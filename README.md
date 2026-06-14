@@ -15,17 +15,19 @@
 
 ## What is 电池功率?
 
-A minimal, always-on-top macOS floating widget that shows real-time battery and power metrics at a glance.
+A minimal macOS floating widget that shows real-time total power, battery level, and detailed power breakdowns at a glance.
 
-Built with Python + Tkinter, it renders a transparent rounded-corner window with no Dock icon — designed to stay out of your way while keeping power data visible.
+Built with Python + Tkinter, it renders a compact floating window with no Dock icon — designed to stay out of your way while keeping power data visible.
 
 ### Features
 
-- **Real-time power display** — hero wattage updates every second via `ioreg`
-- **Three-state awareness** — distinguishes *charging* (⚡ green), *plugged-full* (🔌 blue), and *battery-only* (🔋 white)
-- **System load + battery/adapter power** shown in the bottom bar
-- **macOS-native transparent window** with rounded corners and no title bar
-- **Always-on-top toggle** via the green traffic-light dot
+- **Real-time total power display** — shows system load plus battery charging power, updated every second via `ioreg`
+- **Minimal desktop widget mode** — compact total-power strip with right-click settings
+- **Cmd-hover details** — temporarily expands to show system power and battery charge/discharge power
+- **Optional advanced estimates** — CPU/GPU/ANE estimates are off by default and require administrator sampling
+- **Three-state awareness** — distinguishes charging, plugged-full, and battery-only states with a small status dot
+- **macOS-native floating window** with no title bar
+- **Always-on-top and desktop-mode toggles** via the right-click menu
 - **Drag anywhere** to reposition
 
 ### Screenshot
@@ -49,7 +51,7 @@ open ~/Applications/电池功率.app
 ### Requirements
 
 - macOS 12+
-- Python 3 with Tkinter (ships with macOS or Homebrew `python3`)
+- Python 3 with Tkinter. On this Mac, `/usr/local/bin/python3` is preferred because the Xcode Python Tk runtime does not render child widgets reliably.
 
 ## Development
 
@@ -64,7 +66,7 @@ design/icon/          # App icon assets
 Run directly for development:
 
 ```bash
-python3 battery_monitor.py
+/usr/local/bin/python3 battery_monitor.py
 ```
 
 ## License

@@ -14,15 +14,53 @@ echo "📦 Installing ${APP_NAME}..."
 cp "$MONITOR_SCRIPT" "$INSTALL_PATH"
 echo "  ✅ Script → $INSTALL_PATH"
 
-# 2. Create app bundle structure
+# 2. Recreate app bundle structure
+rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR/Contents/MacOS"
 mkdir -p "$APP_DIR/Contents/Resources"
 
-# 3. Write launcher
-cat > "$APP_DIR/Contents/MacOS/applet" << 'EOF'
-#!/bin/bash
-exec /usr/local/bin/python3 "$HOME/.battery_monitor.py"
+# 3. Build native launcher. LaunchServices is more reliable with a Mach-O
+# executable than with a shell script as CFBundleExecutable.
+cat > "$APP_DIR/Contents/MacOS/applet.c" << 'EOF'
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdio.h>
+
+int main(void) {
+    const char *home = getenv("HOME");
+    const char *pythons[] = {
+        "/usr/local/bin/python3",
+        "/usr/bin/python3",
+        "/opt/homebrew/bin/python3",
+        NULL
+    };
+    char script[1024];
+
+    if (home == NULL || strlen(home) > 900) {
+        return 1;
+    }
+    snprintf(script, sizeof(script), "%s/.battery_monitor.py", home);
+
+    for (int i = 0; pythons[i] != NULL; i++) {
+        if (access(pythons[i], X_OK) == 0) {
+            execl(pythons[i], pythons[i], script, (char *)NULL);
+            return 1;
+        }
+    }
+
+    execl(
+        "/usr/bin/osascript",
+        "osascript",
+        "-e",
+        "display alert \"电池功率启动失败\" message \"未找到可用的 Python 3 + Tkinter 运行环境。\"",
+        (char *)NULL
+    );
+    return 1;
+}
 EOF
+cc "$APP_DIR/Contents/MacOS/applet.c" -o "$APP_DIR/Contents/MacOS/applet"
+rm -f "$APP_DIR/Contents/MacOS/applet.c"
 chmod +x "$APP_DIR/Contents/MacOS/applet"
 echo "  ✅ Launcher → $APP_DIR/Contents/MacOS/applet"
 
@@ -45,6 +83,12 @@ cat > "$APP_DIR/Contents/Info.plist" << EOF
     <string>1.0.0</string>
     <key>CFBundleExecutable</key>
     <string>applet</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
     <key>LSUIElement</key>

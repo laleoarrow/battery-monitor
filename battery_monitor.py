@@ -1,344 +1,655 @@
-import tkinter as tk
-import subprocess
-import datetime
-import re
-import sys
+import json
 import os
-import time
-import math
+import re
+import subprocess
+import sys
+import tkinter as tk
+from dataclasses import dataclass
 
-# ═══════════════════════════════════════════
-#  电池功率 — macOS Floating Battery Monitor
-# ═══════════════════════════════════════════
 
-# ── Position Persistence ──
+# 电池功率 — macOS floating battery power monitor.
+# Runtime copy is installed to ~/.battery_monitor.py by scripts/install.sh.
+
 CFG = os.path.expanduser("~/.battery_monitor.cfg")
 
-def load_pos():
+DEFAULT_CONFIG = {
+    "x": 200,
+    "y": 100,
+    "pinned": True,
+    "desktop_mode": False,
+    "advanced_power": False,
+}
+
+COMPACT_W, COMPACT_H = 238, 58
+EXPANDED_W, EXPANDED_H = 330, 132
+
+BG = "#17191D"
+BORDER = "#30343B"
+MUTED = "#8A8F9B"
+SUBTLE = "#71717A"
+TEXT = "#F8FAFC"
+GREEN = "#30D158"
+BLUE = "#0A84FF"
+ORANGE = "#FF9F0A"
+RED = "#FF453A"
+
+anim = {"total": 0.0, "system": 0.0, "charge": 0.0, "discharge": 0.0}
+tgt = {"total": 0.0, "system": 0.0, "charge": 0.0, "discharge": 0.0}
+
+items = {}
+app_config = dict(DEFAULT_CONFIG)
+current_snapshot = None
+advanced_power = {"status": "disabled"}
+details_visible = False
+cmd_down = False
+_dx = _dy = 0
+content_offset_y = 0
+
+
+@dataclass(frozen=True)
+class PowerSnapshot:
+    percent: int
+    plugged: bool
+    charging: bool
+    state: str
+    system_w: float
+    battery_charge_w: float
+    battery_discharge_w: float
+    total_w: float
+    status_label: str
+    status_color: str
+    hero_color: str
+
+
+def load_config(path=CFG):
     try:
-        with open(CFG) as f:
-            x, y = f.read().strip().split(",")
-            return int(x), int(y)
+        with open(path, encoding="utf-8") as f:
+            raw = f.read().strip()
     except Exception:
-        return 200, 100
+        return dict(DEFAULT_CONFIG)
+
+    if "," in raw and not raw.startswith("{"):
+        try:
+            x, y = raw.split(",", 1)
+            config = dict(DEFAULT_CONFIG)
+            config["x"] = int(x)
+            config["y"] = int(y)
+            return config
+        except Exception:
+            return dict(DEFAULT_CONFIG)
+
+    try:
+        saved = json.loads(raw)
+    except Exception:
+        return dict(DEFAULT_CONFIG)
+
+    config = dict(DEFAULT_CONFIG)
+    for key, default in DEFAULT_CONFIG.items():
+        config[key] = saved.get(key, default)
+
+    try:
+        config["x"] = int(config["x"])
+        config["y"] = int(config["y"])
+        config["pinned"] = bool(config["pinned"])
+        config["desktop_mode"] = bool(config["desktop_mode"])
+        config["advanced_power"] = bool(config["advanced_power"])
+    except Exception:
+        return dict(DEFAULT_CONFIG)
+    return config
+
+
+def save_config(config, path=CFG):
+    serializable = dict(DEFAULT_CONFIG)
+    serializable.update(config)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(serializable, f, ensure_ascii=False)
+
+
+def load_pos():
+    config = load_config()
+    return int(config["x"]), int(config["y"])
+
 
 def save_pos():
     try:
-        with open(CFG, "w") as f:
-            f.write(f"{root.winfo_x()},{root.winfo_y()}")
+        config = load_config()
+        config["x"] = root.winfo_x()
+        config["y"] = root.winfo_y()
+        save_config(config)
     except Exception:
         pass
 
-# ── Battery Telemetry ──
+
+def _extract_int_map(name, text):
+    match = re.search(rf'"{name}"\s*=\s*\{{([^}}]+)\}}', text)
+    values = {}
+    if not match:
+        return values
+    for key, raw in re.findall(r'"?(\w+)"?\s*=\s*(-?\d+)', match.group(1)):
+        values[key] = int(raw)
+    return values
+
+
+def parse_ioreg_output(text):
+    info = {}
+    for key in (
+        "CurrentCapacity",
+        "MaxCapacity",
+        "Voltage",
+        "Amperage",
+        "ExternalConnected",
+        "IsCharging",
+        "FullyCharged",
+    ):
+        match = re.search(fr'"{key}"\s*=\s*(-?[0-9]+|Yes|No)', text)
+        if not match:
+            continue
+        raw = match.group(1)
+        if raw == "Yes":
+            info[key] = True
+        elif raw == "No":
+            info[key] = False
+        else:
+            info[key] = int(raw)
+
+    info["tel"] = _extract_int_map("PowerTelemetryData", text)
+    info["charger"] = _extract_int_map("ChargerData", text)
+    return info
+
+
 def get_battery_info():
     try:
         out = subprocess.check_output(
-            'ioreg -rd1 -c AppleSmartBattery', shell=True
-        ).decode()
+            "ioreg -rd1 -c AppleSmartBattery", shell=True
+        ).decode(errors="replace")
     except Exception:
         return {}
+    return parse_ioreg_output(out)
 
-    info = {}
-    for k in ('CurrentCapacity', 'MaxCapacity', 'Voltage', 'Amperage',
-              'ExternalConnected', 'IsCharging'):
-        m = re.search(fr'"{k}"\s*=\s*(-?[0-9]+|Yes|No)', out)
-        if m:
-            v = m.group(1)
-            if v == 'Yes':    info[k] = True
-            elif v == 'No':   info[k] = False
-            else:             info[k] = int(v)
 
-    tel = {}
-    m = re.search(r'"PowerTelemetryData"\s*=\s*\{([^}]+)\}', out)
-    if m:
-        for k2, v2 in re.findall(r'"?(\w+)"?\s*=\s*(-?\d+)', m.group(1)):
-            tel[k2] = int(v2)
-    info['tel'] = tel
-    return info
+def _mw_from_map(values, key):
+    value = values.get(key)
+    return value / 1000.0 if value is not None else None
 
-# ── Smooth Animation State ──
-anim = dict(hero=0.0, sys=0.0, bat=0.0)   # current displayed values
-tgt  = dict(hero=0.0, sys=0.0, bat=0.0)   # target values
-colors = dict(hero="#FFFFFF", bat="#E5E5EA")
 
-# Breathing dot state
-breath_phase = 0.0
-breath_base_color = (113, 113, 122)   # gray (#71717A)
-breath_speed = 0.04                    # radians per frame
+def _battery_fallback_w(info):
+    return abs(info.get("Voltage", 0) * info.get("Amperage", 0) / 1e6)
+
+
+def _charge_power_w(info, charging):
+    charger = info.get("charger", {})
+    voltage = charger.get("ChargingVoltage")
+    current = charger.get("ChargingCurrent")
+    if charging and voltage and current and current > 0:
+        return abs(voltage * current / 1e6)
+    if not charging:
+        return 0.0
+
+    tel_power = _mw_from_map(info.get("tel", {}), "BatteryPower")
+    if tel_power is not None:
+        return abs(tel_power)
+    return _battery_fallback_w(info)
+
+
+def _discharge_power_w(info, plugged):
+    if plugged:
+        return 0.0
+    tel_power = _mw_from_map(info.get("tel", {}), "BatteryPower")
+    if tel_power is not None:
+        return abs(tel_power)
+    return _battery_fallback_w(info)
+
+
+def compute_power_snapshot(info):
+    percent = int(info.get("CurrentCapacity", 0))
+    plugged = bool(info.get("ExternalConnected", False))
+    charging = bool(info.get("IsCharging", False))
+    tel = info.get("tel", {})
+
+    charge_w = _charge_power_w(info, charging)
+    system_w = _mw_from_map(tel, "SystemLoad")
+    if system_w is None:
+        system_in = _mw_from_map(tel, "SystemPowerIn")
+        if system_in is not None:
+            system_w = max(system_in - charge_w, 0.0)
+        else:
+            system_w = _battery_fallback_w(info)
+
+    discharge_w = _discharge_power_w(info, plugged)
+    total_w = max(system_w, 0.0) + max(charge_w, 0.0)
+
+    if charging:
+        state = "charging"
+        status_label = "充电"
+        status_color = GREEN
+        hero_color = GREEN
+    elif plugged:
+        state = "plugged_full"
+        status_label = "外接电源"
+        status_color = BLUE
+        hero_color = BLUE
+    elif percent <= 20:
+        state = "low_battery"
+        status_label = "低电量"
+        status_color = RED
+        hero_color = TEXT
+    else:
+        state = "discharging"
+        status_label = "放电"
+        status_color = MUTED
+        hero_color = TEXT
+
+    return PowerSnapshot(
+        percent=percent,
+        plugged=plugged,
+        charging=charging,
+        state=state,
+        system_w=system_w,
+        battery_charge_w=charge_w,
+        battery_discharge_w=discharge_w,
+        total_w=total_w,
+        status_label=status_label,
+        status_color=status_color,
+        hero_color=hero_color,
+    )
+
+
+def parse_powermetrics_output(text):
+    values = {}
+    patterns = {
+        "CPU": r"CPU Power:\s*([0-9.]+)\s*mW",
+        "GPU": r"GPU Power:\s*([0-9.]+)\s*mW",
+        "ANE": r"ANE Power:\s*([0-9.]+)\s*mW",
+    }
+    for label, pattern in patterns.items():
+        match = re.search(pattern, text)
+        if match:
+            values[label] = float(match.group(1)) / 1000.0
+    return values
+
+
+def sample_advanced_power(enabled):
+    if not enabled:
+        return {"status": "disabled"}
+    if hasattr(os, "geteuid") and os.geteuid() != 0:
+        return {"status": "needs_root"}
+    try:
+        out = subprocess.check_output(
+            [
+                "powermetrics",
+                "--samplers",
+                "cpu_power,gpu_power,ane_power",
+                "--sample-rate",
+                "1000",
+                "--sample-count",
+                "1",
+            ],
+            stderr=subprocess.STDOUT,
+            timeout=3,
+        ).decode(errors="replace")
+    except Exception:
+        return {"status": "unavailable"}
+
+    values = parse_powermetrics_output(out)
+    if not values:
+        return {"status": "unavailable"}
+    values["status"] = "ok"
+    return values
+
+
+def format_advanced_summary(enabled, values):
+    status = values.get("status")
+    if not enabled or status == "disabled":
+        return "高级分项关闭"
+    if status == "needs_root":
+        return "高级分项需要管理员权限"
+    if status == "unavailable":
+        return "高级分项不可用"
+
+    parts = []
+    for label in ("CPU", "GPU", "ANE"):
+        if label in values:
+            parts.append(f"{label}估算 {values[label]:.1f} W")
+    return " · ".join(parts) if parts else "高级分项不可用"
+
+
+def get_advanced_summary():
+    return format_advanced_summary(
+        app_config.get("advanced_power", False), advanced_power
+    )
+
+
+def resize_window(width, height):
+    match = re.match(r"\d+x\d+([+-]\d+)([+-]\d+)", root.geometry())
+    frame_height = height + content_offset_y
+    if match:
+        root.geometry(f"{width}x{frame_height}{match.group(1)}{match.group(2)}")
+    else:
+        root.geometry(f"{width}x{frame_height}+{app_config['x']}+{app_config['y']}")
+    panel.config(width=width, height=frame_height)
+
+
+def _clear_panel():
+    for child in panel.winfo_children():
+        child.destroy()
+
+
+def _bind_widget_events(widget):
+    widget.bind("<Button-1>", _start)
+    widget.bind("<B1-Motion>", _drag)
+    widget.bind("<ButtonRelease-1>", lambda event: persist_window_config())
+    widget.bind("<Button-2>", show_context_menu)
+    widget.bind("<Button-3>", show_context_menu)
+    widget.bind("<Control-Button-1>", show_context_menu)
+    widget.bind("<Enter>", _enter_widget)
+    widget.bind("<Motion>", _motion_widget)
+    widget.bind("<Leave>", _leave_widget)
+
+
+def _label(text, x, y, font, fg=TEXT, anchor="w"):
+    label = tk.Label(
+        panel,
+        text=text,
+        fg=fg,
+        bg=BG,
+        font=font,
+        bd=0,
+        padx=0,
+        pady=0,
+    )
+    label.place(x=x, y=y, anchor=anchor)
+    _bind_widget_events(label)
+    return label
+
+
+def create_compact_items():
+    _clear_panel()
+    y = content_offset_y
+    return {
+        "total": _label("-- W", 14, y + 29, ("Helvetica Neue", 24, "bold")),
+        "dot": _label("●", COMPACT_W - 68, y + 29, ("Helvetica Neue", 14), MUTED, "center"),
+        "pct": _label("--%", COMPACT_W - 14, y + 29, ("Helvetica Neue", 16, "bold"), TEXT, "e"),
+    }
+
+
+def create_expanded_items():
+    _clear_panel()
+    y = content_offset_y
+    divider = tk.Frame(panel, bg="#2D323A", bd=0, height=1)
+    divider.place(x=14, y=y + 58, width=EXPANDED_W - 28, height=1)
+    return {
+        "total": _label("-- W", 14, y + 30, ("Helvetica Neue", 24, "bold")),
+        "dot": _label("●", EXPANDED_W - 68, y + 30, ("Helvetica Neue", 14), MUTED, "center"),
+        "pct": _label("--%", EXPANDED_W - 14, y + 30, ("Helvetica Neue", 16, "bold"), TEXT, "e"),
+        "system": _label("整机 -- W", 16, y + 76, ("Helvetica Neue", 12), MUTED),
+        "battery": _label("电池 -- W", 16, y + 97, ("Helvetica Neue", 12), MUTED),
+        "state": _label("--", EXPANDED_W - 16, y + 76, ("Helvetica Neue", 12), MUTED, "e"),
+        "advanced": _label("高级分项关闭", 16, y + 118, ("Helvetica Neue", 11), SUBTLE),
+    }
+
+
+def _fmt_w(value):
+    return f"{value:.1f} W"
+
+
+def _fit_text(item_id, text, max_width, sizes, weight="bold"):
+    del max_width
+    size = sizes[0]
+    if len(text) >= 8 and len(sizes) > 2:
+        size = sizes[2]
+    elif len(text) >= 7 and len(sizes) > 1:
+        size = sizes[1]
+    item_id.config(text=text, font=("Helvetica Neue", size, weight))
+
+
+def _battery_detail_text(snapshot):
+    if snapshot.battery_charge_w > 0.05:
+        return f"电池充电 {_fmt_w(anim['charge'])}"
+    if snapshot.battery_discharge_w > 0.05:
+        return f"电池放电 {_fmt_w(anim['discharge'])}"
+    return "电池 0.0 W"
+
+
+def _apply_snapshot_to_items(snapshot):
+    total_text = _fmt_w(anim["total"])
+    max_total_width = (EXPANDED_W if details_visible else COMPACT_W) - 112
+    _fit_text(items["total"], total_text, max_total_width, (24, 22, 20, 18))
+    items["total"].config(fg=snapshot.hero_color)
+    items["dot"].config(fg=snapshot.status_color)
+    items["pct"].config(text=f"{snapshot.percent}%", fg=snapshot.status_color)
+
+    if details_visible:
+        items["system"].config(text=f"整机 {_fmt_w(anim['system'])}")
+        items["battery"].config(text=_battery_detail_text(snapshot))
+        items["state"].config(text=snapshot.status_label, fg=snapshot.status_color)
+        items["advanced"].config(text=get_advanced_summary())
+
+
+def show_compact():
+    global details_visible, items
+    details_visible = False
+    resize_window(COMPACT_W, COMPACT_H)
+    items = create_compact_items()
+    if current_snapshot:
+        _apply_snapshot_to_items(current_snapshot)
+
+
+def show_details():
+    global details_visible, items, advanced_power
+    details_visible = True
+    resize_window(EXPANDED_W, EXPANDED_H)
+    items = create_expanded_items()
+    advanced_power = sample_advanced_power(app_config.get("advanced_power", False))
+    if current_snapshot:
+        _apply_snapshot_to_items(current_snapshot)
+
 
 def update_data():
-    """Fetch battery data every 1 s and set animation targets."""
+    global current_snapshot, advanced_power
     info = get_battery_info()
     if not info:
-        canvas.itemconfig(txt_hero, text="Error", fill="#FF453A")
+        if "total" in items:
+            items["total"].config(text="Error", fg=RED)
         root.after(1000, update_data)
         return
 
-    pct = info.get('CurrentCapacity', 0)
-    charging = info.get('IsCharging', False)
-    plugged  = info.get('ExternalConnected', False)
-    tel = info.get('tel', {})
-
-    # Power in watts
-    def mw(key):
-        v = tel.get(key)
-        return v / 1000.0 if v is not None else None
-
-    sys_w = mw('SystemLoad') or abs(
-        info.get('Voltage', 0) * info.get('Amperage', 0) / 1e6)
-    bat_w = mw('BatteryPower') or abs(
-        info.get('Voltage', 0) * info.get('Amperage', 0) / 1e6)
-    chg_w = mw('SystemPowerIn') or (bat_w if charging else 0.0)
-
-    tgt['sys'] = sys_w
-
-    if charging:
-        tgt['hero'] = chg_w;   colors['hero'] = "#30D158"
-        tgt['bat']  = bat_w;   colors['bat']  = "#30D158"
-        lbl_text = "充电:"
-        _set_breath(r=48, g=209, b=88, spd=0.08)    # green, fast
-    elif plugged:
-        tgt['hero'] = sys_w if sys_w > 0 else chg_w
-        colors['hero'] = "#0A84FF"
-        tgt['bat']  = chg_w;   colors['bat']  = "#0A84FF"
-        lbl_text = "电源:"
-        _set_breath(r=10, g=132, b=255, spd=0.03)   # blue, slow
-    else:
-        tgt['hero'] = bat_w;   colors['hero'] = "#FFFFFF"
-        tgt['bat']  = bat_w;   colors['bat']  = "#FF453A"
-        lbl_text = "放电:"
-        if pct <= 20:
-            _set_breath(r=255, g=69, b=58, spd=0.15)  # red, urgent
-        else:
-            _set_breath(r=113, g=113, b=122, spd=0.02) # gray, calm
-
-    # Percentage
-    if charging or pct > 80:    cpct = "#30D158"
-    elif pct > 20:              cpct = "#FF9F0A"
-    else:                       cpct = "#FF453A"
-    canvas.itemconfig(txt_pct, text=f"{pct}%", fill=cpct)
-
-    # Time
-    canvas.itemconfig(txt_time,
-                      text=datetime.datetime.now().strftime("%H:%M:%S"))
-
-    # Bottom labels (2-char max, no emoji)
-    canvas.itemconfig(txt_bat_lbl, text=lbl_text)
-
+    snapshot = compute_power_snapshot(info)
+    current_snapshot = snapshot
+    tgt["total"] = snapshot.total_w
+    tgt["system"] = snapshot.system_w
+    tgt["charge"] = snapshot.battery_charge_w
+    tgt["discharge"] = snapshot.battery_discharge_w
+    if details_visible:
+        advanced_power = sample_advanced_power(app_config.get("advanced_power", False))
+    _apply_snapshot_to_items(snapshot)
     root.after(1000, update_data)
 
-def _set_breath(r, g, b, spd):
-    global breath_base_color, breath_speed
-    breath_base_color = (r, g, b)
-    breath_speed = spd
-
-def _lerp_hex(base, factor):
-    """Blend base color toward white by factor (0..1)."""
-    bg = (24, 24, 27)  # #18181B background
-    r = int(bg[0] + (base[0] - bg[0]) * factor)
-    g = int(bg[1] + (base[1] - bg[1]) * factor)
-    b = int(bg[2] + (base[2] - bg[2]) * factor)
-    return f"#{r:02x}{g:02x}{b:02x}"
 
 def animate():
-    """50 ms loop — interpolate displayed values toward targets."""
-    global breath_phase
     k = 0.2
-    for key in ('hero', 'sys', 'bat'):
+    for key in ("total", "system", "charge", "discharge"):
         anim[key] += (tgt[key] - anim[key]) * k
         if abs(tgt[key] - anim[key]) < 0.05:
             anim[key] = tgt[key]
-
-    canvas.itemconfig(txt_hero,
-                      text=f"{anim['hero']:.1f} W", fill=colors['hero'])
-    canvas.itemconfig(txt_sys_val, text=f"{anim['sys']:.1f} W")
-    canvas.itemconfig(txt_bat_val,
-                      text=f"{anim['bat']:.1f} W", fill=colors['bat'])
-
-    # ── Breathing dot animation ──
-    breath_phase += breath_speed
-    t = (math.sin(breath_phase) + 1.0) / 2.0   # 0..1
-    # Core dot (bright)
-    canvas.itemconfig(dot_core, fill=_lerp_hex(breath_base_color, 0.4 + 0.6 * t))
-    # Middle glow
-    canvas.itemconfig(dot_mid,  fill=_lerp_hex(breath_base_color, 0.2 + 0.4 * t))
-    # Outer halo
-    canvas.itemconfig(dot_out,  fill=_lerp_hex(breath_base_color, 0.05 + 0.15 * t))
-
+    if current_snapshot and items:
+        _apply_snapshot_to_items(current_snapshot)
     root.after(50, animate)
 
-# ── Pin / Close ──
-pinned = True
 
-def toggle_pin(e=None):
-    global pinned
-    pinned = not pinned
-    root.attributes("-topmost", pinned)
-    canvas.itemconfig(pin_id,
-                      fill="#27C93F" if pinned else "#4B5563",
-                      outline="#1AAB2F" if pinned else "#374151")
-    return "break"
+def persist_window_config():
+    try:
+        app_config["x"] = root.winfo_x()
+        app_config["y"] = root.winfo_y()
+        save_config(app_config)
+    except Exception:
+        pass
 
-def close_app(e=None):
-    for i in range(10, -1, -1):
+
+def apply_window_mode():
+    topmost = bool(app_config["pinned"]) and not bool(app_config["desktop_mode"])
+    root.attributes("-topmost", topmost)
+    root.attributes("-alpha", 0.86 if app_config["desktop_mode"] else 0.95)
+
+
+def toggle_desktop_mode():
+    app_config["desktop_mode"] = not app_config["desktop_mode"]
+    if app_config["desktop_mode"]:
+        app_config["pinned"] = False
+    apply_window_mode()
+    persist_window_config()
+
+
+def toggle_pin_menu():
+    app_config["pinned"] = not app_config["pinned"]
+    apply_window_mode()
+    persist_window_config()
+
+
+def toggle_advanced_power():
+    global advanced_power
+    app_config["advanced_power"] = not app_config["advanced_power"]
+    advanced_power = sample_advanced_power(app_config["advanced_power"])
+    persist_window_config()
+    if current_snapshot:
+        _apply_snapshot_to_items(current_snapshot)
+
+
+def show_context_menu(event):
+    menu.delete(0, "end")
+    desktop_mark = "✓ " if app_config["desktop_mode"] else ""
+    pin_mark = "✓ " if app_config["pinned"] else ""
+    advanced_mark = "✓ " if app_config["advanced_power"] else ""
+    menu.add_command(label=f"{desktop_mark}桌面模式", command=toggle_desktop_mode)
+    menu.add_command(label=f"{pin_mark}置顶", command=toggle_pin_menu)
+    menu.add_command(label=f"{advanced_mark}高级分项", command=toggle_advanced_power)
+    menu.add_separator()
+    menu.add_command(label="退出", command=close_app)
+    try:
+        menu.tk_popup(event.x_root, event.y_root)
+    finally:
+        menu.grab_release()
+
+
+def close_app(event=None):
+    persist_window_config()
+    root.destroy()
+    sys.exit(0)
+
+
+def _start(event):
+    global _dx, _dy
+    _dx, _dy = event.x, event.y
+
+
+def _drag(event):
+    root.geometry(f"+{root.winfo_x() + event.x - _dx}+{root.winfo_y() + event.y - _dy}")
+
+
+def _event_has_cmd(event):
+    # Tk maps Command differently across macOS builds; accept common mod masks.
+    return bool(event and getattr(event, "state", 0) & (0x0008 | 0x0010 | 0x0040 | 0x0080))
+
+
+def _pointer_inside_root():
+    x = root.winfo_pointerx()
+    y = root.winfo_pointery()
+    return (
+        root.winfo_rootx() <= x <= root.winfo_rootx() + root.winfo_width()
+        and root.winfo_rooty() <= y <= root.winfo_rooty() + root.winfo_height()
+    )
+
+
+def _cmd_pressed(event=None):
+    global cmd_down
+    cmd_down = True
+    if _pointer_inside_root():
+        show_details()
+
+
+def _cmd_released(event=None):
+    global cmd_down
+    cmd_down = False
+    if details_visible:
+        show_compact()
+
+
+def _enter_widget(event=None):
+    if cmd_down or _event_has_cmd(event):
+        show_details()
+
+
+def _motion_widget(event=None):
+    if not details_visible and (cmd_down or _event_has_cmd(event)):
+        show_details()
+
+
+def _leave_widget(event=None):
+    if details_visible:
+        show_compact()
+
+
+def _bind_events():
+    _bind_widget_events(panel)
+
+    for sequence in (
+        "<KeyPress-Meta_L>",
+        "<KeyPress-Meta_R>",
+        "<KeyPress-Command_L>",
+        "<KeyPress-Command_R>",
+    ):
         try:
-            root.attributes("-alpha", i / 10.0 * 0.95)
-            root.update(); time.sleep(0.012)
-        except Exception:
-            break
-    root.destroy(); sys.exit(0)
+            root.bind_all(sequence, _cmd_pressed)
+        except tk.TclError:
+            pass
+    for sequence in (
+        "<KeyRelease-Meta_L>",
+        "<KeyRelease-Meta_R>",
+        "<KeyRelease-Command_L>",
+        "<KeyRelease-Command_R>",
+    ):
+        try:
+            root.bind_all(sequence, _cmd_released)
+        except tk.TclError:
+            pass
 
-# ── Hover helpers ──
-def _enter_close(e):
-    canvas.config(cursor="hand2")
-    canvas.itemconfig(close_id, fill="#FF7B72")
-    canvas.itemconfig(close_x,  fill="#4C0000")
 
-def _leave_close(e):
-    canvas.config(cursor="")
-    canvas.itemconfig(close_id, fill="#FF5F56")
-    canvas.itemconfig(close_x,  fill="")
+def main():
+    global root, panel, menu, app_config
 
-def _enter_pin(e):
-    canvas.config(cursor="hand2")
-    canvas.itemconfig(pin_id, fill="#34D399" if pinned else "#9CA3AF")
+    app_config = load_config()
+    root = tk.Tk(baseName="BatteryPowerWidget", className="BatteryPowerWidget")
+    root.withdraw()
+    root.title("电池功率")
+    root.overrideredirect(True)
+    root.configure(bg=BG)
+    root.resizable(False, False)
+    root.geometry(
+        f"{COMPACT_W}x{COMPACT_H + content_offset_y}"
+        f"+{app_config['x']}+{app_config['y']}"
+    )
 
-def _leave_pin(e):
-    canvas.config(cursor="")
-    canvas.itemconfig(pin_id, fill="#27C93F" if pinned else "#4B5563")
+    panel = tk.Frame(
+        root,
+        width=COMPACT_W,
+        height=COMPACT_H + content_offset_y,
+        bg=BG,
+        highlightthickness=0,
+        bd=0,
+    )
+    panel.pack(fill="both", expand=True)
+    menu = tk.Menu(root, tearoff=0)
 
-# ── Drag ──
-_dx = _dy = 0
-def _start(e):
-    global _dx, _dy; _dx, _dy = e.x, e.y
-def _drag(e):
-    root.geometry(f"+{root.winfo_x()+e.x-_dx}+{root.winfo_y()+e.y-_dy}")
+    show_compact()
+    _bind_events()
+    apply_window_mode()
+    root.after(0, root.deiconify)
+    root.after(10, root.lift)
+    root.after(20, apply_window_mode)
+    root.after(50, animate)
+    root.after(100, update_data)
 
-# ── Rounded‑rect helper (returns canvas item ids) ──
-def rrect(cv, x1, y1, x2, y2, r, **kw):
-    f = kw.get("fill",""); o = kw.get("outline",""); w = kw.get("width",1)
-    ids = []
-    if f:
-        ids += [
-            cv.create_arc(x1, y1, x1+2*r, y1+2*r, start=90,  extent=90,
-                          style="pieslice", fill=f, outline=""),
-            cv.create_arc(x2-2*r, y1, x2, y1+2*r, start=0,   extent=90,
-                          style="pieslice", fill=f, outline=""),
-            cv.create_arc(x1, y2-2*r, x1+2*r, y2, start=180, extent=90,
-                          style="pieslice", fill=f, outline=""),
-            cv.create_arc(x2-2*r, y2-2*r, x2, y2, start=270, extent=90,
-                          style="pieslice", fill=f, outline=""),
-            cv.create_rectangle(x1+r, y1, x2-r, y2, fill=f, outline=""),
-            cv.create_rectangle(x1, y1+r, x2, y2-r, fill=f, outline=""),
-        ]
-    if o:
-        ids += [
-            cv.create_arc(x1, y1, x1+2*r, y1+2*r, start=90,  extent=90,
-                          style="arc", outline=o, width=w),
-            cv.create_arc(x2-2*r, y1, x2, y1+2*r, start=0,   extent=90,
-                          style="arc", outline=o, width=w),
-            cv.create_arc(x1, y2-2*r, x1+2*r, y2, start=180, extent=90,
-                          style="arc", outline=o, width=w),
-            cv.create_arc(x2-2*r, y2-2*r, x2, y2, start=270, extent=90,
-                          style="arc", outline=o, width=w),
-            cv.create_line(x1+r, y1, x2-r, y1, fill=o, width=w),
-            cv.create_line(x2, y1+r, x2, y2-r, fill=o, width=w),
-            cv.create_line(x1+r, y2, x2-r, y2, fill=o, width=w),
-            cv.create_line(x1, y1+r, x1, y2-r, fill=o, width=w),
-        ]
-    return ids
+    root.mainloop()
 
-# ══════════════════════════════════════
-#  Build the Window
-# ══════════════════════════════════════
-W, H = 280, 110
-root = tk.Tk()
-root.withdraw()
-root.title("BatteryMonitor")
-root.overrideredirect(True)
-root.wm_attributes("-transparent", True)
-root.attributes("-topmost", pinned)
-root.attributes("-alpha", 0.0)          # start invisible for fade-in
 
-sx, sy = load_pos()
-root.geometry(f"{W}x{H}+{sx}+{sy}")
-root.resizable(False, False)
-root.configure(bg="systemTransparent")
-
-canvas = tk.Canvas(root, width=W, height=H,
-                   bg="systemTransparent", highlightthickness=0, bd=0)
-canvas.pack(fill="both", expand=True)
-
-# ── Background rounded rect ──
-rrect(canvas, 0, 0, W, H, r=14, fill="#18181B", outline="#2D2D33", width=1)
-
-# ── NO bottom bar border — just plain text below a thin separator ──
-# Thin horizontal divider line
-canvas.create_line(14, 78, W-14, 78, fill="#2D2D33", width=1)
-
-# ── Traffic lights ──
-close_id = canvas.create_oval(14, 10, 24, 20, fill="#FF5F56", outline="#E0443E")
-close_x  = canvas.create_text(19, 14, text="×", fill="",
-                               font=("Helvetica Neue", 10, "bold"))
-canvas.tag_bind(close_id, "<Button-1>", close_app)
-canvas.tag_bind(close_id, "<Enter>",    _enter_close)
-canvas.tag_bind(close_id, "<Leave>",    _leave_close)
-
-pin_id = canvas.create_oval(30, 10, 40, 20, fill="#27C93F", outline="#1AAB2F")
-canvas.tag_bind(pin_id, "<Button-1>", toggle_pin)
-canvas.tag_bind(pin_id, "<Enter>",    _enter_pin)
-canvas.tag_bind(pin_id, "<Leave>",    _leave_pin)
-
-# ── Main text ──
-txt_time = canvas.create_text(W-14, 15, text="--:--:--", fill="#71717A",
-                              font=("Helvetica Neue", 11), anchor="e")
-
-txt_hero = canvas.create_text(14, 48, text="-- W", fill="#FFFFFF",
-                              font=("Helvetica Neue", 30, "bold"), anchor="w")
-
-# Breathing dot (3 layered circles for glow effect)
-DOT_X, DOT_Y = W - 58, 50
-dot_out  = canvas.create_oval(DOT_X-7, DOT_Y-7, DOT_X+7, DOT_Y+7,
-                              fill="#18181B", outline="")
-dot_mid  = canvas.create_oval(DOT_X-5, DOT_Y-5, DOT_X+5, DOT_Y+5,
-                              fill="#18181B", outline="")
-dot_core = canvas.create_oval(DOT_X-3, DOT_Y-3, DOT_X+3, DOT_Y+3,
-                              fill="#71717A", outline="")
-
-txt_pct  = canvas.create_text(W-14, 50, text="--%", fill="#FFFFFF",
-                              font=("Helvetica Neue", 18, "bold"), anchor="e")
-
-# ── Bottom info row (no border, just text) ──
-# Left group: system load
-txt_sys_lbl = canvas.create_text(18, 92, text="负载:", fill="#71717A",
-                                 font=("Helvetica Neue", 11), anchor="w")
-txt_sys_val = canvas.create_text(52, 92, text="--", fill="#A1A1AA",
-                                 font=("Helvetica Neue", 11, "bold"), anchor="w")
-
-# Right group: battery / charging status (no emoji)
-txt_bat_lbl  = canvas.create_text(148, 92, text="放电:", fill="#71717A",
-                                  font=("Helvetica Neue", 11), anchor="w")
-txt_bat_val  = canvas.create_text(182, 92, text="--", fill="#A1A1AA",
-                                  font=("Helvetica Neue", 11, "bold"), anchor="w")
-
-# ── Bindings ──
-canvas.bind("<Button-1>",        _start)
-canvas.bind("<B1-Motion>",       _drag)
-canvas.bind("<ButtonRelease-1>", lambda e: save_pos())
-
-# ══════════════════════════════════════
-#  Launch
-# ══════════════════════════════════════
-root.deiconify()
-root.update()
-
-update_data()
-animate()
-
-# Fade in
-for i in range(11):
-    root.attributes("-alpha", i / 10.0 * 0.95)
-    root.update()
-    time.sleep(0.012)
-
-root.mainloop()
+if __name__ == "__main__":
+    main()
