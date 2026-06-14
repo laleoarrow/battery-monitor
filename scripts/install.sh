@@ -5,7 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_NAME="电池功率"
 APP_DIR="$HOME/Applications/${APP_NAME}.app"
-MONITOR_SCRIPT="$SCRIPT_DIR/battery_monitor.py"
+MONITOR_SCRIPT="$SCRIPT_DIR/../battery_monitor.py"
 INSTALL_PATH="$HOME/.battery_monitor.py"
 
 echo "📦 Installing ${APP_NAME}..."
@@ -57,7 +57,7 @@ EOF
 echo "  ✅ Info.plist"
 
 # 5. Copy icon if available
-ICON_SRC="$SCRIPT_DIR/design/icon/AppIcon.icns"
+ICON_SRC="$SCRIPT_DIR/../design/icon/AppIcon.icns"
 if [ -f "$ICON_SRC" ]; then
     cp "$ICON_SRC" "$APP_DIR/Contents/Resources/AppIcon.icns"
     echo "  ✅ Icon → $APP_DIR/Contents/Resources/AppIcon.icns"
