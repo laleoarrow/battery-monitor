@@ -5,6 +5,7 @@ import re
 import sys
 import os
 import time
+import math
 
 # ═══════════════════════════════════════════
 #  电池功率 — macOS Floating Battery Monitor
@@ -60,6 +61,11 @@ anim = dict(hero=0.0, sys=0.0, bat=0.0)   # current displayed values
 tgt  = dict(hero=0.0, sys=0.0, bat=0.0)   # target values
 colors = dict(hero="#FFFFFF", bat="#E5E5EA")
 
+# Breathing dot state
+breath_phase = 0.0
+breath_base_color = (113, 113, 122)   # gray (#71717A)
+breath_speed = 0.04                    # radians per frame
+
 def update_data():
     """Fetch battery data every 1 s and set animation targets."""
     info = get_battery_info()
@@ -89,16 +95,22 @@ def update_data():
     if charging:
         tgt['hero'] = chg_w;   colors['hero'] = "#30D158"
         tgt['bat']  = bat_w;   colors['bat']  = "#30D158"
-        lbl_icon = "⚡";       lbl_text = "充电:"
+        lbl_text = "充电:"
+        _set_breath(r=48, g=209, b=88, spd=0.08)    # green, fast
     elif plugged:
         tgt['hero'] = sys_w if sys_w > 0 else chg_w
         colors['hero'] = "#0A84FF"
         tgt['bat']  = chg_w;   colors['bat']  = "#0A84FF"
-        lbl_icon = "🔌";       lbl_text = "电源:"
+        lbl_text = "电源:"
+        _set_breath(r=10, g=132, b=255, spd=0.03)   # blue, slow
     else:
         tgt['hero'] = bat_w;   colors['hero'] = "#FFFFFF"
         tgt['bat']  = bat_w;   colors['bat']  = "#FF453A"
-        lbl_icon = "🔋";       lbl_text = "放电:"
+        lbl_text = "放电:"
+        if pct <= 20:
+            _set_breath(r=255, g=69, b=58, spd=0.15)  # red, urgent
+        else:
+            _set_breath(r=113, g=113, b=122, spd=0.02) # gray, calm
 
     # Percentage
     if charging or pct > 80:    cpct = "#30D158"
@@ -110,14 +122,27 @@ def update_data():
     canvas.itemconfig(txt_time,
                       text=datetime.datetime.now().strftime("%H:%M:%S"))
 
-    # Bottom labels (2-char max)
-    canvas.itemconfig(txt_bat_icon, text=lbl_icon)
-    canvas.itemconfig(txt_bat_lbl,  text=lbl_text)
+    # Bottom labels (2-char max, no emoji)
+    canvas.itemconfig(txt_bat_lbl, text=lbl_text)
 
     root.after(1000, update_data)
 
+def _set_breath(r, g, b, spd):
+    global breath_base_color, breath_speed
+    breath_base_color = (r, g, b)
+    breath_speed = spd
+
+def _lerp_hex(base, factor):
+    """Blend base color toward white by factor (0..1)."""
+    bg = (24, 24, 27)  # #18181B background
+    r = int(bg[0] + (base[0] - bg[0]) * factor)
+    g = int(bg[1] + (base[1] - bg[1]) * factor)
+    b = int(bg[2] + (base[2] - bg[2]) * factor)
+    return f"#{r:02x}{g:02x}{b:02x}"
+
 def animate():
     """50 ms loop — interpolate displayed values toward targets."""
+    global breath_phase
     k = 0.2
     for key in ('hero', 'sys', 'bat'):
         anim[key] += (tgt[key] - anim[key]) * k
@@ -129,6 +154,17 @@ def animate():
     canvas.itemconfig(txt_sys_val, text=f"{anim['sys']:.1f} W")
     canvas.itemconfig(txt_bat_val,
                       text=f"{anim['bat']:.1f} W", fill=colors['bat'])
+
+    # ── Breathing dot animation ──
+    breath_phase += breath_speed
+    t = (math.sin(breath_phase) + 1.0) / 2.0   # 0..1
+    # Core dot (bright)
+    canvas.itemconfig(dot_core, fill=_lerp_hex(breath_base_color, 0.4 + 0.6 * t))
+    # Middle glow
+    canvas.itemconfig(dot_mid,  fill=_lerp_hex(breath_base_color, 0.2 + 0.4 * t))
+    # Outer halo
+    canvas.itemconfig(dot_out,  fill=_lerp_hex(breath_base_color, 0.05 + 0.15 * t))
+
     root.after(50, animate)
 
 # ── Pin / Close ──
@@ -260,6 +296,15 @@ txt_time = canvas.create_text(W-14, 15, text="--:--:--", fill="#71717A",
 txt_hero = canvas.create_text(14, 48, text="-- W", fill="#FFFFFF",
                               font=("Helvetica Neue", 30, "bold"), anchor="w")
 
+# Breathing dot (3 layered circles for glow effect)
+DOT_X, DOT_Y = W - 58, 50
+dot_out  = canvas.create_oval(DOT_X-7, DOT_Y-7, DOT_X+7, DOT_Y+7,
+                              fill="#18181B", outline="")
+dot_mid  = canvas.create_oval(DOT_X-5, DOT_Y-5, DOT_X+5, DOT_Y+5,
+                              fill="#18181B", outline="")
+dot_core = canvas.create_oval(DOT_X-3, DOT_Y-3, DOT_X+3, DOT_Y+3,
+                              fill="#71717A", outline="")
+
 txt_pct  = canvas.create_text(W-14, 50, text="--%", fill="#FFFFFF",
                               font=("Helvetica Neue", 18, "bold"), anchor="e")
 
@@ -270,12 +315,10 @@ txt_sys_lbl = canvas.create_text(18, 92, text="负载:", fill="#71717A",
 txt_sys_val = canvas.create_text(52, 92, text="--", fill="#A1A1AA",
                                  font=("Helvetica Neue", 11, "bold"), anchor="w")
 
-# Right group: battery / charging status
-txt_bat_icon = canvas.create_text(148, 92, text="🔋", fill="#71717A",
+# Right group: battery / charging status (no emoji)
+txt_bat_lbl  = canvas.create_text(148, 92, text="放电:", fill="#71717A",
                                   font=("Helvetica Neue", 11), anchor="w")
-txt_bat_lbl  = canvas.create_text(166, 92, text="放电:", fill="#71717A",
-                                  font=("Helvetica Neue", 11), anchor="w")
-txt_bat_val  = canvas.create_text(200, 92, text="--", fill="#A1A1AA",
+txt_bat_val  = canvas.create_text(182, 92, text="--", fill="#A1A1AA",
                                   font=("Helvetica Neue", 11, "bold"), anchor="w")
 
 # ── Bindings ──
