@@ -1,5 +1,6 @@
 import AppKit
 import CoreGraphics
+import Darwin
 import Foundation
 
 private let currentConfigVersion = 2
@@ -213,6 +214,42 @@ final class PowerSampler {
             return abs(Double(batteryPower) / 1000.0)
         }
         return fallbackPower(voltage: voltage, amperage: amperage)
+    }
+}
+
+private enum WidgetSnapshotStore {
+    private static var snapshotURL: URL {
+        realHomeDirectory()
+            .appendingPathComponent("Library/Application Support/电池功率", isDirectory: true)
+            .appendingPathComponent("widget-snapshot.json")
+    }
+
+    static func save(_ snapshot: PowerSnapshot) {
+        let payload: [String: Any] = [
+            "percent": snapshot.percent,
+            "plugged": snapshot.plugged,
+            "charging": snapshot.charging,
+            "systemW": snapshot.systemW,
+            "chargeW": snapshot.chargeW,
+            "dischargeW": snapshot.dischargeW,
+            "updatedAt": Date().timeIntervalSince1970,
+        ]
+        let url = snapshotURL
+        do {
+            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+            let data = try JSONSerialization.data(withJSONObject: payload)
+            try data.write(to: url, options: .atomic)
+        } catch {
+            return
+        }
+    }
+
+    private static func realHomeDirectory() -> URL {
+        if let passwd = getpwuid(getuid()),
+           let home = passwd.pointee.pw_dir {
+            return URL(fileURLWithPath: String(cString: home), isDirectory: true)
+        }
+        return FileManager.default.homeDirectoryForCurrentUser
     }
 }
 
@@ -458,7 +495,9 @@ final class AppController: NSObject, NSApplicationDelegate {
     }
 
     private func update() {
-        view.snapshot = sampler.sample()
+        let snapshot = sampler.sample()
+        view.snapshot = snapshot
+        WidgetSnapshotStore.save(snapshot)
     }
 
     private func applyWindowMode() {

@@ -11,10 +11,18 @@ This script performs the following actions:
 1. Copies the python script `battery_monitor.py` to `$HOME/.battery_monitor.py`.
 2. Creates the app structure at `$HOME/Applications/电池功率.app/`.
 3. Compiles `BatteryPowerWidget.swift` to the native executable at `Contents/MacOS/applet`.
-4. Generates the `Contents/Info.plist` with app metadata and hides the Dock icon (`LSUIElement=true`).
-5. Copies the custom application icon `design/icon/AppIcon.icns` if present into the app bundle resources.
+4. Compiles `BatteryPowerWidgetExtension.swift` to `Contents/PlugIns/BatteryPowerWidgetExtension.appex` for the macOS widget gallery.
+5. Generates the `Contents/Info.plist` with app metadata and hides the Dock icon (`LSUIElement=true`).
+6. Copies the custom application icon `design/icon/AppIcon.icns` if present into the app bundle resources.
+7. Signs the WidgetKit extension with the sandbox entitlement required for system registration, then signs the outer app bundle.
 
 The Python script is still copied to `$HOME/.battery_monitor.py` for compatibility/reference, but the installed app runs the native Swift/AppKit executable.
+The installed AppKit app also writes `~/Library/Application Support/电池功率/widget-snapshot.json`; the sandboxed WidgetKit extension reads that snapshot because direct IORegistry access is not available from the extension sandbox.
+
+After install, verify the system widget extension is visible to macOS:
+```bash
+pluginkit -m -v -A -D -i com.leoarrow.battery-monitor.widget
+```
 
 ## Building and generating AppIcon.icns
 

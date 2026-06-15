@@ -31,8 +31,12 @@ Before claiming a fix or feature is ready, complete this checklist:
    ```bash
    open ~/Applications/电池功率.app
    ```
-7. Verify that no errors are written to `/Users/leoarrow/Project/UKB/p.cataract.met/agents/tmp/battery_app.log` (if shell redirections are active).
-8. Ensure `git status` is clean except for the intended tracked changes.
+7. Verify the WidgetKit extension is registered:
+   ```bash
+   pluginkit -m -v -A -D -i com.leoarrow.battery-monitor.widget
+   ```
+8. Verify that no errors are written to `/Users/leoarrow/Project/UKB/p.cataract.met/agents/tmp/battery_app.log` (if shell redirections are active).
+9. Ensure `git status` is clean except for the intended tracked changes.
 
 ## Common runtime checks and fixes
 
