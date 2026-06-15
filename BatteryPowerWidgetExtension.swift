@@ -125,20 +125,20 @@ private struct BatteryWidgetView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Text(String(format: "%.1f", entry.snapshot.totalW))
-                    .font(.system(size: 35, weight: .bold, design: .rounded))
+                    .font(.system(size: 32, weight: .bold, design: .rounded))
                     .foregroundStyle(entry.snapshot.accentColor)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                 Text("W")
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundStyle(Color(hex: 0xA6ABB6))
-                Spacer(minLength: 6)
-                percentView(size: 22)
+                Spacer(minLength: 0)
             }
 
             Spacer(minLength: 0)
 
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
+                percentView(size: 20)
                 Text(entry.snapshot.statusText)
                     .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(Color(hex: 0xF8FAFC))

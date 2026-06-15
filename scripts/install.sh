@@ -4,17 +4,22 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_NAME="电池功率"
-APP_VERSION="1.1.1"
+APP_VERSION="1.2.0"
 APP_DIR="$HOME/Applications/${APP_NAME}.app"
 MONITOR_SCRIPT="$SCRIPT_DIR/../battery_monitor.py"
 SWIFT_SOURCE="$SCRIPT_DIR/../BatteryPowerWidget.swift"
-WIDGET_SOURCE="$SCRIPT_DIR/../BatteryPowerWidgetExtension.swift"
+WIDGET_PROJECT="$SCRIPT_DIR/../BatteryPowerWidgetExtension.xcodeproj"
 INSTALL_PATH="$HOME/.battery_monitor.py"
 WIDGET_NAME="BatteryPowerWidgetExtension"
 WIDGET_BUNDLE_ID="com.leoarrow.battery-monitor.widget"
 WIDGET_DIR="$APP_DIR/Contents/PlugIns/${WIDGET_NAME}.appex"
-WIDGET_ENTITLEMENTS="$(mktemp "${TMPDIR:-/tmp}/battery-widget-entitlements.XXXXXX.plist")"
-trap 'rm -f "$WIDGET_ENTITLEMENTS"' EXIT
+APP_ENTITLEMENTS="$SCRIPT_DIR/../BatteryPowerApp.entitlements"
+WIDGET_ENTITLEMENTS="$SCRIPT_DIR/../BatteryPowerWidgetExtension.entitlements"
+WIDGET_BUILD_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/battery-widget-build.XXXXXX")"
+cleanup() {
+    rm -rf "$WIDGET_BUILD_ROOT"
+}
+trap cleanup EXIT
 
 echo "📦 Installing ${APP_NAME}..."
 
@@ -37,71 +42,22 @@ xcrun swiftc "$SWIFT_SOURCE" \
 chmod +x "$APP_DIR/Contents/MacOS/applet"
 echo "  ✅ Native app → $APP_DIR/Contents/MacOS/applet"
 
-# 4. Build WidgetKit extension for the macOS widget gallery.
-mkdir -p "$WIDGET_DIR/Contents/MacOS"
-WIDGET_TARGET="$(uname -m)-apple-macosx14.0"
-xcrun swiftc "$WIDGET_SOURCE" \
-    -parse-as-library \
-    -application-extension \
-    -target "$WIDGET_TARGET" \
-    -framework WidgetKit \
-    -framework SwiftUI \
-    -framework AppIntents \
-    -o "$WIDGET_DIR/Contents/MacOS/$WIDGET_NAME"
-chmod +x "$WIDGET_DIR/Contents/MacOS/$WIDGET_NAME"
-cat > "$WIDGET_DIR/Contents/Info.plist" << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>CFBundleName</key>
-    <string>${WIDGET_NAME}</string>
-    <key>CFBundleDisplayName</key>
-    <string>${APP_NAME}</string>
-    <key>CFBundleIdentifier</key>
-    <string>${WIDGET_BUNDLE_ID}</string>
-    <key>CFBundleVersion</key>
-    <string>${APP_VERSION}</string>
-    <key>CFBundleShortVersionString</key>
-    <string>${APP_VERSION}</string>
-    <key>CFBundleExecutable</key>
-    <string>${WIDGET_NAME}</string>
-    <key>CFBundlePackageType</key>
-    <string>XPC!</string>
-    <key>CFBundleInfoDictionaryVersion</key>
-    <string>6.0</string>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
-    <key>CFBundleSupportedPlatforms</key>
-    <array>
-        <string>MacOSX</string>
-    </array>
-    <key>LSMinimumSystemVersion</key>
-    <string>14.0</string>
-    <key>NSExtension</key>
-    <dict>
-        <key>NSExtensionPointIdentifier</key>
-        <string>com.apple.widgetkit-extension</string>
-    </dict>
-</dict>
-</plist>
-EOF
-cat > "$WIDGET_ENTITLEMENTS" << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>com.apple.security.app-sandbox</key>
-    <true/>
-    <key>com.apple.security.temporary-exception.files.home-relative-path.read-only</key>
-    <array>
-        <string>/Library/Application Support/电池功率/</string>
-    </array>
-</dict>
-</plist>
-EOF
+# 4. Build WidgetKit extension for the macOS widget gallery. Xcode must build
+# this target so WidgetKit gets the app-extension entry point it expects.
+xcrun xcodebuild \
+    -project "$WIDGET_PROJECT" \
+    -scheme "$WIDGET_NAME" \
+    -configuration Release \
+    -derivedDataPath "$WIDGET_BUILD_ROOT" \
+    CODE_SIGNING_ALLOWED=NO \
+    build >/dev/null
+BUILT_WIDGET="$WIDGET_BUILD_ROOT/Build/Products/Release/${WIDGET_NAME}.appex"
+if [ ! -d "$BUILT_WIDGET" ]; then
+    echo "  ❌ WidgetKit extension build product not found: $BUILT_WIDGET"
+    exit 1
+fi
+rm -rf "$WIDGET_DIR"
+cp -R "$BUILT_WIDGET" "$WIDGET_DIR"
 echo "  ✅ WidgetKit extension → $WIDGET_DIR"
 
 # 5. Write Info.plist
@@ -152,6 +108,7 @@ else
 fi
 
 codesign --force --sign - --entitlements "$WIDGET_ENTITLEMENTS" "$WIDGET_DIR" >/dev/null
+codesign --force --sign - --entitlements "$APP_ENTITLEMENTS" "$APP_DIR" >/dev/null
 codesign --force --deep --sign - --preserve-metadata=entitlements "$APP_DIR" >/dev/null
 echo "  ✅ Ad-hoc code signature"
 

@@ -27,13 +27,15 @@
 
 - `BatteryPowerWidget.swift` — Native AppKit widget containing transparent window setup, drawing, drag/menu handling, and telemetry updating logic.
 - `BatteryPowerWidgetExtension.swift` — WidgetKit extension used by the macOS Widgets gallery. It shows a snapshot and refreshes on WidgetKit's schedule rather than every second.
+- `BatteryPowerWidgetExtension.xcodeproj` — Minimal Xcode project used to build the WidgetKit `.appex`; do not replace this with hand-rolled `swiftc` packaging because macOS WidgetKit needs the app-extension entry point.
+- `BatteryPowerApp.entitlements` and `BatteryPowerWidgetExtension.entitlements` — Sandbox entitlements for the host app and widget extension.
 - `battery_monitor.py` — Legacy/reference Python implementation used by tests.
-- `scripts/install.sh` — Bash installation script that compiles the Swift executable, embeds the WidgetKit extension, signs both bundles, and creates the macOS app bundle `电池功率.app` under `~/Applications/`.
+- `scripts/install.sh` — Bash installation script that compiles the Swift executable, builds the WidgetKit extension with Xcode, embeds the `.appex`, signs both bundles, and creates the macOS app bundle `电池功率.app` under `~/Applications/`.
 - `design/icon/AppIcon.icns` — Pre-compiled macOS icns file containing resolutions from 16x16 to 512x512, used as the app bundle's application icon.
 
 ## Application Architecture
 
 The app is packaged as a standard macOS app bundle (`电池功率.app`) with a native Swift executable at `Contents/MacOS/applet`.
 The application runs as a background process with no Dock icon (`LSUIElement=true` in `Info.plist`) and presents a transparent borderless AppKit panel on screen.
-The system widget is packaged as `Contents/PlugIns/BatteryPowerWidgetExtension.appex` with `NSExtensionPointIdentifier=com.apple.widgetkit-extension`.
+The system widget is packaged as `Contents/PlugIns/BatteryPowerWidgetExtension.appex` with `NSExtensionPointIdentifier=com.apple.widgetkit-extension`. The extension must be built by the Xcode target so its executable uses the WidgetKit app-extension entry point.
 The AppKit app writes the latest WidgetKit-readable snapshot to `~/Library/Application Support/电池功率/widget-snapshot.json`; the sandboxed WidgetKit extension reads that file instead of directly querying IORegistry.

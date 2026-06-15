@@ -35,8 +35,10 @@ Before claiming a fix or feature is ready, complete this checklist:
    ```bash
    pluginkit -m -v -A -D -i com.leoarrow.battery-monitor.widget
    ```
-8. Verify that no errors are written to `/Users/leoarrow/Project/UKB/p.cataract.met/agents/tmp/battery_app.log` (if shell redirections are active).
-9. Ensure `git status` is clean except for the intended tracked changes.
+8. Open the macOS Widgets editor and search for `电池功率`; both Small and Medium previews should render.
+9. If the widget is registered but not visible, inspect `chronod` logs for descriptor errors. The expected healthy path includes `Publishing changed widget descriptors` for `com.leoarrow.battery-monitor.widget` and placeholder reload success for `BatteryPowerSystemWidget`.
+10. Verify that no errors are written to `/Users/leoarrow/Project/UKB/p.cataract.met/agents/tmp/battery_app.log` (if shell redirections are active).
+11. Ensure `git status` is clean except for the intended tracked changes.
 
 ## Common runtime checks and fixes
 

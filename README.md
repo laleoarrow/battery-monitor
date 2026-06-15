@@ -2,7 +2,7 @@
 
 <div align="center">
   <a href="https://github.com/laleoarrow/battery-monitor/releases">
-    <img src="https://img.shields.io/badge/RELEASE-V1.1.1-1565c0?style=for-the-badge&logo=github&logoColor=white" alt="Release V1.1.1" />
+    <img src="https://img.shields.io/badge/RELEASE-V1.2.0-1565c0?style=for-the-badge&logo=github&logoColor=white" alt="Release V1.2.0" />
   </a>
   <a href="https://github.com/laleoarrow/battery-monitor">
     <img src="https://img.shields.io/badge/PLATFORM-macOS%2012%2B-111111?style=for-the-badge&logo=apple&logoColor=white" alt="Platform macOS 12+" />
@@ -52,7 +52,7 @@ open ~/Applications/电池功率.app
 
 - macOS 12+
 - macOS 14+ for the system Widgets gallery extension
-- macOS command line tools with `swiftc`
+- Xcode command line tools with `swiftc` and `xcodebuild`
 
 ## Development
 
@@ -61,6 +61,7 @@ The installed app is built from the native Swift entrypoint:
 ```
 BatteryPowerWidget.swift  # Native AppKit widget
 BatteryPowerWidgetExtension.swift  # WidgetKit extension for macOS Widgets
+BatteryPowerWidgetExtension.xcodeproj/  # Xcode target that builds the .appex
 battery_monitor.py        # Legacy Python/Tkinter implementation
 scripts/install.sh        # Installer (builds the .app bundle)
 design/icon/              # App icon assets

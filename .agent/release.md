@@ -11,13 +11,13 @@ This script performs the following actions:
 1. Copies the python script `battery_monitor.py` to `$HOME/.battery_monitor.py`.
 2. Creates the app structure at `$HOME/Applications/电池功率.app/`.
 3. Compiles `BatteryPowerWidget.swift` to the native executable at `Contents/MacOS/applet`.
-4. Compiles `BatteryPowerWidgetExtension.swift` to `Contents/PlugIns/BatteryPowerWidgetExtension.appex` for the macOS widget gallery.
+4. Builds `BatteryPowerWidgetExtension.xcodeproj` and copies the resulting `BatteryPowerWidgetExtension.appex` to `Contents/PlugIns/` for the macOS widget gallery.
 5. Generates the `Contents/Info.plist` with app metadata and hides the Dock icon (`LSUIElement=true`).
 6. Copies the custom application icon `design/icon/AppIcon.icns` if present into the app bundle resources.
-7. Signs the WidgetKit extension with the sandbox entitlement required for system registration, then signs the outer app bundle.
+7. Signs the WidgetKit extension and host app with their sandbox entitlements, then signs the outer app bundle while preserving nested entitlements.
 
 The Python script is still copied to `$HOME/.battery_monitor.py` for compatibility/reference, but the installed app runs the native Swift/AppKit executable.
-The installed AppKit app also writes `~/Library/Application Support/电池功率/widget-snapshot.json`; the sandboxed WidgetKit extension reads that snapshot because direct IORegistry access is not available from the extension sandbox.
+The installed AppKit app also writes `~/Library/Application Support/电池功率/widget-snapshot.json`; the sandboxed WidgetKit extension reads that snapshot because direct IORegistry access is not available from the extension sandbox. Keep the host app sandbox entitlement and its temporary read/write exceptions, otherwise `chronod` may register the extension but omit it from the Widgets gallery.
 
 After install, verify the system widget extension is visible to macOS:
 ```bash
@@ -58,8 +58,8 @@ The project uses git for version control under `/Users/leoarrow/Project/mypackag
 To create a new version release tag:
 ```bash
 git add .
-git commit -m "chore: release version v1.1.1"
-git tag v1.1.1
+git commit -m "chore: release version v1.2.0"
+git tag v1.2.0
 ```
 
 To sync and push to the remote repository (once origin is set):
