@@ -22,7 +22,7 @@
 - Create: `tests/test_swift_runtime_contract.py`
 - Test: `tests/test_swift_runtime_contract.py`
 
-- [ ] **Step 1: Write the failing source-contract tests**
+- [x] **Step 1: Write the failing source-contract tests**
 
 ```python
 import pathlib
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     unittest.main()
 ```
 
-- [ ] **Step 2: Run the new tests and verify failure**
+- [x] **Step 2: Run the new tests and verify failure**
 
 Run:
 
@@ -93,7 +93,7 @@ python3 -m unittest tests.test_swift_runtime_contract -v
 
 Expected: failures for the missing `syncWidgetIfNeeded`, 30 FPS pulse, eight-point gap, and per-draw `DateFormatter` allocation.
 
-- [ ] **Step 3: Commit the failing tests**
+- [x] **Step 3: Commit the failing tests**
 
 ```bash
 git add tests/test_swift_runtime_contract.py
@@ -107,7 +107,7 @@ git commit -m "test: define widget performance contract"
 - Modify: `BatteryPowerWidget.swift:821-877`
 - Test: `tests/test_swift_runtime_contract.py`
 
-- [ ] **Step 1: Return snapshot persistence success**
+- [x] **Step 1: Return snapshot persistence success**
 
 Change `WidgetSnapshotStore.save` to return `Bool`:
 
@@ -135,7 +135,7 @@ static func save(_ snapshot: PowerSnapshot) -> Bool {
 }
 ```
 
-- [ ] **Step 2: Move persistence behind the five-second gate**
+- [x] **Step 2: Move persistence behind the five-second gate**
 
 Replace the widget calls in `update()` and the old reload method with:
 
@@ -161,7 +161,7 @@ private func syncWidgetIfNeeded() {
 }
 ```
 
-- [ ] **Step 3: Run the widget synchronization contract test**
+- [x] **Step 3: Run the widget synchronization contract test**
 
 Run:
 
@@ -171,7 +171,7 @@ python3 -m unittest tests.test_swift_runtime_contract.SwiftRuntimeContractTests.
 
 Expected: `OK`.
 
-- [ ] **Step 4: Compile the native app**
+- [x] **Step 4: Compile the native app**
 
 Run:
 
@@ -181,7 +181,7 @@ xcrun swiftc BatteryPowerWidget.swift -framework AppKit -framework CoreGraphics 
 
 Expected: exit code 0 with `/tmp/BatteryPowerWidget-test` created.
 
-- [ ] **Step 5: Commit widget synchronization**
+- [x] **Step 5: Commit widget synchronization**
 
 ```bash
 git add BatteryPowerWidget.swift
@@ -195,7 +195,7 @@ git commit -m "perf: synchronize widget snapshot refresh"
 - Modify: `BatteryPowerWidget.swift:735-741`
 - Test: `tests/test_swift_runtime_contract.py`
 
-- [ ] **Step 1: Cache the time formatter**
+- [x] **Step 1: Cache the time formatter**
 
 Add this property to `BatteryView`:
 
@@ -215,7 +215,7 @@ private func timeString() -> String {
 }
 ```
 
-- [ ] **Step 2: Apply the approved four-point dot gap**
+- [x] **Step 2: Apply the approved four-point dot gap**
 
 Change:
 
@@ -225,7 +225,7 @@ let dotToValueGap: CGFloat = 4
 
 Keep `percentValueX`, `maximumPulseRadius`, glow diameter, and dot center Y unchanged.
 
-- [ ] **Step 3: Reduce pulse rendering to 15 FPS without slowing the pulse**
+- [x] **Step 3: Reduce pulse rendering to 15 FPS without slowing the pulse**
 
 Change `advancePulse()` and the timer setup to:
 
@@ -239,7 +239,7 @@ pulseTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 15.0, repeats: true) {
 }
 ```
 
-- [ ] **Step 4: Run all source-contract tests**
+- [x] **Step 4: Run all source-contract tests**
 
 Run:
 
@@ -249,7 +249,7 @@ python3 -m unittest tests.test_swift_runtime_contract -v
 
 Expected: all five tests pass.
 
-- [ ] **Step 5: Run the full Python suite**
+- [x] **Step 5: Run the full Python suite**
 
 Run:
 
@@ -259,7 +259,7 @@ python3 -m unittest discover -s tests -p 'test_*.py'
 
 Expected: all legacy and Swift contract tests pass.
 
-- [ ] **Step 6: Commit rendering optimization**
+- [x] **Step 6: Commit rendering optimization**
 
 ```bash
 git add BatteryPowerWidget.swift
@@ -273,7 +273,7 @@ git commit -m "perf: reduce status glow rendering cost"
 - Verify: `BatteryPowerWidget.swift`
 - Verify: `scripts/install.sh`
 
-- [ ] **Step 1: Build the WidgetKit extension**
+- [x] **Step 1: Build the WidgetKit extension**
 
 Run:
 
@@ -288,7 +288,7 @@ xcrun xcodebuild \
 
 Expected: `** BUILD SUCCEEDED **`.
 
-- [ ] **Step 2: Install and launch the fresh app bundle**
+- [x] **Step 2: Install and launch the fresh app bundle**
 
 Run:
 
@@ -299,7 +299,7 @@ open "$HOME/Applications/电池功率.app"
 
 Expected: installation succeeds and the AppKit panel appears.
 
-- [ ] **Step 3: Verify five-second snapshot and WidgetKit synchronization**
+- [x] **Step 3: Verify five-second snapshot and WidgetKit synchronization**
 
 Observe the snapshot and timeline modification times for at least 15 seconds:
 
@@ -314,7 +314,7 @@ done
 
 Expected: both timestamps advance together approximately every five seconds; the snapshot no longer advances every second.
 
-- [ ] **Step 4: Verify successful WidgetKit reloads**
+- [x] **Step 4: Verify successful WidgetKit reloads**
 
 Run:
 
@@ -326,11 +326,11 @@ Run:
 
 Expected: recent `Reload success` entries and no new bundle-version mismatch.
 
-- [ ] **Step 5: Verify the visual states manually**
+- [x] **Step 5: Verify the visual states manually**
 
 Check charging, adapter-full, and discharging states. Confirm the dot and glow moved four points toward the percentage without touching it, all text remains unclipped, and no other UI changed.
 
-- [ ] **Step 6: Measure CPU after warm-up**
+- [x] **Step 6: Measure CPU after warm-up**
 
 Run:
 
@@ -344,7 +344,7 @@ done
 
 Expected: sustained CPU is materially below the previous 10-13% single-core baseline, with memory remaining in the same general range.
 
-- [ ] **Step 7: Check repository state and commit plan completion**
+- [x] **Step 7: Check repository state and commit plan completion**
 
 Update the task checkboxes in this plan, then run:
 
