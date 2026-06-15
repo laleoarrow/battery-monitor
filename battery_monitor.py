@@ -16,14 +16,13 @@ from datetime import datetime
 # Runtime copy is installed to ~/.battery_monitor.py by scripts/install.sh.
 
 CFG = os.path.expanduser("~/.battery_monitor.cfg")
-CONFIG_VERSION = 2
+CONFIG_VERSION = 3
 
 DEFAULT_CONFIG = {
     "config_version": CONFIG_VERSION,
     "x": 200,
     "y": 100,
     "pinned": False,
-    "desktop_mode": True,
 }
 
 COMPACT_W, COMPACT_H = 319, 90
@@ -96,8 +95,6 @@ def load_config(path=CFG):
         config[key] = saved.get(key, default)
 
     if saved_version < CONFIG_VERSION:
-        config["pinned"] = DEFAULT_CONFIG["pinned"]
-        config["desktop_mode"] = DEFAULT_CONFIG["desktop_mode"]
         config["config_version"] = CONFIG_VERSION
 
     try:
@@ -105,7 +102,6 @@ def load_config(path=CFG):
         config["x"] = int(config["x"])
         config["y"] = int(config["y"])
         config["pinned"] = bool(config["pinned"])
-        config["desktop_mode"] = bool(config["desktop_mode"])
     except Exception:
         return dict(DEFAULT_CONFIG)
     return config
@@ -113,7 +109,9 @@ def load_config(path=CFG):
 
 def save_config(config, path=CFG):
     serializable = dict(DEFAULT_CONFIG)
-    serializable.update(config)
+    for key in DEFAULT_CONFIG:
+        if key in config:
+            serializable[key] = config[key]
     with open(path, "w", encoding="utf-8") as f:
         json.dump(serializable, f, ensure_ascii=False)
 
@@ -520,20 +518,8 @@ def persist_window_config():
 
 
 def apply_window_mode():
-    desktop_mode = bool(app_config["desktop_mode"])
-    topmost = bool(app_config["pinned"]) and not desktop_mode
-    root.attributes("-topmost", False if desktop_mode else topmost)
-    if not desktop_mode:
-        root.attributes("-topmost", topmost)
+    root.attributes("-topmost", bool(app_config["pinned"]))
     root.attributes("-alpha", 1.0)
-
-
-def toggle_desktop_mode():
-    app_config["desktop_mode"] = not app_config["desktop_mode"]
-    if app_config["desktop_mode"]:
-        app_config["pinned"] = False
-    apply_window_mode()
-    persist_window_config()
 
 
 def toggle_pin_menu():
@@ -544,9 +530,7 @@ def toggle_pin_menu():
 
 def show_context_menu(event):
     menu.delete(0, "end")
-    desktop_mark = "✓ " if app_config["desktop_mode"] else ""
     pin_mark = "✓ " if app_config["pinned"] else ""
-    menu.add_command(label=f"{desktop_mark}桌面模式", command=toggle_desktop_mode)
     menu.add_command(label=f"{pin_mark}置顶", command=toggle_pin_menu)
     menu.add_separator()
     menu.add_command(label="退出", command=close_app)
@@ -577,8 +561,7 @@ def _bind_events():
 
 def reveal_window():
     root.deiconify()
-    if not bool(app_config["desktop_mode"]):
-        root.lift()
+    root.lift()
     apply_window_mode()
 
 

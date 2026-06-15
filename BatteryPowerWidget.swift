@@ -3,7 +3,7 @@ import CoreGraphics
 import Darwin
 import Foundation
 
-private let currentConfigVersion = 2
+private let currentConfigVersion = 3
 private let widgetWidth: CGFloat = 319
 private let widgetHeight: CGFloat = 90
 
@@ -21,7 +21,6 @@ struct WidgetConfig {
     var x: Int = 200
     var y: Int = 100
     var pinned: Bool = false
-    var desktopMode: Bool = true
 }
 
 struct PowerSnapshot {
@@ -62,12 +61,9 @@ final class ConfigStore {
         config.x = object["x"] as? Int ?? config.x
         config.y = object["y"] as? Int ?? config.y
         config.pinned = object["pinned"] as? Bool ?? config.pinned
-        config.desktopMode = object["desktop_mode"] as? Bool ?? config.desktopMode
 
         if savedVersion < currentConfigVersion {
             config.configVersion = currentConfigVersion
-            config.pinned = WidgetConfig().pinned
-            config.desktopMode = WidgetConfig().desktopMode
         }
         return config
     }
@@ -78,7 +74,6 @@ final class ConfigStore {
             "x": config.x,
             "y": config.y,
             "pinned": config.pinned,
-            "desktop_mode": config.desktopMode,
         ]
         if let data = try? JSONSerialization.data(withJSONObject: object, options: []) {
             try? data.write(to: url)
@@ -418,7 +413,9 @@ final class AppController: NSObject, NSApplicationDelegate {
     private var pulseTimer: Timer?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        ProcessInfo.processInfo.disableAutomaticTermination("Battery power monitor keeps a live floating window and widget snapshot current.")
         NSApp.setActivationPolicy(.accessory)
+        ConfigStore.shared.save(config)
         view.controller = self
 
         let panel = WidgetWindow(
@@ -430,6 +427,7 @@ final class AppController: NSObject, NSApplicationDelegate {
         panel.isOpaque = false
         panel.backgroundColor = .clear
         panel.hasShadow = false
+        panel.isReleasedWhenClosed = false
         panel.contentView = view
         panel.isMovableByWindowBackground = false
         panel.hidesOnDeactivate = false
@@ -452,9 +450,6 @@ final class AppController: NSObject, NSApplicationDelegate {
 
     func showMenu(event: NSEvent) {
         let menu = NSMenu()
-        let desktopItem = NSMenuItem(title: "\(config.desktopMode ? "✓ " : "")桌面模式", action: #selector(toggleDesktopMode), keyEquivalent: "")
-        desktopItem.target = self
-        menu.addItem(desktopItem)
         let pinnedItem = NSMenuItem(title: "\(config.pinned ? "✓ " : "")置顶", action: #selector(togglePinned), keyEquivalent: "")
         pinnedItem.target = self
         menu.addItem(pinnedItem)
@@ -472,15 +467,6 @@ final class AppController: NSObject, NSApplicationDelegate {
             config.y = Int((screen.frame.maxY - window.frame.maxY).rounded())
         }
         ConfigStore.shared.save(config)
-    }
-
-    @objc private func toggleDesktopMode() {
-        config.desktopMode.toggle()
-        if config.desktopMode {
-            config.pinned = false
-        }
-        ConfigStore.shared.save(config)
-        applyWindowMode()
     }
 
     @objc private func togglePinned() {
@@ -502,15 +488,9 @@ final class AppController: NSObject, NSApplicationDelegate {
 
     private func applyWindowMode() {
         guard let window else { return }
-        if config.desktopMode {
-            window.level = .normal
-            window.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
-            window.alphaValue = 0.92
-        } else {
-            window.level = config.pinned ? .floating : .normal
-            window.collectionBehavior = []
-            window.alphaValue = 1
-        }
+        window.level = config.pinned ? .floating : .normal
+        window.collectionBehavior = []
+        window.alphaValue = 1
         window.orderFrontRegardless()
     }
 

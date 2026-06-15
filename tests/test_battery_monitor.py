@@ -113,10 +113,9 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(config["x"], 222)
         self.assertEqual(config["y"], 333)
         self.assertFalse(config["pinned"])
-        self.assertTrue(config["desktop_mode"])
         self.assertEqual(config["config_version"], self.module.CONFIG_VERSION)
 
-    def test_old_json_config_keeps_position_but_moves_to_desktop_widget(self):
+    def test_old_json_config_ignores_removed_desktop_mode(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = pathlib.Path(tmp) / "cfg"
             path.write_text(
@@ -126,12 +125,12 @@ class ConfigTests(unittest.TestCase):
             config = self.module.load_config(path)
         self.assertEqual(config["x"], 444)
         self.assertEqual(config["y"], 555)
-        self.assertFalse(config["pinned"])
-        self.assertTrue(config["desktop_mode"])
+        self.assertTrue(config["pinned"])
+        self.assertNotIn("desktop_mode", config)
 
-    def test_default_config_starts_as_desktop_widget(self):
+    def test_default_config_has_no_desktop_mode(self):
         self.assertFalse(self.module.DEFAULT_CONFIG["pinned"])
-        self.assertTrue(self.module.DEFAULT_CONFIG["desktop_mode"])
+        self.assertNotIn("desktop_mode", self.module.DEFAULT_CONFIG)
 
     def test_source_does_not_use_unsafe_objc_bridge(self):
         source = APP_PATH.read_text(encoding="utf-8")
@@ -154,7 +153,7 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(config["x"], 44)
         self.assertEqual(config["y"], 55)
         self.assertFalse(config["pinned"])
-        self.assertTrue(config["desktop_mode"])
+        self.assertNotIn("desktop_mode", config)
 
 
 if __name__ == "__main__":

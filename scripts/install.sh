@@ -152,7 +152,7 @@ else
 fi
 
 codesign --force --sign - --entitlements "$WIDGET_ENTITLEMENTS" "$WIDGET_DIR" >/dev/null
-codesign --force --sign - "$APP_DIR" >/dev/null
+codesign --force --deep --sign - --preserve-metadata=entitlements "$APP_DIR" >/dev/null
 echo "  ✅ Ad-hoc code signature"
 
 if xcrun pluginkit -a "$WIDGET_DIR" >/dev/null 2>&1; then

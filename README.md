@@ -22,13 +22,12 @@ Built as a small native Swift/AppKit app, it renders a compact floating window w
 ### Features
 
 - **Real-time total power display** — shows system load plus battery charging power, updated every second via `ioreg`
-- **Desktop widget mode by default** — compact rounded widget placed with desktop items unless you choose otherwise
 - **System widget gallery support** — installs a WidgetKit extension so 电池功率 appears in macOS Widgets
 - **Widget snapshot sharing** — the floating app writes the latest power snapshot for the system widget to read
 - **Inline power breakdown** — shows system load and battery charge/discharge power without an expanded mode
 - **Three-state awareness** — distinguishes charging, plugged-full, and battery-only states with a small status dot
 - **macOS-native floating window** with no title bar
-- **Optional always-on-top and mode toggles** via the right-click menu
+- **Optional always-on-top toggle** via the right-click menu
 - **Drag anywhere** to reposition
 
 ### Screenshot

@@ -7,9 +7,9 @@
 ## Current behavior
 
 - **Real-time monitor**: Fetches system telemetry and battery details every second.
-- **Window characteristics**: Compact rounded widget, draggable window, right-click settings, desktop-mode and always-on-top toggles.
+- **Window characteristics**: Compact rounded floating monitor, draggable window, right-click settings, and an always-on-top toggle.
 - **System Widgets support**: Installs a WidgetKit app extension so the app appears in the macOS widget gallery on macOS 14+.
-- **Controls**: No permanent traffic-light controls; right-click menu provides desktop mode, pinning, and exit.
+- **Controls**: No permanent traffic-light controls; right-click menu provides pinning and exit.
 - **Dynamic layout**: The compact layout avoids mixed emoji/text strings and shrinks the main wattage text when necessary.
 - **Three Power States**:
   - **Charging**: Green total power and green status dot.
