@@ -274,7 +274,8 @@ private enum WidgetSnapshotStore {
             .appendingPathComponent("widget-snapshot.json")
     }
 
-    static func save(_ snapshot: PowerSnapshot) {
+    @discardableResult
+    static func save(_ snapshot: PowerSnapshot) -> Bool {
         let payload: [String: Any] = [
             "percent": snapshot.percent,
             "plugged": snapshot.plugged,
@@ -289,8 +290,9 @@ private enum WidgetSnapshotStore {
             try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
             let data = try JSONSerialization.data(withJSONObject: payload)
             try data.write(to: url, options: .atomic)
+            return true
         } catch {
-            return
+            return false
         }
     }
 
@@ -822,9 +824,8 @@ final class AppController: NSObject, NSApplicationDelegate {
         let snapshot = sampler.sample()
         latestSnapshot = snapshot
         view.snapshot = snapshot
-        WidgetSnapshotStore.save(snapshot)
         updateDockTile()
-        requestWidgetTimelineReloadIfNeeded()
+        syncWidgetIfNeeded()
     }
 
     private func applyWindowMode() {
@@ -866,12 +867,15 @@ final class AppController: NSObject, NSApplicationDelegate {
         NSApp.dockTile.display()
     }
 
-    private func requestWidgetTimelineReloadIfNeeded() {
+    private func syncWidgetIfNeeded() {
         let now = Date()
         guard now.timeIntervalSince(lastWidgetReloadRequest) >= widgetReloadRequestInterval else {
             return
         }
         lastWidgetReloadRequest = now
+        guard WidgetSnapshotStore.save(latestSnapshot) else {
+            return
+        }
         WidgetCenter.shared.reloadTimelines(ofKind: widgetKind)
     }
 
