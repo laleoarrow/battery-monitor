@@ -464,8 +464,7 @@ final class AppController: NSObject, NSApplicationDelegate {
     private func applyWindowMode() {
         guard let window else { return }
         if config.desktopMode {
-            let rawLevel = Int(CGWindowLevelForKey(.desktopIconWindow)) + 1
-            window.level = NSWindow.Level(rawValue: rawLevel)
+            window.level = .normal
             window.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
             window.alphaValue = 0.92
         } else {

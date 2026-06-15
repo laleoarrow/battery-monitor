@@ -2,7 +2,7 @@
 
 <div align="center">
   <a href="https://github.com/laleoarrow/battery-monitor/releases">
-    <img src="https://img.shields.io/badge/RELEASE-V1.1.0-1565c0?style=for-the-badge&logo=github&logoColor=white" alt="Release V1.1.0" />
+    <img src="https://img.shields.io/badge/RELEASE-V1.1.1-1565c0?style=for-the-badge&logo=github&logoColor=white" alt="Release V1.1.1" />
   </a>
   <a href="https://github.com/laleoarrow/battery-monitor">
     <img src="https://img.shields.io/badge/PLATFORM-macOS%2012%2B-111111?style=for-the-badge&logo=apple&logoColor=white" alt="Platform macOS 12+" />

@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_NAME="电池功率"
-APP_VERSION="1.1.0"
+APP_VERSION="1.1.1"
 APP_DIR="$HOME/Applications/${APP_NAME}.app"
 MONITOR_SCRIPT="$SCRIPT_DIR/../battery_monitor.py"
 SWIFT_SOURCE="$SCRIPT_DIR/../BatteryPowerWidget.swift"

@@ -50,8 +50,8 @@ The project uses git for version control under `/Users/leoarrow/Project/mypackag
 To create a new version release tag:
 ```bash
 git add .
-git commit -m "chore: release version v1.1.0"
-git tag v1.1.0
+git commit -m "chore: release version v1.1.1"
+git tag v1.1.1
 ```
 
 To sync and push to the remote repository (once origin is set):
