@@ -2,7 +2,7 @@
 
 <div align="center">
   <a href="https://github.com/laleoarrow/battery-monitor/releases">
-    <img src="https://img.shields.io/badge/RELEASE-V1.2.0-1565c0?style=for-the-badge&logo=github&logoColor=white" alt="Release V1.2.0" />
+    <img src="https://img.shields.io/badge/RELEASE-V1.3.0-1565c0?style=for-the-badge&logo=github&logoColor=white" alt="Release V1.3.0" />
   </a>
   <a href="https://github.com/laleoarrow/battery-monitor">
     <img src="https://img.shields.io/badge/PLATFORM-macOS%2012%2B-111111?style=for-the-badge&logo=apple&logoColor=white" alt="Platform macOS 12+" />
@@ -36,6 +36,10 @@ Built as a small native Swift/AppKit app, it renders a compact floating window w
 
 ## Install
 
+Download the latest `.dmg` from [GitHub Releases](https://github.com/laleoarrow/battery-monitor/releases), open it, and drag `电池功率.app` to Applications.
+
+To build from source:
+
 ```bash
 git clone https://github.com/laleoarrow/battery-monitor.git
 cd battery-monitor
@@ -64,6 +68,7 @@ BatteryPowerWidgetExtension.swift  # WidgetKit extension for macOS Widgets
 BatteryPowerWidgetExtension.xcodeproj/  # Xcode target that builds the .appex
 battery_monitor.py        # Legacy Python/Tkinter implementation
 scripts/install.sh        # Installer (builds the .app bundle)
+scripts/package_dmg.sh    # Release packager (builds a drag-install .dmg)
 design/icon/              # App icon assets
 ```
 
@@ -74,7 +79,13 @@ Build and install for development:
 open ~/Applications/电池功率.app
 ```
 
-The floating window updates every second. The macOS system widget reads the latest saved snapshot and refreshes on WidgetKit's schedule.
+The floating window updates every second. The macOS system widget reads the latest saved snapshot and refreshes on WidgetKit's schedule; the host app requests a timeline reload periodically, but macOS may still throttle desktop widget updates.
+
+Build a release DMG:
+
+```bash
+./scripts/package_dmg.sh 1.3.0
+```
 
 ## License
 

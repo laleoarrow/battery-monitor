@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_NAME="电池功率"
-APP_VERSION="1.2.0"
+APP_VERSION="1.3.0"
 APP_DIR="$HOME/Applications/${APP_NAME}.app"
 MONITOR_SCRIPT="$SCRIPT_DIR/../battery_monitor.py"
 SWIFT_SOURCE="$SCRIPT_DIR/../BatteryPowerWidget.swift"
@@ -38,6 +38,7 @@ mkdir -p "$APP_DIR/Contents/PlugIns"
 xcrun swiftc "$SWIFT_SOURCE" \
     -framework AppKit \
     -framework CoreGraphics \
+    -framework WidgetKit \
     -o "$APP_DIR/Contents/MacOS/applet"
 chmod +x "$APP_DIR/Contents/MacOS/applet"
 echo "  ✅ Native app → $APP_DIR/Contents/MacOS/applet"

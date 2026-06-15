@@ -16,16 +16,18 @@ from datetime import datetime
 # Runtime copy is installed to ~/.battery_monitor.py by scripts/install.sh.
 
 CFG = os.path.expanduser("~/.battery_monitor.cfg")
-CONFIG_VERSION = 3
+CONFIG_VERSION = 4
 
 DEFAULT_CONFIG = {
     "config_version": CONFIG_VERSION,
     "x": 200,
     "y": 100,
     "pinned": False,
+    "show_dock_icon": False,
+    "dock_display_mode": "app_icon",
 }
 
-COMPACT_W, COMPACT_H = 319, 90
+COMPACT_W, COMPACT_H = 319, 100
 
 WINDOW_BG = "systemTransparent"
 BG = "#17191F"

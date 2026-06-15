@@ -3,7 +3,7 @@ import Darwin
 import SwiftUI
 import WidgetKit
 
-private let refreshInterval: TimeInterval = 60
+private let refreshInterval: TimeInterval = 5 * 60
 
 private struct BatteryWidgetSnapshot: Codable {
     var percent: Int

@@ -24,6 +24,22 @@ After install, verify the system widget extension is visible to macOS:
 pluginkit -m -v -A -D -i com.leoarrow.battery-monitor.widget
 ```
 
+## Building the release DMG
+
+To build the app and package a user-installable DMG:
+
+```bash
+cd /Users/leoarrow/Project/mypackage/agents/电池功率
+bash scripts/package_dmg.sh 1.3.0
+```
+
+The DMG is written to `dist/电池功率-v1.3.0.dmg` and contains:
+- `电池功率.app`
+- an `Applications` symlink for drag-and-drop installation
+
+The DMG is suitable for GitHub Releases. The app is ad-hoc signed for local use
+unless a Developer ID certificate and notarization flow are added later.
+
 ## Building and generating AppIcon.icns
 
 The app icon is designed in the `design/` folder. If you edit or regenerate the icon PNG file:
