@@ -16,12 +16,14 @@ from datetime import datetime
 # Runtime copy is installed to ~/.battery_monitor.py by scripts/install.sh.
 
 CFG = os.path.expanduser("~/.battery_monitor.cfg")
+CONFIG_VERSION = 2
 
 DEFAULT_CONFIG = {
+    "config_version": CONFIG_VERSION,
     "x": 200,
     "y": 100,
-    "pinned": True,
-    "desktop_mode": False,
+    "pinned": False,
+    "desktop_mode": True,
 }
 
 COMPACT_W, COMPACT_H = 319, 90
@@ -84,11 +86,22 @@ def load_config(path=CFG):
     except Exception:
         return dict(DEFAULT_CONFIG)
 
+    try:
+        saved_version = int(saved.get("config_version", 0))
+    except Exception:
+        saved_version = 0
+
     config = dict(DEFAULT_CONFIG)
     for key, default in DEFAULT_CONFIG.items():
         config[key] = saved.get(key, default)
 
+    if saved_version < CONFIG_VERSION:
+        config["pinned"] = DEFAULT_CONFIG["pinned"]
+        config["desktop_mode"] = DEFAULT_CONFIG["desktop_mode"]
+        config["config_version"] = CONFIG_VERSION
+
     try:
+        config["config_version"] = int(config["config_version"])
         config["x"] = int(config["x"])
         config["y"] = int(config["y"])
         config["pinned"] = bool(config["pinned"])
@@ -278,11 +291,6 @@ def _clear_items():
             child.destroy()
 
 
-def _hex_to_rgb(color):
-    color = color.lstrip("#")
-    return tuple(int(color[i:i + 2], 16) for i in (0, 2, 4))
-
-
 def _inside_round_rect(x, y, width, height, radius):
     if x < 0 or y < 0 or x >= width or y >= height:
         return False
@@ -299,6 +307,11 @@ def _inside_round_rect(x, y, width, height, radius):
             <= radius ** 2
         )
     return True
+
+
+def _hex_to_rgb(color):
+    color = color.lstrip("#")
+    return tuple(int(color[i:i + 2], 16) for i in (0, 2, 4))
 
 
 def _png_chunk(kind, data):
@@ -507,9 +520,12 @@ def persist_window_config():
 
 
 def apply_window_mode():
-    topmost = bool(app_config["pinned"]) and not bool(app_config["desktop_mode"])
-    root.attributes("-topmost", topmost)
-    root.attributes("-alpha", 0.90 if app_config["desktop_mode"] else 1.0)
+    desktop_mode = bool(app_config["desktop_mode"])
+    topmost = bool(app_config["pinned"]) and not desktop_mode
+    root.attributes("-topmost", False if desktop_mode else topmost)
+    if not desktop_mode:
+        root.attributes("-topmost", topmost)
+    root.attributes("-alpha", 1.0)
 
 
 def toggle_desktop_mode():
@@ -559,6 +575,22 @@ def _bind_events():
     _bind_widget_events(root)
 
 
+def reveal_window():
+    root.deiconify()
+    if not bool(app_config["desktop_mode"]):
+        root.lift()
+    apply_window_mode()
+
+
+def _configure_window_shell(window):
+    window.overrideredirect(True)
+    window.configure(bg=WINDOW_BG)
+    try:
+        window.attributes("-transparent", True)
+    except tk.TclError:
+        pass
+
+
 def main():
     global root, menu, app_config
 
@@ -566,12 +598,7 @@ def main():
     root = tk.Tk(baseName="BatteryPowerWidget", className="BatteryPowerWidget")
     root.withdraw()
     root.title("电池功率")
-    root.overrideredirect(True)
-    root.configure(bg=WINDOW_BG)
-    try:
-        root.attributes("-transparent", True)
-    except tk.TclError:
-        pass
+    _configure_window_shell(root)
     root.resizable(False, False)
     root.geometry(
         f"{COMPACT_W}x{COMPACT_H + content_offset_y}"
@@ -583,8 +610,7 @@ def main():
     show_compact()
     _bind_events()
     apply_window_mode()
-    root.after(0, root.deiconify)
-    root.after(10, root.lift)
+    root.after(0, reveal_window)
     root.after(20, apply_window_mode)
     root.after(50, animate)
     root.after(100, update_data)

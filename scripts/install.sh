@@ -4,8 +4,10 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_NAME="电池功率"
+APP_VERSION="1.1.0"
 APP_DIR="$HOME/Applications/${APP_NAME}.app"
 MONITOR_SCRIPT="$SCRIPT_DIR/../battery_monitor.py"
+SWIFT_SOURCE="$SCRIPT_DIR/../BatteryPowerWidget.swift"
 INSTALL_PATH="$HOME/.battery_monitor.py"
 
 echo "📦 Installing ${APP_NAME}..."
@@ -19,50 +21,14 @@ rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR/Contents/MacOS"
 mkdir -p "$APP_DIR/Contents/Resources"
 
-# 3. Build native launcher. LaunchServices is more reliable with a Mach-O
-# executable than with a shell script as CFBundleExecutable.
-cat > "$APP_DIR/Contents/MacOS/applet.c" << 'EOF'
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdio.h>
-
-int main(void) {
-    const char *home = getenv("HOME");
-    const char *pythons[] = {
-        "/usr/local/bin/python3",
-        "/usr/bin/python3",
-        "/opt/homebrew/bin/python3",
-        NULL
-    };
-    char script[1024];
-
-    if (home == NULL || strlen(home) > 900) {
-        return 1;
-    }
-    snprintf(script, sizeof(script), "%s/.battery_monitor.py", home);
-
-    for (int i = 0; pythons[i] != NULL; i++) {
-        if (access(pythons[i], X_OK) == 0) {
-            execl(pythons[i], pythons[i], script, (char *)NULL);
-            return 1;
-        }
-    }
-
-    execl(
-        "/usr/bin/osascript",
-        "osascript",
-        "-e",
-        "display alert \"电池功率启动失败\" message \"未找到可用的 Python 3 + Tkinter 运行环境。\"",
-        (char *)NULL
-    );
-    return 1;
-}
-EOF
-cc "$APP_DIR/Contents/MacOS/applet.c" -o "$APP_DIR/Contents/MacOS/applet"
-rm -f "$APP_DIR/Contents/MacOS/applet.c"
+# 3. Build native AppKit executable. Tk windows remain rectangular at the
+# window layer; the native panel gives true transparent rounded corners.
+xcrun swiftc "$SWIFT_SOURCE" \
+    -framework AppKit \
+    -framework CoreGraphics \
+    -o "$APP_DIR/Contents/MacOS/applet"
 chmod +x "$APP_DIR/Contents/MacOS/applet"
-echo "  ✅ Launcher → $APP_DIR/Contents/MacOS/applet"
+echo "  ✅ Native app → $APP_DIR/Contents/MacOS/applet"
 
 # 4. Write Info.plist
 cat > "$APP_DIR/Contents/Info.plist" << EOF
@@ -78,9 +44,9 @@ cat > "$APP_DIR/Contents/Info.plist" << EOF
     <key>CFBundleIdentifier</key>
     <string>com.leoarrow.battery-monitor</string>
     <key>CFBundleVersion</key>
-    <string>1.0.0</string>
+    <string>${APP_VERSION}</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.0</string>
+    <string>${APP_VERSION}</string>
     <key>CFBundleExecutable</key>
     <string>applet</string>
     <key>CFBundlePackageType</key>
@@ -95,6 +61,8 @@ cat > "$APP_DIR/Contents/Info.plist" << EOF
     <true/>
     <key>LSMinimumSystemVersion</key>
     <string>12.0</string>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
 </dict>
 </plist>
 EOF
@@ -108,6 +76,9 @@ if [ -f "$ICON_SRC" ]; then
 else
     echo "  ⚠️  No AppIcon.icns found, skipping icon"
 fi
+
+codesign --force --deep --sign - "$APP_DIR" >/dev/null
+echo "  ✅ Ad-hoc code signature"
 
 echo ""
 echo "🎉 Done! Open from ~/Applications/${APP_NAME}.app"

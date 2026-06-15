@@ -4,9 +4,10 @@
 
 To run and verify changes locally:
 ```bash
-/usr/local/bin/python3 /Users/leoarrow/Project/mypackage/agents/电池功率/battery_monitor.py
+xcrun swiftc /Users/leoarrow/Project/mypackage/agents/电池功率/BatteryPowerWidget.swift -framework AppKit -framework CoreGraphics -o /tmp/BatteryPowerWidget-test
+/tmp/BatteryPowerWidget-test
 ```
-This launches the widget directly. You can drag it around, verify text layouts, and close it from the right-click menu.
+This launches the native widget directly. You can drag it around, verify text layouts, and close it from the right-click menu.
 
 ## Required handoff after any code change
 
@@ -24,7 +25,7 @@ Before claiming a fix or feature is ready, complete this checklist:
    ```
 5. Quit the currently running instances of the app:
    ```bash
-   pkill -f battery_monitor.py
+   pkill -f '电池功率.app/Contents/MacOS/applet|BatteryPowerWidget-test'
    ```
 6. Launch the installed app bundle to verify runtime stability:
    ```bash
@@ -35,30 +36,25 @@ Before claiming a fix or feature is ready, complete this checklist:
 
 ## Common runtime checks and fixes
 
-### 1. Window shell appears but text is missing
-- **Symptom**: The window frame appears, but power text and status labels do not render.
-- **Root cause**: On this Mac, the Xcode Python Tk runtime can show the window shell without reliably rendering child widgets.
-- **Fix**: Use `/usr/local/bin/python3` first. The installer intentionally prefers `/usr/local/bin/python3` before `/usr/bin/python3`.
-
-### 2. Rectangular background around rounded corners
+### 1. Rectangular background around rounded corners
 - **Symptom**: The rounded widget has square background color visible around its corners.
-- **Root cause**: macOS/Tk top-level transparency works at the window level, but `Canvas` is still a rectangular drawing surface.
-- **Fix**: Keep the top-level window background as `systemTransparent`, use `-transparent`, and render the rounded shell as a PNG with transparent corner pixels.
+- **Root cause**: Tk windows and child widgets remain rectangular at the window layer.
+- **Fix**: Use the native Swift/AppKit `NSPanel` entrypoint. It sets `isOpaque = false`, `backgroundColor = .clear`, and draws the rounded widget inside a transparent window.
 
-### 3. Overlapping text and status alignment
+### 2. Overlapping text and status alignment
 - **Symptom**: Total power, status dot, percentage, or lower-row metrics overlap in compact mode.
-- **Root cause**: The compact widget uses fixed-size Label placements to keep the window tiny.
+- **Root cause**: The compact widget uses fixed-position text drawing to keep the window tiny.
 - **Fix**: Keep all secondary values in the lower row, and shrink the main wattage text before it reaches the status area.
 
 ## Useful commands
 
 - **List running instances**:
   ```bash
-  ps aux | grep -i battery_monitor.py
+  ps aux | grep -i '电池功率.app/Contents/MacOS/applet'
   ```
 - **Kill running instances**:
   ```bash
-  pkill -f battery_monitor.py
+  pkill -f '电池功率.app/Contents/MacOS/applet|BatteryPowerWidget-test'
   ```
 - **Launch the app bundle**:
   ```bash

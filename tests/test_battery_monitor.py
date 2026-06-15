@@ -112,8 +112,31 @@ class ConfigTests(unittest.TestCase):
             config = self.module.load_config(path)
         self.assertEqual(config["x"], 222)
         self.assertEqual(config["y"], 333)
-        self.assertTrue(config["pinned"])
-        self.assertFalse(config["desktop_mode"])
+        self.assertFalse(config["pinned"])
+        self.assertTrue(config["desktop_mode"])
+        self.assertEqual(config["config_version"], self.module.CONFIG_VERSION)
+
+    def test_old_json_config_keeps_position_but_moves_to_desktop_widget(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = pathlib.Path(tmp) / "cfg"
+            path.write_text(
+                '{"x": 444, "y": 555, "pinned": true, "desktop_mode": false}',
+                encoding="utf-8",
+            )
+            config = self.module.load_config(path)
+        self.assertEqual(config["x"], 444)
+        self.assertEqual(config["y"], 555)
+        self.assertFalse(config["pinned"])
+        self.assertTrue(config["desktop_mode"])
+
+    def test_default_config_starts_as_desktop_widget(self):
+        self.assertFalse(self.module.DEFAULT_CONFIG["pinned"])
+        self.assertTrue(self.module.DEFAULT_CONFIG["desktop_mode"])
+
+    def test_source_does_not_use_unsafe_objc_bridge(self):
+        source = APP_PATH.read_text(encoding="utf-8")
+        self.assertNotIn("ctypes", source)
+        self.assertNotIn("objc_msgSend", source)
 
     def test_save_and_load_config_round_trip(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -18,19 +18,17 @@
 ## External dependencies
 
 - **`ioreg` tool**: Standard macOS command-line utility used to query battery status (`ioreg -rd1 -c AppleSmartBattery`).
-- **Python 3 & Tkinter**: The main programming language and GUI framework used to draw the custom widget interface.
+- **Swift & AppKit**: The installed app uses a transparent native `NSPanel` so rounded corners are transparent at the window layer.
+- **Python 3**: `battery_monitor.py` is retained as a legacy/reference implementation for parsing and tests.
 
 ## Key files
 
-- `battery_monitor.py` — Main python script containing transparent window setup, generated PNG rounded background, label layout, drag bindings, and telemetry updating logic.
-- `scripts/install.sh` — Bash installation script that creates the macOS app wrapper bundle `电池功率.app` under `~/Applications/` and copies the monitor script to `~/.battery_monitor.py`.
+- `BatteryPowerWidget.swift` — Native AppKit widget containing transparent window setup, drawing, drag/menu handling, and telemetry updating logic.
+- `battery_monitor.py` — Legacy/reference Python implementation used by tests.
+- `scripts/install.sh` — Bash installation script that compiles the Swift executable and creates the macOS app bundle `电池功率.app` under `~/Applications/`.
 - `design/icon/AppIcon.icns` — Pre-compiled macOS icns file containing resolutions from 16x16 to 512x512, used as the app bundle's application icon.
 
 ## Application Architecture
 
-The app is packaged as a standard macOS wrapper bundle (`电池功率.app`) which contains a bash launcher at `Contents/MacOS/applet`.
-When the user launches the app, macOS runs this launcher script, which executes:
-```bash
-exec "$PYTHON_BIN" "$HOME/.battery_monitor.py"
-```
-The launcher selects the first available Python 3 binary from `/usr/local/bin/python3`, `/usr/bin/python3`, and `/opt/homebrew/bin/python3`. `/usr/local/bin/python3` is preferred on this Mac because the Xcode Python Tk runtime can show the window shell without rendering child widgets. The application runs as a background process with no Dock icon (`LSUIElement=true` in `Info.plist`), and presents its custom Tkinter window on screen.
+The app is packaged as a standard macOS app bundle (`电池功率.app`) with a native Swift executable at `Contents/MacOS/applet`.
+The application runs as a background process with no Dock icon (`LSUIElement=true` in `Info.plist`) and presents a transparent borderless AppKit panel on screen.

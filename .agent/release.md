@@ -10,9 +10,11 @@ bash scripts/install.sh
 This script performs the following actions:
 1. Copies the python script `battery_monitor.py` to `$HOME/.battery_monitor.py`.
 2. Creates the app structure at `$HOME/Applications/电池功率.app/`.
-3. Generates the launcher script at `Contents/MacOS/applet` wrapping the python launch.
+3. Compiles `BatteryPowerWidget.swift` to the native executable at `Contents/MacOS/applet`.
 4. Generates the `Contents/Info.plist` with app metadata and hides the Dock icon (`LSUIElement=true`).
 5. Copies the custom application icon `design/icon/AppIcon.icns` if present into the app bundle resources.
+
+The Python script is still copied to `$HOME/.battery_monitor.py` for compatibility/reference, but the installed app runs the native Swift/AppKit executable.
 
 ## Building and generating AppIcon.icns
 
@@ -48,8 +50,8 @@ The project uses git for version control under `/Users/leoarrow/Project/mypackag
 To create a new version release tag:
 ```bash
 git add .
-git commit -m "chore: release version v1.0.0"
-git tag v1.0.0
+git commit -m "chore: release version v1.1.0"
+git tag v1.1.0
 ```
 
 To sync and push to the remote repository (once origin is set):
