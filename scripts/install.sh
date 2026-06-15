@@ -6,6 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_NAME="电池功率"
 APP_VERSION="1.3.0"
 APP_DIR="$HOME/Applications/${APP_NAME}.app"
+APP_BUNDLE_ID="com.leoarrow.battery-monitor"
 MONITOR_SCRIPT="$SCRIPT_DIR/../battery_monitor.py"
 SWIFT_SOURCE="$SCRIPT_DIR/../BatteryPowerWidget.swift"
 WIDGET_PROJECT="$SCRIPT_DIR/../BatteryPowerWidgetExtension.xcodeproj"
@@ -13,6 +14,8 @@ INSTALL_PATH="$HOME/.battery_monitor.py"
 WIDGET_NAME="BatteryPowerWidgetExtension"
 WIDGET_BUNDLE_ID="com.leoarrow.battery-monitor.widget"
 WIDGET_DIR="$APP_DIR/Contents/PlugIns/${WIDGET_NAME}.appex"
+WIDGET_TIMELINE_DIR="$HOME/Library/Containers/$WIDGET_BUNDLE_ID/Data/SystemData/com.apple.chrono/timelines/BatteryPowerSystemWidget"
+LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
 APP_ENTITLEMENTS="$SCRIPT_DIR/../BatteryPowerApp.entitlements"
 WIDGET_ENTITLEMENTS="$SCRIPT_DIR/../BatteryPowerWidgetExtension.entitlements"
 WIDGET_BUILD_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/battery-widget-build.XXXXXX")"
@@ -28,6 +31,11 @@ cp "$MONITOR_SCRIPT" "$INSTALL_PATH"
 echo "  ✅ Script → $INSTALL_PATH"
 
 # 2. Recreate app bundle structure
+pkill -f "$APP_DIR/Contents/MacOS/applet" 2>/dev/null || true
+if [ -d "$APP_DIR" ]; then
+    xcrun pluginkit -r "$WIDGET_DIR" >/dev/null 2>&1 || true
+    "$LSREGISTER" -u "$APP_DIR" >/dev/null 2>&1 || true
+fi
 rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR/Contents/MacOS"
 mkdir -p "$APP_DIR/Contents/Resources"
@@ -73,7 +81,7 @@ cat > "$APP_DIR/Contents/Info.plist" << EOF
     <key>CFBundleDisplayName</key>
     <string>${APP_NAME}</string>
     <key>CFBundleIdentifier</key>
-    <string>com.leoarrow.battery-monitor</string>
+    <string>${APP_BUNDLE_ID}</string>
     <key>CFBundleVersion</key>
     <string>${APP_VERSION}</string>
     <key>CFBundleShortVersionString</key>
@@ -113,11 +121,17 @@ codesign --force --sign - --entitlements "$APP_ENTITLEMENTS" "$APP_DIR" >/dev/nu
 codesign --force --deep --sign - --preserve-metadata=entitlements "$APP_DIR" >/dev/null
 echo "  ✅ Ad-hoc code signature"
 
+"$LSREGISTER" -f "$APP_DIR" >/dev/null
 if xcrun pluginkit -a "$WIDGET_DIR" >/dev/null 2>&1; then
     echo "  ✅ WidgetKit extension registered"
 else
     echo "  ⚠️  WidgetKit extension built; macOS may index it after opening the app"
 fi
+
+# WidgetKit caches a bundle stub with each archived timeline. Replacing an
+# ad-hoc-signed development build under the same version invalidates that stub.
+rm -rf "$WIDGET_TIMELINE_DIR"
+killall chronod >/dev/null 2>&1 || true
 
 echo ""
 echo "🎉 Done! Open from ~/Applications/${APP_NAME}.app"
