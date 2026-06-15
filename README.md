@@ -15,16 +15,15 @@
 
 ## What is 电池功率?
 
-A minimal macOS floating widget that shows real-time total power, battery level, and detailed power breakdowns at a glance.
+A minimal macOS floating widget that shows real-time total power, battery level, system load, and battery charge/discharge power at a glance.
 
 Built with Python + Tkinter, it renders a compact floating window with no Dock icon — designed to stay out of your way while keeping power data visible.
 
 ### Features
 
 - **Real-time total power display** — shows system load plus battery charging power, updated every second via `ioreg`
-- **Minimal desktop widget mode** — compact total-power strip with right-click settings
-- **Cmd-hover details** — temporarily expands to show system power and battery charge/discharge power
-- **Optional advanced estimates** — CPU/GPU/ANE estimates are off by default and require administrator sampling
+- **Minimal desktop widget mode** — compact rounded widget with right-click settings
+- **Inline power breakdown** — shows system load and battery charge/discharge power without an expanded mode
 - **Three-state awareness** — distinguishes charging, plugged-full, and battery-only states with a small status dot
 - **macOS-native floating window** with no title bar
 - **Always-on-top and desktop-mode toggles** via the right-click menu

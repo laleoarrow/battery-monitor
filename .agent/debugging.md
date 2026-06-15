@@ -40,10 +40,15 @@ Before claiming a fix or feature is ready, complete this checklist:
 - **Root cause**: On this Mac, the Xcode Python Tk runtime can show the window shell without reliably rendering child widgets.
 - **Fix**: Use `/usr/local/bin/python3` first. The installer intentionally prefers `/usr/local/bin/python3` before `/usr/bin/python3`.
 
-### 2. Overlapping text and status alignment
-- **Symptom**: Total power, status dot, or percentage overlap in compact mode, or detail labels clip in expanded mode.
+### 2. Rectangular background around rounded corners
+- **Symptom**: The rounded widget has square background color visible around its corners.
+- **Root cause**: macOS/Tk top-level transparency works at the window level, but `Canvas` is still a rectangular drawing surface.
+- **Fix**: Keep the top-level window background as `systemTransparent`, use `-transparent`, and render the rounded shell as a PNG with transparent corner pixels.
+
+### 3. Overlapping text and status alignment
+- **Symptom**: Total power, status dot, percentage, or lower-row metrics overlap in compact mode.
 - **Root cause**: The compact widget uses fixed-size Label placements to keep the window tiny.
-- **Fix**: Keep compact mode to the three primary elements only: total power, status dot, and percentage. Put secondary details only in the expanded view.
+- **Fix**: Keep all secondary values in the lower row, and shrink the main wattage text before it reaches the status area.
 
 ## Useful commands
 

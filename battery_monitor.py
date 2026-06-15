@@ -1,10 +1,15 @@
+import base64
 import json
 import os
 import re
+import struct
 import subprocess
 import sys
 import tkinter as tk
+import tkinter.font as tkfont
+import zlib
 from dataclasses import dataclass
+from datetime import datetime
 
 
 # 电池功率 — macOS floating battery power monitor.
@@ -17,19 +22,18 @@ DEFAULT_CONFIG = {
     "y": 100,
     "pinned": True,
     "desktop_mode": False,
-    "advanced_power": False,
 }
 
-COMPACT_W, COMPACT_H = 238, 58
-EXPANDED_W, EXPANDED_H = 330, 132
+COMPACT_W, COMPACT_H = 319, 90
 
-BG = "#17191D"
-BORDER = "#30343B"
-MUTED = "#8A8F9B"
-SUBTLE = "#71717A"
+WINDOW_BG = "systemTransparent"
+BG = "#17191F"
+BORDER = "#343945"
+INNER_BORDER = "#222733"
+MUTED = "#A6ABB6"
 TEXT = "#F8FAFC"
-GREEN = "#30D158"
-BLUE = "#0A84FF"
+GREEN = "#34E36E"
+BLUE = "#4AA3FF"
 ORANGE = "#FF9F0A"
 RED = "#FF453A"
 
@@ -39,9 +43,6 @@ tgt = {"total": 0.0, "system": 0.0, "charge": 0.0, "discharge": 0.0}
 items = {}
 app_config = dict(DEFAULT_CONFIG)
 current_snapshot = None
-advanced_power = {"status": "disabled"}
-details_visible = False
-cmd_down = False
 _dx = _dy = 0
 content_offset_y = 0
 
@@ -92,7 +93,6 @@ def load_config(path=CFG):
         config["y"] = int(config["y"])
         config["pinned"] = bool(config["pinned"])
         config["desktop_mode"] = bool(config["desktop_mode"])
-        config["advanced_power"] = bool(config["advanced_power"])
     except Exception:
         return dict(DEFAULT_CONFIG)
     return config
@@ -254,71 +254,6 @@ def compute_power_snapshot(info):
     )
 
 
-def parse_powermetrics_output(text):
-    values = {}
-    patterns = {
-        "CPU": r"CPU Power:\s*([0-9.]+)\s*mW",
-        "GPU": r"GPU Power:\s*([0-9.]+)\s*mW",
-        "ANE": r"ANE Power:\s*([0-9.]+)\s*mW",
-    }
-    for label, pattern in patterns.items():
-        match = re.search(pattern, text)
-        if match:
-            values[label] = float(match.group(1)) / 1000.0
-    return values
-
-
-def sample_advanced_power(enabled):
-    if not enabled:
-        return {"status": "disabled"}
-    if hasattr(os, "geteuid") and os.geteuid() != 0:
-        return {"status": "needs_root"}
-    try:
-        out = subprocess.check_output(
-            [
-                "powermetrics",
-                "--samplers",
-                "cpu_power,gpu_power,ane_power",
-                "--sample-rate",
-                "1000",
-                "--sample-count",
-                "1",
-            ],
-            stderr=subprocess.STDOUT,
-            timeout=3,
-        ).decode(errors="replace")
-    except Exception:
-        return {"status": "unavailable"}
-
-    values = parse_powermetrics_output(out)
-    if not values:
-        return {"status": "unavailable"}
-    values["status"] = "ok"
-    return values
-
-
-def format_advanced_summary(enabled, values):
-    status = values.get("status")
-    if not enabled or status == "disabled":
-        return "高级分项关闭"
-    if status == "needs_root":
-        return "高级分项需要管理员权限"
-    if status == "unavailable":
-        return "高级分项不可用"
-
-    parts = []
-    for label in ("CPU", "GPU", "ANE"):
-        if label in values:
-            parts.append(f"{label}估算 {values[label]:.1f} W")
-    return " · ".join(parts) if parts else "高级分项不可用"
-
-
-def get_advanced_summary():
-    return format_advanced_summary(
-        app_config.get("advanced_power", False), advanced_power
-    )
-
-
 def resize_window(width, height):
     match = re.match(r"\d+x\d+([+-]\d+)([+-]\d+)", root.geometry())
     frame_height = height + content_offset_y
@@ -326,12 +261,6 @@ def resize_window(width, height):
         root.geometry(f"{width}x{frame_height}{match.group(1)}{match.group(2)}")
     else:
         root.geometry(f"{width}x{frame_height}+{app_config['x']}+{app_config['y']}")
-    panel.config(width=width, height=frame_height)
-
-
-def _clear_panel():
-    for child in panel.winfo_children():
-        child.destroy()
 
 
 def _bind_widget_events(widget):
@@ -341,50 +270,152 @@ def _bind_widget_events(widget):
     widget.bind("<Button-2>", show_context_menu)
     widget.bind("<Button-3>", show_context_menu)
     widget.bind("<Control-Button-1>", show_context_menu)
-    widget.bind("<Enter>", _enter_widget)
-    widget.bind("<Motion>", _motion_widget)
-    widget.bind("<Leave>", _leave_widget)
 
 
-def _label(text, x, y, font, fg=TEXT, anchor="w"):
+def _clear_items():
+    for child in root.winfo_children():
+        if child is not menu:
+            child.destroy()
+
+
+def _hex_to_rgb(color):
+    color = color.lstrip("#")
+    return tuple(int(color[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def _inside_round_rect(x, y, width, height, radius):
+    if x < 0 or y < 0 or x >= width or y >= height:
+        return False
+    if x < radius and y < radius:
+        return (x - radius) ** 2 + (y - radius) ** 2 <= radius ** 2
+    if x >= width - radius and y < radius:
+        return (x - (width - radius - 1)) ** 2 + (y - radius) ** 2 <= radius ** 2
+    if x < radius and y >= height - radius:
+        return (x - radius) ** 2 + (y - (height - radius - 1)) ** 2 <= radius ** 2
+    if x >= width - radius and y >= height - radius:
+        return (
+            (x - (width - radius - 1)) ** 2
+            + (y - (height - radius - 1)) ** 2
+            <= radius ** 2
+        )
+    return True
+
+
+def _png_chunk(kind, data):
+    return (
+        struct.pack(">I", len(data))
+        + kind
+        + data
+        + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+    )
+
+
+def _rounded_panel_png(width, height, radius):
+    fill = _hex_to_rgb(BG)
+    border = _hex_to_rgb(BORDER)
+    inner = _hex_to_rgb(INNER_BORDER)
+    rows = []
+    scale = 4
+    samples = scale * scale
+
+    for y in range(height):
+        row = bytearray([0])
+        for x in range(width):
+            red = green = blue = alpha = 0
+            for sy in range(scale):
+                for sx in range(scale):
+                    px = x + (sx + 0.5) / scale
+                    py = y + (sy + 0.5) / scale
+                    if not _inside_round_rect(px, py, width, height, radius):
+                        continue
+                    if not _inside_round_rect(px - 1.5, py - 1.5, width - 3, height - 3, radius - 2):
+                        color = border
+                    elif not _inside_round_rect(px - 3.0, py - 3.0, width - 6, height - 6, radius - 4):
+                        color = inner
+                    else:
+                        color = fill
+                    red += color[0]
+                    green += color[1]
+                    blue += color[2]
+                    alpha += 255
+            if alpha:
+                covered = alpha // 255
+                row += bytes((
+                    red // covered,
+                    green // covered,
+                    blue // covered,
+                    round(alpha / samples),
+                ))
+            else:
+                row += b"\x00\x00\x00\x00"
+        rows.append(bytes(row))
+
+    raw = b"".join(rows)
+    png = (
+        b"\x89PNG\r\n\x1a\n"
+        + _png_chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0))
+        + _png_chunk(b"IDAT", zlib.compress(raw, 9))
+        + _png_chunk(b"IEND", b"")
+    )
+    return base64.b64encode(png).decode("ascii")
+
+
+def _label(text, x, y, font, fg=TEXT, bg=BG, anchor="w"):
     label = tk.Label(
-        panel,
+        root,
         text=text,
         fg=fg,
-        bg=BG,
+        bg=bg,
         font=font,
         bd=0,
         padx=0,
         pady=0,
+        highlightthickness=0,
     )
     label.place(x=x, y=y, anchor=anchor)
     _bind_widget_events(label)
     return label
 
 
+def _compact_metric_group(x, y, label, value="-- W", value_fill=TEXT):
+    label_id = _label(label, x, y, ("Helvetica Neue", 12, "bold"), MUTED)
+    value_id = _label(value, x + 34, y, ("Helvetica Neue", 12, "bold"), value_fill)
+    return label_id, value_id
+
+
 def create_compact_items():
-    _clear_panel()
-    y = content_offset_y
-    return {
-        "total": _label("-- W", 14, y + 29, ("Helvetica Neue", 24, "bold")),
-        "dot": _label("●", COMPACT_W - 68, y + 29, ("Helvetica Neue", 14), MUTED, "center"),
-        "pct": _label("--%", COMPACT_W - 14, y + 29, ("Helvetica Neue", 16, "bold"), TEXT, "e"),
-    }
+    _clear_items()
+    panel_image = tk.PhotoImage(
+        data=_rounded_panel_png(COMPACT_W, COMPACT_H, 22),
+        format="png",
+    )
+    background = tk.Label(
+        root,
+        image=panel_image,
+        bg=WINDOW_BG,
+        bd=0,
+        highlightthickness=0,
+        padx=0,
+        pady=0,
+    )
+    background.image = panel_image
+    background.place(x=0, y=0, width=COMPACT_W, height=COMPACT_H)
+    _bind_widget_events(background)
 
-
-def create_expanded_items():
-    _clear_panel()
-    y = content_offset_y
-    divider = tk.Frame(panel, bg="#2D323A", bd=0, height=1)
-    divider.place(x=14, y=y + 58, width=EXPANDED_W - 28, height=1)
+    dot = _label("●", 238, 27, ("Helvetica Neue", 13), MUTED, anchor="center")
+    load_label, load_value = _compact_metric_group(20, 70, "负载")
+    charge_label, charge_value = _compact_metric_group(142, 70, "充电", value_fill=GREEN)
     return {
-        "total": _label("-- W", 14, y + 30, ("Helvetica Neue", 24, "bold")),
-        "dot": _label("●", EXPANDED_W - 68, y + 30, ("Helvetica Neue", 14), MUTED, "center"),
-        "pct": _label("--%", EXPANDED_W - 14, y + 30, ("Helvetica Neue", 16, "bold"), TEXT, "e"),
-        "system": _label("整机 -- W", 16, y + 76, ("Helvetica Neue", 12), MUTED),
-        "battery": _label("电池 -- W", 16, y + 97, ("Helvetica Neue", 12), MUTED),
-        "state": _label("--", EXPANDED_W - 16, y + 76, ("Helvetica Neue", 12), MUTED, "e"),
-        "advanced": _label("高级分项关闭", 16, y + 118, ("Helvetica Neue", 11), SUBTLE),
+        "background": background,
+        "total": _label("--", 20, 32, ("Helvetica Neue", 32, "bold"), TEXT),
+        "unit": _label("W", 95, 35, ("Helvetica Neue", 15, "bold"), MUTED),
+        "dot": dot,
+        "pct": _label("--%", 250, 31, ("Helvetica Neue", 17, "bold"), TEXT),
+        "load_label": load_label,
+        "load": load_value,
+        "battery_label": charge_label,
+        "battery": charge_value,
+        "time": _label("--:--", COMPACT_W - 19, 70, ("Helvetica Neue", 12, "bold"), MUTED, anchor="e"),
     }
 
 
@@ -393,59 +424,51 @@ def _fmt_w(value):
 
 
 def _fit_text(item_id, text, max_width, sizes, weight="bold"):
-    del max_width
-    size = sizes[0]
-    if len(text) >= 8 and len(sizes) > 2:
-        size = sizes[2]
-    elif len(text) >= 7 and len(sizes) > 1:
-        size = sizes[1]
-    item_id.config(text=text, font=("Helvetica Neue", size, weight))
+    for size in sizes:
+        font = ("Helvetica Neue", size, weight)
+        if tkfont.Font(font=font).measure(text) <= max_width:
+            item_id.config(text=text, font=font)
+            return size
+    font = ("Helvetica Neue", sizes[-1], weight)
+    item_id.config(text=text, font=font)
+    return sizes[-1]
 
 
-def _battery_detail_text(snapshot):
+def _battery_compact_label(snapshot):
     if snapshot.battery_charge_w > 0.05:
-        return f"电池充电 {_fmt_w(anim['charge'])}"
+        return "充电", _fmt_w(anim["charge"]), GREEN
     if snapshot.battery_discharge_w > 0.05:
-        return f"电池放电 {_fmt_w(anim['discharge'])}"
-    return "电池 0.0 W"
+        return "放电", _fmt_w(anim["discharge"]), RED if snapshot.percent <= 20 else TEXT
+    return "电池", "0.0 W", MUTED
 
 
 def _apply_snapshot_to_items(snapshot):
-    total_text = _fmt_w(anim["total"])
-    max_total_width = (EXPANDED_W if details_visible else COMPACT_W) - 112
-    _fit_text(items["total"], total_text, max_total_width, (24, 22, 20, 18))
+    total_text = f"{anim['total']:.1f}"
+    size = _fit_text(items["total"], total_text, 150, (32, 30, 28, 26))
+    total_width = tkfont.Font(font=("Helvetica Neue", size, "bold")).measure(total_text)
     items["total"].config(fg=snapshot.hero_color)
+    items["unit"].config(fg=MUTED)
+    items["unit"].place(x=max(20 + total_width + 8, 95), y=35, anchor="w")
     items["dot"].config(fg=snapshot.status_color)
     items["pct"].config(text=f"{snapshot.percent}%", fg=snapshot.status_color)
+    items["load"].config(text=_fmt_w(anim["system"]))
 
-    if details_visible:
-        items["system"].config(text=f"整机 {_fmt_w(anim['system'])}")
-        items["battery"].config(text=_battery_detail_text(snapshot))
-        items["state"].config(text=snapshot.status_label, fg=snapshot.status_color)
-        items["advanced"].config(text=get_advanced_summary())
+    battery_label, battery_value, battery_color = _battery_compact_label(snapshot)
+    items["battery_label"].config(text=battery_label)
+    items["battery"].config(text=battery_value, fg=battery_color)
+    items["time"].config(text=datetime.now().strftime("%H:%M"))
 
 
 def show_compact():
-    global details_visible, items
-    details_visible = False
+    global items
     resize_window(COMPACT_W, COMPACT_H)
     items = create_compact_items()
     if current_snapshot:
         _apply_snapshot_to_items(current_snapshot)
 
 
-def show_details():
-    global details_visible, items, advanced_power
-    details_visible = True
-    resize_window(EXPANDED_W, EXPANDED_H)
-    items = create_expanded_items()
-    advanced_power = sample_advanced_power(app_config.get("advanced_power", False))
-    if current_snapshot:
-        _apply_snapshot_to_items(current_snapshot)
-
-
 def update_data():
-    global current_snapshot, advanced_power
+    global current_snapshot
     info = get_battery_info()
     if not info:
         if "total" in items:
@@ -459,8 +482,6 @@ def update_data():
     tgt["system"] = snapshot.system_w
     tgt["charge"] = snapshot.battery_charge_w
     tgt["discharge"] = snapshot.battery_discharge_w
-    if details_visible:
-        advanced_power = sample_advanced_power(app_config.get("advanced_power", False))
     _apply_snapshot_to_items(snapshot)
     root.after(1000, update_data)
 
@@ -488,7 +509,7 @@ def persist_window_config():
 def apply_window_mode():
     topmost = bool(app_config["pinned"]) and not bool(app_config["desktop_mode"])
     root.attributes("-topmost", topmost)
-    root.attributes("-alpha", 0.86 if app_config["desktop_mode"] else 0.95)
+    root.attributes("-alpha", 0.90 if app_config["desktop_mode"] else 1.0)
 
 
 def toggle_desktop_mode():
@@ -505,23 +526,12 @@ def toggle_pin_menu():
     persist_window_config()
 
 
-def toggle_advanced_power():
-    global advanced_power
-    app_config["advanced_power"] = not app_config["advanced_power"]
-    advanced_power = sample_advanced_power(app_config["advanced_power"])
-    persist_window_config()
-    if current_snapshot:
-        _apply_snapshot_to_items(current_snapshot)
-
-
 def show_context_menu(event):
     menu.delete(0, "end")
     desktop_mark = "✓ " if app_config["desktop_mode"] else ""
     pin_mark = "✓ " if app_config["pinned"] else ""
-    advanced_mark = "✓ " if app_config["advanced_power"] else ""
     menu.add_command(label=f"{desktop_mark}桌面模式", command=toggle_desktop_mode)
     menu.add_command(label=f"{pin_mark}置顶", command=toggle_pin_menu)
-    menu.add_command(label=f"{advanced_mark}高级分项", command=toggle_advanced_power)
     menu.add_separator()
     menu.add_command(label="退出", command=close_app)
     try:
@@ -545,98 +555,29 @@ def _drag(event):
     root.geometry(f"+{root.winfo_x() + event.x - _dx}+{root.winfo_y() + event.y - _dy}")
 
 
-def _event_has_cmd(event):
-    # Tk maps Command differently across macOS builds; accept common mod masks.
-    return bool(event and getattr(event, "state", 0) & (0x0008 | 0x0010 | 0x0040 | 0x0080))
-
-
-def _pointer_inside_root():
-    x = root.winfo_pointerx()
-    y = root.winfo_pointery()
-    return (
-        root.winfo_rootx() <= x <= root.winfo_rootx() + root.winfo_width()
-        and root.winfo_rooty() <= y <= root.winfo_rooty() + root.winfo_height()
-    )
-
-
-def _cmd_pressed(event=None):
-    global cmd_down
-    cmd_down = True
-    if _pointer_inside_root():
-        show_details()
-
-
-def _cmd_released(event=None):
-    global cmd_down
-    cmd_down = False
-    if details_visible:
-        show_compact()
-
-
-def _enter_widget(event=None):
-    if cmd_down or _event_has_cmd(event):
-        show_details()
-
-
-def _motion_widget(event=None):
-    if not details_visible and (cmd_down or _event_has_cmd(event)):
-        show_details()
-
-
-def _leave_widget(event=None):
-    if details_visible:
-        show_compact()
-
-
 def _bind_events():
-    _bind_widget_events(panel)
-
-    for sequence in (
-        "<KeyPress-Meta_L>",
-        "<KeyPress-Meta_R>",
-        "<KeyPress-Command_L>",
-        "<KeyPress-Command_R>",
-    ):
-        try:
-            root.bind_all(sequence, _cmd_pressed)
-        except tk.TclError:
-            pass
-    for sequence in (
-        "<KeyRelease-Meta_L>",
-        "<KeyRelease-Meta_R>",
-        "<KeyRelease-Command_L>",
-        "<KeyRelease-Command_R>",
-    ):
-        try:
-            root.bind_all(sequence, _cmd_released)
-        except tk.TclError:
-            pass
+    _bind_widget_events(root)
 
 
 def main():
-    global root, panel, menu, app_config
+    global root, menu, app_config
 
     app_config = load_config()
     root = tk.Tk(baseName="BatteryPowerWidget", className="BatteryPowerWidget")
     root.withdraw()
     root.title("电池功率")
     root.overrideredirect(True)
-    root.configure(bg=BG)
+    root.configure(bg=WINDOW_BG)
+    try:
+        root.attributes("-transparent", True)
+    except tk.TclError:
+        pass
     root.resizable(False, False)
     root.geometry(
         f"{COMPACT_W}x{COMPACT_H + content_offset_y}"
         f"+{app_config['x']}+{app_config['y']}"
     )
 
-    panel = tk.Frame(
-        root,
-        width=COMPACT_W,
-        height=COMPACT_H + content_offset_y,
-        bg=BG,
-        highlightthickness=0,
-        bd=0,
-    )
-    panel.pack(fill="both", expand=True)
     menu = tk.Menu(root, tearoff=0)
 
     show_compact()

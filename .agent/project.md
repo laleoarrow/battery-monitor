@@ -2,14 +2,14 @@
 
 ## Goal
 
-`电池功率` is a native macOS floating battery power monitor widget. It displays real-time total power, battery percentage, charging state, and optional detail power readings in a minimal floating window.
+`电池功率` is a native macOS floating battery power monitor widget. It displays real-time total power, battery percentage, charging state, system load, and battery charge/discharge power in a minimal floating window.
 
 ## Current behavior
 
 - **Real-time monitor**: Fetches system telemetry and battery details every second.
-- **Window characteristics**: Compact strip, draggable window, right-click settings, desktop-mode and always-on-top toggles.
-- **Controls**: No permanent traffic-light controls; right-click menu provides desktop mode, pinning, advanced estimates, and exit.
-- **Dynamic layout**: Compact and expanded layouts avoid mixed emoji/text strings and shrink the main wattage text when necessary.
+- **Window characteristics**: Compact rounded widget, draggable window, right-click settings, desktop-mode and always-on-top toggles.
+- **Controls**: No permanent traffic-light controls; right-click menu provides desktop mode, pinning, and exit.
+- **Dynamic layout**: The compact layout avoids mixed emoji/text strings and shrinks the main wattage text when necessary.
 - **Three Power States**:
   - **Charging**: Green total power and green status dot.
   - **Plugged in (fully charged)**: Blue total/system power and blue status dot.
@@ -22,7 +22,7 @@
 
 ## Key files
 
-- `battery_monitor.py` — Main python script containing window setup, label layout, drag bindings, and telemetry updating logic.
+- `battery_monitor.py` — Main python script containing transparent window setup, generated PNG rounded background, label layout, drag bindings, and telemetry updating logic.
 - `scripts/install.sh` — Bash installation script that creates the macOS app wrapper bundle `电池功率.app` under `~/Applications/` and copies the monitor script to `~/.battery_monitor.py`.
 - `design/icon/AppIcon.icns` — Pre-compiled macOS icns file containing resolutions from 16x16 to 512x512, used as the app bundle's application icon.
 

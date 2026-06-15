@@ -114,7 +114,6 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(config["y"], 333)
         self.assertTrue(config["pinned"])
         self.assertFalse(config["desktop_mode"])
-        self.assertFalse(config["advanced_power"])
 
     def test_save_and_load_config_round_trip(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -125,7 +124,6 @@ class ConfigTests(unittest.TestCase):
                     "y": 55,
                     "pinned": False,
                     "desktop_mode": True,
-                    "advanced_power": True,
                 },
                 path,
             )
@@ -134,32 +132,6 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(config["y"], 55)
         self.assertFalse(config["pinned"])
         self.assertTrue(config["desktop_mode"])
-        self.assertTrue(config["advanced_power"])
-
-
-class AdvancedPowerTests(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.module = load_module()
-
-    def test_advanced_power_disabled_summary(self):
-        self.assertEqual(
-            self.module.format_advanced_summary(False, {"status": "disabled"}),
-            "高级分项关闭",
-        )
-
-    def test_advanced_power_needs_root_summary(self):
-        self.assertEqual(
-            self.module.format_advanced_summary(True, {"status": "needs_root"}),
-            "高级分项需要管理员权限",
-        )
-
-    def test_parse_powermetrics_extracts_estimated_values(self):
-        text = "CPU Power: 1200 mW\nGPU Power: 450 mW\nANE Power: 80 mW\n"
-        parsed = self.module.parse_powermetrics_output(text)
-        self.assertAlmostEqual(parsed["CPU"], 1.2, places=1)
-        self.assertAlmostEqual(parsed["GPU"], 0.45, places=2)
-        self.assertAlmostEqual(parsed["ANE"], 0.08, places=2)
 
 
 if __name__ == "__main__":
