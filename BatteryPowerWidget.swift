@@ -306,6 +306,12 @@ private enum WidgetSnapshotStore {
 }
 
 final class BatteryView: NSView {
+    private static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter
+    }()
+
     var snapshot = PowerSnapshot() {
         didSet { needsDisplay = true }
     }
@@ -319,7 +325,7 @@ final class BatteryView: NSView {
     override var isFlipped: Bool { true }
 
     func advancePulse() {
-        pulsePhase += 0.16
+        pulsePhase += 0.32
         if pulsePhase > Double.pi * 2 {
             pulsePhase -= Double.pi * 2
         }
@@ -360,7 +366,7 @@ final class BatteryView: NSView {
         let percentValueWidth = textWidth(percentValue, size: heroSize, weight: .bold)
         let percentValueX = percentSignX - 7 - percentValueWidth
         let maximumPulseRadius: CGFloat = 16
-        let dotToValueGap: CGFloat = 8
+        let dotToValueGap: CGFloat = 4
         let statusDotX = percentValueX - maximumPulseRadius - dotToValueGap
 
         drawStatusDot(center: NSPoint(x: statusDotX, y: 42))
@@ -415,9 +421,7 @@ final class BatteryView: NSView {
     }
 
     private func timeString() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return formatter.string(from: Date())
+        Self.timeFormatter.string(from: Date())
     }
 
     private func drawStatusDot(center: NSPoint) {
@@ -738,7 +742,7 @@ final class AppController: NSObject, NSApplicationDelegate {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.update()
         }
-        pulseTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 30.0, repeats: true) { [weak self] _ in
+        pulseTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 15.0, repeats: true) { [weak self] _ in
             self?.view.advancePulse()
         }
     }
