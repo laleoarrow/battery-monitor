@@ -350,13 +350,20 @@ final class BatteryView: NSView {
         let totalWidth = textWidth(totalText, size: heroSize, weight: .bold)
         drawText("W", at: NSPoint(x: max(20 + totalWidth + 8, 108), y: 30), size: 20, weight: .bold, color: mutedColor)
 
-        let percentText = "\(snapshot.percent)%"
-        let percentY: CGFloat = 22
-        let percentSize: CGFloat = 29
-        let percentWidth = textWidth(percentText, size: percentSize, weight: .bold)
-        let percentX = widgetWidth - 19 - percentWidth
-        drawStatusDot(center: NSPoint(x: percentX - 14.5, y: percentY + percentSize / 2))
-        drawText(percentText, at: NSPoint(x: percentX, y: percentY), size: percentSize, weight: .bold, color: snapshot.statusColor)
+        let percentValue = "\(snapshot.percent)"
+        let percentSign = "%"
+        let percentSignSize: CGFloat = 20
+        let percentSignWidth = textWidth(percentSign, size: percentSignSize, weight: .bold)
+        let percentSignX = widgetWidth - 19 - percentSignWidth
+        let percentValueWidth = textWidth(percentValue, size: heroSize, weight: .bold)
+        let percentValueX = percentSignX - 7 - percentValueWidth
+        let maximumPulseRadius: CGFloat = 16
+        let dotToValueGap: CGFloat = 8
+        let statusDotX = percentValueX - maximumPulseRadius - dotToValueGap
+
+        drawStatusDot(center: NSPoint(x: statusDotX, y: 42))
+        drawText(percentValue, at: NSPoint(x: percentValueX, y: 14), size: heroSize, weight: .bold, color: snapshot.statusColor)
+        drawText(percentSign, at: NSPoint(x: percentSignX, y: 30), size: percentSignSize, weight: .bold, color: mutedColor)
 
         let lowerRowY: CGFloat = 70
         drawText("负载", at: NSPoint(x: 20, y: lowerRowY), size: 17, weight: .bold, color: mutedColor)
