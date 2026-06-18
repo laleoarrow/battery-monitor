@@ -7,6 +7,10 @@ APP_NAME="电池功率"
 APP_VERSION="1.3.0"
 APP_DIR="$HOME/Applications/${APP_NAME}.app"
 APP_BUNDLE_ID="com.leoarrow.battery-monitor"
+LAUNCH_AGENT_ID="${APP_BUNDLE_ID}.agent"
+LAUNCH_AGENT_PLIST="$HOME/Library/LaunchAgents/${LAUNCH_AGENT_ID}.plist"
+LEGACY_LAUNCH_AGENT_PLIST="$HOME/Library/LaunchAgents/${APP_BUNDLE_ID}.plist"
+LAUNCH_DOMAIN="gui/$(id -u)"
 MONITOR_SCRIPT="$SCRIPT_DIR/../battery_monitor.py"
 SWIFT_SOURCE="$SCRIPT_DIR/../BatteryPowerWidget.swift"
 WIDGET_PROJECT="$SCRIPT_DIR/../BatteryPowerWidgetExtension.xcodeproj"
@@ -31,6 +35,9 @@ cp "$MONITOR_SCRIPT" "$INSTALL_PATH"
 echo "  ✅ Script → $INSTALL_PATH"
 
 # 2. Recreate app bundle structure
+launchctl bootout "$LAUNCH_DOMAIN" "$LAUNCH_AGENT_PLIST" >/dev/null 2>&1 || true
+launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_LAUNCH_AGENT_PLIST" >/dev/null 2>&1 || true
+rm -f "$LEGACY_LAUNCH_AGENT_PLIST"
 pkill -f "$APP_DIR/Contents/MacOS/applet" 2>/dev/null || true
 if [ -d "$APP_DIR" ]; then
     xcrun pluginkit -r "$WIDGET_DIR" >/dev/null 2>&1 || true
@@ -133,6 +140,42 @@ fi
 rm -rf "$WIDGET_TIMELINE_DIR"
 killall chronod >/dev/null 2>&1 || true
 
+mkdir -p "$(dirname "$LAUNCH_AGENT_PLIST")"
+cat > "$LAUNCH_AGENT_PLIST" << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>${LAUNCH_AGENT_ID}</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>${APP_DIR}/Contents/MacOS/applet</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <dict>
+        <key>Crashed</key>
+        <true/>
+    </dict>
+    <key>LimitLoadToSessionType</key>
+    <string>Aqua</string>
+    <key>ProcessType</key>
+    <string>Interactive</string>
+    <key>StandardOutPath</key>
+    <string>${HOME}/Library/Logs/${APP_NAME}.log</string>
+    <key>StandardErrorPath</key>
+    <string>${HOME}/Library/Logs/${APP_NAME}.log</string>
+</dict>
+</plist>
+EOF
+plutil -lint "$LAUNCH_AGENT_PLIST" >/dev/null
+launchctl bootstrap "$LAUNCH_DOMAIN" "$LAUNCH_AGENT_PLIST"
+launchctl enable "$LAUNCH_DOMAIN/$LAUNCH_AGENT_ID" >/dev/null 2>&1 || true
+launchctl kickstart -k "$LAUNCH_DOMAIN/$LAUNCH_AGENT_ID"
+echo "  ✅ Login agent → $LAUNCH_AGENT_PLIST"
+
 echo ""
-echo "🎉 Done! Open from ~/Applications/${APP_NAME}.app"
-echo "   Or run: open ~/Applications/${APP_NAME}.app"
+echo "🎉 Done! ${APP_NAME} is running and will start at login."

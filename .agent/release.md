@@ -15,6 +15,7 @@ This script performs the following actions:
 5. Generates the `Contents/Info.plist` with app metadata and hides the Dock icon (`LSUIElement=true`).
 6. Copies the custom application icon `design/icon/AppIcon.icns` if present into the app bundle resources.
 7. Signs the WidgetKit extension and host app with their sandbox entitlements, then signs the outer app bundle while preserving nested entitlements.
+8. Installs a user LaunchAgent at `~/Library/LaunchAgents/com.leoarrow.battery-monitor.agent.plist` so the host app starts at login and restarts after crashes. A normal user quit is not forced to relaunch.
 
 The Python script is still copied to `$HOME/.battery_monitor.py` for compatibility/reference, but the installed app runs the native Swift/AppKit executable.
 The installed AppKit app also writes `~/Library/Application Support/电池功率/widget-snapshot.json`; the sandboxed WidgetKit extension reads that snapshot because direct IORegistry access is not available from the extension sandbox. Keep the host app sandbox entitlement and its temporary read/write exceptions, otherwise `chronod` may register the extension but omit it from the Widgets gallery.
