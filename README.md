@@ -1,92 +1,44 @@
-<h1 align="center">电池功率</h1>
+# 电池功率
 
-<div align="center">
-  <a href="https://github.com/laleoarrow/battery-monitor/releases">
-    <img src="https://img.shields.io/badge/RELEASE-V1.3.0-1565c0?style=for-the-badge&logo=github&logoColor=white" alt="Release V1.3.0" />
-  </a>
-  <a href="https://github.com/laleoarrow/battery-monitor">
-    <img src="https://img.shields.io/badge/PLATFORM-macOS%2012%2B-111111?style=for-the-badge&logo=apple&logoColor=white" alt="Platform macOS 12+" />
-  </a>
-</div>
+电池功率是一款 macOS 电量与功率监看工具。它提供一个轻量的桌面悬浮窗，也可以添加到 macOS 小组件，方便随时查看当前功耗、电量、充电状态和电池充放电功率。
 
-<div align="center">
-  <a href="./README.md">English</a> | <a href="./README_zh.md">简体中文</a>
-</div>
+## 主要功能
 
-## What is 电池功率?
+- 实时显示当前总功率
+- 显示电量百分比、充电状态和系统负载
+- 区分充电中、已接电、电池供电和低电量状态
+- 提供 macOS 桌面悬浮窗
+- 支持添加到 macOS 小组件
+- 右键可设置置顶、Dock 显示和退出
+- 可拖动悬浮窗到屏幕任意位置
 
-A minimal macOS floating widget that shows real-time total power, battery level, system load, and battery charge/discharge power at a glance.
+## 安装
 
-Built as a small native Swift/AppKit app, it renders a compact floating window with no Dock icon — designed to stay out of your way while keeping power data visible.
+从 [GitHub Releases](https://github.com/laleoarrow/battery-monitor/releases) 下载最新版 `.dmg`，打开后将 `电池功率.app` 拖到 Applications 文件夹。
 
-### Features
+首次打开时，如果 macOS 提示安全确认，请在系统设置中允许打开该应用。
 
-- **Real-time total power display** — shows system load plus battery charging power, updated every second via `ioreg`
-- **System widget gallery support** — installs a WidgetKit extension so 电池功率 appears in macOS Widgets
-- **Standalone widget refresh** — the system widget samples the battery directly via IOKit, so it stays fresh even when the app is not running; tapping it refreshes in place instead of launching the app
-- **Inline power breakdown** — shows system load and battery charge/discharge power without an expanded mode
-- **Three-state awareness** — distinguishes charging, plugged-full, and battery-only states with a small status dot
-- **macOS-native floating window** with no title bar
-- **Optional always-on-top toggle** via the right-click menu
-- **Drag anywhere** to reposition
+## 使用
 
-### Screenshot
+打开 `电池功率.app` 后，悬浮窗会出现在桌面上并自动更新数据。
 
-<!-- TODO: add screenshot -->
+- 拖动悬浮窗：按住悬浮窗任意位置移动
+- 打开菜单：右键点击悬浮窗
+- 添加系统小组件：打开 macOS 小组件编辑器，搜索“电池功率”
+- 刷新小组件：点击小组件即可请求刷新
 
-## Install
+macOS 会管理小组件的刷新频率，因此系统小组件不会像悬浮窗一样每秒连续更新。
 
-Download the latest `.dmg` from [GitHub Releases](https://github.com/laleoarrow/battery-monitor/releases), open it, and drag `电池功率.app` to Applications.
+## 系统要求
 
-To build from source:
+- macOS 12 或更新版本
+- macOS 14 或更新版本可使用系统小组件
+- 适用于带电池的 Mac
 
-```bash
-git clone https://github.com/laleoarrow/battery-monitor.git
-cd battery-monitor
-./scripts/install.sh
-```
+## 隐私
 
-Then open from `~/Applications/电池功率.app`, or:
+电池功率只读取本机电池和功率状态。应用不会收集、上传或共享个人数据。
 
-```bash
-open ~/Applications/电池功率.app
-```
+## 反馈
 
-### Requirements
-
-- macOS 12+
-- macOS 14+ for the system Widgets gallery extension
-- Xcode command line tools with `swiftc` and `xcodebuild`
-
-## Development
-
-The installed app is built from the native Swift entrypoint:
-
-```
-BatteryPowerWidget.swift  # Native AppKit widget
-BatteryPowerWidgetExtension.swift  # WidgetKit extension for macOS Widgets
-BatteryPowerWidgetExtension.xcodeproj/  # Xcode target that builds the .appex
-battery_monitor.py        # Legacy Python/Tkinter implementation
-scripts/install.sh        # Installer (builds the .app bundle)
-scripts/package_dmg.sh    # Release packager (builds a drag-install .dmg)
-design/icon/              # App icon assets
-```
-
-Build and install for development:
-
-```bash
-./scripts/install.sh
-open ~/Applications/电池功率.app
-```
-
-The floating window updates every second. The macOS system widget samples the battery directly on each WidgetKit timeline reload (falling back to the app's saved snapshot), and tapping the widget triggers an in-place refresh via an interactive-widget intent; the host app also requests a timeline reload periodically, but macOS may still throttle desktop widget updates.
-
-Build a release DMG:
-
-```bash
-./scripts/package_dmg.sh 1.3.0
-```
-
-## License
-
-MIT
+如需反馈问题或查看更新，请访问 [GitHub Releases](https://github.com/laleoarrow/battery-monitor/releases) 或 [提交 Issue](https://github.com/laleoarrow/battery-monitor/issues/new)。

@@ -44,19 +44,19 @@ class WidgetExtensionContractTests(unittest.TestCase):
     def test_tap_refreshes_in_place_instead_of_launching_app(self):
         self.assertIn("struct RefreshBatteryWidgetIntent: AppIntent", self.source)
         self.assertIn("Button(intent: RefreshBatteryWidgetIntent())", self.source)
+        self.assertIn('WidgetCenter.shared.reloadTimelines(ofKind: batteryWidgetKind)', self.source)
         self.assertIn(".buttonStyle(.plain)", self.source)
 
-    def test_status_dot_uses_layered_glow(self):
-        self.assertIn("struct StatusGlowDot", self.source)
-        self.assertIn("RadialGradient", self.source)
-        # The old flat rendering used a plain shadow on a circle.
+    def test_status_dot_is_solid_blue_with_more_spacing(self):
+        self.assertIn("struct StatusDot", self.source)
+        self.assertIn("Color(hex: 0x4AA3FF)", self.source)
+        self.assertIn("HStack(spacing: 12)", self.source)
+        self.assertNotIn("RadialGradient", self.source)
         self.assertNotIn(".shadow(color:", self.source)
 
-    def test_glow_only_when_external_power(self):
-        self.assertIn("charging || plugged", self.source)
-
-    def test_widget_shows_snapshot_freshness_time(self):
-        self.assertIn("updatedDate", self.source)
+    def test_widget_does_not_show_timestamp(self):
+        self.assertNotIn("timeView", self.source)
+        self.assertNotIn(".dateTime.hour", self.source)
 
 
 if __name__ == "__main__":

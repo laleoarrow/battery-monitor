@@ -6,6 +6,7 @@ import SwiftUI
 import WidgetKit
 
 private let refreshInterval: TimeInterval = 5 * 60
+private let batteryWidgetKind = "BatteryPowerSystemWidget"
 
 private struct BatteryWidgetSnapshot: Codable {
     var percent: Int
@@ -20,10 +21,6 @@ private struct BatteryWidgetSnapshot: Codable {
         max(systemW, 0) + max(chargeW, 0)
     }
 
-    var updatedDate: Date {
-        Date(timeIntervalSince1970: updatedAt)
-    }
-
     var statusText: String {
         if charging { return "充电中" }
         if plugged { return "已接电" }
@@ -36,10 +33,6 @@ private struct BatteryWidgetSnapshot: Codable {
         if plugged { return Color(hex: 0x4AA3FF) }
         if percent <= 20 { return Color(hex: 0xFF453A) }
         return Color(hex: 0xA6ABB6)
-    }
-
-    var glowing: Bool {
-        charging || plugged
     }
 
     var batteryLine: (label: String, value: Double, color: Color) {
@@ -186,15 +179,15 @@ private enum WidgetPowerSampler {
     }
 }
 
-// Performing an intent keeps the tap inside the extension process: WidgetKit
-// reloads the timeline afterwards (re-sampling live data) instead of launching
-// the host app.
+// Performing an intent keeps the tap inside the extension process and explicitly
+// asks WidgetKit to reload this timeline instead of launching the host app.
 struct RefreshBatteryWidgetIntent: AppIntent {
     static let title: LocalizedStringResource = "刷新电池功率"
     static let description = IntentDescription("立即重新读取电池功率数据并刷新小组件。")
 
     func perform() async throws -> some IntentResult {
-        .result()
+        WidgetCenter.shared.reloadTimelines(ofKind: batteryWidgetKind)
+        return .result()
     }
 }
 
@@ -221,7 +214,7 @@ private struct BatteryWidgetProvider: TimelineProvider {
 }
 
 private struct BatteryPowerSystemWidget: Widget {
-    let kind = "BatteryPowerSystemWidget"
+    let kind = batteryWidgetKind
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: BatteryWidgetProvider()) { entry in
@@ -233,47 +226,13 @@ private struct BatteryPowerSystemWidget: Widget {
     }
 }
 
-// Static rendition of the app's pulsing status glow, frozen at mid-pulse:
-// radial outer glow + halo + specular core. Layout footprint stays at the core
-// size so the glow overflows without shifting neighbors.
-private struct StatusGlowDot: View {
-    let color: Color
-    let glowing: Bool
-    let coreSize: CGFloat
+private struct StatusDot: View {
+    let size: CGFloat
 
     var body: some View {
-        ZStack {
-            if glowing {
-                Circle()
-                    .fill(
-                        RadialGradient(
-                            gradient: Gradient(colors: [color.opacity(0.42), color.opacity(0.16), color.opacity(0)]),
-                            center: .center,
-                            startRadius: coreSize * 0.2,
-                            endRadius: coreSize * 1.8
-                        )
-                    )
-                    .frame(width: coreSize * 3.6, height: coreSize * 3.6)
-                Circle()
-                    .fill(color.opacity(0.3))
-                    .frame(width: coreSize * 1.75, height: coreSize * 1.75)
-            }
-            Circle()
-                .fill(color)
-                .overlay(
-                    Circle()
-                        .fill(
-                            RadialGradient(
-                                gradient: Gradient(colors: [Color.white.opacity(glowing ? 0.55 : 0.25), Color.white.opacity(0)]),
-                                center: UnitPoint(x: 0.35, y: 0.3),
-                                startRadius: 0,
-                                endRadius: coreSize * 0.75
-                            )
-                        )
-                )
-                .frame(width: coreSize, height: coreSize)
-        }
-        .frame(width: coreSize, height: coreSize)
+        Circle()
+            .fill(Color(hex: 0x4AA3FF))
+            .frame(width: size, height: size)
     }
 }
 
@@ -316,13 +275,10 @@ private struct BatteryWidgetView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 percentView(size: 20)
-                HStack(spacing: 6) {
-                    Text(entry.snapshot.statusText)
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color(hex: 0xF8FAFC))
-                    Spacer(minLength: 4)
-                    timeView(size: 11)
-                }
+                Text(entry.snapshot.statusText)
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color(hex: 0xF8FAFC))
+                    .lineLimit(1)
                 batteryLineView
             }
         }
@@ -348,32 +304,20 @@ private struct BatteryWidgetView: View {
                 percentView(size: 28)
                 metricRow(label: "负载", value: entry.snapshot.systemW, color: Color(hex: 0xF8FAFC))
                 batteryLineView
-                timeView(size: 11)
             }
         }
         .padding(18)
     }
 
     private func percentView(size: CGFloat) -> some View {
-        HStack(spacing: 7) {
-            StatusGlowDot(
-                color: entry.snapshot.accentColor,
-                glowing: entry.snapshot.glowing,
-                coreSize: size * 0.36
-            )
+        HStack(spacing: 12) {
+            StatusDot(size: size * 0.34)
             Text("\(entry.snapshot.percent)%")
                 .font(.system(size: size, weight: .bold, design: .rounded))
                 .foregroundStyle(entry.snapshot.accentColor)
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
         }
-    }
-
-    private func timeView(size: CGFloat) -> some View {
-        Text(entry.snapshot.updatedDate, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits))
-            .font(.system(size: size, weight: .semibold, design: .rounded))
-            .foregroundStyle(Color(hex: 0xA6ABB6).opacity(0.8))
-            .lineLimit(1)
     }
 
     private var batteryLineView: some View {
