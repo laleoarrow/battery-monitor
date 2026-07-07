@@ -1,5 +1,7 @@
-import Foundation
+import AppIntents
 import Darwin
+import Foundation
+import IOKit
 import SwiftUI
 import WidgetKit
 
@@ -18,6 +20,10 @@ private struct BatteryWidgetSnapshot: Codable {
         max(systemW, 0) + max(chargeW, 0)
     }
 
+    var updatedDate: Date {
+        Date(timeIntervalSince1970: updatedAt)
+    }
+
     var statusText: String {
         if charging { return "充电中" }
         if plugged { return "已接电" }
@@ -30,6 +36,10 @@ private struct BatteryWidgetSnapshot: Codable {
         if plugged { return Color(hex: 0x4AA3FF) }
         if percent <= 20 { return Color(hex: 0xFF453A) }
         return Color(hex: 0xA6ABB6)
+    }
+
+    var glowing: Bool {
+        charging || plugged
     }
 
     var batteryLine: (label: String, value: Double, color: Color) {
@@ -51,6 +61,10 @@ private struct BatteryWidgetSnapshot: Codable {
         dischargeW: 0
     )
 
+    static func current() -> BatteryWidgetSnapshot {
+        WidgetPowerSampler.sample() ?? loadShared() ?? .preview
+    }
+
     static func loadShared() -> BatteryWidgetSnapshot? {
         let url = realHomeDirectory()
             .appendingPathComponent("Library/Application Support/电池功率", isDirectory: true)
@@ -70,6 +84,120 @@ private struct BatteryWidgetSnapshot: Codable {
     }
 }
 
+// The sandbox denies fork/exec, so unlike the host app the extension cannot
+// shell out to ioreg; reading IORegistry properties directly is allowed.
+private enum WidgetPowerSampler {
+    static func sample() -> BatteryWidgetSnapshot? {
+        guard let props = batteryProperties() else {
+            return nil
+        }
+
+        let percent = intValue(props["CurrentCapacity"])
+        let plugged = boolValue(props["ExternalConnected"])
+        let charging = boolValue(props["IsCharging"])
+        let voltage = intValue(props["Voltage"])
+        let amperage = intValue(props["Amperage"])
+        let telemetry = intMap(props["PowerTelemetryData"])
+        let charger = intMap(props["ChargerData"])
+
+        let chargeW = chargePower(charging: charging, telemetry: telemetry, charger: charger, voltage: voltage, amperage: amperage)
+        let systemW: Double
+        if let load = telemetry["SystemLoad"] {
+            systemW = Double(load) / 1000.0
+        } else if let systemIn = telemetry["SystemPowerIn"] {
+            systemW = max(Double(systemIn) / 1000.0 - chargeW, 0)
+        } else {
+            systemW = fallbackPower(voltage: voltage, amperage: amperage)
+        }
+        let dischargeW = plugged ? 0 : (telemetry["BatteryPower"].map { abs(Double($0) / 1000.0) } ?? fallbackPower(voltage: voltage, amperage: amperage))
+
+        return BatteryWidgetSnapshot(
+            percent: percent,
+            plugged: plugged,
+            charging: charging,
+            systemW: systemW,
+            chargeW: chargeW,
+            dischargeW: dischargeW
+        )
+    }
+
+    private static func batteryProperties() -> [String: Any]? {
+        let service = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("AppleSmartBattery"))
+        guard service != IO_OBJECT_NULL else {
+            return nil
+        }
+        defer { IOObjectRelease(service) }
+        var propsRef: Unmanaged<CFMutableDictionary>?
+        guard IORegistryEntryCreateCFProperties(service, &propsRef, kCFAllocatorDefault, 0) == KERN_SUCCESS,
+              let props = propsRef?.takeRetainedValue() as? [String: Any] else {
+            return nil
+        }
+        return props
+    }
+
+    // Amperage and friends are stored as raw two's-complement bit patterns, so
+    // negative currents surface as huge unsigned numbers (64-bit via NSNumber,
+    // 32-bit on older firmware). Battery values never legitimately exceed
+    // Int32.max, so anything in the 32-bit wraparound range is negative.
+    private static func intValue(_ raw: Any?) -> Int {
+        guard let number = raw as? NSNumber else {
+            return 0
+        }
+        var value = number.int64Value
+        if value > Int64(Int32.max), value <= Int64(UInt32.max) {
+            value -= Int64(UInt32.max) + 1
+        }
+        return Int(value)
+    }
+
+    private static func boolValue(_ raw: Any?) -> Bool {
+        if let flag = raw as? Bool {
+            return flag
+        }
+        return (raw as? NSNumber)?.boolValue ?? false
+    }
+
+    private static func intMap(_ raw: Any?) -> [String: Int] {
+        guard let dict = raw as? [String: Any] else {
+            return [:]
+        }
+        var values: [String: Int] = [:]
+        for (key, value) in dict where value is NSNumber {
+            values[key] = intValue(value)
+        }
+        return values
+    }
+
+    private static func fallbackPower(voltage: Int, amperage: Int) -> Double {
+        abs(Double(voltage) * Double(amperage) / 1_000_000.0)
+    }
+
+    private static func chargePower(charging: Bool, telemetry: [String: Int], charger: [String: Int], voltage: Int, amperage: Int) -> Double {
+        guard charging else { return 0 }
+        if let chargeVoltage = charger["ChargingVoltage"],
+           let current = charger["ChargingCurrent"],
+           current > 0 {
+            return abs(Double(chargeVoltage) * Double(current) / 1_000_000.0)
+        }
+        if let batteryPower = telemetry["BatteryPower"] {
+            return abs(Double(batteryPower) / 1000.0)
+        }
+        return fallbackPower(voltage: voltage, amperage: amperage)
+    }
+}
+
+// Performing an intent keeps the tap inside the extension process: WidgetKit
+// reloads the timeline afterwards (re-sampling live data) instead of launching
+// the host app.
+struct RefreshBatteryWidgetIntent: AppIntent {
+    static let title: LocalizedStringResource = "刷新电池功率"
+    static let description = IntentDescription("立即重新读取电池功率数据并刷新小组件。")
+
+    func perform() async throws -> some IntentResult {
+        .result()
+    }
+}
+
 private struct BatteryWidgetEntry: TimelineEntry {
     let date: Date
     let snapshot: BatteryWidgetSnapshot
@@ -81,13 +209,13 @@ private struct BatteryWidgetProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (BatteryWidgetEntry) -> Void) {
-        let snapshot = context.isPreview ? BatteryWidgetSnapshot.preview : (BatteryWidgetSnapshot.loadShared() ?? .preview)
+        let snapshot = context.isPreview ? BatteryWidgetSnapshot.preview : BatteryWidgetSnapshot.current()
         completion(BatteryWidgetEntry(date: Date(), snapshot: snapshot))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<BatteryWidgetEntry>) -> Void) {
         let now = Date()
-        let entry = BatteryWidgetEntry(date: now, snapshot: BatteryWidgetSnapshot.loadShared() ?? .preview)
+        let entry = BatteryWidgetEntry(date: now, snapshot: BatteryWidgetSnapshot.current())
         completion(Timeline(entries: [entry], policy: .after(now.addingTimeInterval(refreshInterval))))
     }
 }
@@ -100,8 +228,52 @@ private struct BatteryPowerSystemWidget: Widget {
             BatteryWidgetView(entry: entry)
         }
         .configurationDisplayName("电池功率")
-        .description("显示当前电量和功率快照。")
+        .description("显示当前电量和功率，点按立即刷新。")
         .supportedFamilies([.systemSmall, .systemMedium])
+    }
+}
+
+// Static rendition of the app's pulsing status glow, frozen at mid-pulse:
+// radial outer glow + halo + specular core. Layout footprint stays at the core
+// size so the glow overflows without shifting neighbors.
+private struct StatusGlowDot: View {
+    let color: Color
+    let glowing: Bool
+    let coreSize: CGFloat
+
+    var body: some View {
+        ZStack {
+            if glowing {
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            gradient: Gradient(colors: [color.opacity(0.42), color.opacity(0.16), color.opacity(0)]),
+                            center: .center,
+                            startRadius: coreSize * 0.2,
+                            endRadius: coreSize * 1.8
+                        )
+                    )
+                    .frame(width: coreSize * 3.6, height: coreSize * 3.6)
+                Circle()
+                    .fill(color.opacity(0.3))
+                    .frame(width: coreSize * 1.75, height: coreSize * 1.75)
+            }
+            Circle()
+                .fill(color)
+                .overlay(
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                gradient: Gradient(colors: [Color.white.opacity(glowing ? 0.55 : 0.25), Color.white.opacity(0)]),
+                                center: UnitPoint(x: 0.35, y: 0.3),
+                                startRadius: 0,
+                                endRadius: coreSize * 0.75
+                            )
+                        )
+                )
+                .frame(width: coreSize, height: coreSize)
+        }
+        .frame(width: coreSize, height: coreSize)
     }
 }
 
@@ -110,14 +282,19 @@ private struct BatteryWidgetView: View {
     let entry: BatteryWidgetEntry
 
     var body: some View {
-        Group {
-            switch family {
-            case .systemMedium:
-                mediumLayout
-            default:
-                smallLayout
+        Button(intent: RefreshBatteryWidgetIntent()) {
+            Group {
+                switch family {
+                case .systemMedium:
+                    mediumLayout
+                default:
+                    smallLayout
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .contentShape(Rectangle())
         }
+        .buttonStyle(.plain)
         .containerBackground(Color(hex: 0x17191F), for: .widget)
     }
 
@@ -139,9 +316,13 @@ private struct BatteryWidgetView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 percentView(size: 20)
-                Text(entry.snapshot.statusText)
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color(hex: 0xF8FAFC))
+                HStack(spacing: 6) {
+                    Text(entry.snapshot.statusText)
+                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color(hex: 0xF8FAFC))
+                    Spacer(minLength: 4)
+                    timeView(size: 11)
+                }
                 batteryLineView
             }
         }
@@ -163,27 +344,36 @@ private struct BatteryWidgetView: View {
 
             Spacer(minLength: 8)
 
-            VStack(alignment: .trailing, spacing: 10) {
+            VStack(alignment: .trailing, spacing: 8) {
                 percentView(size: 28)
                 metricRow(label: "负载", value: entry.snapshot.systemW, color: Color(hex: 0xF8FAFC))
                 batteryLineView
+                timeView(size: 11)
             }
         }
         .padding(18)
     }
 
     private func percentView(size: CGFloat) -> some View {
-        HStack(spacing: 6) {
-            Circle()
-                .fill(entry.snapshot.accentColor)
-                .frame(width: size * 0.34, height: size * 0.34)
-                .shadow(color: entry.snapshot.accentColor.opacity(0.45), radius: 5)
+        HStack(spacing: 7) {
+            StatusGlowDot(
+                color: entry.snapshot.accentColor,
+                glowing: entry.snapshot.glowing,
+                coreSize: size * 0.36
+            )
             Text("\(entry.snapshot.percent)%")
                 .font(.system(size: size, weight: .bold, design: .rounded))
                 .foregroundStyle(entry.snapshot.accentColor)
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
         }
+    }
+
+    private func timeView(size: CGFloat) -> some View {
+        Text(entry.snapshot.updatedDate, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits))
+            .font(.system(size: size, weight: .semibold, design: .rounded))
+            .foregroundStyle(Color(hex: 0xA6ABB6).opacity(0.8))
+            .lineLimit(1)
     }
 
     private var batteryLineView: some View {
