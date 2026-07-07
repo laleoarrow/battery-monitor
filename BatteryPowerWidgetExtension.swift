@@ -7,6 +7,7 @@ import WidgetKit
 
 private let refreshInterval: TimeInterval = 5 * 60
 private let batteryWidgetKind = "BatteryPowerSystemWidget"
+private let refreshFeedbackDuration: TimeInterval = 2.5
 
 private struct BatteryWidgetSnapshot: Codable {
     var percent: Int
@@ -186,30 +187,69 @@ struct RefreshBatteryWidgetIntent: AppIntent {
     static let description = IntentDescription("立即重新读取电池功率数据并刷新小组件。")
 
     func perform() async throws -> some IntentResult {
+        WidgetRefreshFeedbackStore.markRefreshRequested()
         WidgetCenter.shared.reloadTimelines(ofKind: batteryWidgetKind)
         return .result()
+    }
+}
+
+private enum WidgetRefreshFeedbackStore {
+    private static let lastRefreshRequestKey = "lastRefreshRequestAt"
+
+    static func markRefreshRequested(at date: Date = Date()) {
+        UserDefaults.standard.set(date.timeIntervalSince1970, forKey: lastRefreshRequestKey)
+        UserDefaults.standard.synchronize()
+    }
+
+    static func lastRefreshRequestAt() -> Double {
+        UserDefaults.standard.double(forKey: lastRefreshRequestKey)
+    }
+
+    static func shouldShowFeedback(at date: Date = Date()) -> Bool {
+        let lastRequestAt = lastRefreshRequestAt()
+        guard lastRequestAt > 0 else {
+            return false
+        }
+        return date.timeIntervalSince1970 - lastRequestAt <= refreshFeedbackDuration
     }
 }
 
 private struct BatteryWidgetEntry: TimelineEntry {
     let date: Date
     let snapshot: BatteryWidgetSnapshot
+    let showsRefreshFeedback: Bool
+    let refreshAnimationID: Double
 }
 
 private struct BatteryWidgetProvider: TimelineProvider {
     func placeholder(in context: Context) -> BatteryWidgetEntry {
-        BatteryWidgetEntry(date: Date(), snapshot: .preview)
+        BatteryWidgetEntry(date: Date(), snapshot: .preview, showsRefreshFeedback: false, refreshAnimationID: 0)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (BatteryWidgetEntry) -> Void) {
         let snapshot = context.isPreview ? BatteryWidgetSnapshot.preview : BatteryWidgetSnapshot.current()
-        completion(BatteryWidgetEntry(date: Date(), snapshot: snapshot))
+        completion(BatteryWidgetEntry(date: Date(), snapshot: snapshot, showsRefreshFeedback: false, refreshAnimationID: WidgetRefreshFeedbackStore.lastRefreshRequestAt()))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<BatteryWidgetEntry>) -> Void) {
         let now = Date()
-        let entry = BatteryWidgetEntry(date: now, snapshot: BatteryWidgetSnapshot.current())
-        completion(Timeline(entries: [entry], policy: .after(now.addingTimeInterval(refreshInterval))))
+        let snapshot = BatteryWidgetSnapshot.current()
+        let showFeedback = WidgetRefreshFeedbackStore.shouldShowFeedback(at: now)
+        let refreshAnimationID = WidgetRefreshFeedbackStore.lastRefreshRequestAt()
+        var entries = [
+            BatteryWidgetEntry(date: now, snapshot: snapshot, showsRefreshFeedback: showFeedback, refreshAnimationID: refreshAnimationID)
+        ]
+        if showFeedback {
+            entries.append(
+                BatteryWidgetEntry(
+                    date: now.addingTimeInterval(refreshFeedbackDuration),
+                    snapshot: snapshot,
+                    showsRefreshFeedback: false,
+                    refreshAnimationID: refreshAnimationID
+                )
+            )
+        }
+        completion(Timeline(entries: entries, policy: .after(now.addingTimeInterval(refreshInterval))))
     }
 }
 
@@ -233,6 +273,46 @@ private struct StatusDot: View {
         Circle()
             .fill(Color(hex: 0x4AA3FF))
             .frame(width: size, height: size)
+    }
+}
+
+private struct FlipNumberText: View {
+    let text: String
+    let size: CGFloat
+    let color: Color
+    let minimumScale: CGFloat
+    let isRefreshing: Bool
+    let refreshAnimationID: Double
+
+    var body: some View {
+        Text(text)
+            .font(.system(size: size, weight: .bold, design: .rounded))
+            .foregroundStyle(color)
+            .lineLimit(1)
+            .minimumScaleFactor(minimumScale)
+            .background {
+                if isRefreshing {
+                    RoundedRectangle(cornerRadius: 5, style: .continuous)
+                        .fill(Color(hex: 0x4AA3FF).opacity(0.12))
+                        .padding(.horizontal, -4)
+                        .padding(.vertical, -2)
+                }
+            }
+            .overlay {
+                if isRefreshing {
+                    Rectangle()
+                        .fill(Color.white.opacity(0.18))
+                        .frame(height: 1)
+                        .padding(.horizontal, -4)
+                }
+            }
+            .rotation3DEffect(
+                .degrees(isRefreshing ? -7 : 0),
+                axis: (x: 1, y: 0, z: 0),
+                perspective: 0.45
+            )
+            .id(refreshAnimationID)
+            .transition(.asymmetric(insertion: .push(from: .top), removal: .push(from: .bottom)))
     }
 }
 
@@ -260,11 +340,7 @@ private struct BatteryWidgetView: View {
     private var smallLayout: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text(String(format: "%.1f", entry.snapshot.totalW))
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
-                    .foregroundStyle(entry.snapshot.accentColor)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                totalPowerNumber(size: 32)
                 Text("W")
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundStyle(Color(hex: 0xA6ABB6))
@@ -275,10 +351,7 @@ private struct BatteryWidgetView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 percentView(size: 20)
-                Text(entry.snapshot.statusText)
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color(hex: 0xF8FAFC))
-                    .lineLimit(1)
+                statusView(size: 14)
                 batteryLineView
             }
         }
@@ -288,14 +361,13 @@ private struct BatteryWidgetView: View {
     private var mediumLayout: some View {
         HStack(alignment: .center, spacing: 18) {
             VStack(alignment: .leading, spacing: 6) {
-                Text(String(format: "%.1f W", entry.snapshot.totalW))
-                    .font(.system(size: 40, weight: .bold, design: .rounded))
-                    .foregroundStyle(entry.snapshot.accentColor)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                Text(entry.snapshot.statusText)
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color(hex: 0xF8FAFC))
+                HStack(alignment: .firstTextBaseline, spacing: 5) {
+                    totalPowerNumber(size: 40)
+                    Text("W")
+                        .font(.system(size: 19, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color(hex: 0xA6ABB6))
+                }
+                statusView(size: 15)
             }
 
             Spacer(minLength: 8)
@@ -312,12 +384,34 @@ private struct BatteryWidgetView: View {
     private func percentView(size: CGFloat) -> some View {
         HStack(spacing: 12) {
             StatusDot(size: size * 0.34)
-            Text("\(entry.snapshot.percent)%")
-                .font(.system(size: size, weight: .bold, design: .rounded))
-                .foregroundStyle(entry.snapshot.accentColor)
-                .lineLimit(1)
-                .minimumScaleFactor(0.75)
+            FlipNumberText(
+                text: "\(entry.snapshot.percent)%",
+                size: size,
+                color: entry.snapshot.accentColor,
+                minimumScale: 0.75,
+                isRefreshing: entry.showsRefreshFeedback,
+                refreshAnimationID: entry.refreshAnimationID
+            )
         }
+    }
+
+    private func statusView(size: CGFloat) -> some View {
+        Text(entry.snapshot.statusText)
+            .font(.system(size: size, weight: .bold, design: .rounded))
+            .foregroundStyle(Color(hex: 0xF8FAFC))
+            .minimumScaleFactor(0.8)
+        .lineLimit(1)
+    }
+
+    private func totalPowerNumber(size: CGFloat) -> some View {
+        FlipNumberText(
+            text: String(format: "%.1f", entry.snapshot.totalW),
+            size: size,
+            color: entry.snapshot.accentColor,
+            minimumScale: 0.7,
+            isRefreshing: entry.showsRefreshFeedback,
+            refreshAnimationID: entry.refreshAnimationID
+        )
     }
 
     private var batteryLineView: some View {

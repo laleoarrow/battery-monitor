@@ -44,8 +44,21 @@ class WidgetExtensionContractTests(unittest.TestCase):
     def test_tap_refreshes_in_place_instead_of_launching_app(self):
         self.assertIn("struct RefreshBatteryWidgetIntent: AppIntent", self.source)
         self.assertIn("Button(intent: RefreshBatteryWidgetIntent())", self.source)
+        self.assertIn("WidgetRefreshFeedbackStore.markRefreshRequested()", self.source)
         self.assertIn('WidgetCenter.shared.reloadTimelines(ofKind: batteryWidgetKind)', self.source)
         self.assertIn(".buttonStyle(.plain)", self.source)
+
+    def test_tap_has_short_visible_feedback(self):
+        self.assertIn("private let refreshFeedbackDuration: TimeInterval = 2.5", self.source)
+        self.assertIn("UserDefaults.standard.synchronize()", self.source)
+        self.assertIn("struct FlipNumberText", self.source)
+        self.assertIn("rotation3DEffect", self.source)
+        self.assertIn(".transition(.asymmetric(insertion: .push(from: .top), removal: .push(from: .bottom)))", self.source)
+        self.assertIn("let showsRefreshFeedback: Bool", self.source)
+        self.assertIn("let refreshAnimationID: Double", self.source)
+        self.assertIn("WidgetRefreshFeedbackStore.shouldShowFeedback(at: now)", self.source)
+        self.assertIn("now.addingTimeInterval(refreshFeedbackDuration)", self.source)
+        self.assertNotIn("已刷新", self.source)
 
     def test_status_dot_is_solid_blue_with_more_spacing(self):
         self.assertIn("struct StatusDot", self.source)
