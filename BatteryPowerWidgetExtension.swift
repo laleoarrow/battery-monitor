@@ -284,95 +284,17 @@ private struct FlipNumberText: View {
     let isRefreshing: Bool
     let refreshAnimationID: Double
 
-    private var glyphs: [FlipGlyph] {
-        Array(text).enumerated().map { index, character in
-            FlipGlyph(index: index, value: String(character), isDigit: character.wholeNumberValue != nil)
-        }
-    }
-
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: max(size * 0.015, 1)) {
-            ForEach(glyphs) { glyph in
-                if glyph.isDigit {
-                    FlipDigitText(
-                        glyph: glyph,
-                        size: size,
-                        color: color,
-                        minimumScale: minimumScale,
-                        isRefreshing: isRefreshing,
-                        refreshAnimationID: refreshAnimationID
-                    )
-                } else {
-                    Text(glyph.value)
-                        .font(.system(size: size, weight: .bold, design: .rounded))
-                        .foregroundStyle(color)
-                        .lineLimit(1)
-                        .minimumScaleFactor(minimumScale)
-                }
-            }
-        }
-        .fixedSize(horizontal: true, vertical: false)
-        .lineLimit(1)
-    }
-}
-
-private struct FlipGlyph: Identifiable {
-    let index: Int
-    let value: String
-    let isDigit: Bool
-
-    var id: Int {
-        index
-    }
-}
-
-private struct FlipDigitText: View {
-    let glyph: FlipGlyph
-    let size: CGFloat
-    let color: Color
-    let minimumScale: CGFloat
-    let isRefreshing: Bool
-    let refreshAnimationID: Double
-
-    private var digitDelay: Double {
-        Double(glyph.index) * 0.045
-    }
-
-    private var digitDuration: Double {
-        0.22 + Double(glyph.index % 3) * 0.055
-    }
-
-    private var rotationDegrees: Double {
-        guard isRefreshing else { return 0 }
-        let angles = [-24.0, -14.0, -29.0, -18.0]
-        return angles[glyph.index % angles.count]
-    }
-
-    private var verticalOffset: CGFloat {
-        guard isRefreshing else { return 0 }
-        let offsets = [-0.045, 0.025, -0.018, 0.04]
-        return size * offsets[glyph.index % offsets.count]
-    }
-
-    private var insertionEdge: Edge {
-        glyph.index.isMultiple(of: 2) ? .top : .bottom
-    }
-
-    private var horizontalPadding: CGFloat {
-        max(size * 0.035, 1)
-    }
-
-    var body: some View {
-        Text(glyph.value)
-            .font(.system(size: size, weight: .bold, design: .rounded).monospacedDigit())
+        Text(text)
+            .font(.system(size: size, weight: .bold, design: .rounded))
             .foregroundStyle(color)
             .lineLimit(1)
             .minimumScaleFactor(minimumScale)
-            .padding(.horizontal, horizontalPadding)
             .background {
                 if isRefreshing {
-                    RoundedRectangle(cornerRadius: max(size * 0.12, 4), style: .continuous)
+                    RoundedRectangle(cornerRadius: 5, style: .continuous)
                         .fill(Color(hex: 0x4AA3FF).opacity(0.12))
+                        .padding(.horizontal, -4)
                         .padding(.vertical, -2)
                 }
             }
@@ -381,18 +303,16 @@ private struct FlipDigitText: View {
                     Rectangle()
                         .fill(Color.white.opacity(0.18))
                         .frame(height: 1)
-                        .padding(.horizontal, -1)
+                        .padding(.horizontal, -4)
                 }
             }
             .rotation3DEffect(
-                .degrees(rotationDegrees),
+                .degrees(isRefreshing ? -7 : 0),
                 axis: (x: 1, y: 0, z: 0),
                 perspective: 0.45
             )
-            .offset(y: verticalOffset)
-            .id("\(refreshAnimationID)-\(glyph.index)")
-            .transition(.asymmetric(insertion: .push(from: insertionEdge), removal: .opacity))
-            .animation(.easeInOut(duration: digitDuration).delay(digitDelay), value: refreshAnimationID)
+            .id(refreshAnimationID)
+            .transition(.asymmetric(insertion: .push(from: .top), removal: .push(from: .bottom)))
     }
 }
 
