@@ -23,7 +23,7 @@ Built as a small native Swift/AppKit app, it renders a compact floating window w
 
 - **Real-time total power display** — shows system load plus battery charging power, updated every second via `ioreg`
 - **System widget gallery support** — installs a WidgetKit extension so 电池功率 appears in macOS Widgets
-- **Widget snapshot sharing** — the floating app writes the latest power snapshot for the system widget to read
+- **Standalone widget refresh** — the system widget samples the battery directly via IOKit, so it stays fresh even when the app is not running; tapping it refreshes in place instead of launching the app
 - **Inline power breakdown** — shows system load and battery charge/discharge power without an expanded mode
 - **Three-state awareness** — distinguishes charging, plugged-full, and battery-only states with a small status dot
 - **macOS-native floating window** with no title bar
@@ -79,7 +79,7 @@ Build and install for development:
 open ~/Applications/电池功率.app
 ```
 
-The floating window updates every second. The macOS system widget reads the latest saved snapshot and refreshes on WidgetKit's schedule; the host app requests a timeline reload periodically, but macOS may still throttle desktop widget updates.
+The floating window updates every second. The macOS system widget samples the battery directly on each WidgetKit timeline reload (falling back to the app's saved snapshot), and tapping the widget triggers an in-place refresh via an interactive-widget intent; the host app also requests a timeline reload periodically, but macOS may still throttle desktop widget updates.
 
 Build a release DMG:
 
