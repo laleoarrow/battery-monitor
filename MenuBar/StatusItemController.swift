@@ -7,7 +7,6 @@ final class StatusItemController: NSObject {
     private static let displayInterval: TimeInterval = 1
 
     /// True while we are showing a stale snapshot because a read failed.
-    /// Plan 2's popover reads this to surface a notice.
     private(set) var isDegraded = false
     private let log = OSLog(subsystem: "com.leoarrow.wattson", category: "menubar")
 
@@ -23,28 +22,30 @@ final class StatusItemController: NSObject {
 
     func start() {
         guard let button = statusItem.button else { return }
-
-        guard BatterySampler.sample() != nil else {
+        guard let initial = BatterySampler.sample() else {
             os_log("no AppleSmartBattery — this Mac has no battery", log: log, type: .fault)
             noBattery()
             return
         }
 
+        snapshot = initial
+        history.append(initial.totalInputW)
         button.target = self
         button.action = #selector(handleClick)
-        // Down events are needed too: a coloured icon must revert to template
-        // while the selection highlight is drawn behind it.
         button.sendAction(on: [.leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp])
         button.toolTip = "Wattson — 左键查看功率流，右键切换省电模式"
 
         popover.onVisibilityChange { [weak self] shown in
             shown ? self?.startDisplayClock() : self?.stopDisplayClock()
         }
+        popover.setModeToggleHandler { [weak self] in
+            self?.toggleEnergyMode() ?? false
+        }
 
-        EnergyModeController.observe { [weak self] _ in self?.refreshIcon() }
+        EnergyModeController.observe { [weak self] _ in self?.refreshPresentation() }
         startEventDrivenUpdates()
         startHistoryClock()
-        sampleNow()
+        refreshPresentation()
     }
 
     // MARK: - Clicks
@@ -55,26 +56,33 @@ final class StatusItemController: NSObject {
         switch event.type {
         case .leftMouseDown, .rightMouseDown:
             pressed = true
-            refreshIcon()
-
+            refreshPresentation()
         case .rightMouseUp:
             pressed = false
-            guard HelperClient.isInstalled else {
-                os_log("helper not installed — right-click is a no-op", log: log, type: .error)
-                confirmToggle(success: false)
-                return
-            }
-            let ok = EnergyModeController.toggle()
+            let ok = toggleEnergyMode()
             confirmToggle(success: ok)
-
         case .leftMouseUp:
             pressed = false
-            refreshIcon()
+            refreshPresentation()
             popover.toggle(relativeTo: button)
-
         default:
             break
         }
+    }
+
+    private func toggleEnergyMode() -> Bool {
+        guard HelperClient.isInstalled else {
+            os_log("helper not installed — mode toggle is a no-op", log: log, type: .error)
+            refreshPresentation()
+            return false
+        }
+        let succeeded = EnergyModeController.toggle()
+        if succeeded {
+            sampleNow(recordHistory: false)
+        } else {
+            refreshPresentation()
+        }
+        return succeeded
     }
 
     private func noBattery() {
@@ -82,8 +90,6 @@ final class StatusItemController: NSObject {
         NSApp.terminate(nil)
     }
 
-    /// Right-click is a direct action with no menu, which is undiscoverable.
-    /// A brief squeeze confirms that something happened.
     private func confirmToggle(success: Bool) {
         guard let button = statusItem.button else { return }
         button.wantsLayer = true
@@ -95,18 +101,17 @@ final class StatusItemController: NSObject {
         squeeze.autoreverses = true
         squeeze.timingFunction = CAMediaTimingFunction(name: .easeOut)
         layer.add(squeeze, forKey: "confirmToggle")
-        refreshIcon()
+        refreshPresentation()
     }
 
     // MARK: - Clocks
 
-    /// The system tells us when the power source changes. No polling.
     private func startEventDrivenUpdates() {
         let context = Unmanaged.passUnretained(self).toOpaque()
         guard let source = IOPSNotificationCreateRunLoopSource({ raw in
             guard let raw else { return }
             let controller = Unmanaged<StatusItemController>.fromOpaque(raw).takeUnretainedValue()
-            controller.sampleNow()
+            controller.sampleNow(recordHistory: false)
         }, context)?.takeRetainedValue() else { return }
         powerSourceRunLoopSource = source
         CFRunLoopAddSource(CFRunLoopGetMain(), source, .defaultMode)
@@ -114,13 +119,15 @@ final class StatusItemController: NSObject {
 
     private func startHistoryClock() {
         historyTimer = Timer.scheduledTimer(withTimeInterval: Self.historyInterval, repeats: true) { [weak self] _ in
-            self?.sampleNow()
+            self?.sampleNow(recordHistory: true)
         }
     }
 
     private func startDisplayClock() {
+        guard displayTimer == nil else { return }
+        sampleNow(recordHistory: false)
         displayTimer = Timer.scheduledTimer(withTimeInterval: Self.displayInterval, repeats: true) { [weak self] _ in
-            self?.sampleNow()
+            self?.sampleNow(recordHistory: false)
         }
     }
 
@@ -129,26 +136,32 @@ final class StatusItemController: NSObject {
         displayTimer = nil
     }
 
-    fileprivate func sampleNow() {
+    fileprivate func sampleNow(recordHistory: Bool) {
         guard let fresh = BatterySampler.sample() else {
-            // Keep the last good snapshot. A dropped read should not blank
-            // the icon.
             isDegraded = true
-            refreshIcon()
+            refreshPresentation()
             return
         }
         isDegraded = false
         snapshot = fresh
-        history.append(fresh.totalInputW)
-        refreshIcon()
+        if recordHistory {
+            history.append(fresh.totalInputW)
+        }
+        refreshPresentation()
     }
 
-    private func refreshIcon() {
+    private func refreshPresentation() {
         statusItem.button?.image = BatteryIcon.image(
             for: snapshot,
             mode: EnergyModeController.current,
             pressed: pressed
         )
         statusItem.button?.alphaValue = isDegraded ? 0.45 : 1.0
+        popover.update(
+            snapshot: snapshot,
+            history: history.samples,
+            peak: history.peak,
+            degraded: isDegraded
+        )
     }
 }

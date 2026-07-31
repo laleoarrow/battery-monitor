@@ -4,6 +4,7 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 STATUS_SOURCE = ROOT / "MenuBar" / "StatusItemController.swift"
 POPOVER_SOURCE = ROOT / "Popover" / "PopoverController.swift"
+STYLE_SOURCE = ROOT / "Popover" / "PopoverStyle.swift"
 
 
 class StatusItemContractTests(unittest.TestCase):
@@ -11,6 +12,7 @@ class StatusItemContractTests(unittest.TestCase):
     def setUpClass(cls):
         cls.source = STATUS_SOURCE.read_text(encoding="utf-8")
         cls.popover = POPOVER_SOURCE.read_text(encoding="utf-8")
+        cls.style = STYLE_SOURCE.read_text(encoding="utf-8")
 
     def test_listens_for_both_mouse_buttons(self):
         self.assertIn("leftMouseUp", self.source)
@@ -52,7 +54,8 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn(".maxY", self.popover)
 
     def test_popover_is_360_wide(self):
-        self.assertIn("width: 360", self.popover)
+        self.assertIn("static let width: CGFloat = 360", self.style)
+        self.assertIn("width: PopoverStyle.width", self.popover)
 
 
 if __name__ == "__main__":
