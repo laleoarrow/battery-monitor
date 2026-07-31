@@ -1,9 +1,15 @@
 import AppKit
 import IOKit.ps
+import os
 
 final class StatusItemController: NSObject {
     private static let historyInterval: TimeInterval = 2
     private static let displayInterval: TimeInterval = 1
+
+    /// True while we are showing a stale snapshot because a read failed.
+    /// Plan 2's popover reads this to surface a notice.
+    private(set) var isDegraded = false
+    private let log = OSLog(subsystem: "com.leoarrow.wattson", category: "menubar")
 
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let popover = PopoverController()
@@ -17,9 +23,18 @@ final class StatusItemController: NSObject {
 
     func start() {
         guard let button = statusItem.button else { return }
+
+        guard BatterySampler.sample() != nil else {
+            os_log("no AppleSmartBattery — this Mac has no battery", log: log, type: .fault)
+            noBattery()
+            return
+        }
+
         button.target = self
         button.action = #selector(handleClick)
-        button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        // Down events are needed too: a coloured icon must revert to template
+        // while the selection highlight is drawn behind it.
+        button.sendAction(on: [.leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp])
         button.toolTip = "Wattson — 左键查看功率流，右键切换省电模式"
 
         popover.onVisibilityChange { [weak self] shown in
@@ -35,13 +50,36 @@ final class StatusItemController: NSObject {
     // MARK: - Clicks
 
     @objc private func handleClick() {
-        guard let button = statusItem.button else { return }
-        if NSApp.currentEvent?.type == .rightMouseUp {
+        guard let button = statusItem.button, let event = NSApp.currentEvent else { return }
+
+        switch event.type {
+        case .leftMouseDown, .rightMouseDown:
+            pressed = true
+            refreshIcon()
+
+        case .rightMouseUp:
+            pressed = false
+            guard HelperClient.isInstalled else {
+                os_log("helper not installed — right-click is a no-op", log: log, type: .error)
+                confirmToggle(success: false)
+                return
+            }
             let ok = EnergyModeController.toggle()
             confirmToggle(success: ok)
-        } else {
+
+        case .leftMouseUp:
+            pressed = false
+            refreshIcon()
             popover.toggle(relativeTo: button)
+
+        default:
+            break
         }
+    }
+
+    private func noBattery() {
+        NSStatusBar.system.removeStatusItem(statusItem)
+        NSApp.terminate(nil)
     }
 
     /// Right-click is a direct action with no menu, which is undiscoverable.
@@ -92,7 +130,14 @@ final class StatusItemController: NSObject {
     }
 
     fileprivate func sampleNow() {
-        guard let fresh = BatterySampler.sample() else { return }
+        guard let fresh = BatterySampler.sample() else {
+            // Keep the last good snapshot. A dropped read should not blank
+            // the icon.
+            isDegraded = true
+            refreshIcon()
+            return
+        }
+        isDegraded = false
         snapshot = fresh
         history.append(fresh.totalInputW)
         refreshIcon()
@@ -104,5 +149,6 @@ final class StatusItemController: NSObject {
             mode: EnergyModeController.current,
             pressed: pressed
         )
+        statusItem.button?.alphaValue = isDegraded ? 0.45 : 1.0
     }
 }

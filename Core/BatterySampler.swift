@@ -1,5 +1,6 @@
 import Foundation
 import IOKit
+import os
 
 enum BatterySampler {
     static func sample() -> PowerSnapshot? {
@@ -40,6 +41,16 @@ enum BatterySampler {
         }
 
         snapshot.lowPowerMode = ProcessInfo.processInfo.isLowPowerModeEnabled
+
+        // A conservation break means a field was parsed wrong. Say so loudly
+        // rather than rendering a plausible lie.
+        if abs(snapshot.conservationError) > 2.0 {
+            os_log("conservation broken by %{public}.2f W — adapter=%{public}.2f battery=%{public}.2f system=%{public}.2f",
+                   log: OSLog(subsystem: "com.leoarrow.wattson", category: "sampler"),
+                   type: .error,
+                   snapshot.conservationError, snapshot.adapterW, snapshot.batteryW, snapshot.systemW)
+        }
+
         return snapshot
     }
 

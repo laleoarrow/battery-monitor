@@ -17,6 +17,14 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("rightMouseUp", self.source)
         self.assertIn("sendAction(on:", self.source)
 
+    def test_press_state_is_actually_wired_not_just_declared(self):
+        # BatteryIcon supports reverting to template while pressed, but that
+        # branch is dead unless something sets the flag on a down event.
+        self.assertIn("leftMouseDown", self.source)
+        self.assertIn("rightMouseDown", self.source)
+        self.assertIn("pressed = true", self.source)
+        self.assertIn("pressed = false", self.source)
+
     def test_left_opens_popover_and_right_toggles_mode(self):
         self.assertIn("popover.toggle", self.source)
         self.assertIn("EnergyModeController.toggle", self.source)
