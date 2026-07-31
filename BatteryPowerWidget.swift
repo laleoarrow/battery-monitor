@@ -71,22 +71,43 @@ struct WidgetConfig {
     var dockDisplayMode: DockDisplayMode = .appIcon
 }
 
-struct PowerSnapshot {
-    var percent: Int = 0
-    var plugged: Bool = false
-    var charging: Bool = false
-    var state: String = "unknown"
-    var systemW: Double = 0
-    var chargeW: Double = 0
-    var dischargeW: Double = 0
-    var totalW: Double = 0
-    var heroColor: NSColor = textColor
-    var statusColor: NSColor = mutedColor
+// The desktop panel predates the signed power model in Core/PowerSnapshot.swift.
+// These accessors let it keep reading the fields it always has, so its drawing
+// code needs no changes. Core stays the single source of truth.
+extension PowerSnapshot {
+    var charging: Bool { state == .charging }
+    var chargeW: Double { max(batteryW, 0) }
+    var dischargeW: Double { max(-batteryW, 0) }
+    var totalW: Double { totalInputW }
+
+    var heroColor: NSColor {
+        switch state {
+        case .charging: return greenColor
+        case .pluggedIdle: return blueColor
+        case .onBattery, .mixedSupply: return textColor
+        }
+    }
+
+    var statusColor: NSColor {
+        if percent <= 20 { return redColor }
+        switch state {
+        case .charging: return greenColor
+        case .pluggedIdle: return blueColor
+        case .onBattery: return mutedColor
+        // The battery is draining while plugged in — an underpowered adapter.
+        case .mixedSupply: return NSColor.systemOrange
+        }
+    }
 }
 
 final class ConfigStore {
     static let shared = ConfigStore()
-    private let url = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".battery_monitor.cfg")
+    private let url: URL = {
+        let dir = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Application Support/Wattson", isDirectory: true)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        return dir.appendingPathComponent("config.json")
+    }()
 
     func load() -> WidgetConfig {
         guard let data = try? Data(contentsOf: url) else {
@@ -136,141 +157,10 @@ final class ConfigStore {
     }
 }
 
-final class PowerSampler {
-    func sample() -> PowerSnapshot {
-        let text = runIoreg()
-        guard !text.isEmpty else {
-            return PowerSnapshot()
-        }
-
-        let percent = intValue("CurrentCapacity", in: text) ?? 0
-        let plugged = boolValue("ExternalConnected", in: text) ?? false
-        let charging = boolValue("IsCharging", in: text) ?? false
-        let voltage = intValue("Voltage", in: text) ?? 0
-        let amperage = intValue("Amperage", in: text) ?? 0
-        let telemetry = intMap("PowerTelemetryData", in: text)
-        let charger = intMap("ChargerData", in: text)
-
-        let chargeW = chargePower(charging: charging, telemetry: telemetry, charger: charger, voltage: voltage, amperage: amperage)
-        let systemW: Double
-        if let load = telemetry["SystemLoad"] {
-            systemW = Double(load) / 1000.0
-        } else if let systemIn = telemetry["SystemPowerIn"] {
-            systemW = max(Double(systemIn) / 1000.0 - chargeW, 0)
-        } else {
-            systemW = fallbackPower(voltage: voltage, amperage: amperage)
-        }
-
-        let dischargeW = plugged ? 0 : (telemetry["BatteryPower"].map { abs(Double($0) / 1000.0) } ?? fallbackPower(voltage: voltage, amperage: amperage))
-        let totalW = max(systemW, 0) + max(chargeW, 0)
-
-        var snapshot = PowerSnapshot()
-        snapshot.percent = percent
-        snapshot.plugged = plugged
-        snapshot.charging = charging
-        snapshot.systemW = systemW
-        snapshot.chargeW = chargeW
-        snapshot.dischargeW = dischargeW
-        snapshot.totalW = totalW
-
-        if charging {
-            snapshot.state = "charging"
-            snapshot.heroColor = greenColor
-            snapshot.statusColor = greenColor
-        } else if plugged {
-            snapshot.state = "plugged_full"
-            snapshot.heroColor = blueColor
-            snapshot.statusColor = blueColor
-        } else if percent <= 20 {
-            snapshot.state = "low_battery"
-            snapshot.heroColor = textColor
-            snapshot.statusColor = redColor
-        } else {
-            snapshot.state = "discharging"
-            snapshot.heroColor = textColor
-            snapshot.statusColor = mutedColor
-        }
-        return snapshot
-    }
-
-    private func runIoreg() -> String {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/sbin/ioreg")
-        process.arguments = ["-rd1", "-c", "AppleSmartBattery"]
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = Pipe()
-        do {
-            try process.run()
-            process.waitUntilExit()
-        } catch {
-            return ""
-        }
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        return String(data: data, encoding: .utf8) ?? ""
-    }
-
-    private func intValue(_ key: String, in text: String) -> Int? {
-        let pattern = "\"\(key)\"\\s*=\\s*(-?\\d+)"
-        guard let match = text.range(of: pattern, options: .regularExpression) else {
-            return nil
-        }
-        let matched = String(text[match])
-        return Int(matched.components(separatedBy: "=").last?.trimmingCharacters(in: .whitespaces) ?? "")
-    }
-
-    private func boolValue(_ key: String, in text: String) -> Bool? {
-        let pattern = "\"\(key)\"\\s*=\\s*(Yes|No)"
-        guard let match = text.range(of: pattern, options: .regularExpression) else {
-            return nil
-        }
-        return String(text[match]).contains("Yes")
-    }
-
-    private func intMap(_ name: String, in text: String) -> [String: Int] {
-        let pattern = "\"\(name)\"\\s*=\\s*\\{([^}]*)\\}"
-        guard let regex = try? NSRegularExpression(pattern: pattern),
-              let match = regex.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)),
-              let range = Range(match.range(at: 1), in: text) else {
-            return [:]
-        }
-        let body = String(text[range])
-        let pairRegex = try? NSRegularExpression(pattern: "\"?(\\w+)\"?\\s*=\\s*(-?\\d+)")
-        var values: [String: Int] = [:]
-        pairRegex?.enumerateMatches(in: body, range: NSRange(body.startIndex..., in: body)) { match, _, _ in
-            guard let match,
-                  let keyRange = Range(match.range(at: 1), in: body),
-                  let valueRange = Range(match.range(at: 2), in: body),
-                  let value = Int(body[valueRange]) else {
-                return
-            }
-            values[String(body[keyRange])] = value
-        }
-        return values
-    }
-
-    private func fallbackPower(voltage: Int, amperage: Int) -> Double {
-        abs(Double(voltage * amperage) / 1_000_000.0)
-    }
-
-    private func chargePower(charging: Bool, telemetry: [String: Int], charger: [String: Int], voltage: Int, amperage: Int) -> Double {
-        guard charging else { return 0 }
-        if let chargeVoltage = charger["ChargingVoltage"],
-           let current = charger["ChargingCurrent"],
-           current > 0 {
-            return abs(Double(chargeVoltage * current) / 1_000_000.0)
-        }
-        if let batteryPower = telemetry["BatteryPower"] {
-            return abs(Double(batteryPower) / 1000.0)
-        }
-        return fallbackPower(voltage: voltage, amperage: amperage)
-    }
-}
-
 private enum WidgetSnapshotStore {
     private static var snapshotURL: URL {
         realHomeDirectory()
-            .appendingPathComponent("Library/Application Support/电池功率", isDirectory: true)
+            .appendingPathComponent("Library/Application Support/Wattson", isDirectory: true)
             .appendingPathComponent("widget-snapshot.json")
     }
 
@@ -701,7 +591,6 @@ final class SettingsWindowController: NSWindowController {
 
 final class AppController: NSObject, NSApplicationDelegate {
     private var config = ConfigStore.shared.load()
-    private let sampler = PowerSampler()
     private let view = BatteryView(frame: NSRect(x: 0, y: 0, width: widgetWidth, height: widgetHeight))
     private let dockView = DockPowerView(frame: NSRect(x: 0, y: 0, width: 128, height: 128))
     private var window: WidgetWindow?
@@ -825,7 +714,7 @@ final class AppController: NSObject, NSApplicationDelegate {
     }
 
     private func update() {
-        let snapshot = sampler.sample()
+        let snapshot = BatterySampler.sample() ?? PowerSnapshot()
         latestSnapshot = snapshot
         view.snapshot = snapshot
         updateDockTile()
@@ -966,7 +855,3 @@ final class AppController: NSObject, NSApplicationDelegate {
     }
 }
 
-let app = NSApplication.shared
-let delegate = AppController()
-app.delegate = delegate
-app.run()
