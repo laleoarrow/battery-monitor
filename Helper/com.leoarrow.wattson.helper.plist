@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.leoarrow.wattson.helper</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper</string>
+    </array>
+    <key>Sockets</key>
+    <dict>
+        <key>Listener</key>
+        <dict>
+            <key>SockPathName</key>
+            <string>/var/run/wattson-helper.sock</string>
+            <key>SockPathMode</key>
+            <integer>438</integer>
+        </dict>
+    </dict>
+</dict>
+</plist>
