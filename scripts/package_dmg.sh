@@ -1,15 +1,15 @@
 #!/bin/bash
-# package_dmg.sh - Build a drag-to-Applications DMG for 电池功率
+# package_dmg.sh - Build a drag-to-Applications DMG for Wattson
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-APP_NAME="电池功率"
-APP_VERSION="${1:-1.3.0}"
+APP_NAME="Wattson"
+APP_VERSION="${1:-2.0.0}"
 APP_DIR="$HOME/Applications/${APP_NAME}.app"
 DIST_DIR="$ROOT_DIR/dist"
 DMG_PATH="$DIST_DIR/${APP_NAME}-v${APP_VERSION}.dmg"
-STAGING_DIR="$(mktemp -d "${TMPDIR:-/tmp}/battery-dmg.XXXXXX")"
+STAGING_DIR="$(mktemp -d "${TMPDIR:-/tmp}/wattson-dmg.XXXXXX")"
 
 cleanup() {
     rm -rf "$STAGING_DIR"
@@ -17,7 +17,7 @@ cleanup() {
 trap cleanup EXIT
 
 echo "📦 Building ${APP_NAME} v${APP_VERSION}..."
-pkill -f "${APP_DIR}/Contents/MacOS/applet" >/dev/null 2>&1 || true
+pkill -f "${APP_DIR}/Contents/MacOS/Wattson" >/dev/null 2>&1 || true
 bash "$SCRIPT_DIR/install.sh"
 
 mkdir -p "$DIST_DIR"

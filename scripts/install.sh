@@ -1,82 +1,77 @@
 #!/bin/bash
-# install.sh — Install 电池功率 as a macOS app
+# install.sh — Install Wattson as a macOS menu bar app
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-APP_NAME="电池功率"
-APP_VERSION="1.3.0"
-APP_DIR="$HOME/Applications/${APP_NAME}.app"
-APP_BUNDLE_ID="com.leoarrow.battery-monitor"
-LAUNCH_AGENT_ID="${APP_BUNDLE_ID}.agent"
-LAUNCH_AGENT_PLIST="$HOME/Library/LaunchAgents/${LAUNCH_AGENT_ID}.plist"
-LEGACY_LAUNCH_AGENT_PLIST="$HOME/Library/LaunchAgents/${APP_BUNDLE_ID}.plist"
-LAUNCH_DOMAIN="gui/$(id -u)"
-MONITOR_SCRIPT="$SCRIPT_DIR/../battery_monitor.py"
-SWIFT_SOURCE="$SCRIPT_DIR/../BatteryPowerWidget.swift"
-WIDGET_PROJECT="$SCRIPT_DIR/../BatteryPowerWidgetExtension.xcodeproj"
-INSTALL_PATH="$HOME/.battery_monitor.py"
-WIDGET_NAME="BatteryPowerWidgetExtension"
-WIDGET_BUNDLE_ID="com.leoarrow.battery-monitor.widget"
-WIDGET_DIR="$APP_DIR/Contents/PlugIns/${WIDGET_NAME}.appex"
-WIDGET_TIMELINE_DIR="$HOME/Library/Containers/$WIDGET_BUNDLE_ID/Data/SystemData/com.apple.chrono/timelines/BatteryPowerSystemWidget"
+ROOT_DIR="$SCRIPT_DIR/.."
+APP_NAME="Wattson"
+APP_VERSION="2.0.0"
+APP_DIR="$HOME/Applications/Wattson.app"
+APP_BUNDLE_ID="com.leoarrow.wattson"
+SUPPORT_DIR="$HOME/Library/Application Support/Wattson"
+HELPER_LABEL="com.leoarrow.wattson.helper"
+HELPER_PLIST="/Library/LaunchDaemons/${HELPER_LABEL}.plist"
+HELPER_BIN="/Library/PrivilegedHelperTools/${HELPER_LABEL}"
 LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
-APP_ENTITLEMENTS="$SCRIPT_DIR/../BatteryPowerApp.entitlements"
-WIDGET_ENTITLEMENTS="$SCRIPT_DIR/../BatteryPowerWidgetExtension.entitlements"
-WIDGET_BUILD_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/battery-widget-build.XXXXXX")"
+LAUNCH_DOMAIN="gui/$(id -u)"
+
+LEGACY_APP="$HOME/Applications/电池功率.app"
+LEGACY_BUNDLE_ID="com.leoarrow.battery-monitor"
+LEGACY_AGENT="$HOME/Library/LaunchAgents/${LEGACY_BUNDLE_ID}.agent.plist"
+LEGACY_AGENT_OLD="$HOME/Library/LaunchAgents/${LEGACY_BUNDLE_ID}.plist"
+LEGACY_SUPPORT="$HOME/Library/Application Support/电池功率"
+LEGACY_CONFIG="$HOME/.battery_monitor.cfg"
+LEGACY_SCRIPT="$HOME/.battery_monitor.py"
+
+APP_ENTITLEMENTS="$ROOT_DIR/BatteryPowerApp.entitlements"
+BUILD_DIR="$(mktemp -d "${TMPDIR:-/tmp}/wattson-build.XXXXXX")"
 cleanup() {
-    rm -rf "$WIDGET_BUILD_ROOT"
+    rm -rf "$BUILD_DIR"
 }
 trap cleanup EXIT
 
 echo "📦 Installing ${APP_NAME}..."
 
-# 1. Copy monitor script
-cp "$MONITOR_SCRIPT" "$INSTALL_PATH"
-echo "  ✅ Script → $INSTALL_PATH"
+# 1. Remove the old install completely. Unregister before deleting, otherwise
+# LaunchServices keeps a stale record pointing at a missing bundle.
+launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT" >/dev/null 2>&1 || true
+launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT_OLD" >/dev/null 2>&1 || true
+rm -f "$LEGACY_AGENT" "$LEGACY_AGENT_OLD"
+pkill -f "$LEGACY_APP/Contents/MacOS/applet" 2>/dev/null || true
+if [ -d "$LEGACY_APP" ]; then
+    xcrun pluginkit -r "$LEGACY_APP/Contents/PlugIns/BatteryPowerWidgetExtension.appex" >/dev/null 2>&1 || true
+    "$LSREGISTER" -u "$LEGACY_APP" >/dev/null 2>&1 || true
+fi
+rm -rf "$LEGACY_APP" "$LEGACY_SUPPORT"
+rm -f "$LEGACY_CONFIG" "$LEGACY_SCRIPT"
+echo "  ✅ Removed 电池功率"
 
-# 2. Recreate app bundle structure
-launchctl bootout "$LAUNCH_DOMAIN" "$LAUNCH_AGENT_PLIST" >/dev/null 2>&1 || true
-launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_LAUNCH_AGENT_PLIST" >/dev/null 2>&1 || true
-rm -f "$LEGACY_LAUNCH_AGENT_PLIST"
-pkill -f "$APP_DIR/Contents/MacOS/applet" 2>/dev/null || true
+# 2. Recreate the app bundle.
+pkill -f "$APP_DIR/Contents/MacOS/Wattson" 2>/dev/null || true
 if [ -d "$APP_DIR" ]; then
-    xcrun pluginkit -r "$WIDGET_DIR" >/dev/null 2>&1 || true
     "$LSREGISTER" -u "$APP_DIR" >/dev/null 2>&1 || true
 fi
 rm -rf "$APP_DIR"
-mkdir -p "$APP_DIR/Contents/MacOS"
-mkdir -p "$APP_DIR/Contents/Resources"
-mkdir -p "$APP_DIR/Contents/PlugIns"
+mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources" "$SUPPORT_DIR"
 
-# 3. Build native AppKit executable. Tk windows remain rectangular at the
-# window layer; the native panel gives true transparent rounded corners.
-xcrun swiftc "$SWIFT_SOURCE" \
+# 3. Build. Top-level statements live in main.swift; every other source is a
+# plain module file.
+xcrun swiftc \
+    "$ROOT_DIR"/Core/*.swift \
+    "$ROOT_DIR"/MenuBar/*.swift \
+    "$ROOT_DIR"/Popover/*.swift \
+    "$ROOT_DIR/BatteryPowerWidget.swift" \
+    "$ROOT_DIR/main.swift" \
     -framework AppKit \
     -framework CoreGraphics \
+    -framework IOKit \
     -framework WidgetKit \
-    -o "$APP_DIR/Contents/MacOS/applet"
-chmod +x "$APP_DIR/Contents/MacOS/applet"
-echo "  ✅ Native app → $APP_DIR/Contents/MacOS/applet"
+    -O \
+    -o "$APP_DIR/Contents/MacOS/Wattson"
+chmod +x "$APP_DIR/Contents/MacOS/Wattson"
+echo "  ✅ Native app → $APP_DIR/Contents/MacOS/Wattson"
 
-# 4. Build WidgetKit extension for the macOS widget gallery. Xcode must build
-# this target so WidgetKit gets the app-extension entry point it expects.
-xcrun xcodebuild \
-    -project "$WIDGET_PROJECT" \
-    -scheme "$WIDGET_NAME" \
-    -configuration Release \
-    -derivedDataPath "$WIDGET_BUILD_ROOT" \
-    CODE_SIGNING_ALLOWED=NO \
-    build >/dev/null
-BUILT_WIDGET="$WIDGET_BUILD_ROOT/Build/Products/Release/${WIDGET_NAME}.appex"
-if [ ! -d "$BUILT_WIDGET" ]; then
-    echo "  ❌ WidgetKit extension build product not found: $BUILT_WIDGET"
-    exit 1
-fi
-rm -rf "$WIDGET_DIR"
-cp -R "$BUILT_WIDGET" "$WIDGET_DIR"
-echo "  ✅ WidgetKit extension → $WIDGET_DIR"
-
-# 5. Write Info.plist
+# 4. Write bundle metadata.
 cat > "$APP_DIR/Contents/Info.plist" << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
@@ -94,7 +89,7 @@ cat > "$APP_DIR/Contents/Info.plist" << EOF
     <key>CFBundleShortVersionString</key>
     <string>${APP_VERSION}</string>
     <key>CFBundleExecutable</key>
-    <string>applet</string>
+    <string>Wattson</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleInfoDictionaryVersion</key>
@@ -112,70 +107,44 @@ cat > "$APP_DIR/Contents/Info.plist" << EOF
 </dict>
 </plist>
 EOF
+
+mkdir -p "$APP_DIR/Contents/Resources/zh-Hans.lproj"
+cat > "$APP_DIR/Contents/Resources/zh-Hans.lproj/InfoPlist.strings" << 'EOF'
+"CFBundleDisplayName" = "瓦特森";
+"CFBundleName" = "瓦特森";
+EOF
 echo "  ✅ Info.plist"
 
-# 6. Copy icon if available
-ICON_SRC="$SCRIPT_DIR/../design/icon/AppIcon.icns"
+# 5. Copy the application icon when present.
+ICON_SRC="$ROOT_DIR/design/icon/AppIcon.icns"
 if [ -f "$ICON_SRC" ]; then
     cp "$ICON_SRC" "$APP_DIR/Contents/Resources/AppIcon.icns"
-    echo "  ✅ Icon → $APP_DIR/Contents/Resources/AppIcon.icns"
+    echo "  ✅ Icon"
 else
     echo "  ⚠️  No AppIcon.icns found, skipping icon"
 fi
 
-codesign --force --sign - --entitlements "$WIDGET_ENTITLEMENTS" "$WIDGET_DIR" >/dev/null
+# 6. Sign and register the app.
 codesign --force --sign - --entitlements "$APP_ENTITLEMENTS" "$APP_DIR" >/dev/null
-codesign --force --deep --sign - --preserve-metadata=entitlements "$APP_DIR" >/dev/null
 echo "  ✅ Ad-hoc code signature"
-
 "$LSREGISTER" -f "$APP_DIR" >/dev/null
-if xcrun pluginkit -a "$WIDGET_DIR" >/dev/null 2>&1; then
-    echo "  ✅ WidgetKit extension registered"
-else
-    echo "  ⚠️  WidgetKit extension built; macOS may index it after opening the app"
-fi
 
-# WidgetKit caches a bundle stub with each archived timeline. Replacing an
-# ad-hoc-signed development build under the same version invalidates that stub.
-rm -rf "$WIDGET_TIMELINE_DIR"
-killall chronod >/dev/null 2>&1 || true
-
-mkdir -p "$(dirname "$LAUNCH_AGENT_PLIST")"
-cat > "$LAUNCH_AGENT_PLIST" << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>${LAUNCH_AGENT_ID}</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>${APP_DIR}/Contents/MacOS/applet</string>
-    </array>
-    <key>RunAtLoad</key>
-    <true/>
-    <key>KeepAlive</key>
-    <dict>
-        <key>Crashed</key>
-        <true/>
-    </dict>
-    <key>LimitLoadToSessionType</key>
-    <string>Aqua</string>
-    <key>ProcessType</key>
-    <string>Interactive</string>
-    <key>StandardOutPath</key>
-    <string>${HOME}/Library/Logs/${APP_NAME}.log</string>
-    <key>StandardErrorPath</key>
-    <string>${HOME}/Library/Logs/${APP_NAME}.log</string>
-</dict>
-</plist>
-EOF
-plutil -lint "$LAUNCH_AGENT_PLIST" >/dev/null
-launchctl bootstrap "$LAUNCH_DOMAIN" "$LAUNCH_AGENT_PLIST"
-launchctl enable "$LAUNCH_DOMAIN/$LAUNCH_AGENT_ID" >/dev/null 2>&1 || true
-launchctl kickstart -k "$LAUNCH_DOMAIN/$LAUNCH_AGENT_ID"
-echo "  ✅ Login agent → $LAUNCH_AGENT_PLIST"
+# 7. Install the privileged helper. launchd wakes it on demand and it exits
+# after five idle seconds.
+echo "  🔑 Installing the privileged helper (needs sudo once)"
+HELPER_BUILD="$BUILD_DIR/wattson-helper"
+xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift" -O -o "$HELPER_BUILD"
+codesign --force --sign - "$HELPER_BUILD" >/dev/null
+sudo launchctl bootout system "$HELPER_PLIST" 2>/dev/null || true
+sudo mkdir -p /Library/PrivilegedHelperTools
+sudo cp "$HELPER_BUILD" "$HELPER_BIN"
+sudo chown root:wheel "$HELPER_BIN"
+sudo chmod 544 "$HELPER_BIN"
+sudo cp "$ROOT_DIR/Helper/${HELPER_LABEL}.plist" "$HELPER_PLIST"
+sudo chown root:wheel "$HELPER_PLIST"
+sudo chmod 644 "$HELPER_PLIST"
+sudo launchctl bootstrap system "$HELPER_PLIST"
+echo "  ✅ Helper installed (not running until you right-click)"
 
 echo ""
-echo "🎉 Done! ${APP_NAME} is running and will start at login."
+echo "🎉 Done. Launch with: open -a ${APP_NAME}"

@@ -11,24 +11,23 @@ class InstallScriptContractTests(unittest.TestCase):
     def setUpClass(cls):
         cls.source = INSTALL_SCRIPT.read_text(encoding="utf-8")
 
-    def test_installs_login_agent_for_snapshot_writer(self):
-        self.assertIn('LAUNCH_AGENT_ID="${APP_BUNDLE_ID}.agent"', self.source)
-        self.assertIn('LAUNCH_AGENT_PLIST="$HOME/Library/LaunchAgents/${LAUNCH_AGENT_ID}.plist"', self.source)
-        self.assertIn("<key>RunAtLoad</key>", self.source)
-        self.assertIn("<key>Crashed</key>", self.source)
-        self.assertIn("<true/>", self.source)
-        self.assertIn("<key>KeepAlive</key>", self.source)
-        self.assertIn("launchctl bootstrap", self.source)
-        self.assertIn("launchctl kickstart -k", self.source)
+    def test_removes_both_legacy_login_agent_names(self):
+        self.assertIn(
+            'LEGACY_AGENT="$HOME/Library/LaunchAgents/${LEGACY_BUNDLE_ID}.agent.plist"',
+            self.source,
+        )
+        self.assertIn(
+            'LEGACY_AGENT_OLD="$HOME/Library/LaunchAgents/${LEGACY_BUNDLE_ID}.plist"',
+            self.source,
+        )
+        self.assertIn('launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT"', self.source)
+        self.assertIn('launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT_OLD"', self.source)
+        self.assertIn('rm -f "$LEGACY_AGENT" "$LEGACY_AGENT_OLD"', self.source)
 
-    def test_unloads_existing_login_agent_before_replacing_app(self):
+    def test_unloads_existing_login_agent_before_removing_legacy_app(self):
         bootout_index = self.source.index("launchctl bootout")
-        remove_index = self.source.index('rm -rf "$APP_DIR"')
+        remove_index = self.source.index('rm -rf "$LEGACY_APP"')
         self.assertLess(bootout_index, remove_index)
-
-    def test_removes_legacy_conflicting_launch_agent_label(self):
-        self.assertIn('LEGACY_LAUNCH_AGENT_PLIST="$HOME/Library/LaunchAgents/${APP_BUNDLE_ID}.plist"', self.source)
-        self.assertIn('rm -f "$LEGACY_LAUNCH_AGENT_PLIST"', self.source)
 
 
 if __name__ == "__main__":

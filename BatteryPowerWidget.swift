@@ -5,7 +5,7 @@ import Foundation
 import WidgetKit
 
 private let currentConfigVersion = 4
-private let fallbackAppVersion = "1.3.0"
+private let fallbackAppVersion = "2.0.0"
 private let widgetWidth: CGFloat = 319
 private let widgetHeight: CGFloat = 100
 private let widgetKind = "BatteryPowerSystemWidget"
@@ -495,7 +495,7 @@ final class SettingsWindowController: NSWindowController {
         root.translatesAutoresizingMaskIntoConstraints = false
         panel.contentView = root
 
-        let titleLabel = NSTextField(labelWithString: "电池功率设置")
+        let titleLabel = NSTextField(labelWithString: "瓦特森设置")
         titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
         titleLabel.textColor = textColor
 
@@ -601,7 +601,7 @@ final class AppController: NSObject, NSApplicationDelegate {
     private var lastWidgetReloadRequest = Date.distantPast
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        ProcessInfo.processInfo.disableAutomaticTermination("Battery power monitor keeps a live floating window and widget snapshot current.")
+        ProcessInfo.processInfo.disableAutomaticTermination("Wattson keeps its live monitor and snapshot current.")
         applyDockPresentation()
         ConfigStore.shared.save(config)
         view.controller = self
@@ -854,4 +854,3 @@ final class AppController: NSObject, NSApplicationDelegate {
         return NSPoint(x: CGFloat(config.x), y: screen.maxY - CGFloat(config.y))
     }
 }
-

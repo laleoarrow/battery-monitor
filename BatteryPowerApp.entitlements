@@ -7,14 +7,9 @@
     <true/>
     <key>com.apple.security.network.client</key>
     <true/>
-    <key>com.apple.security.temporary-exception.files.absolute-path.read-only</key>
-    <array>
-        <string>/usr/sbin/ioreg</string>
-    </array>
     <key>com.apple.security.temporary-exception.files.home-relative-path.read-write</key>
     <array>
-        <string>/.battery_monitor.cfg</string>
-        <string>/Library/Application Support/电池功率/</string>
+        <string>/Library/Application Support/Wattson/</string>
     </array>
 </dict>
 </plist>
