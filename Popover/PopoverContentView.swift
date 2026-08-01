@@ -108,12 +108,7 @@ final class PopoverHeaderView: PopoverSection {
 final class PopoverFooterView: PopoverSection {
     static let preferredHeight: CGFloat = 78
     private let modes: [EnergyMode] = [.auto, .low, .high]
-    private lazy var modeControl = NSSegmentedControl(
-        labels: modes.map(\.title),
-        trackingMode: .selectOne,
-        target: self,
-        action: #selector(modeChanged)
-    )
+    private lazy var modeControl = ModeSliderView(modes: modes)
     private lazy var systemBatteryIconButton = NSButton(
         checkboxWithTitle: "隐藏系统电池图标",
         target: self,
@@ -131,16 +126,7 @@ final class PopoverFooterView: PopoverSection {
     init() {
         super.init(height: Self.preferredHeight)
 
-        modeControl.segmentStyle = .automatic
-        modeControl.segmentDistribution = .fillEqually
-        modeControl.controlSize = .small
-        modeControl.font = .systemFont(ofSize: 11, weight: .medium)
-        modeControl.setAccessibilityLabel("性能模式")
-        let highIndex = modes.firstIndex(of: .high)!
-        modeControl.setEnabled(EnergyModeController.supportsHighPower, forSegment: highIndex)
-        if !EnergyModeController.supportsHighPower {
-            modeControl.setToolTip("此 Mac 不支持高性能模式", forSegment: highIndex)
-        }
+        modeControl.onSelect = { [weak self] mode in self?.onSelect?(mode) ?? false }
         addSubview(modeControl)
 
         systemBatteryIconButton.controlSize = .small
@@ -168,15 +154,13 @@ final class PopoverFooterView: PopoverSection {
         super.layout()
         systemBatteryIconButton.frame = NSRect(x: 0, y: 10, width: 168, height: 20)
         hint.frame = NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)
-        modeControl.frame = NSRect(x: 0, y: 38, width: bounds.width - 34, height: 28)
+        modeControl.frame = NSRect(x: 0, y: 36, width: bounds.width - 34, height: ModeSliderView.preferredHeight)
         settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
     }
 
     func update(mode: EnergyMode, helperInstalled: Bool, systemBatteryIconHidden: Bool?) {
         selected = mode
         self.systemBatteryIconHidden = systemBatteryIconHidden
-        modeControl.selectedSegment = modes.firstIndex(of: mode) ?? 0
-        modeControl.isEnabled = helperInstalled
         if let systemBatteryIconHidden {
             systemBatteryIconButton.state = systemBatteryIconHidden ? .on : .off
             systemBatteryIconButton.isEnabled = helperInstalled
@@ -187,21 +171,17 @@ final class PopoverFooterView: PopoverSection {
         hint.stringValue = helperInstalled
             ? (systemBatteryIconHidden == nil ? "系统设置不可读" : "右键图标可切换")
             : "助手未安装"
-        let highIndex = modes.firstIndex(of: .high)!
-        modeControl.setEnabled(helperInstalled && EnergyModeController.supportsHighPower,
-                               forSegment: highIndex)
+        // High power is only a real detent on hardware that has it, and none
+        // of them are reachable without the helper.
+        var available: [EnergyMode] = helperInstalled ? [.auto, .low] : []
+        if helperInstalled && EnergyModeController.supportsHighPower { available.append(.high) }
+        modeControl.update(selected: mode, enabledModes: available,
+                           tint: PopoverStyle.stateColor(latestState))
     }
 
-    @objc private func modeChanged(_ sender: NSSegmentedControl) {
-        guard modes.indices.contains(sender.selectedSegment) else { return }
-        let requested = modes[sender.selectedSegment]
-        guard onSelect?(requested) == true else {
-            sender.selectedSegment = modes.firstIndex(of: selected) ?? 0
-            NSSound.beep()
-            return
-        }
-        selected = requested
-    }
+    /// Tints the knob with the current power state so the control belongs to
+    /// the data above it rather than floating free.
+    var latestState: PowerState = .pluggedIdle
 
     @objc private func systemBatteryIconChanged(_ sender: NSButton) {
         let requested = sender.state == .on
@@ -324,6 +304,7 @@ final class PopoverContentViewController: NSViewController {
     }
 
     private func updateFooter() {
+        footer.latestState = latestSnapshot.state
         footer.update(
             mode: EnergyModeController.current,
             helperInstalled: HelperClient.isInstalled,

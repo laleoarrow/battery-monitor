@@ -110,16 +110,24 @@ final class FlowNodeView: NSView {
     }
 }
 
-/// One pipe: a dark trough, sparse round-capped pulses tinted by a horizontal
-/// fade so they dim toward both ends, and sparks scattered across the
-/// cross-section.
+/// One pipe: a solid trough with a soft-cored light sweeping its full length,
+/// plus sparks scattered across the cross-section.
+///
+/// The light is a gradient masked by the stroked path, not a dashed stroke.
+/// Dashes give hard edges, and an earlier attempt to soften them by fading the
+/// whole container also faded the trough — the pipe appeared to stop short of
+/// its node. Nothing fades here; the ends are tucked under the node wells.
 final class PipeBundle {
     let container = CALayer()
 
     private let trough = CAShapeLayer()
-    private let pulse = CAShapeLayer()
-    private let fade = CAGradientLayer()
+    private let flowHost = CALayer()
+    private let flowMask = CAShapeLayer()
+    private let gradient = CAGradientLayer()
+
     private var particles: [CALayer] = []
+    private var particleCount = -1
+    private var particlesAreHot = false
     private var geometry = PipeGeometry(start: .zero, control1: .zero, control2: .zero, end: .zero)
 
     init() {
@@ -128,21 +136,15 @@ final class PipeBundle {
         trough.strokeColor = PopoverStyle.trough.cgColor
         container.addSublayer(trough)
 
-        pulse.fillColor = nil
-        pulse.lineCap = .round          // each pulse is a rounded capsule
-        pulse.lineDashPattern = [34, 40]
-        container.addSublayer(pulse)
+        flowMask.fillColor = nil
+        flowMask.lineCap = .round
+        flowMask.strokeColor = NSColor.black.cgColor
+        flowHost.mask = flowMask
 
-        // Fades the run at both ends so pulses arrive and leave rather than
-        // being clipped. Masks the whole container, which is far more reliable
-        // than trying to mask a gradient with a dashed stroke.
-        fade.startPoint = CGPoint(x: 0, y: 0.5)
-        fade.endPoint = CGPoint(x: 1, y: 0.5)
-        fade.colors = [NSColor.black.withAlphaComponent(0.25).cgColor,
-                       NSColor.black.cgColor,
-                       NSColor.black.cgColor,
-                       NSColor.black.withAlphaComponent(0.25).cgColor]
-        fade.locations = [0, 0.12, 0.88, 1]
+        gradient.startPoint = CGPoint(x: 0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        flowHost.addSublayer(gradient)
+        container.addSublayer(flowHost)
     }
 
     func apply(geometry newGeometry: PipeGeometry, thickness: CGFloat, color: NSColor,
@@ -155,13 +157,23 @@ final class PipeBundle {
             self.trough.lineWidth = thickness
             self.trough.frame = bounds
 
-            self.pulse.path = path
-            self.pulse.lineWidth = thickness
-            self.pulse.frame = bounds
+            self.flowHost.frame = bounds
+            self.flowMask.frame = bounds
+            self.flowMask.path = path
+            self.flowMask.lineWidth = thickness
 
-            self.pulse.strokeColor = color.cgColor
-            self.fade.frame = bounds
-            self.container.mask = self.fade
+            // Twice the width so shifting by exactly one width loops with no
+            // seam. Each pulse has a bright core inside a softer body, which is
+            // what separates a moving light from a moving block.
+            self.gradient.frame = CGRect(x: -bounds.width, y: 0,
+                                         width: bounds.width * 2, height: bounds.height)
+            let clear = color.withAlphaComponent(0).cgColor
+            let soft = color.withAlphaComponent(0.30).cgColor
+            let core = color.cgColor
+            self.gradient.colors = [clear, soft, core, soft, clear,
+                                    soft, core, soft, clear, clear]
+            self.gradient.locations = [0, 0.13, 0.21, 0.25, 0.38,
+                                       0.63, 0.71, 0.75, 0.88, 1].map { NSNumber(value: $0) }
             self.container.opacity = thickness > 0.5 ? 1 : 0
         }
 
@@ -175,40 +187,54 @@ final class PipeBundle {
         }
     }
 
-    func startFlow(period: CFTimeInterval) {
-        guard pulse.animation(forKey: "flow") == nil else { return }
-        let drift = CABasicAnimation(keyPath: "lineDashPhase")
-        drift.fromValue = 0
-        drift.toValue = -74           // one full dash period
-        drift.duration = period
-        drift.repeatCount = .infinity
-        drift.isRemovedOnCompletion = false
-        pulse.add(drift, forKey: "flow")
+    func startFlow(period: CFTimeInterval, width: CGFloat) {
+        if gradient.animation(forKey: "flow") == nil {
+            let drift = CABasicAnimation(keyPath: "position.x")
+            drift.byValue = width
+            drift.duration = 2.4
+            drift.repeatCount = .infinity
+            drift.isRemovedOnCompletion = false
+            gradient.add(drift, forKey: "flow")
+        }
+        // Retime rather than restart, so a data refresh never jolts the light.
+        PopoverStyle.setAnimationSpeed(gradient, multiplier: CGFloat(2.4 / period))
     }
 
     func stopFlow() {
-        pulse.removeAllAnimations()
+        gradient.removeAllAnimations()
         particles.forEach { $0.removeAllAnimations() }
     }
 
     /// Particles ride the pipe at every power level, not just past saturation.
     /// Each takes a deterministic offset across the cross-section — putting them
     /// all on the centreline reads as a conveyor belt, not a current.
+    ///
+    /// The pool is only rebuilt when the count or the hot/cold styling actually
+    /// changes. Tearing it down on every 1 Hz refresh reset every particle to
+    /// its seeded position once a second, which is what produced the stutter.
     func rebuildParticles(count: Int, thickness: CGFloat, color: NSColor,
                           period: CFTimeInterval, seed: UInt64, hot: Bool, animating: Bool) {
+        let wanted = thickness > 0.5 ? count : 0
+        guard wanted != particleCount || hot != particlesAreHot else {
+            retimeParticles(period: period)
+            return
+        }
+        particleCount = wanted
+        particlesAreHot = hot
+
         particles.forEach { $0.removeFromSuperlayer() }
         particles.removeAll()
-        guard count > 0, thickness > 0.5 else { return }
+        guard wanted > 0 else { return }
 
         var rng = SeededRNG(seed: seed)
         let tint = hot ? PopoverStyle.saturationParticle : NSColor.white
         let basePath = geometry.path
 
-        for index in 0..<count {
+        for index in 0..<wanted {
             let offset = (rng.nextUnit() * 2 - 1) * thickness * 0.36
             let radius = (hot ? 1.3 : 0.85) + rng.nextUnit() * (hot ? 1.9 : 1.4)
-            let duration = period * (1.4 + rng.nextUnit() * 1.1)
-            let delay = rng.nextUnit() * duration
+            let spread = 1.4 + rng.nextUnit() * 1.1
+            let delay = rng.nextUnit()
 
             let dot = CALayer()
             dot.bounds = CGRect(x: 0, y: 0, width: radius * 2, height: radius * 2)
@@ -221,7 +247,7 @@ final class PipeBundle {
 
             // Seat every dot on the curve up front, so they are visible even
             // when animations are off.
-            let seat = geometry.point(at: (CGFloat(index) + 0.5) / CGFloat(count))
+            let seat = geometry.point(at: (CGFloat(index) + 0.5) / CGFloat(wanted))
             PopoverStyle.setWithoutAnimation {
                 dot.position = CGPoint(x: seat.x, y: seat.y + offset)
                 dot.opacity = 1
@@ -233,12 +259,16 @@ final class PipeBundle {
             var shift = CGAffineTransform(translationX: 0, y: offset)
             guard let ridePath = basePath.copy(using: &shift) else { continue }
 
+            // Fixed durations; speed comes from the layer timeline so a refresh
+            // can retime without rebuilding.
+            let duration = 2.4 * spread
+
             let ride = CAKeyframeAnimation(keyPath: "position")
             ride.path = ridePath
             ride.duration = duration
             ride.repeatCount = .infinity
             ride.calculationMode = .paced
-            ride.timeOffset = delay
+            ride.timeOffset = delay * duration
             ride.isRemovedOnCompletion = false
 
             let fade = CAKeyframeAnimation(keyPath: "opacity")
@@ -246,12 +276,18 @@ final class PipeBundle {
             fade.keyTimes = [0, 0.09, 0.86, 1]
             fade.duration = duration
             fade.repeatCount = .infinity
-            fade.timeOffset = delay
+            fade.timeOffset = delay * duration
             fade.isRemovedOnCompletion = false
 
             dot.add(ride, forKey: "ride")
             dot.add(fade, forKey: "fade")
         }
+        retimeParticles(period: period)
+    }
+
+    private func retimeParticles(period: CFTimeInterval) {
+        let multiplier = CGFloat(2.4 / period)
+        particles.forEach { PopoverStyle.setAnimationSpeed($0, multiplier: multiplier) }
     }
 }
 
@@ -425,7 +461,7 @@ final class PowerFlowView: PopoverSection {
                      bounds: plot.bounds, animated: animated)
         bundle.rebuildParticles(count: particles, thickness: thickness, color: color,
                                 period: period, seed: seed, hot: hot, animating: animationsEnabled)
-        if animationsEnabled { bundle.startFlow(period: period) }
+        if animationsEnabled { bundle.startFlow(period: period, width: plot.bounds.width) }
     }
 
     private func configureNodes(snapshot: PowerSnapshot, color: NSColor) {

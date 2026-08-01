@@ -3,6 +3,7 @@ import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "Popover" / "PopoverContentView.swift"
+SLIDER = ROOT / "Popover" / "ModeSliderView.swift"
 STATUS = ROOT / "MenuBar" / "StatusItemController.swift"
 SYSTEM_ICON = ROOT / "Core" / "SystemBatteryIcon.swift"
 ENERGY_MODE = ROOT / "Core" / "EnergyMode.swift"
@@ -12,16 +13,25 @@ class PopoverControlsContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.content = CONTENT.read_text(encoding="utf-8")
+        cls.slider = SLIDER.read_text(encoding="utf-8")
         cls.status = STATUS.read_text(encoding="utf-8")
         cls.system_icon = SYSTEM_ICON.read_text(encoding="utf-8")
         cls.energy_mode = ENERGY_MODE.read_text(encoding="utf-8")
 
-    def test_mode_picker_is_the_native_liquid_glass_control(self):
-        # Standard AppKit controls adopt Liquid Glass when built with the
-        # macOS 26 SDK, including keyboard and accessibility behavior.
-        self.assertIn("NSSegmentedControl(", self.content)
-        self.assertIn("segmentStyle = .automatic", self.content)
-        self.assertNotIn("private let selection = CALayer()", self.content)
+    def test_mode_picker_is_a_draggable_glass_knob(self):
+        # A segmented control was correct but inert. The knob follows the
+        # pointer one-to-one and springs to the nearest detent on release.
+        self.assertIn("ModeSliderView(modes:", self.content)
+        self.assertNotIn("NSSegmentedControl(", self.content)
+        self.assertIn('NSClassFromString("NSGlassEffectView")', self.slider)
+        self.assertIn("override func mouseDragged", self.slider)
+        self.assertIn("CASpringAnimation", self.slider)
+
+    def test_knob_has_a_fallback_below_macos_26(self):
+        # Liquid Glass is macOS 26 only; older systems get a plain translucent
+        # pill rather than a hand-rolled imitation.
+        self.assertIn("as? NSView.Type", self.slider)
+        self.assertIn("} else {", self.slider)
 
     def test_three_modes_are_always_visible_in_requested_order(self):
         self.assertIn("[.auto, .low, .high]", self.content)
@@ -29,8 +39,11 @@ class PopoverControlsContractTests(unittest.TestCase):
             self.assertIn(title, self.energy_mode)
 
     def test_unsupported_high_power_is_disabled_not_removed(self):
+        # The detent stays visible but cannot be snapped to, so the control
+        # never silently loses a position.
         self.assertIn("EnergyModeController.supportsHighPower", self.content)
-        self.assertIn("setEnabled", self.content)
+        self.assertIn("enabledModes:", self.content)
+        self.assertIn("candidates = modes.indices.filter { enabled[$0] }", self.slider)
 
     def test_system_battery_checkbox_is_in_the_footer(self):
         self.assertIn("checkboxWithTitle: \"\u9690\u85cf\u7cfb\u7edf\u7535\u6c60\u56fe\u6807\"", self.content)

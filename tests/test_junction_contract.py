@@ -20,20 +20,28 @@ class JunctionContractTests(unittest.TestCase):
         self.assertIn("cy - lowerThickness / 2", self.source)
         self.assertIn("cy + upperThickness / 2", self.source)
 
-    def test_trough_is_butt_capped_and_pulse_is_round_capped(self):
-        # Butt keeps the seam flush under the node; round gives each travelling
-        # pulse its capsule shape.
+    def test_trough_is_butt_capped_and_flow_is_round_capped(self):
+        # Butt keeps the seam flush under the node; round gives the travelling
+        # light its capsule ends.
         self.assertIn("trough.lineCap = .butt", self.source)
-        self.assertIn("pulse.lineCap = .round", self.source)
+        self.assertIn("flowMask.lineCap = .round", self.source)
 
     def test_pipe_ends_are_tucked_under_the_node_boxes(self):
         # 40 + 18 - 4 and 288 - 18 + 4: four points inside each 36pt box.
         self.assertIn("startX: CGFloat = 53", self.source)
         self.assertIn("endX: CGFloat = 275", self.source)
 
-    def test_run_is_faded_at_both_ends(self):
-        self.assertIn("container.mask", self.source)
-        self.assertIn("fade.locations", self.source)
+    def test_nothing_fades_the_pipe_near_its_nodes(self):
+        # A container-wide fade was tried and reverted: it dimmed the trough as
+        # well as the light, so the pipe appeared to stop short of its node
+        # instead of running into it. The ends are hidden under the node wells,
+        # so no fade is needed.
+        self.assertNotIn("container.mask", self.source)
+
+    def test_light_sweeps_the_full_width_without_a_seam(self):
+        # Twice the width, shifted by exactly one width, loops with no jump.
+        self.assertIn("width: bounds.width * 2", self.source)
+        self.assertIn("drift.byValue = width", self.source)
 
     def test_geometry_is_recomputed_once_bounds_are_real(self):
         # Anything derived from bounds is nonsense when `update` lands before
