@@ -35,9 +35,23 @@ class BatteryIconContractTests(unittest.TestCase):
     def test_icon_keeps_the_system_battery_width(self):
         match = re.search(r"static let width: CGFloat = ([\d.]+)", self.source)
         self.assertIsNotNone(match)
-        # The system glyph on macOS 26 is 25 pt. Going wider would waste scarce
-        # menu-bar space; going narrower looks undersized beside it.
-        self.assertEqual(float(match.group(1)), 25.0)
+        # Measured from the system's own assets in BatteryCenterUI.framework:
+        # outline 19x10 plus a 2pt cap. Going wider wastes scarce menu-bar
+        # space; going narrower looks undersized beside it.
+        self.assertEqual(float(match.group(1)), 22.0)
+
+
+    def test_bolt_overflows_the_shell(self):
+        # The system bolt is 9x12 against a 10pt shell, so it breaks the
+        # outline top and bottom. Containing it inside the shell is what made
+        # the glyph read as undersized.
+        shell = re.search(r"let shell = NSRect\(x: [\d.]+, y: ([\d.]+), width: [\d.]+, height: ([\d.]+)\)", self.source)
+        self.assertIsNotNone(shell)
+        top = float(shell.group(1)) + float(shell.group(2))
+        ys = [float(m) for m in re.findall(r"bolt\.(?:move|line)\(to: NSPoint\(x: [\d.]+, y: ([\d.]+)\)\)", self.source)]
+        self.assertTrue(ys, "bolt path not found")
+        self.assertGreater(max(ys), top, "bolt must break the top of the shell")
+        self.assertLess(min(ys), float(shell.group(1)), "bolt must break the bottom of the shell")
 
 
 if __name__ == "__main__":
