@@ -29,7 +29,9 @@ class StatusItemContractTests(unittest.TestCase):
 
     def test_left_opens_popover_and_right_toggles_mode(self):
         self.assertIn("popover.toggle", self.source)
-        self.assertIn("EnergyModeController.toggle", self.source)
+        # Right-click stays a two-state toggle even though three modes exist.
+        self.assertIn("EnergyModeController.current == .low ? .auto : .low", self.source)
+        self.assertIn("applyEnergyMode", self.source)
 
     def test_right_click_has_a_visible_confirmation(self):
         # Right-click as a direct action is undiscoverable, so it must confirm.

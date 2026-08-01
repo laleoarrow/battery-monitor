@@ -100,23 +100,30 @@ final class PopoverHeaderView: PopoverSection {
     }
 }
 
-/// Segmented 省电 / 自动 plus the right-click hint.
+/// Segmented 省电 / 自动 / 高性能 plus the right-click hint.
+///
+/// High power lives here and not on the right-click gesture: a three-way cycle
+/// on a control with no visible state is a guessing game. In the popover the
+/// current mode is on screen, so a direct pick is unambiguous.
 final class PopoverFooterView: PopoverSection {
     static let preferredHeight: CGFloat = 46
+    private static let segmentWidth: CGFloat = 56
 
     private let group = CALayer()
     private let selection = CALayer()
-    private let lowLabel = NSTextField(labelWithString: "省电")
-    private let autoLabel = NSTextField(labelWithString: "自动")
+    private var labels: [NSTextField] = []
+    private var modes: [EnergyMode] = []
     private let hint = NSTextField(labelWithString: "右键图标可切换")
     private let settingsButton = NSButton()
 
-    private var isLow = false
-    var onToggle: (() -> Bool)?
+    private var selected: EnergyMode = .auto
+    var onSelect: ((EnergyMode) -> Bool)?
     var onShowMenu: ((NSButton) -> Void)?
 
     init() {
         super.init(height: Self.preferredHeight)
+
+        modes = EnergyModeController.supportsHighPower ? [.low, .auto, .high] : [.low, .auto]
 
         group.backgroundColor = PopoverStyle.well.cgColor
         group.cornerRadius = 7
@@ -128,10 +135,12 @@ final class PopoverFooterView: PopoverSection {
         selection.cornerCurve = .continuous
         group.addSublayer(selection)
 
-        for field in [lowLabel, autoLabel] {
+        for mode in modes {
+            let field = NSTextField(labelWithString: mode.title)
             field.font = .systemFont(ofSize: 11, weight: .regular)
             field.alignment = .center
             addSubview(field)
+            labels.append(field)
         }
 
         hint.font = .systemFont(ofSize: 11, weight: .regular)
@@ -146,38 +155,47 @@ final class PopoverFooterView: PopoverSection {
         settingsButton.action = #selector(showMenu)
         addSubview(settingsButton)
 
-        let click = NSClickGestureRecognizer(target: self, action: #selector(toggleTapped))
-        addGestureRecognizer(click)
+        addGestureRecognizer(NSClickGestureRecognizer(target: self, action: #selector(segmentTapped)))
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
+    private var groupWidth: CGFloat { Self.segmentWidth * CGFloat(modes.count) + 4 }
+
     override func layout() {
         super.layout()
         let top = PopoverStyle.sectionPadding - 2
+        let index = modes.firstIndex(of: selected) ?? 1
         PopoverStyle.setWithoutAnimation {
-            self.group.frame = CGRect(x: 0, y: top, width: 108, height: 24)
-            self.selection.frame = CGRect(x: self.isLow ? 2 : 54, y: 2, width: 52, height: 20)
+            self.group.frame = CGRect(x: 0, y: top, width: self.groupWidth, height: 24)
+            self.selection.frame = CGRect(x: 2 + CGFloat(index) * Self.segmentWidth, y: 2,
+                                          width: Self.segmentWidth, height: 20)
         }
-        lowLabel.frame = NSRect(x: 2, y: top + 5, width: 52, height: 15)
-        autoLabel.frame = NSRect(x: 54, y: top + 5, width: 52, height: 15)
+        for (offset, field) in labels.enumerated() {
+            field.frame = NSRect(x: 2 + CGFloat(offset) * Self.segmentWidth, y: top + 5,
+                                 width: Self.segmentWidth, height: 15)
+        }
         settingsButton.frame = NSRect(x: bounds.width - 24, y: top + 2, width: 22, height: 20)
-        hint.frame = NSRect(x: bounds.width - 190, y: top + 5, width: 158, height: 15)
+        let hintX = groupWidth + 8
+        hint.frame = NSRect(x: hintX, y: top + 5, width: bounds.width - 32 - hintX, height: 15)
     }
 
-    func update(isLowPower: Bool, helperInstalled: Bool) {
-        isLow = isLowPower
-        lowLabel.textColor = isLowPower ? PopoverStyle.primaryText : PopoverStyle.secondaryText
-        autoLabel.textColor = isLowPower ? PopoverStyle.secondaryText : PopoverStyle.primaryText
+    func update(mode: EnergyMode, helperInstalled: Bool) {
+        selected = mode
+        for (offset, field) in labels.enumerated() {
+            field.textColor = modes[offset] == mode ? PopoverStyle.primaryText : PopoverStyle.secondaryText
+        }
         hint.stringValue = helperInstalled ? "右键图标可切换" : "助手未安装"
         group.opacity = helperInstalled ? 1 : 0.45
         needsLayout = true
     }
 
-    @objc private func toggleTapped(_ sender: NSClickGestureRecognizer) {
+    @objc private func segmentTapped(_ sender: NSClickGestureRecognizer) {
         let point = sender.location(in: self)
         guard group.frame.contains(point) else { return }
-        _ = onToggle?()
+        let index = Int((point.x - 2) / Self.segmentWidth)
+        guard modes.indices.contains(index) else { return }
+        _ = onSelect?(modes[index])
     }
 
     @objc private func showMenu() { onShowMenu?(settingsButton) }
@@ -197,7 +215,7 @@ final class PopoverContentViewController: NSViewController {
     private var latestSnapshot = PowerSnapshot()
     private var latestHistory: [Double] = []
     private var latestPeak: Double = 0
-    private var modeToggleHandler: (() -> Bool)?
+    private var modeSelectHandler: ((EnergyMode) -> Bool)?
     var heightDidChange: ((CGFloat) -> Void)?
 
     override func loadView() {
@@ -230,12 +248,12 @@ final class PopoverContentViewController: NSViewController {
         laneView.update(snapshot: snapshot)
         historyView.update(samples: latestHistory, peak: latestPeak,
                            color: PopoverStyle.stateColor(snapshot.state))
-        footer.update(isLowPower: EnergyModeController.current == .low,
+        footer.update(mode: EnergyModeController.current,
                       helperInstalled: HelperClient.isInstalled)
     }
 
-    func setModeToggleHandler(_ handler: @escaping () -> Bool) {
-        modeToggleHandler = handler
+    func setModeSelectHandler(_ handler: @escaping (EnergyMode) -> Bool) {
+        modeSelectHandler = handler
     }
 
     func setAnimationsEnabled(_ enabled: Bool) {
@@ -272,7 +290,7 @@ final class PopoverContentViewController: NSViewController {
             footer.heightAnchor.constraint(equalToConstant: PopoverFooterView.preferredHeight),
         ])
 
-        footer.onToggle = { [weak self] in self?.modeToggleHandler?() ?? false }
+        footer.onSelect = { [weak self] mode in self?.modeSelectHandler?(mode) ?? false }
         footer.onShowMenu = { [weak self] button in self?.showModuleMenu(button) }
         applyModuleVisibility()
     }
@@ -303,7 +321,19 @@ final class PopoverContentViewController: NSViewController {
             item.state = isVisible(module) ? .on : .off
             menu.addItem(item)
         }
+
+        menu.addItem(.separator())
+        let percentage = NSMenuItem(title: "菜单栏显示电量百分比",
+                                    action: #selector(togglePercentage), keyEquivalent: "")
+        percentage.target = self
+        percentage.state = Settings.showsMenuBarPercentage ? .on : .off
+        menu.addItem(percentage)
+
         menu.popUp(positioning: nil, at: NSPoint(x: 0, y: sender.bounds.maxY + 4), in: sender)
+    }
+
+    @objc private func togglePercentage() {
+        Settings.showsMenuBarPercentage.toggle()
     }
 
     @objc private func toggleModule(_ sender: NSMenuItem) {

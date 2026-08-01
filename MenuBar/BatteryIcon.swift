@@ -13,7 +13,7 @@ enum BatteryIcon {
 
         let image = NSImage(size: NSSize(width: width, height: height), flipped: false) { _ in
             let stroke = useTemplate ? NSColor.black : tint!
-            draw(percent: snapshot.percent, charging: snapshot.state == .charging, color: stroke)
+            draw(percent: snapshot.percent, plugged: snapshot.plugged, color: stroke)
             return true
         }
 
@@ -35,7 +35,7 @@ enum BatteryIcon {
         return nil
     }
 
-    private static func draw(percent: Int, charging: Bool, color: NSColor) {
+    private static func draw(percent: Int, plugged: Bool, color: NSColor) {
         let shell = NSRect(x: 0.5, y: 0.8, width: 18.6, height: 10.4)
         let body = NSBezierPath(roundedRect: shell, xRadius: 3.1, yRadius: 3.1)
         body.lineWidth = 0.9
@@ -56,7 +56,10 @@ enum BatteryIcon {
         color.setFill()
         NSBezierPath(roundedRect: fill, xRadius: 1.9, yRadius: 1.9).fill()
 
-        guard charging else { return }
+        // The system shows the bolt whenever a power source is attached, not
+        // only while current is actually flowing into the battery. At 100% on
+        // the adapter it still means "you are on wall power".
+        guard plugged else { return }
         let bolt = NSBezierPath()
         bolt.move(to: NSPoint(x: 11.4, y: 10.0))
         bolt.line(to: NSPoint(x: 8.4, y: 5.9))
@@ -65,7 +68,20 @@ enum BatteryIcon {
         bolt.line(to: NSPoint(x: 12.6, y: 7.0))
         bolt.line(to: NSPoint(x: 10.5, y: 7.0))
         bolt.close()
-        NSColor.white.setFill()
+
+        // Knock a transparent ring around the bolt rather than drawing it in a
+        // lighter colour. A template image carries only alpha, so a white bolt
+        // on a black fill is the same opaque mass and vanishes entirely.
+        NSGraphicsContext.current?.compositingOperation = .destinationOut
+        NSColor.black.setStroke()
+        bolt.lineWidth = 1.5
+        bolt.lineJoinStyle = .round
+        bolt.stroke()
+        NSGraphicsContext.current?.compositingOperation = .sourceOver
+
+        // Filled in the icon colour so it stays visible over the empty part of
+        // the shell at low charge, where there is no fill to cut through.
+        color.setFill()
         bolt.fill()
     }
 }

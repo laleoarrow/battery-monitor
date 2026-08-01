@@ -32,10 +32,12 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn("/dev/console", self.source)
 
     def test_pmset_arguments_are_constants(self):
-        # The whole security argument rests on this: no caller-supplied value
-        # ever reaches the argument vector.
-        self.assertIn('"/usr/bin/pmset", "-a", "lowpowermode", "1"', self.source)
-        self.assertIn('"/usr/bin/pmset", "-a", "lowpowermode", "0"', self.source)
+        # The whole security argument rests on this: the request selects which
+        # constant to run, and no caller-supplied value ever reaches the
+        # argument vector.
+        for value in ("0", "1", "2"):
+            self.assertIn(f'"/usr/bin/pmset", "-a", "powermode", "{value}"', self.source)
+        self.assertIn("Mode(rawValue: raw)", self.source)
 
     def test_rejects_anything_outside_the_whitelist(self):
         self.assertIn('case "getMode"', self.source)

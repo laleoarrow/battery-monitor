@@ -24,10 +24,24 @@ class EnergyModeContractTests(unittest.TestCase):
         self.assertIn("isLowPowerModeEnabled", self.mode)
         self.assertIn("NSProcessInfoPowerStateDidChange", self.mode)
 
-    def test_toggle_is_two_state_only(self):
-        self.assertIn("case low", self.mode)
-        self.assertIn("case auto", self.mode)
-        self.assertNotIn("case high", self.mode)
+    def test_three_modes_exist_but_the_right_click_toggle_uses_two(self):
+        # High power is reachable from the popover, where the current mode is
+        # visible. A three-way cycle on a gesture with no visible state is a
+        # guessing game.
+        for case in ("case low", "case auto", "case high"):
+            self.assertIn(case, self.mode)
+        toggle = self.mode.split("static func toggle()", 1)[1].split("}", 1)[0]
+        self.assertIn("current == .low ? .auto : .low", toggle)
+        self.assertNotIn(".high", toggle)
+
+    def test_high_power_support_is_detected_not_assumed(self):
+        # The HighPowerMode key only exists on hardware that has the feature.
+        self.assertIn("supportsHighPower", self.mode)
+        self.assertIn('"HighPowerMode"', self.mode)
+
+    def test_mode_is_read_without_forking_pmset(self):
+        self.assertIn("NSDictionary(contentsOfFile:", self.mode)
+        self.assertNotIn("Process()", self.mode)
 
     def test_toggle_goes_through_the_helper(self):
         self.assertIn("HelperClient.send", self.mode)

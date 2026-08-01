@@ -38,11 +38,16 @@ final class StatusItemController: NSObject {
         popover.onVisibilityChange { [weak self] shown in
             shown ? self?.startDisplayClock() : self?.stopDisplayClock()
         }
-        popover.setModeToggleHandler { [weak self] in
-            self?.toggleEnergyMode() ?? false
+        popover.setModeSelectHandler { [weak self] mode in
+            self?.applyEnergyMode(mode) ?? false
         }
 
         EnergyModeController.observe { [weak self] _ in self?.refreshPresentation() }
+        NotificationCenter.default.addObserver(
+            forName: Settings.didChange, object: nil, queue: .main
+        ) { [weak self] _ in
+            self?.refreshPresentation()
+        }
         startEventDrivenUpdates()
         startHistoryClock()
         refreshPresentation()
@@ -59,7 +64,7 @@ final class StatusItemController: NSObject {
             refreshPresentation()
         case .rightMouseUp:
             pressed = false
-            let ok = toggleEnergyMode()
+            let ok = applyEnergyMode(EnergyModeController.current == .low ? .auto : .low)
             confirmToggle(success: ok)
         case .leftMouseUp:
             pressed = false
@@ -70,13 +75,13 @@ final class StatusItemController: NSObject {
         }
     }
 
-    private func toggleEnergyMode() -> Bool {
+    private func applyEnergyMode(_ mode: EnergyMode) -> Bool {
         guard HelperClient.isInstalled else {
-            os_log("helper not installed — mode toggle is a no-op", log: log, type: .error)
+            os_log("helper not installed — mode change is a no-op", log: log, type: .error)
             refreshPresentation()
             return false
         }
-        let succeeded = EnergyModeController.toggle()
+        let succeeded = EnergyModeController.set(mode)
         if succeeded {
             sampleNow(recordHistory: false)
         } else {
@@ -151,12 +156,26 @@ final class StatusItemController: NSObject {
     }
 
     private func refreshPresentation() {
-        statusItem.button?.image = BatteryIcon.image(
+        guard let button = statusItem.button else { return }
+        button.image = BatteryIcon.image(
             for: snapshot,
             mode: EnergyModeController.current,
             pressed: pressed
         )
-        statusItem.button?.alphaValue = isDegraded ? 0.45 : 1.0
+
+        // Percentage left of the glyph, matching the system battery. Setting a
+        // plain title rather than an attributed one lets AppKit keep the text
+        // colour correct across light, dark and the pressed highlight.
+        if Settings.showsMenuBarPercentage {
+            button.font = .monospacedDigitSystemFont(ofSize: 12, weight: .regular)
+            button.title = "\(snapshot.percent)% "
+            button.imagePosition = .imageRight
+        } else {
+            button.title = ""
+            button.imagePosition = .imageOnly
+        }
+
+        button.alphaValue = isDegraded ? 0.45 : 1.0
         popover.update(
             snapshot: snapshot,
             history: history.samples,

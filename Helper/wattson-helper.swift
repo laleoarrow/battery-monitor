@@ -12,11 +12,19 @@ private func consoleUID() -> uid_t? {
     return info.st_uid
 }
 
-private func runPmset(low: Bool) -> Bool {
-    // Constant argument vectors. No caller-supplied value is ever placed here.
-    let args = low
-        ? ["/usr/bin/pmset", "-a", "lowpowermode", "1"]
-        : ["/usr/bin/pmset", "-a", "lowpowermode", "0"]
+private enum Mode: String {
+    case low, auto, high
+}
+
+private func runPmset(_ mode: Mode) -> Bool {
+    // Constant argument vectors, one per mode. No caller-supplied value is
+    // ever placed here — the request only selects which constant to run.
+    let args: [String]
+    switch mode {
+    case .low:  args = ["/usr/bin/pmset", "-a", "powermode", "1"]
+    case .auto: args = ["/usr/bin/pmset", "-a", "powermode", "0"]
+    case .high: args = ["/usr/bin/pmset", "-a", "powermode", "2"]
+    }
 
     var pid: pid_t = 0
     var argv: [UnsafeMutablePointer<CChar>?] = args.map { strdup($0) }
@@ -58,9 +66,8 @@ private func handle(_ fd: Int32) {
     case "getMode":
         reply = "{\"ok\":true,\"mode\":\"\(currentMode())\"}"
     case "setMode":
-        let requested = object["value"] as? String
-        if requested == "low" || requested == "auto" {
-            let ok = runPmset(low: requested == "low")
+        if let raw = object["value"] as? String, let mode = Mode(rawValue: raw) {
+            let ok = runPmset(mode)
             reply = ok ? "{\"ok\":true,\"mode\":\"\(currentMode())\"}"
                        : #"{"ok":false,"error":"pmset failed"}"#
         } else {

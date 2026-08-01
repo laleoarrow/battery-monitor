@@ -23,8 +23,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         content.update(snapshot: snapshot, history: history, peak: peak, degraded: degraded)
     }
 
-    func setModeToggleHandler(_ handler: @escaping () -> Bool) {
-        content.setModeToggleHandler(handler)
+    func setModeSelectHandler(_ handler: @escaping (EnergyMode) -> Bool) {
+        content.setModeSelectHandler(handler)
     }
 
     func toggle(relativeTo button: NSStatusBarButton) {
