@@ -1,137 +1,154 @@
 import AppKit
-import QuartzCore
 
-final class LaneView: NSView {
-    private let titleLabel = NSTextField(labelWithString: "功率泳道")
-    private let systemTitle = NSTextField(labelWithString: "系统消耗")
-    private let systemValue = NSTextField(labelWithString: "0.0 W")
-    private let batteryTitle = NSTextField(labelWithString: "电池静止")
-    private let batteryValue = NSTextField(labelWithString: "0.0 W")
-    private let tracks = [CAShapeLayer(), CAShapeLayer()]
-    private let sweeps = [CAShapeLayer(), CAShapeLayer()]
-    private var snapshot = PowerSnapshot()
+/// Two lanes, each length proportional to its own wattage, with the value
+/// inside the bar and the label at its far end.
+///
+/// The proportion is the whole point. Normalising against a fixed ceiling makes
+/// 108 W and 32 W render at nearly the same length, which states something
+/// false about the data.
+final class LaneView: PopoverSection {
+    static let laneHeight: CGFloat = 26
+    static let laneGap: CGFloat = 9
+    static let plotHeight: CGFloat = laneHeight * 2 + laneGap
+    static let preferredHeight: CGFloat = plotHeight + PopoverStyle.sectionPadding * 2
+
+    private static let wellSize: CGFloat = 26
+    private static let trackX: CGFloat = wellSize + laneGap
+    private static var trackWidth: CGFloat { PopoverStyle.contentWidth - trackX }
+
+    private final class Lane {
+        let well = CALayer()
+        let icon = NSImageView()
+        let track = CALayer()
+        let fill = CALayer()
+        let sweep = CAGradientLayer()
+        let value = NSTextField(labelWithString: "0.0 W")
+        let caption = NSTextField(labelWithString: "")
+
+        init() {
+            well.backgroundColor = PopoverStyle.well.cgColor
+            well.cornerRadius = 8
+            well.cornerCurve = .continuous
+
+            track.backgroundColor = PopoverStyle.well.cgColor
+            track.cornerRadius = 8
+            track.cornerCurve = .continuous
+            track.masksToBounds = true
+
+            fill.cornerRadius = 8
+            fill.cornerCurve = .continuous
+            fill.masksToBounds = true
+            sweep.startPoint = CGPoint(x: 0, y: 0.5)
+            sweep.endPoint = CGPoint(x: 1, y: 0.5)
+            fill.addSublayer(sweep)
+            track.addSublayer(fill)
+
+            value.font = PopoverStyle.mono(12.5)
+            value.textColor = PopoverStyle.primaryText
+            caption.font = .systemFont(ofSize: 11, weight: .regular)
+            caption.textColor = PopoverStyle.secondaryText
+            caption.alignment = .right
+        }
+    }
+
+    private let lanes = [Lane(), Lane()]
     private var animationsEnabled = false
+    private var period: CFTimeInterval = 2.4
+    private var latest: PowerSnapshot?
 
-    override var isFlipped: Bool { true }
-
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        PopoverStyle.configureModule(self)
-
-        titleLabel.font = .systemFont(ofSize: 11, weight: .semibold)
-        titleLabel.textColor = .secondaryLabelColor
-        addSubview(titleLabel)
-
-        for label in [systemTitle, batteryTitle] {
-            label.font = .systemFont(ofSize: 11, weight: .medium)
-            label.textColor = .secondaryLabelColor
-            addSubview(label)
-        }
-        for label in [systemValue, batteryValue] {
-            label.font = .monospacedDigitSystemFont(ofSize: 12, weight: .medium)
-            label.alignment = .right
-            label.textColor = .labelColor
-            addSubview(label)
-        }
-
-        for index in 0..<2 {
-            let track = tracks[index]
-            track.fillColor = nil
-            track.strokeColor = NSColor.separatorColor.withAlphaComponent(0.45).cgColor
-            track.lineWidth = 6
-            track.lineCap = .round
-            layer?.addSublayer(track)
-
-            let sweep = sweeps[index]
-            sweep.fillColor = nil
-            sweep.lineWidth = 4
-            sweep.lineCap = .round
-            layer?.addSublayer(sweep)
+    init() {
+        super.init(height: Self.preferredHeight)
+        for lane in lanes {
+            layer?.addSublayer(lane.well)
+            layer?.addSublayer(lane.track)
+            addSubview(lane.icon)
+            addSubview(lane.value)
+            addSubview(lane.caption)
         }
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     override func layout() {
         super.layout()
-        titleLabel.frame = NSRect(x: 12, y: 8, width: 100, height: 16)
-        systemTitle.frame = NSRect(x: 12, y: 32, width: 76, height: 16)
-        batteryTitle.frame = NSRect(x: 12, y: 64, width: 76, height: 16)
-        systemValue.frame = NSRect(x: 254, y: 29, width: 62, height: 18)
-        batteryValue.frame = NSRect(x: 254, y: 61, width: 62, height: 18)
-
-        let ys: [CGFloat] = [40, 72]
-        for index in 0..<2 {
-            let trackPath = CGMutablePath()
-            trackPath.move(to: CGPoint(x: 92, y: ys[index]))
-            trackPath.addLine(to: CGPoint(x: 246, y: ys[index]))
-            tracks[index].path = trackPath
-            tracks[index].frame = bounds
-
-            let sweepPath = CGMutablePath()
-            sweepPath.move(to: CGPoint(x: 92, y: ys[index]))
-            sweepPath.addLine(to: CGPoint(x: 126, y: ys[index]))
-            sweeps[index].path = sweepPath
-            sweeps[index].frame = bounds
+        for (index, lane) in lanes.enumerated() {
+            let y = PopoverStyle.sectionPadding + CGFloat(index) * (Self.laneHeight + Self.laneGap)
+            PopoverStyle.setWithoutAnimation {
+                lane.well.frame = CGRect(x: 0, y: y, width: Self.wellSize, height: Self.wellSize)
+                lane.track.frame = CGRect(x: Self.trackX, y: y, width: Self.trackWidth, height: Self.laneHeight)
+            }
+            lane.icon.frame = NSRect(x: 5, y: y + 5, width: 16, height: 16)
+            lane.value.frame = NSRect(x: Self.trackX + 10, y: y + 5, width: 90, height: 16)
+            lane.caption.frame = NSRect(x: PopoverStyle.contentWidth - 130, y: y + 6, width: 120, height: 14)
         }
+        if let latest { update(snapshot: latest) }
     }
 
     func update(snapshot: PowerSnapshot) {
-        self.snapshot = snapshot
+        latest = snapshot
         let color = PopoverStyle.stateColor(snapshot.state)
-        let primaryColor: NSColor = snapshot.state == .mixedSupply ? .systemBlue : color
-        systemValue.stringValue = PopoverStyle.watts(snapshot.systemW)
-        batteryTitle.stringValue = batteryLabel(snapshot.state)
-        batteryValue.stringValue = PopoverStyle.watts(abs(snapshot.batteryW))
-        systemValue.textColor = primaryColor
-        batteryValue.textColor = snapshot.state == .mixedSupply ? .systemOrange : color
-        sweeps[0].strokeColor = primaryColor.cgColor
-        sweeps[1].strokeColor = (snapshot.state == .mixedSupply ? NSColor.systemOrange : color).cgColor
-        sweeps[1].opacity = abs(snapshot.batteryW) <= PowerSnapshot.epsilon ? 0 : 1
-        needsLayout = true
-        layoutSubtreeIfNeeded()
-        if animationsEnabled {
-            startSweeps(totalInputW: snapshot.totalInputW)
+        let systemWatts = snapshot.systemW
+        let batteryWatts = snapshot.state == .pluggedIdle ? 0 : abs(snapshot.batteryW)
+
+        // Normalise against the larger lane so the ratio between them is exact
+        // and the dominant lane always fills its track.
+        let ceiling = max(systemWatts, batteryWatts, 0.1)
+        period = 2.4 / Double(VisualEncoding.multiplier(snapshot.totalInputW))
+
+        apply(lanes[0], symbol: "cpu", caption: "系统负载", watts: systemWatts,
+              ceiling: ceiling, color: color)
+        apply(lanes[1],
+              symbol: snapshot.state == .charging ? "battery.100.bolt" : "battery.50",
+              caption: PopoverStyle.batteryFlowLabel(snapshot.state),
+              watts: batteryWatts, ceiling: ceiling,
+              color: snapshot.state == .mixedSupply ? PopoverStyle.amber : color)
+    }
+
+    private func apply(_ lane: Lane, symbol: String, caption: String,
+                       watts: Double, ceiling: Double, color: NSColor) {
+        lane.icon.image = NSImage(systemSymbolName: symbol, accessibilityDescription: caption)
+        lane.icon.contentTintColor = color
+        lane.value.stringValue = PopoverStyle.watts(watts)
+        lane.caption.stringValue = caption
+
+        let fraction = CGFloat(min(max(watts / ceiling, 0), 1))
+        let width = max(fraction * Self.trackWidth, watts > 0.05 ? 12 : 0)
+
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(0.45)
+        lane.fill.frame = CGRect(x: 0, y: 0, width: width, height: Self.laneHeight)
+        lane.fill.backgroundColor = color.withAlphaComponent(0.17).cgColor
+        CATransaction.commit()
+
+        PopoverStyle.setWithoutAnimation {
+            lane.sweep.frame = CGRect(x: -width, y: 0, width: width * 2, height: Self.laneHeight)
+            let clear = color.withAlphaComponent(0).cgColor
+            lane.sweep.colors = [clear, color.withAlphaComponent(0.75).cgColor, clear, clear]
+            lane.sweep.locations = [0, 0.2, 0.4, 1].map { NSNumber(value: $0) }
         }
+
+        if animationsEnabled, width > 0 { startSweep(lane, width: width) }
+    }
+
+    private func startSweep(_ lane: Lane, width: CGFloat) {
+        guard lane.sweep.animation(forKey: "sweep") == nil else { return }
+        let motion = CABasicAnimation(keyPath: "position.x")
+        motion.byValue = width
+        motion.duration = 2.4
+        motion.repeatCount = .infinity
+        motion.isRemovedOnCompletion = false
+        lane.sweep.add(motion, forKey: "sweep")
+        PopoverStyle.setAnimationSpeed(lane.sweep, multiplier: CGFloat(2.4 / period))
     }
 
     func setAnimationsEnabled(_ enabled: Bool) {
         animationsEnabled = enabled
         if enabled {
-            startSweeps(totalInputW: snapshot.totalInputW)
+            for lane in lanes where lane.fill.bounds.width > 0 {
+                startSweep(lane, width: lane.fill.bounds.width)
+            }
         } else {
-            sweeps.forEach { $0.removeAllAnimations() }
-        }
-    }
-
-    private func startSweeps(totalInputW: Double) {
-        for (index, sweep) in sweeps.enumerated() {
-            guard sweep.opacity > 0 else {
-                sweep.removeAnimation(forKey: "sweep")
-                continue
-            }
-            if sweep.animation(forKey: "sweep") == nil {
-                let motion = CABasicAnimation(keyPath: "transform.translation.x")
-                motion.fromValue = 0
-                motion.toValue = 120
-                motion.duration = 2.4
-                motion.timeOffset = Double(index) * 0.37
-                motion.repeatCount = .infinity
-                motion.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-                sweep.add(motion, forKey: "sweep")
-            }
-            PopoverStyle.setAnimationSpeed(sweep, multiplier: VisualEncoding.multiplier(totalInputW))
-        }
-    }
-
-    private func batteryLabel(_ state: PowerState) -> String {
-        switch state {
-        case .charging: return "充入电池"
-        case .pluggedIdle: return "电池静止"
-        case .onBattery: return "电池输出"
-        case .mixedSupply: return "电池补差"
+            lanes.forEach { $0.sweep.removeAllAnimations() }
         }
     }
 }

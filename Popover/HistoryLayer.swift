@@ -1,114 +1,115 @@
 import AppKit
-import QuartzCore
 
-final class HistoryView: NSView {
-    private let titleLabel = NSTextField(labelWithString: "近 2 分钟")
-    private let peakLabel = NSTextField(labelWithString: "峰值 0.0 W")
-    private let gridLayers = [CAShapeLayer(), CAShapeLayer()]
-    private let areaLayer = CAShapeLayer()
-    private let lineLayer = CAShapeLayer()
-    private var samples: [Double] = []
-    private var peak: Double = 0
-    private var color: NSColor = .systemBlue
+/// Two minutes of total input power. Redrawn on data, never animated — a
+/// moving history chart is harder to read than a still one.
+final class HistoryView: PopoverSection {
+    static let chartHeight: CGFloat = 64
+    static let headerHeight: CGFloat = 22
+    static let plotHeight: CGFloat = headerHeight + chartHeight
+    static let preferredHeight: CGFloat = plotHeight + PopoverStyle.sectionPadding * 2
 
-    override var isFlipped: Bool { true }
+    private let area = CAShapeLayer()
+    private let line = CAShapeLayer()
+    private let head = CALayer()
+    private let gradientMask = CAShapeLayer()
+    private let areaGradient = CAGradientLayer()
 
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        PopoverStyle.configureModule(self)
+    private let caption = NSTextField(labelWithString: "功率历史 · 近 2 分钟")
+    private let peakLabel = NSTextField(labelWithString: "")
 
-        titleLabel.font = .systemFont(ofSize: 11, weight: .semibold)
-        titleLabel.textColor = .secondaryLabelColor
-        addSubview(titleLabel)
+    init() {
+        super.init(height: Self.preferredHeight)
 
-        peakLabel.font = .monospacedDigitSystemFont(ofSize: 10, weight: .regular)
-        peakLabel.textColor = .tertiaryLabelColor
+        areaGradient.mask = gradientMask
+        gradientMask.fillColor = NSColor.black.cgColor
+        gradientMask.strokeColor = nil
+        layer?.addSublayer(areaGradient)
+
+        line.fillColor = nil
+        line.lineWidth = 1.6
+        line.lineJoin = .round
+        line.lineCap = .round
+        layer?.addSublayer(line)
+
+        head.cornerRadius = 2.6
+        layer?.addSublayer(head)
+
+        caption.font = .systemFont(ofSize: 11, weight: .regular)
+        caption.textColor = PopoverStyle.secondaryText
+        addSubview(caption)
+
+        peakLabel.font = PopoverStyle.mono(11, .regular)
+        peakLabel.textColor = PopoverStyle.tertiaryText
         peakLabel.alignment = .right
         addSubview(peakLabel)
-
-        gridLayers.forEach {
-            $0.fillColor = nil
-            $0.strokeColor = NSColor.separatorColor.withAlphaComponent(0.28).cgColor
-            $0.lineWidth = 0.6
-            layer?.addSublayer($0)
-        }
-        areaLayer.fillColor = color.withAlphaComponent(0.16).cgColor
-        areaLayer.strokeColor = nil
-        layer?.addSublayer(areaLayer)
-        lineLayer.fillColor = nil
-        lineLayer.strokeColor = color.cgColor
-        lineLayer.lineWidth = 1.7
-        lineLayer.lineJoin = .round
-        lineLayer.lineCap = .round
-        layer?.addSublayer(lineLayer)
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    private var chartRect: CGRect {
+        CGRect(x: 0, y: PopoverStyle.sectionPadding + Self.headerHeight,
+               width: PopoverStyle.contentWidth, height: Self.chartHeight)
     }
 
     override func layout() {
         super.layout()
-        titleLabel.frame = NSRect(x: 12, y: 8, width: 100, height: 16)
-        peakLabel.frame = NSRect(x: 200, y: 8, width: 116, height: 16)
-        redraw()
+        caption.frame = NSRect(x: 0, y: PopoverStyle.sectionPadding, width: 180, height: 15)
+        peakLabel.frame = NSRect(x: PopoverStyle.contentWidth - 160,
+                                 y: PopoverStyle.sectionPadding, width: 160, height: 15)
+        PopoverStyle.setWithoutAnimation {
+            self.area.frame = self.bounds
+            self.line.frame = self.bounds
+            self.gradientMask.frame = self.bounds
+            self.areaGradient.frame = self.bounds
+        }
     }
 
     func update(samples: [Double], peak: Double, color: NSColor) {
-        self.samples = samples
-        self.peak = peak
-        self.color = color
-        peakLabel.stringValue = "峰值 " + PopoverStyle.watts(peak)
-        redraw()
-    }
+        peakLabel.stringValue = samples.isEmpty ? "采集中" : String(format: "峰值 %.1f W", peak)
 
-    private func redraw() {
-        guard bounds.width > 0 else { return }
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        defer { CATransaction.commit() }
-
-        let chart = CGRect(x: 12, y: 28, width: bounds.width - 24, height: bounds.height - 38)
-        for (index, grid) in gridLayers.enumerated() {
-            let y = chart.minY + chart.height * CGFloat(index + 1) / 3
-            let path = CGMutablePath()
-            path.move(to: CGPoint(x: chart.minX, y: y))
-            path.addLine(to: CGPoint(x: chart.maxX, y: y))
-            grid.path = path
-            grid.frame = bounds
-        }
-
-        guard !samples.isEmpty else {
-            areaLayer.path = nil
-            lineLayer.path = nil
+        let plot = chartRect
+        guard samples.count > 1 else {
+            PopoverStyle.setWithoutAnimation {
+                self.gradientMask.path = nil
+                self.line.path = nil
+                self.head.opacity = 0
+            }
             return
         }
 
-        let scale = max(peak, 1)
-        let points = samples.enumerated().map { index, value -> CGPoint in
-            let denominator = max(samples.count - 1, 1)
-            let x = chart.minX + chart.width * CGFloat(index) / CGFloat(denominator)
-            let y = chart.maxY - chart.height * CGFloat(max(value, 0) / scale)
-            return CGPoint(x: x, y: y)
+        let ceiling = max(peak * 1.14, 8)
+        let step = plot.width / CGFloat(samples.count - 1)
+        func point(_ index: Int) -> CGPoint {
+            let value = min(max(samples[index], 0), ceiling)
+            return CGPoint(x: plot.minX + CGFloat(index) * step,
+                           y: plot.maxY - CGFloat(value / ceiling) * plot.height)
         }
 
-        let linePath = CGMutablePath()
-        linePath.move(to: points[0])
-        points.dropFirst().forEach { linePath.addLine(to: $0) }
-        if points.count == 1 {
-            linePath.addLine(to: CGPoint(x: chart.maxX, y: points[0].y))
-        }
+        let stroke = CGMutablePath()
+        stroke.move(to: point(0))
+        for index in 1..<samples.count { stroke.addLine(to: point(index)) }
 
-        let areaPath = linePath.mutableCopy() ?? CGMutablePath()
-        areaPath.addLine(to: CGPoint(x: chart.maxX, y: chart.maxY))
-        areaPath.addLine(to: CGPoint(x: chart.minX, y: chart.maxY))
-        areaPath.closeSubpath()
+        let filled = CGMutablePath()
+        filled.addPath(stroke)
+        filled.addLine(to: CGPoint(x: plot.maxX, y: plot.maxY))
+        filled.addLine(to: CGPoint(x: plot.minX, y: plot.maxY))
+        filled.closeSubpath()
 
-        areaLayer.path = areaPath
-        areaLayer.frame = bounds
-        areaLayer.fillColor = color.withAlphaComponent(0.16).cgColor
-        lineLayer.path = linePath
-        lineLayer.frame = bounds
-        lineLayer.strokeColor = color.cgColor
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        line.path = stroke
+        line.strokeColor = color.cgColor
+
+        gradientMask.path = filled
+        areaGradient.colors = [color.withAlphaComponent(0.38).cgColor,
+                               color.withAlphaComponent(0.03).cgColor]
+        areaGradient.startPoint = CGPoint(x: 0.5, y: 0)
+        areaGradient.endPoint = CGPoint(x: 0.5, y: 1)
+
+        let last = point(samples.count - 1)
+        head.frame = CGRect(x: last.x - 2.6, y: last.y - 2.6, width: 5.2, height: 5.2)
+        head.backgroundColor = color.cgColor
+        head.opacity = 1
+        CATransaction.commit()
     }
 }

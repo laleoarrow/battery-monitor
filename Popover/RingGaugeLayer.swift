@@ -1,136 +1,163 @@
 import AppKit
-import QuartzCore
 
-final class RingGaugeView: NSView {
-    private let titleLabel = NSTextField(labelWithString: "环形仪表")
-    private let percentLabel = NSTextField(labelWithString: "0%")
-    private let systemTitle = NSTextField(labelWithString: "系统消耗")
-    private let systemValue = NSTextField(labelWithString: "0.0 W")
-    private let batteryTitle = NSTextField(labelWithString: "电池静止")
-    private let batteryValue = NSTextField(labelWithString: "0.0 W")
+/// Charge as the outer ring, power intensity as a rotating inner arc, four
+/// readings beside it.
+///
+/// The centre reads charge percentage, not watts — the header already owns the
+/// wattage, and spending the module's most valuable spot on a number that
+/// appears 60pt above it is waste.
+final class RingGaugeView: PopoverSection {
+    static let plotHeight: CGFloat = 112
+    static let preferredHeight: CGFloat = plotHeight + PopoverStyle.sectionPadding * 2
 
-    private let ringTrack = CAShapeLayer()
-    private let chargeArc = CAShapeLayer()
+    private static let centre = CGPoint(x: 56, y: 56 + PopoverStyle.sectionPadding)
+    private static let ringRadius: CGFloat = 46
+    private static let arcRadius: CGFloat = 34
+
+    private let track = CAShapeLayer()
+    private let charge = CAShapeLayer()
+    private let arcHost = CALayer()
     private let rotatingArc = CAShapeLayer()
-    private var snapshot = PowerSnapshot()
+    private let arcGradient = CAGradientLayer()
+
+    private let percentLabel = NSTextField(labelWithString: "0")
+    private let percentUnit = NSTextField(labelWithString: "%")
+
+    private var captions: [NSTextField] = []
+    private var values: [NSTextField] = []
     private var animationsEnabled = false
+    private var intensity: CGFloat = 0
 
-    override var isFlipped: Bool { true }
+    init() {
+        super.init(height: Self.preferredHeight)
 
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        PopoverStyle.configureModule(self)
+        track.fillColor = nil
+        track.lineWidth = 7
+        track.strokeColor = PopoverStyle.ringTrack.cgColor
+        layer?.addSublayer(track)
 
-        titleLabel.font = .systemFont(ofSize: 11, weight: .semibold)
-        titleLabel.textColor = .secondaryLabelColor
-        addSubview(titleLabel)
+        charge.fillColor = nil
+        charge.lineWidth = 7
+        charge.lineCap = .round
+        layer?.addSublayer(charge)
 
-        percentLabel.font = .monospacedDigitSystemFont(ofSize: 15, weight: .semibold)
+        rotatingArc.fillColor = nil
+        rotatingArc.lineWidth = 4.5
+        rotatingArc.lineCap = .round
+        rotatingArc.strokeColor = NSColor.black.cgColor
+        // Fading the inner arc along its sweep separates it from the outer
+        // ring; two solid arcs of the same colour read as one thick ring.
+        arcGradient.mask = rotatingArc
+        arcHost.addSublayer(arcGradient)
+        layer?.addSublayer(arcHost)
+
+        percentLabel.font = PopoverStyle.mono(25, .semibold)
+        percentLabel.textColor = PopoverStyle.primaryText
         percentLabel.alignment = .center
-        percentLabel.textColor = .labelColor
         addSubview(percentLabel)
 
-        for label in [systemTitle, batteryTitle] {
-            label.font = .systemFont(ofSize: 11, weight: .medium)
-            label.textColor = .secondaryLabelColor
-            addSubview(label)
-        }
-        for label in [systemValue, batteryValue] {
-            label.font = .monospacedDigitSystemFont(ofSize: 14, weight: .medium)
-            label.textColor = .labelColor
-            label.alignment = .right
-            addSubview(label)
-        }
+        percentUnit.font = .systemFont(ofSize: 11, weight: .regular)
+        percentUnit.textColor = PopoverStyle.secondaryText
+        percentUnit.alignment = .center
+        addSubview(percentUnit)
 
-        for shape in [ringTrack, chargeArc, rotatingArc] {
-            shape.fillColor = nil
-            shape.lineCap = .round
-            layer?.addSublayer(shape)
+        for text in ["系统负载", "充入电池", "电池温度", "循环次数"] {
+            captions.append(label(text, size: 11, color: PopoverStyle.secondaryText))
         }
-        ringTrack.strokeColor = NSColor.separatorColor.withAlphaComponent(0.50).cgColor
-        ringTrack.lineWidth = 7
-        chargeArc.lineWidth = 7
-        rotatingArc.lineWidth = 2.4
+        for _ in 0..<4 {
+            let field = label("--", size: 15, color: PopoverStyle.primaryText, mono: true)
+            values.append(field)
+        }
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     override func layout() {
         super.layout()
-        titleLabel.frame = NSRect(x: 12, y: 8, width: 100, height: 16)
-        percentLabel.frame = NSRect(x: 19, y: 52, width: 58, height: 20)
-        systemTitle.frame = NSRect(x: 108, y: 32, width: 90, height: 16)
-        systemValue.frame = NSRect(x: 204, y: 29, width: 108, height: 20)
-        batteryTitle.frame = NSRect(x: 108, y: 66, width: 90, height: 16)
-        batteryValue.frame = NSRect(x: 204, y: 63, width: 108, height: 20)
+        percentLabel.frame = NSRect(x: Self.centre.x - 40, y: Self.centre.y - 20, width: 80, height: 28)
+        percentUnit.frame = NSRect(x: Self.centre.x - 40, y: Self.centre.y + 8, width: 80, height: 14)
 
-        let center = CGPoint(x: 48, y: 62)
-        let trackPath = CGMutablePath()
-        trackPath.addArc(center: center, radius: 30, startAngle: -.pi / 2, endAngle: .pi * 1.5, clockwise: false)
-        ringTrack.path = trackPath
+        // Two columns beside the ring.
+        for index in 0..<4 {
+            let column = index % 2
+            let row = index / 2
+            let x = 132 + CGFloat(column) * 100
+            let y = PopoverStyle.sectionPadding + 14 + CGFloat(row) * 50
+            captions[index].frame = NSRect(x: x, y: y, width: 96, height: 14)
+            values[index].frame = NSRect(x: x, y: y + 15, width: 96, height: 19)
+        }
 
-        let progress = min(max(CGFloat(snapshot.percent) / 100, 0), 1)
-        let chargePath = CGMutablePath()
-        chargePath.addArc(center: center, radius: 30, startAngle: -.pi / 2, endAngle: -.pi / 2 + .pi * 2 * progress, clockwise: false)
-        chargeArc.path = chargePath
+        PopoverStyle.setWithoutAnimation {
+            for shape in [self.track, self.charge] { shape.frame = self.bounds }
+            self.arcHost.bounds = CGRect(x: 0, y: 0, width: Self.arcRadius * 2 + 12, height: Self.arcRadius * 2 + 12)
+            self.arcHost.position = Self.centre
+            self.rotatingArc.frame = self.arcHost.bounds
+            self.arcGradient.frame = self.arcHost.bounds
+            self.arcGradient.startPoint = CGPoint(x: 0, y: 0)
+            self.arcGradient.endPoint = CGPoint(x: 1, y: 1)
+        }
+        rebuildPaths()
+    }
 
-        let spinnerPath = CGMutablePath()
-        spinnerPath.addArc(center: center, radius: 23, startAngle: -.pi / 2, endAngle: .pi / 5, clockwise: false)
-        rotatingArc.path = spinnerPath
-        rotatingArc.bounds = bounds
-        rotatingArc.anchorPoint = CGPoint(x: center.x / bounds.width, y: center.y / bounds.height)
-        rotatingArc.position = center
+    private func rebuildPaths() {
+        PopoverStyle.setWithoutAnimation {
+            let ring = CGMutablePath()
+            ring.addArc(center: Self.centre, radius: Self.ringRadius,
+                        startAngle: -.pi / 2, endAngle: .pi * 1.5, clockwise: false)
+            self.track.path = ring
+            self.charge.path = ring
+
+            // Drawn in the rotating layer's own space so spinning it does not
+            // drag the arc off the ring's centre.
+            let local = CGPoint(x: self.arcHost.bounds.midX, y: self.arcHost.bounds.midY)
+            let arc = CGMutablePath()
+            arc.addArc(center: local, radius: Self.arcRadius,
+                       startAngle: -.pi / 2, endAngle: .pi * 1.5, clockwise: false)
+            self.rotatingArc.path = arc
+        }
     }
 
     func update(snapshot: PowerSnapshot) {
-        self.snapshot = snapshot
         let color = PopoverStyle.stateColor(snapshot.state)
-        let primaryColor: NSColor = snapshot.state == .mixedSupply ? .systemBlue : color
-        percentLabel.stringValue = "\(snapshot.percent)" + "%"
-        systemValue.stringValue = PopoverStyle.watts(snapshot.systemW)
-        batteryValue.stringValue = PopoverStyle.watts(abs(snapshot.batteryW))
-        batteryTitle.stringValue = batteryLabel(snapshot.state)
-        systemValue.textColor = primaryColor
-        batteryValue.textColor = snapshot.state == .mixedSupply ? .systemOrange : color
-        chargeArc.strokeColor = color.cgColor
-        rotatingArc.strokeColor = color.withAlphaComponent(0.82).cgColor
-        needsLayout = true
-        layoutSubtreeIfNeeded()
-        if animationsEnabled {
-            startRotation(totalInputW: snapshot.totalInputW)
+        intensity = VisualEncoding.t(snapshot.totalInputW)
+
+        percentLabel.stringValue = "\(snapshot.percent)"
+        percentLabel.textColor = snapshot.percent <= 20 ? PopoverStyle.red : PopoverStyle.primaryText
+
+        captions[1].stringValue = PopoverStyle.batteryFlowLabel(snapshot.state)
+        values[0].stringValue = PopoverStyle.watts(snapshot.systemW)
+        values[1].stringValue = snapshot.state == .pluggedIdle
+            ? "0.0 W" : PopoverStyle.watts(abs(snapshot.batteryW))
+        values[2].stringValue = String(format: "%.1f°C", snapshot.temperatureC)
+        values[3].stringValue = "\(snapshot.cycleCount)"
+
+        rebuildPaths()
+        PopoverStyle.setWithoutAnimation {
+            self.charge.strokeColor = (snapshot.percent <= 20 ? PopoverStyle.red : color).cgColor
+            self.charge.strokeEnd = CGFloat(snapshot.percent) / 100
+            let arcColor = snapshot.state == .mixedSupply ? PopoverStyle.blue : color
+            self.arcGradient.colors = [arcColor.withAlphaComponent(0.12).cgColor, arcColor.cgColor]
+            self.rotatingArc.strokeEnd = max(0.06, self.intensity)
         }
+        applyRotation()
+    }
+
+    private func applyRotation() {
+        guard animationsEnabled else { return }
+        if arcHost.animation(forKey: "spin") == nil {
+            let rotation = CABasicAnimation(keyPath: "transform.rotation.z")
+            rotation.fromValue = 0
+            rotation.toValue = CGFloat.pi * 2
+            rotation.duration = 5.0
+            rotation.repeatCount = .infinity
+            rotation.isRemovedOnCompletion = false
+            arcHost.add(rotation, forKey: "spin")
+        }
+        PopoverStyle.setAnimationSpeed(arcHost, multiplier: 1 + intensity * (VisualEncoding.speedRatio - 1))
     }
 
     func setAnimationsEnabled(_ enabled: Bool) {
         animationsEnabled = enabled
-        if enabled {
-            startRotation(totalInputW: snapshot.totalInputW)
-        } else {
-            rotatingArc.removeAllAnimations()
-        }
-    }
-
-    private func startRotation(totalInputW: Double) {
-        if rotatingArc.animation(forKey: "rotation") == nil {
-            let rotation = CABasicAnimation(keyPath: "transform.rotation.z")
-            rotation.fromValue = 0
-            rotation.toValue = Double.pi * 2
-            rotation.duration = 5.0
-            rotation.repeatCount = .infinity
-            rotation.timingFunction = CAMediaTimingFunction(name: .linear)
-            rotatingArc.add(rotation, forKey: "rotation")
-        }
-        PopoverStyle.setAnimationSpeed(rotatingArc, multiplier: VisualEncoding.multiplier(totalInputW))
-    }
-
-    private func batteryLabel(_ state: PowerState) -> String {
-        switch state {
-        case .charging: return "充入电池"
-        case .pluggedIdle: return "电池静止"
-        case .onBattery: return "电池输出"
-        case .mixedSupply: return "电池补差"
-        }
+        if enabled { applyRotation() } else { arcHost.removeAllAnimations() }
     }
 }
