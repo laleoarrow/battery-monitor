@@ -11,7 +11,31 @@ final class ModeSliderView: NSView {
 
     private let trackView = NSView()
     private let knobHost = NSView()
-    private var glass: NSView?
+    /// Which knob was actually built. Liquid Glass takes a tintColor; a plain
+    /// NSView does not, and sending it one raises NSUnknownKeyException. Making
+    /// the difference a type stops the call site from having to remember.
+    private enum Knob {
+        case glass(NSView)
+        case plain(NSView)
+
+        var view: NSView {
+            switch self {
+            case .glass(let view): return view
+            case .plain(let view): return view
+            }
+        }
+
+        func applyTint(_ tint: NSColor) {
+            switch self {
+            case .glass(let view):
+                view.setValue(tint.withAlphaComponent(0.55), forKey: "tintColor")
+            case .plain(let view):
+                view.layer?.borderColor = tint.withAlphaComponent(0.5).cgColor
+            }
+        }
+    }
+
+    private var knob: Knob?
     private var labels: [NSTextField] = []
 
     private var modes: [EnergyMode] = []
@@ -67,16 +91,19 @@ final class ModeSliderView: NSView {
     /// pill rather than a hand-rolled imitation of glass.
     private func installKnob() {
         let radius = (Self.preferredHeight - 4) / 2
-        if let glassClass = NSClassFromString("NSGlassEffectView") as? NSView.Type {
+        // Without this the pre-26 branch is unreachable on a macOS 26 machine,
+        // so it would only ever be exercised on someone else's Mac.
+        let forceLegacy = ProcessInfo.processInfo.environment["WATTSON_FORCE_LEGACY_KNOB"] == "1"
+        if !forceLegacy, let glassClass = NSClassFromString("NSGlassEffectView") as? NSView.Type {
             let view = glassClass.init(frame: .zero)
-            view.setValue(radius, forKey: "cornerRadius")
+            view.setValue(NSNumber(value: Double(radius)), forKey: "cornerRadius")
             // Liquid Glass renders nothing without content to refract.
             let content = NSView()
             content.wantsLayer = true
             content.layer?.backgroundColor = NSColor(white: 1, alpha: 0.10).cgColor
             view.setValue(content, forKey: "contentView")
             knobHost.addSubview(view)
-            glass = view
+            knob = .glass(view)
         } else {
             let view = NSView(frame: .zero)
             view.wantsLayer = true
@@ -86,7 +113,7 @@ final class ModeSliderView: NSView {
             view.layer?.cornerRadius = radius
             view.layer?.cornerCurve = .continuous
             knobHost.addSubview(view)
-            glass = view
+            knob = .plain(view)
         }
     }
 
@@ -111,7 +138,7 @@ final class ModeSliderView: NSView {
         if !dragging {
             knobHost.frame = knobFrame(at: selectedIndex)
         }
-        glass?.frame = knobHost.bounds
+        knob?.view.frame = knobHost.bounds
     }
 
     // MARK: - State
@@ -121,7 +148,7 @@ final class ModeSliderView: NSView {
         if let index = modes.firstIndex(of: selected) { selectedIndex = index }
 
         highlight(selectedIndex)
-        glass?.setValue(tint.withAlphaComponent(0.55), forKey: "tintColor")
+        knob?.applyTint(tint)
         knobHost.layer?.backgroundColor = NSColor(white: 0.97, alpha: 0.95).cgColor
         knobHost.layer?.borderColor = tint.withAlphaComponent(0.35).cgColor
         if !dragging { settle(to: selectedIndex, animated: true) }
@@ -133,7 +160,7 @@ final class ModeSliderView: NSView {
         let target = knobFrame(at: index)
         guard animated else {
             knobHost.frame = target
-            glass?.frame = knobHost.bounds
+            knob?.view.frame = knobHost.bounds
             return
         }
         let spring = CASpringAnimation(keyPath: "position")
@@ -144,7 +171,7 @@ final class ModeSliderView: NSView {
         spring.duration = spring.settlingDuration
         spring.fromValue = knobHost.layer?.presentation()?.position ?? knobHost.layer?.position as Any
         knobHost.frame = target
-        glass?.frame = knobHost.bounds
+        knob?.view.frame = knobHost.bounds
         spring.toValue = knobHost.layer?.position
         knobHost.layer?.add(spring, forKey: "settle")
     }
@@ -165,7 +192,7 @@ final class ModeSliderView: NSView {
         let x = min(max(point.x - grabOffset, 2), maxX)
         PopoverStyle.setWithoutAnimation {
             self.knobHost.frame.origin.x = x
-            self.glass?.frame = self.knobHost.bounds
+            self.knob?.view.frame = self.knobHost.bounds
         }
         highlight(nearestIndex())
     }

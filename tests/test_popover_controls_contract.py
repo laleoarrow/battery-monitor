@@ -27,6 +27,26 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("override func mouseDragged", self.slider)
         self.assertIn("CASpringAnimation", self.slider)
 
+    def test_glass_only_kvc_never_reaches_the_fallback(self):
+        # tintColor exists on NSGlassEffectView and not on NSView. Sending it to
+        # the pre-26 fallback raises NSUnknownKeyException and takes the app
+        # down the moment the popover refreshes. The capability is a type now,
+        # so the call site cannot forget which knob it is holding.
+        self.assertIn("case glass(NSView)", self.slider)
+        self.assertIn("case plain(NSView)", self.slider)
+        self.assertIn("knob?.applyTint(", self.slider)
+        self.assertNotIn("glass?.setValue", self.slider)
+
+        # Inside applyTint, only the glass case may use KVC.
+        body = self.slider.split("func applyTint(", 1)[1].split("\n    }", 1)[0]
+        plain_branch = body.split("case .plain(let view):", 1)[1]
+        self.assertNotIn("setValue", plain_branch)
+
+    def test_legacy_knob_path_is_reachable_for_testing(self):
+        # On a macOS 26 machine the fallback is otherwise dead code that would
+        # only ever run on someone else's Mac.
+        self.assertIn("WATTSON_FORCE_LEGACY_KNOB", self.slider)
+
     def test_knob_has_a_fallback_below_macos_26(self):
         # Liquid Glass is macOS 26 only; older systems get a plain translucent
         # pill rather than a hand-rolled imitation.
