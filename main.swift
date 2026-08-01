@@ -1,10 +1,10 @@
 import AppKit
 
-// Swift only allows top-level statements in a file named main.swift. The app
-// was a single translation unit before, so this lived at the bottom of
-// BatteryPowerWidget.swift; multi-file compilation requires it to move here.
+// Swift only allows top-level statements in a file named main.swift.
 
 let app = NSApplication.shared
+let delegate = AppDelegate()
+app.delegate = delegate
 
 #if DEBUG
 if CommandLine.arguments.contains("--popover-preview") {
@@ -17,20 +17,9 @@ if CommandLine.arguments.contains("--popover-preview") {
     previewController.showWindow(nil)
     app.activate(ignoringOtherApps: true)
     app.run()
-} else {
-    let delegate = AppController()
-    app.delegate = delegate
-    let statusItemController = StatusItemController()
-    statusItemController.start()
-    app.run()
 }
-#else
-let delegate = AppController()
-app.delegate = delegate
+#endif
 
-// The menu bar extra is the primary surface. The desktop panel is unchanged
-// and still owned by AppController.
 let statusItemController = StatusItemController()
 statusItemController.start()
 app.run()
-#endif

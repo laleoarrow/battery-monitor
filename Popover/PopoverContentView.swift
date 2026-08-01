@@ -365,7 +365,18 @@ final class PopoverContentViewController: NSViewController {
         percentage.state = Settings.showsMenuBarPercentage ? .on : .off
         menu.addItem(percentage)
 
+        menu.addItem(.separator())
+        // The desktop panel used to own the only way out of the app. With it
+        // gone this is the sole quit affordance, so it cannot be dropped.
+        let quit = NSMenuItem(title: "退出 Wattson", action: #selector(quitApp), keyEquivalent: "q")
+        quit.target = self
+        menu.addItem(quit)
+
         menu.popUp(positioning: nil, at: NSPoint(x: 0, y: sender.bounds.maxY + 4), in: sender)
+    }
+
+    @objc private func quitApp() {
+        NSApp.terminate(nil)
     }
 
     @objc private func togglePercentage() {

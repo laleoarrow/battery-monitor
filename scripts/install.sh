@@ -60,12 +60,10 @@ xcrun swiftc \
     "$ROOT_DIR"/Core/*.swift \
     "$ROOT_DIR"/MenuBar/*.swift \
     "$ROOT_DIR"/Popover/*.swift \
-    "$ROOT_DIR/BatteryPowerWidget.swift" \
     "$ROOT_DIR/main.swift" \
     -framework AppKit \
     -framework CoreGraphics \
     -framework IOKit \
-    -framework WidgetKit \
     -O \
     -o "$APP_DIR/Contents/MacOS/Wattson"
 chmod +x "$APP_DIR/Contents/MacOS/Wattson"
