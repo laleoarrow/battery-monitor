@@ -9,9 +9,9 @@ enum EnergyMode: String {
 
     var title: String {
         switch self {
-        case .low: return "省电"
+        case .low: return "Low Power"
         case .auto: return "自动"
-        case .high: return "高性能"
+        case .high: return "High Power"
         }
     }
 }

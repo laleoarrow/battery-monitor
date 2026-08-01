@@ -27,6 +27,14 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         content.setModeSelectHandler(handler)
     }
 
+    func setSystemBatteryIconToggleHandler(_ handler: @escaping (Bool) -> Bool) {
+        content.setSystemBatteryIconToggleHandler(handler)
+    }
+
+    func updateSystemBatteryIconState(_ hidden: Bool?) {
+        content.updateSystemBatteryIconState(hidden)
+    }
+
     func toggle(relativeTo button: NSStatusBarButton) {
         if popover.isShown {
             popover.performClose(nil)

@@ -42,8 +42,23 @@ class HelperContractTests(unittest.TestCase):
     def test_rejects_anything_outside_the_whitelist(self):
         self.assertIn('case "getMode"', self.source)
         self.assertIn('case "setMode"', self.source)
+        self.assertIn('case "getSystemBatteryIconHidden"', self.source)
+        self.assertIn('case "setSystemBatteryIconHidden"', self.source)
         self.assertIn("default:", self.source)
         self.assertIn("os_log", self.source)
+
+    def test_system_battery_visibility_uses_fixed_control_center_values(self):
+        # 8 keeps Battery in Control Center but removes it from the menu bar;
+        # 18 restores it to both. The request supplies only a Boolean.
+        self.assertIn('"com.apple.controlcenter"', self.source)
+        self.assertIn("hidden ? 8 : 18", self.source)
+        self.assertIn("CFPreferencesSetValue", self.source)
+        self.assertIn("CFPreferencesSynchronize", self.source)
+
+    def test_control_center_is_restarted_in_the_console_user_domain(self):
+        self.assertIn('"/usr/bin/pkill", "-TERM", "-U"', self.source)
+        self.assertIn('"\\(uid)", "-x", "ControlCenter"', self.source)
+        self.assertIn("launchctl kickstart is rejected by SIP", self.source)
 
     def test_never_interpolates_input_into_a_command(self):
         for forbidden in ("\\(value)", "\\(op)", "\\(request", "/bin/sh", "-c\""):

@@ -100,48 +100,54 @@ final class PopoverHeaderView: PopoverSection {
     }
 }
 
-/// Segmented 省电 / 自动 / 高性能 plus the right-click hint.
+/// Native three-position mode control and system-battery visibility choice.
 ///
-/// High power lives here and not on the right-click gesture: a three-way cycle
-/// on a control with no visible state is a guessing game. In the popover the
-/// current mode is on screen, so a direct pick is unambiguous.
+/// On macOS 26, NSSegmentedControl adopts Liquid Glass automatically. Keeping
+/// the standard control also preserves keyboard and accessibility behavior on
+/// older systems, where AppKit supplies the appropriate fallback appearance.
 final class PopoverFooterView: PopoverSection {
-    static let preferredHeight: CGFloat = 46
-    private static let segmentWidth: CGFloat = 56
-
-    private let group = CALayer()
-    private let selection = CALayer()
-    private var labels: [NSTextField] = []
-    private var modes: [EnergyMode] = []
+    static let preferredHeight: CGFloat = 78
+    private let modes: [EnergyMode] = [.auto, .low, .high]
+    private lazy var modeControl = NSSegmentedControl(
+        labels: modes.map(\.title),
+        trackingMode: .selectOne,
+        target: self,
+        action: #selector(modeChanged)
+    )
+    private lazy var systemBatteryIconButton = NSButton(
+        checkboxWithTitle: "隐藏系统电池图标",
+        target: self,
+        action: #selector(systemBatteryIconChanged)
+    )
     private let hint = NSTextField(labelWithString: "右键图标可切换")
     private let settingsButton = NSButton()
 
     private var selected: EnergyMode = .auto
+    private var systemBatteryIconHidden: Bool?
     var onSelect: ((EnergyMode) -> Bool)?
+    var onSystemBatteryIconToggle: ((Bool) -> Bool)?
     var onShowMenu: ((NSButton) -> Void)?
 
     init() {
         super.init(height: Self.preferredHeight)
 
-        modes = EnergyModeController.supportsHighPower ? [.low, .auto, .high] : [.low, .auto]
-
-        group.backgroundColor = PopoverStyle.well.cgColor
-        group.cornerRadius = 7
-        group.cornerCurve = .continuous
-        layer?.addSublayer(group)
-
-        selection.backgroundColor = NSColor(rgb: 0x3A3A42).cgColor
-        selection.cornerRadius = 5
-        selection.cornerCurve = .continuous
-        group.addSublayer(selection)
-
-        for mode in modes {
-            let field = NSTextField(labelWithString: mode.title)
-            field.font = .systemFont(ofSize: 11, weight: .regular)
-            field.alignment = .center
-            addSubview(field)
-            labels.append(field)
+        modeControl.segmentStyle = .automatic
+        modeControl.segmentDistribution = .fillEqually
+        modeControl.controlSize = .small
+        modeControl.font = .systemFont(ofSize: 11, weight: .medium)
+        modeControl.setAccessibilityLabel("性能模式")
+        let highIndex = modes.firstIndex(of: .high)!
+        modeControl.setEnabled(EnergyModeController.supportsHighPower, forSegment: highIndex)
+        if !EnergyModeController.supportsHighPower {
+            modeControl.setToolTip("此 Mac 不支持高性能模式", forSegment: highIndex)
         }
+        addSubview(modeControl)
+
+        systemBatteryIconButton.controlSize = .small
+        systemBatteryIconButton.font = .systemFont(ofSize: 11, weight: .regular)
+        systemBatteryIconButton.state = .mixed
+        systemBatteryIconButton.setAccessibilityHelp("隐藏 macOS 自带的菜单栏电池图标")
+        addSubview(systemBatteryIconButton)
 
         hint.font = .systemFont(ofSize: 11, weight: .regular)
         hint.textColor = PopoverStyle.secondaryText
@@ -154,48 +160,57 @@ final class PopoverFooterView: PopoverSection {
         settingsButton.target = self
         settingsButton.action = #selector(showMenu)
         addSubview(settingsButton)
-
-        addGestureRecognizer(NSClickGestureRecognizer(target: self, action: #selector(segmentTapped)))
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-    private var groupWidth: CGFloat { Self.segmentWidth * CGFloat(modes.count) + 4 }
-
     override func layout() {
         super.layout()
-        let top = PopoverStyle.sectionPadding - 2
-        let index = modes.firstIndex(of: selected) ?? 1
-        PopoverStyle.setWithoutAnimation {
-            self.group.frame = CGRect(x: 0, y: top, width: self.groupWidth, height: 24)
-            self.selection.frame = CGRect(x: 2 + CGFloat(index) * Self.segmentWidth, y: 2,
-                                          width: Self.segmentWidth, height: 20)
-        }
-        for (offset, field) in labels.enumerated() {
-            field.frame = NSRect(x: 2 + CGFloat(offset) * Self.segmentWidth, y: top + 5,
-                                 width: Self.segmentWidth, height: 15)
-        }
-        settingsButton.frame = NSRect(x: bounds.width - 24, y: top + 2, width: 22, height: 20)
-        let hintX = groupWidth + 8
-        hint.frame = NSRect(x: hintX, y: top + 5, width: bounds.width - 32 - hintX, height: 15)
+        systemBatteryIconButton.frame = NSRect(x: 0, y: 10, width: 168, height: 20)
+        hint.frame = NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)
+        modeControl.frame = NSRect(x: 0, y: 38, width: bounds.width - 34, height: 28)
+        settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
     }
 
-    func update(mode: EnergyMode, helperInstalled: Bool) {
+    func update(mode: EnergyMode, helperInstalled: Bool, systemBatteryIconHidden: Bool?) {
         selected = mode
-        for (offset, field) in labels.enumerated() {
-            field.textColor = modes[offset] == mode ? PopoverStyle.primaryText : PopoverStyle.secondaryText
+        self.systemBatteryIconHidden = systemBatteryIconHidden
+        modeControl.selectedSegment = modes.firstIndex(of: mode) ?? 0
+        modeControl.isEnabled = helperInstalled
+        if let systemBatteryIconHidden {
+            systemBatteryIconButton.state = systemBatteryIconHidden ? .on : .off
+            systemBatteryIconButton.isEnabled = helperInstalled
+        } else {
+            systemBatteryIconButton.state = .mixed
+            systemBatteryIconButton.isEnabled = false
         }
-        hint.stringValue = helperInstalled ? "右键图标可切换" : "助手未安装"
-        group.opacity = helperInstalled ? 1 : 0.45
-        needsLayout = true
+        hint.stringValue = helperInstalled
+            ? (systemBatteryIconHidden == nil ? "系统设置不可读" : "右键图标可切换")
+            : "助手未安装"
+        let highIndex = modes.firstIndex(of: .high)!
+        modeControl.setEnabled(helperInstalled && EnergyModeController.supportsHighPower,
+                               forSegment: highIndex)
     }
 
-    @objc private func segmentTapped(_ sender: NSClickGestureRecognizer) {
-        let point = sender.location(in: self)
-        guard group.frame.contains(point) else { return }
-        let index = Int((point.x - 2) / Self.segmentWidth)
-        guard modes.indices.contains(index) else { return }
-        _ = onSelect?(modes[index])
+    @objc private func modeChanged(_ sender: NSSegmentedControl) {
+        guard modes.indices.contains(sender.selectedSegment) else { return }
+        let requested = modes[sender.selectedSegment]
+        guard onSelect?(requested) == true else {
+            sender.selectedSegment = modes.firstIndex(of: selected) ?? 0
+            NSSound.beep()
+            return
+        }
+        selected = requested
+    }
+
+    @objc private func systemBatteryIconChanged(_ sender: NSButton) {
+        let requested = sender.state == .on
+        guard onSystemBatteryIconToggle?(requested) == true else {
+            sender.state = systemBatteryIconHidden == true ? .on : .off
+            NSSound.beep()
+            return
+        }
+        systemBatteryIconHidden = requested
     }
 
     @objc private func showMenu() { onShowMenu?(settingsButton) }
@@ -215,7 +230,9 @@ final class PopoverContentViewController: NSViewController {
     private var latestSnapshot = PowerSnapshot()
     private var latestHistory: [Double] = []
     private var latestPeak: Double = 0
+    private var systemBatteryIconHidden: Bool?
     private var modeSelectHandler: ((EnergyMode) -> Bool)?
+    private var systemBatteryIconToggleHandler: ((Bool) -> Bool)?
     var heightDidChange: ((CGFloat) -> Void)?
 
     override func loadView() {
@@ -248,12 +265,20 @@ final class PopoverContentViewController: NSViewController {
         laneView.update(snapshot: snapshot)
         historyView.update(samples: latestHistory, peak: latestPeak,
                            color: PopoverStyle.stateColor(snapshot.state))
-        footer.update(mode: EnergyModeController.current,
-                      helperInstalled: HelperClient.isInstalled)
+        updateFooter()
     }
 
     func setModeSelectHandler(_ handler: @escaping (EnergyMode) -> Bool) {
         modeSelectHandler = handler
+    }
+
+    func setSystemBatteryIconToggleHandler(_ handler: @escaping (Bool) -> Bool) {
+        systemBatteryIconToggleHandler = handler
+    }
+
+    func updateSystemBatteryIconState(_ hidden: Bool?) {
+        systemBatteryIconHidden = hidden
+        updateFooter()
     }
 
     func setAnimationsEnabled(_ enabled: Bool) {
@@ -291,8 +316,19 @@ final class PopoverContentViewController: NSViewController {
         ])
 
         footer.onSelect = { [weak self] mode in self?.modeSelectHandler?(mode) ?? false }
+        footer.onSystemBatteryIconToggle = { [weak self] hidden in
+            self?.systemBatteryIconToggleHandler?(hidden) ?? false
+        }
         footer.onShowMenu = { [weak self] button in self?.showModuleMenu(button) }
         applyModuleVisibility()
+    }
+
+    private func updateFooter() {
+        footer.update(
+            mode: EnergyModeController.current,
+            helperInstalled: HelperClient.isInstalled,
+            systemBatteryIconHidden: systemBatteryIconHidden
+        )
     }
 
     private func loadModuleVisibility() {

@@ -4,6 +4,8 @@ import os
 
 private let log = OSLog(subsystem: "com.leoarrow.wattson.helper", category: "ipc")
 private let idleTimeout: TimeInterval = 5
+private let controlCenterDomain = "com.apple.controlcenter" as CFString
+private let controlCenterBatteryKey = "Battery" as CFString
 
 /// The console owner is the only UID allowed to talk to us.
 private func consoleUID() -> uid_t? {
@@ -16,16 +18,7 @@ private enum Mode: String {
     case low, auto, high
 }
 
-private func runPmset(_ mode: Mode) -> Bool {
-    // Constant argument vectors, one per mode. No caller-supplied value is
-    // ever placed here — the request only selects which constant to run.
-    let args: [String]
-    switch mode {
-    case .low:  args = ["/usr/bin/pmset", "-a", "powermode", "1"]
-    case .auto: args = ["/usr/bin/pmset", "-a", "powermode", "0"]
-    case .high: args = ["/usr/bin/pmset", "-a", "powermode", "2"]
-    }
-
+private func run(_ args: [String]) -> Bool {
     var pid: pid_t = 0
     var argv: [UnsafeMutablePointer<CChar>?] = args.map { strdup($0) }
     argv.append(nil)
@@ -37,8 +30,66 @@ private func runPmset(_ mode: Mode) -> Bool {
     return status == 0
 }
 
+private func runPmset(_ mode: Mode) -> Bool {
+    // Constant argument vectors, one per mode. No caller-supplied value is
+    // ever placed here — the request only selects which constant to run.
+    switch mode {
+    case .low:  return run(["/usr/bin/pmset", "-a", "powermode", "1"])
+    case .auto: return run(["/usr/bin/pmset", "-a", "powermode", "0"])
+    case .high: return run(["/usr/bin/pmset", "-a", "powermode", "2"])
+    }
+}
+
 private func currentMode() -> String {
     ProcessInfo.processInfo.isLowPowerModeEnabled ? "low" : "auto"
+}
+
+private func userName(for uid: uid_t) -> CFString? {
+    guard let record = getpwuid(uid), let name = record.pointee.pw_name else { return nil }
+    return String(cString: name) as CFString
+}
+
+/// Control Center stores Battery as 18 when it is in both Control Center and
+/// the menu bar, and 8 when it remains in Control Center only. Unknown values
+/// are not guessed at, so a future macOS layout cannot be overwritten from a
+/// misleading checkbox state.
+private func systemBatteryIconHidden(for uid: uid_t) -> Bool? {
+    guard let user = userName(for: uid),
+          let raw = CFPreferencesCopyValue(
+              controlCenterBatteryKey,
+              controlCenterDomain,
+              user,
+              kCFPreferencesCurrentHost
+          ) as? NSNumber else { return nil }
+    switch raw.intValue {
+    case 8: return true
+    case 18: return false
+    default: return nil
+    }
+}
+
+private func restartControlCenter(for uid: uid_t) -> Bool {
+    // uid comes from /dev/console, never from the request. launchd immediately
+    // relaunches this per-user agent; launchctl kickstart is rejected by SIP.
+    run(["/usr/bin/pkill", "-TERM", "-U", "\(uid)", "-x", "ControlCenter"])
+}
+
+private func setSystemBatteryIconHidden(_ hidden: Bool, for uid: uid_t) -> Bool {
+    guard let user = userName(for: uid) else { return false }
+    let target = hidden ? 8 : 18
+    CFPreferencesSetValue(
+        controlCenterBatteryKey,
+        NSNumber(value: target),
+        controlCenterDomain,
+        user,
+        kCFPreferencesCurrentHost
+    )
+    guard CFPreferencesSynchronize(
+        controlCenterDomain,
+        user,
+        kCFPreferencesCurrentHost
+    ), systemBatteryIconHidden(for: uid) == hidden else { return false }
+    return restartControlCenter(for: uid)
 }
 
 private func handle(_ fd: Int32) {
@@ -72,6 +123,25 @@ private func handle(_ fd: Int32) {
                        : #"{"ok":false,"error":"pmset failed"}"#
         } else {
             os_log("rejected setMode with unknown value", log: log, type: .error)
+        }
+    case "getSystemBatteryIconHidden":
+        if let hidden = systemBatteryIconHidden(for: peerUID) {
+            reply = hidden ? #"{"ok":true,"hidden":true}"#
+                           : #"{"ok":true,"hidden":false}"#
+        } else {
+            reply = #"{"ok":false,"error":"unknown battery preference"}"#
+        }
+    case "setSystemBatteryIconHidden":
+        if let hidden = object["hidden"] as? Bool {
+            let ok = setSystemBatteryIconHidden(hidden, for: peerUID)
+            if ok {
+                reply = hidden ? #"{"ok":true,"hidden":true}"#
+                               : #"{"ok":true,"hidden":false}"#
+            } else {
+                reply = #"{"ok":false,"error":"control center update failed"}"#
+            }
+        } else {
+            os_log("rejected battery visibility with a non-boolean value", log: log, type: .error)
         }
     default:
         os_log("rejected unknown op", log: log, type: .error)

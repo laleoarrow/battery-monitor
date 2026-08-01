@@ -32,10 +32,12 @@ class BatteryIconContractTests(unittest.TestCase):
         self.assertLess(low_power, low_battery)
         self.assertLess(low_battery, charging)
 
-    def test_icon_is_narrow_enough_for_a_crowded_menu_bar(self):
+    def test_icon_keeps_the_system_battery_width(self):
         match = re.search(r"static let width: CGFloat = ([\d.]+)", self.source)
         self.assertIsNotNone(match)
-        self.assertLessEqual(float(match.group(1)), 22.0)
+        # The system glyph on macOS 26 is 25 pt. Going wider would waste scarce
+        # menu-bar space; going narrower looks undersized beside it.
+        self.assertEqual(float(match.group(1)), 25.0)
 
 
 if __name__ == "__main__":

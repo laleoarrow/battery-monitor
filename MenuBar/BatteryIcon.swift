@@ -1,8 +1,8 @@
 import AppKit
 
 enum BatteryIcon {
-    static let width: CGFloat = 21
-    static let height: CGFloat = 12
+    static let width: CGFloat = 25
+    static let height: CGFloat = 13
 
     /// Geometry never changes — only the fill colour does. `pressed` forces
     /// template rendering because a coloured image does not invert under the
@@ -36,37 +36,37 @@ enum BatteryIcon {
     }
 
     private static func draw(percent: Int, plugged: Bool, color: NSColor) {
-        let shell = NSRect(x: 0.5, y: 0.8, width: 18.6, height: 10.4)
-        let body = NSBezierPath(roundedRect: shell, xRadius: 3.1, yRadius: 3.1)
-        body.lineWidth = 0.9
-        color.withAlphaComponent(0.38).setStroke()
+        // Proportions traced against the system battery: a fuller shell with a
+        // solid outline. The earlier glyph was narrower and drawn at 0.38 alpha,
+        // which read as thin and washed out next to it.
+        let shell = NSRect(x: 0.5, y: 1.1, width: 21.6, height: 10.8)
+        let body = NSBezierPath(roundedRect: shell, xRadius: 3.4, yRadius: 3.4)
+        body.lineWidth = 1.0
+        color.withAlphaComponent(0.55).setStroke()
         body.stroke()
 
         let cap = NSBezierPath()
-        cap.move(to: NSPoint(x: 19.6, y: 4.2))
-        cap.curve(to: NSPoint(x: 19.6, y: 7.8),
-                  controlPoint1: NSPoint(x: 20.9, y: 4.6),
-                  controlPoint2: NSPoint(x: 20.9, y: 7.4))
+        cap.move(to: NSPoint(x: 23.0, y: 4.6))
+        cap.curve(to: NSPoint(x: 23.0, y: 8.4),
+                  controlPoint1: NSPoint(x: 24.5, y: 5.1),
+                  controlPoint2: NSPoint(x: 24.5, y: 7.9))
         cap.close()
-        color.withAlphaComponent(0.38).setFill()
+        color.withAlphaComponent(0.55).setFill()
         cap.fill()
 
         let clamped = CGFloat(min(max(percent, 0), 100)) / 100
-        let fill = NSRect(x: 1.9, y: 2.2, width: 15.8 * clamped, height: 7.6)
+        let fill = NSRect(x: 2.0, y: 2.6, width: 18.6 * clamped, height: 7.8)
         color.setFill()
-        NSBezierPath(roundedRect: fill, xRadius: 1.9, yRadius: 1.9).fill()
+        NSBezierPath(roundedRect: fill, xRadius: 2.0, yRadius: 2.0).fill()
 
-        // The system shows the bolt whenever a power source is attached, not
-        // only while current is actually flowing into the battery. At 100% on
-        // the adapter it still means "you are on wall power".
         guard plugged else { return }
         let bolt = NSBezierPath()
-        bolt.move(to: NSPoint(x: 11.4, y: 10.0))
-        bolt.line(to: NSPoint(x: 8.4, y: 5.9))
-        bolt.line(to: NSPoint(x: 10.4, y: 5.9))
-        bolt.line(to: NSPoint(x: 9.4, y: 2.7))
-        bolt.line(to: NSPoint(x: 12.6, y: 7.0))
-        bolt.line(to: NSPoint(x: 10.5, y: 7.0))
+        bolt.move(to: NSPoint(x: 13.4, y: 11.6))
+        bolt.line(to: NSPoint(x: 8.3, y: 5.5))
+        bolt.line(to: NSPoint(x: 11.2, y: 5.5))
+        bolt.line(to: NSPoint(x: 9.7, y: 1.4))
+        bolt.line(to: NSPoint(x: 14.8, y: 7.5))
+        bolt.line(to: NSPoint(x: 11.9, y: 7.5))
         bolt.close()
 
         // Knock a transparent ring around the bolt rather than drawing it in a
@@ -74,7 +74,7 @@ enum BatteryIcon {
         // on a black fill is the same opaque mass and vanishes entirely.
         NSGraphicsContext.current?.compositingOperation = .destinationOut
         NSColor.black.setStroke()
-        bolt.lineWidth = 1.5
+        bolt.lineWidth = 1.7
         bolt.lineJoinStyle = .round
         bolt.stroke()
         NSGraphicsContext.current?.compositingOperation = .sourceOver

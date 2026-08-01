@@ -23,9 +23,10 @@ class MenuBarPercentageContractTests(unittest.TestCase):
         self.assertIn("imagePosition = .imageRight", self.status)
 
     def test_percentage_uses_tabular_digits(self):
-        # A proportional font makes the item resize as the number changes,
-        # which shoves every neighbouring menu bar icon sideways.
-        self.assertIn("monospacedDigitSystemFont", self.status)
+        # Keep the exact menu-bar face and only switch its number-spacing
+        # feature. A fully monospaced system font looks unlike its neighbours.
+        self.assertIn("menuBarFont", self.status)
+        self.assertIn("kMonospacedNumbersSelector", self.status)
 
     def test_title_is_plain_so_appkit_keeps_the_colour_right(self):
         # An attributed title would not invert under the pressed highlight and

@@ -3,6 +3,20 @@ import IOKit.ps
 import os
 
 final class StatusItemController: NSObject {
+    /// The system menu bar font with tabular figures switched on. Deriving from
+    /// menuBarFont keeps size and weight identical to every neighbouring item;
+    /// the feature setting stops the width jumping as digits change.
+    private static let menuBarTabularFont: NSFont = {
+        let base = NSFont.menuBarFont(ofSize: 0)
+        let descriptor = base.fontDescriptor.addingAttributes([
+            .featureSettings: [[
+                NSFontDescriptor.FeatureKey.typeIdentifier: kNumberSpacingType,
+                NSFontDescriptor.FeatureKey.selectorIdentifier: kMonospacedNumbersSelector,
+            ]],
+        ])
+        return NSFont(descriptor: descriptor, size: 0) ?? base
+    }()
+
     private static let historyInterval: TimeInterval = 2
     private static let displayInterval: TimeInterval = 1
 
@@ -19,6 +33,7 @@ final class StatusItemController: NSObject {
     private var displayTimer: Timer?
     private var powerSourceRunLoopSource: CFRunLoopSource?
     private var pressed = false
+    private var systemBatteryIconHidden: Bool?
 
     func start() {
         guard let button = statusItem.button else { return }
@@ -40,6 +55,9 @@ final class StatusItemController: NSObject {
         }
         popover.setModeSelectHandler { [weak self] mode in
             self?.applyEnergyMode(mode) ?? false
+        }
+        popover.setSystemBatteryIconToggleHandler { [weak self] hidden in
+            self?.applySystemBatteryIconHidden(hidden) ?? false
         }
 
         EnergyModeController.observe { [weak self] _ in self?.refreshPresentation() }
@@ -69,6 +87,7 @@ final class StatusItemController: NSObject {
         case .leftMouseUp:
             pressed = false
             refreshPresentation()
+            if !popover.isShown { refreshSystemBatteryIconState() }
             popover.toggle(relativeTo: button)
         default:
             break
@@ -86,6 +105,27 @@ final class StatusItemController: NSObject {
             sampleNow(recordHistory: false)
         } else {
             refreshPresentation()
+        }
+        return succeeded
+    }
+
+    private func refreshSystemBatteryIconState() {
+        systemBatteryIconHidden = HelperClient.isInstalled
+            ? SystemBatteryIconController.isHidden
+            : nil
+        popover.updateSystemBatteryIconState(systemBatteryIconHidden)
+    }
+
+    private func applySystemBatteryIconHidden(_ hidden: Bool) -> Bool {
+        guard HelperClient.isInstalled else {
+            os_log("helper not installed — system battery setting is a no-op", log: log, type: .error)
+            refreshSystemBatteryIconState()
+            return false
+        }
+        let succeeded = SystemBatteryIconController.setHidden(hidden)
+        refreshSystemBatteryIconState()
+        if !succeeded {
+            os_log("failed to update the system battery icon", log: log, type: .error)
         }
         return succeeded
     }
@@ -167,7 +207,7 @@ final class StatusItemController: NSObject {
         // plain title rather than an attributed one lets AppKit keep the text
         // colour correct across light, dark and the pressed highlight.
         if Settings.showsMenuBarPercentage {
-            button.font = .monospacedDigitSystemFont(ofSize: 12, weight: .regular)
+            button.font = Self.menuBarTabularFont
             button.title = "\(snapshot.percent)% "
             button.imagePosition = .imageRight
         } else {
