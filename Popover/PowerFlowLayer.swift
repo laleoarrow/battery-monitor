@@ -128,6 +128,8 @@ final class PipeBundle {
     private var particles: [CALayer] = []
     private var particleCount = -1
     private var particlesAreHot = false
+    private var particlesAreAnimating = false
+    private var particleGeometryKey = ""
     private var geometry = PipeGeometry(start: .zero, control1: .zero, control2: .zero, end: .zero)
 
     init() {
@@ -203,6 +205,10 @@ final class PipeBundle {
     func stopFlow() {
         gradient.removeAllAnimations()
         particles.forEach { $0.removeAllAnimations() }
+        // The bookkeeping has to match what was just done to the layers.
+        // Leaving this true made the pool believe it was still animating, so
+        // reopening the popover skipped the rebuild and the sparks stayed dead.
+        particlesAreAnimating = false
     }
 
     /// Particles ride the pipe at every power level, not just past saturation.
@@ -215,12 +221,26 @@ final class PipeBundle {
     func rebuildParticles(count: Int, thickness: CGFloat, color: NSColor,
                           period: CFTimeInterval, seed: UInt64, hot: Bool, animating: Bool) {
         let wanted = thickness > 0.5 ? count : 0
-        guard wanted != particleCount || hot != particlesAreHot else {
+
+        // Everything the pool is built from has to be in this key. Guarding on
+        // the count alone meant particles kept the animations — or the curve —
+        // they were born with: reopening the popover left them frozen, and a
+        // topology change left them riding the old path.
+        let key = String(format: "%.1f,%.1f,%.1f,%.1f,%.1f",
+                         geometry.start.x, geometry.start.y,
+                         geometry.end.x, geometry.end.y, thickness)
+        guard wanted != particleCount
+            || hot != particlesAreHot
+            || animating != particlesAreAnimating
+            || key != particleGeometryKey
+        else {
             retimeParticles(period: period)
             return
         }
         particleCount = wanted
         particlesAreHot = hot
+        particlesAreAnimating = animating
+        particleGeometryKey = key
 
         particles.forEach { $0.removeFromSuperlayer() }
         particles.removeAll()

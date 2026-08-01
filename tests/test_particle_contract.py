@@ -44,5 +44,26 @@ class ParticleContractTests(unittest.TestCase):
             self.assertNotIn(excluded, self.flow)
 
 
+    def test_pool_guard_covers_everything_it_is_built_from(self):
+        # Guarding on the count alone let particles keep whatever they were
+        # born with: reopening the popover left them frozen, and a topology
+        # change left them riding the previous curve.
+        guard = self.flow.split("let wanted = thickness > 0.5", 1)[1].split("else {", 1)[0]
+        for term in ("particleCount", "particlesAreHot",
+                     "particlesAreAnimating", "particleGeometryKey"):
+            self.assertIn(term, guard)
+
+    def test_geometry_key_tracks_the_curve_and_thickness(self):
+        self.assertIn("geometry.start.x", self.flow)
+        self.assertIn("geometry.end.x", self.flow)
+
+    def test_stopping_flow_records_that_particles_stopped(self):
+        # Stripping the animations without updating the bookkeeping made the
+        # pool believe it was still animating, so the next rebuild was skipped.
+        body = self.flow.split("func stopFlow()", 1)[1].split("\n    }", 1)[0]
+        self.assertIn("removeAllAnimations", body)
+        self.assertIn("particlesAreAnimating = false", body)
+
+
 if __name__ == "__main__":
     unittest.main()

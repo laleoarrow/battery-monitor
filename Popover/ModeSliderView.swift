@@ -145,13 +145,19 @@ final class ModeSliderView: NSView {
 
     func update(selected: EnergyMode, enabledModes: [EnergyMode], tint: NSColor) {
         enabled = modes.map(enabledModes.contains)
+        let previous = selectedIndex
         if let index = modes.firstIndex(of: selected) { selectedIndex = index }
 
         highlight(selectedIndex)
         knob?.applyTint(tint)
         knobHost.layer?.backgroundColor = NSColor(white: 0.97, alpha: 0.95).cgColor
         knobHost.layer?.borderColor = tint.withAlphaComponent(0.35).cgColor
-        if !dragging { settle(to: selectedIndex, animated: true) }
+        // Only spring when the position actually changed. This runs at 1 Hz
+        // with the rest of the popover, and re-adding the animation every
+        // second left the knob permanently twitching.
+        if !dragging, selectedIndex != previous {
+            settle(to: selectedIndex, animated: true)
+        }
     }
 
     /// A spring rather than a linear move — the knob arrives with a little

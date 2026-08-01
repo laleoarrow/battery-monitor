@@ -27,6 +27,11 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("override func mouseDragged", self.slider)
         self.assertIn("CASpringAnimation", self.slider)
 
+    def test_knob_only_springs_when_the_position_changes(self):
+        # update() runs at 1 Hz with the rest of the popover. Re-adding the
+        # spring every second left the knob permanently twitching.
+        self.assertIn("selectedIndex != previous", self.slider)
+
     def test_glass_only_kvc_never_reaches_the_fallback(self):
         # tintColor exists on NSGlassEffectView and not on NSView. Sending it to
         # the pre-26 fallback raises NSUnknownKeyException and takes the app
