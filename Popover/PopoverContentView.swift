@@ -21,7 +21,7 @@ enum PopoverModule: String, CaseIterable {
 /// Hero number, state, and the conservation line. No separator — it is the top
 /// of the surface.
 final class PopoverHeaderView: PopoverSection {
-    static let preferredHeight: CGFloat = 72
+    static let preferredHeight: CGFloat = 94
 
     private let total = NSTextField(labelWithString: "0.0")
     private let unit = NSTextField(labelWithString: "W")
@@ -58,11 +58,13 @@ final class PopoverHeaderView: PopoverSection {
 
     override func layout() {
         super.layout()
-        total.frame = NSRect(x: 0, y: 12, width: 150, height: 36)
-        unit.frame = NSRect(x: totalWidth() + 4, y: 27, width: 30, height: 20)
-        percent.frame = NSRect(x: bounds.width - 160, y: 14, width: 160, height: 18)
-        state.frame = NSRect(x: bounds.width - 200, y: 32, width: 200, height: 16)
-        equation.frame = NSRect(x: 0, y: 52, width: bounds.width, height: 15)
+        // The hero block and the conservation line are separate thoughts, so
+        // they get a real gap rather than sitting a few points apart.
+        total.frame = NSRect(x: 0, y: 16, width: 150, height: 40)
+        unit.frame = NSRect(x: totalWidth() + 5, y: 34, width: 30, height: 20)
+        percent.frame = NSRect(x: bounds.width - 160, y: 18, width: 160, height: 20)
+        state.frame = NSRect(x: bounds.width - 220, y: 40, width: 220, height: 16)
+        equation.frame = NSRect(x: 0, y: 70, width: bounds.width, height: 15)
     }
 
     private func totalWidth() -> CGFloat {
@@ -215,7 +217,7 @@ final class PopoverContentViewController: NSViewController {
         if isVisible(.ring) { total += RingGaugeView.preferredHeight }
         if isVisible(.lanes) { total += LaneView.preferredHeight }
         if isVisible(.history) { total += HistoryView.preferredHeight }
-        return total + 8
+        return total + 24
     }
 
     func update(snapshot: PowerSnapshot, history: [Double], peak: Double, degraded: Bool) {
@@ -261,7 +263,7 @@ final class PopoverContentViewController: NSViewController {
         NSLayoutConstraint.activate([
             stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: PopoverStyle.sideInset),
             stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -PopoverStyle.sideInset),
-            stack.topAnchor.constraint(equalTo: view.topAnchor, constant: 4),
+            stack.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
             header.heightAnchor.constraint(equalToConstant: PopoverHeaderView.preferredHeight),
             flowView.heightAnchor.constraint(equalToConstant: PowerFlowView.preferredHeight),
             ringView.heightAnchor.constraint(equalToConstant: RingGaugeView.preferredHeight),
