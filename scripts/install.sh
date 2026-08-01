@@ -125,6 +125,9 @@ fi
 # 6. Sign and register the app.
 codesign --force --sign - --entitlements "$APP_ENTITLEMENTS" "$APP_DIR" >/dev/null
 echo "  ✅ Ad-hoc code signature"
+# Bumping the bundle's mtime before re-registering is what makes Finder and
+# Spotlight pick up a changed icon; without it they keep serving the cached one.
+touch "$APP_DIR"
 "$LSREGISTER" -f "$APP_DIR" >/dev/null
 
 # 7. Install the privileged helper. launchd wakes it on demand and it exits

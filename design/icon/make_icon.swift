@@ -1,112 +1,54 @@
 import AppKit
 import Foundation
 
-// Wattson = Watt + Watson. The mark is a single W whose centre peak is cut by a
-// bolt, so the letter and the lightning are one figure rather than two stacked
-// symbols.
+// The mark is the product's own hero visual shrunk down: a pipe carrying a
+// travelling light, with sparks riding it. A letterform with a bolt would say
+// nothing a hundred other utilities do not already say; this says exactly what
+// the app draws.
 
-let colorBackTop = NSColor(srgbRed: 0.145, green: 0.145, blue: 0.169, alpha: 1)
-let colorBackBottom = NSColor(srgbRed: 0.055, green: 0.055, blue: 0.070, alpha: 1)
-let colorMarkTop = NSColor(srgbRed: 0.235, green: 0.859, blue: 0.396, alpha: 1)   // 30D158
-let colorMarkBottom = NSColor(srgbRed: 0.086, green: 0.616, blue: 0.290, alpha: 1)
+private let backTop = NSColor(srgbRed: 0.129, green: 0.129, blue: 0.149, alpha: 1)
+private let backBottom = NSColor(srgbRed: 0.043, green: 0.043, blue: 0.055, alpha: 1)
+private let troughColor = NSColor(srgbRed: 0.176, green: 0.180, blue: 0.204, alpha: 1)
+private let flowCold = NSColor(srgbRed: 0.039, green: 0.518, blue: 1.0, alpha: 1)    // 0A84FF
+private let flowWarm = NSColor(srgbRed: 0.188, green: 0.820, blue: 0.345, alpha: 1)  // 30D158
+private let sparkTint = NSColor(srgbRed: 0.898, green: 0.949, blue: 1.0, alpha: 1)   // E5F2FF
 
-func wPath(in side: CGFloat) -> NSBezierPath {
-    let s = side / 1024
-    // AppKit draws with y growing upward. Written the other way the W comes
-    // out as an M.
-    let points = [
-        CGPoint(x: 244 * s, y: 706 * s),
-        CGPoint(x: 400 * s, y: 318 * s),
-        CGPoint(x: 512 * s, y: 536 * s),
-        CGPoint(x: 624 * s, y: 318 * s),
-        CGPoint(x: 780 * s, y: 706 * s),
-    ]
-    let path = NSBezierPath()
-    path.move(to: points[0])
-    for point in points.dropFirst() { path.line(to: point) }
-    path.lineWidth = 104 * s
-    path.lineJoinStyle = .miter
-    path.lineCapStyle = .round
-    path.miterLimit = 6
-    return path
+/// One cubic — the same shape the popover draws — scaled to the canvas.
+private struct Curve {
+    var start: CGPoint, c1: CGPoint, c2: CGPoint, end: CGPoint
+
+    func scaled(_ s: CGFloat) -> Curve {
+        Curve(start: CGPoint(x: start.x * s, y: start.y * s),
+              c1: CGPoint(x: c1.x * s, y: c1.y * s),
+              c2: CGPoint(x: c2.x * s, y: c2.y * s),
+              end: CGPoint(x: end.x * s, y: end.y * s))
+    }
+
+    var path: NSBezierPath {
+        let p = NSBezierPath()
+        p.move(to: start)
+        p.curve(to: end, controlPoint1: c1, controlPoint2: c2)
+        return p
+    }
+
+    func point(at t: CGFloat) -> CGPoint {
+        let u = 1 - t
+        return CGPoint(
+            x: u*u*u*start.x + 3*u*u*t*c1.x + 3*u*t*t*c2.x + t*t*t*end.x,
+            y: u*u*u*start.y + 3*u*u*t*c1.y + 3*u*t*t*c2.y + t*t*t*end.y
+        )
+    }
 }
 
-func boltPath(in side: CGFloat) -> NSBezierPath {
-    let s = side / 1024
-    let pts: [CGPoint] = [
-        CGPoint(x: 551, y: 707), CGPoint(x: 437, y: 517), CGPoint(x: 500, y: 517),
-        CGPoint(x: 473, y: 355), CGPoint(x: 587, y: 545), CGPoint(x: 524, y: 545),
-    ].map { CGPoint(x: $0.x * s, y: $0.y * s) }
-    let path = NSBezierPath()
-    path.move(to: pts[0])
-    for point in pts.dropFirst() { path.line(to: point) }
-    path.close()
-    return path
-}
+private let baseCurve = Curve(
+    start: CGPoint(x: 240, y: 352),
+    c1: CGPoint(x: 452, y: 352),
+    c2: CGPoint(x: 566, y: 690),
+    end: CGPoint(x: 784, y: 690)
+)
 
-func render(side: CGFloat) -> NSImage {
-    let image = NSImage(size: NSSize(width: side, height: side))
-    image.lockFocus()
-    guard let ctx = NSGraphicsContext.current?.cgContext else { image.unlockFocus(); return image }
-    ctx.setShouldAntialias(true)
-    ctx.interpolationQuality = .high
-
-    let inset = side * 0.0977          // macOS icons leave a margin inside the canvas
-    let rect = NSRect(x: inset, y: inset, width: side - inset * 2, height: side - inset * 2)
-    let radius = rect.width * 0.2246
-    let squircle = NSBezierPath(roundedRect: rect, xRadius: radius, yRadius: radius)
-
-    ctx.saveGState()
-    squircle.addClip()
-    NSGradient(starting: colorBackBottom, ending: colorBackTop)?
-        .draw(in: rect, angle: 90)
-    // Faint top edge highlight, the way system icons catch light.
-    NSColor.white.withAlphaComponent(0.07).setFill()
-    NSBezierPath(rect: NSRect(x: rect.minX, y: rect.maxY - rect.height * 0.012,
-                              width: rect.width, height: rect.height * 0.012)).fill()
-    ctx.restoreGState()
-
-    // The W in green.
-    let mark = wPath(in: side)
-    ctx.saveGState()
-    squircle.addClip()
-    ctx.setLineWidth(mark.lineWidth)
-    ctx.setLineJoin(.miter)
-    ctx.setLineCap(.round)
-    ctx.setMiterLimit(6)
-    ctx.addPath(mark.cgPath)
-    ctx.replacePathWithStrokedPath()
-    ctx.clip()
-    NSGradient(starting: colorMarkBottom, ending: colorMarkTop)?.draw(in: rect, angle: 90)
-    ctx.restoreGState()
-
-    // Punch a gap through the centre peak, then set the bolt inside it. The
-    // gap is what makes the letter and the lightning read as one figure
-    // instead of a symbol dropped on top of a letter.
-    let bolt = boltPath(in: side)
-    ctx.saveGState()
-    squircle.addClip()
-    let gapWidth = side / 1024 * 34
-    ctx.setLineWidth(gapWidth)
-    ctx.setLineJoin(.round)
-    NSGradient(starting: colorBackBottom, ending: colorBackTop)?.draw(in: NSRect.zero, angle: 90)
-    colorBackBottom.setStroke()
-    colorBackBottom.setFill()
-    bolt.lineWidth = gapWidth
-    bolt.lineJoinStyle = .round
-    bolt.stroke()
-    bolt.fill()
-    ctx.restoreGState()
-
-    ctx.saveGState()
-    squircle.addClip()
-    ctx.addPath(bolt.cgPath)
-    ctx.clip()
-    NSGradient(starting: colorMarkBottom, ending: colorMarkTop)?.draw(in: rect, angle: 90)
-    ctx.restoreGState()
-
-    image.unlockFocus()
-    return image
+private func squircle(in rect: NSRect) -> NSBezierPath {
+    NSBezierPath(roundedRect: rect, xRadius: rect.width * 0.2246, yRadius: rect.width * 0.2246)
 }
 
 extension NSBezierPath {
@@ -126,13 +68,98 @@ extension NSBezierPath {
     }
 }
 
+func render(side: CGFloat) -> NSImage {
+    let image = NSImage(size: NSSize(width: side, height: side))
+    image.lockFocus()
+    defer { image.unlockFocus() }
+    guard let ctx = NSGraphicsContext.current?.cgContext else { return image }
+    ctx.setShouldAntialias(true)
+
+    let scale = side / 1024
+    let inset = side * 0.0977
+    let rect = NSRect(x: inset, y: inset, width: side - inset * 2, height: side - inset * 2)
+    let clip = squircle(in: rect)
+
+    ctx.saveGState()
+    clip.addClip()
+    NSGradient(starting: backBottom, ending: backTop)?.draw(in: rect, angle: 90)
+    NSColor.white.withAlphaComponent(0.06).setFill()
+    NSBezierPath(rect: NSRect(x: rect.minX, y: rect.maxY - rect.height * 0.010,
+                              width: rect.width, height: rect.height * 0.010)).fill()
+    ctx.restoreGState()
+
+    let curve = baseCurve.scaled(scale)
+    let lineWidth = 134 * scale
+
+    ctx.saveGState()
+    clip.addClip()
+    let trough = curve.path
+    trough.lineWidth = lineWidth
+    trough.lineCapStyle = .round
+    troughColor.setStroke()
+    trough.stroke()
+    ctx.restoreGState()
+
+    // The light is clipped to the trough, so it reads as something moving
+    // inside the pipe rather than a second pipe laid on top of it.
+    ctx.saveGState()
+    clip.addClip()
+    ctx.setLineWidth(lineWidth)
+    ctx.setLineCap(.round)
+    ctx.addPath(curve.path.cgPath)
+    ctx.replacePathWithStrokedPath()
+    ctx.clip()
+    NSGradient(colorsAndLocations:
+        (flowCold.withAlphaComponent(0.22), 0.0),
+        (flowCold, 0.32),
+        (flowWarm, 0.66),
+        (flowWarm.withAlphaComponent(0.22), 1.0)
+    )?.draw(in: rect, angle: 42)
+    ctx.restoreGState()
+
+    // Sparks riding the curve. This is the app's signature and the reason the
+    // mark is more than a pipe.
+    ctx.saveGState()
+    clip.addClip()
+    for (t, radius) in [(0.17, 13.0), (0.41, 23.0), (0.64, 17.0), (0.87, 10.0)] {
+        let centre = curve.point(at: CGFloat(t))
+        let r = CGFloat(radius) * scale
+        let halo = r * 3.6
+
+        // CoreGraphics rather than NSGradient: NSGradient interpolates toward a
+        // transparent stop in a non-premultiplied space, so the falloff came
+        // out as a grey disc instead of fading to nothing.
+        if let gradient = CGGradient(
+            colorsSpace: CGColorSpaceCreateDeviceRGB(),
+            colors: [sparkTint.withAlphaComponent(0.55).cgColor,
+                     sparkTint.withAlphaComponent(0).cgColor] as CFArray,
+            locations: [0, 1]
+        ) {
+            ctx.saveGState()
+            ctx.drawRadialGradient(gradient, startCenter: centre, startRadius: 0,
+                                   endCenter: centre, endRadius: halo, options: [])
+            ctx.restoreGState()
+        }
+
+        sparkTint.setFill()
+        NSBezierPath(ovalIn: NSRect(x: centre.x - r, y: centre.y - r,
+                                    width: r * 2, height: r * 2)).fill()
+    }
+    ctx.restoreGState()
+
+    return image
+}
+
 let out = URL(fileURLWithPath: CommandLine.arguments[1])
 try? FileManager.default.createDirectory(at: out, withIntermediateDirectories: true)
-for (name, side) in [("icon_512x512@2x", 1024.0), ("icon_512x512", 512.0), ("icon_256x256@2x", 512.0),
-                     ("icon_256x256", 256.0), ("icon_128x128@2x", 256.0), ("icon_128x128", 128.0),
-                     ("icon_32x32@2x", 64.0), ("icon_32x32", 32.0), ("icon_16x16@2x", 32.0), ("icon_16x16", 16.0)] {
-    let img = render(side: CGFloat(side))
-    guard let tiff = img.tiffRepresentation,
+let sizes: [(String, CGFloat)] = [
+    ("icon_512x512@2x", 1024), ("icon_512x512", 512), ("icon_256x256@2x", 512),
+    ("icon_256x256", 256), ("icon_128x128@2x", 256), ("icon_128x128", 128),
+    ("icon_32x32@2x", 64), ("icon_32x32", 32), ("icon_16x16@2x", 32), ("icon_16x16", 16),
+]
+for (name, side) in sizes {
+    let image = render(side: side)
+    guard let tiff = image.tiffRepresentation,
           let rep = NSBitmapImageRep(data: tiff),
           let png = rep.representation(using: .png, properties: [:]) else { continue }
     try? png.write(to: out.appendingPathComponent("\(name).png"))
