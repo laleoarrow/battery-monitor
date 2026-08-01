@@ -43,6 +43,33 @@ class JunctionContractTests(unittest.TestCase):
         self.assertIn("width: bounds.width * 2", self.source)
         self.assertIn("drift.byValue = width", self.source)
 
+    def test_light_pattern_is_periodic_across_the_loop(self):
+        # The gradient is shifted by exactly one view width, which is half its
+        # own span, so the pattern must repeat with period 0.5. The first
+        # version did not: alpha differed by 0.14 across the wrap and showed as
+        # a seam once per cycle.
+        import re
+        block = self.source.split("self.gradient.locations = [", 1)[1].split("]", 1)[0]
+        locations = [float(x) for x in re.findall(r"[\d.]+", block)]
+        colours = self.source.split("self.gradient.colors = [", 1)[1].split("]", 1)[0]
+        names = [n.strip() for n in colours.replace("\n", "").split(",") if n.strip()]
+        alpha = {"clear": 0.0, "soft": 0.30, "core": 1.0}
+        values = [alpha[n] for n in names]
+        self.assertEqual(len(values), len(locations))
+
+        def at(f):
+            if f <= locations[0]:
+                return values[0]
+            for i in range(1, len(locations)):
+                if f <= locations[i]:
+                    span = locations[i] - locations[i - 1]
+                    u = 0 if span == 0 else (f - locations[i - 1]) / span
+                    return values[i - 1] + (values[i] - values[i - 1]) * u
+            return values[-1]
+
+        worst = max(abs(at(f / 1000) - at(f / 1000 + 0.5)) for f in range(501))
+        self.assertLess(worst, 0.001, f"pattern is not periodic; worst gap {worst:.3f}")
+
     def test_geometry_is_recomputed_once_bounds_are_real(self):
         # Anything derived from bounds is nonsense when `update` lands before
         # the first layout pass — the mask collapses and the pipes vanish.

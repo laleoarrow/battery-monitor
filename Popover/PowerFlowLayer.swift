@@ -129,7 +129,7 @@ final class PipeBundle {
     private var particleCount = -1
     private var particlesAreHot = false
     private var particlesAreAnimating = false
-    private var particleGeometryKey = ""
+    private var particleTopology = ""
     private var geometry = PipeGeometry(start: .zero, control1: .zero, control2: .zero, end: .zero)
 
     init() {
@@ -169,13 +169,17 @@ final class PipeBundle {
             // what separates a moving light from a moving block.
             self.gradient.frame = CGRect(x: -bounds.width, y: 0,
                                          width: bounds.width * 2, height: bounds.height)
+            // Strictly periodic with period 0.5, so shifting by exactly one
+            // view width lands the pattern back on itself. The earlier stops
+            // were not: alpha differed by 0.14 across the wrap, which showed up
+            // as a seam once per cycle.
             let clear = color.withAlphaComponent(0).cgColor
             let soft = color.withAlphaComponent(0.30).cgColor
             let core = color.cgColor
             self.gradient.colors = [clear, soft, core, soft, clear,
-                                    soft, core, soft, clear, clear]
-            self.gradient.locations = [0, 0.13, 0.21, 0.25, 0.38,
-                                       0.63, 0.71, 0.75, 0.88, 1].map { NSNumber(value: $0) }
+                                    clear, soft, core, soft, clear, clear]
+            self.gradient.locations = [0, 0.13, 0.21, 0.29, 0.42,
+                                       0.50, 0.63, 0.71, 0.79, 0.92, 1].map { NSNumber(value: $0) }
             self.container.opacity = thickness > 0.5 ? 1 : 0
         }
 
@@ -219,20 +223,34 @@ final class PipeBundle {
     /// changes. Tearing it down on every 1 Hz refresh reset every particle to
     /// its seeded position once a second, which is what produced the stutter.
     func rebuildParticles(count: Int, thickness: CGFloat, color: NSColor,
-                          period: CFTimeInterval, seed: UInt64, hot: Bool, animating: Bool) {
-        let wanted = thickness > 0.5 ? count : 0
+                          period: CFTimeInterval, seed: UInt64, hot: Bool,
+                          animating: Bool, topology: String) {
+        let requested = thickness > 0.5 ? count : 0
+
+        // Hysteresis. The count is a rounded function of a continuously drifting
+        // reading, so it oscillates across a boundary — 43 W wants five sparks
+        // and 45 W wants six, and the pool rebuilt on every crossing. One spark
+        // either way is invisible; churning the pool at 1 Hz is not.
+        let wanted: Int
+        if particleCount < 0 || requested == 0 || particleCount == 0 {
+            wanted = requested
+        } else {
+            wanted = abs(requested - particleCount) >= 2 ? requested : particleCount
+        }
 
         // Everything the pool is built from has to be in this key. Guarding on
         // the count alone meant particles kept the animations — or the curve —
         // they were born with: reopening the popover left them frozen, and a
         // topology change left them riding the old path.
-        let key = String(format: "%.1f,%.1f,%.1f,%.1f,%.1f",
-                         geometry.start.x, geometry.start.y,
-                         geometry.end.x, geometry.end.y, thickness)
+        // Only discrete facts belong in this guard. Keying on the curve's
+        // coordinates or on thickness meant keying on a continuously drifting
+        // reading: whatever the quantisation, the value oscillates across its
+        // own boundary and the pool churns at 1 Hz. Topology is discrete, and
+        // sub-point drift in the path is not visible.
         guard wanted != particleCount
             || hot != particlesAreHot
             || animating != particlesAreAnimating
-            || key != particleGeometryKey
+            || topology != particleTopology
         else {
             retimeParticles(period: period)
             return
@@ -240,7 +258,7 @@ final class PipeBundle {
         particleCount = wanted
         particlesAreHot = hot
         particlesAreAnimating = animating
-        particleGeometryKey = key
+        particleTopology = topology
 
         particles.forEach { $0.removeFromSuperlayer() }
         particles.removeAll()
@@ -442,10 +460,12 @@ final class PowerFlowView: PopoverSection {
 
             configure(bundles[0], geometry: pipeGeometry(from: upperStart, to: Self.topY),
                       thickness: upperThickness, color: color, period: period,
-                      particles: count, hot: hot, seed: 11, animated: animated)
+                      particles: count, hot: hot, seed: 11, animated: animated,
+                      topology: "adapterLed.0")
             configure(bundles[1], geometry: pipeGeometry(from: lowerStart, to: Self.bottomY),
                       thickness: lowerThickness, color: color, period: period,
-                      particles: charging ? count : 0, hot: hot, seed: 29, animated: animated)
+                      particles: charging ? count : 0, hot: hot, seed: 29, animated: animated,
+                      topology: "adapterLed.1.\(charging)")
 
             idleConnection.path = charging ? nil : pipeGeometry(from: cy, to: Self.bottomY).path
 
@@ -460,11 +480,13 @@ final class PowerFlowView: PopoverSection {
 
             configure(bundles[0], geometry: pipeGeometry(from: Self.topY, to: upperEnd),
                       thickness: upperThickness, color: PopoverStyle.blue, period: period,
-                      particles: adapterActive ? count : 0, hot: hot, seed: 11, animated: animated)
+                      particles: adapterActive ? count : 0, hot: hot, seed: 11, animated: animated,
+                      topology: "batteryLed.0.\(adapterActive)")
             configure(bundles[1], geometry: pipeGeometry(from: Self.bottomY, to: lowerEnd),
                       thickness: lowerThickness,
                       color: adapterActive ? PopoverStyle.amber : color, period: period,
-                      particles: count, hot: hot, seed: 29, animated: animated)
+                      particles: count, hot: hot, seed: 29, animated: animated,
+                      topology: "batteryLed.1.\(adapterActive)")
 
             idleConnection.path = nil
         }
@@ -476,11 +498,12 @@ final class PowerFlowView: PopoverSection {
 
     private func configure(_ bundle: PipeBundle, geometry: PipeGeometry, thickness: CGFloat,
                            color: NSColor, period: CFTimeInterval, particles: Int,
-                           hot: Bool, seed: UInt64, animated: Bool) {
+                           hot: Bool, seed: UInt64, animated: Bool, topology: String) {
         bundle.apply(geometry: geometry, thickness: thickness, color: color,
                      bounds: plot.bounds, animated: animated)
         bundle.rebuildParticles(count: particles, thickness: thickness, color: color,
-                                period: period, seed: seed, hot: hot, animating: animationsEnabled)
+                                period: period, seed: seed, hot: hot,
+                                animating: animationsEnabled, topology: topology)
         if animationsEnabled { bundle.startFlow(period: period, width: plot.bounds.width) }
     }
 
