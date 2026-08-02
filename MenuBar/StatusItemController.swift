@@ -33,9 +33,7 @@ final class StatusItemController: NSObject {
     private var displayTimer: Timer?
     private var powerSourceRunLoopSource: CFRunLoopSource?
     private var pressed = false
-    /// Both halves of one click must not act twice.
-    private static let clickCoalescingWindow: TimeInterval = 0.3
-    private var lastClickAt: TimeInterval = 0
+    private var clickRouter = ClickRouter()
     private var systemBatteryIconHidden: Bool?
 
     func start() {
@@ -79,45 +77,29 @@ final class StatusItemController: NSObject {
     @objc private func handleClick() {
         guard let button = statusItem.button else { return }
         let event = NSApp.currentEvent
-        let type = event?.type
-
-        // Act on whichever half of the click arrives first, and ignore the
-        // other half. A trackpad tap is short enough that AppKit may deliver
-        // only one of the pair, and by the time the action runs
-        // NSApp.currentEvent can already be nil — the old code required it and
-        // silently dropped the click, so taps did nothing while a held press
-        // worked.
-        let now = Date().timeIntervalSinceReferenceDate
-        let isPress = type == .leftMouseDown || type == .rightMouseDown
-        let isRelease = type == .leftMouseUp || type == .rightMouseUp
-
-        // A coloured icon has to revert to template while the selection
-        // highlight is drawn behind it, so the press state still has to be set
-        // even though the action itself fires on whichever half arrives first.
-        if isPress {
-            pressed = true
-            refreshPresentation()
-        }
-        if isRelease {
-            if pressed {
-                pressed = false
+        for intent in clickRouter.intents(for: event?.type,
+                                          controlHeld: event?.modifierFlags.contains(.control) ?? false) {
+            switch intent {
+            case .press:
+                pressed = true
                 refreshPresentation()
+            case .release:
+                if pressed {
+                    pressed = false
+                    refreshPresentation()
+                }
+            case .primary:
+                pressed = false
+                // Only when opening: the query wakes the helper through
+                // launchd, so it has no business running on the 1 Hz refresh.
+                if !popover.isOpen { refreshSystemBatteryIconState() }
+                refreshPresentation()
+                popover.toggle(relativeTo: button)
+            case .secondary:
+                pressed = false
+                let ok = applyEnergyMode(EnergyModeController.current == .low ? .auto : .low)
+                confirmToggle(success: ok)
             }
-            if now - lastClickAt < Self.clickCoalescingWindow { return }
-        }
-        lastClickAt = now
-
-        let isSecondary = type == .rightMouseDown || type == .rightMouseUp
-            || event?.modifierFlags.contains(.control) == true
-        if isSecondary {
-            let ok = applyEnergyMode(EnergyModeController.current == .low ? .auto : .low)
-            confirmToggle(success: ok)
-        } else {
-            // Only when opening: the query wakes the helper through launchd, so
-            // it has no business running on the 1 Hz refresh or on close.
-            if !popover.isShown { refreshSystemBatteryIconState() }
-            refreshPresentation()
-            popover.toggle(relativeTo: button)
         }
     }
 

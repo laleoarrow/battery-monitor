@@ -96,7 +96,7 @@ class PopoverControlsContractTests(unittest.TestCase):
     def test_system_battery_state_is_queried_only_when_opening(self):
         # The query wakes the helper through launchd, so it must not run on the
         # 1 Hz refresh or when the popover is closing.
-        primary = self.status.split("if !popover.isShown", 1)[1].split("}", 1)[0]
+        primary = self.status.split("if !popover.isOpen", 1)[1].split("}", 1)[0]
         self.assertIn("refreshSystemBatteryIconState", primary)
         refresh = self.status.split("private func refreshPresentation()", 1)[1]
         self.assertNotIn("SystemBatteryIconController.isHidden", refresh)

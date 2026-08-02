@@ -1,6 +1,18 @@
 #!/bin/bash
 # install.sh — Install Wattson as a macOS menu bar app
+#
+# --app-only skips step 7. The app itself lives in ~/Applications and needs no
+# elevation; only the privileged helper does. The helper changes rarely, so
+# updating the app should not have to ask for a password.
 set -euo pipefail
+
+APP_ONLY=0
+for arg in "$@"; do
+    case "$arg" in
+        --app-only) APP_ONLY=1 ;;
+        *) echo "unknown option: $arg" >&2; exit 2 ;;
+    esac
+done
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$SCRIPT_DIR/.."
@@ -132,6 +144,18 @@ touch "$APP_DIR"
 
 # 7. Install the privileged helper. launchd wakes it on demand and it exits
 # after five idle seconds.
+if [ "$APP_ONLY" = "1" ]; then
+    echo "  ⏭  Skipping the privileged helper (--app-only)"
+    # -e, not -x: the helper is 544 root:wheel, so it is deliberately not
+    # executable by the user running this script.
+    if [ ! -e "$HELPER_BIN" ]; then
+        echo "  ⚠️  No helper at $HELPER_BIN — power mode switching will not work."
+        echo "     Run ./scripts/install.sh without --app-only to install it."
+    fi
+    echo ""
+    echo "🎉 Done. Launch with: open -a ${APP_NAME}"
+    exit 0
+fi
 echo "  🔑 Installing the privileged helper (needs sudo once)"
 HELPER_BUILD="$BUILD_DIR/wattson-helper"
 xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift" -O -o "$HELPER_BUILD"

@@ -40,11 +40,37 @@ class StatusItemContractTests(unittest.TestCase):
         # worked.
         handler = self.source.split("@objc private func handleClick()", 1)[1].split("\n    private func", 1)[0]
         self.assertNotIn("guard let event = NSApp.currentEvent", handler)
-        self.assertIn("clickCoalescingWindow", handler)
+        self.assertIn("clickRouter.intents(for: event?.type", handler)
 
     def test_both_halves_of_a_click_do_not_act_twice(self):
-        self.assertIn("clickCoalescingWindow: TimeInterval", self.source)
-        self.assertIn("lastClickAt", self.source)
+        # Pairing is tracked as click-cycle state, not a time window. A window
+        # let a press held past its length act twice, so the popover opened and
+        # immediately closed. See tests/interaction for the executed proof.
+        router = (ROOT / "MenuBar" / "ClickRouter.swift").read_text(encoding="utf-8")
+        self.assertIn("pressAlreadyActed", router)
+        self.assertNotIn("coalescingWindow", router)
+        self.assertNotIn("now: TimeInterval", router)
+
+    def test_popover_toggle_keys_on_intent_not_on_appkit_animation_state(self):
+        # `popover.isShown` stays true for the whole close animation, so
+        # branching on it swallowed a click that reopened the popover mid-fade.
+        popover = (ROOT / "Popover" / "PopoverController.swift").read_text(encoding="utf-8")
+        toggle = popover.split("func toggle(relativeTo", 1)[1].split("\n    private func close", 1)[0]
+        self.assertNotIn("popover.isShown", toggle.split("private func open", 1)[0])
+        self.assertIn("wantsOpen ? close() : open(relativeTo: button)", toggle)
+
+    def test_a_superseded_close_does_not_tear_down_the_popover_that_replaced_it(self):
+        # AppKit pairs one close with each show; counting them is exact, while
+        # the state at that instant is not — isShown is briefly false in the
+        # ~7ms between the old popover leaving and the new one landing.
+        popover = (ROOT / "Popover" / "PopoverController.swift").read_text(encoding="utf-8")
+        self.assertIn("showsRequested += 1", popover)
+        self.assertIn("closesObserved += 1", popover)
+        self.assertIn("guard closesObserved >= showsRequested else { return }", popover)
+        # The teardown must still reset the intent, or an AppKit-initiated
+        # dismissal would leave the next click reading as "close".
+        teardown = popover.split("guard closesObserved >= showsRequested else { return }", 1)[1]
+        self.assertIn("wantsOpen = false", teardown)
 
     def test_right_click_has_a_visible_confirmation(self):
         # Right-click as a direct action is undiscoverable, so it must confirm.
