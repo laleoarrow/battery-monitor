@@ -1,8 +1,8 @@
 import AppKit
 
 enum BatteryIcon {
-    static let width: CGFloat = 22
-    static let height: CGFloat = 13
+    static let width: CGFloat = 23
+    static let height: CGFloat = 14
 
     /// Geometry never changes — only the fill colour does. `pressed` forces
     /// template rendering because a coloured image does not invert under the
@@ -13,6 +13,7 @@ enum BatteryIcon {
 
         let image = NSImage(size: NSSize(width: width, height: height), flipped: false) { _ in
             let stroke = useTemplate ? NSColor.black : tint!
+            NSGraphicsContext.current?.cgContext.scaleBy(x: width / 22, y: height / 13)
             draw(percent: snapshot.percent, plugged: snapshot.plugged, color: stroke)
             return true
         }

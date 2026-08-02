@@ -32,13 +32,14 @@ class BatteryIconContractTests(unittest.TestCase):
         self.assertLess(low_power, low_battery)
         self.assertLess(low_battery, charging)
 
-    def test_icon_keeps_the_system_battery_width(self):
-        match = re.search(r"static let width: CGFloat = ([\d.]+)", self.source)
-        self.assertIsNotNone(match)
-        # Measured from the system's own assets in BatteryCenterUI.framework:
-        # outline 19x10 plus a 2pt cap. Going wider wastes scarce menu-bar
-        # space; going narrower looks undersized beside it.
-        self.assertEqual(float(match.group(1)), 22.0)
+    def test_icon_is_one_point_larger_than_the_system_asset_canvas(self):
+        width = re.search(r"static let width: CGFloat = ([\d.]+)", self.source)
+        height = re.search(r"static let height: CGFloat = ([\d.]+)", self.source)
+        self.assertIsNotNone(width)
+        self.assertIsNotNone(height)
+        self.assertEqual(float(width.group(1)), 23.0)
+        self.assertEqual(float(height.group(1)), 14.0)
+        self.assertIn("scaleBy(x: width / 22, y: height / 13)", self.source)
 
 
     def test_bolt_overflows_the_shell(self):
