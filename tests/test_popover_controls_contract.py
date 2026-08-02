@@ -106,6 +106,28 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn('"setSystemBatteryIconHidden"', self.system_icon)
         self.assertNotIn("Process()", self.system_icon)
 
+    def test_slider_hit_tests_as_one_control(self):
+        # The track covers the whole bounds, so AppKit hit-tested a plain
+        # NSView and asked *it* whether it takes the first mouse. It says no,
+        # which spent the first click after the popover opened on making the
+        # window key. Dragging still worked because the event bubbled up the
+        # responder chain, which is what hid this.
+        self.assertIn("override func hitTest(_ point: NSPoint) -> NSView?", self.slider)
+        self.assertIn("override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }", self.slider)
+
+    def test_a_click_selects_the_detent_it_landed_on(self):
+        # mouseUp used to read the knob's position. A click never moves the
+        # knob, so it always resolved to the mode already selected and the
+        # control only responded to drags.
+        self.assertIn("movedWhileDragging ? nearestIndex() : nearestIndex(toward: pressX)", self.slider)
+        self.assertIn("private static let dragSlop", self.slider)
+
+    def test_a_click_cannot_select_an_unsupported_mode(self):
+        # Both the drag and the click path go through the same filter, so
+        # High Power stays unreachable on hardware without it.
+        chooser = self.slider.split("private func nearestIndex(toward x: CGFloat)", 1)[1]
+        self.assertIn("modes.indices.filter { enabled[$0] }", chooser)
+
 
 if __name__ == "__main__":
     unittest.main()

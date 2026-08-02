@@ -38,6 +38,13 @@ class InteractionBehaviorTests(unittest.TestCase):
             ["/bin/bash", str(RUNNER)], capture_output=True, text=True, check=False, timeout=300
         )
         output = result.stdout + result.stderr
+        # A locked screen starts CoreAnimation but never completes it, so the
+        # popover never finishes closing. Those checks cannot run; counting
+        # them as passes would overstate the coverage and counting them as
+        # failures would invent bugs.
+        if "SCREEN_LOCKED_CHECKS_SKIPPED" in output:
+            self.assertEqual(result.returncode, 2, output)
+            self.skipTest("screen is locked; popover close checks cannot run")
         self.assertEqual(result.returncode, 0, output)
         self.assertIn("ALL_INTERACTION_CHECKS_PASSED", output, output)
         # A harness that silently stops checking still prints a pass line.

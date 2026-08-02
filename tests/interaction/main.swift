@@ -8,6 +8,12 @@ func check(_ n: String, _ ok: Bool, _ d: String = "") {
     log("\(ok ? "✅" : "❌") \(n)\(d.isEmpty ? "" : "  — \(d)")")
 }
 
+/// A locked screen starts CoreAnimation but never finishes it, so anything
+/// waiting on a close animation to complete hangs forever. Reporting that as a
+/// failure would be inventing eight bugs that do not exist, and reporting it as
+/// a pass would be worse. Say plainly that it could not be checked.
+let screenLocked = (CGSessionCopyCurrentDictionary() as? [String: Any])?["CGSSessionScreenIsLocked"] as? Int == 1
+
 // ---- 1. 点击路由：AppKit 可能送达的每一种单击形态 ----
 func run(_ steps: [NSEvent.EventType?], control: Bool = false) -> [ClickIntent] {
     var router = ClickRouter()
@@ -25,62 +31,74 @@ check("control+点击视为右键", run([.leftMouseDown], control: true).contain
 check("按下仍会置 pressed", held.first == .press && held.contains(.release))
 
 // ---- 2. 真实 NSStatusItem + NSPopover ----
+// 从这里到第 3 节结束，全部依赖关闭动画真的跑完
+if screenLocked {
+    log("")
+    log("⏭  屏幕已锁定：关闭动画不会完成，弹窗开合与动画停止的检查无法进行")
+    log("   解锁后重跑 ./scripts/verify_interaction.sh 才算验过")
+    log("SCREEN_LOCKED_CHECKS_SKIPPED")
+    log("")
+}
 let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 item.button?.image = NSImage(systemSymbolName: "battery.100", accessibilityDescription: nil)
 guard let button = item.button else { log("no button"); exit(1) }
-app.finishLaunching()
+app.finishLaunching()                     // 少了这句状态栏按钮无法承载弹窗
 RunLoop.current.run(until: Date().addingTimeInterval(0.3))
 func spin(_ s: TimeInterval) { RunLoop.current.run(until: Date().addingTimeInterval(s)) }
 
-let p = PopoverController()
-check("初始未监听外部点击", !p.isWatchingOutsideClicks)
-p.toggle(relativeTo: button); spin(0.4)
-check("轻触图标弹窗打开", p.isShownForTest && p.isOpen)
-check("打开后开始监听外部点击", p.isWatchingOutsideClicks)
-p.handleOutsideClick()
-check("外部点击后立刻停止监听", !p.isWatchingOutsideClicks)
-spin(1.2)
-check("点击桌面/其他 app 后弹窗收起", !p.isShownForTest && !p.isOpen)
+if !screenLocked {
+    app.finishLaunching()
 
-p.toggle(relativeTo: button); spin(0.4)
-p.toggle(relativeTo: button); spin(0.2)      // 关，动画中途
-p.toggle(relativeTo: button); spin(1.2)      // 立刻再点想重开
-check("关闭动画中途再点可立即重开", p.isShownForTest && p.isOpen)
-check("重开后仍在监听外部点击", p.isWatchingOutsideClicks)
-p.handleOutsideClick(); spin(1.2)
-check("重开后的弹窗仍可被外部点击收起", !p.isShownForTest && !p.isOpen)
+    let p = PopoverController()
+    check("初始未监听外部点击", !p.isWatchingOutsideClicks)
+    p.toggle(relativeTo: button); spin(0.4)
+    check("轻触图标弹窗打开", p.isShownForTest && p.isOpen)
+    check("打开后开始监听外部点击", p.isWatchingOutsideClicks)
+    p.handleOutsideClick()
+    check("外部点击后立刻停止监听", !p.isWatchingOutsideClicks)
+    spin(1.2)
+    check("点击桌面/其他 app 后弹窗收起", !p.isShownForTest && !p.isOpen)
 
-p.toggle(relativeTo: button); spin(0.4)
-p.closeBypassingControllerForTest(); spin(1.2)   // AppKit 自行瞬态关闭（Esc 等）
-check("AppKit 自行关闭后意图已复位", !p.isOpen)
-check("AppKit 自行关闭后监听已撤除", !p.isWatchingOutsideClicks)
-p.toggle(relativeTo: button); spin(0.4)
-check("自行关闭后下一次点击仍能打开", p.isShownForTest && p.isOpen)
-p.handleOutsideClick(); spin(1.2)
+    p.toggle(relativeTo: button); spin(0.4)
+    p.toggle(relativeTo: button); spin(0.2)      // 关，动画中途
+    p.toggle(relativeTo: button); spin(1.2)      // 立刻再点想重开
+    check("关闭动画中途再点可立即重开", p.isShownForTest && p.isOpen)
+    check("重开后仍在监听外部点击", p.isWatchingOutsideClicks)
+    p.handleOutsideClick(); spin(1.2)
+    check("重开后的弹窗仍可被外部点击收起", !p.isShownForTest && !p.isOpen)
 
-// ---- 3. 隐藏时必须停止动画：这是省电的全部意义 ----
-p.toggle(relativeTo: button); spin(0.8)
-let openAnims = p.runningAnimationCountForTest
-check("打开时内容在动", openAnims > 0, "\(openAnims) 个动画")
-p.handleOutsideClick(); spin(1.2)
-let closedAnims = p.runningAnimationCountForTest
-check("收起后动画已停", closedAnims == 0, "\(closedAnims) 个动画")
+    p.toggle(relativeTo: button); spin(0.4)
+    p.closeBypassingControllerForTest(); spin(1.2)   // AppKit 自行瞬态关闭（Esc 等）
+    check("AppKit 自行关闭后意图已复位", !p.isOpen)
+    check("AppKit 自行关闭后监听已撤除", !p.isWatchingOutsideClicks)
+    p.toggle(relativeTo: button); spin(0.4)
+    check("自行关闭后下一次点击仍能打开", p.isShownForTest && p.isOpen)
+    p.handleOutsideClick(); spin(1.2)
 
-// 中途重开之后动画必须恢复——迟到的 didClose 不能把它关掉
-p.toggle(relativeTo: button); spin(0.6)
-p.toggle(relativeTo: button); spin(0.2)
-p.toggle(relativeTo: button); spin(1.4)
-let reopenAnims = p.runningAnimationCountForTest
-check("中途重开后动画已恢复", reopenAnims > 0, "\(reopenAnims) 个动画")
-p.handleOutsideClick(); spin(1.2)
-check("重开再收起后动画仍会停", p.runningAnimationCountForTest == 0)
+    // ---- 3. 隐藏时必须停止动画：这是省电的全部意义 ----
+    p.toggle(relativeTo: button); spin(0.8)
+    let openAnims = p.runningAnimationCountForTest
+    check("打开时内容在动", openAnims > 0, "\(openAnims) 个动画")
+    p.handleOutsideClick(); spin(1.2)
+    let closedAnims = p.runningAnimationCountForTest
+    check("收起后动画已停", closedAnims == 0, "\(closedAnims) 个动画")
 
-// 连开关三轮，确认计数不漂
-for _ in 0..<3 { p.toggle(relativeTo: button); spin(0.4); p.toggle(relativeTo: button); spin(0.9) }
-p.toggle(relativeTo: button); spin(0.4)
-check("反复开关后仍能正常打开", p.isShownForTest && p.isOpen)
-p.handleOutsideClick(); spin(1.2)
-check("反复开关后仍能正常收起", !p.isShownForTest && !p.isOpen && !p.isWatchingOutsideClicks)
+    // 中途重开之后动画必须恢复——迟到的 didClose 不能把它关掉
+    p.toggle(relativeTo: button); spin(0.6)
+    p.toggle(relativeTo: button); spin(0.2)
+    p.toggle(relativeTo: button); spin(1.4)
+    let reopenAnims = p.runningAnimationCountForTest
+    check("中途重开后动画已恢复", reopenAnims > 0, "\(reopenAnims) 个动画")
+    p.handleOutsideClick(); spin(1.2)
+    check("重开再收起后动画仍会停", p.runningAnimationCountForTest == 0)
+
+    // 连开关三轮，确认计数不漂
+    for _ in 0..<3 { p.toggle(relativeTo: button); spin(0.4); p.toggle(relativeTo: button); spin(0.9) }
+    p.toggle(relativeTo: button); spin(0.4)
+    check("反复开关后仍能正常打开", p.isShownForTest && p.isOpen)
+    p.handleOutsideClick(); spin(1.2)
+    check("反复开关后仍能正常收起", !p.isShownForTest && !p.isOpen && !p.isWatchingOutsideClicks)
+}
 
 // ---- 4. 模式滑块：拖得到 High Power，松手吸附，拖动中不做多余重绘 ----
 let slider = ModeSliderView(modes: [.low, .auto, .high])
@@ -156,5 +174,69 @@ check("不支持 High 时拖过去停在 Auto",
       limitedChosen.isEmpty && limited.selectedIndexForTest == 1,
       "选中索引 \(limited.selectedIndexForTest) 回调 \(limitedChosen)")
 
+// ---- 5. 点击/轻触档位，不只是拖动 ----
+/// 按下即抬起，中间没有移动——触控板单指轻触就是这个形状
+func tap(_ view: ModeSliderView, in window: NSWindow, atX x: CGFloat, wobble: CGFloat = 0) {
+    func ev(_ t: NSEvent.EventType, _ px: CGFloat) -> NSEvent {
+        NSEvent.mouseEvent(with: t, location: NSPoint(x: px, y: ModeSliderView.preferredHeight / 2),
+                           modifierFlags: [], timestamp: 0, windowNumber: window.windowNumber,
+                           context: nil, eventNumber: 0, clickCount: 1, pressure: 1)!
+    }
+    view.mouseDown(with: ev(.leftMouseDown, x))
+    if wobble != 0 { view.mouseDragged(with: ev(.leftMouseDragged, x + wobble)) }
+    view.mouseUp(with: ev(.leftMouseUp, x + wobble))
+}
+
+// 命中测试必须回到控件本身，否则 AppKit 会去问一个说 false 的装饰视图
+let hit = slider.hitTest(NSPoint(x: 40, y: ModeSliderView.preferredHeight / 2))
+check("滑块命中测试返回自身而非装饰子视图",
+      hit === slider, "\(hit.map { String(describing: type(of: $0)) } ?? "nil")")
+check("滑块接受 first mouse", slider.acceptsFirstMouse(for: nil))
+
+// 此刻旋钮在 Low（上一段拖回去了）
+chosen.removeAll()
+tap(slider, in: win, atX: slider.detentCentreForTest(2))
+check("点击 High Power 档位会切过去", chosen.last == .high, "\(chosen)")
+check("点击后旋钮吸附到 High",
+      abs(slider.knobCentreForTest - slider.detentCentreForTest(2)) < 0.5,
+      String(format: "%.1f vs %.1f", slider.knobCentreForTest, slider.detentCentreForTest(2)))
+spin(0.6)
+
+chosen.removeAll()
+tap(slider, in: win, atX: slider.detentCentreForTest(0))
+check("点击 Low Power 档位会切回来", chosen.last == .low, "\(chosen)")
+spin(0.6)
+
+// 轻触难免抖一两个像素，仍应是点击而不是把旋钮推一下又弹回原位
+chosen.removeAll()
+tap(slider, in: win, atX: slider.detentCentreForTest(1), wobble: 2)
+check("轻触抖动 2pt 仍按点击处理", chosen.last == .auto, "\(chosen)")
+spin(0.6)
+
+// 点在已选中的档位上不该触发回调
+chosen.removeAll()
+tap(slider, in: win, atX: slider.detentCentreForTest(1))
+check("点击当前档位不重复触发", chosen.isEmpty, "\(chosen)")
+
+// 点在档位之间偏向哪边就选哪边
+chosen.removeAll()
+let between = (slider.detentCentreForTest(1) + slider.detentCentreForTest(2)) / 2 + 8
+tap(slider, in: win, atX: between)
+check("点在两档之间选更近的一个", chosen.last == .high, "\(chosen)")
+spin(0.6)
+
+// 不支持 High 的机器上直接点 High，必须没有反应
+limitedChosen.removeAll()
+tap(limited, in: win2, atX: limited.detentCentreForTest(2))
+check("不支持 High 时点它无效",
+      limitedChosen.isEmpty && limited.selectedIndexForTest == 1,
+      "选中索引 \(limited.selectedIndexForTest) 回调 \(limitedChosen)")
+
 NSStatusBar.system.removeStatusItem(item)
-log(pass ? "\nALL_INTERACTION_CHECKS_PASSED" : "\nSOME_CHECKS_FAILED")
+if !pass {
+    log("\nSOME_CHECKS_FAILED")
+    exit(1)
+}
+// 跑过的都过了，但跳过的不能算验过
+log(screenLocked ? "\nRUNNABLE_CHECKS_PASSED_SOME_SKIPPED" : "\nALL_INTERACTION_CHECKS_PASSED")
+exit(screenLocked ? 2 : 0)

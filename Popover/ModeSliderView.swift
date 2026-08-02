@@ -55,6 +55,15 @@ final class ModeSliderView: NSView {
     private var dragging = false
     private var grabOffset: CGFloat = 0
     private var highlighted = -1
+    /// Where the press landed, so a click can select the detent under the
+    /// pointer. Reading the knob's position instead meant a click that never
+    /// moved the knob resolved to the mode already selected, and did nothing.
+    private var pressX: CGFloat = 0
+    private var movedWhileDragging = false
+
+    /// A tap is never perfectly still. Below this the gesture is a click on a
+    /// detent, not a drag of the knob.
+    private static let dragSlop: CGFloat = 3
 
     /// Returns true when the change was accepted; a refusal springs back.
     var onSelect: ((EnergyMode) -> Bool)?
@@ -204,11 +213,28 @@ final class ModeSliderView: NSView {
         knobHost.layer?.add(spring, forKey: "settle")
     }
 
-    // MARK: - Dragging
+    // MARK: - Clicks and drags
+
+    /// The track, knob and labels are decoration; the control is one object.
+    /// Hit-testing through to them leaked that structure into the event system:
+    /// AppKit asks whichever view it hit whether it takes the first mouse, and
+    /// a plain NSView says no. Dragging still worked because the event bubbled
+    /// up the responder chain, which is exactly what made this hard to see.
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        guard let local = superview.map({ convert(point, from: $0) }) ?? nil else { return nil }
+        return bounds.contains(local) ? self : nil
+    }
+
+    /// The popover belongs to an accessory app that never activates, so its
+    /// window is never key and every click arrives as a first mouse. Without
+    /// this the first click after opening is spent making the window key.
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
 
     override func mouseDown(with event: NSEvent) {
         let point = convert(event.locationInWindow, from: nil)
         dragging = true
+        movedWhileDragging = false
+        pressX = point.x
         grabOffset = knobHost.frame.contains(point) ? point.x - knobHost.frame.minX : knobHost.frame.width / 2
         knobHost.layer?.removeAnimation(forKey: "settle")
     }
@@ -216,6 +242,10 @@ final class ModeSliderView: NSView {
     override func mouseDragged(with event: NSEvent) {
         guard dragging else { return }
         let point = convert(event.locationInWindow, from: nil)
+        // Hold still under the slop so a tap that wobbles a pixel stays a tap,
+        // rather than nudging the knob and snapping back to where it started.
+        guard movedWhileDragging || abs(point.x - pressX) >= Self.dragSlop else { return }
+        movedWhileDragging = true
         let maxX = bounds.width - knobHost.frame.width - 2
         let x = min(max(point.x - grabOffset, 2), maxX)
         // Only the origin moves. The knob's own frame is in knobHost's
@@ -231,7 +261,9 @@ final class ModeSliderView: NSView {
     override func mouseUp(with event: NSEvent) {
         guard dragging else { return }
         dragging = false
-        let index = nearestIndex()
+        // A drag is read off the knob it moved; a click or tap is read off the
+        // detent it landed on.
+        let index = movedWhileDragging ? nearestIndex() : nearestIndex(toward: pressX)
         let previous = selectedIndex
         selectedIndex = index
         settle(to: index, animated: true)
@@ -246,14 +278,15 @@ final class ModeSliderView: NSView {
         }
     }
 
+    private func nearestIndex() -> Int { nearestIndex(toward: knobHost.frame.midX) }
+
     /// Skips disabled detents, so an unsupported mode cannot be selected by
-    /// dragging past it.
-    private func nearestIndex() -> Int {
-        let centre = knobHost.frame.midX
+    /// dragging past it or by clicking straight on it.
+    private func nearestIndex(toward x: CGFloat) -> Int {
         let candidates = modes.indices.filter { enabled[$0] }
         guard !candidates.isEmpty else { return selectedIndex }
         return candidates.min {
-            abs(knobFrame(at: $0).midX - centre) < abs(knobFrame(at: $1).midX - centre)
+            abs(knobFrame(at: $0).midX - x) < abs(knobFrame(at: $1).midX - x)
         } ?? selectedIndex
     }
 

@@ -140,6 +140,9 @@ extension PopoverController {
     /// Running animations across the whole content layer tree. A hidden popover
     /// that keeps animating is invisible on screen and expensive on battery,
     /// which is the entire reason `setAnimationsEnabled(false)` exists.
+    var contentWindowForTest: NSWindow? { popoverForTest.contentViewController?.view.window }
+    var contentViewForTest: NSView? { popoverForTest.contentViewController?.view }
+
     var runningAnimationCountForTest: Int {
         func count(_ layer: CALayer) -> Int {
             (layer.animationKeys()?.count ?? 0) + (layer.sublayers ?? []).reduce(0) { $0 + count($1) }
