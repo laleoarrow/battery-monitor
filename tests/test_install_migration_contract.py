@@ -38,6 +38,16 @@ class InstallMigrationContractTests(unittest.TestCase):
     def test_run_script_does_not_reference_the_removed_legacy_source(self):
         self.assertNotIn("BatteryPowerWidget.swift", self.run_script)
 
+    def test_preview_bundle_cannot_shadow_the_installed_app(self):
+        self.assertIn('BUNDLE_ID="com.leoarrow.wattson.preview"', self.run_script)
+        self.assertIn('LOG_SUBSYSTEM="com.leoarrow.wattson"', self.run_script)
+        self.assertIn("<key>CFBundleIconFile</key>", self.run_script)
+        self.assertIn("<string>AppIcon</string>", self.run_script)
+        self.assertIn('touch "$APP_BUNDLE"', self.run_script)
+        unregister = self.run_script.index('"$LSREGISTER" -u "$APP_BUNDLE"')
+        delete = self.run_script.index('rm -rf "$APP_BUNDLE"')
+        self.assertLess(unregister, delete)
+
     def test_sandbox_allows_the_new_support_directory(self):
         self.assertIn("/Library/Application Support/Wattson/", self.entitlements)
         self.assertNotIn("/Library/Application Support/电池功率/", self.entitlements)

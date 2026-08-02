@@ -3,8 +3,11 @@ set -euo pipefail
 
 MODE="${1:-run}"
 APP_NAME="Wattson"
-BUNDLE_ID="com.leoarrow.wattson"
+BUNDLE_ID="com.leoarrow.wattson.preview"
+LOG_SUBSYSTEM="com.leoarrow.wattson"
+DISPLAY_NAME="Wattson Preview"
 MIN_SYSTEM_VERSION="12.0"
+LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
@@ -16,6 +19,10 @@ APP_BINARY="$APP_MACOS/$APP_NAME"
 INFO_PLIST="$APP_CONTENTS/Info.plist"
 
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
+
+if [ -d "$APP_BUNDLE" ] && [ -x "$LSREGISTER" ]; then
+    "$LSREGISTER" -u "$APP_BUNDLE" >/dev/null 2>&1 || true
+fi
 
 rm -rf "$APP_BUNDLE"
 mkdir -p "$APP_MACOS" "$APP_RESOURCES"
@@ -41,6 +48,10 @@ cat > "$INFO_PLIST" << PLIST
   <string>$APP_NAME</string>
   <key>CFBundleIdentifier</key>
   <string>$BUNDLE_ID</string>
+  <key>CFBundleDisplayName</key>
+  <string>$DISPLAY_NAME</string>
+  <key>CFBundleIconFile</key>
+  <string>AppIcon</string>
   <key>CFBundleName</key>
   <string>$APP_NAME</string>
   <key>CFBundlePackageType</key>
@@ -60,6 +71,7 @@ if [ -f "$ROOT_DIR/design/icon/AppIcon.icns" ]; then
 fi
 
 codesign --force --sign - --entitlements "$ROOT_DIR/BatteryPowerApp.entitlements" "$APP_BUNDLE" >/dev/null
+touch "$APP_BUNDLE"
 
 open_app() {
     /usr/bin/open -n "$APP_BUNDLE"
@@ -78,7 +90,7 @@ case "$MODE" in
         ;;
     --telemetry|telemetry)
         open_app
-        /usr/bin/log stream --info --style compact --predicate "subsystem == \"$BUNDLE_ID\""
+        /usr/bin/log stream --info --style compact --predicate "subsystem == \"$LOG_SUBSYSTEM\""
         ;;
     --verify|verify)
         open_app
