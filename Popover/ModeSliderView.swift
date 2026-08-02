@@ -44,6 +44,7 @@ final class ModeSliderView: NSView {
 
     private var dragging = false
     private var grabOffset: CGFloat = 0
+    private var highlighted = -1
 
     /// Returns true when the change was accepted; a refusal springs back.
     var onSelect: ((EnergyMode) -> Bool)?
@@ -117,6 +118,16 @@ final class ModeSliderView: NSView {
         }
     }
 
+    /// Core Animation derives a shadow from the layer's alpha channel every
+    /// frame unless it is given an explicit path. With Liquid Glass sampling the
+    /// backdrop on top of that, dragging crawled.
+    private func updateShadowPath() {
+        let radius = knobHost.layer?.cornerRadius ?? 0
+        knobHost.layer?.shadowPath = CGPath(roundedRect: knobHost.bounds,
+                                            cornerWidth: radius, cornerHeight: radius,
+                                            transform: nil)
+    }
+
     // MARK: - Geometry
 
     private var segmentWidth: CGFloat { bounds.width / CGFloat(max(modes.count, 1)) }
@@ -139,6 +150,7 @@ final class ModeSliderView: NSView {
             knobHost.frame = knobFrame(at: selectedIndex)
         }
         knob?.view.frame = knobHost.bounds
+        updateShadowPath()
     }
 
     // MARK: - State
@@ -196,11 +208,14 @@ final class ModeSliderView: NSView {
         let point = convert(event.locationInWindow, from: nil)
         let maxX = bounds.width - knobHost.frame.width - 2
         let x = min(max(point.x - grabOffset, 2), maxX)
+        // Only the origin moves. The knob's own frame is in knobHost's
+        // coordinate space and the shadow path is bounds-relative, so neither
+        // needs touching per event.
         PopoverStyle.setWithoutAnimation {
             self.knobHost.frame.origin.x = x
-            self.knob?.view.frame = self.knobHost.bounds
         }
-        highlight(nearestIndex())
+        let nearest = nearestIndex()
+        if nearest != highlighted { highlight(nearest) }
     }
 
     override func mouseUp(with event: NSEvent) {
@@ -235,6 +250,7 @@ final class ModeSliderView: NSView {
     /// The knob is a light material, so the label riding on it has to go dark.
     /// Leaving it near-white made the active mode the one you could not read.
     private func highlight(_ index: Int) {
+        highlighted = index
         for (offset, field) in labels.enumerated() {
             field.textColor = !enabled[offset] ? PopoverStyle.tertiaryText
                 : offset == index ? PopoverStyle.surface

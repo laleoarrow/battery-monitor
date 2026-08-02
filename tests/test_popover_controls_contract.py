@@ -7,6 +7,7 @@ SLIDER = ROOT / "Popover" / "ModeSliderView.swift"
 STATUS = ROOT / "MenuBar" / "StatusItemController.swift"
 SYSTEM_ICON = ROOT / "Core" / "SystemBatteryIcon.swift"
 ENERGY_MODE = ROOT / "Core" / "EnergyMode.swift"
+POPOVER = ROOT / "Popover" / "PopoverController.swift"
 
 
 class PopoverControlsContractTests(unittest.TestCase):
@@ -17,6 +18,7 @@ class PopoverControlsContractTests(unittest.TestCase):
         cls.status = STATUS.read_text(encoding="utf-8")
         cls.system_icon = SYSTEM_ICON.read_text(encoding="utf-8")
         cls.energy_mode = ENERGY_MODE.read_text(encoding="utf-8")
+        cls.popover = POPOVER.read_text(encoding="utf-8")
 
     def test_mode_picker_is_a_draggable_glass_knob(self):
         # A segmented control was correct but inert. The knob follows the
@@ -26,6 +28,23 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn('NSClassFromString("NSGlassEffectView")', self.slider)
         self.assertIn("override func mouseDragged", self.slider)
         self.assertIn("CASpringAnimation", self.slider)
+
+    def test_outside_clicks_dismiss_the_popover(self):
+        # `.transient` only reacts to events this process sees. Wattson is an
+        # accessory app that never activates, so a click on the desktop or in
+        # another app never reaches it and the popover stayed open.
+        self.assertIn("addGlobalMonitorForEvents", self.popover)
+        self.assertIn("removeMonitor", self.popover)
+        self.assertIn("performClose", self.popover)
+
+    def test_knob_shadow_has_an_explicit_path(self):
+        # Without one, Core Animation derives the shadow from the layer's alpha
+        # channel every frame; with Liquid Glass on top, dragging crawled.
+        self.assertIn("shadowPath", self.slider)
+
+    def test_dragging_only_relabels_on_a_detent_change(self):
+        drag = self.slider.split("override func mouseDragged", 1)[1].split("\n    override", 1)[0]
+        self.assertIn("nearest != highlighted", drag)
 
     def test_knob_only_springs_when_the_position_changes(self):
         # update() runs at 1 Hz with the rest of the popover. Re-adding the
@@ -75,8 +94,10 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("onSystemBatteryIconToggle", self.content)
 
     def test_system_battery_state_is_queried_only_when_opening(self):
-        left_up = self.status.split("case .leftMouseUp:", 1)[1].split("default:", 1)[0]
-        self.assertIn("refreshSystemBatteryIconState", left_up)
+        # The query wakes the helper through launchd, so it must not run on the
+        # 1 Hz refresh or when the popover is closing.
+        primary = self.status.split("if !popover.isShown", 1)[1].split("}", 1)[0]
+        self.assertIn("refreshSystemBatteryIconState", primary)
         refresh = self.status.split("private func refreshPresentation()", 1)[1]
         self.assertNotIn("SystemBatteryIconController.isHidden", refresh)
 

@@ -34,14 +34,32 @@ class EnergyModeContractTests(unittest.TestCase):
         self.assertIn("current == .low ? .auto : .low", toggle)
         self.assertNotIn(".high", toggle)
 
-    def test_high_power_support_is_detected_not_assumed(self):
-        # The HighPowerMode key only exists on hardware that has the feature.
+    def test_high_power_support_comes_from_the_helper(self):
+        # The app is sandboxed and gets killed for touching /Library/Preferences,
+        # where the power-mode keys live. The helper runs as root outside the
+        # sandbox and is the only component that can answer.
         self.assertIn("supportsHighPower", self.mode)
-        self.assertIn('"HighPowerMode"', self.mode)
+        self.assertIn("refreshFromHelper", self.mode)
+        self.assertIn('"supportsHigh"', self.mode)
+        # The comment explains why; what matters is that no read remains.
+        self.assertNotIn("NSDictionary(contentsOfFile:", self.mode)
+        self.assertNotIn("contentsOfDirectory", self.mode)
+
+    def test_helper_reads_the_keys_the_sandbox_hides(self):
+        helper = (pathlib.Path(__file__).resolve().parents[1]
+                  / "Helper" / "wattson-helper.swift").read_text(encoding="utf-8")
+        self.assertIn('"HighPowerMode"', helper)
+        self.assertIn("com.apple.PowerManagement.", helper)
 
     def test_mode_is_read_without_forking_pmset(self):
-        self.assertIn("NSDictionary(contentsOfFile:", self.mode)
         self.assertNotIn("Process()", self.mode)
+        self.assertIn("isLowPowerModeEnabled", self.mode)
+
+    def test_helper_state_is_cached_not_queried_per_read(self):
+        # `current` is consulted on every menu bar refresh; each query wakes the
+        # helper through launchd.
+        self.assertIn("cachedSupportsHigh", self.mode)
+        self.assertIn("cachedHelperMode", self.mode)
 
     def test_toggle_goes_through_the_helper(self):
         self.assertIn("HelperClient.send", self.mode)

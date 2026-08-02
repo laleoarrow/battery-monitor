@@ -40,8 +40,39 @@ private func runPmset(_ mode: Mode) -> Bool {
     }
 }
 
+/// The app is sandboxed and cannot read /Library/Preferences, so it cannot see
+/// the power-mode keys at all. This process runs as root outside the sandbox,
+/// which is the only reason it can answer.
+private func powerPreferences() -> [String: [String: Any]]? {
+    let directory = "/Library/Preferences"
+    guard let names = try? FileManager.default.contentsOfDirectory(atPath: directory) else { return nil }
+    for name in names
+    where name.hasPrefix("com.apple.PowerManagement.") && name.hasSuffix(".plist") {
+        guard let raw = NSDictionary(contentsOfFile: "\(directory)/\(name)") as? [String: Any] else { continue }
+        let sources = raw.compactMapValues { $0 as? [String: Any] }
+        if sources.values.contains(where: { $0["HighPowerMode"] != nil || $0["LowPowerMode"] != nil }) {
+            return sources
+        }
+    }
+    return nil
+}
+
+private func flag(_ key: String) -> Int {
+    guard let prefs = powerPreferences() else { return 0 }
+    for source in ["AC Power", "Battery Power"] {
+        if let value = prefs[source]?[key] as? Int { return value }
+    }
+    return 0
+}
+
 private func currentMode() -> String {
-    ProcessInfo.processInfo.isLowPowerModeEnabled ? "low" : "auto"
+    if flag("LowPowerMode") == 1 { return "low" }
+    return flag("HighPowerMode") == 1 ? "high" : "auto"
+}
+
+/// The HighPowerMode key only exists on hardware that has the feature.
+private func supportsHighPower() -> Bool {
+    powerPreferences()?.values.contains { $0["HighPowerMode"] != nil } ?? false
 }
 
 private func userName(for uid: uid_t) -> CFString? {
@@ -115,11 +146,11 @@ private func handle(_ fd: Int32) {
 
     switch op {
     case "getMode":
-        reply = "{\"ok\":true,\"mode\":\"\(currentMode())\"}"
+        reply = "{\"ok\":true,\"mode\":\"\(currentMode())\",\"supportsHigh\":\(supportsHighPower())}"
     case "setMode":
         if let raw = object["value"] as? String, let mode = Mode(rawValue: raw) {
             let ok = runPmset(mode)
-            reply = ok ? "{\"ok\":true,\"mode\":\"\(currentMode())\"}"
+            reply = ok ? "{\"ok\":true,\"mode\":\"\(currentMode())\",\"supportsHigh\":\(supportsHighPower())}"
                        : #"{"ok":false,"error":"pmset failed"}"#
         } else {
             os_log("rejected setMode with unknown value", log: log, type: .error)

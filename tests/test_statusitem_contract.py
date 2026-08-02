@@ -33,6 +33,19 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("EnergyModeController.current == .low ? .auto : .low", self.source)
         self.assertIn("applyEnergyMode", self.source)
 
+    def test_click_acts_without_depending_on_currentEvent(self):
+        # A trackpad tap is short enough that AppKit may deliver only one half
+        # of the pair, and NSApp.currentEvent can already be nil by the time the
+        # action runs. Requiring it silently dropped taps while a held press
+        # worked.
+        handler = self.source.split("@objc private func handleClick()", 1)[1].split("\n    private func", 1)[0]
+        self.assertNotIn("guard let event = NSApp.currentEvent", handler)
+        self.assertIn("clickCoalescingWindow", handler)
+
+    def test_both_halves_of_a_click_do_not_act_twice(self):
+        self.assertIn("clickCoalescingWindow: TimeInterval", self.source)
+        self.assertIn("lastClickAt", self.source)
+
     def test_right_click_has_a_visible_confirmation(self):
         # Right-click as a direct action is undiscoverable, so it must confirm.
         self.assertIn("confirmToggle", self.source)

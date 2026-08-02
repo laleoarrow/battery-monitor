@@ -17,28 +17,45 @@ enum EnergyMode: String {
 }
 
 enum EnergyModeController {
-    /// Reading costs nothing and needs no helper. Low power has a first-class
-    /// API; high power only exists in the power-management preferences.
+    /// The app is sandboxed, so it cannot read /Library/Preferences at all —
+    /// attempting it gets the process killed. Low power still has a first-class
+    /// API that works inside the sandbox; high power only exists in those
+    /// preferences, so the helper (root, unsandboxed) has to report it.
+    ///
+    /// Cached rather than queried per read: `current` is consulted on every
+    /// menu bar refresh, and each query wakes the helper through launchd.
+    private static var cachedHelperMode: EnergyMode?
+    private static var cachedSupportsHigh = false
+
     static var current: EnergyMode {
         if ProcessInfo.processInfo.isLowPowerModeEnabled { return .low }
-        return flag("HighPowerMode") == 1 ? .high : .auto
+        return cachedHelperMode == .high ? .high : .auto
     }
 
-    /// True when this Mac offers high power mode at all. A segment that can
-    /// never take effect is worse than no segment.
-    ///
-    /// The HighPowerMode key only appears on hardware that has the feature, so
-    /// its presence is the check — no chip-name guessing.
-    static var supportsHighPower: Bool {
-        activePreferences()?.values.contains { $0["HighPowerMode"] != nil } ?? false
+    /// False until the helper has been asked. A segment that cannot take effect
+    /// is worse than one that appears a moment late.
+    static var supportsHighPower: Bool { cachedSupportsHigh }
+
+    /// Refresh the cache from the helper. Cheap enough for popover opens and
+    /// mode changes; far too expensive for the 1 Hz refresh.
+    @discardableResult
+    static func refreshFromHelper() -> Bool {
+        guard let reply = HelperClient.send(["op": "getMode"]),
+              reply["ok"] as? Bool == true else { return false }
+        if let raw = reply["mode"] as? String { cachedHelperMode = EnergyMode(rawValue: raw) }
+        cachedSupportsHigh = (reply["supportsHigh"] as? Bool) ?? false
+        return true
     }
 
     /// Writing needs root, so it goes through the helper. Returns false when
     /// the helper is missing or refused.
     @discardableResult
     static func set(_ mode: EnergyMode) -> Bool {
-        let reply = HelperClient.send(["op": "setMode", "value": mode.rawValue])
-        return (reply?["ok"] as? Bool) ?? false
+        guard let reply = HelperClient.send(["op": "setMode", "value": mode.rawValue]),
+              reply["ok"] as? Bool == true else { return false }
+        if let raw = reply["mode"] as? String { cachedHelperMode = EnergyMode(rawValue: raw) }
+        cachedSupportsHigh = (reply["supportsHigh"] as? Bool) ?? cachedSupportsHigh
+        return true
     }
 
     /// The right-click gesture stays a two-state toggle between 省电 and 自动.
@@ -61,30 +78,4 @@ enum EnergyModeController {
         }
     }
 
-    /// Read from the machine's power-management preferences rather than by
-    /// forking pmset. The file is world-readable; only writing needs root.
-    private static func activePreferences() -> [String: [String: Any]]? {
-        let directory = "/Library/Preferences"
-        guard let names = try? FileManager.default.contentsOfDirectory(atPath: directory) else { return nil }
-        // The per-machine file carries the power-mode keys. The plain
-        // com.apple.PowerManagement.plist does not.
-        for name in names
-        where name.hasPrefix("com.apple.PowerManagement.") && name.hasSuffix(".plist") {
-            guard let raw = NSDictionary(contentsOfFile: "\(directory)/\(name)") as? [String: Any] else { continue }
-            let sources = raw.compactMapValues { $0 as? [String: Any] }
-            if sources.values.contains(where: { $0["HighPowerMode"] != nil || $0["LowPowerMode"] != nil }) {
-                return sources
-            }
-        }
-        return nil
-    }
-
-    private static func flag(_ key: String) -> Int {
-        guard let prefs = activePreferences() else { return 0 }
-        // `pmset -a` writes both sources, so either answers the question.
-        for source in ["AC Power", "Battery Power"] {
-            if let value = prefs[source]?[key] as? Int { return value }
-        }
-        return 0
-    }
 }

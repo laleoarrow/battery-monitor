@@ -5,6 +5,12 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     private let content = PopoverContentViewController()
     private var visibilityHandler: ((Bool) -> Void)?
 
+    /// `.transient` only dismisses for events this process sees. Wattson is an
+    /// accessory app that never activates, so a click on the desktop or another
+    /// app never reaches it and the popover just stayed open. A global monitor
+    /// is the only way to hear those clicks.
+    private var outsideClickMonitor: Any?
+
     override init() {
         super.init()
         popover.contentViewController = content
@@ -41,6 +47,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         } else {
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: .maxY)
             content.setAnimationsEnabled(true)
+            EnergyModeController.refreshFromHelper()
+            startWatchingForOutsideClicks()
             visibilityHandler?(true)
         }
     }
@@ -50,7 +58,23 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     }
 
     func popoverDidClose(_ notification: Notification) {
+        stopWatchingForOutsideClicks()
         content.setAnimationsEnabled(false)
         visibilityHandler?(false)
+    }
+
+    private func startWatchingForOutsideClicks() {
+        guard outsideClickMonitor == nil else { return }
+        outsideClickMonitor = NSEvent.addGlobalMonitorForEvents(
+            matching: [.leftMouseDown, .rightMouseDown, .otherMouseDown]
+        ) { [weak self] _ in
+            guard let self, self.popover.isShown else { return }
+            self.popover.performClose(nil)
+        }
+    }
+
+    private func stopWatchingForOutsideClicks() {
+        if let outsideClickMonitor { NSEvent.removeMonitor(outsideClickMonitor) }
+        outsideClickMonitor = nil
     }
 }
