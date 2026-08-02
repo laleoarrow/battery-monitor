@@ -22,6 +22,7 @@ final class LaneView: PopoverSection {
         let track = CALayer()
         let fill = CALayer()
         let sweep = CAGradientLayer()
+        var sweepWidth: CGFloat = 0
         let value = NSTextField(labelWithString: "0.0 W")
         let caption = NSTextField(labelWithString: "")
 
@@ -127,17 +128,41 @@ final class LaneView: PopoverSection {
             lane.sweep.locations = [0, 0.2, 0.4, 1].map { NSNumber(value: $0) }
         }
 
-        if animationsEnabled, width > 0 { startSweep(lane, width: width) }
+        if animationsEnabled {
+            if width > 0 {
+                startSweep(lane, width: width)
+            } else {
+                lane.sweep.removeAnimation(forKey: "sweep")
+                lane.sweepWidth = 0
+            }
+        }
     }
 
     private func startSweep(_ lane: Lane, width: CGFloat) {
-        guard lane.sweep.animation(forKey: "sweep") == nil else { return }
-        let motion = CABasicAnimation(keyPath: "position.x")
-        motion.byValue = width
-        motion.duration = 2.4
-        motion.repeatCount = .infinity
-        motion.isRemovedOnCompletion = false
-        lane.sweep.add(motion, forKey: "sweep")
+        let previous = lane.sweep.animation(forKey: "sweep") as? CABasicAnimation
+        if previous == nil || abs(width - lane.sweepWidth) > 0.5 {
+            let motion = CABasicAnimation(keyPath: "position.x")
+            // The gradient spans 2w and its bright pulse sits in the first
+            // 40%. A 1w shift only carries the peak to 40% of the lane; 2w
+            // moves it completely off both edges, so the whole bar is crossed
+            // and the repeat happens while the pulse is invisible.
+            motion.byValue = width * 2
+            motion.duration = 2.4
+            motion.repeatCount = .infinity
+            motion.isRemovedOnCompletion = false
+            if let previous {
+                // Width follows 1 Hz telemetry. Retarget the travel distance
+                // without restarting the normalized phase.
+                motion.beginTime = previous.beginTime
+                motion.timeOffset = previous.timeOffset
+            } else {
+                motion.beginTime = lane.sweep.convertTime(CACurrentMediaTime(), from: nil)
+            }
+            lane.sweep.add(motion, forKey: "sweep")
+            lane.sweepWidth = width
+        }
+        // Keep this outside animation creation: total power can change the
+        // shared rate even when a lane's width stays constant.
         PopoverStyle.setAnimationSpeed(lane.sweep, multiplier: CGFloat(2.4 / period))
     }
 
@@ -151,4 +176,15 @@ final class LaneView: PopoverSection {
             lanes.forEach { $0.sweep.removeAllAnimations() }
         }
     }
+
+#if DEBUG
+    func sweepMetricsForTest(at index: Int) ->
+        (fillWidth: CGFloat, travel: CGFloat, beginTime: CFTimeInterval, layerSpeed: Float)? {
+        guard lanes.indices.contains(index),
+              let motion = lanes[index].sweep.animation(forKey: "sweep") as? CABasicAnimation,
+              let number = motion.byValue as? NSNumber else { return nil }
+        return (lanes[index].fill.bounds.width, CGFloat(truncating: number),
+                motion.beginTime, lanes[index].sweep.speed)
+    }
+#endif
 }

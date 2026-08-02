@@ -312,6 +312,43 @@ check("复用粒子的 ride path 跟随新几何",
 check("更新路径不重启粒子相位",
       firstBeginTimes == movedBeginTimes && firstTimeOffsets == movedTimeOffsets)
 
+// ---- 7. 功率泳道：亮峰贯穿全宽，1 Hz 改宽/改速不重启相位 ----
+let laneView = LaneView()
+let laneWindow = NSWindow(contentRect: NSRect(x: 0, y: 0,
+                                               width: PopoverStyle.contentWidth,
+                                               height: LaneView.preferredHeight),
+                          styleMask: [.borderless], backing: .buffered, defer: false)
+laneWindow.contentView = laneView
+laneView.frame = laneWindow.contentView!.bounds
+laneView.layoutSubtreeIfNeeded()
+laneView.update(snapshot: PowerSnapshot(percent: 72, plugged: true, adapterW: 68,
+                                        batteryW: 22.2, systemW: 45.8,
+                                        temperatureC: 34.2, cycleCount: 116,
+                                        lowPowerMode: false))
+laneView.setAnimationsEnabled(true)
+guard let firstLane = laneView.sweepMetricsForTest(at: 1) else {
+    log("❌ 无法读取泳道扫光动画")
+    exit(1)
+}
+check("泳道扫光行程覆盖整个填充条",
+      abs(firstLane.travel - firstLane.fillWidth * 2) < 0.01,
+      String(format: "行程 %.1f，填充宽 %.1f", firstLane.travel, firstLane.fillWidth))
+
+laneView.update(snapshot: PowerSnapshot(percent: 72, plugged: true, adapterW: 80,
+                                        batteryW: 34.2, systemW: 45.8,
+                                        temperatureC: 34.2, cycleCount: 116,
+                                        lowPowerMode: false))
+guard let changedLane = laneView.sweepMetricsForTest(at: 1) else {
+    log("❌ 无法读取改宽后的泳道扫光动画")
+    exit(1)
+}
+check("泳道宽度变化后更新行程但不重启相位",
+      changedLane.fillWidth > firstLane.fillWidth
+          && abs(changedLane.travel - changedLane.fillWidth * 2) < 0.01
+          && changedLane.beginTime == firstLane.beginTime)
+check("总功率变化会重定时现有泳道动画",
+      abs(changedLane.layerSpeed - firstLane.layerSpeed) > 0.005)
+
 NSStatusBar.system.removeStatusItem(item)
 if !pass {
     log("\nSOME_CHECKS_FAILED")

@@ -67,6 +67,12 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("trackWidth: CGFloat { PopoverStyle.contentWidth", self.lanes)
         self.assertNotIn("lane.track.bounds.width", self.lanes)
 
+    def test_lane_sweep_crosses_the_entire_fill(self):
+        # The pulse sits at 20% of a gradient that is twice the fill width.
+        # Moving that layer by only one width leaves the pulse around the
+        # middle; two widths carries it fully off the right edge before repeat.
+        self.assertIn("motion.byValue = width * 2", self.lanes)
+
     def test_battery_lane_and_stat_follow_state_semantics(self):
         for label in ("充入电池", "电池输出", "电池补差"):
             self.assertIn(label, self.style)
