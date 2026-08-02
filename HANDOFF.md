@@ -1,9 +1,9 @@
 # Wattson 项目状态
 
 **分支：`wattson-menubar`**
-**状态：133 个契约测试通过，全部源码类型检查通过，弹窗四种电源状态已完成可视化验证**
+**状态：149 个测试通过（其中 1 个会真的构建 .app 并驱动真实 AppKit 对象跑 32 项交互检查），应用与助手 `-O` 构建干净，已安装二进制为最新且签名有效**
 
-菜单栏插件这一轮的代码工作已经完成。**唯一还没做的是在你机器上真正安装并跑一遍手工验证矩阵**——那需要 sudo，得你自己执行。
+菜单栏插件这一轮的代码工作已经完成，特权助手已部署且为最新版（`getMode` 返回 `supportsHigh:true`）。
 
 ---
 
@@ -13,11 +13,35 @@
 ./scripts/install.sh
 ```
 
-会请求一次 sudo，用于放置切换省电模式所需的特权助手。助手平时不运行，只在你右键点击时由 launchd 唤醒，执行完即退出。
+会请求一次 sudo，用于放置切换省电模式所需的特权助手。
+
+助手已经装好之后，日常更新只跑应用即可，不需要密码：
+
+```bash
+./scripts/install.sh --app-only
+```
+
+应用装在 `~/Applications`，本来就不需要提权；只有助手需要。助手平时不运行，只在你右键点击时由 launchd 唤醒，执行完即退出。
 
 安装脚本会先把旧的 `电池功率.app`、`~/.battery_monitor.cfg`、`~/Library/Application Support/电池功率/` 全部删除（你确认过不再需要），再装新的。
 
 卸载：`./scripts/uninstall.sh`
+
+---
+
+## 测试
+
+```bash
+python3 -m unittest discover -s tests
+```
+
+大部分测试读源码文本——对几何和常数够用。交互路径不够用：点击与弹窗依赖 AppKit 自己的时序，读代码没能发现"按住超过 0.3 秒会切换两次"和"关闭动画中途点击被吞掉"这两个 bug。所以 `tests/interaction/` 会构建一个真正的 .app，驱动真实的 `NSStatusItem`、`NSPopover` 和 `ModeSliderView`：
+
+```bash
+./scripts/verify_interaction.sh
+```
+
+约 20 秒，需要图形会话，不需要 sudo，也不需要辅助功能权限（事件直接投递给视图，不经系统注入）。迭代快测时可用 `WATTSON_SKIP_INTERACTION=1` 跳过。
 
 ---
 
