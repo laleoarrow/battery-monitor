@@ -77,7 +77,10 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         showsRequested += 1
         wantsOpen = true
         content.setAnimationsEnabled(true)
-        EnergyModeController.refreshFromHelper()
+        EnergyModeController.refreshFromHelper { [weak self] refreshed in
+            guard refreshed, self?.wantsOpen == true else { return }
+            self?.content.refreshEnergyModeState()
+        }
         startWatchingForOutsideClicks()
         visibilityHandler?(true)
     }

@@ -261,6 +261,10 @@ final class PopoverContentViewController: NSViewController {
         updateFooter()
     }
 
+    func refreshEnergyModeState() {
+        updateFooter()
+    }
+
     func setAnimationsEnabled(_ enabled: Bool) {
         animationsEnabled = enabled
         flowView.setAnimationsEnabled(enabled && !flowView.isHidden)

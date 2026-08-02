@@ -77,7 +77,7 @@ sudo rm -f /var/run/wattson-helper.sock
 弹窗有独立的预览入口，不需要安装、不需要 sudo：
 
 ```bash
-xcrun swiftc -D DEBUG Core/*.swift MenuBar/*.swift Popover/*.swift BatteryPowerWidget.swift main.swift -framework AppKit -framework CoreGraphics -framework IOKit -framework WidgetKit -o /tmp/wattson && /tmp/wattson --popover-preview --preview-state=charging
+xcrun swiftc -D DEBUG Core/*.swift MenuBar/*.swift Popover/*.swift main.swift -framework AppKit -framework CoreGraphics -framework IOKit -o /tmp/wattson && /tmp/wattson --popover-preview --preview-state=charging
 ```
 
 `--preview-state=` 可选 `charging` / `idle` / `battery` / `mixed` / `high`，
@@ -183,8 +183,8 @@ python3 -m unittest discover -s tests -v
 
 # 类型检查
 xcrun swiftc -typecheck Core/*.swift MenuBar/*.swift Popover/*.swift \
-  BatteryPowerWidget.swift main.swift \
-  -framework AppKit -framework CoreGraphics -framework IOKit -framework WidgetKit
+  main.swift \
+  -framework AppKit -framework CoreGraphics -framework IOKit
 ```
 
 测试是 Python `unittest` 对源码做结构断言，不是单元测试。它的固有盲区见坑 4。

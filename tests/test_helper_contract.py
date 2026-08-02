@@ -39,6 +39,25 @@ class HelperContractTests(unittest.TestCase):
             self.assertIn(f'"/usr/bin/pmset", "-a", "powermode", "{value}"', self.source)
         self.assertIn("Mode(rawValue: raw)", self.source)
 
+    def test_mode_readback_comes_from_pmset_live(self):
+        # The preferences plist is lazily written and can lag by a whole mode
+        # transition. A verified reply must come from the live value instead.
+        self.assertIn('arguments = ["-g", "live"]', self.source)
+        self.assertIn('"modeVerified":true', self.source)
+        self.assertIn("livePowerMode()", self.source)
+
+    def test_each_request_reads_the_live_mode_only_once(self):
+        # A live read costs about 76 ms on the target machine. getMode and
+        # setMode must pass that one result into support detection instead of
+        # spawning pmset twice.
+        self.assertIn("supportsHighPower(current:", self.source)
+        get_mode = self.source.split('case "getMode":', 1)[1].split('case "setMode":', 1)[0]
+        set_mode = self.source.split('case "setMode":', 1)[1].split(
+            'case "getSystemBatteryIconHidden":', 1
+        )[0]
+        self.assertEqual(get_mode.count("livePowerMode()"), 1)
+        self.assertEqual(set_mode.count("livePowerMode()"), 1)
+
     def test_rejects_anything_outside_the_whitelist(self):
         self.assertIn('case "getMode"', self.source)
         self.assertIn('case "setMode"', self.source)

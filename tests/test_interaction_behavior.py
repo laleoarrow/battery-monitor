@@ -6,6 +6,7 @@ import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 RUNNER = ROOT / "scripts" / "verify_interaction.sh"
+HARNESS = ROOT / "tests" / "interaction" / "main.swift"
 
 
 class InteractionBehaviorTests(unittest.TestCase):
@@ -21,6 +22,11 @@ class InteractionBehaviorTests(unittest.TestCase):
     It takes about 20 seconds. Set WATTSON_SKIP_INTERACTION=1 to skip it while
     iterating on the fast structural tests.
     """
+
+    def test_slider_harness_uses_the_production_mode_order(self):
+        source = HARNESS.read_text(encoding="utf-8")
+        self.assertIn("ModeSliderView(modes: [.auto, .low, .high])", source)
+        self.assertNotIn("ModeSliderView(modes: [.low, .auto, .high])", source)
 
     def test_interaction_contract_holds_against_real_appkit(self):
         if os.environ.get("WATTSON_SKIP_INTERACTION") == "1":

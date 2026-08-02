@@ -40,9 +40,46 @@ private func runPmset(_ mode: Mode) -> Bool {
     }
 }
 
+/// The power mode actually in force, for whichever source is supplying power.
+///
+/// The preference file looks like the obvious source and is the wrong one:
+/// powerd writes it lazily and coalesces, so it lags the real setting by a
+/// whole transition. Measured on this machine, it held `LowPowerMode = 2`
+/// while pmset reported powermode 0, and held 0 right after a switch to high.
+/// Reading it is what made High Power look like it never applied — it applied
+/// every time, and the readback lost it. `pmset -g live` was correct and
+/// immediate across seven consecutive transitions.
+private func livePowerMode() -> Mode? {
+    let process = Process()
+    process.executableURL = URL(fileURLWithPath: "/usr/bin/pmset")
+    process.arguments = ["-g", "live"]
+    let pipe = Pipe()
+    process.standardOutput = pipe
+    process.standardError = FileHandle.nullDevice
+    guard (try? process.run()) != nil else { return nil }
+    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    process.waitUntilExit()
+    guard process.terminationStatus == 0,
+          let text = String(data: data, encoding: .utf8) else { return nil }
+    for line in text.split(separator: "\n") {
+        let fields = line.split(whereSeparator: { $0.isWhitespace })
+        guard fields.first?.lowercased() == "powermode",
+              let value = fields.last.flatMap({ Int($0) }) else { continue }
+        switch value {
+        case 0: return .auto
+        case 1: return .low
+        case 2: return .high
+        default: return nil
+        }
+    }
+    return nil
+}
+
 /// The app is sandboxed and cannot read /Library/Preferences, so it cannot see
 /// the power-mode keys at all. This process runs as root outside the sandbox,
-/// which is the only reason it can answer.
+/// which is the only reason it can answer. Only used to tell whether the
+/// hardware has the feature — the key's presence is stable even though its
+/// value is not.
 private func powerPreferences() -> [String: [String: Any]]? {
     let directory = "/Library/Preferences"
     guard let names = try? FileManager.default.contentsOfDirectory(atPath: directory) else { return nil }
@@ -57,22 +94,17 @@ private func powerPreferences() -> [String: [String: Any]]? {
     return nil
 }
 
-private func flag(_ key: String) -> Int {
-    guard let prefs = powerPreferences() else { return 0 }
-    for source in ["AC Power", "Battery Power"] {
-        if let value = prefs[source]?[key] as? Int { return value }
-    }
-    return 0
+/// The HighPowerMode key only exists on hardware that has the feature. Being
+/// in high power right now is proof on its own, and does not depend on a file
+/// whose values cannot be trusted.
+private func supportsHighPower(current: Mode) -> Bool {
+    if current == .high { return true }
+    return powerPreferences()?.values.contains { $0["HighPowerMode"] != nil } ?? false
 }
 
-private func currentMode() -> String {
-    if flag("LowPowerMode") == 1 { return "low" }
-    return flag("HighPowerMode") == 1 ? "high" : "auto"
-}
-
-/// The HighPowerMode key only exists on hardware that has the feature.
-private func supportsHighPower() -> Bool {
-    powerPreferences()?.values.contains { $0["HighPowerMode"] != nil } ?? false
+private func modeReply(_ mode: Mode) -> String {
+    let supportsHigh = supportsHighPower(current: mode)
+    return #"{"ok":true,"mode":"\#(mode.rawValue)","supportsHigh":\#(supportsHigh),"modeVerified":true}"#
 }
 
 private func userName(for uid: uid_t) -> CFString? {
@@ -146,12 +178,18 @@ private func handle(_ fd: Int32) {
 
     switch op {
     case "getMode":
-        reply = "{\"ok\":true,\"mode\":\"\(currentMode())\",\"supportsHigh\":\(supportsHighPower())}"
+        if let mode = livePowerMode() {
+            reply = modeReply(mode)
+        } else {
+            reply = #"{"ok":false,"error":"mode readback failed"}"#
+        }
     case "setMode":
         if let raw = object["value"] as? String, let mode = Mode(rawValue: raw) {
-            let ok = runPmset(mode)
-            reply = ok ? "{\"ok\":true,\"mode\":\"\(currentMode())\",\"supportsHigh\":\(supportsHighPower())}"
-                       : #"{"ok":false,"error":"pmset failed"}"#
+            if runPmset(mode), let landed = livePowerMode() {
+                reply = modeReply(landed)
+            } else {
+                reply = #"{"ok":false,"error":"pmset or readback failed"}"#
+            }
         } else {
             os_log("rejected setMode with unknown value", log: log, type: .error)
         }

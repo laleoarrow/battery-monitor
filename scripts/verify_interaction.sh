@@ -51,4 +51,5 @@ codesign --force --sign - \
     --entitlements "$ROOT_DIR/BatteryPowerApp.entitlements" \
     "$APP_DIR" >/dev/null 2>&1
 
-"$APP_DIR/Contents/MacOS/InteractionTests"
+POWER_MODE="$(/usr/bin/pmset -g live | awk 'tolower($1) == "powermode" { print $2; exit }')"
+WATTSON_EXPECTED_POWER_MODE="$POWER_MODE" "$APP_DIR/Contents/MacOS/InteractionTests"

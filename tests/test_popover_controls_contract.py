@@ -119,7 +119,8 @@ class PopoverControlsContractTests(unittest.TestCase):
         # mouseUp used to read the knob's position. A click never moves the
         # knob, so it always resolved to the mode already selected and the
         # control only responded to drags.
-        self.assertIn("movedWhileDragging ? nearestIndex() : nearestIndex(toward: pressX)", self.slider)
+        self.assertIn("if movedWhileDragging", self.slider)
+        self.assertIn("nearestDetentIndex(toward: pressX)", self.slider)
         self.assertIn("private static let dragSlop", self.slider)
 
     def test_a_click_cannot_select_an_unsupported_mode(self):
@@ -127,6 +128,8 @@ class PopoverControlsContractTests(unittest.TestCase):
         # High Power stays unreachable on hardware without it.
         chooser = self.slider.split("private func nearestIndex(toward x: CGFloat)", 1)[1]
         self.assertIn("modes.indices.filter { enabled[$0] }", chooser)
+        mouse_up = self.slider.split("override func mouseUp", 1)[1].split("\n    private func", 1)[0]
+        self.assertIn("guard enabled[pressedIndex] else", mouse_up)
 
 
 if __name__ == "__main__":

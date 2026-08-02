@@ -261,10 +261,21 @@ final class ModeSliderView: NSView {
     override func mouseUp(with event: NSEvent) {
         guard dragging else { return }
         dragging = false
-        // A drag is read off the knob it moved; a click or tap is read off the
-        // detent it landed on.
-        let index = movedWhileDragging ? nearestIndex() : nearestIndex(toward: pressX)
         let previous = selectedIndex
+        // A drag snaps to the nearest usable detent. A click names one exact
+        // detent; clicking a disabled mode is a no-op, not a request for its
+        // nearest neighbour.
+        let index: Int
+        if movedWhileDragging {
+            index = nearestIndex()
+        } else {
+            let pressedIndex = nearestDetentIndex(toward: pressX)
+            guard enabled[pressedIndex] else {
+                highlight(previous)
+                return
+            }
+            index = pressedIndex
+        }
         selectedIndex = index
         settle(to: index, animated: true)
         highlight(index)
@@ -280,8 +291,15 @@ final class ModeSliderView: NSView {
 
     private func nearestIndex() -> Int { nearestIndex(toward: knobHost.frame.midX) }
 
-    /// Skips disabled detents, so an unsupported mode cannot be selected by
-    /// dragging past it or by clicking straight on it.
+    private func nearestDetentIndex(toward x: CGFloat) -> Int {
+        modes.indices.min {
+            abs(knobFrame(at: $0).midX - x) < abs(knobFrame(at: $1).midX - x)
+        } ?? selectedIndex
+    }
+
+    /// Skips disabled detents while dragging, so release always snaps to a
+    /// usable mode. Clicks are handled separately above because a disabled
+    /// detent must be a no-op rather than choosing a neighbour.
     private func nearestIndex(toward x: CGFloat) -> Int {
         let candidates = modes.indices.filter { enabled[$0] }
         guard !candidates.isEmpty else { return selectedIndex }

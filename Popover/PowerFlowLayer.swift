@@ -126,6 +126,7 @@ final class PipeBundle {
     private let gradient = CAGradientLayer()
 
     private var particles: [CALayer] = []
+    private var particleOffsets: [CGFloat] = []
     private var particleCount = -1
     private var particlesAreHot = false
     private var particlesAreAnimating = false
@@ -252,6 +253,7 @@ final class PipeBundle {
             || animating != particlesAreAnimating
             || topology != particleTopology
         else {
+            retargetParticlesToCurrentGeometry()
             retimeParticles(period: period)
             return
         }
@@ -262,6 +264,7 @@ final class PipeBundle {
 
         particles.forEach { $0.removeFromSuperlayer() }
         particles.removeAll()
+        particleOffsets.removeAll()
         guard wanted > 0 else { return }
 
         var rng = SeededRNG(seed: seed)
@@ -292,6 +295,7 @@ final class PipeBundle {
             }
             container.addSublayer(dot)
             particles.append(dot)
+            particleOffsets.append(offset)
 
             guard animating else { continue }
             var shift = CGAffineTransform(translationX: 0, y: offset)
@@ -300,10 +304,12 @@ final class PipeBundle {
             // Fixed durations; speed comes from the layer timeline so a refresh
             // can retime without rebuilding.
             let duration = 2.4 * spread
+            let animationStart = dot.convertTime(CACurrentMediaTime(), from: nil)
 
             let ride = CAKeyframeAnimation(keyPath: "position")
             ride.path = ridePath
             ride.duration = duration
+            ride.beginTime = animationStart
             ride.repeatCount = .infinity
             ride.calculationMode = .paced
             ride.timeOffset = delay * duration
@@ -313,6 +319,7 @@ final class PipeBundle {
             fade.values = [0, 1, 1, 0]
             fade.keyTimes = [0, 0.09, 0.86, 1]
             fade.duration = duration
+            fade.beginTime = animationStart
             fade.repeatCount = .infinity
             fade.timeOffset = delay * duration
             fade.isRemovedOnCompletion = false
@@ -321,6 +328,46 @@ final class PipeBundle {
             dot.add(fade, forKey: "fade")
         }
         retimeParticles(period: period)
+    }
+
+    /// Keep the existing particle layers and their timelines, but move their
+    /// model positions and ride paths onto the latest curve. Power telemetry
+    /// can move a split point without changing topology; leaving the original
+    /// path in place made the sparks drift beside the pipe.
+    private func retargetParticlesToCurrentGeometry() {
+        guard particles.count == particleOffsets.count, !particles.isEmpty else { return }
+        let basePath = geometry.path
+        let count = CGFloat(particles.count)
+
+        for (index, pair) in zip(particles, particleOffsets).enumerated() {
+            let (dot, offset) = pair
+            let seat = geometry.point(at: (CGFloat(index) + 0.5) / count)
+            PopoverStyle.setWithoutAnimation {
+                dot.position = CGPoint(x: seat.x, y: seat.y + offset)
+            }
+
+            guard let previousRide = dot.animation(forKey: "ride") as? CAKeyframeAnimation else { continue }
+            var shift = CGAffineTransform(translationX: 0, y: offset)
+            guard let ridePath = basePath.copy(using: &shift) else { continue }
+
+            let ride = CAKeyframeAnimation(keyPath: "position")
+            ride.path = ridePath
+            ride.duration = previousRide.duration
+            ride.beginTime = previousRide.beginTime
+            ride.timeOffset = previousRide.timeOffset
+            ride.speed = previousRide.speed
+            ride.repeatCount = previousRide.repeatCount
+            ride.repeatDuration = previousRide.repeatDuration
+            ride.autoreverses = previousRide.autoreverses
+            ride.calculationMode = previousRide.calculationMode
+            ride.timingFunction = previousRide.timingFunction
+            ride.fillMode = previousRide.fillMode
+            ride.isRemovedOnCompletion = previousRide.isRemovedOnCompletion
+
+            // The original animation is immutable once attached. Recreate its
+            // timing exactly and replace only the path, preserving the phase.
+            dot.add(ride, forKey: "ride")
+        }
     }
 
     private func retimeParticles(period: CFTimeInterval) {
@@ -332,6 +379,10 @@ final class PipeBundle {
 final class PowerFlowView: PopoverSection {
     static let plotHeight: CGFloat = 176
     static let preferredHeight: CGFloat = plotHeight + PopoverStyle.sectionPadding * 2
+    /// Enter the stronger particle style at saturation, but do not leave it for
+    /// ordinary 1 Hz telemetry noise around 100 W. Without this band, 99.9 /
+    /// 100.1 W rebuilt every particle and its animations on alternating samples.
+    private static let particlesStayHotAbove = Double(VisualEncoding.wRef) - 5
 
     private static let leftX: CGFloat = 40
     private static let rightX: CGFloat = 288
@@ -368,6 +419,7 @@ final class PowerFlowView: PopoverSection {
 
     private var animationsEnabled = false
     private var latest = PowerSnapshot()
+    private var particlesAreHot = false
 
     init() {
         super.init(height: Self.preferredHeight)
@@ -441,7 +493,10 @@ final class PowerFlowView: PopoverSection {
         let color = PopoverStyle.stateColor(snapshot.state)
         let total = snapshot.totalInputW
         let period = 2.4 / Double(VisualEncoding.multiplier(total))
-        let hot = total >= Double(VisualEncoding.wRef)
+        let hot = particlesAreHot
+            ? total >= Self.particlesStayHotAbove
+            : total >= Double(VisualEncoding.wRef)
+        particlesAreHot = hot
         let count = Int((2 + VisualEncoding.t(total) * 6 + VisualEncoding.over(total) * 5).rounded())
 
         configureNodes(snapshot: snapshot, color: color)

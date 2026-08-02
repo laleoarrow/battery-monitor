@@ -24,12 +24,10 @@ xcrun swiftc \
     "$ROOT_DIR"/Core/*.swift \
     "$ROOT_DIR"/MenuBar/*.swift \
     "$ROOT_DIR"/Popover/*.swift \
-    "$ROOT_DIR/BatteryPowerWidget.swift" \
     "$ROOT_DIR/main.swift" \
     -framework AppKit \
     -framework CoreGraphics \
     -framework IOKit \
-    -framework WidgetKit \
     -D DEBUG \
     -o "$APP_BINARY"
 chmod +x "$APP_BINARY"

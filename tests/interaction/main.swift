@@ -54,6 +54,19 @@ if !screenLocked {
     p.toggle(relativeTo: button); spin(0.4)
     check("轻触图标弹窗打开", p.isShownForTest && p.isOpen)
     check("打开后开始监听外部点击", p.isWatchingOutsideClicks)
+    if let raw = ProcessInfo.processInfo.environment["WATTSON_EXPECTED_POWER_MODE"],
+       let expected = ["0": EnergyMode.auto, "1": .low, "2": .high][raw] {
+        let deadline = Date().addingTimeInterval(1.5)
+        while EnergyModeController.current != expected && Date() < deadline { spin(0.05) }
+        check("沙盒 App 识别真实电源模式",
+              EnergyModeController.current == expected,
+              "预期 \(expected.rawValue)，实际 \(EnergyModeController.current.rawValue)")
+        if HelperClient.isInstalled {
+            check("旧 helper 回包错误时仍能确认真实落地档位",
+                  EnergyModeController.set(expected),
+                  "请求保持 \(expected.rawValue)，落地 \(EnergyModeController.current.rawValue)")
+        }
+    }
     p.handleOutsideClick()
     check("外部点击后立刻停止监听", !p.isWatchingOutsideClicks)
     spin(1.2)
@@ -101,13 +114,13 @@ if !screenLocked {
 }
 
 // ---- 4. 模式滑块：拖得到 High Power，松手吸附，拖动中不做多余重绘 ----
-let slider = ModeSliderView(modes: [.low, .auto, .high])
+let slider = ModeSliderView(modes: [.auto, .low, .high])
 let win = NSWindow(contentRect: NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
                                        height: ModeSliderView.preferredHeight),
                    styleMask: [.borderless], backing: .buffered, defer: false)
 win.contentView = slider
 slider.frame = win.contentView!.bounds
-slider.update(selected: .auto, enabledModes: [.low, .auto, .high], tint: .systemBlue)
+slider.update(selected: .auto, enabledModes: [.auto, .low, .high], tint: .systemBlue)
 slider.layoutSubtreeIfNeeded()
 spin(0.1)
 
@@ -129,7 +142,8 @@ func drag(from startX: CGFloat, to endX: CGFloat, steps: Int) {
     slider.mouseUp(with: event(.leftMouseUp, endX))
 }
 
-let autoCentre = slider.detentCentreForTest(1)
+let autoCentre = slider.detentCentreForTest(0)
+let lowCentre = slider.detentCentreForTest(1)
 let highCentre = slider.detentCentreForTest(2)
 let before = slider.highlightCallCountForTest
 drag(from: autoCentre, to: PopoverStyle.contentWidth - 4, steps: 60)
@@ -144,19 +158,19 @@ check("拖动 60 帧只重着色跨档的那几次", relabels <= 3, "\(relabels)
 spin(0.6)
 
 let backBefore = slider.highlightCallCountForTest
-drag(from: highCentre, to: 4, steps: 60)
+drag(from: highCentre, to: lowCentre, steps: 60)
 check("能一路拖回 Low Power", chosen.last == .low, "\(chosen)")
 check("拖回后吸附到 Low 档位",
-      abs(slider.knobCentreForTest - slider.detentCentreForTest(0)) < 0.5)
+      abs(slider.knobCentreForTest - lowCentre) < 0.5)
 check("回程同样不逐帧重着色", slider.highlightCallCountForTest - backBefore <= 3)
 
-// 不支持 High Power 的机器上，拖过去必须停在 Auto
-let limited = ModeSliderView(modes: [.low, .auto, .high])
+// 不支持 High Power 的机器上，拖过去必须停在最近的可用档位 Low
+let limited = ModeSliderView(modes: [.auto, .low, .high])
 let win2 = NSWindow(contentRect: win.contentRect(forFrameRect: win.frame), styleMask: [.borderless],
                     backing: .buffered, defer: false)
 win2.contentView = limited
 limited.frame = win2.contentView!.bounds
-limited.update(selected: .auto, enabledModes: [.low, .auto], tint: .systemBlue)
+limited.update(selected: .auto, enabledModes: [.auto, .low], tint: .systemBlue)
 limited.layoutSubtreeIfNeeded(); spin(0.1)
 var limitedChosen: [EnergyMode] = []
 limited.onSelect = { limitedChosen.append($0); return true }
@@ -166,12 +180,12 @@ do {
                            modifierFlags: [], timestamp: 0, windowNumber: win2.windowNumber,
                            context: nil, eventNumber: 0, clickCount: 1, pressure: 1)!
     }
-    limited.mouseDown(with: ev(.leftMouseDown, limited.detentCentreForTest(1)))
-    for i in 1...30 { limited.mouseDragged(with: ev(.leftMouseDragged, limited.detentCentreForTest(1) + CGFloat(i) * 6)) }
+    limited.mouseDown(with: ev(.leftMouseDown, limited.detentCentreForTest(0)))
+    for i in 1...30 { limited.mouseDragged(with: ev(.leftMouseDragged, limited.detentCentreForTest(0) + CGFloat(i) * 6)) }
     limited.mouseUp(with: ev(.leftMouseUp, PopoverStyle.contentWidth - 4))
 }
-check("不支持 High 时拖过去停在 Auto",
-      limitedChosen.isEmpty && limited.selectedIndexForTest == 1,
+check("不支持 High 时拖过去停在最近可用的 Low",
+      limitedChosen.last == .low && limited.selectedIndexForTest == 1,
       "选中索引 \(limited.selectedIndexForTest) 回调 \(limitedChosen)")
 
 // ---- 5. 点击/轻触档位，不只是拖动 ----
@@ -203,19 +217,19 @@ check("点击后旋钮吸附到 High",
 spin(0.6)
 
 chosen.removeAll()
-tap(slider, in: win, atX: slider.detentCentreForTest(0))
+tap(slider, in: win, atX: slider.detentCentreForTest(1))
 check("点击 Low Power 档位会切回来", chosen.last == .low, "\(chosen)")
 spin(0.6)
 
 // 轻触难免抖一两个像素，仍应是点击而不是把旋钮推一下又弹回原位
 chosen.removeAll()
-tap(slider, in: win, atX: slider.detentCentreForTest(1), wobble: 2)
+tap(slider, in: win, atX: slider.detentCentreForTest(0), wobble: 2)
 check("轻触抖动 2pt 仍按点击处理", chosen.last == .auto, "\(chosen)")
 spin(0.6)
 
 // 点在已选中的档位上不该触发回调
 chosen.removeAll()
-tap(slider, in: win, atX: slider.detentCentreForTest(1))
+tap(slider, in: win, atX: slider.detentCentreForTest(0))
 check("点击当前档位不重复触发", chosen.isEmpty, "\(chosen)")
 
 // 点在档位之间偏向哪边就选哪边
@@ -225,12 +239,78 @@ tap(slider, in: win, atX: between)
 check("点在两档之间选更近的一个", chosen.last == .high, "\(chosen)")
 spin(0.6)
 
-// 不支持 High 的机器上直接点 High，必须没有反应
+// 从 Auto 直接点禁用的 High 也必须没有反应；不能偷偷映射到相邻的 Low
+limited.update(selected: .auto, enabledModes: [.auto, .low], tint: .systemBlue)
 limitedChosen.removeAll()
 tap(limited, in: win2, atX: limited.detentCentreForTest(2))
 check("不支持 High 时点它无效",
-      limitedChosen.isEmpty && limited.selectedIndexForTest == 1,
+      limitedChosen.isEmpty && limited.selectedIndexForTest == 0,
       "选中索引 \(limited.selectedIndexForTest) 回调 \(limitedChosen)")
+
+// 系统拒绝切换时控件必须回到真实档位，不能只在视觉上假装成功
+var rejected: [EnergyMode] = []
+slider.onSelect = { rejected.append($0); return false }
+tap(slider, in: win, atX: lowCentre)
+check("切换失败后回弹到原档位",
+      rejected == [.low]
+          && slider.selectedIndexForTest == 2
+          && abs(slider.knobCentreForTest - highCentre) < 0.5,
+      "选中索引 \(slider.selectedIndexForTest) 回调 \(rejected)")
+
+// ---- 6. 粒子池复用：几何变化只换路径，不换 layer 也不重启相位 ----
+let pipe = PipeBundle()
+let pipeBounds = CGRect(x: 0, y: 0, width: 328, height: 176)
+let firstGeometry = PipeGeometry(
+    start: CGPoint(x: 53, y: 70), control1: CGPoint(x: 138, y: 70),
+    control2: CGPoint(x: 190, y: 38), end: CGPoint(x: 275, y: 38)
+)
+let movedGeometry = PipeGeometry(
+    start: CGPoint(x: 53, y: 64), control1: CGPoint(x: 138, y: 64),
+    control2: CGPoint(x: 190, y: 32), end: CGPoint(x: 275, y: 32)
+)
+pipe.apply(geometry: firstGeometry, thickness: 8, color: .systemBlue,
+           bounds: pipeBounds, animated: false)
+pipe.rebuildParticles(count: 4, thickness: 8, color: .systemBlue,
+                      period: 2.4, seed: 11, hot: false,
+                      animating: true, topology: "test.same")
+let firstLayers = Array((pipe.container.sublayers ?? []).dropFirst(2))
+let firstRideStarts = firstLayers.compactMap {
+    ($0.animation(forKey: "ride") as? CAKeyframeAnimation)?.path?.currentPoint.y
+}
+let firstBeginTimes = firstLayers.compactMap {
+    ($0.animation(forKey: "ride") as? CAKeyframeAnimation)?.beginTime
+}
+let firstTimeOffsets = firstLayers.compactMap {
+    ($0.animation(forKey: "ride") as? CAKeyframeAnimation)?.timeOffset
+}
+
+pipe.apply(geometry: movedGeometry, thickness: 8, color: .systemBlue,
+           bounds: pipeBounds, animated: false)
+pipe.rebuildParticles(count: 4, thickness: 8, color: .systemBlue,
+                      period: 2.4, seed: 11, hot: false,
+                      animating: true, topology: "test.same")
+let movedLayers = Array((pipe.container.sublayers ?? []).dropFirst(2))
+let movedRideStarts = movedLayers.compactMap {
+    ($0.animation(forKey: "ride") as? CAKeyframeAnimation)?.path?.currentPoint.y
+}
+let movedBeginTimes = movedLayers.compactMap {
+    ($0.animation(forKey: "ride") as? CAKeyframeAnimation)?.beginTime
+}
+let movedTimeOffsets = movedLayers.compactMap {
+    ($0.animation(forKey: "ride") as? CAKeyframeAnimation)?.timeOffset
+}
+check("同拓扑几何变化保留粒子 layer",
+      firstLayers.count == movedLayers.count
+          && zip(firstLayers, movedLayers).allSatisfy { $0 === $1 })
+let expectedStartDelta = movedGeometry.start.y - firstGeometry.start.y
+check("复用粒子的 ride path 跟随新几何",
+      firstRideStarts.count == movedRideStarts.count
+          && zip(firstRideStarts, movedRideStarts).allSatisfy {
+              abs(($1 - $0) - expectedStartDelta) < 0.01
+          },
+      "\(firstRideStarts) -> \(movedRideStarts)")
+check("更新路径不重启粒子相位",
+      firstBeginTimes == movedBeginTimes && firstTimeOffsets == movedTimeOffsets)
 
 NSStatusBar.system.removeStatusItem(item)
 if !pass {

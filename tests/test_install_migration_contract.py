@@ -6,6 +6,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 INSTALL = ROOT / "scripts" / "install.sh"
 UNINSTALL = ROOT / "scripts" / "uninstall.sh"
 PACKAGE = ROOT / "scripts" / "package_dmg.sh"
+RUN_SCRIPT = ROOT / "script" / "build_and_run.sh"
 APP_ENTITLEMENTS = ROOT / "BatteryPowerApp.entitlements"
 
 
@@ -15,6 +16,7 @@ class InstallMigrationContractTests(unittest.TestCase):
         cls.install = INSTALL.read_text(encoding="utf-8")
         cls.uninstall = UNINSTALL.read_text(encoding="utf-8")
         cls.package = PACKAGE.read_text(encoding="utf-8")
+        cls.run_script = RUN_SCRIPT.read_text(encoding="utf-8")
         cls.entitlements = APP_ENTITLEMENTS.read_text(encoding="utf-8")
 
     def test_uses_the_new_identity(self):
@@ -32,6 +34,9 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_links_iokit(self):
         self.assertIn("-framework IOKit", self.install)
+
+    def test_run_script_does_not_reference_the_removed_legacy_source(self):
+        self.assertNotIn("BatteryPowerWidget.swift", self.run_script)
 
     def test_sandbox_allows_the_new_support_directory(self):
         self.assertIn("/Library/Application Support/Wattson/", self.entitlements)

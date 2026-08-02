@@ -67,6 +67,13 @@ class ParticleContractTests(unittest.TestCase):
         # back and forth at a boundary. One spark either way is invisible.
         self.assertIn("abs(requested - particleCount) >= 2", self.flow)
 
+    def test_hot_style_has_hysteresis_at_the_saturation_boundary(self):
+        # 99.9/100.1 W telemetry noise must not rebuild the entire pool and its
+        # animations once per second.
+        self.assertIn("particlesStayHotAbove", self.flow)
+        self.assertIn("let hot = particlesAreHot", self.flow)
+        self.assertIn("? total >= Self.particlesStayHotAbove", self.flow)
+
     def test_stopping_flow_records_that_particles_stopped(self):
         # Stripping the animations without updating the bookkeeping made the
         # pool believe it was still animating, so the next rebuild was skipped.

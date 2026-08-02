@@ -13,6 +13,16 @@ enum HelperClient {
         guard fd >= 0 else { return nil }
         defer { close(fd) }
 
+        // Mode changes still run synchronously so the slider can accept or
+        // reject the detent immediately. A wedged helper must not freeze the
+        // AppKit thread forever.
+        var timeout = timeval(tv_sec: 2, tv_usec: 0)
+        let timeoutSize = socklen_t(MemoryLayout<timeval>.size)
+        guard setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, timeoutSize) == 0,
+              setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &timeout, timeoutSize) == 0 else {
+            return nil
+        }
+
         var addr = sockaddr_un()
         addr.sun_family = sa_family_t(AF_UNIX)
         let pathBytes = Array(socketPath.utf8)
