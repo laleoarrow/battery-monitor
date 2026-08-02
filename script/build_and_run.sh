@@ -35,6 +35,7 @@ xcrun swiftc \
     -framework AppKit \
     -framework CoreGraphics \
     -framework IOKit \
+    -framework ServiceManagement \
     -D DEBUG \
     -o "$APP_BINARY"
 chmod +x "$APP_BINARY"

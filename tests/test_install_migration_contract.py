@@ -7,6 +7,7 @@ INSTALL = ROOT / "scripts" / "install.sh"
 UNINSTALL = ROOT / "scripts" / "uninstall.sh"
 PACKAGE = ROOT / "scripts" / "package_dmg.sh"
 RUN_SCRIPT = ROOT / "script" / "build_and_run.sh"
+VERIFY_INTERACTION = ROOT / "scripts" / "verify_interaction.sh"
 APP_ENTITLEMENTS = ROOT / "BatteryPowerApp.entitlements"
 
 
@@ -17,6 +18,7 @@ class InstallMigrationContractTests(unittest.TestCase):
         cls.uninstall = UNINSTALL.read_text(encoding="utf-8")
         cls.package = PACKAGE.read_text(encoding="utf-8")
         cls.run_script = RUN_SCRIPT.read_text(encoding="utf-8")
+        cls.verify_interaction = VERIFY_INTERACTION.read_text(encoding="utf-8")
         cls.entitlements = APP_ENTITLEMENTS.read_text(encoding="utf-8")
 
     def test_uses_the_new_identity(self):
@@ -34,6 +36,11 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_links_iokit(self):
         self.assertIn("-framework IOKit", self.install)
+
+    def test_every_app_build_links_service_management(self):
+        self.assertIn("-framework ServiceManagement", self.install)
+        self.assertIn("-framework ServiceManagement", self.run_script)
+        self.assertIn("-framework ServiceManagement", self.verify_interaction)
 
     def test_run_script_does_not_reference_the_removed_legacy_source(self):
         self.assertNotIn("BatteryPowerWidget.swift", self.run_script)
@@ -64,11 +71,11 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertIn('APP_VERSION="${1:-2.0.0}"', self.package)
+        self.assertIn('APP_VERSION="${1:-2.0.1}"', self.package)
         self.assertIn("Contents/MacOS/Wattson", self.package)
 
     def test_release_binary_matches_the_declared_macos_minimum(self):
-        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.0.0}"', self.install)
+        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.0.1}"', self.install)
         self.assertIn('SWIFT_TARGET="arm64-apple-macos12.0"', self.install)
         self.assertIn('-target "$SWIFT_TARGET"', self.install)
 

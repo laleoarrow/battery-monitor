@@ -366,6 +366,33 @@ final class PopoverContentViewController: NSViewController {
         percentage.state = Settings.showsMenuBarPercentage ? .on : .off
         menu.addItem(percentage)
 
+        let loginState = LoginItemController.state
+        let loginTitle: String
+        let loginMenuState: NSControl.StateValue
+        switch loginState {
+        case .unsupported:
+            loginTitle = "开机自动启动（需 macOS 13）"
+            loginMenuState = .off
+        case .notRegistered:
+            loginTitle = "开机自动启动"
+            loginMenuState = .off
+        case .enabled:
+            loginTitle = "开机自动启动"
+            loginMenuState = .on
+        case .requiresApproval:
+            loginTitle = "开机自动启动（待批准）"
+            loginMenuState = .mixed
+        case .notFound:
+            loginTitle = "开机自动启动（当前不可用）"
+            loginMenuState = .off
+        }
+        let loginItem = NSMenuItem(title: loginTitle,
+                                   action: #selector(toggleLoginItem), keyEquivalent: "")
+        loginItem.target = self
+        loginItem.state = loginMenuState
+        loginItem.isEnabled = loginState != .unsupported && loginState != .notFound
+        menu.addItem(loginItem)
+
         menu.addItem(.separator())
         // The desktop panel used to own the only way out of the app. With it
         // gone this is the sole quit affordance, so it cannot be dropped.
@@ -382,6 +409,19 @@ final class PopoverContentViewController: NSViewController {
 
     @objc private func togglePercentage() {
         Settings.showsMenuBarPercentage.toggle()
+    }
+
+    @objc private func toggleLoginItem() {
+        do {
+            try LoginItemController.toggle()
+        } catch {
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.messageText = "无法更新开机自动启动"
+            alert.informativeText = error.localizedDescription
+            alert.addButton(withTitle: "好")
+            alert.runModal()
+        }
     }
 
     @objc private func toggleModule(_ sender: NSMenuItem) {

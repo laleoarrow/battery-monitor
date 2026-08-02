@@ -17,7 +17,7 @@ done
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$SCRIPT_DIR/.."
 APP_NAME="Wattson"
-APP_VERSION="${WATTSON_APP_VERSION:-2.0.0}"
+APP_VERSION="${WATTSON_APP_VERSION:-2.0.1}"
 SWIFT_TARGET="arm64-apple-macos12.0"
 APP_DIR="$HOME/Applications/Wattson.app"
 APP_BUNDLE_ID="com.leoarrow.wattson"
@@ -78,6 +78,7 @@ xcrun swiftc \
     -framework AppKit \
     -framework CoreGraphics \
     -framework IOKit \
+    -framework ServiceManagement \
     -O \
     -o "$APP_DIR/Contents/MacOS/Wattson"
 chmod +x "$APP_DIR/Contents/MacOS/Wattson"

@@ -5,7 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_NAME="Wattson"
-APP_VERSION="${1:-2.0.0}"
+APP_VERSION="${1:-2.0.1}"
 SWIFT_TARGET="arm64-apple-macos12.0"
 APP_DIR="$HOME/Applications/${APP_NAME}.app"
 HELPER_LABEL="com.leoarrow.wattson.helper"
@@ -122,6 +122,7 @@ USING WATTSON
 • Right-click the icon for a quick power-mode toggle.
 • Drag the Liquid Glass control to Automatic, Low Power, or High Power
   (High Power appears only on supported Macs).
+• Use the gear menu to turn “开机自动启动” on or off (macOS 13 or later).
 
 SYSTEM REQUIREMENTS
 Apple silicon Mac with a built-in battery, macOS 12 or later.
