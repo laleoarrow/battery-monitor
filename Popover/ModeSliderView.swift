@@ -42,6 +42,16 @@ final class ModeSliderView: NSView {
     private var enabled: [Bool] = []
     private var selectedIndex = 0
 
+#if DEBUG
+    /// Relabelling is the expensive part of a drag. It must happen once per
+    /// detent crossed, not once per mouse event.
+    private(set) var highlightCallCountForTest = 0
+    var knobCentreForTest: CGFloat { knobHost.frame.midX }
+    var settleIsAnimatingForTest: Bool { knobHost.layer?.animation(forKey: "settle") != nil }
+    var selectedIndexForTest: Int { selectedIndex }
+    var detentCentreForTest: (Int) -> CGFloat { { self.knobFrame(at: $0).midX } }
+#endif
+
     private var dragging = false
     private var grabOffset: CGFloat = 0
     private var highlighted = -1
@@ -250,6 +260,9 @@ final class ModeSliderView: NSView {
     /// The knob is a light material, so the label riding on it has to go dark.
     /// Leaving it near-white made the active mode the one you could not read.
     private func highlight(_ index: Int) {
+#if DEBUG
+        highlightCallCountForTest += 1
+#endif
         highlighted = index
         for (offset, field) in labels.enumerated() {
             field.textColor = !enabled[offset] ? PopoverStyle.tertiaryText

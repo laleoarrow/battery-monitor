@@ -41,7 +41,7 @@ class InteractionBehaviorTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, output)
         self.assertIn("ALL_INTERACTION_CHECKS_PASSED", output, output)
         # A harness that silently stops checking still prints a pass line.
-        self.assertGreaterEqual(output.count("✅"), 20, output)
+        self.assertGreaterEqual(output.count("✅"), 32, output)
 
 
 if __name__ == "__main__":

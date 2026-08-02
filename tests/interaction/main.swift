@@ -82,5 +82,79 @@ check("反复开关后仍能正常打开", p.isShownForTest && p.isOpen)
 p.handleOutsideClick(); spin(1.2)
 check("反复开关后仍能正常收起", !p.isShownForTest && !p.isOpen && !p.isWatchingOutsideClicks)
 
+// ---- 4. 模式滑块：拖得到 High Power，松手吸附，拖动中不做多余重绘 ----
+let slider = ModeSliderView(modes: [.low, .auto, .high])
+let win = NSWindow(contentRect: NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                                       height: ModeSliderView.preferredHeight),
+                   styleMask: [.borderless], backing: .buffered, defer: false)
+win.contentView = slider
+slider.frame = win.contentView!.bounds
+slider.update(selected: .auto, enabledModes: [.low, .auto, .high], tint: .systemBlue)
+slider.layoutSubtreeIfNeeded()
+spin(0.1)
+
+var chosen: [EnergyMode] = []
+slider.onSelect = { chosen.append($0); return true }
+
+/// 驱动真实的 mouseDown/Dragged/Up，事件直接投递给视图，不经过系统注入
+func drag(from startX: CGFloat, to endX: CGFloat, steps: Int) {
+    func event(_ type: NSEvent.EventType, _ x: CGFloat) -> NSEvent {
+        NSEvent.mouseEvent(with: type,
+                           location: NSPoint(x: x, y: ModeSliderView.preferredHeight / 2),
+                           modifierFlags: [], timestamp: 0, windowNumber: win.windowNumber,
+                           context: nil, eventNumber: 0, clickCount: 1, pressure: 1)!
+    }
+    slider.mouseDown(with: event(.leftMouseDown, startX))
+    for i in 1...steps {
+        slider.mouseDragged(with: event(.leftMouseDragged, startX + (endX - startX) * CGFloat(i) / CGFloat(steps)))
+    }
+    slider.mouseUp(with: event(.leftMouseUp, endX))
+}
+
+let autoCentre = slider.detentCentreForTest(1)
+let highCentre = slider.detentCentreForTest(2)
+let before = slider.highlightCallCountForTest
+drag(from: autoCentre, to: PopoverStyle.contentWidth - 4, steps: 60)
+let relabels = slider.highlightCallCountForTest - before
+check("拖到最右会选中 High Power", chosen.last == .high, "\(chosen)")
+check("松手后吸附到 High 档位",
+      abs(slider.knobCentreForTest - highCentre) < 0.5,
+      String(format: "旋钮 %.1f vs 档位 %.1f", slider.knobCentreForTest, highCentre))
+check("松手有吸附弹簧动画", slider.settleIsAnimatingForTest)
+// 60 次拖动事件里只该跨过 1 个档位；每帧都重着色正是当初卡顿的原因
+check("拖动 60 帧只重着色跨档的那几次", relabels <= 3, "\(relabels) 次")
+spin(0.6)
+
+let backBefore = slider.highlightCallCountForTest
+drag(from: highCentre, to: 4, steps: 60)
+check("能一路拖回 Low Power", chosen.last == .low, "\(chosen)")
+check("拖回后吸附到 Low 档位",
+      abs(slider.knobCentreForTest - slider.detentCentreForTest(0)) < 0.5)
+check("回程同样不逐帧重着色", slider.highlightCallCountForTest - backBefore <= 3)
+
+// 不支持 High Power 的机器上，拖过去必须停在 Auto
+let limited = ModeSliderView(modes: [.low, .auto, .high])
+let win2 = NSWindow(contentRect: win.contentRect(forFrameRect: win.frame), styleMask: [.borderless],
+                    backing: .buffered, defer: false)
+win2.contentView = limited
+limited.frame = win2.contentView!.bounds
+limited.update(selected: .auto, enabledModes: [.low, .auto], tint: .systemBlue)
+limited.layoutSubtreeIfNeeded(); spin(0.1)
+var limitedChosen: [EnergyMode] = []
+limited.onSelect = { limitedChosen.append($0); return true }
+do {
+    func ev(_ t: NSEvent.EventType, _ x: CGFloat) -> NSEvent {
+        NSEvent.mouseEvent(with: t, location: NSPoint(x: x, y: ModeSliderView.preferredHeight / 2),
+                           modifierFlags: [], timestamp: 0, windowNumber: win2.windowNumber,
+                           context: nil, eventNumber: 0, clickCount: 1, pressure: 1)!
+    }
+    limited.mouseDown(with: ev(.leftMouseDown, limited.detentCentreForTest(1)))
+    for i in 1...30 { limited.mouseDragged(with: ev(.leftMouseDragged, limited.detentCentreForTest(1) + CGFloat(i) * 6)) }
+    limited.mouseUp(with: ev(.leftMouseUp, PopoverStyle.contentWidth - 4))
+}
+check("不支持 High 时拖过去停在 Auto",
+      limitedChosen.isEmpty && limited.selectedIndexForTest == 1,
+      "选中索引 \(limited.selectedIndexForTest) 回调 \(limitedChosen)")
+
 NSStatusBar.system.removeStatusItem(item)
 log(pass ? "\nALL_INTERACTION_CHECKS_PASSED" : "\nSOME_CHECKS_FAILED")
