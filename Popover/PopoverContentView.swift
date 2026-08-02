@@ -21,7 +21,7 @@ enum PopoverModule: String, CaseIterable {
 /// Hero number, state, and the conservation line. No separator — it is the top
 /// of the surface.
 final class PopoverHeaderView: PopoverSection {
-    static let preferredHeight: CGFloat = 94
+    static let preferredHeight: CGFloat = 72
 
     private let total = NSTextField(labelWithString: "0.0")
     private let unit = NSTextField(labelWithString: "W")
@@ -58,13 +58,13 @@ final class PopoverHeaderView: PopoverSection {
 
     override func layout() {
         super.layout()
-        // The hero block and the conservation line are separate thoughts, so
-        // they get a real gap rather than sitting a few points apart.
-        total.frame = NSRect(x: 0, y: 16, width: 150, height: 40)
-        unit.frame = NSRect(x: totalWidth() + 5, y: 34, width: 30, height: 20)
-        percent.frame = NSRect(x: bounds.width - 160, y: 18, width: 160, height: 20)
-        state.frame = NSRect(x: bounds.width - 220, y: 40, width: 220, height: 16)
-        equation.frame = NSRect(x: 0, y: 70, width: bounds.width, height: 15)
+        // Main value and state share the first row; the conservation check is
+        // a compact second row instead of floating at the bottom of a tall box.
+        total.frame = NSRect(x: 0, y: 5, width: 150, height: 40)
+        unit.frame = NSRect(x: totalWidth() + 5, y: 23, width: 30, height: 20)
+        percent.frame = NSRect(x: bounds.width - 160, y: 7, width: 160, height: 20)
+        state.frame = NSRect(x: bounds.width - 220, y: 29, width: 220, height: 16)
+        equation.frame = NSRect(x: 0, y: 51, width: bounds.width, height: 15)
     }
 
     private func totalWidth() -> CGFloat {
@@ -98,6 +98,22 @@ final class PopoverHeaderView: PopoverSection {
         guard abs(snapshot.conservationError) > 2 else { return base }
         return base + String(format: "   偏差 %+.1f W", snapshot.conservationError)
     }
+
+#if DEBUG
+    func layoutFitsForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> Bool {
+        update(snapshot: snapshot, degraded: degraded)
+        layoutSubtreeIfNeeded()
+        let fields = [total, unit, state, percent, equation]
+        return fields.allSatisfy { field in
+            let required = field.stringValue.size(withAttributes: [.font: field.font as Any]).width
+            return field.frame.minX >= 0
+                && field.frame.minY >= 0
+                && field.frame.maxX <= bounds.width
+                && field.frame.maxY <= bounds.height
+                && required <= field.frame.width
+        }
+    }
+#endif
 }
 
 /// Native three-position mode control and system-battery visibility choice.

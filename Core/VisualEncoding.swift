@@ -7,6 +7,8 @@ enum VisualEncoding {
     static let wRef: CGFloat = 100
     static let exponent: CGFloat = 0.65
     static let speedRatio: CGFloat = 3.4
+    /// One full cycle for every non-particle motion at the minimum rate.
+    static let motionPeriod: CFTimeInterval = 2.4
     static let thickMin: CGFloat = 4
     static let thickSpan: CGFloat = 14
     static let nodeSize: CGFloat = 36

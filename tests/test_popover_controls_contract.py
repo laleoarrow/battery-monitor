@@ -96,10 +96,26 @@ class PopoverControlsContractTests(unittest.TestCase):
     def test_system_battery_state_is_queried_only_when_opening(self):
         # The query wakes the helper through launchd, so it must not run on the
         # 1 Hz refresh or when the popover is closing.
-        primary = self.status.split("if !popover.isOpen", 1)[1].split("}", 1)[0]
+        primary = self.status.split("case .primary:", 1)[1].split("case .secondary:", 1)[0]
+        self.assertIn("let opening = !popover.isOpen", primary)
+        self.assertIn("if opening", primary)
         self.assertIn("refreshSystemBatteryIconState", primary)
         refresh = self.status.split("private func refreshPresentation()", 1)[1]
         self.assertNotIn("SystemBatteryIconController.isHidden", refresh)
+
+    def test_opening_is_not_blocked_by_the_system_battery_query(self):
+        # A cold launchd helper, or a wedged socket, may take up to the client
+        # timeout. The popover must already be on screen before that work starts.
+        primary = self.status.split("case .primary:", 1)[1].split("case .secondary:", 1)[0]
+        self.assertLess(primary.index("popover.toggle"),
+                        primary.index("refreshSystemBatteryIconState"))
+        self.assertIn("SystemBatteryIconController.refreshHidden", self.status)
+        self.assertIn("DispatchQueue", self.system_icon)
+        self.assertIn("DispatchQueue.main.async", self.system_icon)
+
+    def test_stale_system_battery_reads_cannot_overwrite_a_newer_choice(self):
+        self.assertIn("systemBatteryIconRefreshGeneration", self.status)
+        self.assertIn("guard generation == self.systemBatteryIconRefreshGeneration", self.status)
 
     def test_system_battery_controller_uses_the_privileged_helper(self):
         self.assertIn('"getSystemBatteryIconHidden"', self.system_icon)

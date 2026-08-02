@@ -42,6 +42,19 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertNotIn("guard let event = NSApp.currentEvent", handler)
         self.assertIn("clickRouter.intents(for: event?.type", handler)
 
+    def test_click_feedback_does_not_redraw_the_whole_popover(self):
+        # The down event delivers both `.press` and `.primary`; rebuilding all
+        # five modules for each intent delayed the first visible frame.
+        handler = self.source.split("@objc private func handleClick()", 1)[1].split("\n    private func", 1)[0]
+        self.assertIn("refreshStatusItem()", handler)
+        self.assertNotIn("refreshPresentation()", handler)
+
+    def test_first_live_sample_is_deferred_until_after_the_opening_event(self):
+        clock = self.source.split("private func startDisplayClock()", 1)[1].split(
+            "private func stopDisplayClock()", 1
+        )[0]
+        self.assertIn("DispatchQueue.main.async", clock)
+
     def test_both_halves_of_a_click_do_not_act_twice(self):
         # Pairing is tracked as click-cycle state, not a time window. A window
         # let a press held past its length act twice, so the popover opened and

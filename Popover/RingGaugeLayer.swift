@@ -27,6 +27,7 @@ final class RingGaugeView: PopoverSection {
     private var values: [NSTextField] = []
     private var animationsEnabled = false
     private var intensity: CGFloat = 0
+    private var motionMultiplier: CGFloat = 1
 
     init() {
         super.init(height: Self.preferredHeight)
@@ -120,6 +121,7 @@ final class RingGaugeView: PopoverSection {
     func update(snapshot: PowerSnapshot) {
         let color = PopoverStyle.stateColor(snapshot.state)
         intensity = VisualEncoding.t(snapshot.totalInputW)
+        motionMultiplier = VisualEncoding.multiplier(snapshot.totalInputW)
 
         percentLabel.stringValue = "\(snapshot.percent)"
         percentLabel.textColor = snapshot.percent <= 20 ? PopoverStyle.red : PopoverStyle.primaryText
@@ -148,16 +150,23 @@ final class RingGaugeView: PopoverSection {
             let rotation = CABasicAnimation(keyPath: "transform.rotation.z")
             rotation.fromValue = 0
             rotation.toValue = CGFloat.pi * 2
-            rotation.duration = 5.0
+            rotation.duration = VisualEncoding.motionPeriod
             rotation.repeatCount = .infinity
             rotation.isRemovedOnCompletion = false
             arcHost.add(rotation, forKey: "spin")
         }
-        PopoverStyle.setAnimationSpeed(arcHost, multiplier: 1 + intensity * (VisualEncoding.speedRatio - 1))
+        PopoverStyle.setAnimationSpeed(arcHost, multiplier: motionMultiplier)
     }
 
     func setAnimationsEnabled(_ enabled: Bool) {
         animationsEnabled = enabled
         if enabled { applyRotation() } else { arcHost.removeAllAnimations() }
     }
+
+#if DEBUG
+    func rotationMetricsForTest() -> (duration: CFTimeInterval, layerSpeed: Float)? {
+        guard let motion = arcHost.animation(forKey: "spin") as? CABasicAnimation else { return nil }
+        return (motion.duration, arcHost.speed)
+    }
+#endif
 }

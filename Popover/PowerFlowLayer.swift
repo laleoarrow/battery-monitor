@@ -194,17 +194,17 @@ final class PipeBundle {
         }
     }
 
-    func startFlow(period: CFTimeInterval, width: CGFloat) {
+    func startFlow(multiplier: CGFloat, width: CGFloat) {
         if gradient.animation(forKey: "flow") == nil {
             let drift = CABasicAnimation(keyPath: "position.x")
             drift.byValue = width
-            drift.duration = 2.4
+            drift.duration = VisualEncoding.motionPeriod
             drift.repeatCount = .infinity
             drift.isRemovedOnCompletion = false
             gradient.add(drift, forKey: "flow")
         }
         // Retime rather than restart, so a data refresh never jolts the light.
-        PopoverStyle.setAnimationSpeed(gradient, multiplier: CGFloat(2.4 / period))
+        PopoverStyle.setAnimationSpeed(gradient, multiplier: multiplier)
     }
 
     func stopFlow() {
@@ -374,6 +374,13 @@ final class PipeBundle {
         let multiplier = CGFloat(2.4 / period)
         particles.forEach { PopoverStyle.setAnimationSpeed($0, multiplier: multiplier) }
     }
+
+#if DEBUG
+    func flowMetricsForTest() -> (duration: CFTimeInterval, layerSpeed: Float)? {
+        guard let motion = gradient.animation(forKey: "flow") as? CABasicAnimation else { return nil }
+        return (motion.duration, gradient.speed)
+    }
+#endif
 }
 
 final class PowerFlowView: PopoverSection {
@@ -492,7 +499,10 @@ final class PowerFlowView: PopoverSection {
 
         let color = PopoverStyle.stateColor(snapshot.state)
         let total = snapshot.totalInputW
-        let period = 2.4 / Double(VisualEncoding.multiplier(total))
+        let motionMultiplier = VisualEncoding.multiplier(total)
+        // Particle timing is intentionally independent from the shared sweep
+        // period. Keep its existing 2.4-second basis when motion styling moves.
+        let particlePeriod = 2.4 / Double(motionMultiplier)
         let hot = particlesAreHot
             ? total >= Self.particlesStayHotAbove
             : total >= Double(VisualEncoding.wRef)
@@ -514,11 +524,13 @@ final class PowerFlowView: PopoverSection {
             let lowerStart = cy + upperThickness / 2
 
             configure(bundles[0], geometry: pipeGeometry(from: upperStart, to: Self.topY),
-                      thickness: upperThickness, color: color, period: period,
+                      thickness: upperThickness, color: color,
+                      particlePeriod: particlePeriod, motionMultiplier: motionMultiplier,
                       particles: count, hot: hot, seed: 11, animated: animated,
                       topology: "adapterLed.0")
             configure(bundles[1], geometry: pipeGeometry(from: lowerStart, to: Self.bottomY),
-                      thickness: lowerThickness, color: color, period: period,
+                      thickness: lowerThickness, color: color,
+                      particlePeriod: particlePeriod, motionMultiplier: motionMultiplier,
                       particles: charging ? count : 0, hot: hot, seed: 29, animated: animated,
                       topology: "adapterLed.1.\(charging)")
 
@@ -534,12 +546,14 @@ final class PowerFlowView: PopoverSection {
             let lowerEnd = adapterActive ? cy + upperThickness / 2 : cy
 
             configure(bundles[0], geometry: pipeGeometry(from: Self.topY, to: upperEnd),
-                      thickness: upperThickness, color: PopoverStyle.blue, period: period,
+                      thickness: upperThickness, color: PopoverStyle.blue,
+                      particlePeriod: particlePeriod, motionMultiplier: motionMultiplier,
                       particles: adapterActive ? count : 0, hot: hot, seed: 11, animated: animated,
                       topology: "batteryLed.0.\(adapterActive)")
             configure(bundles[1], geometry: pipeGeometry(from: Self.bottomY, to: lowerEnd),
                       thickness: lowerThickness,
-                      color: adapterActive ? PopoverStyle.amber : color, period: period,
+                      color: adapterActive ? PopoverStyle.amber : color,
+                      particlePeriod: particlePeriod, motionMultiplier: motionMultiplier,
                       particles: count, hot: hot, seed: 29, animated: animated,
                       topology: "batteryLed.1.\(adapterActive)")
 
@@ -552,14 +566,17 @@ final class PowerFlowView: PopoverSection {
     }
 
     private func configure(_ bundle: PipeBundle, geometry: PipeGeometry, thickness: CGFloat,
-                           color: NSColor, period: CFTimeInterval, particles: Int,
+                           color: NSColor, particlePeriod: CFTimeInterval,
+                           motionMultiplier: CGFloat, particles: Int,
                            hot: Bool, seed: UInt64, animated: Bool, topology: String) {
         bundle.apply(geometry: geometry, thickness: thickness, color: color,
                      bounds: plot.bounds, animated: animated)
         bundle.rebuildParticles(count: particles, thickness: thickness, color: color,
-                                period: period, seed: seed, hot: hot,
+                                period: particlePeriod, seed: seed, hot: hot,
                                 animating: animationsEnabled, topology: topology)
-        if animationsEnabled { bundle.startFlow(period: period, width: plot.bounds.width) }
+        if animationsEnabled {
+            bundle.startFlow(multiplier: motionMultiplier, width: plot.bounds.width)
+        }
     }
 
     private func configureNodes(snapshot: PowerSnapshot, color: NSColor) {
@@ -624,4 +641,10 @@ final class PowerFlowView: PopoverSection {
             bundles.forEach { $0.stopFlow() }
         }
     }
+
+#if DEBUG
+    func flowMetricsForTest() -> (duration: CFTimeInterval, layerSpeed: Float)? {
+        bundles.compactMap { $0.flowMetricsForTest() }.first
+    }
+#endif
 }

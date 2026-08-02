@@ -35,6 +35,7 @@ final class StatusItemController: NSObject {
     private var pressed = false
     private var clickRouter = ClickRouter()
     private var systemBatteryIconHidden: Bool?
+    private var systemBatteryIconRefreshGeneration = 0
 
     func start() {
         guard let button = statusItem.button else { return }
@@ -82,19 +83,20 @@ final class StatusItemController: NSObject {
             switch intent {
             case .press:
                 pressed = true
-                refreshPresentation()
+                refreshStatusItem()
             case .release:
                 if pressed {
                     pressed = false
-                    refreshPresentation()
+                    refreshStatusItem()
                 }
             case .primary:
                 pressed = false
-                // Only when opening: the query wakes the helper through
-                // launchd, so it has no business running on the 1 Hz refresh.
-                if !popover.isOpen { refreshSystemBatteryIconState() }
-                refreshPresentation()
+                let opening = !popover.isOpen
+                refreshStatusItem()
                 popover.toggle(relativeTo: button)
+                // A cold launchd helper can miss the frame budget. Show first,
+                // then fetch the setting without holding AppKit's event loop.
+                if opening { refreshSystemBatteryIconState() }
             case .secondary:
                 pressed = false
                 let ok = applyEnergyMode(EnergyModeController.current == .low ? .auto : .low)
@@ -119,19 +121,34 @@ final class StatusItemController: NSObject {
     }
 
     private func refreshSystemBatteryIconState() {
-        systemBatteryIconHidden = HelperClient.isInstalled
-            ? SystemBatteryIconController.isHidden
-            : nil
-        popover.updateSystemBatteryIconState(systemBatteryIconHidden)
+        systemBatteryIconRefreshGeneration += 1
+        let generation = systemBatteryIconRefreshGeneration
+        guard HelperClient.isInstalled else {
+            systemBatteryIconHidden = nil
+            popover.updateSystemBatteryIconState(nil)
+            return
+        }
+        SystemBatteryIconController.refreshHidden { [weak self] hidden in
+            guard let self = self else { return }
+            guard generation == self.systemBatteryIconRefreshGeneration else { return }
+            self.systemBatteryIconHidden = hidden
+            self.popover.updateSystemBatteryIconState(hidden)
+        }
     }
 
     private func applySystemBatteryIconHidden(_ hidden: Bool) -> Bool {
+        // Invalidate any read that began before this user choice.
+        systemBatteryIconRefreshGeneration += 1
         guard HelperClient.isInstalled else {
             os_log("helper not installed — system battery setting is a no-op", log: log, type: .error)
             refreshSystemBatteryIconState()
             return false
         }
         let succeeded = SystemBatteryIconController.setHidden(hidden)
+        if succeeded {
+            systemBatteryIconHidden = hidden
+            popover.updateSystemBatteryIconState(hidden)
+        }
         refreshSystemBatteryIconState()
         if !succeeded {
             os_log("failed to update the system battery icon", log: log, type: .error)
@@ -179,8 +196,13 @@ final class StatusItemController: NSObject {
 
     private func startDisplayClock() {
         guard displayTimer == nil else { return }
-        sampleNow(recordHistory: false)
         displayTimer = Timer.scheduledTimer(withTimeInterval: Self.displayInterval, repeats: true) { [weak self] _ in
+            self?.sampleNow(recordHistory: false)
+        }
+        // Let NSPopover hand its first frame to the window server before doing
+        // a fresh IOKit read and rebuilding the animated modules.
+        DispatchQueue.main.async { [weak self] in
+            guard self?.displayTimer != nil else { return }
             self?.sampleNow(recordHistory: false)
         }
     }
@@ -205,6 +227,16 @@ final class StatusItemController: NSObject {
     }
 
     private func refreshPresentation() {
+        refreshStatusItem()
+        popover.update(
+            snapshot: snapshot,
+            history: history.samples,
+            peak: history.peak,
+            degraded: isDegraded
+        )
+    }
+
+    private func refreshStatusItem() {
         guard let button = statusItem.button else { return }
         button.image = BatteryIcon.image(
             for: snapshot,
@@ -225,11 +257,5 @@ final class StatusItemController: NSObject {
         }
 
         button.alphaValue = isDegraded ? 0.45 : 1.0
-        popover.update(
-            snapshot: snapshot,
-            history: history.samples,
-            peak: history.peak,
-            degraded: isDegraded
-        )
     }
 }

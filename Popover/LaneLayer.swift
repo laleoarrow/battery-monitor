@@ -54,7 +54,7 @@ final class LaneView: PopoverSection {
 
     private let lanes = [Lane(), Lane()]
     private var animationsEnabled = false
-    private var period: CFTimeInterval = 2.4
+    private var motionMultiplier: CGFloat = 1
     private var latest: PowerSnapshot?
 
     init() {
@@ -94,7 +94,7 @@ final class LaneView: PopoverSection {
         // Normalise against the larger lane so the ratio between them is exact
         // and the dominant lane always fills its track.
         let ceiling = max(systemWatts, batteryWatts, 0.1)
-        period = 2.4 / Double(VisualEncoding.multiplier(snapshot.totalInputW))
+        motionMultiplier = VisualEncoding.multiplier(snapshot.totalInputW)
 
         apply(lanes[0], symbol: "cpu", caption: "系统负载", watts: systemWatts,
               ceiling: ceiling, color: color)
@@ -147,7 +147,7 @@ final class LaneView: PopoverSection {
             // moves it completely off both edges, so the whole bar is crossed
             // and the repeat happens while the pulse is invisible.
             motion.byValue = width * 2
-            motion.duration = 2.4
+            motion.duration = VisualEncoding.motionPeriod
             motion.repeatCount = .infinity
             motion.isRemovedOnCompletion = false
             if let previous {
@@ -163,7 +163,7 @@ final class LaneView: PopoverSection {
         }
         // Keep this outside animation creation: total power can change the
         // shared rate even when a lane's width stays constant.
-        PopoverStyle.setAnimationSpeed(lane.sweep, multiplier: CGFloat(2.4 / period))
+        PopoverStyle.setAnimationSpeed(lane.sweep, multiplier: motionMultiplier)
     }
 
     func setAnimationsEnabled(_ enabled: Bool) {
@@ -179,12 +179,13 @@ final class LaneView: PopoverSection {
 
 #if DEBUG
     func sweepMetricsForTest(at index: Int) ->
-        (fillWidth: CGFloat, travel: CGFloat, beginTime: CFTimeInterval, layerSpeed: Float)? {
+        (fillWidth: CGFloat, travel: CGFloat, beginTime: CFTimeInterval,
+         duration: CFTimeInterval, layerSpeed: Float)? {
         guard lanes.indices.contains(index),
               let motion = lanes[index].sweep.animation(forKey: "sweep") as? CABasicAnimation,
               let number = motion.byValue as? NSNumber else { return nil }
         return (lanes[index].fill.bounds.width, CGFloat(truncating: number),
-                motion.beginTime, lanes[index].sweep.speed)
+                motion.beginTime, motion.duration, lanes[index].sweep.speed)
     }
 #endif
 }

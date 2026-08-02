@@ -349,6 +349,61 @@ check("泳道宽度变化后更新行程但不重启相位",
 check("总功率变化会重定时现有泳道动画",
       abs(changedLane.layerSpeed - firstLane.layerSpeed) > 0.005)
 
+// ---- 8. 三个模块的非粒子运动共享同一功率节奏 ----
+let sharedMotionSnapshot = PowerSnapshot(
+    percent: 72, plugged: true, adapterW: 68, batteryW: 22.2, systemW: 45.8,
+    temperatureC: 34.2, cycleCount: 116, lowPowerMode: false
+)
+let flowView = PowerFlowView()
+flowView.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                        height: PowerFlowView.preferredHeight)
+flowView.layoutSubtreeIfNeeded()
+flowView.update(snapshot: sharedMotionSnapshot, animated: false)
+flowView.setAnimationsEnabled(true)
+
+let ringView = RingGaugeView()
+ringView.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                        height: RingGaugeView.preferredHeight)
+ringView.layoutSubtreeIfNeeded()
+ringView.update(snapshot: sharedMotionSnapshot)
+ringView.setAnimationsEnabled(true)
+
+laneView.update(snapshot: sharedMotionSnapshot)
+guard let flowMotion = flowView.flowMetricsForTest(),
+      let ringMotion = ringView.rotationMetricsForTest(),
+      let laneMotion = laneView.sweepMetricsForTest(at: 0) else {
+    log("❌ 无法读取三个模块的共享运动动画")
+    exit(1)
+}
+check("三模块非粒子动画使用同一基准周期",
+      abs(flowMotion.duration - ringMotion.duration) < 0.001
+          && abs(flowMotion.duration - laneMotion.duration) < 0.001)
+check("三模块非粒子动画使用同一功率倍率",
+      abs(flowMotion.layerSpeed - ringMotion.layerSpeed) < 0.005
+          && abs(flowMotion.layerSpeed - laneMotion.layerSpeed) < 0.005)
+
+// ---- 9. 紧凑顶栏覆盖所有供电状态，不截断也不越界 ----
+let header = PopoverHeaderView()
+header.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                      height: PopoverHeaderView.preferredHeight)
+let headerSnapshots = [
+    PowerSnapshot(percent: 72, plugged: true, adapterW: 68, batteryW: 22.2,
+                  systemW: 45.8, temperatureC: 34.2, cycleCount: 116),
+    PowerSnapshot(percent: 100, plugged: true, adapterW: 52, batteryW: 0,
+                  systemW: 52, temperatureC: 31.8, cycleCount: 116),
+    PowerSnapshot(percent: 41, plugged: false, adapterW: 0, batteryW: -36.9,
+                  systemW: 36.9, temperatureC: 33.1, cycleCount: 116),
+    PowerSnapshot(percent: 18, plugged: true, adapterW: 28, batteryW: -31.7,
+                  systemW: 59.7, temperatureC: 38.6, cycleCount: 116),
+    PowerSnapshot(percent: 18, plugged: true, adapterW: 28, batteryW: -31.7,
+                  systemW: 70, temperatureC: 38.6, cycleCount: 116),
+    PowerSnapshot(percent: 66, plugged: true, adapterW: 140, batteryW: 32,
+                  systemW: 108, temperatureC: 41.4, cycleCount: 116),
+]
+check("紧凑顶栏在充电/已满/电池/混合/偏差/高功率状态均不截断",
+      headerSnapshots.allSatisfy { header.layoutFitsForTest(snapshot: $0) }
+          && header.layoutFitsForTest(snapshot: headerSnapshots[3], degraded: true))
+
 NSStatusBar.system.removeStatusItem(item)
 if !pass {
     log("\nSOME_CHECKS_FAILED")

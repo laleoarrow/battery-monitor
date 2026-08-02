@@ -1,9 +1,12 @@
 import pathlib
+import re
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "Popover" / "PopoverContentView.swift"
 STYLE = ROOT / "Popover" / "PopoverStyle.swift"
+ENCODING = ROOT / "Core" / "VisualEncoding.swift"
+FLOW = ROOT / "Popover" / "PowerFlowLayer.swift"
 RING = ROOT / "Popover" / "RingGaugeLayer.swift"
 LANES = ROOT / "Popover" / "LaneLayer.swift"
 HISTORY = ROOT / "Popover" / "HistoryLayer.swift"
@@ -16,6 +19,8 @@ class PopoverModulesContractTests(unittest.TestCase):
     def setUpClass(cls):
         cls.content = CONTENT.read_text(encoding="utf-8")
         cls.style = STYLE.read_text(encoding="utf-8")
+        cls.encoding = ENCODING.read_text(encoding="utf-8")
+        cls.flow = FLOW.read_text(encoding="utf-8")
         cls.ring = RING.read_text(encoding="utf-8")
         cls.lanes = LANES.read_text(encoding="utf-8")
         cls.history = HISTORY.read_text(encoding="utf-8")
@@ -44,22 +49,42 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("conservationError", self.content)
         self.assertIn("abs(snapshot.conservationError) > 2", self.content)
 
+    def test_header_uses_a_compact_two_row_layout(self):
+        header = self.content.split("final class PopoverHeaderView", 1)[1].split(
+            "final class PopoverFooterView", 1
+        )[0]
+        height = float(re.search(r"preferredHeight: CGFloat = (\d+)", header).group(1))
+        self.assertLessEqual(height, 76)
+        self.assertIn("equation.frame = NSRect(x: 0, y: 51", header)
+
     def test_ring_centre_shows_charge_not_watts(self):
         # The header already owns the wattage.
         self.assertIn('percentUnit = NSTextField(labelWithString: "%")', self.ring)
         self.assertIn('percentLabel.stringValue = "\\(snapshot.percent)"', self.ring)
 
-    def test_ring_rotation_is_five_seconds_scaled_by_the_shared_multiplier(self):
-        self.assertIn("rotation.duration = 5.0", self.ring)
-        self.assertIn("setAnimationSpeed(arcHost", self.ring)
-        self.assertIn("VisualEncoding.speedRatio", self.ring)
+    def test_non_particle_motion_uses_one_power_driven_period(self):
+        self.assertIn("motionPeriod: CFTimeInterval = 2.4", self.encoding)
+        for module in (self.flow, self.ring, self.lanes):
+            self.assertIn("VisualEncoding.motionPeriod", module)
+            self.assertIn("VisualEncoding.multiplier", module)
+
+    def test_particles_keep_their_independent_timing(self):
+        particles = self.flow.split("func rebuildParticles", 1)[1].split(
+            "final class PowerFlowView", 1
+        )[0]
+        self.assertIn("let duration = 2.4 * spread", particles)
+        self.assertIn("let multiplier = CGFloat(2.4 / period)", particles)
+        self.assertNotIn("VisualEncoding.motionPeriod", particles)
+        self.assertIn("let particlePeriod = 2.4 / Double(motionMultiplier)", self.flow)
+        self.assertIn("period: particlePeriod", self.flow)
+        self.assertIn("startFlow(multiplier: motionMultiplier", self.flow)
 
     def test_lane_length_is_proportional_to_its_own_wattage(self):
         # Normalising against a fixed ceiling renders 108 W and 32 W at nearly
         # the same length, which states something false about the data.
         self.assertIn("max(systemWatts, batteryWatts, 0.1)", self.lanes)
         self.assertIn("fraction * Self.trackWidth", self.lanes)
-        self.assertIn("motion.duration = 2.4", self.lanes)
+        self.assertIn("motion.duration = VisualEncoding.motionPeriod", self.lanes)
 
     def test_lane_track_width_is_constant_not_read_from_bounds(self):
         # `update` can land before the first layout pass, and reading a
