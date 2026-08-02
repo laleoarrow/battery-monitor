@@ -17,7 +17,8 @@ done
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$SCRIPT_DIR/.."
 APP_NAME="Wattson"
-APP_VERSION="2.0.0"
+APP_VERSION="${WATTSON_APP_VERSION:-2.0.0}"
+SWIFT_TARGET="arm64-apple-macos12.0"
 APP_DIR="$HOME/Applications/Wattson.app"
 APP_BUNDLE_ID="com.leoarrow.wattson"
 SUPPORT_DIR="$HOME/Library/Application Support/Wattson"
@@ -73,6 +74,7 @@ xcrun swiftc \
     "$ROOT_DIR"/MenuBar/*.swift \
     "$ROOT_DIR"/Popover/*.swift \
     "$ROOT_DIR/main.swift" \
+    -target "$SWIFT_TARGET" \
     -framework AppKit \
     -framework CoreGraphics \
     -framework IOKit \
@@ -158,7 +160,10 @@ if [ "$APP_ONLY" = "1" ]; then
 fi
 echo "  🔑 Installing the privileged helper (needs sudo once)"
 HELPER_BUILD="$BUILD_DIR/wattson-helper"
-xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift" -O -o "$HELPER_BUILD"
+xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift" \
+    -target "$SWIFT_TARGET" \
+    -O \
+    -o "$HELPER_BUILD"
 codesign --force --sign - "$HELPER_BUILD" >/dev/null
 sudo launchctl bootout system "$HELPER_PLIST" 2>/dev/null || true
 sudo mkdir -p /Library/PrivilegedHelperTools

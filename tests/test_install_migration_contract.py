@@ -67,6 +67,19 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn('APP_VERSION="${1:-2.0.0}"', self.package)
         self.assertIn("Contents/MacOS/Wattson", self.package)
 
+    def test_release_binary_matches_the_declared_macos_minimum(self):
+        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.0.0}"', self.install)
+        self.assertIn('SWIFT_TARGET="arm64-apple-macos12.0"', self.install)
+        self.assertIn('-target "$SWIFT_TARGET"', self.install)
+
+    def test_release_dmg_contains_a_full_install_path(self):
+        self.assertIn('bash "$SCRIPT_DIR/install.sh" --app-only', self.package)
+        self.assertIn('WATTSON_APP_VERSION="$APP_VERSION"', self.package)
+        self.assertIn('Install Wattson.command', self.package)
+        self.assertIn('Quick Start.txt', self.package)
+        self.assertIn('HELPER_LABEL="com.leoarrow.wattson.helper"', self.package)
+        self.assertIn('-target "$SWIFT_TARGET"', self.package)
+
 
 if __name__ == "__main__":
     unittest.main()
