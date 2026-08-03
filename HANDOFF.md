@@ -90,9 +90,9 @@ xcrun swiftc -D DEBUG Core/*.swift MenuBar/*.swift Popover/*.swift main.swift -f
 | 部分 | 内容 |
 |---|---|
 | 数据层 | 有符号功率模型（含混合供电）、IOKit 直读采样、60 槽历史环形缓冲 |
-| 提权 | launchd 按需唤醒的 root 助手，两条硬编码指令，UID 校验 |
+| 提权 | launchd 按需唤醒的 root 助手，固定操作白名单，UID 校验 |
 | 菜单栏 | 系统级一致的电池图标、四色状态、按下切模板、左右键路由、三时钟 |
-| 弹窗 | 数字头 + 守恒行、桑基能量流、环形仪表、双泳道、功率历史、模块开关、分段模式控件 |
+| 弹窗 | 紧凑数字头（守恒异常才告警）、桑基能量流、环形仪表、双泳道、功率历史、模块开关、分段模式控件 |
 | 身份 | 改名 Wattson / 瓦特森，bundle ID、配置路径、安装/卸载脚本 |
 | Logo | `design/icon/AppIcon.icns`，由 `design/icon/make_icon.swift` 生成，改参数重跑即可 |
 
@@ -161,6 +161,7 @@ thick = 4 + t(该管道瓦数) × 14 pt    →  4 .. 18 pt
 | 决策 | 内容 |
 |---|---|
 | 提权方式 | launchd 按需唤醒的 LaunchDaemon。ad-hoc 签名用不了 `SMAppService` |
+| 开机启动 | 由 helper 管理固定的用户 LaunchAgent；agent 只执行一次 `/usr/bin/open`，关闭选项不会退出当前 Wattson |
 | 模式语义 | 全局两态 省电 ↔ 自动，`pmset -a`。AC 上的高能模式会变成自动，已确认接受 |
 | 右键行为 | 直接动作、不弹菜单。**偏离 HIG**，是明确要求。补偿：形变确认 + 弹窗内可见开关 + tooltip |
 | 弹窗而非菜单 | HIG 的例外条款「unless too complex for a menu format」适用 |

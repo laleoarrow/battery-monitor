@@ -37,10 +37,10 @@ class InstallMigrationContractTests(unittest.TestCase):
     def test_links_iokit(self):
         self.assertIn("-framework IOKit", self.install)
 
-    def test_every_app_build_links_service_management(self):
-        self.assertIn("-framework ServiceManagement", self.install)
-        self.assertIn("-framework ServiceManagement", self.run_script)
-        self.assertIn("-framework ServiceManagement", self.verify_interaction)
+    def test_app_builds_do_not_link_the_unusable_service_management_path(self):
+        self.assertNotIn("-framework ServiceManagement", self.install)
+        self.assertNotIn("-framework ServiceManagement", self.run_script)
+        self.assertNotIn("-framework ServiceManagement", self.verify_interaction)
 
     def test_run_script_does_not_reference_the_removed_legacy_source(self):
         self.assertNotIn("BatteryPowerWidget.swift", self.run_script)
@@ -71,11 +71,11 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertIn('APP_VERSION="${1:-2.0.1}"', self.package)
+        self.assertIn('APP_VERSION="${1:-2.0.2}"', self.package)
         self.assertIn("Contents/MacOS/Wattson", self.package)
 
     def test_release_binary_matches_the_declared_macos_minimum(self):
-        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.0.1}"', self.install)
+        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.0.2}"', self.install)
         self.assertIn('SWIFT_TARGET="arm64-apple-macos12.0"', self.install)
         self.assertIn('-target "$SWIFT_TARGET"', self.install)
 

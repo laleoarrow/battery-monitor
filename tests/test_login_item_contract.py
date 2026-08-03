@@ -5,6 +5,9 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 LOGIN_ITEM = ROOT / "Core" / "LoginItemController.swift"
 CONTENT = ROOT / "Popover" / "PopoverContentView.swift"
+POPOVER = ROOT / "Popover" / "PopoverController.swift"
+HELPER = ROOT / "Helper" / "wattson-helper.swift"
+UNINSTALL = ROOT / "scripts" / "uninstall.sh"
 
 
 class LoginItemContractTests(unittest.TestCase):
@@ -12,36 +15,49 @@ class LoginItemContractTests(unittest.TestCase):
     def setUpClass(cls):
         cls.login_item = LOGIN_ITEM.read_text(encoding="utf-8")
         cls.content = CONTENT.read_text(encoding="utf-8")
+        cls.popover = POPOVER.read_text(encoding="utf-8")
+        cls.helper = HELPER.read_text(encoding="utf-8")
+        cls.uninstall = UNINSTALL.read_text(encoding="utf-8")
 
-    def test_uses_the_native_main_app_login_item(self):
-        self.assertIn("import ServiceManagement", self.login_item)
-        self.assertIn("SMAppService.mainApp", self.login_item)
-        self.assertIn("try service.register()", self.login_item)
-        self.assertIn("try service.unregister()", self.login_item)
+    def test_ad_hoc_build_uses_the_existing_helper_not_smappservice(self):
+        self.assertNotIn("ServiceManagement", self.login_item)
+        self.assertNotIn("SMAppService", self.login_item)
+        self.assertIn('"getLaunchAtLoginEnabled"', self.login_item)
+        self.assertIn('"setLaunchAtLoginEnabled"', self.login_item)
 
-    def test_system_status_is_the_single_source_of_truth(self):
-        self.assertIn("service.status", self.login_item)
-        self.assertIn("case .enabled:", self.login_item)
-        self.assertIn("case .requiresApproval:", self.login_item)
-        self.assertIn("case .notFound:", self.login_item)
-        self.assertNotIn("UserDefaults", self.login_item)
+    def test_status_refresh_never_blocks_popover_opening(self):
+        self.assertIn("DispatchQueue", self.login_item)
+        self.assertIn("DispatchQueue.main.async", self.login_item)
+        self.assertIn("LoginItemController.refresh", self.popover)
 
-    def test_macos_12_keeps_the_option_visible_but_disabled(self):
-        self.assertIn("#available(macOS 13.0, *)", self.login_item)
-        self.assertIn("case unsupported", self.login_item)
-        self.assertIn("loginItem.isEnabled", self.content)
-        self.assertIn("需 macOS 13", self.content)
+    def test_initial_query_is_not_misreported_as_disabled(self):
+        self.assertIn("case checking", self.login_item)
+        self.assertIn('? .checking', self.login_item.replace("\n", " "))
+        self.assertIn("正在读取…", self.content)
+        self.assertIn("loginItem.isEnabled = loginState == .notRegistered", self.content)
 
-    def test_pending_approval_guides_the_user_to_system_settings(self):
-        self.assertIn("SMAppService.openSystemSettingsLoginItems()", self.login_item)
-        self.assertIn("待批准", self.content)
-        self.assertIn(".mixed", self.content)
+    def test_preview_bundle_cannot_change_the_installed_login_item(self):
+        self.assertIn('Bundle.main.bundleIdentifier == "com.leoarrow.wattson"', self.login_item)
 
     def test_toggle_is_reachable_from_the_settings_menu(self):
         self.assertIn("开机自动启动", self.content)
         self.assertIn("#selector(toggleLoginItem)", self.content)
-        self.assertIn("try LoginItemController.toggle()", self.content)
-        self.assertIn("无法更新开机自动启动", self.content)
+        self.assertIn("LoginItemController.setEnabled", self.content)
+        self.assertIn("需完整安装", self.content)
+        self.assertNotIn("当前不可用", self.content)
+
+    def test_helper_accepts_only_a_boolean_and_owns_the_fixed_agent(self):
+        self.assertIn('case "getLaunchAtLoginEnabled"', self.helper)
+        self.assertIn('case "setLaunchAtLoginEnabled"', self.helper)
+        self.assertIn('object["enabled"] as? Bool', self.helper)
+        self.assertIn('com.leoarrow.wattson.login', self.helper)
+        self.assertIn('Library/LaunchAgents', self.helper)
+        self.assertNotIn('object["path"]', self.helper)
+
+    def test_uninstall_removes_the_user_login_agent(self):
+        self.assertIn('LOGIN_AGENT_LABEL="com.leoarrow.wattson.login"', self.uninstall)
+        self.assertIn("launchctl bootout", self.uninstall)
+        self.assertIn('rm -f "$LOGIN_AGENT_PLIST"', self.uninstall)
 
 
 if __name__ == "__main__":

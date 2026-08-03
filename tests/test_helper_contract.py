@@ -27,6 +27,11 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn("idleTimeout", self.source)
         self.assertIn("exit(0)", self.source)
 
+    def test_spawned_commands_have_a_deadline(self):
+        self.assertIn("childTimeout", self.source)
+        self.assertIn("WNOHANG", self.source)
+        self.assertIn("SIGKILL", self.source)
+
     def test_verifies_peer_uid_against_console_owner(self):
         self.assertIn("getpeereid", self.source)
         self.assertIn("/dev/console", self.source)
@@ -63,8 +68,44 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn('case "setMode"', self.source)
         self.assertIn('case "getSystemBatteryIconHidden"', self.source)
         self.assertIn('case "setSystemBatteryIconHidden"', self.source)
+        self.assertIn('case "getLaunchAtLoginEnabled"', self.source)
+        self.assertIn('case "setLaunchAtLoginEnabled"', self.source)
         self.assertIn("default:", self.source)
         self.assertIn("os_log", self.source)
+
+    def test_launch_agent_paths_are_derived_from_the_authenticated_user(self):
+        self.assertIn(r'"Library/LaunchAgents/\(loginAgentLabel).plist"', self.source)
+        self.assertIn('"Applications/Wattson.app"', self.source)
+        self.assertIn("getpwuid(uid)", self.source)
+        self.assertNotIn('object["path"]', self.source)
+
+    def test_user_owned_agent_is_written_without_root_privileges(self):
+        # The console user may replace directories with symlinks. Dropping the
+        # effective IDs before touching their home prevents a root overwrite.
+        self.assertIn("setegid(account.gid)", self.source)
+        self.assertIn("seteuid(account.uid)", self.source)
+        self.assertIn("seteuid(0)", self.source)
+        self.assertIn("setegid(0)", self.source)
+        self.assertIn("initgroups", self.source)
+        self.assertIn("restoreSupplementaryGroups", self.source)
+        self.assertIn("defer {", self.source)
+
+    def test_login_agent_is_canonical_and_associated_with_wattson(self):
+        self.assertIn("lstat(account.agentPath", self.source)
+        self.assertIn("S_IFREG", self.source)
+        self.assertIn("info.st_uid == account.uid", self.source)
+        self.assertIn('"AssociatedBundleIdentifiers"', self.source)
+        self.assertIn('"com.leoarrow.wattson"', self.source)
+
+    def test_socket_client_cannot_hold_the_helper_open_forever(self):
+        self.assertIn("SO_RCVTIMEO", self.source)
+        self.assertIn("SO_SNDTIMEO", self.source)
+
+    def test_login_agent_has_no_shell_or_caller_supplied_command(self):
+        self.assertIn('["/usr/bin/open", "-gj", account.appPath]', self.source)
+        self.assertIn('"RunAtLoad": true', self.source)
+        self.assertIn('"/bin/launchctl", "bootstrap"', self.source)
+        self.assertIn('"/bin/launchctl", "bootout"', self.source)
 
     def test_system_battery_visibility_uses_fixed_control_center_values(self):
         # 8 keeps Battery in Control Center but removes it from the menu bar;

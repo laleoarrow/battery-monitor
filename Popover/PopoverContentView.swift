@@ -18,16 +18,14 @@ enum PopoverModule: String, CaseIterable {
     var defaultsKey: String { "popover.module.\(rawValue)" }
 }
 
-/// Hero number, state, and the conservation line. No separator — it is the top
-/// of the surface.
+/// Hero number and state. No separator — it is the top of the surface.
 final class PopoverHeaderView: PopoverSection {
-    static let preferredHeight: CGFloat = 72
+    static let preferredHeight: CGFloat = 52
 
     private let total = NSTextField(labelWithString: "0.0")
     private let unit = NSTextField(labelWithString: "W")
     private let state = NSTextField(labelWithString: "--")
     private let percent = NSTextField(labelWithString: "")
-    private let equation = NSTextField(labelWithString: "")
 
     init() {
         super.init(height: Self.preferredHeight, showsSeparator: false)
@@ -48,23 +46,16 @@ final class PopoverHeaderView: PopoverSection {
         percent.font = PopoverStyle.mono(13)
         percent.alignment = .right
         addSubview(percent)
-
-        equation.font = PopoverStyle.mono(11, .regular)
-        equation.textColor = PopoverStyle.tertiaryText
-        addSubview(equation)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     override func layout() {
         super.layout()
-        // Main value and state share the first row; the conservation check is
-        // a compact second row instead of floating at the bottom of a tall box.
         total.frame = NSRect(x: 0, y: 5, width: 150, height: 40)
         unit.frame = NSRect(x: totalWidth() + 5, y: 23, width: 30, height: 20)
         percent.frame = NSRect(x: bounds.width - 160, y: 7, width: 160, height: 20)
         state.frame = NSRect(x: bounds.width - 220, y: 29, width: 220, height: 16)
-        equation.frame = NSRect(x: 0, y: 51, width: bounds.width, height: 15)
     }
 
     private func totalWidth() -> CGFloat {
@@ -73,37 +64,26 @@ final class PopoverHeaderView: PopoverSection {
 
     func update(snapshot: PowerSnapshot, degraded: Bool) {
         total.stringValue = String(format: "%.1f", snapshot.totalInputW)
-        state.stringValue = degraded ? "读取失败 · 上次数据" : PopoverStyle.stateTitle(snapshot.state)
-        state.textColor = degraded ? PopoverStyle.red : PopoverStyle.secondaryText
+        if degraded {
+            state.stringValue = "读取失败 · 上次数据"
+            state.textColor = PopoverStyle.red
+        } else if abs(snapshot.conservationError) > 2 {
+            state.stringValue = String(format: "数据异常 · 偏差 %+.1f W", snapshot.conservationError)
+            state.textColor = PopoverStyle.red
+        } else {
+            state.stringValue = PopoverStyle.stateTitle(snapshot.state)
+            state.textColor = PopoverStyle.secondaryText
+        }
         percent.stringValue = "\(snapshot.percent)%"
         percent.textColor = snapshot.percent <= 20 ? PopoverStyle.red : PopoverStyle.stateColor(snapshot.state)
-        equation.stringValue = conservationText(snapshot)
-        equation.textColor = abs(snapshot.conservationError) > 2 ? PopoverStyle.red : PopoverStyle.tertiaryText
         needsLayout = true
-    }
-
-    /// Not decoration: if this equation stops balancing, a field was parsed
-    /// wrong and every number above it is suspect.
-    private func conservationText(_ snapshot: PowerSnapshot) -> String {
-        let adapter = String(format: "%.1f", snapshot.adapterW)
-        let battery = String(format: "%.1f", abs(snapshot.batteryW))
-        let system = String(format: "%.1f", snapshot.systemW)
-        let base: String
-        switch snapshot.state {
-        case .charging:    base = "\(adapter) 入  =  \(system) 系统  +  \(battery) 充入"
-        case .pluggedIdle: base = "\(adapter) 入  =  \(system) 系统  ·  电池不进不出"
-        case .onBattery:   base = "\(battery) 电池  =  \(system) 系统"
-        case .mixedSupply: base = "\(adapter) 适配器  +  \(battery) 电池  =  \(system) 系统"
-        }
-        guard abs(snapshot.conservationError) > 2 else { return base }
-        return base + String(format: "   偏差 %+.1f W", snapshot.conservationError)
     }
 
 #if DEBUG
     func layoutFitsForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> Bool {
         update(snapshot: snapshot, degraded: degraded)
         layoutSubtreeIfNeeded()
-        let fields = [total, unit, state, percent, equation]
+        let fields = [total, unit, state, percent]
         return fields.allSatisfy { field in
             let required = field.stringValue.size(withAttributes: [.font: field.font as Any]).width
             return field.frame.minX >= 0
@@ -112,6 +92,12 @@ final class PopoverHeaderView: PopoverSection {
                 && field.frame.maxY <= bounds.height
                 && required <= field.frame.width
         }
+    }
+
+    func statePresentationForTest(snapshot: PowerSnapshot, degraded: Bool = false) ->
+        (text: String, color: NSColor?) {
+        update(snapshot: snapshot, degraded: degraded)
+        return (state.stringValue, state.textColor)
     }
 #endif
 }
@@ -370,8 +356,8 @@ final class PopoverContentViewController: NSViewController {
         let loginTitle: String
         let loginMenuState: NSControl.StateValue
         switch loginState {
-        case .unsupported:
-            loginTitle = "开机自动启动（需 macOS 13）"
+        case .checking:
+            loginTitle = "开机自动启动（正在读取…）"
             loginMenuState = .off
         case .notRegistered:
             loginTitle = "开机自动启动"
@@ -379,18 +365,18 @@ final class PopoverContentViewController: NSViewController {
         case .enabled:
             loginTitle = "开机自动启动"
             loginMenuState = .on
-        case .requiresApproval:
-            loginTitle = "开机自动启动（待批准）"
-            loginMenuState = .mixed
-        case .notFound:
-            loginTitle = "开机自动启动（当前不可用）"
+        case .unavailable:
+            loginTitle = "开机自动启动（需完整安装）"
+            loginMenuState = .off
+        case .readFailed:
+            loginTitle = "开机自动启动（状态读取失败）"
             loginMenuState = .off
         }
         let loginItem = NSMenuItem(title: loginTitle,
                                    action: #selector(toggleLoginItem), keyEquivalent: "")
         loginItem.target = self
         loginItem.state = loginMenuState
-        loginItem.isEnabled = loginState != .unsupported && loginState != .notFound
+        loginItem.isEnabled = loginState == .notRegistered || loginState == .enabled
         menu.addItem(loginItem)
 
         menu.addItem(.separator())
@@ -412,9 +398,9 @@ final class PopoverContentViewController: NSViewController {
     }
 
     @objc private func toggleLoginItem() {
-        do {
-            try LoginItemController.toggle()
-        } catch {
+        let enable = LoginItemController.state != .enabled
+        LoginItemController.setEnabled(enable) { result in
+            guard case let .failure(error) = result else { return }
             let alert = NSAlert()
             alert.alertStyle = .warning
             alert.messageText = "无法更新开机自动启动"

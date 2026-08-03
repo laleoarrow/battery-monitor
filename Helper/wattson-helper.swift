@@ -4,8 +4,11 @@ import os
 
 private let log = OSLog(subsystem: "com.leoarrow.wattson.helper", category: "ipc")
 private let idleTimeout: TimeInterval = 5
+private let childTimeout: TimeInterval = 1.5
 private let controlCenterDomain = "com.apple.controlcenter" as CFString
 private let controlCenterBatteryKey = "Battery" as CFString
+private let loginAgentLabel = "com.leoarrow.wattson.login"
+private let wattsonBundleIdentifier = "com.leoarrow.wattson"
 
 /// The console owner is the only UID allowed to talk to us.
 private func consoleUID() -> uid_t? {
@@ -26,8 +29,18 @@ private func run(_ args: [String]) -> Bool {
 
     guard posix_spawn(&pid, args[0], nil, nil, &argv, environ) == 0 else { return false }
     var status: Int32 = 0
-    waitpid(pid, &status, 0)
-    return status == 0
+    let deadline = Date().addingTimeInterval(childTimeout)
+    while true {
+        let result = waitpid(pid, &status, WNOHANG)
+        if result == pid { return status == 0 }
+        if result < 0, errno != EINTR { return false }
+        if Date() >= deadline {
+            _ = kill(pid, SIGKILL)
+            _ = waitpid(pid, &status, 0)
+            return false
+        }
+        usleep(10_000)
+    }
 }
 
 private func runPmset(_ mode: Mode) -> Bool {
@@ -112,6 +125,199 @@ private func userName(for uid: uid_t) -> CFString? {
     return String(cString: name) as CFString
 }
 
+private struct UserAccount {
+    let uid: uid_t
+    let gid: gid_t
+    let name: String
+    let home: String
+
+    var appPath: String {
+        URL(fileURLWithPath: home, isDirectory: true)
+            .appendingPathComponent("Applications/Wattson.app")
+            .path
+    }
+
+    var agentDirectory: String {
+        URL(fileURLWithPath: home, isDirectory: true)
+            .appendingPathComponent("Library/LaunchAgents")
+            .path
+    }
+
+    var agentPath: String {
+        URL(fileURLWithPath: home, isDirectory: true)
+            .appendingPathComponent("Library/LaunchAgents/\(loginAgentLabel).plist")
+            .path
+    }
+}
+
+/// Account data comes from the authenticated peer UID, never from JSON.
+private func userAccount(for uid: uid_t) -> UserAccount? {
+    guard uid != 0,
+          let record = getpwuid(uid),
+          let rawName = record.pointee.pw_name,
+          let rawHome = record.pointee.pw_dir else { return nil }
+    let name = String(cString: rawName)
+    let home = String(cString: rawHome)
+    guard !name.isEmpty, home.hasPrefix("/") else { return nil }
+    return UserAccount(uid: uid, gid: record.pointee.pw_gid, name: name, home: home)
+}
+
+private func currentSupplementaryGroups() -> [gid_t]? {
+    let count = getgroups(0, nil)
+    guard count >= 0 else { return nil }
+    guard count > 0 else { return [] }
+    var groups = [gid_t](repeating: 0, count: Int(count))
+    let readCount = groups.withUnsafeMutableBufferPointer {
+        getgroups(count, $0.baseAddress)
+    }
+    return readCount == count ? groups : nil
+}
+
+private func restoreSupplementaryGroups(_ groups: [gid_t]) -> Bool {
+    if groups.isEmpty { return setgroups(0, nil) == 0 }
+    return groups.withUnsafeBufferPointer {
+        setgroups(Int32($0.count), $0.baseAddress)
+    } == 0
+}
+
+/// User-controlled home-directory paths are never touched with root file
+/// privileges. The helper is single-threaded, so changing effective IDs cannot
+/// leak into another request. `defer` also covers every early failure path.
+private func withUserPrivileges(_ account: UserAccount, body: () -> Bool) -> Bool {
+    let originalUID = geteuid()
+    let originalGID = getegid()
+    guard originalUID == 0, originalGID == 0,
+          let originalGroups = currentSupplementaryGroups() else { return false }
+
+    defer {
+        guard seteuid(0) == 0,
+              restoreSupplementaryGroups(originalGroups),
+              setegid(0) == 0 else {
+            os_log("could not restore helper privileges", log: log, type: .fault)
+            exit(1)
+        }
+    }
+
+    let groupsReady = account.name.withCString {
+        initgroups($0, Int32(bitPattern: account.gid)) == 0
+    }
+    guard groupsReady,
+          setegid(account.gid) == 0,
+          seteuid(account.uid) == 0 else { return false }
+    return body()
+}
+
+private func loginAgentPlist(for account: UserAccount) -> [String: Any] {
+    [
+        "Label": loginAgentLabel,
+        "ProgramArguments": ["/usr/bin/open", "-gj", account.appPath],
+        "RunAtLoad": true,
+        "LimitLoadToSessionType": "Aqua",
+        "ProcessType": "Interactive",
+        "AssociatedBundleIdentifiers": [wattsonBundleIdentifier],
+    ]
+}
+
+private func loginAgentIsCanonical(for account: UserAccount) -> Bool {
+    withUserPrivileges(account) {
+        var info = stat()
+        guard lstat(account.agentPath, &info) == 0,
+              (info.st_mode & S_IFMT) == S_IFREG,
+              info.st_uid == account.uid,
+              info.st_gid == account.gid,
+              (info.st_mode & 0o777) == 0o644,
+              info.st_size > 0,
+              info.st_size <= 65_536,
+              let data = try? Data(contentsOf: URL(fileURLWithPath: account.agentPath)),
+              let plist = try? PropertyListSerialization.propertyList(from: data, format: nil)
+                  as? [String: Any] else { return false }
+
+        let expected = loginAgentPlist(for: account)
+        guard plist.count == expected.count else { return false }
+        return plist["Label"] as? String == loginAgentLabel
+            && plist["ProgramArguments"] as? [String] == ["/usr/bin/open", "-gj", account.appPath]
+            && plist["RunAtLoad"] as? Bool == true
+            && plist["LimitLoadToSessionType"] as? String == "Aqua"
+            && plist["ProcessType"] as? String == "Interactive"
+            && plist["AssociatedBundleIdentifiers"] as? [String] == [wattsonBundleIdentifier]
+    }
+}
+
+private func writeLoginAgent(for account: UserAccount) -> Bool {
+    var isDirectory: ObjCBool = false
+    guard FileManager.default.fileExists(atPath: account.appPath, isDirectory: &isDirectory),
+          isDirectory.boolValue,
+          let data = try? PropertyListSerialization.data(
+              fromPropertyList: loginAgentPlist(for: account),
+              format: .xml,
+              options: 0
+          ) else { return false }
+
+    let wrote = withUserPrivileges(account) {
+        do {
+            try FileManager.default.createDirectory(
+                atPath: account.agentDirectory,
+                withIntermediateDirectories: true,
+                attributes: [.posixPermissions: 0o755]
+            )
+            try data.write(to: URL(fileURLWithPath: account.agentPath), options: .atomic)
+            return chmod(account.agentPath, 0o644) == 0
+        } catch {
+            return false
+        }
+    }
+    return wrote && loginAgentIsCanonical(for: account)
+}
+
+private func removeLoginAgent(for account: UserAccount) -> Bool {
+    withUserPrivileges(account) {
+        var info = stat()
+        guard lstat(account.agentPath, &info) == 0 else { return errno == ENOENT }
+        guard (info.st_mode & S_IFMT) != S_IFDIR else { return false }
+        return unlink(account.agentPath) == 0
+    }
+}
+
+private func loginAgentTarget(for account: UserAccount) -> String {
+    "gui/\(account.uid)/\(loginAgentLabel)"
+}
+
+private func loginAgentIsLoaded(for account: UserAccount) -> Bool {
+    run(["/bin/launchctl", "print", loginAgentTarget(for: account)])
+}
+
+private func launchAtLoginEnabled(for uid: uid_t) -> Bool? {
+    guard uid == consoleUID(), let account = userAccount(for: uid) else { return nil }
+    return loginAgentIsCanonical(for: account) && loginAgentIsLoaded(for: account)
+}
+
+private func setLaunchAtLoginEnabled(_ enabled: Bool, for uid: uid_t) -> Bool? {
+    // Recheck the console owner immediately before mutation in case fast-user
+    // switching happened after the socket was authenticated.
+    guard uid == consoleUID(), let account = userAccount(for: uid) else { return nil }
+    let target = loginAgentTarget(for: account)
+
+    if enabled {
+        if loginAgentIsCanonical(for: account) && loginAgentIsLoaded(for: account) { return true }
+        _ = run(["/bin/launchctl", "bootout", target])
+        guard writeLoginAgent(for: account),
+              run(["/bin/launchctl", "enable", target]),
+              run(["/bin/launchctl", "bootstrap", "gui/\(account.uid)", account.agentPath]),
+              loginAgentIsLoaded(for: account) else {
+            _ = run(["/bin/launchctl", "bootout", target])
+            _ = removeLoginAgent(for: account)
+            return nil
+        }
+        return true
+    }
+
+    // Remove the persistent file first. Even if launchctl reports a transient
+    // failure, the app cannot return at the next login.
+    guard removeLoginAgent(for: account) else { return nil }
+    _ = run(["/bin/launchctl", "bootout", target])
+    return loginAgentIsLoaded(for: account) ? nil : false
+}
+
 /// Control Center stores Battery as 18 when it is in both Control Center and
 /// the menu bar, and 8 when it remains in Control Center only. Unknown values
 /// are not guessed at, so a future macOS layout cannot be overwritten from a
@@ -157,6 +363,15 @@ private func setSystemBatteryIconHidden(_ hidden: Bool, for uid: uid_t) -> Bool 
 
 private func handle(_ fd: Int32) {
     defer { close(fd) }
+
+    // A same-user process can connect to the public socket. Never let a client
+    // that stops mid-request pin this single-threaded on-demand helper.
+    var socketTimeout = timeval(tv_sec: 2, tv_usec: 0)
+    let socketTimeoutSize = socklen_t(MemoryLayout<timeval>.size)
+    guard setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &socketTimeout, socketTimeoutSize) == 0,
+          setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &socketTimeout, socketTimeoutSize) == 0 else {
+        return
+    }
 
     var peerUID: uid_t = 0
     var peerGID: gid_t = 0
@@ -211,6 +426,22 @@ private func handle(_ fd: Int32) {
             }
         } else {
             os_log("rejected battery visibility with a non-boolean value", log: log, type: .error)
+        }
+    case "getLaunchAtLoginEnabled":
+        if let enabled = launchAtLoginEnabled(for: peerUID) {
+            reply = enabled ? #"{"ok":true,"enabled":true}"#
+                            : #"{"ok":true,"enabled":false}"#
+        } else {
+            reply = #"{"ok":false,"error":"login item readback failed"}"#
+        }
+    case "setLaunchAtLoginEnabled":
+        if let enabled = object["enabled"] as? Bool,
+           let landed = setLaunchAtLoginEnabled(enabled, for: peerUID) {
+            reply = landed ? #"{"ok":true,"enabled":true}"#
+                           : #"{"ok":true,"enabled":false}"#
+        } else {
+            os_log("login item update failed or received a non-boolean value", log: log, type: .error)
+            reply = #"{"ok":false,"error":"login item update failed"}"#
         }
     default:
         os_log("rejected unknown op", log: log, type: .error)

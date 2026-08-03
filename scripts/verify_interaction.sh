@@ -44,7 +44,6 @@ xcrun swiftc \
     -framework AppKit \
     -framework CoreGraphics \
     -framework IOKit \
-    -framework ServiceManagement \
     -o "$APP_DIR/Contents/MacOS/InteractionTests"
 
 # Sandboxed like the shipping app, so the helper query on open behaves the same.

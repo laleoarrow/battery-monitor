@@ -70,6 +70,7 @@ final class StatusItemController: NSObject {
         }
         startEventDrivenUpdates()
         startHistoryClock()
+        LoginItemController.refresh()
         refreshPresentation()
     }
 

@@ -43,19 +43,26 @@ class PopoverModulesContractTests(unittest.TestCase):
             self.assertNotIn('"环形仪表"', view)
             self.assertNotIn('"功率泳道"', view)
 
-    def test_numbers_use_monospaced_digits_and_conservation_is_visible(self):
+    def test_numbers_use_monospaced_digits(self):
         # Tabular digits keep the readout from twitching at 1 Hz.
         self.assertIn("monospacedDigitSystemFont", self.style)
-        self.assertIn("conservationError", self.content)
-        self.assertIn("abs(snapshot.conservationError) > 2", self.content)
 
-    def test_header_uses_a_compact_two_row_layout(self):
+    def test_header_uses_a_compact_single_row_layout(self):
         header = self.content.split("final class PopoverHeaderView", 1)[1].split(
             "final class PopoverFooterView", 1
         )[0]
         height = float(re.search(r"preferredHeight: CGFloat = (\d+)", header).group(1))
-        self.assertLessEqual(height, 76)
-        self.assertIn("equation.frame = NSRect(x: 0, y: 51", header)
+        self.assertEqual(height, 52)
+        self.assertNotIn("private let equation", header)
+        self.assertNotIn("equation.frame", header)
+
+    def test_header_only_surfaces_conservation_breaks_in_the_state(self):
+        header = self.content.split("final class PopoverHeaderView", 1)[1].split(
+            "final class PopoverFooterView", 1
+        )[0]
+        self.assertIn("abs(snapshot.conservationError) > 2", header)
+        self.assertIn('String(format: "数据异常 · 偏差 %+.1f W"', header)
+        self.assertIn('state.stringValue = "读取失败 · 上次数据"', header)
 
     def test_ring_centre_shows_charge_not_watts(self):
         # The header already owns the wattage.
