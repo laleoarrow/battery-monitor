@@ -17,7 +17,7 @@ done
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$SCRIPT_DIR/.."
 APP_NAME="Wattson"
-APP_VERSION="${WATTSON_APP_VERSION:-2.0.2}"
+APP_VERSION="${WATTSON_APP_VERSION:-2.0.3}"
 SWIFT_TARGET="arm64-apple-macos12.0"
 APP_DIR="$HOME/Applications/Wattson.app"
 APP_BUNDLE_ID="com.leoarrow.wattson"
@@ -155,7 +155,7 @@ if [ "$APP_ONLY" = "1" ]; then
         echo "     Run ./scripts/install.sh without --app-only to install it."
     fi
     echo ""
-    echo "🎉 Done. Launch with: open -a ${APP_NAME}"
+    echo "🎉 Done. Launch with: open \"$APP_DIR\""
     exit 0
 fi
 echo "  🔑 Installing the privileged helper (needs sudo once)"
@@ -177,4 +177,4 @@ sudo launchctl bootstrap system "$HELPER_PLIST"
 echo "  ✅ Helper installed (not running until you right-click)"
 
 echo ""
-echo "🎉 Done. Launch with: open -a ${APP_NAME}"
+echo "🎉 Done. Launch with: open \"$APP_DIR\""

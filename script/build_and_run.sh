@@ -2,16 +2,18 @@
 set -euo pipefail
 
 MODE="${1:-run}"
-APP_NAME="Wattson"
+APP_NAME="WattsonPreview"
 BUNDLE_ID="com.leoarrow.wattson.preview"
 LOG_SUBSYSTEM="com.leoarrow.wattson"
 DISPLAY_NAME="Wattson Preview"
 MIN_SYSTEM_VERSION="12.0"
+SWIFT_TARGET="arm64-apple-macos12.0"
 LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DIST_DIR="$ROOT_DIR/dist"
-APP_BUNDLE="$DIST_DIR/$APP_NAME.app"
+BUILD_DIR="${TMPDIR:-/tmp}/wattson-preview"
+APP_BUNDLE="$BUILD_DIR/$DISPLAY_NAME.app"
+LEGACY_APP_BUNDLE="$ROOT_DIR/dist/Wattson.app"
 APP_CONTENTS="$APP_BUNDLE/Contents"
 APP_MACOS="$APP_CONTENTS/MacOS"
 APP_RESOURCES="$APP_CONTENTS/Resources"
@@ -19,6 +21,13 @@ APP_BINARY="$APP_MACOS/$APP_NAME"
 INFO_PLIST="$APP_CONTENTS/Info.plist"
 
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
+
+# Older preview builds used the shipping app's filename inside dist, so app
+# search tools displayed an extra Wattson even though its bundle ID differed.
+if [ -d "$LEGACY_APP_BUNDLE" ]; then
+    "$LSREGISTER" -u "$LEGACY_APP_BUNDLE" >/dev/null 2>&1 || true
+    rm -rf "$LEGACY_APP_BUNDLE"
+fi
 
 if [ -d "$APP_BUNDLE" ] && [ -x "$LSREGISTER" ]; then
     "$LSREGISTER" -u "$APP_BUNDLE" >/dev/null 2>&1 || true
@@ -32,6 +41,7 @@ xcrun swiftc \
     "$ROOT_DIR"/MenuBar/*.swift \
     "$ROOT_DIR"/Popover/*.swift \
     "$ROOT_DIR/main.swift" \
+    -target "$SWIFT_TARGET" \
     -framework AppKit \
     -framework CoreGraphics \
     -framework IOKit \

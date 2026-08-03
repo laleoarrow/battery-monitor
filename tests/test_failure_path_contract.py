@@ -31,7 +31,7 @@ class FailurePathContractTests(unittest.TestCase):
         self.assertIn("HelperClient.isInstalled", self.status)
 
     def test_readme_documents_recovery_when_the_menu_bar_hides_the_item(self):
-        self.assertIn("open -a Wattson", self.readme)
+        self.assertIn('open "$HOME/Applications/Wattson.app"', self.readme)
 
 
 if __name__ == "__main__":

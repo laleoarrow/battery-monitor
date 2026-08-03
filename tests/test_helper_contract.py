@@ -35,6 +35,14 @@ class HelperContractTests(unittest.TestCase):
     def test_verifies_peer_uid_against_console_owner(self):
         self.assertIn("getpeereid", self.source)
         self.assertIn("/dev/console", self.source)
+        self.assertIn("peerUID == consoleUID()", self.source)
+
+    def test_installer_health_probe_drops_to_the_console_user(self):
+        self.assertIn('"--health-probe"', self.source)
+        self.assertIn("dropHealthProbePrivilegesToConsoleUser", self.source)
+        self.assertIn("setgid(gid)", self.source)
+        self.assertIn("setuid(uid)", self.source)
+        self.assertIn('response["modeVerified"] as? Bool == true', self.source)
 
     def test_pmset_arguments_are_constants(self):
         # The whole security argument rests on this: the request selects which

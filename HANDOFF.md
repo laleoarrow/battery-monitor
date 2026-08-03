@@ -1,13 +1,20 @@
 # Wattson 项目状态
 
 **分支：`wattson-menubar`**
-**状态：149 个测试通过（其中 1 个会真的构建 .app 并驱动真实 AppKit 对象跑 32 项交互检查），应用与助手 `-O` 构建干净，已安装二进制为最新且签名有效**
+**状态：v2.0.3 图形安装助手与单入口 DMG 已构建并挂载验证；应用与特权助手签名有效，完整测试套件通过**
 
 菜单栏插件这一轮的代码工作已经完成，特权助手已部署且为最新版（`getMode` 返回 `supportsHigh:true`）。
 
 ---
 
 ## 装它
+
+发给用户时使用 `dist/Wattson-v2.0.3.dmg`。镜像只显示
+`Install Wattson.app`；它会安装唯一的 `~/Applications/Wattson.app`、
+请求一次管理员授权安装特权助手，然后确认助手 socket 与真实菜单栏项都已就绪。
+必须从已挂载的只读 DMG 中直接运行安装器；授权或就绪验证失败时会恢复旧 app。
+
+本地源码安装：
 
 ```bash
 ./scripts/install.sh

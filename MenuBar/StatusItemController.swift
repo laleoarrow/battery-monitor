@@ -37,12 +37,12 @@ final class StatusItemController: NSObject {
     private var systemBatteryIconHidden: Bool?
     private var systemBatteryIconRefreshGeneration = 0
 
-    func start() {
-        guard let button = statusItem.button else { return }
+    func start() -> Bool {
+        guard let button = statusItem.button else { return false }
         guard let initial = BatterySampler.sample() else {
             os_log("no AppleSmartBattery — this Mac has no battery", log: log, type: .fault)
             noBattery()
-            return
+            return false
         }
 
         snapshot = initial
@@ -72,6 +72,7 @@ final class StatusItemController: NSObject {
         startHistoryClock()
         LoginItemController.refresh()
         refreshPresentation()
+        return true
     }
 
     // MARK: - Clicks

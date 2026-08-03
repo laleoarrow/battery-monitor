@@ -9,6 +9,7 @@ private let controlCenterDomain = "com.apple.controlcenter" as CFString
 private let controlCenterBatteryKey = "Battery" as CFString
 private let loginAgentLabel = "com.leoarrow.wattson.login"
 private let wattsonBundleIdentifier = "com.leoarrow.wattson"
+private let helperSocketPath = "/var/run/wattson-helper.sock"
 
 /// The console owner is the only UID allowed to talk to us.
 private func consoleUID() -> uid_t? {
@@ -118,6 +119,72 @@ private func supportsHighPower(current: Mode) -> Bool {
 private func modeReply(_ mode: Mode) -> String {
     let supportsHigh = supportsHighPower(current: mode)
     return #"{"ok":true,"mode":"\#(mode.rawValue)","supportsHigh":\#(supportsHigh),"modeVerified":true}"#
+}
+
+/// The installer runs this client mode as root while its rollback backup still
+/// exists. It proves the newly bootstrapped service can accept a connection and
+/// return live, verified state rather than merely appearing in launchctl.
+private func helperHealthProbeOnce() -> Bool {
+    let fd = socket(AF_UNIX, SOCK_STREAM, 0)
+    guard fd >= 0 else { return false }
+    defer { close(fd) }
+
+    var timeout = timeval(tv_sec: 2, tv_usec: 0)
+    let timeoutSize = socklen_t(MemoryLayout<timeval>.size)
+    guard setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, timeoutSize) == 0,
+          setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &timeout, timeoutSize) == 0 else {
+        return false
+    }
+
+    var address = sockaddr_un()
+    address.sun_family = sa_family_t(AF_UNIX)
+    let pathBytes = Array(helperSocketPath.utf8)
+    guard pathBytes.count < MemoryLayout.size(ofValue: address.sun_path) else { return false }
+    withUnsafeMutableBytes(of: &address.sun_path) { raw in
+        raw.copyBytes(from: pathBytes)
+    }
+
+    let addressSize = socklen_t(MemoryLayout<sockaddr_un>.size)
+    let connected = withUnsafePointer(to: &address) { pointer in
+        pointer.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+            connect(fd, $0, addressSize)
+        }
+    }
+    guard connected == 0 else { return false }
+
+    let request = Data(#"{"op":"getMode"}"#.utf8)
+    let wrote = request.withUnsafeBytes { write(fd, $0.baseAddress, request.count) }
+    guard wrote == request.count else { return false }
+
+    var buffer = [UInt8](repeating: 0, count: 512)
+    let count = read(fd, &buffer, buffer.count)
+    guard count > 0,
+          let response = try? JSONSerialization.jsonObject(
+              with: Data(buffer[0..<count])
+          ) as? [String: Any] else { return false }
+    return response["ok"] as? Bool == true
+        && response["modeVerified"] as? Bool == true
+}
+
+private func newlyInstalledHelperIsHealthy() -> Bool {
+    let deadline = Date().addingTimeInterval(8)
+    repeat {
+        if helperHealthProbeOnce() { return true }
+        usleep(100_000)
+    } while Date() < deadline
+    return false
+}
+
+private func dropHealthProbePrivilegesToConsoleUser() -> Bool {
+    guard geteuid() == 0,
+          let uid = consoleUID(), uid != 0,
+          let account = getpwuid(uid),
+          let name = account.pointee.pw_name else { return false }
+    let userName = String(cString: name)
+    let gid = account.pointee.pw_gid
+    return userName.withCString { initgroups($0, Int32(bitPattern: gid)) == 0 }
+        && setgid(gid) == 0
+        && setuid(uid) == 0
 }
 
 private func userName(for uid: uid_t) -> CFString? {
@@ -448,6 +515,12 @@ private func handle(_ fd: Int32) {
     }
 
     _ = reply.withCString { write(fd, $0, strlen($0)) }
+}
+
+if CommandLine.arguments.count == 2,
+   CommandLine.arguments[1] == "--health-probe" {
+    if !dropHealthProbePrivilegesToConsoleUser() { exit(1) }
+    exit(newlyInstalledHelperIsHealthy() ? 0 : 1)
 }
 
 // Socket activation: launchd already opened and bound the listener.

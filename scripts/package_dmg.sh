@@ -1,14 +1,17 @@
 #!/bin/bash
-# package_dmg.sh - Build a self-contained installer DMG for Wattson
+# package_dmg.sh - Build a single-action graphical installer DMG for Wattson
 set -euo pipefail
+umask 022
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_NAME="Wattson"
-APP_VERSION="${1:-2.0.2}"
+APP_VERSION="${1:-2.0.3}"
 SWIFT_TARGET="arm64-apple-macos12.0"
 APP_DIR="$HOME/Applications/${APP_NAME}.app"
 HELPER_LABEL="com.leoarrow.wattson.helper"
+INSTALLER_NAME="Install Wattson.app"
+INSTALLER_EXECUTABLE="Install Wattson"
 DIST_DIR="$ROOT_DIR/dist"
 DMG_PATH="$DIST_DIR/${APP_NAME}-v${APP_VERSION}.dmg"
 
@@ -18,10 +21,16 @@ if [[ ! "$APP_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z]+)?$ ]]; then
 fi
 
 STAGING_DIR="$(mktemp -d "${TMPDIR:-/tmp}/wattson-dmg.XXXXXX")"
-SUPPORT_DIR="$STAGING_DIR/.wattson-support"
+INSTALLER_BUILD_DIR="$(mktemp -d "${TMPDIR:-/tmp}/wattson-installer-build.XXXXXX")"
+chmod 755 "$STAGING_DIR"
+INSTALLER_DIR="$STAGING_DIR/$INSTALLER_NAME"
+INSTALLER_CONTENTS="$INSTALLER_DIR/Contents"
+INSTALLER_MACOS="$INSTALLER_CONTENTS/MacOS"
+INSTALLER_RESOURCES="$INSTALLER_CONTENTS/Resources"
+PAYLOAD_DIR="$INSTALLER_RESOURCES/Payload"
 
 cleanup() {
-    rm -rf "$STAGING_DIR"
+    rm -rf "$STAGING_DIR" "$INSTALLER_BUILD_DIR"
 }
 trap cleanup EXIT
 
@@ -29,113 +38,88 @@ echo "📦 Building ${APP_NAME} v${APP_VERSION}..."
 pkill -f "${APP_DIR}/Contents/MacOS/Wattson" >/dev/null 2>&1 || true
 WATTSON_APP_VERSION="$APP_VERSION" bash "$SCRIPT_DIR/install.sh" --app-only
 
-mkdir -p "$DIST_DIR"
+mkdir -p "$DIST_DIR" "$INSTALLER_MACOS" "$PAYLOAD_DIR"
 rm -f "$DMG_PATH"
 
-ditto "$APP_DIR" "$STAGING_DIR/${APP_NAME}.app"
-ln -s /Applications "$STAGING_DIR/Applications"
+# Keep the shipping app inside an archive so Spotlight and LaunchServices do
+# not register a second Wattson while the read-only image is mounted.
+ditto -c -k --sequesterRsrc --keepParent \
+    "$APP_DIR" \
+    "$PAYLOAD_DIR/Wattson.zip"
 
-# Ship the privileged helper alongside the app so recipients can enable every
-# control without needing this source repository or Xcode.
-mkdir -p "$SUPPORT_DIR"
+# The graphical installer deploys the existing fixed-command helper after the
+# user approves the standard macOS administrator prompt.
 xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift" \
     -target "$SWIFT_TARGET" \
     -O \
-    -o "$SUPPORT_DIR/$HELPER_LABEL"
-codesign --force --sign - "$SUPPORT_DIR/$HELPER_LABEL" >/dev/null
-cp "$ROOT_DIR/Helper/${HELPER_LABEL}.plist" "$SUPPORT_DIR/${HELPER_LABEL}.plist"
+    -o "$PAYLOAD_DIR/$HELPER_LABEL"
+codesign --force --sign - "$PAYLOAD_DIR/$HELPER_LABEL" >/dev/null
+cp "$ROOT_DIR/Helper/${HELPER_LABEL}.plist" "$PAYLOAD_DIR/${HELPER_LABEL}.plist"
+cp "$ROOT_DIR/Installer/install-helper.sh" "$INSTALLER_RESOURCES/install-helper.sh"
+chmod 755 "$INSTALLER_RESOURCES/install-helper.sh"
 
-cat > "$STAGING_DIR/Install Wattson.command" << 'INSTALLER'
-#!/bin/bash
-set -euo pipefail
+WATTSON_ARCHIVE_SHA256="$(shasum -a 256 "$PAYLOAD_DIR/Wattson.zip" | awk '{print $1}')"
+INSTALL_HELPER_SHA256="$(shasum -a 256 "$INSTALLER_RESOURCES/install-helper.sh" | awk '{print $1}')"
+HELPER_BINARY_SHA256="$(shasum -a 256 "$PAYLOAD_DIR/$HELPER_LABEL" | awk '{print $1}')"
+HELPER_PLIST_SHA256="$(shasum -a 256 "$PAYLOAD_DIR/${HELPER_LABEL}.plist" | awk '{print $1}')"
 
-SOURCE_DIR="$(cd "$(dirname "$0")" && pwd)"
-APP_SOURCE="$SOURCE_DIR/Wattson.app"
-SUPPORT_SOURCE="$SOURCE_DIR/.wattson-support"
-APP_DEST="$HOME/Applications/Wattson.app"
-HELPER_LABEL="com.leoarrow.wattson.helper"
-HELPER_DEST="/Library/PrivilegedHelperTools/$HELPER_LABEL"
-PLIST_DEST="/Library/LaunchDaemons/${HELPER_LABEL}.plist"
-LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
-
-verify_payload() {
-    test -d "$APP_SOURCE"
-    test -f "$SUPPORT_SOURCE/$HELPER_LABEL"
-    test -f "$SUPPORT_SOURCE/${HELPER_LABEL}.plist"
-    codesign --verify --deep --strict "$APP_SOURCE"
-    codesign --verify --strict "$SUPPORT_SOURCE/$HELPER_LABEL"
-    plutil -lint "$SUPPORT_SOURCE/${HELPER_LABEL}.plist" >/dev/null
-}
-
-verify_payload
-if [ "${1:-}" = "--verify" ]; then
-    echo "Wattson installer payload verified."
-    exit 0
+sed \
+    -e "s/__WATTSON_ARCHIVE_SHA256__/$WATTSON_ARCHIVE_SHA256/g" \
+    -e "s/__INSTALL_HELPER_SHA256__/$INSTALL_HELPER_SHA256/g" \
+    -e "s/__HELPER_BINARY_SHA256__/$HELPER_BINARY_SHA256/g" \
+    -e "s/__HELPER_PLIST_SHA256__/$HELPER_PLIST_SHA256/g" \
+    "$ROOT_DIR/Installer/main.swift" > "$INSTALLER_BUILD_DIR/main.swift"
+if grep -Eq '__[A-Z_]+SHA256__' "$INSTALLER_BUILD_DIR/main.swift"; then
+    echo "installer payload hash substitution failed" >&2
+    exit 1
 fi
 
-echo "Installing Wattson..."
-mkdir -p "$HOME/Applications"
-pkill -f "$APP_DEST/Contents/MacOS/Wattson" >/dev/null 2>&1 || true
-if [ -d "$APP_DEST" ]; then
-    "$LSREGISTER" -u "$APP_DEST" >/dev/null 2>&1 || true
-fi
-rm -rf "$APP_DEST"
-ditto "$APP_SOURCE" "$APP_DEST"
-# The user has already approved this private test build by opening this
-# installer. Remove quarantine only from the verified copy we just installed.
-xattr -dr com.apple.quarantine "$APP_DEST" 2>/dev/null || true
-touch "$APP_DEST"
-"$LSREGISTER" -f "$APP_DEST" >/dev/null
+xcrun swiftc \
+    "$INSTALLER_BUILD_DIR/main.swift" \
+    -target "$SWIFT_TARGET" \
+    -framework AppKit \
+    -O \
+    -o "$INSTALLER_MACOS/$INSTALLER_EXECUTABLE"
 
-echo "Installing the optional power-control helper (macOS will ask for an administrator password)..."
-sudo launchctl bootout system "$PLIST_DEST" >/dev/null 2>&1 || true
-sudo install -d -o root -g wheel -m 755 /Library/PrivilegedHelperTools
-sudo install -o root -g wheel -m 544 "$SUPPORT_SOURCE/$HELPER_LABEL" "$HELPER_DEST"
-sudo install -o root -g wheel -m 644 "$SUPPORT_SOURCE/${HELPER_LABEL}.plist" "$PLIST_DEST"
-sudo launchctl bootstrap system "$PLIST_DEST"
+cat > "$INSTALLER_CONTENTS/Info.plist" << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>Install Wattson</string>
+    <key>CFBundleDisplayName</key>
+    <string>Install Wattson</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.leoarrow.wattson.installer</string>
+    <key>CFBundleVersion</key>
+    <string>${APP_VERSION}</string>
+    <key>CFBundleShortVersionString</key>
+    <string>${APP_VERSION}</string>
+    <key>CFBundleExecutable</key>
+    <string>${INSTALLER_EXECUTABLE}</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>12.0</string>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+</dict>
+</plist>
+EOF
 
-open "$APP_DEST"
-echo "Wattson is installed and running from $APP_DEST"
-INSTALLER
-chmod +x "$STAGING_DIR/Install Wattson.command"
+cp "$ROOT_DIR/design/icon/AppIcon.icns" "$INSTALLER_RESOURCES/AppIcon.icns"
+codesign --force --sign - "$INSTALLER_DIR" >/dev/null
+codesign --verify --deep --strict "$INSTALLER_DIR"
 
-cat > "$STAGING_DIR/Quick Start.txt" << GUIDE
-WATTSON v${APP_VERSION} — QUICK START
-
-PRIVATE TEST BUILD
-This build is ad-hoc signed and is not Apple-notarized. Install it only if you
-trust the sender. Keep Gatekeeper enabled; use right-click → Open when macOS asks.
-
-FULL INSTALLATION
-1. Double-click “Install Wattson.command”.
-2. Enter your Mac administrator password when Terminal asks.
-3. Wattson launches automatically in the menu bar.
-
-If macOS blocks the installer, right-click “Install Wattson.command” and choose Open.
-
-MONITOR-ONLY INSTALLATION
-Drag Wattson.app to Applications. Live monitoring works, but power-mode switching
-and system battery-icon controls require the full installer above.
-
-USING WATTSON
-• Left-click the menu-bar battery icon to open the live power monitor.
-• Right-click the icon for a quick power-mode toggle.
-• Drag the Liquid Glass control to Automatic, Low Power, or High Power
-  (High Power appears only on supported Macs).
-• Use the gear menu to turn “开机自动启动” on or off. This control
-  requires the full installation because it is managed by Wattson’s fixed-command helper.
-
-SYSTEM REQUIREMENTS
-Apple silicon Mac with a built-in battery, macOS 12 or later.
-
-PRIVACY
-Wattson reads battery and power status locally. No account, analytics, or upload.
-
-ASK CODEX TO INSTALL
-“Install Wattson from this mounted DMG. First run ‘Install Wattson.command --verify’,
-then run the installer. Preserve unrelated files, launch Wattson, and verify its
-menu-bar icon and popover. Pause for me when macOS asks for a password or approval.”
-GUIDE
+# mktemp creates its directory as 0700. If that mode reaches the image, other
+# users can see the icons but cannot open them. Normalize every shipped path.
+touch "$STAGING_DIR/.metadata_never_index"
+chmod -R a+rX "$STAGING_DIR"
+chmod 755 "$STAGING_DIR"
 
 hdiutil create \
     -volname "${APP_NAME} v${APP_VERSION}" \
@@ -144,5 +128,7 @@ hdiutil create \
     -format UDZO \
     "$DMG_PATH" >/dev/null
 
+hdiutil verify "$DMG_PATH" >/dev/null
+bash "$SCRIPT_DIR/verify_dmg.sh" "$DMG_PATH"
 echo "✅ DMG → $DMG_PATH"
 shasum -a 256 "$DMG_PATH"
