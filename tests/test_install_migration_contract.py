@@ -83,11 +83,11 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertIn('APP_VERSION="${1:-2.0.3}"', self.package)
+        self.assertIn('APP_VERSION="${1:-2.0.4}"', self.package)
         self.assertIn("Contents/MacOS/Wattson", self.package)
 
     def test_release_binary_matches_the_declared_macos_minimum(self):
-        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.0.3}"', self.install)
+        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.0.4}"', self.install)
         self.assertIn('SWIFT_TARGET="arm64-apple-macos12.0"', self.install)
         self.assertIn('-target "$SWIFT_TARGET"', self.install)
 

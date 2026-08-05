@@ -5,6 +5,8 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 STATUS_SOURCE = ROOT / "MenuBar" / "StatusItemController.swift"
 POPOVER_SOURCE = ROOT / "Popover" / "PopoverController.swift"
 STYLE_SOURCE = ROOT / "Popover" / "PopoverStyle.swift"
+ANIMATION_HARNESS = ROOT / "tests" / "animation_stress" / "main.swift"
+ANIMATION_RUNNER = ROOT / "scripts" / "verify_animation_stress.sh"
 
 
 class StatusItemContractTests(unittest.TestCase):
@@ -13,6 +15,8 @@ class StatusItemContractTests(unittest.TestCase):
         cls.source = STATUS_SOURCE.read_text(encoding="utf-8")
         cls.popover = POPOVER_SOURCE.read_text(encoding="utf-8")
         cls.style = STYLE_SOURCE.read_text(encoding="utf-8")
+        cls.animation_harness = ANIMATION_HARNESS.read_text(encoding="utf-8")
+        cls.animation_runner = ANIMATION_RUNNER.read_text(encoding="utf-8")
 
     def test_listens_for_both_mouse_buttons(self):
         self.assertIn("leftMouseUp", self.source)
@@ -106,6 +110,65 @@ class StatusItemContractTests(unittest.TestCase):
     def test_popover_is_transient_and_hangs_below_the_item(self):
         self.assertIn(".transient", self.popover)
         self.assertIn(".maxY", self.popover)
+
+    def test_entrance_animation_configures_the_native_motion_on_each_open(self):
+        opening = self.popover.split("private func open(relativeTo", 1)[1].split(
+            "private func close()", 1
+        )[0]
+        self.assertIn("popover.animates = !reduceMotion", opening)
+
+    def test_reopening_during_dismissal_does_not_replay_from_low_opacity(self):
+        opening = self.popover.split("private func open(relativeTo", 1)[1].split(
+            "private func close()", 1
+        )[0]
+        self.assertIn("let reopeningDuringDismissal = popover.isShown", opening)
+        self.assertIn("if !reopeningDuringDismissal", opening)
+
+    def test_entrance_animation_honors_reduce_motion(self):
+        opening = self.popover.split("private func open(relativeTo", 1)[1].split(
+            "private func close()", 1
+        )[0]
+        self.assertIn("NSWorkspace.shared.accessibilityDisplayShouldReduceMotion", opening)
+        self.assertIn("playEntranceAnimation", opening)
+        self.assertIn('CABasicAnimation(keyPath: "opacity")', self.popover)
+        self.assertIn('CABasicAnimation(keyPath: "transform")', self.popover)
+        self.assertIn("reduceMotion", self.popover)
+
+    def test_entrance_animation_uses_one_replaceable_key(self):
+        normalized = self.popover.replace("Self.", "")
+        self.assertIn("entranceAnimationKey", normalized)
+        self.assertIn("forKey: entranceAnimationKey", normalized)
+        self.assertIn("removeAnimation(forKey: entranceAnimationKey)", normalized)
+
+    def test_debug_seam_exposes_entrance_animation_without_showing_a_window(self):
+        for declaration in (
+            "func playEntranceAnimationForTest(reduceMotion: Bool)",
+            "func stopEntranceAnimationForTest()",
+            "var entranceAnimationCountForTest: Int",
+            "var entranceAnimationForTest: CAAnimation?",
+        ):
+            self.assertIn(declaration, self.popover)
+
+        self.assertIn("PopoverController()", self.animation_harness)
+        for forbidden in ("NSApplication.shared", "NSWindow(", "NSPanel(", ".show("):
+            self.assertNotIn(forbidden, self.animation_harness)
+
+    def test_animation_stress_replaces_twenty_thousand_times_then_removes(self):
+        self.assertIn("20_000", self.animation_harness)
+        self.assertIn("iteration.isMultiple(of: 2)", self.animation_harness)
+        self.assertIn("entranceAnimationCountForTest == 1", self.animation_harness)
+        self.assertIn("stopEntranceAnimationForTest()", self.animation_harness)
+        self.assertIn("entranceAnimationCountForTest == 0", self.animation_harness)
+        self.assertIn("elapsed", self.animation_harness)
+
+    def test_animation_stress_runner_is_isolated_and_low_priority(self):
+        self.assertIn("mktemp -d", self.animation_runner)
+        self.assertGreaterEqual(
+            self.animation_runner.count("/usr/sbin/taskpolicy -b /usr/bin/nice -n 15"), 2
+        )
+        self.assertIn('${1:-20000}', self.animation_runner)
+        for forbidden in ("install.sh", "pkill", "killall", "/usr/bin/open"):
+            self.assertNotIn(forbidden, self.animation_runner)
 
     def test_popover_is_360_wide(self):
         self.assertIn("static let width: CGFloat = 360", self.style)

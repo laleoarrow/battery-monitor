@@ -51,7 +51,9 @@ if !screenLocked {
 
     let p = PopoverController()
     check("初始未监听外部点击", !p.isWatchingOutsideClicks)
-    p.toggle(relativeTo: button); spin(0.4)
+    p.toggle(relativeTo: button)
+    check("点击打开会安排一次平滑入场动画", p.entranceAnimationCountForTest == 1)
+    spin(0.4)
     check("轻触图标弹窗打开", p.isShownForTest && p.isOpen)
     check("打开后开始监听外部点击", p.isWatchingOutsideClicks)
     if let raw = ProcessInfo.processInfo.environment["WATTSON_EXPECTED_POWER_MODE"],
@@ -74,7 +76,9 @@ if !screenLocked {
 
     p.toggle(relativeTo: button); spin(0.4)
     p.toggle(relativeTo: button); spin(0.2)      // 关，动画中途
-    p.toggle(relativeTo: button); spin(1.2)      // 立刻再点想重开
+    p.toggle(relativeTo: button)                 // 立刻再点想重开
+    check("关闭中途重开不会从低透明度重播入场", p.entranceAnimationCountForTest == 0)
+    spin(1.2)
     check("关闭动画中途再点可立即重开", p.isShownForTest && p.isOpen)
     check("重开后仍在监听外部点击", p.isWatchingOutsideClicks)
     p.handleOutsideClick(); spin(1.2)

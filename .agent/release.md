@@ -23,10 +23,10 @@ bash scripts/install.sh --app-only
 
 ```bash
 cd /Users/leoarrow/Project/mypackage/agents/电池功率
-bash scripts/package_dmg.sh 2.0.3
+bash scripts/package_dmg.sh 2.0.4
 ```
 
-The result is `dist/Wattson-v2.0.3.dmg`. Its only visible item is
+The result is `dist/Wattson-v2.0.4.dmg`. Its only visible item is
 `Install Wattson.app`, a native graphical installer. The shipping app and the
 privileged helper are sealed inside that installer instead of being exposed as
 additional Finder choices.
@@ -65,7 +65,7 @@ trusted channel and describe the artifact only as a private test build.
 
 ```bash
 python3 -m unittest discover -s tests -v
-bash scripts/verify_dmg.sh dist/Wattson-v2.0.3.dmg
+bash scripts/verify_dmg.sh dist/Wattson-v2.0.4.dmg
 codesign --verify --deep --strict "$HOME/Applications/Wattson.app"
 ```
 
@@ -78,12 +78,13 @@ After all checks pass and the worktree contains only the intended changes:
 
 ```bash
 git add <intended files>
-git commit -m "fix: replace the release DMG with a graphical installer"
-git tag v2.0.3
+git commit -m "feat: add a smooth popover entrance"
+git tag -a v2.0.4 -m "Wattson v2.0.4"
 ```
 
 Push only when requested:
 
 ```bash
-git push origin wattson-menubar --tags
+git push origin HEAD:main
+git push origin v2.0.4
 ```

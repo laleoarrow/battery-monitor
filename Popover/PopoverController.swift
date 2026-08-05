@@ -1,6 +1,7 @@
 import AppKit
 
 final class PopoverController: NSObject, NSPopoverDelegate {
+    private static let entranceAnimationKey = "wattson.popover.entrance"
     private let popover = NSPopover()
 #if DEBUG
     fileprivate var popoverForTest: NSPopover { popover }
@@ -70,10 +71,18 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     }
 
     private func open(relativeTo button: NSStatusBarButton) {
+        let reduceMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+        popover.animates = !reduceMotion
+        let reopeningDuringDismissal = popover.isShown
         // Showing while a previous close is still animating is fine — AppKit
         // takes over the fade rather than dropping the request.
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .maxY)
         guard popover.isShown else { return }   // never leave a monitor behind
+        // Replaying from a fixed low opacity while AppKit is reversing a close
+        // would flash. Let the in-flight presentation continue instead.
+        if !reopeningDuringDismissal {
+            playEntranceAnimation(reduceMotion: reduceMotion)
+        }
         showsRequested += 1
         wantsOpen = true
         content.setAnimationsEnabled(true)
@@ -108,7 +117,49 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         wantsOpen = false
         stopWatchingForOutsideClicks()
         content.setAnimationsEnabled(false)
+        stopEntranceAnimation()
         visibilityHandler?(false)
+    }
+
+    /// Adds a small compositor-only accent to AppKit's native popover reveal.
+    /// A stable key replaces interrupted reveals instead of queueing work, and
+    /// Reduce Motion keeps only the short cross-fade. No timer or display link
+    /// survives the one-shot animation.
+    private func playEntranceAnimation(reduceMotion: Bool) {
+        guard let layer = content.view.layer else { return }
+        layer.removeAnimation(forKey: Self.entranceAnimationKey)
+
+        let fade = CABasicAnimation(keyPath: "opacity")
+        fade.fromValue = reduceMotion ? 0.65 : 0.25
+        fade.toValue = 1.0
+        fade.duration = reduceMotion ? 0.12 : 0.18
+        fade.timingFunction = CAMediaTimingFunction(name: .easeOut)
+
+        let animation = CAAnimationGroup()
+        if reduceMotion {
+            animation.animations = [fade]
+            animation.duration = fade.duration
+        } else {
+            var start = CATransform3DMakeTranslation(0, 7, 0)
+            start = CATransform3DScale(start, 0.985, 0.985, 1)
+
+            let settle = CABasicAnimation(keyPath: "transform")
+            settle.fromValue = NSValue(caTransform3D: start)
+            settle.toValue = NSValue(caTransform3D: CATransform3DIdentity)
+            settle.duration = 0.24
+            settle.timingFunction = CAMediaTimingFunction(
+                controlPoints: 0.22, 1.0, 0.36, 1.0
+            )
+
+            animation.animations = [fade, settle]
+            animation.duration = settle.duration
+        }
+        animation.isRemovedOnCompletion = true
+        layer.add(animation, forKey: Self.entranceAnimationKey)
+    }
+
+    private func stopEntranceAnimation() {
+        content.view.layer?.removeAnimation(forKey: Self.entranceAnimationKey)
     }
 
     private func startWatchingForOutsideClicks() {
@@ -134,6 +185,20 @@ final class PopoverController: NSObject, NSPopoverDelegate {
 
 #if DEBUG
 extension PopoverController {
+    func playEntranceAnimationForTest(reduceMotion: Bool) {
+        playEntranceAnimation(reduceMotion: reduceMotion)
+    }
+
+    func stopEntranceAnimationForTest() { stopEntranceAnimation() }
+
+    var entranceAnimationCountForTest: Int {
+        content.view.layer?.animationKeys()?.filter { $0 == Self.entranceAnimationKey }.count ?? 0
+    }
+
+    var entranceAnimationForTest: CAAnimation? {
+        content.view.layer?.animation(forKey: Self.entranceAnimationKey)
+    }
+
     /// What AppKit is drawing, as opposed to `isOpen`, which is what the user
     /// asked for. They differ for the length of the close animation.
     var isShownForTest: Bool { popoverForTest.isShown }

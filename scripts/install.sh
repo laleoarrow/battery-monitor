@@ -17,7 +17,7 @@ done
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$SCRIPT_DIR/.."
 APP_NAME="Wattson"
-APP_VERSION="${WATTSON_APP_VERSION:-2.0.3}"
+APP_VERSION="${WATTSON_APP_VERSION:-2.0.4}"
 SWIFT_TARGET="arm64-apple-macos12.0"
 APP_DIR="$HOME/Applications/Wattson.app"
 APP_BUNDLE_ID="com.leoarrow.wattson"
