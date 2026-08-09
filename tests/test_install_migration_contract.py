@@ -318,7 +318,7 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertNotIn("pull_request:", self.ci_helper_workflow)
         self.assertNotIn("\n  push:", self.ci_helper_workflow)
         self.assertIn("runner: [macos-14, macos-15, macos-26]", self.ci_helper_workflow)
-        self.assertIn("runs-on: macos-15", self.ci_helper_workflow)
+        self.assertIn("runs-on: macos-26", self.ci_helper_workflow)
         self.assertIn("if: github.ref == 'refs/heads/main'", self.ci_helper_workflow)
         self.assertIn("persist-credentials: false", self.ci_helper_workflow)
         self.assertNotIn("uses: actions/checkout@v4", self.ci_helper_workflow)

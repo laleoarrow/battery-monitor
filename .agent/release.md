@@ -75,7 +75,7 @@ tests.test_interaction_behavior -v` only in an idle or disposable GUI session.
 
 For external-helper compatibility without touching the developer's Mac, push
 the candidate commit and manually run the GitHub ARM64 matrix. It builds one
-DMG on macOS 15, then installs those exact bytes on fresh macOS 14, 15, and 26
+DMG with the macOS 26 SDK, then installs those exact bytes on fresh macOS 14, 15, and 26
 runners:
 
 ```bash

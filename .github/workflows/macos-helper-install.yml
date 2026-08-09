@@ -14,9 +14,9 @@ permissions:
 
 jobs:
   build-packaged-dmg:
-    name: macos-15 packaged release artifact
+    name: macos-26 packaged release artifact
     if: github.ref == 'refs/heads/main'
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 30
     env:
       WATTSON_VERSION: ${{ inputs.version }}
