@@ -291,12 +291,30 @@ jobs:
 
           verify_app_launch_stability() {
             local attempt
+            local battery_registry
+            local exit_status
+            local has_battery=0
+
+            battery_registry="$(/usr/sbin/ioreg -r -c AppleSmartBattery 2>/dev/null)"
+            if [[ "$battery_registry" == *AppleSmartBattery* ]]; then
+              has_battery=1
+            fi
 
             "$APP_BIN" >"$RUNNER_TEMP/wattson-app-launch.log" 2>&1 &
             APP_PID="$!"
             for ((attempt = 0; attempt < 20; attempt++)); do
               if ! /bin/kill -0 "$APP_PID" >/dev/null 2>&1; then
-                echo "Wattson exited during the packaged-app launch check." >&2
+                if wait "$APP_PID"; then
+                  exit_status=0
+                else
+                  exit_status="$?"
+                fi
+                APP_PID=""
+                if [[ "$has_battery" == "0" && "$exit_status" == "0" ]]; then
+                  echo "Wattson exited cleanly because this hosted runner has no AppleSmartBattery."
+                  return 0
+                fi
+                echo "Wattson exited during the packaged-app launch check (status=$exit_status, AppleSmartBattery=$has_battery)." >&2
                 /bin/cat "$RUNNER_TEMP/wattson-app-launch.log" >&2 || true
                 return 1
               fi

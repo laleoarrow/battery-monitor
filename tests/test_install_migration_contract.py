@@ -349,6 +349,11 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn("ProgramArguments:2 string $LEGACY_APP", self.ci_helper_workflow)
         self.assertIn("ProgramArguments:2' \"$LOGIN_PLIST\"", self.ci_helper_workflow)
         self.assertIn("verify_app_launch_stability", self.ci_helper_workflow)
+        self.assertIn("/usr/sbin/ioreg -r -c AppleSmartBattery", self.ci_helper_workflow)
+        self.assertIn('[[ "$battery_registry" == *AppleSmartBattery* ]]', self.ci_helper_workflow)
+        self.assertNotIn("| /usr/bin/grep -q AppleSmartBattery", self.ci_helper_workflow)
+        self.assertIn('[[ "$has_battery" == "0" && "$exit_status" == "0" ]]', self.ci_helper_workflow)
+        self.assertIn("hosted runner has no AppleSmartBattery", self.ci_helper_workflow)
         self.assertIn("/bin/bash scripts/uninstall.sh", self.ci_helper_workflow)
         self.assertNotIn("ci_test_helper_install.sh", self.ci_helper_workflow)
 
