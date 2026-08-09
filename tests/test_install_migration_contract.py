@@ -17,6 +17,8 @@ HELPER_SOURCE = ROOT / "Helper" / "wattson-helper.swift"
 RUN_SCRIPT = ROOT / "script" / "build_and_run.sh"
 VERIFY_INTERACTION = ROOT / "scripts" / "verify_interaction.sh"
 APP_ENTITLEMENTS = ROOT / "BatteryPowerApp.entitlements"
+CI_HELPER_INSTALL = ROOT / "scripts" / "ci_test_helper_install.sh"
+CI_HELPER_WORKFLOW = ROOT / ".github" / "workflows" / "macos-helper-install.yml"
 
 
 class InstallMigrationContractTests(unittest.TestCase):
@@ -33,6 +35,8 @@ class InstallMigrationContractTests(unittest.TestCase):
         cls.run_script = RUN_SCRIPT.read_text(encoding="utf-8")
         cls.verify_interaction = VERIFY_INTERACTION.read_text(encoding="utf-8")
         cls.entitlements = APP_ENTITLEMENTS.read_text(encoding="utf-8")
+        cls.ci_helper_install = CI_HELPER_INSTALL.read_text(encoding="utf-8")
+        cls.ci_helper_workflow = CI_HELPER_WORKFLOW.read_text(encoding="utf-8")
 
     def test_uses_the_new_identity(self):
         self.assertIn("com.leoarrow.wattson", self.install)
@@ -86,11 +90,11 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertIn('APP_VERSION="${1:-2.1.4}"', self.package)
+        self.assertIn('APP_VERSION="${1:-2.1.5}"', self.package)
         self.assertIn("Contents/MacOS/Wattson", self.install)
 
     def test_release_binary_matches_the_declared_macos_minimum(self):
-        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.1.4}"', self.install)
+        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.1.5}"', self.install)
         self.assertIn('SWIFT_TARGET="arm64-apple-macos12.0"', self.install)
         self.assertIn('-target "$SWIFT_TARGET"', self.install)
 
@@ -221,6 +225,8 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn("for attempt in 1 2", self.installer_helper)
         self.assertIn('/bin/launchctl enable "$HELPER_TARGET"', self.installer_helper)
         self.assertIn('--identifier "$HELPER_LABEL"', self.package)
+        self.assertIn("Candidate helper signature before rollback", self.installer_helper)
+        self.assertIn("Candidate helper xattr names before rollback", self.installer_helper)
 
     def test_privileged_phase_is_pinned_and_staged_by_root(self):
         self.assertIn("__INSTALL_HELPER_SHA256__", self.installer)
@@ -275,6 +281,63 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn('codesign', self.installer)
         self.assertIn('com.leoarrow.wattson', self.installer)
         self.assertIn('Contents/MacOS/Wattson', self.installer)
+
+    def test_install_failure_offers_one_click_read_only_diagnostics(self):
+        diagnostics = self.installer.split(
+            "private enum InstallationDiagnostics {", 1
+        )[1].split("private struct PreparedPayload", 1)[0]
+        self.assertIn('alert.addButton(withTitle: "复制诊断信息")', self.installer)
+        self.assertIn("NSPasteboard.general", self.installer)
+        self.assertIn("copyInstallationDiagnostics", self.installer)
+        self.assertIn("readOnlyCommandArguments", diagnostics)
+        self.assertIn("contains(arguments) == true", diagnostics)
+        self.assertIn("matchingWattsonLines", diagnostics)
+        self.assertIn('"/usr/bin/sw_vers"', diagnostics)
+        self.assertIn('"/bin/launchctl"', diagnostics)
+        self.assertIn('"/usr/bin/sfltool"', diagnostics)
+        self.assertIn('"/usr/bin/log"', diagnostics)
+        self.assertIn('"show", "--last", "15m"', diagnostics)
+        self.assertIn('["dumpbtm"]', diagnostics)
+        self.assertIn('["--verify", "--strict", helperInstallPath]', diagnostics)
+        self.assertIn("acceptedExitCodes: [0, 1]", diagnostics)
+        self.assertIn("50_000", diagnostics)
+        self.assertNotIn("sudo", diagnostics)
+        self.assertNotIn('["resetbtm"]', diagnostics)
+        self.assertNotIn('["-d"', diagnostics)
+        self.assertNotIn('["--global-disable"', diagnostics)
+        self.assertNotIn('["erase"', diagnostics)
+        self.assertNotIn('["bootstrap"', diagnostics)
+        self.assertNotIn('["bootout"', diagnostics)
+        self.assertNotIn('["enable"', diagnostics)
+        self.assertNotIn('["disable"', diagnostics)
+        self.assertNotIn('CONTAINS[c] \\"com.leoarrow\\"', diagnostics)
+        self.assertNotIn('normalized.contains("com.leoarrow")', diagnostics)
+
+    def test_remote_helper_install_is_manual_and_ephemeral(self):
+        self.assertIn("workflow_dispatch:", self.ci_helper_workflow)
+        self.assertNotIn("pull_request:", self.ci_helper_workflow)
+        self.assertNotIn("\n  push:", self.ci_helper_workflow)
+        self.assertIn("runner: [macos-14, macos-15, macos-26]", self.ci_helper_workflow)
+        self.assertIn("runs-on: macos-15", self.ci_helper_workflow)
+        self.assertIn("if: github.ref == 'refs/heads/main'", self.ci_helper_workflow)
+        self.assertIn("persist-credentials: false", self.ci_helper_workflow)
+        self.assertNotIn("uses: actions/checkout@v4", self.ci_helper_workflow)
+        self.assertNotIn("uses: actions/upload-artifact@v4", self.ci_helper_workflow)
+        self.assertNotIn("uses: actions/download-artifact@v4", self.ci_helper_workflow)
+        self.assertIn("retention-days: 1", self.ci_helper_workflow)
+        self.assertIn("UNNOTARIZED-CI-ONLY", self.ci_helper_workflow)
+        self.assertIn('"${GITHUB_ACTIONS:-}" == "true"', self.ci_helper_install)
+        self.assertIn('"${RUNNER_ENVIRONMENT:-}" == "github-hosted"', self.ci_helper_install)
+        self.assertIn('"$(/usr/bin/uname -m)" == "arm64"', self.ci_helper_install)
+        self.assertIn("assert_runner_temp_path", self.ci_helper_install)
+        self.assertIn("/private/tmp/com.leoarrow.wattson.ci.XXXXXX", self.ci_helper_install)
+        self.assertIn("root stage ownership or mode", self.ci_helper_install)
+        self.assertIn("/usr/bin/install -o root -g wheel", self.ci_helper_install)
+        self.assertIn("/usr/bin/env -i", self.ci_helper_install)
+        self.assertIn("cleanup left launchd service loaded", self.ci_helper_install)
+        self.assertIn("installed helper hash does not match", self.ci_helper_install)
+        self.assertIn("root:wheel 0544", self.ci_helper_install)
+        self.assertIn("assert_quarantine_absent", self.ci_helper_install)
 
     def test_preview_build_does_not_create_a_searchable_dist_app(self):
         self.assertNotIn('APP_BUNDLE="$DIST_DIR/$APP_NAME.app"', self.run_script)

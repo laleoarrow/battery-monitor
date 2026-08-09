@@ -114,6 +114,242 @@ private enum Command {
     }
 }
 
+private enum InstallationDiagnostics {
+    private struct Probe {
+        let key: String
+        let executablePath: String
+        let arguments: [String]
+        let acceptedExitCodes: Set<Int32>
+        let timeout: TimeInterval
+    }
+
+    private final class ProbeResultStore {
+        private let lock = NSLock()
+        private var values: [String: String] = [:]
+
+        func set(_ value: String, for key: String) {
+            lock.lock()
+            values[key] = value
+            lock.unlock()
+        }
+
+        func value(for key: String) -> String {
+            lock.lock()
+            defer { lock.unlock() }
+            return values[key] ?? "（诊断未完成）"
+        }
+    }
+
+    private static let logPredicate =
+        "(process == \"launchd\" OR process == \"backgroundtaskmanagementd\" OR process == \"syspolicyd\" OR process == \"amfid\") AND eventMessage CONTAINS[c] \"wattson\""
+
+    // The collector rejects every command/argument pair that is not explicitly
+    // listed here. This keeps future diagnostics read-only by construction.
+    private static let readOnlyCommandArguments: [String: [[String]]] = [
+        "/usr/bin/sw_vers": [[]],
+        "/usr/bin/uname": [["-m"]],
+        "/usr/sbin/spctl": [["--status"]],
+        "/bin/launchctl": [
+            ["print", "system/\(helperLabel)"],
+            ["print-disabled", "system"],
+        ],
+        "/usr/bin/sfltool": [["dumpbtm"]],
+        "/bin/ls": [["-leO@", helperInstallPath, helperPlistInstallPath]],
+        "/usr/bin/codesign": [
+            ["-dvv", helperInstallPath],
+            ["--verify", "--strict", helperInstallPath],
+        ],
+        "/usr/bin/xattr": [
+            [helperInstallPath],
+            [helperPlistInstallPath],
+        ],
+        "/usr/bin/log": [[
+            "show", "--last", "15m", "--style", "compact",
+            "--predicate", logPredicate,
+        ]],
+    ]
+
+    static func collect(failureDescription: String) -> String {
+        let probes = [
+            Probe(
+                key: "system", executablePath: "/usr/bin/sw_vers",
+                arguments: [], acceptedExitCodes: [0], timeout: 3
+            ),
+            Probe(
+                key: "architecture", executablePath: "/usr/bin/uname",
+                arguments: ["-m"], acceptedExitCodes: [0], timeout: 3
+            ),
+            Probe(
+                key: "gatekeeper", executablePath: "/usr/sbin/spctl",
+                arguments: ["--status"], acceptedExitCodes: [0, 1], timeout: 3
+            ),
+            Probe(
+                key: "launchd", executablePath: "/bin/launchctl",
+                arguments: ["print", "system/\(helperLabel)"],
+                acceptedExitCodes: [0], timeout: 3
+            ),
+            Probe(
+                key: "disabled", executablePath: "/bin/launchctl",
+                arguments: ["print-disabled", "system"],
+                acceptedExitCodes: [0], timeout: 3
+            ),
+            Probe(
+                key: "btm", executablePath: "/usr/bin/sfltool",
+                arguments: ["dumpbtm"], acceptedExitCodes: [0], timeout: 6
+            ),
+            Probe(
+                key: "files", executablePath: "/bin/ls",
+                arguments: ["-leO@", helperInstallPath, helperPlistInstallPath],
+                acceptedExitCodes: [0], timeout: 3
+            ),
+            Probe(
+                key: "signature", executablePath: "/usr/bin/codesign",
+                arguments: ["-dvv", helperInstallPath],
+                acceptedExitCodes: [0], timeout: 3
+            ),
+            Probe(
+                key: "signatureVerification", executablePath: "/usr/bin/codesign",
+                arguments: ["--verify", "--strict", helperInstallPath],
+                acceptedExitCodes: [0], timeout: 3
+            ),
+            Probe(
+                key: "helperAttributes", executablePath: "/usr/bin/xattr",
+                arguments: [helperInstallPath],
+                acceptedExitCodes: [0], timeout: 3
+            ),
+            Probe(
+                key: "plistAttributes", executablePath: "/usr/bin/xattr",
+                arguments: [helperPlistInstallPath],
+                acceptedExitCodes: [0], timeout: 3
+            ),
+            Probe(
+                key: "logs", executablePath: "/usr/bin/log",
+                arguments: [
+                    "show", "--last", "15m", "--style", "compact",
+                    "--predicate", logPredicate,
+                ],
+                acceptedExitCodes: [0], timeout: 8
+            ),
+        ]
+
+        let results = ProbeResultStore()
+        let group = DispatchGroup()
+        let queue = DispatchQueue(
+            label: "com.leoarrow.wattson.installer-diagnostics",
+            qos: .utility,
+            attributes: .concurrent
+        )
+        for probe in probes {
+            group.enter()
+            queue.async {
+                let output = command(
+                    probe.executablePath,
+                    probe.arguments,
+                    acceptedExitCodes: probe.acceptedExitCodes,
+                    timeout: probe.timeout
+                )
+                results.set(output, for: probe.key)
+                group.leave()
+            }
+        }
+        group.wait()
+
+        let installerVersion = Bundle.main.object(
+            forInfoDictionaryKey: "CFBundleShortVersionString"
+        ) as? String ?? "未知"
+        let disabledState = matchingWattsonLines(results.value(for: "disabled"))
+        let backgroundTasks = matchingWattsonLines(results.value(for: "btm"))
+        let recentLogs = bounded(
+            results.value(for: "logs"),
+            maximumCharacters: 50_000
+        )
+
+        return """
+        Wattson 安装诊断
+        生成时间：\(ISO8601DateFormatter().string(from: Date()))
+        安装器版本：\(installerVersion)
+        安装失败信息：\(failureDescription)
+        说明：文件与服务状态是安装器完成自动回滚后的只读快照；原始错误与系统日志保留失败时信息。
+
+        === 系统 ===
+        \(results.value(for: "system"))
+        芯片架构：\(results.value(for: "architecture"))
+        Gatekeeper：\(results.value(for: "gatekeeper"))
+
+        === launchd 服务（回滚后） ===
+        \(results.value(for: "launchd"))
+
+        === launchd 禁用状态（仅匹配 Wattson 的行） ===
+        \(disabledState)
+
+        === 后台项目（仅匹配 Wattson 的行） ===
+        \(backgroundTasks)
+
+        === 已安装文件（回滚后） ===
+        \(results.value(for: "files"))
+
+        === Helper 签名（回滚后） ===
+        \(results.value(for: "signature"))
+        验证结果：\(results.value(for: "signatureVerification"))
+
+        === Helper 扩展属性名称（不复制属性值） ===
+        \(results.value(for: "helperAttributes"))
+
+        === Plist 扩展属性名称（不复制属性值） ===
+        \(results.value(for: "plistAttributes"))
+
+        === 最近 15 分钟相关系统日志 ===
+        \(recentLogs)
+        """
+    }
+
+    private static func command(
+        _ executablePath: String,
+        _ arguments: [String],
+        acceptedExitCodes: Set<Int32>,
+        timeout: TimeInterval
+    ) -> String {
+        guard readOnlyCommandArguments[executablePath]?.contains(arguments) == true else {
+            return "（已拒绝未列入只读白名单的诊断命令）"
+        }
+        do {
+            let output = try Command.run(
+                executablePath,
+                arguments,
+                acceptedExitCodes: acceptedExitCodes,
+                timeout: timeout
+            )
+            return output.isEmpty ? "（命令成功，无输出）" : output
+        } catch {
+            return "（读取失败：\(error.localizedDescription)）"
+        }
+    }
+
+    private static func matchingWattsonLines(_ output: String) -> String {
+        if output.hasPrefix("（读取失败：") {
+            return output
+        }
+        var seen = Set<String>()
+        let selected = output.components(separatedBy: .newlines).filter { line in
+            let normalized = line.lowercased()
+            let matches = normalized.contains("wattson")
+            return matches && seen.insert(line).inserted
+        }
+        return selected.isEmpty
+            ? "（未发现 Wattson 相关记录）"
+            : selected.joined(separator: "\n")
+    }
+
+    private static func bounded(
+        _ output: String,
+        maximumCharacters: Int
+    ) -> String {
+        guard output.count > maximumCharacters else { return output }
+        return String(output.prefix(maximumCharacters))
+            + "\n（日志过长，后续内容已截断）"
+    }
+}
+
 private struct PreparedPayload {
     let temporaryDirectory: URL
     let appURL: URL
@@ -616,6 +852,7 @@ private final class InstallerWindowController: NSObject, NSWindowDelegate {
     private let cancelButton = NSButton(title: "取消", target: nil, action: nil)
     private let workerQueue = DispatchQueue(label: "com.leoarrow.wattson.installer", qos: .userInitiated)
     private var isInstalling = false
+    private var isCollectingDiagnostics = false
 
     override init() {
         window = NSWindow(
@@ -761,12 +998,52 @@ private final class InstallerWindowController: NSObject, NSWindowDelegate {
         alert.alertStyle = .critical
         alert.messageText = "安装失败"
         alert.informativeText = error.localizedDescription
-        alert.addButton(withTitle: "好")
-        alert.beginSheetModal(for: window)
+            + "\n\n点击“复制诊断信息”即可一键收集只读系统信息，然后直接粘贴回复邮件。"
+        alert.addButton(withTitle: "复制诊断信息")
+        alert.addButton(withTitle: "关闭")
+        alert.beginSheetModal(for: window) { [weak self] response in
+            guard response == .alertFirstButtonReturn else { return }
+            self?.copyInstallationDiagnostics(failureDescription: error.localizedDescription)
+        }
+    }
+
+    private func copyInstallationDiagnostics(failureDescription: String) {
+        guard !isCollectingDiagnostics else { return }
+        isCollectingDiagnostics = true
+        installButton.isEnabled = false
+        cancelButton.isEnabled = false
+        statusLabel.stringValue = "正在收集只读诊断信息…"
+
+        workerQueue.async { [weak self] in
+            let report = InstallationDiagnostics.collect(
+                failureDescription: failureDescription
+            )
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                let pasteboard = NSPasteboard.general
+                pasteboard.clearContents()
+                let copied = pasteboard.setString(report, forType: .string)
+                self.isCollectingDiagnostics = false
+                self.installButton.isEnabled = true
+                self.cancelButton.isEnabled = true
+                self.statusLabel.stringValue = copied
+                    ? "诊断信息已复制；请直接粘贴回复邮件。"
+                    : "无法复制诊断信息，请重试。"
+
+                let confirmation = NSAlert()
+                confirmation.alertStyle = copied ? .informational : .warning
+                confirmation.messageText = copied ? "诊断信息已复制" : "复制失败"
+                confirmation.informativeText = copied
+                    ? "请回复邮件，在正文中粘贴刚刚复制的全部内容。"
+                    : "请重新点击安装，在失败后再次选择“复制诊断信息”。"
+                confirmation.addButton(withTitle: "好")
+                confirmation.beginSheetModal(for: self.window)
+            }
+        }
     }
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
-        !isInstalling
+        !isInstalling && !isCollectingDiagnostics
     }
 
     func windowWillClose(_ notification: Notification) {

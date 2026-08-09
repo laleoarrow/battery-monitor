@@ -1,0 +1,86 @@
+name: macOS helper installation
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Candidate release version to build and test
+        required: true
+        default: "2.1.5"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build-packaged-dmg:
+    name: macos-15 packaged release artifact
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      WATTSON_VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Run headless tests
+        shell: bash
+        run: |
+          env -u WATTSON_RUN_INTERACTION python3 -m unittest discover -s tests -v
+      - name: Build the packaged DMG once
+        shell: bash
+        run: |
+          set -o pipefail
+          bash scripts/package_dmg.sh "$WATTSON_VERSION" 2>&1 | tee "$RUNNER_TEMP/wattson-dmg-build.log"
+      - name: Upload packaged DMG for installation and release follow-up
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: UNNOTARIZED-CI-ONLY-Wattson-v${{ env.WATTSON_VERSION }}.dmg
+          path: dist/Wattson-v${{ env.WATTSON_VERSION }}.dmg
+          if-no-files-found: error
+          retention-days: 1
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: wattson-dmg-build-log-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/wattson-dmg-build.log
+          if-no-files-found: warn
+          retention-days: 7
+
+  packaged-helper-install:
+    name: ${{ matrix.runner }} packaged helper install
+    runs-on: ${{ matrix.runner }}
+    needs: build-packaged-dmg
+    timeout-minutes: 30
+    env:
+      WATTSON_VERSION: ${{ inputs.version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-14, macos-15, macos-26]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Download the single packaged DMG
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: UNNOTARIZED-CI-ONLY-Wattson-v${{ env.WATTSON_VERSION }}.dmg
+          path: ${{ runner.temp }}/wattson-dmg
+      - name: Install, verify, and clean up the packaged helper
+        shell: bash
+        run: |
+          set -o pipefail
+          bash scripts/ci_test_helper_install.sh \
+            "$RUNNER_TEMP/wattson-dmg/Wattson-v${WATTSON_VERSION}.dmg" \
+            2>&1 | tee "$RUNNER_TEMP/wattson-helper-install.log"
+      - name: Upload helper installation logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: wattson-helper-install-log-${{ matrix.runner }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/wattson-helper-install.log
+          if-no-files-found: warn
+          retention-days: 7

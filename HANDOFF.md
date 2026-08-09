@@ -1,7 +1,7 @@
 # Wattson 项目状态
 
 **分支：`wattson-menubar`**
-**状态：v2.1.4 候选版加固外部 DMG 的 helper 注册；v2.1.3 已完成模式滑块、Liquid Glass、系统电池偏好会话及功率遥测更新**
+**状态：v2.1.5 候选版增加安装失败一键诊断；v2.1.4 已加固外部 DMG 的 helper 注册**
 
 菜单栏插件这一轮的代码工作已经完成。弹窗采用一次性 Core Animation
 淡入与轻微位移/缩放回落；Reduce Motion 下只淡入，不新增定时器。特权助手已部署且为最新版（`getMode` 返回 `supportsHigh:true`）。
@@ -10,11 +10,11 @@
 
 ## 装它
 
-发给用户时使用 `dist/Wattson-v2.1.4.dmg`。镜像只显示
+发给用户时使用 `dist/Wattson-v2.1.5.dmg`。镜像只显示
 `Install Wattson.app`；它会安装唯一的 `~/Applications/Wattson.app`、
 请求一次管理员授权安装特权助手，然后确认助手 socket 与真实菜单栏项都已就绪。
 必须从已挂载的只读 DMG 中直接运行安装器；授权或就绪验证失败时会恢复旧 app。
-SHA-256：`f2351e074be685d41523848958c97afd50b5547b7e92555acf6b10f88295826e`。
+SHA-256：最终构建后填写。
 
 本地源码安装：
 

@@ -124,6 +124,7 @@ bootstrap_helper() {
 }
 
 report_bootstrap_failure() {
+    local bootstrap_status="$1"
     local current_disabled="unknown"
     local current_state
 
@@ -137,9 +138,15 @@ report_bootstrap_failure() {
                 ;;
         esac
     fi
-    echo "Install Wattson: helper registration failed after one cleanup retry" >&2
+    echo "Install Wattson: helper registration failed after one cleanup retry (status $bootstrap_status)" >&2
     echo "System: macOS $(/usr/bin/sw_vers -productVersion) ($(/usr/bin/uname -m)); launchd disabled: $current_disabled; quarantine: absent" >&2
-    echo "请在“系统设置 > 通用 > 登录项与扩展”中允许 Wattson 在后台运行，然后重新安装。" >&2
+    echo "Candidate helper signature before rollback:" >&2
+    /usr/bin/codesign -dvv "$HELPER_BIN" >&2 || true
+    echo "Candidate helper xattr names before rollback:" >&2
+    /usr/bin/xattr "$HELPER_BIN" >&2 || true
+    echo "Candidate plist xattr names before rollback:" >&2
+    /usr/bin/xattr "$HELPER_PLIST" >&2 || true
+    echo '请在“系统设置 > 通用 > 登录项与扩展”中允许 Wattson 在后台运行，然后重新安装。' >&2
 }
 
 rollback_helper_install() {
@@ -254,7 +261,7 @@ if bootstrap_helper; then
     :
 else
     bootstrap_status="$?"
-    report_bootstrap_failure
+    report_bootstrap_failure "$bootstrap_status"
     exit "$bootstrap_status"
 fi
 /bin/launchctl print "$HELPER_TARGET" >/dev/null

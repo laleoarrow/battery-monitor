@@ -23,10 +23,10 @@ bash scripts/install.sh --app-only
 
 ```bash
 cd /Users/leoarrow/Project/mypackage/agents/电池功率
-bash scripts/package_dmg.sh 2.1.4
+bash scripts/package_dmg.sh 2.1.5
 ```
 
-The result is `dist/Wattson-v2.1.4.dmg`. Its only visible item is
+The result is `dist/Wattson-v2.1.5.dmg`. Its only visible item is
 `Install Wattson.app`, a native graphical installer. The shipping app and the
 privileged helper are sealed inside that installer instead of being exposed as
 additional Finder choices.
@@ -65,13 +65,22 @@ trusted channel and describe the artifact only as a private test build.
 
 ```bash
 python3 -m unittest discover -s tests -v
-bash scripts/verify_dmg.sh dist/Wattson-v2.1.4.dmg
+bash scripts/verify_dmg.sh dist/Wattson-v2.1.5.dmg
 codesign --verify --deep --strict "$HOME/Applications/Wattson.app"
 ```
 
 The default unittest run skips the real AppKit interaction replay because it
 opens a visible popover. Run `WATTSON_RUN_INTERACTION=1 python3 -m unittest
 tests.test_interaction_behavior -v` only in an idle or disposable GUI session.
+
+For external-helper compatibility without touching the developer's Mac, push
+the candidate commit and manually run the GitHub ARM64 matrix. It builds one
+DMG on macOS 15, then installs those exact bytes on fresh macOS 14, 15, and 26
+runners:
+
+```bash
+gh workflow run macos-helper-install.yml --ref main -f version=2.1.5
+```
 
 Also launch the installed app, confirm that its menu-bar item and real popover
 work, and verify that power-mode switching still reaches the privileged helper.
@@ -82,13 +91,13 @@ After all checks pass and the worktree contains only the intended changes:
 
 ```bash
 git add <intended files>
-git commit -m "feat: refine power mode slider and harden installation"
-git tag -a v2.1.4 -m "Wattson v2.1.4"
+git commit -m "fix: add remote installer diagnostics"
+git tag -a v2.1.5 -m "Wattson v2.1.5"
 ```
 
 Push only when requested:
 
 ```bash
 git push origin HEAD:main
-git push origin v2.1.4
+git push origin v2.1.5
 ```
