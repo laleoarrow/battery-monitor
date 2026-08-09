@@ -27,7 +27,11 @@ jobs:
       - name: Run headless tests
         shell: bash
         run: |
-          env -u WATTSON_RUN_INTERACTION python3 -m unittest discover -s tests -v
+          env -u WATTSON_RUN_INTERACTION python3 -m unittest -v \
+            tests.test_install_helper_behavior \
+            tests.test_install_migration_contract \
+            tests.test_install_script_contract \
+            tests.test_interaction_behavior
       - name: Build the packaged DMG once
         shell: bash
         run: |

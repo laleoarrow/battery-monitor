@@ -326,6 +326,8 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertNotIn("uses: actions/download-artifact@v4", self.ci_helper_workflow)
         self.assertIn("retention-days: 1", self.ci_helper_workflow)
         self.assertIn("UNNOTARIZED-CI-ONLY", self.ci_helper_workflow)
+        self.assertIn("tests.test_install_helper_behavior", self.ci_helper_workflow)
+        self.assertNotIn("unittest discover", self.ci_helper_workflow)
         self.assertIn('"${GITHUB_ACTIONS:-}" == "true"', self.ci_helper_install)
         self.assertIn('"${RUNNER_ENVIRONMENT:-}" == "github-hosted"', self.ci_helper_install)
         self.assertIn('"$(/usr/bin/uname -m)" == "arm64"', self.ci_helper_install)
