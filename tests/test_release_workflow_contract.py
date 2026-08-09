@@ -33,15 +33,32 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn('actions/runs/$CANDIDATE_RUN_ID', PROMOTE)
         self.assertIn('== ".github/workflows/macos-helper-install.yml"', PROMOTE)
         self.assertIn('== "success"', PROMOTE)
-        self.assertIn('== "main"', PROMOTE)
+        self.assertIn("workflow_dispatch:main", PROMOTE)
+        self.assertIn("push:release-candidate", PROMOTE)
         self.assertIn('== "$GITHUB_SHA"', PROMOTE)
+
+    def test_release_candidate_branch_runs_the_fail_closed_promotion_chain(self):
+        self.assertIn("branches:\n      - release-candidate", CANDIDATE)
+        self.assertIn("candidate_version:", CANDIDATE)
+        self.assertIn("steps.resolve-version.outputs.version", CANDIDATE)
+        self.assertIn("workflow_run:", PROMOTE)
+        self.assertIn("github.event.workflow_run.conclusion == 'success'", PROMOTE)
+        self.assertIn("github.event.workflow_run.head_branch == 'release-candidate'", PROMOTE)
+
+    def test_promotion_requires_successful_headless_ci_on_the_same_main_sha(self):
+        self.assertIn("actions/workflows/ci.yml/runs", PROMOTE)
+        self.assertIn("-f branch=main", PROMOTE)
+        self.assertIn("-f event=push", PROMOTE)
+        self.assertIn('-f head_sha="$GITHUB_SHA"', PROMOTE)
+        self.assertIn('.head_sha == $sha', PROMOTE)
+        self.assertIn('.conclusion == "success"', PROMOTE)
 
     def test_promotion_downloads_and_publishes_the_same_artifact(self):
         self.assertIn("run-id: ${{ env.CANDIDATE_RUN_ID }}", PROMOTE)
         self.assertIn("sha256sum -c SHA256SUMS.txt", PROMOTE)
         self.assertIn('gh release create "$TAG"', PROMOTE)
         self.assertIn("--verify-tag", PROMOTE)
-        self.assertIn("--latest", PROMOTE)
+        self.assertIn("--latest=false", PROMOTE)
         self.assertNotIn("scripts/release.sh", PROMOTE)
 
     def test_promotion_dispatches_homebrew_before_pages(self):
@@ -78,6 +95,21 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("releases/tags/$RELEASE_TAG", HOMEBREW_INSTALL)
         self.assertIn("git/ref/tags/$RELEASE_TAG", HOMEBREW_INSTALL)
         self.assertIn("'.casks[0].version'", HOMEBREW_INSTALL)
+
+    def test_public_homebrew_success_gates_the_pages_deployment(self):
+        self.assertIn("actions: write", HOMEBREW)
+        self.assertIn("Verify the public cask", HOMEBREW)
+        self.assertIn("actions/workflows/tests.yml/runs", HOMEBREW)
+        self.assertIn("completed:success", HOMEBREW)
+        self.assertIn("homebrew-install-test.yml", HOMEBREW)
+        self.assertIn('version \\"$VERSION\\"', HOMEBREW)
+        self.assertIn('sha256 \\"$EXPECTED_SHA\\"', HOMEBREW)
+        self.assertIn("deploy-pages:", HOMEBREW_INSTALL)
+        self.assertIn("needs: install", HOMEBREW_INSTALL)
+        self.assertIn("if: success() && github.ref == 'refs/heads/main'", HOMEBREW_INSTALL)
+        self.assertIn("-f make_latest=true", HOMEBREW_INSTALL)
+        self.assertIn("releases/latest", HOMEBREW_INSTALL)
+        self.assertIn("gh workflow run pages.yml", HOMEBREW_INSTALL)
 
     def test_public_homebrew_install_covers_the_privileged_lifecycle(self):
         install = "brew install --cask laleoarrow/tap/wattson"

@@ -325,10 +325,11 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertNotIn('CONTAINS[c] \\"com.leoarrow\\"', diagnostics)
         self.assertNotIn('normalized.contains("com.leoarrow")', diagnostics)
 
-    def test_remote_v3_install_is_manual_and_ephemeral(self):
+    def test_remote_v3_install_is_explicit_and_ephemeral(self):
         self.assertIn("workflow_dispatch:", self.ci_helper_workflow)
         self.assertNotIn("pull_request:", self.ci_helper_workflow)
-        self.assertNotIn("\n  push:", self.ci_helper_workflow)
+        self.assertIn("\n  push:\n    branches:\n      - release-candidate", self.ci_helper_workflow)
+        self.assertNotIn("branches-ignore:", self.ci_helper_workflow)
         self.assertIn("runs-on: macos-26", self.ci_helper_workflow)
         for runner in ("macos-14", "macos-15", "macos-26", "macos-15-intel", "macos-26-intel"):
             self.assertIn(f"runner: {runner}", self.ci_helper_workflow)

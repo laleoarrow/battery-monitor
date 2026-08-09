@@ -43,15 +43,27 @@ notarized unless `notarytool` returned `Accepted` and `stapler validate` passed.
    and exact candidate artifact bytes.
 7. Promotion explicitly dispatches Homebrew validation/synchronization because
    a release created with `GITHUB_TOKEN` does not emit another workflow run
-   from a normal `release` trigger. Require the tap update and its separate
-   three-platform CI to finish green, then manually dispatch the tag-pinned
-   Pages workflow. GitHub Pages must already use **GitHub Actions** as its
-   publishing source. Announce the release only after Pages is green.
+   from a normal `release` trigger. The Homebrew workflow must observe the exact
+   release version and PKG checksum in the public cask before dispatching the
+   Intel and Apple-silicon public lifecycle tests, and the exact tap commit must
+   first pass its own `brew test-bot` workflow. Promotion publishes the stable
+   release without changing `releases/latest`; only after both public lifecycle
+   jobs pass is it marked latest and the tag-pinned Pages workflow dispatched.
+   GitHub Pages must already use **GitHub Actions** as its publishing source.
+   Announce the release only after Pages is green.
+
+For an unattended release, first push the final commit to `main`, freeze it,
+then push the identical SHA to `release-candidate`. A successful candidate run
+automatically starts promotion. Promotion rejects any candidate whose workflow,
+origin branch, completion state, or head SHA does not match the approved release
+contract, and also requires successful Headless CI for that same `main` SHA.
+The manual candidate and promotion dispatches remain the fallback.
 
 If `HOMEBREW_TAP_TOKEN` is unavailable, the release workflow still downloads
-and verifies every stable asset and generates the exact cask without pushing.
-Sync that cask from a trusted maintainer checkout and require the separate
-`laleoarrow/homebrew-tap` CI run to pass before announcement.
+and verifies every stable asset and generates the exact cask, but then fails
+closed without pushing or dispatching later stages. Sync that cask from a
+trusted maintainer checkout and require the separate `laleoarrow/homebrew-tap`
+CI run to pass before continuing.
 
 The website reads GitHub's stable `releases/latest`; publish v3 before deploying
 the site so it cannot advertise an older architecture-limited release.

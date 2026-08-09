@@ -8,6 +8,9 @@ on:
         required: true
         default: "3.0.1"
         type: string
+  push:
+    branches:
+      - release-candidate
 
 permissions:
   contents: read
@@ -21,6 +24,8 @@ jobs:
     name: Build universal PKG and DMG once
     runs-on: macos-26
     timeout-minutes: 45
+    outputs:
+      candidate_version: ${{ steps.resolve-version.outputs.version }}
     env:
       WATTSON_VERSION: ${{ inputs.version }}
     steps:
@@ -29,12 +34,21 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Validate the requested version
+      - name: Resolve and validate the candidate version
+        id: resolve-version
         shell: bash
         run: |
           set -euo pipefail
+          if [[ -z "$WATTSON_VERSION" ]]; then
+            WATTSON_VERSION="$(/usr/bin/tr -d '\r\n' < VERSION)"
+          fi
           [[ "$WATTSON_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
           [[ "$(/usr/bin/tr -d '\r\n' < VERSION)" == "$WATTSON_VERSION" ]]
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            [[ "$GITHUB_REF" == "refs/heads/release-candidate" ]]
+          fi
+          echo "WATTSON_VERSION=$WATTSON_VERSION" >> "$GITHUB_ENV"
+          echo "version=$WATTSON_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Run headless release tests
         shell: bash
@@ -67,7 +81,7 @@ jobs:
       - name: Upload the exact release candidate bytes
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: UNNOTARIZED-CI-ONLY-Wattson-v${{ env.WATTSON_VERSION }}
+          name: UNNOTARIZED-CI-ONLY-Wattson-v${{ steps.resolve-version.outputs.version }}
           path: |
             dist/Wattson-v${{ env.WATTSON_VERSION }}-macos-universal.pkg
             dist/Wattson-v${{ env.WATTSON_VERSION }}-macos-universal.dmg
@@ -91,7 +105,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 45
     env:
-      WATTSON_VERSION: ${{ inputs.version }}
+      WATTSON_VERSION: ${{ needs.build.outputs.candidate_version }}
     strategy:
       fail-fast: false
       matrix:

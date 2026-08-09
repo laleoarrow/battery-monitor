@@ -9,6 +9,7 @@ on:
         type: string
 
 permissions:
+  actions: write
   contents: read
 
 concurrency:
@@ -270,3 +271,65 @@ jobs:
 
           CLEANUP_REQUIRED=0
           echo "Public Homebrew cask install, helper health, and uninstall cleanup passed."
+
+  deploy-pages:
+    name: Deploy site after both public cask lifecycles pass
+    needs: install
+    if: success() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: write
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
+    steps:
+      - name: Mark the fully validated stable release as latest
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          RELEASE_ID="$(
+            gh api \
+              --header 'Accept: application/vnd.github+json' \
+              --header 'X-GitHub-Api-Version: 2022-11-28' \
+              "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" \
+              --jq .id
+          )"
+          readonly RELEASE_ID
+          [[ "$RELEASE_ID" =~ ^[0-9]+$ ]]
+          gh api \
+            --method PATCH \
+            --header 'Accept: application/vnd.github+json' \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID" \
+            -f make_latest=true \
+            >/dev/null
+
+          latest_matches=0
+          for attempt in {1..12}; do
+            if [[ "$(
+              gh api \
+                --header 'Accept: application/vnd.github+json' \
+                --header 'X-GitHub-Api-Version: 2022-11-28' \
+                "repos/$GITHUB_REPOSITORY/releases/latest" \
+                --jq .tag_name
+            )" == "$RELEASE_TAG" ]]; then
+              latest_matches=1
+              break
+            fi
+            echo "latest-release verification poll $attempt/12"
+            /bin/sleep 5
+          done
+          [[ "$latest_matches" == "1" ]]
+
+      - name: Dispatch the tag-pinned Pages deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          gh workflow run pages.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            --field "release_tag=$RELEASE_TAG"

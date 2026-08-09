@@ -76,24 +76,35 @@ bash scripts/verify_interaction.sh
 bash scripts/verify_animation_stress.sh
 ```
 
-The manual `Wattson release candidate` workflow first replays the native and
-legacy AppKit interaction suites plus the animation stress test on its
-disposable macOS 26 build runner. It then builds the artifact set once,
-then downloads those exact bytes on macOS 14, 15, and 26 Apple-silicon runners
-and macOS 15 and 26 Intel runners. It verifies checksums, universal slices,
-first install, disabled-service reinstall, the shipped uninstaller, reinstall,
-app-process launch stability, helper health, v2.1.5 upgrade, launch-at-login
-migration, and final cleanup. All privileged operations stay on disposable
-GitHub-hosted runners.
+Pushing the frozen `main` commit unchanged to `release-candidate` starts the
+`Wattson release candidate` workflow. It first replays the native and legacy
+AppKit interaction suites plus the animation stress test on its disposable
+macOS 26 build runner. It then builds the artifact set once, then downloads
+those exact bytes on macOS 14, 15, and 26 Apple-silicon runners and macOS 15
+and 26 Intel runners. It verifies checksums, universal slices, first install,
+disabled-service reinstall, the shipped uninstaller, reinstall, app-process
+launch stability, helper health, v2.1.5 upgrade, launch-at-login migration, and
+final cleanup. All privileged operations stay on disposable GitHub-hosted
+runners.
 
 ## Release order
 
-1. Make headless CI green on the final commit.
-2. Make the manual release-candidate matrix green on that exact commit.
-3. Create the annotated `v3.0.1` tag and stable GitHub release from the exact
-   candidate artifacts.
-4. Require the Homebrew tap sync and tap CI to finish green.
-5. Deploy the English website to GitHub Pages and OpenAI Sites.
+1. Make headless CI green on the final `main` commit, then freeze `main`.
+2. Push that identical commit to `release-candidate`. The candidate workflow
+   must pass its build and five-platform install matrix.
+3. A successful branch candidate automatically invokes the fail-closed
+   promotion workflow. Promotion requires both successful Headless CI and the
+   candidate to use the current `main` SHA, creates the annotated `v3.0.1` tag,
+   and publishes the exact candidate artifacts. Manual dispatch remains an
+   audited fallback.
+4. Promotion dispatches the Homebrew sync. The workflow must observe the exact
+   version and PKG checksum in the public cask, and the exact tap commit must
+   pass `brew test-bot`, before it starts the Intel and Apple-silicon public
+   Homebrew lifecycle tests.
+5. The stable release is initially published without replacing
+   `releases/latest`. Only after both public Homebrew lifecycle jobs pass does
+   the chain mark v3.0.1 latest and dispatch the tag-pinned GitHub Pages
+   deployment. Update OpenAI Sites from the same release source.
 6. Announce the release only after every public route resolves to v3.0.1.
 
 ## v3.0.1 performance work
