@@ -139,16 +139,12 @@ jobs:
             --title "Wattson v$WATTSON_VERSION" \
             --notes-file "$NOTES_PATH"
 
-      - name: Dispatch the verified downstream distributions
+      - name: Dispatch Homebrew validation and synchronization
         shell: bash
         run: |
           set -euo pipefail
           readonly TAG="v$WATTSON_VERSION"
           gh workflow run homebrew-tap.yml \
-            --repo "$GITHUB_REPOSITORY" \
-            --ref main \
-            --field "release_tag=$TAG"
-          gh workflow run pages.yml \
             --repo "$GITHUB_REPOSITORY" \
             --ref main \
             --field "release_tag=$TAG"

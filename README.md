@@ -75,8 +75,17 @@ cannot override macOS status-item placement.
 
 ## Uninstall
 
+If Wattson was installed with Homebrew:
+
 ```bash
-./scripts/uninstall.sh
+brew uninstall --cask laleoarrow/tap/wattson
+```
+
+For a direct DMG or PKG installation, download or clone this repository, then
+run its audited uninstaller from the repository root:
+
+```bash
+bash scripts/uninstall.sh
 ```
 
 The script removes the canonical app, v2 user-local app, launch-at-login entry,

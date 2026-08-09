@@ -34,10 +34,10 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("--latest", PROMOTE)
         self.assertNotIn("scripts/release.sh", PROMOTE)
 
-    def test_promotion_explicitly_dispatches_downstream_workflows(self):
+    def test_promotion_dispatches_homebrew_before_pages(self):
         self.assertIn("actions: write", PROMOTE)
         self.assertIn("gh workflow run homebrew-tap.yml", PROMOTE)
-        self.assertIn("gh workflow run pages.yml", PROMOTE)
+        self.assertNotIn("gh workflow run pages.yml", PROMOTE)
         self.assertIn('--field "release_tag=$TAG"', PROMOTE)
 
         for workflow in (HOMEBREW, PAGES):
@@ -51,7 +51,6 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertNotIn("\n  push:", PAGES)
         self.assertIn("workflow_dispatch:", PAGES)
         self.assertIn("ref: ${{ inputs.release_tag }}", PAGES)
-        self.assertIn("enablement: true", PAGES)
         self.assertIn('== "false"', PAGES)
 
 

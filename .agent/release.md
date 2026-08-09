@@ -41,10 +41,12 @@ notarized unless `notarytool` returned `Accepted` and `stapler validate` passed.
 5. GitHub headless CI and the release-candidate matrix are green.
 6. Create the annotated tag and stable GitHub release from that exact commit
    and exact candidate artifact bytes.
-7. Require the promotion-dispatched Homebrew synchronization and tag-pinned
-   Pages deployment to finish green before announcing the release. Promotion
-   dispatches these explicitly because a release created with `GITHUB_TOKEN`
-   does not emit another workflow run from a normal `release` trigger.
+7. Promotion explicitly dispatches Homebrew validation/synchronization because
+   a release created with `GITHUB_TOKEN` does not emit another workflow run
+   from a normal `release` trigger. Require the tap update and its separate
+   three-platform CI to finish green, then manually dispatch the tag-pinned
+   Pages workflow. GitHub Pages must already use **GitHub Actions** as its
+   publishing source. Announce the release only after Pages is green.
 
 If `HOMEBREW_TAP_TOKEN` is unavailable, the release workflow still downloads
 and verifies every stable asset and generates the exact cask without pushing.
