@@ -1,7 +1,7 @@
 # Wattson 项目状态
 
 **分支：`wattson-menubar`**
-**状态：v2.1.5 候选版增加安装失败一键诊断；v2.1.4 已加固外部 DMG 的 helper 注册**
+**状态：v2.1.5 候选版已通过 GitHub M1 的 macOS 14/15/26 远端安装矩阵**
 
 菜单栏插件这一轮的代码工作已经完成。弹窗采用一次性 Core Animation
 淡入与轻微位移/缩放回落；Reduce Motion 下只淡入，不新增定时器。特权助手已部署且为最新版（`getMode` 返回 `supportsHigh:true`）。
@@ -14,7 +14,8 @@
 `Install Wattson.app`；它会安装唯一的 `~/Applications/Wattson.app`、
 请求一次管理员授权安装特权助手，然后确认助手 socket 与真实菜单栏项都已就绪。
 必须从已挂载的只读 DMG 中直接运行安装器；授权或就绪验证失败时会恢复旧 app。
-SHA-256：最终构建后填写。
+SHA-256：`1a5054dfbc3f3a4ff9518620d3a9b49c282ff42973f9952a076470c05cf4caf6`。
+远端矩阵：https://github.com/laleoarrow/battery-monitor/actions/runs/31327037185
 
 本地源码安装：
 
