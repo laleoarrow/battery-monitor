@@ -1,4 +1,7 @@
+import os
 import pathlib
+import subprocess
+import tempfile
 import unittest
 
 
@@ -83,16 +86,21 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertIn('APP_VERSION="${1:-2.1.3}"', self.package)
-        self.assertIn("Contents/MacOS/Wattson", self.package)
+        self.assertIn('APP_VERSION="${1:-2.1.4}"', self.package)
+        self.assertIn("Contents/MacOS/Wattson", self.install)
 
     def test_release_binary_matches_the_declared_macos_minimum(self):
-        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.1.3}"', self.install)
+        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.1.4}"', self.install)
         self.assertIn('SWIFT_TARGET="arm64-apple-macos12.0"', self.install)
         self.assertIn('-target "$SWIFT_TARGET"', self.install)
 
     def test_release_dmg_has_one_graphical_install_path(self):
         self.assertIn('bash "$SCRIPT_DIR/install.sh" --app-only', self.package)
+        self.assertIn('WATTSON_PACKAGE_APP_DIR="$APP_DIR"', self.package)
+        self.assertNotIn('APP_DIR="$HOME/Applications/', self.package)
+        self.assertNotIn('pkill -f "${APP_DIR}', self.package)
+        self.assertIn("getconf DARWIN_USER_TEMP_DIR", self.package)
+        self.assertIn("getconf DARWIN_USER_TEMP_DIR", self.install)
         self.assertIn('WATTSON_APP_VERSION="$APP_VERSION"', self.package)
         self.assertIn('INSTALLER_NAME="Install Wattson.app"', self.package)
         self.assertIn('Installer/main.swift', self.package)
@@ -100,6 +108,29 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertNotIn('Install Wattson.command', self.package)
         self.assertNotIn('Quick Start.txt', self.package)
         self.assertNotIn('ln -s /Applications', self.package)
+
+    def test_packaging_destination_rejects_a_spoofed_tmpdir(self):
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+            fake_temp = pathlib.Path(directory)
+            target = fake_temp / "Wattson.app"
+            target.mkdir()
+            sentinel = target / "must-not-be-deleted"
+            sentinel.write_text("sentinel", encoding="utf-8")
+            environment = os.environ.copy()
+            environment["TMPDIR"] = str(fake_temp)
+            environment["WATTSON_PACKAGE_APP_DIR"] = str(target)
+
+            result = subprocess.run(
+                ["/bin/bash", str(INSTALL), "--app-only"],
+                check=False,
+                env=environment,
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+            self.assertIn("inside the temp root", result.stderr)
+            self.assertEqual(sentinel.read_text(encoding="utf-8"), "sentinel")
 
     def test_release_dmg_is_world_traversable_and_not_spotlight_indexed(self):
         self.assertIn('chmod 755 "$STAGING_DIR"', self.package)
@@ -148,14 +179,16 @@ class InstallMigrationContractTests(unittest.TestCase):
         stop_old_service = self.installer_helper.index(
             'stop_loaded_helper', replacement
         )
+        bootstrap_function = self.installer_helper.index("bootstrap_helper() {")
         enable_service = self.installer_helper.index(
-            '/bin/launchctl enable "$HELPER_TARGET"', replacement
+            '/bin/launchctl enable "$HELPER_TARGET"', bootstrap_function
         )
         bootstrap_service = self.installer_helper.index(
-            '/bin/launchctl bootstrap system "$HELPER_PLIST"', replacement
+            '/bin/launchctl bootstrap system "$HELPER_PLIST"', bootstrap_function
         )
-        self.assertLess(stop_old_service, enable_service)
+        bootstrap_call = self.installer_helper.index("if bootstrap_helper; then", replacement)
         self.assertLess(enable_service, bootstrap_service)
+        self.assertLess(stop_old_service, bootstrap_call)
 
         rollback = self.installer_helper.split("rollback_helper_install() {", 1)[1]
         rollback = rollback.split("abort_helper_install() {", 1)[0]
@@ -175,6 +208,19 @@ class InstallMigrationContractTests(unittest.TestCase):
             'if ! sudo launchctl bootstrap system "$HELPER_PLIST"', self.install
         )
         self.assertIn('sudo launchctl disable "$HELPER_TARGET"', self.install)
+
+    def test_graphical_helper_handles_external_distribution_state(self):
+        helper_plist = (ROOT / "Helper" / "com.leoarrow.wattson.helper.plist").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("AssociatedBundleIdentifiers", helper_plist)
+        self.assertIn("com.leoarrow.wattson", helper_plist)
+        self.assertIn("clear_quarantine", self.installer_helper)
+        self.assertIn("com.apple.quarantine", self.installer_helper)
+        self.assertIn("bootstrap_helper", self.installer_helper)
+        self.assertIn("for attempt in 1 2", self.installer_helper)
+        self.assertIn('/bin/launchctl enable "$HELPER_TARGET"', self.installer_helper)
+        self.assertIn('--identifier "$HELPER_LABEL"', self.package)
 
     def test_privileged_phase_is_pinned_and_staged_by_root(self):
         self.assertIn("__INSTALL_HELPER_SHA256__", self.installer)

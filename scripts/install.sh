@@ -2,8 +2,8 @@
 # install.sh — Install Wattson as a macOS menu bar app
 #
 # --app-only skips step 7. The app itself lives in ~/Applications and needs no
-# elevation; only the privileged helper does. The helper changes rarely, so
-# updating the app should not have to ask for a password.
+# elevation; only the privileged helper does. WATTSON_PACKAGE_APP_DIR is an
+# internal packaging-only destination and is accepted only under the temp root.
 set -euo pipefail
 
 APP_ONLY=0
@@ -17,9 +17,27 @@ done
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$SCRIPT_DIR/.."
 APP_NAME="Wattson"
-APP_VERSION="${WATTSON_APP_VERSION:-2.1.3}"
+APP_VERSION="${WATTSON_APP_VERSION:-2.1.4}"
 SWIFT_TARGET="arm64-apple-macos12.0"
-APP_DIR="$HOME/Applications/Wattson.app"
+PACKAGE_APP_DIR="${WATTSON_PACKAGE_APP_DIR:-}"
+PACKAGE_BUILD=0
+SYSTEM_TEMP_ROOT="$(/usr/bin/getconf DARWIN_USER_TEMP_DIR)"
+SYSTEM_TEMP_ROOT="$(cd -P -- "$SYSTEM_TEMP_ROOT" && pwd)"
+if [[ -n "$PACKAGE_APP_DIR" ]]; then
+    [[ "$APP_ONLY" == "1" ]] || { echo "packaging destination requires --app-only" >&2; exit 2; }
+    [[ "$(/usr/bin/basename "$PACKAGE_APP_DIR")" == "Wattson.app" ]] \
+        || { echo "invalid packaging app destination" >&2; exit 2; }
+    package_parent="$(cd -P -- "$(/usr/bin/dirname "$PACKAGE_APP_DIR")" 2>/dev/null && pwd)" \
+        || { echo "packaging app parent is missing" >&2; exit 2; }
+    case "$package_parent/" in
+        "$SYSTEM_TEMP_ROOT/"*) ;;
+        *) echo "packaging app destination must be inside the temp root" >&2; exit 2 ;;
+    esac
+    APP_DIR="$PACKAGE_APP_DIR"
+    PACKAGE_BUILD=1
+else
+    APP_DIR="$HOME/Applications/Wattson.app"
+fi
 APP_BUNDLE_ID="com.leoarrow.wattson"
 SUPPORT_DIR="$HOME/Library/Application Support/Wattson"
 HELPER_LABEL="com.leoarrow.wattson.helper"
@@ -38,32 +56,43 @@ LEGACY_CONFIG="$HOME/.battery_monitor.cfg"
 LEGACY_SCRIPT="$HOME/.battery_monitor.py"
 
 APP_ENTITLEMENTS="$ROOT_DIR/BatteryPowerApp.entitlements"
-BUILD_DIR="$(mktemp -d "${TMPDIR:-/tmp}/wattson-build.XXXXXX")"
+BUILD_DIR="$(mktemp -d "$SYSTEM_TEMP_ROOT/wattson-build.XXXXXX")"
+if [[ "$PACKAGE_BUILD" == "1" ]]; then
+    SUPPORT_DIR="$BUILD_DIR/Application Support/Wattson"
+fi
 cleanup() {
     rm -rf "$BUILD_DIR"
 }
 trap cleanup EXIT
 
-echo "📦 Installing ${APP_NAME}..."
+if [[ "$PACKAGE_BUILD" == "1" ]]; then
+    echo "📦 Building ${APP_NAME} for packaging..."
+else
+    echo "📦 Installing ${APP_NAME}..."
+fi
 
 # 1. Remove the old install completely. Unregister before deleting, otherwise
 # LaunchServices keeps a stale record pointing at a missing bundle.
-launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT" >/dev/null 2>&1 || true
-launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT_OLD" >/dev/null 2>&1 || true
-rm -f "$LEGACY_AGENT" "$LEGACY_AGENT_OLD"
-pkill -f "$LEGACY_APP/Contents/MacOS/applet" 2>/dev/null || true
-if [ -d "$LEGACY_APP" ]; then
-    xcrun pluginkit -r "$LEGACY_APP/Contents/PlugIns/BatteryPowerWidgetExtension.appex" >/dev/null 2>&1 || true
-    "$LSREGISTER" -u "$LEGACY_APP" >/dev/null 2>&1 || true
+if [[ "$PACKAGE_BUILD" != "1" ]]; then
+    launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT" >/dev/null 2>&1 || true
+    launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT_OLD" >/dev/null 2>&1 || true
+    rm -f "$LEGACY_AGENT" "$LEGACY_AGENT_OLD"
+    pkill -f "$LEGACY_APP/Contents/MacOS/applet" 2>/dev/null || true
+    if [ -d "$LEGACY_APP" ]; then
+        xcrun pluginkit -r "$LEGACY_APP/Contents/PlugIns/BatteryPowerWidgetExtension.appex" >/dev/null 2>&1 || true
+        "$LSREGISTER" -u "$LEGACY_APP" >/dev/null 2>&1 || true
+    fi
+    rm -rf "$LEGACY_APP" "$LEGACY_SUPPORT"
+    rm -f "$LEGACY_CONFIG" "$LEGACY_SCRIPT"
+    echo "  ✅ Removed 电池功率"
 fi
-rm -rf "$LEGACY_APP" "$LEGACY_SUPPORT"
-rm -f "$LEGACY_CONFIG" "$LEGACY_SCRIPT"
-echo "  ✅ Removed 电池功率"
 
 # 2. Recreate the app bundle.
-pkill -f "$APP_DIR/Contents/MacOS/Wattson" 2>/dev/null || true
-if [ -d "$APP_DIR" ]; then
-    "$LSREGISTER" -u "$APP_DIR" >/dev/null 2>&1 || true
+if [[ "$PACKAGE_BUILD" != "1" ]]; then
+    pkill -f "$APP_DIR/Contents/MacOS/Wattson" 2>/dev/null || true
+    if [ -d "$APP_DIR" ]; then
+        "$LSREGISTER" -u "$APP_DIR" >/dev/null 2>&1 || true
+    fi
 fi
 rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources" "$SUPPORT_DIR"
@@ -143,7 +172,9 @@ echo "  ✅ Ad-hoc code signature"
 # Bumping the bundle's mtime before re-registering is what makes Finder and
 # Spotlight pick up a changed icon; without it they keep serving the cached one.
 touch "$APP_DIR"
-"$LSREGISTER" -f "$APP_DIR" >/dev/null
+if [[ "$PACKAGE_BUILD" != "1" ]]; then
+    "$LSREGISTER" -f "$APP_DIR" >/dev/null
+fi
 
 # 7. Install the privileged helper. launchd wakes it on demand and it exits
 # after five idle seconds.
@@ -151,9 +182,13 @@ if [ "$APP_ONLY" = "1" ]; then
     echo "  ⏭  Skipping the privileged helper (--app-only)"
     # -e, not -x: the helper is 544 root:wheel, so it is deliberately not
     # executable by the user running this script.
-    if [ ! -e "$HELPER_BIN" ]; then
+    if [[ "$PACKAGE_BUILD" != "1" && ! -e "$HELPER_BIN" ]]; then
         echo "  ⚠️  No helper at $HELPER_BIN — power mode switching will not work."
         echo "     Run ./scripts/install.sh without --app-only to install it."
+    fi
+    if [[ "$PACKAGE_BUILD" == "1" ]]; then
+        echo "✅ Packaging app build complete"
+        exit 0
     fi
     echo ""
     echo "🎉 Done. Launch with: open \"$APP_DIR\""
@@ -165,7 +200,7 @@ xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift" \
     -target "$SWIFT_TARGET" \
     -O \
     -o "$HELPER_BUILD"
-codesign --force --sign - "$HELPER_BUILD" >/dev/null
+codesign --force --sign - --identifier "$HELPER_LABEL" "$HELPER_BUILD" >/dev/null
 helper_was_disabled=0
 if ! disabled_services="$(sudo launchctl print-disabled system)"; then
     echo "helper launchd state could not be inspected" >&2

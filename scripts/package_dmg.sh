@@ -6,9 +6,8 @@ umask 022
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_NAME="Wattson"
-APP_VERSION="${1:-2.1.3}"
+APP_VERSION="${1:-2.1.4}"
 SWIFT_TARGET="arm64-apple-macos12.0"
-APP_DIR="$HOME/Applications/${APP_NAME}.app"
 HELPER_LABEL="com.leoarrow.wattson.helper"
 INSTALLER_NAME="Install Wattson.app"
 INSTALLER_EXECUTABLE="Install Wattson"
@@ -20,9 +19,13 @@ if [[ ! "$APP_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z]+)?$ ]]; then
     exit 2
 fi
 
-STAGING_DIR="$(mktemp -d "${TMPDIR:-/tmp}/wattson-dmg.XXXXXX")"
-INSTALLER_BUILD_DIR="$(mktemp -d "${TMPDIR:-/tmp}/wattson-installer-build.XXXXXX")"
+SYSTEM_TEMP_ROOT="$(/usr/bin/getconf DARWIN_USER_TEMP_DIR)"
+SYSTEM_TEMP_ROOT="$(cd -P -- "$SYSTEM_TEMP_ROOT" && pwd)"
+STAGING_DIR="$(mktemp -d "$SYSTEM_TEMP_ROOT/wattson-dmg.XXXXXX")"
+INSTALLER_BUILD_DIR="$(mktemp -d "$SYSTEM_TEMP_ROOT/wattson-installer-build.XXXXXX")"
 chmod 755 "$STAGING_DIR"
+mkdir -p "$INSTALLER_BUILD_DIR/AppBuild"
+APP_DIR="$INSTALLER_BUILD_DIR/AppBuild/${APP_NAME}.app"
 INSTALLER_DIR="$STAGING_DIR/$INSTALLER_NAME"
 INSTALLER_CONTENTS="$INSTALLER_DIR/Contents"
 INSTALLER_MACOS="$INSTALLER_CONTENTS/MacOS"
@@ -35,8 +38,9 @@ cleanup() {
 trap cleanup EXIT
 
 echo "📦 Building ${APP_NAME} v${APP_VERSION}..."
-pkill -f "${APP_DIR}/Contents/MacOS/Wattson" >/dev/null 2>&1 || true
-WATTSON_APP_VERSION="$APP_VERSION" bash "$SCRIPT_DIR/install.sh" --app-only
+WATTSON_APP_VERSION="$APP_VERSION" \
+WATTSON_PACKAGE_APP_DIR="$APP_DIR" \
+    bash "$SCRIPT_DIR/install.sh" --app-only
 
 mkdir -p "$DIST_DIR" "$INSTALLER_MACOS" "$PAYLOAD_DIR"
 rm -f "$DMG_PATH"
@@ -53,7 +57,7 @@ xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift" \
     -target "$SWIFT_TARGET" \
     -O \
     -o "$PAYLOAD_DIR/$HELPER_LABEL"
-codesign --force --sign - "$PAYLOAD_DIR/$HELPER_LABEL" >/dev/null
+codesign --force --sign - --identifier "$HELPER_LABEL" "$PAYLOAD_DIR/$HELPER_LABEL" >/dev/null
 cp "$ROOT_DIR/Helper/${HELPER_LABEL}.plist" "$PAYLOAD_DIR/${HELPER_LABEL}.plist"
 cp "$ROOT_DIR/Installer/install-helper.sh" "$INSTALLER_RESOURCES/install-helper.sh"
 chmod 755 "$INSTALLER_RESOURCES/install-helper.sh"

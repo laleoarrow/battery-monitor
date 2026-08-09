@@ -51,6 +51,30 @@ validate_plist() {
         || fail "$description socket does not match"
 }
 
+clear_quarantine() {
+    local item_path="$1"
+    local attributes
+
+    # Browser-downloaded disk images can propagate quarantine while copying.
+    # These files have already passed the pinned payload
+    # hashes and structural validation performed by the graphical installer.
+    attributes="$(/usr/bin/xattr "$item_path" 2>/dev/null)" \
+        || fail "extended attributes could not be inspected on $(/usr/bin/basename "$item_path")"
+    case $'\n'"$attributes"$'\n' in
+        *$'\ncom.apple.quarantine\n'*)
+            /usr/bin/xattr -d com.apple.quarantine "$item_path" >/dev/null 2>&1 \
+                || fail "quarantine could not be removed from $(/usr/bin/basename "$item_path")"
+            ;;
+    esac
+    attributes="$(/usr/bin/xattr "$item_path" 2>/dev/null)" \
+        || fail "extended attributes could not be verified on $(/usr/bin/basename "$item_path")"
+    case $'\n'"$attributes"$'\n' in
+        *$'\ncom.apple.quarantine\n'*)
+            fail "quarantine could not be removed from $(/usr/bin/basename "$item_path")"
+            ;;
+    esac
+}
+
 stop_loaded_helper() {
     local attempt
 
@@ -65,6 +89,57 @@ stop_loaded_helper() {
         /bin/sleep 0.1
     done
     return 1
+}
+
+bootstrap_helper() {
+    local attempt
+    local bootstrap_status=1
+
+    for attempt in 1 2; do
+        # Re-check the final state after the plist is in place. On macOS 13+
+        # Background Task Management can update legacy-job state during this
+        # window even when there was no previous Wattson installation.
+        /bin/launchctl enable "$HELPER_TARGET" || return "$?"
+        if /bin/launchctl bootstrap system "$HELPER_PLIST"; then
+            return 0
+        else
+            bootstrap_status="$?"
+        fi
+
+        # launchctl can report an error even though the job was registered.
+        # The later health probe remains the source of truth in that case.
+        if /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+            return 0
+        fi
+        if [[ "$attempt" == "2" ]]; then
+            return "$bootstrap_status"
+        fi
+
+        # Clear a partially registered or still-unloading job once, then retry.
+        /bin/sleep 0.5
+        stop_loaded_helper >/dev/null 2>&1 || return "$bootstrap_status"
+        /bin/rm -f -- "$HELPER_SOCKET" || return "$bootstrap_status"
+    done
+    return "$bootstrap_status"
+}
+
+report_bootstrap_failure() {
+    local current_disabled="unknown"
+    local current_state
+
+    if current_state="$(/bin/launchctl print-disabled system 2>/dev/null)"; then
+        case "$current_state" in
+            *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*)
+                current_disabled="yes"
+                ;;
+            *)
+                current_disabled="no"
+                ;;
+        esac
+    fi
+    echo "Install Wattson: helper registration failed after one cleanup retry" >&2
+    echo "System: macOS $(/usr/bin/sw_vers -productVersion) ($(/usr/bin/uname -m)); launchd disabled: $current_disabled; quarantine: absent" >&2
+    echo "请在“系统设置 > 通用 > 登录项与扩展”中允许 Wattson 在后台运行，然后重新安装。" >&2
 }
 
 rollback_helper_install() {
@@ -163,6 +238,8 @@ fi
 # Validate destination-filesystem candidates before the old service is touched.
 /usr/bin/install -o root -g wheel -m 544 "$SOURCE_HELPER" "$HELPER_CANDIDATE"
 /usr/bin/install -o root -g wheel -m 644 "$SOURCE_PLIST" "$PLIST_CANDIDATE"
+clear_quarantine "$HELPER_CANDIDATE"
+clear_quarantine "$PLIST_CANDIDATE"
 validate_helper "$HELPER_CANDIDATE"
 validate_plist "$PLIST_CANDIDATE" "candidate helper plist"
 
@@ -173,10 +250,13 @@ stop_loaded_helper || fail "existing helper service could not be stopped"
 /bin/mv -f -- "$PLIST_CANDIDATE" "$HELPER_PLIST"
 validate_helper "$HELPER_BIN"
 validate_plist "$HELPER_PLIST" "installed helper plist"
-if [[ "$old_service_disabled" == "1" ]]; then
-    /bin/launchctl enable "$HELPER_TARGET"
+if bootstrap_helper; then
+    :
+else
+    bootstrap_status="$?"
+    report_bootstrap_failure
+    exit "$bootstrap_status"
 fi
-/bin/launchctl bootstrap system "$HELPER_PLIST"
 /bin/launchctl print "$HELPER_TARGET" >/dev/null
 "$HELPER_BIN" --health-probe
 
@@ -190,8 +270,11 @@ if [[ -d "$DUPLICATE_APP" && ! -L "$DUPLICATE_APP" ]]; then
         if [[ "$duplicate_id" == "com.leoarrow.wattson" ]]; then
             [[ ! -e "$DUPLICATE_BACKUP" && ! -L "$DUPLICATE_BACKUP" ]] \
                 || fail "duplicate-app rollback path already exists"
-            /bin/mv -- "$DUPLICATE_APP" "$DUPLICATE_BACKUP"
             duplicate_moved=1
+            if ! /bin/mv -- "$DUPLICATE_APP" "$DUPLICATE_BACKUP"; then
+                duplicate_moved=0
+                fail "duplicate app could not be moved to its rollback path"
+            fi
             "$LSREGISTER" -u "$DUPLICATE_BACKUP" >/dev/null 2>&1 || true
             /usr/bin/pkill -f '^/Applications/Wattson\.app/Contents/MacOS/Wattson([[:space:]]|$)' \
                 >/dev/null 2>&1 || true

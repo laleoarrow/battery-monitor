@@ -4,6 +4,10 @@
 <dict>
     <key>Label</key>
     <string>com.leoarrow.wattson.helper</string>
+    <key>AssociatedBundleIdentifiers</key>
+    <array>
+        <string>com.leoarrow.wattson</string>
+    </array>
     <key>ProgramArguments</key>
     <array>
         <string>/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper</string>

@@ -19,8 +19,8 @@ class InteractionBehaviorTests(unittest.TestCase):
     AppKit's own timing is in the loop, so this one builds a real .app and
     drives real NSStatusItem and NSPopover objects.
 
-    It takes about 20 seconds. Set WATTSON_SKIP_INTERACTION=1 to skip it while
-    iterating on the fast structural tests.
+    It takes about 20 seconds and displays a real popover, so it is opt-in.
+    Set WATTSON_RUN_INTERACTION=1 only in a disposable or idle GUI session.
     """
 
     def test_slider_harness_uses_the_production_mode_order(self):
@@ -29,8 +29,8 @@ class InteractionBehaviorTests(unittest.TestCase):
         self.assertNotIn("ModeSliderView(modes: [.low, .auto, .high])", source)
 
     def _assert_interaction_contract(self, force_legacy=False):
-        if os.environ.get("WATTSON_SKIP_INTERACTION") == "1":
-            self.skipTest("WATTSON_SKIP_INTERACTION=1")
+        if os.environ.get("WATTSON_RUN_INTERACTION") != "1":
+            self.skipTest("real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)")
         if shutil.which("xcrun") is None:
             self.skipTest("no Xcode command line tools")
         # A status item cannot host a popover without a window server.
