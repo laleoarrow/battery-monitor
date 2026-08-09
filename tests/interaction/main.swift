@@ -93,9 +93,12 @@ if !screenLocked {
     check("点击桌面/其他 app 后弹窗收起", !p.isShownForTest && !p.isOpen)
 
     p.toggle(relativeTo: button); spin(0.4)
-    p.toggle(relativeTo: button); spin(0.2)      // 关，动画中途
+    p.toggle(relativeTo: button)                 // 关，不用固定等待猜测动画时长
+    let dismissalInFlight = !p.isOpen && p.isShownForTest
+    check("重开测试确实发生在关闭动画尚未完成时", dismissalInFlight)
     p.toggle(relativeTo: button)                 // 立刻再点想重开
-    check("关闭中途重开不会从低透明度重播入场", p.entranceAnimationCountForTest == 0)
+    check("关闭中途重开不会从低透明度重播入场",
+          !dismissalInFlight || p.entranceAnimationCountForTest == 0)
     spin(1.2)
     check("关闭动画中途再点可立即重开", p.isShownForTest && p.isOpen)
     check("重开后仍在监听外部点击", p.isWatchingOutsideClicks)
