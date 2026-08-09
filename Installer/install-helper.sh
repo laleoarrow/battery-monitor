@@ -4,6 +4,7 @@ set -euo pipefail
 umask 022
 
 readonly HELPER_LABEL="com.leoarrow.wattson.helper"
+readonly HELPER_TARGET="system/$HELPER_LABEL"
 readonly HELPER_BIN="/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper"
 readonly HELPER_PLIST="/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist"
 readonly HELPER_SOCKET="/var/run/wattson-helper.sock"
@@ -24,6 +25,7 @@ readonly BACKUP_PLIST="$BACKUP_DIR/${HELPER_LABEL}.plist"
 had_helper=0
 had_plist=0
 old_service_loaded=0
+old_service_disabled=0
 replacement_started=0
 duplicate_moved=0
 
@@ -49,6 +51,22 @@ validate_plist() {
         || fail "$description socket does not match"
 }
 
+stop_loaded_helper() {
+    local attempt
+
+    if ! /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+        return 0
+    fi
+    /bin/launchctl bootout "$HELPER_TARGET" || return 1
+    for ((attempt = 0; attempt < 10; attempt++)); do
+        if ! /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+            return 0
+        fi
+        /bin/sleep 0.1
+    done
+    return 1
+}
+
 rollback_helper_install() {
     local status="$?"
     local restore_ok=1
@@ -57,21 +75,32 @@ rollback_helper_install() {
 
     /bin/rm -f -- "$HELPER_CANDIDATE" "$PLIST_CANDIDATE"
     if [[ "$status" != "0" && "$replacement_started" == "1" ]]; then
-        /bin/launchctl bootout system "$HELPER_PLIST" >/dev/null 2>&1 || true
-        /bin/rm -f -- "$HELPER_SOCKET" "$HELPER_BIN" "$HELPER_PLIST"
-        if [[ "$had_helper" == "1" ]]; then
-            /usr/bin/install -o root -g wheel -m 544 "$BACKUP_HELPER" "$HELPER_BIN" \
-                || restore_ok=0
-        fi
-        if [[ "$had_plist" == "1" ]]; then
-            /usr/bin/install -o root -g wheel -m 644 "$BACKUP_PLIST" "$HELPER_PLIST" \
-                || restore_ok=0
-        fi
-        if [[ "$old_service_loaded" == "1" && "$had_helper" == "1" && "$had_plist" == "1" ]]; then
-            /bin/launchctl bootstrap system "$HELPER_PLIST" >/dev/null 2>&1 \
-                || restore_ok=0
-            /bin/launchctl print "system/$HELPER_LABEL" >/dev/null 2>&1 \
-                || restore_ok=0
+        if stop_loaded_helper >/dev/null 2>&1; then
+            /bin/rm -f -- "$HELPER_SOCKET" "$HELPER_BIN" "$HELPER_PLIST"
+            if [[ "$had_helper" == "1" ]]; then
+                /usr/bin/install -o root -g wheel -m 544 "$BACKUP_HELPER" "$HELPER_BIN" \
+                    || restore_ok=0
+            fi
+            if [[ "$had_plist" == "1" ]]; then
+                /usr/bin/install -o root -g wheel -m 644 "$BACKUP_PLIST" "$HELPER_PLIST" \
+                    || restore_ok=0
+            fi
+            if [[ "$old_service_loaded" == "1" && "$had_helper" == "1" && "$had_plist" == "1" ]]; then
+                if [[ "$old_service_disabled" == "1" ]]; then
+                    /bin/launchctl enable "$HELPER_TARGET" >/dev/null 2>&1 \
+                        || restore_ok=0
+                fi
+                /bin/launchctl bootstrap system "$HELPER_PLIST" >/dev/null 2>&1 \
+                    || restore_ok=0
+                /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1 \
+                    || restore_ok=0
+            fi
+            if [[ "$old_service_disabled" == "1" ]]; then
+                /bin/launchctl disable "$HELPER_TARGET" >/dev/null 2>&1 \
+                    || restore_ok=0
+            fi
+        else
+            restore_ok=0
         fi
     fi
     if [[ "$status" != "0" && "$duplicate_moved" == "1" ]]; then
@@ -119,7 +148,15 @@ if [[ -e "$HELPER_PLIST" || -L "$HELPER_PLIST" ]]; then
     /usr/bin/install -o root -g wheel -m 644 "$HELPER_PLIST" "$BACKUP_PLIST"
     had_plist=1
 fi
-if /bin/launchctl print "system/$HELPER_LABEL" >/dev/null 2>&1; then
+if ! disabled_services="$(/bin/launchctl print-disabled system 2>/dev/null)"; then
+    fail "helper launchd state could not be inspected"
+fi
+case "$disabled_services" in
+    *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*)
+        old_service_disabled=1
+        ;;
+esac
+if /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
     old_service_loaded=1
 fi
 
@@ -130,14 +167,17 @@ validate_helper "$HELPER_CANDIDATE"
 validate_plist "$PLIST_CANDIDATE" "candidate helper plist"
 
 replacement_started=1
-/bin/launchctl bootout system "$HELPER_PLIST" >/dev/null 2>&1 || true
+stop_loaded_helper || fail "existing helper service could not be stopped"
 /bin/rm -f -- "$HELPER_SOCKET"
 /bin/mv -f -- "$HELPER_CANDIDATE" "$HELPER_BIN"
 /bin/mv -f -- "$PLIST_CANDIDATE" "$HELPER_PLIST"
 validate_helper "$HELPER_BIN"
 validate_plist "$HELPER_PLIST" "installed helper plist"
+if [[ "$old_service_disabled" == "1" ]]; then
+    /bin/launchctl enable "$HELPER_TARGET"
+fi
 /bin/launchctl bootstrap system "$HELPER_PLIST"
-/bin/launchctl print "system/$HELPER_LABEL" >/dev/null
+/bin/launchctl print "$HELPER_TARGET" >/dev/null
 "$HELPER_BIN" --health-probe
 
 # This is deliberately the final fallible installation step. The new app has

@@ -54,7 +54,9 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         content.update(snapshot: snapshot, history: history, peak: peak, degraded: degraded)
     }
 
-    func setModeSelectHandler(_ handler: @escaping (EnergyMode) -> Bool) {
+    func setModeSelectHandler(
+        _ handler: @escaping (EnergyMode, @escaping (EnergyMode?) -> Void) -> Void
+    ) {
         content.setModeSelectHandler(handler)
     }
 

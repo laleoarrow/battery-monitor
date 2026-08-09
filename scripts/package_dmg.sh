@@ -6,7 +6,7 @@ umask 022
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_NAME="Wattson"
-APP_VERSION="${1:-2.0.4}"
+APP_VERSION="${1:-2.1.3}"
 SWIFT_TARGET="arm64-apple-macos12.0"
 APP_DIR="$HOME/Applications/${APP_NAME}.app"
 HELPER_LABEL="com.leoarrow.wattson.helper"

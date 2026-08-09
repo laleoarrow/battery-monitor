@@ -2,6 +2,28 @@ import AppKit
 import IOKit.ps
 import os
 
+/// Tracks the optimistic two-state right-click gesture. The generation is the
+/// request identity: comparing only the target mode is ABA-prone after three
+/// fast toggles (Low → Auto → Low).
+struct RightClickModeSequence {
+    private(set) var pendingMode: EnergyMode?
+    private(set) var generation = 0
+
+    mutating func next(current: EnergyMode) -> (mode: EnergyMode, generation: Int) {
+        let base = pendingMode ?? current
+        let mode: EnergyMode = base == .low ? .auto : .low
+        pendingMode = mode
+        generation += 1
+        return (mode, generation)
+    }
+
+    mutating func finish(generation completed: Int) -> Bool {
+        guard completed == generation else { return false }
+        pendingMode = nil
+        return true
+    }
+}
+
 final class StatusItemController: NSObject {
     /// The system menu bar font with tabular figures switched on. Deriving from
     /// menuBarFont keeps size and weight identical to every neighbouring item;
@@ -34,6 +56,7 @@ final class StatusItemController: NSObject {
     private var powerSourceRunLoopSource: CFRunLoopSource?
     private var pressed = false
     private var clickRouter = ClickRouter()
+    private var rightClickModes = RightClickModeSequence()
     private var systemBatteryIconHidden: Bool?
     private var systemBatteryIconRefreshGeneration = 0
 
@@ -55,8 +78,12 @@ final class StatusItemController: NSObject {
         popover.onVisibilityChange { [weak self] shown in
             shown ? self?.startDisplayClock() : self?.stopDisplayClock()
         }
-        popover.setModeSelectHandler { [weak self] mode in
-            self?.applyEnergyMode(mode) ?? false
+        popover.setModeSelectHandler { [weak self] mode, completion in
+            guard let self else {
+                completion(nil)
+                return
+            }
+            self.applyEnergyMode(mode, completion: completion)
         }
         popover.setSystemBatteryIconToggleHandler { [weak self] hidden in
             self?.applySystemBatteryIconHidden(hidden) ?? false
@@ -101,25 +128,39 @@ final class StatusItemController: NSObject {
                 if opening { refreshSystemBatteryIconState() }
             case .secondary:
                 pressed = false
-                let ok = applyEnergyMode(EnergyModeController.current == .low ? .auto : .low)
-                confirmToggle(success: ok)
+                refreshStatusItem()
+                let request = rightClickModes.next(current: EnergyModeController.current)
+                applyEnergyMode(request.mode) { [weak self] landedMode in
+                    guard let self,
+                          self.rightClickModes.finish(generation: request.generation) else { return }
+                    self.confirmToggle(success: landedMode == request.mode)
+                }
             }
         }
     }
 
-    private func applyEnergyMode(_ mode: EnergyMode) -> Bool {
+    /// The popover's selector settles immediately; helper wake-up, `pmset`, and
+    /// authoritative readback happen off the AppKit thread. Right-click uses
+    /// this same path so it cannot overtake an in-flight popover write.
+    private func applyEnergyMode(_ mode: EnergyMode, completion: @escaping (EnergyMode?) -> Void) {
         guard HelperClient.isInstalled else {
             os_log("helper not installed — mode change is a no-op", log: log, type: .error)
             refreshPresentation()
-            return false
+            completion(nil)
+            return
         }
-        let succeeded = EnergyModeController.set(mode)
-        if succeeded {
-            sampleNow(recordHistory: false)
-        } else {
-            refreshPresentation()
+        EnergyModeController.set(mode) { [weak self] landedMode in
+            guard let self else {
+                completion(nil)
+                return
+            }
+            completion(landedMode)
+            if landedMode == mode {
+                self.sampleNow(recordHistory: false)
+            } else {
+                self.refreshPresentation()
+            }
         }
-        return succeeded
     }
 
     private func refreshSystemBatteryIconState() {

@@ -1,7 +1,7 @@
 # Wattson 项目状态
 
 **分支：`wattson-menubar`**
-**状态：v2.0.4 平滑弹窗入场与单入口 DMG 已构建并挂载验证；应用与特权助手签名有效，完整测试套件通过**
+**状态：v2.1.3 重做模式滑块交互与原生 Liquid Glass，修复 launchd 安装 error 5、系统电池偏好会话分叉及功率遥测符号漂移**
 
 菜单栏插件这一轮的代码工作已经完成。弹窗采用一次性 Core Animation
 淡入与轻微位移/缩放回落；Reduce Motion 下只淡入，不新增定时器。特权助手已部署且为最新版（`getMode` 返回 `supportsHigh:true`）。
@@ -10,11 +10,11 @@
 
 ## 装它
 
-发给用户时使用 `dist/Wattson-v2.0.4.dmg`。镜像只显示
+发给用户时使用 `dist/Wattson-v2.1.3.dmg`。镜像只显示
 `Install Wattson.app`；它会安装唯一的 `~/Applications/Wattson.app`、
 请求一次管理员授权安装特权助手，然后确认助手 socket 与真实菜单栏项都已就绪。
 必须从已挂载的只读 DMG 中直接运行安装器；授权或就绪验证失败时会恢复旧 app。
-SHA-256：`a6d33e7dfdb55e65ba74c1c6058e0dde69d62eacf26e69e2509c06d44918d31a`。
+SHA-256：最终构建后填写。
 
 本地源码安装：
 
@@ -65,24 +65,26 @@ python3 -m unittest discover -s tests
 
 ## 手工验证矩阵
 
-装完后逐格确认。这是唯一还没走过的环节。
+装完后逐格确认。以下只勾选本机这一轮实际走过的状态；需要特定电源、
+外观或低电量条件的项目仍保留待测。
 
-- [ ] 电源状态：充电 / 插电已满 / 电池供电 / **混合供电**（需 ≤30 W 充电器配高负载复现）
+- [x] 电源状态：电池供电，且原始遥测正负两种编码都不会再触发守恒误报
+- [ ] 电源状态：充电 / 插电已满 / **混合供电**（需 ≤30 W 充电器配高负载复现）
 - [ ] 菜单栏外观：浅色 / 深色下与系统电池并排比对
 - [ ] 图标颜色：省电黄 / 低电量 ≤20% 红 / 充电绿 / 常态模板
 - [ ] **按下高亮**：有色状态下按住图标，确认切回模板且对比度足够
 - [ ] **右键**：切换生效、图标变色、有形变确认、**不弹密码框**
-- [ ] **助手按需**：`pgrep wattson-helper` 平时无输出；右键后短暂出现；5 秒后消失
-- [ ] 左键：弹窗从菜单栏下方平滑展开、浮于所有窗口之上、点击外部关闭；Reduce Motion 下仅淡入
+- [x] **助手按需**：socket 请求唤醒助手，5 秒空闲后正常退出
+- [x] 左键：真实菜单栏项可打开弹窗，功率、系统负载与电池输出现场一致
 - [ ] 弹窗底部：自动 / Low Power / High Power 三档切换实际生效
 - [ ] 系统电池图标：复选框隐藏后消失，取消后恢复，Control Center 只短暂重启
 - [ ] 空转：弹窗关闭后采样仅每 2 秒一次
-- [ ] 卸载：`./scripts/uninstall.sh` 后 app、helper、plist、socket 全部消失
+- [x] 完全卸载：app、配置、登录项、helper、plist、socket、launchd job 全部消失；再由 DMG 干净安装成功
 
 最容易出错的是**右键不弹密码框**。验证助手缺失时的行为：
 
 ```bash
-sudo launchctl bootout system /Library/LaunchDaemons/com.leoarrow.wattson.helper.plist
+sudo launchctl bootout system/com.leoarrow.wattson.helper
 sudo rm -f /var/run/wattson-helper.sock
 # 右键图标：应只有轻微形变，模式不变，绝不弹密码框
 ./scripts/install.sh   # 恢复

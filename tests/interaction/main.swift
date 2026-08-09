@@ -30,6 +30,16 @@ check("右键只切模式不开弹窗", right.filter { $0 == .secondary }.count 
 check("control+点击视为右键", run([.leftMouseDown], control: true).contains(.secondary))
 check("按下仍会置 pressed", held.first == .press && held.contains(.release))
 
+var rightClickModes = RightClickModeSequence()
+let rapid1 = rightClickModes.next(current: .auto)
+let rapid2 = rightClickModes.next(current: .auto)
+let rapid3 = rightClickModes.next(current: .auto)
+check("三次快速右键仍按乐观状态逐次翻转",
+      [rapid1.mode, rapid2.mode, rapid3.mode] == [.low, .auto, .low])
+check("同目标的旧右键回调不能冒充最新请求",
+      !rightClickModes.finish(generation: rapid1.generation)
+          && rightClickModes.finish(generation: rapid3.generation))
+
 // ---- 2. 真实 NSStatusItem + NSPopover ----
 // 从这里到第 3 节结束，全部依赖关闭动画真的跑完
 if screenLocked {
@@ -119,17 +129,27 @@ if !screenLocked {
 
 // ---- 4. 模式滑块：拖得到 High Power，松手吸附，拖动中不做多余重绘 ----
 let slider = ModeSliderView(modes: [.auto, .low, .high])
-let win = NSWindow(contentRect: NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+let productionTrackWidth = PopoverStyle.contentWidth - 46
+let win = NSWindow(contentRect: NSRect(x: 0, y: 0, width: productionTrackWidth,
                                        height: ModeSliderView.preferredHeight),
                    styleMask: [.borderless], backing: .buffered, defer: false)
 win.contentView = slider
 slider.frame = win.contentView!.bounds
 slider.update(selected: .auto, enabledModes: [.auto, .low, .high], tint: .systemBlue)
 slider.layoutSubtreeIfNeeded()
+// Keep a composited window offscreen. Assertions below read the public frame
+// of the real NSGlassEffectView, not the wrapper presentation layer that can
+// animate independently of the container-promoted material.
+win.setFrameOrigin(NSPoint(x: -10_000, y: -10_000))
+win.alphaValue = 0.01
+win.orderFrontRegardless()
 spin(0.1)
 
 var chosen: [EnergyMode] = []
-slider.onSelect = { chosen.append($0); return true }
+slider.onSelect = { mode, completion in
+    chosen.append(mode)
+    completion(mode)
+}
 
 /// 驱动真实的 mouseDown/Dragged/Up，事件直接投递给视图，不经过系统注入
 func drag(from startX: CGFloat, to endX: CGFloat, steps: Int) {
@@ -149,14 +169,102 @@ func drag(from startX: CGFloat, to endX: CGFloat, steps: Int) {
 let autoCentre = slider.detentCentreForTest(0)
 let lowCentre = slider.detentCentreForTest(1)
 let highCentre = slider.detentCentreForTest(2)
+check("静止选中片不超过一个档位的宽度",
+      slider.restingKnobWidthForTest <= slider.segmentWidthForTest + 0.01,
+      String(format: "选中片 %.1f，单档 %.1f",
+             slider.restingKnobWidthForTest, slider.segmentWidthForTest))
+
+let allowsNativeGlass = ProcessInfo.processInfo.environment["WATTSON_FORCE_LEGACY_KNOB"] != "1"
+let expectsNativeGlass: Bool
+if #available(macOS 26.0, *) {
+    expectsNativeGlass = allowsNativeGlass
+} else {
+    expectsNativeGlass = false
+}
+if expectsNativeGlass {
+    check("原生材质使用暗色 Regular 底轨和 Regular 折射透镜",
+          slider.nativeGlassStylesForTest?.track == 0
+              && slider.nativeGlassStylesForTest?.selector == 0,
+          "\(String(describing: slider.nativeGlassStylesForTest))")
+} else {
+    check("旧系统路径不向普通 NSView 发送 Liquid Glass 属性",
+          slider.nativeGlassStylesForTest == nil)
+    if ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] == "1" {
+        check("旧系统减少透明度时 selector 使用不透明填充",
+              (slider.fallbackSelectorOpacityForTest ?? 0) >= 0.999,
+              "alpha \(slider.fallbackSelectorOpacityForTest ?? -1)")
+    }
+}
+
+// 只有真正拖动才浮起并膨胀；按下和触控板轻微抖动都维持静止形态。
+do {
+    func ev(_ t: NSEvent.EventType, _ x: CGFloat) -> NSEvent {
+        NSEvent.mouseEvent(with: t,
+                           location: NSPoint(x: x, y: ModeSliderView.preferredHeight / 2),
+                           modifierFlags: [], timestamp: 0, windowNumber: win.windowNumber,
+                           context: nil, eventNumber: 0, clickCount: 1, pressure: 1)!
+    }
+    slider.mouseDown(with: ev(.leftMouseDown, autoCentre))
+    if expectsNativeGlass {
+        check("单纯按下仍是 Regular 静止选中片",
+              slider.nativeGlassStylesForTest?.selector == 0)
+    }
+    let pressed = slider.knobScaleForTest
+    check("单纯按下不放大",
+          abs(pressed.width - 1) < 0.01 && abs(pressed.height - 1) < 0.01,
+          String(format: "%.2f × %.2f", pressed.width, pressed.height))
+
+    slider.mouseDragged(with: ev(.leftMouseDragged, autoCentre + 2))
+    let wobble = slider.knobScaleForTest
+    check("小于拖动阈值的抖动仍不放大",
+          abs(wobble.width - 1) < 0.01 && abs(wobble.height - 1) < 0.01,
+          String(format: "%.2f × %.2f", wobble.width, wobble.height))
+
+    slider.mouseDragged(with: ev(.leftMouseDragged, autoCentre + 6))
+    let dragged = slider.knobScaleForTest
+    if expectsNativeGlass {
+        check("开始拖动后 Regular 选中片变为 Clear 折射透镜",
+              slider.nativeGlassStylesForTest?.selector == 1)
+    }
+    if slider.reducesMotionForTest {
+        check("减少动态效果时拖动不放大",
+              abs(dragged.width - 1) < 0.01 && abs(dragged.height - 1) < 0.01)
+    } else {
+        check("开始拖动后才放大为浮起透镜",
+              dragged.width >= 1.12 && dragged.height >= 1.34,
+              String(format: "%.2f × %.2f", dragged.width, dragged.height))
+    }
+    slider.mouseDragged(with: ev(.leftMouseDragged, (autoCentre + lowCentre) / 2))
+    let midpointBlend = slider.activeLabelOpacitiesForTest
+    check("拖到两档正中时两侧文字各约一半亮度",
+          midpointBlend.count == 3
+              && abs(midpointBlend[0] - 0.5) < 0.06
+              && abs(midpointBlend[1] - 0.5) < 0.06
+              && midpointBlend[2] < 0.02,
+          "\(midpointBlend)")
+    slider.mouseDragged(with: ev(.leftMouseDragged, autoCentre + 6))
+    check("拖动预览不会提前提交系统模式", chosen.isEmpty, "\(chosen)")
+    slider.mouseUp(with: ev(.leftMouseUp, autoCentre + 6))
+    if expectsNativeGlass {
+        check("释放后透镜恢复 Regular 静止材质",
+              slider.nativeGlassStylesForTest?.selector == 0)
+    }
+    spin(0.3)
+}
+
 let before = slider.highlightCallCountForTest
-drag(from: autoCentre, to: PopoverStyle.contentWidth - 4, steps: 60)
+drag(from: autoCentre, to: slider.bounds.maxX - 4, steps: 60)
 let relabels = slider.highlightCallCountForTest - before
 check("拖到最右会选中 High Power", chosen.last == .high, "\(chosen)")
 check("松手后吸附到 High 档位",
       abs(slider.knobCentreForTest - highCentre) < 0.5,
       String(format: "旋钮 %.1f vs 档位 %.1f", slider.knobCentreForTest, highCentre))
-check("松手有吸附弹簧动画", slider.settleIsAnimatingForTest)
+if slider.reducesMotionForTest {
+    check("减少动态效果时释放直接吸附且不添加弹簧", !slider.settleIsAnimatingForTest)
+} else {
+    check("松手有吸附弹簧动画",
+          slider.settleIsAnimatingForTest && slider.settleUsesSpringForTest)
+}
 // 60 次拖动事件里只该跨过 1 个档位；每帧都重着色正是当初卡顿的原因
 check("拖动 60 帧只重着色跨档的那几次", relabels <= 3, "\(relabels) 次")
 spin(0.6)
@@ -177,7 +285,10 @@ limited.frame = win2.contentView!.bounds
 limited.update(selected: .auto, enabledModes: [.auto, .low], tint: .systemBlue)
 limited.layoutSubtreeIfNeeded(); spin(0.1)
 var limitedChosen: [EnergyMode] = []
-limited.onSelect = { limitedChosen.append($0); return true }
+limited.onSelect = { mode, completion in
+    limitedChosen.append(mode)
+    completion(mode)
+}
 do {
     func ev(_ t: NSEvent.EventType, _ x: CGFloat) -> NSEvent {
         NSEvent.mouseEvent(with: t, location: NSPoint(x: x, y: ModeSliderView.preferredHeight / 2),
@@ -186,7 +297,7 @@ do {
     }
     limited.mouseDown(with: ev(.leftMouseDown, limited.detentCentreForTest(0)))
     for i in 1...30 { limited.mouseDragged(with: ev(.leftMouseDragged, limited.detentCentreForTest(0) + CGFloat(i) * 6)) }
-    limited.mouseUp(with: ev(.leftMouseUp, PopoverStyle.contentWidth - 4))
+    limited.mouseUp(with: ev(.leftMouseUp, limited.bounds.maxX - 4))
 }
 check("不支持 High 时拖过去停在最近可用的 Low",
       limitedChosen.last == .low && limited.selectedIndexForTest == 1,
@@ -209,16 +320,98 @@ func tap(_ view: ModeSliderView, in window: NSWindow, atX x: CGFloat, wobble: CG
 let hit = slider.hitTest(NSPoint(x: 40, y: ModeSliderView.preferredHeight / 2))
 check("滑块命中测试返回自身而非装饰子视图",
       hit === slider, "\(hit.map { String(describing: type(of: $0)) } ?? "nil")")
+let offsetContainer = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 100))
+let offsetSlider = ModeSliderView(modes: [.auto, .low, .high])
+offsetSlider.frame = NSRect(x: 18, y: 36, width: 300, height: ModeSliderView.preferredHeight)
+offsetContainer.addSubview(offsetSlider)
+let offsetHitPoint = NSPoint(x: offsetSlider.frame.minX + 40,
+                             y: offsetSlider.frame.minY + ModeSliderView.preferredHeight / 2)
+check("滑块放在 footer 的实际偏移位置仍能命中",
+      offsetContainer.hitTest(offsetHitPoint) === offsetSlider)
+check("滑块偏移后的 frame 外不会误命中",
+      offsetContainer.hitTest(NSPoint(x: offsetSlider.frame.minX + 40,
+                                      y: offsetSlider.frame.maxY + 4)) !== offsetSlider)
 check("滑块接受 first mouse", slider.acceptsFirstMouse(for: nil))
+check("鼠标与键盘操作都不会绘制整条蓝色焦点外框",
+      slider.focusRingTypeForTest == .none)
 
 // 此刻旋钮在 Low（上一段拖回去了）
 chosen.removeAll()
 tap(slider, in: win, atX: slider.detentCentreForTest(2))
 check("点击 High Power 档位会切过去", chosen.last == .high, "\(chosen)")
-check("点击后旋钮吸附到 High",
-      abs(slider.knobCentreForTest - slider.detentCentreForTest(2)) < 0.5,
-      String(format: "%.1f vs %.1f", slider.knobCentreForTest, slider.detentCentreForTest(2)))
-spin(0.6)
+if slider.reducesMotionForTest {
+    check("减少动态效果时点击直接切换",
+          !slider.settleIsAnimatingForTest
+              && abs(slider.glassViewCentreForTest - highCentre) < 0.5)
+} else {
+    check("点击第一帧真实玻璃仍留在 Low，目标文字不会抢先亮",
+          abs(slider.glassViewCentreForTest - lowCentre) < 2
+              && slider.activeLabelOpacitiesForTest[1] > 0.90
+              && slider.activeLabelOpacitiesForTest[2] < 0.10,
+          "玻璃 \(slider.glassViewCentreForTest)，文字 \(slider.activeLabelOpacitiesForTest)")
+    check("点击换档使用磁吸流动而非拖拽弹簧或瞬移",
+          slider.settleIsAnimatingForTest
+              && slider.settleUsesMagneticFlowForTest
+              && !slider.settleUsesSpringForTest)
+    spin(0.10)
+    let visibleCentre = slider.glassViewCentreForTest
+    let visibleScale = slider.knobPresentationScaleForTest
+    check("点击后 100ms 原生玻璃实际 frame 仍在两档之间",
+          visibleCentre > lowCentre + 3 && visibleCentre < highCentre - 3,
+          String(format: "玻璃位置 %.1f，起点 %.1f，终点 %.1f",
+                 visibleCentre, lowCentre, highCentre))
+    check("点击磁吸全程不进入拖动放大态",
+          visibleScale.width <= 1.001 && visibleScale.height <= 1.001,
+          String(format: "%.3f × %.3f", visibleScale.width, visibleScale.height))
+    let visibleBlend = slider.activeLabelPresentationOpacitiesForTest
+    check("点击移动中文字亮度随玻璃位置连续交叉渐变",
+          visibleBlend.count == 3
+              && visibleBlend[0] < 0.02
+              && visibleBlend[1] > 0.08 && visibleBlend[1] < 0.92
+              && visibleBlend[2] > 0.08 && visibleBlend[2] < 0.92,
+          "\(visibleBlend)")
+}
+spin(0.5)
+check("点击动画最终精确吸附到 High",
+      abs(slider.glassViewCentreForTest - highCentre) < 0.5)
+
+// 用户现场路径：当前在 High，直接点击最左侧 Auto。真实玻璃必须反向
+// 穿过 Low；layout 与同档 1 Hz update 不能把它提前推到模型层终点。
+chosen.removeAll()
+slider.resetLabelBlendTraceForTest()
+tap(slider, in: win, atX: autoCentre)
+check("High 直接点击 Auto 会提交 Auto", chosen.last == .auto, "\(chosen)")
+if slider.reducesMotionForTest {
+    check("减少动态效果时 High 到 Auto 直接切换",
+          abs(slider.glassViewCentreForTest - autoCentre) < 0.5)
+} else {
+    check("High 到 Auto 第一帧真实玻璃仍在 High",
+          abs(slider.glassViewCentreForTest - highCentre) < 2,
+          String(format: "%.1f vs %.1f", slider.glassViewCentreForTest, highCentre))
+    spin(0.10)
+    let beforeRefresh = slider.glassViewCentreForTest
+    check("High 到 Auto 的真实玻璃正在反向流动",
+          beforeRefresh > autoCentre + 3 && beforeRefresh < highCentre - 3,
+          String(format: "%.1f，终点 %.1f...%.1f", beforeRefresh, autoCentre, highCentre))
+    slider.layoutSubtreeIfNeeded()
+    slider.update(selected: .auto, enabledModes: [.auto, .low, .high], tint: .systemBlue)
+    spin(0.06)
+    check("布局与 1 Hz 更新不会把真实玻璃抢先推到 Auto",
+          slider.settleIsAnimatingForTest
+              && slider.glassViewCentreForTest < beforeRefresh - 1
+              && slider.glassViewCentreForTest > autoCentre + 3,
+          String(format: "刷新前 %.1f，刷新后 %.1f",
+                 beforeRefresh, slider.glassViewCentreForTest))
+}
+spin(0.5)
+let reverseMiddlePeak = slider.labelBlendTraceForTest.compactMap { weights in
+    weights.count == 3 ? weights[1] : nil
+}.max() ?? 0
+check("High 到 Auto 会经过 Low 且文字随真实玻璃渐亮",
+      abs(slider.glassViewCentreForTest - autoCentre) < 0.5
+          && (slider.reducesMotionForTest || reverseMiddlePeak > 0.75),
+      String(format: "终点 %.1f，Low 峰值 %.3f",
+             slider.glassViewCentreForTest, reverseMiddlePeak))
 
 chosen.removeAll()
 tap(slider, in: win, atX: slider.detentCentreForTest(1))
@@ -239,9 +432,41 @@ check("点击当前档位不重复触发", chosen.isEmpty, "\(chosen)")
 // 点在档位之间偏向哪边就选哪边
 chosen.removeAll()
 let between = (slider.detentCentreForTest(1) + slider.detentCentreForTest(2)) / 2 + 8
+slider.resetLabelBlendTraceForTest()
 tap(slider, in: win, atX: between)
 check("点在两档之间选更近的一个", chosen.last == .high, "\(chosen)")
-spin(0.6)
+var middleLabelPeak: CGFloat = 0
+var closestToMiddle = CGFloat.greatestFiniteMagnitude
+let middlePeakDeadline = Date().addingTimeInterval(0.70)
+while Date() < middlePeakDeadline {
+    spin(0.005)
+    closestToMiddle = min(closestToMiddle,
+                          abs(slider.knobPresentationCentreForTest - lowCentre))
+    let opacities = slider.activeLabelPresentationOpacitiesForTest
+    if opacities.count == 3 { middleLabelPeak = max(middleLabelPeak, opacities[1]) }
+}
+let appliedMiddlePeak = slider.labelBlendTraceForTest.compactMap { weights in
+    weights.count == 3 ? weights[1] : nil
+}.max() ?? 0
+let directMotionCentres = slider.magneticMotionCentresForTest(from: 0, to: 2)
+let middleDwellFrames = directMotionCentres.filter { abs($0 - lowCentre) <= 4.1 }.count
+check("Auto 直接点 High 的轨迹包含 Low 中心磁力驻留",
+      directMotionCentres.contains(where: { abs($0 - lowCentre) < 0.01 })
+          && middleDwellFrames >= 3,
+      "Low 附近 \(middleDwellFrames) 个关键帧")
+if slider.reducesMotionForTest {
+    check("减少动态效果时 Auto 直接落到 High",
+          abs(slider.glassViewCentreForTest - highCentre) < 1)
+} else {
+    check("离屏降帧时仍能看到 Low 渐亮并最终落到 High",
+          middleLabelPeak > 0.45
+              && appliedMiddlePeak > 0.45
+              && abs(slider.glassViewCentreForTest - highCentre) < 1,
+          String(format: "呈现峰值 %.3f，计算峰值 %.3f，最近 %.1fpt，终点 %.1f",
+                 middleLabelPeak, appliedMiddlePeak, closestToMiddle,
+                 slider.glassViewCentreForTest))
+}
+spin(0.1)
 
 // 从 Auto 直接点禁用的 High 也必须没有反应；不能偷偷映射到相邻的 Low
 limited.update(selected: .auto, enabledModes: [.auto, .low], tint: .systemBlue)
@@ -253,13 +478,78 @@ check("不支持 High 时点它无效",
 
 // 系统拒绝切换时控件必须回到真实档位，不能只在视觉上假装成功
 var rejected: [EnergyMode] = []
-slider.onSelect = { rejected.append($0); return false }
+slider.onSelect = { mode, completion in
+    rejected.append(mode)
+    completion(.high)
+}
 tap(slider, in: win, atX: lowCentre)
 check("切换失败后回弹到原档位",
       rejected == [.low]
           && slider.selectedIndexForTest == 2
           && abs(slider.knobCentreForTest - highCentre) < 0.5,
       "选中索引 \(slider.selectedIndexForTest) 回调 \(rejected)")
+
+// helper 回读可以稍后完成；期间 1 Hz 外部刷新不能把乐观预览拽回去。
+var delayedMode: EnergyMode?
+var delayedCompletion: ((EnergyMode?) -> Void)?
+slider.onSelect = { mode, completion in
+    delayedMode = mode
+    delayedCompletion = completion
+}
+tap(slider, in: win, atX: lowCentre)
+check("模式写入期间控件保持目标档位且不阻塞",
+      delayedMode == .low && slider.selectionIsPendingForTest && slider.selectedIndexForTest == 1)
+slider.update(selected: .high, enabledModes: [.auto, .low, .high], tint: .systemBlue)
+check("拖动后的 1 Hz 刷新不覆盖待确认预览", slider.selectedIndexForTest == 1)
+delayedCompletion?(.low)
+check("异步确认后目标档位成为已提交状态",
+      !slider.selectionIsPendingForTest && slider.selectedIndexForTest == 1)
+
+// A 已落地、B 被拒绝时，B 必须回到真实的 A，不能回到两次请求前的旧档。
+var racedSelections: [(mode: EnergyMode, completion: (EnergyMode?) -> Void)] = []
+slider.onSelect = { mode, completion in
+    racedSelections.append((mode, completion))
+}
+tap(slider, in: win, atX: highCentre)
+tap(slider, in: win, atX: autoCentre)
+check("连续选择会各自排队且最后一次保持待确认",
+      racedSelections.map(\.mode) == [.high, .auto]
+          && slider.selectionIsPendingForTest
+          && slider.selectedIndexForTest == 0)
+racedSelections[0].completion(.high)
+check("较旧写入的迟到回调不会覆盖最新预览",
+      slider.selectionIsPendingForTest && slider.selectedIndexForTest == 0)
+racedSelections[1].completion(.high)
+check("A 成功而 B 失败时回到实际落地的 A",
+      !slider.selectionIsPendingForTest && slider.selectedIndexForTest == 2)
+
+// 键盘与 VoiceOver 走同一条提交路径，并跳过不可用档位。
+let accessible = ModeSliderView(modes: [.auto, .low, .high])
+accessible.frame = NSRect(x: 0, y: 0, width: 300, height: ModeSliderView.preferredHeight)
+accessible.update(selected: .auto, enabledModes: [.auto, .low], tint: .systemBlue)
+accessible.layoutSubtreeIfNeeded()
+var accessibleSelections: [EnergyMode] = []
+accessible.onSelect = { mode, completion in
+    accessibleSelections.append(mode)
+    completion(mode)
+}
+check("模式滑块向 VoiceOver 暴露单一可调控件",
+      accessible.isAccessibilityElement()
+          && accessible.accessibilityRole() == .slider
+          && accessible.accessibilityValueDescription() == EnergyMode.auto.title)
+check("VoiceOver 增量可切到下一可用档",
+      accessible.accessibilityPerformIncrement()
+          && accessibleSelections == [.low]
+          && accessible.selectedIndexForTest == 1)
+check("VoiceOver 不会进入禁用的 High Power",
+      !accessible.accessibilityPerformIncrement() && accessible.selectedIndexForTest == 1)
+let leftArrow = NSEvent.keyEvent(with: .keyDown, location: .zero, modifierFlags: [],
+                                 timestamp: 0, windowNumber: 0, context: nil,
+                                 characters: "", charactersIgnoringModifiers: "",
+                                 isARepeat: false, keyCode: 123)!
+accessible.keyDown(with: leftArrow)
+check("键盘左箭头与可访问性动作使用同一切换路径",
+      accessibleSelections == [.low, .auto] && accessible.selectedIndexForTest == 0)
 
 // ---- 6. 粒子池复用：几何变化只换路径，不换 layer 也不重启相位 ----
 let pipe = PipeBundle()

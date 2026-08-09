@@ -28,7 +28,7 @@ class InteractionBehaviorTests(unittest.TestCase):
         self.assertIn("ModeSliderView(modes: [.auto, .low, .high])", source)
         self.assertNotIn("ModeSliderView(modes: [.low, .auto, .high])", source)
 
-    def test_interaction_contract_holds_against_real_appkit(self):
+    def _assert_interaction_contract(self, force_legacy=False):
         if os.environ.get("WATTSON_SKIP_INTERACTION") == "1":
             self.skipTest("WATTSON_SKIP_INTERACTION=1")
         if shutil.which("xcrun") is None:
@@ -40,8 +40,14 @@ class InteractionBehaviorTests(unittest.TestCase):
         if "Aqua" not in probe.stdout:
             self.skipTest("no GUI session; a status item cannot host a popover")
 
+        environment = os.environ.copy()
+        if force_legacy:
+            environment["WATTSON_FORCE_LEGACY_KNOB"] = "1"
+            environment["WATTSON_FORCE_REDUCE_MOTION"] = "1"
+            environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] = "1"
         result = subprocess.run(
-            ["/bin/bash", str(RUNNER)], capture_output=True, text=True, check=False, timeout=300
+            ["/bin/bash", str(RUNNER)], capture_output=True, text=True, check=False,
+            timeout=300, env=environment
         )
         output = result.stdout + result.stderr
         # A locked screen starts CoreAnimation but never completes it, so the
@@ -55,6 +61,12 @@ class InteractionBehaviorTests(unittest.TestCase):
         self.assertIn("ALL_INTERACTION_CHECKS_PASSED", output, output)
         # A harness that silently stops checking still prints a pass line.
         self.assertGreaterEqual(output.count("✅"), 32, output)
+
+    def test_interaction_contract_holds_against_real_appkit(self):
+        self._assert_interaction_contract()
+
+    def test_legacy_slider_contract_holds_against_real_appkit(self):
+        self._assert_interaction_contract(force_legacy=True)
 
 
 if __name__ == "__main__":

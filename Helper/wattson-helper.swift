@@ -10,6 +10,7 @@ private let controlCenterBatteryKey = "Battery" as CFString
 private let loginAgentLabel = "com.leoarrow.wattson.login"
 private let wattsonBundleIdentifier = "com.leoarrow.wattson"
 private let helperSocketPath = "/var/run/wattson-helper.sock"
+private let helperExecutablePath = "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper"
 
 /// The console owner is the only UID allowed to talk to us.
 private func consoleUID() -> uid_t? {
@@ -22,26 +23,39 @@ private enum Mode: String {
     case low, auto, high
 }
 
-private func run(_ args: [String]) -> Bool {
+private enum BatteryPreferenceWorkerOperation: String {
+    case read = "--battery-preference-read"
+    case hide = "--battery-preference-hide"
+    case show = "--battery-preference-show"
+}
+
+private func runExitCode(_ args: [String]) -> Int32? {
     var pid: pid_t = 0
     var argv: [UnsafeMutablePointer<CChar>?] = args.map { strdup($0) }
     argv.append(nil)
     defer { argv.forEach { free($0) } }
 
-    guard posix_spawn(&pid, args[0], nil, nil, &argv, environ) == 0 else { return false }
+    guard posix_spawn(&pid, args[0], nil, nil, &argv, environ) == 0 else { return nil }
     var status: Int32 = 0
     let deadline = Date().addingTimeInterval(childTimeout)
     while true {
         let result = waitpid(pid, &status, WNOHANG)
-        if result == pid { return status == 0 }
-        if result < 0, errno != EINTR { return false }
+        if result == pid {
+            guard (status & 0x7f) == 0 else { return nil }
+            return (status >> 8) & 0xff
+        }
+        if result < 0, errno != EINTR { return nil }
         if Date() >= deadline {
             _ = kill(pid, SIGKILL)
             _ = waitpid(pid, &status, 0)
-            return false
+            return nil
         }
         usleep(10_000)
     }
+}
+
+private func run(_ args: [String]) -> Bool {
+    runExitCode(args) == 0
 }
 
 private func runPmset(_ mode: Mode) -> Bool {
@@ -185,11 +199,6 @@ private func dropHealthProbePrivilegesToConsoleUser() -> Bool {
     return userName.withCString { initgroups($0, Int32(bitPattern: gid)) == 0 }
         && setgid(gid) == 0
         && setuid(uid) == 0
-}
-
-private func userName(for uid: uid_t) -> CFString? {
-    guard let record = getpwuid(uid), let name = record.pointee.pw_name else { return nil }
-    return String(cString: name) as CFString
 }
 
 private struct UserAccount {
@@ -389,15 +398,49 @@ private func setLaunchAtLoginEnabled(_ enabled: Bool, for uid: uid_t) -> Bool? {
 /// the menu bar, and 8 when it remains in Control Center only. Unknown values
 /// are not guessed at, so a future macOS layout cannot be overwritten from a
 /// misleading checkbox state.
-private func systemBatteryIconHidden(for uid: uid_t) -> Bool? {
-    guard let user = userName(for: uid),
-          let raw = CFPreferencesCopyValue(
-              controlCenterBatteryKey,
-              controlCenterDomain,
-              user,
-              kCFPreferencesCurrentHost
-          ) as? NSNumber else { return nil }
+private func currentUserSystemBatteryIconHidden() -> Bool? {
+    guard CFPreferencesSynchronize(
+        controlCenterDomain,
+        kCFPreferencesCurrentUser,
+        kCFPreferencesCurrentHost
+    ) else { return nil }
+    guard let raw = CFPreferencesCopyValue(
+        controlCenterBatteryKey,
+        controlCenterDomain,
+        kCFPreferencesCurrentUser,
+        kCFPreferencesCurrentHost
+    ) as? NSNumber else { return nil }
     switch raw.intValue {
+    case 8: return true
+    case 18: return false
+    default: return nil
+    }
+}
+
+private func setCurrentUserSystemBatteryIconHidden(_ hidden: Bool) -> Bool {
+    CFPreferencesSetValue(
+        controlCenterBatteryKey,
+        NSNumber(value: hidden ? 8 : 18),
+        controlCenterDomain,
+        kCFPreferencesCurrentUser,
+        kCFPreferencesCurrentHost
+    )
+    return currentUserSystemBatteryIconHidden() == hidden
+}
+
+private func runBatteryPreferenceWorker(
+    _ operation: BatteryPreferenceWorkerOperation,
+    for uid: uid_t
+) -> Int32? {
+    guard uid == consoleUID(), userAccount(for: uid) != nil else { return nil }
+    return runExitCode([
+        "/bin/launchctl", "asuser", "\(uid)", helperExecutablePath,
+        operation.rawValue,
+    ])
+}
+
+private func systemBatteryIconHidden(for uid: uid_t) -> Bool? {
+    switch runBatteryPreferenceWorker(.read, for: uid) {
     case 8: return true
     case 18: return false
     default: return nil
@@ -407,25 +450,38 @@ private func systemBatteryIconHidden(for uid: uid_t) -> Bool? {
 private func restartControlCenter(for uid: uid_t) -> Bool {
     // uid comes from /dev/console, never from the request. launchd immediately
     // relaunches this per-user agent; launchctl kickstart is rejected by SIP.
-    run(["/usr/bin/pkill", "-TERM", "-U", "\(uid)", "-x", "ControlCenter"])
+    guard let exitCode = runExitCode([
+        "/usr/bin/pkill", "-TERM", "-U", "\(uid)", "-x", "ControlCenter",
+    ]) else { return false }
+    return exitCode == 0 || exitCode == 1
 }
 
 private func setSystemBatteryIconHidden(_ hidden: Bool, for uid: uid_t) -> Bool {
-    guard let user = userName(for: uid) else { return false }
-    let target = hidden ? 8 : 18
-    CFPreferencesSetValue(
-        controlCenterBatteryKey,
-        NSNumber(value: target),
-        controlCenterDomain,
-        user,
-        kCFPreferencesCurrentHost
-    )
-    guard CFPreferencesSynchronize(
-        controlCenterDomain,
-        user,
-        kCFPreferencesCurrentHost
-    ), systemBatteryIconHidden(for: uid) == hidden else { return false }
+    let operation: BatteryPreferenceWorkerOperation = hidden ? .hide : .show
+    guard runBatteryPreferenceWorker(operation, for: uid) == 0 else { return false }
     return restartControlCenter(for: uid)
+}
+
+private func runBatteryPreferenceWorkerIfRequested() {
+    guard CommandLine.arguments.count == 2,
+          let operation = BatteryPreferenceWorkerOperation(
+              rawValue: CommandLine.arguments[1]
+          ) else { return }
+
+    // `launchctl asuser` supplies the console user's bootstrap context but
+    // intentionally keeps root credentials. Permanently drop those credentials
+    // before touching CurrentUser preferences so both dimensions match the
+    // logged-in user's cfprefsd instance.
+    guard dropHealthProbePrivilegesToConsoleUser() else { exit(2) }
+    switch operation {
+    case .read:
+        guard let hidden = currentUserSystemBatteryIconHidden() else { exit(2) }
+        exit(hidden ? 8 : 18)
+    case .hide:
+        exit(setCurrentUserSystemBatteryIconHidden(true) ? 0 : 2)
+    case .show:
+        exit(setCurrentUserSystemBatteryIconHidden(false) ? 0 : 2)
+    }
 }
 
 private func handle(_ fd: Int32) {
@@ -516,6 +572,8 @@ private func handle(_ fd: Int32) {
 
     _ = reply.withCString { write(fd, $0, strlen($0)) }
 }
+
+runBatteryPreferenceWorkerIfRequested()
 
 if CommandLine.arguments.count == 2,
    CommandLine.arguments[1] == "--health-probe" {

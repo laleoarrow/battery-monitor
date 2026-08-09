@@ -34,8 +34,16 @@ class StatusItemContractTests(unittest.TestCase):
     def test_left_opens_popover_and_right_toggles_mode(self):
         self.assertIn("popover.toggle", self.source)
         # Right-click stays a two-state toggle even though three modes exist.
-        self.assertIn("EnergyModeController.current == .low ? .auto : .low", self.source)
+        self.assertIn("rightClickModes.next(current: EnergyModeController.current)", self.source)
+        self.assertIn("base == .low ? .auto : .low", self.source)
         self.assertIn("applyEnergyMode", self.source)
+
+    def test_right_click_write_is_async_and_restores_press_state_immediately(self):
+        secondary = self.source.split("case .secondary:", 1)[1].split("\n            }", 1)[0]
+        self.assertIn("pressed = false", secondary)
+        self.assertIn("refreshStatusItem()", secondary)
+        self.assertIn("applyEnergyMode(request.mode)", secondary)
+        self.assertIn("rightClickModes.finish(generation: request.generation)", secondary)
 
     def test_click_acts_without_depending_on_currentEvent(self):
         # A trackpad tap is short enough that AppKit may deliver only one half

@@ -17,12 +17,13 @@ done
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$SCRIPT_DIR/.."
 APP_NAME="Wattson"
-APP_VERSION="${WATTSON_APP_VERSION:-2.0.4}"
+APP_VERSION="${WATTSON_APP_VERSION:-2.1.3}"
 SWIFT_TARGET="arm64-apple-macos12.0"
 APP_DIR="$HOME/Applications/Wattson.app"
 APP_BUNDLE_ID="com.leoarrow.wattson"
 SUPPORT_DIR="$HOME/Library/Application Support/Wattson"
 HELPER_LABEL="com.leoarrow.wattson.helper"
+HELPER_TARGET="system/$HELPER_LABEL"
 HELPER_PLIST="/Library/LaunchDaemons/${HELPER_LABEL}.plist"
 HELPER_BIN="/Library/PrivilegedHelperTools/${HELPER_LABEL}"
 LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
@@ -165,7 +166,29 @@ xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift" \
     -O \
     -o "$HELPER_BUILD"
 codesign --force --sign - "$HELPER_BUILD" >/dev/null
-sudo launchctl bootout system "$HELPER_PLIST" 2>/dev/null || true
+helper_was_disabled=0
+if ! disabled_services="$(sudo launchctl print-disabled system)"; then
+    echo "helper launchd state could not be inspected" >&2
+    exit 1
+fi
+case "$disabled_services" in
+    *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*)
+        helper_was_disabled=1
+        ;;
+esac
+if sudo launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+    sudo launchctl bootout "$HELPER_TARGET"
+    for ((helper_stop_attempt = 0; helper_stop_attempt < 10; helper_stop_attempt++)); do
+        if ! sudo launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+            break
+        fi
+        sleep 0.1
+    done
+    if sudo launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+        echo "existing helper service could not be stopped" >&2
+        exit 1
+    fi
+fi
 sudo mkdir -p /Library/PrivilegedHelperTools
 sudo cp "$HELPER_BUILD" "$HELPER_BIN"
 sudo chown root:wheel "$HELPER_BIN"
@@ -173,7 +196,16 @@ sudo chmod 544 "$HELPER_BIN"
 sudo cp "$ROOT_DIR/Helper/${HELPER_LABEL}.plist" "$HELPER_PLIST"
 sudo chown root:wheel "$HELPER_PLIST"
 sudo chmod 644 "$HELPER_PLIST"
-sudo launchctl bootstrap system "$HELPER_PLIST"
+if [ "$helper_was_disabled" = "1" ]; then
+    sudo launchctl enable "$HELPER_TARGET"
+fi
+if ! sudo launchctl bootstrap system "$HELPER_PLIST"; then
+    if [ "$helper_was_disabled" = "1" ]; then
+        sudo launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true
+        sudo launchctl disable "$HELPER_TARGET" >/dev/null 2>&1 || true
+    fi
+    exit 1
+fi
 echo "  ✅ Helper installed (not running until you right-click)"
 
 echo ""

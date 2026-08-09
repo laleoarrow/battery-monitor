@@ -104,9 +104,8 @@ final class PopoverHeaderView: PopoverSection {
 
 /// Native three-position mode control and system-battery visibility choice.
 ///
-/// On macOS 26, NSSegmentedControl adopts Liquid Glass automatically. Keeping
-/// the standard control also preserves keyboard and accessibility behavior on
-/// older systems, where AppKit supplies the appropriate fallback appearance.
+/// `ModeSliderView` owns the tactile Liquid Glass interaction on macOS 26 and
+/// its keyboard, VoiceOver, and reduced-transparency fallback on older systems.
 final class PopoverFooterView: PopoverSection {
     static let preferredHeight: CGFloat = 78
     private let modes: [EnergyMode] = [.auto, .low, .high]
@@ -121,14 +120,20 @@ final class PopoverFooterView: PopoverSection {
 
     private var selected: EnergyMode = .auto
     private var systemBatteryIconHidden: Bool?
-    var onSelect: ((EnergyMode) -> Bool)?
+    var onSelect: ((EnergyMode, @escaping (EnergyMode?) -> Void) -> Void)?
     var onSystemBatteryIconToggle: ((Bool) -> Bool)?
     var onShowMenu: ((NSButton) -> Void)?
 
     init() {
         super.init(height: Self.preferredHeight)
 
-        modeControl.onSelect = { [weak self] mode in self?.onSelect?(mode) ?? false }
+        modeControl.onSelect = { [weak self] mode, completion in
+            guard let self, let onSelect = self.onSelect else {
+                completion(nil)
+                return
+            }
+            onSelect(mode, completion)
+        }
         addSubview(modeControl)
 
         systemBatteryIconButton.controlSize = .small
@@ -156,11 +161,16 @@ final class PopoverFooterView: PopoverSection {
         super.layout()
         systemBatteryIconButton.frame = NSRect(x: 0, y: 10, width: 168, height: 20)
         hint.frame = NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)
-        modeControl.frame = NSRect(x: 0, y: 36, width: bounds.width - 34, height: ModeSliderView.preferredHeight)
+        // The lifted lens extends about 15% beyond its resting plate. Reserve
+        // that optical overscan so a High Power drag never covers the settings
+        // button beside the track.
+        modeControl.frame = NSRect(x: 0, y: 36, width: bounds.width - 46,
+                                   height: ModeSliderView.preferredHeight)
         settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
     }
 
-    func update(mode: EnergyMode, helperInstalled: Bool, systemBatteryIconHidden: Bool?) {
+    func update(mode: EnergyMode, helperInstalled: Bool, systemBatteryIconHidden: Bool?,
+                tint: NSColor) {
         selected = mode
         self.systemBatteryIconHidden = systemBatteryIconHidden
         if let systemBatteryIconHidden {
@@ -177,13 +187,8 @@ final class PopoverFooterView: PopoverSection {
         // of them are reachable without the helper.
         var available: [EnergyMode] = helperInstalled ? [.auto, .low] : []
         if helperInstalled && EnergyModeController.supportsHighPower { available.append(.high) }
-        modeControl.update(selected: mode, enabledModes: available,
-                           tint: PopoverStyle.stateColor(latestState))
+        modeControl.update(selected: mode, enabledModes: available, tint: tint)
     }
-
-    /// Tints the knob with the current power state so the control belongs to
-    /// the data above it rather than floating free.
-    var latestState: PowerState = .pluggedIdle
 
     @objc private func systemBatteryIconChanged(_ sender: NSButton) {
         let requested = sender.state == .on
@@ -213,7 +218,7 @@ final class PopoverContentViewController: NSViewController {
     private var latestHistory: [Double] = []
     private var latestPeak: Double = 0
     private var systemBatteryIconHidden: Bool?
-    private var modeSelectHandler: ((EnergyMode) -> Bool)?
+    private var modeSelectHandler: ((EnergyMode, @escaping (EnergyMode?) -> Void) -> Void)?
     private var systemBatteryIconToggleHandler: ((Bool) -> Bool)?
     var heightDidChange: ((CGFloat) -> Void)?
 
@@ -245,12 +250,17 @@ final class PopoverContentViewController: NSViewController {
         flowView.update(snapshot: snapshot, animated: true)
         ringView.update(snapshot: snapshot)
         laneView.update(snapshot: snapshot)
+        let historyColor = snapshot.state == .mixedSupply
+            ? PopoverStyle.blue
+            : PopoverStyle.stateColor(snapshot.state)
         historyView.update(samples: latestHistory, peak: latestPeak,
-                           color: PopoverStyle.stateColor(snapshot.state))
+                           color: historyColor)
         updateFooter()
     }
 
-    func setModeSelectHandler(_ handler: @escaping (EnergyMode) -> Bool) {
+    func setModeSelectHandler(
+        _ handler: @escaping (EnergyMode, @escaping (EnergyMode?) -> Void) -> Void
+    ) {
         modeSelectHandler = handler
     }
 
@@ -301,7 +311,13 @@ final class PopoverContentViewController: NSViewController {
             footer.heightAnchor.constraint(equalToConstant: PopoverFooterView.preferredHeight),
         ])
 
-        footer.onSelect = { [weak self] mode in self?.modeSelectHandler?(mode) ?? false }
+        footer.onSelect = { [weak self] mode, completion in
+            guard let self, let handler = self.modeSelectHandler else {
+                completion(nil)
+                return
+            }
+            handler(mode, completion)
+        }
         footer.onSystemBatteryIconToggle = { [weak self] hidden in
             self?.systemBatteryIconToggleHandler?(hidden) ?? false
         }
@@ -310,11 +326,11 @@ final class PopoverContentViewController: NSViewController {
     }
 
     private func updateFooter() {
-        footer.latestState = latestSnapshot.state
         footer.update(
             mode: EnergyModeController.current,
             helperInstalled: HelperClient.isInstalled,
-            systemBatteryIconHidden: systemBatteryIconHidden
+            systemBatteryIconHidden: systemBatteryIconHidden,
+            tint: PopoverStyle.stateColor(latestSnapshot.state)
         )
     }
 
@@ -378,6 +394,18 @@ final class PopoverContentViewController: NSViewController {
         loginItem.state = loginMenuState
         loginItem.isEnabled = loginState == .notRegistered || loginState == .enabled
         menu.addItem(loginItem)
+
+        menu.addItem(.separator())
+        let version = Bundle.main.object(
+            forInfoDictionaryKey: "CFBundleShortVersionString"
+        ) as? String ?? "开发版"
+        let versionItem = NSMenuItem(
+            title: "Wattson 版本 \(version)",
+            action: nil,
+            keyEquivalent: ""
+        )
+        versionItem.isEnabled = false
+        menu.addItem(versionItem)
 
         menu.addItem(.separator())
         // The desktop panel used to own the only way out of the app. With it

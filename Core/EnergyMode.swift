@@ -16,6 +16,28 @@ enum EnergyMode: String {
     }
 }
 
+/// Retains an authoritative result only for the immediately following write.
+/// A fallback is never re-recorded, so one confirmed state cannot leak across
+/// multiple failed requests.
+struct GenerationBoundWriteFallback<Value> {
+    private var confirmed: (writeGeneration: Int, value: Value)?
+
+    mutating func resolve(
+        forWriteGeneration generation: Int,
+        request: () -> Value?,
+        readback: () -> Value?
+    ) -> Value? {
+        if let value = request() ?? readback() {
+            confirmed = (generation, value)
+            return value
+        }
+        guard generation > 0,
+              let confirmed,
+              confirmed.writeGeneration == generation - 1 else { return nil }
+        return confirmed.value
+    }
+}
+
 enum EnergyModeController {
     /// The app is sandboxed, so it cannot read /Library/Preferences at all —
     /// attempting it gets the process killed. The helper still reports whether
@@ -28,17 +50,29 @@ enum EnergyModeController {
     /// mode changes, never in that hot path.
     private static var cachedMode: EnergyMode?
     private static var cachedSupportsHigh = false
-    private static let refreshQueue = DispatchQueue(
-        label: "com.leoarrow.wattson.mode-refresh", qos: .userInitiated
-    )
-    /// Main-thread generation. A set invalidates any slower refresh that began
-    /// first, so stale readback can never overwrite the mode that just landed.
-    private static var refreshGeneration = 0
+    private static let queueKey = DispatchSpecificKey<Void>()
+    private static let refreshQueue: DispatchQueue = {
+        let queue = DispatchQueue(
+            label: "com.leoarrow.wattson.mode-refresh", qos: .userInitiated
+        )
+        queue.setSpecific(key: queueKey, value: ())
+        return queue
+    }()
+    /// Main-thread generations. Writes invalidate reads, while a later read
+    /// must never make an in-flight write report failure. Keeping them separate
+    /// also lets the latest write recover the actual state after a refusal.
+    private static var readGeneration = 0
+    private static var writeGeneration = 0
 
     private struct ModeState {
         let mode: EnergyMode
         let supportsHigh: Bool?
     }
+
+    /// Only touched on `refreshQueue`. A failed write may recover the state
+    /// authoritatively confirmed by the immediately preceding write, but no
+    /// startup refresh or older write is valid evidence for this request.
+    private static var lastQueueState = GenerationBoundWriteFallback<ModeState>()
 
     static var current: EnergyMode {
         if ProcessInfo.processInfo.isLowPowerModeEnabled { return .low }
@@ -53,12 +87,14 @@ enum EnergyModeController {
     /// readback cannot stall the popover's opening animation. Cache mutation and
     /// completion return to AppKit's main thread.
     static func refreshFromHelper(completion: @escaping (Bool) -> Void) {
-        refreshGeneration += 1
-        let generation = refreshGeneration
+        readGeneration += 1
+        let generation = readGeneration
+        let writesAtStart = writeGeneration
         refreshQueue.async {
             let state = fetchModeState()
             DispatchQueue.main.async {
-                guard generation == refreshGeneration else {
+                guard generation == readGeneration,
+                      writesAtStart == writeGeneration else {
                     completion(false)
                     return
                 }
@@ -76,15 +112,68 @@ enum EnergyModeController {
     /// the helper is missing, refused, or when the mode did not actually take.
     @discardableResult
     static func set(_ mode: EnergyMode) -> Bool {
-        refreshGeneration += 1
+        readGeneration += 1
+        writeGeneration += 1
+        let generation = writeGeneration
+        guard let state = performOnRefreshQueue({
+            resolveModeChange(mode, writeGeneration: generation)
+        }) else { return false }
+        apply(state)
+        return state.mode == mode
+    }
+
+    /// Popover controls must not wait on the helper from AppKit's event loop.
+    /// This shares the same serial queue as refreshes, then returns cache
+    /// mutation and completion to the main thread. A newer request invalidates
+    /// an older result before it can overwrite the visible mode.
+    static func set(_ mode: EnergyMode, completion: @escaping (EnergyMode?) -> Void) {
+        readGeneration += 1
+        writeGeneration += 1
+        let generation = writeGeneration
+        refreshQueue.async {
+            let state = resolveModeChange(mode, writeGeneration: generation)
+            DispatchQueue.main.async {
+                guard generation == writeGeneration else {
+                    completion(nil)
+                    return
+                }
+                guard let state else {
+                    completion(nil)
+                    return
+                }
+                apply(state)
+                completion(state.mode)
+            }
+        }
+    }
+
+    private static func performOnRefreshQueue<T>(_ operation: () -> T) -> T {
+        if DispatchQueue.getSpecific(key: queueKey) != nil { return operation() }
+        return refreshQueue.sync(execute: operation)
+    }
+
+    /// A failed write is followed by an authoritative read on the same serial
+    /// queue. This makes A-success/B-failure resolve to A, not the state that
+    /// happened to be cached before either request began.
+    private static func resolveModeChange(
+        _ mode: EnergyMode,
+        writeGeneration generation: Int
+    ) -> ModeState? {
+        lastQueueState.resolve(
+            forWriteGeneration: generation,
+            request: { requestModeChange(mode) },
+            readback: { fetchModeState() }
+        )
+    }
+
+    private static func requestModeChange(_ mode: EnergyMode) -> ModeState? {
         guard let reply = HelperClient.send(["op": "setMode", "value": mode.rawValue]),
               reply["ok"] as? Bool == true,
-              let landed = verifiedMode(from: reply) else { return false }
-        apply(ModeState(
+              let landed = verifiedMode(from: reply) else { return nil }
+        return ModeState(
             mode: landed,
             supportsHigh: reply["supportsHigh"] as? Bool
-        ))
-        return landed == mode
+        )
     }
 
     private static func fetchModeState() -> ModeState? {

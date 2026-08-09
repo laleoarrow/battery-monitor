@@ -111,6 +111,15 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("batteryFlowLabel", self.lanes)
         self.assertIn("batteryFlowLabel", self.ring)
 
+    def test_mixed_supply_lanes_and_history_keep_the_blue_instrument_color(self):
+        self.assertIn("snapshot.state == .mixedSupply", self.lanes)
+        self.assertIn("? PopoverStyle.blue", self.lanes)
+        history_update = self.content.split("let historyColor", 1)[1].split(
+            "updateFooter()", 1
+        )[0]
+        self.assertIn("snapshot.state == .mixedSupply", history_update)
+        self.assertIn("? PopoverStyle.blue", history_update)
+
     def test_history_draws_the_two_minute_samples_without_animation(self):
         self.assertIn("samples: [Double]", self.history)
         self.assertIn("CATransaction.setDisableActions(true)", self.history)

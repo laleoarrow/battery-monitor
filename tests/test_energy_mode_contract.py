@@ -1,4 +1,7 @@
 import pathlib
+import subprocess
+import tempfile
+import textwrap
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -75,16 +78,20 @@ class EnergyModeContractTests(unittest.TestCase):
         setter = self.mode.split("static func set(_ mode: EnergyMode)", 1)[1].split(
             "\n    }", 1
         )[0]
-        self.assertIn("landed == mode", setter)
+        self.assertIn("state.mode == mode", setter)
 
     def test_open_refresh_does_not_block_appkit_or_overwrite_a_newer_set(self):
         self.assertIn("refreshQueue.async", self.mode)
         self.assertIn("DispatchQueue.main.async", self.mode)
-        self.assertIn("refreshGeneration", self.mode)
+        self.assertIn("readGeneration", self.mode)
+        self.assertIn("writeGeneration", self.mode)
+        self.assertIn("writesAtStart == writeGeneration", self.mode)
         setter = self.mode.split("static func set(_ mode: EnergyMode)", 1)[1].split(
             "\n    }", 1
         )[0]
-        self.assertIn("refreshGeneration += 1", setter)
+        self.assertIn("readGeneration += 1", setter)
+        self.assertIn("writeGeneration += 1", setter)
+        self.assertIn("performOnRefreshQueue", setter)
 
     def test_verified_low_mode_is_visible_before_processinfo_catches_up(self):
         current = self.mode.split("static var current: EnergyMode", 1)[1].split("\n    }", 1)[0]
@@ -111,6 +118,116 @@ class EnergyModeContractTests(unittest.TestCase):
     def test_toggle_goes_through_the_helper(self):
         self.assertIn("HelperClient.send", self.mode)
         self.assertIn('"setMode"', self.mode)
+
+    def test_popover_mode_write_does_not_block_appkit(self):
+        async_set = self.mode.split(
+            "static func set(_ mode: EnergyMode, completion:", 1
+        )[1].split("private static func requestModeChange", 1)[0]
+        self.assertIn("refreshQueue.async", async_set)
+        self.assertIn("DispatchQueue.main.async", async_set)
+        self.assertLess(
+            async_set.index("refreshQueue.async"),
+            async_set.index("resolveModeChange(mode, writeGeneration: generation)"),
+        )
+
+    def test_failed_latest_write_only_uses_an_adjacent_confirmed_write(self):
+        resolver = self.mode.split("private static func resolveModeChange", 1)[1].split(
+            "private static func requestModeChange", 1
+        )[0]
+        self.assertIn("writeGeneration generation: Int", resolver)
+        self.assertIn("lastQueueState.resolve", resolver)
+        self.assertIn("request: { requestModeChange(mode) }", resolver)
+        self.assertIn("readback: { fetchModeState() }", resolver)
+        self.assertNotIn("?? lastQueueState", resolver)
+        self.assertIn("queue.setSpecific", self.mode)
+        self.assertIn("refreshQueue.sync", self.mode)
+
+        refresh = self.mode.split("static func refreshFromHelper", 1)[1].split(
+            "static func set(_ mode: EnergyMode)", 1
+        )[0]
+        self.assertNotIn("lastQueueState.resolve", refresh)
+
+    def test_generation_bound_fallback_rejects_stale_state_in_real_swift(self):
+        harness = textwrap.dedent(
+            """
+            import Foundation
+
+            func require(_ condition: @autoclosure () -> Bool, _ message: String) {
+                if !condition() {
+                    FileHandle.standardError.write(Data((message + "\\n").utf8))
+                    exit(1)
+                }
+            }
+
+            var empty = GenerationBoundWriteFallback<String>()
+            require(
+                empty.resolve(forWriteGeneration: 1, request: { nil }, readback: { nil }) == nil,
+                "empty cache"
+            )
+
+            var stale = GenerationBoundWriteFallback<String>()
+            require(
+                stale.resolve(forWriteGeneration: 4, request: { "stale" }, readback: { nil })
+                    == "stale",
+                "seed stale state"
+            )
+            require(
+                stale.resolve(forWriteGeneration: 6, request: { nil }, readback: { nil }) == nil,
+                "stale generation"
+            )
+
+            var consecutive = GenerationBoundWriteFallback<String>()
+            var unexpectedReadback = false
+            require(
+                consecutive.resolve(
+                    forWriteGeneration: 7,
+                    request: { "A" },
+                    readback: {
+                        unexpectedReadback = true
+                        return nil
+                    }
+                ) == "A",
+                "authoritative A"
+            )
+            require(!unexpectedReadback, "readback after authoritative write")
+            require(
+                consecutive.resolve(
+                    forWriteGeneration: 8,
+                    request: { nil },
+                    readback: { nil }
+                ) == "A",
+                "adjacent A fallback"
+            )
+            require(
+                consecutive.resolve(
+                    forWriteGeneration: 9,
+                    request: { nil },
+                    readback: { nil }
+                ) == nil,
+                "fallback propagation"
+            )
+            """
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            temp_path = pathlib.Path(temp)
+            main = temp_path / "main.swift"
+            binary = temp_path / "energy-mode-fallback"
+            main.write_text(harness, encoding="utf-8")
+            subprocess.run(
+                [
+                    "xcrun",
+                    "swiftc",
+                    str(CLIENT_SOURCE),
+                    str(MODE_SOURCE),
+                    str(main),
+                    "-o",
+                    str(binary),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            subprocess.run([str(binary)], check=True, capture_output=True, text=True)
 
 
 if __name__ == "__main__":

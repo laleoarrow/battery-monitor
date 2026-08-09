@@ -87,7 +87,9 @@ final class LaneView: PopoverSection {
 
     func update(snapshot: PowerSnapshot) {
         latest = snapshot
-        let color = PopoverStyle.stateColor(snapshot.state)
+        let color = snapshot.state == .mixedSupply
+            ? PopoverStyle.blue
+            : PopoverStyle.stateColor(snapshot.state)
         let systemWatts = snapshot.systemW
         let batteryWatts = snapshot.state == .pluggedIdle ? 0 : abs(snapshot.batteryW)
 
@@ -101,8 +103,7 @@ final class LaneView: PopoverSection {
         apply(lanes[1],
               symbol: snapshot.state == .charging ? "battery.100.bolt" : "battery.50",
               caption: PopoverStyle.batteryFlowLabel(snapshot.state),
-              watts: batteryWatts, ceiling: ceiling,
-              color: snapshot.state == .mixedSupply ? PopoverStyle.amber : color)
+              watts: batteryWatts, ceiling: ceiling, color: color)
     }
 
     private func apply(_ lane: Lane, symbol: String, caption: String,

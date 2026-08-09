@@ -13,9 +13,9 @@ enum HelperClient {
         guard fd >= 0 else { return nil }
         defer { close(fd) }
 
-        // Mode changes still run synchronously so the slider can accept or
-        // reject the detent immediately. A wedged helper must not freeze the
-        // AppKit thread forever.
+        // The client is synchronous, but UI callers dispatch it to their serial
+        // worker queues. The timeout bounds helper failure without ever holding
+        // AppKit's event loop.
         var timeout = timeval(tv_sec: 2, tv_usec: 0)
         let timeoutSize = socklen_t(MemoryLayout<timeval>.size)
         guard setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, timeoutSize) == 0,

@@ -123,10 +123,41 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn("CFPreferencesSetValue", self.source)
         self.assertIn("CFPreferencesSynchronize", self.source)
 
+    def test_system_battery_visibility_uses_the_console_users_preferences_daemon(self):
+        # A root LaunchDaemon remains in the system bootstrap even after an
+        # effective-UID change. Run a fixed internal worker in the console
+        # user's bootstrap, then permanently drop that worker's credentials.
+        battery_helpers = self.source.split(
+            "private func currentUserSystemBatteryIconHidden", 1
+        )[1].split("private func handle", 1)[0]
+        self.assertIn('"/bin/launchctl", "asuser"', battery_helpers)
+        self.assertIn('"--battery-preference-read"', self.source)
+        self.assertIn('"--battery-preference-hide"', self.source)
+        self.assertIn('"--battery-preference-show"', self.source)
+        self.assertIn("dropHealthProbePrivilegesToConsoleUser()", self.source)
+        self.assertIn("kCFPreferencesCurrentUser", battery_helpers)
+        self.assertNotIn("withUserPrivileges(account)", battery_helpers)
+        self.assertNotIn("userName(for:", self.source)
+        current_user_read = battery_helpers.split(
+            "private func systemBatteryIconHidden", 1
+        )[0]
+        self.assertLess(
+            current_user_read.index("CFPreferencesSynchronize"),
+            current_user_read.index("CFPreferencesCopyValue"),
+        )
+
     def test_control_center_is_restarted_in_the_console_user_domain(self):
         self.assertIn('"/usr/bin/pkill", "-TERM", "-U"', self.source)
         self.assertIn('"\\(uid)", "-x", "ControlCenter"', self.source)
         self.assertIn("launchctl kickstart is rejected by SIP", self.source)
+
+    def test_missing_control_center_during_relaunch_is_not_a_write_failure(self):
+        restart = self.source.split("private func restartControlCenter", 1)[1].split(
+            "private func setSystemBatteryIconHidden", 1
+        )[0]
+        self.assertIn("runExitCode", restart)
+        self.assertIn("exitCode == 0 || exitCode == 1", restart)
+        self.assertNotIn("pgrep", restart)
 
     def test_never_interpolates_input_into_a_command(self):
         for forbidden in ("\\(value)", "\\(op)", "\\(request", "/bin/sh", "-c\""):

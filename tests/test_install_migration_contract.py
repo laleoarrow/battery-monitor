@@ -83,11 +83,11 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertIn('APP_VERSION="${1:-2.0.4}"', self.package)
+        self.assertIn('APP_VERSION="${1:-2.1.3}"', self.package)
         self.assertIn("Contents/MacOS/Wattson", self.package)
 
     def test_release_binary_matches_the_declared_macos_minimum(self):
-        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.0.4}"', self.install)
+        self.assertIn('APP_VERSION="${WATTSON_APP_VERSION:-2.1.3}"', self.install)
         self.assertIn('SWIFT_TARGET="arm64-apple-macos12.0"', self.install)
         self.assertIn('-target "$SWIFT_TARGET"', self.install)
 
@@ -133,8 +133,48 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn("trap rollback_helper_install EXIT", self.installer_helper)
         candidate_validation = self.installer_helper.index('validate_helper "$HELPER_CANDIDATE"')
         replacement = self.installer_helper.index("replacement_started=1")
-        stop_old_service = self.installer_helper.index('/bin/launchctl bootout system', replacement)
+        stop_old_service = self.installer_helper.index('stop_loaded_helper', replacement)
         self.assertLess(candidate_validation, stop_old_service)
+
+    def test_helper_replacement_clears_disabled_and_stale_launchd_state(self):
+        self.assertIn('HELPER_TARGET="system/$HELPER_LABEL"', self.installer_helper)
+        self.assertIn("old_service_disabled=0", self.installer_helper)
+        self.assertIn("print-disabled system", self.installer_helper)
+        self.assertNotIn(
+            "print-disabled system 2>/dev/null || true", self.installer_helper
+        )
+
+        replacement = self.installer_helper.index("replacement_started=1")
+        stop_old_service = self.installer_helper.index(
+            'stop_loaded_helper', replacement
+        )
+        enable_service = self.installer_helper.index(
+            '/bin/launchctl enable "$HELPER_TARGET"', replacement
+        )
+        bootstrap_service = self.installer_helper.index(
+            '/bin/launchctl bootstrap system "$HELPER_PLIST"', replacement
+        )
+        self.assertLess(stop_old_service, enable_service)
+        self.assertLess(enable_service, bootstrap_service)
+
+        rollback = self.installer_helper.split("rollback_helper_install() {", 1)[1]
+        rollback = rollback.split("abort_helper_install() {", 1)[0]
+        rollback_enable = rollback.index('/bin/launchctl enable "$HELPER_TARGET"')
+        rollback_bootstrap = rollback.index(
+            '/bin/launchctl bootstrap system "$HELPER_PLIST"'
+        )
+        rollback_disable = rollback.index('/bin/launchctl disable "$HELPER_TARGET"')
+        self.assertLess(rollback_enable, rollback_bootstrap)
+        self.assertLess(rollback_bootstrap, rollback_disable)
+
+        self.assertIn('HELPER_TARGET="system/$HELPER_LABEL"', self.install)
+        self.assertNotIn("print-disabled system 2>/dev/null || true", self.install)
+        self.assertIn('sudo launchctl bootout "$HELPER_TARGET"', self.install)
+        self.assertIn('sudo launchctl enable "$HELPER_TARGET"', self.install)
+        self.assertIn(
+            'if ! sudo launchctl bootstrap system "$HELPER_PLIST"', self.install
+        )
+        self.assertIn('sudo launchctl disable "$HELPER_TARGET"', self.install)
 
     def test_privileged_phase_is_pinned_and_staged_by_root(self):
         self.assertIn("__INSTALL_HELPER_SHA256__", self.installer)
