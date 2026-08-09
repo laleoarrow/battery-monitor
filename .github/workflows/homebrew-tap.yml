@@ -1,0 +1,167 @@
+name: Sync stable release to Homebrew tap
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing stable Wattson release tag
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: Update laleoarrow/homebrew-tap
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
+    steps:
+      - name: Check out the Homebrew tap with push credentials
+        if: env.TAP_TOKEN != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: laleoarrow/homebrew-tap
+          ref: main
+          path: homebrew-tap
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          fetch-depth: 0
+
+      - name: Check out the public Homebrew tap for validation only
+        if: env.TAP_TOKEN == ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: laleoarrow/homebrew-tap
+          ref: main
+          path: homebrew-tap
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Update and push the Wattson cask
+        shell: bash
+        working-directory: homebrew-tap
+        run: |
+          set -euo pipefail
+
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          readonly VERSION="${RELEASE_TAG#v}"
+          readonly PKG_NAME="Wattson-v${VERSION}-macos-universal.pkg"
+          readonly DMG_NAME="Wattson-v${VERSION}-macos-universal.dmg"
+          readonly INFO_NAME="Wattson-v${VERSION}-release-info.txt"
+          readonly CHECKSUM_NAME="SHA256SUMS.txt"
+          readonly ASSET_BASE="https://github.com/laleoarrow/battery-monitor/releases/download/${RELEASE_TAG}"
+          readonly DOWNLOAD_DIR="$RUNNER_TEMP/wattson-release"
+          readonly RELEASE_JSON="$RUNNER_TEMP/wattson-release.json"
+
+          gh api \
+            --header 'Accept: application/vnd.github+json' \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" \
+            > "$RELEASE_JSON"
+          [[ "$(/usr/bin/jq -r .tag_name "$RELEASE_JSON")" == "$RELEASE_TAG" ]]
+          [[ "$(/usr/bin/jq -r .draft "$RELEASE_JSON")" == "false" ]]
+          [[ "$(/usr/bin/jq -r .prerelease "$RELEASE_JSON")" == "false" ]]
+
+          /bin/mkdir -p "$DOWNLOAD_DIR"
+          for asset_name in "$PKG_NAME" "$DMG_NAME" "$INFO_NAME" "$CHECKSUM_NAME"; do
+            /usr/bin/jq -e \
+              --arg name "$asset_name" \
+              '[.assets[] | select(.name == $name)] | length == 1' \
+              "$RELEASE_JSON" >/dev/null
+            /usr/bin/curl \
+              --fail \
+              --location \
+              --proto '=https' \
+              --retry 3 \
+              --retry-delay 2 \
+              --tlsv1.2 \
+              --output "$DOWNLOAD_DIR/$asset_name" \
+              "$ASSET_BASE/$asset_name"
+          done
+
+          [[ "$(/usr/bin/wc -l < "$DOWNLOAD_DIR/$CHECKSUM_NAME" | /usr/bin/tr -d ' ')" == "3" ]]
+          (
+            cd "$DOWNLOAD_DIR"
+            /usr/bin/sha256sum -c "$CHECKSUM_NAME"
+          )
+          /usr/bin/grep -Fxq "version=$VERSION" "$DOWNLOAD_DIR/$INFO_NAME"
+          /usr/bin/grep -Fxq "architectures=arm64,x86_64" "$DOWNLOAD_DIR/$INFO_NAME"
+          /usr/bin/grep -Fxq "minimum_macos=12.0" "$DOWNLOAD_DIR/$INFO_NAME"
+          /usr/bin/grep -Fxq "install_path=/Applications/Wattson.app" "$DOWNLOAD_DIR/$INFO_NAME"
+          /usr/bin/grep -Fxq "distribution_mode=community-ad-hoc" "$DOWNLOAD_DIR/$INFO_NAME"
+          /usr/bin/grep -Fxq "package_signature=unsigned" "$DOWNLOAD_DIR/$INFO_NAME"
+          /usr/bin/grep -Fxq "notarized=no" "$DOWNLOAD_DIR/$INFO_NAME"
+
+          SHA256="$(
+            /usr/bin/awk -v name="$PKG_NAME" '$2 == name { print $1 }' \
+              "$DOWNLOAD_DIR/$CHECKSUM_NAME"
+          )"
+          readonly SHA256
+          [[ "$SHA256" =~ ^[0-9a-f]{64}$ ]]
+
+          /bin/mkdir -p Casks
+          [[ ! -L Casks && ! -L Casks/wattson.rb ]]
+          cat > Casks/wattson.rb <<EOF
+          cask "wattson" do
+            version "$VERSION"
+            sha256 "$SHA256"
+
+            url "https://github.com/laleoarrow/battery-monitor/releases/download/v#{version}/Wattson-v#{version}-macos-universal.pkg",
+                verified: "github.com/laleoarrow/battery-monitor/"
+            name "Wattson"
+            desc "Native macOS menu-bar power-flow monitor"
+            homepage "https://github.com/laleoarrow/battery-monitor"
+
+            depends_on macos: ">= :monterey"
+
+            pkg "Wattson-v#{version}-macos-universal.pkg"
+
+            uninstall launchctl: [
+                        "com.leoarrow.wattson.helper",
+                        "com.leoarrow.wattson.login",
+                      ],
+                      quit:      "com.leoarrow.wattson",
+                      pkgutil:   "com.leoarrow.wattson.pkg",
+                      delete:    [
+                        "/Applications/Wattson.app",
+                        "/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist",
+                        "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper",
+                        "/var/run/wattson-helper.sock",
+                        "~/Library/LaunchAgents/com.leoarrow.wattson.login.plist",
+                      ]
+
+            zap trash: [
+              "~/Library/Application Support/Wattson",
+              "~/Library/Caches/com.leoarrow.wattson",
+              "~/Library/Containers/com.leoarrow.wattson",
+              "~/Library/Preferences/com.leoarrow.wattson.plist",
+              "~/Library/Saved Application State/com.leoarrow.wattson.savedState",
+            ]
+          end
+          EOF
+
+          ruby -c Casks/wattson.rb
+          git diff --check
+          if [[ -z "$(git status --porcelain -- Casks/wattson.rb)" ]]; then
+            echo "The Wattson cask already matches v$VERSION."
+            exit 0
+          fi
+
+          if [[ -z "$TAP_TOKEN" ]]; then
+            echo "The exact v$VERSION cask was generated and validated, but cross-repository push credentials are not configured." \
+              >> "$GITHUB_STEP_SUMMARY"
+            echo "Sync Casks/wattson.rb from a trusted maintainer checkout, then require the tap CI run to pass." \
+              >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks/wattson.rb
+          git commit -m "Update Wattson to v$VERSION"
+          git push origin HEAD:main

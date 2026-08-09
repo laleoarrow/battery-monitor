@@ -1,0 +1,154 @@
+#!/bin/bash
+# Validate the canonical payload, register its helper, then retire the v2 app.
+set -euo pipefail
+umask 022
+
+readonly APP_BUNDLE_ID="com.leoarrow.wattson"
+readonly APP_DIR="/Applications/Wattson.app"
+readonly APP_EXECUTABLE="$APP_DIR/Contents/MacOS/Wattson"
+readonly HELPER_LABEL="com.leoarrow.wattson.helper"
+readonly HELPER_TARGET="system/$HELPER_LABEL"
+readonly HELPER_BIN="/Library/PrivilegedHelperTools/$HELPER_LABEL"
+readonly HELPER_PLIST="/Library/LaunchDaemons/$HELPER_LABEL.plist"
+readonly HELPER_SOCKET="/var/run/wattson-helper.sock"
+readonly LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
+
+fail() {
+    echo "Wattson postinstall: $*" >&2
+    exit 1
+}
+
+validate_payload_shape() {
+    [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]] || fail "canonical app is missing"
+    [[ -f "$APP_EXECUTABLE" && ! -L "$APP_EXECUTABLE" ]] \
+        || fail "app executable is missing"
+    [[ -f "$HELPER_BIN" && ! -L "$HELPER_BIN" ]] || fail "helper is missing"
+    [[ -f "$HELPER_PLIST" && ! -L "$HELPER_PLIST" ]] || fail "helper plist is missing"
+}
+
+validate_payload() {
+    validate_payload_shape
+    /usr/bin/plutil -lint "$APP_DIR/Contents/Info.plist" >/dev/null
+    /usr/bin/plutil -lint "$HELPER_PLIST" >/dev/null
+    [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "$APP_BUNDLE_ID" ]] \
+        || fail "app bundle identifier does not match"
+    [[ "$(/usr/libexec/PlistBuddy -c 'Print :Label' "$HELPER_PLIST")" == "$HELPER_LABEL" ]] \
+        || fail "helper label does not match"
+    [[ "$(/usr/libexec/PlistBuddy -c 'Print :ProgramArguments:0' "$HELPER_PLIST")" == "$HELPER_BIN" ]] \
+        || fail "helper executable path does not match"
+    [[ "$(/usr/libexec/PlistBuddy -c 'Print :Sockets:Listener:SockPathName' "$HELPER_PLIST")" == "$HELPER_SOCKET" ]] \
+        || fail "helper socket path does not match"
+    /usr/bin/codesign --verify --deep --strict "$APP_DIR"
+    /usr/bin/codesign --verify --strict "$HELPER_BIN"
+}
+
+bootstrap_helper() {
+    local attempt
+
+    for attempt in 1 2; do
+        /bin/launchctl enable "$HELPER_TARGET" || return "$?"
+        if /bin/launchctl bootstrap system "$HELPER_PLIST"; then
+            return 0
+        fi
+        # launchctl can return an error after registering the job. Its actual
+        # state is authoritative, so do not tear down a successfully loaded job.
+        if /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+            return 0
+        fi
+        [[ "$attempt" == "1" ]] || return 1
+        /bin/sleep 0.5
+        /bin/launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true
+        /bin/rm -f -- "$HELPER_SOCKET"
+    done
+    return 1
+}
+
+remove_v2_user_app() {
+    local console_record
+    local console_user
+    local console_uid
+    local home_record
+    local home_dir
+    local legacy_app
+    local legacy_executable
+    local legacy_info
+    local legacy_id
+    local legacy_process_pattern
+
+    console_record="$(/usr/bin/stat -f '%Su:%u' /dev/console 2>/dev/null || true)"
+    console_user="${console_record%%:*}"
+    console_uid="${console_record##*:}"
+    [[ "$console_user" != "root" && "$console_user" != "loginwindow" ]] || return 0
+    [[ "$console_user" =~ ^[A-Za-z0-9._-]+$ && "$console_uid" =~ ^[0-9]+$ ]] || return 0
+
+    home_record="$(/usr/bin/dscl . -read "/Users/$console_user" NFSHomeDirectory 2>/dev/null || true)"
+    home_dir="${home_record#NFSHomeDirectory: }"
+    [[ "$home_dir" == /* && "$home_dir" != "/" ]] || return 0
+    [[ -d "$home_dir" && ! -L "$home_dir" ]] || return 0
+
+    legacy_app="$home_dir/Applications/Wattson.app"
+    legacy_info="$legacy_app/Contents/Info.plist"
+    [[ -d "$legacy_app" && ! -L "$legacy_app" ]] || return 0
+    [[ -f "$legacy_info" && ! -L "$legacy_info" ]] || return 0
+    legacy_id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$legacy_info" 2>/dev/null || true)"
+    [[ "$legacy_id" == "$APP_BUNDLE_ID" ]] || return 0
+
+    legacy_executable="$legacy_app/Contents/MacOS/Wattson"
+    legacy_process_pattern="$(
+        /usr/bin/printf '%s' "$legacy_executable" \
+            | /usr/bin/sed 's/[][(){}.^$*+?|\\]/\\&/g'
+    )"
+    /usr/bin/pkill \
+        -u "$console_uid" \
+        -f "^${legacy_process_pattern}([[:space:]]|$)" \
+        >/dev/null 2>&1 || true
+    for _ in 1 2 3 4 5 6 7 8 9 10; do
+        if ! /usr/bin/pgrep \
+            -u "$console_uid" \
+            -f "^${legacy_process_pattern}([[:space:]]|$)" \
+            >/dev/null 2>&1; then
+            break
+        fi
+        /bin/sleep 0.1
+    done
+    /usr/bin/pkill \
+        -KILL \
+        -u "$console_uid" \
+        -f "^${legacy_process_pattern}([[:space:]]|$)" \
+        >/dev/null 2>&1 || true
+
+    "$LSREGISTER" -u "$legacy_app" >/dev/null 2>&1 || true
+    # The old app is below a user-controlled home directory. Drop to that UID
+    # for deletion so a last-moment path swap cannot become a root overwrite.
+    if ! /usr/bin/sudo -n -u "#$console_uid" -- /bin/rm -rf -- "$legacy_app"; then
+        echo "Wattson postinstall: could not remove legacy app at $legacy_app" >&2
+    fi
+}
+
+[[ "$(/usr/bin/id -u)" == "0" ]] || fail "Installer did not run as root"
+[[ "${3:-/}" == "/" ]] || fail "Wattson can only be installed on the startup volume"
+
+validate_payload_shape
+/usr/sbin/chown root:wheel "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST"
+/bin/chmod 755 "$APP_DIR" "$APP_EXECUTABLE"
+/bin/chmod 544 "$HELPER_BIN"
+/bin/chmod 644 "$HELPER_PLIST"
+validate_payload
+/bin/rm -f -- "$HELPER_SOCKET"
+bootstrap_helper || fail "helper registration failed"
+/bin/launchctl print "$HELPER_TARGET" >/dev/null \
+    || fail "helper did not remain registered"
+
+# Probe the socket only in an interactive install. MDM/loginwindow installs
+# have no console user to authenticate and are valid once launchd is ready.
+console_uid="$(/usr/bin/stat -f '%u' /dev/console 2>/dev/null || true)"
+if [[ "$console_uid" =~ ^[0-9]+$ && "$console_uid" != "0" ]]; then
+    "$HELPER_BIN" --health-probe || fail "helper health probe failed"
+fi
+
+"$HELPER_BIN" --migrate-legacy-login-item \
+    || fail "legacy launch-at-login migration failed"
+remove_v2_user_app
+"$LSREGISTER" -f "$APP_DIR" >/dev/null 2>&1 || true
+echo "Wattson installed at $APP_DIR with helper $HELPER_BIN"
+exit 0

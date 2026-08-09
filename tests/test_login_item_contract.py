@@ -33,18 +33,20 @@ class LoginItemContractTests(unittest.TestCase):
     def test_initial_query_is_not_misreported_as_disabled(self):
         self.assertIn("case checking", self.login_item)
         self.assertIn('? .checking', self.login_item.replace("\n", " "))
-        self.assertIn("正在读取…", self.content)
+        self.assertIn("Checking…", self.content)
         self.assertIn("loginItem.isEnabled = loginState == .notRegistered", self.content)
 
     def test_preview_bundle_cannot_change_the_installed_login_item(self):
         self.assertIn('Bundle.main.bundleIdentifier == "com.leoarrow.wattson"', self.login_item)
+        self.assertIn('canonicalAppPath = "/Applications/Wattson.app"', self.login_item)
+        self.assertIn("Bundle.main.bundleURL.standardizedFileURL.path", self.login_item)
 
     def test_toggle_is_reachable_from_the_settings_menu(self):
-        self.assertIn("开机自动启动", self.content)
+        self.assertIn("Launch at Login", self.content)
         self.assertIn("#selector(toggleLoginItem)", self.content)
         self.assertIn("LoginItemController.setEnabled", self.content)
-        self.assertIn("需完整安装", self.content)
-        self.assertNotIn("当前不可用", self.content)
+        self.assertIn("Full Installer Required", self.content)
+        self.assertNotIn("Currently Unavailable", self.content)
 
     def test_helper_accepts_only_a_boolean_and_owns_the_fixed_agent(self):
         self.assertIn('case "getLaunchAtLoginEnabled"', self.helper)
@@ -57,7 +59,7 @@ class LoginItemContractTests(unittest.TestCase):
     def test_uninstall_removes_the_user_login_agent(self):
         self.assertIn('LOGIN_AGENT_LABEL="com.leoarrow.wattson.login"', self.uninstall)
         self.assertIn("launchctl bootout", self.uninstall)
-        self.assertIn('rm -f "$LOGIN_AGENT_PLIST"', self.uninstall)
+        self.assertIn('rm -f -- "$LOGIN_AGENT_PLIST"', self.uninstall)
 
 
 if __name__ == "__main__":

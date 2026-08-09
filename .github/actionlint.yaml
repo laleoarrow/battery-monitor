@@ -1,0 +1,6 @@
+# GitHub supports this standard Intel label, but actionlint 1.7.11's bundled
+# runner catalog predates its GA rollout.
+paths:
+  .github/workflows/macos-helper-install.yml:
+    ignore:
+      - 'label "macos-26-intel" is unknown'

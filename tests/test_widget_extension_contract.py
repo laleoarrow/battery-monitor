@@ -58,7 +58,7 @@ class WidgetExtensionContractTests(unittest.TestCase):
         self.assertIn("let refreshAnimationID: Double", self.source)
         self.assertIn("WidgetRefreshFeedbackStore.shouldShowFeedback(at: now)", self.source)
         self.assertIn("now.addingTimeInterval(refreshFeedbackDuration)", self.source)
-        self.assertNotIn("已刷新", self.source)
+        self.assertNotIn("Refreshed", self.source)
 
     def test_status_dot_is_solid_blue_with_more_spacing(self):
         self.assertIn("struct StatusDot", self.source)

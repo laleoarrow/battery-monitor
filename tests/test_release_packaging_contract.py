@@ -1,0 +1,162 @@
+import pathlib
+import plistlib
+import stat
+import subprocess
+import unittest
+
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+SCRIPTS = {
+    name: ROOT / "scripts" / name
+    for name in (
+        "build_release.sh",
+        "package_pkg.sh",
+        "package_dmg.sh",
+        "verify_dmg.sh",
+        "notarize.sh",
+        "release.sh",
+        "verify_release.sh",
+    )
+}
+PREINSTALL = ROOT / "Packaging" / "pkg" / "preinstall"
+POSTINSTALL = ROOT / "Packaging" / "pkg" / "postinstall"
+
+
+class ReleasePackagingContractTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.source = {
+            name: path.read_text(encoding="utf-8") for name, path in SCRIPTS.items()
+        }
+        cls.preinstall = PREINSTALL.read_text(encoding="utf-8")
+        cls.postinstall = POSTINSTALL.read_text(encoding="utf-8")
+
+    def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.0\n")
+        with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
+            info = plistlib.load(handle)
+        self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
+        self.assertEqual(info["CFBundleName"], "Wattson")
+        self.assertEqual(info["CFBundleDisplayName"], "Wattson")
+        self.assertEqual(info["LSMinimumSystemVersion"], "12.0")
+        self.assertFalse(list((ROOT / "Packaging").rglob("InfoPlist.strings")))
+
+    def test_release_scripts_are_executable_and_parse_as_bash(self):
+        for path in (*SCRIPTS.values(), PREINSTALL, POSTINSTALL):
+            with self.subTest(path=path):
+                self.assertTrue(path.stat().st_mode & stat.S_IXUSR)
+                result = subprocess.run(
+                    ["/bin/bash", "-n", str(path)],
+                    check=False,
+                    text=True,
+                    capture_output=True,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_swiftpm_build_must_be_universal_and_target_macos_12(self):
+        build = self.source["build_release.sh"]
+        self.assertIn("/usr/bin/swift build", build)
+        self.assertIn("--arch arm64", build)
+        self.assertIn("--arch x86_64", build)
+        self.assertIn('lipo "$binary_path" -verify_arch arm64 x86_64', build)
+        self.assertIn('vtool -arch "$architecture" -show-build', build)
+        self.assertIn('MIN_MACOS_VERSION="12.0"', build)
+        self.assertNotIn("swiftc", build)
+        self.assertNotIn("fall back", build.lower())
+
+    def test_app_and_helper_use_one_explicit_signing_mode(self):
+        build = self.source["build_release.sh"]
+        self.assertIn("WATTSON_DEVELOPER_ID_APP", build)
+        self.assertIn("--options runtime", build)
+        self.assertIn('SIGNING_MODE="ad-hoc"', build)
+        self.assertIn('--identifier "$HELPER_LABEL"', build)
+        helper_signing = build.index('--identifier "$HELPER_LABEL"')
+        app_signing = build.index('--entitlements "$ROOT_DIR/BatteryPowerApp.entitlements"')
+        self.assertLess(helper_signing, app_signing)
+
+    def test_pkg_owns_the_canonical_app_and_full_helper_payload(self):
+        package = self.source["package_pkg.sh"]
+        for path in (
+            "$PKG_ROOT/Applications/Wattson.app",
+            "$PKG_ROOT/Library/PrivilegedHelperTools/$HELPER_LABEL",
+            "$PKG_ROOT/Library/LaunchDaemons/$HELPER_LABEL.plist",
+        ):
+            self.assertIn(path, package)
+        self.assertIn("--ownership recommended", package)
+        self.assertIn("--install-location /", package)
+        self.assertIn('--component-plist "$COMPONENT_PLIST"', package)
+        self.assertIn("WATTSON_DEVELOPER_ID_INSTALLER", package)
+        self.assertNotIn('$HOME/Applications/Wattson.app', package)
+
+        with (ROOT / "Packaging" / "pkg" / "component.plist").open("rb") as handle:
+            components = plistlib.load(handle)
+        self.assertEqual(components[0]["RootRelativeBundlePath"], "Applications/Wattson.app")
+        self.assertFalse(components[0]["BundleIsRelocatable"])
+
+    def test_pkg_scripts_replace_and_restart_the_existing_helper(self):
+        self.assertIn('launchctl bootout "$HELPER_TARGET"', self.preinstall)
+        self.assertIn('/bin/rm -f -- "$HELPER_SOCKET"', self.preinstall)
+        self.assertIn('APP_DIR="/Applications/Wattson.app"', self.postinstall)
+        self.assertIn('/bin/launchctl enable "$HELPER_TARGET"', self.postinstall)
+        self.assertIn('/bin/launchctl bootstrap system "$HELPER_PLIST"', self.postinstall)
+        self.assertIn('"$HELPER_BIN" --health-probe', self.postinstall)
+        self.assertIn('"$HELPER_BIN" --migrate-legacy-login-item', self.postinstall)
+        self.assertLess(
+            self.postinstall.index('"$HELPER_BIN" --migrate-legacy-login-item'),
+            self.postinstall.index("remove_v2_user_app\n"),
+        )
+        self.assertNotIn("NSStatusItem", self.postinstall)
+        self.assertNotIn("--installer-ready-token", self.postinstall)
+        self.assertNotIn("/usr/bin/open", self.postinstall)
+
+    def test_v2_user_app_cleanup_is_identity_pinned_and_unprivileged(self):
+        self.assertIn('legacy_app="$home_dir/Applications/Wattson.app"', self.postinstall)
+        self.assertIn('[[ "$legacy_id" == "$APP_BUNDLE_ID" ]]', self.postinstall)
+        identity_check = self.postinstall.index('[[ "$legacy_id" == "$APP_BUNDLE_ID" ]]')
+        stop_process = self.postinstall.index('/usr/bin/pkill', identity_check)
+        delete_app = self.postinstall.index('/bin/rm -rf -- "$legacy_app"', stop_process)
+        self.assertLess(identity_check, stop_process)
+        self.assertLess(stop_process, delete_app)
+        self.assertIn('-u "$console_uid"', self.postinstall[stop_process:delete_app])
+        self.assertIn('legacy_process_pattern', self.postinstall[stop_process:delete_app])
+        self.assertIn('/usr/bin/sudo -n -u "#$console_uid"', self.postinstall)
+        self.assertNotIn('rm -rf -- "$home_dir"', self.postinstall)
+
+    def test_dmg_contains_the_exact_pkg_and_no_second_install_surface(self):
+        package = self.source["package_dmg.sh"]
+        verify = self.source["verify_dmg.sh"]
+        self.assertIn('/bin/cp "$PKG_PATH" "$STAGING_DIR/$PKG_NAME"', package)
+        self.assertIn('/usr/bin/cmp -s "$PKG_PATH" "$STAGING_DIR/$PKG_NAME"', package)
+        self.assertIn('/usr/bin/cmp -s "$EXPECTED_PKG" "$EMBEDDED_PKG"', verify)
+        self.assertIn("DMG must expose exactly one installer PKG", verify)
+        self.assertNotIn("Wattson.app", package)
+        self.assertNotIn("Install Wattson.app", package)
+
+    def test_notarization_is_opt_in_and_claimed_only_after_acceptance(self):
+        release = self.source["release.sh"]
+        notarize = self.source["notarize.sh"]
+        self.assertIn('NOTARIZE_RELEASE="${WATTSON_NOTARIZE:-0}"', release)
+        self.assertIn('NOTARY_STATUS" != "Accepted"', notarize)
+        self.assertLess(
+            notarize.index('NOTARY_STATUS" != "Accepted"'),
+            notarize.index("stapler staple"),
+        )
+        self.assertLess(
+            release.index('notarize.sh" "$DMG_PATH"'),
+            release.index('NOTARIZED="yes"'),
+        )
+        self.assertIn('NOTARIZED="no"', release)
+        self.assertIn("configure both Developer ID Application and Installer", release)
+
+    def test_release_checksums_are_written_after_final_artifacts(self):
+        release = self.source["release.sh"]
+        checksum_write = release.index('> "$CHECKSUM_PATH"')
+        self.assertLess(release.index('notarize.sh" "$DMG_PATH"'), checksum_write)
+        self.assertLess(release.index('verify_release.sh" "$PKG_PATH" "$DMG_PATH"'), checksum_write)
+        self.assertIn('/usr/bin/shasum -a 256 "$PKG_NAME"', release)
+        self.assertIn('/usr/bin/shasum -a 256 "$DMG_NAME"', release)
+        self.assertIn('/usr/bin/shasum -a 256 -c', release)
+
+
+if __name__ == "__main__":
+    unittest.main()

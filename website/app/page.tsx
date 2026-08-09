@@ -1,0 +1,537 @@
+"use client";
+
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
+
+const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
+const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
+const RELEASE_API =
+  "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
+const FALLBACK_VERSION = "v3.0.0";
+const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
+
+type ReleaseAsset = {
+  browser_download_url: string;
+  name: string;
+};
+
+type LatestRelease = {
+  assets?: ReleaseAsset[];
+  html_url?: string;
+  tag_name?: string;
+};
+
+type ReleaseDetails = {
+  dmgUrl: string;
+  htmlUrl: string;
+  pkgUrl: string;
+  source: "fallback" | "live";
+  version: string;
+};
+
+const fallbackRelease: ReleaseDetails = {
+  dmgUrl: RELEASES_URL,
+  htmlUrl: RELEASES_URL,
+  pkgUrl: RELEASES_URL,
+  source: "fallback",
+  version: FALLBACK_VERSION,
+};
+
+const historyValues = [
+  38, 42, 45, 43, 48, 52, 49, 56, 61, 58, 64, 68, 66, 71, 76, 73, 78, 82,
+  79, 84, 88, 86, 91, 88, 84, 81, 78, 74,
+];
+
+function ReleaseLink({
+  children,
+  className,
+  href,
+}: {
+  children: React.ReactNode;
+  className: string;
+  href: string;
+}) {
+  return (
+    <a className={className} href={href} rel="noreferrer" target="_blank">
+      {children}
+      <span aria-hidden="true" className="button-arrow">
+        ↗
+      </span>
+    </a>
+  );
+}
+
+export default function Home() {
+  const [release, setRelease] = useState<ReleaseDetails>(fallbackRelease);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadLatestRelease() {
+      try {
+        const response = await fetch(RELEASE_API, {
+          headers: { Accept: "application/vnd.github+json" },
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error("Latest release unavailable");
+        }
+
+        const latest = (await response.json()) as LatestRelease;
+        const assets = latest.assets ?? [];
+        const htmlUrl = latest.html_url || RELEASES_URL;
+        const dmg = assets.find((asset) => asset.name.toLowerCase().endsWith(".dmg"));
+        const pkg = assets.find((asset) => asset.name.toLowerCase().endsWith(".pkg"));
+
+        setRelease({
+          dmgUrl: dmg?.browser_download_url || htmlUrl,
+          htmlUrl,
+          pkgUrl: pkg?.browser_download_url || htmlUrl,
+          source: "live",
+          version: latest.tag_name || FALLBACK_VERSION,
+        });
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === "AbortError")) {
+          setRelease(fallbackRelease);
+        }
+      }
+    }
+
+    void loadLatestRelease();
+    return () => controller.abort();
+  }, []);
+
+  const versionLabel = useMemo(
+    () => release.version.replace(/^v/i, "v"),
+    [release.version],
+  );
+
+  async function copyHomebrewCommand() {
+    try {
+      await navigator.clipboard.writeText(HOMEBREW_COMMAND);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setCopied(false);
+    }
+  }
+
+  return (
+    <main>
+      <a className="skip-link" href="#content">
+        Skip to content
+      </a>
+
+      <header className="site-header">
+        <a className="wordmark" href="#top" aria-label="Wattson home">
+          <span aria-hidden="true" className="brand-cell">
+            <span className="brand-charge" />
+          </span>
+          <span>Wattson</span>
+        </a>
+
+        <nav aria-label="Primary navigation" className="main-nav">
+          <a href="#features">Features</a>
+          <a href="#install">Install</a>
+          <a href={GITHUB_REPO} rel="noreferrer" target="_blank">
+            GitHub
+          </a>
+        </nav>
+
+        <a className="header-download" href="#install">
+          Get Wattson
+          <span aria-hidden="true">↓</span>
+        </a>
+      </header>
+
+      <div id="content">
+        <section className="hero" id="top">
+          <div aria-hidden="true" className="hero-glow hero-glow-blue" />
+          <div aria-hidden="true" className="hero-glow hero-glow-orange" />
+
+          <div className="hero-copy">
+            <div className="eyebrow">
+              <span className="live-dot" />
+              Native macOS power monitor
+            </div>
+            <h1>
+              See where
+              <br />
+              <span>every watt</span> goes.
+            </h1>
+            <p className="hero-lede">
+              Wattson turns battery, adapter, and system load into one calm,
+              live map—right from your menu bar.
+            </p>
+            <div className="hero-actions">
+              <ReleaseLink className="button button-primary" href={release.dmgUrl}>
+                Download for Mac
+              </ReleaseLink>
+              <a className="button button-ghost" href="#flow-preview">
+                Explore the flow
+                <span aria-hidden="true" className="button-arrow">
+                  ↓
+                </span>
+              </a>
+            </div>
+            <div className="compatibility-line" aria-label="Compatibility">
+              <span>macOS 12+</span>
+              <span>Apple silicon + Intel</span>
+              <span>No telemetry</span>
+            </div>
+          </div>
+
+          <div className="app-showcase" id="flow-preview">
+            <div aria-hidden="true" className="showcase-shadow" />
+            <div className="app-window">
+              <div className="window-bar">
+                <div className="window-identity">
+                  <span aria-hidden="true" className="mini-battery" />
+                  <span>Wattson</span>
+                </div>
+                <div className="window-state">
+                  <span className="live-dot" />
+                  Live
+                </div>
+              </div>
+
+              <div className="metrics-row">
+                <div>
+                  <span>Input</span>
+                  <strong className="blue-value">67.1 W</strong>
+                </div>
+                <div>
+                  <span>Battery</span>
+                  <strong className="green-value">82%</strong>
+                </div>
+                <div>
+                  <span>System load</span>
+                  <strong className="orange-value">24.8 W</strong>
+                </div>
+              </div>
+
+              <div className="power-map" aria-label="Live power flow preview">
+                <div className="power-node source-node">
+                  <span aria-hidden="true" className="node-symbol">
+                    ∿
+                  </span>
+                  <span className="node-label">Adapter</span>
+                  <strong>67 W</strong>
+                </div>
+
+                <div aria-hidden="true" className="energy-lane input-lane">
+                  <span className="flow-particle particle-one" />
+                  <span className="flow-particle particle-two" />
+                  <span className="flow-particle particle-three" />
+                </div>
+
+                <div className="battery-gauge">
+                  <div className="gauge-ring">
+                    <div className="gauge-core">
+                      <span>82%</span>
+                      <small>Charging</small>
+                    </div>
+                  </div>
+                  <span className="gauge-caption">41 min to full</span>
+                </div>
+
+                <div aria-hidden="true" className="energy-lane output-lane">
+                  <span className="flow-particle particle-one" />
+                  <span className="flow-particle particle-two" />
+                  <span className="flow-particle particle-three" />
+                </div>
+
+                <div className="power-node load-node">
+                  <span aria-hidden="true" className="node-symbol">
+                    ⌑
+                  </span>
+                  <span className="node-label">Mac</span>
+                  <strong>24.8 W</strong>
+                </div>
+              </div>
+
+              <div className="history-panel">
+                <div className="history-heading">
+                  <div>
+                    <span>Power history</span>
+                    <strong>Last 2 minutes</strong>
+                  </div>
+                  <div className="history-legend">
+                    <span className="legend-input">Input</span>
+                    <span className="legend-load">Load</span>
+                  </div>
+                </div>
+                <div aria-hidden="true" className="history-chart">
+                  {historyValues.map((height, index) => (
+                    <span
+                      className={index > 21 ? "history-bar warm" : "history-bar"}
+                      key={`${height}-${index}`}
+                      style={{ "--bar-height": `${height}%` } as CSSProperties}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="mode-row">
+                <span>Energy mode</span>
+                <div className="mode-control" aria-label="Energy mode preview">
+                  <span className="mode-active">Auto</span>
+                  <span>Low Power</span>
+                  <span>High Power</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="signal-strip" aria-label="Product highlights">
+          <div>
+            <strong>1 s</strong>
+            <span>live refresh</span>
+          </div>
+          <div>
+            <strong>2 min</strong>
+            <span>power history</span>
+          </div>
+          <div>
+            <strong>4 states</strong>
+            <span>clearly distinguished</span>
+          </div>
+          <div>
+            <strong>0 bytes</strong>
+            <span>personal data uploaded</span>
+          </div>
+        </section>
+
+        <section className="features section-shell" id="features">
+          <div className="section-intro">
+            <span className="section-kicker">Clarity without the clutter</span>
+            <h2>Power you can actually read.</h2>
+            <p>
+              Wattson gives the numbers shape, motion, and context—so you can
+              tell charging from drawing power at a glance.
+            </p>
+          </div>
+
+          <div className="feature-grid">
+            <article className="feature-card feature-card-wide">
+              <div aria-hidden="true" className="feature-visual lane-visual">
+                <span className="lane-dot lane-dot-blue" />
+                <span className="lane-track lane-track-blue" />
+                <span className="lane-core" />
+                <span className="lane-track lane-track-orange" />
+                <span className="lane-dot lane-dot-orange" />
+              </div>
+              <span className="feature-number">01</span>
+              <h3>Power, in motion</h3>
+              <p>
+                Follow energy from adapter to battery to system load. Charging,
+                full, battery, and mixed-power states each get a distinct read.
+              </p>
+            </article>
+
+            <article className="feature-card">
+              <div aria-hidden="true" className="feature-visual ring-visual">
+                <div className="mini-ring">
+                  <span>82</span>
+                </div>
+              </div>
+              <span className="feature-number">02</span>
+              <h3>Native by design</h3>
+              <p>
+                A focused AppKit menu-bar experience with smooth animation,
+                native controls, and support for Reduce Motion.
+              </p>
+            </article>
+
+            <article className="feature-card">
+              <div aria-hidden="true" className="feature-visual toggle-visual">
+                <div className="mini-segment">
+                  <span className="selected">Auto</span>
+                  <span>Low</span>
+                  <span>High</span>
+                </div>
+              </div>
+              <span className="feature-number">03</span>
+              <h3>Control in one click</h3>
+              <p>
+                Switch energy modes and manage the system battery icon without
+                digging through System Settings.
+              </p>
+            </article>
+
+            <article className="feature-card feature-card-wide privacy-card">
+              <div aria-hidden="true" className="feature-visual privacy-visual">
+                <span className="privacy-orbit" />
+                <span className="privacy-lock">
+                  <i />
+                </span>
+              </div>
+              <span className="feature-number">04</span>
+              <h3>Local, always</h3>
+              <p>
+                Battery and power state stay on your Mac. Wattson has no
+                account, no cloud service, no analytics, and nothing to upload.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section className="install-section" id="install">
+          <div className="section-shell">
+            <div className="install-heading">
+              <div>
+                <span className="section-kicker">Choose your route</span>
+                <h2>Put Wattson in your menu bar.</h2>
+              </div>
+              <div className="release-pill" aria-live="polite">
+                <span className="live-dot" />
+                Latest {versionLabel}
+                <small>
+                  {release.source === "live" ? "checked on GitHub" : "fallback"}
+                </small>
+              </div>
+            </div>
+
+            <div className="install-grid">
+              <article className="install-card recommended-card">
+                <span className="recommended-label">Recommended</span>
+                <div className="install-card-top">
+                  <span aria-hidden="true" className="install-glyph dmg-glyph">
+                    DMG
+                  </span>
+                  <span>01</span>
+                </div>
+                <h3>Disk image</h3>
+                <p>
+                  Open the image, then double-click the enclosed
+                  <strong> Wattson PKG</strong> and follow macOS Installer.
+                </p>
+                <ReleaseLink className="install-action primary-action" href={release.dmgUrl}>
+                  Download DMG
+                </ReleaseLink>
+              </article>
+
+              <article className="install-card">
+                <div className="install-card-top">
+                  <span aria-hidden="true" className="install-glyph pkg-glyph">
+                    PKG
+                  </span>
+                  <span>02</span>
+                </div>
+                <h3>Package installer</h3>
+                <p>
+                  Download the same universal installer package directly,
+                  without the disk-image wrapper.
+                </p>
+                <ReleaseLink className="install-action" href={release.pkgUrl}>
+                  Download PKG
+                </ReleaseLink>
+              </article>
+
+              <article className="install-card brew-card">
+                <div className="install-card-top">
+                  <span aria-hidden="true" className="install-glyph brew-glyph">
+                    ›_
+                  </span>
+                  <span>03</span>
+                </div>
+                <h3>Homebrew</h3>
+                <p>Install or update from Terminal with the community tap.</p>
+                <div className="command-box">
+                  <code>{HOMEBREW_COMMAND}</code>
+                  <button
+                    aria-label="Copy Homebrew install command"
+                    className="copy-button"
+                    onClick={copyHomebrewCommand}
+                    type="button"
+                  >
+                    {copied ? "Copied" : "Copy"}
+                  </button>
+                </div>
+              </article>
+            </div>
+
+            <aside className="trust-note">
+              <div aria-hidden="true" className="trust-mark">
+                <span>!</span>
+              </div>
+              <div>
+                <span className="trust-eyebrow">Community build · Know what you install</span>
+                <h3>Transparent about trust.</h3>
+                <p>
+                  Current downloads are ad-hoc signed and are not Apple-notarized.
+                  macOS may show a Gatekeeper warning; use Finder’s Control-click
+                  → Open only if you trust the release. Review the source and
+                  compare the published SHA-256 checksum before installing.
+                </p>
+              </div>
+              <a href={`${GITHUB_REPO}/releases`} rel="noreferrer" target="_blank">
+                Inspect releases <span aria-hidden="true">↗</span>
+              </a>
+            </aside>
+
+            <div className="system-requirements">
+              <div>
+                <span className="requirement-label">System</span>
+                <strong>macOS 12 or later</strong>
+                <small>Monterey through the latest macOS</small>
+              </div>
+              <div>
+                <span className="requirement-label">Architecture</span>
+                <strong>Apple silicon + Intel</strong>
+                <small>Universal support for battery-equipped Macs</small>
+              </div>
+              <div>
+                <span className="requirement-label">Source</span>
+                <strong>Open on GitHub</strong>
+                <small>Read the code, report issues, or contribute</small>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="closing-section section-shell">
+          <div className="closing-mark" aria-hidden="true">
+            <span className="closing-cell">
+              <i />
+            </span>
+          </div>
+          <span className="section-kicker">A clearer relationship with power</span>
+          <h2>Your Mac is already talking.<br />Wattson lets you see it.</h2>
+          <ReleaseLink className="button button-primary" href={release.dmgUrl}>
+            Download {versionLabel}
+          </ReleaseLink>
+        </section>
+      </div>
+
+      <footer className="site-footer">
+        <div className="footer-brand">
+          <a className="wordmark" href="#top" aria-label="Wattson home">
+            <span aria-hidden="true" className="brand-cell">
+              <span className="brand-charge" />
+            </span>
+            <span>Wattson</span>
+          </a>
+          <p>A native power-flow monitor for macOS.</p>
+        </div>
+        <div className="footer-links">
+          <a href={GITHUB_REPO} rel="noreferrer" target="_blank">
+            Source
+          </a>
+          <a href={`${GITHUB_REPO}/releases`} rel="noreferrer" target="_blank">
+            Releases
+          </a>
+          <a href={`${GITHUB_REPO}/issues`} rel="noreferrer" target="_blank">
+            Issues
+          </a>
+        </div>
+        <p className="footer-note">
+          Wattson is an independent community project and is not affiliated
+          with Apple Inc.
+        </p>
+      </footer>
+    </main>
+  );
+}

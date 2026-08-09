@@ -702,7 +702,7 @@ let normalStates = headerSnapshots.prefix(4).map {
     header.statePresentationForTest(snapshot: $0)
 }
 check("顶栏保留四种正常供电状态文案",
-      normalStates.map(\.text) == ["充电中", "插电已满", "电池供电", "混合供电 · 充电器功率不足"]
+      normalStates.map(\.text) == ["Charging", "Plugged In · Full", "On Battery", "Mixed Power · Adapter Limited"]
           && normalStates.allSatisfy { $0.color?.isEqual(PopoverStyle.secondaryText) == true })
 
 let thresholdSnapshot = PowerSnapshot(
@@ -710,16 +710,16 @@ let thresholdSnapshot = PowerSnapshot(
     temperatureC: 31.8, cycleCount: 116
 )
 check("守恒偏差恰好 2 W 时仍显示正常状态",
-      header.statePresentationForTest(snapshot: thresholdSnapshot).text == "插电已满")
+      header.statePresentationForTest(snapshot: thresholdSnapshot).text == "Plugged In · Full")
 
 let imbalanceState = header.statePresentationForTest(snapshot: headerSnapshots[4])
 check("守恒偏差超过 2 W 时右上角显示红色数据异常",
-      imbalanceState.text == "数据异常 · 偏差 -10.3 W"
+      imbalanceState.text == "Data Issue · Imbalance -10.3 W"
           && imbalanceState.color?.isEqual(PopoverStyle.red) == true)
 
 let degradedState = header.statePresentationForTest(snapshot: headerSnapshots[4], degraded: true)
 check("读取失败优先于守恒偏差",
-      degradedState.text == "读取失败 · 上次数据"
+      degradedState.text == "Read Failed · Last Reading"
           && degradedState.color?.isEqual(PopoverStyle.red) == true)
 
 NSStatusBar.system.removeStatusItem(item)

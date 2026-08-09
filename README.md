@@ -1,68 +1,108 @@
-# Wattson / 瓦特森
+# Wattson
 
-Wattson 是一款 macOS 菜单栏电量与功率监看工具。菜单栏图标与系统电池保持一致，左键弹出实时功率流监视器，右键直接切换省电模式。
+Wattson is a native macOS menu-bar monitor that turns adapter input, battery
+flow, and system load into a live power map.
 
-## 主要功能
+## Highlights
 
-- 菜单栏图标形状与系统电池一致，按状态变色：省电（黄）、低电量（红）、充电（绿）
-- 左键以原生平滑动画展开实时功率流，并自动尊重 macOS“减弱动态效果”设置
-- 区分充电、插电已满、电池供电和混合供电
-- 环形仪表、双泳道与 2 分钟功率历史；四个模块可单独显示或隐藏
-- 右键直接在省电模式与自动之间切换，无需打开系统设置
-- 弹窗左下角提供原生 Liquid Glass 三档控件：自动、Low Power、High Power
-- 可在弹窗内隐藏或恢复 macOS 自带的菜单栏电池图标
-- 通过 IOKit 直读电池，不轮询、不派生子进程
+- Native AppKit menu-bar app with a compact real-time power-flow panel.
+- Charging, full, battery, and mixed-supply states with state-aware colors.
+- Ring gauge, power lanes, animated particles, and two-minute history.
+- Auto, Low Power, and supported High Power modes in one fluid glass control.
+- Optional system battery-icon visibility and launch-at-login controls.
+- Reduce Motion, Reduce Transparency, keyboard, and VoiceOver support.
+- No account, analytics, telemetry, or uploaded data.
 
-## 安装
+## Install v3.0.0
 
-面向用户的发布包只有一个安装入口：
+Choose one route from the [latest release](https://github.com/laleoarrow/battery-monitor/releases/latest):
 
-1. 打开 `Wattson-v2.1.5.dmg`。
-2. 在已打开的 DMG 窗口中直接双击 `Install Wattson.app`（不要把安装器单独拷出）。
-3. 点击“安装”，并在 macOS 询问时输入一次管理员密码。
+### DMG
 
-如果安装失败，点击弹窗中的“复制诊断信息”。安装器会在本机只读采集
-Wattson 相关的系统状态和最近日志，然后复制到剪贴板；直接粘贴到回复邮件即可。
+1. Open `Wattson-v3.0.0-macos-universal.dmg`.
+2. Double-click the enclosed `Wattson-v3.0.0-macos-universal.pkg`.
+3. Follow macOS Installer and approve the standard administrator prompt.
+4. Open Wattson from `/Applications` after installation finishes.
 
-安装助手会把唯一的正式副本放到
-`~/Applications/Wattson.app`，同时安装切换能耗模式、系统电池图标与开机启动所需的特权助手。
-安装期间会保留原版本；如果授权、辅助助手或启动验证失败，安装助手会自动恢复原版本。
-完成后 Wattson 会自动启动；只有当菜单栏项完成初始化且特权助手真实响应时，安装器才会报告成功。
+### Direct PKG
 
-当前发布仍是未公证的私有测试版。如果 macOS 拦截安装助手，请在 Finder 中右键它并选择“打开”；仅安装你信任的发布件。
+Download and open `Wattson-v3.0.0-macos-universal.pkg`. It is the exact same
+installer package contained in the DMG.
 
-在源码仓库中本地开发时可以直接运行：
+### Homebrew
 
 ```bash
-./scripts/install.sh
+brew install --cask laleoarrow/tap/wattson
 ```
 
-安装过程会请求一次 `sudo`，用于放置切换能耗模式与系统电池图标所需的特权助手。该助手平时不运行——只在操作这些控件时由 launchd 唤醒，执行完即退出。隐藏或恢复系统电池图标时，Control Center 会自动重启一次，菜单栏可能短暂闪动。
-若助手未安装，监视功能仍可正常使用；右键切换会保持无操作，弹窗底部会显示安装提示。
+All three routes install the same universal app at `/Applications/Wattson.app`
+and the same on-demand helper at
+`/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper`.
 
-## 卸载
+The v3 installer upgrades the former `~/Applications/Wattson.app` layout. A
+strictly validated v2 launch-at-login entry is migrated to the canonical v3
+path during installation, before the retired v2 app is removed.
+
+## Community-build trust note
+
+The current public artifacts follow the same community distribution model as
+iData: the app and helper are ad-hoc signed, while the PKG and DMG are not
+Developer ID signed or Apple-notarized. macOS may therefore show an
+unidentified-developer warning. Use Control-click → Open, or the corresponding
+Privacy & Security override, only when you trust this repository and release.
+Compare downloads with `SHA256SUMS.txt` before installation.
+
+The release metadata states the signing and notarization status explicitly; it
+never describes a community artifact as notarized.
+
+## Requirements
+
+- macOS 12 or later.
+- Apple silicon or Intel Mac with an internal battery.
+- High Power mode appears only on hardware that supports it.
+
+## When the menu-bar item is hidden
+
+macOS can hide status items when the menu bar is crowded, especially on Macs
+with a camera notch. Relaunch Wattson with:
+
+```bash
+open "/Applications/Wattson.app"
+```
+
+If it remains hidden, reduce other menu-bar items in System Settings. Wattson
+cannot override macOS status-item placement.
+
+## Uninstall
 
 ```bash
 ./scripts/uninstall.sh
 ```
 
-## 菜单栏图标不见了
+The script removes the canonical app, v2 user-local app, launch-at-login entry,
+privileged helper, LaunchDaemon, socket, and package receipt. It intentionally
+keeps settings under `~/Library/Application Support/Wattson`.
 
-macOS 会在菜单栏拥挤时隐藏图标，带刘海的机型尤其容易发生。这是系统行为，应用无法程序化补救。重新拉起：
+## Build and verify from source
+
+Headless development checks:
 
 ```bash
-open "$HOME/Applications/Wattson.app"
+swift test --parallel
+python3 -m unittest discover -s tests -v
 ```
 
-如果仍看不到，减少其他菜单栏图标，或在系统设置中调整菜单栏项目。
+Build the exact community release artifacts:
 
-## 系统要求
+```bash
+bash scripts/release.sh 3.0.0
+```
 
-- macOS 12 或更新版本
-- Apple 芯片且带电池的 Mac
+Outputs:
 
-macOS 26 使用系统 Liquid Glass 外观；旧版 macOS 使用对应的原生 AppKit 样式。
+- `dist/Wattson-v3.0.0-macos-universal.pkg`
+- `dist/Wattson-v3.0.0-macos-universal.dmg`
+- `dist/Wattson-v3.0.0-release-info.txt`
+- `dist/SHA256SUMS.txt`
 
-## 隐私
-
-Wattson 只读取本机电池和功率状态。应用不会收集、上传或共享个人数据。
+The release build is universal (`arm64` + `x86_64`) and targets macOS 12.

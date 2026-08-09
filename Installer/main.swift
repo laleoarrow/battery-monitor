@@ -23,7 +23,7 @@ private enum InstallerError: LocalizedError {
         case .message(let message):
             return message
         case .authorizationCancelled:
-            return "已取消管理员授权，Wattson 的辅助助手未安装。"
+            return "Administrator authorization was cancelled. The Wattson helper was not installed."
         }
     }
 }
@@ -44,14 +44,14 @@ private enum Command {
             contents: nil,
             attributes: [.posixPermissions: 0o600]
         ) else {
-            throw InstallerError.message("无法创建安装命令的临时日志。")
+            throw InstallerError.message("Couldn’t create a temporary log for the installation command.")
         }
         let outputHandle: FileHandle
         do {
             outputHandle = try FileHandle(forWritingTo: outputURL)
         } catch {
             try? fileManager.removeItem(at: outputURL)
-            throw InstallerError.message("无法打开安装命令的临时日志。")
+            throw InstallerError.message("Couldn’t open the temporary log for the installation command.")
         }
         defer {
             try? outputHandle.close()
@@ -78,7 +78,7 @@ private enum Command {
         do {
             try process.run()
         } catch {
-            throw InstallerError.message("无法运行 \(executablePath)：\(error.localizedDescription)")
+            throw InstallerError.message("Couldn’t run \(executablePath): \(error.localizedDescription)")
         }
 
         let deadline = Date().addingTimeInterval(timeout)
@@ -96,7 +96,7 @@ private enum Command {
             }
             process.waitUntilExit()
             throw InstallerError.message(
-                "\(URL(fileURLWithPath: executablePath).lastPathComponent) 超过 \(Int(timeout)) 秒未完成，已终止。"
+                "\(URL(fileURLWithPath: executablePath).lastPathComponent) did not finish within \(Int(timeout)) seconds and was terminated."
             )
         }
         process.waitUntilExit()
@@ -107,8 +107,8 @@ private enum Command {
         let text = String(data: data, encoding: .utf8)?
             .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard acceptedExitCodes.contains(process.terminationStatus) else {
-            let detail = text.isEmpty ? "退出码 \(process.terminationStatus)" : text
-            throw InstallerError.message("\(URL(fileURLWithPath: executablePath).lastPathComponent) 失败：\(detail)")
+            let detail = text.isEmpty ? "exit status \(process.terminationStatus)" : text
+            throw InstallerError.message("\(URL(fileURLWithPath: executablePath).lastPathComponent) failed: \(detail)")
         }
         return text
     }
@@ -136,7 +136,7 @@ private enum InstallationDiagnostics {
         func value(for key: String) -> String {
             lock.lock()
             defer { lock.unlock() }
-            return values[key] ?? "（诊断未完成）"
+            return values[key] ?? "(diagnostics incomplete)"
         }
     }
 
@@ -256,7 +256,7 @@ private enum InstallationDiagnostics {
 
         let installerVersion = Bundle.main.object(
             forInfoDictionaryKey: "CFBundleShortVersionString"
-        ) as? String ?? "未知"
+        ) as? String ?? "Unknown"
         let disabledState = matchingWattsonLines(results.value(for: "disabled"))
         let backgroundTasks = matchingWattsonLines(results.value(for: "btm"))
         let recentLogs = bounded(
@@ -265,40 +265,40 @@ private enum InstallationDiagnostics {
         )
 
         return """
-        Wattson 安装诊断
-        生成时间：\(ISO8601DateFormatter().string(from: Date()))
-        安装器版本：\(installerVersion)
-        安装失败信息：\(failureDescription)
-        说明：文件与服务状态是安装器完成自动回滚后的只读快照；原始错误与系统日志保留失败时信息。
+        Wattson Installation Diagnostics
+        Generated: \(ISO8601DateFormatter().string(from: Date()))
+        Installer version: \(installerVersion)
+        Installation error: \(failureDescription)
+        Note: File and service status is a read-only snapshot taken after automatic rollback. The original error and system logs retain information from the time of failure.
 
-        === 系统 ===
+        === System ===
         \(results.value(for: "system"))
-        芯片架构：\(results.value(for: "architecture"))
-        Gatekeeper：\(results.value(for: "gatekeeper"))
+        Architecture: \(results.value(for: "architecture"))
+        Gatekeeper: \(results.value(for: "gatekeeper"))
 
-        === launchd 服务（回滚后） ===
+        === launchd Service (After Rollback) ===
         \(results.value(for: "launchd"))
 
-        === launchd 禁用状态（仅匹配 Wattson 的行） ===
+        === launchd Disabled State (Wattson Lines Only) ===
         \(disabledState)
 
-        === 后台项目（仅匹配 Wattson 的行） ===
+        === Background Items (Wattson Lines Only) ===
         \(backgroundTasks)
 
-        === 已安装文件（回滚后） ===
+        === Installed Files (After Rollback) ===
         \(results.value(for: "files"))
 
-        === Helper 签名（回滚后） ===
+        === Helper Signature (After Rollback) ===
         \(results.value(for: "signature"))
-        验证结果：\(results.value(for: "signatureVerification"))
+        Verification: \(results.value(for: "signatureVerification"))
 
-        === Helper 扩展属性名称（不复制属性值） ===
+        === Helper Extended Attribute Names (Values Not Copied) ===
         \(results.value(for: "helperAttributes"))
 
-        === Plist 扩展属性名称（不复制属性值） ===
+        === Plist Extended Attribute Names (Values Not Copied) ===
         \(results.value(for: "plistAttributes"))
 
-        === 最近 15 分钟相关系统日志 ===
+        === Related System Logs from the Last 15 Minutes ===
         \(recentLogs)
         """
     }
@@ -310,7 +310,7 @@ private enum InstallationDiagnostics {
         timeout: TimeInterval
     ) -> String {
         guard readOnlyCommandArguments[executablePath]?.contains(arguments) == true else {
-            return "（已拒绝未列入只读白名单的诊断命令）"
+            return "(diagnostic command rejected because it is not on the read-only allowlist)"
         }
         do {
             let output = try Command.run(
@@ -319,14 +319,14 @@ private enum InstallationDiagnostics {
                 acceptedExitCodes: acceptedExitCodes,
                 timeout: timeout
             )
-            return output.isEmpty ? "（命令成功，无输出）" : output
+            return output.isEmpty ? "(command succeeded with no output)" : output
         } catch {
-            return "（读取失败：\(error.localizedDescription)）"
+            return "(read failed: \(error.localizedDescription))"
         }
     }
 
     private static func matchingWattsonLines(_ output: String) -> String {
-        if output.hasPrefix("（读取失败：") {
+        if output.hasPrefix("(read failed:") {
             return output
         }
         var seen = Set<String>()
@@ -336,7 +336,7 @@ private enum InstallationDiagnostics {
             return matches && seen.insert(line).inserted
         }
         return selected.isEmpty
-            ? "（未发现 Wattson 相关记录）"
+            ? "(no Wattson-related records found)"
             : selected.joined(separator: "\n")
     }
 
@@ -346,7 +346,7 @@ private enum InstallationDiagnostics {
     ) -> String {
         guard output.count > maximumCharacters else { return output }
         return String(output.prefix(maximumCharacters))
-            + "\n（日志过长，后续内容已截断）"
+            + "\n(log too long; remaining content truncated)"
     }
 }
 
@@ -372,12 +372,12 @@ private final class InstallerEngine {
         defer { try? fileManager.removeItem(at: payload.temporaryDirectory) }
         try Command.run("/bin/bash", ["-n", "-c", privilegedInstallScript(for: payload)])
         guard let script = NSAppleScript(source: authorizationAppleScriptSource(for: payload)) else {
-            throw InstallerError.message("无法创建系统授权请求。")
+            throw InstallerError.message("Couldn’t create the system authorization request.")
         }
         var errorInfo: NSDictionary?
         guard script.compileAndReturnError(&errorInfo) else {
-            let detail = errorInfo?["NSAppleScriptErrorMessage"] as? String ?? "未知错误"
-            throw InstallerError.message("系统授权脚本无法编译：\(detail)")
+            let detail = errorInfo?["NSAppleScriptErrorMessage"] as? String ?? "Unknown error"
+            throw InstallerError.message("The system authorization script could not be compiled: \(detail)")
         }
     }
 
@@ -386,11 +386,11 @@ private final class InstallerEngine {
         let payload = try preparePayload(progress: progress)
         defer { try? fileManager.removeItem(at: payload.temporaryDirectory) }
 
-        progress("正在替换旧版 Wattson…")
+        progress("Replacing the previous version of Wattson…")
         let transaction = try installApplication(from: payload.appURL)
 
         do {
-            progress("正在启动 Wattson…")
+            progress("Starting Wattson…")
             let readinessToken = UUID()
             let readinessURL = installerReadinessURL(for: readinessToken)
             try? fileManager.removeItem(at: readinessURL)
@@ -408,17 +408,17 @@ private final class InstallerEngine {
                 readinessURL: readinessURL
             )
 
-            progress("等待系统管理员授权…")
+            progress("Waiting for administrator authorization…")
             try installPrivilegedHelper(using: payload)
             commitApplicationInstall(transaction)
         } catch {
             let installationError = error
-            progress("安装未完成，正在恢复之前版本…")
+            progress("Installation incomplete. Restoring the previous version…")
             do {
                 try rollbackApplicationInstall(transaction)
             } catch {
                 throw InstallerError.message(
-                    "\(installationError.localizedDescription) 恢复之前版本时又失败：\(error.localizedDescription)"
+                    "\(installationError.localizedDescription) Restoring the previous version also failed: \(error.localizedDescription)"
                 )
             }
             throw installationError
@@ -427,7 +427,7 @@ private final class InstallerEngine {
 
     private func preparePayload(progress: (String) -> Void) throws -> PreparedPayload {
         guard let resourceURL = Bundle.main.resourceURL else {
-            throw InstallerError.message("安装器资源目录不存在。")
+            throw InstallerError.message("The installer resources folder is missing.")
         }
 
         let payloadDirectory = resourceURL.appendingPathComponent("Payload", isDirectory: true)
@@ -436,10 +436,10 @@ private final class InstallerEngine {
         let helperPlistURL = payloadDirectory.appendingPathComponent("\(helperLabel).plist")
         let installHelperScriptURL = resourceURL.appendingPathComponent("install-helper.sh")
 
-        progress("正在验证安装资源…")
+        progress("Verifying installation resources…")
         try requireRegularFile(archiveURL, description: "Wattson.zip")
-        try requireRegularFile(helperURL, description: "辅助助手")
-        try requireRegularFile(helperPlistURL, description: "辅助助手 plist")
+        try requireRegularFile(helperURL, description: "helper")
+        try requireRegularFile(helperPlistURL, description: "helper plist")
         try requireRegularFile(installHelperScriptURL, description: "install-helper.sh")
         try requireSHA256(
             expectedWattsonArchiveSHA256,
@@ -454,12 +454,12 @@ private final class InstallerEngine {
         try requireSHA256(
             expectedHelperBinarySHA256,
             for: helperURL,
-            description: "辅助助手"
+            description: "helper"
         )
         try requireSHA256(
             expectedHelperPlistSHA256,
             for: helperPlistURL,
-            description: "辅助助手 plist"
+            description: "helper plist"
         )
         try Command.run("/usr/bin/codesign", ["--verify", "--strict", helperURL.path])
         try validateHelperPlist(at: helperPlistURL)
@@ -473,7 +473,7 @@ private final class InstallerEngine {
                 withIntermediateDirectories: false,
                 attributes: [.posixPermissions: 0o700]
             )
-            progress("正在解压 Wattson…")
+            progress("Extracting Wattson…")
             try Command.run("/usr/bin/ditto", ["-x", "-k", archiveURL.path, temporaryDirectory.path])
 
             let appURL = temporaryDirectory.appendingPathComponent("Wattson.app", isDirectory: true)
@@ -495,11 +495,11 @@ private final class InstallerEngine {
         let installerURL = Bundle.main.bundleURL
         var fileSystem = statfs()
         guard statfs(installerURL.path, &fileSystem) == 0 else {
-            throw InstallerError.message("无法检查安装器所在卷。")
+            throw InstallerError.message("Couldn’t verify the volume containing the installer.")
         }
         guard (fileSystem.f_flags & UInt32(MNT_RDONLY)) != 0 else {
             throw InstallerError.message(
-                "请直接从只读 DMG 中打开 Install Wattson.app，不要先把安装器拷贝到其他位置。"
+                "Open Install Wattson.app directly from the read-only DMG. Do not copy it elsewhere first."
             )
         }
         try Command.run(
@@ -512,32 +512,32 @@ private final class InstallerEngine {
         let hexadecimal = CharacterSet(charactersIn: "0123456789abcdef")
         guard normalizedExpected.count == 64,
               normalizedExpected.unicodeScalars.allSatisfy(hexadecimal.contains) else {
-            throw InstallerError.message("安装器没有固化 \(description) 的完整性信息。")
+            throw InstallerError.message("The installer has no embedded integrity information for \(description).")
         }
         let output = try Command.run("/usr/bin/shasum", ["-a", "256", url.path])
         let actual = output.split(whereSeparator: { $0.isWhitespace }).first.map(String.init) ?? ""
         guard actual.lowercased() == normalizedExpected else {
-            throw InstallerError.message("\(description) 的 SHA-256 不匹配，安装已停止。")
+            throw InstallerError.message("The SHA-256 for \(description) does not match. Installation has stopped.")
         }
     }
 
     private func validateApplication(at appURL: URL) throws {
         let values = try appURL.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
         guard values.isDirectory == true, values.isSymbolicLink != true else {
-            throw InstallerError.message("Wattson.app 不是有效的应用包。")
+            throw InstallerError.message("Wattson.app is not a valid app bundle.")
         }
 
         let infoURL = appURL.appendingPathComponent("Contents/Info.plist")
         let info = try propertyList(at: infoURL)
         guard info["CFBundleIdentifier"] as? String == wattsonBundleIdentifier else {
-            throw InstallerError.message("Wattson.app 的 bundle identifier 不匹配。")
+            throw InstallerError.message("The Wattson.app bundle identifier does not match.")
         }
         guard info["CFBundleExecutable"] as? String == "Wattson" else {
-            throw InstallerError.message("Wattson.app 的可执行文件声明不匹配。")
+            throw InstallerError.message("The Wattson.app executable declaration does not match.")
         }
         try requireRegularFile(
             appURL.appendingPathComponent(wattsonExecutableRelativePath),
-            description: "Wattson 可执行文件"
+            description: "Wattson executable"
         )
         try Command.run("/usr/bin/codesign", ["--verify", "--deep", "--strict", appURL.path])
     }
@@ -545,16 +545,16 @@ private final class InstallerEngine {
     private func validateHelperPlist(at plistURL: URL) throws {
         let plist = try propertyList(at: plistURL)
         guard plist["Label"] as? String == helperLabel else {
-            throw InstallerError.message("辅助助手 plist 的 Label 不匹配。")
+            throw InstallerError.message("The helper plist Label does not match.")
         }
         guard let arguments = plist["ProgramArguments"] as? [String],
               arguments == [helperInstallPath] else {
-            throw InstallerError.message("辅助助手 plist 的程序路径不匹配。")
+            throw InstallerError.message("The helper plist program path does not match.")
         }
         guard let sockets = plist["Sockets"] as? [String: Any],
               let listener = sockets["Listener"] as? [String: Any],
               listener["SockPathName"] as? String == helperSocketPath else {
-            throw InstallerError.message("辅助助手 plist 的 socket 路径不匹配。")
+            throw InstallerError.message("The helper plist socket path does not match.")
         }
     }
 
@@ -564,13 +564,13 @@ private final class InstallerEngine {
             let data = try Data(contentsOf: url, options: [.mappedIfSafe])
             let object = try PropertyListSerialization.propertyList(from: data, options: [], format: nil)
             guard let dictionary = object as? [String: Any] else {
-                throw InstallerError.message("\(url.lastPathComponent) 不是字典格式。")
+                throw InstallerError.message("\(url.lastPathComponent) is not a dictionary.")
             }
             return dictionary
         } catch let error as InstallerError {
             throw error
         } catch {
-            throw InstallerError.message("无法读取 \(url.lastPathComponent)：\(error.localizedDescription)")
+            throw InstallerError.message("Couldn’t read \(url.lastPathComponent): \(error.localizedDescription)")
         }
     }
 
@@ -578,12 +578,12 @@ private final class InstallerEngine {
         do {
             let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
             guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                throw InstallerError.message("\(description) 缺失或不是普通文件。")
+                throw InstallerError.message("\(description) is missing or is not a regular file.")
             }
         } catch let error as InstallerError {
             throw error
         } catch {
-            throw InstallerError.message("无法读取 \(description)：\(error.localizedDescription)")
+            throw InstallerError.message("Couldn’t read \(description): \(error.localizedDescription)")
         }
     }
 
@@ -611,11 +611,11 @@ private final class InstallerEngine {
         if targetExisted {
             let existingValues = try targetURL.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
             guard existingValues.isDirectory == true, existingValues.isSymbolicLink != true else {
-                throw InstallerError.message("同名目标不是可安全替换的应用包。")
+                throw InstallerError.message("The item with the same name is not an app bundle that can be safely replaced.")
             }
             let existingInfo = try propertyList(at: targetURL.appendingPathComponent("Contents/Info.plist"))
             guard existingInfo["CFBundleIdentifier"] as? String == wattsonBundleIdentifier else {
-                throw InstallerError.message("已存在同名但不是 Wattson 的应用，为避免覆盖已停止安装。")
+                throw InstallerError.message("An app with the same name already exists but is not Wattson. Installation stopped to avoid overwriting it.")
             }
         }
 
@@ -629,7 +629,7 @@ private final class InstallerEngine {
         )
         let remainingAttributes = try Command.run("/usr/bin/xattr", ["-l", "-r", candidateURL.path])
         guard !remainingAttributes.contains("com.apple.quarantine") else {
-            throw InstallerError.message("无法移除已验证 Wattson 副本的隔离属性。")
+            throw InstallerError.message("Couldn’t remove quarantine attributes from the verified copy of Wattson.")
         }
         try validateApplication(at: candidateURL)
 
@@ -655,7 +655,7 @@ private final class InstallerEngine {
                 try rollbackApplicationInstall(transaction)
             } catch {
                 throw InstallerError.message(
-                    "\(replacementError.localizedDescription) 恢复之前版本时又失败：\(error.localizedDescription)"
+                    "\(replacementError.localizedDescription) Restoring the previous version also failed: \(error.localizedDescription)"
                 )
             }
             throw replacementError
@@ -712,7 +712,7 @@ private final class InstallerEngine {
 
         applicationsRunning(at: appURL).forEach { _ = $0.forceTerminate() }
         guard waitUntil(timeout: 2, condition: { self.applicationsRunning(at: appURL).isEmpty }) else {
-            throw InstallerError.message("无法关闭正在运行的旧版 Wattson。")
+            throw InstallerError.message("Couldn’t close the previous version of Wattson.")
         }
     }
 
@@ -741,7 +741,7 @@ private final class InstallerEngine {
             let running = !applicationsRunning(at: appURL).isEmpty
             if running { appeared = true }
             if appeared, !running {
-                throw InstallerError.message("Wattson 启动后立即退出，请重新安装或查看系统日志。")
+                throw InstallerError.message("Wattson quit immediately after launch. Reinstall it or check the system logs.")
             }
             if running,
                let response = try? String(contentsOf: readinessURL, encoding: .utf8),
@@ -758,9 +758,9 @@ private final class InstallerEngine {
         } while Date() < deadline
 
         if !appeared {
-            throw InstallerError.message("已安装 Wattson，但未检测到它从安装路径启动。")
+            throw InstallerError.message("Wattson was installed, but it did not launch from the installation location.")
         }
-        throw InstallerError.message("Wattson 进程已启动，但菜单栏项未返回就绪回执。")
+        throw InstallerError.message("Wattson launched, but the menu bar item did not return a readiness response.")
     }
 
     private func waitUntil(timeout: TimeInterval, condition: () -> Bool) -> Bool {
@@ -811,7 +811,7 @@ private final class InstallerEngine {
         var caughtError: Error?
         DispatchQueue.main.sync {
             guard let script = NSAppleScript(source: source) else {
-                caughtError = InstallerError.message("无法创建系统授权请求。")
+                caughtError = InstallerError.message("Couldn’t create the system authorization request.")
                 return
             }
             var errorInfo: NSDictionary?
@@ -822,8 +822,8 @@ private final class InstallerEngine {
                     caughtError = InstallerError.authorizationCancelled
                 } else {
                     let detail = errorInfo["NSAppleScriptErrorMessage"] as? String
-                        ?? "系统未返回详细信息。"
-                    caughtError = InstallerError.message("安装辅助助手失败：\(detail)")
+                        ?? "The system did not provide details."
+                    caughtError = InstallerError.message("Couldn’t install the privileged helper: \(detail)")
                 }
             }
         }
@@ -846,10 +846,10 @@ private final class InstallerEngine {
 
 private final class InstallerWindowController: NSObject, NSWindowDelegate {
     private let window: NSWindow
-    private let statusLabel = NSTextField(labelWithString: "准备安装")
+    private let statusLabel = NSTextField(labelWithString: "Ready to Install")
     private let progressIndicator = NSProgressIndicator()
-    private let installButton = NSButton(title: "安装", target: nil, action: nil)
-    private let cancelButton = NSButton(title: "取消", target: nil, action: nil)
+    private let installButton = NSButton(title: "Install", target: nil, action: nil)
+    private let cancelButton = NSButton(title: "Cancel", target: nil, action: nil)
     private let workerQueue = DispatchQueue(label: "com.leoarrow.wattson.installer", qos: .userInitiated)
     private var isInstalling = false
     private var isCollectingDiagnostics = false
@@ -872,7 +872,7 @@ private final class InstallerWindowController: NSObject, NSWindowDelegate {
     }
 
     private func configureWindow() {
-        window.title = "安装 Wattson"
+        window.title = "Install Wattson"
         window.isReleasedWhenClosed = false
         window.delegate = self
 
@@ -882,12 +882,12 @@ private final class InstallerWindowController: NSObject, NSWindowDelegate {
         iconView.translatesAutoresizingMaskIntoConstraints = false
         iconView.imageScaling = .scaleProportionallyUpOrDown
 
-        let titleLabel = NSTextField(labelWithString: "安装 Wattson")
+        let titleLabel = NSTextField(labelWithString: "Install Wattson")
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = .systemFont(ofSize: 22, weight: .semibold)
 
         let detailLabel = NSTextField(wrappingLabelWithString:
-            "Wattson 将安装到 ~/Applications，并安装用于省电模式、系统电池图标和开机启动的辅助助手。系统会请求一次管理员密码。")
+            "Wattson will be installed in ~/Applications with a helper for power modes, the system battery icon, and launch at login. macOS will request an administrator password once.")
         detailLabel.translatesAutoresizingMaskIntoConstraints = false
         detailLabel.textColor = .secondaryLabelColor
         detailLabel.maximumNumberOfLines = 3
@@ -953,7 +953,7 @@ private final class InstallerWindowController: NSObject, NSWindowDelegate {
         isInstalling = true
         installButton.isEnabled = false
         cancelButton.isEnabled = false
-        statusLabel.stringValue = "正在开始…"
+        statusLabel.stringValue = "Starting…"
         progressIndicator.startAnimation(nil)
 
         workerQueue.async { [weak self] in
@@ -977,13 +977,13 @@ private final class InstallerWindowController: NSObject, NSWindowDelegate {
 
     private func showSuccess() {
         progressIndicator.stopAnimation(nil)
-        statusLabel.stringValue = "安装完成，Wattson 正在菜单栏运行。"
+        statusLabel.stringValue = "Installation complete. Wattson is running in the menu bar."
 
         let alert = NSAlert()
         alert.alertStyle = .informational
-        alert.messageText = "Wattson 已安装"
-        alert.informativeText = "Wattson 已从 ~/Applications/Wattson.app 启动。安装器已确认菜单栏项完成初始化，且辅助助手能够正常响应。若菜单栏空间不足或使用刘海机型，macOS 仍可能隐藏图标。"
-        alert.addButton(withTitle: "完成")
+        alert.messageText = "Wattson Installed"
+        alert.informativeText = "Wattson launched from ~/Applications/Wattson.app. The installer confirmed that the menu bar item initialized and the helper is responding. macOS may still hide the icon when menu bar space is limited or on Macs with a notch."
+        alert.addButton(withTitle: "Done")
         alert.beginSheetModal(for: window) { _ in NSApp.terminate(nil) }
     }
 
@@ -992,15 +992,15 @@ private final class InstallerWindowController: NSObject, NSWindowDelegate {
         progressIndicator.stopAnimation(nil)
         installButton.isEnabled = true
         cancelButton.isEnabled = true
-        statusLabel.stringValue = "安装未完成。可以重试或退出。"
+        statusLabel.stringValue = "Installation incomplete. Retry or quit."
 
         let alert = NSAlert()
         alert.alertStyle = .critical
-        alert.messageText = "安装失败"
+        alert.messageText = "Installation Failed"
         alert.informativeText = error.localizedDescription
-            + "\n\n点击“复制诊断信息”即可一键收集只读系统信息，然后直接粘贴回复邮件。"
-        alert.addButton(withTitle: "复制诊断信息")
-        alert.addButton(withTitle: "关闭")
+            + "\n\nClick “Copy Diagnostics” to collect read-only system information, then paste it directly into your reply email."
+        alert.addButton(withTitle: "Copy Diagnostics")
+        alert.addButton(withTitle: "Close")
         alert.beginSheetModal(for: window) { [weak self] response in
             guard response == .alertFirstButtonReturn else { return }
             self?.copyInstallationDiagnostics(failureDescription: error.localizedDescription)
@@ -1012,7 +1012,7 @@ private final class InstallerWindowController: NSObject, NSWindowDelegate {
         isCollectingDiagnostics = true
         installButton.isEnabled = false
         cancelButton.isEnabled = false
-        statusLabel.stringValue = "正在收集只读诊断信息…"
+        statusLabel.stringValue = "Collecting read-only diagnostics…"
 
         workerQueue.async { [weak self] in
             let report = InstallationDiagnostics.collect(
@@ -1027,16 +1027,16 @@ private final class InstallerWindowController: NSObject, NSWindowDelegate {
                 self.installButton.isEnabled = true
                 self.cancelButton.isEnabled = true
                 self.statusLabel.stringValue = copied
-                    ? "诊断信息已复制；请直接粘贴回复邮件。"
-                    : "无法复制诊断信息，请重试。"
+                    ? "Diagnostics copied. Paste them directly into your reply email."
+                    : "Couldn’t copy diagnostics. Try again."
 
                 let confirmation = NSAlert()
                 confirmation.alertStyle = copied ? .informational : .warning
-                confirmation.messageText = copied ? "诊断信息已复制" : "复制失败"
+                confirmation.messageText = copied ? "Diagnostics Copied" : "Copy Failed"
                 confirmation.informativeText = copied
-                    ? "请回复邮件，在正文中粘贴刚刚复制的全部内容。"
-                    : "请重新点击安装，在失败后再次选择“复制诊断信息”。"
-                confirmation.addButton(withTitle: "好")
+                    ? "Reply to the email and paste all copied content into the message body."
+                    : "Start the installation again and choose “Copy Diagnostics” after it fails."
+                confirmation.addButton(withTitle: "OK")
                 confirmation.beginSheetModal(for: self.window)
             }
         }

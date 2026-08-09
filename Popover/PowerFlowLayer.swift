@@ -588,7 +588,7 @@ final class PowerFlowView: PopoverSection {
         default: batterySymbol = "battery.100"
         }
 
-        systemNode.configure(symbol: "cpu", caption: "系统",
+        systemNode.configure(symbol: "cpu", caption: "System",
                              value: PopoverStyle.watts(snapshot.systemW), tint: PopoverStyle.neutral)
         systemNode.setPresence(1)
         systemNode.setBreathing(false, color: color)
@@ -596,37 +596,37 @@ final class PowerFlowView: PopoverSection {
 
         switch snapshot.state {
         case .charging:
-            adapterNode.configure(symbol: "powerplug", caption: "适配器",
+            adapterNode.configure(symbol: "powerplug", caption: "Adapter",
                                   value: PopoverStyle.watts(snapshot.adapterW), tint: color)
             adapterNode.setPresence(1)
-            batteryNode.configure(symbol: "battery.100.bolt", caption: "充入电池",
+            batteryNode.configure(symbol: "battery.100.bolt", caption: "To Battery",
                                   value: PopoverStyle.watts(snapshot.batteryW), tint: color)
             batteryNode.setPresence(1)
             batteryNode.setBreathing(false, color: color)
 
         case .pluggedIdle:
-            adapterNode.configure(symbol: "powerplug", caption: "适配器",
+            adapterNode.configure(symbol: "powerplug", caption: "Adapter",
                                   value: PopoverStyle.watts(snapshot.adapterW), tint: color)
             adapterNode.setPresence(1)
-            batteryNode.configure(symbol: batterySymbol, caption: "电池 已满",
+            batteryNode.configure(symbol: batterySymbol, caption: "Battery · Full",
                                   value: "\(snapshot.percent) %", tint: color)
             batteryNode.setPresence(0.6)
             batteryNode.setBreathing(true, color: color)
 
         case .onBattery:
-            adapterNode.configure(symbol: "powerplug.slash", caption: "适配器",
-                                  value: "未连接", tint: PopoverStyle.neutral)
+            adapterNode.configure(symbol: "powerplug.slash", caption: "Adapter",
+                                  value: "Unplugged", tint: PopoverStyle.neutral)
             adapterNode.setPresence(0.28)
-            batteryNode.configure(symbol: batterySymbol, caption: "电池 \(snapshot.percent)%",
+            batteryNode.configure(symbol: batterySymbol, caption: "Battery \(snapshot.percent)%",
                                   value: PopoverStyle.watts(abs(snapshot.batteryW)), tint: color)
             batteryNode.setPresence(1)
             batteryNode.setBreathing(false, color: color)
 
         case .mixedSupply:
-            adapterNode.configure(symbol: "powerplug", caption: "适配器",
+            adapterNode.configure(symbol: "powerplug", caption: "Adapter",
                                   value: PopoverStyle.watts(snapshot.adapterW), tint: PopoverStyle.blue)
             adapterNode.setPresence(1)
-            batteryNode.configure(symbol: batterySymbol, caption: "电池补差",
+            batteryNode.configure(symbol: batterySymbol, caption: "Battery Assist",
                                   value: PopoverStyle.watts(abs(snapshot.batteryW)), tint: PopoverStyle.amber)
             batteryNode.setPresence(1)
             batteryNode.setBreathing(false, color: color)

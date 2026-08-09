@@ -14,7 +14,7 @@ final class HistoryView: PopoverSection {
     private let gradientMask = CAShapeLayer()
     private let areaGradient = CAGradientLayer()
 
-    private let caption = NSTextField(labelWithString: "功率历史 · 近 2 分钟")
+    private let caption = NSTextField(labelWithString: "Power History · 2 min")
     private let peakLabel = NSTextField(labelWithString: "")
 
     init() {
@@ -65,7 +65,7 @@ final class HistoryView: PopoverSection {
     }
 
     func update(samples: [Double], peak: Double, color: NSColor) {
-        peakLabel.stringValue = samples.isEmpty ? "采集中" : String(format: "峰值 %.1f W", peak)
+        peakLabel.stringValue = samples.isEmpty ? "Collecting…" : String(format: "Peak %.1f W", peak)
 
         let plot = chartRect
         guard samples.count > 1 else {

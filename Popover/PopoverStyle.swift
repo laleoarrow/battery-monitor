@@ -42,19 +42,19 @@ enum PopoverStyle {
 
     static func stateTitle(_ state: PowerState) -> String {
         switch state {
-        case .charging: return "充电中"
-        case .pluggedIdle: return "插电已满"
-        case .onBattery: return "电池供电"
-        case .mixedSupply: return "混合供电 · 充电器功率不足"
+        case .charging: return "Charging"
+        case .pluggedIdle: return "Plugged In · Full"
+        case .onBattery: return "On Battery"
+        case .mixedSupply: return "Mixed Power · Adapter Limited"
         }
     }
 
     static func batteryFlowLabel(_ state: PowerState) -> String {
         switch state {
-        case .charging: return "充入电池"
-        case .pluggedIdle: return "已充满"
-        case .onBattery: return "电池输出"
-        case .mixedSupply: return "电池补差"
+        case .charging: return "To Battery"
+        case .pluggedIdle: return "Full"
+        case .onBattery: return "Battery Output"
+        case .mixedSupply: return "Battery Assist"
         }
     }
 

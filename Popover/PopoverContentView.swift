@@ -8,10 +8,10 @@ enum PopoverModule: String, CaseIterable {
     /// nothing they cannot already see.
     var title: String {
         switch self {
-        case .flow: return "能量流"
-        case .ring: return "环形仪表"
-        case .lanes: return "功率泳道"
-        case .history: return "功率历史"
+        case .flow: return "Energy Flow"
+        case .ring: return "Ring Gauge"
+        case .lanes: return "Power Lanes"
+        case .history: return "Power History"
         }
     }
 
@@ -65,10 +65,10 @@ final class PopoverHeaderView: PopoverSection {
     func update(snapshot: PowerSnapshot, degraded: Bool) {
         total.stringValue = String(format: "%.1f", snapshot.totalInputW)
         if degraded {
-            state.stringValue = "读取失败 · 上次数据"
+            state.stringValue = "Read Failed · Last Reading"
             state.textColor = PopoverStyle.red
         } else if abs(snapshot.conservationError) > 2 {
-            state.stringValue = String(format: "数据异常 · 偏差 %+.1f W", snapshot.conservationError)
+            state.stringValue = String(format: "Data Issue · Imbalance %+.1f W", snapshot.conservationError)
             state.textColor = PopoverStyle.red
         } else {
             state.stringValue = PopoverStyle.stateTitle(snapshot.state)
@@ -111,11 +111,11 @@ final class PopoverFooterView: PopoverSection {
     private let modes: [EnergyMode] = [.auto, .low, .high]
     private lazy var modeControl = ModeSliderView(modes: modes)
     private lazy var systemBatteryIconButton = NSButton(
-        checkboxWithTitle: "隐藏系统电池图标",
+        checkboxWithTitle: "Hide System Battery Icon",
         target: self,
         action: #selector(systemBatteryIconChanged)
     )
-    private let hint = NSTextField(labelWithString: "右键图标可切换")
+    private let hint = NSTextField(labelWithString: "Right-click to switch modes")
     private let settingsButton = NSButton()
 
     private var selected: EnergyMode = .auto
@@ -139,7 +139,7 @@ final class PopoverFooterView: PopoverSection {
         systemBatteryIconButton.controlSize = .small
         systemBatteryIconButton.font = .systemFont(ofSize: 11, weight: .regular)
         systemBatteryIconButton.state = .mixed
-        systemBatteryIconButton.setAccessibilityHelp("隐藏 macOS 自带的菜单栏电池图标")
+        systemBatteryIconButton.setAccessibilityHelp("Hide the built-in macOS battery icon in the menu bar")
         addSubview(systemBatteryIconButton)
 
         hint.font = .systemFont(ofSize: 11, weight: .regular)
@@ -147,7 +147,7 @@ final class PopoverFooterView: PopoverSection {
         hint.alignment = .right
         addSubview(hint)
 
-        settingsButton.image = NSImage(systemSymbolName: "slider.horizontal.3", accessibilityDescription: "选择显示模块")
+        settingsButton.image = NSImage(systemSymbolName: "slider.horizontal.3", accessibilityDescription: "Choose Modules")
         settingsButton.isBordered = false
         settingsButton.contentTintColor = PopoverStyle.secondaryText
         settingsButton.target = self
@@ -181,8 +181,8 @@ final class PopoverFooterView: PopoverSection {
             systemBatteryIconButton.isEnabled = false
         }
         hint.stringValue = helperInstalled
-            ? (systemBatteryIconHidden == nil ? "系统设置不可读" : "右键图标可切换")
-            : "助手未安装"
+            ? (systemBatteryIconHidden == nil ? "Can’t Read System Settings" : "Right-click to switch modes")
+            : "Helper Not Installed"
         // High power is only a real detent on hardware that has it, and none
         // of them are reachable without the helper.
         var available: [EnergyMode] = helperInstalled ? [.auto, .low] : []
@@ -352,7 +352,7 @@ final class PopoverContentViewController: NSViewController {
     }
 
     private func showModuleMenu(_ sender: NSButton) {
-        let menu = NSMenu(title: "显示模块")
+        let menu = NSMenu(title: "Modules")
         for module in PopoverModule.allCases {
             let item = NSMenuItem(title: module.title, action: #selector(toggleModule(_:)), keyEquivalent: "")
             item.target = self
@@ -362,7 +362,7 @@ final class PopoverContentViewController: NSViewController {
         }
 
         menu.addItem(.separator())
-        let percentage = NSMenuItem(title: "菜单栏显示电量百分比",
+        let percentage = NSMenuItem(title: "Show Battery Percentage in Menu Bar",
                                     action: #selector(togglePercentage), keyEquivalent: "")
         percentage.target = self
         percentage.state = Settings.showsMenuBarPercentage ? .on : .off
@@ -373,19 +373,19 @@ final class PopoverContentViewController: NSViewController {
         let loginMenuState: NSControl.StateValue
         switch loginState {
         case .checking:
-            loginTitle = "开机自动启动（正在读取…）"
+            loginTitle = "Launch at Login (Checking…)"
             loginMenuState = .off
         case .notRegistered:
-            loginTitle = "开机自动启动"
+            loginTitle = "Launch at Login"
             loginMenuState = .off
         case .enabled:
-            loginTitle = "开机自动启动"
+            loginTitle = "Launch at Login"
             loginMenuState = .on
         case .unavailable:
-            loginTitle = "开机自动启动（需完整安装）"
+            loginTitle = "Launch at Login (Full Installer Required)"
             loginMenuState = .off
         case .readFailed:
-            loginTitle = "开机自动启动（状态读取失败）"
+            loginTitle = "Launch at Login (Status Unavailable)"
             loginMenuState = .off
         }
         let loginItem = NSMenuItem(title: loginTitle,
@@ -398,9 +398,9 @@ final class PopoverContentViewController: NSViewController {
         menu.addItem(.separator())
         let version = Bundle.main.object(
             forInfoDictionaryKey: "CFBundleShortVersionString"
-        ) as? String ?? "开发版"
+        ) as? String ?? "Development Build"
         let versionItem = NSMenuItem(
-            title: "Wattson 版本 \(version)",
+            title: "Wattson Version \(version)",
             action: nil,
             keyEquivalent: ""
         )
@@ -410,7 +410,7 @@ final class PopoverContentViewController: NSViewController {
         menu.addItem(.separator())
         // The desktop panel used to own the only way out of the app. With it
         // gone this is the sole quit affordance, so it cannot be dropped.
-        let quit = NSMenuItem(title: "退出 Wattson", action: #selector(quitApp), keyEquivalent: "q")
+        let quit = NSMenuItem(title: "Quit Wattson", action: #selector(quitApp), keyEquivalent: "q")
         quit.target = self
         menu.addItem(quit)
 
@@ -431,9 +431,9 @@ final class PopoverContentViewController: NSViewController {
             guard case let .failure(error) = result else { return }
             let alert = NSAlert()
             alert.alertStyle = .warning
-            alert.messageText = "无法更新开机自动启动"
+            alert.messageText = "Couldn’t Update Launch at Login"
             alert.informativeText = error.localizedDescription
-            alert.addButton(withTitle: "好")
+            alert.addButton(withTitle: "OK")
             alert.runModal()
         }
     }

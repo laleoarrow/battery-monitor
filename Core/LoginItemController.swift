@@ -15,9 +15,9 @@ enum LoginItemError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unavailable:
-            return "当前安装缺少最新助手，请使用完整安装器更新 Wattson。"
+            return "This installation is missing the latest helper. Update Wattson using the full installer."
         case .updateFailed:
-            return "系统未能更新登录启动项，请稍后重试。"
+            return "macOS couldn’t update the login item. Try again later."
         }
     }
 }
@@ -27,6 +27,7 @@ enum LoginItemError: LocalizedError {
 /// Every socket call stays off AppKit's thread, so opening never waits on launchd.
 enum LoginItemController {
     private static let queue = DispatchQueue(label: "com.leoarrow.wattson.login-item")
+    private static let canonicalAppPath = "/Applications/Wattson.app"
     private static var generation = 0
     private static var cachedState: LoginItemState = canManageInstalledApp && HelperClient.isInstalled
         ? .checking
@@ -34,6 +35,7 @@ enum LoginItemController {
 
     private static var canManageInstalledApp: Bool {
         Bundle.main.bundleIdentifier == "com.leoarrow.wattson"
+            && Bundle.main.bundleURL.standardizedFileURL.path == canonicalAppPath
     }
 
     static var state: LoginItemState { cachedState }

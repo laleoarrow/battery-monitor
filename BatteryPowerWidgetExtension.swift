@@ -23,10 +23,10 @@ private struct BatteryWidgetSnapshot: Codable {
     }
 
     var statusText: String {
-        if charging { return "充电中" }
-        if plugged { return "已接电" }
-        if percent <= 20 { return "低电量" }
-        return "电池供电"
+        if charging { return "Charging" }
+        if plugged { return "Plugged In" }
+        if percent <= 20 { return "Low Battery" }
+        return "On Battery"
     }
 
     var accentColor: Color {
@@ -38,12 +38,12 @@ private struct BatteryWidgetSnapshot: Codable {
 
     var batteryLine: (label: String, value: Double, color: Color) {
         if chargeW > 0.05 {
-            return ("充电", chargeW, Color(hex: 0x34E36E))
+            return ("Charge", chargeW, Color(hex: 0x34E36E))
         }
         if dischargeW > 0.05 {
-            return ("放电", dischargeW, percent <= 20 ? Color(hex: 0xFF453A) : Color(hex: 0xF8FAFC))
+            return ("Discharge", dischargeW, percent <= 20 ? Color(hex: 0xFF453A) : Color(hex: 0xF8FAFC))
         }
-        return ("电池", 0, Color(hex: 0xA6ABB6))
+        return ("Battery", 0, Color(hex: 0xA6ABB6))
     }
 
     static let preview = BatteryWidgetSnapshot(
@@ -183,8 +183,8 @@ private enum WidgetPowerSampler {
 // Performing an intent keeps the tap inside the extension process and explicitly
 // asks WidgetKit to reload this timeline instead of launching the host app.
 struct RefreshBatteryWidgetIntent: AppIntent {
-    static let title: LocalizedStringResource = "刷新电池功率"
-    static let description = IntentDescription("立即重新读取电池功率数据并刷新小组件。")
+    static let title: LocalizedStringResource = "Refresh Battery Power"
+    static let description = IntentDescription("Read the latest battery power data and refresh the widget.")
 
     func perform() async throws -> some IntentResult {
         WidgetRefreshFeedbackStore.markRefreshRequested()
@@ -260,8 +260,8 @@ private struct BatteryPowerSystemWidget: Widget {
         StaticConfiguration(kind: kind, provider: BatteryWidgetProvider()) { entry in
             BatteryWidgetView(entry: entry)
         }
-        .configurationDisplayName("电池功率")
-        .description("显示当前电量和功率，点按立即刷新。")
+        .configurationDisplayName("Wattson")
+        .description("Shows the current battery level and power. Tap to refresh.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
@@ -374,7 +374,7 @@ private struct BatteryWidgetView: View {
 
             VStack(alignment: .trailing, spacing: 8) {
                 percentView(size: 28)
-                metricRow(label: "负载", value: entry.snapshot.systemW, color: Color(hex: 0xF8FAFC))
+                metricRow(label: "Load", value: entry.snapshot.systemW, color: Color(hex: 0xF8FAFC))
                 batteryLineView
             }
         }

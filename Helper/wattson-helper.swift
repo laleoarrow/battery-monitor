@@ -209,6 +209,10 @@ private struct UserAccount {
     let home: String
 
     var appPath: String {
+        "/Applications/Wattson.app"
+    }
+
+    var legacyAppPath: String {
         URL(fileURLWithPath: home, isDirectory: true)
             .appendingPathComponent("Applications/Wattson.app")
             .path
@@ -284,10 +288,13 @@ private func withUserPrivileges(_ account: UserAccount, body: () -> Bool) -> Boo
     return body()
 }
 
-private func loginAgentPlist(for account: UserAccount) -> [String: Any] {
+private func loginAgentPlist(
+    for account: UserAccount,
+    appPath: String? = nil
+) -> [String: Any] {
     [
         "Label": loginAgentLabel,
-        "ProgramArguments": ["/usr/bin/open", "-gj", account.appPath],
+        "ProgramArguments": ["/usr/bin/open", "-gj", appPath ?? account.appPath],
         "RunAtLoad": true,
         "LimitLoadToSessionType": "Aqua",
         "ProcessType": "Interactive",
@@ -295,7 +302,7 @@ private func loginAgentPlist(for account: UserAccount) -> [String: Any] {
     ]
 }
 
-private func loginAgentIsCanonical(for account: UserAccount) -> Bool {
+private func loginAgentMatches(_ appPath: String, for account: UserAccount) -> Bool {
     withUserPrivileges(account) {
         var info = stat()
         guard lstat(account.agentPath, &info) == 0,
@@ -309,15 +316,23 @@ private func loginAgentIsCanonical(for account: UserAccount) -> Bool {
               let plist = try? PropertyListSerialization.propertyList(from: data, format: nil)
                   as? [String: Any] else { return false }
 
-        let expected = loginAgentPlist(for: account)
+        let expected = loginAgentPlist(for: account, appPath: appPath)
         guard plist.count == expected.count else { return false }
         return plist["Label"] as? String == loginAgentLabel
-            && plist["ProgramArguments"] as? [String] == ["/usr/bin/open", "-gj", account.appPath]
+            && plist["ProgramArguments"] as? [String] == ["/usr/bin/open", "-gj", appPath]
             && plist["RunAtLoad"] as? Bool == true
             && plist["LimitLoadToSessionType"] as? String == "Aqua"
             && plist["ProcessType"] as? String == "Interactive"
             && plist["AssociatedBundleIdentifiers"] as? [String] == [wattsonBundleIdentifier]
     }
+}
+
+private func loginAgentIsCanonical(for account: UserAccount) -> Bool {
+    loginAgentMatches(account.appPath, for: account)
+}
+
+private func loginAgentIsLegacyCanonical(for account: UserAccount) -> Bool {
+    loginAgentMatches(account.legacyAppPath, for: account)
 }
 
 private func writeLoginAgent(for account: UserAccount) -> Bool {
@@ -365,7 +380,13 @@ private func loginAgentIsLoaded(for account: UserAccount) -> Bool {
 
 private func launchAtLoginEnabled(for uid: uid_t) -> Bool? {
     guard uid == consoleUID(), let account = userAccount(for: uid) else { return nil }
-    return loginAgentIsCanonical(for: account) && loginAgentIsLoaded(for: account)
+    guard loginAgentIsLoaded(for: account) else { return false }
+    if loginAgentIsCanonical(for: account) { return true }
+
+    // v2 stored the app in ~/Applications. Migrate only its exact, user-owned
+    // LaunchAgent contract after the v3 app has landed at /Applications.
+    guard loginAgentIsLegacyCanonical(for: account) else { return false }
+    return setLaunchAtLoginEnabled(true, for: uid)
 }
 
 private func setLaunchAtLoginEnabled(_ enabled: Bool, for uid: uid_t) -> Bool? {
@@ -393,6 +414,17 @@ private func setLaunchAtLoginEnabled(_ enabled: Bool, for uid: uid_t) -> Bool? {
     guard removeLoginAgent(for: account) else { return nil }
     _ = run(["/bin/launchctl", "bootout", target])
     return loginAgentIsLoaded(for: account) ? nil : false
+}
+
+/// A native PKG does not launch the app after installation. Migrate an exact
+/// loaded v2 LaunchAgent before postinstall removes the v2 user-local app, so
+/// launch at login keeps working even if the user does not open v3 immediately.
+private func migrateLegacyLoginAgentForInstaller() -> Bool {
+    guard geteuid() == 0 else { return false }
+    guard let uid = consoleUID(), uid != 0,
+          let account = userAccount(for: uid) else { return true }
+    guard loginAgentIsLegacyCanonical(for: account) else { return true }
+    return setLaunchAtLoginEnabled(true, for: uid) == true
 }
 
 /// Control Center stores Battery as 18 when it is in both Control Center and
@@ -576,42 +608,52 @@ private func handle(_ fd: Int32) {
     _ = reply.withCString { write(fd, $0, strlen($0)) }
 }
 
-runBatteryPreferenceWorkerIfRequested()
+@main
+private enum WattsonHelperMain {
+    static func main() {
+        runBatteryPreferenceWorkerIfRequested()
 
-if CommandLine.arguments.count == 2,
-   CommandLine.arguments[1] == "--health-probe" {
-    if !dropHealthProbePrivilegesToConsoleUser() { exit(1) }
-    exit(newlyInstalledHelperIsHealthy() ? 0 : 1)
-}
-
-// Socket activation: launchd already opened and bound the listener.
-// The parameter is a pointer to a non-optional pointer, so this starts as a
-// throwaway allocation that launch_activate_socket overwrites with its own
-// malloc'd array. On success the caller owns that array and must free it.
-var fds = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
-var fdCount: size_t = 0
-guard launch_activate_socket("Listener", &fds, &fdCount) == 0, fdCount > 0 else {
-    os_log("no launchd socket", log: log, type: .fault)
-    exit(1)
-}
-let listener = fds[0]
-free(fds)
-
-var lastActivity = Date()
-while true {
-    var readSet = fd_set()
-    __darwin_fd_set(listener, &readSet)
-    var timeout = timeval(tv_sec: 1, tv_usec: 0)
-
-    if select(listener + 1, &readSet, nil, nil, &timeout) > 0 {
-        let client = accept(listener, nil, nil)
-        if client >= 0 {
-            handle(client)
-            lastActivity = Date()
+        if CommandLine.arguments.count == 2,
+           CommandLine.arguments[1] == "--migrate-legacy-login-item" {
+            exit(migrateLegacyLoginAgentForInstaller() ? 0 : 1)
         }
-    }
 
-    if Date().timeIntervalSince(lastActivity) > idleTimeout {
-        exit(0)
+        if CommandLine.arguments.count == 2,
+           CommandLine.arguments[1] == "--health-probe" {
+            if !dropHealthProbePrivilegesToConsoleUser() { exit(1) }
+            exit(newlyInstalledHelperIsHealthy() ? 0 : 1)
+        }
+
+        // Socket activation: launchd already opened and bound the listener.
+        // The parameter is a pointer to a non-optional pointer, so this starts as a
+        // throwaway allocation that launch_activate_socket overwrites with its own
+        // malloc'd array. On success the caller owns that array and must free it.
+        var fds = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
+        var fdCount: size_t = 0
+        guard launch_activate_socket("Listener", &fds, &fdCount) == 0, fdCount > 0 else {
+            os_log("no launchd socket", log: log, type: .fault)
+            exit(1)
+        }
+        let listener = fds[0]
+        free(fds)
+
+        var lastActivity = Date()
+        while true {
+            var readSet = fd_set()
+            __darwin_fd_set(listener, &readSet)
+            var timeout = timeval(tv_sec: 1, tv_usec: 0)
+
+            if select(listener + 1, &readSet, nil, nil, &timeout) > 0 {
+                let client = accept(listener, nil, nil)
+                if client >= 0 {
+                    handle(client)
+                    lastActivity = Date()
+                }
+            }
+
+            if Date().timeIntervalSince(lastActivity) > idleTimeout {
+                exit(0)
+            }
+        }
     }
 }

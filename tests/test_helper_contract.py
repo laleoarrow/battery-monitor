@@ -94,11 +94,19 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn("default:", self.source)
         self.assertIn("os_log", self.source)
 
-    def test_launch_agent_paths_are_derived_from_the_authenticated_user(self):
+    def test_launch_agent_is_user_owned_and_opens_the_canonical_app(self):
         self.assertIn(r'"Library/LaunchAgents/\(loginAgentLabel).plist"', self.source)
-        self.assertIn('"Applications/Wattson.app"', self.source)
+        self.assertIn('"/Applications/Wattson.app"', self.source)
         self.assertIn("getpwuid(uid)", self.source)
         self.assertNotIn('object["path"]', self.source)
+
+    def test_legacy_login_agent_is_migrated_only_after_exact_validation(self):
+        self.assertIn('"Applications/Wattson.app"', self.source)
+        self.assertIn("loginAgentIsLegacyCanonical", self.source)
+        self.assertIn("loginAgentMatches(account.legacyAppPath", self.source)
+        self.assertIn("setLaunchAtLoginEnabled(true, for: uid)", self.source)
+        self.assertIn('"--migrate-legacy-login-item"', self.source)
+        self.assertIn("migrateLegacyLoginAgentForInstaller", self.source)
 
     def test_user_owned_agent_is_written_without_root_privileges(self):
         # The console user may replace directories with symlinks. Dropping the
@@ -123,7 +131,8 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn("SO_SNDTIMEO", self.source)
 
     def test_login_agent_has_no_shell_or_caller_supplied_command(self):
-        self.assertIn('["/usr/bin/open", "-gj", account.appPath]', self.source)
+        self.assertIn('["/usr/bin/open", "-gj", appPath ?? account.appPath]', self.source)
+        self.assertIn('["/usr/bin/open", "-gj", appPath]', self.source)
         self.assertIn('"RunAtLoad": true', self.source)
         self.assertIn('"/bin/launchctl", "bootstrap"', self.source)
         self.assertIn('"/bin/launchctl", "bootout"', self.source)

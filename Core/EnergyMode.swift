@@ -10,7 +10,7 @@ enum EnergyMode: String {
     var title: String {
         switch self {
         case .low: return "Low Power"
-        case .auto: return "自动"
+        case .auto: return "Auto"
         case .high: return "High Power"
         }
     }
@@ -233,7 +233,7 @@ enum EnergyModeController {
         return nil
     }
 
-    /// The right-click gesture stays a two-state toggle between 省电 and 自动.
+    /// The right-click gesture stays a two-state toggle between Low Power and Auto.
     /// A three-way cycle on a control with no visible state is a guessing game;
     /// high power is reachable from the popover, where the current mode is on
     /// screen next to the alternatives.

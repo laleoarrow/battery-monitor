@@ -42,7 +42,7 @@ class MenuBarPercentageContractTests(unittest.TestCase):
         self.assertIn("NotificationCenter.default.post", self.settings)
 
     def test_toggle_is_reachable_from_the_popover(self):
-        self.assertIn("菜单栏显示电量百分比", self.content)
+        self.assertIn("Show Battery Percentage in Menu Bar", self.content)
         self.assertIn("Settings.showsMenuBarPercentage.toggle()", self.content)
 
 

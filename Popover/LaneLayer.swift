@@ -98,7 +98,7 @@ final class LaneView: PopoverSection {
         let ceiling = max(systemWatts, batteryWatts, 0.1)
         motionMultiplier = VisualEncoding.multiplier(snapshot.totalInputW)
 
-        apply(lanes[0], symbol: "cpu", caption: "系统负载", watts: systemWatts,
+        apply(lanes[0], symbol: "cpu", caption: "System Load", watts: systemWatts,
               ceiling: ceiling, color: color)
         apply(lanes[1],
               symbol: snapshot.state == .charging ? "battery.100.bolt" : "battery.50",

@@ -1,68 +1,55 @@
-# Debugging 电池功率
+# Debugging Wattson
 
-## Fast verification
+## Safe headless checks
 
-To run and verify changes locally:
 ```bash
-xcrun swiftc /Users/leoarrow/Project/mypackage/agents/电池功率/BatteryPowerWidget.swift -framework AppKit -framework CoreGraphics -o /tmp/BatteryPowerWidget-test
-/tmp/BatteryPowerWidget-test
+swift test --parallel
+python3 -m unittest discover -s tests -v
+bash -n scripts/*.sh Packaging/pkg/preinstall Packaging/pkg/postinstall
+git diff --check
 ```
-This launches the native widget directly. You can drag it around, verify text layouts, and close it from the right-click menu.
 
-## Required handoff after any code change
+The default Python suite skips real AppKit interaction. It is safe for an
+active desktop and must keep `WATTSON_RUN_INTERACTION` unset in ordinary CI.
 
-Before claiming a fix or feature is ready, complete this checklist:
+## Real AppKit interaction
 
-1. Test the widget locally in different power states:
-   - Charging state (plugged in, percentage < 100%)
-   - Adapter-only state (plugged in, percentage = 100%)
-   - Discharging state (unplugged)
-2. Verify that there is no layout overlapping or clipped text in any of these states.
-3. Verify that the compact window is visible, readable, and does not show clipped text.
-4. Run the install script to deploy the fresh bundle:
-   ```bash
-   bash /Users/leoarrow/Project/mypackage/agents/电池功率/scripts/install.sh
-   ```
-5. Quit the currently running instances of the app:
-   ```bash
-   pkill -f '电池功率.app/Contents/MacOS/applet|BatteryPowerWidget-test'
-   ```
-6. Launch the installed app bundle to verify runtime stability:
-   ```bash
-   open ~/Applications/电池功率.app
-   ```
-7. Verify the WidgetKit extension is registered:
-   ```bash
-   pluginkit -m -v -A -D -i com.leoarrow.battery-monitor.widget
-   ```
-8. Open the macOS Widgets editor and search for `电池功率`; both Small and Medium previews should render.
-9. If the widget is registered but not visible, inspect `chronod` logs for descriptor errors. The expected healthy path includes `Publishing changed widget descriptors` for `com.leoarrow.battery-monitor.widget` and placeholder reload success for `BatteryPowerSystemWidget`.
-10. Verify that no errors are written to `/Users/leoarrow/Project/UKB/p.cataract.met/agents/tmp/battery_app.log` (if shell redirections are active).
-11. Ensure `git status` is clean except for the intended tracked changes.
+Run only when the user has made the desktop available or in a disposable GUI
+session:
 
-## Common runtime checks and fixes
+```bash
+bash scripts/verify_interaction.sh
+bash scripts/verify_animation_stress.sh
+```
 
-### 1. Rectangular background around rounded corners
-- **Symptom**: The rounded widget has square background color visible around its corners.
-- **Root cause**: Tk windows and child widgets remain rectangular at the window layer.
-- **Fix**: Use the native Swift/AppKit `NSPanel` entrypoint. It sets `isOpaque = false`, `backgroundColor = .clear`, and draws the rounded widget inside a transparent window.
+The interaction harness drives real `NSStatusItem`, `NSPopover`, mouse,
+keyboard, VoiceOver, Reduce Motion, and legacy/native selector paths. It does
+not use system event injection or Accessibility permission.
 
-### 2. Overlapping text and status alignment
-- **Symptom**: Total power, status dot, percentage, or lower-row metrics overlap in compact mode.
-- **Root cause**: The compact widget uses fixed-position text drawing to keep the window tiny.
-- **Fix**: Keep all secondary values in the lower row, and shrink the main wattage text before it reaches the status area.
+## Release structure
 
-## Useful commands
+```bash
+bash scripts/release.sh 3.0.0
+bash scripts/verify_release.sh \
+  dist/Wattson-v3.0.0-macos-universal.pkg \
+  dist/Wattson-v3.0.0-macos-universal.dmg
+```
 
-- **List running instances**:
-  ```bash
-  ps aux | grep -i '电池功率.app/Contents/MacOS/applet'
-  ```
-- **Kill running instances**:
-  ```bash
-  pkill -f '电池功率.app/Contents/MacOS/applet|BatteryPowerWidget-test'
-  ```
-- **Launch the app bundle**:
-  ```bash
-  open ~/Applications/电池功率.app
-  ```
+This builds and mounts artifacts but does not install them. Privileged install,
+upgrade, disabled-service reinstall, helper health, app readiness, and cleanup
+belong on fresh GitHub-hosted macOS runners unless the user explicitly makes a
+local admin test session available.
+
+## Common failures
+
+- `Bootstrap failed: 5`: inspect disabled launchd state, stale job state,
+  helper/plist ownership and mode, then use the native PKG lifecycle test. The
+  v3 pre/postinstall hooks boot out stale jobs, enable the label, retry
+  bootstrap, and trust verified loaded/health state over a misleading return.
+- Missing menu-bar item: launch `/Applications/Wattson.app`, then reduce other
+  status items if macOS has hidden it behind a notch.
+- No power mode: monitoring still works; confirm helper registration and socket
+  health rather than prompting during each user action.
+- Visual regression: test charging, full, battery, mixed supply, light/dark,
+  Reduce Motion, and Reduce Transparency without changing geometry constants
+  merely to fix one state.

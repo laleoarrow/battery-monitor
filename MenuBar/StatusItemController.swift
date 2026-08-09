@@ -73,7 +73,7 @@ final class StatusItemController: NSObject {
         button.target = self
         button.action = #selector(handleClick)
         button.sendAction(on: [.leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp])
-        button.toolTip = "Wattson — 左键查看功率流，右键切换省电模式"
+        button.toolTip = "Wattson — click for power flow; right-click to toggle Low Power Mode"
 
         popover.onVisibilityChange { [weak self] shown in
             shown ? self?.startDisplayClock() : self?.stopDisplayClock()

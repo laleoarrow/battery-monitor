@@ -146,7 +146,7 @@ report_bootstrap_failure() {
     /usr/bin/xattr "$HELPER_BIN" >&2 || true
     echo "Candidate plist xattr names before rollback:" >&2
     /usr/bin/xattr "$HELPER_PLIST" >&2 || true
-    echo '请在“系统设置 > 通用 > 登录项与扩展”中允许 Wattson 在后台运行，然后重新安装。' >&2
+    echo 'Allow Wattson to run in the background in System Settings > General > Login Items & Extensions, then reinstall.' >&2
 }
 
 rollback_helper_install() {

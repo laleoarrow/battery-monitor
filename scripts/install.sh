@@ -17,7 +17,7 @@ done
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$SCRIPT_DIR/.."
 APP_NAME="Wattson"
-APP_VERSION="${WATTSON_APP_VERSION:-2.1.5}"
+APP_VERSION="${WATTSON_APP_VERSION:-$(/usr/bin/tr -d '\r\n' < "$ROOT_DIR/VERSION")}"
 SWIFT_TARGET="arm64-apple-macos12.0"
 PACKAGE_APP_DIR="${WATTSON_PACKAGE_APP_DIR:-}"
 PACKAGE_BUILD=0
@@ -84,7 +84,7 @@ if [[ "$PACKAGE_BUILD" != "1" ]]; then
     fi
     rm -rf "$LEGACY_APP" "$LEGACY_SUPPORT"
     rm -f "$LEGACY_CONFIG" "$LEGACY_SCRIPT"
-    echo "  ✅ Removed 电池功率"
+    echo "  ✅ Removed the legacy Battery Power app"
 fi
 
 # 2. Recreate the app bundle.
@@ -150,11 +150,6 @@ cat > "$APP_DIR/Contents/Info.plist" << EOF
 </plist>
 EOF
 
-mkdir -p "$APP_DIR/Contents/Resources/zh-Hans.lproj"
-cat > "$APP_DIR/Contents/Resources/zh-Hans.lproj/InfoPlist.strings" << 'EOF'
-"CFBundleDisplayName" = "瓦特森";
-"CFBundleName" = "瓦特森";
-EOF
 echo "  ✅ Info.plist"
 
 # 5. Copy the application icon when present.
@@ -197,6 +192,7 @@ fi
 echo "  🔑 Installing the privileged helper (needs sudo once)"
 HELPER_BUILD="$BUILD_DIR/wattson-helper"
 xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift" \
+    -parse-as-library \
     -target "$SWIFT_TARGET" \
     -O \
     -o "$HELPER_BUILD"

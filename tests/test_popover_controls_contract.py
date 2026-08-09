@@ -85,7 +85,7 @@ class PopoverControlsContractTests(unittest.TestCase):
             "@objc private func quitApp", 1
         )[0]
         self.assertIn('forInfoDictionaryKey: "CFBundleShortVersionString"', menu)
-        self.assertIn('title: "Wattson 版本 \\(version)"', menu)
+        self.assertIn('title: "Wattson Version \\(version)"', menu)
         self.assertIn("versionItem.isEnabled = false", menu)
 
     def test_outside_clicks_dismiss_the_popover(self):
@@ -131,7 +131,7 @@ class PopoverControlsContractTests(unittest.TestCase):
 
     def test_three_modes_are_always_visible_in_requested_order(self):
         self.assertIn("[.auto, .low, .high]", self.content)
-        for title in ('"\u81ea\u52a8"', '"Low Power"', '"High Power"'):
+        for title in ('"Auto"', '"Low Power"', '"High Power"'):
             self.assertIn(title, self.energy_mode)
 
     def test_unsupported_high_power_is_disabled_not_removed(self):
@@ -142,7 +142,7 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("candidates = modes.indices.filter { enabled[$0] }", self.slider)
 
     def test_system_battery_checkbox_is_in_the_footer(self):
-        self.assertIn("checkboxWithTitle: \"\u9690\u85cf\u7cfb\u7edf\u7535\u6c60\u56fe\u6807\"", self.content)
+        self.assertIn('checkboxWithTitle: "Hide System Battery Icon"', self.content)
         self.assertIn("onSystemBatteryIconToggle", self.content)
 
     def test_system_battery_state_is_queried_only_when_opening(self):

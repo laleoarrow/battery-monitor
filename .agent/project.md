@@ -1,42 +1,49 @@
-# Project overview
+# Wattson project overview
 
-## Goal
+## Product
 
-`电池功率` is a native macOS floating battery power monitor widget. It displays real-time total power, battery percentage, charging state, system load, and battery charge/discharge power in a minimal floating window.
+Wattson is a native AppKit menu-bar app for macOS. It samples battery and
+adapter telemetry through IOKit, displays a live power-flow popover, and uses a
+small socket-activated privileged helper for fixed power-management actions.
 
-## Current behavior
+## Runtime architecture
 
-- **Real-time monitor**: Fetches system telemetry and battery details every second.
-- **Window characteristics**: Compact rounded floating monitor, draggable window, right-click settings, and an always-on-top toggle.
-- **System Widgets support**: Installs a WidgetKit app extension so the app appears in the macOS widget gallery on macOS 14+.
-- **Controls**: No permanent traffic-light controls; right-click menu provides pinning and exit.
-- **Dynamic layout**: The compact layout avoids mixed emoji/text strings and shrinks the main wattage text when necessary.
-- **Three Power States**:
-  - **Charging**: Green total power and green status dot.
-  - **Plugged in (fully charged)**: Blue total/system power and blue status dot.
-  - **Battery only**: Neutral total/system power with neutral or red status dot depending on battery percentage.
+- `Core/`: sampling, state models, history, settings, and helper client.
+- `MenuBar/`: status-item icon, click routing, and application lifecycle.
+- `Popover/`: AppKit views, Liquid Glass selector, layers, and animations.
+- `Helper/wattson-helper.swift`: root LaunchDaemon with a fixed JSON operation
+  whitelist and console-user peer validation.
+- `main.swift`: application entry point and installer-readiness signal.
+- `Package.swift`: macOS 12 SwiftPM products for the app and helper.
 
-## External dependencies
+The public v3 package installs:
 
-- **`ioreg` tool**: Standard macOS command-line utility used to query battery status (`ioreg -rd1 -c AppleSmartBattery`).
-- **Swift & AppKit**: The installed app uses a transparent native `NSPanel` so rounded corners are transparent at the window layer.
-- **WidgetKit & SwiftUI**: The system widget gallery entry is a separate app extension embedded under `Contents/PlugIns`.
-- **Python 3**: `battery_monitor.py` is retained as a legacy/reference implementation for parsing and tests.
+- `/Applications/Wattson.app`
+- `/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper`
+- `/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist`
 
-## Key files
+The helper is activated through `/var/run/wattson-helper.sock` and exits after
+five idle seconds. It owns only fixed operations for power mode, the macOS
+battery icon, and Wattson's launch-at-login agent.
 
-- `BatteryPowerWidget.swift` — Native AppKit widget containing transparent window setup, drawing, drag/menu handling, and telemetry updating logic.
-- `BatteryPowerWidgetExtension.swift` — WidgetKit extension used by the macOS Widgets gallery. It shows a snapshot and refreshes on WidgetKit's schedule rather than every second.
-- `BatteryPowerWidgetExtension.xcodeproj` — Minimal Xcode project used to build the WidgetKit `.appex`; do not replace this with hand-rolled `swiftc` packaging because macOS WidgetKit needs the app-extension entry point.
-- `BatteryPowerApp.entitlements` and `BatteryPowerWidgetExtension.entitlements` — Sandbox entitlements for the host app and widget extension.
-- `battery_monitor.py` — Legacy/reference Python implementation used by tests.
-- `scripts/install.sh` — Bash installation script that compiles the Swift executable, builds the WidgetKit extension with Xcode, embeds the `.appex`, signs both bundles, and creates the macOS app bundle `电池功率.app` under `~/Applications/`.
-- `design/icon/AppIcon.icns` — Pre-compiled macOS icns file containing resolutions from 16x16 to 512x512, used as the app bundle's application icon.
+## Distribution architecture
 
-## Application Architecture
+`VERSION` is the release-version source. `scripts/release.sh` builds one
+universal app/helper pair, creates one native PKG, wraps those exact PKG bytes
+in a DMG, verifies both, and emits SHA-256 checksums plus truthful signing
+metadata.
 
-The app is packaged as a standard macOS app bundle (`电池功率.app`) with a native Swift executable at `Contents/MacOS/applet`.
-The application runs as a background process with no Dock icon (`LSUIElement=true` in `Info.plist`) and presents a transparent borderless AppKit panel on screen.
-The system widget is packaged as `Contents/PlugIns/BatteryPowerWidgetExtension.appex` with `NSExtensionPointIdentifier=com.apple.widgetkit-extension`. The extension must be built by the Xcode target so its executable uses the WidgetKit app-extension entry point.
-The WidgetKit extension samples `AppleSmartBattery` directly through IOKit (`IORegistryEntryCreateCFProperties`) on every timeline reload, so it stays fresh even when the app is not running. The sandbox denies fork/exec, so the extension must never shell out to `ioreg` the way the host app does. The AppKit app still writes `~/Library/Application Support/电池功率/widget-snapshot.json` as a fallback data source for the extension.
-Tapping the widget performs `RefreshBatteryWidgetIntent` (an interactive-widget AppIntent) inside the extension process, which re-samples and redraws in place instead of launching the host app.
+The default release mode is `community-ad-hoc`: app/helper ad-hoc signed,
+PKG/DMG unsigned, and no notarization claim. Developer ID and notarization are
+optional environment-configured paths, not public-release prerequisites.
+
+## Compatibility
+
+- Deployment target: macOS 12.
+- Architectures: arm64 and x86_64.
+- High Power mode is exposed only when the hardware reports support.
+- macOS 26 uses native Liquid Glass; macOS 12–25 use the AppKit fallback.
+
+`BatteryPowerWidgetExtension.swift` and the legacy Python implementation remain
+reference/test surfaces; the currently shipped v3 app bundle is the AppKit
+menu-bar product.

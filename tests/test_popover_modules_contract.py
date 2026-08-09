@@ -40,8 +40,8 @@ class PopoverModulesContractTests(unittest.TestCase):
     def test_sections_carry_no_titles(self):
         # A ring labelled "ring gauge" costs height and says nothing.
         for view in (self.ring, self.lanes):
-            self.assertNotIn('"环形仪表"', view)
-            self.assertNotIn('"功率泳道"', view)
+            self.assertNotIn('"Ring Gauge"', view)
+            self.assertNotIn('"Power Lanes"', view)
 
     def test_numbers_use_monospaced_digits(self):
         # Tabular digits keep the readout from twitching at 1 Hz.
@@ -61,8 +61,8 @@ class PopoverModulesContractTests(unittest.TestCase):
             "final class PopoverFooterView", 1
         )[0]
         self.assertIn("abs(snapshot.conservationError) > 2", header)
-        self.assertIn('String(format: "数据异常 · 偏差 %+.1f W"', header)
-        self.assertIn('state.stringValue = "读取失败 · 上次数据"', header)
+        self.assertIn('String(format: "Data Issue · Imbalance %+.1f W"', header)
+        self.assertIn('state.stringValue = "Read Failed · Last Reading"', header)
 
     def test_ring_centre_shows_charge_not_watts(self):
         # The header already owns the wattage.
@@ -106,7 +106,7 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("motion.byValue = width * 2", self.lanes)
 
     def test_battery_lane_and_stat_follow_state_semantics(self):
-        for label in ("充入电池", "电池输出", "电池补差"):
+        for label in ("To Battery", "Battery Output", "Battery Assist"):
             self.assertIn(label, self.style)
         self.assertIn("batteryFlowLabel", self.lanes)
         self.assertIn("batteryFlowLabel", self.ring)

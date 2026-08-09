@@ -248,7 +248,7 @@ final class ModeSliderView: NSView {
     private func configureAccessibility() {
         setAccessibilityElement(true)
         setAccessibilityRole(.slider)
-        setAccessibilityLabel("电源模式")
+        setAccessibilityLabel("Power Mode")
         setAccessibilityOrientation(.horizontal)
         setAccessibilityMinValue(NSNumber(value: 0))
         setAccessibilityMaxValue(NSNumber(value: max(modes.count - 1, 0)))

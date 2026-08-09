@@ -103,7 +103,7 @@ class StatusItemContractTests(unittest.TestCase):
 
     def test_tooltip_documents_the_right_click(self):
         self.assertIn("toolTip", self.source)
-        self.assertIn("右键", self.source)
+        self.assertIn("right-click", self.source)
 
     def test_icon_updates_are_event_driven_not_polled(self):
         self.assertIn("IOPSNotificationCreateRunLoopSource", self.source)

@@ -1,0 +1,38 @@
+#!/bin/bash
+# Stop the v2/v3 helper before Installer replaces its on-disk executable.
+set -euo pipefail
+
+readonly HELPER_LABEL="com.leoarrow.wattson.helper"
+readonly HELPER_TARGET="system/$HELPER_LABEL"
+readonly HELPER_SOCKET="/var/run/wattson-helper.sock"
+
+fail() {
+    echo "Wattson preinstall: $*" >&2
+    exit 1
+}
+
+[[ "$(/usr/bin/id -u)" == "0" ]] || fail "Installer did not run as root"
+[[ "${3:-/}" == "/" ]] || fail "Wattson can only be installed on the startup volume"
+
+# Replacing a running executable is legal, but stopping first ensures the
+# postinstall readiness check exercises the newly installed helper bytes.
+if /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+    /bin/launchctl bootout "$HELPER_TARGET" \
+        || fail "existing helper could not be stopped"
+    for _ in 1 2 3 4 5 6 7 8 9 10; do
+        if ! /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+            break
+        fi
+        /bin/sleep 0.1
+    done
+    if /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+        fail "existing helper remained loaded"
+    fi
+fi
+
+/bin/rm -f -- "$HELPER_SOCKET"
+/usr/bin/pkill -f \
+    '^/Applications/Wattson\.app/Contents/MacOS/Wattson([[:space:]]|$)' \
+    >/dev/null 2>&1 || true
+
+exit 0

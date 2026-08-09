@@ -1,92 +1,547 @@
-name: macOS helper installation
+name: Wattson release candidate
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: Candidate release version to build and test
+        description: Version from the repository VERSION file
         required: true
-        default: "2.1.5"
+        default: "3.0.0"
         type: string
 
 permissions:
   contents: read
 
+concurrency:
+  group: release-candidate-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  build-packaged-dmg:
-    name: macos-26 packaged release artifact
-    if: github.ref == 'refs/heads/main'
+  build:
+    name: Build universal PKG and DMG once
     runs-on: macos-26
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       WATTSON_VERSION: ${{ inputs.version }}
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Check out the candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Run headless tests
+
+      - name: Validate the requested version
         shell: bash
         run: |
-          env -u WATTSON_RUN_INTERACTION python3 -m unittest -v \
-            tests.test_energy_mode_contract \
-            tests.test_helper_contract \
-            tests.test_install_helper_behavior \
-            tests.test_install_migration_contract \
-            tests.test_install_script_contract \
-            tests.test_interaction_behavior
-      - name: Build the packaged DMG once
+          set -euo pipefail
+          [[ "$WATTSON_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          [[ "$(/usr/bin/tr -d '\r\n' < VERSION)" == "$WATTSON_VERSION" ]]
+
+      - name: Run headless release tests
         shell: bash
+        run: |
+          set -euo pipefail
+          swift test
+          env -u WATTSON_RUN_INTERACTION python3 -m unittest discover -s tests -v
+
+      - name: Build and verify the release artifacts
+        shell: bash
+        env:
+          WATTSON_NOTARIZE: "0"
         run: |
           set -o pipefail
-          bash scripts/package_dmg.sh "$WATTSON_VERSION" 2>&1 | tee "$RUNNER_TEMP/wattson-dmg-build.log"
-      - name: Upload packaged DMG for installation and release follow-up
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+          /bin/bash scripts/release.sh "$WATTSON_VERSION" \
+            2>&1 | /usr/bin/tee "$RUNNER_TEMP/wattson-release-build.log"
+
+      - name: Upload the exact release candidate bytes
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: UNNOTARIZED-CI-ONLY-Wattson-v${{ env.WATTSON_VERSION }}.dmg
-          path: dist/Wattson-v${{ env.WATTSON_VERSION }}.dmg
+          name: UNNOTARIZED-CI-ONLY-Wattson-v${{ env.WATTSON_VERSION }}
+          path: |
+            dist/Wattson-v${{ env.WATTSON_VERSION }}-macos-universal.pkg
+            dist/Wattson-v${{ env.WATTSON_VERSION }}-macos-universal.dmg
+            dist/Wattson-v${{ env.WATTSON_VERSION }}-release-info.txt
+            dist/SHA256SUMS.txt
           if-no-files-found: error
-          retention-days: 1
-      - name: Upload build logs
+          retention-days: 7
+
+      - name: Upload the release build log
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: wattson-dmg-build-log-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/wattson-dmg-build.log
+          name: wattson-release-build-log-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/wattson-release-build.log
           if-no-files-found: warn
           retention-days: 7
 
-  packaged-helper-install:
-    name: ${{ matrix.runner }} packaged helper install
+  install:
+    name: Install on ${{ matrix.runner }}
+    needs: build
     runs-on: ${{ matrix.runner }}
-    needs: build-packaged-dmg
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       WATTSON_VERSION: ${{ inputs.version }}
     strategy:
       fail-fast: false
       matrix:
-        runner: [macos-14, macos-15, macos-26]
+        include:
+          - runner: macos-14
+            test_v2_upgrade: true
+          - runner: macos-15
+            test_v2_upgrade: true
+          - runner: macos-26
+            test_v2_upgrade: true
+          - runner: macos-15-intel
+            test_v2_upgrade: false
+          - runner: macos-26-intel
+            test_v2_upgrade: false
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Check out the candidate lifecycle scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Download the single packaged DMG
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+
+      - name: Download the single release build
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          name: UNNOTARIZED-CI-ONLY-Wattson-v${{ env.WATTSON_VERSION }}.dmg
-          path: ${{ runner.temp }}/wattson-dmg
-      - name: Install, verify, and clean up the packaged helper
+          name: UNNOTARIZED-CI-ONLY-Wattson-v${{ env.WATTSON_VERSION }}
+          path: ${{ runner.temp }}/wattson-release
+
+      - name: Verify checksums, universal payloads, and DMG identity
         shell: bash
         run: |
-          set -o pipefail
-          bash scripts/ci_test_helper_install.sh \
-            "$RUNNER_TEMP/wattson-dmg/Wattson-v${WATTSON_VERSION}.dmg" \
-            2>&1 | tee "$RUNNER_TEMP/wattson-helper-install.log"
-      - name: Upload helper installation logs
+          set -euo pipefail
+
+          readonly RELEASE_DIR="$RUNNER_TEMP/wattson-release"
+          readonly PKG_NAME="Wattson-v${WATTSON_VERSION}-macos-universal.pkg"
+          readonly DMG_NAME="Wattson-v${WATTSON_VERSION}-macos-universal.dmg"
+          readonly INFO_NAME="Wattson-v${WATTSON_VERSION}-release-info.txt"
+          readonly PKG_PATH="$RELEASE_DIR/$PKG_NAME"
+          readonly DMG_PATH="$RELEASE_DIR/$DMG_NAME"
+          readonly INFO_PATH="$RELEASE_DIR/$INFO_NAME"
+          readonly CHECKSUM_PATH="$RELEASE_DIR/SHA256SUMS.txt"
+
+          assert_runner_temp_path() {
+            case "$1" in
+              "$RUNNER_TEMP"/*) ;;
+              *) echo "path escaped RUNNER_TEMP: $1" >&2; exit 1 ;;
+            esac
+          }
+
+          [[ "$WATTSON_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          for artifact in "$PKG_PATH" "$DMG_PATH" "$INFO_PATH" "$CHECKSUM_PATH"; do
+            [[ -f "$artifact" && ! -L "$artifact" ]]
+          done
+          [[ "$(/usr/bin/wc -l < "$CHECKSUM_PATH" | /usr/bin/tr -d ' ')" == "3" ]]
+          /usr/bin/grep -Eq "^[0-9a-f]{64}  ${PKG_NAME}$" "$CHECKSUM_PATH"
+          /usr/bin/grep -Eq "^[0-9a-f]{64}  ${DMG_NAME}$" "$CHECKSUM_PATH"
+          /usr/bin/grep -Eq "^[0-9a-f]{64}  ${INFO_NAME}$" "$CHECKSUM_PATH"
+          (
+            cd "$RELEASE_DIR"
+            /usr/bin/shasum -a 256 -c SHA256SUMS.txt
+          )
+          /usr/bin/grep -Fxq "version=$WATTSON_VERSION" "$INFO_PATH"
+          /usr/bin/grep -Fxq "architectures=arm64,x86_64" "$INFO_PATH"
+          /usr/bin/grep -Fxq "install_path=/Applications/Wattson.app" "$INFO_PATH"
+
+          EXPAND_BASE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-pkg.XXXXXX")"
+          EXPAND_DIR="$EXPAND_BASE/expanded"
+          MOUNT_DIR="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-dmg.XXXXXX")"
+          assert_runner_temp_path "$EXPAND_BASE"
+          assert_runner_temp_path "$MOUNT_DIR"
+          MOUNTED=0
+          cleanup() {
+            local status="$?"
+            trap - EXIT
+            if [[ "$MOUNTED" == "1" ]]; then
+              /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null 2>&1 || status=1
+            fi
+            /bin/rm -rf -- "$EXPAND_BASE" "$MOUNT_DIR" || status=1
+            exit "$status"
+          }
+          trap cleanup EXIT
+
+          /usr/sbin/pkgutil --expand-full "$PKG_PATH" "$EXPAND_DIR"
+          PACKAGED_APP_BIN="$(
+            /usr/bin/find "$EXPAND_DIR" -type f \
+              -path '*/Payload/Applications/Wattson.app/Contents/MacOS/Wattson' \
+              -print -quit
+          )"
+          PACKAGED_APP_INFO="$(
+            /usr/bin/find "$EXPAND_DIR" -type f \
+              -path '*/Payload/Applications/Wattson.app/Contents/Info.plist' \
+              -print -quit
+          )"
+          PACKAGED_HELPER="$(
+            /usr/bin/find "$EXPAND_DIR" -type f \
+              -path '*/Payload/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper' \
+              -print -quit
+          )"
+          [[ -n "$PACKAGED_APP_BIN" && -n "$PACKAGED_APP_INFO" && -n "$PACKAGED_HELPER" ]]
+          /usr/bin/xcrun lipo "$PACKAGED_APP_BIN" -verify_arch arm64 x86_64
+          /usr/bin/xcrun lipo "$PACKAGED_HELPER" -verify_arch arm64 x86_64
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$PACKAGED_APP_INFO")" == "$WATTSON_VERSION" ]]
+
+          /usr/bin/hdiutil attach \
+            -nobrowse \
+            -readonly \
+            -mountpoint "$MOUNT_DIR" \
+            "$DMG_PATH" >/dev/null
+          MOUNTED=1
+          [[ -f "$MOUNT_DIR/$PKG_NAME" && ! -L "$MOUNT_DIR/$PKG_NAME" ]]
+          /usr/bin/cmp -s "$PKG_PATH" "$MOUNT_DIR/$PKG_NAME"
+          /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null
+          MOUNTED=0
+
+      - name: Test first install and disabled-service reinstall
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          readonly PKG_PATH="$RUNNER_TEMP/wattson-release/Wattson-v${WATTSON_VERSION}-macos-universal.pkg"
+          readonly APP_DIR="/Applications/Wattson.app"
+          readonly APP_BIN="$APP_DIR/Contents/MacOS/Wattson"
+          readonly HELPER_LABEL="com.leoarrow.wattson.helper"
+          readonly HELPER_TARGET="system/$HELPER_LABEL"
+          readonly HELPER_BIN="/Library/PrivilegedHelperTools/$HELPER_LABEL"
+          readonly HELPER_PLIST="/Library/LaunchDaemons/$HELPER_LABEL.plist"
+          readonly HELPER_SOCKET="/var/run/wattson-helper.sock"
+          readonly RECEIPT="com.leoarrow.wattson.pkg"
+          readonly LOGIN_LABEL="com.leoarrow.wattson.login"
+          LOGIN_TARGET="gui/$(/usr/bin/id -u)/$LOGIN_LABEL"
+          readonly LOGIN_TARGET
+          readonly LOGIN_PLIST="$HOME/Library/LaunchAgents/$LOGIN_LABEL.plist"
+          readonly LEGACY_APP="$HOME/Applications/Wattson.app"
+          readonly USER_SUPPORT="$HOME/Library/Application Support/Wattson"
+          readonly USER_CONTAINER="$HOME/Library/Containers/com.leoarrow.wattson"
+          readonly USER_PREFERENCES="$HOME/Library/Preferences/com.leoarrow.wattson.plist"
+          APP_PID=""
+
+          cleanup() {
+            local status="$?"
+            local cleanup_failed=0
+            local disabled_state
+            local residual
+            trap - EXIT
+            set +e
+
+            if [[ -n "$APP_PID" ]]; then
+              /bin/kill "$APP_PID" >/dev/null 2>&1 || true
+              wait "$APP_PID" >/dev/null 2>&1 || true
+              APP_PID=""
+            fi
+            /bin/launchctl bootout "$LOGIN_TARGET" >/dev/null 2>&1 || true
+            /bin/rm -f -- "$LOGIN_PLIST" "$USER_PREFERENCES" || cleanup_failed=1
+            /usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true
+            /usr/bin/sudo -n /bin/launchctl enable "$HELPER_TARGET" >/dev/null 2>&1 \
+              || cleanup_failed=1
+            /usr/bin/sudo -n /bin/rm -f -- \
+              "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN" || cleanup_failed=1
+            /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1
+            /bin/rm -rf -- "$LEGACY_APP" "$USER_SUPPORT" "$USER_CONTAINER" \
+              || cleanup_failed=1
+            /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true
+
+            if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+              echo "helper service remains registered after cleanup" >&2
+              cleanup_failed=1
+            fi
+            disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system 2>/dev/null)" \
+              || cleanup_failed=1
+            case "$disabled_state" in
+              *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*)
+                echo "helper remains disabled after cleanup" >&2
+                cleanup_failed=1
+                ;;
+            esac
+            for residual in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do
+              if [[ -e "$residual" || -L "$residual" ]]; then
+                echo "cleanup left $residual" >&2
+                cleanup_failed=1
+              fi
+            done
+            if [[ "$status" == "0" && "$cleanup_failed" != "0" ]]; then
+              status=1
+            fi
+            exit "$status"
+          }
+          trap cleanup EXIT
+
+          verify_install() {
+            local disabled_state
+            [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]]
+            [[ -f "$APP_BIN" && ! -L "$APP_BIN" ]]
+            [[ -f "$HELPER_BIN" && ! -L "$HELPER_BIN" ]]
+            [[ -f "$HELPER_PLIST" && ! -L "$HELPER_PLIST" ]]
+            [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]]
+            [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]]
+            /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
+            /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64
+            /usr/bin/codesign --verify --deep --strict "$APP_DIR"
+            /usr/bin/sudo -n /usr/bin/codesign --verify --strict "$HELPER_BIN"
+            [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_BIN")" == "0:0:544" ]]
+            [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_PLIST")" == "0:0:644" ]]
+            /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null
+            /usr/bin/sudo -n "$HELPER_BIN" --health-probe
+            [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]]
+            disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"
+            case "$disabled_state" in
+              *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*) return 1 ;;
+            esac
+          }
+
+          verify_app_launch_stability() {
+            local attempt
+
+            "$APP_BIN" >"$RUNNER_TEMP/wattson-app-launch.log" 2>&1 &
+            APP_PID="$!"
+            for ((attempt = 0; attempt < 20; attempt++)); do
+              if ! /bin/kill -0 "$APP_PID" >/dev/null 2>&1; then
+                echo "Wattson exited during the packaged-app launch check." >&2
+                /bin/cat "$RUNNER_TEMP/wattson-app-launch.log" >&2 || true
+                return 1
+              fi
+              /bin/sleep 0.1
+            done
+            /bin/kill "$APP_PID"
+            wait "$APP_PID" >/dev/null 2>&1 || true
+            APP_PID=""
+          }
+
+          [[ "${GITHUB_ACTIONS:-}" == "true" ]]
+          [[ "${RUNNER_OS:-}" == "macOS" ]]
+          [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]]
+          [[ -f "$PKG_PATH" && ! -L "$PKG_PATH" ]]
+          /usr/bin/sudo -n /usr/bin/true
+          for initial_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do
+            [[ ! -e "$initial_path" && ! -L "$initial_path" ]]
+          done
+          if /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then
+            echo "fresh runner unexpectedly has a Wattson package receipt" >&2
+            exit 1
+          fi
+
+          echo "Installing the candidate on a fresh runner..."
+          /usr/bin/sudo -n /usr/sbin/installer \
+            -verboseR \
+            -pkg "$PKG_PATH" \
+            -target / \
+            2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-install.log"
+          verify_install
+          verify_app_launch_stability
+
+          echo "Reinstalling after an explicit launchd disable..."
+          /usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET"
+          /usr/bin/sudo -n /bin/launchctl disable "$HELPER_TARGET"
+          disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"
+          case "$disabled_state" in
+            *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*) ;;
+            *) echo "launchd did not record the disabled state" >&2; exit 1 ;;
+          esac
+          /usr/bin/sudo -n /usr/sbin/installer \
+            -verboseR \
+            -pkg "$PKG_PATH" \
+            -target / \
+            2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-install.log"
+          verify_install
+
+          echo "Running the shipped uninstaller, then reinstalling once more..."
+          /bin/bash scripts/uninstall.sh \
+            2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-uninstall.log"
+          for removed_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do
+            [[ ! -e "$removed_path" && ! -L "$removed_path" ]]
+          done
+          if /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then
+            echo "the shipped uninstaller left the package receipt" >&2
+            exit 1
+          fi
+          if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+            echo "the shipped uninstaller left the helper registered" >&2
+            exit 1
+          fi
+
+          /usr/bin/sudo -n /usr/sbin/installer \
+            -verboseR \
+            -pkg "$PKG_PATH" \
+            -target / \
+            2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-install.log"
+          verify_install
+          verify_app_launch_stability
+
+          echo "First install, disabled-service reinstall, uninstall, reinstall, app launch, and cleanup checks passed."
+
+      - name: Test upgrade from the published v2.1.5 release
+        if: matrix.test_v2_upgrade
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          readonly V2_VERSION="2.1.5"
+          readonly V2_SHA256="1a5054dfbc3f3a4ff9518620d3a9b49c282ff42973f9952a076470c05cf4caf6"
+          readonly V2_DMG="$RUNNER_TEMP/Wattson-v${V2_VERSION}.dmg"
+          readonly V2_URL="https://github.com/laleoarrow/battery-monitor/releases/download/v${V2_VERSION}/Wattson-v${V2_VERSION}.dmg"
+          readonly PKG_PATH="$RUNNER_TEMP/wattson-release/Wattson-v${WATTSON_VERSION}-macos-universal.pkg"
+          readonly APP_DIR="/Applications/Wattson.app"
+          readonly APP_BIN="$APP_DIR/Contents/MacOS/Wattson"
+          readonly LEGACY_APP="$HOME/Applications/Wattson.app"
+          readonly HELPER_LABEL="com.leoarrow.wattson.helper"
+          readonly HELPER_TARGET="system/$HELPER_LABEL"
+          readonly HELPER_BIN="/Library/PrivilegedHelperTools/$HELPER_LABEL"
+          readonly HELPER_PLIST="/Library/LaunchDaemons/$HELPER_LABEL.plist"
+          readonly HELPER_SOCKET="/var/run/wattson-helper.sock"
+          readonly RECEIPT="com.leoarrow.wattson.pkg"
+          readonly LOGIN_LABEL="com.leoarrow.wattson.login"
+          LOGIN_TARGET="gui/$(/usr/bin/id -u)/$LOGIN_LABEL"
+          readonly LOGIN_TARGET
+          readonly LOGIN_PLIST="$HOME/Library/LaunchAgents/$LOGIN_LABEL.plist"
+          MOUNT_DIR="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-v2-dmg.XXXXXX")"
+          V2_STAGE=""
+          MOUNTED=0
+
+          cleanup() {
+            local status="$?"
+            local cleanup_failed=0
+            local residual
+            trap - EXIT
+            set +e
+            if [[ "$MOUNTED" == "1" ]]; then
+              /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null 2>&1 || cleanup_failed=1
+            fi
+            if [[ -n "$V2_STAGE" ]]; then
+              case "$V2_STAGE" in
+                /private/tmp/com.leoarrow.wattson.v2-ci.*)
+                  /usr/bin/sudo -n /bin/rm -rf -- "$V2_STAGE" || cleanup_failed=1
+                  ;;
+                *) echo "v2 root stage escaped its fixed prefix" >&2; cleanup_failed=1 ;;
+              esac
+            fi
+            /bin/launchctl bootout "$LOGIN_TARGET" >/dev/null 2>&1 || true
+            /bin/rm -f -- "$LOGIN_PLIST" || cleanup_failed=1
+            /usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true
+            /usr/bin/sudo -n /bin/launchctl enable "$HELPER_TARGET" >/dev/null 2>&1 \
+              || cleanup_failed=1
+            /usr/bin/sudo -n /bin/rm -f -- \
+              "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN" || cleanup_failed=1
+            /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1
+            /bin/rm -rf -- "$LEGACY_APP" "$MOUNT_DIR" || cleanup_failed=1
+            /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true
+            if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+              echo "helper service remains registered after v2 upgrade cleanup" >&2
+              cleanup_failed=1
+            fi
+            for residual in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do
+              if [[ -e "$residual" || -L "$residual" ]]; then
+                echo "v2 upgrade cleanup left $residual" >&2
+                cleanup_failed=1
+              fi
+            done
+            if [[ "$status" == "0" && "$cleanup_failed" != "0" ]]; then
+              status=1
+            fi
+            exit "$status"
+          }
+          trap cleanup EXIT
+
+          [[ "$(/usr/bin/uname -m)" == "arm64" ]]
+          [[ -f "$PKG_PATH" && ! -L "$PKG_PATH" ]]
+          /usr/bin/curl \
+            --fail \
+            --location \
+            --proto '=https' \
+            --retry 3 \
+            --retry-delay 2 \
+            --tlsv1.2 \
+            --output "$V2_DMG" \
+            "$V2_URL"
+          [[ "$(/usr/bin/shasum -a 256 "$V2_DMG" | /usr/bin/awk '{ print $1 }')" == "$V2_SHA256" ]]
+
+          /usr/bin/hdiutil attach \
+            -nobrowse \
+            -readonly \
+            -mountpoint "$MOUNT_DIR" \
+            "$V2_DMG" >/dev/null
+          MOUNTED=1
+          readonly V2_INSTALLER="$MOUNT_DIR/Install Wattson.app"
+          readonly V2_RESOURCES="$V2_INSTALLER/Contents/Resources"
+          [[ -d "$V2_INSTALLER" && ! -L "$V2_INSTALLER" ]]
+          /usr/bin/codesign --verify --deep --strict "$V2_INSTALLER"
+          "$V2_INSTALLER/Contents/MacOS/Install Wattson" --verify
+
+          /bin/mkdir -p "$HOME/Applications"
+          /usr/bin/ditto -x -k "$V2_RESOURCES/Payload/Wattson.zip" "$HOME/Applications"
+          [[ -d "$LEGACY_APP" && ! -L "$LEGACY_APP" ]]
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$LEGACY_APP/Contents/Info.plist")" == "$V2_VERSION" ]]
+          /usr/bin/codesign --verify --deep --strict "$LEGACY_APP"
+
+          /bin/mkdir -p "$HOME/Library/LaunchAgents"
+          /usr/bin/plutil -create xml1 "$LOGIN_PLIST"
+          /usr/libexec/PlistBuddy -c "Add :Label string $LOGIN_LABEL" "$LOGIN_PLIST"
+          /usr/libexec/PlistBuddy -c 'Add :ProgramArguments array' "$LOGIN_PLIST"
+          /usr/libexec/PlistBuddy -c 'Add :ProgramArguments:0 string /usr/bin/open' "$LOGIN_PLIST"
+          /usr/libexec/PlistBuddy -c 'Add :ProgramArguments:1 string -gj' "$LOGIN_PLIST"
+          /usr/libexec/PlistBuddy -c "Add :ProgramArguments:2 string $LEGACY_APP" "$LOGIN_PLIST"
+          /usr/libexec/PlistBuddy -c 'Add :RunAtLoad bool true' "$LOGIN_PLIST"
+          /usr/libexec/PlistBuddy -c 'Add :LimitLoadToSessionType string Aqua' "$LOGIN_PLIST"
+          /usr/libexec/PlistBuddy -c 'Add :ProcessType string Interactive' "$LOGIN_PLIST"
+          /usr/libexec/PlistBuddy -c 'Add :AssociatedBundleIdentifiers array' "$LOGIN_PLIST"
+          /usr/libexec/PlistBuddy -c 'Add :AssociatedBundleIdentifiers:0 string com.leoarrow.wattson' "$LOGIN_PLIST"
+          /bin/chmod 644 "$LOGIN_PLIST"
+          /bin/launchctl bootstrap "gui/$(/usr/bin/id -u)" "$LOGIN_PLIST"
+          /bin/launchctl print "$LOGIN_TARGET" >/dev/null
+
+          V2_STAGE="$(
+            /usr/bin/sudo -n /usr/bin/mktemp \
+              -d /private/tmp/com.leoarrow.wattson.v2-ci.XXXXXX
+          )"
+          case "$V2_STAGE" in
+            /private/tmp/com.leoarrow.wattson.v2-ci.*) ;;
+            *) echo "invalid v2 root stage" >&2; exit 1 ;;
+          esac
+          /usr/bin/sudo -n /usr/bin/install -d -o root -g wheel -m 700 "$V2_STAGE/Payload"
+          /usr/bin/sudo -n /usr/bin/install -o root -g wheel -m 500 \
+            "$V2_RESOURCES/install-helper.sh" "$V2_STAGE/install-helper.sh"
+          /usr/bin/sudo -n /usr/bin/install -o root -g wheel -m 500 \
+            "$V2_RESOURCES/Payload/$HELPER_LABEL" "$V2_STAGE/Payload/$HELPER_LABEL"
+          /usr/bin/sudo -n /usr/bin/install -o root -g wheel -m 400 \
+            "$V2_RESOURCES/Payload/$HELPER_LABEL.plist" "$V2_STAGE/Payload/$HELPER_LABEL.plist"
+          /usr/bin/sudo -n /usr/bin/env -i \
+            PATH=/usr/bin:/bin:/usr/sbin:/sbin \
+            HOME=/var/root \
+            USER=root \
+            LOGNAME=root \
+            /bin/bash -p "$V2_STAGE/install-helper.sh"
+          /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null
+          /usr/bin/sudo -n "$HELPER_BIN" --health-probe
+
+          /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null
+          MOUNTED=0
+          /usr/bin/sudo -n /bin/rm -rf -- "$V2_STAGE"
+          V2_STAGE=""
+
+          echo "Upgrading the exact v2.1.5 app and helper state to v${WATTSON_VERSION}..."
+          /usr/bin/sudo -n /usr/sbin/installer \
+            -verboseR \
+            -pkg "$PKG_PATH" \
+            -target / \
+            2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v2-upgrade.log"
+          [[ ! -e "$LEGACY_APP" && ! -L "$LEGACY_APP" ]]
+          [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]]
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :ProgramArguments:2' "$LOGIN_PLIST")" == "/Applications/Wattson.app" ]]
+          /bin/launchctl print "$LOGIN_TARGET" >/dev/null
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]]
+          /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
+          /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64
+          /usr/bin/codesign --verify --deep --strict "$APP_DIR"
+          /usr/bin/sudo -n /usr/bin/codesign --verify --strict "$HELPER_BIN"
+          /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null
+          /usr/bin/sudo -n "$HELPER_BIN" --health-probe
+          [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]]
+          echo "v2.1.5 upgrade and cleanup checks passed."
+
+      - name: Upload installation logs
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: wattson-helper-install-log-${{ matrix.runner }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/wattson-helper-install.log
+          name: wattson-install-log-${{ matrix.runner }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/wattson-*.log
           if-no-files-found: warn
           retention-days: 7

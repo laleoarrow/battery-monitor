@@ -62,7 +62,7 @@ final class RingGaugeView: PopoverSection {
         percentUnit.alignment = .center
         addSubview(percentUnit)
 
-        for text in ["系统负载", "充入电池", "电池温度", "循环次数"] {
+        for text in ["System Load", "To Battery", "Battery Temp", "Cycle Count"] {
             captions.append(label(text, size: 11, color: PopoverStyle.secondaryText))
         }
         for _ in 0..<4 {
