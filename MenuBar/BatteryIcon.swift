@@ -4,6 +4,52 @@ enum BatteryIcon {
     static let width: CGFloat = 23
     static let height: CGFloat = 14
 
+    enum TintRole: Equatable {
+        case template
+        case lowPower
+        case lowBattery
+        case charging
+    }
+
+    /// Only these values can change the pixels in the menu-bar glyph. Live
+    /// wattage, temperature and cycle-count samples deliberately do not, so a
+    /// 1 Hz presentation refresh can keep the existing NSImage.
+    struct RenderKey: Equatable {
+        let percent: Int
+        let plugged: Bool
+        let tintRole: TintRole
+        let appearanceName: String
+        let increasedContrast: Bool
+    }
+
+    static func renderKey(
+        for snapshot: PowerSnapshot,
+        mode: EnergyMode,
+        pressed: Bool,
+        appearance: NSAppearance,
+        increasedContrast: Bool
+    ) -> RenderKey {
+        let tintRole: TintRole
+        if pressed {
+            tintRole = .template
+        } else if mode == .low {
+            tintRole = .lowPower
+        } else if snapshot.percent <= 20 {
+            tintRole = .lowBattery
+        } else if snapshot.state == .charging {
+            tintRole = .charging
+        } else {
+            tintRole = .template
+        }
+        return RenderKey(
+            percent: snapshot.percent,
+            plugged: snapshot.plugged,
+            tintRole: tintRole,
+            appearanceName: appearance.name.rawValue,
+            increasedContrast: increasedContrast
+        )
+    }
+
     /// Geometry never changes — only the fill colour does. `pressed` forces
     /// template rendering because a coloured image does not invert under the
     /// menu bar's selection highlight, and would sit unreadable on top of it.

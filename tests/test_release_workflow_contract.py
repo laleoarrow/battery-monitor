@@ -21,6 +21,13 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertNotIn(" WATTSON_RUN_INTERACTION python3 ", CI)
         self.assertNotIn(" WATTSON_RUN_INTERACTION python3 ", CANDIDATE)
 
+    def test_release_candidate_replays_real_appkit_off_the_user_mac(self):
+        self.assertIn("scripts/verify_interaction.sh", CANDIDATE)
+        self.assertIn("WATTSON_FORCE_LEGACY_KNOB=1", CANDIDATE)
+        self.assertIn("WATTSON_FORCE_REDUCE_MOTION=1", CANDIDATE)
+        self.assertIn("WATTSON_FORCE_REDUCE_TRANSPARENCY=1", CANDIDATE)
+        self.assertIn("scripts/verify_animation_stress.sh", CANDIDATE)
+
     def test_promotion_requires_the_successful_main_candidate_run(self):
         self.assertIn("candidate_run_id:", PROMOTE)
         self.assertIn('actions/runs/$CANDIDATE_RUN_ID', PROMOTE)

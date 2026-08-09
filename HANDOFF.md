@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.0`
+- Version: `3.0.1`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +14,11 @@
 
 ## Public artifacts
 
-`scripts/release.sh 3.0.0` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.1` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.0-macos-universal.pkg`
-- `Wattson-v3.0.0-macos-universal.dmg`
-- `Wattson-v3.0.0-release-info.txt`
+- `Wattson-v3.0.1-macos-universal.pkg`
+- `Wattson-v3.0.1-macos-universal.dmg`
+- `Wattson-v3.0.1-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -66,7 +66,7 @@ Headless checks:
 ```bash
 swift test --parallel
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.0
+bash scripts/release.sh 3.0.1
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -76,7 +76,9 @@ bash scripts/verify_interaction.sh
 bash scripts/verify_animation_stress.sh
 ```
 
-The manual `Wattson release candidate` workflow builds the artifact set once,
+The manual `Wattson release candidate` workflow first replays the native and
+legacy AppKit interaction suites plus the animation stress test on its
+disposable macOS 26 build runner. It then builds the artifact set once,
 then downloads those exact bytes on macOS 14, 15, and 26 Apple-silicon runners
 and macOS 15 and 26 Intel runners. It verifies checksums, universal slices,
 first install, disabled-service reinstall, the shipped uninstaller, reinstall,
@@ -88,17 +90,18 @@ GitHub-hosted runners.
 
 1. Make headless CI green on the final commit.
 2. Make the manual release-candidate matrix green on that exact commit.
-3. Create the annotated `v3.0.0` tag and stable GitHub release from the exact
+3. Create the annotated `v3.0.1` tag and stable GitHub release from the exact
    candidate artifacts.
 4. Require the Homebrew tap sync and tap CI to finish green.
 5. Deploy the English website to GitHub Pages and OpenAI Sites.
-6. Announce the release only after every public route resolves to v3.0.0.
+6. Announce the release only after every public route resolves to v3.0.1.
 
-## Performance follow-up
+## v3.0.1 performance work
 
-The v3 audit found bounded memory use and no production leak. The highest-value
-post-release work is to avoid rendering hidden popover modules, close the idle
-breathing-animation lifecycle gap, replace overlapping 1 s and 2 s timers with
-one adaptive sampling clock, and reduce the helper's idle timeout wakeups.
-These changes should preserve every current animation and visual contract and
-ship only after separate measurement and interaction verification.
+The v3.0.1 pass preserves the approved UI while caching closed-popover data
+instead of rebuilding invisible AppKit layers, keeping the full-battery breath
+phase stable and stopping it on close, reusing unchanged menu-bar images,
+skipping unchanged history paths, and deriving history samples and peak in one
+pass. The adaptive sampling clock, user-hidden module updates, and helper idle
+wakeups remain deliberately deferred until Instruments data justifies their
+additional lifecycle risk.

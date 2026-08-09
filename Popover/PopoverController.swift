@@ -1,6 +1,13 @@
 import AppKit
 
 final class PopoverController: NSObject, NSPopoverDelegate {
+    private struct Presentation {
+        let snapshot: PowerSnapshot
+        let history: [Double]
+        let peak: Double
+        let degraded: Bool
+    }
+
     private static let entranceAnimationKey = "wattson.popover.entrance"
     private let popover = NSPopover()
 #if DEBUG
@@ -8,6 +15,10 @@ final class PopoverController: NSObject, NSPopoverDelegate {
 #endif
     private let content = PopoverContentViewController()
     private var visibilityHandler: ((Bool) -> Void)?
+    private var latestPresentation: Presentation?
+#if DEBUG
+    private(set) var contentRenderCountForTest = 0
+#endif
 
     /// `.transient` only dismisses for events this process sees. Wattson is an
     /// accessory app that never activates, so a click on the desktop or another
@@ -51,7 +62,14 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     var isOpen: Bool { wantsOpen }
 
     func update(snapshot: PowerSnapshot, history: [Double], peak: Double, degraded: Bool) {
-        content.update(snapshot: snapshot, history: history, peak: peak, degraded: degraded)
+        latestPresentation = Presentation(
+            snapshot: snapshot, history: history, peak: peak, degraded: degraded
+        )
+        // Keep data current while closed, but do not rebuild invisible AppKit
+        // layers. Continue through AppKit's close fade so its last visible
+        // frame behaves exactly as before.
+        guard wantsOpen || popover.isShown else { return }
+        applyLatestPresentation()
     }
 
     func setModeSelectHandler(
@@ -76,6 +94,10 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         let reduceMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
         popover.animates = !reduceMotion
         let reopeningDuringDismissal = popover.isShown
+        // Prime every module with the newest cached telemetry before AppKit
+        // captures the first frame. This replaces hidden periodic rendering
+        // without introducing a stale flash on open.
+        applyLatestPresentation()
         // Showing while a previous close is still animating is fine — AppKit
         // takes over the fade rather than dropping the request.
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .maxY)
@@ -95,6 +117,19 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         }
         startWatchingForOutsideClicks()
         visibilityHandler?(true)
+    }
+
+    private func applyLatestPresentation() {
+        guard let latestPresentation else { return }
+        content.update(
+            snapshot: latestPresentation.snapshot,
+            history: latestPresentation.history,
+            peak: latestPresentation.peak,
+            degraded: latestPresentation.degraded
+        )
+#if DEBUG
+        contentRenderCountForTest += 1
+#endif
     }
 
     private func close() {
@@ -187,6 +222,10 @@ final class PopoverController: NSObject, NSPopoverDelegate {
 
 #if DEBUG
 extension PopoverController {
+    func applyLatestPresentationForTest() { applyLatestPresentation() }
+
+    var cachedPercentForTest: Int? { latestPresentation?.snapshot.percent }
+
     func playEntranceAnimationForTest(reduceMotion: Bool) {
         playEntranceAnimation(reduceMotion: reduceMotion)
     }

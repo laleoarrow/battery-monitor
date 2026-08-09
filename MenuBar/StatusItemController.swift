@@ -59,6 +59,7 @@ final class StatusItemController: NSObject {
     private var rightClickModes = RightClickModeSequence()
     private var systemBatteryIconHidden: Bool?
     private var systemBatteryIconRefreshGeneration = 0
+    private var renderedStatusIconKey: BatteryIcon.RenderKey?
 
     func start() -> Bool {
         guard let button = statusItem.button else { return false }
@@ -271,21 +272,27 @@ final class StatusItemController: NSObject {
 
     private func refreshPresentation() {
         refreshStatusItem()
+        let historyPresentation = history.presentation
         popover.update(
             snapshot: snapshot,
-            history: history.samples,
-            peak: history.peak,
+            history: historyPresentation.samples,
+            peak: historyPresentation.peak,
             degraded: isDegraded
         )
     }
 
     private func refreshStatusItem() {
         guard let button = statusItem.button else { return }
-        button.image = BatteryIcon.image(
-            for: snapshot,
-            mode: EnergyModeController.current,
-            pressed: pressed
+        let mode = EnergyModeController.current
+        let key = BatteryIcon.renderKey(
+            for: snapshot, mode: mode, pressed: pressed,
+            appearance: button.effectiveAppearance,
+            increasedContrast: NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
         )
+        if key != renderedStatusIconKey {
+            button.image = BatteryIcon.image(for: snapshot, mode: mode, pressed: pressed)
+            renderedStatusIconKey = key
+        }
 
         // Percentage left of the glyph, matching the system battery. Setting a
         // plain title rather than an attributed one lets AppKit keep the text

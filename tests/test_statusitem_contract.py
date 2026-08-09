@@ -61,6 +61,28 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("refreshStatusItem()", handler)
         self.assertNotIn("refreshPresentation()", handler)
 
+    def test_closed_popover_updates_are_cached_until_the_next_open(self):
+        # The 2 s history clock continues while the popover is closed. Those
+        # samples must stay current without rebuilding every hidden AppKit
+        # module; the newest cached presentation is applied before show().
+        update = self.popover.split("func update(snapshot:", 1)[1].split(
+            "func setModeSelectHandler", 1
+        )[0]
+        self.assertIn("latestPresentation =", update)
+        self.assertIn("guard wantsOpen || popover.isShown else { return }", update)
+        opening = self.popover.split("private func open(relativeTo", 1)[1].split(
+            "private func close()", 1
+        )[0]
+        self.assertIn("applyLatestPresentation()", opening)
+        self.assertLess(opening.index("applyLatestPresentation()"),
+                        opening.index("popover.show"))
+
+    def test_identical_status_icon_visuals_reuse_the_existing_image(self):
+        refresh = self.source.split("private func refreshStatusItem()", 1)[1]
+        self.assertIn("BatteryIcon.renderKey", refresh)
+        self.assertIn("renderedStatusIconKey", refresh)
+        self.assertIn("if key != renderedStatusIconKey", refresh)
+
     def test_first_live_sample_is_deferred_until_after_the_opening_event(self):
         clock = self.source.split("private func startDisplayClock()", 1)[1].split(
             "private func stopDisplayClock()", 1

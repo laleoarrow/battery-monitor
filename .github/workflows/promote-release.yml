@@ -6,7 +6,7 @@ on:
       version:
         description: Stable semantic version without the v prefix
         required: true
-        default: "3.0.0"
+        default: "3.0.1"
         type: string
       candidate_run_id:
         description: Successful Wattson release candidate workflow run ID
@@ -123,6 +123,7 @@ jobs:
           - Replaces the former graphical helper installer with one native PKG shared by the DMG and Homebrew.
           - Installs the app at `/Applications/Wattson.app` and safely migrates the v2 helper and launch-at-login state.
           - Ships the refined magnetic Liquid Glass mode selector, full English interface, version display, keyboard, VoiceOver, Reduce Motion, and legacy macOS fallback.
+          - Keeps that approved UI intact while avoiding closed-popover rendering, repeated menu-bar images and unchanged chart paths; full-battery breathing now stops cleanly when the popover closes.
           - Includes explicit SHA-256 and release-policy metadata.
 
           **Community build:** the app and helper are ad-hoc signed; the PKG and DMG are not Developer ID signed or Apple-notarized. Review the source and checksums before using the macOS security override.

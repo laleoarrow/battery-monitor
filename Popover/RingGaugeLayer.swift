@@ -133,7 +133,6 @@ final class RingGaugeView: PopoverSection {
         values[2].stringValue = String(format: "%.1f°C", snapshot.temperatureC)
         values[3].stringValue = "\(snapshot.cycleCount)"
 
-        rebuildPaths()
         PopoverStyle.setWithoutAnimation {
             self.charge.strokeColor = (snapshot.percent <= 20 ? PopoverStyle.red : color).cgColor
             self.charge.strokeEnd = CGFloat(snapshot.percent) / 100

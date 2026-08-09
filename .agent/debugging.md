@@ -29,10 +29,11 @@ not use system event injection or Accessibility permission.
 ## Release structure
 
 ```bash
-bash scripts/release.sh 3.0.0
+WATTSON_RELEASE_VERSION="$(tr -d '\r\n' < VERSION)"
+bash scripts/release.sh "$WATTSON_RELEASE_VERSION"
 bash scripts/verify_release.sh \
-  dist/Wattson-v3.0.0-macos-universal.pkg \
-  dist/Wattson-v3.0.0-macos-universal.dmg
+  "dist/Wattson-v${WATTSON_RELEASE_VERSION}-macos-universal.pkg" \
+  "dist/Wattson-v${WATTSON_RELEASE_VERSION}-macos-universal.dmg"
 ```
 
 This builds and mounts artifacts but does not install them. Privileged install,

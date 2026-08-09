@@ -43,6 +43,10 @@ final class FlowNodeView: NSView {
     private let icon = NSImageView()
     private let caption = NSTextField(labelWithString: "")
     private let value = NSTextField(labelWithString: "")
+    private var breathingColor: NSColor?
+#if DEBUG
+    private(set) var breathingInstallationsForTest = 0
+#endif
 
     override var isFlipped: Bool { true }
 
@@ -97,8 +101,17 @@ final class FlowNodeView: NSView {
     func setPresence(_ alpha: CGFloat) { alphaValue = alpha }
 
     func setBreathing(_ on: Bool, color: NSColor) {
-        box.layer?.removeAnimation(forKey: "breathe")
-        guard on else { return }
+        guard on else {
+            stopBreathing()
+            return
+        }
+        if let breathingColor,
+           breathingColor.isEqual(color),
+           box.layer?.animation(forKey: "breathe") != nil {
+            return
+        }
+        stopBreathing()
+        breathingColor = color
         let pulse = CABasicAnimation(keyPath: "borderColor")
         pulse.fromValue = color.withAlphaComponent(0.18).cgColor
         pulse.toValue = color.withAlphaComponent(0.85).cgColor
@@ -107,7 +120,21 @@ final class FlowNodeView: NSView {
         pulse.repeatCount = .infinity
         pulse.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         box.layer?.add(pulse, forKey: "breathe")
+#if DEBUG
+        breathingInstallationsForTest += 1
+#endif
     }
+
+    func stopBreathing() {
+        box.layer?.removeAnimation(forKey: "breathe")
+        breathingColor = nil
+    }
+
+#if DEBUG
+    var breathingAnimationCountForTest: Int {
+        box.layer?.animation(forKey: "breathe") == nil ? 0 : 1
+    }
+#endif
 }
 
 /// One pipe: a solid trough with a soft-cored light sweeping its full length,
@@ -611,7 +638,7 @@ final class PowerFlowView: PopoverSection {
             batteryNode.configure(symbol: batterySymbol, caption: "Battery · Full",
                                   value: "\(snapshot.percent) %", tint: color)
             batteryNode.setPresence(0.6)
-            batteryNode.setBreathing(true, color: color)
+            batteryNode.setBreathing(animationsEnabled, color: color)
 
         case .onBattery:
             adapterNode.configure(symbol: "powerplug.slash", caption: "Adapter",
@@ -639,10 +666,19 @@ final class PowerFlowView: PopoverSection {
             update(snapshot: latest, animated: false)
         } else {
             bundles.forEach { $0.stopFlow() }
+            [adapterNode, batteryNode, systemNode].forEach { $0.stopBreathing() }
         }
     }
 
 #if DEBUG
+    var breathingMetricsForTest: (running: Int, installations: Int) {
+        let nodes = [adapterNode, batteryNode, systemNode]
+        return (
+            nodes.reduce(0) { $0 + $1.breathingAnimationCountForTest },
+            nodes.reduce(0) { $0 + $1.breathingInstallationsForTest }
+        )
+    }
+
     func flowMetricsForTest() -> (duration: CFTimeInterval, layerSpeed: Float)? {
         bundles.compactMap { $0.flowMetricsForTest() }.first
     }

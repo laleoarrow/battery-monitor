@@ -124,6 +124,13 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("samples: [Double]", self.history)
         self.assertIn("CATransaction.setDisableActions(true)", self.history)
 
+    def test_history_skips_rebuilding_an_identical_path_and_color(self):
+        self.assertIn("lastSamples", self.history)
+        self.assertIn("lastPeak", self.history)
+        self.assertIn("lastColor", self.history)
+        self.assertIn("samples == lastSamples", self.history)
+        self.assertIn("lastColor.isEqual(color)", self.history)
+
     def test_module_visibility_defaults_on_and_is_persisted(self):
         self.assertIn("UserDefaults.standard", self.content)
         self.assertIn("register(defaults:", self.content)
@@ -134,6 +141,24 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("setAnimationsEnabled(false)", self.popover)
         self.assertIn("stopDisplayClock()", self.status)
         self.assertIn("removeAllAnimations()", self.content)
+
+    def test_full_battery_breathing_stops_and_stays_stopped_when_hidden(self):
+        idle = self.flow.split("case .pluggedIdle:", 1)[1].split(
+            "case .onBattery:", 1
+        )[0]
+        self.assertIn("setBreathing(animationsEnabled", idle)
+        disabling = self.flow.split("func setAnimationsEnabled(_ enabled: Bool)", 1)[1]
+        self.assertIn("stopBreathing", disabling)
+
+    def test_ring_paths_are_rebuilt_by_layout_not_telemetry(self):
+        layout = self.ring.split("override func layout()", 1)[1].split(
+            "private func rebuildPaths", 1
+        )[0]
+        update = self.ring.split("func update(snapshot:", 1)[1].split(
+            "private func applyRotation", 1
+        )[0]
+        self.assertIn("rebuildPaths()", layout)
+        self.assertNotIn("rebuildPaths()", update)
 
     def test_history_is_only_recorded_by_the_history_clock(self):
         self.assertIn("sampleNow(recordHistory: true)", self.status)

@@ -16,6 +16,12 @@ final class HistoryView: PopoverSection {
 
     private let caption = NSTextField(labelWithString: "Power History · 2 min")
     private let peakLabel = NSTextField(labelWithString: "")
+    private var lastSamples: [Double]?
+    private var lastPeak: Double?
+    private var lastColor: NSColor?
+#if DEBUG
+    private(set) var renderCountForTest = 0
+#endif
 
     init() {
         super.init(height: Self.preferredHeight)
@@ -65,6 +71,18 @@ final class HistoryView: PopoverSection {
     }
 
     func update(samples: [Double], peak: Double, color: NSColor) {
+        if samples == lastSamples,
+           peak == lastPeak,
+           let lastColor,
+           lastColor.isEqual(color) {
+            return
+        }
+        lastSamples = samples
+        lastPeak = peak
+        lastColor = color
+#if DEBUG
+        renderCountForTest += 1
+#endif
         peakLabel.stringValue = samples.isEmpty ? "Collecting…" : String(format: "Peak %.1f W", peak)
 
         let plot = chartRect

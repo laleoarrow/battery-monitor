@@ -60,8 +60,16 @@ if !screenLocked {
     app.finishLaunching()
 
     let p = PopoverController()
+    let fullSnapshot = PowerSnapshot(
+        percent: 100, plugged: true, adapterW: 52,
+        batteryW: 0, systemW: 52
+    )
+    p.update(snapshot: fullSnapshot, history: [50, 52], peak: 52, degraded: false)
+    check("关闭时只缓存最新数据而不渲染隐藏弹窗",
+          p.contentRenderCountForTest == 0 && p.cachedPercentForTest == 100)
     check("初始未监听外部点击", !p.isWatchingOutsideClicks)
     p.toggle(relativeTo: button)
+    check("展示前恰好渲染一次最新缓存数据", p.contentRenderCountForTest == 1)
     check("点击打开会安排一次平滑入场动画", p.entranceAnimationCountForTest == 1)
     spin(0.4)
     check("轻触图标弹窗打开", p.isShownForTest && p.isOpen)
@@ -109,6 +117,11 @@ if !screenLocked {
     p.handleOutsideClick(); spin(1.2)
     let closedAnims = p.runningAnimationCountForTest
     check("收起后动画已停", closedAnims == 0, "\(closedAnims) 个动画")
+    let closedRenderCount = p.contentRenderCountForTest
+    p.update(snapshot: fullSnapshot, history: [50, 52, 51], peak: 52, degraded: false)
+    check("满电状态在关闭后更新仍不渲染也不重启呼吸动画",
+          p.contentRenderCountForTest == closedRenderCount
+              && p.runningAnimationCountForTest == 0)
 
     // 中途重开之后动画必须恢复——迟到的 didClose 不能把它关掉
     p.toggle(relativeTo: button); spin(0.6)

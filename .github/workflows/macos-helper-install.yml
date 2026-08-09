@@ -6,7 +6,7 @@ on:
       version:
         description: Version from the repository VERSION file
         required: true
-        default: "3.0.0"
+        default: "3.0.1"
         type: string
 
 permissions:
@@ -42,6 +42,18 @@ jobs:
           set -euo pipefail
           swift test
           env -u WATTSON_RUN_INTERACTION /usr/bin/python3 -m unittest discover -s tests -v
+
+      - name: Replay real AppKit interaction and animation lifecycles
+        shell: bash
+        run: |
+          set -euo pipefail
+          /bin/bash scripts/verify_interaction.sh
+          env \
+            WATTSON_FORCE_LEGACY_KNOB=1 \
+            WATTSON_FORCE_REDUCE_MOTION=1 \
+            WATTSON_FORCE_REDUCE_TRANSPARENCY=1 \
+            /bin/bash scripts/verify_interaction.sh
+          /bin/bash scripts/verify_animation_stress.sh
 
       - name: Build and verify the release artifacts
         shell: bash

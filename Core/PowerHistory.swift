@@ -28,7 +28,15 @@ final class PowerHistory {
         return Array(storage[writeIndex..<capacity]) + Array(storage[0..<writeIndex])
     }
 
+    /// The popover needs both values together. Deriving the peak from this
+    /// materialized sequence avoids building the wrapped array a second time
+    /// on every presentation refresh.
+    var presentation: (samples: [Double], peak: Double) {
+        let samples = self.samples
+        return (samples, samples.max() ?? 0)
+    }
+
     var peak: Double {
-        samples.max() ?? 0
+        presentation.peak
     }
 }

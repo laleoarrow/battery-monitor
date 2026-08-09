@@ -13,20 +13,20 @@ flow, and system load into a live power map.
 - Reduce Motion, Reduce Transparency, keyboard, and VoiceOver support.
 - No account, analytics, telemetry, or uploaded data.
 
-## Install v3.0.0
+## Install v3.0.1
 
 Choose one route from the [latest release](https://github.com/laleoarrow/battery-monitor/releases/latest):
 
 ### DMG
 
-1. Open `Wattson-v3.0.0-macos-universal.dmg`.
-2. Double-click the enclosed `Wattson-v3.0.0-macos-universal.pkg`.
+1. Open `Wattson-v3.0.1-macos-universal.dmg`.
+2. Double-click the enclosed `Wattson-v3.0.1-macos-universal.pkg`.
 3. Follow macOS Installer and approve the standard administrator prompt.
 4. Open Wattson from `/Applications` after installation finishes.
 
 ### Direct PKG
 
-Download and open `Wattson-v3.0.0-macos-universal.pkg`. It is the exact same
+Download and open `Wattson-v3.0.1-macos-universal.pkg`. It is the exact same
 installer package contained in the DMG.
 
 ### Homebrew
@@ -104,14 +104,14 @@ python3 -m unittest discover -s tests -v
 Build the exact community release artifacts:
 
 ```bash
-bash scripts/release.sh 3.0.0
+bash scripts/release.sh 3.0.1
 ```
 
 Outputs:
 
-- `dist/Wattson-v3.0.0-macos-universal.pkg`
-- `dist/Wattson-v3.0.0-macos-universal.dmg`
-- `dist/Wattson-v3.0.0-release-info.txt`
+- `dist/Wattson-v3.0.1-macos-universal.pkg`
+- `dist/Wattson-v3.0.1-macos-universal.dmg`
+- `dist/Wattson-v3.0.1-release-info.txt`
 - `dist/SHA256SUMS.txt`
 
 The release build is universal (`arm64` + `x86_64`) and targets macOS 12.

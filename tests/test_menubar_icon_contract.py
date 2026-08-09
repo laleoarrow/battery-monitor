@@ -22,8 +22,17 @@ class BatteryIconContractTests(unittest.TestCase):
     def test_pressed_state_falls_back_to_template(self):
         # A colored image does not invert under the selection highlight.
         self.assertIn("pressed", self.source)
-        match = re.search(r"if pressed \{[^}]*isTemplate = true", self.source, re.DOTALL)
-        self.assertIsNotNone(match, "pressed must force template rendering")
+        key = self.source.split("static func renderKey", 1)[1].split(
+            "static func image", 1
+        )[0]
+        self.assertIn("if pressed", key)
+        self.assertIn(".template", key)
+
+    def test_render_key_tracks_every_input_that_can_change_the_pixels(self):
+        self.assertIn("struct RenderKey: Equatable", self.source)
+        for field in ("percent", "plugged", "tintRole", "appearanceName",
+                      "increasedContrast"):
+            self.assertIn(field, self.source)
 
     def test_color_priority_is_low_power_then_low_battery_then_charging(self):
         low_power = self.source.index("systemYellow")

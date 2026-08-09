@@ -16,5 +16,5 @@ npm run export:pages
 validated static site to the repository's `docs/` directory.
 
 The page resolves the current stable release through GitHub's public API and
-links directly to the universal DMG and PKG assets. Publish v3.0.0 before the
+links directly to the universal DMG and PKG assets. Publish v3.0.1 before the
 site so the API cannot surface an older Apple-silicon-only release.
