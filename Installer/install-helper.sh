@@ -268,8 +268,8 @@ fi
 "$HELPER_BIN" --health-probe
 
 # This is deliberately the final fallible installation step. The new app has
-# already passed its menu-bar readiness check, and the helper has answered a
-# console-user socket probe while both rollback backups still exist.
+# already passed its menu-bar readiness check, and the helper has authenticated
+# and answered a console-user socket probe while both rollback backups still exist.
 if [[ -d "$DUPLICATE_APP" && ! -L "$DUPLICATE_APP" ]]; then
     duplicate_info="$DUPLICATE_APP/Contents/Info.plist"
     if [[ -f "$duplicate_info" && ! -L "$duplicate_info" ]]; then

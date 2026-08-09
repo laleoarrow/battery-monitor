@@ -42,7 +42,19 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn("dropHealthProbePrivilegesToConsoleUser", self.source)
         self.assertIn("setgid(gid)", self.source)
         self.assertIn("setuid(uid)", self.source)
-        self.assertIn('response["modeVerified"] as? Bool == true', self.source)
+        self.assertIn('Data(#"{\"op\":\"health\"}"#.utf8)', self.source)
+        self.assertIn('response["health"] as? Bool == true', self.source)
+
+    def test_health_request_is_fixed_and_read_only(self):
+        health = self.source.split('case "health":', 1)[1].split(
+            'case "getMode":', 1
+        )[0]
+        self.assertIn('#"{\"ok\":true,\"health\":true}"#', health)
+        self.assertNotIn("livePowerMode", health)
+        self.assertNotIn("powerPreferences", health)
+        self.assertNotIn("runPmset", health)
+        self.assertNotIn("setSystemBatteryIconHidden", health)
+        self.assertNotIn("setLaunchAtLoginEnabled", health)
 
     def test_pmset_arguments_are_constants(self):
         # The whole security argument rests on this: the request selects which
@@ -72,6 +84,7 @@ class HelperContractTests(unittest.TestCase):
         self.assertEqual(set_mode.count("livePowerMode()"), 1)
 
     def test_rejects_anything_outside_the_whitelist(self):
+        self.assertIn('case "health"', self.source)
         self.assertIn('case "getMode"', self.source)
         self.assertIn('case "setMode"', self.source)
         self.assertIn('case "getSystemBatteryIconHidden"', self.source)

@@ -28,6 +28,8 @@ jobs:
         shell: bash
         run: |
           env -u WATTSON_RUN_INTERACTION python3 -m unittest -v \
+            tests.test_energy_mode_contract \
+            tests.test_helper_contract \
             tests.test_install_helper_behavior \
             tests.test_install_migration_contract \
             tests.test_install_script_contract \

@@ -267,6 +267,8 @@ class InstallMigrationContractTests(unittest.TestCase):
     def test_success_requires_helper_and_menu_bar_readiness(self):
         self.assertIn('"$HELPER_BIN" --health-probe', self.installer_helper)
         self.assertIn("--health-probe", self.helper_source)
+        self.assertIn('case "health"', self.helper_source)
+        self.assertIn('response["health"] as? Bool == true', self.helper_source)
         self.assertIn("modeVerified", self.helper_source)
         self.assertIn("dropHealthProbePrivilegesToConsoleUser", self.helper_source)
         self.assertIn("--installer-ready-token=", self.installer)

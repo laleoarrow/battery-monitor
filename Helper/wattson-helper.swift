@@ -136,8 +136,9 @@ private func modeReply(_ mode: Mode) -> String {
 }
 
 /// The installer runs this client mode as root while its rollback backup still
-/// exists. It proves the newly bootstrapped service can accept a connection and
-/// return live, verified state rather than merely appearing in launchctl.
+/// exists. It proves the newly bootstrapped service can authenticate the console
+/// user and answer over its socket without requiring battery hardware to expose
+/// a power-mode value.
 private func helperHealthProbeOnce() -> Bool {
     let fd = socket(AF_UNIX, SOCK_STREAM, 0)
     guard fd >= 0 else { return false }
@@ -166,7 +167,7 @@ private func helperHealthProbeOnce() -> Bool {
     }
     guard connected == 0 else { return false }
 
-    let request = Data(#"{"op":"getMode"}"#.utf8)
+    let request = Data(#"{"op":"health"}"#.utf8)
     let wrote = request.withUnsafeBytes { write(fd, $0.baseAddress, request.count) }
     guard wrote == request.count else { return false }
 
@@ -177,7 +178,7 @@ private func helperHealthProbeOnce() -> Bool {
               with: Data(buffer[0..<count])
           ) as? [String: Any] else { return false }
     return response["ok"] as? Bool == true
-        && response["modeVerified"] as? Bool == true
+        && response["health"] as? Bool == true
 }
 
 private func newlyInstalledHelperIsHealthy() -> Bool {
@@ -515,6 +516,8 @@ private func handle(_ fd: Int32) {
     var reply = #"{"ok":false,"error":"rejected"}"#
 
     switch op {
+    case "health":
+        reply = #"{"ok":true,"health":true}"#
     case "getMode":
         if let mode = livePowerMode() {
             reply = modeReply(mode)
