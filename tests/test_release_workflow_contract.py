@@ -6,9 +6,18 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 PROMOTE = (ROOT / ".github/workflows/promote-release.yml").read_text(encoding="utf-8")
 PAGES = (ROOT / ".github/workflows/pages.yml").read_text(encoding="utf-8")
 HOMEBREW = (ROOT / ".github/workflows/homebrew-tap.yml").read_text(encoding="utf-8")
+CI = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+CANDIDATE = (ROOT / ".github/workflows/macos-helper-install.yml").read_text(encoding="utf-8")
 
 
 class ReleaseWorkflowContractTests(unittest.TestCase):
+    def test_macos_workflows_use_the_tk_capable_system_python(self):
+        command = "/usr/bin/python3 -m unittest discover -s tests -v"
+        self.assertIn(command, CI)
+        self.assertIn(command, CANDIDATE)
+        self.assertNotIn(" WATTSON_RUN_INTERACTION python3 ", CI)
+        self.assertNotIn(" WATTSON_RUN_INTERACTION python3 ", CANDIDATE)
+
     def test_promotion_requires_the_successful_main_candidate_run(self):
         self.assertIn("candidate_run_id:", PROMOTE)
         self.assertIn('actions/runs/$CANDIDATE_RUN_ID', PROMOTE)

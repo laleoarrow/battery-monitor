@@ -41,7 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           swift test
-          env -u WATTSON_RUN_INTERACTION python3 -m unittest discover -s tests -v
+          env -u WATTSON_RUN_INTERACTION /usr/bin/python3 -m unittest discover -s tests -v
 
       - name: Build and verify the release artifacts
         shell: bash

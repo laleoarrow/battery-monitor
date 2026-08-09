@@ -31,7 +31,7 @@ jobs:
 
       - name: Run the default headless Python suite
         shell: bash
-        run: env -u WATTSON_RUN_INTERACTION python3 -m unittest discover -s tests -v
+        run: env -u WATTSON_RUN_INTERACTION /usr/bin/python3 -m unittest discover -s tests -v
 
   website:
     name: Website build, test, lint, and export
