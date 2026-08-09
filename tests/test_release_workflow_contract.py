@@ -6,6 +6,9 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 PROMOTE = (ROOT / ".github/workflows/promote-release.yml").read_text(encoding="utf-8")
 PAGES = (ROOT / ".github/workflows/pages.yml").read_text(encoding="utf-8")
 HOMEBREW = (ROOT / ".github/workflows/homebrew-tap.yml").read_text(encoding="utf-8")
+HOMEBREW_INSTALL = (
+    ROOT / ".github/workflows/homebrew-install-test.yml"
+).read_text(encoding="utf-8")
 CI = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
 CANDIDATE = (ROOT / ".github/workflows/macos-helper-install.yml").read_text(encoding="utf-8")
 
@@ -58,6 +61,30 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("depends_on macos: :monterey", HOMEBREW)
         self.assertNotIn('desc "Native macOS', HOMEBREW)
         self.assertNotIn('depends_on macos: ">= :monterey"', HOMEBREW)
+
+    def test_public_homebrew_install_uses_real_hosted_runners(self):
+        self.assertIn("workflow_dispatch:", HOMEBREW_INSTALL)
+        self.assertIn("release_tag:", HOMEBREW_INSTALL)
+        self.assertIn("runner: macos-15-intel", HOMEBREW_INSTALL)
+        self.assertIn("runner: macos-26", HOMEBREW_INSTALL)
+        self.assertIn('RUNNER_ENVIRONMENT:-}" == "github-hosted"', HOMEBREW_INSTALL)
+        self.assertIn("releases/tags/$RELEASE_TAG", HOMEBREW_INSTALL)
+        self.assertIn("git/ref/tags/$RELEASE_TAG", HOMEBREW_INSTALL)
+        self.assertIn("'.casks[0].version'", HOMEBREW_INSTALL)
+
+    def test_public_homebrew_install_covers_the_privileged_lifecycle(self):
+        install = "brew install --cask laleoarrow/tap/wattson"
+        uninstall = "brew uninstall --cask laleoarrow/tap/wattson"
+        self.assertIn(install, HOMEBREW_INSTALL)
+        self.assertIn(uninstall, HOMEBREW_INSTALL)
+        self.assertNotIn("--no-quarantine", HOMEBREW_INSTALL)
+        self.assertIn('"$HELPER_BIN" --health-probe', HOMEBREW_INSTALL)
+        self.assertIn("0:0:544", HOMEBREW_INSTALL)
+        self.assertIn("0:0:644", HOMEBREW_INSTALL)
+        self.assertIn('pkgutil --pkg-info "$RECEIPT"', HOMEBREW_INSTALL)
+        self.assertIn("assert_helper_absent", HOMEBREW_INSTALL)
+        self.assertIn("assert_login_agent_absent", HOMEBREW_INSTALL)
+        self.assertIn("CLEANUP_REQUIRED=1", HOMEBREW_INSTALL)
 
 
 if __name__ == "__main__":

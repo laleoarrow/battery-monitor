@@ -1,0 +1,272 @@
+name: Test public Homebrew install
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing stable Wattson release tag
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homebrew-install-${{ inputs.release_tag }}
+  cancel-in-progress: false
+
+jobs:
+  install:
+    name: Homebrew lifecycle on ${{ matrix.runner }}
+    if: github.ref == 'refs/heads/main'
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15-intel
+            architecture: x86_64
+          - runner: macos-26
+            architecture: arm64
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
+      EXPECTED_ARCHITECTURE: ${{ matrix.architecture }}
+      HOMEBREW_NO_ENV_HINTS: "1"
+    steps:
+      - name: Validate the hosted runner and stable release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          [[ "${GITHUB_ACTIONS:-}" == "true" ]]
+          [[ "${RUNNER_OS:-}" == "macOS" ]]
+          [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]]
+          [[ "$(/usr/bin/uname -m)" == "$EXPECTED_ARCHITECTURE" ]]
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          /usr/bin/sudo -n /usr/bin/true
+          /usr/bin/command -v brew >/dev/null
+
+          readonly VERSION="${RELEASE_TAG#v}"
+          readonly PKG_NAME="Wattson-v${VERSION}-macos-universal.pkg"
+          readonly RELEASE_JSON="$RUNNER_TEMP/wattson-stable-release.json"
+          readonly TAG_JSON="$RUNNER_TEMP/wattson-stable-tag.json"
+
+          gh api \
+            --header 'Accept: application/vnd.github+json' \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" \
+            > "$RELEASE_JSON"
+          [[ "$(/usr/bin/jq -r .tag_name "$RELEASE_JSON")" == "$RELEASE_TAG" ]]
+          [[ "$(/usr/bin/jq -r .draft "$RELEASE_JSON")" == "false" ]]
+          [[ "$(/usr/bin/jq -r .prerelease "$RELEASE_JSON")" == "false" ]]
+          /usr/bin/jq -e \
+            --arg name "$PKG_NAME" \
+            '[.assets[] | select(.name == $name)] | length == 1' \
+            "$RELEASE_JSON" >/dev/null
+
+          gh api \
+            --header 'Accept: application/vnd.github+json' \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" \
+            > "$TAG_JSON"
+          [[ "$(/usr/bin/jq -r .ref "$TAG_JSON")" == "refs/tags/$RELEASE_TAG" ]]
+
+          echo "WATTSON_VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Validate the public Homebrew cask
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          readonly CASK_JSON="$RUNNER_TEMP/wattson-public-cask.json"
+          readonly EXPECTED_URL="https://github.com/laleoarrow/battery-monitor/releases/download/${RELEASE_TAG}/Wattson-v${WATTSON_VERSION}-macos-universal.pkg"
+
+          brew tap laleoarrow/tap
+          brew info --cask --json=v2 laleoarrow/tap/wattson > "$CASK_JSON"
+          [[ "$(/usr/bin/jq -r '.casks | length' "$CASK_JSON")" == "1" ]]
+          [[ "$(/usr/bin/jq -r '.casks[0].token' "$CASK_JSON")" == "wattson" ]]
+          [[ "$(/usr/bin/jq -r '.casks[0].version' "$CASK_JSON")" == "$WATTSON_VERSION" ]]
+          [[ "$(/usr/bin/jq -r '.casks[0].url' "$CASK_JSON")" == "$EXPECTED_URL" ]]
+
+      - name: Test public cask install and uninstall
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          readonly APP_DIR="/Applications/Wattson.app"
+          readonly APP_BIN="$APP_DIR/Contents/MacOS/Wattson"
+          readonly HELPER_LABEL="com.leoarrow.wattson.helper"
+          readonly HELPER_TARGET="system/$HELPER_LABEL"
+          readonly HELPER_BIN="/Library/PrivilegedHelperTools/$HELPER_LABEL"
+          readonly HELPER_PLIST="/Library/LaunchDaemons/$HELPER_LABEL.plist"
+          readonly HELPER_SOCKET="/var/run/wattson-helper.sock"
+          readonly RECEIPT="com.leoarrow.wattson.pkg"
+          readonly LOGIN_LABEL="com.leoarrow.wattson.login"
+          LOGIN_TARGET="gui/$(/usr/bin/id -u)/$LOGIN_LABEL"
+          readonly LOGIN_TARGET
+          readonly LOGIN_PLIST="$HOME/Library/LaunchAgents/$LOGIN_LABEL.plist"
+          CLEANUP_REQUIRED=0
+
+          fail() {
+            echo "Homebrew lifecycle test: $*" >&2
+            exit 1
+          }
+
+          probe_helper_service() {
+            local output
+            if output="$(
+              /usr/bin/sudo -n /usr/bin/env -i \
+                PATH=/usr/bin:/bin:/usr/sbin:/sbin \
+                LANG=C \
+                LC_ALL=C \
+                /bin/launchctl print "$HELPER_TARGET" 2>&1
+            )"; then
+              return 0
+            fi
+            case "$output" in
+              *"Could not find service"*|*"Could not find specified service"*) return 1 ;;
+              *) echo "Unexpected launchd query failure: $output" >&2; return 2 ;;
+            esac
+          }
+
+          assert_helper_absent() {
+            local status
+            if probe_helper_service; then
+              fail "helper service remains registered"
+            else
+              status="$?"
+            fi
+            [[ "$status" == "1" ]] || fail "could not confirm helper service removal"
+          }
+
+          assert_login_agent_absent() {
+            local output
+            local status
+            if output="$(/bin/launchctl print "$LOGIN_TARGET" 2>&1)"; then
+              fail "login agent remains registered"
+            else
+              status="$?"
+            fi
+            case "$output" in
+              *"Could not find service"*|*"Could not find specified service"*) ;;
+              *) fail "could not confirm login agent removal (status=$status): $output" ;;
+            esac
+          }
+
+          assert_helper_enabled() {
+            local disabled_state
+            disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"
+            case "$disabled_state" in
+              *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*)
+                fail "helper service is disabled"
+                ;;
+            esac
+          }
+
+          assert_quarantine_absent() {
+            local attributes
+            attributes="$(/usr/bin/sudo -n /usr/bin/xattr "$1")"
+            case $'\n'"$attributes"$'\n' in
+              *$'\ncom.apple.quarantine\n'*) fail "installed item retains quarantine: $1" ;;
+            esac
+          }
+
+          collect_diagnostics() {
+            echo "::group::Wattson Homebrew diagnostics"
+            brew config || true
+            brew info --cask laleoarrow/tap/wattson || true
+            brew list --cask --versions wattson || true
+            /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" || true
+            /usr/bin/sudo -n /bin/launchctl print-disabled system || true
+            /usr/bin/sudo -n /usr/bin/xattr "$HELPER_BIN" || true
+            /usr/bin/sudo -n /usr/bin/xattr "$HELPER_PLIST" || true
+            /usr/bin/sudo -n /usr/bin/tail -n 500 /var/log/install.log || true
+            /usr/bin/log show --style compact --last 10m \
+              --predicate '(process == "wattson-helper") OR (eventMessage CONTAINS[c] "Wattson")' \
+              || true
+            echo "::endgroup::"
+          }
+
+          cleanup() {
+            local status="$?"
+            trap - EXIT
+            set +e
+            if [[ "$status" != "0" ]]; then
+              collect_diagnostics
+            fi
+            if [[ "$CLEANUP_REQUIRED" == "1" ]]; then
+              brew uninstall --cask --force laleoarrow/tap/wattson >/dev/null 2>&1 || true
+              /bin/launchctl bootout "$LOGIN_TARGET" >/dev/null 2>&1 || true
+              /bin/rm -f -- "$LOGIN_PLIST"
+              /usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true
+              /usr/bin/sudo -n /bin/launchctl enable "$HELPER_TARGET" >/dev/null 2>&1 || true
+              /usr/bin/sudo -n /bin/rm -f -- "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN"
+              /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR"
+              /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true
+            fi
+            exit "$status"
+          }
+          trap cleanup EXIT
+
+          [[ "${GITHUB_ACTIONS:-}" == "true" ]] || fail "GitHub Actions is required"
+          [[ "${RUNNER_OS:-}" == "macOS" ]] || fail "a macOS runner is required"
+          [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]] \
+            || fail "a GitHub-hosted ephemeral runner is required"
+          [[ "$(/usr/bin/uname -m)" == "$EXPECTED_ARCHITECTURE" ]] \
+            || fail "runner architecture does not match the matrix"
+          /usr/bin/sudo -n /usr/bin/true
+
+          for initial_path in \
+            "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LOGIN_PLIST"; do
+            [[ ! -e "$initial_path" && ! -L "$initial_path" ]] \
+              || fail "refusing to touch pre-existing path: $initial_path"
+          done
+          if /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then
+            fail "fresh runner unexpectedly has a Wattson package receipt"
+          fi
+          assert_helper_absent
+          assert_login_agent_absent
+          assert_helper_enabled
+
+          CLEANUP_REQUIRED=1
+          brew install --cask laleoarrow/tap/wattson
+
+          [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]] || fail "app was not installed"
+          [[ -f "$APP_BIN" && ! -L "$APP_BIN" ]] || fail "app executable is missing"
+          [[ -f "$HELPER_BIN" && ! -L "$HELPER_BIN" ]] || fail "helper is missing"
+          [[ -f "$HELPER_PLIST" && ! -L "$HELPER_PLIST" ]] || fail "helper plist is missing"
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]]
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]]
+          [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_BIN")" == "0:0:544" ]]
+          [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_PLIST")" == "0:0:644" ]]
+          /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
+          /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64
+          /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null
+          /usr/bin/sudo -n "$HELPER_BIN" --health-probe
+          assert_helper_enabled
+          assert_quarantine_absent "$HELPER_BIN"
+          assert_quarantine_absent "$HELPER_PLIST"
+          [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]]
+          [[ "$(brew list --cask --versions wattson)" == "wattson $WATTSON_VERSION" ]]
+
+          brew uninstall --cask laleoarrow/tap/wattson
+
+          for removed_path in \
+            "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LOGIN_PLIST"; do
+            [[ ! -e "$removed_path" && ! -L "$removed_path" ]] \
+              || fail "Homebrew uninstall left $removed_path"
+          done
+          if /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then
+            fail "Homebrew uninstall left the package receipt"
+          fi
+          if brew list --cask --versions wattson >/dev/null 2>&1; then
+            fail "Homebrew still reports Wattson as installed"
+          fi
+          assert_helper_absent
+          assert_login_agent_absent
+          assert_helper_enabled
+
+          CLEANUP_REQUIRED=0
+          echo "Public Homebrew cask install, helper health, and uninstall cleanup passed."
