@@ -53,6 +53,12 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("ref: ${{ inputs.release_tag }}", PAGES)
         self.assertIn('== "false"', PAGES)
 
+    def test_homebrew_cask_uses_current_portable_syntax(self):
+        self.assertIn('desc "Real-time menu-bar power-flow monitor"', HOMEBREW)
+        self.assertIn("depends_on macos: :monterey", HOMEBREW)
+        self.assertNotIn('desc "Native macOS', HOMEBREW)
+        self.assertNotIn('depends_on macos: ">= :monterey"', HOMEBREW)
+
 
 if __name__ == "__main__":
     unittest.main()

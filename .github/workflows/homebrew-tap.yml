@@ -114,10 +114,10 @@ jobs:
             url "https://github.com/laleoarrow/battery-monitor/releases/download/v#{version}/Wattson-v#{version}-macos-universal.pkg",
                 verified: "github.com/laleoarrow/battery-monitor/"
             name "Wattson"
-            desc "Native macOS menu-bar power-flow monitor"
+            desc "Real-time menu-bar power-flow monitor"
             homepage "https://github.com/laleoarrow/battery-monitor"
 
-            depends_on macos: ">= :monterey"
+            depends_on macos: :monterey
 
             pkg "Wattson-v#{version}-macos-universal.pkg"
 
