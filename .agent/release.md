@@ -65,6 +65,23 @@ closed without pushing or dispatching later stages. Sync that cask from a
 trusted maintainer checkout and require the separate `laleoarrow/homebrew-tap`
 CI run to pass before continuing.
 
+After a trusted manual tap sync, push the current `main` commit to the recovery
+branch `homebrew-ready/v<version>`. That branch is only a signal to resume the
+public validation chain: the workflow derives the release tag from the branch,
+requires the recovery commit to equal the current remote `main` SHA and requires
+a successful Headless CI `push` run for that same SHA. It then downloads the
+stable PKG, DMG, release metadata, and checksum manifest, verifies all checksums,
+requires the public cask to contain that exact version and PKG SHA, and requires
+the exact public tap commit's `tests.yml` push run to have completed successfully
+before starting either hosted-macOS lifecycle job. The recovery tag must match
+the `VERSION` file at current `main`; each runner disables Homebrew auto-update
+and requires its tapped repository to remain at that exact tested commit.
+
+A manual `workflow_dispatch` from `main` with an explicit release tag remains
+the audited fallback and passes through the same fail-closed checks. Neither
+entry path may mark the release latest or dispatch Pages until both the Intel
+and Apple-silicon public install/helper/uninstall lifecycles succeed.
+
 The website reads GitHub's stable `releases/latest`; publish v3 before deploying
 the site so it cannot advertise an older architecture-limited release.
 

@@ -96,6 +96,97 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("git/ref/tags/$RELEASE_TAG", HOMEBREW_INSTALL)
         self.assertIn("'.casks[0].version'", HOMEBREW_INSTALL)
 
+    def test_homebrew_recovery_resolves_the_tag_from_the_current_main_sha(self):
+        prepare = HOMEBREW_INSTALL.split("  prepare:", 1)[1].split(
+            "\n  install:", 1
+        )[0]
+        self.assertIn("push:\n    branches:\n      - 'homebrew-ready/v*'", HOMEBREW_INSTALL)
+        self.assertIn(
+            "github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'",
+            prepare,
+        )
+        self.assertIn("push:refs/heads/homebrew-ready/v*", prepare)
+        self.assertIn(
+            'RELEASE_TAG="${GITHUB_REF#refs/heads/homebrew-ready/}"', prepare
+        )
+        self.assertIn('RELEASE_TAG="$REQUESTED_TAG"', prepare)
+        self.assertIn("release_tag: ${{ steps.resolve.outputs.release_tag }}", prepare)
+        self.assertIn("git/ref/heads/main", prepare)
+        self.assertIn('[[ "$GITHUB_SHA" == "$MAIN_SHA" ]]', prepare)
+        self.assertIn(
+            "raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/VERSION",
+            prepare,
+        )
+        self.assertIn('[[ "$RELEASE_TAG" == "v$SOURCE_VERSION" ]]', prepare)
+
+    def test_homebrew_recovery_requires_successful_headless_ci_on_the_same_sha(self):
+        prepare = HOMEBREW_INSTALL.split("  prepare:", 1)[1].split(
+            "\n  install:", 1
+        )[0]
+        self.assertIn("actions/workflows/ci.yml/runs", prepare)
+        self.assertIn("-f branch=main", prepare)
+        self.assertIn("-f event=push", prepare)
+        self.assertIn('-f head_sha="$GITHUB_SHA"', prepare)
+        self.assertIn(".head_sha == $sha", prepare)
+        self.assertIn('.head_branch == "main"', prepare)
+        self.assertIn('.event == "push"', prepare)
+        self.assertIn('.status == "completed"', prepare)
+        self.assertIn('.conclusion == "success"', prepare)
+
+    def test_homebrew_recovery_revalidates_release_cask_and_exact_tap_ci(self):
+        prepare = HOMEBREW_INSTALL.split("  prepare:", 1)[1].split(
+            "\n  install:", 1
+        )[0]
+        for asset in (
+            'PKG_NAME="Wattson-v${VERSION}-macos-universal.pkg"',
+            'DMG_NAME="Wattson-v${VERSION}-macos-universal.dmg"',
+            'INFO_NAME="Wattson-v${VERSION}-release-info.txt"',
+            'CHECKSUM_NAME="SHA256SUMS.txt"',
+        ):
+            self.assertIn(asset, prepare)
+        self.assertIn("releases/tags/$RELEASE_TAG", prepare)
+        self.assertIn('.draft "$RELEASE_JSON")" == "false"', prepare)
+        self.assertIn('.prerelease "$RELEASE_JSON")" == "false"', prepare)
+        self.assertIn(
+            'for asset_name in "$PKG_NAME" "$DMG_NAME" "$INFO_NAME" "$CHECKSUM_NAME"',
+            prepare,
+        )
+        self.assertIn('/usr/bin/sha256sum -c "$CHECKSUM_NAME"', prepare)
+        self.assertIn("homebrew-tap/git/ref/heads/main", prepare)
+        self.assertIn("homebrew-tap/$TAP_SHA/Casks/wattson.rb", prepare)
+        self.assertIn('version \\"$VERSION\\"', prepare)
+        self.assertIn('sha256 \\"$EXPECTED_SHA\\"', prepare)
+        self.assertIn(
+            "actions/workflows/tests.yml/runs?event=push&head_sha=$TAP_SHA", prepare
+        )
+        self.assertIn(".head_sha == $sha", prepare)
+        self.assertIn('.head_branch == "main"', prepare)
+        self.assertIn('.event == "push"', prepare)
+        self.assertIn('.status == "completed"', prepare)
+        self.assertIn('.conclusion == "success"', prepare)
+        self.assertIn('echo "tap_sha=$TAP_SHA" >> "$GITHUB_OUTPUT"', prepare)
+        self.assertIn('echo "pkg_sha=$EXPECTED_SHA" >> "$GITHUB_OUTPUT"', prepare)
+
+        install = HOMEBREW_INSTALL.split("\n  install:", 1)[1].split(
+            "\n  deploy-pages:", 1
+        )[0]
+        self.assertIn("needs: prepare", install)
+        self.assertIn(
+            "RELEASE_TAG: ${{ needs.prepare.outputs.release_tag }}", install
+        )
+        self.assertIn(
+            "EXPECTED_TAP_SHA: ${{ needs.prepare.outputs.tap_sha }}", install
+        )
+        self.assertIn(
+            "EXPECTED_PKG_SHA: ${{ needs.prepare.outputs.pkg_sha }}", install
+        )
+        self.assertIn('HOMEBREW_NO_AUTO_UPDATE: "1"', install)
+        self.assertIn('git -C "$TAP_REPOSITORY" rev-parse HEAD', install)
+        self.assertIn('[[ "$CURRENT_TAP_SHA" == "$EXPECTED_TAP_SHA" ]]', install)
+        self.assertIn('sha256 \\"$EXPECTED_PKG_SHA\\"', install)
+        self.assertIn("'.casks[0].sha256'", install)
+        self.assertNotIn("HOMEBREW_TAP_TOKEN", HOMEBREW_INSTALL)
+
     def test_public_homebrew_success_gates_the_pages_deployment(self):
         self.assertIn("actions: write", HOMEBREW)
         self.assertIn("Verify the public cask", HOMEBREW)
@@ -104,12 +195,15 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("homebrew-install-test.yml", HOMEBREW)
         self.assertIn('version \\"$VERSION\\"', HOMEBREW)
         self.assertIn('sha256 \\"$EXPECTED_SHA\\"', HOMEBREW)
-        self.assertIn("deploy-pages:", HOMEBREW_INSTALL)
-        self.assertIn("needs: install", HOMEBREW_INSTALL)
-        self.assertIn("if: success() && github.ref == 'refs/heads/main'", HOMEBREW_INSTALL)
-        self.assertIn("-f make_latest=true", HOMEBREW_INSTALL)
-        self.assertIn("releases/latest", HOMEBREW_INSTALL)
-        self.assertIn("gh workflow run pages.yml", HOMEBREW_INSTALL)
+        deploy = HOMEBREW_INSTALL.split("  deploy-pages:", 1)[1]
+        self.assertIn("needs: [prepare, install]", deploy)
+        self.assertIn("if: success()", deploy)
+        self.assertIn(
+            "RELEASE_TAG: ${{ needs.prepare.outputs.release_tag }}", deploy
+        )
+        self.assertIn("-f make_latest=true", deploy)
+        self.assertIn("releases/latest", deploy)
+        self.assertIn("gh workflow run pages.yml", deploy)
 
     def test_public_homebrew_install_covers_the_privileged_lifecycle(self):
         install = "brew install --cask laleoarrow/tap/wattson"
