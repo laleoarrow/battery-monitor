@@ -7,6 +7,7 @@ const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
 const RELEASE_API =
   "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
 const FALLBACK_VERSION = "v3.0.1";
+const FALLBACK_ASSET_BASE = `${GITHUB_REPO}/releases/download/${FALLBACK_VERSION}`;
 const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
 
 type ReleaseAsset = {
@@ -29,9 +30,9 @@ type ReleaseDetails = {
 };
 
 const fallbackRelease: ReleaseDetails = {
-  dmgUrl: RELEASES_URL,
+  dmgUrl: `${FALLBACK_ASSET_BASE}/Wattson-${FALLBACK_VERSION}-macos-universal.dmg`,
   htmlUrl: RELEASES_URL,
-  pkgUrl: RELEASES_URL,
+  pkgUrl: `${FALLBACK_ASSET_BASE}/Wattson-${FALLBACK_VERSION}-macos-universal.pkg`,
   source: "fallback",
   version: FALLBACK_VERSION,
 };
@@ -288,7 +289,7 @@ export default function Home() {
         <section className="signal-strip" aria-label="Product highlights">
           <div>
             <strong>1 s</strong>
-            <span>live refresh</span>
+            <span>refresh while open</span>
           </div>
           <div>
             <strong>2 min</strong>
@@ -327,7 +328,7 @@ export default function Home() {
               <h3>Power, in motion</h3>
               <p>
                 Follow energy from adapter to battery to system load. Charging,
-                full, battery, and mixed-power states each get a distinct read.
+                full, on-battery, and mixed-power states each get a distinct read.
               </p>
             </article>
 
@@ -356,8 +357,8 @@ export default function Home() {
               <span className="feature-number">03</span>
               <h3>Control in one click</h3>
               <p>
-                Switch energy modes and manage the system battery icon without
-                digging through System Settings.
+                Switch Auto or Low Power, use High Power where supported, and
+                manage the system battery icon without opening System Settings.
               </p>
             </article>
 
@@ -389,7 +390,7 @@ export default function Home() {
                 <span className="live-dot" />
                 Latest {versionLabel}
                 <small>
-                  {release.source === "live" ? "checked on GitHub" : "fallback"}
+                  {release.source === "live" ? "checked on GitHub" : "stable release"}
                 </small>
               </div>
             </div>
@@ -461,10 +462,11 @@ export default function Home() {
                 <span className="trust-eyebrow">Community build · Know what you install</span>
                 <h3>Transparent about trust.</h3>
                 <p>
-                  Current downloads are ad-hoc signed and are not Apple-notarized.
-                  macOS may show a Gatekeeper warning; use Finder’s Control-click
-                  → Open only if you trust the release. Review the source and
-                  compare the published SHA-256 checksum before installing.
+                  The app and helper are ad-hoc signed; the PKG and DMG are
+                  unsigned and not Apple-notarized. macOS may show a Gatekeeper
+                  warning; use Finder’s Control-click → Open only if you trust
+                  the release. Review the source and compare the published
+                  SHA-256 checksum before installing.
                 </p>
               </div>
               <a href={`${GITHUB_REPO}/releases`} rel="noreferrer" target="_blank">

@@ -551,7 +551,7 @@ jobs:
           done
           [[ "$latest_matches" == "1" ]]
 
-      - name: Dispatch the tag-pinned Pages deployment
+      - name: Dispatch the stable-release Pages deployment
         shell: bash
         run: |
           set -euo pipefail

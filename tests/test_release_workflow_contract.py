@@ -73,12 +73,26 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
             self.assertIn("releases/tags/$RELEASE_TAG", workflow)
             self.assertIn('== "false"', workflow)
 
-    def test_pages_requires_explicit_tag_pinned_promotion(self):
+    def test_pages_requires_explicit_stable_release_promotion(self):
         self.assertNotIn("\n  release:", PAGES)
         self.assertNotIn("\n  push:", PAGES)
         self.assertIn("workflow_dispatch:", PAGES)
-        self.assertIn("ref: ${{ inputs.release_tag }}", PAGES)
+        self.assertIn("ref: ${{ github.sha }}", PAGES)
+        self.assertNotIn("ref: ${{ inputs.release_tag }}", PAGES)
         self.assertIn('== "false"', PAGES)
+
+    def test_pages_deploys_the_current_tested_main_site(self):
+        self.assertIn("git/ref/heads/main", PAGES)
+        self.assertIn('[[ "$GITHUB_SHA" == "$MAIN_SHA" ]]', PAGES)
+        self.assertIn("actions/workflows/ci.yml/runs", PAGES)
+        self.assertIn("-f branch=main", PAGES)
+        self.assertIn("-f event=push", PAGES)
+        self.assertIn('-f head_sha="$GITHUB_SHA"', PAGES)
+        self.assertIn(".head_sha == $sha", PAGES)
+        self.assertIn('.head_branch == "main"', PAGES)
+        self.assertIn('.event == "push"', PAGES)
+        self.assertIn('.status == "completed"', PAGES)
+        self.assertIn('.conclusion == "success"', PAGES)
 
     def test_homebrew_cask_uses_current_portable_syntax(self):
         self.assertIn('desc "Real-time menu-bar power-flow monitor"', HOMEBREW)

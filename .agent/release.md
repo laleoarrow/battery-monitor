@@ -48,7 +48,9 @@ notarized unless `notarytool` returned `Accepted` and `stapler validate` passed.
    Intel and Apple-silicon public lifecycle tests, and the exact tap commit must
    first pass its own `brew test-bot` workflow. Promotion publishes the stable
    release without changing `releases/latest`; only after both public lifecycle
-   jobs pass is it marked latest and the tag-pinned Pages workflow dispatched.
+   jobs pass is it marked latest and the stable-release Pages workflow
+   dispatched. Pages builds the current tested `main` commit only when its
+   `VERSION` still matches that stable release tag.
    GitHub Pages must already use **GitHub Actions** as its publishing source.
    Announce the release only after Pages is green.
 
@@ -82,8 +84,10 @@ the audited fallback and passes through the same fail-closed checks. Neither
 entry path may mark the release latest or dispatch Pages until both the Intel
 and Apple-silicon public install/helper/uninstall lifecycles succeed.
 
-The website reads GitHub's stable `releases/latest`; publish v3 before deploying
-the site so it cannot advertise an older architecture-limited release.
+The Pages workflow requires successful Headless CI for the exact current
+`main` commit and requires its `VERSION` to match the supplied stable release
+tag. Keep that release marked latest before deploying so the website and public
+downloads stay aligned.
 
 ## Local developer install
 

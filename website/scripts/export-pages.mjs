@@ -36,7 +36,13 @@ html = html
   .replaceAll('"/_next/', `"${basePath}/_next/`)
   .replaceAll("url(/_next/", `url(${basePath}/_next/`)
   .replaceAll('"/favicon.png', `"${basePath}/favicon.png`)
-  .replaceAll('"/og.png', `"${basePath}/og.png`);
+  .replaceAll('"/og.png', `"${basePath}/og.png`)
+  .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+  .replace(/<link\b(?=[^>]*\brel="modulepreload")[^>]*\/?>/gi, "")
+  .replace(
+    /<button\b(?=[^>]*\bclass="copy-button")[^>]*>[\s\S]*?<\/button>/gi,
+    "",
+  );
 
 for (const required of [
   "See where",
@@ -51,9 +57,16 @@ for (const required of [
 
 await rm(outputRoot, { force: true, recursive: true });
 await mkdir(outputRoot, { recursive: true });
-await cp(new URL("dist/client/_next/", siteRoot), new URL("_next/", outputRoot), {
-  recursive: true,
-});
+await cp(
+  new URL("dist/client/_next/static/css/", siteRoot),
+  new URL("_next/static/css/", outputRoot),
+  { recursive: true },
+);
+await cp(
+  new URL("dist/client/_next/static/_vinext_fonts/", siteRoot),
+  new URL("_next/static/_vinext_fonts/", outputRoot),
+  { recursive: true },
+);
 await cp(new URL("dist/client/favicon.png", siteRoot), new URL("favicon.png", outputRoot));
 await cp(new URL("dist/client/og.png", siteRoot), new URL("og.png", outputRoot));
 await writeFile(new URL("index.html", outputRoot), html, "utf8");
@@ -63,6 +76,16 @@ await writeFile(new URL(".nojekyll", outputRoot), "", "utf8");
 const emitted = await readFile(new URL("index.html", outputRoot), "utf8");
 if (emitted.includes('"/_next/') || emitted.includes("url(/_next/")) {
   throw new Error("Static page contains an unscoped Next.js asset path");
+}
+for (const forbidden of [
+  "<script",
+  'rel="modulepreload"',
+  "vinext.navigationRuntime",
+  'class="copy-button"',
+]) {
+  if (emitted.includes(forbidden)) {
+    throw new Error(`Static page contains unsupported runtime content: ${forbidden}`);
+  }
 }
 for (const expectedUrl of [
   "https://laleoarrow.github.io/battery-monitor/og.png",

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 async function render() {
@@ -50,4 +50,33 @@ test("ships the required static assets", async () => {
   assert.match(page, /api\.github\.com\/repos\/laleoarrow\/battery-monitor\/releases\/latest/);
   assert.match(page, /Apple silicon \+ Intel/);
   assert.match(page, /macOS 12\+/);
+});
+
+test("exports a server-independent GitHub Pages document", async () => {
+  const html = await readFile(new URL("../../docs/index.html", import.meta.url), "utf8");
+  const version = (
+    await readFile(new URL("../../VERSION", import.meta.url), "utf8")
+  ).trim();
+  const assets = await readdir(new URL("../../docs/_next/", import.meta.url), {
+    recursive: true,
+  });
+  const assetBase = `https://github.com/laleoarrow/battery-monitor/releases/download/v${version}`;
+
+  assert.match(html, /<title>Wattson — Live power flow for macOS<\/title>/i);
+  assert.match(html, /href="\/battery-monitor\/_next\/static\/css\//i);
+  assert.ok(
+    html.includes(
+      `href="${assetBase}/Wattson-v${version}-macos-universal.dmg"`,
+    ),
+  );
+  assert.ok(
+    html.includes(
+      `href="${assetBase}/Wattson-v${version}-macos-universal.pkg"`,
+    ),
+  );
+  assert.doesNotMatch(html, /<script\b/i);
+  assert.doesNotMatch(html, /rel="modulepreload"/i);
+  assert.doesNotMatch(html, /vinext\.navigationRuntime|"initialCacheKind":"dynamic"/i);
+  assert.doesNotMatch(html, /class="copy-button"/i);
+  assert.equal(assets.some((asset) => asset.endsWith(".js")), false);
 });
