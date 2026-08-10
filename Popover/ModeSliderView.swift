@@ -1,8 +1,8 @@
 import AppKit
 
-/// A horizontally locked Liquid Glass selector. The clear base carries the
-/// labels; the stronger moving lens sits above it, so macOS can refract the
-/// labels instead of merely painting a translucent pill behind them.
+/// A horizontally locked mode bar. One native Liquid Glass surface carries
+/// the labels; a restrained neutral capsule moves above it to show selection
+/// without stacking a second foggy glass layer.
 final class ModeSliderView: NSView {
     static let preferredHeight: CGFloat = 30
 
@@ -27,38 +27,37 @@ final class ModeSliderView: NSView {
     private let trackContent = NSView()
     private let knobHost = NSView()
 
-    private var materialContainer: NSView?
     private var trackGlass: NSView?
+    private var usesNativeGlass = false
 
-    /// Liquid Glass accepts AppKit-only properties that a plain fallback view
-    /// does not. Keeping the distinction typed prevents accidental KVC crashes
-    /// on macOS versions that do not have NSGlassEffectView.
+    /// The native selected capsule is intentionally a lightweight overlay.
+    /// Refraction belongs to the shared track, which avoids sampling glass
+    /// through glass while the capsule moves between detents.
     private enum Knob {
-        case glass(NSView)
+        case nativeSelection(NSView)
         case plain(NSView)
 
         var view: NSView {
             switch self {
-            case .glass(let view): return view
+            case .nativeSelection(let view): return view
             case .plain(let view): return view
             }
         }
 
         func applyTint(_: NSColor) {
             switch self {
-            case .glass(let view):
-                // The reference lens is almost colourless. The selected label
-                // carries semantic colour; a heavy glass tint kills refraction.
-                if #available(macOS 26.0, *), let glass = view as? NSGlassEffectView {
-                    glass.tintColor = NSColor.white.withAlphaComponent(0.05)
-                }
+            case .nativeSelection(let view):
+                view.layer?.backgroundColor = NSColor.white.withAlphaComponent(
+                    ModeSliderView.reducesTransparency ? 0.24 : 0.10
+                ).cgColor
+                view.layer?.borderWidth = 0
             case .plain(let view):
                 let reduceTransparency = ModeSliderView.reducesTransparency
                 view.layer?.backgroundColor = reduceTransparency
                     ? NSColor(white: 0.30, alpha: 1).cgColor
                     : NSColor(white: 1, alpha: 0.12).cgColor
-                // The native lens edge is neutral. Keep the older-system
-                // fallback neutral too; semantic blue belongs to the label,
+                // The native capsule edge is neutral. Keep the older-system
+                // fallback neutral too; semantic colour belongs to the label,
                 // not to a second outline treatment.
                 view.layer?.borderColor = NSColor.white.withAlphaComponent(
                     reduceTransparency ? 0.38 : 0.18
@@ -68,13 +67,11 @@ final class ModeSliderView: NSView {
 
         func setLifted(_ lifted: Bool) {
             switch self {
-            case .glass(let view):
-                // Static selection is a neutral fogged plate; direct
-                // manipulation becomes the clearer refractive lens.
-                if #available(macOS 26.0, *), let glass = view as? NSGlassEffectView {
-                    glass.style = lifted ? .clear : .regular
-                    glass.tintColor = NSColor.white.withAlphaComponent(lifted ? 0.035 : 0.05)
-                }
+            case .nativeSelection(let view):
+                let reduceTransparency = ModeSliderView.reducesTransparency
+                view.layer?.backgroundColor = NSColor.white.withAlphaComponent(
+                    reduceTransparency ? (lifted ? 0.20 : 0.24) : (lifted ? 0.14 : 0.10)
+                ).cgColor
             case .plain(let view):
                 let reduceTransparency = ModeSliderView.reducesTransparency
                 view.layer?.backgroundColor = reduceTransparency
@@ -87,9 +84,9 @@ final class ModeSliderView: NSView {
     private var knob: Knob?
     private var labels: [NSTextField] = []
     /// Fixed foreground copies stay aligned with each detent. Their layer
-    /// opacities are blended from the lens centre, so direct manipulation never
+    /// opacities are blended from the capsule centre, so direct manipulation never
     /// has to relayout text and a click cannot switch the highlight ahead of
-    /// the glass presentation layer.
+    /// the moving selection.
     private var activeLabels: [NSTextField] = []
 
     private var modes: [EnergyMode] = []
@@ -106,9 +103,10 @@ final class ModeSliderView: NSView {
     private(set) var labelBlendTraceForTest: [[CGFloat]] = []
     func resetLabelBlendTraceForTest() { labelBlendTraceForTest.removeAll(keepingCapacity: true) }
     var knobCentreForTest: CGFloat { knobHost.frame.midX }
-    var settleIsAnimatingForTest: Bool { settleTimer != nil }
+    var settleIsAnimatingForTest: Bool { activeSettleMotion != nil }
     var settleUsesSpringForTest: Bool { activeSettleMotion == .spring }
     var settleUsesMagneticFlowForTest: Bool { activeSettleMotion == .magnetic }
+    var settleDurationForTest: CFTimeInterval? { activeSettleDuration }
     var focusRingTypeForTest: NSFocusRingType { focusRingType }
     var restingKnobWidthForTest: CGFloat { knobFrame(at: selectedIndex).width }
     var segmentWidthForTest: CGFloat { segmentWidth }
@@ -125,19 +123,20 @@ final class ModeSliderView: NSView {
         return CGSize(width: knobHost.frame.width / max(base.width, 1),
                       height: knobHost.frame.height / max(base.height, 1))
     }
-    var knobPresentationCentreForTest: CGFloat {
-        knobHost.layer?.presentation()?.frame.midX ?? knobHost.frame.midX
-    }
-    var glassViewFrameForTest: NSRect {
-        guard let view = knob?.view else { return knobHost.frame }
-        return convert(view.bounds, from: view)
-    }
+    var knobPresentationCentreForTest: CGFloat { visibleKnobFrame().midX }
+    var glassViewFrameForTest: NSRect { visibleKnobFrame() }
     var glassViewCentreForTest: CGFloat { glassViewFrameForTest.midX }
     var knobPresentationScaleForTest: CGSize {
-        knobScaleForTest
+        let base = knobFrame(at: selectedIndex)
+        let visible = visibleKnobFrame()
+        return CGSize(width: visible.width / max(base.width, 1),
+                      height: visible.height / max(base.height, 1))
     }
     var activeLabelOpacitiesForTest: [CGFloat] {
-        activeLabels.map { CGFloat($0.layer?.opacity ?? 0) }
+        guard activeSettleMotion != nil else {
+            return activeLabels.map { CGFloat($0.layer?.opacity ?? 0) }
+        }
+        return labelBlendWeights(at: visibleKnobFrame().midX)
     }
     var activeLabelPresentationOpacitiesForTest: [CGFloat] {
         activeLabels.map { CGFloat($0.layer?.presentation()?.opacity ?? $0.layer?.opacity ?? 0) }
@@ -146,12 +145,23 @@ final class ModeSliderView: NSView {
         magneticMotion(from: knobFrame(at: startIndex).midX,
                        to: knobFrame(at: targetIndex).midX).centres
     }
-    var nativeGlassStylesForTest: (track: Int, selector: Int)? {
-        guard #available(macOS 26.0, *),
-              let track = trackGlass as? NSGlassEffectView,
-              case .glass(let selectorView) = knob,
-              let selector = selectorView as? NSGlassEffectView else { return nil }
-        return (track.style.rawValue, selector.style.rawValue)
+    var nativeTrackStyleForTest: Int? {
+        guard #available(macOS 26.0, *), usesNativeGlass,
+              let track = trackGlass as? NSGlassEffectView else { return nil }
+        return track.style.rawValue
+    }
+    var nativeTrackHasTintForTest: Bool? {
+        guard #available(macOS 26.0, *), usesNativeGlass,
+              let track = trackGlass as? NSGlassEffectView else { return nil }
+        return track.tintColor != nil
+    }
+    var nativeSelectorFillAlphaForTest: CGFloat? {
+        guard usesNativeGlass, case .nativeSelection(let selector) = knob else { return nil }
+        return selector.layer?.backgroundColor?.alpha
+    }
+    var nativeSelectorBorderWidthForTest: CGFloat? {
+        guard usesNativeGlass, case .nativeSelection(let selector) = knob else { return nil }
+        return selector.layer?.borderWidth
     }
 #endif
 
@@ -171,15 +181,17 @@ final class ModeSliderView: NSView {
     private var selectionGeneration = 0
     private var pendingSelectionIndex: Int?
     private var displayOptionsObserver: NSObjectProtocol?
-    /// Native Liquid Glass is promoted into the container's own SDF/backdrop
-    /// tree. Advancing an ancestor's presentation layer does not move that
-    /// material, so the brief settle drives the actual view frame instead.
-    private var settleTimer: Timer?
+    /// Click and release motion runs on Core Animation's compositor. Direct
+    /// dragging still updates real geometry one-to-one with pointer events.
+    private var settleCompletionWorkItem: DispatchWorkItem?
+    private var settleGeneration = 0
+    private var settleStartFrame: NSRect?
     private var activeSettleMotion: SettleMotion?
+    private var activeSettleDuration: CFTimeInterval?
 
     /// Four points filters trackpad tap wobble without making a deliberate drag
     /// feel sticky. A drag that begins away from the knob moves relatively, so
-    /// crossing this threshold never makes the lens jump under the pointer.
+    /// crossing this threshold never makes the capsule jump under the pointer.
     private static let dragSlop: CGFloat = 4
     private static let pressedScale = CGSize(width: 1.13, height: 1.35)
 
@@ -204,7 +216,7 @@ final class ModeSliderView: NSView {
 
         for mode in modes {
             let field = NSTextField(labelWithString: mode.title)
-            field.font = .systemFont(ofSize: 11, weight: .medium)
+            field.font = .systemFont(ofSize: 11, weight: .regular)
             field.alignment = .center
             field.isSelectable = false
             field.wantsLayer = true
@@ -213,7 +225,7 @@ final class ModeSliderView: NSView {
             labels.append(field)
 
             let active = NSTextField(labelWithString: mode.title)
-            active.font = .systemFont(ofSize: 11, weight: .medium)
+            active.font = .systemFont(ofSize: 11, weight: .semibold)
             active.alignment = .center
             active.isSelectable = false
             active.wantsLayer = true
@@ -237,7 +249,7 @@ final class ModeSliderView: NSView {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     deinit {
-        settleTimer?.invalidate()
+        settleCompletionWorkItem?.cancel()
         if let displayOptionsObserver {
             NSWorkspace.shared.notificationCenter.removeObserver(displayOptionsObserver)
         }
@@ -252,7 +264,8 @@ final class ModeSliderView: NSView {
         setAccessibilityOrientation(.horizontal)
         setAccessibilityMinValue(NSNumber(value: 0))
         setAccessibilityMaxValue(NSNumber(value: max(modes.count - 1, 0)))
-        // This compact popover already exposes the selected label in blue.
+        // This compact popover already exposes the selected label in the
+        // current semantic accent.
         // AppKit's full-control accent ring reads as a second, unrelated glass
         // outline after a mouse click, so keep keyboard semantics without it.
         focusRingType = .none
@@ -305,10 +318,10 @@ final class ModeSliderView: NSView {
 
     // MARK: - Material
 
-    /// Builds the two reference surfaces in one native glass container:
-    /// a dark-tinted regular base and a regular, empty selector above its content.
-    /// On older systems the exact same hierarchy gets a lightweight translucent
-    /// fallback, keeping event and geometry behavior identical.
+    /// Builds the GitHub Mobile-style hierarchy: one neutral system glass track
+    /// and one subtle selected capsule. The capsule is not a second glass view,
+    /// so the track stays clear instead of being sampled twice. Older systems
+    /// retain the lightweight translucent fallback with identical interaction.
     private func installMaterials() {
         materialRoot.wantsLayer = true
         trackView.wantsLayer = true
@@ -319,28 +332,25 @@ final class ModeSliderView: NSView {
         let radius = (Self.preferredHeight - 4) / 2
 
         if !forceLegacy, #available(macOS 26.0, *) {
-            let container = NSGlassEffectContainerView(frame: .zero)
-            container.contentView = materialRoot
-            // Zero still batches the two related glass surfaces, without asking
-            // AppKit to merge the full-width base into the moving selector.
-            container.spacing = 0
-            addSubview(container)
-            materialContainer = container
+            addSubview(materialRoot)
+            usesNativeGlass = true
 
             let base = NSGlassEffectView(frame: .zero)
-            configureGlass(base, style: .regular, cornerRadius: Self.preferredHeight / 2,
-                           tint: NSColor.black.withAlphaComponent(0.16), content: trackContent)
+            configureGlass(base, style: .regular,
+                           cornerRadius: Self.preferredHeight / 2,
+                           tint: nil, content: trackContent)
             trackView.addSubview(base)
             trackGlass = base
 
-            let selectorContent = NSView()
-            selectorContent.wantsLayer = true
-            selectorContent.layer?.backgroundColor = NSColor.clear.cgColor
-            let selector = NSGlassEffectView(frame: .zero)
-            configureGlass(selector, style: .regular, cornerRadius: radius,
-                           tint: NSColor.white.withAlphaComponent(0.05), content: selectorContent)
+            let selector = NSView(frame: .zero)
+            selector.wantsLayer = true
+            selector.layer?.backgroundColor = NSColor.white.withAlphaComponent(0.10).cgColor
+            selector.layer?.borderWidth = 0
+            selector.layer?.cornerRadius = radius
+            selector.layer?.cornerCurve = .continuous
+            selector.layer?.allowsEdgeAntialiasing = true
             knobHost.addSubview(selector)
-            knob = .glass(selector)
+            knob = .nativeSelection(selector)
         } else {
             addSubview(materialRoot)
             trackView.addSubview(trackContent)
@@ -374,19 +384,22 @@ final class ModeSliderView: NSView {
     private func installFallbackChromeIfNeeded() {
         trackView.layer?.cornerRadius = Self.preferredHeight / 2
         trackView.layer?.cornerCurve = .continuous
-        trackView.layer?.masksToBounds = true
+        // Let native Liquid Glass draw its own exterior edge and elevation.
+        // Only the plain fallback needs clipping for its painted background.
+        trackView.layer?.masksToBounds = !usesNativeGlass
         knobHost.layer?.backgroundColor = NSColor.clear.cgColor
         knobHost.layer?.cornerRadius = (Self.preferredHeight - 4) / 2
         knobHost.layer?.cornerCurve = .continuous
 
-        // Native Liquid Glass supplies its own dynamic reflection, refraction,
-        // colour separation, edge lighting, and shadow. The older-system path
-        // stays deliberately restrained instead of imitating those effects
-        // with static gradients that would look painted on during movement.
-        guard trackGlass == nil else { return }
-        trackView.layer?.backgroundColor = PopoverStyle.well.cgColor
-        trackView.layer?.borderWidth = 0.5
-        trackView.layer?.borderColor = PopoverStyle.wellBorder.withAlphaComponent(0.78).cgColor
+        if !usesNativeGlass {
+            trackView.layer?.backgroundColor = PopoverStyle.well.cgColor
+            trackView.layer?.borderWidth = 0.5
+            trackView.layer?.borderColor = PopoverStyle.wellBorder.withAlphaComponent(0.78).cgColor
+        }
+
+        // Native Liquid Glass supplies the shared surface edge and elevation.
+        // The older-system fallback keeps one inexpensive selector shadow.
+        guard !usesNativeGlass else { return }
         knobHost.layer?.shadowColor = NSColor.black.cgColor
         knobHost.layer?.shadowOpacity = 0.28
         knobHost.layer?.shadowRadius = 5
@@ -400,24 +413,20 @@ final class ModeSliderView: NSView {
         if highlighted >= 0 { highlight(highlighted, force: true) }
     }
 
-    /// The outer panel edge follows the live power state. Native Liquid Glass
-    /// derives the coloured edge from its semantic tint; the older-system path
-    /// uses the same tint on its real border rather than a fixed blue accent.
-    private func applyTrackTint(_ tint: NSColor) {
-        if #available(macOS 26.0, *), let glass = trackGlass as? NSGlassEffectView {
-            glass.tintColor = tint.withAlphaComponent(0.11)
-        } else {
-            trackView.layer?.borderColor = tint.withAlphaComponent(
-                Self.reducesTransparency ? 0.56 : 0.40
-            ).cgColor
-        }
+    /// GitHub Mobile keeps the bar chrome neutral and puts semantic colour on
+    /// the selected foreground. Preserve that hierarchy in the fallback too.
+    private func applyTrackTint(_: NSColor) {
+        guard !usesNativeGlass else { return }
+        trackView.layer?.borderColor = PopoverStyle.wellBorder.withAlphaComponent(
+            Self.reducesTransparency ? 0.92 : 0.78
+        ).cgColor
     }
 
     /// Core Animation would otherwise derive the shadow from the glass alpha on
     /// every frame. A fixed bounds-relative path stays cheap while the host is
     /// moved and scaled by the compositor.
     private func updateShadowPath() {
-        guard trackGlass == nil else { return }
+        guard !usesNativeGlass else { return }
         let radius = knobHost.layer?.cornerRadius ?? 0
         knobHost.layer?.shadowPath = CGPath(roundedRect: knobHost.bounds,
                                             cornerWidth: radius,
@@ -439,7 +448,6 @@ final class ModeSliderView: NSView {
     override func layout() {
         super.layout()
         PopoverStyle.setWithoutAnimation {
-            self.materialContainer?.frame = self.bounds
             self.materialRoot.frame = self.bounds
             self.trackView.frame = self.bounds
             self.trackGlass?.frame = self.trackView.bounds
@@ -452,12 +460,12 @@ final class ModeSliderView: NSView {
             labels[index].frame = frame
             activeLabels[index].frame = frame
         }
-        if !dragging, settleTimer == nil {
+        if !dragging, activeSettleMotion == nil {
             knobHost.frame = knobFrame(at: selectedIndex)
         }
         knob?.view.frame = knobHost.bounds
         updateShadowPath()
-        if settleTimer == nil {
+        if activeSettleMotion == nil {
             applyLabelBlend(at: knobHost.frame.midX)
         }
     }
@@ -475,8 +483,11 @@ final class ModeSliderView: NSView {
         currentTint = tint
         applyTrackTint(tint)
         knob?.applyTint(tint)
+        // A telemetry refresh can arrive while the pointer is held. Reapply
+        // the interaction material so it cannot flatten the lifted capsule.
+        knob?.setLifted(movedWhileDragging)
         // During a held drag the 1 Hz telemetry refresh must recolour the mode
-        // under the lens, not jump the highlight back to the committed mode.
+        // under the capsule, not jump the highlight back to the committed mode.
         let visualIndex = dragging && highlighted >= 0 ? highlighted : selectedIndex
         highlight(visualIndex, force: true)
         updateAccessibilityValue(announce: false)
@@ -487,18 +498,17 @@ final class ModeSliderView: NSView {
     }
 
     /// Clicks flow toward the next detent with a small overshoot and pull-back;
-    /// a released drag keeps the shorter viscous spring. Both motions advance
-    /// the real view frame because NSGlassEffectContainerView promotes glass
-    /// into a material tree that does not follow an ancestor's CA presentation.
+    /// a released drag uses a faster critically damped capture. Both motions
+    /// share one compositor timeline with the label crossfade.
     private func settle(to index: Int, animated: Bool, initialVelocityX: CGFloat = 0,
                         motion: SettleMotion = .magnetic) {
         let target = knobFrame(at: index)
-        let start = knobHost.frame
+        let start = visibleKnobFrame()
         stopSettleMotion()
-        knobHost.layer?.removeAllAnimations()
         PopoverStyle.setWithoutAnimation {
             self.knobHost.layer?.transform = CATransform3DIdentity
         }
+        setKnobFrame(start)
         knob?.setLifted(false)
 
         let reduceMotion = Self.reducesMotion
@@ -516,8 +526,9 @@ final class ModeSliderView: NSView {
         switch motion {
         case .magnetic:
             let path = magneticMotion(from: start.midX, to: target.midX)
-            startSettleMotion(kind: .magnetic, duration: path.duration) { phase in
-                let centre = self.interpolatedCentre(in: path, phase: phase)
+            let frames = path.keyTimes.enumerated().map { offset, time in
+                let phase = CGFloat(truncating: time)
+                let centre = path.centres[offset]
                 let scale = self.magneticScale(at: phase,
                                                start: CGSize(width: start.width / target.width,
                                                              height: start.height / target.height))
@@ -525,25 +536,36 @@ final class ModeSliderView: NSView {
                               y: (self.bounds.height - target.height * scale.height) / 2,
                               width: target.width * scale.width,
                               height: target.height * scale.height)
-            } completion: {
+            }
+            startSettleMotion(kind: .magnetic, duration: path.duration,
+                              frames: frames, keyTimes: path.keyTimes) {
                 self.setKnobGeometry(centreX: target.midX,
                                      width: target.width,
                                      height: target.height)
             }
 
         case .spring:
-            let duration: CFTimeInterval = 0.32
+            // The pointer already established direction and intent. Release
+            // should therefore capture promptly instead of replaying a long
+            // decorative spring after direct manipulation has ended.
+            let duration: CFTimeInterval = 0.24
             let impulse = min(max(initialVelocityX * 0.012, -12), 12)
-            startSettleMotion(kind: .spring, duration: duration) { phase in
+            let phases = (0...24).map { CGFloat($0) / 24 }
+            let frames = phases.map { phase -> NSRect in
                 let progress = self.springProgress(phase)
-                let velocityCarry = impulse * phase * exp(-6 * phase)
-                let centre = start.midX + (target.midX - start.midX) * progress + velocityCarry
+                let velocityCarry = impulse * phase * (1 - phase) * exp(-5 * phase)
+                let centre = phase >= 1
+                    ? target.midX
+                    : start.midX + (target.midX - start.midX) * progress + velocityCarry
                 let width = start.width + (target.width - start.width) * progress
                 let height = start.height + (target.height - start.height) * progress
                 return NSRect(x: centre - width / 2,
                               y: (self.bounds.height - height) / 2,
                               width: width, height: height)
-            } completion: {
+            }
+            let keyTimes = phases.map { NSNumber(value: Double($0)) }
+            startSettleMotion(kind: .spring, duration: duration,
+                              frames: frames, keyTimes: keyTimes) {
                 self.setKnobGeometry(centreX: target.midX,
                                      width: target.width,
                                      height: target.height)
@@ -553,7 +575,7 @@ final class ModeSliderView: NSView {
 
     private func magneticDuration(for travel: CGFloat) -> CFTimeInterval {
         let detentDistance = min(abs(travel) / max(segmentWidth, 1), 2)
-        return 0.36 + 0.06 * Double(detentDistance)
+        return 0.18 + 0.06 * Double(detentDistance)
     }
 
     private struct MagneticMotion {
@@ -562,7 +584,7 @@ final class ModeSliderView: NSView {
         let duration: CFTimeInterval
     }
 
-    /// Samples one shared magnetic trajectory for both the glass position and
+    /// Samples one shared magnetic trajectory for both the capsule position and
     /// label opacity. Exact detent-crossing phases are inserted so a two-slot
     /// click still brings the middle label all the way to full brightness.
     private func magneticMotion(from start: CGFloat, to target: CGFloat) -> MagneticMotion {
@@ -580,12 +602,10 @@ final class ModeSliderView: NSView {
             }
             if phase <= 0.82 {
                 let progress = (phase - 0.72) / 0.10
-                let eased = 1 - (1 - progress) * (1 - progress)
-                return target + overshoot * eased
+                return target + overshoot * smoothstep(progress)
             }
             let progress = (phase - 0.82) / 0.18
-            let remaining = 1 - progress
-            return target + overshoot * remaining * remaining * remaining
+            return target + overshoot * (1 - smoothstep(progress))
         }
         func phase(forLinearProgress progress: CGFloat) -> CGFloat {
             var lower: CGFloat = 0
@@ -610,14 +630,8 @@ final class ModeSliderView: NSView {
                 let progress = (detent - start) / travel
                 if progress > 0, progress < 1 {
                     let crossing = phase(forLinearProgress: progress)
-                    let halfWindow: CGFloat = 0.04
-                    phases.removeAll { abs($0 - crossing) < halfWindow }
-                    centreOverrides.append((crossing - halfWindow,
-                                            detent - direction * 4))
                     centreOverrides.append((crossing, detent))
-                    centreOverrides.append((crossing + halfWindow,
-                                            detent + direction * 4))
-                    phases.append(contentsOf: centreOverrides.suffix(3).map { $0.phase })
+                    phases.append(crossing)
                 }
             }
         }
@@ -636,22 +650,6 @@ final class ModeSliderView: NSView {
         )
     }
 
-    private func interpolatedCentre(in motion: MagneticMotion, phase: CGFloat) -> CGFloat {
-        guard let first = motion.centres.first, let last = motion.centres.last else { return 0 }
-        if phase <= 0 { return first }
-        if phase >= 1 { return last }
-        for index in 1..<motion.keyTimes.count {
-            let upper = CGFloat(truncating: motion.keyTimes[index])
-            guard phase <= upper else { continue }
-            let lower = CGFloat(truncating: motion.keyTimes[index - 1])
-            let span = max(upper - lower, 0.0001)
-            let progress = (phase - lower) / span
-            return motion.centres[index - 1]
-                + (motion.centres[index] - motion.centres[index - 1]) * progress
-        }
-        return last
-    }
-
     /// Click motion stays within the resting footprint: it streamlines while
     /// travelling, compresses slightly at capture, then returns to one detent.
     private func magneticScale(at phase: CGFloat, start: CGSize) -> CGSize {
@@ -661,9 +659,10 @@ final class ModeSliderView: NSView {
         for index in 1..<times.count where phase <= times[index] {
             let progress = (phase - times[index - 1])
                 / max(times[index] - times[index - 1], 0.0001)
+            let eased = progress * progress * (3 - 2 * progress)
             return CGSize(
-                width: widths[index - 1] + (widths[index] - widths[index - 1]) * progress,
-                height: heights[index - 1] + (heights[index] - heights[index - 1]) * progress
+                width: widths[index - 1] + (widths[index] - widths[index - 1]) * eased,
+                height: heights[index - 1] + (heights[index] - heights[index - 1]) * eased
             )
         }
         return CGSize(width: 1, height: 1)
@@ -673,42 +672,141 @@ final class ModeSliderView: NSView {
     /// the detent without the loose oscillation that made release feel rubbery.
     private func springProgress(_ phase: CGFloat) -> CGFloat {
         let clamped = min(max(phase, 0), 1)
-        let x = 7 * clamped
+        let x = 9 * clamped
         let raw = 1 - (1 + x) * exp(-x)
-        let end = 1 - 8 * exp(CGFloat(-7))
+        let end = 1 - 10 * exp(CGFloat(-9))
         return min(max(raw / end, 0), 1)
     }
 
     private func startSettleMotion(kind: SettleMotion, duration: CFTimeInterval,
-                                   frameAt: @escaping (CGFloat) -> NSRect,
+                                   frames: [NSRect], keyTimes: [NSNumber],
                                    completion: @escaping () -> Void) {
+        guard frames.count >= 2, frames.count == keyTimes.count,
+              let start = frames.first, let target = frames.last,
+              let layer = knobHost.layer else {
+            if let target = frames.last { setKnobFrame(target) }
+            completion()
+            return
+        }
+
         stopSettleMotion()
         activeSettleMotion = kind
-        let startTime = CACurrentMediaTime()
-        let timer = Timer(timeInterval: 1.0 / 120.0, repeats: true) { [weak self] timer in
-            guard let self else {
-                timer.invalidate()
-                return
-            }
-            let phase = min(max(CGFloat((CACurrentMediaTime() - startTime) / duration), 0), 1)
-            if phase >= 1 || self.window?.isVisible != true {
-                timer.invalidate()
-                self.settleTimer = nil
-                self.activeSettleMotion = nil
-                completion()
-                return
-            }
-            self.setKnobFrame(frameAt(phase))
+        activeSettleDuration = duration
+        settleStartFrame = start
+        settleGeneration += 1
+        let generation = settleGeneration
+
+        let positions = frames.map {
+            NSValue(point: NSPoint(x: $0.midX, y: $0.midY))
         }
-        settleTimer = timer
-        RunLoop.main.add(timer, forMode: .common)
-        timer.fire()
+        let transforms = frames.map {
+            NSValue(caTransform3D: CATransform3DMakeScale(
+                $0.width / max(target.width, 1),
+                $0.height / max(target.height, 1),
+                1
+            ))
+        }
+        let labelWeights = frames.map { labelBlendWeights(at: $0.midX) }
+#if DEBUG
+        labelBlendTraceForTest.append(contentsOf: labelWeights)
+#endif
+
+        let position = CAKeyframeAnimation(keyPath: "position")
+        position.values = positions
+        position.keyTimes = keyTimes
+        position.duration = duration
+        position.calculationMode = .linear
+
+        let transform = CAKeyframeAnimation(keyPath: "transform")
+        transform.values = transforms
+        transform.keyTimes = keyTimes
+        transform.duration = duration
+        transform.calculationMode = .linear
+
+        let group = CAAnimationGroup()
+        group.animations = [position, transform]
+        group.duration = duration
+        group.timingFunction = CAMediaTimingFunction(name: .linear)
+
+        let beginTime = CACurrentMediaTime()
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        // Model writes and every explicit animation commit atomically. This
+        // prevents the final target from becoming visible for one display frame
+        // before the first keyframe reaches the render server.
+        setKnobFrame(target)
+        group.beginTime = layer.convertTime(beginTime, from: nil)
+        layer.add(group, forKey: "wattson.settle.geometry")
+
+        for index in activeLabels.indices {
+            guard let activeLayer = activeLabels[index].layer,
+                  let baseLayer = labels[index].layer else { continue }
+            let active = CAKeyframeAnimation(keyPath: "opacity")
+            active.values = labelWeights.map { NSNumber(value: Double($0[index])) }
+            active.keyTimes = keyTimes
+            active.duration = duration
+            active.beginTime = activeLayer.convertTime(beginTime, from: nil)
+            active.calculationMode = .linear
+            activeLayer.add(active, forKey: "wattson.settle.opacity")
+
+            let base = CAKeyframeAnimation(keyPath: "opacity")
+            base.values = labelWeights.map { NSNumber(value: Double(1 - $0[index])) }
+            base.keyTimes = keyTimes
+            base.duration = duration
+            base.beginTime = baseLayer.convertTime(beginTime, from: nil)
+            base.calculationMode = .linear
+            baseLayer.add(base, forKey: "wattson.settle.opacity")
+        }
+        CATransaction.commit()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self, self.settleGeneration == generation else { return }
+            self.removeSettleAnimations()
+            self.settleCompletionWorkItem = nil
+            self.settleStartFrame = nil
+            self.activeSettleMotion = nil
+            self.activeSettleDuration = nil
+            completion()
+        }
+        settleCompletionWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: workItem)
     }
 
     private func stopSettleMotion() {
-        settleTimer?.invalidate()
-        settleTimer = nil
+        settleGeneration += 1
+        settleCompletionWorkItem?.cancel()
+        settleCompletionWorkItem = nil
+        removeSettleAnimations()
+        settleStartFrame = nil
         activeSettleMotion = nil
+        activeSettleDuration = nil
+    }
+
+    private func removeSettleAnimations() {
+        knobHost.layer?.removeAnimation(forKey: "wattson.settle.geometry")
+        for label in labels + activeLabels {
+            label.layer?.removeAnimation(forKey: "wattson.settle.opacity")
+        }
+    }
+
+    private func visibleKnobFrame() -> NSRect {
+        if activeSettleMotion != nil {
+            if let presentation = knobHost.layer?.presentation() {
+                // `frame` is undefined for transformed layers. Our settle uses
+                // scale plus position only, so derive the visible rectangle
+                // explicitly from presentation values.
+                let width = presentation.bounds.width * abs(presentation.transform.m11)
+                let height = presentation.bounds.height * abs(presentation.transform.m22)
+                return NSRect(
+                    x: presentation.position.x - width * presentation.anchorPoint.x,
+                    y: presentation.position.y - height * presentation.anchorPoint.y,
+                    width: width,
+                    height: height
+                )
+            }
+            if let settleStartFrame { return settleStartFrame }
+        }
+        return knobHost.frame
     }
 
     private func setKnobFrame(_ frame: NSRect) {
@@ -727,7 +825,7 @@ final class ModeSliderView: NSView {
     }
 
     /// Linear distance weights make the foreground labels crossfade exactly at
-    /// the lens centre: a detent is fully bright at its centre and two adjacent
+    /// the capsule centre: a detent is fully bright at its centre and two adjacent
     /// labels are each 50% bright halfway between them.
     private func labelBlendWeights(at centreX: CGFloat) -> [CGFloat] {
         modes.indices.map { index in
@@ -746,9 +844,7 @@ final class ModeSliderView: NSView {
             for index in self.activeLabels.indices {
                 let weight = weights[index]
                 self.activeLabels[index].layer?.opacity = Float(weight)
-                self.labels[index].layer?.opacity = self.trackGlass == nil
-                    ? Float(1 - weight)
-                    : 1
+                self.labels[index].layer?.opacity = Float(1 - weight)
             }
         }
     }
@@ -847,7 +943,7 @@ final class ModeSliderView: NSView {
         }
 
         // Availability can change while the pointer is held (for example if
-        // the helper disappears). Always lower the lens back onto the last
+        // the helper disappears). Always lower the capsule back onto the last
         // confirmed detent instead of leaving a disabled drag suspended.
         guard enabled.indices.contains(index), enabled[index] else {
             settle(to: committedIndex, animated: true, motion: motion)
@@ -913,17 +1009,17 @@ final class ModeSliderView: NSView {
         updateAccessibilityValue(announce: changed)
     }
 
-    /// A settle advances model geometry, so re-grabbing simply freezes its last
-    /// real frame. There is no separate presentation position to reconcile.
+    /// Core Animation keeps the target in the model layer. Re-grabbing first
+    /// captures the visible presentation frame, then removes only our named
+    /// settle animations and resumes direct manipulation from that exact point.
     private func interruptSettleAtVisibleGeometry() -> CGFloat {
-        let visibleCentre = knobHost.frame.midX
+        let visibleFrame = visibleKnobFrame()
         stopSettleMotion()
-        knobHost.layer?.removeAllAnimations()
         PopoverStyle.setWithoutAnimation {
             self.knobHost.layer?.transform = CATransform3DIdentity
         }
-        applyLabelBlend(at: visibleCentre)
-        return visibleCentre
+        setKnobFrame(visibleFrame)
+        return visibleFrame.midX
     }
 
     private func moveKnob(centreX: CGFloat, scaleX: CGFloat, scaleY: CGFloat) {
@@ -933,7 +1029,7 @@ final class ModeSliderView: NSView {
                         height: base.height * scaleY)
     }
 
-    /// The optical body may extend beyond the base, but its centre stops exactly
+    /// The dragged capsule may extend beyond the base, but its centre stops exactly
     /// on the first and last slot like the reference control.
     private func clampedCentre(_ centre: CGFloat) -> CGFloat {
         let firstIndex = modes.indices.first ?? 0
@@ -977,7 +1073,7 @@ final class ModeSliderView: NSView {
 #endif
         highlighted = index
         refreshLabelPalette()
-        if !dragging, settleTimer == nil {
+        if !dragging, activeSettleMotion == nil {
             applyLabelBlend(at: knobHost.frame.midX)
         }
     }

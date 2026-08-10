@@ -21,25 +21,28 @@ class PopoverControlsContractTests(unittest.TestCase):
         cls.popover = POPOVER.read_text(encoding="utf-8")
 
     def test_mode_picker_is_a_draggable_glass_knob(self):
-        # The regular base owns the labels, while a stronger empty glass lens
-        # moves above them so AppKit can refract the real content.
+        # One untinted system glass track carries a neutral moving selection
+        # capsule, avoiding a foggy glass-on-glass stack.
         self.assertIn("ModeSliderView(modes:", self.content)
         self.assertNotIn("NSSegmentedControl(", self.content)
         self.assertIn("NSGlassEffectView(frame:", self.slider)
-        self.assertIn("NSGlassEffectContainerView(frame:", self.slider)
+        self.assertNotIn("NSGlassEffectContainerView(frame:", self.slider)
+        self.assertIn("let base = NSGlassEffectView", self.slider)
         self.assertIn("style: .regular", self.slider)
-        self.assertIn("NSColor.black.withAlphaComponent(0.16)", self.slider)
-        self.assertIn("style: .regular", self.slider)
+        self.assertIn("tint: nil, content: trackContent", self.slider)
+        self.assertIn("case nativeSelection(NSView)", self.slider)
+        self.assertIn("weight: .regular", self.slider)
+        self.assertIn("weight: .semibold", self.slider)
         self.assertIn("func setLifted(_ lifted: Bool)", self.slider)
         self.assertIn("trackContent.addSubview(field)", self.slider)
         self.assertIn("override func mouseDragged", self.slider)
-        self.assertIn("private var settleTimer: Timer?", self.slider)
+        self.assertIn("private var settleCompletionWorkItem: DispatchWorkItem?", self.slider)
         self.assertIn("self.knobHost.frame = frame", self.slider)
 
     def test_native_glass_is_not_covered_by_an_opaque_imitation(self):
         self.assertNotIn("alpha: 0.95", self.slider)
         self.assertNotIn("alpha: 0.55", self.slider)
-        self.assertIn("guard trackGlass == nil else { return }", self.slider)
+        self.assertIn("guard !usesNativeGlass else { return }", self.slider)
         self.assertIn("tint: PopoverStyle.stateColor(latestSnapshot.state)", self.content)
 
     def test_mode_change_is_completed_asynchronously(self):
@@ -73,10 +76,10 @@ class PopoverControlsContractTests(unittest.TestCase):
         blend = self.slider.split("private func applyLabelBlend", 1)[1].split(
             "\n    /// During the brief settle", 1
         )[0]
-        self.assertIn("self.trackGlass == nil", blend)
         self.assertIn("Float(1 - weight)", blend)
+        self.assertNotIn("self.usesNativeGlass", blend)
 
-    def test_lifted_lens_reserves_space_before_the_settings_button(self):
+    def test_lifted_capsule_reserves_space_before_the_settings_button(self):
         self.assertIn("bounds.width - 46", self.content)
         self.assertIn("bounds.width - 22", self.content)
 
@@ -113,8 +116,9 @@ class PopoverControlsContractTests(unittest.TestCase):
     def test_glass_configuration_uses_typed_api_not_kvc(self):
         # KVC turns a missing glass property into an Objective-C exception that
         # Swift cannot recover from. The public macOS 26 API is compile-checked.
-        self.assertIn("case glass(NSView)", self.slider)
+        self.assertIn("case nativeSelection(NSView)", self.slider)
         self.assertIn("case plain(NSView)", self.slider)
+        self.assertIn("trackGlass as? NSGlassEffectView", self.slider)
         self.assertIn("knob?.applyTint(", self.slider)
         self.assertNotIn("setValue", self.slider)
 
@@ -206,7 +210,7 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("setLifted(true)", threshold)
         self.assertIn("moveKnob(centreX:", mouse_dragged)
         move = self.slider.split("private func moveKnob", 1)[1].split(
-            "\n    /// The optical body", 1
+            "\n    /// The dragged capsule", 1
         )[0]
         self.assertIn("setKnobGeometry", move)
 
@@ -218,11 +222,20 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("private func magneticScale", self.slider)
         self.assertIn("startSettleMotion(kind: .spring", self.slider)
         self.assertIn("private func springProgress", self.slider)
-        self.assertIn("1.0 / 120.0", self.slider)
-        self.assertNotIn('CAKeyframeAnimation(keyPath: "position")', self.slider)
+        self.assertIn("let duration: CFTimeInterval = 0.24", self.slider)
+        self.assertIn('CAKeyframeAnimation(keyPath: "position")', self.slider)
+        self.assertIn('CAKeyframeAnimation(keyPath: "transform")', self.slider)
+        self.assertNotIn("Timer(timeInterval:", self.slider)
         self.assertIn("movedWhileDragging ? .spring : .magnetic", self.slider)
 
-    def test_label_brightness_tracks_lens_distance_without_relayout(self):
+        magnetic = self.slider.split("private func magneticMotion", 1)[1].split(
+            "\n    /// Click motion", 1
+        )[0]
+        self.assertNotIn("halfWindow", magnetic)
+        self.assertNotIn("phases.removeAll", magnetic)
+        self.assertIn("centreOverrides.append((crossing, detent))", magnetic)
+
+    def test_label_brightness_tracks_capsule_distance_without_relayout(self):
         self.assertIn("private var activeLabels: [NSTextField]", self.slider)
         weights = self.slider.split("private func labelBlendWeights", 1)[1].split(
             "\n    private func applyLabelBlend", 1
@@ -235,7 +248,7 @@ class PopoverControlsContractTests(unittest.TestCase):
         )[0]
         self.assertIn("layer?.opacity", blend)
         drag = self.slider.split("private func moveKnob", 1)[1].split(
-            "\n    /// The optical body", 1
+            "\n    /// The dragged capsule", 1
         )[0]
         self.assertIn("setKnobGeometry", drag)
         self.assertNotIn("textColor", drag)
@@ -246,38 +259,79 @@ class PopoverControlsContractTests(unittest.TestCase):
         driver = self.slider.split("private func startSettleMotion", 1)[1].split(
             "\n    private func stopSettleMotion", 1
         )[0]
-        self.assertIn("self.setKnobFrame(frameAt(phase))", driver)
+        self.assertIn("let labelWeights = frames.map", driver)
+        self.assertIn("active.values = labelWeights.map", driver)
+        self.assertIn("base.values = labelWeights.map", driver)
+        self.assertIn('layer.add(group, forKey: "wattson.settle.geometry")', driver)
+        transaction_start = driver.rindex("CATransaction.begin()")
+        model_write = driver.rindex("setKnobFrame(target)")
+        animation_add = driver.index('layer.add(group, forKey: "wattson.settle.geometry")')
+        transaction_commit = driver.rindex("CATransaction.commit()")
+        self.assertLess(transaction_start, model_write)
+        self.assertLess(model_write, animation_add)
+        self.assertLess(animation_add, transaction_commit)
         self.assertLess(frame_update.index("self.knobHost.frame = frame"),
                         frame_update.index("applyLabelBlend(at: frame.midX)"))
 
-    def test_native_glass_motion_updates_real_geometry_not_wrapper_presentation(self):
+    def test_settle_runs_on_the_compositor_and_can_be_interrupted_visually(self):
         settle = self.slider.split("private func settle", 1)[1].split(
             "\n    private func magneticDuration", 1
         )[0]
         self.assertIn("startSettleMotion", settle)
-        self.assertNotIn("layer.add(", settle)
-        self.assertNotIn("presentation()", settle)
+        self.assertIn("let start = visibleKnobFrame()", settle)
+        self.assertNotIn("Timer", settle)
+        driver = self.slider.split("private func startSettleMotion", 1)[1].split(
+            "\n    private func stopSettleMotion", 1
+        )[0]
+        self.assertIn("CAAnimationGroup()", driver)
+        self.assertIn("settleGeneration == generation", driver)
+        interrupt = self.slider.split("private func interruptSettleAtVisibleGeometry", 1)[1].split(
+            "\n    private func moveKnob", 1
+        )[0]
+        self.assertLess(interrupt.index("visibleKnobFrame()"),
+                        interrupt.index("stopSettleMotion()"))
+        self.assertNotIn("removeAllAnimations", interrupt)
+        visible = self.slider.split("private func visibleKnobFrame", 1)[1].split(
+            "\n    private func setKnobFrame", 1
+        )[0]
+        self.assertIn("layer?.presentation()", visible)
+        self.assertIn("presentation.transform.m11", visible)
         layout = self.slider.split("override func layout()", 1)[1].split(
             "\n    // MARK: - State", 1
         )[0]
-        self.assertIn("if !dragging, settleTimer == nil", layout)
+        self.assertIn("if !dragging, activeSettleMotion == nil", layout)
 
     def test_display_option_refresh_cannot_lift_a_click_below_drag_slop(self):
         refresh = self.slider.split("private func refreshDisplayOptions", 1)[1].split(
-            "\n    /// The outer panel", 1
+            "\n    /// GitHub Mobile", 1
         )[0]
         self.assertIn("setLifted(movedWhileDragging)", refresh)
         self.assertNotIn("setLifted(dragging)", refresh)
 
-    def test_selector_is_neutral_while_outer_panel_follows_power_state(self):
-        self.assertIn("glass.tintColor = NSColor.white.withAlphaComponent", self.slider)
-        self.assertIn("view.layer?.borderColor = NSColor.white.withAlphaComponent", self.slider)
-        self.assertNotIn("view.layer?.borderColor = tint.withAlphaComponent", self.slider)
+        update = self.slider.split("func update(selected:", 1)[1].split(
+            "\n    /// Clicks flow", 1
+        )[0]
+        self.assertIn("setLifted(movedWhileDragging)", update)
+
+    def test_native_track_and_selector_follow_github_mobile_hierarchy(self):
+        self.assertIn("configureGlass(base, style: .regular", self.slider)
+        self.assertIn("tint: nil, content: trackContent", self.slider)
+        self.assertIn("selector.layer?.backgroundColor = NSColor.white.withAlphaComponent", self.slider)
+        self.assertIn("selector.layer?.borderWidth = 0", self.slider)
+        self.assertNotIn("configureGlass(selector", self.slider)
+        self.assertNotIn("case glass(NSView)", self.slider)
         track_tint = self.slider.split("private func applyTrackTint", 1)[1].split(
             "\n    /// Core Animation", 1
         )[0]
-        self.assertIn("glass.tintColor = tint.withAlphaComponent", track_tint)
-        self.assertIn("trackView.layer?.borderColor = tint.withAlphaComponent", track_tint)
+        self.assertIn("guard !usesNativeGlass else { return }", track_tint)
+        self.assertNotIn("glass.tintColor", track_tint)
+        self.assertIn("PopoverStyle.wellBorder.withAlphaComponent", track_tint)
+        self.assertNotIn("WATTSON_FORCE_OPTICAL_LENS", self.slider)
+        self.assertNotIn("backdropFilters", self.slider)
+        fallback = self.slider.split("private func installFallbackChromeIfNeeded", 1)[1].split(
+            "\n    private func refreshDisplayOptions", 1
+        )[0]
+        self.assertIn("masksToBounds = !usesNativeGlass", fallback)
 
     def test_footer_panel_tint_tracks_all_power_states_instead_of_fixed_blue(self):
         update_footer = self.content.split("private func updateFooter", 1)[1].split(

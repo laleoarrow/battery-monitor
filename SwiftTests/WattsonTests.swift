@@ -2,6 +2,95 @@ import XCTest
 @testable import Wattson
 
 final class WattsonTests: XCTestCase {
+    private func spinMainRunLoop(_ seconds: TimeInterval) {
+        RunLoop.main.run(until: Date().addingTimeInterval(seconds))
+    }
+
+    private func makeAnimatedSlider(selected: EnergyMode) -> (ModeSliderView, NSWindow) {
+        _ = NSApplication.shared
+        let slider = ModeSliderView(modes: [.auto, .low, .high])
+        let window = NSWindow(
+            contentRect: NSRect(x: -10_000, y: -10_000,
+                                width: 300, height: ModeSliderView.preferredHeight),
+            styleMask: [.borderless], backing: .buffered, defer: false
+        )
+        window.contentView = slider
+        slider.frame = window.contentView!.bounds
+        slider.update(selected: selected,
+                      enabledModes: [.auto, .low, .high],
+                      tint: .systemBlue)
+        slider.layoutSubtreeIfNeeded()
+        window.alphaValue = 0.01
+        window.orderFrontRegardless()
+        spinMainRunLoop(0.05)
+        return (slider, window)
+    }
+
+    private func sliderMouseEvent(_ type: NSEvent.EventType, x: CGFloat,
+                                  window: NSWindow) -> NSEvent {
+        NSEvent.mouseEvent(
+            with: type,
+            location: NSPoint(x: x, y: ModeSliderView.preferredHeight / 2),
+            modifierFlags: [], timestamp: 0, windowNumber: window.windowNumber,
+            context: nil, eventNumber: 0, clickCount: 1, pressure: 1
+        )!
+    }
+
+    private func tap(_ slider: ModeSliderView, in window: NSWindow, x: CGFloat) {
+        slider.mouseDown(with: sliderMouseEvent(.leftMouseDown, x: x, window: window))
+        slider.mouseUp(with: sliderMouseEvent(.leftMouseUp, x: x, window: window))
+    }
+
+    func testModeSliderRegrabMaterializesPresentationWithoutJump() {
+        let (slider, window) = makeAnimatedSlider(selected: .auto)
+        defer { window.orderOut(nil) }
+        slider.onSelect = { mode, completion in completion(mode) }
+
+        tap(slider, in: window, x: slider.detentCentreForTest(2))
+        spinMainRunLoop(0.075)
+        let visibleBeforeGrab = slider.glassViewCentreForTest
+        slider.mouseDown(with: sliderMouseEvent(.leftMouseDown,
+                                                x: visibleBeforeGrab,
+                                                window: window))
+
+        if slider.reducesMotionForTest {
+            XCTAssertEqual(visibleBeforeGrab, slider.detentCentreForTest(2), accuracy: 0.5)
+        } else {
+            XCTAssertGreaterThan(visibleBeforeGrab, slider.detentCentreForTest(0) + 2)
+            XCTAssertLessThan(visibleBeforeGrab, slider.detentCentreForTest(2) - 2)
+        }
+        XCTAssertEqual(slider.knobCentreForTest, visibleBeforeGrab, accuracy: 1)
+        XCTAssertFalse(slider.settleIsAnimatingForTest)
+    }
+
+    func testModeSliderRejectionReversesFromPresentationPosition() {
+        let (slider, window) = makeAnimatedSlider(selected: .high)
+        defer { window.orderOut(nil) }
+        var completion: ((EnergyMode?) -> Void)?
+        slider.onSelect = { _, callback in completion = callback }
+
+        tap(slider, in: window, x: slider.detentCentreForTest(0))
+        spinMainRunLoop(0.08)
+        let visibleBeforeRejection = slider.glassViewCentreForTest
+        completion?(.high)
+        let visibleAfterRejection = slider.glassViewCentreForTest
+
+        if slider.reducesMotionForTest {
+            XCTAssertEqual(visibleBeforeRejection, slider.detentCentreForTest(0), accuracy: 0.5)
+            XCTAssertEqual(visibleAfterRejection, slider.detentCentreForTest(2), accuracy: 0.5)
+            XCTAssertFalse(slider.settleIsAnimatingForTest)
+        } else {
+            XCTAssertGreaterThan(visibleBeforeRejection, slider.detentCentreForTest(0) + 2)
+            XCTAssertLessThan(visibleBeforeRejection, slider.detentCentreForTest(2) - 2)
+            XCTAssertEqual(visibleAfterRejection, visibleBeforeRejection, accuracy: 1)
+            XCTAssertTrue(slider.settleIsAnimatingForTest)
+        }
+
+        spinMainRunLoop(0.4)
+        XCTAssertEqual(slider.glassViewCentreForTest,
+                       slider.detentCentreForTest(2), accuracy: 0.5)
+    }
+
     func testPowerSnapshotUsesSignedBatteryFlow() {
         let charging = PowerSnapshot(
             percent: 60,

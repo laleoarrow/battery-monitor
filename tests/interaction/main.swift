@@ -157,8 +157,8 @@ slider.frame = win.contentView!.bounds
 slider.update(selected: .auto, enabledModes: [.auto, .low, .high], tint: .systemBlue)
 slider.layoutSubtreeIfNeeded()
 // Keep a composited window offscreen. Assertions below read the public frame
-// of the real NSGlassEffectView, not the wrapper presentation layer that can
-// animate independently of the container-promoted material.
+// of the real moving selection capsule, so geometry and label blending are
+// verified from the same animation state.
 win.setFrameOrigin(NSPoint(x: -10_000, y: -10_000))
 win.alphaValue = 0.01
 win.orderFrontRegardless()
@@ -201,13 +201,17 @@ if #available(macOS 26.0, *) {
     expectsNativeGlass = false
 }
 if expectsNativeGlass {
-    check("原生材质使用暗色 Regular 底轨和 Regular 折射透镜",
-          slider.nativeGlassStylesForTest?.track == 0
-              && slider.nativeGlassStylesForTest?.selector == 0,
-          "\(String(describing: slider.nativeGlassStylesForTest))")
+    let selectorFill = slider.nativeSelectorFillAlphaForTest ?? 0
+    check("原生材质使用无染色 Regular 底轨和中性无边框选中胶囊",
+          slider.nativeTrackStyleForTest == 0
+              && slider.nativeTrackHasTintForTest == false
+              && selectorFill > 0
+              && selectorFill <= 0.25
+              && slider.nativeSelectorBorderWidthForTest == 0,
+          "track=\(String(describing: slider.nativeTrackStyleForTest)) fill=\(selectorFill)")
 } else {
     check("旧系统路径不向普通 NSView 发送 Liquid Glass 属性",
-          slider.nativeGlassStylesForTest == nil)
+          slider.nativeTrackStyleForTest == nil)
     if ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] == "1" {
         check("旧系统减少透明度时 selector 使用不透明填充",
               (slider.fallbackSelectorOpacityForTest ?? 0) >= 0.999,
@@ -225,8 +229,9 @@ do {
     }
     slider.mouseDown(with: ev(.leftMouseDown, autoCentre))
     if expectsNativeGlass {
-        check("单纯按下仍是 Regular 静止选中片",
-              slider.nativeGlassStylesForTest?.selector == 0)
+        check("单纯按下不改变中性选中胶囊",
+              (slider.nativeSelectorFillAlphaForTest ?? 0) > 0
+                  && slider.nativeSelectorBorderWidthForTest == 0)
     }
     let pressed = slider.knobScaleForTest
     check("单纯按下不放大",
@@ -242,14 +247,22 @@ do {
     slider.mouseDragged(with: ev(.leftMouseDragged, autoCentre + 6))
     let dragged = slider.knobScaleForTest
     if expectsNativeGlass {
-        check("开始拖动后 Regular 选中片变为 Clear 折射透镜",
-              slider.nativeGlassStylesForTest?.selector == 1)
+        let liftedFill = slider.nativeSelectorFillAlphaForTest ?? 0
+        check("开始拖动后仍保持中性无边框选中胶囊",
+              liftedFill > 0
+                  && slider.nativeSelectorBorderWidthForTest == 0)
+        slider.update(selected: .auto,
+                      enabledModes: [.auto, .low, .high],
+                      tint: .systemBlue)
+        check("拖动中的 1 Hz 刷新不会压平浮起材质",
+              abs((slider.nativeSelectorFillAlphaForTest ?? 0) - liftedFill) < 0.001,
+              "刷新前 \(liftedFill)，刷新后 \(slider.nativeSelectorFillAlphaForTest ?? -1)")
     }
     if slider.reducesMotionForTest {
         check("减少动态效果时拖动不放大",
               abs(dragged.width - 1) < 0.01 && abs(dragged.height - 1) < 0.01)
     } else {
-        check("开始拖动后才放大为浮起透镜",
+        check("开始拖动后才放大为浮起胶囊",
               dragged.width >= 1.12 && dragged.height >= 1.34,
               String(format: "%.2f × %.2f", dragged.width, dragged.height))
     }
@@ -265,8 +278,9 @@ do {
     check("拖动预览不会提前提交系统模式", chosen.isEmpty, "\(chosen)")
     slider.mouseUp(with: ev(.leftMouseUp, autoCentre + 6))
     if expectsNativeGlass {
-        check("释放后透镜恢复 Regular 静止材质",
-              slider.nativeGlassStylesForTest?.selector == 0)
+        check("释放后选中胶囊回到中性静止材质",
+              (slider.nativeSelectorFillAlphaForTest ?? 0) > 0
+                  && slider.nativeSelectorBorderWidthForTest == 0)
     }
     spin(0.3)
 }
@@ -282,7 +296,9 @@ if slider.reducesMotionForTest {
     check("减少动态效果时释放直接吸附且不添加弹簧", !slider.settleIsAnimatingForTest)
 } else {
     check("松手有吸附弹簧动画",
-          slider.settleIsAnimatingForTest && slider.settleUsesSpringForTest)
+          slider.settleIsAnimatingForTest
+              && slider.settleUsesSpringForTest
+              && (slider.settleDurationForTest ?? 1) <= 0.24)
 }
 // 60 次拖动事件里只该跨过 1 个档位；每帧都重着色正是当初卡顿的原因
 check("拖动 60 帧只重着色跨档的那几次", relabels <= 3, "\(relabels) 次")
@@ -468,11 +484,10 @@ let appliedMiddlePeak = slider.labelBlendTraceForTest.compactMap { weights in
     weights.count == 3 ? weights[1] : nil
 }.max() ?? 0
 let directMotionCentres = slider.magneticMotionCentresForTest(from: 0, to: 2)
-let middleDwellFrames = directMotionCentres.filter { abs($0 - lowCentre) <= 4.1 }.count
-check("Auto 直接点 High 的轨迹包含 Low 中心磁力驻留",
+check("Auto 直接点 High 的连续轨迹精确经过 Low 中心",
       directMotionCentres.contains(where: { abs($0 - lowCentre) < 0.01 })
-          && middleDwellFrames >= 3,
-      "Low 附近 \(middleDwellFrames) 个关键帧")
+          && appliedMiddlePeak > 0.99,
+      String(format: "Low 亮度峰值 %.3f", appliedMiddlePeak))
 if slider.reducesMotionForTest {
     check("减少动态效果时 Auto 直接落到 High",
           abs(slider.glassViewCentreForTest - highCentre) < 1)
@@ -541,6 +556,57 @@ check("较旧写入的迟到回调不会覆盖最新预览",
 racedSelections[1].completion(.high)
 check("A 成功而 B 失败时回到实际落地的 A",
       !slider.selectionIsPendingForTest && slider.selectedIndexForTest == 2)
+spin(0.4)
+
+// 合成层动画中重新抓取必须从屏幕上的实际位置继续，不能跳到 model 终点。
+slider.onSelect = { mode, completion in completion(mode) }
+tap(slider, in: win, atX: autoCentre)
+spin(0.075)
+let centreBeforeRegrab = slider.glassViewCentreForTest
+do {
+    func ev(_ type: NSEvent.EventType, _ x: CGFloat) -> NSEvent {
+        NSEvent.mouseEvent(with: type,
+                           location: NSPoint(x: x, y: ModeSliderView.preferredHeight / 2),
+                           modifierFlags: [], timestamp: 0, windowNumber: win.windowNumber,
+                           context: nil, eventNumber: 0, clickCount: 1, pressure: 1)!
+    }
+    slider.mouseDown(with: ev(.leftMouseDown, centreBeforeRegrab))
+    check("动画中重新抓取不发生位置跳变",
+          abs(slider.knobCentreForTest - centreBeforeRegrab) < 1
+              && !slider.settleIsAnimatingForTest,
+          String(format: "抓取前 %.2f，抓取后 %.2f",
+                 centreBeforeRegrab, slider.knobCentreForTest))
+    slider.mouseUp(with: ev(.leftMouseUp, centreBeforeRegrab))
+}
+spin(0.4)
+
+// helper 在动画途中拒绝写入时，回滚也必须从当前 presentation 开始。
+slider.update(selected: .high, enabledModes: [.auto, .low, .high], tint: .systemBlue)
+spin(0.35)
+var rejectionCompletion: ((EnergyMode?) -> Void)?
+slider.onSelect = { _, completion in rejectionCompletion = completion }
+tap(slider, in: win, atX: autoCentre)
+spin(0.08)
+let centreBeforeRejection = slider.glassViewCentreForTest
+rejectionCompletion?(.high)
+let centreAfterRejection = slider.glassViewCentreForTest
+if slider.reducesMotionForTest {
+    check("减少动态效果时失败回滚直接落到真实档位",
+          abs(centreBeforeRejection - autoCentre) < 0.5
+              && abs(centreAfterRejection - highCentre) < 0.5
+              && !slider.settleIsAnimatingForTest)
+} else {
+    check("动画中失败回滚从当前可见位置反向启动",
+          centreBeforeRejection > autoCentre + 2
+              && centreBeforeRejection < highCentre - 2
+              && abs(centreAfterRejection - centreBeforeRejection) < 1
+              && slider.settleIsAnimatingForTest,
+          String(format: "拒绝前 %.2f，回滚起点 %.2f",
+                 centreBeforeRejection, centreAfterRejection))
+}
+spin(0.4)
+check("动画中失败最终回到真实档位",
+      abs(slider.glassViewCentreForTest - highCentre) < 0.5)
 
 // 键盘与 VoiceOver 走同一条提交路径，并跳过不可用档位。
 let accessible = ModeSliderView(modes: [.auto, .low, .high])

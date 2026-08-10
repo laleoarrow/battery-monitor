@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.1`
+- Version: `3.0.2`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +14,11 @@
 
 ## Public artifacts
 
-`scripts/release.sh 3.0.1` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.2` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.1-macos-universal.pkg`
-- `Wattson-v3.0.1-macos-universal.dmg`
-- `Wattson-v3.0.1-release-info.txt`
+- `Wattson-v3.0.2-macos-universal.pkg`
+- `Wattson-v3.0.2-macos-universal.dmg`
+- `Wattson-v3.0.2-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -50,12 +50,13 @@ All shipped user-facing copy is English. The settings menu shows the exact
 
 The mode selector keeps the v2.1.5 interaction contract:
 
-- Resting glass is no wider than one segment.
-- Only a real drag enlarges the lens.
+- The resting selection is no wider than one segment.
+- Only a real drag enlarges the selection capsule.
 - Dragging previews continuously and commits on release.
 - Clicking another mode follows a visible magnetic path rather than jumping.
-- Label brightness cross-fades with the real lens position.
-- Native Liquid Glass is used on macOS 26; macOS 12–25 use the tested fallback.
+- Label brightness cross-fades with the real selection position.
+- One native Liquid Glass track is used on macOS 26 with a neutral selection
+  capsule; macOS 12–25 use the tested fallback.
 - Reduce Motion, Reduce Transparency, keyboard, VoiceOver, and focus behavior
   remain covered.
 
@@ -66,7 +67,7 @@ Headless checks:
 ```bash
 swift test --parallel
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.1
+bash scripts/release.sh 3.0.2
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -94,7 +95,7 @@ runners.
    must pass its build and five-platform install matrix.
 3. A successful branch candidate automatically invokes the fail-closed
    promotion workflow. Promotion requires both successful Headless CI and the
-   candidate to use the current `main` SHA, creates the annotated `v3.0.1` tag,
+   candidate to use the current `main` SHA, creates the annotated `v3.0.2` tag,
    and publishes the exact candidate artifacts. Manual dispatch remains an
    audited fallback.
 4. Promotion dispatches the Homebrew sync. The workflow must observe the exact
@@ -103,9 +104,17 @@ runners.
    Homebrew lifecycle tests.
 5. The stable release is initially published without replacing
    `releases/latest`. Only after both public Homebrew lifecycle jobs pass does
-   the chain mark v3.0.1 latest and dispatch the tag-pinned GitHub Pages
+   the chain mark v3.0.2 latest and dispatch the tag-pinned GitHub Pages
    deployment. Update OpenAI Sites from the same release source.
-6. Announce the release only after every public route resolves to v3.0.1.
+6. Announce the release only after every public route resolves to v3.0.2.
+
+## v3.0.2 selector work
+
+The v3.0.2 pass moves click and release motion to Core Animation's compositor,
+keeps direct dragging one-to-one, shortens magnetic release, and blends label
+brightness from the visible capsule position. It also handles re-grabbing an
+active animation and rejected mode writes without a one-frame jump, including
+the Reduce Motion path.
 
 ## v3.0.1 performance work
 
