@@ -700,8 +700,12 @@ final class ModeSliderView: NSView {
         settleGeneration += 1
         let generation = settleGeneration
 
+        let anchorPoint = layer.anchorPoint
         let positions = frames.map {
-            NSValue(point: NSPoint(x: $0.midX, y: $0.midY))
+            NSValue(point: NSPoint(
+                x: $0.minX + $0.width * anchorPoint.x,
+                y: $0.minY + $0.height * anchorPoint.y
+            ))
         }
         let transforms = frames.map {
             NSValue(caTransform3D: CATransform3DMakeScale(

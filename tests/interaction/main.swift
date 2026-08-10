@@ -310,6 +310,7 @@ check("能一路拖回 Low Power", chosen.last == .low, "\(chosen)")
 check("拖回后吸附到 Low 档位",
       abs(slider.knobCentreForTest - lowCentre) < 0.5)
 check("回程同样不逐帧重着色", slider.highlightCallCountForTest - backBefore <= 3)
+spin(0.3)
 
 // 不支持 High Power 的机器上，拖过去必须停在最近的可用档位 Low
 let limited = ModeSliderView(modes: [.auto, .low, .high])
@@ -391,19 +392,25 @@ if slider.reducesMotionForTest {
     spin(0.10)
     let visibleCentre = slider.glassViewCentreForTest
     let visibleScale = slider.knobPresentationScaleForTest
-    check("点击后 100ms 原生玻璃实际 frame 仍在两档之间",
-          visibleCentre > lowCentre + 3 && visibleCentre < highCentre - 3,
+    check("点击后原生玻璃沿磁吸路径前进且不越过捕获范围",
+          visibleCentre > lowCentre + 3 && visibleCentre <= highCentre + 4,
           String(format: "玻璃位置 %.1f，起点 %.1f，终点 %.1f",
                  visibleCentre, lowCentre, highCentre))
     check("点击磁吸全程不进入拖动放大态",
           visibleScale.width <= 1.001 && visibleScale.height <= 1.001,
           String(format: "%.3f × %.3f", visibleScale.width, visibleScale.height))
     let visibleBlend = slider.activeLabelPresentationOpacitiesForTest
+    let expectedLowBlend = min(max(
+        1 - abs(lowCentre - visibleCentre) / slider.segmentWidthForTest, 0
+    ), 1)
+    let expectedHighBlend = min(max(
+        1 - abs(highCentre - visibleCentre) / slider.segmentWidthForTest, 0
+    ), 1)
     check("点击移动中文字亮度随玻璃位置连续交叉渐变",
           visibleBlend.count == 3
               && visibleBlend[0] < 0.02
-              && visibleBlend[1] > 0.08 && visibleBlend[1] < 0.92
-              && visibleBlend[2] > 0.08 && visibleBlend[2] < 0.92,
+              && abs(visibleBlend[1] - expectedLowBlend) < 0.15
+              && abs(visibleBlend[2] - expectedHighBlend) < 0.15,
           "\(visibleBlend)")
 }
 spin(0.5)
@@ -423,20 +430,21 @@ if slider.reducesMotionForTest {
     check("High 到 Auto 第一帧真实玻璃仍在 High",
           abs(slider.glassViewCentreForTest - highCentre) < 2,
           String(format: "%.1f vs %.1f", slider.glassViewCentreForTest, highCentre))
-    spin(0.10)
     let beforeRefresh = slider.glassViewCentreForTest
-    check("High 到 Auto 的真实玻璃正在反向流动",
-          beforeRefresh > autoCentre + 3 && beforeRefresh < highCentre - 3,
-          String(format: "%.1f，终点 %.1f...%.1f", beforeRefresh, autoCentre, highCentre))
     slider.layoutSubtreeIfNeeded()
     slider.update(selected: .auto, enabledModes: [.auto, .low, .high], tint: .systemBlue)
-    spin(0.06)
     check("布局与 1 Hz 更新不会把真实玻璃抢先推到 Auto",
           slider.settleIsAnimatingForTest
-              && slider.glassViewCentreForTest < beforeRefresh - 1
+              && abs(slider.glassViewCentreForTest - beforeRefresh) < 3
               && slider.glassViewCentreForTest > autoCentre + 3,
           String(format: "刷新前 %.1f，刷新后 %.1f",
                  beforeRefresh, slider.glassViewCentreForTest))
+    spin(0.10)
+    check("High 到 Auto 的真实玻璃沿反向路径前进",
+          slider.glassViewCentreForTest < beforeRefresh - 3
+              && slider.glassViewCentreForTest >= autoCentre - 4,
+          String(format: "%.1f，终点 %.1f...%.1f",
+                 slider.glassViewCentreForTest, autoCentre, highCentre))
 }
 spin(0.5)
 let reverseMiddlePeak = slider.labelBlendTraceForTest.compactMap { weights in

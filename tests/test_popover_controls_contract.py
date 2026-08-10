@@ -289,6 +289,9 @@ class PopoverControlsContractTests(unittest.TestCase):
         )[0]
         self.assertIn("CAAnimationGroup()", driver)
         self.assertIn("settleGeneration == generation", driver)
+        self.assertIn("let anchorPoint = layer.anchorPoint", driver)
+        self.assertIn("$0.minX + $0.width * anchorPoint.x", driver)
+        self.assertIn("$0.minY + $0.height * anchorPoint.y", driver)
         interrupt = self.slider.split("private func interruptSettleAtVisibleGeometry", 1)[1].split(
             "\n    private func moveKnob", 1
         )[0]

@@ -41,6 +41,16 @@ final class WattsonTests: XCTestCase {
         slider.mouseUp(with: sliderMouseEvent(.leftMouseUp, x: x, window: window))
     }
 
+    private func drag(_ slider: ModeSliderView, in window: NSWindow,
+                      from startX: CGFloat, to endX: CGFloat, steps: Int = 30) {
+        slider.mouseDown(with: sliderMouseEvent(.leftMouseDown, x: startX, window: window))
+        for step in 1...steps {
+            let x = startX + (endX - startX) * CGFloat(step) / CGFloat(steps)
+            slider.mouseDragged(with: sliderMouseEvent(.leftMouseDragged, x: x, window: window))
+        }
+        slider.mouseUp(with: sliderMouseEvent(.leftMouseUp, x: endX, window: window))
+    }
+
     func testModeSliderRegrabMaterializesPresentationWithoutJump() {
         let (slider, window) = makeAnimatedSlider(selected: .auto)
         defer { window.orderOut(nil) }
@@ -111,6 +121,41 @@ final class WattsonTests: XCTestCase {
             XCTAssertFalse(slider.settleIsAnimatingForTest)
         } else {
             XCTAssertGreaterThan(middlePeak, 0.99)
+        }
+    }
+
+    func testModeSliderClickDuringSpringStaysInsideItsVisiblePath() {
+        let (slider, window) = makeAnimatedSlider(selected: .auto)
+        defer { window.orderOut(nil) }
+        slider.onSelect = { mode, completion in completion(mode) }
+        let auto = slider.detentCentreForTest(0)
+        let low = slider.detentCentreForTest(1)
+        let high = slider.detentCentreForTest(2)
+
+        drag(slider, in: window, from: auto, to: high)
+        spinMainRunLoop(0.4)
+        drag(slider, in: window, from: high, to: low)
+        spinMainRunLoop(0.18)
+        let visibleBeforeClick = slider.glassViewCentreForTest
+        tap(slider, in: window, x: high)
+        let visibleAfterClick = slider.glassViewCentreForTest
+
+        if slider.reducesMotionForTest {
+            XCTAssertEqual(visibleAfterClick, high, accuracy: 0.5)
+        } else {
+            XCTAssertEqual(visibleAfterClick, visibleBeforeClick, accuracy: 1)
+            var samples = [visibleAfterClick]
+            let deadline = Date().addingTimeInterval(0.4)
+            while slider.settleIsAnimatingForTest && Date() < deadline {
+                spinMainRunLoop(0.01)
+                samples.append(slider.glassViewCentreForTest)
+            }
+            XCTAssertGreaterThan(samples.max() ?? visibleAfterClick, visibleBeforeClick)
+            XCTAssertTrue(samples.allSatisfy {
+                $0 >= min(visibleBeforeClick, high) - 4
+                    && $0 <= max(visibleBeforeClick, high) + 4
+            })
+            XCTAssertEqual(slider.glassViewCentreForTest, high, accuracy: 0.5)
         }
     }
 
