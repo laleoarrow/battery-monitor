@@ -127,6 +127,10 @@ class PopoverControlsContractTests(unittest.TestCase):
         # only ever run on someone else's Mac.
         self.assertIn("WATTSON_FORCE_LEGACY_KNOB", self.slider)
 
+    def test_release_runner_can_force_both_reduce_motion_paths(self):
+        self.assertIn('case "1": return true', self.slider)
+        self.assertIn('case "0": return false', self.slider)
+
     def test_knob_has_a_fallback_below_macos_26(self):
         # Liquid Glass is macOS 26 only; older systems get a plain translucent
         # pill rather than a hand-rolled imitation.

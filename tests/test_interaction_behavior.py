@@ -45,6 +45,8 @@ class InteractionBehaviorTests(unittest.TestCase):
             environment["WATTSON_FORCE_LEGACY_KNOB"] = "1"
             environment["WATTSON_FORCE_REDUCE_MOTION"] = "1"
             environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] = "1"
+        else:
+            environment["WATTSON_FORCE_REDUCE_MOTION"] = "0"
         result = subprocess.run(
             ["/bin/bash", str(RUNNER)], capture_output=True, text=True, check=False,
             timeout=300, env=environment

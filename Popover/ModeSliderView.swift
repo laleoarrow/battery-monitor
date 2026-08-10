@@ -8,7 +8,11 @@ final class ModeSliderView: NSView {
 
     private static var reducesMotion: Bool {
 #if DEBUG
-        if ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"] == "1" { return true }
+        switch ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"] {
+        case "1": return true
+        case "0": return false
+        default: break
+        }
 #endif
         return NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
     }

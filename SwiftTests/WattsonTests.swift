@@ -91,6 +91,29 @@ final class WattsonTests: XCTestCase {
                        slider.detentCentreForTest(2), accuracy: 0.5)
     }
 
+    func testModeSliderTwoDetentMotionRecordsTheMiddleLabelPeak() {
+        let (slider, window) = makeAnimatedSlider(selected: .auto)
+        defer { window.orderOut(nil) }
+        slider.onSelect = { mode, completion in completion(mode) }
+
+        slider.resetLabelBlendTraceForTest()
+        tap(slider, in: window, x: slider.detentCentreForTest(2))
+
+        let middlePeak = slider.labelBlendTraceForTest.compactMap { weights in
+            weights.count == 3 ? weights[1] : nil
+        }.max() ?? 0
+        XCTAssertTrue(
+            slider.magneticMotionCentresForTest(from: 0, to: 2).contains {
+                abs($0 - slider.detentCentreForTest(1)) < 0.01
+            }
+        )
+        if slider.reducesMotionForTest {
+            XCTAssertFalse(slider.settleIsAnimatingForTest)
+        } else {
+            XCTAssertGreaterThan(middlePeak, 0.99)
+        }
+    }
+
     func testPowerSnapshotUsesSignedBatteryFlow() {
         let charging = PowerSnapshot(
             percent: 60,

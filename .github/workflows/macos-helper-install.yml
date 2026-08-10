@@ -61,7 +61,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          /bin/bash scripts/verify_interaction.sh
+          env WATTSON_FORCE_REDUCE_MOTION=0 \
+            /bin/bash scripts/verify_interaction.sh
           env \
             WATTSON_FORCE_LEGACY_KNOB=1 \
             WATTSON_FORCE_REDUCE_MOTION=1 \

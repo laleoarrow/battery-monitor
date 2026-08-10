@@ -23,6 +23,7 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
 
     def test_release_candidate_replays_real_appkit_off_the_user_mac(self):
         self.assertIn("scripts/verify_interaction.sh", CANDIDATE)
+        self.assertIn("WATTSON_FORCE_REDUCE_MOTION=0", CANDIDATE)
         self.assertIn("WATTSON_FORCE_LEGACY_KNOB=1", CANDIDATE)
         self.assertIn("WATTSON_FORCE_REDUCE_MOTION=1", CANDIDATE)
         self.assertIn("WATTSON_FORCE_REDUCE_TRANSPARENCY=1", CANDIDATE)

@@ -486,7 +486,7 @@ let appliedMiddlePeak = slider.labelBlendTraceForTest.compactMap { weights in
 let directMotionCentres = slider.magneticMotionCentresForTest(from: 0, to: 2)
 check("Auto 直接点 High 的连续轨迹精确经过 Low 中心",
       directMotionCentres.contains(where: { abs($0 - lowCentre) < 0.01 })
-          && appliedMiddlePeak > 0.99,
+          && (slider.reducesMotionForTest || appliedMiddlePeak > 0.99),
       String(format: "Low 亮度峰值 %.3f", appliedMiddlePeak))
 if slider.reducesMotionForTest {
     check("减少动态效果时 Auto 直接落到 High",
