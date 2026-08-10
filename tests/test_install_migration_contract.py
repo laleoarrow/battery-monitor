@@ -338,7 +338,8 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertNotIn("uses: actions/upload-artifact@v4", self.ci_helper_workflow)
         self.assertNotIn("uses: actions/download-artifact@v4", self.ci_helper_workflow)
         self.assertIn("retention-days: 7", self.ci_helper_workflow)
-        self.assertIn("UNNOTARIZED-CI-ONLY", self.ci_helper_workflow)
+        self.assertIn("Wattson-release-candidate-v", self.ci_helper_workflow)
+        self.assertNotIn("UNNOTARIZED-CI-ONLY", self.ci_helper_workflow)
         self.assertIn("scripts/release.sh", self.ci_helper_workflow)
         self.assertIn("unittest discover", self.ci_helper_workflow)
         self.assertIn("shasum -a 256 -c SHA256SUMS.txt", self.ci_helper_workflow)
@@ -357,6 +358,47 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn("hosted runner has no AppleSmartBattery", self.ci_helper_workflow)
         self.assertIn("/bin/bash scripts/uninstall.sh", self.ci_helper_workflow)
         self.assertNotIn("ci_test_helper_install.sh", self.ci_helper_workflow)
+
+    def test_signed_candidate_matrix_verifies_exact_uploaded_bytes(self):
+        workflow = self.ci_helper_workflow
+        self.assertEqual(workflow.count("scripts/release.sh"), 1)
+        self.assertIn(
+            "WATTSON_DISTRIBUTION_MODE: ${{ needs.build.outputs.distribution_mode }}",
+            workflow,
+        )
+        self.assertIn(
+            "EXPECTED_TEAM_ID: ${{ needs.build.outputs.signing_team_id }}",
+            workflow,
+        )
+        for metadata in (
+            "distribution_mode=developer-id",
+            "app_signature=developer-id",
+            "helper_signature=developer-id",
+            "package_signature=developer-id",
+            "dmg_signature=developer-id",
+            "notarized=yes",
+            "stapled=yes",
+        ):
+            self.assertIn(metadata, workflow)
+        self.assertIn('pkgutil --check-signature "$PKG_PATH"', workflow)
+        self.assertIn(
+            'codesign --verify --deep --strict --verbose=2 "$PACKAGED_APP_DIR"',
+            workflow,
+        )
+        self.assertIn(
+            'codesign --verify --strict --verbose=2 "$PACKAGED_HELPER"',
+            workflow,
+        )
+        self.assertIn('codesign --verify --strict --verbose=2 "$DMG_PATH"', workflow)
+        self.assertIn('TeamIdentifier=$EXPECTED_TEAM_ID', workflow)
+        self.assertIn("Signed with a trusted timestamp", workflow)
+        self.assertIn("'^Timestamp=.+'", workflow)
+        self.assertIn('xcrun stapler validate -v "$PKG_PATH"', workflow)
+        self.assertIn('xcrun stapler validate -v "$DMG_PATH"', workflow)
+        self.assertIn('spctl --assess --type execute', workflow)
+        self.assertIn('spctl --assess --type install', workflow)
+        self.assertIn('--context context:primary-signature', workflow)
+        self.assertIn('/usr/bin/cmp -s "$PKG_PATH" "$MOUNT_DIR/$PKG_NAME"', workflow)
 
     def test_preview_build_does_not_create_a_searchable_dist_app(self):
         self.assertNotIn('APP_BUNDLE="$DIST_DIR/$APP_NAME.app"', self.run_script)

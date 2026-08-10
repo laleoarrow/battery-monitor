@@ -136,11 +136,34 @@ class ReleasePackagingContractTests(unittest.TestCase):
         release = self.source["release.sh"]
         notarize = self.source["notarize.sh"]
         self.assertIn('NOTARIZE_RELEASE="${WATTSON_NOTARIZE:-0}"', release)
+        self.assertIn('|| -z "${WATTSON_NOTARY_ISSUER:-}"', release)
+        self.assertIn('|| -n "${WATTSON_NOTARY_ISSUER:-}"', notarize)
+        self.assertIn('|| -z "${WATTSON_NOTARY_ISSUER:-}"', notarize)
+        self.assertIn('--issuer "$WATTSON_NOTARY_ISSUER"', notarize)
+        self.assertIn('-extract status raw "$SUBMISSION_RESULT"', notarize)
+        self.assertIn('-extract id raw "$SUBMISSION_RESULT"', notarize)
+        self.assertIn("notarytool log", notarize)
+        self.assertIn('-type issues "$NOTARY_LOG"', notarize)
+        self.assertIn('-extract issues raw "$NOTARY_LOG"', notarize)
+        self.assertIn('NOTARY_ISSUE_COUNT" != "0"', notarize)
         self.assertIn('NOTARY_STATUS" != "Accepted"', notarize)
+        self.assertLess(
+            notarize.index("notarytool log"),
+            notarize.index('NOTARY_STATUS" != "Accepted"'),
+        )
         self.assertLess(
             notarize.index('NOTARY_STATUS" != "Accepted"'),
             notarize.index("stapler staple"),
         )
+        self.assertLess(
+            notarize.index('NOTARY_ISSUE_COUNT" != "0"'),
+            notarize.index("stapler staple"),
+        )
+        self.assertIn('/usr/bin/mktemp -d', notarize)
+        self.assertIn("trap cleanup EXIT", notarize)
+        self.assertIn('/bin/rm -f -- "$NOTARY_LOG"', notarize)
+        self.assertIn('/bin/rm -f -- "$SUBMISSION_RESULT"', notarize)
+        self.assertIn('/bin/rmdir "$TEMP_DIR"', notarize)
         self.assertLess(
             release.index('notarize.sh" "$DMG_PATH"'),
             release.index('NOTARIZED="yes"'),

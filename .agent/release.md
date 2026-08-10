@@ -2,8 +2,8 @@
 
 ## Community release
 
-The normal public build intentionally matches iData's community distribution
-model and does not require Developer ID credentials:
+The credential-free script default intentionally matches iData's community
+distribution model and does not require Developer ID credentials:
 
 ```bash
 bash scripts/release.sh "$(tr -d '\r\n' < VERSION)"
@@ -20,12 +20,55 @@ The DMG contains exactly one visible item: the byte-identical native PKG. The
 PKG is the canonical installation surface for DMG, direct download, and the
 Homebrew cask.
 
-## Optional Developer ID path
+## Developer ID and notarization
 
-Set both `WATTSON_DEVELOPER_ID_APP` and
-`WATTSON_DEVELOPER_ID_INSTALLER`. Set `WATTSON_NOTARIZE=1` only with a valid
-notary keychain profile or API-key variables. Never describe an artifact as
-notarized unless `notarytool` returned `Accepted` and `stapler validate` passed.
+The local script still supports an explicit Developer ID path. Set both
+`WATTSON_DEVELOPER_ID_APP` and `WATTSON_DEVELOPER_ID_INSTALLER`, then set
+`WATTSON_NOTARIZE=1` with either a valid notary keychain profile or all three
+Team API-key variables: `WATTSON_NOTARY_KEY_PATH`, `WATTSON_NOTARY_KEY_ID`, and
+`WATTSON_NOTARY_ISSUER`. Never describe an artifact as notarized unless Apple
+returned `Accepted`, the notarization log contains no issues, and
+`stapler validate` passed.
+
+The unattended authenticated path is the **Wattson release candidate** GitHub
+workflow. Configure a `release-signing` Environment that permits deployments
+from `main` only. A required reviewer is optional; omit it when the release
+must continue unattended. Store only these values in that Environment:
+
+Secrets:
+
+- `MACOS_APP_CERT_P12_BASE64`
+- `MACOS_APP_CERT_P12_PASSWORD`
+- `MACOS_INSTALLER_CERT_P12_BASE64`
+- `MACOS_INSTALLER_CERT_P12_PASSWORD`
+- `APPLE_NOTARY_API_KEY_P8_BASE64`
+- `APPLE_NOTARY_API_KEY_ID`
+- `APPLE_NOTARY_API_ISSUER_ID`
+
+Environment variable:
+
+- `APPLE_TEAM_ID`
+
+The P12 files must contain the private keys for one Developer ID Application
+certificate and one Developer ID Installer certificate from that Team ID. The
+notary credential must be an App Store Connect **Team** API key; an Individual
+API key cannot be used by `notarytool`. Keep `community-ci` free of signing
+secrets.
+
+After increasing `VERSION` and pushing the exact release commit to `main`, open
+Actions, choose **Wattson release candidate**, and run it on `main`. Leave
+`distribution_mode` at `developer-id-notarized`. That single dispatch imports
+the credentials into a temporary keychain, signs the helper/app/PKG/DMG,
+notarizes and staples the PKG and DMG, deletes the credentials, and uploads one
+artifact set. Fresh GitHub-hosted macOS 14, 15, and 26 runners on Intel and
+Apple silicon then install, reinstall, upgrade, launch, and uninstall those
+exact bytes. A fully successful signed run automatically starts stable
+promotion, Homebrew validation, public install tests, and Pages deployment.
+Do not reuse or replace an existing release tag.
+
+Pushes to `release-candidate` and manual `community-ad-hoc` runs remain
+credential-free compatibility tests. They never auto-promote to a stable
+release.
 
 ## Required release gate
 
@@ -54,12 +97,12 @@ notarized unless `notarytool` returned `Accepted` and `stapler validate` passed.
    GitHub Pages must already use **GitHub Actions** as its publishing source.
    Announce the release only after Pages is green.
 
-For an unattended release, first push the final commit to `main`, freeze it,
-then push the identical SHA to `release-candidate`. A successful candidate run
-automatically starts promotion. Promotion rejects any candidate whose workflow,
-origin branch, completion state, or head SHA does not match the approved release
-contract, and also requires successful Headless CI for that same `main` SHA.
-The manual candidate and promotion dispatches remain the fallback.
+For an unattended authenticated release, push the final commit to `main`,
+freeze it, and manually start the signed candidate once. Promotion rejects a
+candidate unless it was manually dispatched from `main`, completed successfully,
+matches the frozen `main` SHA and successful Headless CI, and reports Developer
+ID signatures plus accepted/stapled notarization. Manual promotion remains an
+audited fallback for the same successful candidate run ID.
 
 If `HOMEBREW_TAP_TOKEN` is unavailable, the release workflow still downloads
 and verifies every stable asset and generates the exact cask, but then fails

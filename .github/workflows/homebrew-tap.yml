@@ -60,6 +60,20 @@ jobs:
           readonly DOWNLOAD_DIR="$RUNNER_TEMP/wattson-release"
           readonly RELEASE_JSON="$RUNNER_TEMP/wattson-release.json"
 
+          assert_metadata_line() {
+            local expected="$1"
+            [[ "$(/usr/bin/awk -v expected="$expected" \
+              '$0 == expected { count++ } END { print count + 0 }' \
+              "$DOWNLOAD_DIR/$INFO_NAME")" == "1" ]]
+          }
+
+          assert_metadata_key_once() {
+            local expected_key="$1"
+            [[ "$(/usr/bin/awk -F= -v expected_key="$expected_key" \
+              '$1 == expected_key { count++ } END { print count + 0 }' \
+              "$DOWNLOAD_DIR/$INFO_NAME")" == "1" ]]
+          }
+
           gh api \
             --header 'Accept: application/vnd.github+json' \
             --header 'X-GitHub-Api-Version: 2022-11-28' \
@@ -91,13 +105,49 @@ jobs:
             cd "$DOWNLOAD_DIR"
             /usr/bin/sha256sum -c "$CHECKSUM_NAME"
           )
-          /usr/bin/grep -Fxq "version=$VERSION" "$DOWNLOAD_DIR/$INFO_NAME"
-          /usr/bin/grep -Fxq "architectures=arm64,x86_64" "$DOWNLOAD_DIR/$INFO_NAME"
-          /usr/bin/grep -Fxq "minimum_macos=12.0" "$DOWNLOAD_DIR/$INFO_NAME"
-          /usr/bin/grep -Fxq "install_path=/Applications/Wattson.app" "$DOWNLOAD_DIR/$INFO_NAME"
-          /usr/bin/grep -Fxq "distribution_mode=community-ad-hoc" "$DOWNLOAD_DIR/$INFO_NAME"
-          /usr/bin/grep -Fxq "package_signature=unsigned" "$DOWNLOAD_DIR/$INFO_NAME"
-          /usr/bin/grep -Fxq "notarized=no" "$DOWNLOAD_DIR/$INFO_NAME"
+          assert_metadata_line "version=$VERSION"
+          assert_metadata_line "architectures=arm64,x86_64"
+          assert_metadata_line "minimum_macos=12.0"
+          assert_metadata_line "install_path=/Applications/Wattson.app"
+          for metadata_key in \
+            distribution_mode \
+            app_signature \
+            helper_signature \
+            package_signature \
+            dmg_signature \
+            notarized \
+            stapled; do
+            assert_metadata_key_once "$metadata_key"
+          done
+          RELEASE_DISTRIBUTION_MODE="$(
+            /usr/bin/awk -F= \
+              '$1 == "distribution_mode" { count++; value = $2 } \
+               END { if (count == 1) print value }' \
+              "$DOWNLOAD_DIR/$INFO_NAME"
+          )"
+          readonly RELEASE_DISTRIBUTION_MODE
+          case "$RELEASE_DISTRIBUTION_MODE" in
+            community-ad-hoc)
+              assert_metadata_line "app_signature=ad-hoc"
+              assert_metadata_line "helper_signature=ad-hoc"
+              assert_metadata_line "package_signature=unsigned"
+              assert_metadata_line "dmg_signature=unsigned"
+              assert_metadata_line "notarized=no"
+              assert_metadata_line "stapled=no"
+              ;;
+            developer-id)
+              assert_metadata_line "app_signature=developer-id"
+              assert_metadata_line "helper_signature=developer-id"
+              assert_metadata_line "package_signature=developer-id"
+              assert_metadata_line "dmg_signature=developer-id"
+              assert_metadata_line "notarized=yes"
+              assert_metadata_line "stapled=yes"
+              ;;
+            *)
+              echo "unsupported release distribution metadata: $RELEASE_DISTRIBUTION_MODE" >&2
+              exit 1
+              ;;
+          esac
 
           SHA256="$(
             /usr/bin/awk -v name="$PKG_NAME" '$2 == name { print $1 }' \

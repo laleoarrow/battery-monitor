@@ -33,9 +33,11 @@ universal app/helper pair, creates one native PKG, wraps those exact PKG bytes
 in a DMG, verifies both, and emits SHA-256 checksums plus truthful signing
 metadata.
 
-The default release mode is `community-ad-hoc`: app/helper ad-hoc signed,
-PKG/DMG unsigned, and no notarization claim. Developer ID and notarization are
-optional environment-configured paths, not public-release prerequisites.
+The local script default is `community-ad-hoc`: app/helper ad-hoc signed,
+PKG/DMG unsigned, and no notarization claim. Those builds remain compatibility
+test artifacts. Automatic stable promotion requires the protected GitHub
+Developer ID path, accepted PKG/DMG notarization, stapled tickets, and the full
+hosted-macOS install matrix.
 
 ## Compatibility
 

@@ -60,7 +60,9 @@ if [[ "$NOTARIZE_RELEASE" == "1" ]]; then
     [[ "$DISTRIBUTION_MODE" == "developer-id" ]] \
         || fail "notarization requires both Developer ID identities"
     if [[ -z "${WATTSON_NOTARY_KEYCHAIN_PROFILE:-}" ]] \
-        && [[ -z "${WATTSON_NOTARY_KEY_PATH:-}" || -z "${WATTSON_NOTARY_KEY_ID:-}" ]]; then
+        && [[ -z "${WATTSON_NOTARY_KEY_PATH:-}" \
+            || -z "${WATTSON_NOTARY_KEY_ID:-}" \
+            || -z "${WATTSON_NOTARY_ISSUER:-}" ]]; then
         fail "notarization credentials are not configured"
     fi
 fi

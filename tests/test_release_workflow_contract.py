@@ -35,16 +35,91 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn('== ".github/workflows/macos-helper-install.yml"', PROMOTE)
         self.assertIn('== "success"', PROMOTE)
         self.assertIn("workflow_dispatch:main", PROMOTE)
-        self.assertIn("push:release-candidate", PROMOTE)
+        self.assertNotIn("push:release-candidate", PROMOTE)
+        self.assertIn(
+            "github.event.workflow_run.event == 'workflow_dispatch'", PROMOTE
+        )
+        self.assertIn("github.event.workflow_run.head_branch == 'main'", PROMOTE)
         self.assertIn('== "$GITHUB_SHA"', PROMOTE)
 
-    def test_release_candidate_branch_runs_the_fail_closed_promotion_chain(self):
+    def test_release_candidate_push_stays_community_test_only(self):
         self.assertIn("branches:\n      - release-candidate", CANDIDATE)
         self.assertIn("candidate_version:", CANDIDATE)
+        self.assertIn("distribution_mode:", CANDIDATE)
+        self.assertIn("default: developer-id-notarized", CANDIDATE)
         self.assertIn("steps.resolve-version.outputs.version", CANDIDATE)
+        self.assertIn('DISTRIBUTION_MODE="community-ad-hoc"', CANDIDATE)
+        self.assertIn("NOTARIZE_RELEASE=0", CANDIDATE)
         self.assertIn("workflow_run:", PROMOTE)
         self.assertIn("github.event.workflow_run.conclusion == 'success'", PROMOTE)
-        self.assertIn("github.event.workflow_run.head_branch == 'release-candidate'", PROMOTE)
+        self.assertNotIn(
+            "github.event.workflow_run.head_branch == 'release-candidate'", PROMOTE
+        )
+
+    def test_signed_candidate_is_main_only_and_environment_protected(self):
+        self.assertIn("github.ref == 'refs/heads/main'", CANDIDATE)
+        self.assertIn(
+            "inputs.distribution_mode == 'developer-id-notarized' && "
+            "'release-signing'",
+            CANDIDATE,
+        )
+        self.assertIn("|| 'community-ci'", CANDIDATE)
+        self.assertIn('[[ "$GITHUB_REF" == "refs/heads/main" ]]', CANDIDATE)
+        self.assertIn(
+            "WATTSON_NOTARIZE: ${{ steps.resolve-version.outputs.notarize }}",
+            CANDIDATE,
+        )
+        self.assertIn("NOTARIZE_RELEASE=1", CANDIDATE)
+
+    def test_candidate_imports_separate_credentials_into_a_temporary_keychain(self):
+        for credential in (
+            "MACOS_APP_CERT_P12_BASE64",
+            "MACOS_APP_CERT_P12_PASSWORD",
+            "MACOS_INSTALLER_CERT_P12_BASE64",
+            "MACOS_INSTALLER_CERT_P12_PASSWORD",
+            "APPLE_NOTARY_API_KEY_P8_BASE64",
+            "APPLE_NOTARY_API_KEY_ID",
+            "APPLE_NOTARY_API_ISSUER_ID",
+            "vars.APPLE_TEAM_ID",
+        ):
+            self.assertIn(credential, CANDIDATE)
+        self.assertIn('umask 077', CANDIDATE)
+        self.assertIn('$RUNNER_TEMP/wattson-signing.XXXXXX', CANDIDATE)
+        self.assertIn(
+            'APPLE_NOTARY_API_KEY_ID" =~ ^[A-Za-z0-9]{10,64}$', CANDIDATE
+        )
+        self.assertIn(
+            'APPLE_NOTARY_API_ISSUER_ID" =~ ^[0-9A-Fa-f]{8}-', CANDIDATE
+        )
+        self.assertIn('/usr/bin/openssl rand -base64 48', CANDIDATE)
+        self.assertIn('echo "::add-mask::$KEYCHAIN_PASSWORD"', CANDIDATE)
+        self.assertIn('security create-keychain', CANDIDATE)
+        self.assertNotIn('find-identity -v -p', CANDIDATE)
+        self.assertIn('-S apple-tool:,apple:,codesign:', CANDIDATE)
+        self.assertIn('"Developer ID Application:', CANDIDATE)
+        self.assertIn('"Developer ID Installer:', CANDIDATE)
+        self.assertIn('WATTSON_DEVELOPER_ID_APP=$APP_IDENTITY_SHA1', CANDIDATE)
+        self.assertIn(
+            'WATTSON_DEVELOPER_ID_INSTALLER=$INSTALLER_IDENTITY_SHA1', CANDIDATE
+        )
+        self.assertIn('WATTSON_NOTARY_KEY_PATH=$NOTARY_KEY_PATH', CANDIDATE)
+        self.assertIn(
+            'WATTSON_NOTARY_KEY_ID=$APPLE_NOTARY_API_KEY_ID', CANDIDATE
+        )
+        self.assertIn(
+            'WATTSON_NOTARY_ISSUER=$APPLE_NOTARY_API_ISSUER_ID', CANDIDATE
+        )
+        self.assertIn('WATTSON_EXPECT_TEAM_ID=$EXPECTED_TEAM_ID', CANDIDATE)
+        self.assertIn(
+            '/bin/rm -f -- "$APP_CERT_PATH" "$INSTALLER_CERT_PATH"', CANDIDATE
+        )
+
+        scrub = CANDIDATE.index("- name: Scrub signing credentials")
+        upload = CANDIDATE.index("- name: Upload the exact release candidate bytes")
+        self.assertLess(scrub, upload)
+        self.assertIn("if: always()", CANDIDATE[scrub:upload])
+        self.assertIn('security delete-keychain "$SIGNING_KEYCHAIN"', CANDIDATE)
+        self.assertIn('/bin/rm -rf -- "$SIGNING_TEMP_DIR"', CANDIDATE)
 
     def test_promotion_requires_successful_headless_ci_on_the_same_main_sha(self):
         self.assertIn("actions/workflows/ci.yml/runs", PROMOTE)
@@ -56,11 +131,29 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
 
     def test_promotion_downloads_and_publishes_the_same_artifact(self):
         self.assertIn("run-id: ${{ env.CANDIDATE_RUN_ID }}", PROMOTE)
+        self.assertIn(
+            "name: Wattson-release-candidate-v${{ env.WATTSON_VERSION }}", PROMOTE
+        )
         self.assertIn("sha256sum -c SHA256SUMS.txt", PROMOTE)
         self.assertIn('gh release create "$TAG"', PROMOTE)
         self.assertIn("--verify-tag", PROMOTE)
         self.assertIn("--latest=false", PROMOTE)
         self.assertNotIn("scripts/release.sh", PROMOTE)
+
+    def test_promotion_requires_notarized_developer_id_metadata(self):
+        self.assertIn("assert_metadata_key_once", PROMOTE)
+        for metadata in (
+            "distribution_mode=developer-id",
+            "app_signature=developer-id",
+            "helper_signature=developer-id",
+            "package_signature=developer-id",
+            "dmg_signature=developer-id",
+            "notarized=yes",
+            "stapled=yes",
+        ):
+            self.assertIn(metadata, PROMOTE)
+        self.assertIn("**Verified distribution:**", PROMOTE)
+        self.assertNotIn("**Community build:**", PROMOTE)
 
     def test_promotion_dispatches_homebrew_before_pages(self):
         self.assertIn("actions: write", PROMOTE)
@@ -100,6 +193,28 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("depends_on macos: :monterey", HOMEBREW)
         self.assertNotIn('desc "Native macOS', HOMEBREW)
         self.assertNotIn('depends_on macos: ">= :monterey"', HOMEBREW)
+
+    def test_homebrew_accepts_only_strict_supported_release_metadata(self):
+        self.assertIn("assert_metadata_key_once", HOMEBREW)
+        self.assertIn('case "$RELEASE_DISTRIBUTION_MODE" in', HOMEBREW)
+        for metadata in (
+            "community-ad-hoc)",
+            "app_signature=ad-hoc",
+            "helper_signature=ad-hoc",
+            "package_signature=unsigned",
+            "dmg_signature=unsigned",
+            "notarized=no",
+            "stapled=no",
+            "developer-id)",
+            "app_signature=developer-id",
+            "helper_signature=developer-id",
+            "package_signature=developer-id",
+            "dmg_signature=developer-id",
+            "notarized=yes",
+            "stapled=yes",
+        ):
+            self.assertIn(metadata, HOMEBREW)
+        self.assertIn("unsupported release distribution metadata", HOMEBREW)
 
     def test_public_homebrew_install_uses_real_hosted_runners(self):
         self.assertIn("workflow_dispatch:", HOMEBREW_INSTALL)
