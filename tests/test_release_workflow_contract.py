@@ -96,6 +96,22 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("git/ref/tags/$RELEASE_TAG", HOMEBREW_INSTALL)
         self.assertIn("'.casks[0].version'", HOMEBREW_INSTALL)
 
+    def test_public_homebrew_install_removes_unrelated_untrusted_runner_tap(self):
+        install = HOMEBREW_INSTALL.split("\n  install:", 1)[1].split(
+            "\n  deploy-pages:", 1
+        )[0]
+        cleanup = 'brew untap --force aws/tap'
+        wattson_tap = 'brew tap laleoarrow/tap'
+        self.assertIn(
+            'AWS_TAP_DIR="$(brew --repository)/Library/Taps/aws/homebrew-tap"',
+            install,
+        )
+        self.assertIn('if [[ -d "$AWS_TAP_DIR" ]]', install)
+        self.assertIn(cleanup, install)
+        self.assertNotIn('brew trust aws/tap', install)
+        self.assertNotIn('HOMEBREW_NO_REQUIRE_TAP_TRUST', install)
+        self.assertLess(install.index(cleanup), install.index(wattson_tap))
+
     def test_homebrew_recovery_resolves_the_tag_from_the_current_main_sha(self):
         prepare = HOMEBREW_INSTALL.split("  prepare:", 1)[1].split(
             "\n  install:", 1

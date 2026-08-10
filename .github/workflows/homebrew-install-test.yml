@@ -254,6 +254,13 @@ jobs:
           /usr/bin/sudo -n /usr/bin/true
           /usr/bin/command -v brew >/dev/null
 
+          AWS_TAP_DIR="$(brew --repository)/Library/Taps/aws/homebrew-tap"
+          readonly AWS_TAP_DIR
+          if [[ -d "$AWS_TAP_DIR" ]]; then
+            [[ ! -L "$AWS_TAP_DIR" ]]
+            brew untap --force aws/tap
+          fi
+
           readonly VERSION="${RELEASE_TAG#v}"
           readonly PKG_NAME="Wattson-v${VERSION}-macos-universal.pkg"
           readonly RELEASE_JSON="$RUNNER_TEMP/wattson-stable-release.json"
