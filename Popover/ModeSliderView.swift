@@ -114,6 +114,8 @@ final class ModeSliderView: NSView {
     var focusRingTypeForTest: NSFocusRingType { focusRingType }
     var restingKnobWidthForTest: CGFloat { knobFrame(at: selectedIndex).width }
     var segmentWidthForTest: CGFloat { segmentWidth }
+    var knobCornerRadiusForTest: CGFloat { knobHost.layer?.cornerRadius ?? 0 }
+    var selectorCornerRadiusForTest: CGFloat { knob?.view.layer?.cornerRadius ?? 0 }
     var selectedIndexForTest: Int { selectedIndex }
     var selectionIsPendingForTest: Bool { pendingSelectionIndex != nil }
     var reducesMotionForTest: Bool { Self.reducesMotion }
@@ -333,7 +335,7 @@ final class ModeSliderView: NSView {
         knobHost.wantsLayer = true
 
         let forceLegacy = ProcessInfo.processInfo.environment["WATTSON_FORCE_LEGACY_KNOB"] == "1"
-        let radius = (Self.preferredHeight - 4) / 2
+        let radius = Self.preferredHeight / 2
 
         if !forceLegacy, #available(macOS 26.0, *) {
             addSubview(materialRoot)
@@ -392,7 +394,7 @@ final class ModeSliderView: NSView {
         // Only the plain fallback needs clipping for its painted background.
         trackView.layer?.masksToBounds = !usesNativeGlass
         knobHost.layer?.backgroundColor = NSColor.clear.cgColor
-        knobHost.layer?.cornerRadius = (Self.preferredHeight - 4) / 2
+        knobHost.layer?.cornerRadius = Self.preferredHeight / 2
         knobHost.layer?.cornerCurve = .continuous
 
         if !usesNativeGlass {
@@ -445,8 +447,8 @@ final class ModeSliderView: NSView {
     private func knobFrame(at index: Int) -> NSRect {
         let width = segmentWidth
         let centre = (CGFloat(index) + 0.5) * segmentWidth
-        return NSRect(x: centre - width / 2, y: 2,
-                      width: width, height: bounds.height - 4)
+        return NSRect(x: centre - width / 2, y: 0,
+                      width: width, height: bounds.height)
     }
 
     override func layout() {

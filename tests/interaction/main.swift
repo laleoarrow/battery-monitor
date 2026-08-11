@@ -188,10 +188,22 @@ func drag(from startX: CGFloat, to endX: CGFloat, steps: Int) {
 let autoCentre = slider.detentCentreForTest(0)
 let lowCentre = slider.detentCentreForTest(1)
 let highCentre = slider.detentCentreForTest(2)
+let autoRestingFrame = slider.glassViewFrameForTest
 check("静止选中片不超过一个档位的宽度",
       slider.restingKnobWidthForTest <= slider.segmentWidthForTest + 0.01,
       String(format: "选中片 %.1f，单档 %.1f",
              slider.restingKnobWidthForTest, slider.segmentWidthForTest))
+check("静止 Auto 选中片与轨道上下和左边无缝贴合",
+      abs(autoRestingFrame.minX - slider.bounds.minX) < 0.01
+          && abs(autoRestingFrame.minY - slider.bounds.minY) < 0.01
+          && abs(autoRestingFrame.maxY - slider.bounds.maxY) < 0.01,
+      "选中片 \(autoRestingFrame)，轨道 \(slider.bounds)")
+check("静止选中片与轨道使用同心圆角",
+      abs(slider.knobCornerRadiusForTest - slider.bounds.height / 2) < 0.01
+          && abs(slider.selectorCornerRadiusForTest - slider.bounds.height / 2) < 0.01,
+      String(format: "host %.1f，selector %.1f，轨道 %.1f",
+             slider.knobCornerRadiusForTest, slider.selectorCornerRadiusForTest,
+             slider.bounds.height / 2))
 
 let allowsNativeGlass = ProcessInfo.processInfo.environment["WATTSON_FORCE_LEGACY_KNOB"] != "1"
 let expectsNativeGlass: Bool
@@ -416,6 +428,12 @@ if slider.reducesMotionForTest {
 spin(0.5)
 check("点击动画最终精确吸附到 High",
       abs(slider.glassViewCentreForTest - highCentre) < 0.5)
+let highRestingFrame = slider.glassViewFrameForTest
+check("静止 High 选中片与轨道上下和右边无缝贴合",
+      abs(highRestingFrame.maxX - slider.bounds.maxX) < 0.01
+          && abs(highRestingFrame.minY - slider.bounds.minY) < 0.01
+          && abs(highRestingFrame.maxY - slider.bounds.maxY) < 0.01,
+      "选中片 \(highRestingFrame)，轨道 \(slider.bounds)")
 
 // 用户现场路径：当前在 High，直接点击最左侧 Auto。真实玻璃必须反向
 // 穿过 Low；layout 与同档 1 Hz update 不能把它提前推到模型层终点。
