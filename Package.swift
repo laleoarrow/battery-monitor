@@ -30,6 +30,7 @@ let package = Package(
                 "Installer",
                 "Packaging",
                 "README.md",
+                "Support",
                 "SwiftTests",
                 "VERSION",
                 "WidgetExtensionInfo.plist",

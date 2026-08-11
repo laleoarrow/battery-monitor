@@ -6,7 +6,7 @@ const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
 const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
 const RELEASE_API =
   "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
-const FALLBACK_VERSION = "v3.0.2";
+const FALLBACK_VERSION = "v3.0.3";
 const FALLBACK_ASSET_BASE = `${GITHUB_REPO}/releases/download/${FALLBACK_VERSION}`;
 const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
 
@@ -463,10 +463,11 @@ export default function Home() {
                 <h3>Transparent about trust.</h3>
                 <p>
                   The app and helper are ad-hoc signed; the PKG and DMG are
-                  unsigned and not Apple-notarized. macOS may show a Gatekeeper
-                  warning; use Finder’s Control-click → Open only if you trust
-                  the release. Review the source and compare the published
-                  SHA-256 checksum before installing.
+                  unsigned and not Apple-notarized. On macOS 15 or later, first
+                  try to open the installer, then use System Settings → Privacy
+                  &amp; Security → Open Anyway only if you trust this release.
+                  Review the source and compare the published SHA-256 checksum
+                  before installing.
                 </p>
               </div>
               <a href={`${GITHUB_REPO}/releases`} rel="noreferrer" target="_blank">

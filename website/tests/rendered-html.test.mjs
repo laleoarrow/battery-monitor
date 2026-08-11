@@ -36,6 +36,8 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /brew install --cask laleoarrow\/tap\/wattson/i);
   assert.match(html, /Community build/i);
   assert.match(html, /not Apple-notarized/i);
+  assert.match(html, /System Settings[\s\S]*Privacy[\s\S]*Security[\s\S]*Open Anyway/i);
+  assert.doesNotMatch(html, /Control-click/i);
   assert.doesNotMatch(html, /Your site is taking shape|Starter Project/i);
 });
 

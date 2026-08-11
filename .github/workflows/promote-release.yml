@@ -6,7 +6,7 @@ on:
       version:
         description: Stable semantic version without the v prefix
         required: true
-        default: "3.0.2"
+        default: "3.0.3"
         type: string
       candidate_run_id:
         description: Successful Wattson release candidate workflow run ID
@@ -203,6 +203,7 @@ jobs:
           This Wattson release is universal for Apple silicon and Intel and supports macOS 12 or later.
 
           - Makes the mode selector flow on the compositor, with one-to-one dragging, faster magnetic release, smooth click travel, and continuously blended labels.
+          - Keeps the resting selector flush with its track at every detent, with matching continuous capsule corners and no edge gap.
           - Uses one clear native Liquid Glass track and a restrained neutral selection capsule on macOS 26, with accessible fallbacks for macOS 12–25.
           - Installs the app at `/Applications/Wattson.app` through one native PKG shared byte-for-byte by the DMG, with safe reinstall, v2 upgrade, helper replacement, and uninstall lifecycles.
           - Includes the full English interface, version display, keyboard, VoiceOver, Reduce Motion, Reduce Transparency, SHA-256, and explicit release-policy metadata.

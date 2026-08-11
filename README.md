@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.2">v3.0.2 release notes</a>
+  <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.3">v3.0.3 release notes</a>
 </p>
 
 <p align="center">
@@ -38,12 +38,12 @@ where it is going, and how the picture has changed over the last two minutes.
 - Launch-at-login and system battery-icon controls.
 - No account, analytics, cloud service, or external data upload.
 
-## Install v3.0.2
+## Install v3.0.3
 
 | Route | Best for | What to do |
 | --- | --- | --- |
-| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.2/Wattson-v3.0.2-macos-universal.dmg), open it, then double-click the enclosed PKG. |
-| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.2/Wattson-v3.0.2-macos-universal.pkg) and follow macOS Installer. |
+| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.3/Wattson-v3.0.3-macos-universal.dmg), open it, then double-click the enclosed PKG. |
+| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.3/Wattson-v3.0.3-macos-universal.pkg) and follow macOS Installer. |
 | **Homebrew** | Terminal installation and updates | Run `brew install --cask laleoarrow/tap/wattson`. |
 
 All three routes install the same universal app at
@@ -53,10 +53,11 @@ macOS administrator prompt is required to install the helper.
 
 > [!IMPORTANT]
 > Wattson.app and its privileged helper are ad-hoc signed. The PKG and DMG are
-> unsigned and not Apple-notarized, so macOS may require Control-click → Open
-> or a Privacy & Security override. Only override Gatekeeper when you trust this
-> repository. Verify the published
-> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.2/SHA256SUMS.txt)
+> unsigned and not Apple-notarized. On macOS 15 or later, first try to open the
+> installer, then use System Settings → Privacy & Security → Open Anyway only
+> when you trust this repository. Older macOS releases may instead offer
+> Control-click → Open. Verify the published
+> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.3/SHA256SUMS.txt)
 > before installation.
 
 ### Requirements
@@ -111,9 +112,19 @@ is expected on unsupported hardware.
 
 ### macOS blocks the installer
 
-Review the community-build notice above and the release checksums first. If you
-trust the release, use Finder’s Control-click → Open or the corresponding
-Privacy & Security override.
+Review the community-build notice above and the release checksums first. On
+macOS 15 or later, try opening the installer once, then go to System Settings →
+Privacy & Security and choose Open Anyway. Older macOS releases may offer
+Finder’s Control-click → Open.
+
+### Installation still fails
+
+Download the read-only
+[Wattson Diagnostics tool](https://github.com/laleoarrow/battery-monitor/releases/download/support-diagnostics-v1.0.0/Wattson-Diagnostics-v1.0.0-macos-universal.zip),
+open it using the same Gatekeeper flow above, and click **Collect & Copy
+Diagnostics**. The tool requests no administrator password, changes no setting,
+and uploads nothing. Review the copied report before pasting it into a support
+email.
 
 </details>
 

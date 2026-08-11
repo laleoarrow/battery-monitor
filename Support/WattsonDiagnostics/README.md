@@ -17,5 +17,8 @@ bash scripts/build_diagnostics.sh
 ```
 
 The ZIP and its checksum metadata are written to `dist/support/`. Because the
-community build is ad-hoc signed and not notarized, a downloaded copy may need
-Finder's Control-click → Open flow.
+community build is ad-hoc signed and not notarized, macOS 15 or later may block
+the first launch. Try opening the app once, then use System Settings → Privacy
+& Security → Open Anyway only after verifying that it came from the official
+Wattson GitHub release. Older macOS versions may instead offer Finder's
+Control-click → Open flow.

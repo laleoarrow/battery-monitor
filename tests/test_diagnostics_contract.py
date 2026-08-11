@@ -9,6 +9,9 @@ SOURCE = (ROOT / "Support" / "WattsonDiagnostics" / "main.swift").read_text(
 BUILD_SCRIPT = (ROOT / "scripts" / "build_diagnostics.sh").read_text(
     encoding="utf-8"
 )
+SUPPORT_README = (ROOT / "Support" / "WattsonDiagnostics" / "README.md").read_text(
+    encoding="utf-8"
+)
 
 
 class WattsonDiagnosticsContractTests(unittest.TestCase):
@@ -57,6 +60,11 @@ class WattsonDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("archive contains AppleDouble metadata", BUILD_SCRIPT)
         self.assertIn("EXTRACTED_APP", BUILD_SCRIPT)
         self.assertIn("shasum -a 256 -c", BUILD_SCRIPT)
+
+    def test_macos_15_gatekeeper_guidance_uses_open_anyway(self):
+        self.assertIn("macOS 15 or later", SUPPORT_README)
+        self.assertIn("System Settings → Privacy", SUPPORT_README)
+        self.assertIn("Open Anyway", SUPPORT_README)
 
 
 if __name__ == "__main__":

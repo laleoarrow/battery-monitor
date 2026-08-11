@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.2`
+- Version: `3.0.3`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +14,11 @@
 
 ## Public artifacts
 
-`scripts/release.sh 3.0.2` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.3` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.2-macos-universal.pkg`
-- `Wattson-v3.0.2-macos-universal.dmg`
-- `Wattson-v3.0.2-release-info.txt`
+- `Wattson-v3.0.3-macos-universal.pkg`
+- `Wattson-v3.0.3-macos-universal.dmg`
+- `Wattson-v3.0.3-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -67,7 +67,7 @@ Headless checks:
 ```bash
 swift test --parallel
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.2
+bash scripts/release.sh 3.0.3
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -90,23 +90,31 @@ runners.
 
 ## Release order
 
-1. Make headless CI green on the final `main` commit, then freeze `main`.
-2. Push that identical commit to `release-candidate`. The candidate workflow
-   must pass its build and five-platform install matrix.
-3. A successful branch candidate automatically invokes the fail-closed
-   promotion workflow. Promotion requires both successful Headless CI and the
-   candidate to use the current `main` SHA, creates the annotated `v3.0.2` tag,
-   and publishes the exact candidate artifacts. Manual dispatch remains an
-   audited fallback.
-4. Promotion dispatches the Homebrew sync. The workflow must observe the exact
-   version and PKG checksum in the public cask, and the exact tap commit must
-   pass `brew test-bot`, before it starts the Intel and Apple-silicon public
-   Homebrew lifecycle tests.
-5. The stable release is initially published without replacing
-   `releases/latest`. Only after both public Homebrew lifecycle jobs pass does
-   the chain mark v3.0.2 latest and dispatch the tag-pinned GitHub Pages
-   deployment. Update OpenAI Sites from the same release source.
-6. Announce the release only after every public route resolves to v3.0.2.
+1. Freeze one final commit, push that exact SHA to `main`, and require Headless
+   CI to pass.
+2. Push the same SHA to `release-candidate`. That push intentionally exercises
+   the credential-free `community-ad-hoc` build and five-platform install
+   matrix without starting signed-only promotion.
+3. If Developer ID and notary credentials are configured, use a manual
+   `developer-id-notarized` candidate on `main`; its successful run may enter
+   the fail-closed promotion workflow. Never send a community candidate into
+   that signed-only promotion path.
+4. For a community release, download the exact artifact set from the successful
+   branch candidate, verify its manifest and checksums again, create the
+   annotated `v3.0.3` tag on the frozen SHA, and publish those unchanged bytes
+   with explicit ad-hoc/unsigned/not-notarized wording.
+5. Synchronize the Homebrew cask to that exact PKG checksum and require both
+   tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
+   release latest and deploying the tag-pinned GitHub Pages site.
+6. Announce the release only after every public route resolves to v3.0.3.
+
+## v3.0.3 selector and support work
+
+The v3.0.3 pass removes the resting selector's inset gap at the first and last
+detents and keeps the selector and track on matching continuous capsule corners.
+It also adds a separate, universal read-only diagnostics support app that copies
+a bounded installation report without requesting a password, changing settings,
+or uploading data.
 
 ## v3.0.2 selector work
 
