@@ -262,6 +262,194 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(unchanged.systemW, stale.systemW)
     }
 
+    func testInstantCurrentIsSignedAndFallsBackOnlyWhenMissing() {
+        let wrappedNegative = NSNumber(
+            value: UInt32(bitPattern: Int32(-2_000))
+        )
+        XCTAssertEqual(BatterySampler.optionalIntValue(wrappedNegative), -2_000)
+
+        func watts(_ instant: Int?, _ fallback: Int?) -> Double? {
+            BatterySampler.resolvedInstantBatteryW(
+                voltage: 12_000,
+                instantAmperage: instant,
+                amperage: fallback
+            )
+        }
+
+        XCTAssertEqual(watts(-2_000, 1_000)!, -24, accuracy: 0.001)
+        XCTAssertEqual(watts(nil, 1_000)!, 12, accuracy: 0.001)
+        XCTAssertEqual(watts(0, 1_000)!, 0, accuracy: 0.001)
+        for invalidInstant in [
+            -1,
+            Int(Int32.min),
+            Int(Int32.max),
+            -100_001,
+            100_001,
+            Int.min,
+            Int.max,
+        ] {
+            XCTAssertEqual(watts(invalidInstant, -2_000)!, -24, accuracy: 0.001)
+        }
+        XCTAssertEqual(watts(100_000, nil)!, 1_200, accuracy: 0.001)
+        XCTAssertTrue(BatterySampler.resolvedInstantBatteryW(
+            voltage: Int.max,
+            instantAmperage: 100_000,
+            amperage: nil
+        )!.isFinite)
+        XCTAssertNil(BatterySampler.resolvedInstantBatteryW(
+            voltage: 0, instantAmperage: 1_000, amperage: nil
+        ))
+        XCTAssertNil(watts(nil, nil))
+        XCTAssertNil(watts(-1, Int(Int32.max)))
+    }
+
+    func testMissingTelemetryRejectsInvalidFallbackAmperage() {
+        func sampleEquivalent(_ amperage: Int) -> PowerSnapshot {
+            let fallbackBatteryW = BatterySampler.resolvedFallbackBatteryW(
+                voltage: 12_000,
+                amperage: amperage
+            )
+            let instantBatteryW = BatterySampler.resolvedInstantBatteryW(
+                voltage: 12_000,
+                instantAmperage: nil,
+                amperage: amperage
+            )
+            let power = BatterySampler.resolvedPower(
+                plugged: true,
+                chargingHint: true,
+                systemPowerIn: nil,
+                systemLoad: nil,
+                batteryPower: nil,
+                fallbackBatteryW: fallbackBatteryW,
+                instantBatteryW: instantBatteryW
+            )
+            return PowerSnapshot(
+                plugged: true,
+                adapterW: power.adapterW,
+                batteryW: power.batteryW,
+                systemW: power.systemW
+            )
+        }
+
+        for invalidAmperage in [
+            -1, Int(Int32.min), Int(Int32.max),
+            -100_001, 100_001, Int.min, Int.max,
+        ] {
+            let snapshot = sampleEquivalent(invalidAmperage)
+            XCTAssertEqual(snapshot.adapterW, 0, accuracy: 0.001)
+            XCTAssertEqual(snapshot.batteryW, 0, accuracy: 0.001)
+            XCTAssertEqual(snapshot.systemW, 0, accuracy: 0.001)
+            XCTAssertEqual(snapshot.state, .pluggedIdle)
+            XCTAssertEqual(snapshot.conservationError, 0, accuracy: 0.001)
+        }
+
+        let valid = sampleEquivalent(1_000)
+        XCTAssertEqual(valid.adapterW, 12, accuracy: 0.001)
+        XCTAssertEqual(valid.batteryW, 12, accuracy: 0.001)
+        XCTAssertEqual(valid.systemW, 0, accuracy: 0.001)
+        XCTAssertEqual(valid.conservationError, 0, accuracy: 0.001)
+    }
+
+    func testPluggedTransitionUsesInstantBatteryFlowUntilSourceTelemetryArrives() {
+        func resolve(
+            plugged: Bool = true,
+            chargingHint: Bool,
+            systemPowerIn: Int?,
+            systemLoad: Int? = 40_000,
+            instantBatteryW: Double
+        ) -> PowerSnapshot {
+            let power = BatterySampler.resolvedPower(
+                plugged: plugged,
+                chargingHint: chargingHint,
+                systemPowerIn: systemPowerIn,
+                systemLoad: systemLoad,
+                batteryPower: -9_000,
+                fallbackBatteryW: -9,
+                instantBatteryW: instantBatteryW
+            )
+            return PowerSnapshot(
+                plugged: plugged,
+                adapterW: power.adapterW,
+                batteryW: power.batteryW,
+                systemW: power.systemW
+            )
+        }
+
+        func check(
+            _ snapshot: PowerSnapshot,
+            adapterW: Double,
+            batteryW: Double,
+            systemW: Double,
+            state: PowerState,
+            _ message: String
+        ) {
+            XCTAssertEqual(snapshot.adapterW, adapterW, accuracy: 0.001, message)
+            XCTAssertEqual(snapshot.batteryW, batteryW, accuracy: 0.001, message)
+            XCTAssertEqual(snapshot.systemW, systemW, accuracy: 0.001, message)
+            XCTAssertEqual(snapshot.state, state, message)
+            XCTAssertEqual(snapshot.conservationError, 0, accuracy: 0.001, message)
+        }
+
+        let cases: [(
+            String, Bool, Bool, Int?, Int?, Double,
+            Double, Double, Double, PowerState
+        )] = [
+            ("zero source charge", true, false, 0, 40_000, 24, 64, 24, 40, .charging),
+            ("source sentinel", true, false, -1, 40_000, 24, 64, 24, 40, .charging),
+            ("transition idle", true, true, nil, 40_000, 0, 40, 0, 40, .pluggedIdle),
+            ("stale charging hint", true, true, 0, 40_000, -12, 28, -12, 40, .mixedSupply),
+            ("bounded discharge", true, true, nil, 40_000, -60, 0, -40, 40, .mixedSupply),
+            ("nil load charge", true, false, nil, nil, 24, 24, 24, 0, .charging),
+            ("nil load idle", true, true, nil, nil, 0, 0, 0, 0, .pluggedIdle),
+            ("nil load mixed", true, true, nil, nil, -12, 0, -12, 12, .mixedSupply),
+            ("zero load charge", true, false, 0, 0, 24, 24, 24, 0, .charging),
+            ("zero load mixed", true, true, 0, 0, -12, 0, -12, 12, .mixedSupply),
+            ("unplug old AC", false, true, 60_000, 40_000, 24, 0, -40, 40, .onBattery),
+            ("coherent source", true, false, 60_000, 40_000, -12, 60, 20, 40, .charging),
+        ]
+        for (name, plugged, hint, source, load, instant,
+             adapter, battery, system, state) in cases {
+            check(
+                resolve(
+                    plugged: plugged,
+                    chargingHint: hint,
+                    systemPowerIn: source,
+                    systemLoad: load,
+                    instantBatteryW: instant
+                ),
+                adapterW: adapter,
+                batteryW: battery,
+                systemW: system,
+                state: state,
+                name
+            )
+        }
+
+        let mergeCases: [(Int?, Double, PowerState)] = [
+            (nil, 24, .charging), (nil, 0, .pluggedIdle),
+            (nil, -12, .mixedSupply), (0, 24, .charging),
+            (0, -12, .mixedSupply),
+        ]
+        for (load, instant, state) in mergeCases {
+            let transition = resolve(
+                chargingHint: true,
+                systemPowerIn: nil,
+                systemLoad: load,
+                instantBatteryW: instant
+            )
+            check(
+                BatterySampler.resolvedLivePower(
+                    snapshot: transition, adapterW: 1, systemW: 45
+                ),
+                adapterW: 45 + instant,
+                batteryW: instant,
+                systemW: 45,
+                state: state,
+                "live PSTR merge"
+            )
+        }
+    }
+
     func testBatteryTemperatureUsesPhysicalDeciKelvinThenVirtualCentiCelsius() {
         XCTAssertEqual(
             BatterySampler.resolvedTemperatureC(

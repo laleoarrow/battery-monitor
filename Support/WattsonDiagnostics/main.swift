@@ -1,7 +1,8 @@
 import AppKit
 import Darwin
+import IOKit
 
-private let diagnosticsVersion = "1.0.0"
+private let diagnosticsVersion = "1.1.0"
 private let wattsonAppPath = "/Applications/Wattson.app"
 private let helperLabel = "com.leoarrow.wattson.helper"
 private let helperInstallPath = "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper"
@@ -122,6 +123,320 @@ private enum Command {
     }
 }
 
+private enum InstallationDiagnostics {
+    private static let v3BundleIdentifier = "com.leoarrow.wattson"
+    private static let legacyBundleIdentifier = "com.leoarrow.battery-monitor"
+
+    static func report() -> String {
+        let home = NSHomeDirectory()
+        let paths = [
+            wattsonAppPath,
+            home + "/Applications/Wattson.app",
+            home + "/Applications/电池功率.app",
+            home + "/Library/LaunchAgents/com.leoarrow.wattson.login.plist",
+            home + "/Library/LaunchAgents/com.leoarrow.battery-monitor.agent.plist",
+            home + "/Library/LaunchAgents/com.leoarrow.battery-monitor.plist",
+        ]
+
+        var lines = paths.map(pathInventoryLine)
+        lines.append("")
+        lines.append(contentsOf: runningApplicationLines(
+            label: "Wattson v3",
+            bundleIdentifier: v3BundleIdentifier
+        ))
+        lines.append(contentsOf: runningApplicationLines(
+            label: "legacy Battery Power",
+            bundleIdentifier: legacyBundleIdentifier
+        ))
+        return lines.joined(separator: "\n")
+    }
+
+    private static func pathInventoryLine(_ path: String) -> String {
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory) else {
+            return "\(path): missing"
+        }
+
+        guard path.hasSuffix(".app") else {
+            return "\(path): present"
+        }
+        let info = Bundle(path: path)?.infoDictionary
+        let bundleIdentifier = info?["CFBundleIdentifier"] as? String ?? "unavailable"
+        let version = info?["CFBundleShortVersionString"] as? String ?? "unavailable"
+        let build = info?["CFBundleVersion"] as? String ?? "unavailable"
+        return "\(path): present, bundle_id=\(bundleIdentifier), version=\(version), build=\(build)"
+    }
+
+    private static func runningApplicationLines(
+        label: String,
+        bundleIdentifier: String
+    ) -> [String] {
+        let applications = NSRunningApplication
+            .runningApplications(withBundleIdentifier: bundleIdentifier)
+            .sorted { $0.processIdentifier < $1.processIdentifier }
+        guard !applications.isEmpty else {
+            return ["\(label) (\(bundleIdentifier)): no running instances"]
+        }
+
+        var lines = ["\(label) (\(bundleIdentifier)): \(applications.count) running instance(s)"]
+        for application in applications {
+            let bundlePath = application.bundleURL?.path ?? "unavailable"
+            let executablePath = application.executableURL?.path ?? "unavailable"
+            lines.append(
+                "pid=\(application.processIdentifier), bundle=\(bundlePath), executable=\(executablePath)"
+            )
+        }
+        return lines
+    }
+}
+
+private enum BatteryDiagnostics {
+    private static let propertyKeys = [
+        "CurrentCapacity",
+        "ExternalConnected",
+        "IsCharging",
+        "FullyCharged",
+        "CycleCount",
+        "Temperature",
+        "VirtualTemperature",
+        "Voltage",
+        "Amperage",
+        "InstantAmperage",
+        "PowerTelemetryData",
+    ]
+
+    private static let telemetryKeys = [
+        "SystemPowerIn",
+        "SystemLoad",
+        "BatteryPower",
+        "SystemPowerInAccumulatorCount",
+        "SystemLoadAccumulatorCount",
+        "BatteryPowerAccumulatorCount",
+    ]
+
+    static func report() -> String {
+        let service = IOServiceGetMatchingService(
+            kIOMainPortDefault,
+            IOServiceMatching("AppleSmartBattery")
+        )
+        guard service != IO_OBJECT_NULL else {
+            return "AppleSmartBattery: unavailable (no matching battery service)"
+        }
+        defer { IOObjectRelease(service) }
+
+        var properties: [String: Any] = [:]
+        for key in propertyKeys {
+            if let value = IORegistryEntryCreateCFProperty(
+                service,
+                key as CFString,
+                kCFAllocatorDefault,
+                0
+            )?.takeRetainedValue() {
+                properties[key] = value
+            }
+        }
+
+        var lines = ["AppleSmartBattery: available"]
+        for key in propertyKeys where key != "PowerTelemetryData"
+            && key != "Temperature" && key != "VirtualTemperature"
+            && key != "Amperage" && key != "InstantAmperage" {
+            lines.append("\(key)=\(rawDescription(properties[key]))")
+        }
+
+        for key in ["Amperage", "InstantAmperage"] {
+            lines.append(
+                "\(key) raw=\(rawDescription(properties[key])) "
+                    + "signed_int32=\(signedInt32Description(properties[key]))"
+            )
+        }
+
+        let temperatureRaw = integerValue(properties["Temperature"])
+        let virtualTemperatureRaw = integerValue(properties["VirtualTemperature"])
+        lines.append(
+            "Temperature raw=\(rawDescription(properties["Temperature"])) "
+                + "decoded_deci_kelvin_c=\(decodedTemperature(temperatureRaw, scale: .deciKelvin))"
+        )
+        lines.append(
+            "VirtualTemperature raw=\(rawDescription(properties["VirtualTemperature"])) "
+                + "decoded_centi_celsius=\(decodedTemperature(virtualTemperatureRaw, scale: .centiCelsius))"
+        )
+
+        lines.append("PowerTelemetryData (selected power and accumulator fields only):")
+        guard let telemetry = properties["PowerTelemetryData"] as? [String: Any] else {
+            lines.append("PowerTelemetryData=unavailable")
+            return lines.joined(separator: "\n")
+        }
+        for key in telemetryKeys {
+            let isAccumulator = key.contains("Accumulated") || key.contains("Accumulator")
+            lines.append("\(key)=\(rawDescription(telemetry[key], unsigned: isAccumulator))")
+        }
+        return lines.joined(separator: "\n")
+    }
+
+    private enum TemperatureScale {
+        case deciKelvin
+        case centiCelsius
+    }
+
+    private static func decodedTemperature(_ raw: Int64?, scale: TemperatureScale) -> String {
+        guard let raw else { return "unavailable" }
+        let celsius: Double
+        switch scale {
+        case .deciKelvin:
+            guard raw != 0, raw != -1 else { return "unavailable (firmware sentinel)" }
+            celsius = Double(raw) / 10.0 - 273.15
+        case .centiCelsius:
+            guard raw != -1 else { return "unavailable (firmware sentinel)" }
+            celsius = Double(raw) / 100.0
+        }
+        guard (-100.0 ... 150.0).contains(celsius) else {
+            return "unavailable (decoded value out of range)"
+        }
+        return String(format: "%.2f", celsius)
+    }
+
+    private static func integerValue(_ value: Any?) -> Int64? {
+        (value as? NSNumber)?.int64Value
+    }
+
+    private static func signedInt32Description(_ value: Any?) -> String {
+        guard let number = value as? NSNumber else { return "unavailable" }
+        let signed = Int32(bitPattern: UInt32(truncatingIfNeeded: number.uint64Value))
+        return String(signed)
+    }
+
+    private static func rawDescription(_ value: Any?, unsigned: Bool = false) -> String {
+        guard let value else { return "unavailable" }
+        if let number = value as? NSNumber {
+            if CFGetTypeID(number) == CFBooleanGetTypeID() {
+                return number.boolValue ? "true" : "false"
+            }
+            return unsigned ? String(number.uint64Value) : number.stringValue
+        }
+        return "unavailable (unexpected value type)"
+    }
+}
+
+private enum HelperPowerDiagnostics {
+    private static let sampleCount = 5
+    private static let sampleInterval: TimeInterval = 1.0
+
+    static func report() -> String {
+        var lines = [
+            "Probe transport: fixed read-only helper socket \(HelperClient.socketPath)",
+            "Probe operations: health and getPower (v3.0.4+); the Wattson app was not launched",
+        ]
+
+        let healthStart = DispatchTime.now().uptimeNanoseconds
+        let healthy = HelperClient.isHealthy()
+        let healthElapsed = elapsedMilliseconds(since: healthStart)
+        lines.append(
+            "health=\(healthy ? "available" : "unavailable") elapsed_ms=\(format(healthElapsed))"
+        )
+        guard healthy else {
+            lines.append("getPower=unavailable (helper missing, unreachable, or health unsupported)")
+            lines.append("available_samples=0/\(sampleCount)")
+            lines.append("unique_power_samples=0")
+            return lines.joined(separator: "\n")
+        }
+
+        var availableCount = 0
+        var uniqueSamples = Set<String>()
+        for index in 1 ... sampleCount {
+            let timestamp = ISO8601DateFormatter().string(from: Date())
+            let start = DispatchTime.now().uptimeNanoseconds
+            let power = HelperClient.livePower()
+            let elapsed = elapsedMilliseconds(since: start)
+            if let power {
+                availableCount += 1
+                let adapter = watts(power.adapterW)
+                let system = watts(power.systemW)
+                uniqueSamples.insert("adapter=\(adapter),system=\(system)")
+                lines.append(
+                    "sample[\(index)] time=\(timestamp) elapsed_ms=\(format(elapsed)) "
+                        + "adapterW=\(adapter) systemW=\(system)"
+                )
+            } else {
+                lines.append(
+                    "sample[\(index)] time=\(timestamp) elapsed_ms=\(format(elapsed)) "
+                        + "unavailable (getPower requires a v3.0.4+ helper)"
+                )
+            }
+            if index < sampleCount {
+                Thread.sleep(forTimeInterval: sampleInterval)
+            }
+        }
+        lines.append("available_samples=\(availableCount)/\(sampleCount)")
+        lines.append("unique_power_samples=\(uniqueSamples.count)")
+        if availableCount == 0 {
+            lines.append("getPower=unavailable (installed helper predates v3.0.4 or rejected the fixed request)")
+        }
+        return lines.joined(separator: "\n")
+    }
+
+    private static func elapsedMilliseconds(since start: UInt64) -> Double {
+        Double(DispatchTime.now().uptimeNanoseconds - start) / 1_000_000.0
+    }
+
+    private static func format(_ value: Double) -> String {
+        String(format: "%.1f", value)
+    }
+
+    private static func watts(_ value: Double?) -> String {
+        value.map { String(format: "%.3f", $0) } ?? "unavailable"
+    }
+}
+
+private enum HostRedaction {
+    static func redactedHostVariants(for hostName: String) -> [String] {
+        let original = hostName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !original.isEmpty else { return [] }
+
+        let localSuffix = ".local"
+        let shortName = original.lowercased().hasSuffix(localSuffix)
+            ? String(original.dropLast(localSuffix.count))
+            : original
+        let candidates = [shortName, shortName + localSuffix, original]
+        var seen = Set<String>()
+        return candidates
+            .filter { !$0.isEmpty && seen.insert($0.lowercased()).inserted }
+            .sorted {
+                if $0.count != $1.count { return $0.count > $1.count }
+                return $0.localizedCaseInsensitiveCompare($1) == .orderedAscending
+            }
+    }
+
+    static func redactHost(in output: String, hostName: String) -> String {
+        // A private-use marker prevents a short hostname such as "host" from
+        // matching inside the final "<redacted-host>" replacement text.
+        let marker = "\u{F8FF}WATTSON_PRIVATE_MACHINE\u{F8FF}"
+        var redacted = output
+        for variant in redactedHostVariants(for: hostName) {
+            redacted = redacted.replacingOccurrences(
+                of: variant,
+                with: marker,
+                options: .caseInsensitive
+            )
+        }
+        return redacted.replacingOccurrences(of: marker, with: "<redacted-host>")
+    }
+
+    static func selfTestPassed() -> Bool {
+        let fullFromShort = redactHost(
+            in: "installer host=CODY-MAC.LOCAL",
+            hostName: "cody-mac"
+        )
+        let shortFromFull = redactHost(
+            in: "installer host=CoDy-MaC",
+            hostName: "cody-mac.local"
+        )
+        return fullFromShort == "installer host=<redacted-host>"
+            && shortFromFull == "installer host=<redacted-host>"
+            && redactedHostVariants(for: "cody-mac") == ["cody-mac.local", "cody-mac"]
+            && redactedHostVariants(for: "cody-mac.local") == ["cody-mac.local", "cody-mac"]
+    }
+}
+
 private enum Diagnostics {
     private struct Probe {
         let key: String
@@ -156,6 +471,7 @@ private enum Diagnostics {
     private static let readOnlyCommandArguments: [String: [[String]]] = [
         "/usr/bin/sw_vers": [[]],
         "/usr/bin/uname": [["-m"]],
+        "/usr/sbin/sysctl": [["-n", "hw.model"]],
         "/usr/sbin/spctl": [["--status"]],
         "/usr/sbin/pkgutil": [["--pkg-info", "com.leoarrow.wattson.pkg"]],
         "/bin/launchctl": [
@@ -186,6 +502,7 @@ private enum Diagnostics {
         let probes = [
             Probe(key: "system", executablePath: "/usr/bin/sw_vers", arguments: [], acceptedExitCodes: [0], timeout: 3),
             Probe(key: "architecture", executablePath: "/usr/bin/uname", arguments: ["-m"], acceptedExitCodes: [0], timeout: 3),
+            Probe(key: "model", executablePath: "/usr/sbin/sysctl", arguments: ["-n", "hw.model"], acceptedExitCodes: [0], timeout: 3),
             Probe(key: "gatekeeper", executablePath: "/usr/sbin/spctl", arguments: ["--status"], acceptedExitCodes: [0, 1], timeout: 3),
             Probe(key: "receipt", executablePath: "/usr/sbin/pkgutil", arguments: ["--pkg-info", "com.leoarrow.wattson.pkg"], acceptedExitCodes: [0, 1], timeout: 3),
             Probe(key: "launchd", executablePath: "/bin/launchctl", arguments: ["print", "system/\(helperLabel)"], acceptedExitCodes: [0, 1], timeout: 3),
@@ -223,6 +540,11 @@ private enum Diagnostics {
                 group.leave()
             }
         }
+        group.enter()
+        queue.async {
+            results.set(HelperPowerDiagnostics.report(), for: "helperPower")
+            group.leave()
+        }
         group.wait()
 
         let disabledState = matchingWattsonLines(results.value(for: "disabled"))
@@ -230,7 +552,7 @@ private enum Diagnostics {
         let installLog = matchingWattsonLines(results.value(for: "installLog"))
         let unifiedLog = bounded(results.value(for: "unifiedLog"), maximumCharacters: 50_000)
 
-        let report = redactHomePath("""
+        let report = redactPrivateMachineDetails("""
         Wattson Diagnostics
         Generated: \(ISO8601DateFormatter().string(from: Date()))
         Diagnostics version: \(diagnosticsVersion)
@@ -239,7 +561,17 @@ private enum Diagnostics {
         === System ===
         \(results.value(for: "system"))
         Architecture: \(results.value(for: "architecture"))
+        Hardware model: \(results.value(for: "model"))
         Gatekeeper: \(results.value(for: "gatekeeper"))
+
+        === Wattson Installation and Exact Running Bundles ===
+        \(InstallationDiagnostics.report())
+
+        === AppleSmartBattery Selected Fields ===
+        \(BatteryDiagnostics.report())
+
+        === Privileged Helper Live Power (Five 1-Second Samples) ===
+        \(results.value(for: "helperPower"))
 
         === Wattson Package Receipt ===
         \(results.value(for: "receipt"))
@@ -320,10 +652,17 @@ private enum Diagnostics {
             + "\n(output truncated by Wattson Diagnostics)"
     }
 
-    private static func redactHomePath(_ output: String) -> String {
+    private static func redactPrivateMachineDetails(_ output: String) -> String {
         let home = NSHomeDirectory()
-        guard home != "/", !home.isEmpty else { return output }
-        return output.replacingOccurrences(of: home, with: "~")
+        var redacted = output
+        if home != "/", !home.isEmpty {
+            redacted = redacted.replacingOccurrences(of: home, with: "~")
+        }
+
+        return HostRedaction.redactHost(
+            in: redacted,
+            hostName: ProcessInfo.processInfo.hostName
+        )
     }
 }
 
@@ -490,6 +829,10 @@ private final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         windowController?.canTerminate == false ? .terminateCancel : .terminateNow
     }
+}
+
+if CommandLine.arguments.contains("--host-redaction-self-test") {
+    exit(HostRedaction.selfTestPassed() ? EXIT_SUCCESS : EXIT_FAILURE)
 }
 
 if CommandLine.arguments.contains("--print-diagnostics") {

@@ -9,7 +9,8 @@ export LC_ALL=C
 SCRIPT_DIR="$(cd "$(/usr/bin/dirname "$0")" && /bin/pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 SOURCE_PATH="$ROOT_DIR/Support/WattsonDiagnostics/main.swift"
-DIAGNOSTICS_VERSION="1.0.0"
+HELPER_CLIENT_SOURCE="$ROOT_DIR/Core/HelperClient.swift"
+DIAGNOSTICS_VERSION="1.1.0"
 MIN_MACOS_VERSION="12.0"
 APP_NAME="Wattson Diagnostics"
 BUNDLE_ID="com.leoarrow.wattson.diagnostics"
@@ -30,6 +31,7 @@ fail() {
 }
 
 [[ -f "$SOURCE_PATH" ]] || fail "missing diagnostics source"
+[[ -f "$HELPER_CLIENT_SOURCE" ]] || fail "missing helper client source"
 [[ -f "$ROOT_DIR/design/icon/AppIcon.icns" ]] || fail "missing AppIcon.icns"
 
 /bin/rm -rf -- "$BUILD_ROOT"
@@ -39,8 +41,10 @@ fail() {
 for architecture in arm64 x86_64; do
     /usr/bin/xcrun swiftc \
         "$SOURCE_PATH" \
+        "$HELPER_CLIENT_SOURCE" \
         -target "${architecture}-apple-macos${MIN_MACOS_VERSION}" \
         -framework AppKit \
+        -framework IOKit \
         -O \
         -o "$BUILD_ROOT/$architecture/$APP_NAME"
 done
@@ -94,6 +98,8 @@ EOF
 /usr/bin/codesign --verify --deep --strict "$APP_DIR"
 /usr/bin/xcrun lipo "$EXECUTABLE_PATH" -verify_arch arm64 x86_64 \
     || fail "diagnostics executable is not universal"
+"$EXECUTABLE_PATH" --host-redaction-self-test \
+    || fail "diagnostics hostname redaction self-test failed"
 for architecture in arm64 x86_64; do
     build_info="$(/usr/bin/xcrun vtool -arch "$architecture" -show-build "$EXECUTABLE_PATH")"
     /usr/bin/grep -Eq "minos[[:space:]]+$MIN_MACOS_VERSION([[:space:]]|$)" <<< "$build_info" \

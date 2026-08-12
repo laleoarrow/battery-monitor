@@ -115,6 +115,9 @@ Apple-silicon virtual temperature field, and distinguishes unavailable
 temperature from a real 0°C. It also moves sampling off AppKit's main thread
 and uses the fixed read-only SMC helper path for responsive whole-machine power
 without deriving false battery-flow spikes from independently timed SMC keys.
+During the short battery-to-adapter transition where the system telemetry is
+still stale, the signed instantaneous battery current supplies the flow state
+until the coherent telemetry catches up.
 
 ## v3.0.3 selector and support work
 

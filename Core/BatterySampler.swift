@@ -16,9 +16,19 @@ enum BatterySampler {
             virtualTemperatureRaw: optionalIntValue(props["VirtualTemperature"])
         )
 
-        let voltage = intValue(props["Voltage"])
-        let amperage = intValue(props["Amperage"])
+        let voltage = optionalIntValue(props["Voltage"])
+        let instantAmperage = optionalIntValue(props["InstantAmperage"])
+        let amperage = optionalIntValue(props["Amperage"])
         let telemetry = intMap(props["PowerTelemetryData"])
+        let instantBatteryW = resolvedInstantBatteryW(
+            voltage: voltage,
+            instantAmperage: instantAmperage,
+            amperage: amperage
+        )
+        let fallbackBatteryW = resolvedFallbackBatteryW(
+            voltage: voltage,
+            amperage: amperage
+        )
 
         // `IsCharging` can remain true while an undersized adapter is being
         // supplemented by the battery. Firmware has also emitted both raw sign
@@ -31,7 +41,8 @@ enum BatterySampler {
             systemPowerIn: telemetry["SystemPowerIn"],
             systemLoad: telemetry["SystemLoad"],
             batteryPower: telemetry["BatteryPower"],
-            fallbackBatteryW: Double(voltage * amperage) / 1_000_000.0
+            fallbackBatteryW: fallbackBatteryW,
+            instantBatteryW: instantBatteryW
         )
         snapshot.adapterW = power.adapterW
         snapshot.batteryW = power.batteryW
@@ -51,13 +62,44 @@ enum BatterySampler {
         return snapshot
     }
 
+    static func resolvedInstantBatteryW(
+        voltage: Int?,
+        instantAmperage: Int?,
+        amperage: Int?
+    ) -> Double? {
+        guard let voltage, voltage > 0 else { return nil }
+        guard let current = validBatteryCurrent(instantAmperage)
+                ?? validBatteryCurrent(amperage) else { return nil }
+        let watts = Double(voltage) * Double(current) / 1_000_000.0
+        return watts.isFinite ? watts : nil
+    }
+
+    static func resolvedFallbackBatteryW(
+        voltage: Int?,
+        amperage: Int?
+    ) -> Double {
+        resolvedInstantBatteryW(
+            voltage: voltage,
+            instantAmperage: nil,
+            amperage: amperage
+        ) ?? 0
+    }
+
+    private static func validBatteryCurrent(_ current: Int?) -> Int? {
+        guard let current,
+              current != -1,
+              (-100_000...100_000).contains(current) else { return nil }
+        return current
+    }
+
     static func resolvedPower(
         plugged: Bool,
         chargingHint: Bool,
         systemPowerIn: Int?,
         systemLoad: Int?,
         batteryPower: Int?,
-        fallbackBatteryW: Double
+        fallbackBatteryW: Double,
+        instantBatteryW: Double? = nil
     ) -> (adapterW: Double, batteryW: Double, systemW: Double) {
         // SystemPowerIn is a source and has no observed sign drift. A negative
         // value is invalid/missing, not a real zero-watt adapter sample.
@@ -71,6 +113,20 @@ enum BatterySampler {
         if !plugged {
             let systemW = system ?? batteryMagnitude
             return (0, systemW > 0 ? -systemW : 0, systemW)
+        }
+
+        // AppleSmartBattery can report ExternalConnected immediately while
+        // SystemPowerIn remains missing/zero for roughly one telemetry cycle.
+        // In that narrow transition, signed V×I supplies the battery branch.
+        // A missing/zero load gets the smallest conservative placeholder until
+        // the same sampling pass merges live PSTR and rebuilds the adapter.
+        if (adapter == nil || adapter == 0),
+           let instantBatteryW,
+           instantBatteryW.isFinite {
+            let transitionSystemW = system.flatMap { $0 > 0 ? $0 : nil }
+                ?? max(-instantBatteryW, 0)
+            let batteryW = max(instantBatteryW, -transitionSystemW)
+            return (transitionSystemW + batteryW, batteryW, transitionSystemW)
         }
 
         if let adapter, let system {
@@ -183,8 +239,8 @@ enum BatterySampler {
         // independently.
         let keys = [
             "CurrentCapacity", "ExternalConnected", "IsCharging", "CycleCount",
-            "Temperature", "VirtualTemperature", "Voltage", "Amperage",
-            "PowerTelemetryData",
+            "Temperature", "VirtualTemperature", "Voltage", "InstantAmperage",
+            "Amperage", "PowerTelemetryData",
         ]
         var props: [String: Any] = [:]
         for key in keys {
@@ -206,7 +262,7 @@ enum BatterySampler {
     // Values are raw two's-complement bit patterns, so negative currents
     // surface as huge unsigned numbers. Battery values never legitimately
     // exceed Int32.max, so anything in the 32-bit wraparound range is negative.
-    private static func optionalIntValue(_ raw: Any?) -> Int? {
+    static func optionalIntValue(_ raw: Any?) -> Int? {
         guard let number = raw as? NSNumber else { return nil }
         var value = number.int64Value
         if value > Int64(Int32.max), value <= Int64(UInt32.max) {

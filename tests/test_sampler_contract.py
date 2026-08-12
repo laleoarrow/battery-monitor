@@ -25,12 +25,26 @@ class SamplerContractTests(unittest.TestCase):
             "Temperature",
             "VirtualTemperature",
             "Voltage",
+            "InstantAmperage",
             "Amperage",
             "PowerTelemetryData",
         ):
             self.assertIn(f'"{key}"', self.source)
         self.assertIn('props["CurrentCapacity"] is NSNumber', self.source)
         self.assertIn('props["ExternalConnected"] is NSNumber', self.source)
+        self.assertIn(
+            'optionalIntValue(props["InstantAmperage"])', self.source
+        )
+        self.assertIn("validBatteryCurrent(instantAmperage)", self.source)
+        self.assertIn("validBatteryCurrent(amperage)", self.source)
+        self.assertIn("(-100_000...100_000).contains(current)", self.source)
+        self.assertIn("let fallbackBatteryW = resolvedFallbackBatteryW(", self.source)
+        self.assertIn("fallbackBatteryW: fallbackBatteryW", self.source)
+        self.assertNotIn("Double(amperage ?? 0)", self.source)
+        self.assertIn("adapter == nil || adapter == 0", self.source)
+        self.assertNotIn(
+            "systemPowerIn == nil || systemPowerIn == 0", self.source
+        )
 
     def test_never_forks_ioreg(self):
         # One process spawn per second was the single largest cost in the old
@@ -85,14 +99,16 @@ class SamplerContractTests(unittest.TestCase):
             }
 
             func resolved(_ raw: Int?, charging: Bool, plugged: Bool,
-                          systemIn: Int?, load: Int?, fallback: Double = 0) -> PowerSnapshot {
+                          systemIn: Int?, load: Int?, fallback: Double = 0,
+                          instant: Double? = nil) -> PowerSnapshot {
                 let values = BatterySampler.resolvedPower(
                     plugged: plugged,
                     chargingHint: charging,
                     systemPowerIn: systemIn,
                     systemLoad: load,
                     batteryPower: raw,
-                    fallbackBatteryW: fallback
+                    fallbackBatteryW: fallback,
+                    instantBatteryW: instant
                 )
                 return PowerSnapshot(
                     plugged: plugged,
@@ -172,6 +188,200 @@ class SamplerContractTests(unittest.TestCase):
                                 systemIn: nil, load: nil)
             require(zero.batteryW.sign == .plus && zero.conservationError == 0,
                     "zero stays positive")
+
+            let transitionCharge = resolved(-9_000, charging: false, plugged: true,
+                                             systemIn: 0, load: 40_000,
+                                             fallback: -9, instant: 24)
+            require(transitionCharge.adapterW == 64
+                        && transitionCharge.batteryW == 24
+                        && transitionCharge.systemW == 40
+                        && transitionCharge.state == .charging
+                        && transitionCharge.conservationError == 0,
+                    "instant positive current wins while source telemetry is zero")
+
+            let sourceSentinel = resolved(-9_000, charging: false, plugged: true,
+                                          systemIn: -1, load: 40_000,
+                                          fallback: -9, instant: 24)
+            require(sourceSentinel.adapterW == 64
+                        && sourceSentinel.batteryW == 24
+                        && sourceSentinel.systemW == 40
+                        && sourceSentinel.state == .charging
+                        && sourceSentinel.conservationError == 0,
+                    "normalized unavailable source includes negative sentinel")
+
+            let transitionIdle = resolved(9_000, charging: true, plugged: true,
+                                           systemIn: nil, load: 40_000,
+                                           fallback: 9, instant: 0)
+            require(transitionIdle.adapterW == 40
+                        && transitionIdle.batteryW == 0
+                        && transitionIdle.systemW == 40
+                        && transitionIdle.state == .pluggedIdle
+                        && transitionIdle.conservationError == 0,
+                    "instant zero current produces plugged idle")
+
+            let transitionMixed = resolved(9_000, charging: true, plugged: true,
+                                            systemIn: 0, load: 40_000,
+                                            fallback: 9, instant: -12)
+            require(transitionMixed.adapterW == 28
+                        && transitionMixed.batteryW == -12
+                        && transitionMixed.systemW == 40
+                        && transitionMixed.state == .mixedSupply
+                        && transitionMixed.conservationError == 0,
+                    "signed instant current overrides stale charging hint")
+
+            let boundedMixed = resolved(9_000, charging: true, plugged: true,
+                                        systemIn: nil, load: 40_000,
+                                        fallback: 9, instant: -60)
+            require(boundedMixed.adapterW == 0 && boundedMixed.batteryW == -40
+                        && boundedMixed.systemW == 40
+                        && boundedMixed.conservationError == 0,
+                    "instant battery discharge cannot exceed system load")
+
+            let noLoadCharge = resolved(-9_000, charging: false, plugged: true,
+                                        systemIn: nil, load: nil,
+                                        fallback: -9, instant: 24)
+            require(noLoadCharge.adapterW == 24 && noLoadCharge.batteryW == 24
+                        && noLoadCharge.systemW == 0
+                        && noLoadCharge.state == .charging
+                        && noLoadCharge.conservationError == 0,
+                    "missing load retains instant charging direction")
+
+            let noLoadIdle = resolved(9_000, charging: true, plugged: true,
+                                      systemIn: nil, load: nil,
+                                      fallback: 9, instant: 0)
+            require(noLoadIdle.adapterW == 0 && noLoadIdle.batteryW == 0
+                        && noLoadIdle.systemW == 0
+                        && noLoadIdle.state == .pluggedIdle
+                        && noLoadIdle.conservationError == 0,
+                    "missing load retains instant idle direction")
+
+            let noLoadMixed = resolved(9_000, charging: true, plugged: true,
+                                       systemIn: nil, load: nil,
+                                       fallback: 9, instant: -12)
+            require(noLoadMixed.adapterW == 0 && noLoadMixed.batteryW == -12
+                        && noLoadMixed.systemW == 12
+                        && noLoadMixed.state == .mixedSupply
+                        && noLoadMixed.conservationError == 0,
+                    "missing load retains instant mixed direction")
+
+            let zeroLoadCharge = resolved(-9_000, charging: false, plugged: true,
+                                          systemIn: 0, load: 0,
+                                          fallback: -9, instant: 24)
+            require(zeroLoadCharge.adapterW == 24
+                        && zeroLoadCharge.batteryW == 24
+                        && zeroLoadCharge.systemW == 0
+                        && zeroLoadCharge.state == .charging
+                        && zeroLoadCharge.conservationError == 0,
+                    "zero load retains instant charging direction")
+
+            let zeroLoadMixed = resolved(9_000, charging: true, plugged: true,
+                                         systemIn: 0, load: 0,
+                                         fallback: 9, instant: -12)
+            require(zeroLoadMixed.adapterW == 0 && zeroLoadMixed.batteryW == -12
+                        && zeroLoadMixed.systemW == 12
+                        && zeroLoadMixed.state == .mixedSupply
+                        && zeroLoadMixed.conservationError == 0,
+                    "zero load retains instant mixed direction")
+
+            let unpluggedOldAC = resolved(9_000, charging: true, plugged: false,
+                                          systemIn: 60_000, load: 40_000,
+                                          fallback: 9, instant: 24)
+            require(unpluggedOldAC.adapterW == 0 && unpluggedOldAC.batteryW == -40
+                        && unpluggedOldAC.systemW == 40
+                        && unpluggedOldAC.state == .onBattery
+                        && unpluggedOldAC.conservationError == 0,
+                    "unplug ignores old AC and instant charging telemetry")
+
+            let coherentSource = resolved(9_000, charging: false, plugged: true,
+                                          systemIn: 60_000, load: 40_000,
+                                          fallback: 9, instant: -12)
+            require(coherentSource.adapterW == 60 && coherentSource.batteryW == 20
+                        && coherentSource.systemW == 40
+                        && coherentSource.state == .charging
+                        && coherentSource.conservationError == 0,
+                    "positive source telemetry remains authoritative")
+
+            for (snapshot, expectedBattery, expectedAdapter) in [
+                (transitionCharge, 24.0, 69.0),
+                (transitionIdle, 0.0, 45.0),
+                (transitionMixed, -12.0, 33.0),
+                (noLoadCharge, 24.0, 69.0),
+                (noLoadIdle, 0.0, 45.0),
+                (noLoadMixed, -12.0, 33.0),
+                (zeroLoadCharge, 24.0, 69.0),
+                (zeroLoadMixed, -12.0, 33.0),
+            ] {
+                let live = BatterySampler.resolvedLivePower(
+                    snapshot: snapshot, adapterW: 1, systemW: 45
+                )
+                require(live.adapterW == expectedAdapter
+                            && live.batteryW == expectedBattery
+                            && live.systemW == 45
+                            && live.conservationError == 0,
+                        "live system refresh retains instant battery branch")
+            }
+            require(BatterySampler.resolvedLivePower(
+                        snapshot: noLoadCharge, adapterW: 1, systemW: 45
+                    ).state == .charging,
+                    "live load keeps transition charging state")
+            require(BatterySampler.resolvedLivePower(
+                        snapshot: noLoadIdle, adapterW: 1, systemW: 45
+                    ).state == .pluggedIdle,
+                    "live load keeps transition idle state")
+            require(BatterySampler.resolvedLivePower(
+                        snapshot: noLoadMixed, adapterW: 1, systemW: 45
+                    ).state == .mixedSupply,
+                    "live load keeps transition mixed state")
+
+            for invalidInstant in [
+                -1, Int(Int32.min), Int(Int32.max), -100_001, 100_001,
+                Int.min, Int.max,
+            ] {
+                let fallback = BatterySampler.resolvedInstantBatteryW(
+                    voltage: 12_000,
+                    instantAmperage: invalidInstant,
+                    amperage: -2_000
+                )
+                require(fallback != nil && near(fallback!, -24),
+                        "invalid instant current falls back to valid Amperage")
+            }
+            require(BatterySampler.resolvedInstantBatteryW(
+                        voltage: 12_000,
+                        instantAmperage: -1,
+                        amperage: Int(Int32.max)
+                    ) == nil,
+                    "two invalid current candidates produce nil")
+            require(BatterySampler.resolvedInstantBatteryW(
+                        voltage: Int.max,
+                        instantAmperage: 100_000,
+                        amperage: nil
+                    )?.isFinite == true,
+                    "Double multiplication remains overflow safe")
+
+            for invalidAmperage in [
+                -1, Int(Int32.min), Int(Int32.max), -100_001, 100_001,
+                Int.min, Int.max,
+            ] {
+                let fallback = BatterySampler.resolvedFallbackBatteryW(
+                    voltage: 12_000,
+                    amperage: invalidAmperage
+                )
+                let instant = BatterySampler.resolvedInstantBatteryW(
+                    voltage: 12_000,
+                    instantAmperage: nil,
+                    amperage: invalidAmperage
+                )
+                let snapshot = resolved(
+                    nil, charging: true, plugged: true,
+                    systemIn: nil, load: nil,
+                    fallback: fallback, instant: instant
+                )
+                require(snapshot.adapterW == 0 && snapshot.batteryW == 0
+                            && snapshot.systemW == 0
+                            && snapshot.state == .pluggedIdle
+                            && snapshot.conservationError == 0,
+                        "missing telemetry rejects invalid fallback Amperage")
+            }
             require(BatterySampler.normalizedSystemLoad(30_000) == 30, "positive load")
             require(BatterySampler.normalizedSystemLoad(-30_000) == 30, "negative load")
             """

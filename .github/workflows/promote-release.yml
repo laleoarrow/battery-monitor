@@ -202,6 +202,9 @@ jobs:
             cat <<'EOF'
           This Wattson release is universal for Apple silicon and Intel and supports macOS 12 or later.
 
+          - Restores responsive whole-machine power through fixed read-only SMC sensors, without exposing caller-selected keys or write commands.
+          - Updates battery-to-adapter state transitions from signed instantaneous battery current while the slower coherent telemetry catches up.
+          - Correctly decodes physical battery temperature and falls back to Apple-silicon virtual temperature, showing unavailable data as a dash instead of a false 0°C.
           - Makes the mode selector flow on the compositor, with one-to-one dragging, faster magnetic release, smooth click travel, and continuously blended labels.
           - Keeps the resting selector flush with its track at every detent, with matching continuous capsule corners and no edge gap.
           - Uses one clear native Liquid Glass track and a restrained neutral selection capsule on macOS 26, with accessible fallbacks for macOS 12–25.
