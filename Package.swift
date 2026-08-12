@@ -60,7 +60,10 @@ let package = Package(
             name: "WattsonHelper",
             path: "Helper",
             exclude: ["com.leoarrow.wattson.helper.plist"],
-            sources: ["wattson-helper.swift"]
+            sources: ["wattson-helper.swift"],
+            linkerSettings: [
+                .linkedFramework("IOKit"),
+            ]
         ),
         .testTarget(
             name: "WattsonTests",

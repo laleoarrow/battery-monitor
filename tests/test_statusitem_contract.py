@@ -134,6 +134,22 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("historyInterval: TimeInterval = 2", self.source)
         self.assertIn("displayInterval: TimeInterval = 1", self.source)
 
+    def test_sampling_sources_continue_during_menu_tracking(self):
+        self.assertIn("CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)", self.source)
+        self.assertEqual(self.source.count("RunLoop.main.add(timer, forMode: .common)"), 2)
+
+    def test_fresh_smc_power_is_read_off_main_then_applied_before_presentation(self):
+        sampling = self.source.split("fileprivate func sampleNow", 1)[1].split(
+            "private func finishSample", 1
+        )[0]
+        finish = self.source.split("private func finishSample", 1)[1].split(
+            "private func refreshPresentation", 1
+        )[0]
+        self.assertIn("samplingQueue.async", sampling)
+        self.assertIn("HelperClient.livePower()", sampling)
+        self.assertNotIn("HelperClient.livePower()", finish)
+        self.assertIn("BatterySampler.resolvedLivePower", finish)
+
     def test_display_clock_stops_when_the_popover_closes(self):
         self.assertIn("displayTimer?.invalidate()", self.source)
 

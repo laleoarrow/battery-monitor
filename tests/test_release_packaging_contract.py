@@ -20,6 +20,7 @@ SCRIPTS = {
 }
 PREINSTALL = ROOT / "Packaging" / "pkg" / "preinstall"
 POSTINSTALL = ROOT / "Packaging" / "pkg" / "postinstall"
+RELEASE_GUIDE = ROOT / ".agent" / "release.md"
 
 
 class ReleasePackagingContractTests(unittest.TestCase):
@@ -30,9 +31,10 @@ class ReleasePackagingContractTests(unittest.TestCase):
         }
         cls.preinstall = PREINSTALL.read_text(encoding="utf-8")
         cls.postinstall = POSTINSTALL.read_text(encoding="utf-8")
+        cls.release_guide = RELEASE_GUIDE.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.3\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.4\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -179,6 +181,18 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn('/usr/bin/shasum -a 256 "$PKG_NAME"', release)
         self.assertIn('/usr/bin/shasum -a 256 "$DMG_NAME"', release)
         self.assertIn('/usr/bin/shasum -a 256 -c', release)
+
+    def test_stable_release_requires_installing_verified_public_pkg_locally(self):
+        guide = self.release_guide
+        self.assertIn("A stable release is not complete", guide)
+        self.assertIn("Do not use\n`scripts/install.sh`", guide)
+        self.assertIn("/usr/bin/shasum -a 256 -c", guide)
+        self.assertIn('sudo /usr/sbin/installer -pkg "$verified_pkg" -target /', guide)
+        self.assertIn("Print :CFBundleShortVersionString", guide)
+        self.assertIn("Print :CFBundleVersion", guide)
+        self.assertIn("pkgutil --pkg-info com.leoarrow.wattson.pkg", guide)
+        self.assertIn("/usr/bin/codesign --verify --deep --strict", guide)
+        self.assertIn("/usr/bin/open -n /Applications/Wattson.app", guide)
 
 
 if __name__ == "__main__":

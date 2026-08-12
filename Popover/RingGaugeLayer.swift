@@ -130,7 +130,9 @@ final class RingGaugeView: PopoverSection {
         values[0].stringValue = PopoverStyle.watts(snapshot.systemW)
         values[1].stringValue = snapshot.state == .pluggedIdle
             ? "0.0 W" : PopoverStyle.watts(abs(snapshot.batteryW))
-        values[2].stringValue = String(format: "%.1f°C", snapshot.temperatureC)
+        values[2].stringValue = snapshot.temperatureC.map {
+            String(format: "%.1f°C", $0)
+        } ?? "—"
         values[3].stringValue = "\(snapshot.cycleCount)"
 
         PopoverStyle.setWithoutAnimation {
@@ -163,6 +165,8 @@ final class RingGaugeView: PopoverSection {
     }
 
 #if DEBUG
+    var temperatureTextForTest: String { values[2].stringValue }
+
     func rotationMetricsForTest() -> (duration: CFTimeInterval, layerSpeed: Float)? {
         guard let motion = arcHost.animation(forKey: "spin") as? CABasicAnimation else { return nil }
         return (motion.duration, arcHost.speed)

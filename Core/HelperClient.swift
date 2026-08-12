@@ -2,6 +2,11 @@ import Darwin
 import Foundation
 
 enum HelperClient {
+    struct LivePower: Equatable {
+        let adapterW: Double?
+        let systemW: Double?
+    }
+
     static let socketPath = "/var/run/wattson-helper.sock"
 
     static var isInstalled: Bool {
@@ -45,5 +50,35 @@ enum HelperClient {
         let count = read(fd, &buffer, buffer.count)
         guard count > 0 else { return nil }
         return try? JSONSerialization.jsonObject(with: Data(buffer[0..<count])) as? [String: Any]
+    }
+
+    static func isHealthy() -> Bool {
+        send(["op": "health"])?["health"] as? Bool == true
+    }
+
+    static func livePower() -> LivePower? {
+        guard let response = send(["op": "getPower"]), response["ok"] as? Bool == true else {
+            return nil
+        }
+
+        var invalidField = false
+        func watts(_ name: String) -> Double? {
+            guard let raw = response[name] else { return nil }
+            guard !(raw is Bool), let number = raw as? NSNumber else {
+                invalidField = true
+                return nil
+            }
+            let value = number.doubleValue
+            guard value.isFinite, (0 ... 1_000).contains(value) else {
+                invalidField = true
+                return nil
+            }
+            return value
+        }
+
+        let adapterW = watts("adapterW")
+        let systemW = watts("systemW")
+        guard !invalidField, adapterW != nil || systemW != nil else { return nil }
+        return LivePower(adapterW: adapterW, systemW: systemW)
     }
 }

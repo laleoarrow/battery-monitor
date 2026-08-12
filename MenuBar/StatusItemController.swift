@@ -49,11 +49,18 @@ final class StatusItemController: NSObject {
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let popover = PopoverController()
     private let history = PowerHistory()
+    private let samplingQueue = DispatchQueue(
+        label: "com.leoarrow.wattson.sampler",
+        qos: .userInitiated
+    )
 
     private var snapshot = PowerSnapshot()
     private var historyTimer: Timer?
     private var displayTimer: Timer?
     private var powerSourceRunLoopSource: CFRunLoopSource?
+    private var sampleInFlight = false
+    private var resampleRequested = false
+    private var pendingHistorySample = false
     private var pressed = false
     private var clickRouter = ClickRouter()
     private var rightClickModes = RightClickModeSequence()
@@ -229,20 +236,24 @@ final class StatusItemController: NSObject {
             controller.sampleNow(recordHistory: false)
         }, context)?.takeRetainedValue() else { return }
         powerSourceRunLoopSource = source
-        CFRunLoopAddSource(CFRunLoopGetMain(), source, .defaultMode)
+        CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)
     }
 
     private func startHistoryClock() {
-        historyTimer = Timer.scheduledTimer(withTimeInterval: Self.historyInterval, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: Self.historyInterval, repeats: true) { [weak self] _ in
             self?.sampleNow(recordHistory: true)
         }
+        historyTimer = timer
+        RunLoop.main.add(timer, forMode: .common)
     }
 
     private func startDisplayClock() {
         guard displayTimer == nil else { return }
-        displayTimer = Timer.scheduledTimer(withTimeInterval: Self.displayInterval, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: Self.displayInterval, repeats: true) { [weak self] _ in
             self?.sampleNow(recordHistory: false)
         }
+        displayTimer = timer
+        RunLoop.main.add(timer, forMode: .common)
         // Let NSPopover hand its first frame to the window server before doing
         // a fresh IOKit read and rebuilding the animated modules.
         DispatchQueue.main.async { [weak self] in
@@ -257,10 +268,46 @@ final class StatusItemController: NSObject {
     }
 
     fileprivate func sampleNow(recordHistory: Bool) {
-        guard let fresh = BatterySampler.sample() else {
+        dispatchPrecondition(condition: .onQueue(.main))
+        pendingHistorySample = pendingHistorySample || recordHistory
+        guard !sampleInFlight else {
+            resampleRequested = true
+            return
+        }
+
+        sampleInFlight = true
+        samplingQueue.async { [weak self] in
+            let fresh = BatterySampler.sample()
+            let livePower = HelperClient.livePower()
+            DispatchQueue.main.async { [weak self] in
+                self?.finishSample(fresh, livePower: livePower)
+            }
+        }
+    }
+
+    private func finishSample(
+        _ fresh: PowerSnapshot?,
+        livePower: HelperClient.LivePower?
+    ) {
+        dispatchPrecondition(condition: .onQueue(.main))
+        let recordHistory = pendingHistorySample
+        let shouldResample = resampleRequested
+        pendingHistorySample = false
+        resampleRequested = false
+        sampleInFlight = false
+
+        guard var fresh else {
             isDegraded = true
             refreshPresentation()
+            if shouldResample { sampleNow(recordHistory: false) }
             return
+        }
+        if let live = livePower {
+            fresh = BatterySampler.resolvedLivePower(
+                snapshot: fresh,
+                adapterW: live.adapterW,
+                systemW: live.systemW
+            )
         }
         isDegraded = false
         snapshot = fresh
@@ -268,6 +315,7 @@ final class StatusItemController: NSObject {
             history.append(fresh.totalInputW)
         }
         refreshPresentation()
+        if shouldResample { sampleNow(recordHistory: false) }
     }
 
     private func refreshPresentation() {

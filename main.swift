@@ -3,6 +3,17 @@ import Darwin
 
 // Swift only allows top-level statements in a file named main.swift.
 
+if CommandLine.arguments.contains("--helper-health-probe") {
+    exit(HelperClient.isHealthy() ? 0 : 1)
+}
+if CommandLine.arguments.contains("--helper-power-probe") {
+    guard let power = HelperClient.livePower() else { exit(1) }
+    let adapter = power.adapterW.map { String(format: "%.3f", $0) } ?? "unavailable"
+    let system = power.systemW.map { String(format: "%.3f", $0) } ?? "unavailable"
+    print("adapterW=\(adapter) systemW=\(system)")
+    exit(0)
+}
+
 let app = NSApplication.shared
 let delegate = AppDelegate()
 app.delegate = delegate

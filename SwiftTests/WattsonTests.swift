@@ -203,6 +203,120 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(mixed.conservationError, 0, accuracy: 0.001)
     }
 
+    func testLiveSystemPowerPreservesBatteryBranchAndConservation() {
+        let stale = PowerSnapshot(
+            percent: 60, plugged: true, adapterW: 70, batteryW: 20, systemW: 50
+        )
+        let charging = BatterySampler.resolvedLivePower(
+            snapshot: stale, adapterW: 63, systemW: 48
+        )
+        XCTAssertEqual(charging.adapterW, 68, accuracy: 0.001)
+        XCTAssertEqual(charging.batteryW, 20, accuracy: 0.001)
+        XCTAssertEqual(charging.systemW, 48, accuracy: 0.001)
+        XCTAssertEqual(charging.conservationError, 0, accuracy: 0.001)
+
+        // The independently sampled adapter value is deliberately not
+        // subtracted from system power: on hardware it can be one generation
+        // behind and would turn this charging snapshot into a false discharge.
+        let asynchronousPair = BatterySampler.resolvedLivePower(
+            snapshot: stale, adapterW: 35, systemW: 48
+        )
+        XCTAssertEqual(asynchronousPair.adapterW, 68, accuracy: 0.001)
+        XCTAssertEqual(asynchronousPair.batteryW, 20, accuracy: 0.001)
+        XCTAssertEqual(asynchronousPair.conservationError, 0, accuracy: 0.001)
+
+        var batteryOnly = stale
+        batteryOnly.plugged = false
+        let discharging = BatterySampler.resolvedLivePower(
+            snapshot: batteryOnly, adapterW: nil, systemW: 22
+        )
+        XCTAssertEqual(discharging.adapterW, 0, accuracy: 0.001)
+        XCTAssertEqual(discharging.batteryW, -22, accuracy: 0.001)
+        XCTAssertEqual(discharging.systemW, 22, accuracy: 0.001)
+        XCTAssertEqual(discharging.conservationError, 0, accuracy: 0.001)
+    }
+
+    func testLivePowerUsesEitherSafeBranchAndRejectsInvalidValues() {
+        let stale = PowerSnapshot(
+            percent: 60, plugged: true, adapterW: 70, batteryW: 20, systemW: 50
+        )
+        let systemOnly = BatterySampler.resolvedLivePower(
+            snapshot: stale, adapterW: nil, systemW: 48
+        )
+        XCTAssertEqual(systemOnly.adapterW, 68, accuracy: 0.001)
+        XCTAssertEqual(systemOnly.batteryW, 20, accuracy: 0.001)
+        XCTAssertEqual(systemOnly.systemW, 48, accuracy: 0.001)
+
+        let adapterOnly = BatterySampler.resolvedLivePower(
+            snapshot: stale, adapterW: 63, systemW: nil
+        )
+        XCTAssertEqual(adapterOnly.adapterW, 63, accuracy: 0.001)
+        XCTAssertEqual(adapterOnly.batteryW, 20, accuracy: 0.001)
+        XCTAssertEqual(adapterOnly.systemW, 43, accuracy: 0.001)
+
+        let unchanged = BatterySampler.resolvedLivePower(
+            snapshot: stale, adapterW: .nan, systemW: -.infinity
+        )
+        XCTAssertEqual(unchanged.adapterW, stale.adapterW)
+        XCTAssertEqual(unchanged.batteryW, stale.batteryW)
+        XCTAssertEqual(unchanged.systemW, stale.systemW)
+    }
+
+    func testBatteryTemperatureUsesPhysicalDeciKelvinThenVirtualCentiCelsius() {
+        XCTAssertEqual(
+            BatterySampler.resolvedTemperatureC(
+                temperatureRaw: 3_057,
+                virtualTemperatureRaw: 3_250
+            )!,
+            32.55,
+            accuracy: 0.001
+        )
+        XCTAssertEqual(
+            BatterySampler.resolvedTemperatureC(
+                temperatureRaw: 0,
+                virtualTemperatureRaw: 3_250
+            )!,
+            32.5,
+            accuracy: 0.001
+        )
+        XCTAssertEqual(
+            BatterySampler.resolvedTemperatureC(
+                temperatureRaw: nil,
+                virtualTemperatureRaw: 0
+            )!,
+            0,
+            accuracy: 0.001
+        )
+    }
+
+    func testBatteryTemperatureRejectsMissingAndSentinelValues() {
+        XCTAssertNil(BatterySampler.resolvedTemperatureC(
+            temperatureRaw: nil,
+            virtualTemperatureRaw: nil
+        ))
+        XCTAssertNil(BatterySampler.resolvedTemperatureC(
+            temperatureRaw: 0,
+            virtualTemperatureRaw: nil
+        ))
+        XCTAssertNil(BatterySampler.resolvedTemperatureC(
+            temperatureRaw: -1,
+            virtualTemperatureRaw: 65_535
+        ))
+        XCTAssertNil(BatterySampler.resolvedTemperatureC(
+            temperatureRaw: Int(Int32.max),
+            virtualTemperatureRaw: Int(Int32.min)
+        ))
+    }
+
+    func testRingGaugeDistinguishesMissingTemperatureFromRealZero() {
+        let gauge = RingGaugeView()
+        gauge.update(snapshot: PowerSnapshot(temperatureC: nil))
+        XCTAssertEqual(gauge.temperatureTextForTest, "—")
+
+        gauge.update(snapshot: PowerSnapshot(temperatureC: 0))
+        XCTAssertEqual(gauge.temperatureTextForTest, "0.0°C")
+    }
+
     func testHistoryIsBoundedAndChronological() {
         let history = PowerHistory()
         for value in 0..<75 {

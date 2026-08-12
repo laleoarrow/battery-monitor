@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.3`
+- Version: `3.0.4`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +14,11 @@
 
 ## Public artifacts
 
-`scripts/release.sh 3.0.3` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.4` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.3-macos-universal.pkg`
-- `Wattson-v3.0.3-macos-universal.dmg`
-- `Wattson-v3.0.3-release-info.txt`
+- `Wattson-v3.0.4-macos-universal.pkg`
+- `Wattson-v3.0.4-macos-universal.dmg`
+- `Wattson-v3.0.4-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -67,7 +67,7 @@ Headless checks:
 ```bash
 swift test --parallel
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.3
+bash scripts/release.sh 3.0.4
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -101,12 +101,20 @@ runners.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.3` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.4` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.3.
+6. Announce the release only after every public route resolves to v3.0.4.
+
+## v3.0.4 telemetry compatibility work
+
+The v3.0.4 pass corrects Smart Battery temperature units, falls back to the
+Apple-silicon virtual temperature field, and distinguishes unavailable
+temperature from a real 0°C. It also moves sampling off AppKit's main thread
+and uses the fixed read-only SMC helper path for responsive whole-machine power
+without deriving false battery-flow spikes from independently timed SMC keys.
 
 ## v3.0.3 selector and support work
 

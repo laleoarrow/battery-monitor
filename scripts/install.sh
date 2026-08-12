@@ -178,7 +178,7 @@ if [ "$APP_ONLY" = "1" ]; then
     # -e, not -x: the helper is 544 root:wheel, so it is deliberately not
     # executable by the user running this script.
     if [[ "$PACKAGE_BUILD" != "1" && ! -e "$HELPER_BIN" ]]; then
-        echo "  ⚠️  No helper at $HELPER_BIN — power mode switching will not work."
+        echo "  ⚠️  No helper at $HELPER_BIN — live SMC power and mode switching are unavailable."
         echo "     Run ./scripts/install.sh without --app-only to install it."
     fi
     if [[ "$PACKAGE_BUILD" == "1" ]]; then
@@ -194,6 +194,7 @@ HELPER_BUILD="$BUILD_DIR/wattson-helper"
 xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift" \
     -parse-as-library \
     -target "$SWIFT_TARGET" \
+    -framework IOKit \
     -O \
     -o "$HELPER_BUILD"
 codesign --force --sign - --identifier "$HELPER_LABEL" "$HELPER_BUILD" >/dev/null
@@ -237,7 +238,7 @@ if ! sudo launchctl bootstrap system "$HELPER_PLIST"; then
     fi
     exit 1
 fi
-echo "  ✅ Helper installed (not running until you right-click)"
+echo "  ✅ Socket-activated helper installed"
 
 echo ""
 echo "🎉 Done. Launch with: open \"$APP_DIR\""

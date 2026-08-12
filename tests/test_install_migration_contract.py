@@ -102,7 +102,7 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.3")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.4")
         self.assertIn('VERSION_FILE="$ROOT_DIR/VERSION"', self.package)
         self.assertIn('Contents/MacOS/Wattson', self.package_pkg)
 
@@ -159,6 +159,19 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn('Library/LaunchDaemons', self.package_pkg)
         self.assertIn('--scripts "$PACKAGE_SCRIPTS"', self.package_pkg)
         self.assertIn('/bin/launchctl bootstrap system "$HELPER_PLIST"', self.pkg_postinstall)
+
+    def test_public_pkg_retires_only_the_exact_legacy_battery_power_bundle(self):
+        cleanup = self.pkg_postinstall.split(
+            "remove_legacy_battery_power_app() {", 1
+        )[1].split("[[ \"$(/usr/bin/id -u)\"", 1)[0]
+        self.assertIn('Applications/电池功率.app', cleanup)
+        self.assertIn('legacy_id" == "com.leoarrow.battery-monitor"', cleanup)
+        self.assertIn('com.leoarrow.battery-monitor.agent.plist', cleanup)
+        self.assertIn('ProgramArguments:0', cleanup)
+        self.assertIn('/bin/launchctl bootout "gui/$console_uid"', cleanup)
+        self.assertIn('/usr/bin/sudo -n -u "#$console_uid" -- /bin/rm -rf', cleanup)
+        self.assertNotIn('.battery_monitor.py', cleanup)
+        self.assertNotIn('.battery_monitor.cfg', cleanup)
 
     def test_privileged_installer_uses_only_fixed_verified_targets(self):
         self.assertNotIn("eval ", self.installer_helper)
@@ -351,6 +364,8 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn("ProgramArguments:2 string $LEGACY_APP", self.ci_helper_workflow)
         self.assertIn("ProgramArguments:2' \"$LOGIN_PLIST\"", self.ci_helper_workflow)
         self.assertIn("verify_app_launch_stability", self.ci_helper_workflow)
+        self.assertIn('--helper-health-probe', self.ci_helper_workflow)
+        self.assertIn('--helper-power-probe', self.ci_helper_workflow)
         self.assertIn("/usr/sbin/ioreg -r -c AppleSmartBattery", self.ci_helper_workflow)
         self.assertIn('[[ "$battery_registry" == *AppleSmartBattery* ]]', self.ci_helper_workflow)
         self.assertNotIn("| /usr/bin/grep -q AppleSmartBattery", self.ci_helper_workflow)

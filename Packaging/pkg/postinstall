@@ -1,5 +1,5 @@
 #!/bin/bash
-# Validate the canonical payload, register its helper, then retire the v2 app.
+# Validate the canonical payload, register its helper, then retire older apps.
 set -euo pipefail
 umask 022
 
@@ -125,6 +125,79 @@ remove_v2_user_app() {
     fi
 }
 
+remove_legacy_battery_power_app() {
+    local console_record
+    local console_user
+    local console_uid
+    local home_record
+    local home_dir
+    local legacy_app
+    local legacy_info
+    local legacy_id
+    local legacy_executable
+    local legacy_process_pattern
+    local legacy_agent
+    local legacy_agent_label
+    local legacy_agent_executable
+
+    console_record="$(/usr/bin/stat -f '%Su:%u' /dev/console 2>/dev/null || true)"
+    console_user="${console_record%%:*}"
+    console_uid="${console_record##*:}"
+    [[ "$console_user" != "root" && "$console_user" != "loginwindow" ]] || return 0
+    [[ "$console_user" =~ ^[A-Za-z0-9._-]+$ && "$console_uid" =~ ^[0-9]+$ ]] || return 0
+
+    home_record="$(/usr/bin/dscl . -read "/Users/$console_user" NFSHomeDirectory 2>/dev/null || true)"
+    home_dir="${home_record#NFSHomeDirectory: }"
+    [[ "$home_dir" == /* && "$home_dir" != "/" ]] || return 0
+    [[ -d "$home_dir" && ! -L "$home_dir" ]] || return 0
+
+    legacy_app="$home_dir/Applications/电池功率.app"
+    for legacy_agent in \
+        "$home_dir/Library/LaunchAgents/com.leoarrow.battery-monitor.agent.plist" \
+        "$home_dir/Library/LaunchAgents/com.leoarrow.battery-monitor.plist"; do
+        [[ -f "$legacy_agent" && ! -L "$legacy_agent" ]] || continue
+        legacy_agent_label="$(
+            /usr/libexec/PlistBuddy -c 'Print :Label' "$legacy_agent" 2>/dev/null || true
+        )"
+        legacy_agent_executable="$(
+            /usr/libexec/PlistBuddy -c 'Print :ProgramArguments:0' "$legacy_agent" 2>/dev/null || true
+        )"
+        case "$legacy_agent_label" in
+            com.leoarrow.battery-monitor|com.leoarrow.battery-monitor.agent) ;;
+            *) continue ;;
+        esac
+        [[ "$legacy_agent_executable" == "$legacy_app/Contents/MacOS/applet" ]] \
+            || continue
+        /bin/launchctl bootout "gui/$console_uid" "$legacy_agent" \
+            >/dev/null 2>&1 || true
+        /usr/bin/sudo -n -u "#$console_uid" -- /bin/rm -f -- "$legacy_agent" \
+            || echo "Wattson postinstall: could not remove legacy agent $legacy_agent" >&2
+    done
+
+    legacy_info="$legacy_app/Contents/Info.plist"
+    [[ -d "$legacy_app" && ! -L "$legacy_app" ]] || return 0
+    [[ -f "$legacy_info" && ! -L "$legacy_info" ]] || return 0
+    legacy_id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$legacy_info" 2>/dev/null || true)"
+    [[ "$legacy_id" == "com.leoarrow.battery-monitor" ]] || return 0
+
+    legacy_executable="$legacy_app/Contents/MacOS/applet"
+    legacy_process_pattern="$(
+        /usr/bin/printf '%s' "$legacy_executable" \
+            | /usr/bin/sed 's/[][(){}.^$*+?|\\]/\\&/g'
+    )"
+    /usr/bin/pkill \
+        -u "$console_uid" \
+        -f "^${legacy_process_pattern}([[:space:]]|$)" \
+        >/dev/null 2>&1 || true
+    "$LSREGISTER" -u "$legacy_app" >/dev/null 2>&1 || true
+
+    # Delete only the exact historical bundle identity and do so as its owner;
+    # unrelated scripts/configuration in the user's home remain untouched.
+    if ! /usr/bin/sudo -n -u "#$console_uid" -- /bin/rm -rf -- "$legacy_app"; then
+        echo "Wattson postinstall: could not remove legacy app at $legacy_app" >&2
+    fi
+}
+
 [[ "$(/usr/bin/id -u)" == "0" ]] || fail "Installer did not run as root"
 [[ "${3:-/}" == "/" ]] || fail "Wattson can only be installed on the startup volume"
 
@@ -149,6 +222,7 @@ fi
 "$HELPER_BIN" --migrate-legacy-login-item \
     || fail "legacy launch-at-login migration failed"
 remove_v2_user_app
+remove_legacy_battery_power_app
 "$LSREGISTER" -f "$APP_DIR" >/dev/null 2>&1 || true
 echo "Wattson installed at $APP_DIR with helper $HELPER_BIN"
 exit 0

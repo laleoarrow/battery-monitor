@@ -5,12 +5,20 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 HELPER_SOURCE = ROOT / "Helper" / "wattson-helper.swift"
 HELPER_PLIST = ROOT / "Helper" / "com.leoarrow.wattson.helper.plist"
+CLIENT_SOURCE = ROOT / "Core" / "HelperClient.swift"
+APP_MAIN_SOURCE = ROOT / "main.swift"
+PACKAGE_SOURCE = ROOT / "Package.swift"
+INSTALL_SCRIPT = ROOT / "scripts" / "install.sh"
 
 
 class HelperContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.source = HELPER_SOURCE.read_text(encoding="utf-8")
+        cls.client_source = CLIENT_SOURCE.read_text(encoding="utf-8")
+        cls.app_main_source = APP_MAIN_SOURCE.read_text(encoding="utf-8")
+        cls.package_source = PACKAGE_SOURCE.read_text(encoding="utf-8")
+        cls.install_script = INSTALL_SCRIPT.read_text(encoding="utf-8")
         with HELPER_PLIST.open("rb") as handle:
             cls.plist = plistlib.load(handle)
 
@@ -85,6 +93,7 @@ class HelperContractTests(unittest.TestCase):
 
     def test_rejects_anything_outside_the_whitelist(self):
         self.assertIn('case "health"', self.source)
+        self.assertIn('case "getPower"', self.source)
         self.assertIn('case "getMode"', self.source)
         self.assertIn('case "setMode"', self.source)
         self.assertIn('case "getSystemBatteryIconHidden"', self.source)
@@ -93,6 +102,53 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn('case "setLaunchAtLoginEnabled"', self.source)
         self.assertIn("default:", self.source)
         self.assertIn("os_log", self.source)
+
+    def test_smc_power_endpoint_has_fixed_read_only_keys(self):
+        self.assertIn("import IOKit", self.source)
+        self.assertIn("0x5044_5452", self.source)  # PDTR
+        self.assertIn("0x5053_5452", self.source)  # PSTR
+        self.assertIn("readBytesCommand: UInt8 = 5", self.source)
+        self.assertIn("readKeyInfoCommand: UInt8 = 9", self.source)
+        self.assertNotIn('object["key"]', self.source)
+        self.assertNotIn("writeKey", self.source)
+
+    def test_smc_power_decoder_is_bounded_and_supports_expected_types(self):
+        for data_type in ('"flt "', '"sp78"', '"sp96"'):
+            self.assertIn(data_type, self.source)
+        self.assertIn("Float(bitPattern: bits)", self.source)
+        self.assertIn("Int16(bitPattern: bits)", self.source)
+        self.assertIn("watts.isFinite", self.source)
+        self.assertIn("(0 ... 1_000).contains(watts)", self.source)
+
+    def test_smc_power_response_and_client_are_typed_and_validated(self):
+        self.assertIn('["ok": true]', self.source)
+        self.assertIn('object["adapterW"]', self.source)
+        self.assertIn('object["systemW"]', self.source)
+        self.assertIn("struct LivePower: Equatable", self.client_source)
+        self.assertIn('send(["op": "getPower"])', self.client_source)
+        self.assertIn("value.isFinite", self.client_source)
+        self.assertIn("adapterW != nil || systemW != nil", self.client_source)
+
+    def test_sandboxed_app_binary_can_probe_the_installed_helper(self):
+        self.assertIn('send(["op": "health"])', self.client_source)
+        self.assertIn('--helper-health-probe', self.app_main_source)
+        self.assertIn('HelperClient.isHealthy()', self.app_main_source)
+        self.assertIn('--helper-power-probe', self.app_main_source)
+        self.assertIn('HelperClient.livePower()', self.app_main_source)
+        self.assertLess(
+            self.app_main_source.index('--helper-health-probe'),
+            self.app_main_source.index('NSApplication.shared'),
+        )
+
+    def test_helper_builds_link_iokit_in_swiftpm_and_installer(self):
+        helper_target = self.package_source.split('name: "WattsonHelper"', 1)[1].split(
+            ".testTarget", 1
+        )[0]
+        self.assertIn('.linkedFramework("IOKit")', helper_target)
+        helper_compile = self.install_script.split(
+            'xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift"', 1
+        )[1].split("codesign", 1)[0]
+        self.assertIn("-framework IOKit", helper_compile)
 
     def test_launch_agent_is_user_owned_and_opens_the_canonical_app(self):
         self.assertIn(r'"Library/LaunchAgents/\(loginAgentLabel).plist"', self.source)

@@ -6,7 +6,7 @@ on:
       version:
         description: Version from the repository VERSION file
         required: true
-        default: "3.0.3"
+        default: "3.0.4"
         type: string
       distribution_mode:
         description: Release signing policy
@@ -596,6 +596,13 @@ jobs:
             [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_PLIST")" == "0:0:644" ]]
             /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null
             /usr/bin/sudo -n "$HELPER_BIN" --health-probe
+            "$APP_BIN" --helper-health-probe
+            # Hosted Mac minis have no internal battery, but SMC availability
+            # is independent. Exercise the shipped getPower IPC when the
+            # runner exposes the fixed keys; older runners may legitimately
+            # report them unavailable and retain the public IOKit fallback.
+            "$APP_BIN" --helper-power-probe \
+              || echo "fixed SMC power keys unavailable on this runner"
             [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]]
             disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"
             case "$disabled_state" in

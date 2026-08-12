@@ -18,7 +18,7 @@ struct PowerSnapshot {
     var batteryW: Double = 0
     /// System consumption. Always non-negative.
     var systemW: Double = 0
-    var temperatureC: Double = 0
+    var temperatureC: Double? = nil
     var cycleCount: Int = 0
     var lowPowerMode: Bool = false
 

@@ -2,9 +2,10 @@
 
 ## Product
 
-Wattson is a native AppKit menu-bar app for macOS. It samples battery and
-adapter telemetry through IOKit, displays a live power-flow popover, and uses a
-small socket-activated privileged helper for fixed power-management actions.
+Wattson is a native AppKit menu-bar app for macOS. It samples battery state
+through IOKit, refreshes whole-machine power from two fixed read-only SMC keys
+when the helper is available, and displays the result in a live power-flow
+popover.
 
 ## Runtime architecture
 
@@ -23,8 +24,9 @@ The public v3 package installs:
 - `/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist`
 
 The helper is activated through `/var/run/wattson-helper.sock` and exits after
-five idle seconds. It owns only fixed operations for power mode, the macOS
-battery icon, and Wattson's launch-at-login agent.
+five idle seconds. It exposes fixed read-only whole-machine power sensors plus
+fixed operations for power mode, the macOS battery icon, and Wattson's
+launch-at-login agent. Clients cannot supply an SMC key or SMC write command.
 
 ## Distribution architecture
 

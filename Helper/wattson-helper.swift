@@ -1,5 +1,6 @@
 import Darwin
 import Foundation
+import IOKit
 import os
 
 private let log = OSLog(subsystem: "com.leoarrow.wattson.helper", category: "ipc")
@@ -11,6 +12,180 @@ private let loginAgentLabel = "com.leoarrow.wattson.login"
 private let wattsonBundleIdentifier = "com.leoarrow.wattson"
 private let helperSocketPath = "/var/run/wattson-helper.sock"
 private let helperExecutablePath = "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper"
+
+// AppleSMC's read-only user-client protocol uses this frozen 80-byte structure.
+// Wattson deliberately exposes only the two fixed whole-machine power keys below;
+// no socket input can select an SMC key or reach an SMC write command.
+private typealias SMCBytes = (
+    UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+    UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+    UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+    UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8
+)
+
+private struct SMCVersion {
+    var major: UInt8 = 0
+    var minor: UInt8 = 0
+    var build: UInt8 = 0
+    var reserved: UInt8 = 0
+    var release: UInt16 = 0
+}
+
+private struct SMCPLimitData {
+    var version: UInt16 = 0
+    var length: UInt16 = 0
+    var cpuPLimit: UInt32 = 0
+    var gpuPLimit: UInt32 = 0
+    var memPLimit: UInt32 = 0
+}
+
+private struct SMCKeyInfoData {
+    var dataSize: UInt32 = 0
+    var dataType: UInt32 = 0
+    var dataAttributes: UInt8 = 0
+}
+
+private struct SMCKeyData {
+    var key: UInt32 = 0
+    var version = SMCVersion()
+    var pLimitData = SMCPLimitData()
+    var keyInfo = SMCKeyInfoData()
+    var padding: UInt16 = 0
+    var result: UInt8 = 0
+    var status: UInt8 = 0
+    var data8: UInt8 = 0
+    var data32: UInt32 = 0
+    var bytes: SMCBytes = (
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0
+    )
+}
+
+private struct FixedSMCPower {
+    let adapterW: Double?
+    let systemW: Double?
+}
+
+private enum FixedSMCPowerReader {
+    // These constants are the entire SMC capability granted to the app:
+    // PDTR = adapter/DC-in power, PSTR = total system power.
+    private static let adapterKey: UInt32 = 0x5044_5452
+    private static let systemKey: UInt32 = 0x5053_5452
+    private static let floatType: UInt32 = 0x666c_7420 // "flt "
+    private static let sp78Type: UInt32 = 0x7370_3738 // "sp78"
+    private static let sp96Type: UInt32 = 0x7370_3936 // "sp96"
+    private static let userClientSelector: UInt32 = 2
+    private static let readBytesCommand: UInt8 = 5
+    private static let readKeyInfoCommand: UInt8 = 9
+
+    static func read() -> FixedSMCPower {
+        guard MemoryLayout<SMCKeyData>.size == 80 else {
+            return FixedSMCPower(adapterW: nil, systemW: nil)
+        }
+
+        let service = IOServiceGetMatchingService(
+            kIOMainPortDefault,
+            IOServiceMatching("AppleSMC")
+        )
+        guard service != 0 else {
+            return FixedSMCPower(adapterW: nil, systemW: nil)
+        }
+        defer { IOObjectRelease(service) }
+
+        var connection: io_connect_t = 0
+        guard IOServiceOpen(service, mach_task_self_, 0, &connection) == kIOReturnSuccess else {
+            return FixedSMCPower(adapterW: nil, systemW: nil)
+        }
+        defer { IOServiceClose(connection) }
+
+        return FixedSMCPower(
+            adapterW: readWatts(adapterKey, connection: connection),
+            systemW: readWatts(systemKey, connection: connection)
+        )
+    }
+
+    private static func readWatts(_ key: UInt32, connection: io_connect_t) -> Double? {
+        var infoRequest = SMCKeyData()
+        infoRequest.key = key
+        infoRequest.data8 = readKeyInfoCommand
+        guard let infoReply = call(infoRequest, connection: connection) else { return nil }
+
+        let size = Int(infoReply.keyInfo.dataSize)
+        guard size > 0, size <= 32 else { return nil }
+
+        var valueRequest = SMCKeyData()
+        valueRequest.key = key
+        valueRequest.keyInfo.dataSize = infoReply.keyInfo.dataSize
+        valueRequest.data8 = readBytesCommand
+        guard let valueReply = call(valueRequest, connection: connection) else { return nil }
+
+        let bytes = withUnsafeBytes(of: valueReply.bytes) { Array($0.prefix(size)) }
+        let watts: Double?
+        switch infoReply.keyInfo.dataType {
+        case floatType where bytes.count == 4:
+            // SMC `flt ` values use host/little-endian byte order on supported Macs.
+            let bits = UInt32(bytes[0])
+                | (UInt32(bytes[1]) << 8)
+                | (UInt32(bytes[2]) << 16)
+                | (UInt32(bytes[3]) << 24)
+            watts = Double(Float(bitPattern: bits))
+        case sp78Type where bytes.count == 2:
+            watts = decodeSignedFixedPoint(bytes, fractionalBits: 8)
+        case sp96Type where bytes.count == 2:
+            watts = decodeSignedFixedPoint(bytes, fractionalBits: 6)
+        default:
+            watts = nil
+        }
+
+        guard let watts, watts.isFinite, (0 ... 1_000).contains(watts) else { return nil }
+        return watts
+    }
+
+    private static func decodeSignedFixedPoint(
+        _ bytes: [UInt8],
+        fractionalBits: Int
+    ) -> Double? {
+        guard bytes.count == 2, (0 ... 15).contains(fractionalBits) else { return nil }
+        let bits = (UInt16(bytes[0]) << 8) | UInt16(bytes[1])
+        return Double(Int16(bitPattern: bits)) / Double(1 << fractionalBits)
+    }
+
+    private static func call(_ request: SMCKeyData, connection: io_connect_t) -> SMCKeyData? {
+        var request = request
+        var reply = SMCKeyData()
+        var replySize = MemoryLayout<SMCKeyData>.size
+        let result = IOConnectCallStructMethod(
+            connection,
+            userClientSelector,
+            &request,
+            MemoryLayout<SMCKeyData>.size,
+            &reply,
+            &replySize
+        )
+        guard result == kIOReturnSuccess,
+              replySize == MemoryLayout<SMCKeyData>.size,
+              reply.result == 0 else { return nil }
+        return reply
+    }
+}
+
+private func fixedPowerReply() -> String {
+    let power = FixedSMCPowerReader.read()
+    guard power.adapterW != nil || power.systemW != nil else {
+        return #"{"ok":false,"error":"power sensors unavailable"}"#
+    }
+
+    var object: [String: Any] = ["ok": true]
+    if let adapterW = power.adapterW { object["adapterW"] = adapterW }
+    if let systemW = power.systemW { object["systemW"] = systemW }
+    guard let data = try? JSONSerialization.data(withJSONObject: object),
+          let reply = String(data: data, encoding: .utf8) else {
+        return #"{"ok":false,"error":"power encoding failed"}"#
+    }
+    return reply
+}
 
 /// The console owner is the only UID allowed to talk to us.
 private func consoleUID() -> uid_t? {
@@ -550,6 +725,8 @@ private func handle(_ fd: Int32) {
     switch op {
     case "health":
         reply = #"{"ok":true,"health":true}"#
+    case "getPower":
+        reply = fixedPowerReply()
     case "getMode":
         if let mode = livePowerMode() {
             reply = modeReply(mode)

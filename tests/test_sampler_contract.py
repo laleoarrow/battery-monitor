@@ -15,7 +15,22 @@ class SamplerContractTests(unittest.TestCase):
 
     def test_reads_iokit_directly(self):
         self.assertIn('IOServiceMatching("AppleSmartBattery")', self.source)
-        self.assertIn("IORegistryEntryCreateCFProperties", self.source)
+        self.assertIn("IORegistryEntryCreateCFProperty", self.source)
+        self.assertNotIn("IORegistryEntryCreateCFProperties", self.source)
+        for key in (
+            "CurrentCapacity",
+            "ExternalConnected",
+            "IsCharging",
+            "CycleCount",
+            "Temperature",
+            "VirtualTemperature",
+            "Voltage",
+            "Amperage",
+            "PowerTelemetryData",
+        ):
+            self.assertIn(f'"{key}"', self.source)
+        self.assertIn('props["CurrentCapacity"] is NSNumber', self.source)
+        self.assertIn('props["ExternalConnected"] is NSNumber', self.source)
 
     def test_never_forks_ioreg(self):
         # One process spawn per second was the single largest cost in the old
@@ -25,8 +40,23 @@ class SamplerContractTests(unittest.TestCase):
 
     def test_sign_extends_twos_complement_fields(self):
         # Negative amperage surfaces as a large unsigned value.
+        self.assertIn("optionalIntValue", self.source)
         self.assertIn("Int64(Int32.max)", self.source)
         self.assertIn("Int64(UInt32.max)", self.source)
+
+    def test_temperature_units_and_fallback_are_explicit(self):
+        self.assertIn("Double(raw) / 10.0 - 273.15", self.source)
+        self.assertIn("Double(raw) / 100.0", self.source)
+        self.assertIn("(-100.0...150.0).contains(celsius)", self.source)
+        self.assertIn('optionalIntValue(props["VirtualTemperature"])', self.source)
+
+    def test_live_smc_branch_preserves_coherent_battery_flow_and_conservation(self):
+        self.assertIn("static func resolvedLivePower(", self.source)
+        self.assertIn("fresh.batteryW = max(snapshot.batteryW, -liveSystem)", self.source)
+        self.assertIn("fresh.adapterW = liveSystem + fresh.batteryW", self.source)
+        self.assertIn("fresh.batteryW = min(snapshot.batteryW, liveAdapter)", self.source)
+        self.assertNotIn("fresh.batteryW = adapterW - systemW", self.source)
+        self.assertIn("else { return snapshot }", self.source)
 
     def test_iokit_source_and_sink_signs_are_normalized_to_the_core_model(self):
         # Firmware can expose the same physical sample with either raw sign,

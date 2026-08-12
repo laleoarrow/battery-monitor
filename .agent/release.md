@@ -132,6 +132,41 @@ The Pages workflow requires successful Headless CI for the exact current
 tag. Keep that release marked latest before deploying so the website and public
 downloads stay aligned.
 
+## Maintainer Mac post-release sync
+
+A stable release is not complete until the maintainer Mac is running the exact
+public PKG bytes that passed release verification. Do not use
+`scripts/install.sh` for this public-release sync; that script is only for the
+user-local development build.
+
+1. Download the stable release assets into a clean verification directory and
+   verify `SHA256SUMS.txt` there with `/usr/bin/shasum -a 256 -c`.
+2. Install that verified public PKG into `/Applications`:
+
+   ```bash
+   wattson_version="$(tr -d '\r\n' < VERSION)"
+   verified_pkg="$PWD/dist/public-v${wattson_version}-verify/Wattson-v${wattson_version}-macos-universal.pkg"
+   sudo /usr/sbin/installer -pkg "$verified_pkg" -target /
+   ```
+
+3. Require the installed marketing version, build version, and package receipt
+   to equal `VERSION`, then verify the installed signature:
+
+   ```bash
+   expected_version="$(tr -d '\r\n' < VERSION)"
+   info_plist="/Applications/Wattson.app/Contents/Info.plist"
+   test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$info_plist")" = "$expected_version"
+   test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$info_plist")" = "$expected_version"
+   test "$(/usr/sbin/pkgutil --pkg-info com.leoarrow.wattson.pkg | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" = "$expected_version"
+   /usr/bin/codesign --verify --deep --strict --verbose=2 /Applications/Wattson.app
+   ```
+
+4. Launch the installed app and confirm it stays running:
+
+   ```bash
+   /usr/bin/open -n /Applications/Wattson.app
+   ```
+
 ## Local developer install
 
 ```bash
