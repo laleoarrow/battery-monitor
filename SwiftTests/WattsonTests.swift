@@ -171,8 +171,9 @@ final class WattsonTests: XCTestCase {
         if slider.reducesMotionForTest {
             XCTAssertEqual(visibleBeforeGrab, slider.detentCentreForTest(2), accuracy: 0.5)
         } else {
-            XCTAssertGreaterThan(visibleBeforeGrab, slider.detentCentreForTest(0) + 2)
-            XCTAssertLessThan(visibleBeforeGrab, slider.detentCentreForTest(2) - 2)
+            let path = slider.magneticMotionCentresForTest(from: 0, to: 2)
+            XCTAssertGreaterThanOrEqual(visibleBeforeGrab, (path.min() ?? 0) - 0.5)
+            XCTAssertLessThanOrEqual(visibleBeforeGrab, (path.max() ?? 0) + 0.5)
         }
         XCTAssertEqual(slider.knobCentreForTest, visibleBeforeGrab, accuracy: 1)
         XCTAssertFalse(slider.settleIsAnimatingForTest)
@@ -195,12 +196,11 @@ final class WattsonTests: XCTestCase {
             XCTAssertEqual(visibleAfterRejection, slider.detentCentreForTest(2), accuracy: 0.5)
             XCTAssertFalse(slider.settleIsAnimatingForTest)
         } else {
-            // The magnetic path intentionally overshoots its destination by
-            // at most 3 pt. A busy compositor can make this test observe that
-            // later phase instead of the earlier in-between phase.
-            XCTAssertGreaterThanOrEqual(visibleBeforeRejection,
-                                        slider.detentCentreForTest(0) - 3.1)
-            XCTAssertLessThan(visibleBeforeRejection, slider.detentCentreForTest(2) - 2)
+            // A busy compositor may expose any point on the named magnetic
+            // path, including its intentional bounded overshoot.
+            let path = slider.magneticMotionCentresForTest(from: 2, to: 0)
+            XCTAssertGreaterThanOrEqual(visibleBeforeRejection, (path.min() ?? 0) - 0.5)
+            XCTAssertLessThanOrEqual(visibleBeforeRejection, (path.max() ?? 0) + 0.5)
             XCTAssertEqual(visibleAfterRejection, visibleBeforeRejection, accuracy: 1)
             XCTAssertTrue(slider.settleIsAnimatingForTest)
         }

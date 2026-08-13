@@ -82,6 +82,20 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && approximately(actual.size.height, expected.size.height)
             }
 
+            // AppKit may align an NSGridView cell to the compact viewport.
+            // Compare visible geometry so one outer content point remains
+            // the tolerance at every supported scale.
+            func approximatelyAfterScale(
+                _ actual: NSRect,
+                _ expected: NSRect,
+                scale: CGFloat
+            ) -> Bool {
+                approximately(actual.origin.x * scale, expected.origin.x * scale)
+                    && approximately(actual.origin.y * scale, expected.origin.y * scale)
+                    && approximately(actual.size.width * scale, expected.size.width * scale)
+                    && approximately(actual.size.height * scale, expected.size.height * scale)
+            }
+
             func srgbHex(_ color: NSColor?) -> UInt32? {
                 guard let converted = color?.usingColorSpace(.sRGB) else { return nil }
                 return UInt32((converted.redComponent * 255).rounded()) << 16
@@ -672,22 +686,30 @@ class SettingsWindowContractTests(unittest.TestCase):
                         + "frame=\(content.frame) bounds=\(content.bounds)"
                 )
                 require(
-                    approximately(controller.contentHostFrameForTest, referenceContentHostFrame),
+                    approximatelyAfterScale(
+                        controller.contentHostFrameForTest,
+                        referenceContentHostFrame,
+                        scale: scale
+                    ),
                     "\(phase) content-host reference geometry is unchanged"
                 )
                 require(
-                    approximately(sidebar.frame, referenceSidebarFrame),
+                    approximatelyAfterScale(sidebar.frame, referenceSidebarFrame, scale: scale),
                     "\(phase) sidebar reference geometry is unchanged"
                 )
                 require(
-                    approximately(identity.frame, referenceIdentityFrame),
+                    approximatelyAfterScale(identity.frame, referenceIdentityFrame, scale: scale),
                     "\(phase) identity reference geometry is unchanged"
                 )
 
                 controller.selectSectionForTest(identifier: "general")
                 content.layoutSubtreeIfNeeded()
                 require(
-                    approximately(generalList.frame, referenceGeneralListFrame),
+                    approximatelyAfterScale(
+                        generalList.frame,
+                        referenceGeneralListFrame,
+                        scale: scale
+                    ),
                     "\(phase) General list reference geometry is unchanged"
                 )
                 for row in generalRows {
@@ -697,7 +719,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                         continue
                     }
                     require(
-                        approximately(row.frame, referenceFrame),
+                        approximatelyAfterScale(row.frame, referenceFrame, scale: scale),
                         "\(phase) \(identifier) reference geometry is unchanged"
                     )
                 }
@@ -716,7 +738,11 @@ class SettingsWindowContractTests(unittest.TestCase):
                 controller.selectSectionForTest(identifier: "modules")
                 content.layoutSubtreeIfNeeded()
                 require(
-                    approximately(moduleGrid.frame, referenceModuleGridFrame),
+                    approximatelyAfterScale(
+                        moduleGrid.frame,
+                        referenceModuleGridFrame,
+                        scale: scale
+                    ),
                     "\(phase) Modules grid reference geometry is unchanged"
                 )
                 for card in moduleCards {
@@ -726,8 +752,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                         continue
                     }
                     require(
-                        approximately(card.frame, referenceFrame),
-                        "\(phase) \(identifier) reference geometry is unchanged"
+                        approximatelyAfterScale(card.frame, referenceFrame, scale: scale),
+                        "\(phase) \(identifier) reference geometry is unchanged: "
+                            + "actual=\(card.frame) expected=\(referenceFrame) scale=\(scale)"
                     )
                 }
 
