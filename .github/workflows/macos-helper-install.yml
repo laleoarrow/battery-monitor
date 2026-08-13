@@ -91,7 +91,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          swift test
+          env WATTSON_FORCE_REDUCE_MOTION=0 \
+            WATTSON_FORCE_REDUCE_TRANSPARENCY=0 \
+            swift test
           env -u WATTSON_RUN_INTERACTION /usr/bin/python3 -m unittest discover -s tests -v
 
       - name: Replay real AppKit interaction and animation lifecycles
@@ -99,6 +101,12 @@ jobs:
         run: |
           set -euo pipefail
           env WATTSON_FORCE_REDUCE_MOTION=0 \
+            WATTSON_FORCE_REDUCE_TRANSPARENCY=0 \
+            /bin/bash scripts/verify_interaction.sh
+          env \
+            WATTSON_FORCE_LEGACY_KNOB=1 \
+            WATTSON_FORCE_REDUCE_MOTION=0 \
+            WATTSON_FORCE_REDUCE_TRANSPARENCY=0 \
             /bin/bash scripts/verify_interaction.sh
           env \
             WATTSON_FORCE_LEGACY_KNOB=1 \

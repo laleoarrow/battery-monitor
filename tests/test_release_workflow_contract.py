@@ -25,9 +25,17 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("scripts/verify_interaction.sh", CANDIDATE)
         self.assertIn("WATTSON_FORCE_REDUCE_MOTION=0", CANDIDATE)
         self.assertIn("WATTSON_FORCE_LEGACY_KNOB=1", CANDIDATE)
+        self.assertGreaterEqual(CANDIDATE.count("WATTSON_FORCE_LEGACY_KNOB=1"), 2)
+        self.assertGreaterEqual(CANDIDATE.count("WATTSON_FORCE_REDUCE_MOTION=0"), 3)
+        self.assertGreaterEqual(CANDIDATE.count("WATTSON_FORCE_REDUCE_TRANSPARENCY=0"), 3)
         self.assertIn("WATTSON_FORCE_REDUCE_MOTION=1", CANDIDATE)
         self.assertIn("WATTSON_FORCE_REDUCE_TRANSPARENCY=1", CANDIDATE)
         self.assertIn("scripts/verify_animation_stress.sh", CANDIDATE)
+
+    def test_normal_swift_and_appkit_gates_override_runner_accessibility_defaults(self):
+        for workflow in (CI, CANDIDATE):
+            self.assertIn("WATTSON_FORCE_REDUCE_MOTION=0", workflow)
+            self.assertIn("WATTSON_FORCE_REDUCE_TRANSPARENCY=0", workflow)
 
     def test_promotion_requires_the_successful_main_candidate_run(self):
         self.assertIn("candidate_run_id:", PROMOTE)
