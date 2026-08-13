@@ -353,6 +353,38 @@ class SystemBatteryStateContractTests(unittest.TestCase):
                 "failed synchronous setter does not notify"
             )
 
+            // A's worker result reaches the main queue while the main thread
+            // is blocked in newer synchronous B. Once B publishes, delayed A
+            // must still complete without rolling the shared cache back.
+            sender.append(["ok": true, "hidden": false])
+            sender.append(["ok": true, "hidden": true])
+            sender.append(["ok": true, "hidden": true])
+            sender.append(["ok": true, "hidden": false])
+            var olderAsyncCompleted = false
+            var olderAsyncSucceeded = false
+            let notificationsBeforeOrderedMutations = notifications.count
+            SystemBatteryIconController.setHidden(true) { succeeded in
+                olderAsyncSucceeded = succeeded
+                olderAsyncCompleted = true
+            }
+            let newerSynchronousSucceeded: Bool =
+                SystemBatteryIconController.setHidden(false)
+            require(newerSynchronousSucceeded, "newer synchronous mutation succeeds")
+            require(
+                SystemBatteryIconController.cachedHidden == false,
+                "newer synchronous mutation initially owns the cache"
+            )
+            require(waitUntil { olderAsyncCompleted }, "older async completion delivered")
+            require(olderAsyncSucceeded, "older async caller receives its operation result")
+            require(
+                SystemBatteryIconController.cachedHidden == false,
+                "delayed older async completion cannot overwrite newer mutation"
+            )
+            require(
+                notifications.count == notificationsBeforeOrderedMutations,
+                "stale older mutation cannot emit a false change notification"
+            )
+
             print("system battery shared-state contract passed")
             """
         )

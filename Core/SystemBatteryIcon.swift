@@ -191,6 +191,7 @@ enum SystemBatteryIconController {
     /// "visible", so settings surfaces can keep their control indeterminate.
     private(set) static var cachedHidden: Bool?
     private static var requestSequence = 0
+    private static var latestSettledSequence = 0
     private static var refreshWaiters: [RefreshWaiter] = []
     private static var configurationGeneration = 0
 
@@ -218,8 +219,10 @@ enum SystemBatteryIconController {
             },
             completion: { hidden in
                 guard generation == configurationGeneration else { return }
-                publish(hidden)
-                completeRefreshWaiters(through: sequence, with: hidden)
+                if claimPublication(for: sequence) {
+                    publish(hidden)
+                }
+                completeRefreshWaiters(through: sequence, with: cachedHidden)
             }
         )
     }
@@ -239,7 +242,7 @@ enum SystemBatteryIconController {
             mutationResult(for: hidden)
         }
         guard generation == configurationGeneration else { return false }
-        if result.succeeded {
+        if claimPublication(for: sequence), result.succeeded {
             publish(result.landedHidden)
         }
         completeRefreshWaiters(through: sequence, with: cachedHidden)
@@ -259,7 +262,7 @@ enum SystemBatteryIconController {
             operation: { mutationResult(for: hidden) },
             completion: { result in
                 guard generation == configurationGeneration else { return }
-                if result.succeeded {
+                if claimPublication(for: sequence), result.succeeded {
                     // Only the separate authoritative readback may publish a
                     // mutation. A mismatch is failure and preserves the prior
                     // cache rather than briefly advertising the requested UI.
@@ -306,6 +309,17 @@ enum SystemBatteryIconController {
         )
     }
 
+    /// Worker operations are serialized, but their main-queue completions can
+    /// be delayed behind a newer synchronous mutation. Once a newer sequence
+    /// settles, an older completion still reports its own result but can no
+    /// longer publish stale shared state.
+    private static func claimPublication(for sequence: Int) -> Bool {
+        precondition(Thread.isMainThread)
+        guard sequence >= latestSettledSequence else { return false }
+        latestSettledSequence = sequence
+        return true
+    }
+
     private static func send(
         _ request: [String: Any],
         timeoutSeconds: Int
@@ -349,6 +363,7 @@ enum SystemBatteryIconController {
         configurationGeneration += 1
         testSend = send
         requestSequence = 0
+        latestSettledSequence = 0
         refreshWaiters.removeAll()
         cachedHidden = initialHidden
     }
@@ -361,6 +376,7 @@ enum SystemBatteryIconController {
         configurationGeneration += 1
         testSend = nil
         requestSequence = 0
+        latestSettledSequence = 0
         refreshWaiters.removeAll()
         cachedHidden = nil
     }
