@@ -1,9 +1,7 @@
 import AppKit
 
-/// Public Core Animation primitives provide a consistent optical edge on old
-/// systems and a restrained highlight inside native Liquid Glass. Keeping the
-/// chrome separate from sampled content also lets Reduce Transparency remove
-/// refraction without changing the slider's geometry or hit testing.
+/// Public Core Animation primitives provide a consistent optical edge for the
+/// macOS 12–25 sampled-lens fallback. Native Liquid Glass draws its own edge.
 private final class OpticalLensChromeView: NSView {
     private let causticLayer = CAGradientLayer()
     private let rimLayer = CAShapeLayer()
@@ -183,6 +181,15 @@ private final class LegacyOpticalLensView: NSView {
 final class ModeSliderView: NSView {
     static let preferredHeight: CGFloat = 30
 
+    @available(macOS 14.0, *)
+    private final class NativeGlassDisplayLinkTarget: NSObject {
+        weak var owner: ModeSliderView?
+
+        @objc func displayLinkDidFire(_ displayLink: CADisplayLink) {
+            owner?.nativeGlassDisplayLinkDidFire(displayLink)
+        }
+    }
+
     private static var reducesMotion: Bool {
 #if DEBUG
         switch ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"] {
@@ -234,19 +241,26 @@ final class ModeSliderView: NSView {
             }
         }
 
+        private static func applyNativeSurface(_ view: NSView, lifted: Bool) {
+            let reduceTransparency = ModeSliderView.reducesTransparency
+            let fill = reduceTransparency
+                ? NSColor(white: lifted ? 0.22 : 0.27, alpha: 1)
+                : NSColor.clear
+            view.layer?.backgroundColor = fill.cgColor
+            view.layer?.borderWidth = 0
+            if #available(macOS 26.0, *),
+               let glass = view as? NSGlassEffectView,
+               let content = glass.contentView {
+                content.wantsLayer = true
+                content.layer?.backgroundColor = fill.cgColor
+                content.layer?.borderWidth = 0
+            }
+        }
+
         func applyTint(_: NSColor) {
             switch self {
             case .nativeSelection(let view):
-                let reduceTransparency = ModeSliderView.reducesTransparency
-                view.layer?.backgroundColor = reduceTransparency
-                    ? NSColor(white: 0.27, alpha: 1).cgColor
-                    : NSColor.white.withAlphaComponent(0.035).cgColor
-                view.layer?.borderWidth = 0
-                if #available(macOS 26.0, *),
-                   let glass = view as? NSGlassEffectView,
-                   let chrome = glass.contentView as? OpticalLensChromeView {
-                    chrome.apply(reduceTransparency: reduceTransparency, lifted: false)
-                }
+                Self.applyNativeSurface(view, lifted: false)
             case .plain(let view):
                 let reduceTransparency = ModeSliderView.reducesTransparency
                 if let lens = view as? LegacyOpticalLensView {
@@ -259,15 +273,7 @@ final class ModeSliderView: NSView {
             let lifted = lifted && !ModeSliderView.reducesMotion
             switch self {
             case .nativeSelection(let view):
-                let reduceTransparency = ModeSliderView.reducesTransparency
-                view.layer?.backgroundColor = reduceTransparency
-                    ? NSColor(white: lifted ? 0.22 : 0.27, alpha: 1).cgColor
-                    : NSColor.white.withAlphaComponent(lifted ? 0.055 : 0.035).cgColor
-                if #available(macOS 26.0, *),
-                   let glass = view as? NSGlassEffectView,
-                   let chrome = glass.contentView as? OpticalLensChromeView {
-                    chrome.apply(reduceTransparency: reduceTransparency, lifted: lifted)
-                }
+                Self.applyNativeSurface(view, lifted: lifted)
             case .plain(let view):
                 let reduceTransparency = ModeSliderView.reducesTransparency
                 if let lens = view as? LegacyOpticalLensView {
@@ -396,6 +402,19 @@ final class ModeSliderView: NSView {
               let glass = selector as? NSGlassEffectView else { return nil }
         return glass.contentView?.layer?.backgroundColor?.alpha
     }
+    var nativeSelectorHasCustomChromeForTest: Bool {
+        guard #available(macOS 26.0, *), usesNativeGlass,
+              case .nativeSelection(let selector) = knob,
+              let glass = selector as? NSGlassEffectView else { return false }
+        return glass.contentView is OpticalLensChromeView
+    }
+    var nativeSettleUsesHostLayerAnimationForTest: Bool {
+        knobHost.layer?.animation(forKey: "wattson.settle.geometry") != nil
+    }
+    var nativeSelectorFrameInSliderForTest: NSRect? {
+        guard usesNativeGlass, case .nativeSelection(let selector) = knob else { return nil }
+        return selector.convert(selector.bounds, to: self)
+    }
 #endif
 
     private var dragging = false
@@ -414,13 +433,20 @@ final class ModeSliderView: NSView {
     private var selectionGeneration = 0
     private var pendingSelectionIndex: Int?
     private var displayOptionsObserver: NSObjectProtocol?
-    /// Click and release motion runs on Core Animation's compositor. Direct
-    /// dragging still updates real geometry one-to-one with pointer events.
+    /// Older-system click motion runs on Core Animation's compositor. Native
+    /// glass uses display-linked real view geometry so AppKit's material and
+    /// the selector boundary cannot advance on different timelines.
     private var settleCompletionWorkItem: DispatchWorkItem?
     private var settleGeneration = 0
     private var settleStartFrame: NSRect?
     private var activeSettleMotion: SettleMotion?
     private var activeSettleDuration: CFTimeInterval?
+    private var nativeSettleDisplayLink: AnyObject?
+    private var nativeSettleDisplayLinkTarget: AnyObject?
+    private var nativeSettleFrames: [NSRect] = []
+    private var nativeSettleKeyTimes: [CGFloat] = []
+    private var nativeSettleStartedAt: CFTimeInterval = 0
+    private var nativeSettleGeneration = 0
 
     /// Four points filters trackpad tap wobble without making a deliberate drag
     /// feel sticky. A drag that begins away from the knob moves relatively, so
@@ -498,6 +524,7 @@ final class ModeSliderView: NSView {
 
     deinit {
         settleCompletionWorkItem?.cancel()
+        invalidateNativeGlassDisplayLink()
         if let displayOptionsObserver {
             NSWorkspace.shared.notificationCenter.removeObserver(displayOptionsObserver)
         }
@@ -596,12 +623,14 @@ final class ModeSliderView: NSView {
             trackGlass = base
 
             let selector = NSGlassEffectView(frame: .zero)
-            let chrome = OpticalLensChromeView(frame: .zero)
+            let content = NSView(frame: .zero)
+            content.wantsLayer = true
+            content.layer?.backgroundColor = NSColor.clear.cgColor
             configureGlass(selector, style: .clear,
                            cornerRadius: radius,
-                           tint: nil, content: chrome)
+                           tint: nil, content: content)
             selector.wantsLayer = true
-            selector.layer?.backgroundColor = NSColor.white.withAlphaComponent(0.035).cgColor
+            selector.layer?.backgroundColor = NSColor.clear.cgColor
             selector.layer?.borderWidth = 0
             selector.layer?.cornerRadius = radius
             selector.layer?.cornerCurve = .continuous
@@ -1048,6 +1077,17 @@ final class ModeSliderView: NSView {
         labelBlendTraceForTest.append(contentsOf: labelWeights)
 #endif
 
+        if usesNativeGlass, #available(macOS 26.0, *) {
+            startNativeGlassSettleMotion(
+                duration: duration,
+                frames: frames,
+                keyTimes: keyTimes,
+                generation: generation,
+                completion: completion
+            )
+            return
+        }
+
         let position = CAKeyframeAnimation(keyPath: "position")
         position.values = positions
         position.keyTimes = keyTimes
@@ -1109,10 +1149,119 @@ final class ModeSliderView: NSView {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: workItem)
     }
 
+    @available(macOS 14.0, *)
+    private func startNativeGlassSettleMotion(
+        duration: CFTimeInterval,
+        frames: [NSRect],
+        keyTimes: [NSNumber],
+        generation: Int,
+        completion: @escaping () -> Void
+    ) {
+        nativeSettleFrames = frames
+        nativeSettleKeyTimes = keyTimes.map { CGFloat(truncating: $0) }
+        nativeSettleStartedAt = CACurrentMediaTime()
+        nativeSettleGeneration = generation
+        setKnobFrame(frames[0])
+
+        let target = NativeGlassDisplayLinkTarget()
+        target.owner = self
+        guard let window else {
+            setKnobFrame(frames[frames.count - 1])
+            invalidateNativeGlassDisplayLink()
+            settleStartFrame = nil
+            activeSettleMotion = nil
+            activeSettleDuration = nil
+            completion()
+            return
+        }
+        let displayLink = window.displayLink(
+            target: target,
+            selector: #selector(NativeGlassDisplayLinkTarget.displayLinkDidFire(_:))
+        )
+        nativeSettleDisplayLinkTarget = target
+        nativeSettleDisplayLink = displayLink
+        displayLink.add(to: .main, forMode: .common)
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self,
+                  self.settleGeneration == generation,
+                  self.nativeSettleGeneration == generation else { return }
+            if let target = self.nativeSettleFrames.last {
+                self.setKnobFrame(target)
+            }
+            self.invalidateNativeGlassDisplayLink()
+            self.settleCompletionWorkItem = nil
+            self.settleStartFrame = nil
+            self.activeSettleMotion = nil
+            self.activeSettleDuration = nil
+            completion()
+        }
+        settleCompletionWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: workItem)
+    }
+
+    @available(macOS 14.0, *)
+    fileprivate func nativeGlassDisplayLinkDidFire(_ displayLink: CADisplayLink) {
+        guard nativeSettleGeneration == settleGeneration,
+              nativeSettleDisplayLink === displayLink,
+              activeSettleDuration != nil else { return }
+        let duration = max(activeSettleDuration ?? 0, 0.0001)
+        let phase = CGFloat(
+            min(max((displayLink.timestamp - nativeSettleStartedAt) / duration, 0), 1)
+        )
+        setKnobFrame(nativeSettleFrame(at: phase))
+        if phase >= 1 {
+            stopNativeGlassDisplayLink()
+        }
+    }
+
+    private func nativeSettleFrame(at phase: CGFloat) -> NSRect {
+        guard let first = nativeSettleFrames.first,
+              let last = nativeSettleFrames.last,
+              nativeSettleFrames.count == nativeSettleKeyTimes.count else {
+            return knobHost.frame
+        }
+        if phase <= nativeSettleKeyTimes.first ?? 0 { return first }
+        if phase >= nativeSettleKeyTimes.last ?? 1 { return last }
+
+        for upper in 1..<nativeSettleKeyTimes.count where phase <= nativeSettleKeyTimes[upper] {
+            let lower = upper - 1
+            let span = max(nativeSettleKeyTimes[upper] - nativeSettleKeyTimes[lower], 0.0001)
+            let progress = (phase - nativeSettleKeyTimes[lower]) / span
+            let from = nativeSettleFrames[lower]
+            let to = nativeSettleFrames[upper]
+            return NSRect(
+                x: from.minX + (to.minX - from.minX) * progress,
+                y: from.minY + (to.minY - from.minY) * progress,
+                width: from.width + (to.width - from.width) * progress,
+                height: from.height + (to.height - from.height) * progress
+            )
+        }
+        return last
+    }
+
+    private func stopNativeGlassDisplayLink() {
+        if #available(macOS 14.0, *),
+           let displayLink = nativeSettleDisplayLink as? CADisplayLink {
+            displayLink.invalidate()
+        }
+        nativeSettleDisplayLink = nil
+        nativeSettleDisplayLinkTarget = nil
+    }
+
+    private func invalidateNativeGlassDisplayLink() {
+        stopNativeGlassDisplayLink()
+        nativeSettleFrames.removeAll(keepingCapacity: true)
+        nativeSettleKeyTimes.removeAll(keepingCapacity: true)
+        nativeSettleStartedAt = 0
+        nativeSettleGeneration = 0
+    }
+
     private func stopSettleMotion() {
         settleGeneration += 1
         settleCompletionWorkItem?.cancel()
         settleCompletionWorkItem = nil
+        invalidateNativeGlassDisplayLink()
         removeSettleAnimations()
         settleStartFrame = nil
         activeSettleMotion = nil
@@ -1127,6 +1276,7 @@ final class ModeSliderView: NSView {
     }
 
     private func visibleKnobFrame() -> NSRect {
+        if usesNativeGlass { return knobHost.frame }
         if activeSettleMotion != nil {
             if let presentation = knobHost.layer?.presentation() {
                 // `frame` is undefined for transformed layers. Our settle uses

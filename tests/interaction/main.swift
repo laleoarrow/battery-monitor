@@ -276,11 +276,11 @@ win.contentView = slider
 slider.frame = win.contentView!.bounds
 slider.update(selected: .auto, enabledModes: [.auto, .low, .high], tint: .systemBlue)
 slider.layoutSubtreeIfNeeded()
-// Keep a composited window offscreen. Assertions below read the public frame
-// of the real moving selection capsule, so geometry and label blending are
-// verified from the same animation state.
-win.setFrameOrigin(NSPoint(x: -10_000, y: -10_000))
-win.alphaValue = 0.01
+// Keep a transparent composited window on the active display. A window-owned
+// display link follows that display (including moves between screens) but, by
+// design, does not fire for a window placed outside every screen.
+win.setFrameOrigin(NSPoint(x: 20, y: 20))
+win.alphaValue = 0
 win.orderFrontRegardless()
 spin(0.1)
 
@@ -340,6 +340,7 @@ if expectsNativeGlass {
         && abs((slider.nativeGlassContainerSpacingForTest ?? -1)) < 0.01
         && slider.nativeSelectorIsInsideContainerForTest == true
         && slider.nativeSelectorBorderWidthForTest == 0
+        && slider.nativeSelectorHasCustomChromeForTest == false
     if ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] == "1" {
         check("原生透镜在减少透明度时由不透明高对比内容层覆盖折射",
               nativeStructureMatches
@@ -349,7 +350,9 @@ if expectsNativeGlass {
                   + "content=\(slider.nativeSelectorContentFillAlphaForTest ?? -1)")
     } else {
         check("原生材质用 Regular 底轨与 Clear 移动透镜",
-              nativeStructureMatches && selectorFill > 0 && selectorFill <= 0.08,
+              nativeStructureMatches
+                  && selectorFill <= 0.001
+                  && (slider.nativeSelectorContentFillAlphaForTest ?? 1) <= 0.001,
               "track=\(String(describing: slider.nativeTrackStyleForTest)) "
                   + "selector=\(String(describing: slider.nativeSelectorStyleForTest)) "
                   + "fill=\(selectorFill)")
@@ -390,9 +393,19 @@ do {
     }
     slider.mouseDown(with: ev(.leftMouseDown, autoCentre))
     if expectsNativeGlass {
-        check("单纯按下不改变中性选中胶囊",
-              (slider.nativeSelectorFillAlphaForTest ?? 0) > 0
-                  && slider.nativeSelectorBorderWidthForTest == 0)
+        if ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] == "1" {
+            check("单纯按下仍保持不透明高对比选中胶囊",
+                  (slider.nativeSelectorFillAlphaForTest ?? 0) >= 0.999
+                      && (slider.nativeSelectorContentFillAlphaForTest ?? 0) >= 0.999
+                      && slider.nativeSelectorBorderWidthForTest == 0
+                      && slider.nativeSelectorHasCustomChromeForTest == false)
+        } else {
+            check("单纯按下不改变中性选中胶囊",
+                  (slider.nativeSelectorFillAlphaForTest ?? 1) <= 0.001
+                      && (slider.nativeSelectorContentFillAlphaForTest ?? 1) <= 0.001
+                      && slider.nativeSelectorBorderWidthForTest == 0
+                      && slider.nativeSelectorHasCustomChromeForTest == false)
+        }
     }
     let pressed = slider.knobScaleForTest
     check("单纯按下不放大",
@@ -415,10 +428,11 @@ do {
                       && (slider.nativeSelectorContentFillAlphaForTest ?? 0) >= 0.999)
         } else {
             check("开始拖动后 Clear 折射透镜仍保持原生材质",
-                  liftedFill > 0
-                      && liftedFill <= 0.08
+                  liftedFill <= 0.001
+                      && (slider.nativeSelectorContentFillAlphaForTest ?? 1) <= 0.001
                       && slider.nativeSelectorStyleForTest == 1
-                      && slider.nativeSelectorBorderWidthForTest == 0)
+                      && slider.nativeSelectorBorderWidthForTest == 0
+                      && slider.nativeSelectorHasCustomChromeForTest == false)
         }
         slider.update(selected: .auto,
                       enabledModes: [.auto, .low, .high],
@@ -464,9 +478,19 @@ do {
     check("拖动预览不会提前提交系统模式", chosen.isEmpty, "\(chosen)")
     slider.mouseUp(with: ev(.leftMouseUp, autoCentre + 6))
     if expectsNativeGlass {
-        check("释放后选中胶囊回到中性静止材质",
-              (slider.nativeSelectorFillAlphaForTest ?? 0) > 0
-                  && slider.nativeSelectorBorderWidthForTest == 0)
+        if ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] == "1" {
+            check("释放后选中胶囊回到不透明高对比静止材质",
+                  (slider.nativeSelectorFillAlphaForTest ?? 0) >= 0.999
+                      && (slider.nativeSelectorContentFillAlphaForTest ?? 0) >= 0.999
+                      && slider.nativeSelectorBorderWidthForTest == 0
+                      && slider.nativeSelectorHasCustomChromeForTest == false)
+        } else {
+            check("释放后选中胶囊回到中性静止材质",
+                  (slider.nativeSelectorFillAlphaForTest ?? 1) <= 0.001
+                      && (slider.nativeSelectorContentFillAlphaForTest ?? 1) <= 0.001
+                      && slider.nativeSelectorBorderWidthForTest == 0
+                      && slider.nativeSelectorHasCustomChromeForTest == false)
+        }
     } else {
         check("旧系统释放后关闭折射，不让模型裁剪与呈现层动画错位",
               slider.fallbackLensSamplingEnabledForTest == false
@@ -578,9 +602,12 @@ if slider.reducesMotionForTest {
     check("点击换档使用磁吸流动而非拖拽弹簧或瞬移",
           slider.settleIsAnimatingForTest
               && slider.settleUsesMagneticFlowForTest
-              && !slider.settleUsesSpringForTest)
+              && !slider.settleUsesSpringForTest
+              && (!expectsNativeGlass || !slider.nativeSettleUsesHostLayerAnimationForTest))
     spin(0.10)
     let visibleCentre = slider.glassViewCentreForTest
+    let visibleGlassFrame = slider.glassViewFrameForTest
+    let visibleSelectorFrame = slider.nativeSelectorFrameInSliderForTest
     let visibleScale = slider.knobPresentationScaleForTest
     check("点击后原生玻璃沿磁吸路径前进且不越过捕获范围",
           visibleCentre > lowCentre + 3 && visibleCentre <= highCentre + 4,
@@ -589,6 +616,14 @@ if slider.reducesMotionForTest {
     check("点击磁吸全程不进入拖动放大态",
           visibleScale.width <= 1.001 && visibleScale.height <= 1.001,
           String(format: "%.3f × %.3f", visibleScale.width, visibleScale.height))
+    if expectsNativeGlass, let visibleSelectorFrame {
+        check("点击迁移时原生玻璃与 selector 边界逐帧同步",
+              abs(visibleSelectorFrame.minX - visibleGlassFrame.minX) < 0.5
+                  && abs(visibleSelectorFrame.minY - visibleGlassFrame.minY) < 0.5
+                  && abs(visibleSelectorFrame.width - visibleGlassFrame.width) < 0.5
+                  && abs(visibleSelectorFrame.height - visibleGlassFrame.height) < 0.5,
+              "glass=\(visibleGlassFrame) selector=\(visibleSelectorFrame)")
+    }
     let visibleBlend = slider.activeLabelPresentationOpacitiesForTest
     let expectedLowBlend = min(max(
         1 - abs(lowCentre - visibleCentre) / slider.segmentWidthForTest, 0

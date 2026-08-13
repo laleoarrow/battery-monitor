@@ -48,6 +48,27 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("guard !usesNativeGlass else { return }", self.slider)
         self.assertIn("tint: PopoverStyle.stateColor(latestSnapshot.state)", self.content)
 
+    def test_native_glass_has_no_custom_fill_or_white_rim(self):
+        native = self.slider.split(
+            "if !forceLegacyMaterials, #available(macOS 26.0, *)", 1
+        )[1].split("} else {", 1)[0]
+        self.assertIn("selector.layer?.backgroundColor = NSColor.clear.cgColor", native)
+        self.assertIn("let content = NSView(frame: .zero)", native)
+        self.assertNotIn("OpticalLensChromeView(frame:", native)
+        self.assertNotIn("withAlphaComponent(0.035)", native)
+
+    def test_native_glass_click_motion_updates_real_view_geometry_per_display(self):
+        self.assertIn("let displayLink = window.displayLink(", self.slider)
+        self.assertNotIn("NSScreen.main", self.slider.split(
+            "private func startNativeGlassSettleMotion", 1
+        )[1].split("nativeGlassDisplayLinkDidFire", 1)[0])
+        self.assertIn("nativeGlassDisplayLinkDidFire", self.slider)
+        driver = self.slider.split("private func startSettleMotion", 1)[1].split(
+            "\n    private func stopSettleMotion", 1
+        )[0]
+        self.assertIn("if usesNativeGlass", driver)
+        self.assertIn("startNativeGlassSettleMotion", driver)
+
     def test_mode_change_is_completed_asynchronously(self):
         self.assertIn("@escaping (EnergyMode?) -> Void", self.slider)
         self.assertIn("pendingSelectionIndex", self.slider)
@@ -301,10 +322,13 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("active.values = labelWeights.map", driver)
         self.assertIn("base.values = labelWeights.map", driver)
         self.assertIn('layer.add(group, forKey: "wattson.settle.geometry")', driver)
-        transaction_start = driver.rindex("CATransaction.begin()")
-        model_write = driver.rindex("setKnobFrame(target)")
-        animation_add = driver.index('layer.add(group, forKey: "wattson.settle.geometry")')
-        transaction_commit = driver.rindex("CATransaction.commit()")
+        legacy = driver.split("let position = CAKeyframeAnimation", 1)[1].split(
+            "\n        let workItem = DispatchWorkItem", 1
+        )[0]
+        transaction_start = legacy.index("CATransaction.begin()")
+        model_write = legacy.index("setKnobFrame(target)")
+        animation_add = legacy.index('layer.add(group, forKey: "wattson.settle.geometry")')
+        transaction_commit = legacy.index("CATransaction.commit()")
         self.assertLess(transaction_start, model_write)
         self.assertLess(model_write, animation_add)
         self.assertLess(animation_add, transaction_commit)
@@ -359,7 +383,7 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("let container = NSGlassEffectContainerView", self.slider)
         self.assertIn("container.contentView = materialContent", self.slider)
         self.assertIn("configureGlass(selector, style: .clear", self.slider)
-        self.assertIn("selector.layer?.backgroundColor = NSColor.white.withAlphaComponent", self.slider)
+        self.assertIn("selector.layer?.backgroundColor = NSColor.clear.cgColor", self.slider)
         self.assertIn("selector.layer?.borderWidth = 0", self.slider)
         self.assertNotIn("case glass(NSView)", self.slider)
         track_tint = self.slider.split("private func applyTrackTint", 1)[1].split(
@@ -406,10 +430,11 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("sampleLayer.isHidden = !samplingEnabled", material)
         self.assertIn("alpha: 1", material)
 
-        native = self.slider.split("func applyTint", 1)[1].split(
-            "\n        func setLifted", 1
+        native = self.slider.split("private static func applyNativeSurface", 1)[1].split(
+            "\n        func applyTint", 1
         )[0]
-        self.assertIn("NSColor(white: 0.27, alpha: 1)", native)
+        self.assertIn("NSColor(white: lifted ? 0.22 : 0.27, alpha: 1)", native)
+        self.assertIn(": NSColor.clear", native)
 
     def test_fallback_refraction_is_scoped_to_lifted_direct_drag(self):
         fallback = self.slider.split("private final class LegacyOpticalLensView", 1)[1].split(

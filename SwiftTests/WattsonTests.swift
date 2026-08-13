@@ -10,7 +10,7 @@ final class WattsonTests: XCTestCase {
         _ = NSApplication.shared
         let slider = ModeSliderView(modes: [.auto, .low, .high])
         let window = NSWindow(
-            contentRect: NSRect(x: -10_000, y: -10_000,
+            contentRect: NSRect(x: 20, y: 20,
                                 width: 300, height: ModeSliderView.preferredHeight),
             styleMask: [.borderless], backing: .buffered, defer: false
         )
@@ -20,7 +20,7 @@ final class WattsonTests: XCTestCase {
                       enabledModes: [.auto, .low, .high],
                       tint: .systemBlue)
         slider.layoutSubtreeIfNeeded()
-        window.alphaValue = 0.01
+        window.alphaValue = 0
         window.orderFrontRegardless()
         spinMainRunLoop(0.05)
         return (slider, window)
@@ -131,7 +131,51 @@ final class WattsonTests: XCTestCase {
                        NSGlassEffectView.Style.clear.rawValue)
         XCTAssertEqual(slider.nativeGlassContainerSpacingForTest ?? -1, 0, accuracy: 0.01)
         XCTAssertEqual(slider.nativeSelectorIsInsideContainerForTest, true)
+        XCTAssertEqual(slider.nativeSelectorFillAlphaForTest ?? -1, 0, accuracy: 0.001)
+        XCTAssertEqual(slider.nativeSelectorContentFillAlphaForTest ?? -1, 0, accuracy: 0.001)
+        XCTAssertEqual(slider.nativeSelectorBorderWidthForTest, 0)
+        XCTAssertFalse(slider.nativeSelectorHasCustomChromeForTest)
         XCTAssertNil(slider.fallbackLensSampleImageForTest)
+    }
+
+    func testMacOS26ModeSliderMovesGlassAndItsGeometryOnOneDisplayTimeline() throws {
+        guard #available(macOS 26.0, *) else { throw XCTSkip("requires native Liquid Glass") }
+        let (slider, window) = makeAnimatedSlider(selected: .auto)
+        defer { window.orderOut(nil) }
+        slider.onSelect = { mode, completion in completion(mode) }
+
+        tap(slider, in: window, x: slider.detentCentreForTest(2))
+        guard !slider.reducesMotionForTest else {
+            XCTAssertFalse(slider.settleIsAnimatingForTest)
+            return
+        }
+
+        XCTAssertFalse(
+            slider.nativeSettleUsesHostLayerAnimationForTest,
+            "native AppKit glass must follow real view geometry instead of a separate CA proxy"
+        )
+        var moved = false
+        var intermediateFrames = 0
+        let startCentre = slider.detentCentreForTest(0)
+        let targetCentre = slider.detentCentreForTest(2)
+        let deadline = Date().addingTimeInterval(0.5)
+        while slider.settleIsAnimatingForTest && Date() < deadline {
+            spinMainRunLoop(0.008)
+            let glass = slider.glassViewFrameForTest
+            let selector = try XCTUnwrap(slider.nativeSelectorFrameInSliderForTest)
+            XCTAssertEqual(selector.minX, glass.minX, accuracy: 0.5)
+            XCTAssertEqual(selector.minY, glass.minY, accuracy: 0.5)
+            XCTAssertEqual(selector.width, glass.width, accuracy: 0.5)
+            XCTAssertEqual(selector.height, glass.height, accuracy: 0.5)
+            moved = moved || glass.midX > startCentre + 3
+            if glass.midX > startCentre + 3, glass.midX < targetCentre - 3 {
+                intermediateFrames += 1
+            }
+        }
+        XCTAssertTrue(moved)
+        XCTAssertGreaterThanOrEqual(intermediateFrames, 3)
+        XCTAssertEqual(slider.glassViewCentreForTest,
+                       slider.detentCentreForTest(2), accuracy: 0.5)
     }
 
     func testModeSliderRestingSelectionMeetsTrackEdges() {

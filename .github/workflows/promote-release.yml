@@ -6,7 +6,7 @@ on:
       version:
         description: Stable semantic version without the v prefix
         required: true
-        default: "3.0.6"
+        default: "3.0.7"
         type: string
       candidate_run_id:
         description: Successful Wattson release candidate workflow run ID
@@ -202,13 +202,10 @@ jobs:
             cat <<'EOF'
           This Wattson release is universal for Apple silicon and Intel and supports macOS 12 or later.
 
-          - Rebuilds General and Modules Settings to match the approved C+E reference, while preserving every existing setting and its immediate synchronization with the menu-bar popover.
-          - Uses a stable high-contrast dark palette at the reference size and proportionally scales the complete composition on constrained displays without changing its layout.
-          - Lets General Settings switch Wattson's own status item between its original mark and a macOS-style battery glyph without changing Apple's separate system battery icon.
-          - Adds glass refraction to the lifted power-mode selector with native Liquid Glass on macOS 26 and a cached optical AppKit fallback on macOS 12–25.
-          - Hardens launch-at-login refreshes so every queued waiter completes across availability changes and stale in-flight writes.
-          - Caches successfully parsed `pmset -g cap` capability results for the helper lifetime, while retrying failures and keeping live power-mode reads fresh.
-          - Preserves keyboard and VoiceOver navigation, Reduce Motion, macOS 12–26 behavior, and universal Apple-silicon and Intel support.
+          - Makes the macOS 26 power-mode selector nearly transparent by removing Wattson's duplicate white rim, caustic, and haze overlays from native Clear Liquid Glass.
+          - Advances the real AppKit glass view, selector boundary, and label blend together on one window-synchronized display timeline when another mode is clicked.
+          - Keeps reverse clicks, mid-animation re-grabs, failed mode changes, Reduce Motion, and Reduce Transparency continuous and accessible.
+          - Preserves the cached optical AppKit fallback on macOS 12–25, universal Apple-silicon and Intel support, and all v3.0.6 Settings and native-icon behavior.
           - Installs at `/Applications/Wattson.app` through one native PKG shared byte-for-byte by the DMG, with verified reinstall, v2 upgrade, helper replacement, uninstall, and SHA-256 metadata.
 
           **Verified distribution:** the app, helper, PKG, and DMG are Developer ID signed. Apple accepted both release containers for notarization, and their tickets are stapled for offline validation and normal Gatekeeper installation.

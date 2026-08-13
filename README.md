@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.6">v3.0.6 release notes</a>
+  <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.7">v3.0.7 release notes</a>
 </p>
 
 <p align="center">
@@ -39,25 +39,21 @@ where it is going, and how the picture has changed over the last two minutes.
 - A native Settings window for General controls and popover modules.
 - No account, analytics, cloud service, or external data upload.
 
-## What's new in v3.0.6
+## What's new in v3.0.7
 
-- General and Modules Settings now match the approved C+E reference with a
-  stable high-contrast dark palette and proportional small-screen scaling.
-- General Settings can switch Wattson's menu-bar item between its original
-  mark and a macOS-style battery glyph without changing Apple's separate icon.
-- The lifted power-mode selector adds glass refraction: native Liquid Glass on
-  macOS 26 and a cached optical AppKit fallback on macOS 12–25.
-- Launch-at-login refreshes complete every queued caller across availability
-  changes and stale in-flight writes.
-- The helper caches successfully parsed High Power capability results while
-  retrying failed probes and keeping live power-mode reads fresh.
+- The macOS 26 power-mode selector now uses a nearly transparent native Clear
+  Liquid Glass surface, without Wattson's former white rim or haze overlay.
+- Clicking another mode advances the real AppKit glass view, selector boundary,
+  and label blend together on one window-synchronized display timeline.
+- Reverse clicks, mid-animation re-grabs, failed mode changes, Reduce Motion,
+  and Reduce Transparency retain their existing continuous fallbacks.
 
-## Install v3.0.6
+## Install v3.0.7
 
 | Route | Best for | What to do |
 | --- | --- | --- |
-| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.6/Wattson-v3.0.6-macos-universal.dmg), open it, then double-click the enclosed PKG. |
-| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.6/Wattson-v3.0.6-macos-universal.pkg) and follow macOS Installer. |
+| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.7/Wattson-v3.0.7-macos-universal.dmg), open it, then double-click the enclosed PKG. |
+| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.7/Wattson-v3.0.7-macos-universal.pkg) and follow macOS Installer. |
 | **Homebrew** | Terminal installation and updates | Run `brew install --cask laleoarrow/tap/wattson`. |
 
 All three routes install the same universal app at
@@ -71,7 +67,7 @@ macOS administrator prompt is required to install the helper.
 > installer, then use System Settings → Privacy & Security → Open Anyway only
 > when you trust this repository. Older macOS releases may instead offer
 > Control-click → Open. Verify the published
-> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.6/SHA256SUMS.txt)
+> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.7/SHA256SUMS.txt)
 > before installation.
 
 ### Requirements
