@@ -323,6 +323,36 @@ class SystemBatteryStateContractTests(unittest.TestCase):
             )
             require(notifications.last == "hidden", "false-to-true publishes hidden")
 
+            sender.append(["ok": true, "hidden": true])
+            sender.append(["ok": true, "hidden": false])
+            let requestsBeforeSynchronousSet = sender.requestCount
+            let synchronousSetSucceeded: Bool =
+                SystemBatteryIconController.setHidden(false)
+            require(synchronousSetSucceeded, "synchronous compatibility setter succeeds")
+            require(
+                sender.requestCount == requestsBeforeSynchronousSet + 2,
+                "synchronous setter uses setter and authoritative getter"
+            )
+            require(
+                SystemBatteryIconController.cachedHidden == false,
+                "synchronous setter publishes authoritative state"
+            )
+            require(notifications.last == "shown", "synchronous setter notifies observers")
+
+            sender.append(["ok": false])
+            let notificationsBeforeSynchronousFailure = notifications.count
+            let synchronousSetFailed: Bool =
+                SystemBatteryIconController.setHidden(true)
+            require(!synchronousSetFailed, "synchronous compatibility setter reports failure")
+            require(
+                SystemBatteryIconController.cachedHidden == false,
+                "failed synchronous setter preserves prior state"
+            )
+            require(
+                notifications.count == notificationsBeforeSynchronousFailure,
+                "failed synchronous setter does not notify"
+            )
+
             print("system battery shared-state contract passed")
             """
         )

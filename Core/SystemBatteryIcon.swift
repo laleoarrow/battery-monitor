@@ -224,6 +224,28 @@ enum SystemBatteryIconController {
         )
     }
 
+    /// Synchronous compatibility for existing non-settings callers. AppKit
+    /// controls should use the completion-based overload so helper I/O never
+    /// blocks an event. The legacy caller already runs on the main thread,
+    /// which also keeps the shared observable cache main-thread confined.
+    @discardableResult
+    static func setHidden(_ hidden: Bool) -> Bool {
+        precondition(Thread.isMainThread)
+
+        requestSequence += 1
+        let sequence = requestSequence
+        let generation = configurationGeneration
+        let result = operations.performMutation {
+            mutationResult(for: hidden)
+        }
+        guard generation == configurationGeneration else { return false }
+        if result.succeeded {
+            publish(result.landedHidden)
+        }
+        completeRefreshWaiters(through: sequence, with: cachedHidden)
+        return result.succeeded
+    }
+
     static func setHidden(_ hidden: Bool, completion: @escaping (Bool) -> Void) {
         guard Thread.isMainThread else {
             DispatchQueue.main.async { setHidden(hidden, completion: completion) }
@@ -234,34 +256,7 @@ enum SystemBatteryIconController {
         let sequence = requestSequence
         let generation = configurationGeneration
         operations.enqueueMutation(
-            operation: {
-                let reply = send(
-                    [
-                        "op": "setSystemBatteryIconHidden",
-                        "hidden": hidden,
-                    ],
-                    timeoutSeconds: 6
-                )
-                guard HelperClient.strictJSONBool(reply?["ok"]) == true else {
-                    return MutationResult(succeeded: false, landedHidden: nil)
-                }
-
-                // The setter's success means its fixed preference write and
-                // Control Center restart completed. A separate fixed getter is
-                // still the authority for the value that actually landed.
-                let readback = send(
-                    ["op": "getSystemBatteryIconHidden"], timeoutSeconds: 4
-                )
-                guard HelperClient.strictJSONBool(readback?["ok"]) == true,
-                      let landedHidden = HelperClient.strictJSONBool(readback?["hidden"])
-                else {
-                    return MutationResult(succeeded: false, landedHidden: nil)
-                }
-                return MutationResult(
-                    succeeded: landedHidden == hidden,
-                    landedHidden: landedHidden
-                )
-            },
+            operation: { mutationResult(for: hidden) },
             completion: { result in
                 guard generation == configurationGeneration else { return }
                 if result.succeeded {
@@ -279,6 +274,35 @@ enum SystemBatteryIconController {
                 )
                 completion(result.succeeded)
             }
+        )
+    }
+
+    private static func mutationResult(for hidden: Bool) -> MutationResult {
+        let reply = send(
+            [
+                "op": "setSystemBatteryIconHidden",
+                "hidden": hidden,
+            ],
+            timeoutSeconds: 6
+        )
+        guard HelperClient.strictJSONBool(reply?["ok"]) == true else {
+            return MutationResult(succeeded: false, landedHidden: nil)
+        }
+
+        // The setter's success means its fixed preference write and Control
+        // Center restart completed. A separate fixed getter is still the
+        // authority for the value that actually landed.
+        let readback = send(
+            ["op": "getSystemBatteryIconHidden"], timeoutSeconds: 4
+        )
+        guard HelperClient.strictJSONBool(readback?["ok"]) == true,
+              let landedHidden = HelperClient.strictJSONBool(readback?["hidden"])
+        else {
+            return MutationResult(succeeded: false, landedHidden: nil)
+        }
+        return MutationResult(
+            succeeded: landedHidden == hidden,
+            landedHidden: landedHidden
         )
     }
 
