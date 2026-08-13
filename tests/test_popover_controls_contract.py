@@ -36,7 +36,7 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("case nativeSelection(NSView)", self.slider)
         self.assertIn("weight: .regular", self.slider)
         self.assertIn("weight: .semibold", self.slider)
-        self.assertIn("func setLifted(_ lifted: Bool)", self.slider)
+        self.assertIn("func setLifted(_ lifted: Bool, reduceMotion: Bool)", self.slider)
         self.assertIn("trackContent.addSubview(field)", self.slider)
         self.assertIn("override func mouseDragged", self.slider)
         self.assertIn("private var settleCompletionWorkItem: DispatchWorkItem?", self.slider)
@@ -261,12 +261,12 @@ class PopoverControlsContractTests(unittest.TestCase):
             "\n    override func mouseDragged", 1
         )[0]
         self.assertNotIn("showPressedState", mouse_down)
-        self.assertNotIn("setLifted(true)", mouse_down)
+        self.assertNotIn("setLifted(true,", mouse_down)
         mouse_dragged = self.slider.split("override func mouseDragged", 1)[1].split(
             "\n    override func mouseUp", 1
         )[0]
         threshold = mouse_dragged.split("if !movedWhileDragging", 1)[1]
-        self.assertIn("setLifted(true)", threshold)
+        self.assertIn("setLifted(true, reduceMotion: reducesMotion)", threshold)
         self.assertIn("moveKnob(centreX:", mouse_dragged)
         move = self.slider.split("private func moveKnob", 1)[1].split(
             "\n    /// The dragged capsule", 1
@@ -314,7 +314,8 @@ class PopoverControlsContractTests(unittest.TestCase):
         frame_update = self.slider.split("private func setKnobFrame", 1)[1].split(
             "\n    private func setKnobGeometry", 1
         )[0]
-        self.assertIn("applyLabelBlend(at: frame.midX)", frame_update)
+        self.assertIn("let weights = labelBlendWeights(at: frame.midX)", frame_update)
+        self.assertIn("self.applyLabelBlend(weights)", frame_update)
         driver = self.slider.split("private func startSettleMotion", 1)[1].split(
             "\n    private func stopSettleMotion", 1
         )[0]
@@ -333,7 +334,25 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertLess(model_write, animation_add)
         self.assertLess(animation_add, transaction_commit)
         self.assertLess(frame_update.index("self.knobHost.frame = frame"),
-                        frame_update.index("applyLabelBlend(at: frame.midX)"))
+                        frame_update.index("self.applyLabelBlend(weights)"))
+
+    def test_each_slider_frame_commits_geometry_and_labels_in_one_transaction(self):
+        frame_update = self.slider.split("private func setKnobFrame", 1)[1].split(
+            "\n    private func setKnobGeometry", 1
+        )[0]
+        self.assertEqual(frame_update.count("PopoverStyle.setWithoutAnimation"), 1)
+        transaction = frame_update.split(
+            "PopoverStyle.setWithoutAnimation {", 1
+        )[1].split("\n        }", 1)[0]
+        self.assertIn("self.knobHost.frame = frame", transaction)
+        self.assertIn("self.applyLabelBlend(weights)", transaction)
+        self.assertNotIn("applyLabelBlend(at:", frame_update)
+
+        raw_blend = self.slider.split(
+            "private func applyLabelBlend(_ weights: [CGFloat])", 1
+        )[1].split("\n    private func applyLabelBlend(at", 1)[0]
+        self.assertIn("layer?.opacity", raw_blend)
+        self.assertNotIn("PopoverStyle.setWithoutAnimation", raw_blend)
 
     def test_settle_runs_on_the_compositor_and_can_be_interrupted_visually(self):
         settle = self.slider.split("private func settle", 1)[1].split(
@@ -370,12 +389,23 @@ class PopoverControlsContractTests(unittest.TestCase):
         refresh = self.slider.split("private func refreshDisplayOptions", 1)[1].split(
             "\n    /// GitHub Mobile", 1
         )[0]
-        self.assertIn("setLifted(dragging && movedWhileDragging)", refresh)
+        self.assertIn(
+            "setLifted(dragging && movedWhileDragging, reduceMotion: reducesMotion)",
+            refresh,
+        )
+        self.assertIn("if reduceMotion, activeSettleMotion != nil", refresh)
+        self.assertIn("stopSettleMotion()", refresh)
+        self.assertIn("setKnobFrame(knobFrame(at: selectedIndex))", refresh)
+        self.assertIn("else if reduceMotion, dragging, movedWhileDragging", refresh)
+        self.assertIn("setKnobGeometry(centreX: draggedCentre", refresh)
 
         update = self.slider.split("func update(selected:", 1)[1].split(
             "\n    /// Clicks flow", 1
         )[0]
-        self.assertIn("setLifted(dragging && movedWhileDragging)", update)
+        self.assertIn(
+            "setLifted(dragging && movedWhileDragging, reduceMotion: reducesMotion)",
+            update,
+        )
 
     def test_native_track_and_selector_follow_github_mobile_hierarchy(self):
         self.assertIn("configureGlass(base, style: .regular", self.slider)

@@ -190,7 +190,7 @@ final class ModeSliderView: NSView {
         }
     }
 
-    private static var reducesMotion: Bool {
+    private static var systemReducesMotion: Bool {
 #if DEBUG
         switch ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"] {
         case "1": return true
@@ -269,8 +269,8 @@ final class ModeSliderView: NSView {
             }
         }
 
-        func setLifted(_ lifted: Bool) {
-            let lifted = lifted && !ModeSliderView.reducesMotion
+        func setLifted(_ lifted: Bool, reduceMotion: Bool) {
+            let lifted = lifted && !reduceMotion
             switch self {
             case .nativeSelection(let view):
                 Self.applyNativeSurface(view, lifted: lifted)
@@ -297,6 +297,7 @@ final class ModeSliderView: NSView {
     /// Last mode confirmed by the system. `selectedIndex` may be optimistic
     /// while the helper performs a mode change on its worker queue.
     private var committedIndex = 0
+    private var reducesMotion = false
 
 #if DEBUG
     /// Relabelling is the expensive part of a drag. It must happen once per
@@ -316,7 +317,7 @@ final class ModeSliderView: NSView {
     var selectorCornerRadiusForTest: CGFloat { knob?.view.layer?.cornerRadius ?? 0 }
     var selectedIndexForTest: Int { selectedIndex }
     var selectionIsPendingForTest: Bool { pendingSelectionIndex != nil }
-    var reducesMotionForTest: Bool { Self.reducesMotion }
+    var reducesMotionForTest: Bool { reducesMotion }
     var fallbackSelectorOpacityForTest: CGFloat? {
         guard case .plain(let selector) = knob else { return nil }
         return selector.layer?.backgroundColor?.alpha
@@ -415,6 +416,9 @@ final class ModeSliderView: NSView {
         guard usesNativeGlass, case .nativeSelection(let selector) = knob else { return nil }
         return selector.convert(selector.bounds, to: self)
     }
+    func applyReduceMotionChangeForTest(_ reduceMotion: Bool) {
+        refreshDisplayOptions(reduceMotion: reduceMotion)
+    }
 #endif
 
     private var dragging = false
@@ -482,6 +486,7 @@ final class ModeSliderView: NSView {
     private init(modes: [EnergyMode], forceLegacyMaterials: Bool) {
         self.modes = modes
         self.forceLegacyMaterials = forceLegacyMaterials
+        self.reducesMotion = Self.systemReducesMotion
         super.init(frame: NSRect(x: 0, y: 0,
                                  width: PopoverStyle.contentWidth,
                                  height: Self.preferredHeight))
@@ -691,9 +696,27 @@ final class ModeSliderView: NSView {
     }
 
     private func refreshDisplayOptions() {
+        refreshDisplayOptions(reduceMotion: Self.systemReducesMotion)
+    }
+
+    private func refreshDisplayOptions(reduceMotion: Bool) {
+        reducesMotion = reduceMotion
+        if reduceMotion, activeSettleMotion != nil {
+            stopSettleMotion()
+            PopoverStyle.setWithoutAnimation {
+                self.knobHost.layer?.transform = CATransform3DIdentity
+            }
+            setKnobFrame(knobFrame(at: selectedIndex))
+        } else if reduceMotion, dragging, movedWhileDragging {
+            let draggedCentre = visibleKnobFrame().midX
+            let restingFrame = knobFrame(at: selectedIndex)
+            setKnobGeometry(centreX: draggedCentre,
+                            width: restingFrame.width,
+                            height: restingFrame.height)
+        }
         applyTrackTint(currentTint)
         knob?.applyTint(currentTint)
-        knob?.setLifted(dragging && movedWhileDragging)
+        knob?.setLifted(dragging && movedWhileDragging, reduceMotion: reducesMotion)
         if highlighted >= 0 { highlight(highlighted, force: true) }
         invalidateOpticalSnapshot()
         needsLayout = true
@@ -713,7 +736,7 @@ final class ModeSliderView: NSView {
     /// moved and scaled by the compositor.
     private func updateShadowPath() {
         guard !usesNativeGlass else { return }
-        let lifted = dragging && movedWhileDragging && !Self.reducesMotion
+        let lifted = dragging && movedWhileDragging && !reducesMotion
         let radius = knobHost.bounds.height / 2
         knobHost.layer?.cornerRadius = radius
         knobHost.layer?.shadowOpacity = Self.reducesTransparency
@@ -843,7 +866,7 @@ final class ModeSliderView: NSView {
         knob?.applyTint(tint)
         // A telemetry refresh can arrive while the pointer is held. Reapply
         // the interaction material so it cannot flatten the lifted capsule.
-        knob?.setLifted(dragging && movedWhileDragging)
+        knob?.setLifted(dragging && movedWhileDragging, reduceMotion: reducesMotion)
         // During a held drag the 1 Hz telemetry refresh must recolour the mode
         // under the capsule, not jump the highlight back to the committed mode.
         let visualIndex = dragging && highlighted >= 0 ? highlighted : selectedIndex
@@ -871,9 +894,9 @@ final class ModeSliderView: NSView {
             self.knobHost.layer?.transform = CATransform3DIdentity
         }
         setKnobFrame(start)
-        knob?.setLifted(false)
+        knob?.setLifted(false, reduceMotion: reducesMotion)
 
-        let reduceMotion = Self.reducesMotion
+        let reduceMotion = reducesMotion
         let geometryChanged = abs(target.midX - start.midX) > 0.5
             || abs(target.width - start.width) > 0.5
             || abs(target.height - start.height) > 0.5
@@ -1297,6 +1320,10 @@ final class ModeSliderView: NSView {
     }
 
     private func setKnobFrame(_ frame: NSRect) {
+        let weights = labelBlendWeights(at: frame.midX)
+#if DEBUG
+        labelBlendTraceForTest.append(weights)
+#endif
         PopoverStyle.setWithoutAnimation {
             self.knobHost.frame = frame
             self.knob?.view.frame = self.knobHost.bounds
@@ -1308,9 +1335,9 @@ final class ModeSliderView: NSView {
                 glass.contentView?.frame = glass.bounds
             }
             self.fallbackLens?.update(hostFrameInTrack: frame, trackBounds: self.bounds)
+            self.applyLabelBlend(weights)
         }
         updateShadowPath()
-        applyLabelBlend(at: frame.midX)
     }
 
     private func setKnobGeometry(centreX: CGFloat, width: CGFloat, height: CGFloat) {
@@ -1330,17 +1357,21 @@ final class ModeSliderView: NSView {
         }
     }
 
+    private func applyLabelBlend(_ weights: [CGFloat]) {
+        for index in activeLabels.indices {
+            let weight = weights[index]
+            activeLabels[index].layer?.opacity = Float(weight)
+            labels[index].layer?.opacity = Float(1 - weight)
+        }
+    }
+
     private func applyLabelBlend(at centreX: CGFloat) {
         let weights = labelBlendWeights(at: centreX)
 #if DEBUG
         labelBlendTraceForTest.append(weights)
 #endif
         PopoverStyle.setWithoutAnimation {
-            for index in self.activeLabels.indices {
-                let weight = weights[index]
-                self.activeLabels[index].layer?.opacity = Float(weight)
-                self.labels[index].layer?.opacity = Float(1 - weight)
-            }
+            self.applyLabelBlend(weights)
         }
     }
 
@@ -1393,7 +1424,7 @@ final class ModeSliderView: NSView {
 
         if !movedWhileDragging {
             movedWhileDragging = true
-            knob?.setLifted(true)
+            knob?.setLifted(true, reduceMotion: reducesMotion)
         }
         updateVelocity(pointerX: point.x, timestamp: event.timestamp)
 
@@ -1406,7 +1437,7 @@ final class ModeSliderView: NSView {
         let between = min(abs(centre - nearestCentre) / max(segmentWidth / 2, 1), 1)
         let speed = min(abs(dragVelocityX) / 1_600, 1)
 
-        let reduceMotion = Self.reducesMotion
+        let reduceMotion = reducesMotion
         let scaleX = reduceMotion ? 1 : Self.pressedScale.width + 0.07 * between + 0.03 * speed
         let scaleY = reduceMotion ? 1 : Self.pressedScale.height + 0.04 * speed
         moveKnob(centreX: centre, scaleX: scaleX, scaleY: scaleY)

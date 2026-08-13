@@ -6,9 +6,12 @@ final class WattsonTests: XCTestCase {
         RunLoop.main.run(until: Date().addingTimeInterval(seconds))
     }
 
-    private func makeAnimatedSlider(selected: EnergyMode) -> (ModeSliderView, NSWindow) {
+    private func makeAnimatedSlider(selected: EnergyMode,
+                                    forceLegacyMaterials: Bool = false) -> (ModeSliderView, NSWindow) {
         _ = NSApplication.shared
-        let slider = ModeSliderView(modes: [.auto, .low, .high])
+        let slider = forceLegacyMaterials
+            ? ModeSliderView(modes: [.auto, .low, .high], forceLegacyMaterialsForTest: true)
+            : ModeSliderView(modes: [.auto, .low, .high])
         let window = NSWindow(
             contentRect: NSRect(x: 20, y: 20,
                                 width: 300, height: ModeSliderView.preferredHeight),
@@ -176,6 +179,64 @@ final class WattsonTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(intermediateFrames, 3)
         XCTAssertEqual(slider.glassViewCentreForTest,
                        slider.detentCentreForTest(2), accuracy: 0.5)
+    }
+
+    func testEnablingReduceMotionStopsEveryModeSliderSettleDriverImmediately() throws {
+        guard #available(macOS 26.0, *) else { throw XCTSkip("requires native test host") }
+        for forceLegacyMaterials in [false, true] {
+            let (slider, window) = makeAnimatedSlider(
+                selected: .auto,
+                forceLegacyMaterials: forceLegacyMaterials
+            )
+            defer { window.orderOut(nil) }
+            slider.onSelect = { mode, completion in completion(mode) }
+
+            tap(slider, in: window, x: slider.detentCentreForTest(2))
+            guard !slider.reducesMotionForTest else {
+                throw XCTSkip("test requires normal motion at launch")
+            }
+            spinMainRunLoop(0.04)
+            XCTAssertTrue(slider.settleIsAnimatingForTest)
+
+            slider.applyReduceMotionChangeForTest(true)
+
+            XCTAssertFalse(slider.settleIsAnimatingForTest)
+            XCTAssertEqual(slider.glassViewCentreForTest,
+                           slider.detentCentreForTest(2), accuracy: 0.5)
+            spinMainRunLoop(0.35)
+            XCTAssertFalse(slider.settleIsAnimatingForTest)
+            XCTAssertEqual(slider.glassViewCentreForTest,
+                           slider.detentCentreForTest(2), accuracy: 0.5)
+
+            slider.applyReduceMotionChangeForTest(false)
+            tap(slider, in: window, x: slider.detentCentreForTest(0))
+            XCTAssertTrue(slider.settleIsAnimatingForTest)
+            spinMainRunLoop(0.35)
+            XCTAssertFalse(slider.settleIsAnimatingForTest)
+            XCTAssertEqual(slider.glassViewCentreForTest,
+                           slider.detentCentreForTest(0), accuracy: 0.5)
+
+            let start = slider.detentCentreForTest(0)
+            slider.mouseDown(with: sliderMouseEvent(.leftMouseDown,
+                                                    x: start,
+                                                    window: window))
+            slider.mouseDragged(with: sliderMouseEvent(.leftMouseDragged,
+                                                       x: start + 24,
+                                                       window: window))
+            XCTAssertGreaterThan(slider.knobScaleForTest.width, 1.05)
+            XCTAssertGreaterThan(slider.knobScaleForTest.height, 1.05)
+            let draggedCentre = slider.glassViewCentreForTest
+
+            slider.applyReduceMotionChangeForTest(true)
+
+            XCTAssertEqual(slider.knobScaleForTest.width, 1, accuracy: 0.01)
+            XCTAssertEqual(slider.knobScaleForTest.height, 1, accuracy: 0.01)
+            XCTAssertEqual(slider.glassViewCentreForTest, draggedCentre, accuracy: 0.5)
+            XCTAssertNotEqual(slider.fallbackLensSamplingEnabledForTest, true)
+            slider.mouseUp(with: sliderMouseEvent(.leftMouseUp,
+                                                  x: start + 24,
+                                                  window: window))
+        }
     }
 
     func testModeSliderRestingSelectionMeetsTrackEdges() {
