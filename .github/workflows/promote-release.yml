@@ -6,7 +6,7 @@ on:
       version:
         description: Stable semantic version without the v prefix
         required: true
-        default: "3.0.7"
+        default: "3.0.8"
         type: string
       candidate_run_id:
         description: Successful Wattson release candidate workflow run ID
@@ -202,10 +202,10 @@ jobs:
             cat <<'EOF'
           This Wattson release is universal for Apple silicon and Intel and supports macOS 12 or later.
 
-          - Makes the macOS 26 power-mode selector nearly transparent by removing Wattson's duplicate white rim, caustic, and haze overlays from native Clear Liquid Glass.
-          - Advances the real AppKit glass view, selector boundary, and label blend together on one window-synchronized display timeline when another mode is clicked.
-          - Keeps reverse clicks, mid-animation re-grabs, failed mode changes, Reduce Motion, and Reduce Transparency continuous and accessible.
-          - Preserves the cached optical AppKit fallback on macOS 12–25, universal Apple-silicon and Intel support, and all v3.0.6 Settings and native-icon behavior.
+          - Dynamically enabling Reduce Motion during a mode change immediately stops both the display-link and legacy settle paths and snaps to the selected mode without a delayed continuation.
+          - When Reduce Motion is enabled during an active drag, returns the enlarged glass capsule to 1× size immediately while preserving the drag interaction.
+          - Applies each frame's selector geometry and label opacity in one explicit transaction instead of two, reducing transaction overhead without claiming a fixed CPU-percentage improvement.
+          - Preserves the cached optical AppKit fallback on macOS 12–25, the nearly transparent native Liquid Glass appearance on macOS 26, universal Apple-silicon and Intel support, and all v3.0.7 Settings and native-icon behavior.
           - Installs at `/Applications/Wattson.app` through one native PKG shared byte-for-byte by the DMG, with verified reinstall, v2 upgrade, helper replacement, uninstall, and SHA-256 metadata.
 
           **Verified distribution:** the app, helper, PKG, and DMG are Developer ID signed. Apple accepted both release containers for notarization, and their tickets are stapled for offline validation and normal Gatekeeper installation.

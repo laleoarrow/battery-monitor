@@ -38,7 +38,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.promote_workflow = PROMOTE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.7\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.8\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -51,16 +51,18 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn("support-diagnostics-v1.1.0", self.readme)
         self.assertNotIn("support-diagnostics-v1.0.0", self.readme)
         for current_release_topic in (
-            "nearly transparent",
-            "duplicate white rim",
-            "window-synchronized display timeline",
+            "Dynamically enabling Reduce Motion",
+            "display-link and legacy settle",
+            "1× size",
+            "one explicit transaction",
             "cached optical AppKit fallback",
         ):
             self.assertIn(current_release_topic, self.promote_workflow)
 
         for user_facing_topic in (
-            "nearly transparent native Clear",
-            "selector boundary",
+            "dynamically enabled",
+            "returns to 1×",
+            "one explicit transaction",
         ):
             self.assertIn(user_facing_topic, self.readme)
 
