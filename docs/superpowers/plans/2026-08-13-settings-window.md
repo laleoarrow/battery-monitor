@@ -232,7 +232,7 @@ protocol SettingsSectionController: AnyObject {
 ```
 
 - Produces: `SettingsWindowDependencies.live` with injected closures for login-item and battery-icon state/read/write.
-- Produces: `SettingsWindowController.init(sections:dependencies:)` and `show(activateApp: Bool = true)`.
+- Produces: `SettingsWindowController.init(sections:dependencies:frameAutosaveName:)` and `show(activateApp: Bool = true)`; production defaults to live dependencies and `"WattsonSettingsWindow"`, while tests pass explicit fixtures and `nil` autosave.
 - Consumes: `Settings.Module`, module APIs, `LoginItemState`, `LoginItemController`, `SystemBatteryIconController`.
 
 - [ ] **Step 1: Write the failing compiled-window contract**
@@ -241,8 +241,11 @@ Create a temporary Swift executable that constructs the controller under `NSAppl
 
 ```swift
 let controller = SettingsWindowController(
-    sections: SettingsWindowController.defaultSections(dependencies: .fixture)
+    sections: SettingsWindowController.defaultSections(dependencies: .fixture),
+    dependencies: .fixture,
+    frameAutosaveName: nil
 )
+// Only the opt-in GUI method shows the real window:
 controller.show(activateApp: false)
 let first = controller.windowForTest
 require(first?.isVisible == true, "visible")
@@ -271,11 +274,11 @@ Expected: compile fails because `SettingsWindowController` is absent.
 
 - [ ] **Step 3: Implement the smallest native window shell**
 
-Create one standard titled/closable `NSWindow`, fixed 720×520 content size, `isReleasedWhenClosed = false`, `isRestorable = false`, and one autosave name. Build a fixed 176-point sidebar with Wattson identity plus one row per registered section, and one content host with 32-point insets. General is selected initially; close/reopen keeps the in-process selection. Call `center()` only when no saved frame exists. `show` refreshes authoritative state, demniaturizes if needed, orders front, and activates only when requested. It creates no timers or observers outside section lifetimes.
+Create one standard titled/closable `NSWindow`, fixed 720×520 content size, `isReleasedWhenClosed = false`, `isRestorable = false`, and an injectable autosave name. Production defaults to `"WattsonSettingsWindow"`; nil skips autosave reads and writes. Build a fixed 176-point `.sourceList` `NSTableView` sidebar with a 72-point identity row and 44-point navigation rows (12-point horizontal insets and 4-point row gap), then one content host behind the native one-point divider with 32-point insets. Disallow empty selection and select General initially; close/reopen keeps the in-process selection. The sidebar starts as first responder, native Up/Down changes pages, Tab enters the first visible switch, and Shift-Tab returns. Call `center()` only when no saved frame exists. `show` refreshes authoritative state, deminiaturizes if needed, orders front, and activates only when requested. It creates no timers or observers outside section lifetimes.
 
 - [ ] **Step 4: Implement General with explicit async state rendering**
 
-Use one compact inset list containing exactly three icon/label/detail/switch rows. Use native switch-style checkboxes plus secondary labels. Map `LoginItemState` exactly:
+Use a 28-point semibold heading and one 479×228-point inset list containing exactly three 76-point icon/label/detail/switch rows with a 12-point radius. Secondary labels are one line with tail truncation. Use native switch-style checkboxes plus secondary labels. Map `LoginItemState` exactly:
 
 ```swift
 switch state {
@@ -287,11 +290,11 @@ case .readFailed: checked = nil; enabled = false; detail = "Status unavailable"
 }
 ```
 
-Map battery icon `Bool?` with `.mixed` for nil. Disable each row during its own mutation. On failure restore the last authoritative state and show one inline error; never use a modal alert from the Settings section. Capture views/controllers weakly in asynchronous completions.
+Map battery icon `Bool?` with `.mixed` for nil. Disable each row during its own mutation. Dynamic checking/unavailable/error text updates the switch's accessibility help. On failure restore the last authoritative state, show one inline error, and post one high-priority accessibility announcement; never use a modal alert from the Settings section. Capture views/controllers weakly in asynchronous completions.
 
 - [ ] **Step 5: Implement Modules through the shared store**
 
-Create exactly four compact visual cards from `Settings.Module.allCases`, arranged in a 2×2 grid. Each card has a static code-native preview glyph, title, one-line description, and switch. Reads call `Settings.isModuleVisible`, writes call `Settings.setModule`. Observe `Settings.didChange` weakly and refresh the checkbox states. Remove the observer in `deinit`. Preview glyphs must not animate, sample, or render live data.
+Create exactly four compact visual cards from `Settings.Module.allCases`, arranged in a 479-point-wide 2×2 grid with 12-point horizontal and vertical gaps. Each equal card is 233.5×166 points, has a 12-point radius and 64×64-point static code-native preview, plus title, single-line tail-truncated description, and switch. Use semantic label/separator colors and `systemGreen`; selected navigation uses green at 16% alpha but never color alone. Reads call `Settings.isModuleVisible`, writes call `Settings.setModule`. Observe `Settings.didChange` weakly and refresh the checkbox states. Remove the observer in `deinit`. Preview glyphs must not animate, sample, or render live data.
 
 - [ ] **Step 6: Run focused GREEN and leak-sensitive loop**
 
@@ -303,7 +306,9 @@ swift build
 git diff --check -- MenuBar/SettingsWindowController.swift tests/test_settings_window_contract.py
 ```
 
-The executable harness must also switch General↔Modules at least 1,000 times without growing section/view counts, then create/show/close/release 500 controllers and assert weak controller/window references clear and `/dev/fd` returns to baseline.
+The always-on contract compiles and type-checks the production AppKit source and exercises layout/section seams without showing a window. It switches General↔Modules 1,000 times and requires the same two page-view identities, one content-host child, and every authoritative measurement within 1 point.
+
+Only with `WATTSON_RUN_INTERACTION=1`, run 50 warm-up cycles followed by 500 create/show/close/release cycles in a disposable interactive GUI session. Require weak controller/window references nil, file descriptors no more than warm baseline +2, and RSS no more than post-warm baseline +8 MiB. Source/runtime checks reject Settings-owned timers, display links, repeating dispatch, animations, sampling, and polling.
 
 - [ ] **Step 7: Commit**
 

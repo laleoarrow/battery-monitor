@@ -73,9 +73,11 @@ alternate useful size. It is centered only on first presentation, uses one
 frame-autosave name to preserve a user-moved position across launches, does not
 restore visibility, and never opens automatically at application launch.
 
-The content size is 720×520 points. A fixed 176-point sidebar contains the
-Wattson identity row and exactly two navigation rows. The remaining content
-pane has 32-point outer insets. General is selected on first construction;
+The content size is 720×520 points. A fixed 176-point sidebar contains a
+72-point Wattson identity row and exactly two 44-point navigation rows, each
+with 12-point horizontal insets and 4 points between rows. The content pane is
+separated by the native one-point divider and has 32-point outer insets,
+leaving 479 points of usable width. General is selected on first construction;
 the last page selected while the process remains alive is preserved across
 close/reopen, but page selection is not persisted across launches.
 
@@ -99,16 +101,35 @@ has exactly two registered pages:
    - Power Lanes
    - Power History
 
-Each General row contains an icon, primary label, one-line secondary label,
-and a right-aligned switch. Each module card contains a lightweight
-code-native preview glyph, primary label, one-line secondary label, and a
+General uses a 28-point semibold heading and one 479×228-point inset list with
+three 76-point rows and a 12-point corner radius. Each row contains an icon,
+primary label, a single-line tail-truncated secondary label, and a
+right-aligned switch.
+
+Modules uses a 28-point semibold heading and a 2×2 grid across the same
+479-point width. Horizontal and vertical gaps are 12 points; each equal-width
+card is 233.5×166 points with a 12-point corner radius and a 64×64-point static
+preview region. Each card contains a lightweight code-native preview glyph,
+primary label, a single-line tail-truncated secondary label, and a
 right-aligned switch. The glyphs communicate flow, ring, lanes, and history
-without rendering live data or starting animation. The green accent is
-reserved for selected navigation and enabled controls. The current version
+without rendering live data or starting animation. The reference raster's
+wrapped descriptions are directional only; the one-line contract here is
+authoritative.
+
+Text and separators use semantic `labelColor`, `secondaryLabelColor`, and
+`separatorColor`. Preview/enabled accents use `systemGreen`; the selected
+sidebar row uses `systemGreen` at 16% alpha in addition to its selected state,
+label, and symbol, so color is never the sole state cue. The current version
 and Quit remain commands in the quick menu, not settings.
 
-All controls expose explicit accessibility labels and help. Tab and full
-keyboard access follow AppKit's native checkbox order. The design does not add
+The sidebar is an `NSTableView` with `.sourceList` style and disallows an empty
+selection. It is the first responder on first show; native Up/Down navigation
+changes sections. Tab enters the visible section at its first switch, follows
+the visual switch order, and Shift-Tab returns to the sidebar. All controls
+expose explicit accessibility labels and help. Dynamic checking, unavailable,
+read-failure, and mutation-error text is included in the affected switch's
+`accessibilityHelp`. A mutation error additionally posts one
+`.announcementRequested` accessibility notification. The design does not add
 custom motion.
 
 ## Architecture
@@ -117,7 +138,14 @@ custom motion.
 
 `StatusItemController` remains the UI lifetime root and strongly owns one lazy
 `SettingsWindowController`. `AppDelegate` and `main.swift` keep their current
-roles. The controller creates one `NSWindow`, sets
+roles. The controller accepts injected dependencies and an optional frame
+autosave name:
+
+`init(sections:dependencies:frameAutosaveName:)`
+
+The production default is `"WattsonSettingsWindow"`; tests pass `nil`, which
+must skip both reading and writing frame autosave state. The controller creates
+one `NSWindow`, sets
 `isReleasedWhenClosed = false` and `isRestorable = false`, and exposes one
 idempotent `show(activateApp:)` operation. Tests can pass `activateApp: false`
 to avoid stealing focus.
@@ -222,8 +250,10 @@ Both surfaces restore the authoritative value from the notification.
 - An unavailable helper leaves relevant controls disabled and explains that the
   full installer is required.
 - A read failure displays an unavailable state, not a false `off` value.
-- A mutation failure restores the last authoritative state and presents one
-  concise inline error. Existing popover error behavior remains unchanged.
+- A mutation failure restores the last authoritative state, presents one
+  concise inline error, updates the affected switch's accessibility help, and
+  posts exactly one high-priority accessibility announcement. Existing
+  popover error behavior remains unchanged.
 - Repeated clicks cannot enqueue duplicate mutations because the control is
   disabled and the existing controller also rejects in-flight updates.
 - Opening Settings repeatedly coalesces reads through existing workers and
@@ -258,6 +288,10 @@ failing, then implemented minimally.
 - The window is 720×520 points with a 176-point sidebar, General is initially
   selected, and selecting Modules swaps the content host without constructing
   another page/window instance.
+- Geometry matches the authoritative measurements above within one point:
+  72-point identity row, 44-point navigation rows, 32-point content insets,
+  76-point General rows, 12-point grid gaps, 233.5×166-point cards, and
+  64×64-point preview regions.
 - Sidebar selection is keyboard accessible and persists across close/reopen
   only within the current process.
 - General renders exactly three rows; Modules renders exactly four cards in a
@@ -269,9 +303,15 @@ failing, then implemented minimally.
 - Opening Settings closes the popover first.
 - Launch-at-login and battery-icon states cover checking, unavailable, read
   failure, success, mutation failure, and stale completion.
-- Test dependencies are injected closures/fakes; tests never mutate the
-  installed helper or user preferences outside a temporary UserDefaults suite.
+- Test dependencies are injected closures/fakes; tests pass a nil frame
+  autosave name and never mutate the installed helper or user preferences
+  outside a temporary UserDefaults suite.
 - Settings observers and window controller release without cycles.
+
+The ordinary Python contract compiles and type-checks the real AppKit source
+and exercises section/layout seams without showing an `NSWindow`. Tests that
+actually show, key, close, or release windows run only when
+`WATTSON_RUN_INTERACTION=1` is set in an interactive disposable GUI session.
 
 ### Real AppKit tests
 
@@ -290,8 +330,16 @@ failing, then implemented minimally.
 - ASan, TSan, and UBSan Swift tests.
 - arm64 and x86_64 release builds with deployment target macOS 12.
 - Existing default and forced-legacy interaction harnesses.
-- Settings show/close stress: stable FD count, bounded RSS plateau, one window,
-  no timers, and no increase in closed-popover render count.
+- Switching pages 1,000 times preserves the same two section-view identities
+  and exactly one content-host child.
+- After 50 warm-up controller cycles, 500 create/show/close/release cycles in
+  the opt-in GUI harness release weak controller/window references, keep file
+  descriptors within the warm baseline plus 2, and keep resident memory within
+  8 MiB of the post-warm baseline.
+- Source and runtime checks reject Settings-owned `Timer`, display-link,
+  repeating-dispatch, layer-animation, sampling, or polling work.
+- The later integration harness verifies closing Settings does not increase
+  the already-closed popover's render count.
 
 ## Review and Release Gates
 
