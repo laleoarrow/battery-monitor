@@ -121,7 +121,7 @@ Finder’s Control-click → Open.
 ### Installation still fails
 
 Download the read-only
-[Wattson Diagnostics tool](https://github.com/laleoarrow/battery-monitor/releases/download/support-diagnostics-v1.0.0/Wattson-Diagnostics-v1.0.0-macos-universal.zip),
+[Wattson Diagnostics tool](https://github.com/laleoarrow/battery-monitor/releases/download/support-diagnostics-v1.1.0/Wattson-Diagnostics-v1.1.0-macos-universal.zip),
 open it using the same Gatekeeper flow above, and click **Collect & Copy
 Diagnostics**. The tool requests no administrator password, changes no setting,
 and uploads nothing. Review the copied report before pasting it into a support

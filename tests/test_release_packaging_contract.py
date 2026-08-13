@@ -21,6 +21,8 @@ SCRIPTS = {
 PREINSTALL = ROOT / "Packaging" / "pkg" / "preinstall"
 POSTINSTALL = ROOT / "Packaging" / "pkg" / "postinstall"
 RELEASE_GUIDE = ROOT / ".agent" / "release.md"
+README = ROOT / "README.md"
+PROMOTE_WORKFLOW = ROOT / ".github" / "workflows" / "promote-release.yml"
 
 
 class ReleasePackagingContractTests(unittest.TestCase):
@@ -32,6 +34,8 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.preinstall = PREINSTALL.read_text(encoding="utf-8")
         cls.postinstall = POSTINSTALL.read_text(encoding="utf-8")
         cls.release_guide = RELEASE_GUIDE.read_text(encoding="utf-8")
+        cls.readme = README.read_text(encoding="utf-8")
+        cls.promote_workflow = PROMOTE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
         self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.5\n")
@@ -42,6 +46,16 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertEqual(info["CFBundleDisplayName"], "Wattson")
         self.assertEqual(info["LSMinimumSystemVersion"], "12.0")
         self.assertFalse(list((ROOT / "Packaging").rglob("InfoPlist.strings")))
+
+    def test_current_release_support_and_promotion_copy_are_not_stale(self):
+        self.assertIn("support-diagnostics-v1.1.0", self.readme)
+        self.assertNotIn("support-diagnostics-v1.0.0", self.readme)
+        for current_release_topic in (
+            "native, reusable Settings window",
+            "Coalesces sampling and settings operations",
+            "battery-capacity, signed-current, and power-mode parsing",
+        ):
+            self.assertIn(current_release_topic, self.promote_workflow)
 
     def test_release_scripts_are_executable_and_parse_as_bash(self):
         for path in (*SCRIPTS.values(), PREINSTALL, POSTINSTALL):

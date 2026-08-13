@@ -202,14 +202,13 @@ jobs:
             cat <<'EOF'
           This Wattson release is universal for Apple silicon and Intel and supports macOS 12 or later.
 
-          - Restores responsive whole-machine power through fixed read-only SMC sensors, without exposing caller-selected keys or write commands.
-          - Updates battery-to-adapter state transitions from signed instantaneous battery current while the slower coherent telemetry catches up.
-          - Correctly decodes physical battery temperature and falls back to Apple-silicon virtual temperature, showing unavailable data as a dash instead of a false 0°C.
-          - Makes the mode selector flow on the compositor, with one-to-one dragging, faster magnetic release, smooth click travel, and continuously blended labels.
-          - Keeps the resting selector flush with its track at every detent, with matching continuous capsule corners and no edge gap.
-          - Uses one clear native Liquid Glass track and a restrained neutral selection capsule on macOS 26, with accessible fallbacks for macOS 12–25.
-          - Installs the app at `/Applications/Wattson.app` through one native PKG shared byte-for-byte by the DMG, with safe reinstall, v2 upgrade, helper replacement, and uninstall lifecycles.
-          - Includes the full English interface, version display, keyboard, VoiceOver, Reduce Motion, Reduce Transparency, SHA-256, and explicit release-policy metadata.
+          - Adds one native, reusable Settings window for the existing General and popover-module controls, with immediate synchronization back to the menu-bar popover.
+          - Keeps the resting mode selector flush with its track at every detent, with matching continuous capsule corners and no edge gap.
+          - Coalesces sampling and settings operations, bounds helper IPC queues and subprocesses, and closes command pipes deterministically to reduce idle work and prevent long-running resource growth.
+          - Preserves responsive whole-machine power and battery-to-adapter transitions while correctly decoding physical and virtual battery temperatures.
+          - Expands battery-capacity, signed-current, and power-mode parsing for Apple-silicon and Intel Macs from macOS 12 onward, with safe fallbacks when optional sensors are unavailable.
+          - Supports keyboard and VoiceOver navigation, Reduce Motion, Reduce Transparency, light and dark appearances, and the native macOS 26 material with accessible macOS 12–25 fallbacks.
+          - Installs at `/Applications/Wattson.app` through one native PKG shared byte-for-byte by the DMG, with verified reinstall, v2 upgrade, helper replacement, uninstall, and SHA-256 metadata.
 
           **Verified distribution:** the app, helper, PKG, and DMG are Developer ID signed. Apple accepted both release containers for notarization, and their tickets are stapled for offline validation and normal Gatekeeper installation.
           EOF
