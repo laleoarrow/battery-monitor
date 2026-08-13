@@ -13,6 +13,7 @@ func check(_ n: String, _ ok: Bool, _ d: String = "") {
 /// failure would be inventing eight bugs that do not exist, and reporting it as
 /// a pass would be worse. Say plainly that it could not be checked.
 let screenLocked = (CGSessionCopyCurrentDictionary() as? [String: Any])?["CGSSessionScreenIsLocked"] as? Int == 1
+let forcedReduceMotion = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"] == "1"
 
 // ---- 1. 点击路由：AppKit 可能送达的每一种单击形态 ----
 func run(_ steps: [NSEvent.EventType?], control: Bool = false) -> [ClickIntent] {
@@ -55,6 +56,45 @@ guard let button = item.button else { log("no button"); exit(1) }
 app.finishLaunching()                     // 少了这句状态栏按钮无法承载弹窗
 RunLoop.current.run(until: Date().addingTimeInterval(0.3))
 func spin(_ s: TimeInterval) { RunLoop.current.run(until: Date().addingTimeInterval(s)) }
+
+/// Activation is an NSApplication concern, not just a Foundation run-loop
+/// concern. Enter the real application event loop for assertions that depend
+/// on key-window ownership, then stop it without injecting user events.
+func runApplication(until condition: @escaping () -> Bool,
+                    timeout: TimeInterval) -> Bool {
+    var satisfied = condition()
+    let deadline = Date().addingTimeInterval(timeout)
+
+    func stopApplicationLoop() {
+        app.stop(nil)
+        if let wake = NSEvent.otherEvent(
+            with: .applicationDefined,
+            location: .zero,
+            modifierFlags: [],
+            timestamp: 0,
+            windowNumber: 0,
+            context: nil,
+            subtype: 0,
+            data1: 0,
+            data2: 0
+        ) {
+            app.postEvent(wake, atStart: false)
+        }
+    }
+
+    func poll() {
+        satisfied = condition()
+        guard !satisfied, Date() < deadline else {
+            stopApplicationLoop()
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { poll() }
+    }
+
+    DispatchQueue.main.async { poll() }
+    app.run()
+    return satisfied
+}
 
 if !screenLocked {
     app.finishLaunching()
@@ -119,7 +159,39 @@ if !screenLocked {
     // ---- 3. 隐藏时必须停止动画：这是省电的全部意义 ----
     p.toggle(relativeTo: button); spin(0.8)
     let openAnims = p.runningAnimationCountForTest
-    check("打开时内容在动", openAnims > 0, "\(openAnims) 个动画")
+    check(forcedReduceMotion ? "减少动态效果时打开不启动内容动画" : "打开时内容在动",
+          forcedReduceMotion ? openAnims == 0 : openAnims > 0,
+          "\(openAnims) 个动画")
+
+    // 显示辅助设置会在 app 运行时变化。发送真实 workspace
+    // notification，确认打开的弹窗会立即停止或恢复无限动画。
+    let toggledReduceMotion = !forcedReduceMotion
+    setenv("WATTSON_FORCE_REDUCE_MOTION", toggledReduceMotion ? "1" : "0", 1)
+    NSWorkspace.shared.notificationCenter.post(
+        name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+        object: NSWorkspace.shared
+    )
+    spin(0.05)
+    let toggledAnims = p.runningAnimationCountForTest
+    let toggledInfiniteAnims = p.runningInfiniteAnimationCountForTest
+    check(toggledReduceMotion ? "运行中开启减少动态效果会立即停止内容动画"
+                              : "运行中关闭减少动态效果会恢复内容动画",
+          toggledReduceMotion ? toggledInfiniteAnims == 0 : toggledInfiniteAnims > 0,
+          "\(toggledInfiniteAnims) 个无限动画，\(toggledAnims) 个总动画")
+    setenv("WATTSON_FORCE_REDUCE_MOTION", forcedReduceMotion ? "1" : "0", 1)
+    NSWorkspace.shared.notificationCenter.post(
+        name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+        object: NSWorkspace.shared
+    )
+    spin(0.05)
+    let restoredAnims = p.runningAnimationCountForTest
+    let restoredInfiniteAnims = p.runningInfiniteAnimationCountForTest
+    check("恢复减少动态效果设置后内容动画状态一致",
+          forcedReduceMotion ? restoredInfiniteAnims == 0 : restoredInfiniteAnims > 0,
+          "\(restoredInfiniteAnims) 个无限动画，\(restoredAnims) 个总动画")
+    // Fallback material may cross-fade its fill for 0.25 s. It is finite and
+    // allowed under Reduce Motion; let it finish before testing close cleanup.
+    spin(0.3)
     p.handleOutsideClick(); spin(1.2)
     let closedAnims = p.runningAnimationCountForTest
     check("收起后动画已停", closedAnims == 0, "\(closedAnims) 个动画")
@@ -134,7 +206,9 @@ if !screenLocked {
     p.toggle(relativeTo: button); spin(0.2)
     p.toggle(relativeTo: button); spin(1.4)
     let reopenAnims = p.runningAnimationCountForTest
-    check("中途重开后动画已恢复", reopenAnims > 0, "\(reopenAnims) 个动画")
+    check(forcedReduceMotion ? "减少动态效果时中途重开仍保持静态" : "中途重开后动画已恢复",
+          forcedReduceMotion ? reopenAnims == 0 : reopenAnims > 0,
+          "\(reopenAnims) 个动画")
     p.handleOutsideClick(); spin(1.2)
     check("重开再收起后动画仍会停", p.runningAnimationCountForTest == 0)
 
@@ -832,6 +906,161 @@ let degradedState = header.statePresentationForTest(snapshot: headerSnapshots[4]
 check("读取失败优先于守恒偏差",
       degradedState.text == "Read Failed · Last Reading"
           && degradedState.color?.isEqual(PopoverStyle.red) == true)
+
+// ---- 10. Settings 命令：一个窗口、同一入口、单一系统状态 ----
+final class InteractionSettingsSection: SettingsSectionController {
+    let identifier = "interaction"
+    let title = "Interaction"
+    let symbolName = "gearshape"
+    let view = NSView(frame: NSRect(x: 0, y: 0, width: 479, height: 228))
+    private(set) var refreshCount = 0
+    var onRefresh: (() -> Void)?
+
+    func refresh() {
+        refreshCount += 1
+        onRefresh?()
+    }
+}
+
+let settingsSuiteName = "Wattson.SettingsCommandInteraction.\(UUID().uuidString)"
+let settingsDefaults = UserDefaults(suiteName: settingsSuiteName)!
+settingsDefaults.removePersistentDomain(forName: settingsSuiteName)
+Settings.configureForTest(defaults: settingsDefaults)
+
+let interactionSection = InteractionSettingsSection()
+let interactionSettings = SettingsWindowController(
+    sections: [interactionSection],
+    frameAutosaveName: nil
+)
+let settingsOwner = StatusItemController()
+settingsOwner.configureSettingsWindowForTest(interactionSettings)
+settingsOwner.wireSettingsPresentationForTest()
+
+let previousMainMenu = NSApp.mainMenu
+NSApp.mainMenu = nil
+settingsOwner.installMainMenuForTest()
+let appMenu = NSApp.mainMenu?.items.first?.submenu
+let settingsMenuItem = appMenu?.items.first { $0.title == "Settings…" }
+check("Settings 命令位于标准应用菜单",
+      settingsMenuItem?.action == NSSelectorFromString("showSettings")
+          && settingsMenuItem?.keyEquivalent == ","
+          && settingsMenuItem?.keyEquivalentModifierMask == [.command])
+check("应用菜单保留退出命令",
+      appMenu?.items.contains { $0.title == "Quit Wattson" } == true)
+
+let policyBeforeSettings = app.activationPolicy()
+settingsOwner.openPopoverForSettingsCommandTest(relativeTo: button)
+spin(0.35)
+check("执行 Settings 前弹窗真实打开",
+      settingsOwner.popoverIsOpenForTest
+          && settingsOwner.popoverIsWatchingOutsideClicksForTest,
+      "open=\(settingsOwner.popoverIsOpenForTest), watch=\(settingsOwner.popoverIsWatchingOutsideClicksForTest)")
+settingsOwner.presentSettingsFromQuickMenuForTest()
+check("Settings 回调前先清除弹窗意图和外部监听",
+      !settingsOwner.popoverIsOpenForTest
+          && !settingsOwner.popoverIsWatchingOutsideClicksForTest
+          && interactionSettings.windowForTest?.isVisible == false)
+let firstSettingsWindow = settingsOwner.settingsWindowForTest
+let firstSettingsBecameKey = runApplication(
+    until: { firstSettingsWindow?.isKeyWindow == true },
+    timeout: 2.5
+)
+let firstSettingsKeyTitle = app.keyWindow?.title ?? "nil"
+check("快捷菜单使 Settings 可见并成为键盘窗口",
+      firstSettingsWindow?.isVisible == true
+          && firstSettingsBecameKey,
+      "visible=\(firstSettingsWindow?.isVisible == true), key=\(firstSettingsWindow?.isKeyWindow == true), active=\(app.isActive), keyTitle=\(firstSettingsKeyTitle), canKey=\(firstSettingsWindow?.canBecomeKey == true), same=\(firstSettingsWindow === interactionSettings.windowForTest)")
+
+if let settingsMenuItem,
+   let index = appMenu?.items.firstIndex(where: { $0 === settingsMenuItem }) {
+    appMenu?.performActionForItem(at: index)
+}
+spin(0.05)
+check("重复 Settings 命令复用同一窗口",
+      firstSettingsWindow === settingsOwner.settingsWindowForTest
+          && interactionSection.refreshCount >= 2)
+
+firstSettingsWindow?.close()
+settingsOwner.openPopoverForSettingsCommandTest(relativeTo: button)
+spin(0.35)
+settingsOwner.startDisplayClockForSettingsCommandTest()
+check("Command-Comma 前弹窗和显示时钟都正在运行",
+      settingsOwner.popoverIsOpenForTest
+          && settingsOwner.popoverIsWatchingOutsideClicksForTest
+          && settingsOwner.displayClockIsRunningForTest)
+
+var commandPresentationState: (popoverOpen: Bool, outsideMonitor: Bool, displayClock: Bool)?
+interactionSection.onRefresh = { [weak settingsOwner] in
+    guard let settingsOwner else { return }
+    commandPresentationState = (
+        settingsOwner.popoverIsOpenForTest,
+        settingsOwner.popoverIsWatchingOutsideClicksForTest,
+        settingsOwner.displayClockIsRunningForTest
+    )
+}
+let commandComma = NSEvent.keyEvent(
+    with: .keyDown,
+    location: .zero,
+    modifierFlags: [.command],
+    timestamp: 0,
+    windowNumber: 0,
+    context: nil,
+    characters: ",",
+    charactersIgnoringModifiers: ",",
+    isARepeat: false,
+    keyCode: 43
+)
+let commandHandled = commandComma.map {
+    NSApp.mainMenu?.performKeyEquivalent(with: $0) ?? false
+} ?? false
+check("Command-Comma 在安排 Settings 窗口前同步停止弹窗和显示时钟",
+      commandHandled
+          && !settingsOwner.popoverIsOpenForTest
+          && !settingsOwner.popoverIsWatchingOutsideClicksForTest
+          && !settingsOwner.displayClockIsRunningForTest
+          && firstSettingsWindow?.isVisible == false)
+let reopenedSettingsBecameKey = runApplication(
+    until: { firstSettingsWindow?.isKeyWindow == true },
+    timeout: 2.5
+)
+let reopenedSettingsKeyTitle = app.keyWindow?.title ?? "nil"
+check("Command-Comma 关闭后重开同一窗口",
+      commandHandled
+          && firstSettingsWindow === settingsOwner.settingsWindowForTest
+          && firstSettingsWindow?.isVisible == true
+          && reopenedSettingsBecameKey
+          && commandPresentationState?.popoverOpen == false
+          && commandPresentationState?.outsideMonitor == false
+          && commandPresentationState?.displayClock == false,
+      "handled=\(commandHandled), visible=\(firstSettingsWindow?.isVisible == true), key=\(firstSettingsWindow?.isKeyWindow == true), active=\(app.isActive), keyTitle=\(reopenedSettingsKeyTitle)")
+interactionSection.onRefresh = nil
+check("Settings 未改变 LSUIElement 的 accessory 激活策略",
+      policyBeforeSettings == .accessory
+          && app.activationPolicy() == policyBeforeSettings)
+
+SystemBatteryIconController.configureForTest(initialHidden: true) { _, _ in
+    fatalError("Settings command interaction must not contact an installed helper")
+}
+settingsOwner.beginSystemBatteryIconObservationForTest()
+NotificationCenter.default.post(name: SystemBatteryIconController.didChange, object: nil)
+check("状态项从共享系统电池图标缓存同步",
+      settingsOwner.presentedSystemBatteryIconHiddenForTest == true)
+
+weak var releasedStatusObserver: StatusItemController?
+autoreleasepool {
+    var observerOnlyOwner: StatusItemController? = StatusItemController()
+    observerOnlyOwner?.beginSystemBatteryIconObservationForTest()
+    releasedStatusObserver = observerOnlyOwner
+    observerOnlyOwner = nil
+}
+check("系统电池图标观察者不阻止 StatusItem 释放",
+      releasedStatusObserver == nil)
+
+firstSettingsWindow?.close()
+SystemBatteryIconController.resetTestConfiguration()
+Settings.resetTestConfiguration()
+settingsDefaults.removePersistentDomain(forName: settingsSuiteName)
+NSApp.mainMenu = previousMainMenu
 
 NSStatusBar.system.removeStatusItem(item)
 if !pass {

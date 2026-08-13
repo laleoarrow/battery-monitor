@@ -19,6 +19,7 @@ class SamplerContractTests(unittest.TestCase):
         self.assertNotIn("IORegistryEntryCreateCFProperties", self.source)
         for key in (
             "CurrentCapacity",
+            "MaxCapacity",
             "ExternalConnected",
             "IsCharging",
             "CycleCount",
@@ -30,8 +31,12 @@ class SamplerContractTests(unittest.TestCase):
             "PowerTelemetryData",
         ):
             self.assertIn(f'"{key}"', self.source)
-        self.assertIn('props["CurrentCapacity"] is NSNumber', self.source)
-        self.assertIn('props["ExternalConnected"] is NSNumber', self.source)
+        self.assertIn("let snapshot = resolvedSnapshot(", self.source)
+        self.assertIn("resolvedBatteryPercent(", self.source)
+        self.assertIn(
+            'let plugged = optionalBoolValue(props["ExternalConnected"])',
+            self.source,
+        )
         self.assertIn(
             'optionalIntValue(props["InstantAmperage"])', self.source
         )
@@ -57,6 +62,347 @@ class SamplerContractTests(unittest.TestCase):
         self.assertIn("optionalIntValue", self.source)
         self.assertIn("Int64(Int32.max)", self.source)
         self.assertIn("Int64(UInt32.max)", self.source)
+        self.assertIn("CFBooleanGetTypeID()", self.source)
+
+    def test_property_parser_rejects_cross_hardware_invalid_inputs(self):
+        harness = textwrap.dedent(
+            """
+            import Foundation
+
+            func require(_ condition: @autoclosure () -> Bool, _ message: String) {
+                if !condition() {
+                    FileHandle.standardError.write(Data((message + "\\n").utf8))
+                    exit(1)
+                }
+            }
+
+            func near(_ lhs: Double, _ rhs: Double) -> Bool {
+                abs(lhs - rhs) < 0.000_001
+            }
+
+            func validProps() -> [String: Any] {
+                [
+                    "CurrentCapacity": NSNumber(value: 67),
+                    "MaxCapacity": NSNumber(value: 100),
+                    "ExternalConnected": kCFBooleanTrue as Any,
+                    "IsCharging": kCFBooleanFalse as Any,
+                    "CycleCount": NSNumber(value: 42),
+                    "Voltage": NSNumber(value: 12_000),
+                    "InstantAmperage": NSNumber(value: 1_000),
+                    "Amperage": NSNumber(value: 1_000),
+                    "PowerTelemetryData": [
+                        "SystemPowerIn": NSNumber(value: 60_000),
+                        "SystemLoad": NSNumber(value: 40_000),
+                        "BatteryPower": NSNumber(value: 20_000),
+                    ],
+                ]
+            }
+
+            require(BatterySampler.optionalIntValue(NSNumber(value: 1)) == 1,
+                    "numeric NSNumber(1) remains a valid integer")
+            require(BatterySampler.optionalIntValue(kCFBooleanTrue as Any) == nil,
+                    "CFBoolean true cannot masquerade as integer one")
+            require(BatterySampler.optionalIntValue(kCFBooleanFalse as Any) == nil,
+                    "CFBoolean false cannot masquerade as integer zero")
+            require(BatterySampler.optionalIntValue("12") == nil,
+                    "numeric strings are not IOKit integers")
+            require(BatterySampler.optionalIntValue(NSNumber(value: 12.5)) == nil,
+                    "fractional numbers are not IOKit integers")
+            require(BatterySampler.optionalIntValue(NSNumber(value: UInt64.max)) == -1,
+                    "UInt64 two's-complement sentinel remains signed")
+            require(BatterySampler.optionalIntValue(
+                        NSNumber(value: UInt64.max - 3_134)
+                    ) == -3_135,
+                    "live UInt64 two's-complement current remains signed")
+
+            require(BatterySampler.optionalBoolValue(kCFBooleanTrue as Any) == true,
+                    "CFBoolean true remains a valid flag")
+            require(BatterySampler.optionalBoolValue(NSNumber(value: 1)) == true,
+                    "numeric one remains a valid flag")
+            require(BatterySampler.optionalBoolValue(NSNumber(value: 0)) == false,
+                    "numeric zero remains a valid flag")
+            for invalidFlag: Any in ["1", NSNumber(value: -1), NSNumber(value: 2),
+                                     NSNumber(value: 0.5)] {
+                require(BatterySampler.optionalBoolValue(invalidFlag) == nil,
+                        "unrecognized flag is rejected")
+            }
+
+            let valid = BatterySampler.resolvedSnapshot(
+                from: validProps(), lowPowerMode: true
+            )
+            require(valid != nil, "valid hardware dictionary produces a snapshot")
+            require(valid!.percent == 67 && valid!.plugged && valid!.cycleCount == 42
+                        && valid!.lowPowerMode,
+                    "valid identity fields are preserved")
+            require(near(valid!.adapterW, 60) && near(valid!.batteryW, 20)
+                        && near(valid!.systemW, 40)
+                        && near(valid!.conservationError, 0),
+                    "valid coherent telemetry behavior is preserved")
+
+            for raw: Any in [
+                NSNumber(value: -1), NSNumber(value: Int32.min),
+                NSNumber(value: UInt32.max), NSNumber(value: 100_001),
+                NSNumber(value: Int.max), NSNumber(value: 1.5),
+                kCFBooleanTrue as Any,
+            ] {
+                var props = validProps()
+                props["CycleCount"] = raw
+                require(BatterySampler.resolvedSnapshot(
+                            from: props, lowPowerMode: false
+                        )?.cycleCount == 0,
+                        "wrapped or implausible cycle count degrades to zero")
+            }
+
+            var intelCapacity = validProps()
+            intelCapacity["CurrentCapacity"] = NSNumber(value: 3_500)
+            intelCapacity["MaxCapacity"] = NSNumber(value: 7_000)
+            require(BatterySampler.resolvedSnapshot(
+                        from: intelCapacity, lowPowerMode: false
+                    )?.percent == 50,
+                    "Intel mAh capacity pair resolves to a percentage")
+            intelCapacity["CurrentCapacity"] = NSNumber(value: 7_100)
+            require(BatterySampler.resolvedSnapshot(
+                        from: intelCapacity, lowPowerMode: false
+                    )?.percent == 100,
+                    "Intel calibration overshoot clamps to full")
+
+            var appleSiliconCapacity = validProps()
+            appleSiliconCapacity["CurrentCapacity"] = NSNumber(value: 67)
+            appleSiliconCapacity["MaxCapacity"] = NSNumber(value: 100)
+            require(BatterySampler.resolvedSnapshot(
+                        from: appleSiliconCapacity, lowPowerMode: false
+                    )?.percent == 67,
+                    "Apple-silicon percentage pair remains unchanged")
+
+            var emptyCapacity = validProps()
+            emptyCapacity["CurrentCapacity"] = NSNumber(value: 0)
+            emptyCapacity["MaxCapacity"] = NSNumber(value: 7_000)
+            require(BatterySampler.resolvedSnapshot(
+                        from: emptyCapacity, lowPowerMode: false
+                    )?.percent == 0,
+                    "zero current capacity is a valid empty battery")
+
+            var missingMaximum = validProps()
+            missingMaximum.removeValue(forKey: "MaxCapacity")
+            require(BatterySampler.resolvedSnapshot(
+                        from: missingMaximum, lowPowerMode: false
+                    ) == nil,
+                    "missing maximum cannot identify percentage versus Intel mAh")
+            missingMaximum["CurrentCapacity"] = NSNumber(value: 0)
+            require(BatterySampler.resolvedSnapshot(
+                        from: missingMaximum, lowPowerMode: false
+                    ) == nil,
+                    "zero without a maximum has no reliable unit")
+            missingMaximum["CurrentCapacity"] = NSNumber(value: 3_500)
+            require(BatterySampler.resolvedSnapshot(
+                        from: missingMaximum, lowPowerMode: false
+                    ) == nil,
+                    "missing maximum cannot guess an Intel mAh percentage")
+
+            let invalidMaximums: [Any] = [
+                kCFBooleanTrue as Any,
+                NSNumber(value: 0), NSNumber(value: -1),
+                NSNumber(value: 12.5), NSNumber(value: Int.max), "100",
+            ]
+            for raw in invalidMaximums {
+                var props = validProps()
+                props["MaxCapacity"] = raw
+                require(BatterySampler.resolvedSnapshot(
+                            from: props, lowPowerMode: false
+                        ) == nil,
+                        "malformed or non-positive maximum rejects the sample")
+            }
+
+            let invalidCapacities: [Any] = [
+                NSNumber(value: -1), NSNumber(value: 100_001),
+                NSNumber(value: Int.min), NSNumber(value: Int.max),
+                kCFBooleanTrue as Any, "67",
+            ]
+            for raw in invalidCapacities {
+                var props = validProps()
+                props["CurrentCapacity"] = raw
+                require(BatterySampler.resolvedSnapshot(
+                            from: props, lowPowerMode: false
+                        ) == nil,
+                        "invalid capacity rejects the complete sample")
+            }
+            var percentOvershoot = validProps()
+            percentOvershoot["CurrentCapacity"] = NSNumber(value: 101)
+            require(BatterySampler.resolvedSnapshot(
+                        from: percentOvershoot, lowPowerMode: false
+                    )?.percent == 100,
+                    "percentage calibration overshoot clamps to full")
+
+            let invalidConnections: [Any] = [
+                NSNumber(value: -1), NSNumber(value: 2),
+                NSNumber(value: Int.min), NSNumber(value: Int.max),
+                NSNumber(value: 0.5), "true",
+            ]
+            for raw in invalidConnections {
+                var props = validProps()
+                props["ExternalConnected"] = raw
+                require(BatterySampler.resolvedSnapshot(
+                            from: props, lowPowerMode: false
+                        ) == nil,
+                        "unrecognized connection flag rejects the complete sample")
+            }
+            var missingConnection = validProps()
+            missingConnection.removeValue(forKey: "ExternalConnected")
+            require(BatterySampler.resolvedSnapshot(
+                        from: missingConnection, lowPowerMode: false
+                    ) == nil,
+                    "missing connection state rejects the complete sample")
+
+            let partial: [String: Any] = [
+                "CurrentCapacity": NSNumber(value: 50),
+                "MaxCapacity": NSNumber(value: 100),
+                "ExternalConnected": NSNumber(value: 0),
+            ]
+            let partialSnapshot = BatterySampler.resolvedSnapshot(
+                from: partial, lowPowerMode: false
+            )
+            require(partialSnapshot != nil && partialSnapshot!.percent == 50
+                        && !partialSnapshot!.plugged
+                        && partialSnapshot!.adapterW == 0
+                        && partialSnapshot!.batteryW == 0
+                        && partialSnapshot!.systemW == 0,
+                    "missing optional IOKit fields degrade independently")
+
+            let nonNumericTelemetry = BatterySampler.parsedPowerTelemetry([
+                "SystemPowerIn": "60000",
+                "SystemLoad": kCFBooleanTrue as Any,
+                "BatteryPower": NSNumber(value: 20_000),
+            ])
+            require(nonNumericTelemetry["SystemPowerIn"] == nil
+                        && nonNumericTelemetry["SystemLoad"] == nil
+                        && nonNumericTelemetry["BatteryPower"] == 20_000,
+                    "invalid telemetry fields are omitted instead of becoming zero")
+
+            let telemetryBoundaries = BatterySampler.parsedPowerTelemetry([
+                "SystemPowerIn": NSNumber(value: 1_000_000),
+                "SystemLoad": NSNumber(value: -1_000_000),
+                "BatteryPower": NSNumber(value: 1_000_000),
+            ])
+            require(telemetryBoundaries["SystemPowerIn"] == 1_000_000
+                        && telemetryBoundaries["SystemLoad"] == -1_000_000
+                        && telemetryBoundaries["BatteryPower"] == 1_000_000,
+                    "telemetry limit boundaries remain valid")
+
+            for raw in [-1, -1_000_001, Int.min, 1_000_001, Int.max] {
+                let parsed = BatterySampler.parsedPowerTelemetry([
+                    "SystemPowerIn": NSNumber(value: raw),
+                ])
+                require(parsed["SystemPowerIn"] == nil,
+                        "negative source sentinel and source extremes are rejected")
+            }
+            for key in ["SystemLoad", "BatteryPower"] {
+                for raw in [-1_000_001, Int.min, 1_000_001, Int.max] {
+                    let parsed = BatterySampler.parsedPowerTelemetry([
+                        key: NSNumber(value: raw),
+                    ])
+                    require(parsed[key] == nil,
+                            "signed telemetry extremes are rejected")
+                }
+            }
+
+            require(BatterySampler.validBatteryVoltage(1) == 1
+                        && BatterySampler.validBatteryVoltage(50_000) == 50_000,
+                    "voltage boundaries remain valid")
+            for raw in [0, -1, 50_001, Int.max] {
+                require(BatterySampler.validBatteryVoltage(raw) == nil,
+                        "voltage sentinel and extremes are rejected")
+            }
+            for raw: Any in [NSNumber(value: 0), NSNumber(value: -1),
+                             NSNumber(value: 50_001), NSNumber(value: Int.max),
+                             kCFBooleanTrue as Any, "12000"] {
+                var props = validProps()
+                props.removeValue(forKey: "PowerTelemetryData")
+                props["IsCharging"] = kCFBooleanTrue as Any
+                props["Voltage"] = raw
+                let snapshot = BatterySampler.resolvedSnapshot(
+                    from: props, lowPowerMode: false
+                )
+                require(snapshot != nil && snapshot!.adapterW == 0
+                            && snapshot!.batteryW == 0
+                            && snapshot!.systemW == 0
+                            && snapshot!.conservationError == 0,
+                        "invalid voltage cannot produce an anomalous fallback wattage")
+            }
+
+            require(BatterySampler.resolvedInstantBatteryW(
+                        voltage: 10_000,
+                        instantAmperage: 100_000,
+                        amperage: nil
+                    ) == 1_000,
+                    "positive 1000 W battery boundary remains valid")
+            require(BatterySampler.resolvedInstantBatteryW(
+                        voltage: 10_000,
+                        instantAmperage: -100_000,
+                        amperage: nil
+                    ) == -1_000,
+                    "negative 1000 W battery boundary remains valid")
+            require(BatterySampler.resolvedInstantBatteryW(
+                        voltage: 10_001,
+                        instantAmperage: 100_000,
+                        amperage: nil
+                    ) == nil,
+                    "combined battery power above 1000 W is rejected")
+            require(BatterySampler.resolvedFallbackBatteryW(
+                        voltage: 50_000,
+                        amperage: 100_000
+                    ) == 0,
+                    "valid individual extremes cannot create a 5000 W fallback")
+
+            var extremeFallbackProps = validProps()
+            extremeFallbackProps.removeValue(forKey: "PowerTelemetryData")
+            extremeFallbackProps["IsCharging"] = kCFBooleanTrue as Any
+            extremeFallbackProps["Voltage"] = NSNumber(value: 50_000)
+            extremeFallbackProps["InstantAmperage"] = NSNumber(value: 100_000)
+            extremeFallbackProps["Amperage"] = NSNumber(value: 100_000)
+            let extremeFallback = BatterySampler.resolvedSnapshot(
+                from: extremeFallbackProps, lowPowerMode: false
+            )
+            require(extremeFallback != nil && extremeFallback!.adapterW == 0
+                        && extremeFallback!.batteryW == 0
+                        && extremeFallback!.systemW == 0
+                        && extremeFallback!.conservationError == 0,
+                    "complete sample rejects impossible combined fallback power")
+
+            let extreme = BatterySampler.resolvedPower(
+                plugged: true,
+                chargingHint: true,
+                systemPowerIn: Int.max,
+                systemLoad: Int.min,
+                batteryPower: Int.max,
+                fallbackBatteryW: 0
+            )
+            require(extreme.adapterW == 0 && extreme.batteryW == 0
+                        && extreme.systemW == 0,
+                    "direct resolver also rejects extreme telemetry")
+            """
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            temp_path = pathlib.Path(temp)
+            main = temp_path / "main.swift"
+            binary = temp_path / "sampler-property-validation"
+            main.write_text(harness, encoding="utf-8")
+            subprocess.run(
+                [
+                    "xcrun",
+                    "swiftc",
+                    str(ROOT / "Core" / "PowerSnapshot.swift"),
+                    str(SAMPLER_SOURCE),
+                    str(main),
+                    "-framework",
+                    "IOKit",
+                    "-o",
+                    str(binary),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            subprocess.run([str(binary)], check=True, capture_output=True, text=True)
 
     def test_temperature_units_and_fallback_are_explicit(self):
         self.assertIn("Double(raw) / 10.0 - 273.15", self.source)
@@ -66,9 +412,12 @@ class SamplerContractTests(unittest.TestCase):
 
     def test_live_smc_branch_preserves_coherent_battery_flow_and_conservation(self):
         self.assertIn("static func resolvedLivePower(", self.source)
-        self.assertIn("fresh.batteryW = max(snapshot.batteryW, -liveSystem)", self.source)
+        self.assertIn("abs(snapshot.batteryW) <= maxBatteryPowerWatts", self.source)
+        self.assertIn("max(staleBatteryW, -liveSystem)", self.source)
+        self.assertIn("maxBatteryPowerWatts - liveSystem", self.source)
         self.assertIn("fresh.adapterW = liveSystem + fresh.batteryW", self.source)
-        self.assertIn("fresh.batteryW = min(snapshot.batteryW, liveAdapter)", self.source)
+        self.assertIn("min(staleBatteryW, liveAdapter)", self.source)
+        self.assertIn("liveAdapter - maxBatteryPowerWatts", self.source)
         self.assertNotIn("fresh.batteryW = adapterW - systemW", self.source)
         self.assertIn("else { return snapshot }", self.source)
 
@@ -77,13 +426,16 @@ class SamplerContractTests(unittest.TestCase):
         # and IsCharging can stay true during mixed supply. Source minus sink
         # is therefore the authoritative direction when both totals exist.
         self.assertIn('telemetry["BatteryPower"]', self.source)
-        self.assertIn('boolValue(props["IsCharging"])', self.source)
+        self.assertIn('optionalBoolValue(props["IsCharging"])', self.source)
+        self.assertIn("parsedPowerTelemetry", self.source)
+        self.assertIn("maxTelemetryMilliwatts = 1_000_000", self.source)
+        self.assertIn("maxBatteryVoltageMillivolts = 50_000", self.source)
         self.assertIn("let power = resolvedPower(", self.source)
         self.assertIn('systemPowerIn: telemetry["SystemPowerIn"]', self.source)
         self.assertIn('systemLoad: telemetry["SystemLoad"]', self.source)
         self.assertIn('batteryPower: telemetry["BatteryPower"]', self.source)
         self.assertIn("return (adapter, adapter - system, system)", self.source)
-        self.assertIn("systemLoad.map(normalizedSystemLoad)", self.source)
+        self.assertIn(").map(normalizedSystemLoad)", self.source)
         self.assertNotIn("plugged ? 0", self.source)
 
     def test_numeric_resolution_uses_conservation_before_unreliable_flags(self):
@@ -162,6 +514,28 @@ class SamplerContractTests(unittest.TestCase):
                         && adapterOnlyMixed.systemW == 60
                         && adapterOnlyMixed.conservationError == 0,
                     "adapter-only mixed fallback")
+
+            let signedAdapterOnlyMixed = resolved(
+                nil, charging: true, plugged: true,
+                systemIn: 60_000, load: nil, fallback: 12, instant: -12
+            )
+            require(signedAdapterOnlyMixed.adapterW == 60
+                        && signedAdapterOnlyMixed.batteryW == -12
+                        && signedAdapterOnlyMixed.systemW == 72
+                        && signedAdapterOnlyMixed.state == .mixedSupply
+                        && signedAdapterOnlyMixed.conservationError == 0,
+                    "adapter-only signed current overrides stale charging hint")
+
+            let signedAdapterOnlyCharge = resolved(
+                nil, charging: false, plugged: true,
+                systemIn: 60_000, load: nil, fallback: 12, instant: 12
+            )
+            require(signedAdapterOnlyCharge.adapterW == 60
+                        && signedAdapterOnlyCharge.batteryW == 12
+                        && signedAdapterOnlyCharge.systemW == 48
+                        && signedAdapterOnlyCharge.state == .charging
+                        && signedAdapterOnlyCharge.conservationError == 0,
+                    "adapter-only signed current overrides stale discharging hint")
 
             let loadOnlyCharge = resolved(-20_000, charging: true, plugged: true,
                                           systemIn: nil, load: 30_000)
@@ -355,8 +729,8 @@ class SamplerContractTests(unittest.TestCase):
                         voltage: Int.max,
                         instantAmperage: 100_000,
                         amperage: nil
-                    )?.isFinite == true,
-                    "Double multiplication remains overflow safe")
+                    ) == nil,
+                    "extreme voltage cannot create an anomalous battery wattage")
 
             for invalidAmperage in [
                 -1, Int(Int32.min), Int(Int32.max), -100_001, 100_001,

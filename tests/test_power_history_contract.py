@@ -23,6 +23,20 @@ class PowerHistoryContractTests(unittest.TestCase):
     def test_exposes_peak_for_the_chart_scale(self):
         self.assertIn("var peak: Double", self.source)
 
+    def test_presentation_is_cached_until_the_ring_changes(self):
+        self.assertIn("cachedPresentation", self.source)
+        presentation = self.source.split(
+            "var presentation: (samples: [Double], peak: Double)", 1
+        )[1].split("var peak: Double", 1)[0]
+        self.assertIn("if let cachedPresentation", presentation)
+        self.assertIn("cachedPresentation = presentation", presentation)
+        append = self.source.split("func append", 1)[1].split("/// Oldest first", 1)[0]
+        self.assertIn("cachedPresentation = nil", append)
+
+    def test_rejects_non_finite_samples(self):
+        append = self.source.split("func append", 1)[1].split("func reset", 1)[0]
+        self.assertIn("guard watts.isFinite else { return }", append)
+
 
 if __name__ == "__main__":
     unittest.main()

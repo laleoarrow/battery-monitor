@@ -24,7 +24,7 @@ The public v3 package installs:
 - `/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist`
 
 The helper is activated through `/var/run/wattson-helper.sock` and exits after
-five idle seconds. It exposes fixed read-only whole-machine power sensors plus
+12 idle seconds. It exposes fixed read-only whole-machine power sensors plus
 fixed operations for power mode, the macOS battery icon, and Wattson's
 launch-at-login agent. Clients cannot supply an SMC key or SMC write command.
 

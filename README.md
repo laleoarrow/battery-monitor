@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.4">v3.0.4 release notes</a>
+  <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.5">v3.0.5 release notes</a>
 </p>
 
 <p align="center">
@@ -36,14 +36,15 @@ where it is going, and how the picture has changed over the last two minutes.
 - Native Liquid Glass on macOS 26 with an AppKit fallback for macOS 12–25.
 - Keyboard, VoiceOver, Reduce Motion, and Reduce Transparency support.
 - Launch-at-login and system battery-icon controls.
+- A native Settings window for General controls and popover modules.
 - No account, analytics, cloud service, or external data upload.
 
-## Install v3.0.4
+## Install v3.0.5
 
 | Route | Best for | What to do |
 | --- | --- | --- |
-| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.4/Wattson-v3.0.4-macos-universal.dmg), open it, then double-click the enclosed PKG. |
-| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.4/Wattson-v3.0.4-macos-universal.pkg) and follow macOS Installer. |
+| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.5/Wattson-v3.0.5-macos-universal.dmg), open it, then double-click the enclosed PKG. |
+| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.5/Wattson-v3.0.5-macos-universal.pkg) and follow macOS Installer. |
 | **Homebrew** | Terminal installation and updates | Run `brew install --cask laleoarrow/tap/wattson`. |
 
 All three routes install the same universal app at
@@ -57,7 +58,7 @@ macOS administrator prompt is required to install the helper.
 > installer, then use System Settings → Privacy & Security → Open Anyway only
 > when you trust this repository. Older macOS releases may instead offer
 > Control-click → Open. Verify the published
-> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.4/SHA256SUMS.txt)
+> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.5/SHA256SUMS.txt)
 > before installation.
 
 ### Requirements

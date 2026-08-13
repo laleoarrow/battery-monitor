@@ -55,8 +55,15 @@ for (const required of [
   }
 }
 
-await rm(outputRoot, { force: true, recursive: true });
 await mkdir(outputRoot, { recursive: true });
+await Promise.all([
+  rm(new URL("_next/", outputRoot), { force: true, recursive: true }),
+  rm(new URL("favicon.png", outputRoot), { force: true }),
+  rm(new URL("og.png", outputRoot), { force: true }),
+  rm(new URL("index.html", outputRoot), { force: true }),
+  rm(new URL("404.html", outputRoot), { force: true }),
+  rm(new URL(".nojekyll", outputRoot), { force: true }),
+]);
 await cp(
   new URL("dist/client/_next/static/css/", siteRoot),
   new URL("_next/static/css/", outputRoot),

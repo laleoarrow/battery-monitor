@@ -34,7 +34,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.release_guide = RELEASE_GUIDE.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.4\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.5\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")

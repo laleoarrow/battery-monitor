@@ -1,22 +1,6 @@
 import AppKit
 
-enum PopoverModule: String, CaseIterable {
-    case flow, ring, lanes, history
-
-    /// Only ever shown in the module picker. The sections carry no titles —
-    /// labelling a ring "ring gauge" costs vertical space and tells the reader
-    /// nothing they cannot already see.
-    var title: String {
-        switch self {
-        case .flow: return "Energy Flow"
-        case .ring: return "Ring Gauge"
-        case .lanes: return "Power Lanes"
-        case .history: return "Power History"
-        }
-    }
-
-    var defaultsKey: String { "popover.module.\(rawValue)" }
-}
+typealias PopoverModule = Settings.Module
 
 /// Hero number and state. No separator — it is the top of the surface.
 final class PopoverHeaderView: PopoverSection {
@@ -120,8 +104,10 @@ final class PopoverFooterView: PopoverSection {
 
     private var selected: EnergyMode = .auto
     private var systemBatteryIconHidden: Bool?
+    private var helperInstalled = false
+    private var systemBatteryIconUpdateInFlight = false
     var onSelect: ((EnergyMode, @escaping (EnergyMode?) -> Void) -> Void)?
-    var onSystemBatteryIconToggle: ((Bool) -> Bool)?
+    var onSystemBatteryIconToggle: ((Bool, @escaping (Bool) -> Void) -> Void)?
     var onShowMenu: ((NSButton) -> Void)?
 
     init() {
@@ -172,10 +158,11 @@ final class PopoverFooterView: PopoverSection {
     func update(mode: EnergyMode, helperInstalled: Bool, systemBatteryIconHidden: Bool?,
                 tint: NSColor) {
         selected = mode
+        self.helperInstalled = helperInstalled
         self.systemBatteryIconHidden = systemBatteryIconHidden
         if let systemBatteryIconHidden {
             systemBatteryIconButton.state = systemBatteryIconHidden ? .on : .off
-            systemBatteryIconButton.isEnabled = helperInstalled
+            systemBatteryIconButton.isEnabled = helperInstalled && !systemBatteryIconUpdateInFlight
         } else {
             systemBatteryIconButton.state = .mixed
             systemBatteryIconButton.isEnabled = false
@@ -192,12 +179,21 @@ final class PopoverFooterView: PopoverSection {
 
     @objc private func systemBatteryIconChanged(_ sender: NSButton) {
         let requested = sender.state == .on
-        guard onSystemBatteryIconToggle?(requested) == true else {
+        guard let onSystemBatteryIconToggle else {
             sender.state = systemBatteryIconHidden == true ? .on : .off
             NSSound.beep()
             return
         }
-        systemBatteryIconHidden = requested
+        systemBatteryIconUpdateInFlight = true
+        sender.isEnabled = false
+        onSystemBatteryIconToggle(requested) { [weak self, weak sender] succeeded in
+            guard let self, let sender else { return }
+            self.systemBatteryIconUpdateInFlight = false
+            if succeeded { self.systemBatteryIconHidden = requested }
+            sender.state = self.systemBatteryIconHidden == true ? .on : .off
+            sender.isEnabled = self.helperInstalled && self.systemBatteryIconHidden != nil
+            if !succeeded { NSSound.beep() }
+        }
     }
 
     @objc private func showMenu() { onShowMenu?(settingsButton) }
@@ -213,14 +209,28 @@ final class PopoverContentViewController: NSViewController {
     private let footer = PopoverFooterView()
 
     private var moduleVisibility: [PopoverModule: Bool] = [:]
+    private var presentationActive = false
     private var animationsEnabled = false
     private var latestSnapshot = PowerSnapshot()
     private var latestHistory: [Double] = []
     private var latestPeak: Double = 0
     private var systemBatteryIconHidden: Bool?
     private var modeSelectHandler: ((EnergyMode, @escaping (EnergyMode?) -> Void) -> Void)?
-    private var systemBatteryIconToggleHandler: ((Bool) -> Bool)?
+    private var systemBatteryIconToggleHandler:
+        ((Bool, @escaping (Bool) -> Void) -> Void)?
+    private var settingsHandler: (() -> Void)?
+    private var settingsObserver: NSObjectProtocol?
+#if DEBUG
+    private(set) var moduleUpdateCountsForTest: [PopoverModule: Int] = [:]
+    private(set) var footerUpdateCountForTest = 0
+#endif
     var heightDidChange: ((CGFloat) -> Void)?
+
+    deinit {
+        if let settingsObserver {
+            NotificationCenter.default.removeObserver(settingsObserver)
+        }
+    }
 
     override func loadView() {
         let root = NSView(frame: NSRect(x: 0, y: 0, width: PopoverStyle.width, height: 1))
@@ -244,18 +254,39 @@ final class PopoverContentViewController: NSViewController {
 
     func update(snapshot: PowerSnapshot, history: [Double], peak: Double, degraded: Bool) {
         latestSnapshot = snapshot
-        if !history.isEmpty { latestHistory = history; latestPeak = peak }
+        latestHistory = history
+        latestPeak = peak
 
         header.update(snapshot: snapshot, degraded: degraded)
-        flowView.update(snapshot: snapshot, animated: true)
-        ringView.update(snapshot: snapshot)
-        laneView.update(snapshot: snapshot)
+        for module in PopoverModule.allCases where isVisible(module) {
+            updateModule(module)
+        }
+        updateFooter()
+    }
+
+    private func updateModule(_ module: PopoverModule) {
+#if DEBUG
+        moduleUpdateCountsForTest[module, default: 0] += 1
+#endif
+        switch module {
+        case .flow:
+            flowView.update(snapshot: latestSnapshot, animated: animationsEnabled)
+        case .ring:
+            ringView.update(snapshot: latestSnapshot)
+        case .lanes:
+            laneView.update(snapshot: latestSnapshot)
+        case .history:
+            updateHistory()
+        }
+    }
+
+    private func updateHistory() {
+        let snapshot = latestSnapshot
         let historyColor = snapshot.state == .mixedSupply
             ? PopoverStyle.blue
             : PopoverStyle.stateColor(snapshot.state)
         historyView.update(samples: latestHistory, peak: latestPeak,
                            color: historyColor)
-        updateFooter()
     }
 
     func setModeSelectHandler(
@@ -264,8 +295,14 @@ final class PopoverContentViewController: NSViewController {
         modeSelectHandler = handler
     }
 
-    func setSystemBatteryIconToggleHandler(_ handler: @escaping (Bool) -> Bool) {
+    func setSystemBatteryIconToggleHandler(
+        _ handler: @escaping (Bool, @escaping (Bool) -> Void) -> Void
+    ) {
         systemBatteryIconToggleHandler = handler
+    }
+
+    func setSettingsHandler(_ handler: @escaping () -> Void) {
+        settingsHandler = handler
     }
 
     func updateSystemBatteryIconState(_ hidden: Bool?) {
@@ -282,13 +319,27 @@ final class PopoverContentViewController: NSViewController {
         flowView.setAnimationsEnabled(enabled && !flowView.isHidden)
         ringView.setAnimationsEnabled(enabled && !ringView.isHidden)
         laneView.setAnimationsEnabled(enabled && !laneView.isHidden)
-        if !enabled { view.layer?.removeAllAnimations() }
+        if !enabled, let root = view.layer {
+            removeAnimationsRecursively(from: root)
+        }
     }
 
-    private func isVisible(_ module: PopoverModule) -> Bool { moduleVisibility[module] ?? true }
+    func setPresentationActive(_ active: Bool) {
+        presentationActive = active
+    }
+
+    private func removeAnimationsRecursively(from layer: CALayer) {
+        layer.removeAllAnimations()
+        layer.sublayers?.forEach(removeAnimationsRecursively)
+    }
+
+    private func isVisible(_ module: PopoverModule) -> Bool {
+        moduleVisibility[module] ?? true
+    }
 
     private func buildContent() {
-        loadModuleVisibility()
+        reloadModuleVisibility()
+        observeSettingsChanges()
 
         stack.orientation = .vertical
         stack.alignment = .width
@@ -318,14 +369,21 @@ final class PopoverContentViewController: NSViewController {
             }
             handler(mode, completion)
         }
-        footer.onSystemBatteryIconToggle = { [weak self] hidden in
-            self?.systemBatteryIconToggleHandler?(hidden) ?? false
+        footer.onSystemBatteryIconToggle = { [weak self] hidden, completion in
+            guard let handler = self?.systemBatteryIconToggleHandler else {
+                completion(false)
+                return
+            }
+            handler(hidden, completion)
         }
         footer.onShowMenu = { [weak self] button in self?.showModuleMenu(button) }
         applyModuleVisibility()
     }
 
     private func updateFooter() {
+#if DEBUG
+        footerUpdateCountForTest += 1
+#endif
         footer.update(
             mode: EnergyModeController.current,
             helperInstalled: HelperClient.isInstalled,
@@ -334,19 +392,38 @@ final class PopoverContentViewController: NSViewController {
         )
     }
 
-    private func loadModuleVisibility() {
-        let defaults = UserDefaults.standard
-        defaults.register(defaults: Dictionary(uniqueKeysWithValues: PopoverModule.allCases.map { ($0.defaultsKey, true) }))
+    private func observeSettingsChanges() {
+        settingsObserver = NotificationCenter.default.addObserver(
+            forName: Settings.didChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            guard let change = notification.userInfo?[Settings.changeUserInfoKey]
+                    as? Settings.Change,
+                  case .module = change else { return }
+            self?.reloadModuleVisibility()
+            self?.applyModuleVisibility()
+        }
+    }
+
+    private func reloadModuleVisibility() {
         for module in PopoverModule.allCases {
-            moduleVisibility[module] = defaults.bool(forKey: module.defaultsKey)
+            moduleVisibility[module] = Settings.isModuleVisible(module)
         }
     }
 
     private func applyModuleVisibility() {
-        flowView.isHidden = !isVisible(.flow)
-        ringView.isHidden = !isVisible(.ring)
-        laneView.isHidden = !isVisible(.lanes)
-        historyView.isHidden = !isVisible(.history)
+        let views: [(PopoverModule, NSView)] = [
+            (.flow, flowView), (.ring, ringView),
+            (.lanes, laneView), (.history, historyView),
+        ]
+        for (module, moduleView) in views {
+            let wasHidden = moduleView.isHidden
+            moduleView.isHidden = !isVisible(module)
+            if presentationActive && wasHidden && !moduleView.isHidden {
+                updateModule(module)
+            }
+        }
         if animationsEnabled { setAnimationsEnabled(true) }
         heightDidChange?(preferredHeight)
     }
@@ -395,6 +472,15 @@ final class PopoverContentViewController: NSViewController {
         loginItem.isEnabled = loginState == .notRegistered || loginState == .enabled
         menu.addItem(loginItem)
 
+        let settingsItem = NSMenuItem(
+            title: "Settings…",
+            action: #selector(showSettings),
+            keyEquivalent: ","
+        )
+        settingsItem.target = self
+        settingsItem.keyEquivalentModifierMask = [.command]
+        menu.addItem(settingsItem)
+
         menu.addItem(.separator())
         let version = Bundle.main.object(
             forInfoDictionaryKey: "CFBundleShortVersionString"
@@ -421,6 +507,10 @@ final class PopoverContentViewController: NSViewController {
         NSApp.terminate(nil)
     }
 
+    @objc private func showSettings() {
+        settingsHandler?()
+    }
+
     @objc private func togglePercentage() {
         Settings.showsMenuBarPercentage.toggle()
     }
@@ -442,8 +532,63 @@ final class PopoverContentViewController: NSViewController {
         guard let raw = sender.representedObject as? String,
               let module = PopoverModule(rawValue: raw) else { return }
         let visible = !isVisible(module)
-        moduleVisibility[module] = visible
-        UserDefaults.standard.set(visible, forKey: module.defaultsKey)
-        applyModuleVisibility()
+        Settings.setModule(module, visible: visible)
     }
+
+#if DEBUG
+    func presentSettingsFromQuickMenuForTest() {
+        showSettings()
+    }
+
+    func setModuleVisibleForTest(_ module: PopoverModule, visible: Bool) {
+        Settings.setModule(module, visible: visible)
+    }
+
+    func toggleModuleFromMenuForTest(_ module: PopoverModule) {
+        let item = NSMenuItem()
+        item.representedObject = module.rawValue
+        toggleModule(item)
+    }
+
+    func moduleIsHiddenForTest(_ module: PopoverModule) -> Bool {
+        switch module {
+        case .flow: return flowView.isHidden
+        case .ring: return ringView.isHidden
+        case .lanes: return laneView.isHidden
+        case .history: return historyView.isHidden
+        }
+    }
+
+    var latestHistoryForTest: [Double] { latestHistory }
+
+    var runningAnimationCountForTest: Int {
+        func count(_ layer: CALayer) -> Int {
+            (layer.animationKeys()?.count ?? 0)
+                + (layer.sublayers ?? []).reduce(0) { $0 + count($1) }
+        }
+        return view.layer.map(count) ?? 0
+    }
+
+    var runningModuleAnimationCountForTest: Int {
+        func count(_ layer: CALayer) -> Int {
+            (layer.animationKeys()?.count ?? 0)
+                + (layer.sublayers ?? []).reduce(0) { $0 + count($1) }
+        }
+        return [flowView, ringView, laneView, historyView]
+            .compactMap(\.layer)
+            .reduce(0) { $0 + count($1) }
+    }
+
+    var runningAnimationDescriptionsForTest: [String] {
+        func collect(_ layer: CALayer, path: String) -> [String] {
+            let local = (layer.animationKeys() ?? []).map { "\(path):\($0)" }
+            let nested = (layer.sublayers ?? []).enumerated().flatMap { index, child in
+                collect(child, path: "\(path)/\(index)-\(type(of: child))")
+            }
+            return local + nested
+        }
+        guard let root = view.layer else { return [] }
+        return collect(root, path: "root")
+    }
+#endif
 }

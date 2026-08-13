@@ -131,9 +131,11 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("samples == lastSamples", self.history)
         self.assertIn("lastColor.isEqual(color)", self.history)
 
-    def test_module_visibility_defaults_on_and_is_persisted(self):
-        self.assertIn("UserDefaults.standard", self.content)
-        self.assertIn("register(defaults:", self.content)
+    def test_module_visibility_uses_the_shared_typed_settings_store(self):
+        self.assertIn("typealias PopoverModule = Settings.Module", self.content)
+        self.assertIn("Settings.isModuleVisible", self.content)
+        self.assertIn("Settings.setModule", self.content)
+        self.assertNotIn("UserDefaults.standard", self.content)
 
     def test_transient_close_stops_all_animations_and_the_display_clock(self):
         self.assertIn("NSPopoverDelegate", self.popover)
@@ -141,6 +143,23 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("setAnimationsEnabled(false)", self.popover)
         self.assertIn("stopDisplayClock()", self.status)
         self.assertIn("removeAllAnimations()", self.content)
+
+    def test_reduce_motion_stops_content_motion_and_tracks_runtime_changes(self):
+        opening = self.popover.split("private func open(relativeTo", 1)[1].split(
+            "private func applyLatestPresentation", 1
+        )[0]
+        self.assertIn("let reduceMotion = Self.reducesMotion", opening)
+        self.assertIn("content.setAnimationsEnabled(!reduceMotion)", opening)
+        self.assertIn(
+            "NSWorkspace.accessibilityDisplayOptionsDidChangeNotification",
+            self.popover,
+        )
+        refresh = self.popover.split("private func refreshDisplayOptions()", 1)[1].split(
+            "private func applyLatestPresentation", 1
+        )[0]
+        self.assertIn("guard wantsOpen else { return }", refresh)
+        self.assertIn("content.setAnimationsEnabled(!reduceMotion)", refresh)
+        self.assertIn("if reduceMotion { stopEntranceAnimation() }", refresh)
 
     def test_full_battery_breathing_stops_and_stays_stopped_when_hidden(self):
         idle = self.flow.split("case .pluggedIdle:", 1)[1].split(
@@ -160,10 +179,11 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("rebuildPaths()", layout)
         self.assertNotIn("rebuildPaths()", update)
 
-    def test_history_is_only_recorded_by_the_history_clock(self):
+    def test_history_intent_is_carried_through_sample_availability(self):
         self.assertIn("sampleNow(recordHistory: true)", self.status)
         self.assertIn("sampleNow(recordHistory: false)", self.status)
-        self.assertIn("if recordHistory", self.status)
+        self.assertIn("recordHistory: completedRequest.recordHistory", self.status)
+        self.assertIn("if availabilityPlan.shouldRecordHistory", self.status)
 
     def test_status_controller_pushes_live_data_into_the_popover(self):
         self.assertIn("popover.update(", self.status)

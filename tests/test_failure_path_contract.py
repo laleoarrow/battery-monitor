@@ -18,11 +18,29 @@ class FailurePathContractTests(unittest.TestCase):
         self.assertIn("noBattery", self.status)
         self.assertIn("NSApp.terminate", self.status)
 
+    def test_present_battery_with_temporary_read_failure_stays_alive(self):
+        start = self.status.split("func start() -> Bool", 1)[1].split(
+            "// MARK: - Clicks", 1
+        )[0]
+        self.assertIn(
+            "startupAvailability.start(BatterySampler.sampleResult())", start
+        )
+        self.assertIn("if startupPlan.shouldTerminate", start)
+        self.assertIn("noBattery()", start)
+        self.assertIn("if startupPlan.shouldRetry", start)
+        self.assertIn(
+            "sampleNow(recordHistory: false, requiresFreshFollowUp: true)", start
+        )
+
     def test_keeps_the_last_snapshot_when_a_read_fails(self):
         # A dropped read must not blank the icon.
-        self.assertIn("isDegraded", self.status)
         self.assertIn("let fresh = BatterySampler.sample()", self.status)
-        self.assertIn("guard var fresh else", self.status)
+        finish = self.status.split("private func finishSample", 1)[1].split(
+            "private func refreshPresentation", 1
+        )[0]
+        self.assertIn("startupAvailability.finish", finish)
+        self.assertIn("if let fresh = availabilityPlan.snapshot", finish)
+        self.assertIn("snapshot = fresh", finish)
 
     def test_battery_reads_never_block_the_appkit_thread(self):
         self.assertIn('label: "com.leoarrow.wattson.sampler"', self.status)
@@ -33,8 +51,8 @@ class FailurePathContractTests(unittest.TestCase):
         self.assertIn("BatterySampler.sample()", sampling)
         self.assertIn("HelperClient.livePower()", sampling)
         self.assertIn("DispatchQueue.main.async", self.status)
-        self.assertIn("sampleInFlight", self.status)
-        self.assertIn("resampleRequested", self.status)
+        self.assertIn("SampleRequestCoalescer", self.status)
+        self.assertIn("sampleRequests.request", sampling)
 
     def test_logs_the_raw_fields_when_conservation_breaks(self):
         self.assertIn("conservationError", self.sampler)

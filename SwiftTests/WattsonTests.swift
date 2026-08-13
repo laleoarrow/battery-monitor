@@ -260,6 +260,42 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(unchanged.adapterW, stale.adapterW)
         XCTAssertEqual(unchanged.batteryW, stale.batteryW)
         XCTAssertEqual(unchanged.systemW, stale.systemW)
+
+        let outOfRange = BatterySampler.resolvedLivePower(
+            snapshot: stale, adapterW: 1_001, systemW: 1_001
+        )
+        XCTAssertEqual(outOfRange.adapterW, stale.adapterW)
+        XCTAssertEqual(outOfRange.batteryW, stale.batteryW)
+        XCTAssertEqual(outOfRange.systemW, stale.systemW)
+
+        var corruptBattery = stale
+        corruptBattery.batteryW = .nan
+        let sanitized = BatterySampler.resolvedLivePower(
+            snapshot: corruptBattery, adapterW: nil, systemW: 48
+        )
+        XCTAssertEqual(sanitized.adapterW, 48, accuracy: 0.001)
+        XCTAssertEqual(sanitized.batteryW, 0, accuracy: 0.001)
+        XCTAssertEqual(sanitized.systemW, 48, accuracy: 0.001)
+        XCTAssertEqual(sanitized.conservationError, 0, accuracy: 0.001)
+
+        var maximumCharge = stale
+        maximumCharge.batteryW = 1_000
+        let boundedCharge = BatterySampler.resolvedLivePower(
+            snapshot: maximumCharge, adapterW: nil, systemW: 900
+        )
+        XCTAssertEqual(boundedCharge.adapterW, 1_000, accuracy: 0.001)
+        XCTAssertEqual(boundedCharge.batteryW, 100, accuracy: 0.001)
+        XCTAssertEqual(boundedCharge.systemW, 900, accuracy: 0.001)
+
+        var maximumDischarge = stale
+        maximumDischarge.batteryW = -1_000
+        let boundedDischarge = BatterySampler.resolvedLivePower(
+            snapshot: maximumDischarge, adapterW: 900, systemW: nil
+        )
+        XCTAssertEqual(boundedDischarge.adapterW, 900, accuracy: 0.001)
+        XCTAssertEqual(boundedDischarge.batteryW, -100, accuracy: 0.001)
+        XCTAssertEqual(boundedDischarge.systemW, 1_000, accuracy: 0.001)
+        XCTAssertEqual(boundedDischarge.conservationError, 0, accuracy: 0.001)
     }
 
     func testInstantCurrentIsSignedAndFallsBackOnlyWhenMissing() {
@@ -267,6 +303,11 @@ final class WattsonTests: XCTestCase {
             value: UInt32(bitPattern: Int32(-2_000))
         )
         XCTAssertEqual(BatterySampler.optionalIntValue(wrappedNegative), -2_000)
+        XCTAssertEqual(
+            BatterySampler.optionalIntValue(NSNumber(value: UInt64.max - 3_134)),
+            -3_135
+        )
+        XCTAssertNil(BatterySampler.optionalIntValue(NSNumber(value: 12.5)))
 
         func watts(_ instant: Int?, _ fallback: Int?) -> Double? {
             BatterySampler.resolvedInstantBatteryW(
@@ -290,12 +331,13 @@ final class WattsonTests: XCTestCase {
         ] {
             XCTAssertEqual(watts(invalidInstant, -2_000)!, -24, accuracy: 0.001)
         }
-        XCTAssertEqual(watts(100_000, nil)!, 1_200, accuracy: 0.001)
-        XCTAssertTrue(BatterySampler.resolvedInstantBatteryW(
+        XCTAssertEqual(watts(80_000, nil)!, 960, accuracy: 0.001)
+        XCTAssertNil(watts(100_000, nil))
+        XCTAssertNil(BatterySampler.resolvedInstantBatteryW(
             voltage: Int.max,
             instantAmperage: 100_000,
             amperage: nil
-        )!.isFinite)
+        ))
         XCTAssertNil(BatterySampler.resolvedInstantBatteryW(
             voltage: 0, instantAmperage: 1_000, amperage: nil
         ))
@@ -348,6 +390,155 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(valid.batteryW, 12, accuracy: 0.001)
         XCTAssertEqual(valid.systemW, 0, accuracy: 0.001)
         XCTAssertEqual(valid.conservationError, 0, accuracy: 0.001)
+    }
+
+    func testResolvedPowerRandomizedInputsStayFiniteAndConserveEnergy() {
+        var state: UInt64 = 0x57A7_7501_C0DE_CAFE
+        func next() -> UInt64 {
+            state = state &* 6_364_136_223_846_793_005 &+ 1_442_695_040_888_963_407
+            return state
+        }
+        func optionalTelemetry(signed: Bool) -> Int? {
+            if next().isMultiple(of: 5) { return nil }
+            let magnitude = Int(next() % 2_400_001) - (signed ? 1_200_000 : 200_000)
+            return magnitude
+        }
+        let exceptionalFallbacks: [Double] = [
+            .nan, .infinity, -.infinity, -1_001, 1_001,
+        ]
+
+        for fallback in exceptionalFallbacks {
+            let power = BatterySampler.resolvedPower(
+                plugged: true,
+                chargingHint: false,
+                systemPowerIn: nil,
+                systemLoad: nil,
+                batteryPower: nil,
+                fallbackBatteryW: fallback,
+                instantBatteryW: fallback
+            )
+            XCTAssertTrue(power.adapterW.isFinite)
+            XCTAssertTrue(power.batteryW.isFinite)
+            XCTAssertTrue(power.systemW.isFinite)
+        }
+
+        var observedBooleanPairs = Set<String>()
+        for index in 0..<50_000 {
+            let fallback = index < exceptionalFallbacks.count
+                ? exceptionalFallbacks[index]
+                : Double(Int(next() % 2_400_001) - 1_200_000) / 1_000
+            let instant: Double? = next().isMultiple(of: 4) ? nil : fallback
+            let flags = next()
+            let plugged = flags & (1 << 32) != 0
+            let chargingHint = flags & (1 << 33) != 0
+            observedBooleanPairs.insert("\(plugged)-\(chargingHint)")
+            let power = BatterySampler.resolvedPower(
+                plugged: plugged,
+                chargingHint: chargingHint,
+                systemPowerIn: optionalTelemetry(signed: false),
+                systemLoad: optionalTelemetry(signed: true),
+                batteryPower: optionalTelemetry(signed: true),
+                fallbackBatteryW: fallback,
+                instantBatteryW: instant
+            )
+            let snapshot = PowerSnapshot(
+                plugged: true,
+                adapterW: power.adapterW,
+                batteryW: power.batteryW,
+                systemW: power.systemW
+            )
+            XCTAssertTrue(power.adapterW.isFinite, "adapter at iteration \(index)")
+            XCTAssertTrue(power.batteryW.isFinite, "battery at iteration \(index)")
+            XCTAssertTrue(power.systemW.isFinite, "system at iteration \(index)")
+            XCTAssertGreaterThanOrEqual(power.adapterW, 0, "adapter at iteration \(index)")
+            XCTAssertGreaterThanOrEqual(power.systemW, 0, "system at iteration \(index)")
+            XCTAssertLessThanOrEqual(power.adapterW, 1_000, "adapter at iteration \(index)")
+            XCTAssertLessThanOrEqual(abs(power.batteryW), 1_000, "battery at iteration \(index)")
+            XCTAssertLessThanOrEqual(power.systemW, 1_000, "system at iteration \(index)")
+            XCTAssertEqual(snapshot.conservationError, 0, accuracy: 0.000_001)
+        }
+        XCTAssertEqual(observedBooleanPairs.count, 4)
+    }
+
+    func testBatteryCapacityNormalizesAppleSiliconAndIntelUnits() {
+        XCTAssertEqual(BatterySampler.resolvedBatteryPercent(
+            currentCapacity: NSNumber(value: 67),
+            maxCapacity: NSNumber(value: 100)
+        ), 67)
+        XCTAssertEqual(BatterySampler.resolvedBatteryPercent(
+            currentCapacity: NSNumber(value: 3_500),
+            maxCapacity: NSNumber(value: 7_000)
+        ), 50)
+        XCTAssertEqual(BatterySampler.resolvedBatteryPercent(
+            currentCapacity: NSNumber(value: 7_100),
+            maxCapacity: NSNumber(value: 7_000)
+        ), 100)
+        XCTAssertEqual(BatterySampler.resolvedBatteryPercent(
+            currentCapacity: NSNumber(value: 0),
+            maxCapacity: NSNumber(value: 7_000)
+        ), 0)
+    }
+
+    func testBatteryCapacityRequiresUnitsFromMaximumCapacity() {
+        XCTAssertNil(BatterySampler.resolvedBatteryPercent(
+            currentCapacity: NSNumber(value: 67), maxCapacity: nil
+        ))
+        XCTAssertNil(BatterySampler.resolvedBatteryPercent(
+            currentCapacity: NSNumber(value: 0), maxCapacity: nil
+        ))
+        XCTAssertNil(BatterySampler.resolvedBatteryPercent(
+            currentCapacity: NSNumber(value: 3_500), maxCapacity: nil
+        ))
+
+        for invalidMaximum: Any in [
+            kCFBooleanTrue as Any,
+            NSNumber(value: 0),
+            NSNumber(value: -1),
+            NSNumber(value: 12.5),
+            NSNumber(value: Int.max),
+        ] {
+            XCTAssertNil(BatterySampler.resolvedBatteryPercent(
+                currentCapacity: NSNumber(value: 67),
+                maxCapacity: invalidMaximum
+            ))
+        }
+        for invalidCurrent: Any in [
+            kCFBooleanTrue as Any,
+            NSNumber(value: -1),
+            NSNumber(value: Int.max),
+        ] {
+            XCTAssertNil(BatterySampler.resolvedBatteryPercent(
+                currentCapacity: invalidCurrent,
+                maxCapacity: NSNumber(value: 100)
+            ))
+        }
+        XCTAssertEqual(BatterySampler.resolvedBatteryPercent(
+            currentCapacity: NSNumber(value: 101),
+            maxCapacity: NSNumber(value: 100)
+        ), 100)
+    }
+
+    func testInitialBatterySampleDistinguishesAbsentFromTemporaryReadFailure() {
+        switch BatterySampler.sampleResult(from: nil, lowPowerMode: false) {
+        case .absent: break
+        default: XCTFail("missing service must be absent")
+        }
+        switch BatterySampler.sampleResult(from: [:], lowPowerMode: false) {
+        case .temporarilyUnavailable: break
+        default: XCTFail("present service with incomplete fields must retry")
+        }
+        let props: [String: Any] = [
+            "CurrentCapacity": NSNumber(value: 3_500),
+            "MaxCapacity": NSNumber(value: 7_000),
+            "ExternalConnected": kCFBooleanFalse as Any,
+        ]
+        switch BatterySampler.sampleResult(from: props, lowPowerMode: true) {
+        case let .snapshot(snapshot):
+            XCTAssertEqual(snapshot.percent, 50)
+            XCTAssertTrue(snapshot.lowPowerMode)
+        default:
+            XCTFail("valid fields must produce a snapshot")
+        }
     }
 
     func testPluggedTransitionUsesInstantBatteryFlowUntilSourceTelemetryArrives() {
@@ -450,6 +641,56 @@ final class WattsonTests: XCTestCase {
         }
     }
 
+    func testAdapterOnlyTelemetryUsesSignedInstantBatteryFlow() {
+        func resolve(chargingHint: Bool, instantBatteryW: Double) -> PowerSnapshot {
+            let power = BatterySampler.resolvedPower(
+                plugged: true,
+                chargingHint: chargingHint,
+                systemPowerIn: 60_000,
+                systemLoad: nil,
+                batteryPower: nil,
+                fallbackBatteryW: abs(instantBatteryW),
+                instantBatteryW: instantBatteryW
+            )
+            return PowerSnapshot(
+                plugged: true,
+                adapterW: power.adapterW,
+                batteryW: power.batteryW,
+                systemW: power.systemW
+            )
+        }
+
+        let discharging = resolve(chargingHint: true, instantBatteryW: -12)
+        XCTAssertEqual(discharging.adapterW, 60, accuracy: 0.001)
+        XCTAssertEqual(discharging.batteryW, -12, accuracy: 0.001)
+        XCTAssertEqual(discharging.systemW, 72, accuracy: 0.001)
+        XCTAssertEqual(discharging.state, .mixedSupply)
+        XCTAssertEqual(discharging.conservationError, 0, accuracy: 0.001)
+
+        let charging = resolve(chargingHint: false, instantBatteryW: 12)
+        XCTAssertEqual(charging.adapterW, 60, accuracy: 0.001)
+        XCTAssertEqual(charging.batteryW, 12, accuracy: 0.001)
+        XCTAssertEqual(charging.systemW, 48, accuracy: 0.001)
+        XCTAssertEqual(charging.state, .charging)
+        XCTAssertEqual(charging.conservationError, 0, accuracy: 0.001)
+    }
+
+    func testCycleCountRejectsWrappedAndImplausibleValues() {
+        XCTAssertEqual(BatterySampler.resolvedCycleCount(NSNumber(value: 1_234)), 1_234)
+        XCTAssertEqual(BatterySampler.resolvedCycleCount(NSNumber(value: 0)), 0)
+        for raw: Any in [
+            NSNumber(value: -1),
+            NSNumber(value: Int32.min),
+            NSNumber(value: UInt32.max),
+            NSNumber(value: Int.max),
+            NSNumber(value: 100_001),
+            kCFBooleanTrue as Any,
+            NSNumber(value: 1.5),
+        ] {
+            XCTAssertEqual(BatterySampler.resolvedCycleCount(raw), 0)
+        }
+    }
+
     func testBatteryTemperatureUsesPhysicalDeciKelvinThenVirtualCentiCelsius() {
         XCTAssertEqual(
             BatterySampler.resolvedTemperatureC(
@@ -527,6 +768,188 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(presentation.samples.first, 15)
         XCTAssertEqual(presentation.samples.last, 74)
         XCTAssertEqual(presentation.peak, 74)
+        XCTAssertEqual(history.presentationMaterializationCountForTest, 1)
+
+        let repeated = history.presentation
+        XCTAssertEqual(repeated.samples, presentation.samples)
+        XCTAssertEqual(repeated.peak, presentation.peak)
+        XCTAssertEqual(history.presentationMaterializationCountForTest, 1)
+
+        history.append(75)
+        XCTAssertEqual(history.presentation.peak, 75)
+        XCTAssertEqual(history.presentationMaterializationCountForTest, 2)
+
+        history.reset()
+        XCTAssertTrue(history.presentation.samples.isEmpty)
+        XCTAssertEqual(history.presentation.peak, 0)
+        XCTAssertEqual(history.presentationMaterializationCountForTest, 3)
+        history.append(9)
+        XCTAssertEqual(history.samples, [9])
+    }
+
+    func testHistoryRejectsNonFiniteValuesAndSurvivesLongWraps() {
+        let history = PowerHistory()
+        history.append(.nan)
+        history.append(.infinity)
+        history.append(-.infinity)
+        XCTAssertTrue(history.samples.isEmpty)
+
+        history.append(-3)
+        XCTAssertEqual(history.samples, [0])
+        for value in 0..<100_000 {
+            history.append(Double(value))
+        }
+        XCTAssertEqual(history.samples.count, 60)
+        XCTAssertEqual(history.samples.first, 99_940)
+        XCTAssertEqual(history.samples.last, 99_999)
+        XCTAssertTrue(history.samples.allSatisfy { $0.isFinite && $0 >= 0 })
+    }
+
+    func testStatusButtonPresentationIgnoresNonVisualTelemetry() {
+        let baseline = PowerSnapshot(
+            percent: 67, plugged: true, adapterW: 70, batteryW: 20, systemW: 50
+        )
+        let changedWatts = PowerSnapshot(
+            percent: 67, plugged: true, adapterW: 95, batteryW: 30, systemW: 65
+        )
+
+        let first = StatusButtonPresentation(
+            snapshot: baseline, showsPercentage: true, degraded: false
+        )
+        let sameChrome = StatusButtonPresentation(
+            snapshot: changedWatts, showsPercentage: true, degraded: false
+        )
+        XCTAssertEqual(first, sameChrome)
+        XCTAssertEqual(first.title, "67% ")
+        XCTAssertEqual(first.alpha, 1)
+        XCTAssertNotEqual(first, StatusButtonPresentation(
+            snapshot: baseline, showsPercentage: false, degraded: false
+        ))
+        XCTAssertNotEqual(first, StatusButtonPresentation(
+            snapshot: baseline, showsPercentage: true, degraded: true
+        ))
+    }
+
+    func testColdStartAvailabilityDistinguishesAbsentFromRepeatedPartialReads() {
+        var absent = StartupAvailabilityReducer()
+        let absentPlan = absent.start(.absent)
+        XCTAssertTrue(absentPlan.shouldTerminate)
+        XCTAssertFalse(absentPlan.shouldRetry)
+        XCTAssertNil(absentPlan.snapshot)
+        XCTAssertFalse(absentPlan.shouldRecordHistory)
+        XCTAssertFalse(absent.hasUsableSnapshot)
+        XCTAssertFalse(absent.isDegraded)
+
+        var partial = StartupAvailabilityReducer()
+        let partialPlan = partial.start(.temporarilyUnavailable)
+        XCTAssertFalse(partialPlan.shouldTerminate)
+        XCTAssertTrue(partialPlan.shouldRetry)
+        XCTAssertNil(partialPlan.snapshot)
+        XCTAssertFalse(partialPlan.shouldRecordHistory)
+        XCTAssertFalse(partial.hasUsableSnapshot)
+        XCTAssertTrue(partial.isDegraded)
+
+        for _ in 0..<3 {
+            let repeated = partial.finish(nil, recordHistory: true)
+            XCTAssertFalse(repeated.shouldTerminate)
+            XCTAssertFalse(repeated.shouldRetry)
+            XCTAssertNil(repeated.snapshot)
+            XCTAssertFalse(repeated.shouldRecordHistory)
+            XCTAssertFalse(partial.hasUsableSnapshot)
+            XCTAssertTrue(partial.isDegraded)
+        }
+    }
+
+    func testColdPartialAvailabilityRecoversAndRecordsRequestedHistory() {
+        var availability = StartupAvailabilityReducer()
+        _ = availability.start(.temporarilyUnavailable)
+
+        let recovered = PowerSnapshot(
+            percent: 68, plugged: true, adapterW: 61, batteryW: 9, systemW: 52
+        )
+        let plan = availability.finish(recovered, recordHistory: true)
+
+        XCTAssertEqual(plan.snapshot?.percent, 68)
+        XCTAssertTrue(plan.shouldRecordHistory)
+        XCTAssertFalse(plan.shouldRetry)
+        XCTAssertFalse(plan.shouldTerminate)
+        XCTAssertTrue(availability.hasUsableSnapshot)
+        XCTAssertFalse(availability.isDegraded)
+    }
+
+    func testAvailabilityRetainsUsableStateAcrossDegradationAndRecovery() {
+        var availability = StartupAvailabilityReducer()
+        let initial = availability.start(.snapshot(PowerSnapshot(
+            percent: 67, plugged: false, batteryW: -18, systemW: 18
+        )))
+        XCTAssertEqual(initial.snapshot?.percent, 67)
+        XCTAssertTrue(initial.shouldRecordHistory)
+        XCTAssertTrue(availability.hasUsableSnapshot)
+        XCTAssertFalse(availability.isDegraded)
+
+        let degraded = availability.finish(nil, recordHistory: true)
+        XCTAssertNil(degraded.snapshot)
+        XCTAssertFalse(degraded.shouldRecordHistory)
+        XCTAssertTrue(availability.hasUsableSnapshot)
+        XCTAssertTrue(availability.isDegraded)
+
+        let recovered = availability.finish(
+            PowerSnapshot(percent: 66, plugged: false, batteryW: -20, systemW: 20),
+            recordHistory: false
+        )
+        XCTAssertEqual(recovered.snapshot?.percent, 66)
+        XCTAssertFalse(recovered.shouldRecordHistory)
+        XCTAssertTrue(availability.hasUsableSnapshot)
+        XCTAssertFalse(availability.isDegraded)
+    }
+
+    func testPeriodicSampleRequestsCoalesceWithoutCatchUpStorm() {
+        var requests = SampleRequestCoalescer()
+        XCTAssertTrue(requests.request(
+            recordHistory: false, requiresFreshFollowUp: false
+        ))
+
+        for index in 0..<10_000 {
+            XCTAssertFalse(requests.request(
+                recordHistory: index.isMultiple(of: 2),
+                requiresFreshFollowUp: false
+            ))
+        }
+
+        let completed = requests.complete()
+        XCTAssertTrue(completed.recordHistory)
+        XCTAssertFalse(completed.requiresFreshFollowUp)
+        XCTAssertFalse(requests.isInFlight)
+        XCTAssertTrue(requests.request(
+            recordHistory: false, requiresFreshFollowUp: false
+        ))
+    }
+
+    func testEventSampleRequestsRetainAtMostOneFreshFollowUp() {
+        var requests = SampleRequestCoalescer()
+        XCTAssertTrue(requests.request(
+            recordHistory: false, requiresFreshFollowUp: false
+        ))
+
+        for index in 0..<10_000 {
+            XCTAssertFalse(requests.request(
+                recordHistory: index == 9_999, requiresFreshFollowUp: true
+            ))
+        }
+
+        let first = requests.complete()
+        XCTAssertTrue(first.recordHistory)
+        XCTAssertTrue(first.requiresFreshFollowUp)
+
+        // The controller discards the superseded result and carries the history
+        // request into this one post-event follow-up.
+        XCTAssertTrue(requests.request(
+            recordHistory: first.recordHistory, requiresFreshFollowUp: false
+        ))
+        let second = requests.complete()
+        XCTAssertTrue(second.recordHistory)
+        XCTAssertFalse(second.requiresFreshFollowUp)
+        XCTAssertFalse(requests.isInFlight)
     }
 
     func testHistoryViewSkipsAnIdenticalPathRebuild() {
@@ -626,5 +1049,762 @@ final class WattsonTests: XCTestCase {
 
         popover.applyLatestPresentationForTest()
         XCTAssertEqual(popover.contentRenderCountForTest, 1)
+    }
+
+    func testReducedMotionUpdatesCreateNoImplicitGeometryAnimations() {
+        let content = PopoverContentViewController()
+        _ = content.view
+        content.view.frame = NSRect(x: 0, y: 0, width: 360, height: 500)
+        content.view.layoutSubtreeIfNeeded()
+        content.setAnimationsEnabled(false)
+        content.update(
+            snapshot: PowerSnapshot(
+                percent: 52, plugged: true, adapterW: 96, batteryW: 35, systemW: 61
+            ),
+            history: [20, 96], peak: 96, degraded: false
+        )
+        CATransaction.flush()
+        XCTAssertEqual(
+            content.runningModuleAnimationCountForTest, 0,
+            content.runningAnimationDescriptionsForTest.joined(separator: "\n")
+        )
+    }
+
+    func testHiddenModulesSkipUpdatesAndRefreshOnceWhenShown() {
+        let suiteName = "Wattson.HiddenModules.Tests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defaults.removePersistentDomain(forName: suiteName)
+        Settings.configureForTest(defaults: defaults)
+        defer {
+            Settings.resetTestConfiguration()
+            defaults.removePersistentDomain(forName: suiteName)
+        }
+
+        let content = PopoverContentViewController()
+        _ = content.view
+        content.setPresentationActive(true)
+        for module in PopoverModule.allCases {
+            content.setModuleVisibleForTest(module, visible: false)
+        }
+        let before = content.moduleUpdateCountsForTest
+        for value in 1...100 {
+            content.update(
+                snapshot: PowerSnapshot(
+                    percent: 50, plugged: false,
+                    batteryW: -Double(value), systemW: Double(value)
+                ),
+                history: [Double(value)], peak: Double(value), degraded: false
+            )
+        }
+        XCTAssertEqual(content.moduleUpdateCountsForTest, before)
+
+        content.setModuleVisibleForTest(.history, visible: true)
+        XCTAssertEqual(
+            content.moduleUpdateCountsForTest[.history, default: 0],
+            before[.history, default: 0] + 1
+        )
+        XCTAssertEqual(content.latestHistoryForTest, [100])
+    }
+
+    func testSettingsModuleChangeUpdatesLivePopover() {
+        let suiteName = "Wattson.LivePopoverSettings.Tests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defaults.removePersistentDomain(forName: suiteName)
+        Settings.configureForTest(defaults: defaults)
+        defer {
+            Settings.resetTestConfiguration()
+            defaults.removePersistentDomain(forName: suiteName)
+        }
+
+        let content = PopoverContentViewController()
+        _ = content.view
+        let initialHeight = content.preferredHeight
+        XCTAssertFalse(content.moduleIsHiddenForTest(.flow))
+
+        Settings.setModule(.flow, visible: false)
+        spinMainRunLoop(0.05)
+
+        XCTAssertTrue(content.moduleIsHiddenForTest(.flow))
+        XCTAssertEqual(
+            content.preferredHeight,
+            initialHeight - PowerFlowView.preferredHeight,
+            accuracy: 0.01
+        )
+    }
+
+    func testShowingModuleWhilePopoverIsClosedDoesNotRenderIt() {
+        let suiteName = "Wattson.ClosedPopoverSettings.Tests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defaults.removePersistentDomain(forName: suiteName)
+        Settings.configureForTest(defaults: defaults)
+        defer {
+            Settings.resetTestConfiguration()
+            defaults.removePersistentDomain(forName: suiteName)
+        }
+
+        let content = PopoverContentViewController()
+        _ = content.view
+        Settings.setModule(.flow, visible: false)
+        spinMainRunLoop(0.02)
+        let rendersBeforeShowing = content.moduleUpdateCountsForTest[.flow, default: 0]
+
+        Settings.setModule(.flow, visible: true)
+        spinMainRunLoop(0.02)
+
+        XCTAssertFalse(content.moduleIsHiddenForTest(.flow))
+        XCTAssertEqual(
+            content.moduleUpdateCountsForTest[.flow, default: 0],
+            rendersBeforeShowing
+        )
+    }
+
+    func testQuickMenuModuleActionWritesSharedSettings() {
+        let suiteName = "Wattson.QuickMenuSettings.Tests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defaults.removePersistentDomain(forName: suiteName)
+        Settings.configureForTest(defaults: defaults)
+        defer {
+            Settings.resetTestConfiguration()
+            defaults.removePersistentDomain(forName: suiteName)
+        }
+
+        let content = PopoverContentViewController()
+        _ = content.view
+        XCTAssertTrue(Settings.isModuleVisible(.ring))
+
+        content.toggleModuleFromMenuForTest(.ring)
+
+        XCTAssertFalse(Settings.isModuleVisible(.ring))
+        XCTAssertTrue(content.moduleIsHiddenForTest(.ring))
+    }
+
+    func testPopoverSettingsRelayDefersPresenterToNextMainTurn() {
+        let popover = PopoverController()
+        var presented = false
+        popover.setSettingsHandler { presented = true }
+
+        popover.presentSettingsFromQuickMenuForTest()
+
+        XCTAssertFalse(presented)
+        spinMainRunLoop(0.05)
+        XCTAssertTrue(presented)
+        XCTAssertFalse(popover.isOpen)
+        XCTAssertFalse(popover.isWatchingOutsideClicks)
+    }
+
+    func testClosedPopoverCachesSystemBatteryIconStateWithoutFooterWork() {
+        let popover = PopoverController()
+        let before = popover.footerUpdateCountForTest
+        popover.updateSystemBatteryIconState(true)
+        XCTAssertEqual(popover.footerUpdateCountForTest, before)
+        XCTAssertEqual(popover.cachedSystemBatteryIconStateForTest, true)
+    }
+
+    func testRepeatedReadOperationsCollapseToOnePendingRead() {
+        let operations = CoalescingReadOperationQueue<Int>(
+            label: "com.leoarrow.wattson.tests.coalesced-reads"
+        )
+        let firstStarted = expectation(description: "first read started")
+        let latestCompleted = expectation(description: "latest read completed")
+        let releaseFirst = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var executedValues: [Int] = []
+        var completedValues: [Int] = []
+
+        func enqueue(_ value: Int) {
+            operations.enqueueRead(
+                operation: {
+                    stateLock.lock()
+                    executedValues.append(value)
+                    stateLock.unlock()
+                    if value == 1 {
+                        firstStarted.fulfill()
+                        releaseFirst.wait()
+                    }
+                    return value
+                },
+                completion: { result in
+                    stateLock.lock()
+                    completedValues.append(result)
+                    stateLock.unlock()
+                    if result == 10_000 { latestCompleted.fulfill() }
+                }
+            )
+        }
+
+        enqueue(1)
+        wait(for: [firstStarted], timeout: 1)
+        for value in 2...10_000 { enqueue(value) }
+        releaseFirst.signal()
+        wait(for: [latestCompleted], timeout: 1)
+
+        stateLock.lock()
+        let executed = executedValues
+        let completed = completedValues
+        stateLock.unlock()
+        XCTAssertEqual(executed, [1, 10_000])
+        XCTAssertEqual(completed, [1, 10_000])
+    }
+
+    func testMutationDiscardsStalePendingReadsAndWaitsForOnlyCurrentRead() {
+        let operations = CoalescingReadOperationQueue<Int>(
+            label: "com.leoarrow.wattson.tests.mutation-priority"
+        )
+        let firstStarted = expectation(description: "first read started")
+        let mutationStarted = expectation(description: "mutation started")
+        let latestCompleted = expectation(description: "latest read completed")
+        let releaseFirst = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var executionOrder: [String] = []
+
+        func record(_ value: String) {
+            stateLock.lock()
+            executionOrder.append(value)
+            stateLock.unlock()
+        }
+
+        operations.enqueueRead(
+            operation: {
+                record("read-current")
+                firstStarted.fulfill()
+                releaseFirst.wait()
+                return 1
+            },
+            completion: { _ in }
+        )
+        wait(for: [firstStarted], timeout: 1)
+
+        for value in 2...10_000 {
+            operations.enqueueRead(
+                operation: {
+                    record("stale-\(value)")
+                    return value
+                },
+                completion: { _ in }
+            )
+        }
+        operations.enqueueMutation(
+            operation: {
+                record("mutation")
+                mutationStarted.fulfill()
+                return true
+            },
+            completion: { _ in }
+        )
+        operations.enqueueRead(
+            operation: {
+                record("read-latest")
+                return 10_001
+            },
+            completion: { value in
+                XCTAssertEqual(value, 10_001)
+                latestCompleted.fulfill()
+            }
+        )
+
+        releaseFirst.signal()
+        wait(for: [mutationStarted, latestCompleted], timeout: 1)
+        stateLock.lock()
+        let observedOrder = executionOrder
+        stateLock.unlock()
+        XCTAssertEqual(observedOrder, ["read-current", "mutation", "read-latest"])
+    }
+
+    func testMutationsStaySerializedAndCompletionsRunOnMainThread() {
+        let operations = CoalescingReadOperationQueue<Int>(
+            label: "com.leoarrow.wattson.tests.serial-mutations"
+        )
+        let firstStarted = expectation(description: "first mutation started")
+        let firstCompleted = expectation(description: "first mutation completed")
+        let secondCompleted = expectation(description: "second mutation completed")
+        let releaseFirst = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var executionOrder: [Int] = []
+
+        operations.enqueueMutation(
+            operation: {
+                stateLock.lock()
+                executionOrder.append(1)
+                stateLock.unlock()
+                firstStarted.fulfill()
+                releaseFirst.wait()
+                return 1
+            },
+            completion: { value in
+                XCTAssertTrue(Thread.isMainThread)
+                XCTAssertEqual(value, 1)
+                firstCompleted.fulfill()
+            }
+        )
+        wait(for: [firstStarted], timeout: 1)
+        operations.enqueueMutation(
+            operation: {
+                stateLock.lock()
+                executionOrder.append(2)
+                stateLock.unlock()
+                return 2
+            },
+            completion: { value in
+                XCTAssertTrue(Thread.isMainThread)
+                XCTAssertEqual(value, 2)
+                secondCompleted.fulfill()
+            }
+        )
+
+        stateLock.lock()
+        let beforeRelease = executionOrder
+        stateLock.unlock()
+        XCTAssertEqual(beforeRelease, [1])
+        releaseFirst.signal()
+        wait(for: [firstCompleted, secondCompleted], timeout: 1)
+        stateLock.lock()
+        let afterCompletion = executionOrder
+        stateLock.unlock()
+        XCTAssertEqual(afterCompletion, [1, 2])
+    }
+
+    func testIndependentControllersShareOneHelperSettingsWorker() {
+        let worker = SerialOperationWorker(
+            label: "com.leoarrow.wattson.tests.shared-settings-worker"
+        )
+        let loginOperations = CoalescingReadOperationQueue<Int>(
+            label: "com.leoarrow.wattson.tests.login-operations",
+            worker: worker
+        )
+        let iconOperations = CoalescingReadOperationQueue<Int>(
+            label: "com.leoarrow.wattson.tests.icon-operations",
+            worker: worker
+        )
+        let loginStarted = expectation(description: "slow login operation started")
+        let iconCompleted = expectation(description: "icon mutation completed")
+        let releaseLogin = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var iconStartedBeforeLoginFinished = false
+        var loginFinished = false
+
+        loginOperations.enqueueRead(
+            operation: {
+                loginStarted.fulfill()
+                releaseLogin.wait()
+                stateLock.lock()
+                loginFinished = true
+                stateLock.unlock()
+                return 1
+            },
+            completion: { _ in }
+        )
+        wait(for: [loginStarted], timeout: 1)
+
+        iconOperations.enqueueMutation(
+            operation: {
+                stateLock.lock()
+                iconStartedBeforeLoginFinished = !loginFinished
+                stateLock.unlock()
+                return true
+            },
+            completion: { _ in iconCompleted.fulfill() }
+        )
+        spinMainRunLoop(0.05)
+        stateLock.lock()
+        let startedTooSoon = iconStartedBeforeLoginFinished
+        stateLock.unlock()
+        XCTAssertFalse(startedTooSoon)
+
+        releaseLogin.signal()
+        wait(for: [iconCompleted], timeout: 1)
+        stateLock.lock()
+        let overlapped = iconStartedBeforeLoginFinished
+        stateLock.unlock()
+        XCTAssertFalse(overlapped)
+    }
+
+    func testMutationCanCancelPendingReadUntilSharedWorkerSelectsIt() {
+        let worker = SerialOperationWorker(
+            label: "com.leoarrow.wattson.tests.cancel-before-selection"
+        )
+        let operations = CoalescingReadOperationQueue<Int>(
+            label: "com.leoarrow.wattson.tests.handoff-race",
+            worker: worker
+        )
+        let firstStarted = expectation(description: "first read started")
+        let blockerStarted = expectation(description: "foreign worker task started")
+        let mutationCompleted = expectation(description: "mutation completed")
+        let releaseFirst = DispatchSemaphore(value: 0)
+        let releaseBlocker = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var pendingReadExecutions = 0
+
+        operations.enqueueRead(
+            operation: {
+                firstStarted.fulfill()
+                releaseFirst.wait()
+                return 1
+            },
+            completion: { _ in }
+        )
+        wait(for: [firstStarted], timeout: 1)
+        operations.enqueueRead(
+            operation: {
+                stateLock.lock()
+                pendingReadExecutions += 1
+                stateLock.unlock()
+                return 2
+            },
+            completion: { _ in }
+        )
+        worker.async {
+            blockerStarted.fulfill()
+            releaseBlocker.wait()
+        }
+        releaseFirst.signal()
+        wait(for: [blockerStarted], timeout: 1)
+
+        operations.enqueueMutation(
+            operation: { true },
+            completion: { _ in mutationCompleted.fulfill() }
+        )
+        releaseBlocker.signal()
+        wait(for: [mutationCompleted], timeout: 1)
+        stateLock.lock()
+        let executions = pendingReadExecutions
+        stateLock.unlock()
+        XCTAssertEqual(executions, 0)
+    }
+
+    func testExplicitCancellationDropsOnlyThePendingRead() {
+        let worker = SerialOperationWorker(
+            label: "com.leoarrow.wattson.tests.explicit-read-cancellation"
+        )
+        let operations = CoalescingReadOperationQueue<Int>(
+            label: "com.leoarrow.wattson.tests.cancel-pending-read",
+            worker: worker
+        )
+        let firstStarted = expectation(description: "current read started")
+        let firstCompleted = expectation(description: "current read completed")
+        let releaseFirst = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var pendingExecutions = 0
+
+        operations.enqueueRead(
+            operation: {
+                firstStarted.fulfill()
+                releaseFirst.wait()
+                return 1
+            },
+            completion: { value in
+                XCTAssertEqual(value, 1)
+                firstCompleted.fulfill()
+            }
+        )
+        wait(for: [firstStarted], timeout: 1)
+        operations.enqueueRead(
+            operation: {
+                stateLock.lock()
+                pendingExecutions += 1
+                stateLock.unlock()
+                return 2
+            },
+            completion: { _ in XCTFail("cancelled read completed") }
+        )
+
+        operations.cancelPendingRead()
+        releaseFirst.signal()
+        wait(for: [firstCompleted], timeout: 1)
+        spinMainRunLoop(0.02)
+        stateLock.lock()
+        let executions = pendingExecutions
+        stateLock.unlock()
+        XCTAssertEqual(executions, 0)
+    }
+
+    func testSynchronousMutationIsReentrantOnSharedWorker() {
+        let worker = SerialOperationWorker(
+            label: "com.leoarrow.wattson.tests.reentrant-mutation"
+        )
+        let operations = CoalescingReadOperationQueue<Int>(
+            label: "com.leoarrow.wattson.tests.reentrant-operations",
+            worker: worker
+        )
+        let completed = expectation(description: "reentrant mutation returned")
+        worker.async {
+            let value: Int = operations.performMutation { 42 }
+            XCTAssertEqual(value, 42)
+            completed.fulfill()
+        }
+        wait(for: [completed], timeout: 1)
+    }
+
+    func testLoginItemRejectsRepeatedSetWhileUpdateIsInFlightAndRestoresReadback() {
+        let setStarted = expectation(description: "set started")
+        let firstCompleted = expectation(description: "first set completed")
+        let repeatedCompleted = expectation(description: "repeated sets completed")
+        repeatedCompleted.expectedFulfillmentCount = 9_999
+        let releaseSet = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var setCalls = 0
+
+        LoginItemController.configureForTest(
+            available: true,
+            initialState: .enabled,
+            send: { request, _ in
+                switch request["op"] as? String {
+                case "setLaunchAtLoginEnabled":
+                    stateLock.lock()
+                    setCalls += 1
+                    stateLock.unlock()
+                    setStarted.fulfill()
+                    releaseSet.wait()
+                    return ["ok": false, "error": "login item update failed"]
+                case "getLaunchAtLoginEnabled":
+                    return ["ok": true, "enabled": true]
+                default:
+                    return nil
+                }
+            }
+        )
+        defer { LoginItemController.resetTestConfiguration() }
+
+        LoginItemController.setEnabled(false) { result in
+            guard case .failure = result else {
+                XCTFail("failed write must report failure")
+                return
+            }
+            firstCompleted.fulfill()
+        }
+        XCTAssertEqual(LoginItemController.state, .checking)
+        wait(for: [setStarted], timeout: 1)
+
+        for index in 2...10_000 {
+            LoginItemController.setEnabled(index.isMultiple(of: 2)) { result in
+                guard case let .failure(error) = result,
+                      case LoginItemError.updateInProgress = error else {
+                    XCTFail("repeated write must fail immediately as in progress")
+                    return
+                }
+                repeatedCompleted.fulfill()
+            }
+        }
+        wait(for: [repeatedCompleted], timeout: 1)
+        releaseSet.signal()
+        wait(for: [firstCompleted], timeout: 1)
+
+        XCTAssertEqual(LoginItemController.state, .enabled)
+        stateLock.lock()
+        let observedSetCalls = setCalls
+        stateLock.unlock()
+        XCTAssertEqual(observedSetCalls, 1)
+    }
+
+    func testResettingLoginItemTestConfigurationWaitsForInFlightRead() {
+        let readStarted = expectation(description: "login-item read started")
+        let readFinished = expectation(description: "login-item read finished")
+        let releaseRead = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var finished = false
+
+        LoginItemController.configureForTest(
+            available: true,
+            initialState: .enabled,
+            send: { request, _ in
+                XCTAssertEqual(request["op"] as? String, "getLaunchAtLoginEnabled")
+                readStarted.fulfill()
+                releaseRead.wait()
+                stateLock.lock()
+                finished = true
+                stateLock.unlock()
+                readFinished.fulfill()
+                return ["ok": true, "enabled": true]
+            }
+        )
+
+        LoginItemController.refresh()
+        wait(for: [readStarted], timeout: 1)
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.05) {
+            releaseRead.signal()
+        }
+
+        LoginItemController.resetTestConfiguration()
+        stateLock.lock()
+        let resetReturnedAfterRead = finished
+        stateLock.unlock()
+        wait(for: [readFinished], timeout: 1)
+        XCTAssertTrue(resetReturnedAfterRead)
+    }
+
+    func testAvailableRefreshDuringLoginItemSetDoesNotInvalidateTheWrite() {
+        let setStarted = expectation(description: "set started")
+        let setCompleted = expectation(description: "set completed")
+        let refreshCompleted = expectation(description: "refresh completed")
+        let releaseSet = DispatchSemaphore(value: 0)
+
+        LoginItemController.configureForTest(
+            available: true,
+            initialState: .enabled,
+            send: { request, _ in
+                guard request["op"] as? String == "setLaunchAtLoginEnabled" else {
+                    XCTFail("refresh during a write must not start another helper read")
+                    return nil
+                }
+                setStarted.fulfill()
+                releaseSet.wait()
+                return ["ok": true, "enabled": false]
+            }
+        )
+        defer { LoginItemController.resetTestConfiguration() }
+
+        LoginItemController.setEnabled(false) { result in
+            guard case let .success(state) = result else {
+                XCTFail("write should still complete successfully")
+                return
+            }
+            XCTAssertEqual(state, .notRegistered)
+            setCompleted.fulfill()
+        }
+        wait(for: [setStarted], timeout: 1)
+        LoginItemController.refresh { state in
+            XCTAssertEqual(state, .checking)
+            refreshCompleted.fulfill()
+        }
+        wait(for: [refreshCompleted], timeout: 1)
+        releaseSet.signal()
+        wait(for: [setCompleted], timeout: 1)
+        XCTAssertEqual(LoginItemController.state, .notRegistered)
+    }
+
+    func testFailedLoginItemSetCompletesBeforeCoalescedReadbackStarts() {
+        let setCompleted = expectation(description: "failed set completed")
+        let readbackStarted = expectation(description: "follow-up read started")
+        let readbackCompleted = expectation(description: "follow-up read completed")
+        let releaseReadback = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var operationsAtSetCompletion: [String] = []
+        var observedOperations: [String] = []
+        var readbackHasStarted = false
+
+        LoginItemController.configureForTest(
+            available: true,
+            initialState: .enabled,
+            send: { request, _ in
+                let operation = request["op"] as? String ?? "unknown"
+                stateLock.lock()
+                observedOperations.append(operation)
+                let isFirstReadback = operation == "getLaunchAtLoginEnabled"
+                    && !readbackHasStarted
+                if isFirstReadback { readbackHasStarted = true }
+                stateLock.unlock()
+                if operation == "getLaunchAtLoginEnabled" {
+                    if isFirstReadback {
+                        readbackStarted.fulfill()
+                        releaseReadback.wait()
+                    }
+                    return ["ok": true, "enabled": true]
+                }
+                return nil
+            }
+        )
+        defer { LoginItemController.resetTestConfiguration() }
+
+        LoginItemController.setEnabled(false) { result in
+            guard case .failure = result else {
+                XCTFail("nil write reply must fail")
+                return
+            }
+            XCTAssertEqual(LoginItemController.state, .enabled)
+            stateLock.lock()
+            operationsAtSetCompletion = observedOperations
+            stateLock.unlock()
+            setCompleted.fulfill()
+        }
+        wait(for: [setCompleted], timeout: 1)
+        XCTAssertEqual(operationsAtSetCompletion, ["setLaunchAtLoginEnabled"])
+
+        wait(for: [readbackStarted], timeout: 1)
+        releaseReadback.signal()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
+            LoginItemController.refresh { state in
+                XCTAssertEqual(state, .enabled)
+                readbackCompleted.fulfill()
+            }
+        }
+        wait(for: [readbackCompleted], timeout: 1)
+        stateLock.lock()
+        let finalOperations = observedOperations
+        stateLock.unlock()
+        XCTAssertEqual(finalOperations.first, "setLaunchAtLoginEnabled")
+        XCTAssertEqual(
+            finalOperations.filter { $0 == "getLaunchAtLoginEnabled" }.count,
+            2
+        )
+    }
+
+    func testUnavailableRefreshInvalidatesOlderLoginItemCompletion() {
+        let readStarted = expectation(description: "old read started")
+        let unavailableCompleted = expectation(description: "unavailable refresh completed")
+        let staleCompleted = expectation(description: "stale refresh completion")
+        staleCompleted.isInverted = true
+        let releaseRead = DispatchSemaphore(value: 0)
+
+        LoginItemController.configureForTest(
+            available: true,
+            initialState: .notRegistered,
+            send: { _, _ in
+                readStarted.fulfill()
+                releaseRead.wait()
+                return ["ok": true, "enabled": true]
+            }
+        )
+        defer { LoginItemController.resetTestConfiguration() }
+
+        LoginItemController.refresh { _ in staleCompleted.fulfill() }
+        wait(for: [readStarted], timeout: 1)
+        LoginItemController.setAvailabilityForTest(false)
+        LoginItemController.refresh { state in
+            XCTAssertEqual(state, .unavailable)
+            unavailableCompleted.fulfill()
+        }
+        wait(for: [unavailableCompleted], timeout: 1)
+        releaseRead.signal()
+        wait(for: [staleCompleted], timeout: 0.1)
+        XCTAssertEqual(LoginItemController.state, .unavailable)
+    }
+
+    func testUnavailableRefreshCannotBeOverwrittenByInFlightLoginItemSet() {
+        let setStarted = expectation(description: "set started")
+        let unavailableCompleted = expectation(description: "unavailable refresh completed")
+        let setCompleted = expectation(description: "stale set completed")
+        let releaseSet = DispatchSemaphore(value: 0)
+
+        LoginItemController.configureForTest(
+            available: true,
+            initialState: .enabled,
+            send: { request, _ in
+                XCTAssertEqual(
+                    request["op"] as? String,
+                    "setLaunchAtLoginEnabled"
+                )
+                setStarted.fulfill()
+                releaseSet.wait()
+                return ["ok": true, "enabled": false]
+            }
+        )
+        defer { LoginItemController.resetTestConfiguration() }
+
+        LoginItemController.setEnabled(false) { result in
+            guard case .success(.notRegistered) = result else {
+                XCTFail("the completed command still reports its own result")
+                return
+            }
+            setCompleted.fulfill()
+        }
+        wait(for: [setStarted], timeout: 1)
+        LoginItemController.setAvailabilityForTest(false)
+        LoginItemController.refresh { state in
+            XCTAssertEqual(state, .unavailable)
+            unavailableCompleted.fulfill()
+        }
+        wait(for: [unavailableCompleted], timeout: 1)
+        releaseSet.signal()
+        wait(for: [setCompleted], timeout: 1)
+        XCTAssertEqual(LoginItemController.state, .unavailable)
     }
 }

@@ -20,7 +20,10 @@ class MenuBarPercentageContractTests(unittest.TestCase):
 
     def test_percentage_sits_left_of_the_glyph(self):
         # The system puts the number before the battery, not after.
-        self.assertIn("imagePosition = .imageRight", self.status)
+        self.assertIn(
+            "button.imagePosition = presentation.showsPercentage ? .imageRight : .imageOnly",
+            self.status,
+        )
 
     def test_percentage_uses_tabular_digits(self):
         # Keep the exact menu-bar face and only switch its number-spacing
@@ -34,7 +37,7 @@ class MenuBarPercentageContractTests(unittest.TestCase):
         self.assertNotIn("attributedTitle", self.status)
 
     def test_hiding_the_percentage_leaves_the_glyph_alone(self):
-        self.assertIn("imagePosition = .imageOnly", self.status)
+        self.assertIn(".imageRight : .imageOnly", self.status)
 
     def test_status_item_redraws_when_the_setting_changes(self):
         self.assertIn("Settings.didChange", self.status)

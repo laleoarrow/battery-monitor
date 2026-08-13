@@ -40,7 +40,7 @@ final class PopoverPreviewWindowController: NSWindowController {
             degraded: false
         )
         content.setModeSelectHandler { mode, completion in completion(mode) }
-        content.setSystemBatteryIconToggleHandler { _ in true }
+        content.setSystemBatteryIconToggleHandler { _, completion in completion(true) }
         content.updateSystemBatteryIconState(false)
         content.setAnimationsEnabled(true)
         panel.center()

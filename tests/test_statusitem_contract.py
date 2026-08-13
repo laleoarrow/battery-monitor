@@ -3,6 +3,7 @@ import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 STATUS_SOURCE = ROOT / "MenuBar" / "StatusItemController.swift"
+APP_DELEGATE_SOURCE = ROOT / "MenuBar" / "AppDelegate.swift"
 POPOVER_SOURCE = ROOT / "Popover" / "PopoverController.swift"
 STYLE_SOURCE = ROOT / "Popover" / "PopoverStyle.swift"
 ANIMATION_HARNESS = ROOT / "tests" / "animation_stress" / "main.swift"
@@ -13,6 +14,7 @@ class StatusItemContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.source = STATUS_SOURCE.read_text(encoding="utf-8")
+        cls.app_delegate = APP_DELEGATE_SOURCE.read_text(encoding="utf-8")
         cls.popover = POPOVER_SOURCE.read_text(encoding="utf-8")
         cls.style = STYLE_SOURCE.read_text(encoding="utf-8")
         cls.animation_harness = ANIMATION_HARNESS.read_text(encoding="utf-8")
@@ -123,20 +125,157 @@ class StatusItemContractTests(unittest.TestCase):
         # Right-click as a direct action is undiscoverable, so it must confirm.
         self.assertIn("confirmToggle", self.source)
 
+    def test_right_click_confirmation_honors_reduce_motion(self):
+        confirmation = self.source.split("private func confirmToggle", 1)[1].split(
+            "// MARK: - Clocks", 1
+        )[0]
+        self.assertIn("accessibilityDisplayShouldReduceMotion", confirmation)
+
     def test_tooltip_documents_the_right_click(self):
         self.assertIn("toolTip", self.source)
         self.assertIn("right-click", self.source)
 
+    def test_status_item_strongly_owns_one_lazy_settings_controller(self):
+        self.assertEqual(
+            self.source.count("lazy var settingsWindowController = SettingsWindowController()"),
+            1,
+        )
+        self.assertIn("popover.setSettingsHandler", self.source)
+        self.assertIn("self?.presentSettingsWindow()", self.source)
+
+    def test_quick_menu_and_command_comma_share_one_settings_target(self):
+        self.assertEqual(self.source.count("@objc private func showSettings()"), 1)
+        target = self.source.split("@objc private func showSettings()", 1)[1].split(
+            "\n    private func", 1
+        )[0]
+        for operation in (
+            "stopDisplayClock()",
+            "popover.handleOutsideClick()",
+            "DispatchQueue.main.async",
+            "presentSettingsWindow()",
+        ):
+            self.assertIn(operation, target)
+        self.assertLess(target.index("stopDisplayClock()"),
+                        target.index("popover.handleOutsideClick()"))
+        self.assertLess(target.index("popover.handleOutsideClick()"),
+                        target.index("DispatchQueue.main.async"))
+        presenter = self.source.split("private func presentSettingsWindow()", 1)[1].split(
+            "\n    @objc private func", 1
+        )[0]
+        self.assertIn("stopDisplayClock()", presenter)
+        self.assertIn("settingsWindowController.show()", presenter)
+        self.assertLess(presenter.index("stopDisplayClock()"),
+                        presenter.index("settingsWindowController.show()"))
+        menu = self.source.split("private func installMainMenuIfNeeded()", 1)[1].split(
+            "@objc private func showSettings()", 1
+        )[0]
+        self.assertIn('title: "Settings…"', menu)
+        self.assertIn("#selector(showSettings)", menu)
+        self.assertIn('keyEquivalent: ","', menu)
+        self.assertIn("keyEquivalentModifierMask = [.command]", menu)
+        self.assertIn('title: "Quit Wattson"', menu)
+        self.assertIn("guard NSApp.mainMenu == nil", menu)
+
+    def test_settings_command_does_not_mutate_activation_policy(self):
+        settings_code = self.source.split("private func installMainMenuIfNeeded()", 1)[1]
+        settings_code += self.app_delegate
+        self.assertNotIn("setActivationPolicy", settings_code)
+
+    def test_system_battery_state_has_one_authoritative_cache(self):
+        self.assertNotIn("systemBatteryIconHidden: Bool?", self.source)
+        self.assertNotIn("systemBatteryIconRefreshGeneration", self.source)
+        self.assertIn("SystemBatteryIconController.cachedHidden", self.source)
+        self.assertIn("SystemBatteryIconController.didChange", self.source)
+        self.assertIn("systemBatteryIconObserver", self.source)
+
+    def test_system_battery_observer_updates_popover_and_is_removed(self):
+        observer = self.source.split("SystemBatteryIconController.didChange", 1)[1].split(
+            "wakeObserver =", 1
+        )[0]
+        self.assertIn("queue: .main", observer)
+        self.assertIn("updateSystemBatteryIconPresentation()", observer)
+        teardown = self.source.split("deinit", 1)[1].split("// MARK: - Clicks", 1)[0]
+        self.assertIn("systemBatteryIconObserver", teardown)
+        self.assertIn("removeObserver(systemBatteryIconObserver)", teardown)
+
+    def test_opening_refresh_publishes_through_the_core_controller(self):
+        refresh = self.source.split("private func refreshSystemBatteryIconState()", 1)[1].split(
+            "private func applySystemBatteryIconHidden", 1
+        )[0]
+        self.assertIn("SystemBatteryIconController.refreshHidden", refresh)
+        self.assertIn("updateSystemBatteryIconPresentation()", refresh)
+        self.assertNotIn("generation", refresh)
+
     def test_icon_updates_are_event_driven_not_polled(self):
         self.assertIn("IOPSNotificationCreateRunLoopSource", self.source)
+
+    def test_wake_requests_an_immediate_fresh_sample(self):
+        self.assertIn("NSWorkspace.didWakeNotification", self.source)
+        wake = self.source.split("NSWorkspace.didWakeNotification", 1)[1].split(
+            "startEventDrivenUpdates()", 1
+        )[0]
+        self.assertIn("history.reset()", wake)
+        self.assertIn("refreshPresentation()", wake)
+        self.assertIn(
+            "sampleNow(recordHistory: true, requiresFreshFollowUp: true)", wake
+        )
 
     def test_history_clock_is_two_seconds_and_display_clock_is_one(self):
         self.assertIn("historyInterval: TimeInterval = 2", self.source)
         self.assertIn("displayInterval: TimeInterval = 1", self.source)
 
+    def test_sampling_timers_have_coalescing_tolerance(self):
+        self.assertIn("historyTolerance: TimeInterval = 0.2", self.source)
+        self.assertIn("displayTolerance: TimeInterval = 0.1", self.source)
+        self.assertIn("timer.tolerance = Self.historyTolerance", self.source)
+        self.assertIn("timer.tolerance = Self.displayTolerance", self.source)
+
+    def test_periodic_ticks_coalesce_but_events_keep_one_fresh_follow_up(self):
+        self.assertIn("struct SampleRequestCoalescer", self.source)
+        self.assertIn("freshFollowUpRequested", self.source)
+        self.assertNotIn("private var resampleRequested", self.source)
+        event_updates = self.source.split("private func startEventDrivenUpdates", 1)[1].split(
+            "private func startHistoryClock", 1
+        )[0]
+        self.assertIn("requiresFreshFollowUp: true", event_updates)
+        history_clock = self.source.split("private func startHistoryClock", 1)[1].split(
+            "private func startDisplayClock", 1
+        )[0]
+        display_clock = self.source.split("private func startDisplayClock", 1)[1].split(
+            "private func stopDisplayClock", 1
+        )[0]
+        self.assertNotIn("requiresFreshFollowUp: true", history_clock)
+        repeating_display = display_clock.split("DispatchQueue.main.async", 1)[0]
+        self.assertNotIn("requiresFreshFollowUp: true", repeating_display)
+        deferred_open = display_clock.split("DispatchQueue.main.async", 1)[1]
+        self.assertIn("requiresFreshFollowUp: true", deferred_open)
+        finish = self.source.split("private func finishSample", 1)[1].split(
+            "private func refreshPresentation", 1
+        )[0]
+        follow_up = "sampleNow(recordHistory: completedRequest.recordHistory)"
+        self.assertIn(follow_up, finish)
+        self.assertLess(
+            finish.index(follow_up), finish.index("startupAvailability.finish")
+        )
+
+    def test_sampling_lifecycle_is_idempotent_and_cleans_up_sources(self):
+        self.assertIn("guard !started else { return true }", self.source)
+        self.assertIn("deinit", self.source)
+        self.assertIn("historyTimer?.invalidate()", self.source)
+        self.assertIn("displayTimer?.invalidate()", self.source)
+        self.assertIn("CFRunLoopSourceInvalidate", self.source)
+        self.assertIn("removeObserver", self.source)
+
     def test_sampling_sources_continue_during_menu_tracking(self):
         self.assertIn("CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)", self.source)
         self.assertEqual(self.source.count("RunLoop.main.add(timer, forMode: .common)"), 2)
+
+    def test_unchanged_status_button_chrome_is_not_reassigned(self):
+        refresh = self.source.split("private func refreshStatusItem()", 1)[1]
+        self.assertIn("renderedStatusButtonPresentation", refresh)
+        self.assertIn("presentation.showsPercentage != rendered?.showsPercentage", refresh)
+        self.assertIn("presentation.title != rendered?.title", refresh)
+        self.assertIn("presentation.alpha != rendered?.alpha", refresh)
 
     def test_fresh_smc_power_is_read_off_main_then_applied_before_presentation(self):
         sampling = self.source.split("fileprivate func sampleNow", 1)[1].split(
@@ -174,7 +313,8 @@ class StatusItemContractTests(unittest.TestCase):
         opening = self.popover.split("private func open(relativeTo", 1)[1].split(
             "private func close()", 1
         )[0]
-        self.assertIn("NSWorkspace.shared.accessibilityDisplayShouldReduceMotion", opening)
+        self.assertIn("let reduceMotion = Self.reducesMotion", opening)
+        self.assertIn("NSWorkspace.shared.accessibilityDisplayShouldReduceMotion", self.popover)
         self.assertIn("playEntranceAnimation", opening)
         self.assertIn('CABasicAnimation(keyPath: "opacity")', self.popover)
         self.assertIn('CABasicAnimation(keyPath: "transform")', self.popover)

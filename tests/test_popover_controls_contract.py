@@ -170,17 +170,48 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertLess(primary.index("popover.toggle"),
                         primary.index("refreshSystemBatteryIconState"))
         self.assertIn("SystemBatteryIconController.refreshHidden", self.status)
-        self.assertIn("DispatchQueue", self.system_icon)
-        self.assertIn("DispatchQueue.main.async", self.system_icon)
+        refresh = self.system_icon.split("static func refreshHidden", 1)[1].split(
+            "static func setHidden", 1
+        )[0]
+        self.assertIn("operations.enqueueRead", refresh)
+        self.assertIn("timeoutSeconds: 4", refresh)
+
+    def test_system_battery_write_does_not_block_appkit(self):
+        setter = self.system_icon.split("static func setHidden", 1)[1]
+        self.assertIn("operations.enqueueMutation", setter)
+        self.assertIn("timeoutSeconds: 6", setter)
+        apply = self.status.split("private func applySystemBatteryIconHidden", 1)[1].split(
+            "private func noBattery", 1
+        )[0]
+        self.assertIn("SystemBatteryIconController.setHidden(hidden)", apply)
+        self.assertIn("completion(succeeded)", apply)
 
     def test_stale_system_battery_reads_cannot_overwrite_a_newer_choice(self):
-        self.assertIn("systemBatteryIconRefreshGeneration", self.status)
-        self.assertIn("guard generation == self.systemBatteryIconRefreshGeneration", self.status)
+        self.assertIn("latestSettledSequence", self.system_icon)
+        self.assertIn("guard sequence >= latestSettledSequence", self.system_icon)
+        self.assertIn("SystemBatteryIconController.didChange", self.status)
+        self.assertIn("SystemBatteryIconController.cachedHidden", self.status)
+        self.assertNotIn("systemBatteryIconRefreshGeneration", self.status)
 
     def test_system_battery_controller_uses_the_privileged_helper(self):
         self.assertIn('"getSystemBatteryIconHidden"', self.system_icon)
         self.assertIn('"setSystemBatteryIconHidden"', self.system_icon)
         self.assertNotIn("Process()", self.system_icon)
+
+    def test_helper_backed_settings_share_one_serial_worker(self):
+        self.assertIn("enum HelperSettingsOperationWorker", self.system_icon)
+        self.assertIn(
+            "worker: SerialOperationWorker = HelperSettingsOperationWorker.shared",
+            self.system_icon,
+        )
+        self.assertIn("private func drainOne()", self.system_icon)
+
+    def test_pending_settings_reads_can_be_cancelled_before_selection(self):
+        cancellation = self.system_icon.split("func cancelPendingRead()", 1)[1].split(
+            "func performMutation", 1
+        )[0]
+        self.assertIn("pendingRead = nil", cancellation)
+        self.assertNotIn("pendingMutations", cancellation)
 
     def test_slider_hit_tests_as_one_control(self):
         # The track covers the whole bounds, so AppKit hit-tested a plain

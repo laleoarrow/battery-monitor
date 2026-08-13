@@ -117,7 +117,11 @@ final class LaneView: PopoverSection {
         let width = max(fraction * Self.trackWidth, watts > 0.05 ? 12 : 0)
 
         CATransaction.begin()
-        CATransaction.setAnimationDuration(0.45)
+        if animationsEnabled {
+            CATransaction.setAnimationDuration(0.45)
+        } else {
+            CATransaction.setDisableActions(true)
+        }
         lane.fill.frame = CGRect(x: 0, y: 0, width: width, height: Self.laneHeight)
         lane.fill.backgroundColor = color.withAlphaComponent(0.17).cgColor
         CATransaction.commit()

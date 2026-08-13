@@ -24,6 +24,119 @@ struct RightClickModeSequence {
     }
 }
 
+struct StatusButtonPresentation: Equatable {
+    let title: String
+    let showsPercentage: Bool
+    let alpha: CGFloat
+
+    init(snapshot: PowerSnapshot, showsPercentage: Bool, degraded: Bool) {
+        title = showsPercentage ? "\(snapshot.percent)% " : ""
+        self.showsPercentage = showsPercentage
+        alpha = degraded ? 0.45 : 1.0
+    }
+}
+
+/// Reduces battery availability into the small set of effects the controller
+/// may apply. Keeping this state separate makes a cold partial read distinct
+/// from a machine that truly has no battery, without coupling tests to AppKit.
+struct StartupAvailabilityReducer {
+    struct Plan {
+        let shouldTerminate: Bool
+        let shouldRetry: Bool
+        let snapshot: PowerSnapshot?
+        let shouldRecordHistory: Bool
+    }
+
+    private(set) var hasUsableSnapshot = false
+    private(set) var isDegraded = false
+
+    mutating func start(_ result: BatterySampler.SampleResult) -> Plan {
+        switch result {
+        case .absent:
+            hasUsableSnapshot = false
+            isDegraded = false
+            return Plan(
+                shouldTerminate: true, shouldRetry: false,
+                snapshot: nil, shouldRecordHistory: false
+            )
+        case .temporarilyUnavailable:
+            hasUsableSnapshot = false
+            isDegraded = true
+            return Plan(
+                shouldTerminate: false, shouldRetry: true,
+                snapshot: nil, shouldRecordHistory: false
+            )
+        case let .snapshot(snapshot):
+            return accept(snapshot, recordHistory: true)
+        }
+    }
+
+    mutating func finish(
+        _ snapshot: PowerSnapshot?,
+        recordHistory: Bool
+    ) -> Plan {
+        guard let snapshot else {
+            isDegraded = true
+            return Plan(
+                shouldTerminate: false, shouldRetry: false,
+                snapshot: nil, shouldRecordHistory: false
+            )
+        }
+        return accept(snapshot, recordHistory: recordHistory)
+    }
+
+    private mutating func accept(
+        _ snapshot: PowerSnapshot,
+        recordHistory: Bool
+    ) -> Plan {
+        hasUsableSnapshot = true
+        isDegraded = false
+        return Plan(
+            shouldTerminate: false, shouldRetry: false,
+            snapshot: snapshot, shouldRecordHistory: recordHistory
+        )
+    }
+}
+
+/// Coalesces the two periodic clocks into the sample already in flight, while
+/// retaining one follow-up for an event that happened after that sample began.
+/// This keeps coincident 1 s/2 s timer ticks from doubling IOKit/helper work.
+struct SampleRequestCoalescer {
+    struct Completion {
+        let recordHistory: Bool
+        let requiresFreshFollowUp: Bool
+    }
+
+    private(set) var isInFlight = false
+    private var historyRequested = false
+    private var freshFollowUpRequested = false
+
+    mutating func request(
+        recordHistory: Bool,
+        requiresFreshFollowUp: Bool
+    ) -> Bool {
+        historyRequested = historyRequested || recordHistory
+        guard !isInFlight else {
+            freshFollowUpRequested = freshFollowUpRequested || requiresFreshFollowUp
+            return false
+        }
+        isInFlight = true
+        return true
+    }
+
+    mutating func complete() -> Completion {
+        precondition(isInFlight)
+        let completion = Completion(
+            recordHistory: historyRequested,
+            requiresFreshFollowUp: freshFollowUpRequested
+        )
+        isInFlight = false
+        historyRequested = false
+        freshFollowUpRequested = false
+        return completion
+    }
+}
+
 final class StatusItemController: NSObject {
     /// The system menu bar font with tabular figures switched on. Deriving from
     /// menuBarFont keeps size and weight identical to every neighbouring item;
@@ -40,14 +153,15 @@ final class StatusItemController: NSObject {
     }()
 
     private static let historyInterval: TimeInterval = 2
+    private static let historyTolerance: TimeInterval = 0.2
     private static let displayInterval: TimeInterval = 1
+    private static let displayTolerance: TimeInterval = 0.1
 
-    /// True while we are showing a stale snapshot because a read failed.
-    private(set) var isDegraded = false
     private let log = OSLog(subsystem: "com.leoarrow.wattson", category: "menubar")
 
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let popover = PopoverController()
+    private lazy var settingsWindowController = SettingsWindowController()
     private let history = PowerHistory()
     private let samplingQueue = DispatchQueue(
         label: "com.leoarrow.wattson.sampler",
@@ -58,26 +172,38 @@ final class StatusItemController: NSObject {
     private var historyTimer: Timer?
     private var displayTimer: Timer?
     private var powerSourceRunLoopSource: CFRunLoopSource?
-    private var sampleInFlight = false
-    private var resampleRequested = false
-    private var pendingHistorySample = false
+    private var energyModeObserver: NSObjectProtocol?
+    private var settingsObserver: NSObjectProtocol?
+    private var systemBatteryIconObserver: NSObjectProtocol?
+    private var wakeObserver: NSObjectProtocol?
+    private var started = false
+    private var startupAvailability = StartupAvailabilityReducer()
+    private var hasUsableSnapshot: Bool { startupAvailability.hasUsableSnapshot }
+    private var isDegraded: Bool { startupAvailability.isDegraded }
+    private var sampleRequests = SampleRequestCoalescer()
     private var pressed = false
     private var clickRouter = ClickRouter()
     private var rightClickModes = RightClickModeSequence()
-    private var systemBatteryIconHidden: Bool?
-    private var systemBatteryIconRefreshGeneration = 0
     private var renderedStatusIconKey: BatteryIcon.RenderKey?
+    private var renderedStatusButtonPresentation: StatusButtonPresentation?
 
     func start() -> Bool {
+        guard !started else { return true }
         guard let button = statusItem.button else { return false }
-        guard let initial = BatterySampler.sample() else {
+        let startupPlan = startupAvailability.start(BatterySampler.sampleResult())
+        if startupPlan.shouldTerminate {
             os_log("no AppleSmartBattery — this Mac has no battery", log: log, type: .fault)
             noBattery()
             return false
         }
 
-        snapshot = initial
-        history.append(initial.totalInputW)
+        started = true
+        if let initial = startupPlan.snapshot {
+            snapshot = initial
+            if startupPlan.shouldRecordHistory {
+                history.append(initial.totalInputW)
+            }
+        }
         button.target = self
         button.action = #selector(handleClick)
         button.sendAction(on: [.leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp])
@@ -93,24 +219,126 @@ final class StatusItemController: NSObject {
             }
             self.applyEnergyMode(mode, completion: completion)
         }
-        popover.setSystemBatteryIconToggleHandler { [weak self] hidden in
-            self?.applySystemBatteryIconHidden(hidden) ?? false
+        popover.setSystemBatteryIconToggleHandler { [weak self] hidden, completion in
+            guard let self else {
+                completion(false)
+                return
+            }
+            self.applySystemBatteryIconHidden(hidden, completion: completion)
         }
+        wireSettingsPresentation()
+        installMainMenuIfNeeded()
 
-        EnergyModeController.observe { [weak self] _ in self?.refreshPresentation() }
-        NotificationCenter.default.addObserver(
+        energyModeObserver = EnergyModeController.observe {
+            [weak self] _ in self?.refreshPresentation()
+        }
+        settingsObserver = NotificationCenter.default.addObserver(
             forName: Settings.didChange, object: nil, queue: .main
         ) { [weak self] _ in
             self?.refreshPresentation()
+        }
+        installSystemBatteryIconObservationIfNeeded()
+        wakeObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.didWakeNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            guard let self else { return }
+            // Timers may be coalesced across sleep. Refresh immediately so a
+            // stale pre-sleep power route is never left visible after wake.
+            self.history.reset()
+            self.refreshPresentation()
+            self.sampleNow(recordHistory: true, requiresFreshFollowUp: true)
         }
         startEventDrivenUpdates()
         startHistoryClock()
         LoginItemController.refresh()
         refreshPresentation()
+        if startupPlan.shouldRetry {
+            sampleNow(recordHistory: false, requiresFreshFollowUp: true)
+        }
         return true
     }
 
+    deinit {
+        historyTimer?.invalidate()
+        displayTimer?.invalidate()
+        if let powerSourceRunLoopSource {
+            CFRunLoopSourceInvalidate(powerSourceRunLoopSource)
+        }
+        if let energyModeObserver {
+            NotificationCenter.default.removeObserver(energyModeObserver)
+        }
+        if let settingsObserver {
+            NotificationCenter.default.removeObserver(settingsObserver)
+        }
+        if let systemBatteryIconObserver {
+            NotificationCenter.default.removeObserver(systemBatteryIconObserver)
+        }
+        if let wakeObserver {
+            NSWorkspace.shared.notificationCenter.removeObserver(wakeObserver)
+        }
+        NSStatusBar.system.removeStatusItem(statusItem)
+    }
+
     // MARK: - Clicks
+
+    private func wireSettingsPresentation() {
+        popover.setSettingsHandler { [weak self] in
+            // PopoverController owns close-before-callback and dispatches this
+            // presenter on the next main turn. Calling the raw presenter here
+            // avoids a second close while keeping every direct command on the
+            // guarded `showSettings` path below.
+            self?.presentSettingsWindow()
+        }
+    }
+
+    private func installMainMenuIfNeeded() {
+        guard NSApp.mainMenu == nil else { return }
+
+        let mainMenu = NSMenu(title: "Wattson")
+        let applicationItem = NSMenuItem()
+        let applicationMenu = NSMenu(title: "Wattson")
+        applicationItem.submenu = applicationMenu
+        mainMenu.addItem(applicationItem)
+
+        let settingsItem = NSMenuItem(
+            title: "Settings…",
+            action: #selector(showSettings),
+            keyEquivalent: ","
+        )
+        settingsItem.target = self
+        settingsItem.keyEquivalentModifierMask = [.command]
+        applicationMenu.addItem(settingsItem)
+        applicationMenu.addItem(.separator())
+
+        let quitItem = NSMenuItem(
+            title: "Quit Wattson",
+            action: #selector(NSApplication.terminate(_:)),
+            keyEquivalent: "q"
+        )
+        quitItem.target = NSApp
+        quitItem.keyEquivalentModifierMask = [.command]
+        applicationMenu.addItem(quitItem)
+        NSApp.mainMenu = mainMenu
+    }
+
+    @objc private func showSettings() {
+        // Command-Comma and the application menu can fire while the popover is
+        // open. Establish the closed logical state synchronously, including
+        // stopping its 1 Hz display clock, before any Settings refresh runs.
+        stopDisplayClock()
+        popover.handleOutsideClick()
+        DispatchQueue.main.async { [weak self] in
+            self?.presentSettingsWindow()
+        }
+    }
+
+    private func presentSettingsWindow() {
+        // The quick-menu relay closes the popover first but its animated
+        // `popoverDidClose` arrives later. Stop hidden work at presentation
+        // time instead of waiting for that delegate callback.
+        stopDisplayClock()
+        settingsWindowController.show()
+    }
 
     @objc private func handleClick() {
         guard let button = statusItem.button else { return }
@@ -128,6 +356,10 @@ final class StatusItemController: NSObject {
                 }
             case .primary:
                 pressed = false
+                guard hasUsableSnapshot else {
+                    refreshStatusItem()
+                    continue
+                }
                 let opening = !popover.isOpen
                 refreshStatusItem()
                 popover.toggle(relativeTo: button)
@@ -164,7 +396,7 @@ final class StatusItemController: NSObject {
             }
             completion(landedMode)
             if landedMode == mode {
-                self.sampleNow(recordHistory: false)
+                self.sampleNow(recordHistory: false, requiresFreshFollowUp: true)
             } else {
                 self.refreshPresentation()
             }
@@ -172,39 +404,48 @@ final class StatusItemController: NSObject {
     }
 
     private func refreshSystemBatteryIconState() {
-        systemBatteryIconRefreshGeneration += 1
-        let generation = systemBatteryIconRefreshGeneration
-        guard HelperClient.isInstalled else {
-            systemBatteryIconHidden = nil
-            popover.updateSystemBatteryIconState(nil)
-            return
-        }
-        SystemBatteryIconController.refreshHidden { [weak self] hidden in
-            guard let self = self else { return }
-            guard generation == self.systemBatteryIconRefreshGeneration else { return }
-            self.systemBatteryIconHidden = hidden
-            self.popover.updateSystemBatteryIconState(hidden)
+        SystemBatteryIconController.refreshHidden { [weak self] _ in
+            self?.updateSystemBatteryIconPresentation()
         }
     }
 
-    private func applySystemBatteryIconHidden(_ hidden: Bool) -> Bool {
-        // Invalidate any read that began before this user choice.
-        systemBatteryIconRefreshGeneration += 1
+    private func installSystemBatteryIconObservationIfNeeded() {
+        guard systemBatteryIconObserver == nil else { return }
+        systemBatteryIconObserver = NotificationCenter.default.addObserver(
+            forName: SystemBatteryIconController.didChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.updateSystemBatteryIconPresentation()
+        }
+        updateSystemBatteryIconPresentation()
+    }
+
+    private func updateSystemBatteryIconPresentation() {
+        popover.updateSystemBatteryIconState(SystemBatteryIconController.cachedHidden)
+    }
+
+    private func applySystemBatteryIconHidden(
+        _ hidden: Bool,
+        completion: @escaping (Bool) -> Void
+    ) {
         guard HelperClient.isInstalled else {
             os_log("helper not installed — system battery setting is a no-op", log: log, type: .error)
-            refreshSystemBatteryIconState()
-            return false
+            updateSystemBatteryIconPresentation()
+            completion(false)
+            return
         }
-        let succeeded = SystemBatteryIconController.setHidden(hidden)
-        if succeeded {
-            systemBatteryIconHidden = hidden
-            popover.updateSystemBatteryIconState(hidden)
+        SystemBatteryIconController.setHidden(hidden) { [weak self] succeeded in
+            guard let self else {
+                completion(false)
+                return
+            }
+            self.updateSystemBatteryIconPresentation()
+            if !succeeded {
+                os_log("failed to update the system battery icon", log: self.log, type: .error)
+            }
+            completion(succeeded)
         }
-        refreshSystemBatteryIconState()
-        if !succeeded {
-            os_log("failed to update the system battery icon", log: log, type: .error)
-        }
-        return succeeded
     }
 
     private func noBattery() {
@@ -213,6 +454,10 @@ final class StatusItemController: NSObject {
     }
 
     private func confirmToggle(success: Bool) {
+        guard !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion else {
+            refreshPresentation()
+            return
+        }
         guard let button = statusItem.button else { return }
         button.wantsLayer = true
         guard let layer = button.layer else { return }
@@ -233,7 +478,7 @@ final class StatusItemController: NSObject {
         guard let source = IOPSNotificationCreateRunLoopSource({ raw in
             guard let raw else { return }
             let controller = Unmanaged<StatusItemController>.fromOpaque(raw).takeUnretainedValue()
-            controller.sampleNow(recordHistory: false)
+            controller.sampleNow(recordHistory: false, requiresFreshFollowUp: true)
         }, context)?.takeRetainedValue() else { return }
         powerSourceRunLoopSource = source
         CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)
@@ -243,6 +488,7 @@ final class StatusItemController: NSObject {
         let timer = Timer(timeInterval: Self.historyInterval, repeats: true) { [weak self] _ in
             self?.sampleNow(recordHistory: true)
         }
+        timer.tolerance = Self.historyTolerance
         historyTimer = timer
         RunLoop.main.add(timer, forMode: .common)
     }
@@ -252,13 +498,14 @@ final class StatusItemController: NSObject {
         let timer = Timer(timeInterval: Self.displayInterval, repeats: true) { [weak self] _ in
             self?.sampleNow(recordHistory: false)
         }
+        timer.tolerance = Self.displayTolerance
         displayTimer = timer
         RunLoop.main.add(timer, forMode: .common)
         // Let NSPopover hand its first frame to the window server before doing
         // a fresh IOKit read and rebuilding the animated modules.
         DispatchQueue.main.async { [weak self] in
             guard self?.displayTimer != nil else { return }
-            self?.sampleNow(recordHistory: false)
+            self?.sampleNow(recordHistory: false, requiresFreshFollowUp: true)
         }
     }
 
@@ -267,15 +514,15 @@ final class StatusItemController: NSObject {
         displayTimer = nil
     }
 
-    fileprivate func sampleNow(recordHistory: Bool) {
+    fileprivate func sampleNow(
+        recordHistory: Bool,
+        requiresFreshFollowUp: Bool = false
+    ) {
         dispatchPrecondition(condition: .onQueue(.main))
-        pendingHistorySample = pendingHistorySample || recordHistory
-        guard !sampleInFlight else {
-            resampleRequested = true
-            return
-        }
-
-        sampleInFlight = true
+        guard sampleRequests.request(
+            recordHistory: recordHistory,
+            requiresFreshFollowUp: requiresFreshFollowUp
+        ) else { return }
         samplingQueue.async { [weak self] in
             let fresh = BatterySampler.sample()
             let livePower = HelperClient.livePower()
@@ -290,36 +537,41 @@ final class StatusItemController: NSObject {
         livePower: HelperClient.LivePower?
     ) {
         dispatchPrecondition(condition: .onQueue(.main))
-        let recordHistory = pendingHistorySample
-        let shouldResample = resampleRequested
-        pendingHistorySample = false
-        resampleRequested = false
-        sampleInFlight = false
+        let completedRequest = sampleRequests.complete()
 
-        guard var fresh else {
-            isDegraded = true
-            refreshPresentation()
-            if shouldResample { sampleNow(recordHistory: false) }
+        // An IOPS/wake event happened after this acquisition began, so this
+        // result is already superseded. Do not briefly publish it or attach a
+        // coincident history tick to the wrong side of the transition; carry
+        // that tick into the one retained post-event acquisition instead.
+        if completedRequest.requiresFreshFollowUp {
+            sampleNow(recordHistory: completedRequest.recordHistory)
             return
         }
-        if let live = livePower {
-            fresh = BatterySampler.resolvedLivePower(
+
+        var resolved = fresh
+        if let fresh, let live = livePower {
+            resolved = BatterySampler.resolvedLivePower(
                 snapshot: fresh,
                 adapterW: live.adapterW,
                 systemW: live.systemW
             )
         }
-        isDegraded = false
-        snapshot = fresh
-        if recordHistory {
-            history.append(fresh.totalInputW)
+        let availabilityPlan = startupAvailability.finish(
+            resolved,
+            recordHistory: completedRequest.recordHistory
+        )
+        if let fresh = availabilityPlan.snapshot {
+            snapshot = fresh
+            if availabilityPlan.shouldRecordHistory {
+                history.append(fresh.totalInputW)
+            }
         }
         refreshPresentation()
-        if shouldResample { sampleNow(recordHistory: false) }
     }
 
     private func refreshPresentation() {
         refreshStatusItem()
+        guard hasUsableSnapshot else { return }
         let historyPresentation = history.presentation
         popover.update(
             snapshot: snapshot,
@@ -331,6 +583,15 @@ final class StatusItemController: NSObject {
 
     private func refreshStatusItem() {
         guard let button = statusItem.button else { return }
+        guard hasUsableSnapshot else {
+            button.image = nil
+            button.imagePosition = .noImage
+            button.title = "—"
+            button.alphaValue = 0.45
+            renderedStatusIconKey = nil
+            renderedStatusButtonPresentation = nil
+            return
+        }
         let mode = EnergyModeController.current
         let key = BatteryIcon.renderKey(
             for: snapshot, mode: mode, pressed: pressed,
@@ -342,18 +603,59 @@ final class StatusItemController: NSObject {
             renderedStatusIconKey = key
         }
 
+        let presentation = StatusButtonPresentation(
+            snapshot: snapshot,
+            showsPercentage: Settings.showsMenuBarPercentage,
+            degraded: isDegraded
+        )
+        let rendered = renderedStatusButtonPresentation
+
         // Percentage left of the glyph, matching the system battery. Setting a
         // plain title rather than an attributed one lets AppKit keep the text
-        // colour correct across light, dark and the pressed highlight.
-        if Settings.showsMenuBarPercentage {
-            button.font = Self.menuBarTabularFont
-            button.title = "\(snapshot.percent)% "
-            button.imagePosition = .imageRight
-        } else {
-            button.title = ""
-            button.imagePosition = .imageOnly
+        // colour correct across light, dark and the pressed highlight. These
+        // setters invalidate status-item layout, so write only changed fields.
+        if presentation.showsPercentage != rendered?.showsPercentage {
+            if presentation.showsPercentage { button.font = Self.menuBarTabularFont }
+            button.imagePosition = presentation.showsPercentage ? .imageRight : .imageOnly
         }
-
-        button.alphaValue = isDegraded ? 0.45 : 1.0
+        if presentation.title != rendered?.title {
+            button.title = presentation.title
+        }
+        if presentation.alpha != rendered?.alpha {
+            button.alphaValue = presentation.alpha
+        }
+        renderedStatusButtonPresentation = presentation
     }
 }
+
+#if DEBUG
+extension StatusItemController {
+    func configureSettingsWindowForTest(_ controller: SettingsWindowController) {
+        settingsWindowController = controller
+    }
+
+    func wireSettingsPresentationForTest() { wireSettingsPresentation() }
+    func installMainMenuForTest() { installMainMenuIfNeeded() }
+    func beginSystemBatteryIconObservationForTest() {
+        installSystemBatteryIconObservationIfNeeded()
+    }
+
+    var settingsWindowForTest: NSWindow? { settingsWindowController.window }
+    var presentedSystemBatteryIconHiddenForTest: Bool? {
+        popover.cachedSystemBatteryIconStateForTest
+    }
+    var popoverIsOpenForTest: Bool { popover.isOpen }
+    var popoverIsWatchingOutsideClicksForTest: Bool { popover.isWatchingOutsideClicks }
+    var displayClockIsRunningForTest: Bool { displayTimer != nil }
+
+    func startDisplayClockForSettingsCommandTest() { startDisplayClock() }
+
+    func openPopoverForSettingsCommandTest(relativeTo button: NSStatusBarButton) {
+        popover.openForSettingsCommandTest(relativeTo: button)
+    }
+
+    func presentSettingsFromQuickMenuForTest() {
+        popover.presentSettingsFromQuickMenuForTest()
+    }
+}
+#endif

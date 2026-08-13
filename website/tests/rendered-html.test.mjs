@@ -82,3 +82,57 @@ test("exports a server-independent GitHub Pages document", async () => {
   assert.doesNotMatch(html, /class="copy-button"/i);
   assert.equal(assets.some((asset) => asset.endsWith(".js")), false);
 });
+
+test("preserves non-site documentation during the Pages export", async () => {
+  const exporter = await readFile(
+    new URL("../scripts/export-pages.mjs", import.meta.url),
+    "utf8",
+  );
+
+  assert.doesNotMatch(
+    exporter,
+    /rm\(outputRoot,\s*\{[^}]*recursive:\s*true[^}]*\}\)/s,
+  );
+  await Promise.all([
+    access(
+      new URL(
+        "../../docs/superpowers/plans/2026-08-13-settings-window.md",
+        import.meta.url,
+      ),
+    ),
+    access(
+      new URL(
+        "../../docs/superpowers/specs/2026-08-13-settings-window-design.md",
+        import.meta.url,
+      ),
+    ),
+    access(
+      new URL(
+        "../../docs/superpowers/specs/assets/wattson-settings-c-plus-e.png",
+        import.meta.url,
+      ),
+    ),
+  ]);
+});
+
+test("keeps release workflow defaults aligned with VERSION", async () => {
+  const version = (
+    await readFile(new URL("../../VERSION", import.meta.url), "utf8")
+  ).trim();
+  const workflowUrls = [
+    new URL("../../.github/workflows/promote-release.yml", import.meta.url),
+    new URL("../../.github/workflows/macos-helper-install.yml", import.meta.url),
+  ];
+
+  for (const workflowUrl of workflowUrls) {
+    const workflow = await readFile(workflowUrl, "utf8");
+    const versionInput = workflow.match(
+      /^\s+version:\s*\n((?:^\s{8,}.*\n){1,8})/m,
+    );
+    assert.ok(versionInput, `${workflowUrl.pathname} is missing the version input`);
+    const defaultVersion = versionInput[1].match(
+      /^\s+default:\s*["']?([^"'\s]+)["']?\s*$/m,
+    );
+    assert.equal(defaultVersion?.[1], version, workflowUrl.pathname);
+  }
+});

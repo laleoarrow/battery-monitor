@@ -102,7 +102,7 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.4")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.5")
         self.assertIn('VERSION_FILE="$ROOT_DIR/VERSION"', self.package)
         self.assertIn('Contents/MacOS/Wattson', self.package_pkg)
 
@@ -125,7 +125,9 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertNotIn('ln -s /Applications', self.package)
 
     def test_packaging_destination_rejects_a_spoofed_tmpdir(self):
-        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+        # Keep the spoof outside DARWIN_USER_TEMP_DIR even when a release gate
+        # runs this repository from an isolated snapshot under that directory.
+        with tempfile.TemporaryDirectory(dir=pathlib.Path.home()) as directory:
             fake_temp = pathlib.Path(directory)
             target = fake_temp / "Wattson.app"
             target.mkdir()
@@ -291,7 +293,7 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn('"$HELPER_BIN" --health-probe', self.installer_helper)
         self.assertIn("--health-probe", self.helper_source)
         self.assertIn('case "health"', self.helper_source)
-        self.assertIn('response["health"] as? Bool == true', self.helper_source)
+        self.assertIn('strictJSONBool(response["health"]) == true', self.helper_source)
         self.assertIn("modeVerified", self.helper_source)
         self.assertIn("dropHealthProbePrivilegesToConsoleUser", self.helper_source)
         self.assertIn("--installer-ready-token=", self.installer)

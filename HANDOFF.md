@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.4`
+- Version: `3.0.5`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +14,11 @@
 
 ## Public artifacts
 
-`scripts/release.sh 3.0.4` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.5` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.4-macos-universal.pkg`
-- `Wattson-v3.0.4-macos-universal.dmg`
-- `Wattson-v3.0.4-release-info.txt`
+- `Wattson-v3.0.5-macos-universal.pkg`
+- `Wattson-v3.0.5-macos-universal.dmg`
+- `Wattson-v3.0.5-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -67,7 +67,7 @@ Headless checks:
 ```bash
 swift test --parallel
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.4
+bash scripts/release.sh 3.0.5
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -101,12 +101,23 @@ runners.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.4` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.5` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.4.
+6. Announce the release only after every public route resolves to v3.0.5.
+
+## v3.0.5 settings, performance, and compatibility work
+
+The v3.0.5 pass adds the native C+E Settings window for the application's
+existing controls without changing the monitoring popover. It centralizes
+module visibility and system-backed state, hardens helper framing and queue
+fairness, coalesces settings operations, fixes cross-hardware battery capacity,
+temperature, signed-current, and power-mode parsing, and reduces hidden-state
+rendering and timer work. The release keeps one retained Settings window,
+supports keyboard and VoiceOver navigation, and preserves Reduce Motion,
+macOS 12, Apple-silicon, and Intel fallbacks.
 
 ## v3.0.4 telemetry compatibility work
 
