@@ -1024,6 +1024,20 @@ class HelperContractTests(unittest.TestCase):
                 return readJSONObject(from: fd)
             }
 
+            private func reachesEOF(on fd: Int32, by deadline: UInt64) -> Bool {
+                var buffer = [UInt8](repeating: 0, count: 256)
+                while DispatchTime.now().uptimeNanoseconds < deadline {
+                    let count = recv(fd, &buffer, buffer.count, MSG_DONTWAIT)
+                    if count == 0 { return true }
+                    if count > 0 { continue }
+                    if errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR {
+                        return false
+                    }
+                    usleep(10_000)
+                }
+                return false
+            }
+
             // Model a request that reached the ready FIFO immediately before
             // system sleep. Uptime pauses during sleep; this injected continuous
             // clock jumps, so the accepted request must expire without reaching
@@ -1079,6 +1093,53 @@ class HelperContractTests(unittest.TestCase):
             sleepInbox.closeAll()
             close(sleepListener)
             unlink(sleepSocketPath)
+
+            // Prove the read deadline itself deterministically. The production
+            // clock is injected here so runner scheduling cannot move the
+            // assertion boundary relative to the server's accept time.
+            let expirySocketPath = "/tmp/wattson-inbox-expiry-" + String(getpid())
+                + "-" + UUID().uuidString.prefix(8) + ".sock"
+            unlink(expirySocketPath)
+            let expiryListener = makeListener(at: expirySocketPath)
+            let expiryAcceptedAt: UInt64 = 20_000_000_000
+            private var expiryContinuousNow = expiryAcceptedAt
+            private var expiryInbox = SocketRequestInbox(
+                requestContinuousNow: { expiryContinuousNow }
+            )
+            let expiryClient = connectClient(to: expirySocketPath)
+            require(
+                expiryInbox.poll(listener: expiryListener, timeoutMilliseconds: 0) == true,
+                "expiry client accept"
+            )
+            let expiryDeadline = expiryAcceptedAt + socketRequestStartTimeoutNanoseconds
+            require(
+                expiryInbox.nextReadContinuousDeadline == expiryDeadline,
+                "expiry deadline starts at accept"
+            )
+            expiryContinuousNow = expiryDeadline - 1
+            _ = expiryInbox.poll(listener: expiryListener, timeoutMilliseconds: 0)
+            require(expiryInbox.count == 1, "reader must remain before its deadline")
+            expiryContinuousNow = expiryDeadline
+            require(
+                expiryInbox.poll(listener: expiryListener, timeoutMilliseconds: 0) == true,
+                "reader expires at its exact deadline"
+            )
+            let expiryResponse = readJSONObject(from: expiryClient)
+            require(
+                strictJSONBool(expiryResponse?["ok"]) == false,
+                "expired reader must fail"
+            )
+            require(
+                reachesEOF(
+                    on: expiryClient,
+                    by: DispatchTime.now().uptimeNanoseconds + 500_000_000
+                ),
+                "expired reader must close"
+            )
+            close(expiryClient)
+            expiryInbox.closeAll()
+            close(expiryListener)
+            unlink(expirySocketPath)
 
             let socketPath = "/tmp/wattson-inbox-" + String(getpid())
                 + "-" + UUID().uuidString.prefix(8) + ".sock"
@@ -1456,20 +1517,28 @@ class HelperContractTests(unittest.TestCase):
             )
 
             let timeoutClient = connectClient(to: socketPath)
+            // connect() only queues the client; the helper's two-second budget
+            // intentionally begins at accept(). A FIFO barrier proves this
+            // silent client was accepted before starting the real-clock window.
+            let timeoutBarrierClient = connectClient(to: socketPath)
+            require(
+                writeAll(
+                    Data("{\"op\":\"acceptanceBarrier\"}".utf8),
+                    to: timeoutBarrierClient
+                ),
+                "timeout acceptance barrier write"
+            )
+            require(
+                acceptedBeforeBarrier.wait(timeout: .now() + 1) == .success,
+                "silent client accepted before timeout barrier"
+            )
+            require(
+                strictJSONBool(readJSONObject(from: timeoutBarrierClient)?["ok"]) == true,
+                "timeout acceptance barrier response"
+            )
+            close(timeoutBarrierClient)
             let timeoutDeadline = DispatchTime.now().uptimeNanoseconds + 3_000_000_000
-            var reachedEOF = false
-            var byte: UInt8 = 0
-            while DispatchTime.now().uptimeNanoseconds < timeoutDeadline {
-                let count = recv(timeoutClient, &byte, 1, MSG_DONTWAIT)
-                if count == 0 {
-                    reachedEOF = true
-                    break
-                }
-                if count < 0 && errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR {
-                    break
-                }
-                usleep(10_000)
-            }
+            let reachedEOF = reachesEOF(on: timeoutClient, by: timeoutDeadline)
             close(timeoutClient)
             require(reachedEOF, "silent client must be closed at its monotonic deadline")
 
