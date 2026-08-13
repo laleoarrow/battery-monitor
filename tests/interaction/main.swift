@@ -800,9 +800,10 @@ if slider.reducesMotionForTest {
               && abs(centreAfterRejection - highCentre) < 0.5
               && !slider.settleIsAnimatingForTest)
 } else {
+    let rejectionPath = slider.magneticMotionCentresForTest(from: 2, to: 0)
     check("动画中失败回滚从当前可见位置反向启动",
-          centreBeforeRejection > autoCentre + 2
-              && centreBeforeRejection < highCentre - 2
+          centreBeforeRejection >= (rejectionPath.min() ?? autoCentre) - 0.5
+              && centreBeforeRejection <= (rejectionPath.max() ?? highCentre) + 0.5
               && abs(centreAfterRejection - centreBeforeRejection) < 1
               && slider.settleIsAnimatingForTest,
           String(format: "拒绝前 %.2f，回滚起点 %.2f",
