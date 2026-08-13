@@ -245,17 +245,13 @@ let controller = SettingsWindowController(
     dependencies: .fixture,
     frameAutosaveName: nil
 )
-// Only the opt-in GUI method shows the real window:
-controller.show(activateApp: false)
 let first = controller.windowForTest
-require(first?.isVisible == true, "visible")
+require(first != nil, "window constructed without presentation")
+require(first?.isVisible == false, "ordinary contract does not show")
 require(first?.isReleasedWhenClosed == false, "retained")
 require(first?.isRestorable == false, "not visibility-restored")
 require(first?.styleMask.contains(.miniaturizable) == false, "no minimize")
 require(first?.styleMask.contains(.resizable) == false, "no zoom/resize")
-first?.close()
-controller.show(activateApp: false)
-require(first === controller.windowForTest, "single instance")
 require(controller.sectionIdentifiersForTest == ["general", "modules"], "section order")
 require(first?.contentView?.frame.size == NSSize(width: 720, height: 520), "approved content size")
 require(controller.selectedSectionIdentifierForTest == "general", "general initially selected")
@@ -265,6 +261,9 @@ require(controller.visibleSectionIdentifierForTest == "modules", "single content
 ```
 
 The fixture closures return deterministic states and do not invoke the helper.
+An independent method guarded by `WATTSON_RUN_INTERACTION=1` performs
+`show -> close -> show` and asserts visibility plus the same `NSWindow`
+identity; that method is never entered by the ordinary suite.
 
 - [ ] **Step 2: Run and witness RED**
 
