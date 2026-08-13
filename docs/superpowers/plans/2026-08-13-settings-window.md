@@ -1,5 +1,10 @@
 # Wattson Settings Window Implementation Plan
 
+> Historical implementation record. The user later required pixel alignment
+> to the approved C+E raster; the final geometry and visual rules in
+> `../specs/2026-08-13-settings-window-design.md` supersede the original compact
+> measurements quoted below.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add a native, single-instance C+E Settings window for Wattson's seven existing settings while preserving the current popover, helper semantics, and menu-bar behavior.
@@ -13,8 +18,9 @@
 - Target macOS 12 and newer on arm64 and x86_64.
 - Keep `LSUIElement=true`; do not add a Dock icon or change activation policy.
 - Preserve the current popover layout and every existing quick control.
-- Add only General and Modules settings that already exist today.
-- Implement the approved `docs/superpowers/specs/assets/wattson-settings-c-plus-e.png` direction: 720×520 content, 176-point sidebar, General list page, Modules 2×2 card page.
+- Keep the General and Modules scope narrow; the only new General preference is
+  the requested Wattson/macOS-style menu-bar glyph selector.
+- Implement the approved `docs/superpowers/specs/assets/wattson-settings-c-plus-e.png` direction: 792×794 reference content, 232-point sidebar, General list page, Modules 2×2 card page, with uniform small-screen scaling.
 - Keep Auto/Low/High out of Settings.
 - Keep existing UserDefaults keys and default values unchanged.
 - Treat launchd and Control Center as authoritative; do not mirror them into UserDefaults.

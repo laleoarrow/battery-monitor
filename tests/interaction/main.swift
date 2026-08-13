@@ -334,13 +334,26 @@ if #available(macOS 26.0, *) {
 }
 if expectsNativeGlass {
     let selectorFill = slider.nativeSelectorFillAlphaForTest ?? 0
-    check("原生材质使用无染色 Regular 底轨和中性无边框选中胶囊",
-          slider.nativeTrackStyleForTest == 0
-              && slider.nativeTrackHasTintForTest == false
-              && selectorFill > 0
-              && selectorFill <= 0.25
-              && slider.nativeSelectorBorderWidthForTest == 0,
-          "track=\(String(describing: slider.nativeTrackStyleForTest)) fill=\(selectorFill)")
+    let nativeStructureMatches = slider.nativeTrackStyleForTest == 0
+        && slider.nativeTrackHasTintForTest == false
+        && slider.nativeSelectorStyleForTest == 1
+        && abs((slider.nativeGlassContainerSpacingForTest ?? -1)) < 0.01
+        && slider.nativeSelectorIsInsideContainerForTest == true
+        && slider.nativeSelectorBorderWidthForTest == 0
+    if ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] == "1" {
+        check("原生透镜在减少透明度时由不透明高对比内容层覆盖折射",
+              nativeStructureMatches
+                  && selectorFill >= 0.999
+                  && (slider.nativeSelectorContentFillAlphaForTest ?? 0) >= 0.999,
+              "selector=\(selectorFill) "
+                  + "content=\(slider.nativeSelectorContentFillAlphaForTest ?? -1)")
+    } else {
+        check("原生材质用 Regular 底轨与 Clear 移动透镜",
+              nativeStructureMatches && selectorFill > 0 && selectorFill <= 0.08,
+              "track=\(String(describing: slider.nativeTrackStyleForTest)) "
+                  + "selector=\(String(describing: slider.nativeSelectorStyleForTest)) "
+                  + "fill=\(selectorFill)")
+    }
 } else {
     check("旧系统路径不向普通 NSView 发送 Liquid Glass 属性",
           slider.nativeTrackStyleForTest == nil)
@@ -348,8 +361,24 @@ if expectsNativeGlass {
         check("旧系统减少透明度时 selector 使用不透明填充",
               (slider.fallbackSelectorOpacityForTest ?? 0) >= 0.999,
               "alpha \(slider.fallbackSelectorOpacityForTest ?? -1)")
+        check("旧系统减少透明度时不执行背景采样或折射",
+              slider.fallbackLensSamplingEnabledForTest == false
+                  && slider.fallbackLensSampleImageForTest == nil
+                  && abs((slider.fallbackLensMagnificationForTest ?? -1) - 1) < 0.001,
+              "sampling=\(String(describing: slider.fallbackLensSamplingEnabledForTest)) "
+                  + "captures=\(slider.fallbackLensCaptureCountForTest)")
+    } else {
+        check("旧系统静止时只缓存轨道像素，不叠加折射字形",
+              slider.fallbackLensSampleImageForTest != nil
+                  && slider.fallbackLensSamplingEnabledForTest == false
+                  && abs((slider.fallbackLensMagnificationForTest ?? -1) - 1) < 0.001,
+              "sampling=\(String(describing: slider.fallbackLensSamplingEnabledForTest)) "
+                  + "captures=\(slider.fallbackLensCaptureCountForTest)")
     }
 }
+
+let fallbackCaptureAtRest = slider.fallbackLensCaptureCountForTest
+var fallbackFirstLiftedSample: CGRect?
 
 // 只有真正拖动才浮起并膨胀；按下和触控板轻微抖动都维持静止形态。
 do {
@@ -380,15 +409,32 @@ do {
     let dragged = slider.knobScaleForTest
     if expectsNativeGlass {
         let liftedFill = slider.nativeSelectorFillAlphaForTest ?? 0
-        check("开始拖动后仍保持中性无边框选中胶囊",
-              liftedFill > 0
-                  && slider.nativeSelectorBorderWidthForTest == 0)
+        if ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] == "1" {
+            check("减少透明度时拖动仍保持不透明高对比透镜",
+                  liftedFill >= 0.999
+                      && (slider.nativeSelectorContentFillAlphaForTest ?? 0) >= 0.999)
+        } else {
+            check("开始拖动后 Clear 折射透镜仍保持原生材质",
+                  liftedFill > 0
+                      && liftedFill <= 0.08
+                      && slider.nativeSelectorStyleForTest == 1
+                      && slider.nativeSelectorBorderWidthForTest == 0)
+        }
         slider.update(selected: .auto,
                       enabledModes: [.auto, .low, .high],
                       tint: .systemBlue)
         check("拖动中的 1 Hz 刷新不会压平浮起材质",
               abs((slider.nativeSelectorFillAlphaForTest ?? 0) - liftedFill) < 0.001,
               "刷新前 \(liftedFill)，刷新后 \(slider.nativeSelectorFillAlphaForTest ?? -1)")
+    } else if !slider.reducesMotionForTest
+                && ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] != "1" {
+        fallbackFirstLiftedSample = slider.fallbackLensSampleRectForTest
+        check("旧系统只在越过拖动阈值后开启真实像素折射",
+              slider.fallbackLensSamplingEnabledForTest == true
+                  && slider.fallbackLensSampleImageForTest != nil
+                  && abs((slider.fallbackLensMagnificationForTest ?? -1) - 1.105) < 0.001,
+              "sampling=\(String(describing: slider.fallbackLensSamplingEnabledForTest)) "
+                  + "magnification=\(slider.fallbackLensMagnificationForTest ?? -1)")
     }
     if slider.reducesMotionForTest {
         check("减少动态效果时拖动不放大",
@@ -399,6 +445,14 @@ do {
               String(format: "%.2f × %.2f", dragged.width, dragged.height))
     }
     slider.mouseDragged(with: ev(.leftMouseDragged, (autoCentre + lowCentre) / 2))
+    if let first = fallbackFirstLiftedSample {
+        let moved = slider.fallbackLensSampleRectForTest ?? .zero
+        check("旧系统透镜跟随拖动移动采样区且不逐帧截图",
+              moved.midX > first.midX + 0.08
+                  && slider.fallbackLensCaptureCountForTest == fallbackCaptureAtRest,
+              "first=\(first) moved=\(moved) "
+                  + "captures=\(slider.fallbackLensCaptureCountForTest)")
+    }
     let midpointBlend = slider.activeLabelOpacitiesForTest
     check("拖到两档正中时两侧文字各约一半亮度",
           midpointBlend.count == 3
@@ -413,6 +467,10 @@ do {
         check("释放后选中胶囊回到中性静止材质",
               (slider.nativeSelectorFillAlphaForTest ?? 0) > 0
                   && slider.nativeSelectorBorderWidthForTest == 0)
+    } else {
+        check("旧系统释放后关闭折射，不让模型裁剪与呈现层动画错位",
+              slider.fallbackLensSamplingEnabledForTest == false
+                  && abs((slider.fallbackLensMagnificationForTest ?? -1) - 1) < 0.001)
     }
     spin(0.3)
 }

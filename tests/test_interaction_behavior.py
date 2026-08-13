@@ -28,7 +28,10 @@ class InteractionBehaviorTests(unittest.TestCase):
         self.assertIn("ModeSliderView(modes: [.auto, .low, .high])", source)
         self.assertNotIn("ModeSliderView(modes: [.low, .auto, .high])", source)
 
-    def _assert_interaction_contract(self, force_legacy=False):
+    def _assert_interaction_contract(
+        self, force_legacy=False, accessibility_fallback=False,
+        force_reduce_transparency=False
+    ):
         if os.environ.get("WATTSON_RUN_INTERACTION") != "1":
             self.skipTest("real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)")
         if shutil.which("xcrun") is None:
@@ -43,10 +46,14 @@ class InteractionBehaviorTests(unittest.TestCase):
         environment = os.environ.copy()
         if force_legacy:
             environment["WATTSON_FORCE_LEGACY_KNOB"] = "1"
+        if accessibility_fallback:
             environment["WATTSON_FORCE_REDUCE_MOTION"] = "1"
             environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] = "1"
         else:
             environment["WATTSON_FORCE_REDUCE_MOTION"] = "0"
+            environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] = (
+                "1" if force_reduce_transparency else "0"
+            )
         result = subprocess.run(
             ["/bin/bash", str(RUNNER)], capture_output=True, text=True, check=False,
             timeout=300, env=environment
@@ -68,7 +75,13 @@ class InteractionBehaviorTests(unittest.TestCase):
         self._assert_interaction_contract()
 
     def test_legacy_slider_contract_holds_against_real_appkit(self):
+        self._assert_interaction_contract(force_legacy=True, accessibility_fallback=True)
+
+    def test_legacy_optical_lens_contract_holds_against_real_appkit(self):
         self._assert_interaction_contract(force_legacy=True)
+
+    def test_reduce_transparency_contract_holds_against_real_appkit(self):
+        self._assert_interaction_contract(force_reduce_transparency=True)
 
 
 if __name__ == "__main__":

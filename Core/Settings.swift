@@ -3,6 +3,13 @@ import Foundation
 /// Preferences that more than one surface reads. The popover writes them; the
 /// status item listens and redraws.
 enum Settings {
+    /// Stable persisted values for Wattson's own menu-bar glyph. A typed enum
+    /// keeps unknown future values from leaking into rendering code.
+    enum MenuBarIconStyle: String, CaseIterable {
+        case wattson
+        case native
+    }
+
     enum Module: String, CaseIterable {
         case flow, ring, lanes, history
 
@@ -20,6 +27,7 @@ enum Settings {
 
     enum Change: Equatable {
         case menuBarPercentage
+        case menuBarIconStyle
         case module(Module)
     }
 
@@ -27,8 +35,12 @@ enum Settings {
     static let changeUserInfoKey = "WattsonSettingsChange"
 
     private static let percentageKey = "menubar.showsPercentage"
+    private static let iconStyleKey = "menubar.iconStyle"
     private static let registeredDefaults: [String: Any] = {
-        var values: [String: Any] = [percentageKey: true]
+        var values: [String: Any] = [
+            percentageKey: true,
+            iconStyleKey: MenuBarIconStyle.wattson.rawValue,
+        ]
         for module in Module.allCases {
             values[module.defaultsKey] = true
         }
@@ -56,6 +68,22 @@ enum Settings {
             guard showsMenuBarPercentage != newValue else { return }
             defaults.set(newValue, forKey: percentageKey)
             postChange(.menuBarPercentage)
+        }
+    }
+
+    /// Defaults to Wattson's existing artwork so an upgrade never changes the
+    /// menu-bar appearance without the user's choice.
+    static var menuBarIconStyle: MenuBarIconStyle {
+        get {
+            guard let rawValue = defaults.string(forKey: iconStyleKey) else {
+                return .wattson
+            }
+            return MenuBarIconStyle(rawValue: rawValue) ?? .wattson
+        }
+        set {
+            guard menuBarIconStyle != newValue else { return }
+            defaults.set(newValue.rawValue, forKey: iconStyleKey)
+            postChange(.menuBarIconStyle)
         }
     }
 

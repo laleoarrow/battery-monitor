@@ -51,6 +51,89 @@ final class WattsonTests: XCTestCase {
         slider.mouseUp(with: sliderMouseEvent(.leftMouseUp, x: endX, window: window))
     }
 
+    func testLegacyModeSliderLensSamplesRealTrackPixelsAndRefractsDuringDrag() {
+        _ = NSApplication.shared
+        let slider = ModeSliderView(
+            modes: [.auto, .low, .high],
+            forceLegacyMaterialsForTest: true
+        )
+        let window = NSWindow(
+            contentRect: NSRect(x: -10_000, y: -10_000,
+                                width: 300, height: ModeSliderView.preferredHeight),
+            styleMask: [.borderless], backing: .buffered, defer: false
+        )
+        defer { window.orderOut(nil) }
+        window.contentView = slider
+        slider.frame = window.contentView!.bounds
+        slider.update(selected: .auto,
+                      enabledModes: [.auto, .low, .high],
+                      tint: .systemBlue)
+        window.alphaValue = 0.01
+        window.orderFrontRegardless()
+        slider.layoutSubtreeIfNeeded()
+        spinMainRunLoop(0.05)
+
+        guard let sampledTrack = slider.fallbackLensSampleImageForTest,
+              let data = sampledTrack.dataProvider?.data as Data? else {
+            return XCTFail("legacy lens must cache real AppKit-rendered track pixels")
+        }
+        XCTAssertGreaterThan(sampledTrack.width, 200)
+        XCTAssertGreaterThan(sampledTrack.height, 20)
+        XCTAssertGreaterThan(Set(data).count, 8, "sample must contain real rendered chrome pixels")
+        XCTAssertGreaterThan(slider.fallbackLensRimWidthForTest ?? 0, 0)
+        XCTAssertEqual(slider.fallbackLensSamplingEnabledForTest, false)
+        XCTAssertEqual(slider.fallbackLensMagnificationForTest ?? -1, 1, accuracy: 0.001)
+
+        let capturesBeforeDrag = slider.fallbackLensCaptureCountForTest
+        let start = slider.detentCentreForTest(0)
+        slider.mouseDown(with: sliderMouseEvent(.leftMouseDown, x: start, window: window))
+        slider.mouseDragged(with: sliderMouseEvent(.leftMouseDragged,
+                                                   x: start + 6,
+                                                   window: window))
+        let firstLiftedSample = slider.fallbackLensSampleRectForTest
+        for step in 1...60 {
+            let x = start + (slider.detentCentreForTest(1) - start) * CGFloat(step) / 60
+            slider.mouseDragged(with: sliderMouseEvent(.leftMouseDragged,
+                                                       x: x,
+                                                       window: window))
+        }
+        let during = slider.fallbackLensSampleRectForTest
+
+        XCTAssertEqual(slider.fallbackLensSamplingEnabledForTest, true)
+        XCTAssertEqual(slider.fallbackLensMagnificationForTest ?? -1, 1.105, accuracy: 0.001)
+        XCTAssertNotNil(firstLiftedSample)
+        XCTAssertNotNil(during)
+        XCTAssertGreaterThan(
+            (during?.midX ?? 0) - (firstLiftedSample?.midX ?? 0),
+            0.15
+        )
+        XCTAssertGreaterThan(slider.knobScaleForTest.width, 1.12)
+        XCTAssertGreaterThan(slider.knobScaleForTest.height, 1.34)
+        XCTAssertEqual(
+            slider.fallbackLensCaptureCountForTest,
+            capturesBeforeDrag,
+            "dragging must only move the cached crop, never recapture the view"
+        )
+
+        slider.mouseUp(with: sliderMouseEvent(.leftMouseUp,
+                                              x: slider.detentCentreForTest(1),
+                                              window: window))
+        XCTAssertEqual(slider.fallbackLensSamplingEnabledForTest, false)
+        XCTAssertEqual(slider.fallbackLensMagnificationForTest ?? -1, 1, accuracy: 0.001)
+    }
+
+    func testMacOS26ModeSliderUsesNativeClearGlassAsTheMovingLens() throws {
+        guard #available(macOS 26.0, *) else { throw XCTSkip("requires native Liquid Glass") }
+        let (slider, window) = makeAnimatedSlider(selected: .auto)
+        defer { window.orderOut(nil) }
+
+        XCTAssertEqual(slider.nativeSelectorStyleForTest,
+                       NSGlassEffectView.Style.clear.rawValue)
+        XCTAssertEqual(slider.nativeGlassContainerSpacingForTest ?? -1, 0, accuracy: 0.01)
+        XCTAssertEqual(slider.nativeSelectorIsInsideContainerForTest, true)
+        XCTAssertNil(slider.fallbackLensSampleImageForTest)
+    }
+
     func testModeSliderRestingSelectionMeetsTrackEdges() {
         for (mode, index) in [(EnergyMode.auto, 0), (.low, 1), (.high, 2)] {
             let (slider, window) = makeAnimatedSlider(selected: mode)
@@ -981,10 +1064,12 @@ final class WattsonTests: XCTestCase {
         let appearance = NSAppearance(named: .darkAqua)!
         let first = BatteryIcon.renderKey(
             for: baseline, mode: .auto, pressed: false,
+            style: .wattson,
             appearance: appearance, increasedContrast: false
         )
         let samePixels = BatteryIcon.renderKey(
             for: changedWatts, mode: .auto, pressed: false,
+            style: .wattson,
             appearance: appearance, increasedContrast: false
         )
         XCTAssertEqual(first, samePixels)
@@ -993,20 +1078,124 @@ final class WattsonTests: XCTestCase {
         changedPercent.percent = 66
         XCTAssertNotEqual(first, BatteryIcon.renderKey(
             for: changedPercent, mode: .auto, pressed: false,
+            style: .wattson,
             appearance: appearance, increasedContrast: false
         ))
         XCTAssertNotEqual(first, BatteryIcon.renderKey(
             for: baseline, mode: .low, pressed: false,
+            style: .wattson,
             appearance: appearance, increasedContrast: false
         ))
         XCTAssertNotEqual(first, BatteryIcon.renderKey(
             for: baseline, mode: .auto, pressed: false,
+            style: .wattson,
             appearance: NSAppearance(named: .aqua)!, increasedContrast: false
         ))
         XCTAssertNotEqual(first, BatteryIcon.renderKey(
             for: baseline, mode: .auto, pressed: false,
+            style: .wattson,
             appearance: appearance, increasedContrast: true
         ))
+        XCTAssertNotEqual(first, BatteryIcon.renderKey(
+            for: baseline, mode: .auto, pressed: false,
+            style: .native,
+            appearance: appearance, increasedContrast: false
+        ))
+    }
+
+    func testNativeBatteryIconKeyIgnoresWattsonTintInputsButTracksItsShape() {
+        let baseline = PowerSnapshot(
+            percent: 67, plugged: false, adapterW: 0, batteryW: -20, systemW: 20
+        )
+        let dark = NSAppearance(named: .darkAqua)!
+        let first = BatteryIcon.renderKey(
+            for: baseline, mode: .auto, pressed: false,
+            style: .native,
+            appearance: dark, increasedContrast: false
+        )
+        XCTAssertEqual(first, BatteryIcon.renderKey(
+            for: baseline, mode: .low, pressed: true,
+            style: .native,
+            appearance: NSAppearance(named: .aqua)!, increasedContrast: true
+        ))
+
+        var changedPercent = baseline
+        changedPercent.percent = 68
+        XCTAssertEqual(first, BatteryIcon.renderKey(
+            for: changedPercent, mode: .auto, pressed: false,
+            style: .native,
+            appearance: dark, increasedContrast: false
+        ))
+        var belowBoundary = baseline
+        belowBoundary.percent = 62
+        var aboveBoundary = baseline
+        aboveBoundary.percent = 63
+        XCTAssertNotEqual(
+            BatteryIcon.renderKey(
+                for: belowBoundary, mode: .auto, pressed: false,
+                style: .native,
+                appearance: dark, increasedContrast: false
+            ),
+            BatteryIcon.renderKey(
+                for: aboveBoundary, mode: .auto, pressed: false,
+                style: .native,
+                appearance: dark, increasedContrast: false
+            )
+        )
+        var pluggedIdle = baseline
+        pluggedIdle.plugged = true
+        pluggedIdle.batteryW = 0
+        pluggedIdle.adapterW = 20
+        XCTAssertEqual(first, BatteryIcon.renderKey(
+            for: pluggedIdle, mode: .auto, pressed: false,
+            style: .native,
+            appearance: dark, increasedContrast: false
+        ))
+        var charging = pluggedIdle
+        charging.batteryW = 5
+        charging.systemW = 15
+        XCTAssertNotEqual(first, BatteryIcon.renderKey(
+            for: charging, mode: .auto, pressed: false,
+            style: .native,
+            appearance: dark, increasedContrast: false
+        ))
+    }
+
+    func testNativeBatteryUsesDistinctStaticPublicLevels() {
+        let expected = [
+            (0, "battery.0percent"),
+            (25, "battery.25percent"),
+            (50, "battery.50percent"),
+            (75, "battery.75percent"),
+            (100, "battery.100percent"),
+        ]
+        XCTAssertEqual(
+            expected.map { BatteryIcon.nativeStaticSymbolName(for: $0.0) },
+            expected.map { $0.1 }
+        )
+        XCTAssertEqual(Set(expected.map { $0.1 }).count, expected.count)
+        XCTAssertEqual(
+            BatteryIcon.nativeSymbolName(percent: 25, charging: true),
+            "battery.100percent.bolt"
+        )
+        XCTAssertEqual(
+            BatteryIcon.nativeSymbolName(percent: 25, charging: false),
+            "battery.25percent"
+        )
+    }
+
+    func testNativeBatteryIconIsAResolutionIndependentTemplate() {
+        let snapshot = PowerSnapshot(
+            percent: 42, plugged: true, adapterW: 65, batteryW: 20, systemW: 45
+        )
+        let image = BatteryIcon.image(
+            for: snapshot, mode: .auto, pressed: false, style: .native
+        )
+        XCTAssertTrue(image.isTemplate)
+        XCTAssertGreaterThanOrEqual(image.size.width, 21)
+        XCTAssertLessThanOrEqual(image.size.width, 23)
+        XCTAssertGreaterThanOrEqual(image.size.height, 10)
+        XCTAssertLessThanOrEqual(image.size.height, 14)
     }
 
     func testPluggedIdleBreathingIsIdempotentAndStopsWhenHidden() {
@@ -1662,12 +1851,112 @@ final class WattsonTests: XCTestCase {
         }
         wait(for: [setStarted], timeout: 1)
         LoginItemController.refresh { state in
-            XCTAssertEqual(state, .checking)
+            XCTAssertEqual(state, .notRegistered)
             refreshCompleted.fulfill()
         }
-        wait(for: [refreshCompleted], timeout: 1)
         releaseSet.signal()
-        wait(for: [setCompleted], timeout: 1)
+        wait(for: [setCompleted, refreshCompleted], timeout: 1)
+        XCTAssertEqual(LoginItemController.state, .notRegistered)
+    }
+
+    func testSupersededLoginItemRefreshStillCompletesEveryWaitingCaller() {
+        let firstReadStarted = expectation(description: "first login-item read started")
+        let waitingCallerCompleted = expectation(
+            description: "superseded login-item refresh caller completed"
+        )
+        let releaseFirstRead = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var readCount = 0
+
+        LoginItemController.configureForTest(
+            available: true,
+            initialState: .enabled,
+            send: { request, _ in
+                XCTAssertEqual(request["op"] as? String, "getLaunchAtLoginEnabled")
+                stateLock.lock()
+                readCount += 1
+                let currentRead = readCount
+                stateLock.unlock()
+                if currentRead == 1 {
+                    firstReadStarted.fulfill()
+                    releaseFirstRead.wait()
+                    return ["ok": true, "enabled": true]
+                }
+                return ["ok": true, "enabled": false]
+            }
+        )
+        defer { LoginItemController.resetTestConfiguration() }
+
+        LoginItemController.refresh { state in
+            XCTAssertEqual(state, .notRegistered)
+            waitingCallerCompleted.fulfill()
+        }
+        wait(for: [firstReadStarted], timeout: 1)
+
+        // Popover/status refreshes intentionally have no completion. They may
+        // supersede helper I/O, but must not strand a Settings caller waiting
+        // for the latest authoritative state.
+        LoginItemController.refresh()
+        releaseFirstRead.signal()
+
+        wait(for: [waitingCallerCompleted], timeout: 1)
+        XCTAssertEqual(LoginItemController.state, .notRegistered)
+        stateLock.lock()
+        let observedReadCount = readCount
+        stateLock.unlock()
+        XCTAssertEqual(observedReadCount, 2)
+    }
+
+    func testRecoveredAvailabilityRefreshSurvivesAStaleInFlightSet() {
+        let setStarted = expectation(description: "login-item set started")
+        let setCompleted = expectation(description: "stale login-item set completed")
+        let unavailableCompleted = expectation(description: "unavailable refresh completed")
+        let recoveredCompleted = expectation(description: "recovered refresh completed")
+        let releaseSet = DispatchSemaphore(value: 0)
+
+        LoginItemController.configureForTest(
+            available: true,
+            initialState: .enabled,
+            send: { request, _ in
+                switch request["op"] as? String {
+                case "setLaunchAtLoginEnabled":
+                    setStarted.fulfill()
+                    releaseSet.wait()
+                    return ["ok": true, "enabled": false]
+                case "getLaunchAtLoginEnabled":
+                    return ["ok": true, "enabled": false]
+                default:
+                    XCTFail("unexpected login-item helper operation")
+                    return nil
+                }
+            }
+        )
+        defer { LoginItemController.resetTestConfiguration() }
+
+        LoginItemController.setEnabled(false) { result in
+            guard case .success = result else {
+                XCTFail("the stale helper mutation still returns its own result")
+                return
+            }
+            setCompleted.fulfill()
+        }
+        wait(for: [setStarted], timeout: 1)
+
+        LoginItemController.setAvailabilityForTest(false)
+        LoginItemController.refresh { state in
+            XCTAssertEqual(state, .unavailable)
+            unavailableCompleted.fulfill()
+        }
+        wait(for: [unavailableCompleted], timeout: 1)
+
+        LoginItemController.setAvailabilityForTest(true)
+        LoginItemController.refresh { state in
+            XCTAssertEqual(state, .notRegistered)
+            recoveredCompleted.fulfill()
+        }
+        releaseSet.signal()
+
+        wait(for: [setCompleted, recoveredCompleted], timeout: 1)
         XCTAssertEqual(LoginItemController.state, .notRegistered)
     }
 
@@ -1737,11 +2026,73 @@ final class WattsonTests: XCTestCase {
         )
     }
 
+    func testFailedLoginItemSetKeepsRefreshWaitersForAuthoritativeReadback() {
+        let setStarted = expectation(description: "login-item set started")
+        let setCompleted = expectation(description: "failed set completed")
+        let readbackStarted = expectation(description: "authoritative readback started")
+        let refreshCompleted = expectation(description: "waiting refresh completed")
+        let releaseSet = DispatchSemaphore(value: 0)
+        let releaseReadback = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var waiterDidComplete = false
+
+        LoginItemController.configureForTest(
+            available: true,
+            initialState: .enabled,
+            send: { request, _ in
+                switch request["op"] as? String {
+                case "setLaunchAtLoginEnabled":
+                    setStarted.fulfill()
+                    releaseSet.wait()
+                    return nil
+                case "getLaunchAtLoginEnabled":
+                    readbackStarted.fulfill()
+                    releaseReadback.wait()
+                    return ["ok": true, "enabled": false]
+                default:
+                    XCTFail("unexpected login-item helper operation")
+                    return nil
+                }
+            }
+        )
+        defer { LoginItemController.resetTestConfiguration() }
+
+        LoginItemController.setEnabled(false) { result in
+            guard case .failure = result else {
+                XCTFail("nil write reply must fail")
+                return
+            }
+            setCompleted.fulfill()
+        }
+        wait(for: [setStarted], timeout: 1)
+
+        LoginItemController.refresh { state in
+            XCTAssertEqual(state, .notRegistered)
+            stateLock.lock()
+            waiterDidComplete = true
+            stateLock.unlock()
+            refreshCompleted.fulfill()
+        }
+        releaseSet.signal()
+
+        wait(for: [setCompleted, readbackStarted], timeout: 1)
+        stateLock.lock()
+        let completedBeforeReadback = waiterDidComplete
+        stateLock.unlock()
+        XCTAssertFalse(
+            completedBeforeReadback,
+            "a restoration value must not settle an authoritative refresh waiter"
+        )
+
+        releaseReadback.signal()
+        wait(for: [refreshCompleted], timeout: 1)
+        XCTAssertEqual(LoginItemController.state, .notRegistered)
+    }
+
     func testUnavailableRefreshInvalidatesOlderLoginItemCompletion() {
         let readStarted = expectation(description: "old read started")
         let unavailableCompleted = expectation(description: "unavailable refresh completed")
-        let staleCompleted = expectation(description: "stale refresh completion")
-        staleCompleted.isInverted = true
+        let olderCallerCompleted = expectation(description: "older refresh caller completed")
         let releaseRead = DispatchSemaphore(value: 0)
 
         LoginItemController.configureForTest(
@@ -1755,16 +2106,19 @@ final class WattsonTests: XCTestCase {
         )
         defer { LoginItemController.resetTestConfiguration() }
 
-        LoginItemController.refresh { _ in staleCompleted.fulfill() }
+        LoginItemController.refresh { state in
+            XCTAssertEqual(state, .unavailable)
+            olderCallerCompleted.fulfill()
+        }
         wait(for: [readStarted], timeout: 1)
         LoginItemController.setAvailabilityForTest(false)
         LoginItemController.refresh { state in
             XCTAssertEqual(state, .unavailable)
             unavailableCompleted.fulfill()
         }
-        wait(for: [unavailableCompleted], timeout: 1)
+        wait(for: [olderCallerCompleted, unavailableCompleted], timeout: 1)
         releaseRead.signal()
-        wait(for: [staleCompleted], timeout: 0.1)
+        spinMainRunLoop(0.02)
         XCTAssertEqual(LoginItemController.state, .unavailable)
     }
 

@@ -233,6 +233,125 @@ class HelperContractTests(unittest.TestCase):
             self.assertEqual(run_result.returncode, 0, run_result.stderr)
             self.assertIn("high power capability self-test passed", run_result.stdout)
 
+    def test_high_power_capability_cache_executable_fixture(self):
+        self.assertIn("private struct HighPowerCapabilityCache", self.source)
+        mode_enum = "private enum Mode" + self.source.split(
+            "private enum Mode", 1
+        )[1].split("private enum BatteryPreferenceWorkerOperation", 1)[0]
+        pure_parser = "private func supportsHighPower(" + self.source.split(
+            "private func supportsHighPower(", 1
+        )[1].split("private func parsedHighPowerCapability", 1)[0]
+        capability_cache = "private func parsedHighPowerCapability" + self.source.split(
+            "private func parsedHighPowerCapability", 1
+        )[1].split("private var highPowerCapabilityCache", 1)[0]
+        harness_source = textwrap.dedent(
+            """
+            import Darwin
+            import Foundation
+            """
+        ) + mode_enum + pure_parser + capability_cache + textwrap.dedent(
+            r'''
+
+            private func require(_ condition: @autoclosure () -> Bool, _ message: String) {
+                guard condition() else {
+                    FileHandle.standardError.write(Data((message + "\n").utf8))
+                    exit(1)
+                }
+            }
+
+            let supported = """
+            Capabilities for AC Power:
+             displaysleep
+             lowpowermode
+             highpowermode
+            """
+            let unsupported = """
+            Capabilities for Battery Power:
+             displaysleep
+             lowpowermode
+            """
+
+            var supportedCalls = 0
+            let supportedProvider: () -> String? = {
+                supportedCalls += 1
+                return supported
+            }
+            private var supportedCache = HighPowerCapabilityCache()
+            require(supportedCache.resolve(provider: supportedProvider) == true,
+                    "supported capability")
+            require(supportedCache.resolve(provider: supportedProvider) == true,
+                    "supported capability cache hit")
+            require(supportedCalls == 1, "supported provider must run once")
+
+            var unsupportedCalls = 0
+            let unsupportedProvider: () -> String? = {
+                unsupportedCalls += 1
+                return unsupported
+            }
+            private var unsupportedCache = HighPowerCapabilityCache()
+            require(unsupportedCache.resolve(provider: unsupportedProvider) == false,
+                    "unsupported capability")
+            require(unsupportedCache.resolve(provider: unsupportedProvider) == false,
+                    "unsupported capability cache hit")
+            require(unsupportedCalls == 1, "unsupported provider must run once")
+
+            var commandResponses: [String?] = [nil, supported]
+            var commandCalls = 0
+            let flakyCommandProvider: () -> String? = {
+                commandCalls += 1
+                return commandResponses.removeFirst()
+            }
+            private var commandFailureCache = HighPowerCapabilityCache()
+            require(commandFailureCache.resolve(provider: flakyCommandProvider) == nil,
+                    "command failure must stay unknown")
+            require(commandFailureCache.resolve(provider: flakyCommandProvider) == true,
+                    "command failure must retry")
+            require(commandFailureCache.resolve(provider: flakyCommandProvider) == true,
+                    "successful retry must then cache")
+            require(commandCalls == 2, "command failure must not be cached")
+
+            var parseResponses: [String?] = ["not pmset capability output", unsupported]
+            var parseCalls = 0
+            let flakyParseProvider: () -> String? = {
+                parseCalls += 1
+                return parseResponses.removeFirst()
+            }
+            private var parseFailureCache = HighPowerCapabilityCache()
+            require(parseFailureCache.resolve(provider: flakyParseProvider) == nil,
+                    "parse failure must stay unknown")
+            require(parseFailureCache.resolve(provider: flakyParseProvider) == false,
+                    "parse failure must retry")
+            require(parseFailureCache.resolve(provider: flakyParseProvider) == false,
+                    "successful false retry must then cache")
+            require(parseCalls == 2, "parse failure must not be cached")
+
+            print("high power capability cache self-test passed")
+            '''
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            directory_path = pathlib.Path(directory)
+            harness_path = directory_path / "main.swift"
+            executable_path = directory_path / "high-power-capability-cache-self-test"
+            harness_path.write_text(harness_source, encoding="utf-8")
+            compile_result = subprocess.run(
+                ["/usr/bin/xcrun", "swiftc", str(harness_path), "-o", str(executable_path)],
+                check=False,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
+            run_result = subprocess.run(
+                [str(executable_path)],
+                check=False,
+                text=True,
+                capture_output=True,
+                timeout=5,
+            )
+            self.assertEqual(run_result.returncode, 0, run_result.stderr)
+            self.assertIn(
+                "high power capability cache self-test passed", run_result.stdout
+            )
+
     def test_helper_output_capture_and_mode_parser_executable_self_test(self):
         mode_enum = "private enum Mode" + self.source.split(
             "private enum Mode", 1
@@ -338,6 +457,12 @@ class HelperContractTests(unittest.TestCase):
         )[0]
         self.assertEqual(get_mode.count("livePowerMode()"), 1)
         self.assertEqual(set_mode.count("livePowerMode()"), 1)
+        live_mode = self.source.split("private func livePowerMode()", 1)[1].split(
+            "private func mode(fromLiveOutput", 1
+        )[0]
+        self.assertIn('runOutput(["/usr/bin/pmset", "-g", "live"])', live_mode)
+        self.assertNotIn("HighPowerCapabilityCache", live_mode)
+        self.assertNotIn("highPowerCapabilityCache", live_mode)
 
     def test_rejects_anything_outside_the_whitelist(self):
         self.assertIn('case "health"', self.source)

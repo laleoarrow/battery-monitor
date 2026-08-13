@@ -16,7 +16,8 @@ enum BatteryIcon {
     /// 1 Hz presentation refresh can keep the existing NSImage.
     struct RenderKey: Equatable {
         let percent: Int
-        let plugged: Bool
+        let showsBolt: Bool
+        let style: Settings.MenuBarIconStyle
         let tintRole: TintRole
         let appearanceName: String
         let increasedContrast: Bool
@@ -26,9 +27,25 @@ enum BatteryIcon {
         for snapshot: PowerSnapshot,
         mode: EnergyMode,
         pressed: Bool,
+        style: Settings.MenuBarIconStyle,
         appearance: NSAppearance,
         increasedContrast: Bool
     ) -> RenderKey {
+        let percent = min(max(snapshot.percent, 0), 100)
+        if style == .native {
+            // Public SF Symbols are template artwork. Wattson-specific tint,
+            // appearance and pressed-state inputs therefore cannot alter them.
+            let showsBolt = snapshot.state == .charging
+            return RenderKey(
+                percent: showsBolt ? 100 : nativeStaticLevel(for: percent),
+                showsBolt: showsBolt,
+                style: style,
+                tintRole: .template,
+                appearanceName: "",
+                increasedContrast: false
+            )
+        }
+
         let tintRole: TintRole
         if pressed {
             tintRole = .template
@@ -42,8 +59,9 @@ enum BatteryIcon {
             tintRole = .template
         }
         return RenderKey(
-            percent: snapshot.percent,
-            plugged: snapshot.plugged,
+            percent: percent,
+            showsBolt: snapshot.plugged,
+            style: style,
             tintRole: tintRole,
             appearanceName: appearance.name.rawValue,
             increasedContrast: increasedContrast
@@ -53,7 +71,16 @@ enum BatteryIcon {
     /// Geometry never changes — only the fill colour does. `pressed` forces
     /// template rendering because a coloured image does not invert under the
     /// menu bar's selection highlight, and would sit unreadable on top of it.
-    static func image(for snapshot: PowerSnapshot, mode: EnergyMode, pressed: Bool) -> NSImage {
+    static func image(
+        for snapshot: PowerSnapshot,
+        mode: EnergyMode,
+        pressed: Bool,
+        style: Settings.MenuBarIconStyle
+    ) -> NSImage {
+        if style == .native {
+            return nativeImage(for: snapshot)
+        }
+
         let tint = color(for: snapshot, mode: mode)
         let useTemplate = pressed || tint == nil
 
@@ -71,6 +98,68 @@ enum BatteryIcon {
         } else {
             image.isTemplate = false
         }
+        return image
+    }
+
+    /// Uses Apple's public SF battery artwork at the nearest supported level.
+    /// Battery symbols do not actually honor SF Symbols' variable-value API,
+    /// so explicit static names avoid a misleading always-full glyph.
+    private static func nativeImage(for snapshot: PowerSnapshot) -> NSImage {
+        let percent = min(max(snapshot.percent, 0), 100)
+        let level = nativeStaticLevel(for: percent)
+        let charging = snapshot.state == .charging
+        let canonicalName = nativeSymbolName(percent: percent, charging: charging)
+        let aliasName = charging ? "battery.100.bolt" : "battery.\(level)"
+        let symbol = NSImage(
+            systemSymbolName: canonicalName,
+            accessibilityDescription: nil
+        ) ?? NSImage(
+            systemSymbolName: aliasName,
+            accessibilityDescription: nil
+        )
+
+        let configuration = NSImage.SymbolConfiguration(
+            pointSize: 13,
+            weight: .regular
+        )
+        if let configured = symbol?.withSymbolConfiguration(configuration) {
+            configured.isTemplate = true
+            return configured
+        }
+        return nativeFallbackImage(for: snapshot)
+    }
+
+    static func nativeStaticSymbolName(for percent: Int) -> String {
+        let level = nativeStaticLevel(for: percent)
+        return "battery.\(level)percent"
+    }
+
+    static func nativeSymbolName(percent: Int, charging: Bool) -> String {
+        charging ? "battery.100percent.bolt" : nativeStaticSymbolName(for: percent)
+    }
+
+    private static func nativeStaticLevel(for percent: Int) -> Int {
+        switch percent {
+        case ...12: return 0
+        case ...37: return 25
+        case ...62: return 50
+        case ...87: return 75
+        default: return 100
+        }
+    }
+
+    /// Safe fallback for an unexpectedly missing SF Symbol. This reuses the
+    /// same macOS-derived proportions as Wattson's existing vector path, but
+    /// deliberately drops all semantic colour so AppKit owns menu-bar tinting.
+    private static func nativeFallbackImage(for snapshot: PowerSnapshot) -> NSImage {
+        let charging = snapshot.state == .charging
+        let percent = charging ? 100 : nativeStaticLevel(for: snapshot.percent)
+        let image = NSImage(size: NSSize(width: width, height: height), flipped: false) { _ in
+            NSGraphicsContext.current?.cgContext.scaleBy(x: width / 22, y: height / 13)
+            draw(percent: percent, plugged: charging, color: .black)
+            return true
+        }
+        image.isTemplate = true
         return image
     }
 

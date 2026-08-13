@@ -1,8 +1,185 @@
 import AppKit
 
-/// A horizontally locked mode bar. One native Liquid Glass surface carries
-/// the labels; a restrained neutral capsule moves above it to show selection
-/// without stacking a second foggy glass layer.
+/// Public Core Animation primitives provide a consistent optical edge on old
+/// systems and a restrained highlight inside native Liquid Glass. Keeping the
+/// chrome separate from sampled content also lets Reduce Transparency remove
+/// refraction without changing the slider's geometry or hit testing.
+private final class OpticalLensChromeView: NSView {
+    private let causticLayer = CAGradientLayer()
+    private let rimLayer = CAShapeLayer()
+    private let innerEdgeLayer = CAShapeLayer()
+
+    private(set) var rimWidth: CGFloat = 1
+
+    override var isFlipped: Bool { true }
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        wantsLayer = true
+        layer?.masksToBounds = true
+        layer?.addSublayer(causticLayer)
+        layer?.addSublayer(innerEdgeLayer)
+        layer?.addSublayer(rimLayer)
+        apply(reduceTransparency: false, lifted: false)
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    func apply(reduceTransparency: Bool, lifted: Bool) {
+        rimWidth = reduceTransparency ? 1.5 : (lifted ? 1.15 : 0.9)
+        layer?.backgroundColor = reduceTransparency
+            ? NSColor(white: lifted ? 0.22 : 0.27, alpha: 1).cgColor
+            : NSColor.clear.cgColor
+        rimLayer.lineWidth = rimWidth
+        rimLayer.strokeColor = NSColor.white.withAlphaComponent(
+            reduceTransparency ? 0.58 : (lifted ? 0.52 : 0.36)
+        ).cgColor
+        innerEdgeLayer.lineWidth = reduceTransparency ? 0.75 : 0.55
+        innerEdgeLayer.strokeColor = NSColor.black.withAlphaComponent(
+            reduceTransparency ? 0.28 : 0.18
+        ).cgColor
+        causticLayer.isHidden = reduceTransparency
+        causticLayer.colors = [
+            NSColor.white.withAlphaComponent(lifted ? 0.30 : 0.18).cgColor,
+            NSColor.white.withAlphaComponent(0.03).cgColor,
+            NSColor.black.withAlphaComponent(lifted ? 0.07 : 0.04).cgColor,
+            NSColor.white.withAlphaComponent(lifted ? 0.16 : 0.09).cgColor,
+        ]
+        causticLayer.locations = [0, 0.24, 0.70, 1]
+        causticLayer.startPoint = CGPoint(x: 0.04, y: 0.02)
+        causticLayer.endPoint = CGPoint(x: 0.96, y: 0.98)
+        needsLayout = true
+    }
+
+    override func layout() {
+        super.layout()
+        let radius = bounds.height / 2
+        layer?.cornerRadius = radius
+        layer?.cornerCurve = .continuous
+        causticLayer.frame = bounds
+        let outer = bounds.insetBy(dx: rimWidth / 2, dy: rimWidth / 2)
+        rimLayer.fillColor = NSColor.clear.cgColor
+        rimLayer.path = CGPath(roundedRect: outer,
+                               cornerWidth: max(radius - rimWidth / 2, 0),
+                               cornerHeight: max(radius - rimWidth / 2, 0),
+                               transform: nil)
+        let inner = bounds.insetBy(dx: 1.7, dy: 1.7)
+        innerEdgeLayer.fillColor = NSColor.clear.cgColor
+        innerEdgeLayer.path = CGPath(roundedRect: inner,
+                                     cornerWidth: max(radius - 1.7, 0),
+                                     cornerHeight: max(radius - 1.7, 0),
+                                     transform: nil)
+    }
+}
+
+/// macOS 12–25 fallback. A cached AppKit rendering of the real track content
+/// is cropped and magnified inside the moving capsule. Drag events only adjust
+/// `contentsRect`; they do not ask AppKit to render a new bitmap every frame.
+private final class LegacyOpticalLensView: NSView {
+    private let sampleLayer = CALayer()
+    private let chromeView = OpticalLensChromeView(frame: .zero)
+    private var hostFrameInTrack = NSRect.zero
+    private var trackBounds = NSRect.zero
+    private var lifted = false
+    private var reduceTransparency = false
+
+    private(set) var sampleImage: CGImage?
+    private(set) var sampleRect = CGRect.zero
+    private(set) var magnification: CGFloat = 1.018
+    var rimWidth: CGFloat { chromeView.rimWidth }
+    var samplingEnabled: Bool { lifted && !reduceTransparency && sampleImage != nil }
+
+    override var isFlipped: Bool { true }
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        wantsLayer = true
+        layer?.masksToBounds = true
+        sampleLayer.contentsGravity = .resize
+        sampleLayer.magnificationFilter = .linear
+        sampleLayer.minificationFilter = .trilinear
+        // The cached material replaces the underlying track pixels inside the
+        // lens. Foreground labels stay above the lens, so an opaque sample is
+        // what prevents the base glyph plus refracted glyph plus active glyph
+        // from becoming unreadable triple text.
+        sampleLayer.opacity = 1
+        layer?.addSublayer(sampleLayer)
+        addSubview(chromeView)
+        applyMaterial(reduceTransparency: false, lifted: false)
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    func install(sample image: CGImage) {
+        sampleImage = image
+        sampleLayer.contents = image
+        sampleLayer.contentsScale = window?.backingScaleFactor
+            ?? NSScreen.main?.backingScaleFactor
+            ?? 2
+        updateSamplingRect()
+    }
+
+    func applyMaterial(reduceTransparency: Bool, lifted: Bool) {
+        self.reduceTransparency = reduceTransparency
+        self.lifted = lifted
+        layer?.backgroundColor = reduceTransparency
+            ? NSColor(white: lifted ? 0.22 : 0.27, alpha: 1).cgColor
+            : NSColor.white.withAlphaComponent(lifted ? 0.075 : 0.105).cgColor
+        sampleLayer.isHidden = !samplingEnabled
+        chromeView.apply(reduceTransparency: reduceTransparency, lifted: lifted)
+        updateSamplingRect()
+    }
+
+    func update(hostFrameInTrack: NSRect, trackBounds: NSRect) {
+        self.hostFrameInTrack = hostFrameInTrack
+        self.trackBounds = trackBounds
+        updateSamplingRect()
+    }
+
+    private func updateSamplingRect() {
+        guard trackBounds.width > 0, trackBounds.height > 0 else { return }
+        magnification = samplingEnabled ? 1.105 : 1
+        guard samplingEnabled else {
+            sampleRect = .zero
+            sampleLayer.contentsRect = .zero
+            return
+        }
+
+        let sourceWidth = min(hostFrameInTrack.width / magnification, trackBounds.width)
+        let sourceHeight = min(trackBounds.height / magnification, trackBounds.height)
+        let distanceFromMiddle = (hostFrameInTrack.midX - trackBounds.midX)
+            / max(trackBounds.width / 2, 1)
+        // A small inward prism displacement plus magnification is much more
+        // legible than blur alone, while staying restrained at the end detents.
+        let sourceCentreX = hostFrameInTrack.midX - distanceFromMiddle * 1.4
+        let sourceMinX = min(
+            max(sourceCentreX - sourceWidth / 2, trackBounds.minX),
+            trackBounds.maxX - sourceWidth
+        )
+        let sourceMinY = trackBounds.midY - sourceHeight / 2
+        sampleRect = CGRect(
+            x: (sourceMinX - trackBounds.minX) / trackBounds.width,
+            y: (sourceMinY - trackBounds.minY) / trackBounds.height,
+            width: sourceWidth / trackBounds.width,
+            height: sourceHeight / trackBounds.height
+        )
+        sampleLayer.contentsRect = sampleRect
+    }
+
+    override func layout() {
+        super.layout()
+        let radius = bounds.height / 2
+        layer?.cornerRadius = radius
+        layer?.cornerCurve = .continuous
+        sampleLayer.frame = bounds
+        chromeView.frame = bounds
+        chromeView.layoutSubtreeIfNeeded()
+    }
+}
+
+/// A horizontally locked mode bar. Native systems use a clear Liquid Glass
+/// selector above the regular glass track; older systems move a sampled optical
+/// lens over the same content so the lifted drag state visibly refracts it.
 final class ModeSliderView: NSView {
     static let preferredHeight: CGFloat = 30
 
@@ -19,24 +196,33 @@ final class ModeSliderView: NSView {
 
     private static var reducesTransparency: Bool {
 #if DEBUG
-        if ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] == "1" {
-            return true
+        switch ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] {
+        case "1": return true
+        case "0": return false
+        default: break
         }
 #endif
         return NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency
     }
 
     private let materialRoot = NSView()
+    private let materialContent = NSView()
     private let trackView = NSView()
     private let trackContent = NSView()
     private let knobHost = NSView()
 
     private var trackGlass: NSView?
+    private var nativeGlassContainer: NSView?
+    private var fallbackLens: LegacyOpticalLensView?
     private var usesNativeGlass = false
+    private let forceLegacyMaterials: Bool
+    private var opticalSnapshotDirty = true
+    private var opticalSnapshotCaptureCount = 0
+    private var opticalSnapshotSize = NSSize.zero
 
-    /// The native selected capsule is intentionally a lightweight overlay.
-    /// Refraction belongs to the shared track, which avoids sampling glass
-    /// through glass while the capsule moves between detents.
+    /// Both cases are true optical surfaces. The native selector delegates
+    /// refraction to AppKit; the fallback selector samples the real track once
+    /// and moves a cheap crop through that cached image.
     private enum Knob {
         case nativeSelection(NSView)
         case plain(NSView)
@@ -51,36 +237,42 @@ final class ModeSliderView: NSView {
         func applyTint(_: NSColor) {
             switch self {
             case .nativeSelection(let view):
-                view.layer?.backgroundColor = NSColor.white.withAlphaComponent(
-                    ModeSliderView.reducesTransparency ? 0.24 : 0.10
-                ).cgColor
-                view.layer?.borderWidth = 0
-            case .plain(let view):
                 let reduceTransparency = ModeSliderView.reducesTransparency
                 view.layer?.backgroundColor = reduceTransparency
-                    ? NSColor(white: 0.30, alpha: 1).cgColor
-                    : NSColor(white: 1, alpha: 0.12).cgColor
-                // The native capsule edge is neutral. Keep the older-system
-                // fallback neutral too; semantic colour belongs to the label,
-                // not to a second outline treatment.
-                view.layer?.borderColor = NSColor.white.withAlphaComponent(
-                    reduceTransparency ? 0.38 : 0.18
-                ).cgColor
+                    ? NSColor(white: 0.27, alpha: 1).cgColor
+                    : NSColor.white.withAlphaComponent(0.035).cgColor
+                view.layer?.borderWidth = 0
+                if #available(macOS 26.0, *),
+                   let glass = view as? NSGlassEffectView,
+                   let chrome = glass.contentView as? OpticalLensChromeView {
+                    chrome.apply(reduceTransparency: reduceTransparency, lifted: false)
+                }
+            case .plain(let view):
+                let reduceTransparency = ModeSliderView.reducesTransparency
+                if let lens = view as? LegacyOpticalLensView {
+                    lens.applyMaterial(reduceTransparency: reduceTransparency, lifted: false)
+                }
             }
         }
 
         func setLifted(_ lifted: Bool) {
+            let lifted = lifted && !ModeSliderView.reducesMotion
             switch self {
             case .nativeSelection(let view):
                 let reduceTransparency = ModeSliderView.reducesTransparency
-                view.layer?.backgroundColor = NSColor.white.withAlphaComponent(
-                    reduceTransparency ? (lifted ? 0.20 : 0.24) : (lifted ? 0.14 : 0.10)
-                ).cgColor
+                view.layer?.backgroundColor = reduceTransparency
+                    ? NSColor(white: lifted ? 0.22 : 0.27, alpha: 1).cgColor
+                    : NSColor.white.withAlphaComponent(lifted ? 0.055 : 0.035).cgColor
+                if #available(macOS 26.0, *),
+                   let glass = view as? NSGlassEffectView,
+                   let chrome = glass.contentView as? OpticalLensChromeView {
+                    chrome.apply(reduceTransparency: reduceTransparency, lifted: lifted)
+                }
             case .plain(let view):
                 let reduceTransparency = ModeSliderView.reducesTransparency
-                view.layer?.backgroundColor = reduceTransparency
-                    ? NSColor(white: lifted ? 0.25 : 0.30, alpha: 1).cgColor
-                    : NSColor(white: 1, alpha: lifted ? 0.075 : 0.12).cgColor
+                if let lens = view as? LegacyOpticalLensView {
+                    lens.applyMaterial(reduceTransparency: reduceTransparency, lifted: lifted)
+                }
             }
         }
     }
@@ -123,6 +315,12 @@ final class ModeSliderView: NSView {
         guard case .plain(let selector) = knob else { return nil }
         return selector.layer?.backgroundColor?.alpha
     }
+    var fallbackLensSampleImageForTest: CGImage? { fallbackLens?.sampleImage }
+    var fallbackLensSampleRectForTest: CGRect? { fallbackLens?.sampleRect }
+    var fallbackLensRimWidthForTest: CGFloat? { fallbackLens?.rimWidth }
+    var fallbackLensMagnificationForTest: CGFloat? { fallbackLens?.magnification }
+    var fallbackLensSamplingEnabledForTest: Bool? { fallbackLens?.samplingEnabled }
+    var fallbackLensCaptureCountForTest: Int { opticalSnapshotCaptureCount }
     var detentCentreForTest: (Int) -> CGFloat { { self.knobFrame(at: $0).midX } }
     var knobScaleForTest: CGSize {
         let base = knobFrame(at: selectedIndex)
@@ -169,6 +367,35 @@ final class ModeSliderView: NSView {
         guard usesNativeGlass, case .nativeSelection(let selector) = knob else { return nil }
         return selector.layer?.borderWidth
     }
+    var nativeSelectorStyleForTest: Int? {
+        guard #available(macOS 26.0, *), usesNativeGlass,
+              case .nativeSelection(let selector) = knob,
+              let glass = selector as? NSGlassEffectView else { return nil }
+        return glass.style.rawValue
+    }
+    var nativeGlassContainerSpacingForTest: CGFloat? {
+        guard #available(macOS 26.0, *), usesNativeGlass,
+              let container = nativeGlassContainer as? NSGlassEffectContainerView else { return nil }
+        return container.spacing
+    }
+    var nativeSelectorIsInsideContainerForTest: Bool? {
+        guard #available(macOS 26.0, *), usesNativeGlass,
+              let container = nativeGlassContainer as? NSGlassEffectContainerView,
+              case .nativeSelection(let selector) = knob,
+              let content = container.contentView else { return nil }
+        var ancestor = selector.superview
+        while let current = ancestor {
+            if current === content { return true }
+            ancestor = current.superview
+        }
+        return false
+    }
+    var nativeSelectorContentFillAlphaForTest: CGFloat? {
+        guard #available(macOS 26.0, *), usesNativeGlass,
+              case .nativeSelection(let selector) = knob,
+              let glass = selector as? NSGlassEffectView else { return nil }
+        return glass.contentView?.layer?.backgroundColor?.alpha
+    }
 #endif
 
     private var dragging = false
@@ -212,8 +439,23 @@ final class ModeSliderView: NSView {
 
     override var isFlipped: Bool { true }
 
-    init(modes: [EnergyMode]) {
+    convenience init(modes: [EnergyMode]) {
+        self.init(
+            modes: modes,
+            forceLegacyMaterials:
+                ProcessInfo.processInfo.environment["WATTSON_FORCE_LEGACY_KNOB"] == "1"
+        )
+    }
+
+#if DEBUG
+    convenience init(modes: [EnergyMode], forceLegacyMaterialsForTest: Bool) {
+        self.init(modes: modes, forceLegacyMaterials: forceLegacyMaterialsForTest)
+    }
+#endif
+
+    private init(modes: [EnergyMode], forceLegacyMaterials: Bool) {
         self.modes = modes
+        self.forceLegacyMaterials = forceLegacyMaterials
         super.init(frame: NSRect(x: 0, y: 0,
                                  width: PopoverStyle.contentWidth,
                                  height: Self.preferredHeight))
@@ -324,22 +566,27 @@ final class ModeSliderView: NSView {
 
     // MARK: - Material
 
-    /// Builds the GitHub Mobile-style hierarchy: one neutral system glass track
-    /// and one subtle selected capsule. The capsule is not a second glass view,
-    /// so the track stays clear instead of being sampled twice. Older systems
-    /// retain the lightweight translucent fallback with identical interaction.
+    /// Builds two equivalent optical hierarchies. macOS 26 batches a regular
+    /// track and clear moving lens in one native glass container. macOS 12–25
+    /// uses a sampled lens with the same geometry and interaction semantics.
     private func installMaterials() {
         materialRoot.wantsLayer = true
+        materialContent.wantsLayer = true
         trackView.wantsLayer = true
         trackContent.wantsLayer = true
         knobHost.wantsLayer = true
 
-        let forceLegacy = ProcessInfo.processInfo.environment["WATTSON_FORCE_LEGACY_KNOB"] == "1"
         let radius = Self.preferredHeight / 2
+        addSubview(materialRoot)
 
-        if !forceLegacy, #available(macOS 26.0, *) {
-            addSubview(materialRoot)
+        if !forceLegacyMaterials, #available(macOS 26.0, *) {
             usesNativeGlass = true
+
+            let container = NSGlassEffectContainerView(frame: .zero)
+            container.spacing = 0
+            container.contentView = materialContent
+            materialRoot.addSubview(container)
+            nativeGlassContainer = container
 
             let base = NSGlassEffectView(frame: .zero)
             configureGlass(base, style: .regular,
@@ -348,9 +595,13 @@ final class ModeSliderView: NSView {
             trackView.addSubview(base)
             trackGlass = base
 
-            let selector = NSView(frame: .zero)
+            let selector = NSGlassEffectView(frame: .zero)
+            let chrome = OpticalLensChromeView(frame: .zero)
+            configureGlass(selector, style: .clear,
+                           cornerRadius: radius,
+                           tint: nil, content: chrome)
             selector.wantsLayer = true
-            selector.layer?.backgroundColor = NSColor.white.withAlphaComponent(0.10).cgColor
+            selector.layer?.backgroundColor = NSColor.white.withAlphaComponent(0.035).cgColor
             selector.layer?.borderWidth = 0
             selector.layer?.cornerRadius = radius
             selector.layer?.cornerCurve = .continuous
@@ -358,22 +609,19 @@ final class ModeSliderView: NSView {
             knobHost.addSubview(selector)
             knob = .nativeSelection(selector)
         } else {
-            addSubview(materialRoot)
+            materialRoot.addSubview(materialContent)
             trackView.addSubview(trackContent)
 
-            let selector = NSView(frame: .zero)
-            selector.wantsLayer = true
-            selector.layer?.backgroundColor = NSColor(white: 1, alpha: 0.12).cgColor
-            selector.layer?.borderColor = NSColor(white: 1, alpha: 0.24).cgColor
-            selector.layer?.borderWidth = 0.5
+            let selector = LegacyOpticalLensView(frame: .zero)
             selector.layer?.cornerRadius = radius
             selector.layer?.cornerCurve = .continuous
             knobHost.addSubview(selector)
+            fallbackLens = selector
             knob = .plain(selector)
         }
 
-        materialRoot.addSubview(trackView)
-        materialRoot.addSubview(knobHost)
+        materialContent.addSubview(trackView)
+        materialContent.addSubview(knobHost)
         installFallbackChromeIfNeeded()
     }
 
@@ -403,8 +651,9 @@ final class ModeSliderView: NSView {
             trackView.layer?.borderColor = PopoverStyle.wellBorder.withAlphaComponent(0.78).cgColor
         }
 
-        // Native Liquid Glass supplies the shared surface edge and elevation.
-        // The older-system fallback keeps one inexpensive selector shadow.
+        // Native Liquid Glass supplies the surface elevation. The older-system
+        // lens uses one fixed-path shadow, avoiding per-frame offscreen shadow
+        // analysis while its cached contentsRect moves.
         guard !usesNativeGlass else { return }
         knobHost.layer?.shadowColor = NSColor.black.cgColor
         knobHost.layer?.shadowOpacity = 0.28
@@ -415,8 +664,10 @@ final class ModeSliderView: NSView {
     private func refreshDisplayOptions() {
         applyTrackTint(currentTint)
         knob?.applyTint(currentTint)
-        knob?.setLifted(movedWhileDragging)
+        knob?.setLifted(dragging && movedWhileDragging)
         if highlighted >= 0 { highlight(highlighted, force: true) }
+        invalidateOpticalSnapshot()
+        needsLayout = true
     }
 
     /// GitHub Mobile keeps the bar chrome neutral and puts semantic colour on
@@ -433,11 +684,58 @@ final class ModeSliderView: NSView {
     /// moved and scaled by the compositor.
     private func updateShadowPath() {
         guard !usesNativeGlass else { return }
-        let radius = knobHost.layer?.cornerRadius ?? 0
+        let lifted = dragging && movedWhileDragging && !Self.reducesMotion
+        let radius = knobHost.bounds.height / 2
+        knobHost.layer?.cornerRadius = radius
+        knobHost.layer?.shadowOpacity = Self.reducesTransparency
+            ? 0.34
+            : (lifted ? 0.38 : 0.28)
+        knobHost.layer?.shadowRadius = lifted ? 8 : 5
+        knobHost.layer?.shadowOffset = CGSize(width: 0, height: lifted ? 3 : 2)
         knobHost.layer?.shadowPath = CGPath(roundedRect: knobHost.bounds,
                                             cornerWidth: radius,
                                             cornerHeight: radius,
                                             transform: nil)
+    }
+
+    private func invalidateOpticalSnapshot() {
+        guard fallbackLens != nil else { return }
+        opticalSnapshotDirty = true
+    }
+
+    /// The fallback takes a real AppKit snapshot of the track, including its
+    /// material and edge rendering. Labels are deliberately excluded: the
+    /// sampled opaque material masks the underlying base glyph, while the sharp
+    /// active foreground copy remains above the lens. This produces refraction
+    /// around text without stacking multiple distorted copies of each word.
+    private func captureOpticalSnapshotIfNeeded() {
+        guard let fallbackLens,
+              !Self.reducesTransparency,
+              opticalSnapshotDirty,
+              trackView.bounds.width > 1,
+              trackView.bounds.height > 1 else { return }
+
+        let priorOpacities = labels.map { $0.layer?.opacity ?? 1 }
+        PopoverStyle.setWithoutAnimation {
+            for label in self.labels { label.layer?.opacity = 0 }
+        }
+        defer {
+            PopoverStyle.setWithoutAnimation {
+                for (index, opacity) in priorOpacities.enumerated() {
+                    self.labels[index].layer?.opacity = opacity
+                }
+            }
+        }
+
+        guard let bitmap = trackView.bitmapImageRepForCachingDisplay(in: trackView.bounds) else {
+            return
+        }
+        trackView.cacheDisplay(in: trackView.bounds, to: bitmap)
+        guard let image = bitmap.cgImage else { return }
+        fallbackLens.install(sample: image)
+        opticalSnapshotCaptureCount += 1
+        opticalSnapshotSize = trackView.bounds.size
+        opticalSnapshotDirty = false
     }
 
     // MARK: - Geometry
@@ -453,8 +751,11 @@ final class ModeSliderView: NSView {
 
     override func layout() {
         super.layout()
+        if opticalSnapshotSize != bounds.size { invalidateOpticalSnapshot() }
         PopoverStyle.setWithoutAnimation {
             self.materialRoot.frame = self.bounds
+            self.nativeGlassContainer?.frame = self.materialRoot.bounds
+            self.materialContent.frame = self.materialRoot.bounds
             self.trackView.frame = self.bounds
             self.trackGlass?.frame = self.trackView.bounds
             self.trackContent.frame = self.trackView.bounds
@@ -470,15 +771,37 @@ final class ModeSliderView: NSView {
             knobHost.frame = knobFrame(at: selectedIndex)
         }
         knob?.view.frame = knobHost.bounds
+        if #available(macOS 26.0, *),
+           case .nativeSelection(let selector) = knob,
+           let glass = selector as? NSGlassEffectView {
+            glass.cornerRadius = knobHost.bounds.height / 2
+            glass.layer?.cornerRadius = knobHost.bounds.height / 2
+            glass.contentView?.frame = glass.bounds
+        }
+        fallbackLens?.update(hostFrameInTrack: knobHost.frame, trackBounds: bounds)
         updateShadowPath()
         if activeSettleMotion == nil {
             applyLabelBlend(at: knobHost.frame.midX)
         }
+        captureOpticalSnapshotIfNeeded()
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        invalidateOpticalSnapshot()
+        needsLayout = true
+    }
+
+    override func viewDidChangeBackingProperties() {
+        super.viewDidChangeBackingProperties()
+        invalidateOpticalSnapshot()
+        needsLayout = true
     }
 
     // MARK: - State
 
     func update(selected: EnergyMode, enabledModes: [EnergyMode], tint: NSColor) {
+        let previousEnabled = enabled
         enabled = modes.map(enabledModes.contains)
         let previous = selectedIndex
         if let externalIndex = modes.firstIndex(of: selected), pendingSelectionIndex == nil {
@@ -491,12 +814,16 @@ final class ModeSliderView: NSView {
         knob?.applyTint(tint)
         // A telemetry refresh can arrive while the pointer is held. Reapply
         // the interaction material so it cannot flatten the lifted capsule.
-        knob?.setLifted(movedWhileDragging)
+        knob?.setLifted(dragging && movedWhileDragging)
         // During a held drag the 1 Hz telemetry refresh must recolour the mode
         // under the capsule, not jump the highlight back to the committed mode.
         let visualIndex = dragging && highlighted >= 0 ? highlighted : selectedIndex
         highlight(visualIndex, force: true)
         updateAccessibilityValue(announce: false)
+        if enabled != previousEnabled {
+            invalidateOpticalSnapshot()
+            captureOpticalSnapshotIfNeeded()
+        }
 
         if !dragging, pendingSelectionIndex == nil, selectedIndex != previous {
             settle(to: selectedIndex, animated: true)
@@ -823,6 +1150,14 @@ final class ModeSliderView: NSView {
         PopoverStyle.setWithoutAnimation {
             self.knobHost.frame = frame
             self.knob?.view.frame = self.knobHost.bounds
+            if #available(macOS 26.0, *),
+               case .nativeSelection(let selector) = self.knob,
+               let glass = selector as? NSGlassEffectView {
+                glass.cornerRadius = self.knobHost.bounds.height / 2
+                glass.layer?.cornerRadius = self.knobHost.bounds.height / 2
+                glass.contentView?.frame = glass.bounds
+            }
+            self.fallbackLens?.update(hostFrameInTrack: frame, trackBounds: self.bounds)
         }
         updateShadowPath()
         applyLabelBlend(at: frame.midX)

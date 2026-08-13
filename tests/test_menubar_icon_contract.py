@@ -30,9 +30,40 @@ class BatteryIconContractTests(unittest.TestCase):
 
     def test_render_key_tracks_every_input_that_can_change_the_pixels(self):
         self.assertIn("struct RenderKey: Equatable", self.source)
-        for field in ("percent", "plugged", "tintRole", "appearanceName",
+        for field in ("percent", "showsBolt", "style", "tintRole", "appearanceName",
                       "increasedContrast"):
             self.assertIn(field, self.source)
+
+    def test_native_style_prefers_public_system_symbols_and_is_always_template(self):
+        self.assertIn('"battery.\\(level)percent"', self.source)
+        self.assertIn('"battery.\\(level)"', self.source)
+        self.assertNotIn("variableValue:", self.source)
+        native = self.source.split("private static func nativeImage", 1)[1]
+        self.assertIn("isTemplate = true", native)
+
+    def test_native_style_keeps_a_macos_12_vector_fallback(self):
+        self.assertIn("private static func nativeFallbackImage", self.source)
+        self.assertIn("NSImage(size:", self.source)
+        self.assertIn("nativeStaticLevel", self.source)
+
+    def test_native_charging_indicator_uses_actual_charging_not_ac_presence(self):
+        native = self.source.split("private static func nativeImage", 1)[1].split(
+            "private static func nativeStaticLevel", 1
+        )[0]
+        self.assertIn("snapshot.state == .charging", native)
+        self.assertNotIn("snapshot.plugged", native)
+        self.assertIn('charging ? "battery.100percent.bolt"', self.source)
+
+    def test_native_cache_key_matches_the_quantized_pixels(self):
+        native_key = self.source.split("if style == .native", 1)[1].split(
+            "let tintRole", 1
+        )[0]
+        self.assertIn("nativeStaticLevel(for: percent)", native_key)
+        self.assertIn("showsBolt ? 100", native_key)
+        fallback = self.source.split("private static func nativeFallbackImage", 1)[1].split(
+            "/// Priority", 1
+        )[0]
+        self.assertIn("charging ? 100 : nativeStaticLevel", fallback)
 
     def test_color_priority_is_low_power_then_low_battery_then_charging(self):
         low_power = self.source.index("systemYellow")

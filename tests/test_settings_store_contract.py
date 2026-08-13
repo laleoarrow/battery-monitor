@@ -53,6 +53,12 @@ class SettingsStoreContractTests(unittest.TestCase):
             expect(Settings.showsMenuBarPercentage, "percentage must default on")
             expect(defaults.object(forKey: "menubar.showsPercentage") as? Bool == true,
                    "existing percentage key must remain registered true")
+            expect(Settings.menuBarIconStyle == .wattson,
+                   "existing users must retain the Wattson icon by default")
+            expect(defaults.string(forKey: "menubar.iconStyle") == "wattson",
+                   "icon style must register a stable string default")
+            expect(Settings.MenuBarIconStyle.allCases.map(\.rawValue) == ["wattson", "native"],
+                   "icon styles must remain strongly typed and ordered")
 
             var changes: [Settings.Change] = []
             var keptNilObject = true
@@ -80,15 +86,33 @@ class SettingsStoreContractTests(unittest.TestCase):
             expect(changes == [.menuBarPercentage],
                    "repeating a percentage value must not notify")
 
+            Settings.menuBarIconStyle = .wattson
+            expect(changes == [.menuBarPercentage],
+                   "an unchanged icon style must not notify")
+            Settings.menuBarIconStyle = .native
+            expect(changes == [.menuBarPercentage, .menuBarIconStyle],
+                   "icon style change must notify exactly once")
+            expect(defaults.string(forKey: "menubar.iconStyle") == "native",
+                   "icon style must persist its stable raw value")
+            expect(Settings.menuBarIconStyle == .native,
+                   "icon style must read back as the strong type")
+            Settings.menuBarIconStyle = .native
+            expect(changes == [.menuBarPercentage, .menuBarIconStyle],
+                   "repeating an icon style must not notify")
+
             Settings.setModule(.flow, visible: true)
-            expect(changes == [.menuBarPercentage], "an unchanged module must not notify")
+            expect(changes == [.menuBarPercentage, .menuBarIconStyle],
+                   "an unchanged module must not notify")
             Settings.setModule(.flow, visible: false)
-            expect(changes == [.menuBarPercentage, .module(.flow)],
+            expect(changes == [.menuBarPercentage, .menuBarIconStyle, .module(.flow)],
                    "module change must identify the changed module")
             Settings.setModule(.flow, visible: false)
-            expect(changes == [.menuBarPercentage, .module(.flow)],
+            expect(changes == [.menuBarPercentage, .menuBarIconStyle, .module(.flow)],
                    "repeating a module value must not notify")
             expect(!Settings.isModuleVisible(.flow), "module write must persist")
+            defaults.set("future-style", forKey: "menubar.iconStyle")
+            expect(Settings.menuBarIconStyle == .wattson,
+                   "unknown future values must safely fall back to Wattson")
             expect(keptNilObject, "legacy notification object must remain nil")
             '''
         )

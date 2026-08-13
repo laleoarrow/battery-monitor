@@ -38,7 +38,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.promote_workflow = PROMOTE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.5\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.6\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -51,11 +51,20 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn("support-diagnostics-v1.1.0", self.readme)
         self.assertNotIn("support-diagnostics-v1.0.0", self.readme)
         for current_release_topic in (
-            "native, reusable Settings window",
-            "Coalesces sampling and settings operations",
-            "battery-capacity, signed-current, and power-mode parsing",
+            "match the approved C+E reference",
+            "stable high-contrast dark palette",
+            "macOS-style battery glyph",
+            "glass refraction",
+            "every queued waiter completes",
+            "Caches successfully parsed `pmset -g cap`",
         ):
             self.assertIn(current_release_topic, self.promote_workflow)
+
+        for user_facing_topic in (
+            "macOS-style battery glyph",
+            "glass refraction",
+        ):
+            self.assertIn(user_facing_topic, self.readme)
 
     def test_release_scripts_are_executable_and_parse_as_bash(self):
         for path in (*SCRIPTS.values(), PREINSTALL, POSTINSTALL):

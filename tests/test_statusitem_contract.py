@@ -279,6 +279,12 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("presentation.title != rendered?.title", refresh)
         self.assertIn("presentation.alpha != rendered?.alpha", refresh)
 
+    def test_icon_style_participates_in_the_cached_status_image_key(self):
+        refresh = self.source.split("private func refreshStatusItem()", 1)[1]
+        self.assertIn("let iconStyle = Settings.menuBarIconStyle", refresh)
+        self.assertEqual(refresh.count("style: iconStyle"), 2)
+        self.assertIn("if key != renderedStatusIconKey", refresh)
+
     def test_fresh_smc_power_is_read_off_main_then_applied_before_presentation(self):
         sampling = self.source.split("fileprivate func sampleNow", 1)[1].split(
             "private func finishSample", 1

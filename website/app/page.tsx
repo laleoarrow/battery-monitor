@@ -6,7 +6,7 @@ const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
 const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
 const RELEASE_API =
   "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
-const FALLBACK_VERSION = "v3.0.5";
+const FALLBACK_VERSION = "v3.0.6";
 const FALLBACK_ASSET_BASE = `${GITHUB_REPO}/releases/download/${FALLBACK_VERSION}`;
 const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
 
@@ -341,8 +341,8 @@ export default function Home() {
               <span className="feature-number">02</span>
               <h3>Native by design</h3>
               <p>
-                A focused AppKit menu-bar experience with smooth animation,
-                native controls, and support for Reduce Motion.
+                Choose Wattson’s mark or a macOS-style battery glyph, with
+                native Liquid Glass and optical refraction while you drag.
               </p>
             </article>
 

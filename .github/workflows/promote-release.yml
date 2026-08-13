@@ -6,7 +6,7 @@ on:
       version:
         description: Stable semantic version without the v prefix
         required: true
-        default: "3.0.5"
+        default: "3.0.6"
         type: string
       candidate_run_id:
         description: Successful Wattson release candidate workflow run ID
@@ -202,12 +202,13 @@ jobs:
             cat <<'EOF'
           This Wattson release is universal for Apple silicon and Intel and supports macOS 12 or later.
 
-          - Adds one native, reusable Settings window for the existing General and popover-module controls, with immediate synchronization back to the menu-bar popover.
-          - Keeps the resting mode selector flush with its track at every detent, with matching continuous capsule corners and no edge gap.
-          - Coalesces sampling and settings operations, bounds helper IPC queues and subprocesses, and closes command pipes deterministically to reduce idle work and prevent long-running resource growth.
-          - Preserves responsive whole-machine power and battery-to-adapter transitions while correctly decoding physical and virtual battery temperatures.
-          - Expands battery-capacity, signed-current, and power-mode parsing for Apple-silicon and Intel Macs from macOS 12 onward, with safe fallbacks when optional sensors are unavailable.
-          - Supports keyboard and VoiceOver navigation, Reduce Motion, Reduce Transparency, light and dark appearances, and the native macOS 26 material with accessible macOS 12–25 fallbacks.
+          - Rebuilds General and Modules Settings to match the approved C+E reference, while preserving every existing setting and its immediate synchronization with the menu-bar popover.
+          - Uses a stable high-contrast dark palette at the reference size and proportionally scales the complete composition on constrained displays without changing its layout.
+          - Lets General Settings switch Wattson's own status item between its original mark and a macOS-style battery glyph without changing Apple's separate system battery icon.
+          - Adds glass refraction to the lifted power-mode selector with native Liquid Glass on macOS 26 and a cached optical AppKit fallback on macOS 12–25.
+          - Hardens launch-at-login refreshes so every queued waiter completes across availability changes and stale in-flight writes.
+          - Caches successfully parsed `pmset -g cap` capability results for the helper lifetime, while retrying failures and keeping live power-mode reads fresh.
+          - Preserves keyboard and VoiceOver navigation, Reduce Motion, macOS 12–26 behavior, and universal Apple-silicon and Intel support.
           - Installs at `/Applications/Wattson.app` through one native PKG shared byte-for-byte by the DMG, with verified reinstall, v2 upgrade, helper replacement, uninstall, and SHA-256 metadata.
 
           **Verified distribution:** the app, helper, PKG, and DMG are Developer ID signed. Apple accepted both release containers for notarization, and their tickets are stapled for offline validation and normal Gatekeeper installation.

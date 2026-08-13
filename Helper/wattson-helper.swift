@@ -819,12 +819,47 @@ private func supportsHighPower(
     }
 }
 
+/// A successful `pmset -g cap` response always starts with this heading and
+/// contains at least one capability on a following line. Keep malformed or
+/// failed output unknown so a later request can retry instead of making a
+/// transient failure authoritative for the helper's whole lifetime.
+private func parsedHighPowerCapability(from capabilitiesOutput: String?) -> Bool? {
+    guard let capabilitiesOutput else { return nil }
+    let lines = capabilitiesOutput
+        .split(whereSeparator: \.isNewline)
+        .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
+        .filter { !$0.isEmpty }
+    guard let heading = lines.first,
+          heading.lowercased().hasPrefix("capabilities for "),
+          lines.count > 1 else { return nil }
+    return supportsHighPower(current: .auto, capabilitiesOutput: capabilitiesOutput)
+}
+
+private struct HighPowerCapabilityCache {
+    private var cachedValue: Bool?
+
+    mutating func resolve(provider: () -> String?) -> Bool? {
+        if let cachedValue { return cachedValue }
+        guard let parsed = parsedHighPowerCapability(from: provider()) else {
+            return nil
+        }
+        cachedValue = parsed
+        return parsed
+    }
+}
+
+// Requests execute serially in the helper's main loop. Hardware capability is
+// immutable for this process, so successful true and false results need no lock
+// and no refresh; command or parse failures deliberately remain retryable.
+private var highPowerCapabilityCache = HighPowerCapabilityCache()
+
 /// Being in high power right now is proof on its own. Otherwise use only the
 /// fixed read-only command that reports capabilities for this hardware.
 private func supportsHighPower(current: Mode) -> Bool {
     if current == .high { return true }
-    let output = runOutput(["/usr/bin/pmset", "-g", "cap"])
-    return supportsHighPower(current: current, capabilitiesOutput: output)
+    return highPowerCapabilityCache.resolve {
+        runOutput(["/usr/bin/pmset", "-g", "cap"])
+    } ?? false
 }
 
 private func modeReply(_ mode: Mode) -> String {

@@ -33,6 +33,7 @@ enum LoginItemController {
         let state: LoginItemState
         let succeeded: Bool
         let helperUnavailable: Bool
+        let requiresAuthoritativeReadback: Bool
     }
 
     private static let operations = CoalescingReadOperationQueue<LoginItemState>(
@@ -45,6 +46,7 @@ enum LoginItemController {
         : .unavailable
     private static var lastAuthoritativeState: LoginItemState?
     private static var updateInFlight = false
+    private static var refreshWaiters: [(LoginItemState) -> Void] = []
 
 #if DEBUG
     private static var testAvailability: Bool?
@@ -81,16 +83,19 @@ enum LoginItemController {
             return
         }
 
+        if let completion { refreshWaiters.append(completion) }
         guard isAvailable else {
             // An unavailable transition is authoritative and must invalidate
             // any older helper completion, including an in-flight write.
             generation += 1
             cachedState = .unavailable
-            completion?(.unavailable)
+            completeRefreshWaiters(with: .unavailable)
             return
         }
         guard !updateInFlight else {
-            completion?(.checking)
+            // The in-flight mutation owns the next authoritative state. Keep
+            // completion-bearing callers waiting for that result instead of
+            // stranding a Settings control in its checking state.
             return
         }
 
@@ -106,7 +111,7 @@ enum LoginItemController {
                 guard requestGeneration == generation else { return }
                 cachedState = refreshed
                 rememberAuthoritative(refreshed)
-                completion?(refreshed)
+                completeRefreshWaiters(with: refreshed)
             }
         )
     }
@@ -123,6 +128,7 @@ enum LoginItemController {
         guard isAvailable else {
             generation += 1
             cachedState = .unavailable
+            completeRefreshWaiters(with: .unavailable)
             completion(.failure(LoginItemError.unavailable))
             return
         }
@@ -153,7 +159,8 @@ enum LoginItemController {
                     return SetResult(
                         state: landedState,
                         succeeded: true,
-                        helperUnavailable: false
+                        helperUnavailable: false,
+                        requiresAuthoritativeReadback: false
                     )
                 }
 
@@ -172,7 +179,9 @@ enum LoginItemController {
                 return SetResult(
                     state: recoveredState,
                     succeeded: false,
-                    helperUnavailable: helperUnavailable
+                    helperUnavailable: helperUnavailable,
+                    requiresAuthoritativeReadback:
+                        authoritative(landedState) == nil && !helperUnavailable
                 )
             },
             completion: { result in
@@ -180,6 +189,16 @@ enum LoginItemController {
                 if requestGeneration == generation {
                     cachedState = result.state
                     rememberAuthoritative(result.state)
+                    if !result.requiresAuthoritativeReadback {
+                        completeRefreshWaiters(with: result.state)
+                    }
+                } else if !refreshWaiters.isEmpty {
+                    // An availability transition can supersede a mutation
+                    // while a recovered Settings caller is already waiting.
+                    // The stale write result is not authoritative for that
+                    // caller; start one fresh coalesced read now that the
+                    // mutation lane is clear.
+                    refresh()
                 }
                 if result.succeeded {
                     completion(.success(result.state))
@@ -214,6 +233,13 @@ enum LoginItemController {
         if let state = authoritative(state) { lastAuthoritativeState = state }
     }
 
+    private static func completeRefreshWaiters(with state: LoginItemState) {
+        precondition(Thread.isMainThread)
+        let completed = refreshWaiters
+        refreshWaiters.removeAll()
+        completed.forEach { $0(state) }
+    }
+
     private static func state(from reply: [String: Any]?) -> LoginItemState {
         guard let reply else { return .readFailed }
         guard HelperClient.strictJSONBool(reply["ok"]) == true,
@@ -237,6 +263,7 @@ enum LoginItemController {
         cachedState = initialState
         lastAuthoritativeState = authoritative(initialState)
         updateInFlight = false
+        refreshWaiters.removeAll()
     }
 
     static func setAvailabilityForTest(_ available: Bool) {
@@ -258,6 +285,7 @@ enum LoginItemController {
             : .unavailable
         lastAuthoritativeState = nil
         updateInFlight = false
+        refreshWaiters.removeAll()
     }
 #endif
 }

@@ -21,15 +21,18 @@ class PopoverControlsContractTests(unittest.TestCase):
         cls.popover = POPOVER.read_text(encoding="utf-8")
 
     def test_mode_picker_is_a_draggable_glass_knob(self):
-        # One untinted system glass track carries a neutral moving selection
-        # capsule, avoiding a foggy glass-on-glass stack.
+        # macOS 26 batches a regular track and a clear moving optical lens in
+        # the public glass container. Older systems use the sampled fallback.
         self.assertIn("ModeSliderView(modes:", self.content)
         self.assertNotIn("NSSegmentedControl(", self.content)
         self.assertIn("NSGlassEffectView(frame:", self.slider)
-        self.assertNotIn("NSGlassEffectContainerView(frame:", self.slider)
+        self.assertIn("NSGlassEffectContainerView(frame:", self.slider)
         self.assertIn("let base = NSGlassEffectView", self.slider)
         self.assertIn("style: .regular", self.slider)
         self.assertIn("tint: nil, content: trackContent", self.slider)
+        self.assertIn("configureGlass(selector, style: .clear", self.slider)
+        self.assertIn("container.contentView = materialContent", self.slider)
+        self.assertIn("materialContent.addSubview(knobHost)", self.slider)
         self.assertIn("case nativeSelection(NSView)", self.slider)
         self.assertIn("weight: .regular", self.slider)
         self.assertIn("weight: .semibold", self.slider)
@@ -343,20 +346,21 @@ class PopoverControlsContractTests(unittest.TestCase):
         refresh = self.slider.split("private func refreshDisplayOptions", 1)[1].split(
             "\n    /// GitHub Mobile", 1
         )[0]
-        self.assertIn("setLifted(movedWhileDragging)", refresh)
-        self.assertNotIn("setLifted(dragging)", refresh)
+        self.assertIn("setLifted(dragging && movedWhileDragging)", refresh)
 
         update = self.slider.split("func update(selected:", 1)[1].split(
             "\n    /// Clicks flow", 1
         )[0]
-        self.assertIn("setLifted(movedWhileDragging)", update)
+        self.assertIn("setLifted(dragging && movedWhileDragging)", update)
 
     def test_native_track_and_selector_follow_github_mobile_hierarchy(self):
         self.assertIn("configureGlass(base, style: .regular", self.slider)
         self.assertIn("tint: nil, content: trackContent", self.slider)
+        self.assertIn("let container = NSGlassEffectContainerView", self.slider)
+        self.assertIn("container.contentView = materialContent", self.slider)
+        self.assertIn("configureGlass(selector, style: .clear", self.slider)
         self.assertIn("selector.layer?.backgroundColor = NSColor.white.withAlphaComponent", self.slider)
         self.assertIn("selector.layer?.borderWidth = 0", self.slider)
-        self.assertNotIn("configureGlass(selector", self.slider)
         self.assertNotIn("case glass(NSView)", self.slider)
         track_tint = self.slider.split("private func applyTrackTint", 1)[1].split(
             "\n    /// Core Animation", 1
@@ -370,6 +374,54 @@ class PopoverControlsContractTests(unittest.TestCase):
             "\n    private func refreshDisplayOptions", 1
         )[0]
         self.assertIn("masksToBounds = !usesNativeGlass", fallback)
+
+    def test_legacy_lens_uses_a_bounded_real_track_capture_and_cheap_drag_crop(self):
+        capture = self.slider.split("private func captureOpticalSnapshotIfNeeded", 1)[1].split(
+            "\n    // MARK: - Geometry", 1
+        )[0]
+        self.assertIn("bitmapImageRepForCachingDisplay", capture)
+        self.assertIn("cacheDisplay", capture)
+        self.assertIn("fallbackLens.install(sample: image)", capture)
+        self.assertIn("for label in self.labels { label.layer?.opacity = 0 }", capture)
+        self.assertIn("opticalSnapshotDirty = false", capture)
+        self.assertIn("override func viewDidChangeBackingProperties", self.slider)
+
+        drag = self.slider.split("override func mouseDragged", 1)[1].split(
+            "\n    override func mouseUp", 1
+        )[0]
+        self.assertNotIn("cacheDisplay", drag)
+        self.assertNotIn("bitmapImageRepForCachingDisplay", drag)
+        self.assertIn("moveKnob(centreX:", drag)
+
+        sampling = self.slider.split("private func updateSamplingRect", 1)[1].split(
+            "\n    override func layout", 1
+        )[0]
+        self.assertIn("sampleLayer.contentsRect = sampleRect", sampling)
+        self.assertIn("magnification", sampling)
+
+    def test_reduce_transparency_disables_refraction_and_uses_opaque_selector(self):
+        material = self.slider.split("func applyMaterial", 1)[1].split(
+            "\n    func update(hostFrameInTrack:", 1
+        )[0]
+        self.assertIn("sampleLayer.isHidden = !samplingEnabled", material)
+        self.assertIn("alpha: 1", material)
+
+        native = self.slider.split("func applyTint", 1)[1].split(
+            "\n        func setLifted", 1
+        )[0]
+        self.assertIn("NSColor(white: 0.27, alpha: 1)", native)
+
+    def test_fallback_refraction_is_scoped_to_lifted_direct_drag(self):
+        fallback = self.slider.split("private final class LegacyOpticalLensView", 1)[1].split(
+            "\n/// A horizontally locked mode bar", 1
+        )[0]
+        self.assertIn("lifted && !reduceTransparency && sampleImage != nil", fallback)
+        self.assertIn("sampleLayer.isHidden = !samplingEnabled", fallback)
+        self.assertIn("magnification = samplingEnabled ? 1.105 : 1", fallback)
+        # Settle animations move the host on the render server. Keeping the
+        # crop disabled then prevents a model-frame sample from drifting away
+        # from the presentation-frame lens.
+        self.assertIn("guard samplingEnabled else", fallback)
 
     def test_footer_panel_tint_tracks_all_power_states_instead_of_fixed_blue(self):
         update_footer = self.content.split("private func updateFooter", 1)[1].split(

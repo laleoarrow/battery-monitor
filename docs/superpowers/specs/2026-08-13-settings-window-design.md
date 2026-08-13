@@ -67,19 +67,30 @@ the Settings window forward and does not gain a Dock icon.
 
 ### Window
 
-The window is a standard titled, closable AppKit Settings window with a fixed
-two-column layout. It has no minimize or zoom affordance because there is no
-alternate useful size. It is centered only on first presentation, uses one
+The window is a standard titled AppKit Settings window with a fixed two-column
+layout. Its 20-, 20-, and 19-point reference traffic-light controls retain
+explicit accessibility semantics and forward their actions to AppKit's native
+close, minimize, and zoom controls. Identical minimum and maximum content sizes
+prevent the measured composition from being distorted at its default scale. It
+is centered only on first presentation, uses one
 frame-autosave name to preserve a user-moved position across launches, does not
 restore visibility, and never opens automatically at application launch.
 
-The content size is 720×520 points. A fixed 176-point sidebar contains a
-72-point Wattson identity row and exactly two 44-point navigation rows, each
-with 12-point horizontal insets and 4 points between rows. The content pane is
-separated by the native one-point divider and has 32-point outer insets,
-leaving 479 points of usable width. General is selected on first construction;
+The content size is 792×794 points. A fixed 232-point sidebar contains a
+54-point traffic-light safe area, a 96-point Wattson identity row, and exactly
+two 56-point navigation rows, each with 16-point horizontal insets and 4 points
+between rows. The content pane is separated by the native one-point divider
+and has 25-point horizontal insets, leaving 509 points of usable width. General
+is selected on first construction;
 the last page selected while the process remains alive is preserved across
 close/reopen, but page selection is not persisted across launches.
+
+On a display whose visible frame cannot contain the reference window, one
+constraint-free viewport scales the entire 792×794 composition uniformly down
+to the available area (as low as 60%). The inner layout remains in reference
+coordinates, so proportions, hit testing, keyboard order, and accessibility
+semantics do not reflow or crop. Returning to a larger display restores 1:1
+geometry.
 
 Closing hides the window without terminating Wattson. Reopening, repeated
 menu commands, and repeated Command-Comma actions all reuse the same window and
@@ -87,40 +98,47 @@ bring it forward.
 
 ### Content
 
-The window uses native switch-style checkbox controls, system typography,
-subtle separator/card layers, and concise secondary descriptions. The sidebar
+The window uses custom-drawn pill switches with native checkbox accessibility
+and keyboard semantics, system typography, subtle separator/card layers, and
+concise secondary descriptions. The sidebar
 has exactly two registered pages:
 
-1. **General** — one compact inset list with three rows:
+1. **General** — one compact inset list with four rows:
    - Show Battery Percentage in Menu Bar
    - Launch at Login
    - Hide System Battery Icon
+   - Use macOS-Style Icon
 2. **Modules** — a 2×2 grid of compact visual cards:
    - Energy Flow
    - Ring Gauge
    - Power Lanes
    - Power History
 
-General uses a 28-point semibold heading and one 479×228-point inset list with
-three 76-point rows and a 12-point corner radius. Each row contains an icon,
-primary label, a single-line tail-truncated secondary label, and a
-right-aligned switch.
+General uses a 30-point semibold heading and one 509×400-point inset list with
+four 100-point rows and a 13-point corner radius. Each row contains a 50-point
+icon tile, primary and secondary labels, and a right-aligned 56×32-point switch.
 
-Modules uses a 28-point semibold heading and a 2×2 grid across the same
-479-point width. Horizontal and vertical gaps are 12 points; each equal-width
-card is 233.5×166 points with a 12-point corner radius and a 64×64-point static
+Modules uses a 30-point semibold heading and a 2×2 grid across the same
+509-point width. Horizontal and vertical gaps are 16 points; each equal-width
+card is 246.5×258 points with a 13-point corner radius and a 112×108-point static
 preview region. Each card contains a lightweight code-native preview glyph,
-primary label, a single-line tail-truncated secondary label, and a
+primary label, an explicit two-line secondary label, and a
 right-aligned switch. The glyphs communicate flow, ring, lanes, and history
 without rendering live data or starting animation. The reference raster's
-wrapped descriptions are directional only; the one-line contract here is
-authoritative.
+wrapped descriptions are authoritative.
 
-Text and separators use semantic `labelColor`, `secondaryLabelColor`, and
-`separatorColor`. Preview/enabled accents use `systemGreen`; the selected
-sidebar row uses `systemGreen` at 16% alpha in addition to its selected state,
+The fixed dark reference appearance uses explicit sRGB text, surface, divider,
+and preview colors so it does not vary with wallpaper or transparency settings.
+Preview/enabled accents use the reference green; the selected sidebar row uses
+the reference green-gray fill in addition to its selected state,
 label, and symbol, so color is never the sole state cue. The current version
 and Quit remain commands in the quick menu, not settings.
+
+When macOS Increase Contrast is enabled, only contrast-sensitive strokes and
+inactive/selected surfaces switch to a stronger fixed palette and heavier
+outlines. The normal appearance remains pixel-identical to the reference; the
+system accessibility-display notification applies and removes the alternate
+palette live without polling or animation.
 
 The sidebar is an `NSTableView` with `.sourceList` style and disallows an empty
 selection. It is the first responder on first show; native Up/Down navigation
@@ -216,6 +234,13 @@ StatusItem, popover, and Settings observe one result. Refresh and mutation
 continue through the existing shared helper worker. An unknown state is never
 represented as unchecked.
 
+Wattson's own menu-bar glyph style is an app-owned typed setting, independent
+of Control Center visibility. It defaults to the existing Wattson mark and can
+switch to a public macOS-style template battery glyph. The native style uses
+static public battery levels, adds the bolt only for an actual charging state,
+and falls back to a resolution-independent template drawing when a symbol is
+unavailable on an older supported system.
+
 ## Data Flow
 
 ### App-owned toggle
@@ -285,20 +310,21 @@ failing, then implemented minimally.
 - A live popover reloads module visibility and height on change.
 - Section registry identifiers are unique and default order is General then
   Modules.
-- The window is 720×520 points with a 176-point sidebar, General is initially
+- The window is 792×794 points with a 232-point sidebar, General is initially
   selected, and selecting Modules swaps the content host without constructing
   another page/window instance.
 - Geometry matches the authoritative measurements above within one point:
-  72-point identity row, 44-point navigation rows, 32-point content insets,
-  76-point General rows, 12-point grid gaps, 233.5×166-point cards, and
-  64×64-point preview regions.
+  54-point traffic-safe area, 96-point identity row, 56-point navigation rows,
+  25-point horizontal content insets, 100-point General rows, 16-point grid
+  gaps, 246.5×258-point cards, and 112×108-point preview regions.
 - Sidebar selection is keyboard accessible and persists across close/reopen
   only within the current process.
-- General renders exactly three rows; Modules renders exactly four cards in a
+- General renders exactly four rows; Modules renders exactly four cards in a
   2×2 grid; module preview glyphs remain static when hidden or visible.
 - Window show-close-show preserves one `NSWindow` identity.
 - Repeated show produces one Settings window.
-- The window is nonrestorable, nonreleased, nonminimizable, and nonzoomable.
+- The window is nonrestorable and nonreleased. All three native traffic-light
+  controls remain visible; equal min/max content sizes keep the artwork fixed.
 - Command-Comma and quick-menu Settings call the same presenter once.
 - Opening Settings closes the popover first.
 - Launch-at-login and battery-icon states cover checking, unavailable, read

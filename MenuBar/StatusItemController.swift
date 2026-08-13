@@ -593,13 +593,20 @@ final class StatusItemController: NSObject {
             return
         }
         let mode = EnergyModeController.current
+        let iconStyle = Settings.menuBarIconStyle
         let key = BatteryIcon.renderKey(
             for: snapshot, mode: mode, pressed: pressed,
+            style: iconStyle,
             appearance: button.effectiveAppearance,
             increasedContrast: NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
         )
         if key != renderedStatusIconKey {
-            button.image = BatteryIcon.image(for: snapshot, mode: mode, pressed: pressed)
+            button.image = BatteryIcon.image(
+                for: snapshot,
+                mode: mode,
+                pressed: pressed,
+                style: iconStyle
+            )
             renderedStatusIconKey = key
         }
 
