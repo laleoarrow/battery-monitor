@@ -307,7 +307,7 @@ git diff --check -- MenuBar/SettingsWindowController.swift tests/test_settings_w
 
 The always-on contract compiles and type-checks the production AppKit source and exercises layout/section seams without showing a window. It switches General↔Modules 1,000 times and requires the same two page-view identities, one content-host child, and every authoritative measurement within 1 point.
 
-Only with `WATTSON_RUN_INTERACTION=1`, run 50 warm-up cycles followed by 500 create/show/close/release cycles in a disposable interactive GUI session. Require weak controller/window references nil, file descriptors no more than warm baseline +2, and RSS no more than post-warm baseline +8 MiB. Source/runtime checks reject Settings-owned timers, display links, repeating dispatch, animations, sampling, and polling.
+Only with `WATTSON_RUN_INTERACTION=1`, run 150 warm-up cycles followed by 500 additional create/show/close/release cycles in a disposable interactive GUI session. Require weak controller/window references nil, file descriptors no more than warm baseline +2, and final RSS no more than post-warm baseline +8 MiB. A plateau-spread measurement may be retained only as an additional diagnostic, never as a substitute for this final-versus-baseline gate. Source/runtime checks reject Settings-owned timers, display links, repeating dispatch, animations, sampling, and polling.
 
 - [ ] **Step 7: Commit**
 

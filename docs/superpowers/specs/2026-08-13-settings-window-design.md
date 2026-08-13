@@ -332,7 +332,7 @@ actually show, key, close, or release windows run only when
 - Existing default and forced-legacy interaction harnesses.
 - Switching pages 1,000 times preserves the same two section-view identities
   and exactly one content-host child.
-- After 50 warm-up controller cycles, 500 create/show/close/release cycles in
+- After 150 warm-up controller cycles, 500 additional create/show/close/release cycles in
   the opt-in GUI harness release weak controller/window references, keep file
   descriptors within the warm baseline plus 2, and keep resident memory within
   8 MiB of the post-warm baseline.
