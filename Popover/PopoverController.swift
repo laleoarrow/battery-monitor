@@ -340,6 +340,14 @@ extension PopoverController {
         return count(root)
     }
 
+    var runningAnimationDescriptionsForTest: [String] {
+        content.runningAnimationDescriptionsForTest
+    }
+
+    var runningModuleAnimationCountForTest: Int {
+        content.runningModuleAnimationCountForTest
+    }
+
     var runningInfiniteAnimationCountForTest: Int {
         func count(_ layer: CALayer) -> Int {
             let local = (layer.animationKeys() ?? []).reduce(0) { total, key in

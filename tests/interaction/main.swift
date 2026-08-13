@@ -57,6 +57,32 @@ app.finishLaunching()                     // 少了这句状态栏按钮无法�
 RunLoop.current.run(until: Date().addingTimeInterval(0.3))
 func spin(_ s: TimeInterval) { RunLoop.current.run(until: Date().addingTimeInterval(s)) }
 
+func reducedMotionAnimationsAreSafe(
+    _ controller: PopoverController,
+    descriptions: [String]
+) -> Bool {
+    guard controller.runningInfiniteAnimationCountForTest == 0,
+          controller.runningModuleAnimationCountForTest == 0 else { return false }
+    guard !descriptions.isEmpty else { return true }
+    guard descriptions.count == 1,
+          descriptions[0] == "root:wattson.popover.entrance",
+          let group = controller.entranceAnimationForTest as? CAAnimationGroup,
+          let animations = group.animations,
+          animations.count == 1,
+          let fade = animations[0] as? CABasicAnimation else { return false }
+    let fromOpacity = (fade.fromValue as? NSNumber)?.doubleValue
+    let toOpacity = (fade.toValue as? NSNumber)?.doubleValue
+    return fade.keyPath == "opacity"
+        && abs(group.duration - 0.12) < 0.000_001
+        && abs(fade.duration - 0.12) < 0.000_001
+        && fromOpacity.map { abs($0 - 0.65) < 0.000_001 } == true
+        && toOpacity.map { abs($0 - 1.0) < 0.000_001 } == true
+        && group.repeatCount == 0 && group.repeatDuration == 0
+        && fade.repeatCount == 0 && fade.repeatDuration == 0
+        && !group.autoreverses && !fade.autoreverses
+        && group.isRemovedOnCompletion && fade.isRemovedOnCompletion
+}
+
 /// Activation is an NSApplication concern, not just a Foundation run-loop
 /// concern. Enter the real application event loop for assertions that depend
 /// on key-window ownership, then stop it without injecting user events.
@@ -111,6 +137,16 @@ if !screenLocked {
     p.toggle(relativeTo: button)
     check("展示前恰好渲染一次最新缓存数据", p.contentRenderCountForTest == 1)
     check("点击打开会安排一次平滑入场动画", p.entranceAnimationCountForTest == 1)
+    if forcedReduceMotion {
+        let immediateDescriptions = p.runningAnimationDescriptionsForTest
+        check("减少动态效果允许经验证的短暂透明度淡入",
+              reducedMotionAnimationsAreSafe(p, descriptions: immediateDescriptions),
+              "\(immediateDescriptions)")
+        check("减少动态效果拒绝任何额外动画",
+              !reducedMotionAnimationsAreSafe(
+                  p, descriptions: immediateDescriptions + ["root/rogue:opacity"]
+              ))
+    }
     spin(0.4)
     check("轻触图标弹窗打开", p.isShownForTest && p.isOpen)
     check("打开后开始监听外部点击", p.isWatchingOutsideClicks)
@@ -159,9 +195,14 @@ if !screenLocked {
     // ---- 3. 隐藏时必须停止动画：这是省电的全部意义 ----
     p.toggle(relativeTo: button); spin(0.8)
     let openAnims = p.runningAnimationCountForTest
-    check(forcedReduceMotion ? "减少动态效果时打开不启动内容动画" : "打开时内容在动",
-          forcedReduceMotion ? openAnims == 0 : openAnims > 0,
-          "\(openAnims) 个动画")
+    let openAnimationDescriptions = p.runningAnimationDescriptionsForTest
+    check(forcedReduceMotion ? "减少动态效果时打开仅保留短暂淡入" : "打开时内容在动",
+          forcedReduceMotion
+              ? reducedMotionAnimationsAreSafe(
+                  p, descriptions: openAnimationDescriptions
+              )
+              : openAnims > 0,
+          "\(openAnims) 个动画 \(openAnimationDescriptions)")
 
     // 显示辅助设置会在 app 运行时变化。发送真实 workspace
     // notification，确认打开的弹窗会立即停止或恢复无限动画。
@@ -206,9 +247,14 @@ if !screenLocked {
     p.toggle(relativeTo: button); spin(0.2)
     p.toggle(relativeTo: button); spin(1.4)
     let reopenAnims = p.runningAnimationCountForTest
-    check(forcedReduceMotion ? "减少动态效果时中途重开仍保持静态" : "中途重开后动画已恢复",
-          forcedReduceMotion ? reopenAnims == 0 : reopenAnims > 0,
-          "\(reopenAnims) 个动画")
+    let reopenAnimationDescriptions = p.runningAnimationDescriptionsForTest
+    check(forcedReduceMotion ? "减少动态效果时中途重开仅保留短暂淡入" : "中途重开后动画已恢复",
+          forcedReduceMotion
+              ? reducedMotionAnimationsAreSafe(
+                  p, descriptions: reopenAnimationDescriptions
+              )
+              : reopenAnims > 0,
+          "\(reopenAnims) 个动画 \(reopenAnimationDescriptions)")
     p.handleOutsideClick(); spin(1.2)
     check("重开再收起后动画仍会停", p.runningAnimationCountForTest == 0)
 

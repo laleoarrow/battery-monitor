@@ -8,6 +8,7 @@ POPOVER_SOURCE = ROOT / "Popover" / "PopoverController.swift"
 STYLE_SOURCE = ROOT / "Popover" / "PopoverStyle.swift"
 ANIMATION_HARNESS = ROOT / "tests" / "animation_stress" / "main.swift"
 ANIMATION_RUNNER = ROOT / "scripts" / "verify_animation_stress.sh"
+INTERACTION_HARNESS = ROOT / "tests" / "interaction" / "main.swift"
 
 
 class StatusItemContractTests(unittest.TestCase):
@@ -19,6 +20,7 @@ class StatusItemContractTests(unittest.TestCase):
         cls.style = STYLE_SOURCE.read_text(encoding="utf-8")
         cls.animation_harness = ANIMATION_HARNESS.read_text(encoding="utf-8")
         cls.animation_runner = ANIMATION_RUNNER.read_text(encoding="utf-8")
+        cls.interaction_harness = INTERACTION_HARNESS.read_text(encoding="utf-8")
 
     def test_listens_for_both_mouse_buttons(self):
         self.assertIn("leftMouseUp", self.source)
@@ -319,6 +321,15 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn('CABasicAnimation(keyPath: "opacity")', self.popover)
         self.assertIn('CABasicAnimation(keyPath: "transform")', self.popover)
         self.assertIn("reduceMotion", self.popover)
+        self.assertIn("reducedMotionAnimationsAreSafe", self.interaction_harness)
+        self.assertIn('fade.keyPath == "opacity"', self.interaction_harness)
+        self.assertIn('descriptions.count == 1', self.interaction_harness)
+        self.assertIn('root:wattson.popover.entrance', self.interaction_harness)
+        self.assertIn('runningModuleAnimationCountForTest == 0', self.interaction_harness)
+        self.assertIn('runningInfiniteAnimationCountForTest == 0', self.interaction_harness)
+        self.assertIn('group.repeatCount == 0', self.interaction_harness)
+        self.assertIn('减少动态效果允许经验证的短暂透明度淡入', self.interaction_harness)
+        self.assertIn('root/rogue:opacity', self.interaction_harness)
 
     def test_entrance_animation_uses_one_replaceable_key(self):
         normalized = self.popover.replace("Self.", "")
