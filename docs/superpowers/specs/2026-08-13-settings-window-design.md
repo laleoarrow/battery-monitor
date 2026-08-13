@@ -1,8 +1,13 @@
 # Wattson Settings Window Design
 
 Date: 2026-08-13
-Status: Approved design
+Status: Approved C+E visual direction
 Scope: Native macOS Settings window for existing Wattson controls
+
+Visual reference: `assets/wattson-settings-c-plus-e.png`. The left state is
+General; the right state is Modules. This image is the implementation target,
+while the measurements and behavior below are authoritative when raster
+details are ambiguous.
 
 ## Context
 
@@ -20,8 +25,8 @@ The existing quick controls and menu remain available.
 
 - Add a native single-instance Settings window reachable from `Settings…` and
   the standard Command-Comma shortcut.
-- Organize all seven existing persistent or system-backed choices into a clear
-  single page.
+- Organize all seven existing persistent or system-backed choices into two
+  compact sidebar pages: General and Modules.
 - Keep the current popover controls and their behavior unchanged.
 - Synchronize changes immediately between the Settings window, popover, and
   menu-bar presentation.
@@ -62,11 +67,17 @@ the Settings window forward and does not gain a Dock icon.
 
 ### Window
 
-The window is a standard titled, closable AppKit Settings window with one
-fixed-content page. It has no minimize or zoom affordance because there is no
+The window is a standard titled, closable AppKit Settings window with a fixed
+two-column layout. It has no minimize or zoom affordance because there is no
 alternate useful size. It is centered only on first presentation, uses one
 frame-autosave name to preserve a user-moved position across launches, does not
 restore visibility, and never opens automatically at application launch.
+
+The content size is 720×520 points. A fixed 176-point sidebar contains the
+Wattson identity row and exactly two navigation rows. The remaining content
+pane has 32-point outer insets. General is selected on first construction;
+the last page selected while the process remains alive is preserved across
+close/reopen, but page selection is not persisted across launches.
 
 Closing hides the window without terminating Wattson. Reopening, repeated
 menu commands, and repeated Command-Comma actions all reuse the same window and
@@ -74,21 +85,27 @@ bring it forward.
 
 ### Content
 
-The page uses native checkbox controls, system typography, standard group
-spacing, and concise secondary descriptions. It has two vertically stacked
-sections:
+The window uses native switch-style checkbox controls, system typography,
+subtle separator/card layers, and concise secondary descriptions. The sidebar
+has exactly two registered pages:
 
-1. **General**
+1. **General** — one compact inset list with three rows:
    - Show Battery Percentage in Menu Bar
    - Launch at Login
    - Hide System Battery Icon
-2. **Modules**
+2. **Modules** — a 2×2 grid of compact visual cards:
    - Energy Flow
    - Ring Gauge
    - Power Lanes
    - Power History
 
-The current version and Quit remain commands in the quick menu, not settings.
+Each General row contains an icon, primary label, one-line secondary label,
+and a right-aligned switch. Each module card contains a lightweight
+code-native preview glyph, primary label, one-line secondary label, and a
+right-aligned switch. The glyphs communicate flow, ring, lanes, and history
+without rendering live data or starting animation. The green accent is
+reserved for selected navigation and enabled controls. The current version
+and Quit remain commands in the quick menu, not settings.
 
 All controls expose explicit accessibility labels and help. Tab and full
 keyboard access follow AppKit's native checkbox order. The design does not add
@@ -113,19 +130,22 @@ The presentation callback crosses the existing hierarchy:
 
 ### Section extension boundary
 
-The window consumes an ordered collection of objects conforming to a narrow
+The sidebar and content host consume an ordered collection of objects
+conforming to a narrow
 `SettingsSectionController` protocol:
 
 - stable identifier;
 - user-facing title;
-- an AppKit content view;
+- an AppKit page view and sidebar symbol;
 - `refresh()` for authoritative state when the window opens.
 
 The default registry contains `GeneralSettingsSectionController` and
-`ModuleSettingsSectionController`. A future section is appended to the
-registry; it does not modify window ownership, activation, layout, or menu
-commands. This is the only extension interface added now. There is no generic
-schema, plugin loader, or speculative settings DSL.
+`ModuleSettingsSectionController`, in that order. Selecting a sidebar row
+swaps the single content host; it never constructs a second window. A future
+section is appended to the registry and automatically gains a navigation row;
+it does not modify window ownership, activation, layout, or menu commands.
+This is the only extension interface added now. There is no generic schema,
+plugin loader, or speculative settings DSL.
 
 ### App-owned preferences
 
@@ -235,6 +255,13 @@ failing, then implemented minimally.
 - A live popover reloads module visibility and height on change.
 - Section registry identifiers are unique and default order is General then
   Modules.
+- The window is 720×520 points with a 176-point sidebar, General is initially
+  selected, and selecting Modules swaps the content host without constructing
+  another page/window instance.
+- Sidebar selection is keyboard accessible and persists across close/reopen
+  only within the current process.
+- General renders exactly three rows; Modules renders exactly four cards in a
+  2×2 grid; module preview glyphs remain static when hidden or visible.
 - Window show-close-show preserves one `NSWindow` identity.
 - Repeated show produces one Settings window.
 - The window is nonrestorable, nonreleased, nonminimizable, and nonzoomable.

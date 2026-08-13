@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a native, single-instance Settings window for Wattson's seven existing settings while preserving the current popover, helper semantics, and menu-bar behavior.
+**Goal:** Add a native, single-instance C+E Settings window for Wattson's seven existing settings while preserving the current popover, helper semantics, and menu-bar behavior.
 
-**Architecture:** Keep `StatusItemController` as the UI lifetime root. Move app-owned module preferences into the existing `Settings` store, make system-battery-icon state observable from one controller, and compose a pure-AppKit Settings window from registered section controllers. The existing quick menu and the new window call the same state APIs; no new polling or timers are introduced.
+**Architecture:** Keep `StatusItemController` as the UI lifetime root. Move app-owned module preferences into the existing `Settings` store, make system-battery-icon state observable from one controller, and compose a pure-AppKit Settings window with a fixed sidebar and registered page controllers. General uses compact native rows; Modules uses the approved 2×2 visual-card layout. The existing quick menu and the new window call the same state APIs; no new polling or timers are introduced.
 
 **Tech Stack:** Swift 5 language mode, AppKit, Foundation `UserDefaults` and notifications, SwiftPM, XCTest, Python `unittest` executable contract harnesses, existing privileged-helper clients.
 
@@ -14,6 +14,7 @@
 - Keep `LSUIElement=true`; do not add a Dock icon or change activation policy.
 - Preserve the current popover layout and every existing quick control.
 - Add only General and Modules settings that already exist today.
+- Implement the approved `docs/superpowers/specs/assets/wattson-settings-c-plus-e.png` direction: 720×520 content, 176-point sidebar, General list page, Modules 2×2 card page.
 - Keep Auto/Low/High out of Settings.
 - Keep existing UserDefaults keys and default values unchanged.
 - Treat launchd and Control Center as authoritative; do not mirror them into UserDefaults.
@@ -224,6 +225,7 @@ git commit -m "feat: share system battery icon state"
 protocol SettingsSectionController: AnyObject {
     var identifier: String { get }
     var title: String { get }
+    var symbolName: String { get }
     var view: NSView { get }
     func refresh()
 }
@@ -252,6 +254,11 @@ first?.close()
 controller.show(activateApp: false)
 require(first === controller.windowForTest, "single instance")
 require(controller.sectionIdentifiersForTest == ["general", "modules"], "section order")
+require(first?.contentView?.frame.size == NSSize(width: 720, height: 520), "approved content size")
+require(controller.selectedSectionIdentifierForTest == "general", "general initially selected")
+controller.selectSectionForTest(identifier: "modules")
+require(controller.selectedSectionIdentifierForTest == "modules", "modules selectable")
+require(controller.visibleSectionIdentifierForTest == "modules", "single content host swaps page")
 ```
 
 The fixture closures return deterministic states and do not invoke the helper.
@@ -264,11 +271,11 @@ Expected: compile fails because `SettingsWindowController` is absent.
 
 - [ ] **Step 3: Implement the smallest native window shell**
 
-Create one standard titled/closable `NSWindow`, fixed content size, `isReleasedWhenClosed = false`, `isRestorable = false`, and one autosave name. Call `center()` only when no saved frame exists. `show` calls every section's `refresh()`, demniaturizes if needed, orders front, and activates only when requested. It creates no timers or observers outside section lifetimes.
+Create one standard titled/closable `NSWindow`, fixed 720×520 content size, `isReleasedWhenClosed = false`, `isRestorable = false`, and one autosave name. Build a fixed 176-point sidebar with Wattson identity plus one row per registered section, and one content host with 32-point insets. General is selected initially; close/reopen keeps the in-process selection. Call `center()` only when no saved frame exists. `show` refreshes authoritative state, demniaturizes if needed, orders front, and activates only when requested. It creates no timers or observers outside section lifetimes.
 
 - [ ] **Step 4: Implement General with explicit async state rendering**
 
-Use native checkboxes plus secondary labels. Map `LoginItemState` exactly:
+Use one compact inset list containing exactly three icon/label/detail/switch rows. Use native switch-style checkboxes plus secondary labels. Map `LoginItemState` exactly:
 
 ```swift
 switch state {
@@ -284,7 +291,7 @@ Map battery icon `Bool?` with `.mixed` for nil. Disable each row during its own 
 
 - [ ] **Step 5: Implement Modules through the shared store**
 
-Create exactly four checkboxes from `Settings.Module.allCases`; reads call `Settings.isModuleVisible`, writes call `Settings.setModule`. Observe `Settings.didChange` weakly and refresh the checkbox states. Remove the observer in `deinit`.
+Create exactly four compact visual cards from `Settings.Module.allCases`, arranged in a 2×2 grid. Each card has a static code-native preview glyph, title, one-line description, and switch. Reads call `Settings.isModuleVisible`, writes call `Settings.setModule`. Observe `Settings.didChange` weakly and refresh the checkbox states. Remove the observer in `deinit`. Preview glyphs must not animate, sample, or render live data.
 
 - [ ] **Step 6: Run focused GREEN and leak-sensitive loop**
 
@@ -296,7 +303,7 @@ swift build
 git diff --check -- MenuBar/SettingsWindowController.swift tests/test_settings_window_contract.py
 ```
 
-The executable harness must also create/show/close/release 500 controllers and assert weak controller/window references clear and `/dev/fd` returns to baseline.
+The executable harness must also switch General↔Modules at least 1,000 times without growing section/view counts, then create/show/close/release 500 controllers and assert weak controller/window references clear and `/dev/fd` returns to baseline.
 
 - [ ] **Step 7: Commit**
 
