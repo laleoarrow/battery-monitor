@@ -314,6 +314,7 @@ final class ModeSliderView: NSView {
     var settleUsesSpringForTest: Bool { activeSettleMotion == .spring }
     var settleUsesMagneticFlowForTest: Bool { activeSettleMotion == .magnetic }
     var settleDurationForTest: CFTimeInterval? { activeSettleDuration }
+    var settleStartCentreForTest: CGFloat? { settleStartFrame?.midX }
     var focusRingTypeForTest: NSFocusRingType { focusRingType }
     var restingKnobWidthForTest: CGFloat { knobFrame(at: selectedIndex).width }
     var segmentWidthForTest: CGFloat { segmentWidth }
@@ -726,7 +727,8 @@ final class ModeSliderView: NSView {
         applyTrackTint(currentTint)
         knob?.applyTint(currentTint)
         knob?.setLifted(
-            (dragging && movedWhileDragging) || activeSettleMotion != nil,
+            (dragging && movedWhileDragging)
+                || (usesNativeGlass && activeSettleMotion != nil),
             reduceMotion: reducesMotion
         )
         if highlighted >= 0 { highlight(highlighted, force: true) }
@@ -864,6 +866,17 @@ final class ModeSliderView: NSView {
 
     // MARK: - State
 
+    /// The footer arbitrates requests shared by the glass and reduced-motion
+    /// controls. Its presentation must supersede any older completion retained
+    /// by this standalone control.
+    func updateFromOwner(selected: EnergyMode, enabledModes: [EnergyMode], tint: NSColor) {
+        if pendingSelectionIndex != nil {
+            selectionGeneration += 1
+            pendingSelectionIndex = nil
+        }
+        update(selected: selected, enabledModes: enabledModes, tint: tint)
+    }
+
     func update(selected: EnergyMode, enabledModes: [EnergyMode], tint: NSColor) {
         let previousEnabled = enabled
         enabled = modes.map(enabledModes.contains)
@@ -879,7 +892,8 @@ final class ModeSliderView: NSView {
         // A telemetry refresh can arrive while the pointer is held. Reapply
         // the interaction material so it cannot flatten the lifted capsule.
         knob?.setLifted(
-            (dragging && movedWhileDragging) || activeSettleMotion != nil,
+            (dragging && movedWhileDragging)
+                || (usesNativeGlass && activeSettleMotion != nil),
             reduceMotion: reducesMotion
         )
         // During a held drag the 1 Hz telemetry refresh must recolour the mode

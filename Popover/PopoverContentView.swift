@@ -93,6 +93,18 @@ final class PopoverHeaderView: PopoverSection {
 final class PopoverFooterView: PopoverSection {
     static let preferredHeight: CGFloat = 78
 
+    private struct ModeControlPresentation {
+        let selected: EnergyMode
+        let enabledModes: [EnergyMode]
+        let tint: NSColor
+
+        func matches(selected: EnergyMode, enabledModes: [EnergyMode], tint: NSColor) -> Bool {
+            self.selected == selected
+                && self.enabledModes == enabledModes
+                && self.tint.isEqual(tint)
+        }
+    }
+
     private static var systemReducesMotion: Bool {
 #if DEBUG
         switch ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"] {
@@ -120,6 +132,7 @@ final class PopoverFooterView: PopoverSection {
     private var enabledModes: [EnergyMode] = []
     private var currentTint = PopoverStyle.blue
     private var selectionGeneration = 0
+    private var synchronizedModePresentation: ModeControlPresentation?
     private var systemBatteryIconHidden: Bool?
     private var helperInstalled = false
     private var systemBatteryIconUpdateInFlight = false
@@ -211,7 +224,9 @@ final class PopoverFooterView: PopoverSection {
         enabledModes = helperInstalled ? [.auto, .low] : []
         if helperInstalled && EnergyModeController.supportsHighPower { enabledModes.append(.high) }
         currentTint = tint
-        if pendingMode == nil { selected = mode }
+        // Always retain the newest authoritative observation as the rollback
+        // baseline. `pendingMode` only controls the optimistic presentation.
+        selected = mode
         synchronizeModeControls()
     }
 
@@ -279,8 +294,24 @@ final class PopoverFooterView: PopoverSection {
 
     private func synchronizeModeControls() {
         let displayedMode = pendingMode ?? selected
-        modeControl.update(selected: displayedMode, enabledModes: enabledModes, tint: currentTint)
+        if synchronizedModePresentation?.matches(
+            selected: displayedMode,
+            enabledModes: enabledModes,
+            tint: currentTint
+        ) == true {
+            return
+        }
+        modeControl.updateFromOwner(
+            selected: displayedMode,
+            enabledModes: enabledModes,
+            tint: currentTint
+        )
         reducedMotionModeControl.update(selected: displayedMode, enabledModes: enabledModes)
+        synchronizedModePresentation = ModeControlPresentation(
+            selected: displayedMode,
+            enabledModes: enabledModes,
+            tint: currentTint
+        )
     }
 
     private func refreshDisplayOptions() {

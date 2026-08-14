@@ -227,6 +227,67 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         XCTAssertEqual(native.selectedModeForTest, .low)
     }
 
+    func testNewestIntentReplacesAStaleSliderRequestAcrossControlSwitches() throws {
+        let footer = PopoverFooterView()
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue)
+        let slider = modeSlider(in: footer)
+        let native = nativeControl(in: footer)
+        var completions: [(EnergyMode?) -> Void] = []
+        footer.onSelect = { _, completion in completions.append(completion) }
+
+        footer.applyReduceMotionChangeForTest(false)
+        slider.keyDown(with: try keyEvent(124))
+        XCTAssertEqual(slider.selectedIndexForTest, 1)
+
+        footer.applyReduceMotionChangeForTest(true)
+        native.selectModeForTest(.auto)
+        footer.applyReduceMotionChangeForTest(false)
+        XCTAssertEqual(slider.selectedIndexForTest, 0)
+
+        completions[1](.auto)
+        XCTAssertEqual(slider.selectedIndexForTest, 0)
+        completions[0](.low)
+        XCTAssertEqual(slider.selectedIndexForTest, 0)
+    }
+
+    func testFailedIntentRollsBackToLatestAuthoritativeRefresh() {
+        let footer = PopoverFooterView()
+        footer.update(mode: .low, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue)
+        let native = nativeControl(in: footer)
+        var completion: ((EnergyMode?) -> Void)?
+        footer.onSelect = { _, callback in completion = callback }
+
+        footer.applyReduceMotionChangeForTest(true)
+        native.selectModeForTest(.auto)
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemGreen)
+        XCTAssertEqual(native.selectedModeForTest, .auto)
+
+        completion?(nil)
+        XCTAssertEqual(native.selectedModeForTest, .auto)
+    }
+
+    func testUnchangedTelemetryDoesNotRepeatModeControlLayerWork() {
+        let footer = PopoverFooterView()
+        footer.applyReduceMotionChangeForTest(false)
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue)
+        let slider = modeSlider(in: footer)
+        let baseline = slider.highlightCallCountForTest
+
+        for _ in 0..<1_000 {
+            footer.update(mode: .auto, helperInstalled: true,
+                          systemBatteryIconHidden: false, tint: .systemBlue)
+        }
+        XCTAssertEqual(slider.highlightCallCountForTest, baseline)
+
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemGreen)
+        XCTAssertEqual(slider.highlightCallCountForTest, baseline + 1)
+    }
+
     func testFooterObservesForcedReduceMotionChangesWithoutASetting() {
         let previous = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
         defer {

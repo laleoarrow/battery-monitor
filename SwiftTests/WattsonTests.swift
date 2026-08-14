@@ -125,6 +125,34 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(slider.fallbackLensMagnificationForTest ?? -1, 1, accuracy: 0.001)
     }
 
+    func testLegacyClickSettleNeverEnablesDragOnlyRefractionDuringRefresh() throws {
+        let (slider, window) = makeAnimatedSlider(
+            selected: .auto,
+            forceLegacyMaterials: true
+        )
+        defer { window.orderOut(nil) }
+        slider.onSelect = { mode, completion in completion(mode) }
+
+        tap(slider, in: window, x: slider.detentCentreForTest(2))
+        if slider.reducesMotionForTest {
+            throw XCTSkip("test requires animated legacy settle")
+        }
+        XCTAssertTrue(slider.settleIsAnimatingForTest)
+        XCTAssertEqual(slider.fallbackLensSamplingEnabledForTest, false)
+
+        slider.update(
+            selected: .high,
+            enabledModes: [.auto, .low, .high],
+            tint: .systemGreen
+        )
+        XCTAssertEqual(slider.fallbackLensSamplingEnabledForTest, false)
+        XCTAssertEqual(slider.fallbackLensMagnificationForTest ?? -1, 1, accuracy: 0.001)
+
+        spinMainRunLoop(0.5)
+        XCTAssertEqual(slider.fallbackLensSamplingEnabledForTest, false)
+        XCTAssertEqual(slider.fallbackLensMagnificationForTest ?? -1, 1, accuracy: 0.001)
+    }
+
     func testMacOS26ModeSliderUsesNativeClearGlassAsTheMovingLens() throws {
         guard #available(macOS 26.0, *) else { throw XCTSkip("requires native Liquid Glass") }
         let (slider, window) = makeAnimatedSlider(selected: .auto)

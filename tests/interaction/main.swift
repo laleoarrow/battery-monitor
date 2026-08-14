@@ -516,7 +516,7 @@ if slider.reducesMotionForTest {
           slider.settleIsAnimatingForTest
               && slider.settleUsesSpringForTest
               && (slider.settleDurationForTest ?? 1) <= 0.24
-              && abs(slider.knobCentreForTest - highReleaseCentre) < 1.5)
+              && abs((slider.settleStartCentreForTest ?? .infinity) - highReleaseCentre) < 1.5)
 }
 // 60 次拖动事件里只该跨过 1 个档位；每帧都重着色正是当初卡顿的原因
 check("拖动 60 帧只重着色跨档的那几次", relabels <= 3, "\(relabels) 次")
