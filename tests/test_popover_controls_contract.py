@@ -254,9 +254,10 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("nearestDetentIndex(toward: pressX)", self.slider)
         self.assertIn("private static let dragSlop", self.slider)
 
-    def test_knob_only_grows_after_drag_threshold_and_fits_one_detent_at_rest(self):
+    def test_knob_keeps_one_detent_footprint_through_direct_drag(self):
         self.assertIn("let width = segmentWidth", self.slider)
         self.assertNotIn("segmentWidth * 1.18", self.slider)
+        self.assertNotIn("pressedScale", self.slider)
         mouse_down = self.slider.split("override func mouseDown", 1)[1].split(
             "\n    override func mouseDragged", 1
         )[0]
@@ -267,11 +268,15 @@ class PopoverControlsContractTests(unittest.TestCase):
         )[0]
         threshold = mouse_dragged.split("if !movedWhileDragging", 1)[1]
         self.assertIn("setLifted(true, reduceMotion: reducesMotion)", threshold)
-        self.assertIn("moveKnob(centreX:", mouse_dragged)
+        self.assertIn("moveKnob(centreX: centre)", mouse_dragged)
+        self.assertNotIn("scaleX", mouse_dragged)
+        self.assertNotIn("scaleY", mouse_dragged)
         move = self.slider.split("private func moveKnob", 1)[1].split(
             "\n    /// The dragged capsule", 1
         )[0]
         self.assertIn("setKnobGeometry", move)
+        self.assertIn("width: base.width", move)
+        self.assertIn("height: base.height", move)
 
     def test_clicks_flow_magnetically_and_drag_releases_spring(self):
         self.assertIn("case magnetic", self.slider)
@@ -389,10 +394,8 @@ class PopoverControlsContractTests(unittest.TestCase):
         refresh = self.slider.split("private func refreshDisplayOptions", 1)[1].split(
             "\n    /// GitHub Mobile", 1
         )[0]
-        self.assertIn(
-            "setLifted(dragging && movedWhileDragging, reduceMotion: reducesMotion)",
-            refresh,
-        )
+        self.assertIn("dragging && movedWhileDragging", refresh)
+        self.assertIn("activeSettleMotion != nil", refresh)
         self.assertIn("if reduceMotion, activeSettleMotion != nil", refresh)
         self.assertIn("stopSettleMotion()", refresh)
         self.assertIn("setKnobFrame(knobFrame(at: selectedIndex))", refresh)
@@ -402,10 +405,8 @@ class PopoverControlsContractTests(unittest.TestCase):
         update = self.slider.split("func update(selected:", 1)[1].split(
             "\n    /// Clicks flow", 1
         )[0]
-        self.assertIn(
-            "setLifted(dragging && movedWhileDragging, reduceMotion: reducesMotion)",
-            update,
-        )
+        self.assertIn("dragging && movedWhileDragging", update)
+        self.assertIn("activeSettleMotion != nil", update)
 
     def test_native_track_and_selector_follow_github_mobile_hierarchy(self):
         self.assertIn("configureGlass(base, style: .regular", self.slider)

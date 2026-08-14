@@ -86,14 +86,27 @@ final class PopoverHeaderView: PopoverSection {
 #endif
 }
 
-/// Native three-position mode control and system-battery visibility choice.
+/// Three-position mode control and system-battery visibility choice.
 ///
-/// `ModeSliderView` owns the tactile Liquid Glass interaction on macOS 26 and
-/// its keyboard, VoiceOver, and reduced-transparency fallback on older systems.
+/// The tactile 2A slider remains the normal presentation. macOS Reduce Motion
+/// swaps it for a standard 2C segmented control without adding a saved setting.
 final class PopoverFooterView: PopoverSection {
     static let preferredHeight: CGFloat = 78
+
+    private static var systemReducesMotion: Bool {
+#if DEBUG
+        switch ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"] {
+        case "1": return true
+        case "0": return false
+        default: break
+        }
+#endif
+        return NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+    }
+
     private let modes: [EnergyMode] = [.auto, .low, .high]
     private lazy var modeControl = ModeSliderView(modes: modes)
+    private lazy var reducedMotionModeControl = NativeModeSegmentedControl(modes: modes)
     private lazy var systemBatteryIconButton = NSButton(
         checkboxWithTitle: "Hide System Battery Icon",
         target: self,
@@ -103,9 +116,15 @@ final class PopoverFooterView: PopoverSection {
     private let settingsButton = NSButton()
 
     private var selected: EnergyMode = .auto
+    private var pendingMode: EnergyMode?
+    private var enabledModes: [EnergyMode] = []
+    private var currentTint = PopoverStyle.blue
+    private var selectionGeneration = 0
     private var systemBatteryIconHidden: Bool?
     private var helperInstalled = false
     private var systemBatteryIconUpdateInFlight = false
+    private var reducesMotion = false
+    private var displayOptionsObserver: NSObjectProtocol?
     var onSelect: ((EnergyMode, @escaping (EnergyMode?) -> Void) -> Void)?
     var onSystemBatteryIconToggle: ((Bool, @escaping (Bool) -> Void) -> Void)?
     var onShowMenu: ((NSButton) -> Void)?
@@ -114,13 +133,26 @@ final class PopoverFooterView: PopoverSection {
         super.init(height: Self.preferredHeight)
 
         modeControl.onSelect = { [weak self] mode, completion in
-            guard let self, let onSelect = self.onSelect else {
+            guard let self else {
                 completion(nil)
                 return
             }
-            onSelect(mode, completion)
+            self.requestModeSelection(mode, sourceCompletion: completion)
         }
         addSubview(modeControl)
+
+        reducedMotionModeControl.onSelect = { [weak self] mode in
+            self?.requestModeSelection(mode)
+        }
+        addSubview(reducedMotionModeControl)
+        refreshDisplayOptions(reduceMotion: Self.systemReducesMotion)
+        displayOptionsObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+            object: NSWorkspace.shared,
+            queue: .main
+        ) { [weak self] _ in
+            self?.refreshDisplayOptions()
+        }
 
         systemBatteryIconButton.controlSize = .small
         systemBatteryIconButton.font = .systemFont(ofSize: 11, weight: .regular)
@@ -143,21 +175,25 @@ final class PopoverFooterView: PopoverSection {
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
+    deinit {
+        if let displayOptionsObserver {
+            NSWorkspace.shared.notificationCenter.removeObserver(displayOptionsObserver)
+        }
+    }
+
     override func layout() {
         super.layout()
         systemBatteryIconButton.frame = NSRect(x: 0, y: 10, width: 168, height: 20)
         hint.frame = NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)
-        // The lifted lens extends about 15% beyond its resting plate. Reserve
-        // that optical overscan so a High Power drag never covers the settings
-        // button beside the track.
-        modeControl.frame = NSRect(x: 0, y: 36, width: bounds.width - 46,
-                                   height: ModeSliderView.preferredHeight)
+        let modeFrame = NSRect(x: 0, y: 36, width: bounds.width - 46,
+                               height: ModeSliderView.preferredHeight)
+        modeControl.frame = modeFrame
+        reducedMotionModeControl.frame = modeFrame
         settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
     }
 
     func update(mode: EnergyMode, helperInstalled: Bool, systemBatteryIconHidden: Bool?,
                 tint: NSColor) {
-        selected = mode
         self.helperInstalled = helperInstalled
         self.systemBatteryIconHidden = systemBatteryIconHidden
         if let systemBatteryIconHidden {
@@ -172,9 +208,97 @@ final class PopoverFooterView: PopoverSection {
             : "Helper Not Installed"
         // High power is only a real detent on hardware that has it, and none
         // of them are reachable without the helper.
-        var available: [EnergyMode] = helperInstalled ? [.auto, .low] : []
-        if helperInstalled && EnergyModeController.supportsHighPower { available.append(.high) }
-        modeControl.update(selected: mode, enabledModes: available, tint: tint)
+        enabledModes = helperInstalled ? [.auto, .low] : []
+        if helperInstalled && EnergyModeController.supportsHighPower { enabledModes.append(.high) }
+        currentTint = tint
+        if pendingMode == nil { selected = mode }
+        synchronizeModeControls()
+    }
+
+    private func requestModeSelection(
+        _ mode: EnergyMode,
+        sourceCompletion: ((EnergyMode?) -> Void)? = nil
+    ) {
+        guard enabledModes.contains(mode) else {
+            sourceCompletion?(nil)
+            synchronizeModeControls()
+            return
+        }
+
+        guard mode != (pendingMode ?? selected) else {
+            sourceCompletion?(mode)
+            synchronizeModeControls()
+            return
+        }
+
+        selectionGeneration += 1
+        let generation = selectionGeneration
+        pendingMode = mode
+        synchronizeModeControls()
+        guard let onSelect else {
+            finishModeSelection(
+                generation: generation,
+                landedMode: nil,
+                sourceCompletion: sourceCompletion
+            )
+            return
+        }
+        onSelect(mode) { [weak self] landedMode in
+            guard let self else { return }
+            let finish: () -> Void = { [weak self] in
+                guard let self else { return }
+                self.finishModeSelection(
+                    generation: generation,
+                    landedMode: landedMode,
+                    sourceCompletion: sourceCompletion
+                )
+            }
+            if Thread.isMainThread {
+                finish()
+            } else {
+                DispatchQueue.main.async { finish() }
+            }
+        }
+    }
+
+    private func finishModeSelection(
+        generation: Int,
+        landedMode: EnergyMode?,
+        sourceCompletion: ((EnergyMode?) -> Void)?
+    ) {
+        guard generation == selectionGeneration else {
+            sourceCompletion?(pendingMode ?? selected)
+            synchronizeModeControls()
+            return
+        }
+        pendingMode = nil
+        if let landedMode { selected = landedMode }
+        sourceCompletion?(landedMode)
+        synchronizeModeControls()
+    }
+
+    private func synchronizeModeControls() {
+        let displayedMode = pendingMode ?? selected
+        modeControl.update(selected: displayedMode, enabledModes: enabledModes, tint: currentTint)
+        reducedMotionModeControl.update(selected: displayedMode, enabledModes: enabledModes)
+    }
+
+    private func refreshDisplayOptions() {
+        refreshDisplayOptions(reduceMotion: Self.systemReducesMotion)
+    }
+
+    private func refreshDisplayOptions(reduceMotion: Bool) {
+        guard reduceMotion != reducesMotion
+                || modeControl.isHidden != reduceMotion
+                || reducedMotionModeControl.isHidden == reduceMotion else { return }
+        let previousControl: NSView = reducesMotion ? reducedMotionModeControl : modeControl
+        let nextControl: NSView = reduceMotion ? reducedMotionModeControl : modeControl
+        let transferFocus = window?.firstResponder === previousControl
+        reducesMotion = reduceMotion
+        modeControl.isHidden = reduceMotion
+        reducedMotionModeControl.isHidden = !reduceMotion
+        if transferFocus { window?.makeFirstResponder(nextControl) }
+        needsLayout = true
     }
 
     @objc private func systemBatteryIconChanged(_ sender: NSButton) {
@@ -197,6 +321,12 @@ final class PopoverFooterView: PopoverSection {
     }
 
     @objc private func showMenu() { onShowMenu?(settingsButton) }
+
+#if DEBUG
+    func applyReduceMotionChangeForTest(_ reduceMotion: Bool) {
+        refreshDisplayOptions(reduceMotion: reduceMotion)
+    }
+#endif
 }
 
 final class PopoverContentViewController: NSViewController {

@@ -246,6 +246,10 @@ final class ModeSliderView: NSView {
             let fill = reduceTransparency
                 ? NSColor(white: lifted ? 0.22 : 0.27, alpha: 1)
                 : NSColor.clear
+            view.alphaValue = reduceTransparency
+                ? 1
+                : (lifted ? ModeSliderView.nativeActiveGlassOpacity
+                          : ModeSliderView.nativeRestingGlassOpacity)
             view.layer?.backgroundColor = fill.cgColor
             view.layer?.borderWidth = 0
             if #available(macOS 26.0, *),
@@ -374,6 +378,10 @@ final class ModeSliderView: NSView {
         guard usesNativeGlass, case .nativeSelection(let selector) = knob else { return nil }
         return selector.layer?.borderWidth
     }
+    var nativeSelectorOpacityForTest: CGFloat? {
+        guard usesNativeGlass, case .nativeSelection(let selector) = knob else { return nil }
+        return selector.alphaValue
+    }
     var nativeSelectorStyleForTest: Int? {
         guard #available(macOS 26.0, *), usesNativeGlass,
               case .nativeSelection(let selector) = knob,
@@ -456,7 +464,8 @@ final class ModeSliderView: NSView {
     /// feel sticky. A drag that begins away from the knob moves relatively, so
     /// crossing this threshold never makes the capsule jump under the pointer.
     private static let dragSlop: CGFloat = 4
-    private static let pressedScale = CGSize(width: 1.13, height: 1.35)
+    private static let nativeRestingGlassOpacity: CGFloat = 0.045
+    private static let nativeActiveGlassOpacity: CGFloat = 0.14
 
     private enum SettleMotion: Equatable {
         case magnetic
@@ -716,7 +725,10 @@ final class ModeSliderView: NSView {
         }
         applyTrackTint(currentTint)
         knob?.applyTint(currentTint)
-        knob?.setLifted(dragging && movedWhileDragging, reduceMotion: reducesMotion)
+        knob?.setLifted(
+            (dragging && movedWhileDragging) || activeSettleMotion != nil,
+            reduceMotion: reducesMotion
+        )
         if highlighted >= 0 { highlight(highlighted, force: true) }
         invalidateOpticalSnapshot()
         needsLayout = true
@@ -866,7 +878,10 @@ final class ModeSliderView: NSView {
         knob?.applyTint(tint)
         // A telemetry refresh can arrive while the pointer is held. Reapply
         // the interaction material so it cannot flatten the lifted capsule.
-        knob?.setLifted(dragging && movedWhileDragging, reduceMotion: reducesMotion)
+        knob?.setLifted(
+            (dragging && movedWhileDragging) || activeSettleMotion != nil,
+            reduceMotion: reducesMotion
+        )
         // During a held drag the 1 Hz telemetry refresh must recolour the mode
         // under the capsule, not jump the highlight back to the committed mode.
         let visualIndex = dragging && highlighted >= 0 ? highlighted : selectedIndex
@@ -1101,6 +1116,7 @@ final class ModeSliderView: NSView {
 #endif
 
         if usesNativeGlass, #available(macOS 26.0, *) {
+            knob?.setLifted(true, reduceMotion: false)
             startNativeGlassSettleMotion(
                 duration: duration,
                 frames: frames,
@@ -1190,6 +1206,7 @@ final class ModeSliderView: NSView {
         target.owner = self
         guard let window else {
             setKnobFrame(frames[frames.count - 1])
+            knob?.setLifted(false, reduceMotion: reducesMotion)
             invalidateNativeGlassDisplayLink()
             settleStartFrame = nil
             activeSettleMotion = nil
@@ -1212,6 +1229,7 @@ final class ModeSliderView: NSView {
             if let target = self.nativeSettleFrames.last {
                 self.setKnobFrame(target)
             }
+            self.knob?.setLifted(false, reduceMotion: self.reducesMotion)
             self.invalidateNativeGlassDisplayLink()
             self.settleCompletionWorkItem = nil
             self.settleStartFrame = nil
@@ -1234,6 +1252,7 @@ final class ModeSliderView: NSView {
         )
         setKnobFrame(nativeSettleFrame(at: phase))
         if phase >= 1 {
+            knob?.setLifted(false, reduceMotion: reducesMotion)
             stopNativeGlassDisplayLink()
         }
     }
@@ -1433,14 +1452,7 @@ final class ModeSliderView: NSView {
             : dragStartCentreX + (point.x - pressX)
         let centre = clampedCentre(rawCentre)
         let nearest = nearestIndex(toward: centre)
-        let nearestCentre = knobFrame(at: nearest).midX
-        let between = min(abs(centre - nearestCentre) / max(segmentWidth / 2, 1), 1)
-        let speed = min(abs(dragVelocityX) / 1_600, 1)
-
-        let reduceMotion = reducesMotion
-        let scaleX = reduceMotion ? 1 : Self.pressedScale.width + 0.07 * between + 0.03 * speed
-        let scaleY = reduceMotion ? 1 : Self.pressedScale.height + 0.04 * speed
-        moveKnob(centreX: centre, scaleX: scaleX, scaleY: scaleY)
+        moveKnob(centreX: centre)
 
         if nearest != highlighted { highlight(nearest) }
         lastPointerX = point.x
@@ -1548,15 +1560,15 @@ final class ModeSliderView: NSView {
         return visibleFrame.midX
     }
 
-    private func moveKnob(centreX: CGFloat, scaleX: CGFloat, scaleY: CGFloat) {
+    private func moveKnob(centreX: CGFloat) {
         let base = knobFrame(at: selectedIndex)
         setKnobGeometry(centreX: centreX,
-                        width: base.width * scaleX,
-                        height: base.height * scaleY)
+                        width: base.width,
+                        height: base.height)
     }
 
-    /// The dragged capsule may extend beyond the base, but its centre stops exactly
-    /// on the first and last slot like the reference control.
+    /// The dragged capsule keeps its resting footprint while its centre stops
+    /// exactly on the first and last slot like the reference control.
     private func clampedCentre(_ centre: CGFloat) -> CGFloat {
         let firstIndex = modes.indices.first ?? 0
         let lastIndex = modes.indices.last ?? firstIndex

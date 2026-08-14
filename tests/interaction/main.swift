@@ -352,7 +352,8 @@ if expectsNativeGlass {
         check("原生材质用 Regular 底轨与 Clear 移动透镜",
               nativeStructureMatches
                   && selectorFill <= 0.001
-                  && (slider.nativeSelectorContentFillAlphaForTest ?? 1) <= 0.001,
+                  && (slider.nativeSelectorContentFillAlphaForTest ?? 1) <= 0.001
+                  && abs((slider.nativeSelectorOpacityForTest ?? -1) - 0.045) < 0.001,
               "track=\(String(describing: slider.nativeTrackStyleForTest)) "
                   + "selector=\(String(describing: slider.nativeSelectorStyleForTest)) "
                   + "fill=\(selectorFill)")
@@ -383,7 +384,7 @@ if expectsNativeGlass {
 let fallbackCaptureAtRest = slider.fallbackLensCaptureCountForTest
 var fallbackFirstLiftedSample: CGRect?
 
-// 只有真正拖动才浮起并膨胀；按下和触控板轻微抖动都维持静止形态。
+// 只有真正拖动才增强玻璃材质；按下和触控板轻微抖动都维持静止形态。
 do {
     func ev(_ t: NSEvent.EventType, _ x: CGFloat) -> NSEvent {
         NSEvent.mouseEvent(with: t,
@@ -427,9 +428,11 @@ do {
                   liftedFill >= 0.999
                       && (slider.nativeSelectorContentFillAlphaForTest ?? 0) >= 0.999)
         } else {
+            let expectedDragOpacity: CGFloat = slider.reducesMotionForTest ? 0.045 : 0.14
             check("开始拖动后 Clear 折射透镜仍保持原生材质",
                   liftedFill <= 0.001
                       && (slider.nativeSelectorContentFillAlphaForTest ?? 1) <= 0.001
+                      && abs((slider.nativeSelectorOpacityForTest ?? -1) - expectedDragOpacity) < 0.001
                       && slider.nativeSelectorStyleForTest == 1
                       && slider.nativeSelectorBorderWidthForTest == 0
                       && slider.nativeSelectorHasCustomChromeForTest == false)
@@ -450,14 +453,9 @@ do {
               "sampling=\(String(describing: slider.fallbackLensSamplingEnabledForTest)) "
                   + "magnification=\(slider.fallbackLensMagnificationForTest ?? -1)")
     }
-    if slider.reducesMotionForTest {
-        check("减少动态效果时拖动不放大",
-              abs(dragged.width - 1) < 0.01 && abs(dragged.height - 1) < 0.01)
-    } else {
-        check("开始拖动后才放大为浮起胶囊",
-              dragged.width >= 1.12 && dragged.height >= 1.34,
-              String(format: "%.2f × %.2f", dragged.width, dragged.height))
-    }
+    check("拖动期间始终保持静止态尺寸",
+          abs(dragged.width - 1) < 0.01 && abs(dragged.height - 1) < 0.01,
+          String(format: "%.2f × %.2f", dragged.width, dragged.height))
     slider.mouseDragged(with: ev(.leftMouseDragged, (autoCentre + lowCentre) / 2))
     if let first = fallbackFirstLiftedSample {
         let moved = slider.fallbackLensSampleRectForTest ?? .zero
@@ -497,26 +495,35 @@ do {
                   && abs((slider.fallbackLensMagnificationForTest ?? -1) - 1) < 0.001)
     }
     spin(0.3)
+    if expectsNativeGlass,
+       ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] != "1" {
+        check("吸附完成后恢复近乎透明的静止玻璃",
+              abs((slider.nativeSelectorOpacityForTest ?? -1) - 0.045) < 0.001)
+    }
 }
 
 let before = slider.highlightCallCountForTest
-drag(from: autoCentre, to: slider.bounds.maxX - 4, steps: 60)
+let highReleaseCentre = highCentre - 18
+drag(from: autoCentre, to: highReleaseCentre, steps: 60)
 let relabels = slider.highlightCallCountForTest - before
 check("拖到最右会选中 High Power", chosen.last == .high, "\(chosen)")
-check("松手后吸附到 High 档位",
-      abs(slider.knobCentreForTest - highCentre) < 0.5,
-      String(format: "旋钮 %.1f vs 档位 %.1f", slider.knobCentreForTest, highCentre))
 if slider.reducesMotionForTest {
-    check("减少动态效果时释放直接吸附且不添加弹簧", !slider.settleIsAnimatingForTest)
+    check("减少动态效果时释放直接吸附且不添加弹簧",
+          !slider.settleIsAnimatingForTest
+              && abs(slider.knobCentreForTest - highCentre) < 0.5)
 } else {
-    check("松手有吸附弹簧动画",
+    check("非精确落点松手仍有吸附弹簧动画",
           slider.settleIsAnimatingForTest
               && slider.settleUsesSpringForTest
-              && (slider.settleDurationForTest ?? 1) <= 0.24)
+              && (slider.settleDurationForTest ?? 1) <= 0.24
+              && abs(slider.knobCentreForTest - highReleaseCentre) < 1.5)
 }
 // 60 次拖动事件里只该跨过 1 个档位；每帧都重着色正是当初卡顿的原因
 check("拖动 60 帧只重着色跨档的那几次", relabels <= 3, "\(relabels) 次")
 spin(0.6)
+check("松手后吸附到 High 档位",
+      abs(slider.knobCentreForTest - highCentre) < 0.5,
+      String(format: "旋钮 %.1f vs 档位 %.1f", slider.knobCentreForTest, highCentre))
 
 let backBefore = slider.highlightCallCountForTest
 drag(from: highCentre, to: lowCentre, steps: 60)

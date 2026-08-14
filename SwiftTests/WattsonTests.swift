@@ -110,8 +110,8 @@ final class WattsonTests: XCTestCase {
             (during?.midX ?? 0) - (firstLiftedSample?.midX ?? 0),
             0.15
         )
-        XCTAssertGreaterThan(slider.knobScaleForTest.width, 1.12)
-        XCTAssertGreaterThan(slider.knobScaleForTest.height, 1.34)
+        XCTAssertEqual(slider.knobScaleForTest.width, 1, accuracy: 0.01)
+        XCTAssertEqual(slider.knobScaleForTest.height, 1, accuracy: 0.01)
         XCTAssertEqual(
             slider.fallbackLensCaptureCountForTest,
             capturesBeforeDrag,
@@ -139,6 +139,32 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(slider.nativeSelectorBorderWidthForTest, 0)
         XCTAssertFalse(slider.nativeSelectorHasCustomChromeForTest)
         XCTAssertNil(slider.fallbackLensSampleImageForTest)
+    }
+
+    func testMacOS26NativeGlassStaysAiryAtRestAndOnlyStrengthensDuringMotion() throws {
+        guard #available(macOS 26.0, *) else { throw XCTSkip("requires native Liquid Glass") }
+        let (slider, window) = makeAnimatedSlider(selected: .auto)
+        defer { window.orderOut(nil) }
+        slider.onSelect = { mode, completion in completion(mode) }
+
+        XCTAssertEqual(slider.nativeSelectorOpacityForTest ?? -1, 0.045, accuracy: 0.001)
+
+        tap(slider, in: window, x: slider.detentCentreForTest(2))
+        guard !slider.reducesMotionForTest else { return }
+        XCTAssertEqual(slider.nativeSelectorOpacityForTest ?? -1, 0.14, accuracy: 0.001)
+
+        let deadline = Date().addingTimeInterval(0.6)
+        while slider.settleIsAnimatingForTest && Date() < deadline {
+            spinMainRunLoop(0.008)
+        }
+        XCTAssertEqual(slider.nativeSelectorOpacityForTest ?? -1, 0.045, accuracy: 0.001)
+
+        let start = slider.detentCentreForTest(2)
+        slider.mouseDown(with: sliderMouseEvent(.leftMouseDown, x: start, window: window))
+        slider.mouseDragged(with: sliderMouseEvent(.leftMouseDragged,
+                                                   x: start - 12,
+                                                   window: window))
+        XCTAssertEqual(slider.nativeSelectorOpacityForTest ?? -1, 0.14, accuracy: 0.001)
     }
 
     func testMacOS26ModeSliderMovesGlassAndItsGeometryOnOneDisplayTimeline() throws {
@@ -223,8 +249,8 @@ final class WattsonTests: XCTestCase {
             slider.mouseDragged(with: sliderMouseEvent(.leftMouseDragged,
                                                        x: start + 24,
                                                        window: window))
-            XCTAssertGreaterThan(slider.knobScaleForTest.width, 1.05)
-            XCTAssertGreaterThan(slider.knobScaleForTest.height, 1.05)
+            XCTAssertEqual(slider.knobScaleForTest.width, 1, accuracy: 0.01)
+            XCTAssertEqual(slider.knobScaleForTest.height, 1, accuracy: 0.01)
             let draggedCentre = slider.glassViewCentreForTest
 
             slider.applyReduceMotionChangeForTest(true)
@@ -258,6 +284,33 @@ final class WattsonTests: XCTestCase {
             } else if index == 2 {
                 XCTAssertEqual(selection.maxX, slider.bounds.maxX, accuracy: 0.01)
             }
+        }
+    }
+
+    func testModeSliderDirectDragKeepsRestingFootprint() {
+        for forceLegacyMaterials in [false, true] {
+            let (slider, window) = makeAnimatedSlider(
+                selected: .auto,
+                forceLegacyMaterials: forceLegacyMaterials
+            )
+            defer { window.orderOut(nil) }
+
+            let start = slider.detentCentreForTest(0)
+            let target = slider.detentCentreForTest(1)
+            slider.mouseDown(with: sliderMouseEvent(.leftMouseDown,
+                                                    x: start,
+                                                    window: window))
+            slider.mouseDragged(with: sliderMouseEvent(.leftMouseDragged,
+                                                       x: target,
+                                                       window: window))
+
+            XCTAssertEqual(slider.glassViewCentreForTest, target, accuracy: 0.5)
+            XCTAssertEqual(slider.knobScaleForTest.width, 1, accuracy: 0.01)
+            XCTAssertEqual(slider.knobScaleForTest.height, 1, accuracy: 0.01)
+
+            slider.mouseUp(with: sliderMouseEvent(.leftMouseUp,
+                                                  x: target,
+                                                  window: window))
         }
     }
 
