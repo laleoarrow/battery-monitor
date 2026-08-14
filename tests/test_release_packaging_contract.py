@@ -22,6 +22,7 @@ PREINSTALL = ROOT / "Packaging" / "pkg" / "preinstall"
 POSTINSTALL = ROOT / "Packaging" / "pkg" / "postinstall"
 RELEASE_GUIDE = ROOT / ".agent" / "release.md"
 README = ROOT / "README.md"
+HANDOFF = ROOT / "HANDOFF.md"
 PROMOTE_WORKFLOW = ROOT / ".github" / "workflows" / "promote-release.yml"
 
 
@@ -35,10 +36,11 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.postinstall = POSTINSTALL.read_text(encoding="utf-8")
         cls.release_guide = RELEASE_GUIDE.read_text(encoding="utf-8")
         cls.readme = README.read_text(encoding="utf-8")
+        cls.handoff = HANDOFF.read_text(encoding="utf-8")
         cls.promote_workflow = PROMOTE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.8\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.9\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -51,20 +53,35 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn("support-diagnostics-v1.1.0", self.readme)
         self.assertNotIn("support-diagnostics-v1.0.0", self.readme)
         for current_release_topic in (
-            "Dynamically enabling Reduce Motion",
-            "display-link and legacy settle",
-            "1× size",
-            "one explicit transaction",
-            "cached optical AppKit fallback",
+            "refined 2A airy glass",
+            "stays at 1× while dragging",
+            "system Reduce Motion",
+            "native 2C segmented control",
+            "without an app setting or saved preference",
+            "stale async completion from the other control",
+            "legacy optical refraction only during a real drag",
+            "identical telemetry samples",
         ):
             self.assertIn(current_release_topic, self.promote_workflow)
 
         for user_facing_topic in (
-            "dynamically enabled",
-            "returns to 1×",
-            "one explicit transaction",
+            "refined 2A airy-glass selector",
+            "stays at 1× while dragging",
+            "system Reduce Motion",
+            "native 2C segmented control",
+            "without an app setting or saved preference",
+            "stale async result",
+            "Legacy refraction refreshes only during a real drag",
+            "identical telemetry samples",
         ):
             self.assertIn(user_facing_topic, self.readme)
+
+        self.assertIn("## v3.0.9 selector and rendering work", self.handoff)
+        self.assertIn("## v3.0.8 dynamic Reduce Motion and transaction work", self.handoff)
+        self.assertLess(
+            self.handoff.index("## v3.0.9 selector and rendering work"),
+            self.handoff.index("## v3.0.8 dynamic Reduce Motion and transaction work"),
+        )
 
     def test_release_scripts_are_executable_and_parse_as_bash(self):
         for path in (*SCRIPTS.values(), PREINSTALL, POSTINSTALL):

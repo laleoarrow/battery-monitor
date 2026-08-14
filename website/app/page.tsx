@@ -6,7 +6,7 @@ const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
 const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
 const RELEASE_API =
   "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
-const FALLBACK_VERSION = "v3.0.8";
+const FALLBACK_VERSION = "v3.0.9";
 const FALLBACK_ASSET_BASE = `${GITHUB_REPO}/releases/download/${FALLBACK_VERSION}`;
 const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
 
@@ -341,9 +341,8 @@ export default function Home() {
               <span className="feature-number">02</span>
               <h3>Native by design</h3>
               <p>
-                Choose Wattson’s mark or a macOS-style battery glyph, with
-                clearer native Liquid Glass and optical refraction that move as
-                one precise surface.
+                Choose Wattson’s mark or a macOS-style battery glyph. The
+                refined 2A airy-glass selector stays at 1× while dragging.
               </p>
             </article>
 
@@ -358,8 +357,9 @@ export default function Home() {
               <span className="feature-number">03</span>
               <h3>Control in one click</h3>
               <p>
-                Switch Auto or Low Power, use High Power where supported, and
-                manage the system battery icon without opening System Settings.
+                Switch Auto or Low Power and use High Power where supported.
+                System Reduce Motion automatically uses a native 2C segmented
+                control, without an app setting or saved preference.
               </p>
             </article>
 

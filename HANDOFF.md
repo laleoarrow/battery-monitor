@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.8`
+- Version: `3.0.9`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +14,11 @@
 
 ## Public artifacts
 
-`scripts/release.sh 3.0.8` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.9` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.8-macos-universal.pkg`
-- `Wattson-v3.0.8-macos-universal.dmg`
-- `Wattson-v3.0.8-release-info.txt`
+- `Wattson-v3.0.9-macos-universal.pkg`
+- `Wattson-v3.0.9-macos-universal.dmg`
+- `Wattson-v3.0.9-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -51,12 +51,14 @@ All shipped user-facing copy is English. The settings menu shows the exact
 The mode selector keeps the v2.1.5 interaction contract:
 
 - The resting selection is no wider than one segment.
-- Only a real drag enlarges the selection capsule.
+- The selection capsule stays at 1× while dragging.
 - Dragging previews continuously and commits on release.
 - Clicking another mode follows a visible magnetic path rather than jumping.
 - Label brightness cross-fades with the real selection position.
-- One native Liquid Glass track is used on macOS 26 with a neutral selection
-  capsule; macOS 12–25 use the tested fallback.
+- The refined 2A airy-glass control is the default: macOS 26 uses native Liquid
+  Glass, while macOS 12–25 use the tested optical fallback.
+- macOS system Reduce Motion automatically swaps in a native 2C segmented
+  control without adding an app setting or saved preference.
 - Reduce Motion, Reduce Transparency, keyboard, VoiceOver, and focus behavior
   remain covered.
 
@@ -67,7 +69,7 @@ Headless checks:
 ```bash
 swift test --parallel
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.8
+bash scripts/release.sh 3.0.9
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -101,12 +103,24 @@ runners.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.8` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.9` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.8.
+6. Announce the release only after every public route resolves to v3.0.9.
+
+## v3.0.9 selector and rendering work
+
+The v3.0.9 pass makes the refined 2A airy-glass selector the normal power-mode
+control and keeps its capsule at 1× during direct drag. When macOS system
+Reduce Motion is enabled, Wattson automatically swaps in the native 2C
+segmented control without adding an app setting or saved preference. Both
+controls now share one request generation, so a stale async completion from one
+cannot overwrite a newer selection from the other. The legacy optical fallback
+refreshes refraction only during a real drag. Reusable telemetry drawing inputs
+are cached, and redundant layer updates are removed for identical telemetry
+samples.
 
 ## v3.0.8 dynamic Reduce Motion and transaction work
 
