@@ -60,36 +60,35 @@ struct SettingsWindowDependencies {
 }
 
 private enum SettingsStyle {
-    static let contentSize = NSSize(width: 792, height: 794)
-    static let minimumContentScale: CGFloat = 0.60
-    static let sidebarWidth: CGFloat = 232
-    static let contentHorizontalInset: CGFloat = 25
-    static let contentTopInset: CGFloat = 78
-    static let contentBottomInset: CGFloat = 24
+    static let contentSize = NSSize(width: 720, height: 520)
+    static let sidebarWidth: CGFloat = 176
+    static let contentHorizontalInset: CGFloat = 20
+    static let contentTopInset: CGFloat = 56
+    static let contentBottomInset: CGFloat = 20
 
-    static let trafficLightSafeHeight: CGFloat = 54
-    static let identityHeight: CGFloat = 96
-    static let identityTileSize: CGFloat = 54
-    static let navigationInset: CGFloat = 16
-    static let navigationTopGap: CGFloat = -6
-    static let navigationRowHeight: CGFloat = 56
+    static let trafficLightSafeHeight: CGFloat = 52
+    static let identityHeight: CGFloat = 64
+    static let identityTileSize: CGFloat = 40
+    static let navigationInset: CGFloat = 12
+    static let navigationTopGap: CGFloat = 4
+    static let navigationRowHeight: CGFloat = 38
     static let navigationRowGap: CGFloat = 4
-    static let navigationHeight: CGFloat = 130
+    static let navigationHeight: CGFloat = 86
 
-    static let headingFont = NSFont.systemFont(ofSize: 31, weight: .semibold)
-    static let primaryFont = NSFont.systemFont(ofSize: 19, weight: .regular)
-    static let detailFont = NSFont.systemFont(ofSize: 16, weight: .regular)
-    static let sidebarFont = NSFont.systemFont(ofSize: 17, weight: .medium)
+    static let headingFont = NSFont.systemFont(ofSize: 22, weight: .semibold)
+    static let primaryFont = NSFont.systemFont(ofSize: 14, weight: .regular)
+    static let detailFont = NSFont.systemFont(ofSize: 11, weight: .regular)
+    static let sidebarFont = NSFont.systemFont(ofSize: 13, weight: .medium)
 
-    static let toggleSize = NSSize(width: 56, height: 32)
-    static let generalListHeight: CGFloat = 400
-    static let generalRowHeight: CGFloat = 100
-    static let generalIconTileSize: CGFloat = 50
-    static let moduleCardHeight: CGFloat = 259
-    static let moduleCardWidth: CGFloat = 246.5
-    static let moduleCardGap: CGFloat = 16
-    static let surfaceCornerRadius: CGFloat = 13
-    static let modulePreviewSize = NSSize(width: 112, height: 108)
+    static let toggleSize = NSSize(width: 38, height: 22)
+    static let generalListHeight: CGFloat = 272
+    static let generalRowHeight: CGFloat = 68
+    static let generalIconTileSize: CGFloat = 36
+    static let moduleCardHeight: CGFloat = 166
+    static let moduleCardWidth: CGFloat = 233
+    static let moduleCardGap: CGFloat = 12
+    static let surfaceCornerRadius: CGFloat = 10
+    static let modulePreviewSize = NSSize(width: 64, height: 60)
 
     static let contentBackground = color(hex: 0x151618)
     static let sidebarBackground = color(hex: 0x1E1F21)
@@ -138,139 +137,6 @@ private final class SettingsFillView: NSView {
 
     override func updateLayer() {
         layer?.backgroundColor = fillColor.cgColor
-    }
-}
-
-private final class ReferenceTrafficLightButton: NSButton {
-    enum Kind {
-        case close
-        case minimize
-        case zoom
-
-        var activeColor: NSColor {
-            switch self {
-            case .close: return NSColor(srgbRed: 235 / 255, green: 99 / 255, blue: 86 / 255, alpha: 1)
-            case .minimize: return NSColor(srgbRed: 246 / 255, green: 199 / 255, blue: 69 / 255, alpha: 1)
-            case .zoom: return NSColor(srgbRed: 89 / 255, green: 195 / 255, blue: 87 / 255, alpha: 1)
-            }
-        }
-
-        var accessibilityLabel: String {
-            switch self {
-            case .close: return "Close"
-            case .minimize: return "Minimize"
-            case .zoom: return "Zoom"
-            }
-        }
-    }
-
-    private let kind: Kind
-    private weak var nativeButton: NSButton?
-    private var isHovered = false
-    private var windowObservers: [NSObjectProtocol] = []
-
-    init(kind: Kind, nativeButton: NSButton) {
-        self.kind = kind
-        self.nativeButton = nativeButton
-        super.init(frame: NSRect(x: 0, y: 0, width: 20, height: 20))
-        title = ""
-        isBordered = false
-        setButtonType(.momentaryPushIn)
-        focusRingType = .none
-        target = self
-        action = #selector(forwardNativeAction)
-        setAccessibilityLabel(kind.accessibilityLabel)
-        setAccessibilityHelp("\(kind.accessibilityLabel) the Wattson Settings window.")
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) is unavailable")
-    }
-
-    deinit {
-        windowObservers.forEach(NotificationCenter.default.removeObserver)
-    }
-
-    override var intrinsicContentSize: NSSize { NSSize(width: 20, height: 20) }
-
-    override func viewDidMoveToWindow() {
-        super.viewDidMoveToWindow()
-        windowObservers.forEach(NotificationCenter.default.removeObserver)
-        windowObservers.removeAll()
-        guard let window else { return }
-        for name in [NSWindow.didBecomeKeyNotification, NSWindow.didResignKeyNotification] {
-            windowObservers.append(NotificationCenter.default.addObserver(
-                forName: name,
-                object: window,
-                queue: .main
-            ) { [weak self] _ in
-                self?.needsDisplay = true
-            })
-        }
-    }
-
-    override func updateTrackingAreas() {
-        super.updateTrackingAreas()
-        trackingAreas.forEach(removeTrackingArea)
-        addTrackingArea(NSTrackingArea(
-            rect: bounds,
-            options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
-            owner: self,
-            userInfo: nil
-        ))
-    }
-
-    override func mouseEntered(with event: NSEvent) {
-        isHovered = true
-        needsDisplay = true
-    }
-
-    override func mouseExited(with event: NSEvent) {
-        isHovered = false
-        needsDisplay = true
-    }
-
-    override func draw(_ dirtyRect: NSRect) {
-        let active = window?.isKeyWindow == true || window?.isMainWindow == true
-        let base = active
-            ? kind.activeColor
-            : NSColor(srgbRed: 112 / 255, green: 112 / 255, blue: 114 / 255, alpha: 1)
-        let fill = isHighlighted ? base.blended(withFraction: 0.20, of: .black) ?? base : base
-        fill.setFill()
-        let circle = NSBezierPath(ovalIn: bounds.insetBy(dx: 0.5, dy: 0.5))
-        circle.fill()
-        NSColor.black.withAlphaComponent(active ? 0.22 : 0.14).setStroke()
-        circle.lineWidth = 0.75
-        circle.stroke()
-
-        guard isHovered else { return }
-        NSColor.black.withAlphaComponent(0.56).setStroke()
-        let symbol = NSBezierPath()
-        let width = bounds.width
-        let height = bounds.height
-        switch kind {
-        case .close:
-            symbol.move(to: NSPoint(x: width * 0.325, y: height * 0.325))
-            symbol.line(to: NSPoint(x: width * 0.675, y: height * 0.675))
-            symbol.move(to: NSPoint(x: width * 0.675, y: height * 0.325))
-            symbol.line(to: NSPoint(x: width * 0.325, y: height * 0.675))
-        case .minimize:
-            symbol.move(to: NSPoint(x: width * 0.30, y: height * 0.50))
-            symbol.line(to: NSPoint(x: width * 0.70, y: height * 0.50))
-        case .zoom:
-            symbol.move(to: NSPoint(x: width * 0.30, y: height * 0.50))
-            symbol.line(to: NSPoint(x: width * 0.70, y: height * 0.50))
-            symbol.move(to: NSPoint(x: width * 0.50, y: height * 0.30))
-            symbol.line(to: NSPoint(x: width * 0.50, y: height * 0.70))
-        }
-        symbol.lineWidth = 1.2 * min(width, height) / 20
-        symbol.lineCapStyle = .round
-        symbol.stroke()
-    }
-
-    @objc private func forwardNativeAction() {
-        nativeButton?.performClick(self)
     }
 }
 
@@ -550,54 +416,6 @@ private final class ECGIconView: NSView {
     }
 }
 
-private final class PuzzleNavigationIconView: NSView {
-    override func draw(_ dirtyRect: NSRect) {
-        let path = NSBezierPath()
-        path.move(to: NSPoint(x: 4, y: 23))
-        path.line(to: NSPoint(x: 10, y: 23))
-        path.line(to: NSPoint(x: 10, y: 25))
-        path.curve(
-            to: NSPoint(x: 18, y: 25),
-            controlPoint1: NSPoint(x: 10, y: 29),
-            controlPoint2: NSPoint(x: 18, y: 29)
-        )
-        path.line(to: NSPoint(x: 18, y: 23))
-        path.line(to: NSPoint(x: 24, y: 23))
-        path.line(to: NSPoint(x: 24, y: 17))
-        path.line(to: NSPoint(x: 26, y: 17))
-        path.curve(
-            to: NSPoint(x: 26, y: 11),
-            controlPoint1: NSPoint(x: 30, y: 17),
-            controlPoint2: NSPoint(x: 30, y: 11)
-        )
-        path.line(to: NSPoint(x: 24, y: 11))
-        path.line(to: NSPoint(x: 24, y: 5))
-        path.line(to: NSPoint(x: 18, y: 5))
-        path.line(to: NSPoint(x: 18, y: 8))
-        path.curve(
-            to: NSPoint(x: 10, y: 8),
-            controlPoint1: NSPoint(x: 18, y: 12),
-            controlPoint2: NSPoint(x: 10, y: 12)
-        )
-        path.line(to: NSPoint(x: 10, y: 5))
-        path.line(to: NSPoint(x: 4, y: 5))
-        path.line(to: NSPoint(x: 4, y: 11))
-        path.line(to: NSPoint(x: 7, y: 11))
-        path.curve(
-            to: NSPoint(x: 7, y: 17),
-            controlPoint1: NSPoint(x: 11, y: 11),
-            controlPoint2: NSPoint(x: 11, y: 17)
-        )
-        path.line(to: NSPoint(x: 4, y: 17))
-        path.close()
-        SettingsStyle.primaryText.setStroke()
-        path.lineWidth = 2.4
-        path.lineCapStyle = .round
-        path.lineJoinStyle = .round
-        path.stroke()
-    }
-}
-
 private final class StaticModulePreviewView: NSView {
     private let module: Settings.Module
 
@@ -625,7 +443,16 @@ private final class StaticModulePreviewView: NSView {
             yRadius: 12
         ).fill()
 
-        let drawingRect = bounds.insetBy(dx: 14, dy: 13)
+        NSGraphicsContext.saveGraphicsState()
+        defer { NSGraphicsContext.restoreGraphicsState() }
+        let designSize = NSSize(width: 112, height: 108)
+        let transform = NSAffineTransform()
+        transform.scaleX(
+            by: bounds.width / designSize.width,
+            yBy: bounds.height / designSize.height
+        )
+        transform.concat()
+        let drawingRect = NSRect(origin: .zero, size: designSize).insetBy(dx: 14, dy: 13)
         switch module {
         case .flow:
             drawFlow(in: drawingRect)
@@ -904,7 +731,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             increaseContrast: dependencies.increaseContrast
         )
         nativeIconButton = SettingsToggleButton(
-            accessibilityLabel: "Use macOS-Style Wattson Icon",
+            accessibilityLabel: "Use System Wattson Icon",
             increaseContrast: dependencies.increaseContrast
         )
         super.init()
@@ -965,9 +792,9 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         configureSwitch(nativeIconButton)
         nativeIconButton.target = self
         nativeIconButton.action = #selector(toggleNativeIcon(_:))
-        nativeIconButton.setAccessibilityLabel("Use macOS-Style Wattson Icon")
+        nativeIconButton.setAccessibilityLabel("Use System Wattson Icon")
         nativeIconButton.setAccessibilityHelp(
-            "Changes Wattson only; Apple’s separate battery icon is controlled above."
+            "Changes Wattson only and follows the battery symbol supplied by this macOS version; Apple’s separate battery icon is controlled above."
         )
 
         configureDetailLabel(
@@ -1061,10 +888,10 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             row(
                 identifier: "native-icon",
                 symbolName: "battery.100",
-                visibleTitle: "Use macOS-Style Icon",
+                visibleTitle: "Use System Icon",
                 button: nativeIconButton,
                 detail: configuredDetailLabel(
-                    "Apple battery shape for Wattson’s icon",
+                    "Follows the battery symbol supplied by your macOS",
                     identifier: "settings.general.native-icon.detail"
                 ),
                 error: nil,
@@ -1089,6 +916,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         list.addSubview(rows)
 
         let heading = NSTextField(labelWithString: title)
+        heading.identifier = NSUserInterfaceItemIdentifier("settings.general.heading")
         heading.font = SettingsStyle.headingFont
         heading.textColor = SettingsStyle.headingText
         heading.setAccessibilityLabel(title)
@@ -1098,13 +926,13 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         view.addSubview(list)
 
         NSLayoutConstraint.activate([
-            heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 13),
+            heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             heading.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            heading.topAnchor.constraint(equalTo: view.topAnchor, constant: -4),
+            heading.topAnchor.constraint(equalTo: view.topAnchor, constant: -2),
 
             list.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             list.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            list.topAnchor.constraint(equalTo: view.topAnchor, constant: 61),
+            list.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
             list.heightAnchor.constraint(equalToConstant: SettingsStyle.generalListHeight),
             list.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
 
@@ -1130,7 +958,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         let iconTile = NSBox()
         iconTile.boxType = .custom
         iconTile.titlePosition = .noTitle
-        iconTile.cornerRadius = 10
+        iconTile.cornerRadius = 8
         iconTile.borderWidth = 1
         iconTile.borderColor = SettingsStyle.border
         iconTile.fillColor = SettingsStyle.tileBackground
@@ -1141,7 +969,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             systemSymbolName: symbolName,
             accessibilityDescription: nil
         )?.withSymbolConfiguration(
-            NSImage.SymbolConfiguration(pointSize: 26, weight: .regular)
+            NSImage.SymbolConfiguration(pointSize: 17, weight: .regular)
         )
         icon.contentTintColor = .secondaryLabelColor
         icon.imageScaling = .scaleProportionallyDown
@@ -1162,7 +990,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         text.orientation = .vertical
         text.alignment = .leading
         text.distribution = .fill
-        text.spacing = 4
+        text.spacing = 2
         text.translatesAutoresizingMaskIntoConstraints = false
 
         row.addSubview(iconTile)
@@ -1170,20 +998,20 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         row.addSubview(button)
 
         NSLayoutConstraint.activate([
-            iconTile.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 20),
+            iconTile.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 14),
             iconTile.centerYAnchor.constraint(equalTo: row.centerYAnchor),
             iconTile.widthAnchor.constraint(equalToConstant: SettingsStyle.generalIconTileSize),
             iconTile.heightAnchor.constraint(equalToConstant: SettingsStyle.generalIconTileSize),
             icon.centerXAnchor.constraint(equalTo: iconTile.centerXAnchor),
             icon.centerYAnchor.constraint(equalTo: iconTile.centerYAnchor),
-            icon.widthAnchor.constraint(equalToConstant: 24),
-            icon.heightAnchor.constraint(equalToConstant: 24),
+            icon.widthAnchor.constraint(equalToConstant: 18),
+            icon.heightAnchor.constraint(equalToConstant: 18),
 
-            text.leadingAnchor.constraint(equalTo: iconTile.trailingAnchor, constant: 29),
+            text.leadingAnchor.constraint(equalTo: iconTile.trailingAnchor, constant: 14),
             text.centerYAnchor.constraint(equalTo: row.centerYAnchor, constant: 0.5),
             text.trailingAnchor.constraint(lessThanOrEqualTo: button.leadingAnchor, constant: -12),
 
-            button.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -22),
+            button.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -14),
             button.centerYAnchor.constraint(equalTo: row.centerYAnchor),
         ])
 
@@ -1546,7 +1374,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             labelWithString: "Choose what appears in the power popover."
         )
         subtitle.identifier = NSUserInterfaceItemIdentifier("settings.modules.subtitle")
-        subtitle.font = .systemFont(ofSize: 18, weight: .regular)
+        subtitle.font = SettingsStyle.detailFont
         subtitle.textColor = SettingsStyle.secondaryText
         subtitle.translatesAutoresizingMaskIntoConstraints = false
 
@@ -1583,10 +1411,10 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
 
             subtitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             subtitle.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            subtitle.bottomAnchor.constraint(equalTo: grid.topAnchor, constant: -24),
+            subtitle.bottomAnchor.constraint(equalTo: grid.topAnchor, constant: -10),
 
-            grid.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            grid.topAnchor.constraint(equalTo: view.topAnchor, constant: 94),
+            grid.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            grid.topAnchor.constraint(equalTo: view.topAnchor, constant: 66),
             grid.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
             grid.heightAnchor.constraint(
                 equalToConstant: SettingsStyle.moduleCardHeight * 2
@@ -1621,7 +1449,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         detail.maximumNumberOfLines = 2
         detail.cell?.usesSingleLineMode = false
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 8
+        paragraphStyle.lineSpacing = 3
         detail.attributedStringValue = NSAttributedString(
             string: description(for: module),
             attributes: [
@@ -1650,21 +1478,21 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         card.addSubview(button)
 
         NSLayoutConstraint.activate([
-            preview.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 18),
-            preview.topAnchor.constraint(equalTo: card.topAnchor, constant: 18),
+            preview.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 14),
+            preview.topAnchor.constraint(equalTo: card.topAnchor, constant: 14),
             preview.widthAnchor.constraint(equalToConstant: SettingsStyle.modulePreviewSize.width),
             preview.heightAnchor.constraint(equalToConstant: SettingsStyle.modulePreviewSize.height),
 
-            primary.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 20),
-            primary.trailingAnchor.constraint(lessThanOrEqualTo: button.leadingAnchor, constant: -10),
-            primary.topAnchor.constraint(equalTo: card.topAnchor, constant: 151),
+            primary.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 14),
+            primary.trailingAnchor.constraint(lessThanOrEqualTo: button.leadingAnchor, constant: -8),
+            primary.topAnchor.constraint(equalTo: card.topAnchor, constant: 88),
 
             detail.leadingAnchor.constraint(equalTo: primary.leadingAnchor),
-            detail.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -20),
-            detail.topAnchor.constraint(equalTo: primary.bottomAnchor, constant: 10),
-            detail.bottomAnchor.constraint(lessThanOrEqualTo: card.bottomAnchor, constant: -20),
+            detail.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -14),
+            detail.topAnchor.constraint(equalTo: primary.bottomAnchor, constant: 6),
+            detail.bottomAnchor.constraint(lessThanOrEqualTo: card.bottomAnchor, constant: -12),
 
-            button.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -22),
+            button.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -14),
             button.centerYAnchor.constraint(equalTo: primary.centerYAnchor),
             button.widthAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.width),
             button.heightAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.height),
@@ -1713,19 +1541,12 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     NSTableViewDelegate
 {
     private static let frameAutosaveName = "WattsonSettingsWindow"
-    private static let trafficLightReferenceFrames = [
-        NSRect(x: 23, y: 26, width: 20, height: 20),
-        NSRect(x: 53, y: 26, width: 20, height: 20),
-        NSRect(x: 84, y: 26, width: 19, height: 19),
-    ]
 
     private let sections: [SettingsSectionController]
     private let increaseContrast: () -> Bool
     private let sidebar = NSTableView()
     private let contentHost = NSView()
-    private let titlebarSpacer = NSTitlebarAccessoryViewController()
     private let divider: DynamicSeparatorView
-    private var trafficLightButtons: [ReferenceTrafficLightButton] = []
     private var accessibilityDisplayObserver: NSObjectProtocol?
     private var selectedSectionIndex = 0
 
@@ -1763,7 +1584,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
                 .titled,
                 .closable,
                 .miniaturizable,
-                .resizable,
                 .fullSizeContentView,
             ],
             backing: .buffered,
@@ -1778,9 +1598,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         window.isReleasedWhenClosed = false
         window.isRestorable = false
         window.tabbingMode = .disallowed
-        // The reference is a fixed composition; resizing would distort the
-        // measured card and sidebar geometry. Keep the native zoom control,
-        // but constrain AppKit to the approved artwork size.
+        // This utility window has one intentionally compact composition.
+        // Omitting `.resizable` keeps AppKit's native zoom control disabled.
         window.contentMinSize = SettingsStyle.contentSize
         window.contentMaxSize = SettingsStyle.contentSize
         window.isMovableByWindowBackground = true
@@ -1792,7 +1611,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         super.init(window: window)
 
         configureContent()
-        configureTrafficLights()
         installAccessibilityDisplayObserver()
         refreshContrastAppearance()
         if let frameAutosaveName {
@@ -1841,37 +1659,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         view.subviews.forEach { refreshContrastAppearance(in: $0) }
     }
 
-    private func configureTrafficLights() {
-        guard let window else { return }
-        // Keep AppKit's standard controls as the action owners. The visible
-        // proxy buttons forward to them while matching the reference artwork's
-        // 18-point circles instead of AppKit's fixed 14-point drawing size.
-        titlebarSpacer.layoutAttribute = .bottom
-        titlebarSpacer.view = NSView(frame: NSRect(x: 0, y: 0, width: 1, height: 36))
-        window.addTitlebarAccessoryViewController(titlebarSpacer)
-        window.contentView?.layoutSubtreeIfNeeded()
-
-        let definitions: [(NSWindow.ButtonType, ReferenceTrafficLightButton.Kind)] = [
-            (.closeButton, .close),
-            (.miniaturizeButton, .minimize),
-            (.zoomButton, .zoom),
-        ]
-        trafficLightButtons.removeAll()
-        for ((type, kind), referenceFrame) in zip(
-            definitions,
-            Self.trafficLightReferenceFrames
-        ) {
-            guard let native = window.standardWindowButton(type),
-                  let parent = native.superview else { continue }
-            native.isHidden = true
-            let proxy = ReferenceTrafficLightButton(kind: kind, nativeButton: native)
-            proxy.frame = referenceFrame
-            proxy.autoresizingMask = [.maxXMargin, .minYMargin]
-            parent.addSubview(proxy)
-            trafficLightButtons.append(proxy)
-        }
-    }
-
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) is unavailable")
@@ -1887,7 +1674,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
         refreshSections()
         guard let window else { return }
-        fitReferenceCompositionToVisibleScreen(window)
         if window.isMiniaturized { window.deminiaturize(nil) }
         window.initialFirstResponder = sidebar
         if activateApp {
@@ -1906,65 +1692,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             }
         } else {
             window.orderFront(nil)
-        }
-    }
-
-    private func fitReferenceCompositionToVisibleScreen(_ window: NSWindow) {
-        guard let screen = window.screen ?? NSScreen.main else { return }
-        let visible = screen.visibleFrame.insetBy(dx: 12, dy: 12)
-        let referenceFrame = window.frameRect(forContentRect: NSRect(
-            origin: .zero,
-            size: SettingsStyle.contentSize
-        )).size
-        let scale = max(SettingsStyle.minimumContentScale, min(
-            1,
-            visible.width / referenceFrame.width,
-            visible.height / referenceFrame.height
-        ))
-        applyContentScale(scale, to: window)
-        if scale < 1 { window.center() }
-    }
-
-    private func applyContentScale(_ scale: CGFloat, to window: NSWindow) {
-        let compact = NSSize(
-            width: floor(SettingsStyle.contentSize.width * scale),
-            height: floor(SettingsStyle.contentSize.height * scale)
-        )
-        window.contentMinSize = compact
-        window.contentMaxSize = compact
-        window.setContentSize(compact)
-        // Keep layout in the reference coordinate space while NSView maps it
-        // proportionally into a smaller frame. Unlike a layer transform, the
-        // bounds transform also preserves hit testing and accessibility.
-        if let viewport = window.contentView {
-            viewport.setFrameSize(compact)
-            viewport.setBoundsSize(SettingsStyle.contentSize)
-            viewport.subviews.first {
-                $0.identifier?.rawValue == "settings.root"
-            }?.frame = viewport.bounds
-            viewport.layoutSubtreeIfNeeded()
-        }
-        applyTrafficLightScale(scale)
-    }
-
-    private func applyTrafficLightScale(_ scale: CGFloat) {
-        for (button, referenceFrame) in zip(
-            trafficLightButtons,
-            Self.trafficLightReferenceFrames
-        ) {
-            guard let parent = button.superview else { continue }
-            let referenceTopInset: CGFloat = 68 - referenceFrame.maxY
-            let size = NSSize(
-                width: referenceFrame.width * scale,
-                height: referenceFrame.height * scale
-            )
-            button.frame = NSRect(
-                x: referenceFrame.minX * scale,
-                y: parent.bounds.height - referenceTopInset * scale - size.height,
-                width: size.width,
-                height: size.height
-            )
-            button.needsDisplay = true
         }
     }
 
@@ -2061,7 +1788,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
         viewport.addSubview(root)
         window.contentView = viewport
-        viewport.setBoundsSize(SettingsStyle.contentSize)
         sidebar.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
         tableViewSelectionDidChange(Notification(
             name: NSTableView.selectionDidChangeNotification,
@@ -2077,9 +1803,10 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         identity.translatesAutoresizingMaskIntoConstraints = false
 
         let iconTile = NSBox()
+        iconTile.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.identity.tile")
         iconTile.boxType = .custom
         iconTile.titlePosition = .noTitle
-        iconTile.cornerRadius = 12
+        iconTile.cornerRadius = 9
         iconTile.borderWidth = 1
         iconTile.borderColor = SettingsStyle.border
         iconTile.fillColor = SettingsStyle.tileBackground
@@ -2090,22 +1817,22 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         iconTile.addSubview(icon)
 
         let name = NSTextField(labelWithString: "Wattson")
-        name.font = .systemFont(ofSize: 21, weight: .semibold)
+        name.font = .systemFont(ofSize: 16, weight: .semibold)
         name.textColor = SettingsStyle.headingText
         name.translatesAutoresizingMaskIntoConstraints = false
 
         identity.addSubview(iconTile)
         identity.addSubview(name)
         NSLayoutConstraint.activate([
-            iconTile.leadingAnchor.constraint(equalTo: identity.leadingAnchor, constant: 24),
-            iconTile.centerYAnchor.constraint(equalTo: identity.centerYAnchor, constant: -1),
+            iconTile.leadingAnchor.constraint(equalTo: identity.leadingAnchor, constant: 16),
+            iconTile.centerYAnchor.constraint(equalTo: identity.centerYAnchor),
             iconTile.widthAnchor.constraint(equalToConstant: SettingsStyle.identityTileSize),
             iconTile.heightAnchor.constraint(equalToConstant: SettingsStyle.identityTileSize),
             icon.centerXAnchor.constraint(equalTo: iconTile.centerXAnchor),
             icon.centerYAnchor.constraint(equalTo: iconTile.centerYAnchor),
-            icon.widthAnchor.constraint(equalToConstant: 40),
-            icon.heightAnchor.constraint(equalToConstant: 40),
-            name.leadingAnchor.constraint(equalTo: iconTile.trailingAnchor, constant: 12),
+            icon.widthAnchor.constraint(equalToConstant: 30),
+            icon.heightAnchor.constraint(equalToConstant: 30),
+            name.leadingAnchor.constraint(equalTo: iconTile.trailingAnchor, constant: 10),
             name.centerYAnchor.constraint(equalTo: iconTile.centerYAnchor),
         ])
         return identity
@@ -2219,21 +1946,16 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         let section = sections[row]
         let cell = NSTableCellView()
 
-        let icon: NSView
-        if section.identifier == "modules" {
-            icon = PuzzleNavigationIconView()
-        } else {
-            let imageView = NSImageView()
-            imageView.image = NSImage(
-                systemSymbolName: section.symbolName,
-                accessibilityDescription: nil
-            )?.withSymbolConfiguration(
-                NSImage.SymbolConfiguration(pointSize: 23, weight: .regular)
-            )
-            imageView.contentTintColor = .labelColor
-            imageView.imageScaling = .scaleNone
-            icon = imageView
-        }
+        let imageView = NSImageView()
+        imageView.image = NSImage(
+            systemSymbolName: section.symbolName,
+            accessibilityDescription: nil
+        )?.withSymbolConfiguration(
+            NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
+        )
+        imageView.contentTintColor = .labelColor
+        imageView.imageScaling = .scaleNone
+        let icon: NSView = imageView
         icon.setAccessibilityElement(false)
         icon.translatesAutoresizingMaskIntoConstraints = false
 
@@ -2246,11 +1968,11 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         cell.addSubview(icon)
         cell.addSubview(title)
         NSLayoutConstraint.activate([
-            icon.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: -3),
+            icon.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 2),
             icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
-            icon.widthAnchor.constraint(equalToConstant: 28),
-            icon.heightAnchor.constraint(equalToConstant: 28),
-            title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 15),
+            icon.widthAnchor.constraint(equalToConstant: 20),
+            icon.heightAnchor.constraint(equalToConstant: 20),
+            title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 8),
             title.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -8),
             title.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
         ])
@@ -2261,7 +1983,14 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
 #if DEBUG
     var windowForTest: NSWindow? { window }
-    var trafficLightButtonsForTest: [NSButton] { trafficLightButtons }
+    var trafficLightButtonsForTest: [NSButton] {
+        guard let window else { return [] }
+        return [
+            window.standardWindowButton(.closeButton),
+            window.standardWindowButton(.miniaturizeButton),
+            window.standardWindowButton(.zoomButton),
+        ].compactMap { $0 }
+    }
     var selectedRowStrokeWidthForTest: CGFloat {
         selectedSidebarRowForTest?.selectionStrokeWidth ?? -1
     }
@@ -2307,10 +2036,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         return nil
     }
 
-    func applyContentScaleForTest(_ scale: CGFloat) {
-        guard let window else { return }
-        applyContentScale(scale, to: window)
-    }
     var sectionIdentifiersForTest: [String] { sections.map(\.identifier) }
     var selectedSectionIdentifierForTest: String { sections[selectedSectionIndex].identifier }
     var visibleSectionIdentifierForTest: String? {

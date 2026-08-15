@@ -47,10 +47,75 @@ test("renders the complete English Wattson release page", async () => {
   assert.doesNotMatch(html, /Your site is taking shape|Starter Project/i);
 });
 
+test("groups the install routes in one compact, accessible panel", async () => {
+  const response = await render();
+  const html = await response.text();
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(html, /class="install-panel"/i);
+  assert.equal(
+    (html.match(/<article class="install-row\b/gi) ?? []).length,
+    3,
+  );
+  assert.match(
+    html,
+    /class="install-row install-row-recommended"[\s\S]*?Recommended[\s\S]*?Download DMG/i,
+  );
+  assert.match(
+    html,
+    /class="install-row"[\s\S]*?Package installer[\s\S]*?Download PKG/i,
+  );
+  assert.match(
+    html,
+    /class="install-row install-row-homebrew"[\s\S]*?brew install --cask laleoarrow\/tap\/wattson[\s\S]*?aria-label="Copy Homebrew install command"/i,
+  );
+  assert.match(html, /class="trust-note"[\s\S]*?Inspect releases/i);
+  assert.doesNotMatch(html, /class="install-grid"|class="install-card\b/i);
+
+  assert.match(page, /className="install-shell"/);
+  assert.match(
+    css,
+    /\.install-shell\s*\{[^}]*width:\s*min\(760px,\s*calc\(100% - 48px\)\)/s,
+  );
+  assert.match(css, /\.install-panel\s*\{[^}]*border-radius:\s*14px/s);
+  assert.match(css, /\.install-row\s*\{[^}]*grid-template-columns:/s);
+  assert.match(css, /\.install-action\s*\{[^}]*min-height:\s*40px/s);
+  assert.doesNotMatch(css, /\.install-card\b/);
+  assert.doesNotMatch(
+    css,
+    /\.install-section\s*\{[^}]*padding:\s*145px\s+0\s+100px/s,
+  );
+  assert.doesNotMatch(
+    css,
+    /\.install-row\s*\{[^}]*min-height:\s*(?:3[4-9]\d|[4-9]\d\d)px/s,
+  );
+});
+
+test("shows the current AppKit popover instead of an invented web mock", async () => {
+  const response = await render();
+  const html = await response.text();
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+
+  assert.match(
+    html,
+    /wattson-popover-real\.png[^>]*alt="The real Wattson menu bar popover/i,
+  );
+  assert.match(html, /Captured from the current Wattson AppKit build\./i);
+  assert.doesNotMatch(html, /class="app-window"|class="power-map"/i);
+  assert.doesNotMatch(page, /historyValues|className="app-window"|67\.1 W|24\.8 W/);
+
+  await Promise.all([
+    access(new URL("../public/wattson-popover-real.png", import.meta.url)),
+    access(new URL("../dist/client/wattson-popover-real.png", import.meta.url)),
+  ]);
+});
+
 test("ships the required static assets", async () => {
   await Promise.all([
     access(new URL("../dist/client/favicon.png", import.meta.url)),
     access(new URL("../dist/client/og.png", import.meta.url)),
+    access(new URL("../dist/client/wattson-popover-real.png", import.meta.url)),
     access(new URL("../dist/client/_next/", import.meta.url)),
   ]);
 

@@ -82,20 +82,6 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && approximately(actual.size.height, expected.size.height)
             }
 
-            // AppKit may align an NSGridView cell to the compact viewport.
-            // Compare visible geometry so one outer content point remains
-            // the tolerance at every supported scale.
-            func approximatelyAfterScale(
-                _ actual: NSRect,
-                _ expected: NSRect,
-                scale: CGFloat
-            ) -> Bool {
-                approximately(actual.origin.x * scale, expected.origin.x * scale)
-                    && approximately(actual.origin.y * scale, expected.origin.y * scale)
-                    && approximately(actual.size.width * scale, expected.size.width * scale)
-                    && approximately(actual.size.height * scale, expected.size.height * scale)
-            }
-
             func srgbHex(_ color: NSColor?) -> UInt32? {
                 guard let converted = color?.usingColorSpace(.sRGB) else { return nil }
                 return UInt32((converted.redComponent * 255).rounded()) << 16
@@ -128,38 +114,19 @@ class SettingsWindowContractTests(unittest.TestCase):
             func requireTrafficLightsClearIdentity(
                 controller: SettingsWindowController,
                 in window: NSWindow,
-                identity: NSView,
-                scale: CGFloat,
-                phase: String
+                identity: NSView
             ) {
                 window.contentView?.superview?.layoutSubtreeIfNeeded()
                 let identityInWindow = identity.convert(identity.bounds, to: nil)
-                let referenceSizes = [
-                    NSSize(width: 20, height: 20),
-                    NSSize(width: 20, height: 20),
-                    NSSize(width: 19, height: 19),
-                ]
-                for (trafficButton, referenceSize) in zip(
-                    controller.trafficLightButtonsForTest,
-                    referenceSizes
-                ) {
-                    require(
-                        approximately(
-                            trafficButton.frame.size.width,
-                            referenceSize.width * scale
-                        ) && approximately(
-                            trafficButton.frame.size.height,
-                            referenceSize.height * scale
-                        ),
-                        "\(phase) visible traffic-light button scales uniformly"
-                    )
+                for trafficButton in controller.trafficLightButtonsForTest {
+                    require(!trafficButton.isHidden, "native traffic-light button remains visible")
                     let trafficFrame = trafficButton.superview?.convert(
                         trafficButton.frame,
                         to: nil
                     ) ?? trafficButton.frame
                     require(
                         !identityInWindow.intersects(trafficFrame),
-                        "\(phase) identity avoids visible traffic-light button"
+                        "identity avoids native traffic-light button"
                     )
                 }
             }
@@ -279,33 +246,34 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(first?.isReleasedWhenClosed == false, "retained")
             require(first?.isRestorable == false, "not visibility-restored")
             require(first?.styleMask.contains(.miniaturizable) == true, "reference shell shows minimize")
-            require(first?.styleMask.contains(.resizable) == true, "reference shell shows zoom")
+            require(first?.styleMask.contains(.resizable) == false, "compact shell does not advertise resizing")
             require(first?.styleMask.contains(.fullSizeContentView) == true, "full-height content under titlebar")
             require(first?.titleVisibility == .hidden, "centered window title hidden")
             require(first?.titlebarAppearsTransparent == true, "titlebar is visually unified")
             require(
-                first?.contentView?.frame.size == NSSize(width: 792, height: 794),
-                "approved content size"
+                first?.contentView?.frame.size == NSSize(width: 720, height: 520),
+                "compact content size"
             )
             require(
-                first?.contentMinSize == NSSize(width: 792, height: 794)
-                    && first?.contentMaxSize == NSSize(width: 792, height: 794),
-                "reference composition cannot be distorted by resizing"
+                first?.contentMinSize == NSSize(width: 720, height: 520)
+                    && first?.contentMaxSize == NSSize(width: 720, height: 520),
+                "compact composition cannot be distorted by resizing"
             )
             require(first?.appearance?.name == .darkAqua, "reference artwork has fixed dark appearance")
             require(first?.frameAutosaveName.isEmpty == true, "nil autosave skips persistence")
-            require(controller.trafficLightButtonsForTest.count == 3, "three reference traffic controls")
+            require(controller.trafficLightButtonsForTest.count == 3, "three native traffic controls")
             require(
-                controller.trafficLightButtonsForTest.map { $0.frame.size }
-                    == [NSSize(width: 20, height: 20),
-                        NSSize(width: 20, height: 20),
-                        NSSize(width: 19, height: 19)],
-                "traffic controls match the reference diameter"
+                controller.trafficLightButtonsForTest[0]
+                    === first?.standardWindowButton(.closeButton)
+                    && controller.trafficLightButtonsForTest[1]
+                    === first?.standardWindowButton(.miniaturizeButton)
+                    && controller.trafficLightButtonsForTest[2]
+                    === first?.standardWindowButton(.zoomButton),
+                "traffic controls are AppKit's native buttons"
             )
             require(
-                controller.trafficLightButtonsForTest.compactMap { $0.accessibilityLabel() }
-                    == ["Close", "Minimize", "Zoom"],
-                "traffic controls retain explicit accessibility labels"
+                first?.standardWindowButton(.zoomButton)?.isEnabled == false,
+                "fixed-size native zoom control is disabled"
             )
             require(controller.sectionIdentifiersForTest == ["general", "modules"], "section order")
             require(Set(controller.sectionIdentifiersForTest).count == 2, "unique section identifiers")
@@ -319,14 +287,20 @@ class SettingsWindowContractTests(unittest.TestCase):
             let trafficSafeArea = view("settings.sidebar.traffic-safe-area", in: first)
             let navigation = view("settings.sidebar.navigation", in: first)
             let divider = view("settings.sidebar.divider", in: first)
-            require(approximately(sidebar.frame.width, 232), "reference sidebar width")
-            require(approximately(sidebar.frame.height, 794), "sidebar spans full content height")
-            require(approximately(divider.frame.height, 794), "divider spans full content height")
-            require(approximately(trafficSafeArea.frame.height, 54), "reference traffic-light safe area")
-            require(approximately(identity.frame.height, 96), "reference identity row height")
+            let identityTile = view("settings.sidebar.identity.tile", in: first)
+            require(approximately(sidebar.frame.width, 176), "compact sidebar width")
+            require(approximately(sidebar.frame.height, 520), "sidebar spans full content height")
+            require(approximately(divider.frame.height, 520), "divider spans full content height")
+            require(approximately(trafficSafeArea.frame.height, 52), "native traffic-light safe area")
+            require(approximately(identity.frame.height, 64), "compact identity row height")
+            require(
+                approximately(identityTile.frame.width, 40)
+                    && approximately(identityTile.frame.height, 40),
+                "compact identity tile is 40 points"
+            )
             require(approximately(identity.frame.maxY, trafficSafeArea.frame.minY), "identity begins below traffic safe area")
-            require(approximately(navigation.frame.minX, 16), "reference navigation leading inset")
-            require(approximately(sidebar.frame.maxX - navigation.frame.maxX, 16), "reference navigation trailing inset")
+            require(approximately(navigation.frame.minX, 12), "compact navigation leading inset")
+            require(approximately(sidebar.frame.maxX - navigation.frame.maxX, 12), "compact navigation trailing inset")
             require(approximately(divider.frame.width, 1), "native divider width")
             require(divider.wantsUpdateLayer, "divider resolves semantic color dynamically")
             first?.appearance = NSAppearance(named: .aqua)
@@ -337,11 +311,17 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(divider.wantsUpdateLayer, "Dark Aqua divider stays dynamic")
             require(approximately(divider.frame.width, 1), "Dark Aqua divider stays one point")
             first?.appearance = nil
-            require(approximately(controller.contentHostFrameForTest.width, 509), "reference content width")
+            require(approximately(controller.contentHostFrameForTest.width, 503), "compact content width")
             require(controller.sidebarStyleForTest == .sourceList, "source-list sidebar")
             require(controller.sidebarAllowsEmptySelectionForTest == false, "sidebar disallows empty selection")
-            require(approximately(controller.sidebarRowHeightForTest, 56), "reference navigation row height")
+            require(approximately(controller.sidebarRowHeightForTest, 38), "compact navigation row height")
             require(approximately(controller.sidebarRowGapForTest, 4), "navigation row gap")
+            let navigationLabels = descendants(ofType: NSTextField.self, in: navigation)
+            require(
+                navigationLabels.filter { ["General", "Modules"].contains($0.stringValue) }
+                    .allSatisfy { approximately($0.font?.pointSize ?? -1, 13) },
+                "navigation labels use 13-point type"
+            )
             require(
                 descendants(ofType: NSView.self, in: view("settings.section.general", in: first))
                     .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
@@ -351,24 +331,31 @@ class SettingsWindowContractTests(unittest.TestCase):
             let generalList = view("settings.general.list", in: first)
             let generalRows = descendants(ofType: NSView.self, in: generalList)
                 .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
-            require(approximately(generalList.frame.width, 509), "reference general list width")
-            require(approximately(generalList.frame.height, 400), "extended general list height")
-            require((generalList as? NSBox)?.cornerRadius == 13, "reference general list radius")
-            require(generalRows.allSatisfy { approximately($0.frame.height, 100) }, "four 100-point rows")
+            require(approximately(generalList.frame.width, 503), "compact general list width")
+            require(approximately(generalList.frame.height, 272), "compact general list height")
+            require((generalList as? NSBox)?.cornerRadius == 10, "compact general list radius")
+            require(generalRows.allSatisfy { approximately($0.frame.height, 68) }, "four 68-point rows")
+            require(
+                approximately(
+                    (view("settings.general.heading", in: first) as? NSTextField)?.font?.pointSize ?? -1,
+                    22
+                ),
+                "General heading uses 22-point type"
+            )
             let generalRowsByIdentifier = Dictionary(
                 uniqueKeysWithValues: generalRows.compactMap { row in
                     row.identifier.map { ($0.rawValue, row) }
                 }
             )
             for (identifier, expectedMinY) in [
-                ("settings.general.row.percentage", CGFloat(300)),
-                ("settings.general.row.login", CGFloat(200)),
-                ("settings.general.row.battery", CGFloat(100)),
+                ("settings.general.row.percentage", CGFloat(204)),
+                ("settings.general.row.login", CGFloat(136)),
+                ("settings.general.row.battery", CGFloat(68)),
                 ("settings.general.row.native-icon", CGFloat(0)),
             ] {
                 require(
                     approximately(generalRowsByIdentifier[identifier]?.frame.minY ?? -1, expectedMinY),
-                    "\(identifier) retains its 100-point top-down slot"
+                    "\(identifier) retains its 68-point top-down slot"
                 )
             }
 
@@ -377,13 +364,13 @@ class SettingsWindowContractTests(unittest.TestCase):
             let percentage = button("Show Battery Percentage in Menu Bar", in: first)
             let login = button("Launch at Login", in: first)
             let battery = button("Hide System Battery Icon", in: first)
-            let nativeIcon = button("Use macOS-Style Wattson Icon", in: first)
+            let nativeIcon = button("Use System Wattson Icon", in: first)
             require(controller.sidebarNextKeyViewForTest === percentage, "Tab enters first General switch")
             require(controller.lastVisibleSwitchNextKeyViewForTest === controller.sidebarForTest, "General key loop returns to sidebar")
             require(percentage.accessibilityLabel() == "Show Battery Percentage in Menu Bar", "percentage accessibility label")
             require(login.accessibilityLabel() == "Launch at Login", "login accessibility label")
             require(battery.accessibilityLabel() == "Hide System Battery Icon", "battery accessibility label")
-            require(nativeIcon.accessibilityLabel() == "Use macOS-Style Wattson Icon", "native icon accessibility label")
+            require(nativeIcon.accessibilityLabel() == "Use System Wattson Icon", "system icon accessibility label")
             require(
                 percentage.title.isEmpty && login.title.isEmpty
                     && battery.title.isEmpty && nativeIcon.title.isEmpty,
@@ -391,13 +378,31 @@ class SettingsWindowContractTests(unittest.TestCase):
             )
             require(
                 [percentage, login, battery, nativeIcon].allSatisfy {
-                    approximately($0.frame.width, 56) && approximately($0.frame.height, 32)
+                    approximately($0.frame.width, 38) && approximately($0.frame.height, 22)
                 },
-                "General uses reference-sized toggle switches"
+                "General uses compact toggle switches"
             )
             let generalVisibleTitles = Set(
                 descendants(ofType: NSTextField.self, in: view("settings.section.general", in: first))
                     .map(\.stringValue)
+            )
+            let generalPrimaryLabels = descendants(
+                ofType: NSTextField.self,
+                in: view("settings.section.general", in: first)
+            ).filter {
+                [
+                    "Show Battery Percentage",
+                    "Launch at Login",
+                    "Hide System Battery Icon",
+                    "Use System Icon",
+                ].contains($0.stringValue)
+            }
+            require(
+                generalPrimaryLabels.count == 4
+                    && generalPrimaryLabels.allSatisfy {
+                        approximately($0.font?.pointSize ?? -1, 14)
+                    },
+                "General primary labels use 14-point type"
             )
             require(
                 generalVisibleTitles.contains("Show Battery Percentage"),
@@ -409,13 +414,22 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "battery primary title remains visible"
             )
             require(
-                generalVisibleTitles.contains("Use macOS-Style Icon"),
-                "native icon primary title remains visible"
+                generalVisibleTitles.contains("Use System Icon"),
+                "system icon primary title remains visible"
             )
             let nativeIconDetail = label("settings.general.native-icon.detail", in: first)
             require(
+                approximately(nativeIconDetail.font?.pointSize ?? -1, 11),
+                "General detail labels use 11-point type"
+            )
+            require(
                 nativeIconDetail.intrinsicContentSize.width <= nativeIconDetail.frame.width + 1,
-                "native icon detail is fully visible without truncation"
+                "system icon detail is fully visible without truncation"
+            )
+            require(
+                nativeIconDetail.stringValue
+                    == "Follows the battery symbol supplied by your macOS",
+                "system icon explains that it follows the running macOS version"
             )
             require(!(percentage.accessibilityHelp() ?? "").isEmpty, "percentage accessibility help")
             require(!(login.accessibilityHelp() ?? "").isEmpty, "login accessibility help")
@@ -545,12 +559,20 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "Modules heading keeps intrinsic height"
             )
             require(
+                approximately((moduleHeading as? NSTextField)?.font?.pointSize ?? -1, 22),
+                "Modules heading uses 22-point type"
+            )
+            require(
                 approximately(moduleSubtitle.frame.height, moduleSubtitle.intrinsicContentSize.height),
                 "Modules subtitle keeps intrinsic height"
             )
             require(
-                approximately(moduleSubtitle.frame.minY - moduleGrid.frame.maxY, 24),
-                "Modules grid starts 24 points below subtitle"
+                approximately((moduleSubtitle as? NSTextField)?.font?.pointSize ?? -1, 11),
+                "Modules subtitle uses 11-point type"
+            )
+            require(
+                approximately(moduleSubtitle.frame.minY - moduleGrid.frame.maxY, 10),
+                "Modules grid starts 10 points below subtitle"
             )
             let moduleCards = descendants(ofType: NSView.self, in: modulePage)
                 .filter { $0.identifier?.rawValue.hasPrefix("settings.modules.card.") == true }
@@ -558,15 +580,24 @@ class SettingsWindowContractTests(unittest.TestCase):
                 .filter { $0.identifier?.rawValue.hasPrefix("settings.modules.preview.") == true }
             require(moduleCards.count == 4, "modules has exactly four cards")
             require(modulePreviews.count == 4, "modules has exactly four static previews")
-            require(moduleCards.allSatisfy { approximately($0.frame.width, 246.5) }, "reference card width")
-            require(moduleCards.allSatisfy { approximately($0.frame.height, 258) }, "reference card height")
-            require(moduleCards.allSatisfy { ($0 as? NSBox)?.cornerRadius == 13 }, "reference card radius")
-            require(modulePreviews.allSatisfy { approximately($0.frame.width, 112) }, "reference preview width")
-            require(modulePreviews.allSatisfy { approximately($0.frame.height, 108) }, "reference preview height")
+            require(moduleCards.allSatisfy { approximately($0.frame.width, 233) }, "compact card width")
+            require(moduleCards.allSatisfy { approximately($0.frame.height, 166) }, "compact card height")
+            require(moduleCards.allSatisfy { ($0 as? NSBox)?.cornerRadius == 10 }, "compact card radius")
+            require(modulePreviews.allSatisfy { approximately($0.frame.width, 64) }, "compact preview width")
+            require(modulePreviews.allSatisfy { approximately($0.frame.height, 60) }, "compact preview height")
             let cardXs = Array(Set(moduleCards.map { $0.frame.minX })).sorted()
             let cardYs = Array(Set(moduleCards.map { $0.frame.minY })).sorted()
-            require(cardXs.count == 2 && approximately(cardXs[1] - cardXs[0], 262.5), "16-point column gap")
-            require(cardYs.count == 2 && approximately(cardYs[1] - cardYs[0], 274), "16-point row gap")
+            require(cardXs.count == 2 && approximately(cardXs[1] - cardXs[0], 245), "12-point column gap")
+            require(cardYs.count == 2 && approximately(cardYs[1] - cardYs[0], 178), "12-point row gap")
+            let modulePrimaryLabels = descendants(ofType: NSTextField.self, in: modulePage)
+                .filter { Settings.Module.allCases.map(\.title).contains($0.stringValue) }
+            require(
+                modulePrimaryLabels.count == 4
+                    && modulePrimaryLabels.allSatisfy {
+                        approximately($0.font?.pointSize ?? -1, 14)
+                    },
+                "module primary labels use 14-point type"
+            )
 
             for module in Settings.Module.allCases {
                 let moduleButton = button(module.title, in: first)
@@ -574,9 +605,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(moduleButton.accessibilityLabel() == module.title, "module accessibility label")
                 require(moduleButton.title.isEmpty, "module switch has no clipped visible title")
                 require(
-                    approximately(moduleButton.frame.width, 56)
-                        && approximately(moduleButton.frame.height, 32),
-                    "module uses reference-sized toggle: \(module.rawValue)"
+                    approximately(moduleButton.frame.width, 38)
+                        && approximately(moduleButton.frame.height, 22),
+                    "module uses compact toggle: \(module.rawValue)"
                 )
             }
             let flow = button(Settings.Module.flow.title, in: first)
@@ -642,155 +673,33 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(controller.dividerVisualStrokeWidthForTest == 1, "divider stroke restores exactly")
             require(srgbHex(controller.dividerColorForTest) == 0x363838, "divider sRGB restores exactly")
 
-            // The compact-screen fallback scales only the root view's mapping.
-            // Its reference coordinate space, layout geometry, hit testing, and
-            // accessibility semantics must survive both compaction and restore.
-            let referenceContentHostFrame = controller.contentHostFrameForTest
-            let referenceSidebarFrame = sidebar.frame
-            let referenceIdentityFrame = identity.frame
-            let referenceGeneralListFrame = generalList.frame
-            let referenceGeneralRowFrames = Dictionary(
-                uniqueKeysWithValues: generalRows.compactMap { row in
-                    row.identifier.map { ($0.rawValue, row.frame) }
-                }
-            )
-            let referenceModuleGridFrame = moduleGrid.frame
-            let referenceModuleCardFrames = Dictionary(
-                uniqueKeysWithValues: moduleCards.compactMap { card in
-                    card.identifier.map { ($0.rawValue, card.frame) }
-                }
-            )
-
-            let verifyScaledComposition: (CGFloat, String) -> Void = { scale, phase in
-                controller.applyContentScaleForTest(scale)
-                guard let window = first, let content = window.contentView else {
-                    require(false, "\(phase) retains window content")
-                    return
-                }
-                content.layoutSubtreeIfNeeded()
-
-                let expectedOuterSize = NSSize(
-                    width: floor(792 * scale),
-                    height: floor(794 * scale)
-                )
+            guard let window = first, let content = window.contentView else {
+                require(false, "compact reference retains window content")
+                exit(1)
+            }
+            controller.selectSectionForTest(identifier: "general")
+            content.layoutSubtreeIfNeeded()
+            for generalButton in [percentage, login, battery, nativeIcon] {
+                requireButtonHit(generalButton, through: content, phase: "compact General")
+            }
+            controller.selectSectionForTest(identifier: "modules")
+            content.layoutSubtreeIfNeeded()
+            let contentHost = view("settings.content.host", in: window)
+            for module in Settings.Module.allCases {
+                let moduleButton = button(module.title, in: window)
+                requireButtonHit(moduleButton, through: content, phase: "compact Modules")
+                let card = view("settings.modules.card.\(module.rawValue)", in: window)
+                let cardInHost = card.convert(card.bounds, to: contentHost)
                 require(
-                    content.frame.size == expectedOuterSize,
-                    "\(phase) outer content frame scales: content=\(content.frame.size) "
-                        + "window=\(window.frame.size) layout=\(window.contentLayoutRect.size) "
-                        + "expected=\(expectedOuterSize)"
-                )
-                require(
-                    approximately(content.bounds.width, 792)
-                        && approximately(content.bounds.height, 794),
-                    "\(phase) content bounds preserve reference coordinates: "
-                        + "frame=\(content.frame) bounds=\(content.bounds)"
-                )
-                require(
-                    approximatelyAfterScale(
-                        controller.contentHostFrameForTest,
-                        referenceContentHostFrame,
-                        scale: scale
-                    ),
-                    "\(phase) content-host reference geometry is unchanged"
-                )
-                require(
-                    approximatelyAfterScale(sidebar.frame, referenceSidebarFrame, scale: scale),
-                    "\(phase) sidebar reference geometry is unchanged"
-                )
-                require(
-                    approximatelyAfterScale(identity.frame, referenceIdentityFrame, scale: scale),
-                    "\(phase) identity reference geometry is unchanged"
-                )
-
-                controller.selectSectionForTest(identifier: "general")
-                content.layoutSubtreeIfNeeded()
-                require(
-                    approximatelyAfterScale(
-                        generalList.frame,
-                        referenceGeneralListFrame,
-                        scale: scale
-                    ),
-                    "\(phase) General list reference geometry is unchanged"
-                )
-                for row in generalRows {
-                    guard let identifier = row.identifier?.rawValue,
-                          let referenceFrame = referenceGeneralRowFrames[identifier] else {
-                        require(false, "\(phase) General row retains identity")
-                        continue
-                    }
-                    require(
-                        approximatelyAfterScale(row.frame, referenceFrame, scale: scale),
-                        "\(phase) \(identifier) reference geometry is unchanged"
-                    )
-                }
-                for generalButton in [percentage, login, battery, nativeIcon] {
-                    requireButtonHit(generalButton, through: content, phase: phase)
-                    require(
-                        !(generalButton.accessibilityLabel() ?? "").isEmpty,
-                        "\(phase) General switch retains accessibility label"
-                    )
-                    require(
-                        !(generalButton.accessibilityHelp() ?? "").isEmpty,
-                        "\(phase) General switch retains accessibility help"
-                    )
-                }
-
-                controller.selectSectionForTest(identifier: "modules")
-                content.layoutSubtreeIfNeeded()
-                require(
-                    approximatelyAfterScale(
-                        moduleGrid.frame,
-                        referenceModuleGridFrame,
-                        scale: scale
-                    ),
-                    "\(phase) Modules grid reference geometry is unchanged"
-                )
-                for card in moduleCards {
-                    guard let identifier = card.identifier?.rawValue,
-                          let referenceFrame = referenceModuleCardFrames[identifier] else {
-                        require(false, "\(phase) module card retains identity")
-                        continue
-                    }
-                    require(
-                        approximatelyAfterScale(card.frame, referenceFrame, scale: scale),
-                        "\(phase) \(identifier) reference geometry is unchanged: "
-                            + "actual=\(card.frame) expected=\(referenceFrame) scale=\(scale)"
-                    )
-                }
-
-                let contentHost = view("settings.content.host", in: window)
-                for module in Settings.Module.allCases {
-                    let moduleButton = button(module.title, in: window)
-                    requireButtonHit(moduleButton, through: content, phase: phase)
-                    require(
-                        moduleButton.accessibilityLabel() == module.title,
-                        "\(phase) \(module.rawValue) retains accessibility label"
-                    )
-                    require(
-                        !(moduleButton.accessibilityHelp() ?? "").isEmpty,
-                        "\(phase) \(module.rawValue) retains accessibility help"
-                    )
-                }
-                for module in [Settings.Module.lanes, .history] {
-                    let card = view("settings.modules.card.\(module.rawValue)", in: window)
-                    let cardInHost = card.convert(card.bounds, to: contentHost)
-                    require(
-                        contentHost.bounds.insetBy(dx: -1, dy: -1).contains(cardInHost),
-                        "\(phase) second-row \(module.rawValue) card stays in reference bounds"
-                    )
-                }
-                requireTrafficLightsClearIdentity(
-                    controller: controller,
-                    in: window,
-                    identity: identity,
-                    scale: scale,
-                    phase: phase
+                    contentHost.bounds.insetBy(dx: -1, dy: -1).contains(cardInHost),
+                    "\(module.rawValue) card stays in compact content bounds"
                 )
             }
-
-            verifyScaledComposition(0.68, "compact")
-            verifyScaledComposition(0.60, "minimum compact")
-            verifyScaledComposition(1, "restored")
+            requireTrafficLightsClearIdentity(
+                controller: controller,
+                in: window,
+                identity: identity
+            )
 
             let stableWindow = controller.windowForTest
             let stableSectionViews = controller.sectionViewIdentitiesForTest
@@ -1090,6 +999,10 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertNotIn("DispatchSource.makeTimerSource", source)
         self.assertNotIn("CVDisplayLink", source)
         self.assertNotIn("CABasicAnimation", source)
+        self.assertNotIn("ReferenceTrafficLightButton", source)
+        self.assertNotIn("applyContentScale", source)
+        self.assertNotIn("minimumContentScale", source)
+        self.assertNotIn("titlebarSpacer", source)
         self.assertIn("NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast", source)
         self.assertIn("NSWorkspace.accessibilityDisplayOptionsDidChangeNotification", source)
         self.assertIn("NSWorkspace.shared.notificationCenter", source)
@@ -1100,7 +1013,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             "Show Battery Percentage in Menu Bar",
             "Launch at Login",
             "Hide System Battery Icon",
-            "Use macOS-Style Icon",
+            "Use System Icon",
         ):
             self.assertIn(title, source)
         self.assertIn("Settings.Module.allCases", source)

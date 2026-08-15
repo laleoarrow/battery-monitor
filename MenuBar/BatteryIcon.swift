@@ -102,6 +102,8 @@ enum BatteryIcon {
     }
 
     /// Uses Apple's public SF battery artwork at the nearest supported level.
+    /// The running macOS resolves these names, so this style automatically
+    /// follows later system artwork revisions without bundling copied assets.
     /// Battery symbols do not actually honor SF Symbols' variable-value API,
     /// so explicit static names avoid a misleading always-full glyph.
     private static func nativeImage(for snapshot: PowerSnapshot) -> NSImage {

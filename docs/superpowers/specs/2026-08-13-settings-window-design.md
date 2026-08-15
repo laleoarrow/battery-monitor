@@ -1,13 +1,18 @@
 # Wattson Settings Window Design
 
 Date: 2026-08-13
-Status: Approved C+E visual direction
-Scope: Native macOS Settings window for existing Wattson controls
+Status: Superseded on 2026-08-15 by the compact 720×520 native layout
+Scope: Historical design record for the original oversized Settings window
+
+The current geometry is defined by `MenuBar/SettingsWindowController.swift`
+and its executable contract in `tests/test_settings_window_contract.py`.
+The measurements below are retained as the implementation history for the
+original 792×794 design and are no longer current acceptance criteria.
 
 Visual reference: `assets/wattson-settings-c-plus-e.png`. The left state is
-General; the right state is Modules. This image is the implementation target,
-while the measurements and behavior below are authoritative when raster
-details are ambiguous.
+General; the right state is Modules. This image was the implementation target
+for the v3.0.6–v3.0.9 layout, and the measurements and behavior below were its
+authoritative criteria when raster details were ambiguous.
 
 ## Context
 

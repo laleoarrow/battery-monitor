@@ -37,6 +37,7 @@ let package = Package(
                 "__pycache__",
                 "battery_monitor.py",
                 "design",
+                "design-qa.md",
                 "dist",
                 "docs",
                 "script",

@@ -1,6 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
+import {
+  ArrowUpRight,
+  CircleAlert,
+  FileArchive,
+  PackageOpen,
+  SquareTerminal,
+} from "lucide-react";
 
 const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
 const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
@@ -37,11 +45,6 @@ const fallbackRelease: ReleaseDetails = {
   version: FALLBACK_VERSION,
 };
 
-const historyValues = [
-  38, 42, 45, 43, 48, 52, 49, 56, 61, 58, 64, 68, 66, 71, 76, 73, 78, 82,
-  79, 84, 88, 86, 91, 88, 84, 81, 78, 74,
-];
-
 function ReleaseLink({
   children,
   className,
@@ -54,9 +57,7 @@ function ReleaseLink({
   return (
     <a className={className} href={href} rel="noreferrer" target="_blank">
       {children}
-      <span aria-hidden="true" className="button-arrow">
-        ↗
-      </span>
+      <ArrowUpRight aria-hidden="true" className="button-arrow" size={15} />
     </a>
   );
 }
@@ -183,107 +184,18 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="app-showcase" id="flow-preview">
+          <figure className="app-showcase" id="flow-preview">
             <div aria-hidden="true" className="showcase-shadow" />
-            <div className="app-window">
-              <div className="window-bar">
-                <div className="window-identity">
-                  <span aria-hidden="true" className="mini-battery" />
-                  <span>Wattson</span>
-                </div>
-                <div className="window-state">
-                  <span className="live-dot" />
-                  Live
-                </div>
-              </div>
-
-              <div className="metrics-row">
-                <div>
-                  <span>Input</span>
-                  <strong className="blue-value">67.1 W</strong>
-                </div>
-                <div>
-                  <span>Battery</span>
-                  <strong className="green-value">82%</strong>
-                </div>
-                <div>
-                  <span>System load</span>
-                  <strong className="orange-value">24.8 W</strong>
-                </div>
-              </div>
-
-              <div className="power-map" aria-label="Live power flow preview">
-                <div className="power-node source-node">
-                  <span aria-hidden="true" className="node-symbol">
-                    ∿
-                  </span>
-                  <span className="node-label">Adapter</span>
-                  <strong>67 W</strong>
-                </div>
-
-                <div aria-hidden="true" className="energy-lane input-lane">
-                  <span className="flow-particle particle-one" />
-                  <span className="flow-particle particle-two" />
-                  <span className="flow-particle particle-three" />
-                </div>
-
-                <div className="battery-gauge">
-                  <div className="gauge-ring">
-                    <div className="gauge-core">
-                      <span>82%</span>
-                      <small>Charging</small>
-                    </div>
-                  </div>
-                  <span className="gauge-caption">41 min to full</span>
-                </div>
-
-                <div aria-hidden="true" className="energy-lane output-lane">
-                  <span className="flow-particle particle-one" />
-                  <span className="flow-particle particle-two" />
-                  <span className="flow-particle particle-three" />
-                </div>
-
-                <div className="power-node load-node">
-                  <span aria-hidden="true" className="node-symbol">
-                    ⌑
-                  </span>
-                  <span className="node-label">Mac</span>
-                  <strong>24.8 W</strong>
-                </div>
-              </div>
-
-              <div className="history-panel">
-                <div className="history-heading">
-                  <div>
-                    <span>Power history</span>
-                    <strong>Last 2 minutes</strong>
-                  </div>
-                  <div className="history-legend">
-                    <span className="legend-input">Input</span>
-                    <span className="legend-load">Load</span>
-                  </div>
-                </div>
-                <div aria-hidden="true" className="history-chart">
-                  {historyValues.map((height, index) => (
-                    <span
-                      className={index > 21 ? "history-bar warm" : "history-bar"}
-                      key={`${height}-${index}`}
-                      style={{ "--bar-height": `${height}%` } as CSSProperties}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="mode-row">
-                <span>Energy mode</span>
-                <div className="mode-control" aria-label="Energy mode preview">
-                  <span className="mode-active">Auto</span>
-                  <span>Low Power</span>
-                  <span>High Power</span>
-                </div>
-              </div>
-            </div>
-          </div>
+            <Image
+              alt="The real Wattson menu bar popover showing live power flow, battery, system load, history, and energy mode controls"
+              className="real-popover-image"
+              height={1530}
+              priority
+              src="/wattson-popover-real.png"
+              width={864}
+            />
+            <figcaption>Captured from the current Wattson AppKit build.</figcaption>
+          </figure>
         </section>
 
         <section className="signal-strip" aria-label="Product highlights">
@@ -380,71 +292,73 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="install-section" id="install">
-          <div className="section-shell">
+        <section aria-labelledby="install-title" className="install-section" id="install">
+          <div className="install-shell">
             <div className="install-heading">
               <div>
                 <span className="section-kicker">Choose your route</span>
-                <h2>Put Wattson in your menu bar.</h2>
+                <h2 id="install-title">Put Wattson in your menu bar.</h2>
               </div>
               <div className="release-pill" aria-live="polite">
                 <span className="live-dot" />
-                Latest {versionLabel}
+                <span>{versionLabel}</span>
                 <small>
                   {release.source === "live" ? "checked on GitHub" : "stable release"}
                 </small>
               </div>
             </div>
 
-            <div className="install-grid">
-              <article className="install-card recommended-card">
-                <span className="recommended-label">Recommended</span>
-                <div className="install-card-top">
-                  <span aria-hidden="true" className="install-glyph dmg-glyph">
-                    DMG
-                  </span>
-                  <span>01</span>
+            <div aria-label="Installation methods" className="install-panel">
+              <article className="install-row install-row-recommended">
+                <span aria-hidden="true" className="install-glyph dmg-glyph">
+                  <FileArchive size={24} strokeWidth={1.7} />
+                </span>
+                <div className="install-copy">
+                  <span className="recommended-label">Recommended</span>
+                  <h3>Disk image</h3>
+                  <p>
+                    Open the image, then double-click the enclosed
+                    <strong> Wattson PKG</strong> and follow macOS Installer.
+                  </p>
                 </div>
-                <h3>Disk image</h3>
-                <p>
-                  Open the image, then double-click the enclosed
-                  <strong> Wattson PKG</strong> and follow macOS Installer.
-                </p>
                 <ReleaseLink className="install-action primary-action" href={release.dmgUrl}>
                   Download DMG
                 </ReleaseLink>
               </article>
 
-              <article className="install-card">
-                <div className="install-card-top">
-                  <span aria-hidden="true" className="install-glyph pkg-glyph">
-                    PKG
-                  </span>
-                  <span>02</span>
+              <article className="install-row">
+                <span aria-hidden="true" className="install-glyph pkg-glyph">
+                  <PackageOpen size={24} strokeWidth={1.7} />
+                </span>
+                <div className="install-copy">
+                  <h3>Package installer</h3>
+                  <p>
+                    Download the same universal installer package directly,
+                    without the disk-image wrapper.
+                  </p>
                 </div>
-                <h3>Package installer</h3>
-                <p>
-                  Download the same universal installer package directly,
-                  without the disk-image wrapper.
-                </p>
                 <ReleaseLink className="install-action" href={release.pkgUrl}>
                   Download PKG
                 </ReleaseLink>
               </article>
 
-              <article className="install-card brew-card">
-                <div className="install-card-top">
-                  <span aria-hidden="true" className="install-glyph brew-glyph">
-                    ›_
-                  </span>
-                  <span>03</span>
+              <article className="install-row install-row-homebrew">
+                <span aria-hidden="true" className="install-glyph brew-glyph">
+                  <SquareTerminal size={24} strokeWidth={1.7} />
+                </span>
+                <div className="install-copy">
+                  <h3>Homebrew</h3>
+                  <p>Install or update from Terminal with the community tap.</p>
                 </div>
-                <h3>Homebrew</h3>
-                <p>Install or update from Terminal with the community tap.</p>
                 <div className="command-box">
                   <code>{HOMEBREW_COMMAND}</code>
                   <button
-                    aria-label="Copy Homebrew install command"
+                    aria-label={
+                      copied
+                        ? "Homebrew install command copied"
+                        : "Copy Homebrew install command"
+                    }
+                    aria-live="polite"
                     className="copy-button"
                     onClick={copyHomebrewCommand}
                     type="button"
@@ -457,18 +371,17 @@ export default function Home() {
 
             <aside className="trust-note">
               <div aria-hidden="true" className="trust-mark">
-                <span>!</span>
+                <CircleAlert size={25} strokeWidth={1.55} />
               </div>
-              <div>
+              <div className="trust-copy">
                 <span className="trust-eyebrow">Community build · Know what you install</span>
-                <h3>Transparent about trust.</h3>
                 <p>
-                  The app and helper are ad-hoc signed; the PKG and DMG are
-                  unsigned and not Apple-notarized. On macOS 15 or later, first
-                  try to open the installer, then use System Settings → Privacy
-                  &amp; Security → Open Anyway only if you trust this release.
-                  Review the source and compare the published SHA-256 checksum
-                  before installing.
+                  <strong>Transparent about trust.</strong> The app and helper are
+                  ad-hoc signed; the PKG and DMG are unsigned and not
+                  Apple-notarized. On macOS 15 or later, first try to open the
+                  installer, then use System Settings → Privacy &amp; Security →
+                  Open Anyway only if you trust this release. Review the source
+                  and compare the published SHA-256 checksum before installing.
                 </p>
               </div>
               <a href={`${GITHUB_REPO}/releases`} rel="noreferrer" target="_blank">

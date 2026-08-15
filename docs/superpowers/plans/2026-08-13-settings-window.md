@@ -1,9 +1,9 @@
 # Wattson Settings Window Implementation Plan
 
-> Historical implementation record. The user later required pixel alignment
-> to the approved C+E raster; the final geometry and visual rules in
-> `../specs/2026-08-13-settings-window-design.md` supersede the original compact
-> measurements quoted below.
+> Historical implementation record. The user first required pixel alignment
+> to the approved C+E raster, then replaced that oversized layout on 2026-08-15
+> with the current compact 720×520 native design. The measurements below are
+> retained only as the implementation history of those earlier iterations.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
