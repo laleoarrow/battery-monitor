@@ -60,36 +60,41 @@ struct SettingsWindowDependencies {
 }
 
 private enum SettingsStyle {
-    static let contentSize = NSSize(width: 792, height: 794)
-    static let minimumContentScale: CGFloat = 0.60
-    static let sidebarWidth: CGFloat = 232
-    static let contentHorizontalInset: CGFloat = 25
-    static let contentTopInset: CGFloat = 78
-    static let contentBottomInset: CGFloat = 24
+    static let contentSize = NSSize(width: 720, height: 520)
+    static let sidebarWidth: CGFloat = 176
+    static let contentHorizontalInset: CGFloat = 20
+    static let contentTopInset: CGFloat = 56
+    static let contentBottomInset: CGFloat = 20
 
-    static let trafficLightSafeHeight: CGFloat = 54
-    static let identityHeight: CGFloat = 96
-    static let identityTileSize: CGFloat = 54
-    static let navigationInset: CGFloat = 16
-    static let navigationTopGap: CGFloat = -6
-    static let navigationRowHeight: CGFloat = 56
+    static let trafficLightSafeHeight: CGFloat = 52
+    static let identityHeight: CGFloat = 64
+    static let identityTileSize: CGFloat = 40
+    static let navigationInset: CGFloat = 12
+    static let navigationTopGap: CGFloat = 4
+    static let navigationRowHeight: CGFloat = 38
     static let navigationRowGap: CGFloat = 4
-    static let navigationHeight: CGFloat = 130
+    static let navigationHeight: CGFloat = 136
 
-    static let headingFont = NSFont.systemFont(ofSize: 31, weight: .semibold)
-    static let primaryFont = NSFont.systemFont(ofSize: 19, weight: .regular)
-    static let detailFont = NSFont.systemFont(ofSize: 16, weight: .regular)
-    static let sidebarFont = NSFont.systemFont(ofSize: 17, weight: .medium)
+    static let headingFont = NSFont.systemFont(ofSize: 22, weight: .semibold)
+    static let primaryFont = NSFont.systemFont(ofSize: 14, weight: .regular)
+    static let detailFont = NSFont.systemFont(ofSize: 11, weight: .regular)
+    static let sidebarFont = NSFont.systemFont(ofSize: 13, weight: .medium)
 
-    static let toggleSize = NSSize(width: 56, height: 32)
-    static let generalListHeight: CGFloat = 400
-    static let generalRowHeight: CGFloat = 100
-    static let generalIconTileSize: CGFloat = 50
-    static let moduleCardHeight: CGFloat = 259
-    static let moduleCardWidth: CGFloat = 246.5
-    static let moduleCardGap: CGFloat = 16
-    static let surfaceCornerRadius: CGFloat = 13
-    static let modulePreviewSize = NSSize(width: 112, height: 108)
+    static let toggleSize = NSSize(width: 38, height: 22)
+    static let generalListHeight: CGFloat = 136
+    static let generalRowHeight: CGFloat = 68
+    static let generalIconTileSize: CGFloat = 36
+    static let moduleCardHeight: CGFloat = 166
+    static let moduleCardWidth: CGFloat = 233
+    static let moduleCardGap: CGFloat = 12
+    static let iconCardGap: CGFloat = 8
+    static let iconCardHeight: CGFloat = 80
+    static let iconCardGroupHeight: CGFloat = 344
+    static let iconStateHeight: CGFloat = 38
+    static let iconStateGap: CGFloat = 5
+    static let iconStateCornerRadius: CGFloat = 7
+    static let surfaceCornerRadius: CGFloat = 10
+    static let modulePreviewSize = NSSize(width: 64, height: 60)
 
     static let contentBackground = color(hex: 0x151618)
     static let sidebarBackground = color(hex: 0x1E1F21)
@@ -138,139 +143,6 @@ private final class SettingsFillView: NSView {
 
     override func updateLayer() {
         layer?.backgroundColor = fillColor.cgColor
-    }
-}
-
-private final class ReferenceTrafficLightButton: NSButton {
-    enum Kind {
-        case close
-        case minimize
-        case zoom
-
-        var activeColor: NSColor {
-            switch self {
-            case .close: return NSColor(srgbRed: 235 / 255, green: 99 / 255, blue: 86 / 255, alpha: 1)
-            case .minimize: return NSColor(srgbRed: 246 / 255, green: 199 / 255, blue: 69 / 255, alpha: 1)
-            case .zoom: return NSColor(srgbRed: 89 / 255, green: 195 / 255, blue: 87 / 255, alpha: 1)
-            }
-        }
-
-        var accessibilityLabel: String {
-            switch self {
-            case .close: return "Close"
-            case .minimize: return "Minimize"
-            case .zoom: return "Zoom"
-            }
-        }
-    }
-
-    private let kind: Kind
-    private weak var nativeButton: NSButton?
-    private var isHovered = false
-    private var windowObservers: [NSObjectProtocol] = []
-
-    init(kind: Kind, nativeButton: NSButton) {
-        self.kind = kind
-        self.nativeButton = nativeButton
-        super.init(frame: NSRect(x: 0, y: 0, width: 20, height: 20))
-        title = ""
-        isBordered = false
-        setButtonType(.momentaryPushIn)
-        focusRingType = .none
-        target = self
-        action = #selector(forwardNativeAction)
-        setAccessibilityLabel(kind.accessibilityLabel)
-        setAccessibilityHelp("\(kind.accessibilityLabel) the Wattson Settings window.")
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) is unavailable")
-    }
-
-    deinit {
-        windowObservers.forEach(NotificationCenter.default.removeObserver)
-    }
-
-    override var intrinsicContentSize: NSSize { NSSize(width: 20, height: 20) }
-
-    override func viewDidMoveToWindow() {
-        super.viewDidMoveToWindow()
-        windowObservers.forEach(NotificationCenter.default.removeObserver)
-        windowObservers.removeAll()
-        guard let window else { return }
-        for name in [NSWindow.didBecomeKeyNotification, NSWindow.didResignKeyNotification] {
-            windowObservers.append(NotificationCenter.default.addObserver(
-                forName: name,
-                object: window,
-                queue: .main
-            ) { [weak self] _ in
-                self?.needsDisplay = true
-            })
-        }
-    }
-
-    override func updateTrackingAreas() {
-        super.updateTrackingAreas()
-        trackingAreas.forEach(removeTrackingArea)
-        addTrackingArea(NSTrackingArea(
-            rect: bounds,
-            options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
-            owner: self,
-            userInfo: nil
-        ))
-    }
-
-    override func mouseEntered(with event: NSEvent) {
-        isHovered = true
-        needsDisplay = true
-    }
-
-    override func mouseExited(with event: NSEvent) {
-        isHovered = false
-        needsDisplay = true
-    }
-
-    override func draw(_ dirtyRect: NSRect) {
-        let active = window?.isKeyWindow == true || window?.isMainWindow == true
-        let base = active
-            ? kind.activeColor
-            : NSColor(srgbRed: 112 / 255, green: 112 / 255, blue: 114 / 255, alpha: 1)
-        let fill = isHighlighted ? base.blended(withFraction: 0.20, of: .black) ?? base : base
-        fill.setFill()
-        let circle = NSBezierPath(ovalIn: bounds.insetBy(dx: 0.5, dy: 0.5))
-        circle.fill()
-        NSColor.black.withAlphaComponent(active ? 0.22 : 0.14).setStroke()
-        circle.lineWidth = 0.75
-        circle.stroke()
-
-        guard isHovered else { return }
-        NSColor.black.withAlphaComponent(0.56).setStroke()
-        let symbol = NSBezierPath()
-        let width = bounds.width
-        let height = bounds.height
-        switch kind {
-        case .close:
-            symbol.move(to: NSPoint(x: width * 0.325, y: height * 0.325))
-            symbol.line(to: NSPoint(x: width * 0.675, y: height * 0.675))
-            symbol.move(to: NSPoint(x: width * 0.675, y: height * 0.325))
-            symbol.line(to: NSPoint(x: width * 0.325, y: height * 0.675))
-        case .minimize:
-            symbol.move(to: NSPoint(x: width * 0.30, y: height * 0.50))
-            symbol.line(to: NSPoint(x: width * 0.70, y: height * 0.50))
-        case .zoom:
-            symbol.move(to: NSPoint(x: width * 0.30, y: height * 0.50))
-            symbol.line(to: NSPoint(x: width * 0.70, y: height * 0.50))
-            symbol.move(to: NSPoint(x: width * 0.50, y: height * 0.30))
-            symbol.line(to: NSPoint(x: width * 0.50, y: height * 0.70))
-        }
-        symbol.lineWidth = 1.2 * min(width, height) / 20
-        symbol.lineCapStyle = .round
-        symbol.stroke()
-    }
-
-    @objc private func forwardNativeAction() {
-        nativeButton?.performClick(self)
     }
 }
 
@@ -550,54 +422,6 @@ private final class ECGIconView: NSView {
     }
 }
 
-private final class PuzzleNavigationIconView: NSView {
-    override func draw(_ dirtyRect: NSRect) {
-        let path = NSBezierPath()
-        path.move(to: NSPoint(x: 4, y: 23))
-        path.line(to: NSPoint(x: 10, y: 23))
-        path.line(to: NSPoint(x: 10, y: 25))
-        path.curve(
-            to: NSPoint(x: 18, y: 25),
-            controlPoint1: NSPoint(x: 10, y: 29),
-            controlPoint2: NSPoint(x: 18, y: 29)
-        )
-        path.line(to: NSPoint(x: 18, y: 23))
-        path.line(to: NSPoint(x: 24, y: 23))
-        path.line(to: NSPoint(x: 24, y: 17))
-        path.line(to: NSPoint(x: 26, y: 17))
-        path.curve(
-            to: NSPoint(x: 26, y: 11),
-            controlPoint1: NSPoint(x: 30, y: 17),
-            controlPoint2: NSPoint(x: 30, y: 11)
-        )
-        path.line(to: NSPoint(x: 24, y: 11))
-        path.line(to: NSPoint(x: 24, y: 5))
-        path.line(to: NSPoint(x: 18, y: 5))
-        path.line(to: NSPoint(x: 18, y: 8))
-        path.curve(
-            to: NSPoint(x: 10, y: 8),
-            controlPoint1: NSPoint(x: 18, y: 12),
-            controlPoint2: NSPoint(x: 10, y: 12)
-        )
-        path.line(to: NSPoint(x: 10, y: 5))
-        path.line(to: NSPoint(x: 4, y: 5))
-        path.line(to: NSPoint(x: 4, y: 11))
-        path.line(to: NSPoint(x: 7, y: 11))
-        path.curve(
-            to: NSPoint(x: 7, y: 17),
-            controlPoint1: NSPoint(x: 11, y: 11),
-            controlPoint2: NSPoint(x: 11, y: 17)
-        )
-        path.line(to: NSPoint(x: 4, y: 17))
-        path.close()
-        SettingsStyle.primaryText.setStroke()
-        path.lineWidth = 2.4
-        path.lineCapStyle = .round
-        path.lineJoinStyle = .round
-        path.stroke()
-    }
-}
-
 private final class StaticModulePreviewView: NSView {
     private let module: Settings.Module
 
@@ -625,7 +449,16 @@ private final class StaticModulePreviewView: NSView {
             yRadius: 12
         ).fill()
 
-        let drawingRect = bounds.insetBy(dx: 14, dy: 13)
+        NSGraphicsContext.saveGraphicsState()
+        defer { NSGraphicsContext.restoreGraphicsState() }
+        let designSize = NSSize(width: 112, height: 108)
+        let transform = NSAffineTransform()
+        transform.scaleX(
+            by: bounds.width / designSize.width,
+            yBy: bounds.height / designSize.height
+        )
+        transform.concat()
+        let drawingRect = NSRect(origin: .zero, size: designSize).insetBy(dx: 14, dy: 13)
         switch module {
         case .flow:
             drawFlow(in: drawingRect)
@@ -866,10 +699,8 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     let view = NSView()
 
     private let dependencies: SettingsWindowDependencies
-    private let percentageButton: SettingsToggleButton
     private let loginButton: SettingsToggleButton
     private let batteryButton: SettingsToggleButton
-    private let nativeIconButton: SettingsToggleButton
     private let loginDetail = NSTextField(labelWithString: "")
     private let loginError = NSTextField(labelWithString: "")
     private let batteryDetail = NSTextField(labelWithString: "")
@@ -880,7 +711,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let batteryAccessibilityPurpose =
         "Hide Apple’s battery icon while keeping Wattson in the menu bar."
 
-    private var settingsObserver: NSObjectProtocol?
     private var batteryObserver: NSObjectProtocol?
     private var loginGeneration = 0
     private var batteryGeneration = 0
@@ -891,20 +721,12 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
     init(dependencies: SettingsWindowDependencies) {
         self.dependencies = dependencies
-        percentageButton = SettingsToggleButton(
-            accessibilityLabel: "Show Battery Percentage in Menu Bar",
-            increaseContrast: dependencies.increaseContrast
-        )
         loginButton = SettingsToggleButton(
             accessibilityLabel: "Launch at Login",
             increaseContrast: dependencies.increaseContrast
         )
         batteryButton = SettingsToggleButton(
             accessibilityLabel: "Hide System Battery Icon",
-            increaseContrast: dependencies.increaseContrast
-        )
-        nativeIconButton = SettingsToggleButton(
-            accessibilityLabel: "Use macOS-Style Wattson Icon",
             increaseContrast: dependencies.increaseContrast
         )
         super.init()
@@ -915,9 +737,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     }
 
     deinit {
-        if let settingsObserver {
-            NotificationCenter.default.removeObserver(settingsObserver)
-        }
         if let batteryObserver {
             NotificationCenter.default.removeObserver(batteryObserver)
         }
@@ -929,21 +748,11 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             return
         }
 
-        refreshPercentage()
-        refreshIconStyle()
         refreshLoginItem()
         refreshBatteryIcon()
     }
 
     private func configureControls() {
-        configureSwitch(percentageButton)
-        percentageButton.target = self
-        percentageButton.action = #selector(togglePercentage(_:))
-        percentageButton.setAccessibilityLabel("Show Battery Percentage in Menu Bar")
-        percentageButton.setAccessibilityHelp(
-            "Show the current battery percentage next to the Wattson menu bar icon."
-        )
-
         configureSwitch(loginButton)
         loginButton.target = self
         loginButton.action = #selector(toggleLoginItem(_:))
@@ -960,14 +769,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         batteryButton.setAccessibilityLabel("Hide System Battery Icon")
         batteryButton.setAccessibilityHelp(
             batteryAccessibilityPurpose
-        )
-
-        configureSwitch(nativeIconButton)
-        nativeIconButton.target = self
-        nativeIconButton.action = #selector(toggleNativeIcon(_:))
-        nativeIconButton.setAccessibilityLabel("Use macOS-Style Wattson Icon")
-        nativeIconButton.setAccessibilityHelp(
-            "Changes Wattson only; Apple’s separate battery icon is controlled above."
         )
 
         configureDetailLabel(
@@ -1022,24 +823,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
     private func buildView() {
         view.identifier = NSUserInterfaceItemIdentifier("settings.section.general")
-        let percentageDetail = NSTextField(
-            labelWithString: "Show charge next to the menu bar icon"
-        )
-        configureDetailLabel(
-            percentageDetail,
-            identifier: "settings.general.percentage.detail"
-        )
-
         let rows = NSStackView(views: [
-            row(
-                identifier: "percentage",
-                symbolName: "percent",
-                visibleTitle: "Show Battery Percentage",
-                button: percentageButton,
-                detail: percentageDetail,
-                error: nil,
-                hasSeparator: true
-            ),
             row(
                 identifier: "login",
                 symbolName: "person.fill",
@@ -1056,18 +840,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
                 button: batteryButton,
                 detail: batteryDetail,
                 error: batteryError,
-                hasSeparator: true
-            ),
-            row(
-                identifier: "native-icon",
-                symbolName: "battery.100",
-                visibleTitle: "Use macOS-Style Icon",
-                button: nativeIconButton,
-                detail: configuredDetailLabel(
-                    "Apple battery shape for Wattson’s icon",
-                    identifier: "settings.general.native-icon.detail"
-                ),
-                error: nil,
                 hasSeparator: false
             ),
         ])
@@ -1089,6 +861,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         list.addSubview(rows)
 
         let heading = NSTextField(labelWithString: title)
+        heading.identifier = NSUserInterfaceItemIdentifier("settings.general.heading")
         heading.font = SettingsStyle.headingFont
         heading.textColor = SettingsStyle.headingText
         heading.setAccessibilityLabel(title)
@@ -1098,13 +871,13 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         view.addSubview(list)
 
         NSLayoutConstraint.activate([
-            heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 13),
+            heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             heading.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            heading.topAnchor.constraint(equalTo: view.topAnchor, constant: -4),
+            heading.topAnchor.constraint(equalTo: view.topAnchor, constant: -2),
 
             list.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             list.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            list.topAnchor.constraint(equalTo: view.topAnchor, constant: 61),
+            list.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
             list.heightAnchor.constraint(equalToConstant: SettingsStyle.generalListHeight),
             list.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
 
@@ -1130,7 +903,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         let iconTile = NSBox()
         iconTile.boxType = .custom
         iconTile.titlePosition = .noTitle
-        iconTile.cornerRadius = 10
+        iconTile.cornerRadius = 8
         iconTile.borderWidth = 1
         iconTile.borderColor = SettingsStyle.border
         iconTile.fillColor = SettingsStyle.tileBackground
@@ -1141,7 +914,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             systemSymbolName: symbolName,
             accessibilityDescription: nil
         )?.withSymbolConfiguration(
-            NSImage.SymbolConfiguration(pointSize: 26, weight: .regular)
+            NSImage.SymbolConfiguration(pointSize: 17, weight: .regular)
         )
         icon.contentTintColor = .secondaryLabelColor
         icon.imageScaling = .scaleProportionallyDown
@@ -1162,7 +935,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         text.orientation = .vertical
         text.alignment = .leading
         text.distribution = .fill
-        text.spacing = 4
+        text.spacing = 2
         text.translatesAutoresizingMaskIntoConstraints = false
 
         row.addSubview(iconTile)
@@ -1170,20 +943,20 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         row.addSubview(button)
 
         NSLayoutConstraint.activate([
-            iconTile.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 20),
+            iconTile.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 14),
             iconTile.centerYAnchor.constraint(equalTo: row.centerYAnchor),
             iconTile.widthAnchor.constraint(equalToConstant: SettingsStyle.generalIconTileSize),
             iconTile.heightAnchor.constraint(equalToConstant: SettingsStyle.generalIconTileSize),
             icon.centerXAnchor.constraint(equalTo: iconTile.centerXAnchor),
             icon.centerYAnchor.constraint(equalTo: iconTile.centerYAnchor),
-            icon.widthAnchor.constraint(equalToConstant: 24),
-            icon.heightAnchor.constraint(equalToConstant: 24),
+            icon.widthAnchor.constraint(equalToConstant: 18),
+            icon.heightAnchor.constraint(equalToConstant: 18),
 
-            text.leadingAnchor.constraint(equalTo: iconTile.trailingAnchor, constant: 29),
+            text.leadingAnchor.constraint(equalTo: iconTile.trailingAnchor, constant: 14),
             text.centerYAnchor.constraint(equalTo: row.centerYAnchor, constant: 0.5),
             text.trailingAnchor.constraint(lessThanOrEqualTo: button.leadingAnchor, constant: -12),
 
-            button.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -22),
+            button.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -14),
             button.centerYAnchor.constraint(equalTo: row.centerYAnchor),
         ])
 
@@ -1201,38 +974,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         return row
     }
 
-    private func configuredDetailLabel(
-        _ text: String,
-        identifier: String
-    ) -> NSTextField {
-        let label = NSTextField(labelWithString: text)
-        configureDetailLabel(label, identifier: identifier)
-        return label
-    }
-
     private func installObservers() {
-        settingsObserver = NotificationCenter.default.addObserver(
-            forName: Settings.didChange,
-            object: nil,
-            queue: .main
-        ) { [weak self] notification in
-            guard let self else { return }
-            guard let change = notification.userInfo?[Settings.changeUserInfoKey]
-                    as? Settings.Change else {
-                self.refreshPercentage()
-                self.refreshIconStyle()
-                return
-            }
-            switch change {
-            case .menuBarPercentage:
-                self.refreshPercentage()
-            case .menuBarIconStyle:
-                self.refreshIconStyle()
-            case .module:
-                break
-            }
-        }
-
         batteryObserver = NotificationCenter.default.addObserver(
             forName: dependencies.systemBatteryIconDidChange,
             object: nil,
@@ -1244,14 +986,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             self.clearError(self.batteryError)
             self.renderBatteryIcon(hidden)
         }
-    }
-
-    private func refreshPercentage() {
-        percentageButton.state = Settings.showsMenuBarPercentage ? .on : .off
-    }
-
-    private func refreshIconStyle() {
-        nativeIconButton.state = Settings.menuBarIconStyle == .native ? .on : .off
     }
 
     private func refreshLoginItem() {
@@ -1288,14 +1022,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
                 self.renderBatteryIcon(hidden)
             }
         }
-    }
-
-    @objc private func togglePercentage(_ sender: NSButton) {
-        Settings.showsMenuBarPercentage = sender.state == .on
-    }
-
-    @objc private func toggleNativeIcon(_ sender: NSButton) {
-        Settings.menuBarIconStyle = sender.state == .on ? .native : .wattson
     }
 
     @objc private func toggleLoginItem(_ sender: NSButton) {
@@ -1501,6 +1227,691 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     }
 }
 
+private enum MenuBarIconAppearance: Int, CaseIterable {
+    case wattsonIconOnly
+    case wattsonWithPercentage
+    case macOSIconOnly
+    case macOSWithPercentage
+
+    var iconStyle: Settings.MenuBarIconStyle {
+        switch self {
+        case .wattsonIconOnly, .wattsonWithPercentage: return .wattson
+        case .macOSIconOnly, .macOSWithPercentage: return .native
+        }
+    }
+
+    var showsPercentage: Bool {
+        switch self {
+        case .wattsonIconOnly, .macOSIconOnly: return false
+        case .wattsonWithPercentage, .macOSWithPercentage: return true
+        }
+    }
+
+    var accessibilityLabel: String {
+        switch self {
+        case .wattsonIconOnly: return "Wattson icon only"
+        case .wattsonWithPercentage: return "Wattson with percentage"
+        case .macOSIconOnly: return "macOS 26 icon only"
+        case .macOSWithPercentage: return "macOS 26 with percentage"
+        }
+    }
+
+    var visibleTitle: String {
+        switch iconStyle {
+        case .wattson: return "Wattson"
+        case .native: return "macOS 26"
+        }
+    }
+
+    var visibleDetail: String { showsPercentage ? "With percentage" : "Icon only" }
+
+    var accessibilityHelp: String {
+        let artwork = iconStyle == .wattson
+            ? "Wattson’s live status battery glyph"
+            : "The battery artwork used by the macOS 26 menu bar"
+        return showsPercentage
+            ? "\(artwork), with the battery percentage on its left."
+            : "\(artwork), without a percentage."
+    }
+
+    var identifierSuffix: String {
+        switch self {
+        case .wattsonIconOnly: return "wattson-icon-only"
+        case .wattsonWithPercentage: return "wattson-percentage"
+        case .macOSIconOnly: return "macos-icon-only"
+        case .macOSWithPercentage: return "macos-percentage"
+        }
+    }
+
+    init(iconStyle: Settings.MenuBarIconStyle, showsPercentage: Bool) {
+        switch (iconStyle, showsPercentage) {
+        case (.wattson, false): self = .wattsonIconOnly
+        case (.wattson, true): self = .wattsonWithPercentage
+        case (.native, false): self = .macOSIconOnly
+        case (.native, true): self = .macOSWithPercentage
+        }
+    }
+}
+
+private enum MenuBarIconCardKeyCommand {
+    case previous
+    case next
+    case first
+    case last
+}
+
+enum MenuBarIconPreviewState: CaseIterable {
+    case onBattery
+    case pluggedFull
+    case charging
+    case lowBattery
+    case lowBatteryPlugged
+    case lowPower
+    case lowPowerPlugged
+
+    var identifierSuffix: String {
+        switch self {
+        case .onBattery: return "battery"
+        case .pluggedFull: return "full"
+        case .charging: return "charging"
+        case .lowBattery: return "low"
+        case .lowBatteryPlugged: return "low-ac"
+        case .lowPower: return "saver"
+        case .lowPowerPlugged: return "saver-ac"
+        }
+    }
+
+    var visibleLabel: String {
+        switch self {
+        case .onBattery: return "Battery"
+        case .pluggedFull: return "Full"
+        case .charging: return "Charging"
+        case .lowBattery: return "Low"
+        case .lowBatteryPlugged: return "Low + AC"
+        case .lowPower: return "Saver"
+        case .lowPowerPlugged: return "Saver + AC"
+        }
+    }
+
+    var accessibilityDescription: String {
+        switch self {
+        case .onBattery: return "75 percent on battery"
+        case .pluggedFull: return "100 percent full and connected to power"
+        case .charging: return "72 percent charging"
+        case .lowBattery: return "10 percent low battery"
+        case .lowBatteryPlugged: return "20 percent low battery connected to power"
+        case .lowPower: return "42 percent in Low Power Mode"
+        case .lowPowerPlugged: return "42 percent in Low Power Mode connected to power"
+        }
+    }
+
+    var mode: EnergyMode {
+        switch self {
+        case .lowPower, .lowPowerPlugged: return .low
+        default: return .auto
+        }
+    }
+
+    var fixture: (
+        percent: Int,
+        plugged: Bool,
+        adapterW: Double,
+        batteryW: Double,
+        systemW: Double,
+        lowPowerMode: Bool
+    ) {
+        switch self {
+        case .onBattery:
+            return (percent: 75, plugged: false, adapterW: 0, batteryW: -18,
+                    systemW: 18, lowPowerMode: false)
+        case .pluggedFull:
+            return (percent: 100, plugged: true, adapterW: 42, batteryW: 0,
+                    systemW: 42, lowPowerMode: false)
+        case .charging:
+            return (percent: 72, plugged: true, adapterW: 60, batteryW: 18,
+                    systemW: 42, lowPowerMode: false)
+        case .lowBattery:
+            return (percent: 10, plugged: false, adapterW: 0, batteryW: -12,
+                    systemW: 12, lowPowerMode: false)
+        case .lowBatteryPlugged:
+            return (percent: 20, plugged: true, adapterW: 42, batteryW: 0,
+                    systemW: 42, lowPowerMode: false)
+        case .lowPower:
+            return (percent: 42, plugged: false, adapterW: 0, batteryW: -18,
+                    systemW: 18, lowPowerMode: true)
+        case .lowPowerPlugged:
+            return (percent: 42, plugged: true, adapterW: 42, batteryW: 0,
+                    systemW: 42, lowPowerMode: true)
+        }
+    }
+
+    var snapshot: PowerSnapshot {
+        let fixture = fixture
+        return PowerSnapshot(
+            percent: fixture.percent,
+            plugged: fixture.plugged,
+            adapterW: fixture.adapterW,
+            batteryW: fixture.batteryW,
+            systemW: fixture.systemW,
+            temperatureC: nil,
+            cycleCount: 0,
+            lowPowerMode: fixture.lowPowerMode
+        )
+    }
+}
+
+private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing {
+    let menuBarAppearance: MenuBarIconAppearance
+    var onKeyboardCommand: ((MenuBarIconCardKeyCommand) -> Void)?
+
+#if DEBUG
+    private(set) var drawCountForTest = 0
+#endif
+
+    private let increaseContrast: () -> Bool
+    private var stateBoxes: [NSBox] = []
+
+    /// Keeps the menu-bar font family and tabular digit spacing at a compact
+    /// preview size, leaving safe insets around three-digit percentages.
+    private static let previewMenuBarFont: NSFont = {
+        let base = NSFont.menuBarFont(ofSize: 11)
+        let descriptor = base.fontDescriptor.addingAttributes([
+            .featureSettings: [[
+                NSFontDescriptor.FeatureKey.typeIdentifier: kNumberSpacingType,
+                NSFontDescriptor.FeatureKey.selectorIdentifier:
+                    kMonospacedNumbersSelector,
+            ]],
+        ])
+        return NSFont(descriptor: descriptor, size: 11) ?? base
+    }()
+
+    init(
+        appearance: MenuBarIconAppearance,
+        previews: [(state: MenuBarIconPreviewState, image: NSImage)],
+        increaseContrast: @escaping () -> Bool
+    ) {
+        menuBarAppearance = appearance
+        self.increaseContrast = increaseContrast
+        super.init(frame: .zero)
+
+        let identifierSuffix = appearance.identifierSuffix
+        identifier = NSUserInterfaceItemIdentifier(
+            "settings.menu-bar-icon.card.\(identifierSuffix)"
+        )
+        title = ""
+        isBordered = false
+        bezelStyle = .regularSquare
+        imagePosition = .noImage
+        focusRingType = .none
+        setButtonType(.radio)
+        setAccessibilityRole(.radioButton)
+        setAccessibilityLabel(appearance.accessibilityLabel)
+        let stateDescriptions = previews.map(\.state.accessibilityDescription).joined(
+            separator: ", "
+        )
+        setAccessibilityHelp("\(appearance.accessibilityHelp) Previews: \(stateDescriptions).")
+
+        let stateViews = previews.map { preview -> NSView in
+            let stateSuffix = "\(identifierSuffix).\(preview.state.identifierSuffix)"
+
+            let stateBox = NSBox()
+            stateBox.identifier = NSUserInterfaceItemIdentifier(
+                "settings.menu-bar-icon.state.\(stateSuffix)"
+            )
+            let increased = increaseContrast()
+            stateBox.boxType = .custom
+            stateBox.titlePosition = .noTitle
+            stateBox.cornerRadius = SettingsStyle.iconStateCornerRadius
+            stateBox.borderWidth = increased ? 2 : 1
+            stateBox.borderColor = increased
+                ? SettingsStyle.increasedContrastBorder
+                : SettingsStyle.border
+            stateBox.fillColor = SettingsStyle.previewBackground
+            stateBox.setAccessibilityElement(false)
+            stateBox.translatesAutoresizingMaskIntoConstraints = false
+            stateBoxes.append(stateBox)
+
+            let stateLabel = NSTextField(labelWithString: preview.state.visibleLabel)
+            stateLabel.identifier = NSUserInterfaceItemIdentifier(
+                "settings.menu-bar-icon.state-label.\(stateSuffix)"
+            )
+            stateLabel.font = .systemFont(ofSize: 9, weight: .medium)
+            stateLabel.textColor = SettingsStyle.secondaryText
+            stateLabel.alignment = .center
+            stateLabel.lineBreakMode = .byClipping
+            stateLabel.maximumNumberOfLines = 1
+            stateLabel.setAccessibilityElement(false)
+            stateLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            let imageView = NSImageView()
+            imageView.identifier = NSUserInterfaceItemIdentifier(
+                "settings.menu-bar-icon.preview.\(stateSuffix)"
+            )
+            imageView.image = preview.image
+            imageView.imageScaling = .scaleProportionallyUpOrDown
+            imageView.contentTintColor = .labelColor
+            imageView.setAccessibilityElement(false)
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+
+            var presentationViews: [NSView] = []
+            if appearance.showsPercentage {
+                let percentage = NSTextField(
+                    labelWithString: "\(preview.state.fixture.percent)% "
+                )
+                percentage.identifier = NSUserInterfaceItemIdentifier(
+                    "settings.menu-bar-icon.percentage.\(stateSuffix)"
+                )
+                percentage.font = Self.previewMenuBarFont
+                percentage.textColor = .labelColor
+                percentage.lineBreakMode = .byClipping
+                percentage.setAccessibilityElement(false)
+                presentationViews.append(percentage)
+            }
+            presentationViews.append(imageView)
+            let presentation = NSStackView(views: presentationViews)
+            presentation.orientation = .horizontal
+            presentation.alignment = .centerY
+            presentation.distribution = .fill
+            presentation.spacing = 1
+            presentation.setAccessibilityElement(false)
+            presentation.translatesAutoresizingMaskIntoConstraints = false
+
+            stateBox.addSubview(stateLabel)
+            stateBox.addSubview(presentation)
+            NSLayoutConstraint.activate([
+                stateLabel.leadingAnchor.constraint(equalTo: stateBox.leadingAnchor, constant: 2),
+                stateLabel.trailingAnchor.constraint(equalTo: stateBox.trailingAnchor, constant: -2),
+                stateLabel.topAnchor.constraint(equalTo: stateBox.topAnchor, constant: 3),
+
+                presentation.centerXAnchor.constraint(equalTo: stateBox.centerXAnchor),
+                presentation.bottomAnchor.constraint(equalTo: stateBox.bottomAnchor, constant: -3),
+                imageView.widthAnchor.constraint(equalToConstant: BatteryIcon.width),
+                imageView.heightAnchor.constraint(equalToConstant: BatteryIcon.height),
+                stateLabel.bottomAnchor.constraint(
+                    lessThanOrEqualTo: presentation.topAnchor,
+                    constant: -1
+                ),
+            ])
+            return stateBox
+        }
+        let stateRow = NSStackView(views: stateViews)
+        stateRow.orientation = .horizontal
+        stateRow.alignment = .height
+        stateRow.distribution = .fillEqually
+        stateRow.spacing = SettingsStyle.iconStateGap
+        stateRow.setAccessibilityElement(false)
+        stateRow.translatesAutoresizingMaskIntoConstraints = false
+
+        let primary = NSTextField(labelWithString: appearance.visibleTitle)
+        primary.identifier = NSUserInterfaceItemIdentifier(
+            "settings.menu-bar-icon.title.\(identifierSuffix)"
+        )
+        primary.font = .systemFont(ofSize: 13, weight: .semibold)
+        primary.textColor = SettingsStyle.primaryText
+        primary.alignment = .left
+        primary.lineBreakMode = .byClipping
+        primary.setAccessibilityElement(false)
+        primary.translatesAutoresizingMaskIntoConstraints = false
+
+        let secondary = NSTextField(labelWithString: appearance.visibleDetail)
+        secondary.identifier = NSUserInterfaceItemIdentifier(
+            "settings.menu-bar-icon.detail.\(identifierSuffix)"
+        )
+        secondary.setAccessibilityIdentifier(
+            "settings.menu-bar-icon.detail.\(identifierSuffix)"
+        )
+        secondary.font = SettingsStyle.detailFont
+        secondary.textColor = SettingsStyle.secondaryText
+        secondary.alignment = .left
+        secondary.lineBreakMode = .byClipping
+        secondary.maximumNumberOfLines = 1
+        secondary.setAccessibilityElement(false)
+        secondary.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(primary)
+        addSubview(secondary)
+        addSubview(stateRow)
+        NSLayoutConstraint.activate([
+            primary.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            primary.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+
+            secondary.leadingAnchor.constraint(equalTo: primary.trailingAnchor, constant: 8),
+            secondary.firstBaselineAnchor.constraint(equalTo: primary.firstBaselineAnchor),
+            secondary.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -44),
+
+            stateRow.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            stateRow.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            stateRow.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            stateRow.heightAnchor.constraint(equalToConstant: SettingsStyle.iconStateHeight),
+        ])
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) is unavailable")
+    }
+
+    override var acceptsFirstResponder: Bool { true }
+
+    override func becomeFirstResponder() -> Bool {
+        let becameFirstResponder = super.becomeFirstResponder()
+        if becameFirstResponder {
+            DispatchQueue.main.async { [weak self] in
+                self?.needsDisplay = true
+            }
+        }
+        return becameFirstResponder
+    }
+
+    override func resignFirstResponder() -> Bool {
+        let resignedFirstResponder = super.resignFirstResponder()
+        if resignedFirstResponder {
+            DispatchQueue.main.async { [weak self] in
+                self?.needsDisplay = true
+            }
+        }
+        return resignedFirstResponder
+    }
+
+    override func accessibilityValue() -> Any? {
+        NSNumber(value: state == .on)
+    }
+
+    var cardFillColor: NSColor {
+        guard state == .on else { return SettingsStyle.surfaceBackground }
+        return increaseContrast()
+            ? SettingsStyle.increasedContrastSelection
+            : SettingsStyle.selection
+    }
+
+    var cardBorderColor: NSColor {
+        if state == .on {
+            return increaseContrast()
+                ? SettingsStyle.increasedContrastSelectionBorder
+                : SettingsStyle.green
+        }
+        return increaseContrast()
+            ? SettingsStyle.increasedContrastBorder
+            : SettingsStyle.border
+    }
+
+    var cardBorderWidth: CGFloat {
+        if state == .on { return increaseContrast() ? 3 : 2 }
+        return increaseContrast() ? 2 : 1
+    }
+
+    func refreshContrastAppearance() {
+        let increased = increaseContrast()
+        stateBoxes.forEach {
+            $0.borderWidth = increased ? 2 : 1
+            $0.borderColor = increased
+                ? SettingsStyle.increasedContrastBorder
+                : SettingsStyle.border
+        }
+        needsDisplay = true
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        needsDisplay = true
+    }
+
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        guard !isHidden, frame.contains(point) else { return nil }
+        return self
+    }
+
+    override func keyDown(with event: NSEvent) {
+        switch event.keyCode {
+        case 123, 126:
+            onKeyboardCommand?(.previous)
+        case 124, 125:
+            onKeyboardCommand?(.next)
+        case 115:
+            onKeyboardCommand?(.first)
+        case 119:
+            onKeyboardCommand?(.last)
+        case 49:
+            performClick(nil)
+        default:
+            super.keyDown(with: event)
+        }
+    }
+
+    override func draw(_ dirtyRect: NSRect) {
+#if DEBUG
+        drawCountForTest += 1
+#endif
+        let inset = max(cardBorderWidth / 2, 1)
+        let card = NSBezierPath(
+            roundedRect: bounds.insetBy(dx: inset, dy: inset),
+            xRadius: SettingsStyle.surfaceCornerRadius,
+            yRadius: SettingsStyle.surfaceCornerRadius
+        )
+        cardFillColor.setFill()
+        card.fill()
+        cardBorderColor.setStroke()
+        card.lineWidth = cardBorderWidth
+        card.stroke()
+
+        let radioY = isFlipped ? 15 : bounds.maxY - 29
+        let radioRect = NSRect(
+            x: bounds.maxX - 29,
+            y: radioY,
+            width: 14,
+            height: 14
+        )
+        let radio = NSBezierPath(ovalIn: radioRect)
+        cardBorderColor.setStroke()
+        radio.lineWidth = state == .on ? 2 : 1.5
+        radio.stroke()
+        if state == .on {
+            cardBorderColor.setFill()
+            NSBezierPath(ovalIn: radioRect.insetBy(dx: 4, dy: 4)).fill()
+        }
+
+        if window?.firstResponder === self {
+            NSColor.keyboardFocusIndicatorColor.setStroke()
+            let focus = NSBezierPath(
+                roundedRect: bounds.insetBy(dx: 4, dy: 4),
+                xRadius: SettingsStyle.surfaceCornerRadius - 2,
+                yRadius: SettingsStyle.surfaceCornerRadius - 2
+            )
+            focus.lineWidth = 2
+            focus.stroke()
+        }
+    }
+}
+
+private final class MenuBarIconSettingsSectionController: NSObject,
+    SettingsSectionController
+{
+    let identifier = "menu-bar-icon"
+    let title = "Menu Bar Icon"
+    let symbolName = "battery.100"
+    let view = NSView()
+
+    private let increaseContrast: () -> Bool
+    private var buttons: [MenuBarIconAppearance: MenuBarIconCardButton] = [:]
+    private var settingsObserver: NSObjectProtocol?
+
+    init(increaseContrast: @escaping () -> Bool) {
+        self.increaseContrast = increaseContrast
+        super.init()
+        buildView()
+        installObserver()
+        refreshSelection()
+    }
+
+    deinit {
+        if let settingsObserver {
+            NotificationCenter.default.removeObserver(settingsObserver)
+        }
+    }
+
+    func refresh() {
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in self?.refresh() }
+            return
+        }
+        refreshSelection()
+    }
+
+    private func buildView() {
+        view.identifier = NSUserInterfaceItemIdentifier("settings.section.menu-bar-icon")
+
+        let heading = NSTextField(labelWithString: title)
+        heading.identifier = NSUserInterfaceItemIdentifier("settings.menu-bar-icon.heading")
+        heading.font = SettingsStyle.headingFont
+        heading.textColor = SettingsStyle.headingText
+        heading.setAccessibilityLabel(title)
+        heading.translatesAutoresizingMaskIntoConstraints = false
+
+        let subtitle = NSTextField(
+            labelWithString: "Choose how Wattson appears in the menu bar."
+        )
+        subtitle.identifier = NSUserInterfaceItemIdentifier("settings.menu-bar-icon.subtitle")
+        subtitle.font = SettingsStyle.detailFont
+        subtitle.textColor = SettingsStyle.secondaryText
+        subtitle.translatesAutoresizingMaskIntoConstraints = false
+
+        let orderedButtons = MenuBarIconAppearance.allCases.map { appearance in
+            let previews = MenuBarIconPreviewState.allCases.map { previewState in
+                let snapshot = previewState.snapshot
+                let image = BatteryIcon.image(
+                    for: snapshot,
+                    mode: previewState.mode,
+                    pressed: false,
+                    style: appearance.iconStyle
+                )
+                return (state: previewState, image: image)
+            }
+            let button = MenuBarIconCardButton(
+                appearance: appearance,
+                previews: previews,
+                increaseContrast: increaseContrast
+            )
+            button.target = self
+            button.action = #selector(selectAppearance(_:))
+            button.onKeyboardCommand = { [weak self] command in
+                self?.handleKeyboard(command, from: appearance)
+            }
+            button.translatesAutoresizingMaskIntoConstraints = false
+            buttons[appearance] = button
+            return button
+        }
+
+        let group = NSStackView(views: orderedButtons)
+        group.identifier = NSUserInterfaceItemIdentifier("settings.menu-bar-icon.group")
+        group.orientation = .vertical
+        group.alignment = .leading
+        group.distribution = .fillEqually
+        group.spacing = SettingsStyle.iconCardGap
+        group.setAccessibilityElement(true)
+        group.setAccessibilityRole(.radioGroup)
+        group.setAccessibilityLabel(title)
+        group.setAccessibilityHelp(
+            "Choose a complete Wattson or macOS menu-bar battery presentation."
+        )
+        group.setAccessibilityChildren(orderedButtons)
+        group.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(heading)
+        view.addSubview(subtitle)
+        view.addSubview(group)
+        NSLayoutConstraint.activate([
+            heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
+            heading.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            heading.topAnchor.constraint(equalTo: view.topAnchor, constant: -3),
+
+            subtitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
+            subtitle.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            subtitle.topAnchor.constraint(equalTo: heading.bottomAnchor, constant: 8),
+
+            group.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            group.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            group.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 14),
+            group.heightAnchor.constraint(equalToConstant: SettingsStyle.iconCardGroupHeight),
+        ])
+        orderedButtons.forEach {
+            $0.widthAnchor.constraint(equalTo: group.widthAnchor).isActive = true
+            $0.heightAnchor.constraint(
+                equalToConstant: SettingsStyle.iconCardHeight
+            ).isActive = true
+        }
+    }
+
+    private func installObserver() {
+        settingsObserver = NotificationCenter.default.addObserver(
+            forName: Settings.didChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            guard let self else { return }
+            guard let change = notification.userInfo?[Settings.changeUserInfoKey]
+                    as? Settings.Change else {
+                self.refreshSelection()
+                return
+            }
+            switch change {
+            case .menuBarIconStyle, .menuBarPercentage:
+                self.refreshSelection()
+            case .module:
+                break
+            }
+        }
+    }
+
+    private func refreshSelection() {
+        let selected = MenuBarIconAppearance(
+            iconStyle: Settings.menuBarIconStyle,
+            showsPercentage: Settings.showsMenuBarPercentage
+        )
+        for (appearance, button) in buttons {
+            button.state = appearance == selected ? .on : .off
+            button.needsDisplay = true
+        }
+    }
+
+    @objc private func selectAppearance(_ sender: MenuBarIconCardButton) {
+        select(sender.menuBarAppearance, movingFocus: false)
+    }
+
+    private func handleKeyboard(
+        _ command: MenuBarIconCardKeyCommand,
+        from current: MenuBarIconAppearance
+    ) {
+        let appearances = MenuBarIconAppearance.allCases
+        guard let currentIndex = appearances.firstIndex(of: current) else { return }
+        let targetIndex: Int
+        switch command {
+        case .previous:
+            targetIndex = (currentIndex - 1 + appearances.count) % appearances.count
+        case .next:
+            targetIndex = (currentIndex + 1) % appearances.count
+        case .first:
+            targetIndex = appearances.startIndex
+        case .last:
+            targetIndex = appearances.index(before: appearances.endIndex)
+        }
+        select(appearances[targetIndex], movingFocus: true)
+    }
+
+    private func select(
+        _ appearance: MenuBarIconAppearance,
+        movingFocus: Bool
+    ) {
+        Settings.setMenuBarAppearance(
+            iconStyle: appearance.iconStyle,
+            showsPercentage: appearance.showsPercentage
+        )
+        refreshSelection()
+        if movingFocus, let button = buttons[appearance] {
+            button.window?.makeFirstResponder(button)
+        }
+    }
+}
+
 private final class ModuleSettingsSectionController: NSObject, SettingsSectionController {
     let identifier = "modules"
     let title = "Modules"
@@ -1546,7 +1957,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             labelWithString: "Choose what appears in the power popover."
         )
         subtitle.identifier = NSUserInterfaceItemIdentifier("settings.modules.subtitle")
-        subtitle.font = .systemFont(ofSize: 18, weight: .regular)
+        subtitle.font = SettingsStyle.detailFont
         subtitle.textColor = SettingsStyle.secondaryText
         subtitle.translatesAutoresizingMaskIntoConstraints = false
 
@@ -1583,10 +1994,10 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
 
             subtitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             subtitle.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            subtitle.bottomAnchor.constraint(equalTo: grid.topAnchor, constant: -24),
+            subtitle.bottomAnchor.constraint(equalTo: grid.topAnchor, constant: -10),
 
-            grid.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            grid.topAnchor.constraint(equalTo: view.topAnchor, constant: 94),
+            grid.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            grid.topAnchor.constraint(equalTo: view.topAnchor, constant: 66),
             grid.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
             grid.heightAnchor.constraint(
                 equalToConstant: SettingsStyle.moduleCardHeight * 2
@@ -1621,7 +2032,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         detail.maximumNumberOfLines = 2
         detail.cell?.usesSingleLineMode = false
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 8
+        paragraphStyle.lineSpacing = 3
         detail.attributedStringValue = NSAttributedString(
             string: description(for: module),
             attributes: [
@@ -1650,21 +2061,21 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         card.addSubview(button)
 
         NSLayoutConstraint.activate([
-            preview.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 18),
-            preview.topAnchor.constraint(equalTo: card.topAnchor, constant: 18),
+            preview.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 14),
+            preview.topAnchor.constraint(equalTo: card.topAnchor, constant: 14),
             preview.widthAnchor.constraint(equalToConstant: SettingsStyle.modulePreviewSize.width),
             preview.heightAnchor.constraint(equalToConstant: SettingsStyle.modulePreviewSize.height),
 
-            primary.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 20),
-            primary.trailingAnchor.constraint(lessThanOrEqualTo: button.leadingAnchor, constant: -10),
-            primary.topAnchor.constraint(equalTo: card.topAnchor, constant: 151),
+            primary.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 14),
+            primary.trailingAnchor.constraint(lessThanOrEqualTo: button.leadingAnchor, constant: -8),
+            primary.topAnchor.constraint(equalTo: card.topAnchor, constant: 88),
 
             detail.leadingAnchor.constraint(equalTo: primary.leadingAnchor),
-            detail.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -20),
-            detail.topAnchor.constraint(equalTo: primary.bottomAnchor, constant: 10),
-            detail.bottomAnchor.constraint(lessThanOrEqualTo: card.bottomAnchor, constant: -20),
+            detail.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -14),
+            detail.topAnchor.constraint(equalTo: primary.bottomAnchor, constant: 6),
+            detail.bottomAnchor.constraint(lessThanOrEqualTo: card.bottomAnchor, constant: -12),
 
-            button.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -22),
+            button.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -14),
             button.centerYAnchor.constraint(equalTo: primary.centerYAnchor),
             button.widthAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.width),
             button.heightAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.height),
@@ -1713,19 +2124,12 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     NSTableViewDelegate
 {
     private static let frameAutosaveName = "WattsonSettingsWindow"
-    private static let trafficLightReferenceFrames = [
-        NSRect(x: 23, y: 26, width: 20, height: 20),
-        NSRect(x: 53, y: 26, width: 20, height: 20),
-        NSRect(x: 84, y: 26, width: 19, height: 19),
-    ]
 
     private let sections: [SettingsSectionController]
     private let increaseContrast: () -> Bool
     private let sidebar = NSTableView()
     private let contentHost = NSView()
-    private let titlebarSpacer = NSTitlebarAccessoryViewController()
     private let divider: DynamicSeparatorView
-    private var trafficLightButtons: [ReferenceTrafficLightButton] = []
     private var accessibilityDisplayObserver: NSObjectProtocol?
     private var selectedSectionIndex = 0
 
@@ -1734,6 +2138,9 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     ) -> [SettingsSectionController] {
         [
             GeneralSettingsSectionController(dependencies: dependencies),
+            MenuBarIconSettingsSectionController(
+                increaseContrast: dependencies.increaseContrast
+            ),
             ModuleSettingsSectionController(
                 increaseContrast: dependencies.increaseContrast
             ),
@@ -1763,7 +2170,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
                 .titled,
                 .closable,
                 .miniaturizable,
-                .resizable,
                 .fullSizeContentView,
             ],
             backing: .buffered,
@@ -1778,9 +2184,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         window.isReleasedWhenClosed = false
         window.isRestorable = false
         window.tabbingMode = .disallowed
-        // The reference is a fixed composition; resizing would distort the
-        // measured card and sidebar geometry. Keep the native zoom control,
-        // but constrain AppKit to the approved artwork size.
+        // This utility window has one intentionally compact composition.
+        // Omitting `.resizable` keeps AppKit's native zoom control disabled.
         window.contentMinSize = SettingsStyle.contentSize
         window.contentMaxSize = SettingsStyle.contentSize
         window.isMovableByWindowBackground = true
@@ -1792,7 +2197,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         super.init(window: window)
 
         configureContent()
-        configureTrafficLights()
         installAccessibilityDisplayObserver()
         refreshContrastAppearance()
         if let frameAutosaveName {
@@ -1841,37 +2245,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         view.subviews.forEach { refreshContrastAppearance(in: $0) }
     }
 
-    private func configureTrafficLights() {
-        guard let window else { return }
-        // Keep AppKit's standard controls as the action owners. The visible
-        // proxy buttons forward to them while matching the reference artwork's
-        // 18-point circles instead of AppKit's fixed 14-point drawing size.
-        titlebarSpacer.layoutAttribute = .bottom
-        titlebarSpacer.view = NSView(frame: NSRect(x: 0, y: 0, width: 1, height: 36))
-        window.addTitlebarAccessoryViewController(titlebarSpacer)
-        window.contentView?.layoutSubtreeIfNeeded()
-
-        let definitions: [(NSWindow.ButtonType, ReferenceTrafficLightButton.Kind)] = [
-            (.closeButton, .close),
-            (.miniaturizeButton, .minimize),
-            (.zoomButton, .zoom),
-        ]
-        trafficLightButtons.removeAll()
-        for ((type, kind), referenceFrame) in zip(
-            definitions,
-            Self.trafficLightReferenceFrames
-        ) {
-            guard let native = window.standardWindowButton(type),
-                  let parent = native.superview else { continue }
-            native.isHidden = true
-            let proxy = ReferenceTrafficLightButton(kind: kind, nativeButton: native)
-            proxy.frame = referenceFrame
-            proxy.autoresizingMask = [.maxXMargin, .minYMargin]
-            parent.addSubview(proxy)
-            trafficLightButtons.append(proxy)
-        }
-    }
-
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) is unavailable")
@@ -1887,7 +2260,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
         refreshSections()
         guard let window else { return }
-        fitReferenceCompositionToVisibleScreen(window)
         if window.isMiniaturized { window.deminiaturize(nil) }
         window.initialFirstResponder = sidebar
         if activateApp {
@@ -1906,65 +2278,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             }
         } else {
             window.orderFront(nil)
-        }
-    }
-
-    private func fitReferenceCompositionToVisibleScreen(_ window: NSWindow) {
-        guard let screen = window.screen ?? NSScreen.main else { return }
-        let visible = screen.visibleFrame.insetBy(dx: 12, dy: 12)
-        let referenceFrame = window.frameRect(forContentRect: NSRect(
-            origin: .zero,
-            size: SettingsStyle.contentSize
-        )).size
-        let scale = max(SettingsStyle.minimumContentScale, min(
-            1,
-            visible.width / referenceFrame.width,
-            visible.height / referenceFrame.height
-        ))
-        applyContentScale(scale, to: window)
-        if scale < 1 { window.center() }
-    }
-
-    private func applyContentScale(_ scale: CGFloat, to window: NSWindow) {
-        let compact = NSSize(
-            width: floor(SettingsStyle.contentSize.width * scale),
-            height: floor(SettingsStyle.contentSize.height * scale)
-        )
-        window.contentMinSize = compact
-        window.contentMaxSize = compact
-        window.setContentSize(compact)
-        // Keep layout in the reference coordinate space while NSView maps it
-        // proportionally into a smaller frame. Unlike a layer transform, the
-        // bounds transform also preserves hit testing and accessibility.
-        if let viewport = window.contentView {
-            viewport.setFrameSize(compact)
-            viewport.setBoundsSize(SettingsStyle.contentSize)
-            viewport.subviews.first {
-                $0.identifier?.rawValue == "settings.root"
-            }?.frame = viewport.bounds
-            viewport.layoutSubtreeIfNeeded()
-        }
-        applyTrafficLightScale(scale)
-    }
-
-    private func applyTrafficLightScale(_ scale: CGFloat) {
-        for (button, referenceFrame) in zip(
-            trafficLightButtons,
-            Self.trafficLightReferenceFrames
-        ) {
-            guard let parent = button.superview else { continue }
-            let referenceTopInset: CGFloat = 68 - referenceFrame.maxY
-            let size = NSSize(
-                width: referenceFrame.width * scale,
-                height: referenceFrame.height * scale
-            )
-            button.frame = NSRect(
-                x: referenceFrame.minX * scale,
-                y: parent.bounds.height - referenceTopInset * scale - size.height,
-                width: size.width,
-                height: size.height
-            )
-            button.needsDisplay = true
         }
     }
 
@@ -2061,7 +2374,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
         viewport.addSubview(root)
         window.contentView = viewport
-        viewport.setBoundsSize(SettingsStyle.contentSize)
         sidebar.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
         tableViewSelectionDidChange(Notification(
             name: NSTableView.selectionDidChangeNotification,
@@ -2077,9 +2389,10 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         identity.translatesAutoresizingMaskIntoConstraints = false
 
         let iconTile = NSBox()
+        iconTile.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.identity.tile")
         iconTile.boxType = .custom
         iconTile.titlePosition = .noTitle
-        iconTile.cornerRadius = 12
+        iconTile.cornerRadius = 9
         iconTile.borderWidth = 1
         iconTile.borderColor = SettingsStyle.border
         iconTile.fillColor = SettingsStyle.tileBackground
@@ -2090,22 +2403,22 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         iconTile.addSubview(icon)
 
         let name = NSTextField(labelWithString: "Wattson")
-        name.font = .systemFont(ofSize: 21, weight: .semibold)
+        name.font = .systemFont(ofSize: 16, weight: .semibold)
         name.textColor = SettingsStyle.headingText
         name.translatesAutoresizingMaskIntoConstraints = false
 
         identity.addSubview(iconTile)
         identity.addSubview(name)
         NSLayoutConstraint.activate([
-            iconTile.leadingAnchor.constraint(equalTo: identity.leadingAnchor, constant: 24),
-            iconTile.centerYAnchor.constraint(equalTo: identity.centerYAnchor, constant: -1),
+            iconTile.leadingAnchor.constraint(equalTo: identity.leadingAnchor, constant: 16),
+            iconTile.centerYAnchor.constraint(equalTo: identity.centerYAnchor),
             iconTile.widthAnchor.constraint(equalToConstant: SettingsStyle.identityTileSize),
             iconTile.heightAnchor.constraint(equalToConstant: SettingsStyle.identityTileSize),
             icon.centerXAnchor.constraint(equalTo: iconTile.centerXAnchor),
             icon.centerYAnchor.constraint(equalTo: iconTile.centerYAnchor),
-            icon.widthAnchor.constraint(equalToConstant: 40),
-            icon.heightAnchor.constraint(equalToConstant: 40),
-            name.leadingAnchor.constraint(equalTo: iconTile.trailingAnchor, constant: 12),
+            icon.widthAnchor.constraint(equalToConstant: 30),
+            icon.heightAnchor.constraint(equalToConstant: 30),
+            name.leadingAnchor.constraint(equalTo: iconTile.trailingAnchor, constant: 10),
             name.centerYAnchor.constraint(equalTo: iconTile.centerYAnchor),
         ])
         return identity
@@ -2219,21 +2532,16 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         let section = sections[row]
         let cell = NSTableCellView()
 
-        let icon: NSView
-        if section.identifier == "modules" {
-            icon = PuzzleNavigationIconView()
-        } else {
-            let imageView = NSImageView()
-            imageView.image = NSImage(
-                systemSymbolName: section.symbolName,
-                accessibilityDescription: nil
-            )?.withSymbolConfiguration(
-                NSImage.SymbolConfiguration(pointSize: 23, weight: .regular)
-            )
-            imageView.contentTintColor = .labelColor
-            imageView.imageScaling = .scaleNone
-            icon = imageView
-        }
+        let imageView = NSImageView()
+        imageView.image = NSImage(
+            systemSymbolName: section.symbolName,
+            accessibilityDescription: nil
+        )?.withSymbolConfiguration(
+            NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
+        )
+        imageView.contentTintColor = .labelColor
+        imageView.imageScaling = .scaleNone
+        let icon: NSView = imageView
         icon.setAccessibilityElement(false)
         icon.translatesAutoresizingMaskIntoConstraints = false
 
@@ -2246,12 +2554,12 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         cell.addSubview(icon)
         cell.addSubview(title)
         NSLayoutConstraint.activate([
-            icon.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: -3),
+            icon.leadingAnchor.constraint(equalTo: cell.leadingAnchor),
             icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
-            icon.widthAnchor.constraint(equalToConstant: 28),
-            icon.heightAnchor.constraint(equalToConstant: 28),
-            title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 15),
-            title.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -8),
+            icon.widthAnchor.constraint(equalToConstant: 18),
+            icon.heightAnchor.constraint(equalToConstant: 20),
+            title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 6),
+            title.trailingAnchor.constraint(equalTo: cell.trailingAnchor),
             title.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
         ])
         cell.setAccessibilityLabel(section.title)
@@ -2261,7 +2569,14 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
 #if DEBUG
     var windowForTest: NSWindow? { window }
-    var trafficLightButtonsForTest: [NSButton] { trafficLightButtons }
+    var trafficLightButtonsForTest: [NSButton] {
+        guard let window else { return [] }
+        return [
+            window.standardWindowButton(.closeButton),
+            window.standardWindowButton(.miniaturizeButton),
+            window.standardWindowButton(.zoomButton),
+        ].compactMap { $0 }
+    }
     var selectedRowStrokeWidthForTest: CGFloat {
         selectedSidebarRowForTest?.selectionStrokeWidth ?? -1
     }
@@ -2286,6 +2601,22 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         settingsToggleForTest(accessibilityLabel)?.trackStrokeColor
     }
 
+    func iconCardBorderWidthForTest(_ accessibilityLabel: String) -> CGFloat {
+        iconCardForTest(accessibilityLabel)?.cardBorderWidth ?? -1
+    }
+
+    func iconCardFillColorForTest(_ accessibilityLabel: String) -> NSColor? {
+        iconCardForTest(accessibilityLabel)?.cardFillColor
+    }
+
+    func iconCardBorderColorForTest(_ accessibilityLabel: String) -> NSColor? {
+        iconCardForTest(accessibilityLabel)?.cardBorderColor
+    }
+
+    func iconCardDrawCountForTest(_ accessibilityLabel: String) -> Int {
+        iconCardForTest(accessibilityLabel)?.drawCountForTest ?? -1
+    }
+
     private var selectedSidebarRowForTest: SettingsSidebarRowView? {
         guard sidebar.selectedRow >= 0 else { return nil }
         return sidebar.rowView(
@@ -2307,10 +2638,19 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         return nil
     }
 
-    func applyContentScaleForTest(_ scale: CGFloat) {
-        guard let window else { return }
-        applyContentScale(scale, to: window)
+    private func iconCardForTest(
+        _ accessibilityLabel: String
+    ) -> MenuBarIconCardButton? {
+        for section in sections {
+            if let match = switchButtons(in: section.view)
+                .compactMap({ $0 as? MenuBarIconCardButton })
+                .first(where: { $0.accessibilityLabel() == accessibilityLabel }) {
+                return match
+            }
+        }
+        return nil
     }
+
     var sectionIdentifiersForTest: [String] { sections.map(\.identifier) }
     var selectedSectionIdentifierForTest: String { sections[selectedSectionIndex].identifier }
     var visibleSectionIdentifierForTest: String? {
@@ -2325,6 +2665,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     var sidebarAllowsEmptySelectionForTest: Bool { sidebar.allowsEmptySelection }
     var sidebarRowHeightForTest: CGFloat { sidebar.rowHeight }
     var sidebarRowGapForTest: CGFloat { sidebar.intercellSpacing.height }
+    var sidebarVisibleRectForTest: NSRect { sidebar.visibleRect }
+    func sidebarRectForRowForTest(_ row: Int) -> NSRect { sidebar.rect(ofRow: row) }
     var sidebarForTest: NSTableView { sidebar }
     var sidebarNextKeyViewForTest: NSView? { sidebar.nextKeyView }
     var lastVisibleSwitchNextKeyViewForTest: NSView? {

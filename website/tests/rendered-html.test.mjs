@@ -36,21 +36,112 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /brew install --cask laleoarrow\/tap\/wattson/i);
   assert.match(html, /Community build/i);
   assert.match(html, /macOS-style battery glyph/i);
-  assert.match(html, /refined 2A airy-glass selector/i);
-  assert.match(html, /stays at 1× while dragging/i);
-  assert.match(html, /system Reduce Motion/i);
-  assert.match(html, /native 2C segmented control/i);
-  assert.match(html, /without an app setting or saved preference/i);
+  assert.match(html, /dedicated Menu Bar Icon page/i);
+  assert.match(html, /Wattson icon only/i);
+  assert.match(html, /Wattson with percentage/i);
+  assert.match(html, /macOS 26 icon only/i);
+  assert.match(html, /macOS 26 with percentage/i);
+  assert.match(html, /appearances vertically/i);
+  assert.match(html, /one full-width option per row/i);
+  assert.match(html, /seven real production-rendered states/i);
+  assert.match(
+    html,
+    /Battery, Full, Charging, Low, Low \+ AC, Saver, and Saver \+ AC/i,
+  );
+  assert.match(html, /Control Center battery parts from the running system/i);
+  assert.match(html, /exact percentage fill, an idle-AC plug, and a charging bolt/i);
+  assert.match(html, /only the battery fill is yellow/i);
+  assert.match(html, /outline, cap, plug, and bolt keep the menu-bar foreground colour/i);
+  assert.match(html, /real BatteryIcon renderer/i);
+  assert.match(
+    html,
+    /percentage rows show matching per-state values to the left of each glyph/i,
+  );
+  assert.match(html, /General contains only Launch at Login and Hide System Battery Icon/i);
+  assert.match(html, /720×520/i);
+  assert.match(html, /v3\.0\.12/i);
+  assert.match(html, /release candidate/i);
   assert.match(html, /not Apple-notarized/i);
   assert.match(html, /System Settings[\s\S]*Privacy[\s\S]*Security[\s\S]*Open Anyway/i);
   assert.doesNotMatch(html, /Control-click/i);
+  assert.doesNotMatch(
+    html,
+    /Installers converge|canonical copy passes validation|graphical-install rollback/i,
+  );
+  assert.doesNotMatch(html, /percentage (?:control )?(?:remains|stays) in General/i);
+  assert.doesNotMatch(html, /all four complete appearances in one row/i);
   assert.doesNotMatch(html, /Your site is taking shape|Starter Project/i);
+});
+
+test("groups the install routes in one compact, accessible panel", async () => {
+  const response = await render();
+  const html = await response.text();
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(html, /class="install-panel"/i);
+  assert.equal(
+    (html.match(/<article class="install-row\b/gi) ?? []).length,
+    3,
+  );
+  assert.match(
+    html,
+    /class="install-row install-row-recommended"[\s\S]*?Recommended[\s\S]*?Download DMG/i,
+  );
+  assert.match(
+    html,
+    /class="install-row"[\s\S]*?Package installer[\s\S]*?Download PKG/i,
+  );
+  assert.match(
+    html,
+    /class="install-row install-row-homebrew"[\s\S]*?brew install --cask laleoarrow\/tap\/wattson[\s\S]*?aria-label="Copy Homebrew install command"/i,
+  );
+  assert.match(html, /class="trust-note"[\s\S]*?Inspect releases/i);
+  assert.doesNotMatch(html, /class="install-grid"|class="install-card\b/i);
+
+  assert.match(page, /className="install-shell"/);
+  assert.match(
+    css,
+    /\.install-shell\s*\{[^}]*width:\s*min\(760px,\s*calc\(100% - 48px\)\)/s,
+  );
+  assert.match(css, /\.install-panel\s*\{[^}]*border-radius:\s*14px/s);
+  assert.match(css, /\.install-row\s*\{[^}]*grid-template-columns:/s);
+  assert.match(css, /\.install-action\s*\{[^}]*min-height:\s*40px/s);
+  assert.doesNotMatch(css, /\.install-card\b/);
+  assert.doesNotMatch(
+    css,
+    /\.install-section\s*\{[^}]*padding:\s*145px\s+0\s+100px/s,
+  );
+  assert.doesNotMatch(
+    css,
+    /\.install-row\s*\{[^}]*min-height:\s*(?:3[4-9]\d|[4-9]\d\d)px/s,
+  );
+});
+
+test("shows the current AppKit popover instead of an invented web mock", async () => {
+  const response = await render();
+  const html = await response.text();
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+
+  assert.match(
+    html,
+    /wattson-popover-real\.png[^>]*alt="The real Wattson menu bar popover/i,
+  );
+  assert.match(html, /Captured from the current Wattson AppKit build\./i);
+  assert.doesNotMatch(html, /class="app-window"|class="power-map"/i);
+  assert.doesNotMatch(page, /historyValues|className="app-window"|67\.1 W|24\.8 W/);
+
+  await Promise.all([
+    access(new URL("../public/wattson-popover-real.png", import.meta.url)),
+    access(new URL("../dist/client/wattson-popover-real.png", import.meta.url)),
+  ]);
 });
 
 test("ships the required static assets", async () => {
   await Promise.all([
     access(new URL("../dist/client/favicon.png", import.meta.url)),
     access(new URL("../dist/client/og.png", import.meta.url)),
+    access(new URL("../dist/client/wattson-popover-real.png", import.meta.url)),
     access(new URL("../dist/client/_next/", import.meta.url)),
   ]);
 

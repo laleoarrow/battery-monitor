@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.9">v3.0.9 release notes</a>
+  <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.12">v3.0.12 candidate notes</a>
 </p>
 
 <p align="center">
@@ -36,27 +36,34 @@ where it is going, and how the picture has changed over the last two minutes.
 - Native Liquid Glass on macOS 26 with an AppKit fallback for macOS 12–25.
 - Keyboard, VoiceOver, Reduce Motion, and Reduce Transparency support.
 - Launch-at-login and system battery-icon controls.
-- A native Settings window for General controls and popover modules.
+- A compact native Settings window for General, Menu Bar Icon, and Modules.
 - No account, analytics, cloud service, or external data upload.
 
-## What's new in v3.0.9
+## What's new in v3.0.12
 
-- The default power-mode control now uses the refined 2A airy-glass selector.
-  Its capsule stays at 1× while dragging, keeping tracking direct and compact.
-- When macOS system Reduce Motion is on, Wattson automatically uses a
-  native 2C segmented control, without an app setting or saved preference.
-- Mode changes now share one request owner, so a stale async result from one
-  control cannot overwrite a newer choice from the other.
-- Legacy refraction refreshes only during a real drag.
-- Reusable drawing inputs are cached, and redundant layer updates are removed
-  when consecutive identical telemetry samples arrive.
+> This is a v3.0.12 test-package candidate; it has not been published.
 
-## Install v3.0.9
+- The dedicated Menu Bar Icon page now lists all four complete menu-bar
+  appearances vertically, one full-width option per row: Wattson icon only,
+  Wattson with percentage, macOS 26 icon only, and macOS 26 with percentage.
+- Every row previews seven real production-rendered states: Battery, Full,
+  Charging, Low, Low + AC, Saver, and Saver + AC. Every preview uses the real
+  BatteryIcon renderer; percentage rows show matching per-state values to the
+  left of each glyph. The macOS 26 rows use Control Center battery parts from
+  the running system, with exact percentage fill, an idle-AC plug, and a
+  charging bolt instead of generic SF Symbols. In Low Power Mode, only the
+  battery fill is yellow; the outline, cap, plug, and bolt keep the menu-bar
+  foreground colour. General now contains only Launch at Login and Hide System
+  Battery Icon.
+- Settings keeps its compact, fixed 720×520 window for General, Menu Bar Icon,
+  and Modules.
+
+## Install v3.0.12
 
 | Route | Best for | What to do |
 | --- | --- | --- |
-| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.9/Wattson-v3.0.9-macos-universal.dmg), open it, then double-click the enclosed PKG. |
-| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.9/Wattson-v3.0.9-macos-universal.pkg) and follow macOS Installer. |
+| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.12/Wattson-v3.0.12-macos-universal.dmg), open it, then double-click the enclosed PKG. |
+| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.12/Wattson-v3.0.12-macos-universal.pkg) and follow macOS Installer. |
 | **Homebrew** | Terminal installation and updates | Run `brew install --cask laleoarrow/tap/wattson`. |
 
 All three routes install the same universal app at
@@ -69,8 +76,8 @@ macOS administrator prompt is required to install the helper.
 > unsigned and not Apple-notarized. On macOS 15 or later, first try to open the
 > installer, then use System Settings → Privacy & Security → Open Anyway only
 > when you trust this repository. Older macOS releases may instead offer
-> Control-click → Open. Verify the published
-> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.9/SHA256SUMS.txt)
+> Control-click → Open. Verify the provided
+> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.12/SHA256SUMS.txt)
 > before installation.
 
 ### Requirements

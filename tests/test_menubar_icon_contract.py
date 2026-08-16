@@ -34,36 +34,56 @@ class BatteryIconContractTests(unittest.TestCase):
                       "increasedContrast"):
             self.assertIn(field, self.source)
 
-    def test_native_style_prefers_public_system_symbols_and_is_always_template(self):
-        self.assertIn('"battery.\\(level)percent"', self.source)
-        self.assertIn('"battery.\\(level)"', self.source)
-        self.assertNotIn("variableValue:", self.source)
+    def test_native_style_uses_the_real_macos_menu_bar_battery_assets(self):
+        self.assertIn(
+            '"/System/Library/CoreServices/ControlCenter.app"', self.source
+        )
+        for asset in (
+            "battery-small-outline",
+            "battery-small-cap",
+            "battery-small-bolt",
+            "battery-small-bolt-mask",
+            "battery-plug",
+            "battery-plug-mask",
+        ):
+            self.assertIn(f'"{asset}"', self.source)
+        self.assertNotIn("systemSymbolName:", self.source)
         native = self.source.split("private static func nativeImage", 1)[1]
-        self.assertIn("isTemplate = true", native)
+        self.assertIn("nativeFillColor", native)
 
-    def test_native_style_keeps_a_macos_12_vector_fallback(self):
+    def test_native_low_power_colors_only_the_fill_layer(self):
+        native = self.source.split("private static func nativeImage", 1)[1].split(
+            "private static func nativeFallbackImage", 1
+        )[0]
+        self.assertIn("NSColor.systemYellow", self.source)
+        self.assertIn("fillColor", native)
+        self.assertIn("foregroundColor", native)
+        self.assertIn("image.isTemplate = fillColor == nil", native)
+
+    def test_native_style_keeps_a_vector_fallback(self):
         self.assertIn("private static func nativeFallbackImage", self.source)
         self.assertIn("NSImage(size:", self.source)
-        self.assertIn("nativeStaticLevel", self.source)
 
-    def test_native_charging_indicator_uses_actual_charging_not_ac_presence(self):
+    def test_native_uses_bolt_for_charging_and_plug_for_idle_ac(self):
         native = self.source.split("private static func nativeImage", 1)[1].split(
-            "private static func nativeStaticLevel", 1
+            "private static func nativeFallbackImage", 1
         )[0]
         self.assertIn("snapshot.state == .charging", native)
-        self.assertNotIn("snapshot.plugged", native)
-        self.assertIn('charging ? "battery.100percent.bolt"', self.source)
+        self.assertIn("snapshot.plugged", native)
+        self.assertIn(".bolt", native)
+        self.assertIn(".plug", native)
 
-    def test_native_cache_key_matches_the_quantized_pixels(self):
+    def test_native_cache_key_tracks_exact_fill_bolt_and_plug_pixels(self):
         native_key = self.source.split("if style == .native", 1)[1].split(
             "let tintRole", 1
         )[0]
-        self.assertIn("nativeStaticLevel(for: percent)", native_key)
-        self.assertIn("showsBolt ? 100", native_key)
+        self.assertIn("percent: percent", native_key)
+        self.assertIn("showsBolt", native_key)
+        self.assertIn("showsPlug", native_key)
         fallback = self.source.split("private static func nativeFallbackImage", 1)[1].split(
             "/// Priority", 1
         )[0]
-        self.assertIn("charging ? 100 : nativeStaticLevel", fallback)
+        self.assertIn("snapshot.percent", fallback)
 
     def test_color_priority_is_low_power_then_low_battery_then_charging(self):
         low_power = self.source.index("systemYellow")

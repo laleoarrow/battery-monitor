@@ -40,7 +40,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.promote_workflow = PROMOTE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.9\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.12\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -52,36 +52,125 @@ class ReleasePackagingContractTests(unittest.TestCase):
     def test_current_release_support_and_promotion_copy_are_not_stale(self):
         self.assertIn("support-diagnostics-v1.1.0", self.readme)
         self.assertNotIn("support-diagnostics-v1.0.0", self.readme)
+        normalized_readme = " ".join(self.readme.split())
+        normalized_promote_workflow = " ".join(self.promote_workflow.split())
         for current_release_topic in (
-            "refined 2A airy glass",
-            "stays at 1× while dragging",
-            "system Reduce Motion",
-            "native 2C segmented control",
-            "without an app setting or saved preference",
-            "stale async completion from the other control",
-            "legacy optical refraction only during a real drag",
-            "identical telemetry samples",
+            "dedicated Menu Bar Icon page",
+            "Wattson icon only",
+            "Wattson with percentage",
+            "macOS 26 icon only",
+            "macOS 26 with percentage",
+            "appearances vertically",
+            "one full-width option per row",
+            "seven real production-rendered states",
+            "Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC",
+            "real BatteryIcon renderer",
+            "percentage rows show matching per-state values to the left of each glyph",
+            "Control Center battery parts from the running system",
+            "exact percentage fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols",
+            "only the battery fill is yellow",
+            "outline, cap, plug, and bolt keep the menu-bar foreground colour",
+            "General contains only Launch at Login and Hide System Battery Icon",
+            "720×520",
         ):
-            self.assertIn(current_release_topic, self.promote_workflow)
+            self.assertIn(current_release_topic, normalized_promote_workflow)
 
         for user_facing_topic in (
-            "refined 2A airy-glass selector",
-            "stays at 1× while dragging",
-            "system Reduce Motion",
-            "native 2C segmented control",
-            "without an app setting or saved preference",
-            "stale async result",
-            "Legacy refraction refreshes only during a real drag",
-            "identical telemetry samples",
+            "v3.0.12 test-package candidate",
+            "has not been published",
+            "dedicated Menu Bar Icon page",
+            "Wattson icon only",
+            "Wattson with percentage",
+            "macOS 26 icon only",
+            "macOS 26 with percentage",
+            "appearances vertically",
+            "one full-width option per row",
+            "seven real production-rendered states",
+            "Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC",
+            "real BatteryIcon renderer",
+            "percentage rows show matching per-state values to the left of each glyph",
+            "Control Center battery parts from the running system",
+            "exact percentage fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols",
+            "only the battery fill is yellow",
+            "outline, cap, plug, and bolt keep the menu-bar foreground colour",
+            "General now contains only Launch at Login and Hide System Battery Icon",
+            "720×520",
         ):
-            self.assertIn(user_facing_topic, self.readme)
+            self.assertIn(user_facing_topic, normalized_readme)
 
+        current_handoff = self.handoff.split(
+            "## v3.0.12 complete runtime-state previews", 1
+        )[1].split("## v3.0.11 complete menu-bar appearance presets", 1)[0]
+        normalized_current_handoff = " ".join(current_handoff.split())
+        for misleading_install_claim in (
+            "Every installer now converges",
+            "All installers converge",
+            "Converges every install route",
+            "Installers converge",
+            "same-bundle-ID residue",
+            "only after the canonical app passes validation",
+            "rollback backup outside `/Applications`",
+            "hidden `.app`",
+        ):
+            for release_surface in (
+                normalized_readme,
+                normalized_promote_workflow,
+                normalized_current_handoff,
+            ):
+                self.assertNotIn(misleading_install_claim, release_surface)
+
+        for current_handoff_topic in (
+            "dedicated Menu Bar Icon page",
+            "Wattson icon only",
+            "Wattson with percentage",
+            "macOS 26 icon only",
+            "macOS 26 with percentage",
+            "appearances vertically",
+            "one full-width option per row",
+            "seven real production-rendered states",
+            "Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC",
+            "real BatteryIcon renderer",
+            "percentage rows show matching per-state values to the left of each glyph",
+            "Control Center battery parts from the running system",
+            "exact percentage fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols",
+            "only the battery fill is yellow",
+            "outline, cap, plug, and bolt keep the menu-bar foreground colour",
+            "General contains only Launch at Login and Hide System Battery Icon",
+            "720×520",
+        ):
+            self.assertIn(current_handoff_topic, normalized_current_handoff)
+
+        self.assertIn("## v3.0.12 complete runtime-state previews", self.handoff)
+        self.assertIn("## v3.0.11 complete menu-bar appearance presets", self.handoff)
+        self.assertIn("## v3.0.10 Settings and website work", self.handoff)
         self.assertIn("## v3.0.9 selector and rendering work", self.handoff)
         self.assertIn("## v3.0.8 dynamic Reduce Motion and transaction work", self.handoff)
+        self.assertLess(
+            self.handoff.index("## v3.0.12 complete runtime-state previews"),
+            self.handoff.index("## v3.0.11 complete menu-bar appearance presets"),
+        )
+        self.assertLess(
+            self.handoff.index("## v3.0.11 complete menu-bar appearance presets"),
+            self.handoff.index("## v3.0.10 Settings and website work"),
+        )
+        self.assertLess(
+            self.handoff.index("## v3.0.10 Settings and website work"),
+            self.handoff.index("## v3.0.9 selector and rendering work"),
+        )
         self.assertLess(
             self.handoff.index("## v3.0.9 selector and rendering work"),
             self.handoff.index("## v3.0.8 dynamic Reduce Motion and transaction work"),
         )
+
+        for stale_copy in (
+            "percentage control remains in General",
+            "percentage stays in General",
+            "all four complete appearances in one row",
+            "all four complete menu-bar appearances in one row",
+        ):
+            self.assertNotIn(stale_copy, normalized_readme)
+            self.assertNotIn(stale_copy, normalized_promote_workflow)
+            self.assertNotIn(stale_copy, normalized_current_handoff)
 
     def test_release_scripts_are_executable_and_parse_as_bash(self):
         for path in (*SCRIPTS.values(), PREINSTALL, POSTINSTALL):

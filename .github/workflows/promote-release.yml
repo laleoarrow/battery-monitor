@@ -6,7 +6,7 @@ on:
       version:
         description: Stable semantic version without the v prefix
         required: true
-        default: "3.0.9"
+        default: "3.0.12"
         type: string
       candidate_run_id:
         description: Successful Wattson release candidate workflow run ID
@@ -202,12 +202,13 @@ jobs:
             cat <<'EOF'
           This Wattson release is universal for Apple silicon and Intel and supports macOS 12 or later.
 
-          - Uses the refined 2A airy glass by default; its selection capsule stays at 1× while dragging for direct, compact tracking.
-          - When macOS system Reduce Motion is enabled, automatically switches to the native 2C segmented control without an app setting or saved preference.
-          - Shares request ownership across both controls, so a stale async completion from the other control cannot overwrite a newer mode selection.
-          - Refreshes legacy optical refraction only during a real drag instead of during unrelated telemetry refreshes.
-          - Caches reusable drawing inputs and removes redundant layer updates for identical telemetry samples.
-          - Installs at `/Applications/Wattson.app` through one native PKG shared byte-for-byte by the DMG, with verified reinstall, v2 upgrade, helper replacement, uninstall, and SHA-256 metadata.
+          - Adds a dedicated Menu Bar Icon page that lists all four complete menu-bar appearances vertically, one full-width option per row: Wattson icon only, Wattson with percentage, macOS 26 icon only, and macOS 26 with percentage.
+          - Every row previews seven real production-rendered states: Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC. Every preview uses the real BatteryIcon renderer; percentage rows show matching per-state values to the left of each glyph.
+          - The macOS 26 rows use Control Center battery parts from the running system, with exact percentage fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols. In Low Power Mode, only the battery fill is yellow; the outline, cap, plug, and bolt keep the menu-bar foreground colour.
+          - General contains only Launch at Login and Hide System Battery Icon.
+          - Uses a compact fixed 720×520 Settings window for General, Menu Bar Icon, and Modules.
+          - Adds a compact grouped website install panel for DMG, PKG, and Homebrew.
+          - Uses the real AppKit popover hero instead of a recreated browser mock.
 
           **Verified distribution:** the app, helper, PKG, and DMG are Developer ID signed. Apple accepted both release containers for notarization, and their tickets are stapled for offline validation and normal Gatekeeper installation.
           EOF

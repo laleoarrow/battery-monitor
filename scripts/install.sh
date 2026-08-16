@@ -39,6 +39,7 @@ else
     APP_DIR="$HOME/Applications/Wattson.app"
 fi
 APP_BUNDLE_ID="com.leoarrow.wattson"
+CANONICAL_APP_DIR="/Applications/Wattson.app"
 SUPPORT_DIR="$HOME/Library/Application Support/Wattson"
 HELPER_LABEL="com.leoarrow.wattson.helper"
 HELPER_TARGET="system/$HELPER_LABEL"
@@ -54,6 +55,12 @@ LEGACY_AGENT_OLD="$HOME/Library/LaunchAgents/${LEGACY_BUNDLE_ID}.plist"
 LEGACY_SUPPORT="$HOME/Library/Application Support/电池功率"
 LEGACY_CONFIG="$HOME/.battery_monitor.cfg"
 LEGACY_SCRIPT="$HOME/.battery_monitor.py"
+
+if [[ "$PACKAGE_BUILD" != "1" && ( -e "$CANONICAL_APP_DIR" || -L "$CANONICAL_APP_DIR" ) ]]; then
+    echo "Refusing to create a second Wattson app while $CANONICAL_APP_DIR exists." >&2
+    echo "Build and install the native PKG to update the canonical app instead." >&2
+    exit 1
+fi
 
 APP_ENTITLEMENTS="$ROOT_DIR/BatteryPowerApp.entitlements"
 BUILD_DIR="$(mktemp -d "$SYSTEM_TEMP_ROOT/wattson-build.XXXXXX")"

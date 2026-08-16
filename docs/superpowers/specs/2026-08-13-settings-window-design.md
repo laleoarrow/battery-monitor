@@ -1,13 +1,18 @@
 # Wattson Settings Window Design
 
 Date: 2026-08-13
-Status: Approved C+E visual direction
-Scope: Native macOS Settings window for existing Wattson controls
+Status: Superseded on 2026-08-15 by the compact 720×520 native layout
+Scope: Historical design record for the original oversized Settings window
+
+The current geometry is defined by `MenuBar/SettingsWindowController.swift`
+and its executable contract in `tests/test_settings_window_contract.py`.
+The measurements below are retained as the implementation history for the
+original 792×794 design and are no longer current acceptance criteria.
 
 Visual reference: `assets/wattson-settings-c-plus-e.png`. The left state is
-General; the right state is Modules. This image is the implementation target,
-while the measurements and behavior below are authoritative when raster
-details are ambiguous.
+General; the right state is Modules. This image was the implementation target
+for the v3.0.6–v3.0.9 layout, and the measurements and behavior below were its
+authoritative criteria when raster details were ambiguous.
 
 ## Context
 
@@ -236,10 +241,13 @@ represented as unchecked.
 
 Wattson's own menu-bar glyph style is an app-owned typed setting, independent
 of Control Center visibility. It defaults to the existing Wattson mark and can
-switch to a public macOS-style template battery glyph. The native style uses
-static public battery levels, adds the bolt only for an actual charging state,
-and falls back to a resolution-independent template drawing when a symbol is
-unavailable on an older supported system.
+switch to the battery artwork used by the macOS 26 menu extra. The native style
+composes the running system's small Control Center outline, cap, plug, bolt, and
+knockout-mask resources around the exact percentage fill. Connected-idle states
+use the plug and actual charging uses the bolt. Low Power colours only the
+interior fill yellow; the outline, cap, plug, and bolt retain the menu-bar
+foreground colour. A resolution-independent template drawing remains the
+fallback when a system asset is unavailable.
 
 ## Data Flow
 

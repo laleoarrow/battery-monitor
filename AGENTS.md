@@ -1,6 +1,7 @@
 # Battery Power Monitor agent guide
 
-This project is a native macOS floating battery power monitor widget built using Python and Tkinter.
+This project is the native AppKit Wattson menu-bar battery power monitor built
+with Swift.
 
 ## Read first
 
@@ -12,9 +13,17 @@ This project is a native macOS floating battery power monitor widget built using
 ## Project rules
 
 - All project code and assets must live under `/Users/leoarrow/Project/mypackage/agents/电池功率`.
-- The runtime code copied to user's system runs from `~/.battery_monitor.py`. Always sync modifications from the project directory's `battery_monitor.py` to `~/.battery_monitor.py` after editing.
-- The user-facing app bundle is located at `~/Applications/电池功率.app/` and wraps the python script.
-- Ensure that the canvas has `bd=0` and `highlightthickness=0` to preserve clean transparency with no black corners/borders.
-- Any change to the layout must be verified manually with different battery charging/discharging states to avoid overlapping labels and values (especially in the "适配器" connected/fully-charged state which uses wider text).
-- Emojis (e.g. 💻, 🔋, 🔌, ⚡) should be rendered as separate canvas items rather than combined in strings to prevent mixed-font width calculation errors in Tkinter on macOS.
+- The canonical user-facing app is `/Applications/Wattson.app`, installed by
+  the native PKG together with its privileged helper and package receipt.
+- `battery_monitor.py`, `~/.battery_monitor.py`, and
+  `~/Applications/电池功率.app` are retired v2 reference/migration surfaces.
+  Never copy or launch them as the current product.
+- `scripts/install.sh` is only a user-local developer build. It must fail
+  closed while `/Applications/Wattson.app` exists so a second app with the same
+  bundle identifier cannot be registered. Use a verified release PKG to update
+  the canonical installation.
+- Verify AppKit layout changes with the real production renderers and the
+  charging, full, on-battery, mixed-supply, low-battery, and Low Power states.
+  Use the disposable ARM GUI test VM when visible interaction would interfere
+  with the user's desktop.
 - Keep git repository status clean and update tags/commits appropriately.

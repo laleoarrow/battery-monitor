@@ -1293,7 +1293,7 @@ final class WattsonTests: XCTestCase {
         ))
     }
 
-    func testNativeBatteryIconKeyIgnoresWattsonTintInputsButTracksItsShape() {
+    func testNativeBatteryIconKeyTracksExactFillAndSystemPowerAdornment() {
         let baseline = PowerSnapshot(
             percent: 67, plugged: false, adapterW: 0, batteryW: -20, systemW: 20
         )
@@ -1303,75 +1303,69 @@ final class WattsonTests: XCTestCase {
             style: .native,
             appearance: dark, increasedContrast: false
         )
-        XCTAssertEqual(first, BatteryIcon.renderKey(
+        let lowPower = BatteryIcon.renderKey(
+            for: baseline, mode: .low, pressed: false,
+            style: .native,
+            appearance: dark, increasedContrast: false
+        )
+        XCTAssertNotEqual(first, lowPower)
+        XCTAssertEqual(lowPower.tintRole, .lowPower)
+        XCTAssertEqual(BatteryIcon.renderKey(
             for: baseline, mode: .low, pressed: true,
             style: .native,
-            appearance: NSAppearance(named: .aqua)!, increasedContrast: true
-        ))
+            appearance: dark, increasedContrast: false
+        ).tintRole, .template)
 
         var changedPercent = baseline
         changedPercent.percent = 68
-        XCTAssertEqual(first, BatteryIcon.renderKey(
+        XCTAssertNotEqual(first, BatteryIcon.renderKey(
             for: changedPercent, mode: .auto, pressed: false,
             style: .native,
             appearance: dark, increasedContrast: false
         ))
-        var belowBoundary = baseline
-        belowBoundary.percent = 62
-        var aboveBoundary = baseline
-        aboveBoundary.percent = 63
-        XCTAssertNotEqual(
-            BatteryIcon.renderKey(
-                for: belowBoundary, mode: .auto, pressed: false,
-                style: .native,
-                appearance: dark, increasedContrast: false
-            ),
-            BatteryIcon.renderKey(
-                for: aboveBoundary, mode: .auto, pressed: false,
-                style: .native,
-                appearance: dark, increasedContrast: false
-            )
-        )
         var pluggedIdle = baseline
         pluggedIdle.plugged = true
         pluggedIdle.batteryW = 0
         pluggedIdle.adapterW = 20
-        XCTAssertEqual(first, BatteryIcon.renderKey(
+        let pluggedKey = BatteryIcon.renderKey(
             for: pluggedIdle, mode: .auto, pressed: false,
             style: .native,
             appearance: dark, increasedContrast: false
-        ))
+        )
+        XCTAssertNotEqual(first, pluggedKey)
+        XCTAssertTrue(pluggedKey.showsPlug)
+        XCTAssertFalse(pluggedKey.showsBolt)
         var charging = pluggedIdle
         charging.batteryW = 5
         charging.systemW = 15
-        XCTAssertNotEqual(first, BatteryIcon.renderKey(
+        let chargingKey = BatteryIcon.renderKey(
             for: charging, mode: .auto, pressed: false,
             style: .native,
             appearance: dark, increasedContrast: false
-        ))
+        )
+        XCTAssertNotEqual(pluggedKey, chargingKey)
+        XCTAssertTrue(chargingKey.showsBolt)
+        XCTAssertFalse(chargingKey.showsPlug)
     }
 
-    func testNativeBatteryUsesDistinctStaticPublicLevels() {
-        let expected = [
-            (0, "battery.0percent"),
-            (25, "battery.25percent"),
-            (50, "battery.50percent"),
-            (75, "battery.75percent"),
-            (100, "battery.100percent"),
-        ]
-        XCTAssertEqual(
-            expected.map { BatteryIcon.nativeStaticSymbolName(for: $0.0) },
-            expected.map { $0.1 }
+    func testNativeBatteryRendersIdleACAndChargingAsDistinctTemplatePixels() throws {
+        let onBattery = PowerSnapshot(
+            percent: 42, plugged: false, adapterW: 0, batteryW: -18, systemW: 18
         )
-        XCTAssertEqual(Set(expected.map { $0.1 }).count, expected.count)
-        XCTAssertEqual(
-            BatteryIcon.nativeSymbolName(percent: 25, charging: true),
-            "battery.100percent.bolt"
+        let pluggedIdle = PowerSnapshot(
+            percent: 42, plugged: true, adapterW: 42, batteryW: 0, systemW: 42
         )
-        XCTAssertEqual(
-            BatteryIcon.nativeSymbolName(percent: 25, charging: false),
-            "battery.25percent"
+        let charging = PowerSnapshot(
+            percent: 42, plugged: true, adapterW: 60, batteryW: 18, systemW: 42
         )
+        let images = [onBattery, pluggedIdle, charging].map {
+            BatteryIcon.image(for: $0, mode: .auto, pressed: false, style: .native)
+        }
+        XCTAssertTrue(images.allSatisfy(\.isTemplate))
+        let pixels = try images.map { try XCTUnwrap($0.tiffRepresentation) }
+        XCTAssertNotEqual(pixels[0], pixels[1])
+        XCTAssertNotEqual(pixels[1], pixels[2])
+        XCTAssertNotEqual(pixels[0], pixels[2])
     }
 
     func testNativeBatteryIconIsAResolutionIndependentTemplate() {
@@ -1386,6 +1380,37 @@ final class WattsonTests: XCTestCase {
         XCTAssertLessThanOrEqual(image.size.width, 23)
         XCTAssertGreaterThanOrEqual(image.size.height, 10)
         XCTAssertLessThanOrEqual(image.size.height, 14)
+    }
+
+    func testNativeLowPowerColorsTheFillButKeepsANeutralOutline() throws {
+        let snapshot = PowerSnapshot(
+            percent: 42, plugged: false, adapterW: 0, batteryW: -18, systemW: 18
+        )
+        let image = BatteryIcon.image(
+            for: snapshot, mode: .low, pressed: false, style: .native
+        )
+        XCTAssertFalse(image.isTemplate)
+
+        let data = try XCTUnwrap(image.tiffRepresentation)
+        let bitmap = try XCTUnwrap(NSBitmapImageRep(data: data))
+        var yellowPixels = 0
+        var neutralPixels = 0
+        for y in 0..<bitmap.pixelsHigh {
+            for x in 0..<bitmap.pixelsWide {
+                guard let color = bitmap.colorAt(x: x, y: y)?.usingColorSpace(.deviceRGB),
+                      color.alphaComponent > 0.2 else { continue }
+                let red = color.redComponent
+                let green = color.greenComponent
+                let blue = color.blueComponent
+                if red > 0.7 && green > 0.5 && blue < 0.35 {
+                    yellowPixels += 1
+                } else if max(red, green, blue) - min(red, green, blue) < 0.12 {
+                    neutralPixels += 1
+                }
+            }
+        }
+        XCTAssertGreaterThan(yellowPixels, 0, "the battery fill must be yellow")
+        XCTAssertGreaterThan(neutralPixels, 0, "the outline must remain menu-bar neutral")
     }
 
     func testPluggedIdleBreathingIsIdempotentAndStopsWhenHidden() {

@@ -47,6 +47,9 @@ class InstallMigrationContractTests(unittest.TestCase):
     def test_uses_the_new_identity(self):
         self.assertIn("com.leoarrow.wattson", self.install)
         self.assertIn("Wattson.app", self.install)
+        self.assertIn('CANONICAL_APP_DIR="/Applications/Wattson.app"', self.install)
+        self.assertIn("Refusing to create a second Wattson app", self.install)
+        self.assertIn("Build and install the native PKG", self.install)
         self.assertIn('open \\"$APP_DIR\\"', self.install)
         self.assertNotIn('open -a ${APP_NAME}', self.install)
 
@@ -102,7 +105,7 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.9")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.12")
         self.assertIn('VERSION_FILE="$ROOT_DIR/VERSION"', self.package)
         self.assertIn('Contents/MacOS/Wattson', self.package_pkg)
 

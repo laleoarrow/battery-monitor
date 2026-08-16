@@ -61,6 +61,7 @@ class SettingsStoreContractTests(unittest.TestCase):
                    "icon styles must remain strongly typed and ordered")
 
             var changes: [Settings.Change] = []
+            var observedAppearances: [(Settings.MenuBarIconStyle, Bool)] = []
             var keptNilObject = true
             let observer = NotificationCenter.default.addObserver(
                 forName: Settings.didChange,
@@ -74,6 +75,10 @@ class SettingsStoreContractTests(unittest.TestCase):
                     exit(1)
                 }
                 changes.append(change)
+                observedAppearances.append((
+                    Settings.menuBarIconStyle,
+                    Settings.showsMenuBarPercentage
+                ))
             }
             defer { NotificationCenter.default.removeObserver(observer) }
 
@@ -100,14 +105,51 @@ class SettingsStoreContractTests(unittest.TestCase):
             expect(changes == [.menuBarPercentage, .menuBarIconStyle],
                    "repeating an icon style must not notify")
 
+            changes.removeAll()
+            observedAppearances.removeAll()
+            Settings.setMenuBarAppearance(iconStyle: .wattson, showsPercentage: true)
+            expect(
+                changes == [.menuBarIconStyle, .menuBarPercentage],
+                "changing both appearance dimensions emits both existing notifications"
+            )
+            expect(
+                observedAppearances.count == 2
+                    && observedAppearances.allSatisfy { style, percentage in
+                        style == .wattson && percentage
+                    },
+                "every atomic appearance notification observes the complete landed preset"
+            )
+            expect(
+                defaults.string(forKey: "menubar.iconStyle") == "wattson"
+                    && defaults.object(forKey: "menubar.showsPercentage") as? Bool == true,
+                "atomic appearance persists both existing keys"
+            )
+            Settings.setMenuBarAppearance(iconStyle: .wattson, showsPercentage: true)
+            expect(
+                changes == [.menuBarIconStyle, .menuBarPercentage],
+                "repeating a complete appearance emits no notification"
+            )
+            Settings.setMenuBarAppearance(iconStyle: .wattson, showsPercentage: false)
+            expect(
+                changes == [.menuBarIconStyle, .menuBarPercentage, .menuBarPercentage],
+                "changing only percentage emits only its existing notification"
+            )
+            expect(
+                observedAppearances.last?.0 == .wattson
+                    && observedAppearances.last?.1 == false,
+                "single-dimension atomic notification observes the landed preset"
+            )
+
+            changes.removeAll()
+
             Settings.setModule(.flow, visible: true)
-            expect(changes == [.menuBarPercentage, .menuBarIconStyle],
+            expect(changes.isEmpty,
                    "an unchanged module must not notify")
             Settings.setModule(.flow, visible: false)
-            expect(changes == [.menuBarPercentage, .menuBarIconStyle, .module(.flow)],
+            expect(changes == [.module(.flow)],
                    "module change must identify the changed module")
             Settings.setModule(.flow, visible: false)
-            expect(changes == [.menuBarPercentage, .menuBarIconStyle, .module(.flow)],
+            expect(changes == [.module(.flow)],
                    "repeating a module value must not notify")
             expect(!Settings.isModuleVisible(.flow), "module write must persist")
             defaults.set("future-style", forKey: "menubar.iconStyle")

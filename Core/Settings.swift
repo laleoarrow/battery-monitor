@@ -87,6 +87,24 @@ enum Settings {
         }
     }
 
+    /// Lands both dimensions of a complete menu-bar appearance before either
+    /// existing notification is posted. Settings surfaces can therefore move
+    /// between the four presets without observers briefly selecting an
+    /// intermediate icon/percentage combination.
+    static func setMenuBarAppearance(
+        iconStyle: MenuBarIconStyle,
+        showsPercentage: Bool
+    ) {
+        let iconStyleChanged = menuBarIconStyle != iconStyle
+        let percentageChanged = showsMenuBarPercentage != showsPercentage
+        guard iconStyleChanged || percentageChanged else { return }
+
+        defaults.set(iconStyle.rawValue, forKey: iconStyleKey)
+        defaults.set(showsPercentage, forKey: percentageKey)
+        if iconStyleChanged { postChange(.menuBarIconStyle) }
+        if percentageChanged { postChange(.menuBarPercentage) }
+    }
+
     static func isModuleVisible(_ module: Module) -> Bool {
         defaults.object(forKey: module.defaultsKey) as? Bool ?? true
     }
