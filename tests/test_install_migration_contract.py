@@ -105,7 +105,7 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.12")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.13")
         self.assertIn('VERSION_FILE="$ROOT_DIR/VERSION"', self.package)
         self.assertIn('Contents/MacOS/Wattson', self.package_pkg)
 
@@ -114,6 +114,12 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn('MIN_MACOS_VERSION="12.0"', self.build_release)
         self.assertIn('--arch arm64', self.build_release)
         self.assertIn('--arch x86_64', self.build_release)
+
+    def test_settings_identity_uses_a_png_derived_from_the_real_app_icon(self):
+        for build_script in (self.build_release, self.install):
+            self.assertIn("AppIcon.icns", build_script)
+            self.assertIn("AppIconSettings.png", build_script)
+            self.assertIn("sips -s format png", build_script)
 
     def test_release_dmg_wraps_the_exact_native_pkg(self):
         self.assertIn('/bin/cp "$PKG_PATH" "$STAGING_DIR/$PKG_NAME"', self.package)

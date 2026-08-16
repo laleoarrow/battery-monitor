@@ -398,30 +398,6 @@ private final class DynamicSeparatorView: NSView, SettingsContrastRefreshing {
     }
 }
 
-private final class ECGIconView: NSView {
-    override func draw(_ dirtyRect: NSRect) {
-        let rect = bounds.insetBy(dx: 2, dy: 3)
-        let points = [
-            NSPoint(x: rect.minX, y: rect.midY),
-            NSPoint(x: rect.minX + rect.width * 0.27, y: rect.midY),
-            NSPoint(x: rect.minX + rect.width * 0.36, y: rect.midY + 5),
-            NSPoint(x: rect.minX + rect.width * 0.46, y: rect.midY - 8),
-            NSPoint(x: rect.minX + rect.width * 0.58, y: rect.maxY),
-            NSPoint(x: rect.minX + rect.width * 0.70, y: rect.minY),
-            NSPoint(x: rect.minX + rect.width * 0.82, y: rect.midY),
-            NSPoint(x: rect.maxX, y: rect.midY),
-        ]
-        let path = NSBezierPath()
-        path.move(to: points[0])
-        points.dropFirst().forEach(path.line)
-        SettingsStyle.green.setStroke()
-        path.lineWidth = 3.4
-        path.lineCapStyle = .round
-        path.lineJoinStyle = .round
-        path.stroke()
-    }
-}
-
 private final class StaticModulePreviewView: NSView {
     private let module: Settings.Module
 
@@ -1525,8 +1501,8 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
 
                 presentation.centerXAnchor.constraint(equalTo: stateBox.centerXAnchor),
                 presentation.bottomAnchor.constraint(equalTo: stateBox.bottomAnchor, constant: -3),
-                imageView.widthAnchor.constraint(equalToConstant: BatteryIcon.width),
-                imageView.heightAnchor.constraint(equalToConstant: BatteryIcon.height),
+                imageView.widthAnchor.constraint(equalToConstant: preview.image.size.width),
+                imageView.heightAnchor.constraint(equalToConstant: preview.image.size.height),
                 stateLabel.bottomAnchor.constraint(
                     lessThanOrEqualTo: presentation.topAnchor,
                     constant: -1
@@ -2388,19 +2364,18 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         identity.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.identity")
         identity.translatesAutoresizingMaskIntoConstraints = false
 
-        let iconTile = NSBox()
+        let iconTile = NSImageView()
         iconTile.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.identity.tile")
-        iconTile.boxType = .custom
-        iconTile.titlePosition = .noTitle
-        iconTile.cornerRadius = 9
-        iconTile.borderWidth = 1
-        iconTile.borderColor = SettingsStyle.border
-        iconTile.fillColor = SettingsStyle.tileBackground
+        let appIconPath = Bundle.main.path(
+            forResource: "AppIconSettings",
+            ofType: "png"
+        )
+        iconTile.image = appIconPath.flatMap(NSImage.init(contentsOfFile:))
+            ?? NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath)
+        iconTile.imageScaling = .scaleProportionallyDown
+        iconTile.imageAlignment = .alignCenter
+        iconTile.setAccessibilityElement(false)
         iconTile.translatesAutoresizingMaskIntoConstraints = false
-
-        let icon = ECGIconView()
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        iconTile.addSubview(icon)
 
         let name = NSTextField(labelWithString: "Wattson")
         name.font = .systemFont(ofSize: 16, weight: .semibold)
@@ -2414,10 +2389,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             iconTile.centerYAnchor.constraint(equalTo: identity.centerYAnchor),
             iconTile.widthAnchor.constraint(equalToConstant: SettingsStyle.identityTileSize),
             iconTile.heightAnchor.constraint(equalToConstant: SettingsStyle.identityTileSize),
-            icon.centerXAnchor.constraint(equalTo: iconTile.centerXAnchor),
-            icon.centerYAnchor.constraint(equalTo: iconTile.centerYAnchor),
-            icon.widthAnchor.constraint(equalToConstant: 30),
-            icon.heightAnchor.constraint(equalToConstant: 30),
             name.leadingAnchor.constraint(equalTo: iconTile.trailingAnchor, constant: 10),
             name.centerYAnchor.constraint(equalTo: iconTile.centerYAnchor),
         ])

@@ -39,14 +39,14 @@ class BatteryIconContractTests(unittest.TestCase):
             '"/System/Library/CoreServices/ControlCenter.app"', self.source
         )
         for asset in (
-            "battery-small-outline",
-            "battery-small-cap",
-            "battery-small-bolt",
-            "battery-small-bolt-mask",
-            "battery-plug",
-            "battery-plug-mask",
+            "battery-outline",
+            "battery-cap",
+            "battery-bolt",
+            "battery-bolt-mask",
         ):
             self.assertIn(f'"{asset}"', self.source)
+        self.assertNotIn('"battery-small-', self.source)
+        self.assertNotIn('"battery-plug', self.source)
         self.assertNotIn("systemSymbolName:", self.source)
         native = self.source.split("private static func nativeImage", 1)[1]
         self.assertIn("nativeFillColor", native)
@@ -64,22 +64,20 @@ class BatteryIconContractTests(unittest.TestCase):
         self.assertIn("private static func nativeFallbackImage", self.source)
         self.assertIn("NSImage(size:", self.source)
 
-    def test_native_uses_bolt_for_charging_and_plug_for_idle_ac(self):
+    def test_native_uses_the_system_bolt_for_every_connected_power_state(self):
         native = self.source.split("private static func nativeImage", 1)[1].split(
             "private static func nativeFallbackImage", 1
         )[0]
-        self.assertIn("snapshot.state == .charging", native)
-        self.assertIn("snapshot.plugged", native)
-        self.assertIn(".bolt", native)
-        self.assertIn(".plug", native)
+        self.assertIn("snapshot.plugged ? .bolt : .none", native)
+        self.assertNotIn("case .plug", native)
 
-    def test_native_cache_key_tracks_exact_fill_bolt_and_plug_pixels(self):
+    def test_native_cache_key_tracks_exact_fill_and_bolt_pixels(self):
         native_key = self.source.split("if style == .native", 1)[1].split(
             "let tintRole", 1
         )[0]
         self.assertIn("percent: percent", native_key)
-        self.assertIn("showsBolt", native_key)
-        self.assertIn("showsPlug", native_key)
+        self.assertIn("showsBolt: snapshot.plugged", native_key)
+        self.assertNotIn("showsPlug", self.source)
         fallback = self.source.split("private static func nativeFallbackImage", 1)[1].split(
             "/// Priority", 1
         )[0]
@@ -92,14 +90,19 @@ class BatteryIconContractTests(unittest.TestCase):
         self.assertLess(low_power, low_battery)
         self.assertLess(low_battery, charging)
 
-    def test_icon_is_one_point_larger_than_the_system_asset_canvas(self):
-        width = re.search(r"static let width: CGFloat = ([\d.]+)", self.source)
-        height = re.search(r"static let height: CGFloat = ([\d.]+)", self.source)
+    def test_native_canvas_fits_the_current_system_outline_cap_and_bolt(self):
+        width = re.search(r"static let nativeWidth: CGFloat = ([\d.]+)", self.source)
+        height = re.search(r"static let nativeHeight: CGFloat = ([\d.]+)", self.source)
         self.assertIsNotNone(width)
         self.assertIsNotNone(height)
-        self.assertEqual(float(width.group(1)), 23.0)
+        self.assertEqual(float(width.group(1)), 25.0)
         self.assertEqual(float(height.group(1)), 14.0)
-        self.assertIn("scaleBy(x: width / 22, y: height / 13)", self.source)
+        native = self.source.split("private static func nativeImage", 1)[1].split(
+            "private static func nativeFillColor", 1
+        )[0]
+        self.assertIn("width: 23, height: 12", native)
+        self.assertIn("width: 2, height: 12", native)
+        self.assertIn("width: 11, height: 14", native)
 
 
     def test_bolt_overflows_the_shell(self):

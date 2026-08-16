@@ -85,6 +85,8 @@ verify_universal_binary "$BUILT_HELPER_EXECUTABLE"
 /usr/bin/ditto --noextattr --noqtn "$BUILT_HELPER_EXECUTABLE" "$HELPER_EXECUTABLE"
 /bin/cp "$ROOT_DIR/Packaging/AppInfo.plist" "$APP_DIR/Contents/Info.plist"
 /bin/cp "$ROOT_DIR/design/icon/AppIcon.icns" "$APP_DIR/Contents/Resources/AppIcon.icns"
+/usr/bin/sips -s format png "$ROOT_DIR/design/icon/AppIcon.icns" \
+    --out "$APP_DIR/Contents/Resources/AppIconSettings.png" >/dev/null
 /usr/bin/plutil -replace CFBundleShortVersionString -string "$APP_VERSION" \
     "$APP_DIR/Contents/Info.plist"
 /usr/bin/plutil -replace CFBundleVersion -string "$BUILD_NUMBER" \

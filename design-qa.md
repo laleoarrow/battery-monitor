@@ -68,7 +68,9 @@ The final result removes the large unused General canvas and reduces overall con
 
 - User-reported incomplete-state capture: `/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/codex-clipboard-7b0490dd-18e1-40aa-a911-7ca2473723fe.png`.
 - Superseded four-card implementation: `/tmp/wattson-settings-menu-bar-icon-four-presets.png`.
-- Final four-row, seven-state implementation: `/tmp/wattson-settings-native-system-assets-vm.png` (1440 × 1040 pixels from the shipping AppKit hierarchy).
+- Superseded small-resource implementation: `/tmp/wattson-settings-native-system-assets-vm.png`.
+- Corrected full-size implementation: `/tmp/wattson-settings-macos26-full-size-assets-vm.png` (1440 × 1040 pixels from the shipping AppKit hierarchy).
+- Final packaged-app identity implementation: `/tmp/wattson-settings-png-app-icon.png` (1440 × 1040 pixels from the shipping AppKit hierarchy, with the packaged app icon resource loaded at 40 points).
 - Capture environment: the generic `macOS-TestLab` ARM VM on macOS 26.6.1, rendered at Retina 2× density from the fixed 720 × 520-point window.
 - Capture method: the retained Settings window stayed hidden and non-key; `cacheDisplay` rendered the real hierarchy without touching the maintainer desktop.
 - State: dark appearance with the default complete preset, Wattson with percentage, selected.
@@ -88,13 +90,13 @@ matching values `75%`, `100%`, `72%`, `10%`, `20%`, `42%`, and `42%` to the
 left of their corresponding glyphs using the menu-bar font with tabular
 digits. The Wattson rows visibly cover normal, red low-battery, green charging,
 yellow Low Power, and plugged-bolt combinations. The macOS 26 rows use the
-exact percentage fill plus the distinct system plug and charging-bolt
-adornments. Low Power colours only the interior fill yellow while the outline,
-cap, plug, and bolt remain in the menu-bar foreground colour; the native glyph
-does not inherit Wattson's whole-glyph tint semantics.
+exact percentage fill and the system bolt for every connected state. Low Power
+colours only the interior fill yellow while the outline, cap, and bolt remain
+in the menu-bar foreground colour; the native glyph does not inherit Wattson's
+whole-glyph tint semantics.
 
-The macOS choices compose the running system's Control Center outline, cap,
-plug, bolt, and knockout-mask resources at their native proportions; no Apple
+The macOS choices compose the running system's full-size Control Center outline,
+cap, bolt, and knockout-mask resources at their native proportions; no Apple
 artwork is copied into the app. A resolution-independent vector fallback keeps
 older supported systems usable if a system asset is unavailable. The concise
 visible copy fits at the compact width, while each AX radio exposes the complete
@@ -106,7 +108,7 @@ preset name and a truthful description. General is reduced to exactly two
 - Fonts and typography: the 22-point heading and 11-point subtitle keep the established hierarchy. Row titles use 13-point semibold system type, details use 11-point system type, state labels use compact 9-point medium type, and percentage previews use an 11-point menu-bar font with tabular digits and verified safe chip insets.
 - Spacing and layout rhythm: the 176-point sidebar and 503-point content width remain unchanged. Each option row is 503 × 80 points; four rows use eight-point gaps. Each row contains seven approximately 64 × 38-point state chips separated by five-point gaps.
 - Colors and visual tokens: content, sidebar, state tiles, unselected borders, semantic green selection fill, and high-contrast variants reuse the existing Settings tokens. High Contrast strengthens borders without changing geometry.
-- Image quality and asset fidelity: all 28 glyphs are production `NSImage` outputs at the real 23 × 14-point menu-bar size. No emoji, text-symbol substitute, handcrafted SVG, screenshot, or enlarged approximation is used.
+- Image quality and asset fidelity: all 28 glyphs are production `NSImage` outputs. Wattson retains its 23 × 14-point canvas; the macOS 26 choices retain the system composition's 25 × 14-point canvas with a 23 × 12 outline and 11 × 14 bolt. No emoji, text-symbol substitute, handcrafted SVG, screenshot, or enlarged approximation is used.
 - Copy and content: all four appearances and all seven states are explicitly visible in every row. The percentage rows use every fixture's actual value rather than one repeated example.
 - Interaction and accessibility: the whole 503 × 80-point row remains one radio button and one hit target. State chips are non-interactive and do not add 28 Tab or VoiceOver stops. Up/Down and Left/Right navigate rows; Home, End, Space, AX press, focus redraw, notification syncing, and atomic two-key persistence remain covered.
 
@@ -120,6 +122,8 @@ preset name and a truthful description. General is reduced to exactly two
 6. The host Swift suite, hidden AppKit contract, and the real visible AppKit interaction/lifecycle contract passed. The latter ran inside the ARM VM so the maintainer desktop was never activated or disturbed.
 7. [P1] The first macOS rows used generic `battery.*percent` SF Symbols. Those are not the Battery menu extra's artwork and also omitted the idle-AC plug. Fix: compose the current OS's small Control Center battery assets, preserve exact percentage fill, use the plug for connected-idle states, and reserve the bolt for actual charging. The corrected hierarchy and 500-cycle lifecycle contract passed again in the ARM VM.
 8. [P1] The first Low Power preview left the entire native icon neutral. Fix: match macOS 26 by colouring only the battery's interior fill yellow while keeping the outline, cap, plug, and bolt in the menu-bar foreground colour.
+9. [P1] Direct comparison with the live macOS 26 battery icon showed that the previous native choice still used the 19 × 10 small Control Center outline, a plug for connected-idle states, and a translucent full fill. Fix: load the full-size 23 × 12 outline and 11 × 14 bolt from the running Control Center bundle, use the bolt for every connected state, make normal fill opaque, and preserve the resulting 25 × 14 canvas in Settings previews.
+10. [P1] Replacing the sidebar ECG drawing with `AppIcon.icns` directly produced a dark, detail-free square at 40 points in the offscreen AppKit capture. Fix: packaging derives `AppIconSettings.png` from the exact same ICNS source, and the sidebar loads that representation without adding a second authored brand asset. The ARM VM capture shows the blue-green Wattson mark clearly at the original 40-point footprint.
 
 ### Follow-up polish
 

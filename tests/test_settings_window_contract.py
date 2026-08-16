@@ -325,6 +325,14 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && approximately(identityTile.frame.height, 40),
                 "compact identity tile is 40 points"
             )
+            require(
+                identityTile is NSImageView,
+                "sidebar identity uses the real packaged application icon"
+            )
+            require(
+                (identityTile as? NSImageView)?.image != nil,
+                "sidebar application icon resolves through AppKit"
+            )
             require(approximately(identity.frame.maxY, trafficSafeArea.frame.minY), "identity begins below traffic safe area")
             require(approximately(navigation.frame.minX, 12), "compact navigation leading inset")
             require(approximately(sidebar.frame.maxX - navigation.frame.maxX, 12), "compact navigation trailing inset")
@@ -636,14 +644,14 @@ class SettingsWindowContractTests(unittest.TestCase):
                 (42, false, .lowPower),
                 (42, true, .lowPower),
             ]
-            let expectedNativeKeys: [(Int, Bool, Bool, BatteryIcon.TintRole)] = [
-                (75, false, false, .template),
-                (100, false, true, .template),
-                (72, true, false, .template),
-                (10, false, false, .template),
-                (20, false, true, .template),
-                (42, false, false, .lowPower),
-                (42, false, true, .lowPower),
+            let expectedNativeKeys: [(Int, Bool, BatteryIcon.TintRole)] = [
+                (75, false, .template),
+                (100, true, .template),
+                (72, true, .template),
+                (10, false, .template),
+                (20, true, .template),
+                (42, false, .lowPower),
+                (42, true, .lowPower),
             ]
             let testAppearance = NSAppearance(named: .aqua)!
             for (index, previewState) in previewStates.enumerated() {
@@ -676,9 +684,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(
                     nativeKey.percent == expectedNative.0
                         && nativeKey.showsBolt == expectedNative.1
-                        && nativeKey.showsPlug == expectedNative.2
-                        && nativeKey.tintRole == expectedNative.3,
-                    "macOS preview fixture matches its exact fill, bolt and plug: "
+                        && nativeKey.tintRole == expectedNative.2,
+                    "macOS preview fixture matches its exact fill and power bolt: "
                         + previewState.visibleLabel
                 )
             }
@@ -1475,6 +1482,10 @@ class SettingsWindowContractTests(unittest.TestCase):
 
     def test_source_has_no_timer_and_uses_the_narrow_section_boundary(self):
         source = WINDOW.read_text(encoding="utf-8")
+        self.assertIn('forResource: "AppIconSettings"', source)
+        self.assertIn('ofType: "png"', source)
+        self.assertIn("NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath)", source)
+        self.assertNotIn("ECGIconView", source)
         self.assertIn("protocol SettingsSectionController: AnyObject", source)
         self.assertIn("var identifier: String { get }", source)
         self.assertIn("var title: String { get }", source)
@@ -1532,6 +1543,18 @@ class SettingsWindowContractTests(unittest.TestCase):
         for percent in (75, 100, 72, 10, 20, 42):
             self.assertIn(f"percent: {percent}", source)
         self.assertIn("BatteryIcon.image(", icon_source)
+        self.assertIn(
+            "imageView.widthAnchor.constraint(equalToConstant: preview.image.size.width)",
+            source,
+        )
+        self.assertIn(
+            "imageView.heightAnchor.constraint(equalToConstant: preview.image.size.height)",
+            source,
+        )
+        self.assertNotIn(
+            "imageView.widthAnchor.constraint(equalToConstant: BatteryIcon.width)",
+            source,
+        )
         self.assertIn("mode: previewState.mode", icon_source)
         self.assertIn("pressed: false", icon_source)
         self.assertIn("style: appearance.iconStyle", icon_source)

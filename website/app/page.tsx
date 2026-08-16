@@ -14,7 +14,7 @@ const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
 const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
 const RELEASE_API =
   "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
-const FALLBACK_VERSION = "v3.0.12";
+const FALLBACK_VERSION = "v3.0.13";
 const FALLBACK_ASSET_BASE = `${GITHUB_REPO}/releases/download/${FALLBACK_VERSION}`;
 const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
 
@@ -262,13 +262,16 @@ export default function Home() {
                 Low, Low +
                 AC, Saver, and Saver + AC. Every preview uses the real
                 BatteryIcon renderer; percentage rows show matching per-state
-                values to the left of each glyph. The macOS 26 rows use Control
-                Center battery parts from the running system, with exact
-                percentage fill, an idle-AC plug, and a charging bolt instead
-                of generic SF Symbols. In Low Power Mode, only the battery fill
-                is yellow; the outline, cap, plug, and bolt keep the menu-bar
+                values to the left of each glyph. The macOS 26 rows use full-size
+                macOS 26 Control Center battery parts from the running system,
+                including the 23×12 outline and 11×14 bolt, instead of smaller
+                Control Center artwork or generic SF Symbols. Every connected
+                state uses the system bolt. In Low Power Mode, only the battery
+                fill is yellow; the outline, cap, and bolt keep the menu-bar
                 foreground colour. General contains only Launch at Login and
-                Hide System Battery Icon.
+                Hide System Battery Icon. The Settings sidebar uses the real
+                packaged Wattson app icon instead of a separate ECG-style
+                drawing.
               </p>
             </article>
 

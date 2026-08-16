@@ -3,6 +3,8 @@ import AppKit
 enum BatteryIcon {
     static let width: CGFloat = 23
     static let height: CGFloat = 14
+    static let nativeWidth: CGFloat = 25
+    static let nativeHeight: CGFloat = 14
 
     enum TintRole: Equatable {
         case template
@@ -17,7 +19,6 @@ enum BatteryIcon {
     struct RenderKey: Equatable {
         let percent: Int
         let showsBolt: Bool
-        let showsPlug: Bool
         let style: Settings.MenuBarIconStyle
         let tintRole: TintRole
         let appearanceName: String
@@ -34,13 +35,10 @@ enum BatteryIcon {
     ) -> RenderKey {
         let percent = min(max(snapshot.percent, 0), 100)
         if style == .native {
-            let showsBolt = snapshot.state == .charging
-            let showsPlug = snapshot.plugged && !showsBolt
             let nativeTintRole: TintRole = !pressed && mode == .low ? .lowPower : .template
             return RenderKey(
                 percent: percent,
-                showsBolt: showsBolt,
-                showsPlug: showsPlug,
+                showsBolt: snapshot.plugged,
                 style: style,
                 tintRole: nativeTintRole,
                 appearanceName: nativeTintRole == .template ? "" : appearance.name.rawValue,
@@ -63,7 +61,6 @@ enum BatteryIcon {
         return RenderKey(
             percent: percent,
             showsBolt: snapshot.plugged,
-            showsPlug: false,
             style: style,
             tintRole: tintRole,
             appearanceName: appearance.name.rawValue,
@@ -106,7 +103,6 @@ enum BatteryIcon {
 
     private enum NativeAdornment {
         case none
-        case plug
         case bolt
     }
 
@@ -114,34 +110,26 @@ enum BatteryIcon {
         outline: NSImage,
         cap: NSImage,
         bolt: NSImage,
-        boltMask: NSImage,
-        plug: NSImage,
-        plugMask: NSImage
+        boltMask: NSImage
     )? = {
         guard
             let bundle = Bundle(
                 path: "/System/Library/CoreServices/ControlCenter.app"
             ),
             let outline = bundle.image(
-                forResource: NSImage.Name("battery-small-outline")
+                forResource: NSImage.Name("battery-outline")
             ),
             let cap = bundle.image(
-                forResource: NSImage.Name("battery-small-cap")
+                forResource: NSImage.Name("battery-cap")
             ),
             let bolt = bundle.image(
-                forResource: NSImage.Name("battery-small-bolt")
+                forResource: NSImage.Name("battery-bolt")
             ),
             let boltMask = bundle.image(
-                forResource: NSImage.Name("battery-small-bolt-mask")
-            ),
-            let plug = bundle.image(
-                forResource: NSImage.Name("battery-plug")
-            ),
-            let plugMask = bundle.image(
-                forResource: NSImage.Name("battery-plug-mask")
+                forResource: NSImage.Name("battery-bolt-mask")
             )
         else { return nil }
-        return (outline, cap, bolt, boltMask, plug, plugMask)
+        return (outline, cap, bolt, boltMask)
     }()
 
     /// Control Center's menu extra is not an SF Symbol. It composes separate
@@ -155,41 +143,33 @@ enum BatteryIcon {
     ) -> NSImage {
         let percent = min(max(snapshot.percent, 0), 100)
         let fillColor = nativeFillColor(mode: mode, pressed: pressed)
-        let adornment: NativeAdornment
-        if snapshot.state == .charging {
-            adornment = .bolt
-        } else if snapshot.plugged {
-            adornment = .plug
-        } else {
-            adornment = .none
-        }
+        let adornment: NativeAdornment = snapshot.plugged ? .bolt : .none
         guard let assets = nativeSystemAssets else {
             return nativeFallbackImage(for: snapshot, mode: mode, pressed: pressed)
         }
 
         let image = NSImage(
-            size: NSSize(width: width, height: height), flipped: false
+            size: NSSize(width: nativeWidth, height: nativeHeight), flipped: false
         ) { _ in
             guard let context = NSGraphicsContext.current else { return false }
             context.saveGraphicsState()
-            context.cgContext.scaleBy(x: width / 22, y: height / 14)
 
             let foregroundColor = fillColor == nil ? NSColor.black : NSColor.labelColor
-            (fillColor ?? NSColor.black.withAlphaComponent(0.5)).setFill()
-            let fillWidth = 15 * CGFloat(percent) / 100
+            (fillColor ?? NSColor.black).setFill()
+            let fillWidth = 19 * CGFloat(percent) / 100
             NSBezierPath(
-                roundedRect: NSRect(x: 2, y: 3.5, width: fillWidth, height: 7),
-                xRadius: min(1.8, fillWidth / 2),
-                yRadius: 1.8
+                roundedRect: NSRect(x: 2, y: 3, width: fillWidth, height: 8),
+                xRadius: min(2, fillWidth / 2),
+                yRadius: 2
             ).fill()
             drawNativeAsset(
                 assets.outline,
-                in: NSRect(x: 0.5, y: 2, width: 19, height: 10),
+                in: NSRect(x: 0, y: 1, width: 23, height: 12),
                 color: foregroundColor
             )
             drawNativeAsset(
                 assets.cap,
-                in: NSRect(x: 19.5, y: 2, width: 2, height: 10),
+                in: NSRect(x: 23, y: 1, width: 2, height: 12),
                 color: foregroundColor
             )
 
@@ -197,17 +177,11 @@ enum BatteryIcon {
             case .none:
                 break
             case .bolt:
-                let frame = NSRect(x: 5.5, y: 1, width: 9, height: 12)
+                let frame = NSRect(x: 6, y: 0, width: 11, height: 14)
                 assets.boltMask.draw(
                     in: frame, from: .zero, operation: .destinationOut, fraction: 1
                 )
                 drawNativeAsset(assets.bolt, in: frame, color: foregroundColor)
-            case .plug:
-                let frame = NSRect(x: 4.5, y: 0, width: 11, height: 14)
-                assets.plugMask.draw(
-                    in: frame, from: .zero, operation: .destinationOut, fraction: 1
-                )
-                drawNativeAsset(assets.plug, in: frame, color: foregroundColor)
             }
             context.restoreGraphicsState()
             return true
@@ -246,16 +220,10 @@ enum BatteryIcon {
         pressed: Bool
     ) -> NSImage {
         let fillColor = nativeFillColor(mode: mode, pressed: pressed)
-        let adornment: NativeAdornment
-        if snapshot.state == .charging {
-            adornment = .bolt
-        } else if snapshot.plugged {
-            adornment = .plug
-        } else {
-            adornment = .none
-        }
-        let image = NSImage(size: NSSize(width: width, height: height), flipped: false) { _ in
-            NSGraphicsContext.current?.cgContext.scaleBy(x: width / 22, y: height / 14)
+        let adornment: NativeAdornment = snapshot.plugged ? .bolt : .none
+        let image = NSImage(
+            size: NSSize(width: nativeWidth, height: nativeHeight), flipped: false
+        ) { _ in
             let foregroundColor = fillColor == nil ? NSColor.black : NSColor.labelColor
             drawNativeFallback(
                 percent: snapshot.percent,
@@ -275,30 +243,30 @@ enum BatteryIcon {
         foregroundColor: NSColor,
         fillColor: NSColor?
     ) {
-        let shell = NSRect(x: 0.5, y: 2, width: 19, height: 10)
+        let shell = NSRect(x: 0.5, y: 1.5, width: 22, height: 11)
         let body = NSBezierPath(roundedRect: shell, xRadius: 3.5, yRadius: 3.5)
         body.lineWidth = 1
         foregroundColor.setStroke()
         body.stroke()
 
         let cap = NSBezierPath()
-        cap.move(to: NSPoint(x: 20, y: 5))
+        cap.move(to: NSPoint(x: 23, y: 5))
         cap.curve(
-            to: NSPoint(x: 20, y: 9),
-            controlPoint1: NSPoint(x: 21.5, y: 5.5),
-            controlPoint2: NSPoint(x: 21.5, y: 8.5)
+            to: NSPoint(x: 23, y: 9),
+            controlPoint1: NSPoint(x: 25, y: 5.5),
+            controlPoint2: NSPoint(x: 25, y: 8.5)
         )
         cap.close()
         foregroundColor.setFill()
         cap.fill()
 
         let clamped = CGFloat(min(max(percent, 0), 100)) / 100
-        let fillWidth = 15 * clamped
-        (fillColor ?? foregroundColor.withAlphaComponent(0.5)).setFill()
+        let fillWidth = 19 * clamped
+        (fillColor ?? foregroundColor).setFill()
         NSBezierPath(
-            roundedRect: NSRect(x: 2, y: 3.5, width: fillWidth, height: 7),
-            xRadius: min(1.8, fillWidth / 2),
-            yRadius: 1.8
+            roundedRect: NSRect(x: 2, y: 3, width: fillWidth, height: 8),
+            xRadius: min(2, fillWidth / 2),
+            yRadius: 2
         ).fill()
 
         let mark: NSBezierPath
@@ -307,39 +275,12 @@ enum BatteryIcon {
             return
         case .bolt:
             mark = NSBezierPath()
-            mark.move(to: NSPoint(x: 11.5, y: 13))
+            mark.move(to: NSPoint(x: 12.5, y: 13.5))
             mark.line(to: NSPoint(x: 6.5, y: 7))
-            mark.line(to: NSPoint(x: 9.2, y: 7))
-            mark.line(to: NSPoint(x: 8.5, y: 1))
-            mark.line(to: NSPoint(x: 14, y: 7.5))
-            mark.line(to: NSPoint(x: 11.2, y: 7.5))
-            mark.close()
-        case .plug:
-            mark = NSBezierPath()
-            mark.move(to: NSPoint(x: 7, y: 13.5))
-            mark.line(to: NSPoint(x: 7, y: 9.5))
-            mark.line(to: NSPoint(x: 5.5, y: 9.5))
-            mark.line(to: NSPoint(x: 5.5, y: 7))
-            mark.curve(
-                to: NSPoint(x: 9, y: 4),
-                controlPoint1: NSPoint(x: 5.5, y: 5.2),
-                controlPoint2: NSPoint(x: 7, y: 4)
-            )
+            mark.line(to: NSPoint(x: 10, y: 7))
             mark.line(to: NSPoint(x: 9, y: 0.5))
-            mark.line(to: NSPoint(x: 11, y: 0.5))
-            mark.line(to: NSPoint(x: 11, y: 4))
-            mark.curve(
-                to: NSPoint(x: 14.5, y: 7),
-                controlPoint1: NSPoint(x: 13, y: 4),
-                controlPoint2: NSPoint(x: 14.5, y: 5.2)
-            )
-            mark.line(to: NSPoint(x: 14.5, y: 9.5))
-            mark.line(to: NSPoint(x: 13, y: 9.5))
-            mark.line(to: NSPoint(x: 13, y: 13.5))
-            mark.line(to: NSPoint(x: 11, y: 13.5))
-            mark.line(to: NSPoint(x: 11, y: 9.5))
-            mark.line(to: NSPoint(x: 9, y: 9.5))
-            mark.line(to: NSPoint(x: 9, y: 13.5))
+            mark.line(to: NSPoint(x: 15.5, y: 7.5))
+            mark.line(to: NSPoint(x: 12, y: 7.5))
             mark.close()
         }
 

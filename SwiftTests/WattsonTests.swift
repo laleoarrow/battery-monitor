@@ -1333,8 +1333,7 @@ final class WattsonTests: XCTestCase {
             appearance: dark, increasedContrast: false
         )
         XCTAssertNotEqual(first, pluggedKey)
-        XCTAssertTrue(pluggedKey.showsPlug)
-        XCTAssertFalse(pluggedKey.showsBolt)
+        XCTAssertTrue(pluggedKey.showsBolt)
         var charging = pluggedIdle
         charging.batteryW = 5
         charging.systemW = 15
@@ -1343,12 +1342,11 @@ final class WattsonTests: XCTestCase {
             style: .native,
             appearance: dark, increasedContrast: false
         )
-        XCTAssertNotEqual(pluggedKey, chargingKey)
+        XCTAssertEqual(pluggedKey, chargingKey)
         XCTAssertTrue(chargingKey.showsBolt)
-        XCTAssertFalse(chargingKey.showsPlug)
     }
 
-    func testNativeBatteryRendersIdleACAndChargingAsDistinctTemplatePixels() throws {
+    func testNativeBatteryRendersEveryConnectedPowerStateWithTheSameSystemBolt() throws {
         let onBattery = PowerSnapshot(
             percent: 42, plugged: false, adapterW: 0, batteryW: -18, systemW: 18
         )
@@ -1364,7 +1362,7 @@ final class WattsonTests: XCTestCase {
         XCTAssertTrue(images.allSatisfy(\.isTemplate))
         let pixels = try images.map { try XCTUnwrap($0.tiffRepresentation) }
         XCTAssertNotEqual(pixels[0], pixels[1])
-        XCTAssertNotEqual(pixels[1], pixels[2])
+        XCTAssertEqual(pixels[1], pixels[2])
         XCTAssertNotEqual(pixels[0], pixels[2])
     }
 
@@ -1376,10 +1374,26 @@ final class WattsonTests: XCTestCase {
             for: snapshot, mode: .auto, pressed: false, style: .native
         )
         XCTAssertTrue(image.isTemplate)
-        XCTAssertGreaterThanOrEqual(image.size.width, 21)
-        XCTAssertLessThanOrEqual(image.size.width, 23)
-        XCTAssertGreaterThanOrEqual(image.size.height, 10)
-        XCTAssertLessThanOrEqual(image.size.height, 14)
+        XCTAssertEqual(image.size.width, 25)
+        XCTAssertEqual(image.size.height, 14)
+    }
+
+    func testNativeFullBatteryUsesTheOpaqueSystemFill() throws {
+        let snapshot = PowerSnapshot(
+            percent: 100, plugged: true, adapterW: 42, batteryW: 0, systemW: 42
+        )
+        let image = BatteryIcon.image(
+            for: snapshot, mode: .auto, pressed: false, style: .native
+        )
+        let data = try XCTUnwrap(image.tiffRepresentation)
+        let bitmap = try XCTUnwrap(NSBitmapImageRep(data: data))
+        let scaleX = CGFloat(bitmap.pixelsWide) / image.size.width
+        let scaleY = CGFloat(bitmap.pixelsHigh) / image.size.height
+        let fill = try XCTUnwrap(bitmap.colorAt(
+            x: Int((3 * scaleX).rounded(.down)),
+            y: Int((7 * scaleY).rounded(.down))
+        ))
+        XCTAssertGreaterThan(fill.alphaComponent, 0.95)
     }
 
     func testNativeLowPowerColorsTheFillButKeepsANeutralOutline() throws {

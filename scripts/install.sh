@@ -163,6 +163,8 @@ echo "  ✅ Info.plist"
 ICON_SRC="$ROOT_DIR/design/icon/AppIcon.icns"
 if [ -f "$ICON_SRC" ]; then
     cp "$ICON_SRC" "$APP_DIR/Contents/Resources/AppIcon.icns"
+    /usr/bin/sips -s format png "$ICON_SRC" \
+        --out "$APP_DIR/Contents/Resources/AppIconSettings.png" >/dev/null
     echo "  ✅ Icon"
 else
     echo "  ⚠️  No AppIcon.icns found, skipping icon"

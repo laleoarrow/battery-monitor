@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.12`
+- Version: `3.0.13`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +14,11 @@
 
 ## Candidate artifacts
 
-`scripts/release.sh 3.0.12` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.13` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.12-macos-universal.pkg`
-- `Wattson-v3.0.12-macos-universal.dmg`
-- `Wattson-v3.0.12-release-info.txt`
+- `Wattson-v3.0.13-macos-universal.pkg`
+- `Wattson-v3.0.13-macos-universal.dmg`
+- `Wattson-v3.0.13-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -58,12 +58,14 @@ Wattson icon only, Wattson with percentage, macOS 26 icon only, and macOS 26
 with percentage. Every row previews seven real production-rendered states:
 Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC. Every preview
 uses the real BatteryIcon renderer; percentage rows show matching per-state
-values to the left of each glyph. The macOS 26 rows use Control Center battery
-parts from the running system, with exact percentage fill, an idle-AC plug, and
-a charging bolt instead of generic SF Symbols. In Low Power Mode, only the
-battery fill is yellow; the outline, cap, plug, and bolt keep the menu-bar
-foreground colour. General contains only Launch at Login and Hide System
-Battery Icon.
+values to the left of each glyph. The macOS 26 rows use full-size macOS 26
+Control Center battery parts from the running system, including the 23×12
+outline and 11×14 bolt, instead of smaller Control Center artwork or generic SF
+Symbols. Every connected state uses the system bolt. In Low Power Mode, only
+the battery fill is yellow; the outline, cap, and bolt keep the menu-bar
+foreground colour. General contains only Launch at Login and Hide System Battery
+Icon. The sidebar identity uses a PNG derived during packaging from the same
+`AppIcon.icns` that Finder displays, rather than a separate ECG-style drawing.
 
 The mode selector keeps the v2.1.5 interaction contract:
 
@@ -86,7 +88,7 @@ Headless checks:
 ```bash
 swift test --parallel
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.12
+bash scripts/release.sh 3.0.13
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -109,7 +111,7 @@ runners.
 
 ## Release order
 
-v3.0.12 is a test-package candidate, not a published release. Do not run
+v3.0.13 is a test-package candidate, not a published release. Do not run
 the public promotion steps for this snapshot.
 
 1. Freeze one final commit, push that exact SHA to `main`, and require Headless
@@ -123,12 +125,35 @@ the public promotion steps for this snapshot.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.12` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.13` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.12.
+6. Announce the release only after every public route resolves to v3.0.13.
+
+## v3.0.13 macOS 26 native icon correction
+
+The v3.0.13 candidate corrects the macOS 26 menu-bar appearance against the
+system icon shown on the right side of the maintainer's direct comparison. The
+dedicated Menu Bar Icon page still lists all four complete appearances
+vertically, one full-width option per row: Wattson icon only, Wattson with
+percentage, macOS 26 icon only, and macOS 26 with percentage. Every row
+previews seven real production-rendered states: Battery, Full, Charging, Low,
+Low + AC, Saver, and Saver + AC. Every preview uses the real BatteryIcon
+renderer; percentage rows show matching per-state values to the left of each
+glyph. The
+macOS 26 rows use full-size macOS 26 Control Center battery parts from the
+running system, including the 23×12 outline and 11×14 bolt, instead of the
+smaller Control Center artwork or generic SF Symbols. Every connected state
+uses the system bolt. Full charge uses the opaque system fill. In Low Power
+Mode, only the battery fill is yellow; the outline, cap, and bolt keep the
+menu-bar foreground colour. Settings previews retain each production image's
+native canvas. The sidebar identity now uses the packaged Wattson app icon
+instead of the superseded ECG-style drawing. The native previews retain their
+25×14 canvas instead of compressing it to Wattson's 23-point width. The
+four-row, seven-state layout and compact 720×520 Settings window remain
+unchanged. General contains only Launch at Login and Hide System Battery Icon.
 
 ## v3.0.12 complete runtime-state previews
 
@@ -144,8 +169,9 @@ fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols. In
 Low Power Mode, only the battery fill is yellow; the outline, cap, plug, and
 bolt keep the menu-bar foreground colour. General contains only Launch at Login
 and Hide System Battery Icon. The Settings
-window remains fixed at 720×520. This candidate supersedes the v3.0.11 test
-package; neither candidate is a published release.
+window remains fixed at 720×520. This release superseded the v3.0.11 test
+package. The v3.0.13 candidate corrects the native-icon fidelity issue found
+after v3.0.12 was published.
 
 ## v3.0.11 complete menu-bar appearance presets
 
@@ -153,7 +179,7 @@ The v3.0.11 candidate first exposed all four complete appearances directly but
 placed the four options together in one horizontal row and showed only one
 renderer state per option. General was reduced to Launch at Login and Hide
 System Battery Icon, and the Settings window remained fixed at 720×520. The
-v3.0.12 candidate supersedes this test package before publication.
+v3.0.12 release superseded this test package.
 
 ## v3.0.10 Settings and website work
 

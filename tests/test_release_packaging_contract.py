@@ -40,7 +40,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.promote_workflow = PROMOTE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.12\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.13\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -66,17 +66,19 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC",
             "real BatteryIcon renderer",
             "percentage rows show matching per-state values to the left of each glyph",
-            "Control Center battery parts from the running system",
-            "exact percentage fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols",
+            "full-size macOS 26 Control Center battery parts from the running system",
+            "23×12 outline and 11×14 bolt",
+            "Every connected state uses the system bolt",
             "only the battery fill is yellow",
-            "outline, cap, plug, and bolt keep the menu-bar foreground colour",
+            "outline, cap, and bolt keep the menu-bar foreground colour",
             "General contains only Launch at Login and Hide System Battery Icon",
+            "packaged Wattson app icon",
             "720×520",
         ):
             self.assertIn(current_release_topic, normalized_promote_workflow)
 
         for user_facing_topic in (
-            "v3.0.12 test-package candidate",
+            "v3.0.13 test-package candidate",
             "has not been published",
             "dedicated Menu Bar Icon page",
             "Wattson icon only",
@@ -89,18 +91,20 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC",
             "real BatteryIcon renderer",
             "percentage rows show matching per-state values to the left of each glyph",
-            "Control Center battery parts from the running system",
-            "exact percentage fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols",
+            "full-size macOS 26 Control Center battery parts from the running system",
+            "23×12 outline and 11×14 bolt",
+            "Every connected state uses the system bolt",
             "only the battery fill is yellow",
-            "outline, cap, plug, and bolt keep the menu-bar foreground colour",
+            "outline, cap, and bolt keep the menu-bar foreground colour",
             "General now contains only Launch at Login and Hide System Battery Icon",
+            "packaged Wattson app icon",
             "720×520",
         ):
             self.assertIn(user_facing_topic, normalized_readme)
 
         current_handoff = self.handoff.split(
-            "## v3.0.12 complete runtime-state previews", 1
-        )[1].split("## v3.0.11 complete menu-bar appearance presets", 1)[0]
+            "## v3.0.13 macOS 26 native icon correction", 1
+        )[1].split("## v3.0.12 complete runtime-state previews", 1)[0]
         normalized_current_handoff = " ".join(current_handoff.split())
         for misleading_install_claim in (
             "Every installer now converges",
@@ -131,20 +135,27 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC",
             "real BatteryIcon renderer",
             "percentage rows show matching per-state values to the left of each glyph",
-            "Control Center battery parts from the running system",
-            "exact percentage fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols",
+            "full-size macOS 26 Control Center battery parts from the running system",
+            "23×12 outline and 11×14 bolt",
+            "Every connected state uses the system bolt",
             "only the battery fill is yellow",
-            "outline, cap, plug, and bolt keep the menu-bar foreground colour",
+            "outline, cap, and bolt keep the menu-bar foreground colour",
             "General contains only Launch at Login and Hide System Battery Icon",
+            "packaged Wattson app icon",
             "720×520",
         ):
             self.assertIn(current_handoff_topic, normalized_current_handoff)
 
+        self.assertIn("## v3.0.13 macOS 26 native icon correction", self.handoff)
         self.assertIn("## v3.0.12 complete runtime-state previews", self.handoff)
         self.assertIn("## v3.0.11 complete menu-bar appearance presets", self.handoff)
         self.assertIn("## v3.0.10 Settings and website work", self.handoff)
         self.assertIn("## v3.0.9 selector and rendering work", self.handoff)
         self.assertIn("## v3.0.8 dynamic Reduce Motion and transaction work", self.handoff)
+        self.assertLess(
+            self.handoff.index("## v3.0.13 macOS 26 native icon correction"),
+            self.handoff.index("## v3.0.12 complete runtime-state previews"),
+        )
         self.assertLess(
             self.handoff.index("## v3.0.12 complete runtime-state previews"),
             self.handoff.index("## v3.0.11 complete menu-bar appearance presets"),

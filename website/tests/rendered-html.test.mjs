@@ -48,18 +48,20 @@ test("renders the complete English Wattson release page", async () => {
     html,
     /Battery, Full, Charging, Low, Low \+ AC, Saver, and Saver \+ AC/i,
   );
-  assert.match(html, /Control Center battery parts from the running system/i);
-  assert.match(html, /exact percentage fill, an idle-AC plug, and a charging bolt/i);
+  assert.match(html, /full-size macOS 26 Control Center battery parts from the running system/i);
+  assert.match(html, /23×12 outline and 11×14 bolt/i);
+  assert.match(html, /Every connected state uses the system bolt/i);
   assert.match(html, /only the battery fill is yellow/i);
-  assert.match(html, /outline, cap, plug, and bolt keep the menu-bar foreground colour/i);
+  assert.match(html, /outline, cap, and bolt keep the menu-bar foreground colour/i);
   assert.match(html, /real BatteryIcon renderer/i);
   assert.match(
     html,
     /percentage rows show matching per-state values to the left of each glyph/i,
   );
   assert.match(html, /General contains only Launch at Login and Hide System Battery Icon/i);
+  assert.match(html, /Settings sidebar uses the real packaged Wattson app icon/i);
   assert.match(html, /720×520/i);
-  assert.match(html, /v3\.0\.12/i);
+  assert.match(html, /v3\.0\.13/i);
   assert.match(html, /release candidate/i);
   assert.match(html, /not Apple-notarized/i);
   assert.match(html, /System Settings[\s\S]*Privacy[\s\S]*Security[\s\S]*Open Anyway/i);
