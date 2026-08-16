@@ -17,6 +17,7 @@ enum BatteryIcon {
     struct RenderKey: Equatable {
         let percent: Int
         let showsBolt: Bool
+        let showsPlug: Bool
         let style: Settings.MenuBarIconStyle
         let tintRole: TintRole
         let appearanceName: String
@@ -33,12 +34,12 @@ enum BatteryIcon {
     ) -> RenderKey {
         let percent = min(max(snapshot.percent, 0), 100)
         if style == .native {
-            // Public SF Symbols are template artwork. Wattson-specific tint,
-            // appearance and pressed-state inputs therefore cannot alter them.
             let showsBolt = snapshot.state == .charging
+            let showsPlug = snapshot.plugged && !showsBolt
             return RenderKey(
-                percent: showsBolt ? 100 : nativeStaticLevel(for: percent),
+                percent: percent,
                 showsBolt: showsBolt,
+                showsPlug: showsPlug,
                 style: style,
                 tintRole: .template,
                 appearanceName: "",
@@ -61,6 +62,7 @@ enum BatteryIcon {
         return RenderKey(
             percent: percent,
             showsBolt: snapshot.plugged,
+            showsPlug: false,
             style: style,
             tintRole: tintRole,
             appearanceName: appearance.name.rawValue,
@@ -101,68 +103,222 @@ enum BatteryIcon {
         return image
     }
 
-    /// Uses Apple's public SF battery artwork at the nearest supported level.
-    /// The running macOS resolves these names, so this style automatically
-    /// follows later system artwork revisions without bundling copied assets.
-    /// Battery symbols do not actually honor SF Symbols' variable-value API,
-    /// so explicit static names avoid a misleading always-full glyph.
+    private enum NativeAdornment {
+        case none
+        case plug
+        case bolt
+    }
+
+    private static let nativeSystemAssets: (
+        outline: NSImage,
+        cap: NSImage,
+        bolt: NSImage,
+        boltMask: NSImage,
+        plug: NSImage,
+        plugMask: NSImage
+    )? = {
+        guard
+            let bundle = Bundle(
+                path: "/System/Library/CoreServices/ControlCenter.app"
+            ),
+            let outline = bundle.image(
+                forResource: NSImage.Name("battery-small-outline")
+            ),
+            let cap = bundle.image(
+                forResource: NSImage.Name("battery-small-cap")
+            ),
+            let bolt = bundle.image(
+                forResource: NSImage.Name("battery-small-bolt")
+            ),
+            let boltMask = bundle.image(
+                forResource: NSImage.Name("battery-small-bolt-mask")
+            ),
+            let plug = bundle.image(
+                forResource: NSImage.Name("battery-plug")
+            ),
+            let plugMask = bundle.image(
+                forResource: NSImage.Name("battery-plug-mask")
+            )
+        else { return nil }
+        return (outline, cap, bolt, boltMask, plug, plugMask)
+    }()
+
+    /// Control Center's menu extra is not an SF Symbol. It composes separate
+    /// system-owned outline, cap and power-state masks around an exact fill.
+    /// Loading those resources from the running OS keeps this presentation in
+    /// step with macOS instead of shipping a copied approximation.
     private static func nativeImage(for snapshot: PowerSnapshot) -> NSImage {
         let percent = min(max(snapshot.percent, 0), 100)
-        let level = nativeStaticLevel(for: percent)
-        let charging = snapshot.state == .charging
-        let canonicalName = nativeSymbolName(percent: percent, charging: charging)
-        let aliasName = charging ? "battery.100.bolt" : "battery.\(level)"
-        let symbol = NSImage(
-            systemSymbolName: canonicalName,
-            accessibilityDescription: nil
-        ) ?? NSImage(
-            systemSymbolName: aliasName,
-            accessibilityDescription: nil
-        )
-
-        let configuration = NSImage.SymbolConfiguration(
-            pointSize: 13,
-            weight: .regular
-        )
-        if let configured = symbol?.withSymbolConfiguration(configuration) {
-            configured.isTemplate = true
-            return configured
+        let adornment: NativeAdornment
+        if snapshot.state == .charging {
+            adornment = .bolt
+        } else if snapshot.plugged {
+            adornment = .plug
+        } else {
+            adornment = .none
         }
-        return nativeFallbackImage(for: snapshot)
-    }
-
-    static func nativeStaticSymbolName(for percent: Int) -> String {
-        let level = nativeStaticLevel(for: percent)
-        return "battery.\(level)percent"
-    }
-
-    static func nativeSymbolName(percent: Int, charging: Bool) -> String {
-        charging ? "battery.100percent.bolt" : nativeStaticSymbolName(for: percent)
-    }
-
-    private static func nativeStaticLevel(for percent: Int) -> Int {
-        switch percent {
-        case ...12: return 0
-        case ...37: return 25
-        case ...62: return 50
-        case ...87: return 75
-        default: return 100
+        guard let assets = nativeSystemAssets else {
+            return nativeFallbackImage(for: snapshot)
         }
-    }
 
-    /// Safe fallback for an unexpectedly missing SF Symbol. This reuses the
-    /// same macOS-derived proportions as Wattson's existing vector path, but
-    /// deliberately drops all semantic colour so AppKit owns menu-bar tinting.
-    private static func nativeFallbackImage(for snapshot: PowerSnapshot) -> NSImage {
-        let charging = snapshot.state == .charging
-        let percent = charging ? 100 : nativeStaticLevel(for: snapshot.percent)
-        let image = NSImage(size: NSSize(width: width, height: height), flipped: false) { _ in
-            NSGraphicsContext.current?.cgContext.scaleBy(x: width / 22, y: height / 13)
-            draw(percent: percent, plugged: charging, color: .black)
+        let image = NSImage(
+            size: NSSize(width: width, height: height), flipped: false
+        ) { _ in
+            guard let context = NSGraphicsContext.current else { return false }
+            context.saveGraphicsState()
+            context.cgContext.scaleBy(x: width / 22, y: height / 14)
+
+            NSColor.black.withAlphaComponent(0.5).setFill()
+            let fillWidth = 15 * CGFloat(percent) / 100
+            NSBezierPath(
+                roundedRect: NSRect(x: 2, y: 3.5, width: fillWidth, height: 7),
+                xRadius: min(1.8, fillWidth / 2),
+                yRadius: 1.8
+            ).fill()
+            assets.outline.draw(
+                in: NSRect(x: 0.5, y: 2, width: 19, height: 10),
+                from: .zero,
+                operation: .sourceOver,
+                fraction: 1
+            )
+            assets.cap.draw(
+                in: NSRect(x: 19.5, y: 2, width: 2, height: 10),
+                from: .zero,
+                operation: .sourceOver,
+                fraction: 1
+            )
+
+            switch adornment {
+            case .none:
+                break
+            case .bolt:
+                let frame = NSRect(x: 5.5, y: 1, width: 9, height: 12)
+                assets.boltMask.draw(
+                    in: frame, from: .zero, operation: .destinationOut, fraction: 1
+                )
+                assets.bolt.draw(
+                    in: frame, from: .zero, operation: .sourceOver, fraction: 1
+                )
+            case .plug:
+                let frame = NSRect(x: 4.5, y: 0, width: 11, height: 14)
+                assets.plugMask.draw(
+                    in: frame, from: .zero, operation: .destinationOut, fraction: 1
+                )
+                assets.plug.draw(
+                    in: frame, from: .zero, operation: .sourceOver, fraction: 1
+                )
+            }
+            context.restoreGraphicsState()
             return true
         }
         image.isTemplate = true
         return image
+    }
+
+    /// Safe vector fallback for an unexpectedly missing Control Center asset.
+    private static func nativeFallbackImage(for snapshot: PowerSnapshot) -> NSImage {
+        let adornment: NativeAdornment
+        if snapshot.state == .charging {
+            adornment = .bolt
+        } else if snapshot.plugged {
+            adornment = .plug
+        } else {
+            adornment = .none
+        }
+        let image = NSImage(size: NSSize(width: width, height: height), flipped: false) { _ in
+            NSGraphicsContext.current?.cgContext.scaleBy(x: width / 22, y: height / 14)
+            drawNativeFallback(
+                percent: snapshot.percent,
+                adornment: adornment,
+                color: .black
+            )
+            return true
+        }
+        image.isTemplate = true
+        return image
+    }
+
+    private static func drawNativeFallback(
+        percent: Int,
+        adornment: NativeAdornment,
+        color: NSColor
+    ) {
+        let shell = NSRect(x: 0.5, y: 2, width: 19, height: 10)
+        let body = NSBezierPath(roundedRect: shell, xRadius: 3.5, yRadius: 3.5)
+        body.lineWidth = 1
+        color.setStroke()
+        body.stroke()
+
+        let cap = NSBezierPath()
+        cap.move(to: NSPoint(x: 20, y: 5))
+        cap.curve(
+            to: NSPoint(x: 20, y: 9),
+            controlPoint1: NSPoint(x: 21.5, y: 5.5),
+            controlPoint2: NSPoint(x: 21.5, y: 8.5)
+        )
+        cap.close()
+        color.setFill()
+        cap.fill()
+
+        let clamped = CGFloat(min(max(percent, 0), 100)) / 100
+        let fillWidth = 15 * clamped
+        color.withAlphaComponent(0.5).setFill()
+        NSBezierPath(
+            roundedRect: NSRect(x: 2, y: 3.5, width: fillWidth, height: 7),
+            xRadius: min(1.8, fillWidth / 2),
+            yRadius: 1.8
+        ).fill()
+
+        let mark: NSBezierPath
+        switch adornment {
+        case .none:
+            return
+        case .bolt:
+            mark = NSBezierPath()
+            mark.move(to: NSPoint(x: 11.5, y: 13))
+            mark.line(to: NSPoint(x: 6.5, y: 7))
+            mark.line(to: NSPoint(x: 9.2, y: 7))
+            mark.line(to: NSPoint(x: 8.5, y: 1))
+            mark.line(to: NSPoint(x: 14, y: 7.5))
+            mark.line(to: NSPoint(x: 11.2, y: 7.5))
+            mark.close()
+        case .plug:
+            mark = NSBezierPath()
+            mark.move(to: NSPoint(x: 7, y: 13.5))
+            mark.line(to: NSPoint(x: 7, y: 9.5))
+            mark.line(to: NSPoint(x: 5.5, y: 9.5))
+            mark.line(to: NSPoint(x: 5.5, y: 7))
+            mark.curve(
+                to: NSPoint(x: 9, y: 4),
+                controlPoint1: NSPoint(x: 5.5, y: 5.2),
+                controlPoint2: NSPoint(x: 7, y: 4)
+            )
+            mark.line(to: NSPoint(x: 9, y: 0.5))
+            mark.line(to: NSPoint(x: 11, y: 0.5))
+            mark.line(to: NSPoint(x: 11, y: 4))
+            mark.curve(
+                to: NSPoint(x: 14.5, y: 7),
+                controlPoint1: NSPoint(x: 13, y: 4),
+                controlPoint2: NSPoint(x: 14.5, y: 5.2)
+            )
+            mark.line(to: NSPoint(x: 14.5, y: 9.5))
+            mark.line(to: NSPoint(x: 13, y: 9.5))
+            mark.line(to: NSPoint(x: 13, y: 13.5))
+            mark.line(to: NSPoint(x: 11, y: 13.5))
+            mark.line(to: NSPoint(x: 11, y: 9.5))
+            mark.line(to: NSPoint(x: 9, y: 9.5))
+            mark.line(to: NSPoint(x: 9, y: 13.5))
+            mark.close()
+        }
+
+        NSGraphicsContext.current?.compositingOperation = .destinationOut
+        NSColor.black.setStroke()
+        mark.lineWidth = 1.8
+        mark.lineJoinStyle = .round
+        mark.stroke()
+        NSGraphicsContext.current?.compositingOperation = .sourceOver
+        color.setFill()
+        mark.fill()
     }
 
     /// Priority: low power mode, then low battery, then charging. First hit wins.

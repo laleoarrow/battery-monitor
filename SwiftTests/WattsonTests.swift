@@ -1293,7 +1293,7 @@ final class WattsonTests: XCTestCase {
         ))
     }
 
-    func testNativeBatteryIconKeyIgnoresWattsonTintInputsButTracksItsShape() {
+    func testNativeBatteryIconKeyTracksExactFillAndSystemPowerAdornment() {
         let baseline = PowerSnapshot(
             percent: 67, plugged: false, adapterW: 0, batteryW: -20, systemW: 20
         )
@@ -1311,67 +1311,54 @@ final class WattsonTests: XCTestCase {
 
         var changedPercent = baseline
         changedPercent.percent = 68
-        XCTAssertEqual(first, BatteryIcon.renderKey(
+        XCTAssertNotEqual(first, BatteryIcon.renderKey(
             for: changedPercent, mode: .auto, pressed: false,
             style: .native,
             appearance: dark, increasedContrast: false
         ))
-        var belowBoundary = baseline
-        belowBoundary.percent = 62
-        var aboveBoundary = baseline
-        aboveBoundary.percent = 63
-        XCTAssertNotEqual(
-            BatteryIcon.renderKey(
-                for: belowBoundary, mode: .auto, pressed: false,
-                style: .native,
-                appearance: dark, increasedContrast: false
-            ),
-            BatteryIcon.renderKey(
-                for: aboveBoundary, mode: .auto, pressed: false,
-                style: .native,
-                appearance: dark, increasedContrast: false
-            )
-        )
         var pluggedIdle = baseline
         pluggedIdle.plugged = true
         pluggedIdle.batteryW = 0
         pluggedIdle.adapterW = 20
-        XCTAssertEqual(first, BatteryIcon.renderKey(
+        let pluggedKey = BatteryIcon.renderKey(
             for: pluggedIdle, mode: .auto, pressed: false,
             style: .native,
             appearance: dark, increasedContrast: false
-        ))
+        )
+        XCTAssertNotEqual(first, pluggedKey)
+        XCTAssertTrue(pluggedKey.showsPlug)
+        XCTAssertFalse(pluggedKey.showsBolt)
         var charging = pluggedIdle
         charging.batteryW = 5
         charging.systemW = 15
-        XCTAssertNotEqual(first, BatteryIcon.renderKey(
+        let chargingKey = BatteryIcon.renderKey(
             for: charging, mode: .auto, pressed: false,
             style: .native,
             appearance: dark, increasedContrast: false
-        ))
+        )
+        XCTAssertNotEqual(pluggedKey, chargingKey)
+        XCTAssertTrue(chargingKey.showsBolt)
+        XCTAssertFalse(chargingKey.showsPlug)
     }
 
-    func testNativeBatteryUsesDistinctStaticPublicLevels() {
-        let expected = [
-            (0, "battery.0percent"),
-            (25, "battery.25percent"),
-            (50, "battery.50percent"),
-            (75, "battery.75percent"),
-            (100, "battery.100percent"),
-        ]
-        XCTAssertEqual(
-            expected.map { BatteryIcon.nativeStaticSymbolName(for: $0.0) },
-            expected.map { $0.1 }
+    func testNativeBatteryRendersIdleACAndChargingAsDistinctTemplatePixels() throws {
+        let onBattery = PowerSnapshot(
+            percent: 42, plugged: false, adapterW: 0, batteryW: -18, systemW: 18
         )
-        XCTAssertEqual(Set(expected.map { $0.1 }).count, expected.count)
-        XCTAssertEqual(
-            BatteryIcon.nativeSymbolName(percent: 25, charging: true),
-            "battery.100percent.bolt"
+        let pluggedIdle = PowerSnapshot(
+            percent: 42, plugged: true, adapterW: 42, batteryW: 0, systemW: 42
         )
-        XCTAssertEqual(
-            BatteryIcon.nativeSymbolName(percent: 25, charging: false),
-            "battery.25percent"
+        let charging = PowerSnapshot(
+            percent: 42, plugged: true, adapterW: 60, batteryW: 18, systemW: 42
         )
+        let images = [onBattery, pluggedIdle, charging].map {
+            BatteryIcon.image(for: $0, mode: .auto, pressed: false, style: .native)
+        }
+        XCTAssertTrue(images.allSatisfy(\.isTemplate))
+        let pixels = try images.map { try XCTUnwrap($0.tiffRepresentation) }
+        XCTAssertNotEqual(pixels[0], pixels[1])
+        XCTAssertNotEqual(pixels[1], pixels[2])
+        XCTAssertNotEqual(pixels[0], pixels[2])
     }
 
     func testNativeBatteryIconIsAResolutionIndependentTemplate() {

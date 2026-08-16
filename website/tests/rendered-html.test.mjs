@@ -48,6 +48,8 @@ test("renders the complete English Wattson release page", async () => {
     html,
     /Battery, Full, Charging, Low, Low \+ AC, Saver, and Saver \+ AC/i,
   );
+  assert.match(html, /Control Center battery parts from the running system/i);
+  assert.match(html, /exact percentage fill, an idle-AC plug, and a charging bolt/i);
   assert.match(html, /real BatteryIcon renderer/i);
   assert.match(
     html,

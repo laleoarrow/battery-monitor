@@ -58,8 +58,10 @@ Wattson icon only, Wattson with percentage, macOS icon only, and macOS with
 percentage. Every row previews seven real production-rendered states: Battery,
 Full, Charging, Low, Low + AC, Saver, and Saver + AC. Every preview uses the
 real BatteryIcon renderer; percentage rows show matching per-state values to
-the left of each glyph. General contains only Launch at Login and Hide System
-Battery Icon.
+the left of each glyph. The macOS rows use Control Center battery parts from
+the running system, with exact percentage fill, an idle-AC plug, and a charging
+bolt instead of generic SF Symbols. General contains only Launch at Login and
+Hide System Battery Icon.
 
 The mode selector keeps the v2.1.5 interaction contract:
 
@@ -134,10 +136,12 @@ full-width option per row: Wattson icon only, Wattson with percentage, macOS
 icon only, and macOS with percentage. Every row previews seven real
 production-rendered states: Battery, Full, Charging, Low, Low + AC, Saver, and
 Saver + AC. Every preview uses the real BatteryIcon renderer; percentage rows
-show matching per-state values to the left of each glyph. General contains only
-Launch at Login and Hide System Battery Icon. The Settings window remains fixed
-at 720×520. This candidate supersedes the v3.0.11 test package; neither
-candidate is a published release.
+show matching per-state values to the left of each glyph. The macOS rows use
+Control Center battery parts from the running system, with exact percentage
+fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols.
+General contains only Launch at Login and Hide System Battery Icon. The Settings
+window remains fixed at 720×520. This candidate supersedes the v3.0.11 test
+package; neither candidate is a published release.
 
 ## v3.0.11 complete menu-bar appearance presets
 

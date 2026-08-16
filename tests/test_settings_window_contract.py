@@ -636,14 +636,14 @@ class SettingsWindowContractTests(unittest.TestCase):
                 (42, false, .lowPower),
                 (42, true, .lowPower),
             ]
-            let expectedNativeKeys: [(Int, Bool)] = [
-                (75, false),
-                (100, false),
-                (100, true),
-                (0, false),
-                (25, false),
-                (50, false),
-                (50, false),
+            let expectedNativeKeys: [(Int, Bool, Bool)] = [
+                (75, false, false),
+                (100, false, true),
+                (72, true, false),
+                (10, false, false),
+                (20, false, true),
+                (42, false, false),
+                (42, false, true),
             ]
             let testAppearance = NSAppearance(named: .aqua)!
             for (index, previewState) in previewStates.enumerated() {
@@ -676,8 +676,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(
                     nativeKey.percent == expectedNative.0
                         && nativeKey.showsBolt == expectedNative.1
+                        && nativeKey.showsPlug == expectedNative.2
                         && nativeKey.tintRole == .template,
-                    "macOS preview fixture matches its real public-symbol level and bolt: "
+                    "macOS preview fixture matches its exact fill, bolt and plug: "
                         + previewState.visibleLabel
                 )
             }
@@ -893,9 +894,9 @@ class SettingsWindowContractTests(unittest.TestCase):
 
             let normalizedSystemCopy = (macOSIconOnly.accessibilityHelp() ?? "").lowercased()
             require(
-                normalizedSystemCopy.contains("public battery symbol")
-                    && normalizedSystemCopy.contains("macos"),
-                "System copy truthfully identifies the public macOS battery symbol"
+                normalizedSystemCopy.contains("battery artwork")
+                    && normalizedSystemCopy.contains("macos menu bar"),
+                "System copy truthfully identifies the macOS menu-bar battery artwork"
             )
             require(
                 !normalizedSystemCopy.contains("control center")

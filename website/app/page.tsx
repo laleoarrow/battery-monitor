@@ -262,8 +262,11 @@ export default function Home() {
                 Low, Low +
                 AC, Saver, and Saver + AC. Every preview uses the real
                 BatteryIcon renderer; percentage rows show matching per-state
-                values to the left of each glyph. General contains only Launch
-                at Login and Hide System Battery Icon.
+                values to the left of each glyph. The macOS rows use Control
+                Center battery parts from the running system, with exact
+                percentage fill, an idle-AC plug, and a charging bolt instead
+                of generic SF Symbols. General contains only Launch at Login
+                and Hide System Battery Icon.
               </p>
             </article>
 

@@ -241,10 +241,11 @@ represented as unchecked.
 
 Wattson's own menu-bar glyph style is an app-owned typed setting, independent
 of Control Center visibility. It defaults to the existing Wattson mark and can
-switch to a public macOS-style template battery glyph. The native style uses
-static public battery levels, adds the bolt only for an actual charging state,
-and falls back to a resolution-independent template drawing when a symbol is
-unavailable on an older supported system.
+switch to the battery artwork used by the macOS menu extra. The native style
+composes the running system's small Control Center outline, cap, plug, bolt, and
+knockout-mask resources around the exact percentage fill. Connected-idle states
+use the plug, actual charging uses the bolt, and a resolution-independent
+template drawing remains the fallback when a system asset is unavailable.
 
 ## Data Flow
 

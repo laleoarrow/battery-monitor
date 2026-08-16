@@ -68,7 +68,7 @@ The final result removes the large unused General canvas and reduces overall con
 
 - User-reported incomplete-state capture: `/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/codex-clipboard-7b0490dd-18e1-40aa-a911-7ca2473723fe.png`.
 - Superseded four-card implementation: `/tmp/wattson-settings-menu-bar-icon-four-presets.png`.
-- Final four-row, seven-state implementation: `/tmp/wattson-settings-menu-bar-icon-28-states-final-2.png` (1440 × 1040 pixels from the shipping AppKit hierarchy).
+- Final four-row, seven-state implementation: `/tmp/wattson-settings-native-system-assets-vm.png` (1440 × 1040 pixels from the shipping AppKit hierarchy).
 - Capture environment: the generic `macOS-TestLab` ARM VM on macOS 26.6.1, rendered at Retina 2× density from the fixed 720 × 520-point window.
 - Capture method: the retained Settings window stayed hidden and non-key; `cacheDisplay` rendered the real hierarchy without touching the maintainer desktop.
 - State: dark appearance with the default complete preset, Wattson with percentage, selected.
@@ -87,11 +87,18 @@ All 28 glyphs come directly from
 matching values `75%`, `100%`, `72%`, `10%`, `20%`, `42%`, and `42%` to the
 left of their corresponding glyphs using the menu-bar font with tabular
 digits. The Wattson rows visibly cover normal, red low-battery, green charging,
-yellow Low Power, and plugged-bolt combinations. The macOS rows truthfully
-cover all five public static battery levels plus Apple's public charging
-symbol; they do not invent Wattson tint semantics for the native glyph.
+yellow Low Power, and plugged-bolt combinations. The macOS rows use the exact
+percentage fill plus the distinct system plug and charging-bolt adornments;
+they do not quantize the battery to generic SF Symbol levels or invent Wattson
+tint semantics for the native glyph.
 
-The macOS choices continue to use the public battery symbol supplied by the running system; there is no copied or hand-drawn Apple artwork. The concise visible copy fits at the compact width, while each AX radio exposes the complete preset name and a truthful description. General is reduced to exactly two 68-point rows, removing the duplicate percentage control.
+The macOS choices compose the running system's Control Center outline, cap,
+plug, bolt, and knockout-mask resources at their native proportions; no Apple
+artwork is copied into the app. A resolution-independent vector fallback keeps
+older supported systems usable if a system asset is unavailable. The concise
+visible copy fits at the compact width, while each AX radio exposes the complete
+preset name and a truthful description. General is reduced to exactly two
+68-point rows, removing the duplicate percentage control.
 
 ### Required fidelity surfaces
 
@@ -110,6 +117,7 @@ The macOS choices continue to use the public battery symbol supplied by the runn
 4. [P2] The first four-row capture showed the radio circles underneath the final state chip. Fix: made the radio Y position respect the button's flipped coordinate system and recaptured. The final image visibly shows all four circles and the selected inner dot.
 5. Percentage-to-glyph pairing is asserted by matching complete identifiers, a shared direct parent, and left-to-right frame order for all 14 percentages. No percentage overlaps its glyph.
 6. The host Swift suite, hidden AppKit contract, and the real visible AppKit interaction/lifecycle contract passed. The latter ran inside the ARM VM so the maintainer desktop was never activated or disturbed.
+7. [P1] The first macOS rows used generic `battery.*percent` SF Symbols. Those are not the Battery menu extra's artwork and also omitted the idle-AC plug. Fix: compose the current OS's small Control Center battery assets, preserve exact percentage fill, use the plug for connected-idle states, and reserve the bolt for actual charging. The corrected hierarchy and 500-cycle lifecycle contract passed again in the ARM VM.
 
 ### Follow-up polish
 

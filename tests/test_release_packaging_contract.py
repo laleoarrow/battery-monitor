@@ -66,6 +66,8 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC",
             "real BatteryIcon renderer",
             "percentage rows show matching per-state values to the left of each glyph",
+            "Control Center battery parts from the running system",
+            "exact percentage fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols",
             "General contains only Launch at Login and Hide System Battery Icon",
             "720×520",
         ):
@@ -85,6 +87,8 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC",
             "real BatteryIcon renderer",
             "percentage rows show matching per-state values to the left of each glyph",
+            "Control Center battery parts from the running system",
+            "exact percentage fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols",
             "General now contains only Launch at Login and Hide System Battery Icon",
             "720×520",
         ):
@@ -123,6 +127,8 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC",
             "real BatteryIcon renderer",
             "percentage rows show matching per-state values to the left of each glyph",
+            "Control Center battery parts from the running system",
+            "exact percentage fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols",
             "General contains only Launch at Login and Hide System Battery Icon",
             "720×520",
         ):

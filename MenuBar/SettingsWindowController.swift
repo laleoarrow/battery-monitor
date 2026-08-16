@@ -1268,7 +1268,7 @@ private enum MenuBarIconAppearance: Int, CaseIterable {
     var accessibilityHelp: String {
         let artwork = iconStyle == .wattson
             ? "Wattson’s live status battery glyph"
-            : "The public battery symbol supplied by macOS"
+            : "The battery artwork used by the macOS menu bar"
         return showsPercentage
             ? "\(artwork), with the battery percentage on its left."
             : "\(artwork), without a percentage."
@@ -1811,7 +1811,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
         group.setAccessibilityRole(.radioGroup)
         group.setAccessibilityLabel(title)
         group.setAccessibilityHelp(
-            "Choose a complete Wattson or public macOS battery-symbol presentation."
+            "Choose a complete Wattson or macOS menu-bar battery presentation."
         )
         group.setAccessibilityChildren(orderedButtons)
         group.translatesAutoresizingMaskIntoConstraints = false
