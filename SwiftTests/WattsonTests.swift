@@ -1303,11 +1303,18 @@ final class WattsonTests: XCTestCase {
             style: .native,
             appearance: dark, increasedContrast: false
         )
-        XCTAssertEqual(first, BatteryIcon.renderKey(
+        let lowPower = BatteryIcon.renderKey(
+            for: baseline, mode: .low, pressed: false,
+            style: .native,
+            appearance: dark, increasedContrast: false
+        )
+        XCTAssertNotEqual(first, lowPower)
+        XCTAssertEqual(lowPower.tintRole, .lowPower)
+        XCTAssertEqual(BatteryIcon.renderKey(
             for: baseline, mode: .low, pressed: true,
             style: .native,
-            appearance: NSAppearance(named: .aqua)!, increasedContrast: true
-        ))
+            appearance: dark, increasedContrast: false
+        ).tintRole, .template)
 
         var changedPercent = baseline
         changedPercent.percent = 68
@@ -1373,6 +1380,37 @@ final class WattsonTests: XCTestCase {
         XCTAssertLessThanOrEqual(image.size.width, 23)
         XCTAssertGreaterThanOrEqual(image.size.height, 10)
         XCTAssertLessThanOrEqual(image.size.height, 14)
+    }
+
+    func testNativeLowPowerColorsTheFillButKeepsANeutralOutline() throws {
+        let snapshot = PowerSnapshot(
+            percent: 42, plugged: false, adapterW: 0, batteryW: -18, systemW: 18
+        )
+        let image = BatteryIcon.image(
+            for: snapshot, mode: .low, pressed: false, style: .native
+        )
+        XCTAssertFalse(image.isTemplate)
+
+        let data = try XCTUnwrap(image.tiffRepresentation)
+        let bitmap = try XCTUnwrap(NSBitmapImageRep(data: data))
+        var yellowPixels = 0
+        var neutralPixels = 0
+        for y in 0..<bitmap.pixelsHigh {
+            for x in 0..<bitmap.pixelsWide {
+                guard let color = bitmap.colorAt(x: x, y: y)?.usingColorSpace(.deviceRGB),
+                      color.alphaComponent > 0.2 else { continue }
+                let red = color.redComponent
+                let green = color.greenComponent
+                let blue = color.blueComponent
+                if red > 0.7 && green > 0.5 && blue < 0.35 {
+                    yellowPixels += 1
+                } else if max(red, green, blue) - min(red, green, blue) < 0.12 {
+                    neutralPixels += 1
+                }
+            }
+        }
+        XCTAssertGreaterThan(yellowPixels, 0, "the battery fill must be yellow")
+        XCTAssertGreaterThan(neutralPixels, 0, "the outline must remain menu-bar neutral")
     }
 
     func testPluggedIdleBreathingIsIdempotentAndStopsWhenHidden() {

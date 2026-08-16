@@ -636,14 +636,14 @@ class SettingsWindowContractTests(unittest.TestCase):
                 (42, false, .lowPower),
                 (42, true, .lowPower),
             ]
-            let expectedNativeKeys: [(Int, Bool, Bool)] = [
-                (75, false, false),
-                (100, false, true),
-                (72, true, false),
-                (10, false, false),
-                (20, false, true),
-                (42, false, false),
-                (42, false, true),
+            let expectedNativeKeys: [(Int, Bool, Bool, BatteryIcon.TintRole)] = [
+                (75, false, false, .template),
+                (100, false, true, .template),
+                (72, true, false, .template),
+                (10, false, false, .template),
+                (20, false, true, .template),
+                (42, false, false, .lowPower),
+                (42, false, true, .lowPower),
             ]
             let testAppearance = NSAppearance(named: .aqua)!
             for (index, previewState) in previewStates.enumerated() {
@@ -677,7 +677,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     nativeKey.percent == expectedNative.0
                         && nativeKey.showsBolt == expectedNative.1
                         && nativeKey.showsPlug == expectedNative.2
-                        && nativeKey.tintRole == .template,
+                        && nativeKey.tintRole == expectedNative.3,
                     "macOS preview fixture matches its exact fill, bolt and plug: "
                         + previewState.visibleLabel
                 )
@@ -814,8 +814,8 @@ class SettingsWindowContractTests(unittest.TestCase):
 
             let wattsonIconOnly = button("Wattson icon only", in: first)
             let wattsonWithPercentage = button("Wattson with percentage", in: first)
-            let macOSIconOnly = button("macOS icon only", in: first)
-            let macOSWithPercentage = button("macOS with percentage", in: first)
+            let macOSIconOnly = button("macOS 26 icon only", in: first)
+            let macOSWithPercentage = button("macOS 26 with percentage", in: first)
             let iconButtons = [
                 wattsonIconOnly,
                 wattsonWithPercentage,
@@ -878,7 +878,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "Wattson icon only"
             )
             let macOSDrawsBeforeTransfer = controller.iconCardDrawCountForTest(
-                "macOS with percentage"
+                "macOS 26 with percentage"
             )
             require(first?.makeFirstResponder(macOSWithPercentage) == true, "fourth preset accepts keyboard focus")
             require(
@@ -886,7 +886,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     first?.displayIfNeeded()
                     return controller.iconCardDrawCountForTest("Wattson icon only")
                             > wattsonDrawsBeforeTransfer
-                        && controller.iconCardDrawCountForTest("macOS with percentage")
+                        && controller.iconCardDrawCountForTest("macOS 26 with percentage")
                             > macOSDrawsBeforeTransfer
                 },
                 "Tab-style focus movement redraws both old and new visible focus rings"
@@ -895,8 +895,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             let normalizedSystemCopy = (macOSIconOnly.accessibilityHelp() ?? "").lowercased()
             require(
                 normalizedSystemCopy.contains("battery artwork")
-                    && normalizedSystemCopy.contains("macos menu bar"),
-                "System copy truthfully identifies the macOS menu-bar battery artwork"
+                    && normalizedSystemCopy.contains("macos 26 menu bar"),
+                "System copy truthfully identifies the macOS 26 menu-bar battery artwork"
             )
             require(
                 !normalizedSystemCopy.contains("control center")
@@ -942,7 +942,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             wattsonWithPercentage.keyDown(with: keyEvent(124))
             require(
                 Settings.menuBarIconStyle == .native && !Settings.showsMenuBarPercentage,
-                "Right Arrow advances to macOS icon only"
+                "Right Arrow advances to macOS 26 icon only"
             )
             macOSIconOnly.keyDown(with: keyEvent(123))
             require(
@@ -952,7 +952,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             wattsonIconOnly.keyDown(with: keyEvent(119))
             require(
                 Settings.menuBarIconStyle == .native && Settings.showsMenuBarPercentage,
-                "End selects macOS with percentage"
+                "End selects macOS 26 with percentage"
             )
             macOSWithPercentage.keyDown(with: keyEvent(115))
             require(
@@ -1503,8 +1503,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             'let title = "Menu Bar Icon"',
             '"Wattson icon only"',
             '"Wattson with percentage"',
-            '"macOS icon only"',
-            '"macOS with percentage"',
+            '"macOS 26 icon only"',
+            '"macOS 26 with percentage"',
         ):
             self.assertIn(title, source)
         general_source = source.split(
@@ -1561,8 +1561,8 @@ class SettingsWindowContractTests(unittest.TestCase):
         for label in (
             "Wattson icon only",
             "Wattson with percentage",
-            "macOS icon only",
-            "macOS with percentage",
+            "macOS 26 icon only",
+            "macOS 26 with percentage",
         ):
             self.assertIn(label, icon_source)
 

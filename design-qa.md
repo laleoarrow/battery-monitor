@@ -78,7 +78,7 @@ The final result removes the large unused General canvas and reduces overall con
 The final page preserves the compact shell, heading, subtitle, dark palette,
 radii, and green radio-row selection language. The four complete appearances
 are now listed vertically, one full-width option per row: Wattson icon only,
-Wattson with percentage, macOS icon only, and macOS with percentage. Each row
+Wattson with percentage, macOS 26 icon only, and macOS 26 with percentage. Each row
 contains seven visibly named production states: Battery, Full, Charging, Low,
 Low + AC, Saver, and Saver + AC.
 
@@ -87,10 +87,11 @@ All 28 glyphs come directly from
 matching values `75%`, `100%`, `72%`, `10%`, `20%`, `42%`, and `42%` to the
 left of their corresponding glyphs using the menu-bar font with tabular
 digits. The Wattson rows visibly cover normal, red low-battery, green charging,
-yellow Low Power, and plugged-bolt combinations. The macOS rows use the exact
-percentage fill plus the distinct system plug and charging-bolt adornments;
-they do not quantize the battery to generic SF Symbol levels or invent Wattson
-tint semantics for the native glyph.
+yellow Low Power, and plugged-bolt combinations. The macOS 26 rows use the
+exact percentage fill plus the distinct system plug and charging-bolt
+adornments. Low Power colours only the interior fill yellow while the outline,
+cap, plug, and bolt remain in the menu-bar foreground colour; the native glyph
+does not inherit Wattson's whole-glyph tint semantics.
 
 The macOS choices compose the running system's Control Center outline, cap,
 plug, bolt, and knockout-mask resources at their native proportions; no Apple
@@ -118,6 +119,7 @@ preset name and a truthful description. General is reduced to exactly two
 5. Percentage-to-glyph pairing is asserted by matching complete identifiers, a shared direct parent, and left-to-right frame order for all 14 percentages. No percentage overlaps its glyph.
 6. The host Swift suite, hidden AppKit contract, and the real visible AppKit interaction/lifecycle contract passed. The latter ran inside the ARM VM so the maintainer desktop was never activated or disturbed.
 7. [P1] The first macOS rows used generic `battery.*percent` SF Symbols. Those are not the Battery menu extra's artwork and also omitted the idle-AC plug. Fix: compose the current OS's small Control Center battery assets, preserve exact percentage fill, use the plug for connected-idle states, and reserve the bolt for actual charging. The corrected hierarchy and 500-cycle lifecycle contract passed again in the ARM VM.
+8. [P1] The first Low Power preview left the entire native icon neutral. Fix: match macOS 26 by colouring only the battery's interior fill yellow while keeping the outline, cap, plug, and bolt in the menu-bar foreground colour.
 
 ### Follow-up polish
 

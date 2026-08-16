@@ -39,8 +39,8 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /dedicated Menu Bar Icon page/i);
   assert.match(html, /Wattson icon only/i);
   assert.match(html, /Wattson with percentage/i);
-  assert.match(html, /macOS icon only/i);
-  assert.match(html, /macOS with percentage/i);
+  assert.match(html, /macOS 26 icon only/i);
+  assert.match(html, /macOS 26 with percentage/i);
   assert.match(html, /appearances vertically/i);
   assert.match(html, /one full-width option per row/i);
   assert.match(html, /seven real production-rendered states/i);
@@ -50,6 +50,8 @@ test("renders the complete English Wattson release page", async () => {
   );
   assert.match(html, /Control Center battery parts from the running system/i);
   assert.match(html, /exact percentage fill, an idle-AC plug, and a charging bolt/i);
+  assert.match(html, /only the battery fill is yellow/i);
+  assert.match(html, /outline, cap, plug, and bolt keep the menu-bar foreground colour/i);
   assert.match(html, /real BatteryIcon renderer/i);
   assert.match(
     html,

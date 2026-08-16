@@ -1251,15 +1251,15 @@ private enum MenuBarIconAppearance: Int, CaseIterable {
         switch self {
         case .wattsonIconOnly: return "Wattson icon only"
         case .wattsonWithPercentage: return "Wattson with percentage"
-        case .macOSIconOnly: return "macOS icon only"
-        case .macOSWithPercentage: return "macOS with percentage"
+        case .macOSIconOnly: return "macOS 26 icon only"
+        case .macOSWithPercentage: return "macOS 26 with percentage"
         }
     }
 
     var visibleTitle: String {
         switch iconStyle {
         case .wattson: return "Wattson"
-        case .native: return "macOS"
+        case .native: return "macOS 26"
         }
     }
 
@@ -1268,7 +1268,7 @@ private enum MenuBarIconAppearance: Int, CaseIterable {
     var accessibilityHelp: String {
         let artwork = iconStyle == .wattson
             ? "Wattson’s live status battery glyph"
-            : "The battery artwork used by the macOS menu bar"
+            : "The battery artwork used by the macOS 26 menu bar"
         return showsPercentage
             ? "\(artwork), with the battery percentage on its left."
             : "\(artwork), without a percentage."

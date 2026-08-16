@@ -241,11 +241,13 @@ represented as unchecked.
 
 Wattson's own menu-bar glyph style is an app-owned typed setting, independent
 of Control Center visibility. It defaults to the existing Wattson mark and can
-switch to the battery artwork used by the macOS menu extra. The native style
+switch to the battery artwork used by the macOS 26 menu extra. The native style
 composes the running system's small Control Center outline, cap, plug, bolt, and
 knockout-mask resources around the exact percentage fill. Connected-idle states
-use the plug, actual charging uses the bolt, and a resolution-independent
-template drawing remains the fallback when a system asset is unavailable.
+use the plug and actual charging uses the bolt. Low Power colours only the
+interior fill yellow; the outline, cap, plug, and bolt retain the menu-bar
+foreground colour. A resolution-independent template drawing remains the
+fallback when a system asset is unavailable.
 
 ## Data Flow
 

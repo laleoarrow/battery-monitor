@@ -49,7 +49,16 @@ class BatteryIconContractTests(unittest.TestCase):
             self.assertIn(f'"{asset}"', self.source)
         self.assertNotIn("systemSymbolName:", self.source)
         native = self.source.split("private static func nativeImage", 1)[1]
-        self.assertIn("isTemplate = true", native)
+        self.assertIn("nativeFillColor", native)
+
+    def test_native_low_power_colors_only_the_fill_layer(self):
+        native = self.source.split("private static func nativeImage", 1)[1].split(
+            "private static func nativeFallbackImage", 1
+        )[0]
+        self.assertIn("NSColor.systemYellow", self.source)
+        self.assertIn("fillColor", native)
+        self.assertIn("foregroundColor", native)
+        self.assertIn("image.isTemplate = fillColor == nil", native)
 
     def test_native_style_keeps_a_vector_fallback(self):
         self.assertIn("private static func nativeFallbackImage", self.source)

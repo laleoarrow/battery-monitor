@@ -54,14 +54,16 @@ All shipped user-facing copy is English. The settings menu shows the exact
 
 Settings uses a fixed 720×520 window. The dedicated Menu Bar Icon page places
 all four complete appearances vertically, one full-width option per row:
-Wattson icon only, Wattson with percentage, macOS icon only, and macOS with
-percentage. Every row previews seven real production-rendered states: Battery,
-Full, Charging, Low, Low + AC, Saver, and Saver + AC. Every preview uses the
-real BatteryIcon renderer; percentage rows show matching per-state values to
-the left of each glyph. The macOS rows use Control Center battery parts from
-the running system, with exact percentage fill, an idle-AC plug, and a charging
-bolt instead of generic SF Symbols. General contains only Launch at Login and
-Hide System Battery Icon.
+Wattson icon only, Wattson with percentage, macOS 26 icon only, and macOS 26
+with percentage. Every row previews seven real production-rendered states:
+Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC. Every preview
+uses the real BatteryIcon renderer; percentage rows show matching per-state
+values to the left of each glyph. The macOS 26 rows use Control Center battery
+parts from the running system, with exact percentage fill, an idle-AC plug, and
+a charging bolt instead of generic SF Symbols. In Low Power Mode, only the
+battery fill is yellow; the outline, cap, plug, and bolt keep the menu-bar
+foreground colour. General contains only Launch at Login and Hide System
+Battery Icon.
 
 The mode selector keeps the v2.1.5 interaction contract:
 
@@ -132,14 +134,16 @@ the public promotion steps for this snapshot.
 
 The v3.0.12 candidate corrects the dedicated Menu Bar Icon page so the user can
 see and select all four complete menu-bar appearances vertically, one
-full-width option per row: Wattson icon only, Wattson with percentage, macOS
-icon only, and macOS with percentage. Every row previews seven real
+full-width option per row: Wattson icon only, Wattson with percentage, macOS 26
+icon only, and macOS 26 with percentage. Every row previews seven real
 production-rendered states: Battery, Full, Charging, Low, Low + AC, Saver, and
 Saver + AC. Every preview uses the real BatteryIcon renderer; percentage rows
-show matching per-state values to the left of each glyph. The macOS rows use
+show matching per-state values to the left of each glyph. The macOS 26 rows use
 Control Center battery parts from the running system, with exact percentage
-fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols.
-General contains only Launch at Login and Hide System Battery Icon. The Settings
+fill, an idle-AC plug, and a charging bolt instead of generic SF Symbols. In
+Low Power Mode, only the battery fill is yellow; the outline, cap, plug, and
+bolt keep the menu-bar foreground colour. General contains only Launch at Login
+and Hide System Battery Icon. The Settings
 window remains fixed at 720×520. This candidate supersedes the v3.0.11 test
 package; neither candidate is a published release.
 

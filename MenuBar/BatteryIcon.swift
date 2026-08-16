@@ -36,14 +36,15 @@ enum BatteryIcon {
         if style == .native {
             let showsBolt = snapshot.state == .charging
             let showsPlug = snapshot.plugged && !showsBolt
+            let nativeTintRole: TintRole = !pressed && mode == .low ? .lowPower : .template
             return RenderKey(
                 percent: percent,
                 showsBolt: showsBolt,
                 showsPlug: showsPlug,
                 style: style,
-                tintRole: .template,
-                appearanceName: "",
-                increasedContrast: false
+                tintRole: nativeTintRole,
+                appearanceName: nativeTintRole == .template ? "" : appearance.name.rawValue,
+                increasedContrast: nativeTintRole == .template ? false : increasedContrast
             )
         }
 
@@ -80,7 +81,7 @@ enum BatteryIcon {
         style: Settings.MenuBarIconStyle
     ) -> NSImage {
         if style == .native {
-            return nativeImage(for: snapshot)
+            return nativeImage(for: snapshot, mode: mode, pressed: pressed)
         }
 
         let tint = color(for: snapshot, mode: mode)
@@ -147,8 +148,13 @@ enum BatteryIcon {
     /// system-owned outline, cap and power-state masks around an exact fill.
     /// Loading those resources from the running OS keeps this presentation in
     /// step with macOS instead of shipping a copied approximation.
-    private static func nativeImage(for snapshot: PowerSnapshot) -> NSImage {
+    private static func nativeImage(
+        for snapshot: PowerSnapshot,
+        mode: EnergyMode,
+        pressed: Bool
+    ) -> NSImage {
         let percent = min(max(snapshot.percent, 0), 100)
+        let fillColor = nativeFillColor(mode: mode, pressed: pressed)
         let adornment: NativeAdornment
         if snapshot.state == .charging {
             adornment = .bolt
@@ -158,7 +164,7 @@ enum BatteryIcon {
             adornment = .none
         }
         guard let assets = nativeSystemAssets else {
-            return nativeFallbackImage(for: snapshot)
+            return nativeFallbackImage(for: snapshot, mode: mode, pressed: pressed)
         }
 
         let image = NSImage(
@@ -168,24 +174,23 @@ enum BatteryIcon {
             context.saveGraphicsState()
             context.cgContext.scaleBy(x: width / 22, y: height / 14)
 
-            NSColor.black.withAlphaComponent(0.5).setFill()
+            let foregroundColor = fillColor == nil ? NSColor.black : NSColor.labelColor
+            (fillColor ?? NSColor.black.withAlphaComponent(0.5)).setFill()
             let fillWidth = 15 * CGFloat(percent) / 100
             NSBezierPath(
                 roundedRect: NSRect(x: 2, y: 3.5, width: fillWidth, height: 7),
                 xRadius: min(1.8, fillWidth / 2),
                 yRadius: 1.8
             ).fill()
-            assets.outline.draw(
+            drawNativeAsset(
+                assets.outline,
                 in: NSRect(x: 0.5, y: 2, width: 19, height: 10),
-                from: .zero,
-                operation: .sourceOver,
-                fraction: 1
+                color: foregroundColor
             )
-            assets.cap.draw(
+            drawNativeAsset(
+                assets.cap,
                 in: NSRect(x: 19.5, y: 2, width: 2, height: 10),
-                from: .zero,
-                operation: .sourceOver,
-                fraction: 1
+                color: foregroundColor
             )
 
             switch adornment {
@@ -196,27 +201,51 @@ enum BatteryIcon {
                 assets.boltMask.draw(
                     in: frame, from: .zero, operation: .destinationOut, fraction: 1
                 )
-                assets.bolt.draw(
-                    in: frame, from: .zero, operation: .sourceOver, fraction: 1
-                )
+                drawNativeAsset(assets.bolt, in: frame, color: foregroundColor)
             case .plug:
                 let frame = NSRect(x: 4.5, y: 0, width: 11, height: 14)
                 assets.plugMask.draw(
                     in: frame, from: .zero, operation: .destinationOut, fraction: 1
                 )
-                assets.plug.draw(
-                    in: frame, from: .zero, operation: .sourceOver, fraction: 1
-                )
+                drawNativeAsset(assets.plug, in: frame, color: foregroundColor)
             }
             context.restoreGraphicsState()
             return true
         }
-        image.isTemplate = true
+        image.isTemplate = fillColor == nil
         return image
     }
 
+    private static func nativeFillColor(mode: EnergyMode, pressed: Bool) -> NSColor? {
+        guard !pressed, mode == .low else { return nil }
+        return NSColor.systemYellow
+    }
+
+    private static func drawNativeAsset(
+        _ asset: NSImage,
+        in frame: NSRect,
+        color: NSColor
+    ) {
+        guard let context = NSGraphicsContext.current else { return }
+        context.saveGraphicsState()
+        context.cgContext.beginTransparencyLayer(auxiliaryInfo: nil)
+        asset.draw(
+            in: frame, from: .zero, operation: .sourceOver, fraction: 1
+        )
+        context.compositingOperation = .sourceIn
+        color.setFill()
+        NSBezierPath(rect: frame).fill()
+        context.cgContext.endTransparencyLayer()
+        context.restoreGraphicsState()
+    }
+
     /// Safe vector fallback for an unexpectedly missing Control Center asset.
-    private static func nativeFallbackImage(for snapshot: PowerSnapshot) -> NSImage {
+    private static func nativeFallbackImage(
+        for snapshot: PowerSnapshot,
+        mode: EnergyMode,
+        pressed: Bool
+    ) -> NSImage {
+        let fillColor = nativeFillColor(mode: mode, pressed: pressed)
         let adornment: NativeAdornment
         if snapshot.state == .charging {
             adornment = .bolt
@@ -227,26 +256,29 @@ enum BatteryIcon {
         }
         let image = NSImage(size: NSSize(width: width, height: height), flipped: false) { _ in
             NSGraphicsContext.current?.cgContext.scaleBy(x: width / 22, y: height / 14)
+            let foregroundColor = fillColor == nil ? NSColor.black : NSColor.labelColor
             drawNativeFallback(
                 percent: snapshot.percent,
                 adornment: adornment,
-                color: .black
+                foregroundColor: foregroundColor,
+                fillColor: fillColor
             )
             return true
         }
-        image.isTemplate = true
+        image.isTemplate = fillColor == nil
         return image
     }
 
     private static func drawNativeFallback(
         percent: Int,
         adornment: NativeAdornment,
-        color: NSColor
+        foregroundColor: NSColor,
+        fillColor: NSColor?
     ) {
         let shell = NSRect(x: 0.5, y: 2, width: 19, height: 10)
         let body = NSBezierPath(roundedRect: shell, xRadius: 3.5, yRadius: 3.5)
         body.lineWidth = 1
-        color.setStroke()
+        foregroundColor.setStroke()
         body.stroke()
 
         let cap = NSBezierPath()
@@ -257,12 +289,12 @@ enum BatteryIcon {
             controlPoint2: NSPoint(x: 21.5, y: 8.5)
         )
         cap.close()
-        color.setFill()
+        foregroundColor.setFill()
         cap.fill()
 
         let clamped = CGFloat(min(max(percent, 0), 100)) / 100
         let fillWidth = 15 * clamped
-        color.withAlphaComponent(0.5).setFill()
+        (fillColor ?? foregroundColor.withAlphaComponent(0.5)).setFill()
         NSBezierPath(
             roundedRect: NSRect(x: 2, y: 3.5, width: fillWidth, height: 7),
             xRadius: min(1.8, fillWidth / 2),
@@ -317,7 +349,7 @@ enum BatteryIcon {
         mark.lineJoinStyle = .round
         mark.stroke()
         NSGraphicsContext.current?.compositingOperation = .sourceOver
-        color.setFill()
+        foregroundColor.setFill()
         mark.fill()
     }
 
