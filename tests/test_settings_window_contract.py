@@ -13,6 +13,9 @@ SETTINGS = ROOT / "Core" / "Settings.swift"
 HELPER_CLIENT = ROOT / "Core" / "HelperClient.swift"
 SYSTEM_ICON = ROOT / "Core" / "SystemBatteryIcon.swift"
 LOGIN_ITEM = ROOT / "Core" / "LoginItemController.swift"
+POWER_SNAPSHOT = ROOT / "Core" / "PowerSnapshot.swift"
+ENERGY_MODE = ROOT / "Core" / "EnergyMode.swift"
+BATTERY_ICON = ROOT / "MenuBar" / "BatteryIcon.swift"
 
 
 class SettingsWindowContractTests(unittest.TestCase):
@@ -82,6 +85,25 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && approximately(actual.size.height, expected.size.height)
             }
 
+            func keyEvent(_ keyCode: UInt16, characters: String = "") -> NSEvent {
+                guard let event = NSEvent.keyEvent(
+                    with: .keyDown,
+                    location: .zero,
+                    modifierFlags: [],
+                    timestamp: 0,
+                    windowNumber: 0,
+                    context: nil,
+                    characters: characters,
+                    charactersIgnoringModifiers: characters,
+                    isARepeat: false,
+                    keyCode: keyCode
+                ) else {
+                    FileHandle.standardError.write(Data("could not create key event\n".utf8))
+                    exit(1)
+                }
+                return event
+            }
+
             func srgbHex(_ color: NSColor?) -> UInt32? {
                 guard let converted = color?.usingColorSpace(.sRGB) else { return nil }
                 return UInt32((converted.redComponent * 255).rounded()) << 16
@@ -107,7 +129,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                     hit === button,
                     "\(phase) hit testing reaches "
                         + "\(button.accessibilityLabel() ?? "unlabelled button"): "
-                        + "center=\(center) hit=\(String(describing: hit))"
+                        + "center=\(center) wanted=\(ObjectIdentifier(button)) "
+                        + "hit=\(String(describing: hit)) "
+                        + "hit-label=\(hit?.accessibilityLabel() ?? "none")"
                 )
             }
 
@@ -275,8 +299,11 @@ class SettingsWindowContractTests(unittest.TestCase):
                 first?.standardWindowButton(.zoomButton)?.isEnabled == false,
                 "fixed-size native zoom control is disabled"
             )
-            require(controller.sectionIdentifiersForTest == ["general", "modules"], "section order")
-            require(Set(controller.sectionIdentifiersForTest).count == 2, "unique section identifiers")
+            require(
+                controller.sectionIdentifiersForTest == ["general", "menu-bar-icon", "modules"],
+                "section order is General, Menu Bar Icon, Modules"
+            )
+            require(Set(controller.sectionIdentifiersForTest).count == 3, "unique section identifiers")
             require(controller.selectedSectionIdentifierForTest == "general", "general initially selected")
             require(controller.visibleSectionIdentifierForTest == "general", "general initially visible")
             require(controller.contentHostSubviewCountForTest == 1, "one visible page in content host")
@@ -316,25 +343,46 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(controller.sidebarAllowsEmptySelectionForTest == false, "sidebar disallows empty selection")
             require(approximately(controller.sidebarRowHeightForTest, 38), "compact navigation row height")
             require(approximately(controller.sidebarRowGapForTest, 4), "navigation row gap")
+            require(
+                controller.sidebarRectForRowForTest(2).maxY
+                    <= controller.sidebarVisibleRectForTest.maxY + 1,
+                "sidebar navigation fits all three rows without scrolling: "
+                    + "row=\(controller.sidebarRectForRowForTest(2)) "
+                    + "visible=\(controller.sidebarVisibleRectForTest)"
+            )
             let navigationLabels = descendants(ofType: NSTextField.self, in: navigation)
             require(
-                navigationLabels.filter { ["General", "Modules"].contains($0.stringValue) }
+                navigationLabels.filter {
+                    ["General", "Menu Bar Icon", "Modules"].contains($0.stringValue)
+                }.count == 3
+                    && navigationLabels.filter {
+                        ["General", "Menu Bar Icon", "Modules"].contains($0.stringValue)
+                    }
                     .allSatisfy { approximately($0.font?.pointSize ?? -1, 13) },
                 "navigation labels use 13-point type"
+            )
+            let iconNavigationLabel = navigationLabels.first {
+                $0.stringValue == "Menu Bar Icon"
+            }
+            require(
+                (iconNavigationLabel?.attributedStringValue.size().width
+                    ?? .greatestFiniteMagnitude)
+                    <= (iconNavigationLabel?.frame.width ?? 0) + 1,
+                "Menu Bar Icon navigation title is fully visible"
             )
             require(
                 descendants(ofType: NSView.self, in: view("settings.section.general", in: first))
                     .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
-                    .count == 4,
-                "general has exactly four rows"
+                    .count == 3,
+                "General retains percentage, login, and Apple battery rows only"
             )
             let generalList = view("settings.general.list", in: first)
             let generalRows = descendants(ofType: NSView.self, in: generalList)
                 .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
             require(approximately(generalList.frame.width, 503), "compact general list width")
-            require(approximately(generalList.frame.height, 272), "compact general list height")
+            require(approximately(generalList.frame.height, 204), "General is exactly 3 × 68 points")
             require((generalList as? NSBox)?.cornerRadius == 10, "compact general list radius")
-            require(generalRows.allSatisfy { approximately($0.frame.height, 68) }, "four 68-point rows")
+            require(generalRows.allSatisfy { approximately($0.frame.height, 68) }, "three 68-point rows")
             require(
                 approximately(
                     (view("settings.general.heading", in: first) as? NSTextField)?.font?.pointSize ?? -1,
@@ -348,10 +396,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                 }
             )
             for (identifier, expectedMinY) in [
-                ("settings.general.row.percentage", CGFloat(204)),
-                ("settings.general.row.login", CGFloat(136)),
-                ("settings.general.row.battery", CGFloat(68)),
-                ("settings.general.row.native-icon", CGFloat(0)),
+                ("settings.general.row.percentage", CGFloat(136)),
+                ("settings.general.row.login", CGFloat(68)),
+                ("settings.general.row.battery", CGFloat(0)),
             ] {
                 require(
                     approximately(generalRowsByIdentifier[identifier]?.frame.minY ?? -1, expectedMinY),
@@ -364,20 +411,18 @@ class SettingsWindowContractTests(unittest.TestCase):
             let percentage = button("Show Battery Percentage in Menu Bar", in: first)
             let login = button("Launch at Login", in: first)
             let battery = button("Hide System Battery Icon", in: first)
-            let nativeIcon = button("Use System Wattson Icon", in: first)
             require(controller.sidebarNextKeyViewForTest === percentage, "Tab enters first General switch")
             require(controller.lastVisibleSwitchNextKeyViewForTest === controller.sidebarForTest, "General key loop returns to sidebar")
             require(percentage.accessibilityLabel() == "Show Battery Percentage in Menu Bar", "percentage accessibility label")
             require(login.accessibilityLabel() == "Launch at Login", "login accessibility label")
             require(battery.accessibilityLabel() == "Hide System Battery Icon", "battery accessibility label")
-            require(nativeIcon.accessibilityLabel() == "Use System Wattson Icon", "system icon accessibility label")
             require(
                 percentage.title.isEmpty && login.title.isEmpty
-                    && battery.title.isEmpty && nativeIcon.title.isEmpty,
+                    && battery.title.isEmpty,
                 "General switches have no clipped visible titles"
             )
             require(
-                [percentage, login, battery, nativeIcon].allSatisfy {
+                [percentage, login, battery].allSatisfy {
                     approximately($0.frame.width, 38) && approximately($0.frame.height, 22)
                 },
                 "General uses compact toggle switches"
@@ -394,11 +439,10 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "Show Battery Percentage",
                     "Launch at Login",
                     "Hide System Battery Icon",
-                    "Use System Icon",
                 ].contains($0.stringValue)
             }
             require(
-                generalPrimaryLabels.count == 4
+                generalPrimaryLabels.count == 3
                     && generalPrimaryLabels.allSatisfy {
                         approximately($0.font?.pointSize ?? -1, 14)
                     },
@@ -414,30 +458,23 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "battery primary title remains visible"
             )
             require(
-                generalVisibleTitles.contains("Use System Icon"),
-                "system icon primary title remains visible"
-            )
-            let nativeIconDetail = label("settings.general.native-icon.detail", in: first)
-            require(
-                approximately(nativeIconDetail.font?.pointSize ?? -1, 11),
+                approximately(
+                    label("settings.general.percentage.detail", in: first).font?.pointSize ?? -1,
+                    11
+                ),
                 "General detail labels use 11-point type"
             )
             require(
-                nativeIconDetail.intrinsicContentSize.width <= nativeIconDetail.frame.width + 1,
-                "system icon detail is fully visible without truncation"
-            )
-            require(
-                nativeIconDetail.stringValue
-                    == "Follows the battery symbol supplied by your macOS",
-                "system icon explains that it follows the running macOS version"
+                descendants(ofType: NSView.self, in: view("settings.section.general", in: first))
+                    .allSatisfy {
+                        $0.identifier?.rawValue != "settings.general.row.native-icon"
+                    },
+                "icon style is not duplicated in General"
             )
             require(!(percentage.accessibilityHelp() ?? "").isEmpty, "percentage accessibility help")
             require(!(login.accessibilityHelp() ?? "").isEmpty, "login accessibility help")
             require(!(battery.accessibilityHelp() ?? "").isEmpty, "battery accessibility help")
-            require(!(nativeIcon.accessibilityHelp() ?? "").isEmpty, "native icon accessibility help")
-            require(nativeIcon.state == .off && nativeIcon.isEnabled, "Wattson icon remains the default")
-            require(battery.nextKeyView === nativeIcon, "Tab reaches the fourth General switch")
-            require(nativeIcon.nextKeyView === controller.sidebarForTest, "fourth switch returns to sidebar")
+            require(battery.nextKeyView === controller.sidebarForTest, "third switch returns to sidebar")
 
             require(fixture.loginReads.count == 1, "refresh requests login state once")
             require(fixture.batteryReads.count == 1, "refresh requests battery state once")
@@ -539,13 +576,157 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(Settings.showsMenuBarPercentage == false, "percentage uses shared Settings store")
             Settings.showsMenuBarPercentage = true
             require(percentage.state == .on, "percentage observes shared Settings store")
-            nativeIcon.performClick(nil)
-            require(Settings.menuBarIconStyle == .native, "native icon uses shared Settings store")
-            require(Settings.showsMenuBarPercentage, "icon style remains independent of percentage")
-            Settings.menuBarIconStyle = .wattson
-            require(nativeIcon.state == .off, "native icon observes shared Settings store")
 
             controller.selectSidebarRowForTest(1)
+            require(
+                controller.selectedSectionIdentifierForTest == "menu-bar-icon",
+                "Menu Bar Icon is the second section"
+            )
+            require(
+                controller.visibleSectionIdentifierForTest == "menu-bar-icon",
+                "selection delegate shows Menu Bar Icon"
+            )
+            require(controller.contentHostSubviewCountForTest == 1, "icon page keeps one hosted view")
+            first?.contentView?.layoutSubtreeIfNeeded()
+
+            let iconPage = view("settings.section.menu-bar-icon", in: first)
+            let iconHeading = view("settings.menu-bar-icon.heading", in: first)
+            let iconSubtitle = view("settings.menu-bar-icon.subtitle", in: first)
+            let iconGroup = view("settings.menu-bar-icon.group", in: first)
+            let iconCards = descendants(ofType: NSView.self, in: iconPage)
+                .filter { $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.card.") == true }
+            let iconPreviews = descendants(ofType: NSImageView.self, in: iconPage)
+                .filter {
+                    $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.preview.") == true
+                }
+            require(
+                approximately((iconHeading as? NSTextField)?.font?.pointSize ?? -1, 22),
+                "Menu Bar Icon heading uses 22-point type"
+            )
+            require(
+                approximately((iconSubtitle as? NSTextField)?.font?.pointSize ?? -1, 11),
+                "Menu Bar Icon subtitle uses 11-point type"
+            )
+            require(iconCards.count == 2, "Menu Bar Icon has exactly two whole-card options")
+            require(
+                iconCards.allSatisfy {
+                    approximately($0.frame.width, 233) && approximately($0.frame.height, 166)
+                },
+                "icon options are exactly 233 by 166 points"
+            )
+            let iconCardXs = iconCards.map(\.frame.minX).sorted()
+            require(
+                iconCardXs.count == 2 && approximately(iconCardXs[1] - iconCardXs[0], 245),
+                "icon options have a 12-point horizontal gap"
+            )
+            require(iconPreviews.count == 2, "both cards contain renderer-backed previews")
+            require(
+                iconPreviews.allSatisfy {
+                    ($0.image?.size.width ?? 0) > 0 && ($0.image?.size.height ?? 0) > 0
+                },
+                "both renderer-backed preview images are nonempty"
+            )
+            require(iconGroup.isAccessibilityElement(), "icon choices expose one AX group")
+            require(iconGroup.accessibilityRole() == .radioGroup, "icon choices use AX radioGroup")
+            require(iconGroup.accessibilityLabel() == "Menu Bar Icon", "AX group has a useful label")
+            require(!(iconGroup.accessibilityHelp() ?? "").isEmpty, "AX group has help")
+
+            let wattsonIcon = button("Wattson", in: first)
+            let systemIcon = button("System", in: first)
+            let iconButtons = [wattsonIcon, systemIcon]
+            require(
+                iconButtons.allSatisfy { $0.accessibilityRole() == .radioButton },
+                "whole-card options expose AX radioButton roles"
+            )
+            require(
+                iconButtons.allSatisfy { !($0.accessibilityHelp() ?? "").isEmpty },
+                "both icon radio buttons expose help"
+            )
+            require(
+                iconButtons.filter { $0.state == .on }.count == 1
+                    && wattsonIcon.state == .on,
+                "exactly Wattson is selected by default"
+            )
+            require(
+                (wattsonIcon.accessibilityValue() as? NSNumber)?.boolValue == true
+                    && (systemIcon.accessibilityValue() as? NSNumber)?.boolValue == false,
+                "AX radio values expose selected semantics"
+            )
+            require(
+                controller.sidebarNextKeyViewForTest === wattsonIcon,
+                "Tab enters the first Menu Bar Icon card"
+            )
+            require(wattsonIcon.nextKeyView === systemIcon, "Tab reaches the second icon card")
+            require(systemIcon.nextKeyView === controller.sidebarForTest, "icon Tab loop returns to sidebar")
+
+            first?.displayIfNeeded()
+            let wattsonDrawsBeforeFocus = controller.iconCardDrawCountForTest("Wattson")
+            require(first?.makeFirstResponder(wattsonIcon) == true, "Wattson card accepts keyboard focus")
+            require(
+                waitUntil {
+                    first?.displayIfNeeded()
+                    return controller.iconCardDrawCountForTest("Wattson")
+                        > wattsonDrawsBeforeFocus
+                },
+                "focused Wattson card redraws its visible focus ring"
+            )
+            first?.displayIfNeeded()
+            let wattsonDrawsBeforeTransfer = controller.iconCardDrawCountForTest("Wattson")
+            let systemDrawsBeforeTransfer = controller.iconCardDrawCountForTest("System")
+            require(first?.makeFirstResponder(systemIcon) == true, "System card accepts keyboard focus")
+            require(
+                waitUntil {
+                    first?.displayIfNeeded()
+                    return controller.iconCardDrawCountForTest("Wattson")
+                            > wattsonDrawsBeforeTransfer
+                        && controller.iconCardDrawCountForTest("System")
+                            > systemDrawsBeforeTransfer
+                },
+                "Tab-style focus movement redraws both old and new visible focus rings"
+            )
+
+            let systemCopy = label("settings.menu-bar-icon.system.detail", in: first)
+            let normalizedSystemCopy = systemCopy.stringValue.lowercased()
+            require(
+                normalizedSystemCopy.contains("public battery symbol")
+                    && normalizedSystemCopy.contains("macos"),
+                "System copy truthfully identifies the public macOS battery symbol"
+            )
+            require(
+                !normalizedSystemCopy.contains("control center")
+                    && !normalizedSystemCopy.contains("private")
+                    && !normalizedSystemCopy.contains("copied")
+                    && !normalizedSystemCopy.contains("macos 27"),
+                "System copy makes no private-art or future-version claim"
+            )
+
+            systemIcon.performClick(nil)
+            require(Settings.menuBarIconStyle == .native, "whole-card click persists System immediately")
+            require(Settings.showsMenuBarPercentage, "icon style remains independent of percentage")
+            require(systemIcon.state == .on && wattsonIcon.state == .off, "click keeps exactly one selected")
+            Settings.menuBarIconStyle = .wattson
+            require(
+                wattsonIcon.state == .on && systemIcon.state == .off,
+                "external icon-style notification refreshes both radio cards"
+            )
+
+            wattsonIcon.keyDown(with: keyEvent(124))
+            require(Settings.menuBarIconStyle == .native, "Right Arrow selects System")
+            systemIcon.keyDown(with: keyEvent(123))
+            require(Settings.menuBarIconStyle == .wattson, "Left Arrow selects Wattson")
+            wattsonIcon.keyDown(with: keyEvent(119))
+            require(Settings.menuBarIconStyle == .native, "End selects System")
+            systemIcon.keyDown(with: keyEvent(115))
+            require(Settings.menuBarIconStyle == .wattson, "Home selects Wattson")
+            Settings.menuBarIconStyle = .native
+            wattsonIcon.keyDown(with: keyEvent(49, characters: " "))
+            require(Settings.menuBarIconStyle == .wattson, "Space activates the focused radio card")
+            require(
+                iconButtons.filter { $0.state == .on }.count == 1,
+                "keyboard interactions preserve one selection"
+            )
+
+            controller.selectSidebarRowForTest(2)
             require(controller.selectedSectionIdentifierForTest == "modules", "modules selectable")
             require(controller.visibleSectionIdentifierForTest == "modules", "selection delegate swaps page")
             require(controller.contentHostSubviewCountForTest == 1, "page swap keeps one hosted view")
@@ -627,6 +808,14 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(srgbHex((generalList as? NSBox)?.borderColor) == 0x363838, "normal General border keeps reference sRGB")
             require(moduleBoxes.allSatisfy { $0.borderWidth == 1 }, "normal card borders are one point")
             require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x363838 }, "normal cards keep reference sRGB")
+            require(
+                controller.iconCardBorderWidthForTest("Wattson") == 2,
+                "selected icon card has a clear normal border"
+            )
+            require(
+                srgbHex(controller.iconCardFillColorForTest("Wattson")) == 0x2B362F,
+                "selected icon card has a distinct normal fill"
+            )
             require(controller.selectedRowStrokeWidthForTest == 0, "normal selected row has no extra outline")
             require(srgbHex(controller.selectedRowFillColorForTest) == 0x2B362F, "normal selection keeps reference sRGB")
             require(controller.toggleTrackStrokeWidthForTest("Hide System Battery Icon") == 1, "normal off toggle outline is one point")
@@ -646,6 +835,18 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(srgbHex((generalList as? NSBox)?.borderColor) == 0x8D949A, "increased contrast brightens General border")
             require(moduleBoxes.allSatisfy { $0.borderWidth == 2 }, "increased contrast strengthens card borders")
             require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x8D949A }, "increased contrast brightens card borders")
+            require(
+                controller.iconCardBorderWidthForTest("Wattson") == 3,
+                "increased contrast strengthens the selected icon-card border"
+            )
+            require(
+                srgbHex(controller.iconCardBorderColorForTest("Wattson")) == 0x8AD88E,
+                "increased contrast gives the selected icon card a bright outline"
+            )
+            require(
+                srgbHex(controller.iconCardFillColorForTest("Wattson")) == 0x3B5944,
+                "increased contrast strengthens the selected icon-card fill"
+            )
             require(controller.selectedRowStrokeWidthForTest == 2, "increased contrast outlines selected row")
             require(srgbHex(controller.selectedRowFillColorForTest) == 0x3B5944, "increased contrast strengthens selection fill")
             require(srgbHex(controller.selectedRowStrokeColorForTest) == 0x8AD88E, "increased contrast gives selection a clear outline")
@@ -666,6 +867,11 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(srgbHex((generalList as? NSBox)?.borderColor) == 0x363838, "General border sRGB restores exactly")
             require(moduleBoxes.allSatisfy { $0.borderWidth == 1 }, "card borders restore exactly")
             require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x363838 }, "card border sRGB restores exactly")
+            require(
+                controller.iconCardBorderWidthForTest("Wattson") == 2
+                    && srgbHex(controller.iconCardFillColorForTest("Wattson")) == 0x2B362F,
+                "selected icon-card contrast styling restores exactly"
+            )
             require(controller.selectedRowStrokeWidthForTest == 0, "selected row outline is removed on restore")
             require(srgbHex(controller.selectedRowFillColorForTest) == 0x2B362F, "selection sRGB restores exactly")
             require(controller.toggleTrackStrokeWidthForTest("Hide System Battery Icon") == 1, "off toggle outline restores exactly")
@@ -677,14 +883,24 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(false, "compact reference retains window content")
                 exit(1)
             }
+            let contentHost = view("settings.content.host", in: window)
             controller.selectSectionForTest(identifier: "general")
             content.layoutSubtreeIfNeeded()
-            for generalButton in [percentage, login, battery, nativeIcon] {
+            for generalButton in [percentage, login, battery] {
                 requireButtonHit(generalButton, through: content, phase: "compact General")
+            }
+            controller.selectSectionForTest(identifier: "menu-bar-icon")
+            content.layoutSubtreeIfNeeded()
+            for iconButton in iconButtons {
+                requireButtonHit(iconButton, through: content, phase: "compact Menu Bar Icon")
+                let cardInHost = iconButton.convert(iconButton.bounds, to: contentHost)
+                require(
+                    contentHost.bounds.insetBy(dx: -1, dy: -1).contains(cardInHost),
+                    "\(iconButton.accessibilityLabel() ?? "icon") card stays in content bounds"
+                )
             }
             controller.selectSectionForTest(identifier: "modules")
             content.layoutSubtreeIfNeeded()
-            let contentHost = view("settings.content.host", in: window)
             for module in Settings.Module.allCases {
                 let moduleButton = button(module.title, in: window)
                 requireButtonHit(moduleButton, through: content, phase: "compact Modules")
@@ -704,7 +920,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             let stableWindow = controller.windowForTest
             let stableSectionViews = controller.sectionViewIdentitiesForTest
             for index in 0..<1_000 {
-                controller.selectSectionForTest(identifier: index.isMultiple(of: 2) ? "general" : "modules")
+                let identifiers = ["general", "menu-bar-icon", "modules"]
+                controller.selectSectionForTest(identifier: identifiers[index % identifiers.count])
                 require(controller.contentHostSubviewCountForTest == 1, "switch keeps one hosted page")
             }
             require(stableWindow === controller.windowForTest, "switches keep one window")
@@ -808,7 +1025,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                 keyCode: 125
             )!
             controller.sidebarForTest.keyDown(with: down)
-            require(controller.visibleSectionIdentifierForTest == "modules", "Down key shows Modules")
+            require(
+                controller.visibleSectionIdentifierForTest == "menu-bar-icon",
+                "Down key shows Menu Bar Icon"
+            )
+            controller.sidebarForTest.keyDown(with: down)
+            require(controller.visibleSectionIdentifierForTest == "modules", "second Down key shows Modules")
             require(controller.selectedSectionIdentifierForTest == "modules", "keyboard selection stays non-empty")
             first?.close()
             controller.show(activateApp: false)
@@ -952,6 +1174,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                     str(SYSTEM_ICON),
                     str(LOGIN_ITEM),
                     str(SETTINGS),
+                    str(POWER_SNAPSHOT),
+                    str(ENERGY_MODE),
+                    str(BATTERY_ICON),
                     str(WINDOW),
                     str(main),
                     "-o",
@@ -1013,9 +1238,29 @@ class SettingsWindowContractTests(unittest.TestCase):
             "Show Battery Percentage in Menu Bar",
             "Launch at Login",
             "Hide System Battery Icon",
-            "Use System Icon",
+            'let identifier = "menu-bar-icon"',
+            'let title = "Menu Bar Icon"',
+            '"Wattson"',
+            '"System"',
         ):
             self.assertIn(title, source)
+        general_source = source.split(
+            "private final class GeneralSettingsSectionController", 1
+        )[1].split("private enum MenuBarIconCardKeyCommand", 1)[0]
+        self.assertNotIn("menuBarIconStyle", general_source)
+        self.assertNotIn("nativeIconButton", general_source)
+        icon_source = source.split(
+            "private final class MenuBarIconSettingsSectionController", 1
+        )[1].split("private final class ModuleSettingsSectionController", 1)[0]
+        self.assertIn("PowerSnapshot(", icon_source)
+        self.assertIn("percent: 75", icon_source)
+        self.assertIn("plugged: false", icon_source)
+        self.assertIn("BatteryIcon.image(", icon_source)
+        self.assertIn("mode: .auto", icon_source)
+        self.assertIn("pressed: false", icon_source)
+        self.assertIn("style: style", icon_source)
+        self.assertIn("Settings.menuBarIconStyle", icon_source)
+        self.assertIn("case .menuBarIconStyle", icon_source)
         self.assertIn("Settings.Module.allCases", source)
         self.assertIn("Settings.isModuleVisible", source)
         self.assertIn("Settings.setModule", source)

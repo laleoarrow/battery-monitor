@@ -14,7 +14,7 @@ const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
 const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
 const RELEASE_API =
   "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
-const FALLBACK_VERSION = "v3.0.9";
+const FALLBACK_VERSION = "v3.0.10";
 const FALLBACK_ASSET_BASE = `${GITHUB_REPO}/releases/download/${FALLBACK_VERSION}`;
 const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
 
@@ -253,8 +253,9 @@ export default function Home() {
               <span className="feature-number">02</span>
               <h3>Native by design</h3>
               <p>
-                Choose Wattson’s mark or a macOS-style battery glyph. The
-                refined 2A airy-glass selector stays at 1× while dragging.
+                Choose Wattson’s mark or the macOS-style battery glyph on a
+                dedicated Menu Bar Icon page. Previews use the real Wattson and
+                System renderers; percentage stays in General.
               </p>
             </article>
 
@@ -269,9 +270,8 @@ export default function Home() {
               <span className="feature-number">03</span>
               <h3>Control in one click</h3>
               <p>
-                Switch Auto or Low Power and use High Power where supported.
-                System Reduce Motion automatically uses a native 2C segmented
-                control, without an app setting or saved preference.
+                Settings fits a compact 720×520 window, with General, Menu Bar
+                Icon, and Modules arranged for quick scanning.
               </p>
             </article>
 
@@ -303,7 +303,7 @@ export default function Home() {
                 <span className="live-dot" />
                 <span>{versionLabel}</span>
                 <small>
-                  {release.source === "live" ? "checked on GitHub" : "stable release"}
+                  {release.source === "live" ? "checked on GitHub" : "release candidate"}
                 </small>
               </div>
             </div>
@@ -381,7 +381,7 @@ export default function Home() {
                   Apple-notarized. On macOS 15 or later, first try to open the
                   installer, then use System Settings → Privacy &amp; Security →
                   Open Anyway only if you trust this release. Review the source
-                  and compare the published SHA-256 checksum before installing.
+                  and compare the provided SHA-256 checksum before installing.
                 </p>
               </div>
               <a href={`${GITHUB_REPO}/releases`} rel="noreferrer" target="_blank">

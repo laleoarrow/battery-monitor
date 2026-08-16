@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.9`
+- Version: `3.0.10`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -12,27 +12,30 @@
 - Supported systems: macOS 12 or later, Apple silicon and Intel, with an
   internal battery
 
-## Public artifacts
+## Candidate artifacts
 
-`scripts/release.sh 3.0.9` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.10` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.9-macos-universal.pkg`
-- `Wattson-v3.0.9-macos-universal.dmg`
-- `Wattson-v3.0.9-release-info.txt`
+- `Wattson-v3.0.10-macos-universal.pkg`
+- `Wattson-v3.0.10-macos-universal.dmg`
+- `Wattson-v3.0.10-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
 The same PKG is used for the direct download and Homebrew cask.
 
-The default public build follows the iData community distribution model. The
+The default test-package build follows the iData community distribution model. The
 app and helper are ad-hoc signed; the PKG and DMG are not Developer ID signed
 or Apple-notarized. Release metadata and the website state this explicitly.
 
 ## Installation lifecycle
 
-The native PKG installs the app and helper with macOS Installer, stops any
-existing helper, clears a stale disabled state, bootstraps the new helper, and
-performs a read-only health probe. It never changes the current power mode.
+The native PKG already installs the canonical app at
+`/Applications/Wattson.app` and retires only the exact Wattson app at
+`~/Applications/Wattson.app` as part of its established lifecycle. It also
+stops any existing helper, clears a stale disabled state, bootstraps the new
+helper, and performs a read-only health probe without changing the current
+power mode.
 
 The v3 upgrade path retires the former `~/Applications/Wattson.app`. Before
 deleting it, the installer asks the root-only helper to migrate only an exact,
@@ -47,6 +50,10 @@ system installation.
 
 All shipped user-facing copy is English. The settings menu shows the exact
 `CFBundleShortVersionString` as `Wattson Version <version>`.
+
+Settings uses a fixed 720×520 window. General retains the menu-bar percentage
+control, while the dedicated Menu Bar Icon page previews Wattson and System
+with the same real renderers used by the menu bar.
 
 The mode selector keeps the v2.1.5 interaction contract:
 
@@ -69,7 +76,7 @@ Headless checks:
 ```bash
 swift test --parallel
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.9
+bash scripts/release.sh 3.0.10
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -92,6 +99,9 @@ runners.
 
 ## Release order
 
+v3.0.10 is a frozen test-package candidate, not a published release. Do not run
+the public promotion steps for this snapshot.
+
 1. Freeze one final commit, push that exact SHA to `main`, and require Headless
    CI to pass.
 2. Push the same SHA to `release-candidate`. That push intentionally exercises
@@ -103,12 +113,21 @@ runners.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.9` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.10` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.9.
+6. Announce the release only after every public route resolves to v3.0.10.
+
+## v3.0.10 Settings and website work
+
+The v3.0.10 candidate adds a dedicated Menu Bar Icon page with previews from
+the real Wattson and System renderers; the percentage control remains in
+General. Settings now uses the compact fixed 720×520 window. The compact
+grouped website install panel keeps DMG, PKG, and Homebrew together, and the
+real AppKit popover hero replaces the recreated web mock. Earlier selector and
+rendering work remains recorded below rather than being restated as new.
 
 ## v3.0.9 selector and rendering work
 

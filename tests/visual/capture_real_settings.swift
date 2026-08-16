@@ -5,17 +5,17 @@ import Foundation
 /// helper, login-item state, system battery icon, or persistent preferences.
 ///
 /// Build with `-D DEBUG` so the harness can select each retained settings page.
-/// Pass a section identifier (`general` or `modules`) and one output PNG path.
+/// Pass a section identifier (`general`, `menu-bar-icon`, or `modules`) and one output PNG path.
 @main
 private enum CaptureRealSettings {
     static func main() {
         guard CommandLine.arguments.count == 3 else {
-            fputs("usage: capture_real_settings general|modules OUTPUT.png\n", stderr)
+            fputs("usage: capture_real_settings general|menu-bar-icon|modules OUTPUT.png\n", stderr)
             exit(2)
         }
         let section = CommandLine.arguments[1]
-        guard ["general", "modules"].contains(section) else {
-            fputs("section must be general or modules\n", stderr)
+        guard ["general", "menu-bar-icon", "modules"].contains(section) else {
+            fputs("section must be general, menu-bar-icon, or modules\n", stderr)
             exit(2)
         }
 
@@ -102,10 +102,23 @@ private enum CaptureRealSettings {
         capture.arguments = ["-x", "-l", String(window.windowNumber), path]
         try capture.run()
         capture.waitUntilExit()
-        guard capture.terminationStatus == 0,
-              FileManager.default.fileExists(atPath: path) else {
+        if capture.terminationStatus == 0,
+           FileManager.default.fileExists(atPath: path) {
+            return
+        }
+        try renderAppKitFrame(frameView, to: path)
+    }
+
+    private static func renderAppKitFrame(_ frameView: NSView, to path: String) throws {
+        let bounds = frameView.bounds
+        guard let bitmap = frameView.bitmapImageRepForCachingDisplay(in: bounds) else {
             throw CaptureError.couldNotEncodePNG
         }
+        frameView.cacheDisplay(in: bounds, to: bitmap)
+        guard let png = bitmap.representation(using: .png, properties: [:]) else {
+            throw CaptureError.couldNotEncodePNG
+        }
+        try png.write(to: URL(fileURLWithPath: path), options: .atomic)
     }
 
     private enum CaptureError: Error {

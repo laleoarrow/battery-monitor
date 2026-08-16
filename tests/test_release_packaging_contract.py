@@ -40,7 +40,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.promote_workflow = PROMOTE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.9\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.10\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -53,31 +53,64 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn("support-diagnostics-v1.1.0", self.readme)
         self.assertNotIn("support-diagnostics-v1.0.0", self.readme)
         for current_release_topic in (
-            "refined 2A airy glass",
-            "stays at 1× while dragging",
-            "system Reduce Motion",
-            "native 2C segmented control",
-            "without an app setting or saved preference",
-            "stale async completion from the other control",
-            "legacy optical refraction only during a real drag",
-            "identical telemetry samples",
+            "dedicated Menu Bar Icon page",
+            "real Wattson and System renderers",
+            "percentage control remains in General",
+            "720×520",
+            "compact grouped website install panel",
+            "real AppKit popover hero",
         ):
             self.assertIn(current_release_topic, self.promote_workflow)
 
         for user_facing_topic in (
-            "refined 2A airy-glass selector",
-            "stays at 1× while dragging",
-            "system Reduce Motion",
-            "native 2C segmented control",
-            "without an app setting or saved preference",
-            "stale async result",
-            "Legacy refraction refreshes only during a real drag",
-            "identical telemetry samples",
+            "frozen v3.0.10 test-package candidate",
+            "dedicated Menu Bar Icon page",
+            "real Wattson and System renderers",
+            "percentage control remains in General",
+            "720×520",
+            "compact grouped website install panel",
+            "real AppKit popover hero",
         ):
             self.assertIn(user_facing_topic, self.readme)
 
+        current_handoff = self.handoff.split(
+            "## v3.0.10 Settings and website work", 1
+        )[1].split("## v3.0.9 selector and rendering work", 1)[0]
+        normalized_current_handoff = " ".join(current_handoff.split())
+        for misleading_install_claim in (
+            "Every installer now converges",
+            "All installers converge",
+            "Converges every install route",
+            "Installers converge",
+            "same-bundle-ID residue",
+            "only after the canonical app passes validation",
+            "rollback backup outside `/Applications`",
+            "hidden `.app`",
+        ):
+            for release_surface in (
+                " ".join(self.readme.split()),
+                " ".join(self.promote_workflow.split()),
+                normalized_current_handoff,
+            ):
+                self.assertNotIn(misleading_install_claim, release_surface)
+
+        for current_handoff_topic in (
+            "dedicated Menu Bar Icon page",
+            "real Wattson and System renderers",
+            "percentage control remains in General",
+            "720×520",
+            "compact grouped website install panel",
+            "real AppKit popover hero",
+        ):
+            self.assertIn(current_handoff_topic, normalized_current_handoff)
+
+        self.assertIn("## v3.0.10 Settings and website work", self.handoff)
         self.assertIn("## v3.0.9 selector and rendering work", self.handoff)
         self.assertIn("## v3.0.8 dynamic Reduce Motion and transaction work", self.handoff)
+        self.assertLess(
+            self.handoff.index("## v3.0.10 Settings and website work"),
+            self.handoff.index("## v3.0.9 selector and rendering work"),
+        )
         self.assertLess(
             self.handoff.index("## v3.0.9 selector and rendering work"),
             self.handoff.index("## v3.0.8 dynamic Reduce Motion and transaction work"),
