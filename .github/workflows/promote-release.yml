@@ -6,7 +6,7 @@ on:
       version:
         description: Stable semantic version without the v prefix
         required: true
-        default: "3.0.10"
+        default: "3.0.11"
         type: string
       candidate_run_id:
         description: Successful Wattson release candidate workflow run ID
@@ -202,7 +202,9 @@ jobs:
             cat <<'EOF'
           This Wattson release is universal for Apple silicon and Intel and supports macOS 12 or later.
 
-          - Adds a dedicated Menu Bar Icon page with previews from the real Wattson and System renderers; the percentage control remains in General.
+          - Adds a dedicated Menu Bar Icon page that presents all four complete appearances in one row: Wattson icon only, Wattson with percentage, macOS icon only, and macOS with percentage.
+          - Every preset uses the real BatteryIcon renderer, and percentage appears to the left of the glyph.
+          - General contains only Launch at Login and Hide System Battery Icon.
           - Uses a compact fixed 720×520 Settings window for General, Menu Bar Icon, and Modules.
           - Adds a compact grouped website install panel for DMG, PKG, and Homebrew.
           - Uses the real AppKit popover hero instead of a recreated browser mock.

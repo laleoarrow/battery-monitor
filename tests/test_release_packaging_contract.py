@@ -40,7 +40,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.promote_workflow = PROMOTE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.10\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.11\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -52,30 +52,41 @@ class ReleasePackagingContractTests(unittest.TestCase):
     def test_current_release_support_and_promotion_copy_are_not_stale(self):
         self.assertIn("support-diagnostics-v1.1.0", self.readme)
         self.assertNotIn("support-diagnostics-v1.0.0", self.readme)
+        normalized_readme = " ".join(self.readme.split())
+        normalized_promote_workflow = " ".join(self.promote_workflow.split())
         for current_release_topic in (
             "dedicated Menu Bar Icon page",
-            "real Wattson and System renderers",
-            "percentage control remains in General",
+            "Wattson icon only",
+            "Wattson with percentage",
+            "macOS icon only",
+            "macOS with percentage",
+            "one row",
+            "real BatteryIcon renderer",
+            "percentage appears to the left of the glyph",
+            "General contains only Launch at Login and Hide System Battery Icon",
             "720×520",
-            "compact grouped website install panel",
-            "real AppKit popover hero",
         ):
-            self.assertIn(current_release_topic, self.promote_workflow)
+            self.assertIn(current_release_topic, normalized_promote_workflow)
 
         for user_facing_topic in (
-            "frozen v3.0.10 test-package candidate",
+            "v3.0.11 test-package candidate",
+            "has not been published",
             "dedicated Menu Bar Icon page",
-            "real Wattson and System renderers",
-            "percentage control remains in General",
+            "Wattson icon only",
+            "Wattson with percentage",
+            "macOS icon only",
+            "macOS with percentage",
+            "one row",
+            "real BatteryIcon renderer",
+            "percentage appears to the left of the glyph",
+            "General now contains only Launch at Login and Hide System Battery Icon",
             "720×520",
-            "compact grouped website install panel",
-            "real AppKit popover hero",
         ):
-            self.assertIn(user_facing_topic, self.readme)
+            self.assertIn(user_facing_topic, normalized_readme)
 
         current_handoff = self.handoff.split(
-            "## v3.0.10 Settings and website work", 1
-        )[1].split("## v3.0.9 selector and rendering work", 1)[0]
+            "## v3.0.11 complete menu-bar appearance presets", 1
+        )[1].split("## v3.0.10 Settings and website work", 1)[0]
         normalized_current_handoff = " ".join(current_handoff.split())
         for misleading_install_claim in (
             "Every installer now converges",
@@ -88,25 +99,34 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "hidden `.app`",
         ):
             for release_surface in (
-                " ".join(self.readme.split()),
-                " ".join(self.promote_workflow.split()),
+                normalized_readme,
+                normalized_promote_workflow,
                 normalized_current_handoff,
             ):
                 self.assertNotIn(misleading_install_claim, release_surface)
 
         for current_handoff_topic in (
             "dedicated Menu Bar Icon page",
-            "real Wattson and System renderers",
-            "percentage control remains in General",
+            "Wattson icon only",
+            "Wattson with percentage",
+            "macOS icon only",
+            "macOS with percentage",
+            "one row",
+            "real BatteryIcon renderer",
+            "percentage appears to the left of the glyph",
+            "General contains only Launch at Login and Hide System Battery Icon",
             "720×520",
-            "compact grouped website install panel",
-            "real AppKit popover hero",
         ):
             self.assertIn(current_handoff_topic, normalized_current_handoff)
 
+        self.assertIn("## v3.0.11 complete menu-bar appearance presets", self.handoff)
         self.assertIn("## v3.0.10 Settings and website work", self.handoff)
         self.assertIn("## v3.0.9 selector and rendering work", self.handoff)
         self.assertIn("## v3.0.8 dynamic Reduce Motion and transaction work", self.handoff)
+        self.assertLess(
+            self.handoff.index("## v3.0.11 complete menu-bar appearance presets"),
+            self.handoff.index("## v3.0.10 Settings and website work"),
+        )
         self.assertLess(
             self.handoff.index("## v3.0.10 Settings and website work"),
             self.handoff.index("## v3.0.9 selector and rendering work"),
@@ -115,6 +135,14 @@ class ReleasePackagingContractTests(unittest.TestCase):
             self.handoff.index("## v3.0.9 selector and rendering work"),
             self.handoff.index("## v3.0.8 dynamic Reduce Motion and transaction work"),
         )
+
+        for stale_copy in (
+            "percentage control remains in General",
+            "percentage stays in General",
+        ):
+            self.assertNotIn(stale_copy, normalized_readme)
+            self.assertNotIn(stale_copy, normalized_promote_workflow)
+            self.assertNotIn(stale_copy, normalized_current_handoff)
 
     def test_release_scripts_are_executable_and_parse_as_bash(self):
         for path in (*SCRIPTS.values(), PREINSTALL, POSTINSTALL):

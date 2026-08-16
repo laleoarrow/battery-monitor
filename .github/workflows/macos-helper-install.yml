@@ -6,7 +6,7 @@ on:
       version:
         description: Version from the repository VERSION file
         required: true
-        default: "3.0.10"
+        default: "3.0.11"
         type: string
       distribution_mode:
         description: Release signing policy

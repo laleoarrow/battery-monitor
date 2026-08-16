@@ -5,7 +5,9 @@ import Foundation
 /// helper, login-item state, system battery icon, or persistent preferences.
 ///
 /// Build with `-D DEBUG` so the harness can select each retained settings page.
-/// Pass a section identifier (`general`, `menu-bar-icon`, or `modules`) and one output PNG path.
+/// The retained window is never ordered front or made key; AppKit renders its
+/// real frame hierarchy into a bitmap cache without interrupting the active
+/// desktop. Pass a section identifier and one output PNG path.
 @main
 private enum CaptureRealSettings {
     static func main() {
@@ -60,9 +62,8 @@ private enum CaptureRealSettings {
         }
         window.animationBehavior = .none
         controller.selectSectionForTest(identifier: section)
-        controller.show(activateApp: false)
-        window.makeKeyAndOrderFront(nil)
-        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.15))
+        controller.refreshSectionsForTest()
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
 
         do {
             try capture(
@@ -89,23 +90,10 @@ private enum CaptureRealSettings {
               let frameView = content.superview else {
             throw CaptureError.missingWindowSurface
         }
-        window.orderOut(nil)
-        window.orderFrontRegardless()
-        window.makeKey()
         content.layoutSubtreeIfNeeded()
         frameView.layoutSubtreeIfNeeded()
         window.displayIfNeeded()
         frameView.displayIfNeeded()
-        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
-        let capture = Process()
-        capture.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
-        capture.arguments = ["-x", "-l", String(window.windowNumber), path]
-        try capture.run()
-        capture.waitUntilExit()
-        if capture.terminationStatus == 0,
-           FileManager.default.fileExists(atPath: path) {
-            return
-        }
         try renderAppKitFrame(frameView, to: path)
     }
 

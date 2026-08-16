@@ -37,9 +37,16 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /Community build/i);
   assert.match(html, /macOS-style battery glyph/i);
   assert.match(html, /dedicated Menu Bar Icon page/i);
-  assert.match(html, /real Wattson and System renderers/i);
-  assert.match(html, /percentage stays in General/i);
+  assert.match(html, /Wattson icon only/i);
+  assert.match(html, /Wattson with percentage/i);
+  assert.match(html, /macOS icon only/i);
+  assert.match(html, /macOS with percentage/i);
+  assert.match(html, /one row/i);
+  assert.match(html, /real BatteryIcon renderer/i);
+  assert.match(html, /percentage appears to the left of the glyph/i);
+  assert.match(html, /General contains only Launch at Login and Hide System Battery Icon/i);
   assert.match(html, /720×520/i);
+  assert.match(html, /v3\.0\.11/i);
   assert.match(html, /release candidate/i);
   assert.match(html, /not Apple-notarized/i);
   assert.match(html, /System Settings[\s\S]*Privacy[\s\S]*Security[\s\S]*Open Anyway/i);
@@ -48,6 +55,7 @@ test("renders the complete English Wattson release page", async () => {
     html,
     /Installers converge|canonical copy passes validation|graphical-install rollback/i,
   );
+  assert.doesNotMatch(html, /percentage (?:control )?(?:remains|stays) in General/i);
   assert.doesNotMatch(html, /Your site is taking shape|Starter Project/i);
 });
 

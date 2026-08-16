@@ -81,12 +81,13 @@ private enum SettingsStyle {
     static let sidebarFont = NSFont.systemFont(ofSize: 13, weight: .medium)
 
     static let toggleSize = NSSize(width: 38, height: 22)
-    static let generalListHeight: CGFloat = 204
+    static let generalListHeight: CGFloat = 136
     static let generalRowHeight: CGFloat = 68
     static let generalIconTileSize: CGFloat = 36
     static let moduleCardHeight: CGFloat = 166
     static let moduleCardWidth: CGFloat = 233
     static let moduleCardGap: CGFloat = 12
+    static let iconCardGap: CGFloat = 8
     static let surfaceCornerRadius: CGFloat = 10
     static let modulePreviewSize = NSSize(width: 64, height: 60)
 
@@ -693,7 +694,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     let view = NSView()
 
     private let dependencies: SettingsWindowDependencies
-    private let percentageButton: SettingsToggleButton
     private let loginButton: SettingsToggleButton
     private let batteryButton: SettingsToggleButton
     private let loginDetail = NSTextField(labelWithString: "")
@@ -706,7 +706,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let batteryAccessibilityPurpose =
         "Hide Apple’s battery icon while keeping Wattson in the menu bar."
 
-    private var settingsObserver: NSObjectProtocol?
     private var batteryObserver: NSObjectProtocol?
     private var loginGeneration = 0
     private var batteryGeneration = 0
@@ -717,10 +716,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
     init(dependencies: SettingsWindowDependencies) {
         self.dependencies = dependencies
-        percentageButton = SettingsToggleButton(
-            accessibilityLabel: "Show Battery Percentage in Menu Bar",
-            increaseContrast: dependencies.increaseContrast
-        )
         loginButton = SettingsToggleButton(
             accessibilityLabel: "Launch at Login",
             increaseContrast: dependencies.increaseContrast
@@ -737,9 +732,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     }
 
     deinit {
-        if let settingsObserver {
-            NotificationCenter.default.removeObserver(settingsObserver)
-        }
         if let batteryObserver {
             NotificationCenter.default.removeObserver(batteryObserver)
         }
@@ -751,20 +743,11 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             return
         }
 
-        refreshPercentage()
         refreshLoginItem()
         refreshBatteryIcon()
     }
 
     private func configureControls() {
-        configureSwitch(percentageButton)
-        percentageButton.target = self
-        percentageButton.action = #selector(togglePercentage(_:))
-        percentageButton.setAccessibilityLabel("Show Battery Percentage in Menu Bar")
-        percentageButton.setAccessibilityHelp(
-            "Show the current battery percentage next to the Wattson menu bar icon."
-        )
-
         configureSwitch(loginButton)
         loginButton.target = self
         loginButton.action = #selector(toggleLoginItem(_:))
@@ -835,24 +818,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
     private func buildView() {
         view.identifier = NSUserInterfaceItemIdentifier("settings.section.general")
-        let percentageDetail = NSTextField(
-            labelWithString: "Show charge next to the menu bar icon"
-        )
-        configureDetailLabel(
-            percentageDetail,
-            identifier: "settings.general.percentage.detail"
-        )
-
         let rows = NSStackView(views: [
-            row(
-                identifier: "percentage",
-                symbolName: "percent",
-                visibleTitle: "Show Battery Percentage",
-                button: percentageButton,
-                detail: percentageDetail,
-                error: nil,
-                hasSeparator: true
-            ),
             row(
                 identifier: "login",
                 symbolName: "person.fill",
@@ -1004,21 +970,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     }
 
     private func installObservers() {
-        settingsObserver = NotificationCenter.default.addObserver(
-            forName: Settings.didChange,
-            object: nil,
-            queue: .main
-        ) { [weak self] notification in
-            guard let self else { return }
-            guard let change = notification.userInfo?[Settings.changeUserInfoKey]
-                    as? Settings.Change else {
-                self.refreshPercentage()
-                return
-            }
-            guard change == .menuBarPercentage else { return }
-            self.refreshPercentage()
-        }
-
         batteryObserver = NotificationCenter.default.addObserver(
             forName: dependencies.systemBatteryIconDidChange,
             object: nil,
@@ -1030,10 +981,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             self.clearError(self.batteryError)
             self.renderBatteryIcon(hidden)
         }
-    }
-
-    private func refreshPercentage() {
-        percentageButton.state = Settings.showsMenuBarPercentage ? .on : .off
     }
 
     private func refreshLoginItem() {
@@ -1070,10 +1017,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
                 self.renderBatteryIcon(hidden)
             }
         }
-    }
-
-    @objc private func togglePercentage(_ sender: NSButton) {
-        Settings.showsMenuBarPercentage = sender.state == .on
     }
 
     @objc private func toggleLoginItem(_ sender: NSButton) {
@@ -1279,6 +1222,72 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     }
 }
 
+private enum MenuBarIconAppearance: Int, CaseIterable {
+    case wattsonIconOnly
+    case wattsonWithPercentage
+    case macOSIconOnly
+    case macOSWithPercentage
+
+    var iconStyle: Settings.MenuBarIconStyle {
+        switch self {
+        case .wattsonIconOnly, .wattsonWithPercentage: return .wattson
+        case .macOSIconOnly, .macOSWithPercentage: return .native
+        }
+    }
+
+    var showsPercentage: Bool {
+        switch self {
+        case .wattsonIconOnly, .macOSIconOnly: return false
+        case .wattsonWithPercentage, .macOSWithPercentage: return true
+        }
+    }
+
+    var accessibilityLabel: String {
+        switch self {
+        case .wattsonIconOnly: return "Wattson icon only"
+        case .wattsonWithPercentage: return "Wattson with percentage"
+        case .macOSIconOnly: return "macOS icon only"
+        case .macOSWithPercentage: return "macOS with percentage"
+        }
+    }
+
+    var visibleTitle: String {
+        switch iconStyle {
+        case .wattson: return "Wattson"
+        case .native: return "macOS"
+        }
+    }
+
+    var visibleDetail: String { showsPercentage ? "With percentage" : "Icon only" }
+
+    var accessibilityHelp: String {
+        let artwork = iconStyle == .wattson
+            ? "Wattson’s live status battery glyph"
+            : "The public battery symbol supplied by macOS"
+        return showsPercentage
+            ? "\(artwork), with the battery percentage on its left."
+            : "\(artwork), without a percentage."
+    }
+
+    var identifierSuffix: String {
+        switch self {
+        case .wattsonIconOnly: return "wattson-icon-only"
+        case .wattsonWithPercentage: return "wattson-percentage"
+        case .macOSIconOnly: return "macos-icon-only"
+        case .macOSWithPercentage: return "macos-percentage"
+        }
+    }
+
+    init(iconStyle: Settings.MenuBarIconStyle, showsPercentage: Bool) {
+        switch (iconStyle, showsPercentage) {
+        case (.wattson, false): self = .wattsonIconOnly
+        case (.wattson, true): self = .wattsonWithPercentage
+        case (.native, false): self = .macOSIconOnly
+        case (.native, true): self = .macOSWithPercentage
+        }
+    }
+}
+
 private enum MenuBarIconCardKeyCommand {
     case previous
     case next
@@ -1287,7 +1296,7 @@ private enum MenuBarIconCardKeyCommand {
 }
 
 private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing {
-    let iconStyle: Settings.MenuBarIconStyle
+    let menuBarAppearance: MenuBarIconAppearance
     var onKeyboardCommand: ((MenuBarIconCardKeyCommand) -> Void)?
 
 #if DEBUG
@@ -1296,18 +1305,32 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
 
     private let increaseContrast: () -> Bool
 
+    /// Matches the status item's native menu-bar font and tabular digit
+    /// spacing, so the percentage previews are complete presentations rather
+    /// than explanatory labels beside an enlarged icon.
+    private static let previewMenuBarFont: NSFont = {
+        let base = NSFont.menuBarFont(ofSize: 0)
+        let descriptor = base.fontDescriptor.addingAttributes([
+            .featureSettings: [[
+                NSFontDescriptor.FeatureKey.typeIdentifier: kNumberSpacingType,
+                NSFontDescriptor.FeatureKey.selectorIdentifier:
+                    kMonospacedNumbersSelector,
+            ]],
+        ])
+        return NSFont(descriptor: descriptor, size: 0) ?? base
+    }()
+
     init(
-        style: Settings.MenuBarIconStyle,
-        visibleTitle: String,
-        detail: String,
+        appearance: MenuBarIconAppearance,
         previewImage: NSImage,
+        previewPercent: Int,
         increaseContrast: @escaping () -> Bool
     ) {
-        iconStyle = style
+        menuBarAppearance = appearance
         self.increaseContrast = increaseContrast
         super.init(frame: .zero)
 
-        let identifierSuffix = style == .wattson ? "wattson" : "system"
+        let identifierSuffix = appearance.identifierSuffix
         identifier = NSUserInterfaceItemIdentifier(
             "settings.menu-bar-icon.card.\(identifierSuffix)"
         )
@@ -1318,8 +1341,8 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
         focusRingType = .none
         setButtonType(.radio)
         setAccessibilityRole(.radioButton)
-        setAccessibilityLabel(visibleTitle)
-        setAccessibilityHelp(detail)
+        setAccessibilityLabel(appearance.accessibilityLabel)
+        setAccessibilityHelp(appearance.accessibilityHelp)
 
         let preview = NSBox()
         preview.boxType = .custom
@@ -1340,25 +1363,54 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
         imageView.contentTintColor = .labelColor
         imageView.setAccessibilityElement(false)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        preview.addSubview(imageView)
 
-        let primary = NSTextField(labelWithString: visibleTitle)
-        primary.font = SettingsStyle.primaryFont
+        var presentationViews: [NSView] = []
+        if appearance.showsPercentage {
+            let percentage = NSTextField(
+                labelWithString: "\(previewPercent)% "
+            )
+            percentage.identifier = NSUserInterfaceItemIdentifier(
+                "settings.menu-bar-icon.percentage.\(identifierSuffix)"
+            )
+            percentage.font = Self.previewMenuBarFont
+            percentage.textColor = .labelColor
+            percentage.lineBreakMode = .byClipping
+            percentage.setAccessibilityElement(false)
+            presentationViews.append(percentage)
+        }
+        presentationViews.append(imageView)
+        let presentation = NSStackView(views: presentationViews)
+        presentation.orientation = .horizontal
+        presentation.alignment = .centerY
+        presentation.distribution = .fill
+        presentation.spacing = 2
+        presentation.setAccessibilityElement(false)
+        presentation.translatesAutoresizingMaskIntoConstraints = false
+        preview.addSubview(presentation)
+
+        let primary = NSTextField(labelWithString: appearance.visibleTitle)
+        primary.identifier = NSUserInterfaceItemIdentifier(
+            "settings.menu-bar-icon.title.\(identifierSuffix)"
+        )
+        primary.font = .systemFont(ofSize: 13, weight: .semibold)
         primary.textColor = SettingsStyle.primaryText
+        primary.alignment = .center
+        primary.lineBreakMode = .byClipping
         primary.setAccessibilityElement(false)
         primary.translatesAutoresizingMaskIntoConstraints = false
 
-        let secondary = NSTextField(labelWithString: detail)
+        let secondary = NSTextField(labelWithString: appearance.visibleDetail)
         secondary.identifier = NSUserInterfaceItemIdentifier(
-            "settings.menu-bar-icon.\(identifierSuffix).detail"
+            "settings.menu-bar-icon.detail.\(identifierSuffix)"
         )
         secondary.setAccessibilityIdentifier(
-            "settings.menu-bar-icon.\(identifierSuffix).detail"
+            "settings.menu-bar-icon.detail.\(identifierSuffix)"
         )
         secondary.font = SettingsStyle.detailFont
         secondary.textColor = SettingsStyle.secondaryText
-        secondary.lineBreakMode = .byWordWrapping
-        secondary.maximumNumberOfLines = 2
+        secondary.alignment = .center
+        secondary.lineBreakMode = .byClipping
+        secondary.maximumNumberOfLines = 1
         secondary.setAccessibilityElement(false)
         secondary.translatesAutoresizingMaskIntoConstraints = false
 
@@ -1367,24 +1419,23 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
         addSubview(secondary)
         NSLayoutConstraint.activate([
             preview.centerXAnchor.constraint(equalTo: centerXAnchor),
-            preview.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            preview.widthAnchor.constraint(equalToConstant: 78),
-            preview.heightAnchor.constraint(equalToConstant: 60),
+            preview.topAnchor.constraint(equalTo: topAnchor, constant: 18),
+            preview.widthAnchor.constraint(equalToConstant: 92),
+            preview.heightAnchor.constraint(equalToConstant: 56),
 
-            imageView.centerXAnchor.constraint(equalTo: preview.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: preview.centerYAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: 46),
-            imageView.heightAnchor.constraint(equalToConstant: 30),
+            presentation.centerXAnchor.constraint(equalTo: preview.centerXAnchor),
+            presentation.centerYAnchor.constraint(equalTo: preview.centerYAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: BatteryIcon.width),
+            imageView.heightAnchor.constraint(equalToConstant: BatteryIcon.height),
 
-            primary.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            primary.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -38),
-            primary.topAnchor.constraint(equalTo: preview.bottomAnchor, constant: 12),
+            primary.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            primary.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            primary.topAnchor.constraint(equalTo: preview.bottomAnchor, constant: 14),
 
-            secondary.leadingAnchor.constraint(equalTo: primary.leadingAnchor),
-            secondary.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            secondary.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            secondary.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             secondary.topAnchor.constraint(equalTo: primary.bottomAnchor, constant: 4),
-            secondary.heightAnchor.constraint(equalToConstant: 28),
-            secondary.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10),
+            secondary.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -16),
         ])
     }
 
@@ -1526,7 +1577,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
     let view = NSView()
 
     private static let previewSnapshot = PowerSnapshot(
-        percent: 75,
+        percent: 42,
         plugged: false,
         adapterW: 0,
         batteryW: -18,
@@ -1537,7 +1588,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
     )
 
     private let increaseContrast: () -> Bool
-    private var buttons: [Settings.MenuBarIconStyle: MenuBarIconCardButton] = [:]
+    private var buttons: [MenuBarIconAppearance: MenuBarIconCardButton] = [:]
     private var settingsObserver: NSObjectProtocol?
 
     init(increaseContrast: @escaping () -> Bool) {
@@ -1580,39 +1631,26 @@ private final class MenuBarIconSettingsSectionController: NSObject,
         subtitle.textColor = SettingsStyle.secondaryText
         subtitle.translatesAutoresizingMaskIntoConstraints = false
 
-        let definitions: [(Settings.MenuBarIconStyle, String, String)] = [
-            (
-                .wattson,
-                "Wattson",
-                "Wattson’s battery glyph with live status color."
-            ),
-            (
-                .native,
-                "System",
-                "Follows the public battery symbol supplied by current macOS."
-            ),
-        ]
-        let orderedButtons = definitions.map { style, label, detail in
+        let orderedButtons = MenuBarIconAppearance.allCases.map { appearance in
             let preview = BatteryIcon.image(
                 for: Self.previewSnapshot,
                 mode: .auto,
                 pressed: false,
-                style: style
+                style: appearance.iconStyle
             )
             let button = MenuBarIconCardButton(
-                style: style,
-                visibleTitle: label,
-                detail: detail,
+                appearance: appearance,
                 previewImage: preview,
+                previewPercent: Self.previewSnapshot.percent,
                 increaseContrast: increaseContrast
             )
             button.target = self
-            button.action = #selector(selectIconStyle(_:))
+            button.action = #selector(selectAppearance(_:))
             button.onKeyboardCommand = { [weak self] command in
-                self?.handleKeyboard(command, from: style)
+                self?.handleKeyboard(command, from: appearance)
             }
             button.translatesAutoresizingMaskIntoConstraints = false
-            buttons[style] = button
+            buttons[appearance] = button
             return button
         }
 
@@ -1620,12 +1658,14 @@ private final class MenuBarIconSettingsSectionController: NSObject,
         group.identifier = NSUserInterfaceItemIdentifier("settings.menu-bar-icon.group")
         group.orientation = .horizontal
         group.alignment = .height
-        group.distribution = .fill
-        group.spacing = SettingsStyle.moduleCardGap
+        group.distribution = .fillEqually
+        group.spacing = SettingsStyle.iconCardGap
         group.setAccessibilityElement(true)
         group.setAccessibilityRole(.radioGroup)
         group.setAccessibilityLabel(title)
-        group.setAccessibilityHelp("Choose Wattson or the public system battery symbol.")
+        group.setAccessibilityHelp(
+            "Choose a complete Wattson or public macOS battery-symbol presentation."
+        )
         group.setAccessibilityChildren(orderedButtons)
         group.translatesAutoresizingMaskIntoConstraints = false
 
@@ -1642,15 +1682,15 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             subtitle.topAnchor.constraint(equalTo: heading.bottomAnchor, constant: 8),
 
             group.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            group.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor),
+            group.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             group.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 14),
             group.heightAnchor.constraint(equalToConstant: SettingsStyle.moduleCardHeight),
-
-            orderedButtons[0].widthAnchor.constraint(equalToConstant: SettingsStyle.moduleCardWidth),
-            orderedButtons[0].heightAnchor.constraint(equalToConstant: SettingsStyle.moduleCardHeight),
-            orderedButtons[1].widthAnchor.constraint(equalToConstant: SettingsStyle.moduleCardWidth),
-            orderedButtons[1].heightAnchor.constraint(equalToConstant: SettingsStyle.moduleCardHeight),
         ])
+        orderedButtons.forEach {
+            $0.heightAnchor.constraint(
+                equalToConstant: SettingsStyle.moduleCardHeight
+            ).isActive = true
+        }
     }
 
     private func installObserver() {
@@ -1665,51 +1705,60 @@ private final class MenuBarIconSettingsSectionController: NSObject,
                 self.refreshSelection()
                 return
             }
-            if case .menuBarIconStyle = change {
+            switch change {
+            case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
+            case .module:
+                break
             }
         }
     }
 
     private func refreshSelection() {
-        let selected = Settings.menuBarIconStyle
-        for (style, button) in buttons {
-            button.state = style == selected ? .on : .off
+        let selected = MenuBarIconAppearance(
+            iconStyle: Settings.menuBarIconStyle,
+            showsPercentage: Settings.showsMenuBarPercentage
+        )
+        for (appearance, button) in buttons {
+            button.state = appearance == selected ? .on : .off
             button.needsDisplay = true
         }
     }
 
-    @objc private func selectIconStyle(_ sender: MenuBarIconCardButton) {
-        select(sender.iconStyle, movingFocus: false)
+    @objc private func selectAppearance(_ sender: MenuBarIconCardButton) {
+        select(sender.menuBarAppearance, movingFocus: false)
     }
 
     private func handleKeyboard(
         _ command: MenuBarIconCardKeyCommand,
-        from current: Settings.MenuBarIconStyle
+        from current: MenuBarIconAppearance
     ) {
-        let styles = Settings.MenuBarIconStyle.allCases
-        guard let currentIndex = styles.firstIndex(of: current) else { return }
+        let appearances = MenuBarIconAppearance.allCases
+        guard let currentIndex = appearances.firstIndex(of: current) else { return }
         let targetIndex: Int
         switch command {
         case .previous:
-            targetIndex = (currentIndex - 1 + styles.count) % styles.count
+            targetIndex = (currentIndex - 1 + appearances.count) % appearances.count
         case .next:
-            targetIndex = (currentIndex + 1) % styles.count
+            targetIndex = (currentIndex + 1) % appearances.count
         case .first:
-            targetIndex = styles.startIndex
+            targetIndex = appearances.startIndex
         case .last:
-            targetIndex = styles.index(before: styles.endIndex)
+            targetIndex = appearances.index(before: appearances.endIndex)
         }
-        select(styles[targetIndex], movingFocus: true)
+        select(appearances[targetIndex], movingFocus: true)
     }
 
     private func select(
-        _ style: Settings.MenuBarIconStyle,
+        _ appearance: MenuBarIconAppearance,
         movingFocus: Bool
     ) {
-        Settings.menuBarIconStyle = style
+        Settings.setMenuBarAppearance(
+            iconStyle: appearance.iconStyle,
+            showsPercentage: appearance.showsPercentage
+        )
         refreshSelection()
-        if movingFocus, let button = buttons[style] {
+        if movingFocus, let button = buttons[appearance] {
             button.window?.makeFirstResponder(button)
         }
     }
