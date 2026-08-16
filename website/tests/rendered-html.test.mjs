@@ -41,12 +41,21 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /Wattson with percentage/i);
   assert.match(html, /macOS icon only/i);
   assert.match(html, /macOS with percentage/i);
-  assert.match(html, /one row/i);
+  assert.match(html, /appearances vertically/i);
+  assert.match(html, /one full-width option per row/i);
+  assert.match(html, /seven real production-rendered states/i);
+  assert.match(
+    html,
+    /Battery, Full, Charging, Low, Low \+ AC, Saver, and Saver \+ AC/i,
+  );
   assert.match(html, /real BatteryIcon renderer/i);
-  assert.match(html, /percentage appears to the left of the glyph/i);
+  assert.match(
+    html,
+    /percentage rows show matching per-state values to the left of each glyph/i,
+  );
   assert.match(html, /General contains only Launch at Login and Hide System Battery Icon/i);
   assert.match(html, /720×520/i);
-  assert.match(html, /v3\.0\.11/i);
+  assert.match(html, /v3\.0\.12/i);
   assert.match(html, /release candidate/i);
   assert.match(html, /not Apple-notarized/i);
   assert.match(html, /System Settings[\s\S]*Privacy[\s\S]*Security[\s\S]*Open Anyway/i);
@@ -56,6 +65,7 @@ test("renders the complete English Wattson release page", async () => {
     /Installers converge|canonical copy passes validation|graphical-install rollback/i,
   );
   assert.doesNotMatch(html, /percentage (?:control )?(?:remains|stays) in General/i);
+  assert.doesNotMatch(html, /all four complete appearances in one row/i);
   assert.doesNotMatch(html, /Your site is taking shape|Starter Project/i);
 });
 

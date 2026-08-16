@@ -66,36 +66,50 @@ The final result removes the large unused General canvas and reduces overall con
 
 ### Source and implementation
 
-- Source visual truth: `/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/codex-clipboard-7b0490dd-18e1-40aa-a911-7ca2473723fe.png` (1452 × 1052 pixels, active dark window with a six-pixel outer capture margin).
-- Normalized source: `/tmp/wattson-settings-menu-bar-icon-source-normalized.png` (1440 × 1040 pixels after removing only the six-pixel outer margin).
-- Final implementation: `/tmp/wattson-settings-menu-bar-icon-four-presets.png` (1440 × 1040 pixels from the shipping AppKit frame hierarchy).
-- General two-row implementation: `/tmp/wattson-settings-general-two-rows.png` (1440 × 1040 pixels).
-- Full-view same-input comparison: `/tmp/wattson-settings-menu-bar-icon-comparison.png` (2880 × 1040 pixels; normalized source left, implementation right).
-- Focused same-input comparison: `/tmp/wattson-settings-menu-bar-icon-focused-comparison.png` (2080 × 430 pixels; card region, source left and implementation right).
-- Viewport and density normalization: both compared surfaces are 720 × 520 AppKit points at Retina 2× density. No resampling was used; the source was cropped to the exact content/frame extent.
-- State: dark appearance at the default complete preset, Wattson with percentage. The reference has the former System style selected; selecting the second preset is an intentional product requirement, not design drift. The implementation traffic lights are inactive because the capture is deliberately hidden and non-key so it cannot interrupt the user's desktop.
+- User-reported incomplete-state capture: `/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/codex-clipboard-7b0490dd-18e1-40aa-a911-7ca2473723fe.png`.
+- Superseded four-card implementation: `/tmp/wattson-settings-menu-bar-icon-four-presets.png`.
+- Final four-row, seven-state implementation: `/tmp/wattson-settings-menu-bar-icon-28-states-final-2.png` (1440 × 1040 pixels from the shipping AppKit hierarchy).
+- Capture environment: the generic `macOS-TestLab` ARM VM on macOS 26.6.1, rendered at Retina 2× density from the fixed 720 × 520-point window.
+- Capture method: the retained Settings window stayed hidden and non-key; `cacheDisplay` rendered the real hierarchy without touching the maintainer desktop.
+- State: dark appearance with the default complete preset, Wattson with percentage, selected.
 
 ### Comparison
 
-The final page preserves the reference shell, heading, subtitle, dark palette, radii, and green radio-card selection language. The former two broad style cards are deliberately replaced by four equal 119.75 × 166-point cards in one 503-point row with three eight-point gaps: Wattson icon only, Wattson with percentage, macOS icon only, and macOS with percentage. Every card contains an image returned by the shipping `BatteryIcon.image(for:mode:pressed:style:)` renderer for the same static 42% snapshot. The two percentage presets additionally render the real `42% ` status title to the glyph's left using `NSFont.menuBarFont` with tabular digits.
+The final page preserves the compact shell, heading, subtitle, dark palette,
+radii, and green radio-row selection language. The four complete appearances
+are now listed vertically, one full-width option per row: Wattson icon only,
+Wattson with percentage, macOS icon only, and macOS with percentage. Each row
+contains seven visibly named production states: Battery, Full, Charging, Low,
+Low + AC, Saver, and Saver + AC.
+
+All 28 glyphs come directly from
+`BatteryIcon.image(for:mode:pressed:style:)`. The two percentage rows show the
+matching values `75%`, `100%`, `72%`, `10%`, `20%`, `42%`, and `42%` to the
+left of their corresponding glyphs using the menu-bar font with tabular
+digits. The Wattson rows visibly cover normal, red low-battery, green charging,
+yellow Low Power, and plugged-bolt combinations. The macOS rows truthfully
+cover all five public static battery levels plus Apple's public charging
+symbol; they do not invent Wattson tint semantics for the native glyph.
 
 The macOS choices continue to use the public battery symbol supplied by the running system; there is no copied or hand-drawn Apple artwork. The concise visible copy fits at the compact width, while each AX radio exposes the complete preset name and a truthful description. General is reduced to exactly two 68-point rows, removing the duplicate percentage control.
 
 ### Required fidelity surfaces
 
-- Fonts and typography: the 22-point heading and 11-point subtitle match the source hierarchy. Card titles use 13-point semibold system type, details use 11-point system type, and percentage previews use the real menu-bar font with tabular digits. The executable AppKit contract verifies no visible card title or preset copy is truncated.
-- Spacing and layout rhythm: the 176-point sidebar, 503-point content width, 166-point card height, ten-point radii, and aligned heading/subtitle remain unchanged. The four cards are equal width, share one baseline, stay entirely inside the content host, and retain an eight-point rhythm without crowding.
-- Colors and visual tokens: content, sidebar, preview tile, unselected border, semantic green selection fill, and high-contrast variants all reuse the existing Settings tokens. High Contrast strengthens borders without shifting geometry.
-- Image quality and asset fidelity: all four glyphs are production `NSImage` outputs from `BatteryIcon`; the macOS glyph is a public SF Symbol resolved by the current OS. No emoji, text-symbol substitute, handcrafted SVG, or enlarged screenshot is used.
-- Copy and content: all four complete appearances are named explicitly. `Icon only` and `With percentage` remain fully visible, and the percentage examples show the exact visible value `42%` rather than describing it abstractly.
+- Fonts and typography: the 22-point heading and 11-point subtitle keep the established hierarchy. Row titles use 13-point semibold system type, details use 11-point system type, state labels use compact 9-point medium type, and percentage previews use an 11-point menu-bar font with tabular digits and verified safe chip insets.
+- Spacing and layout rhythm: the 176-point sidebar and 503-point content width remain unchanged. Each option row is 503 × 80 points; four rows use eight-point gaps. Each row contains seven approximately 64 × 38-point state chips separated by five-point gaps.
+- Colors and visual tokens: content, sidebar, state tiles, unselected borders, semantic green selection fill, and high-contrast variants reuse the existing Settings tokens. High Contrast strengthens borders without changing geometry.
+- Image quality and asset fidelity: all 28 glyphs are production `NSImage` outputs at the real 23 × 14-point menu-bar size. No emoji, text-symbol substitute, handcrafted SVG, screenshot, or enlarged approximation is used.
+- Copy and content: all four appearances and all seven states are explicitly visible in every row. The percentage rows use every fixture's actual value rather than one repeated example.
+- Interaction and accessibility: the whole 503 × 80-point row remains one radio button and one hit target. State chips are non-interactive and do not add 28 Tab or VoiceOver stops. Up/Down and Left/Right navigate rows; Home, End, Space, AX press, focus redraw, notification syncing, and atomic two-key persistence remain covered.
 
 ### QA history
 
-1. [P1] The first implementation exposed only Wattson and System style cards, so users could not see or directly select all complete menu-bar appearances. Fix: replaced the two-card style dictionary with the four-value `MenuBarIconAppearance` product order while continuing to persist the existing style and percentage keys. Post-fix evidence: both comparison images visibly show all four choices in one row; the AppKit contract requires four cards and four renderer images.
-2. [P1] General duplicated percentage as a separate switch after complete appearances moved to their own page. Fix: removed that row and its observer/action; the list is now exactly 136 points with two 68-point rows. Post-fix evidence: `/tmp/wattson-settings-general-two-rows.png` and executable row geometry assertions.
-3. [P2] The first compact preview layout placed the trailing-space percentage frame two points over the image frame (`percentage=(-2,0,36,16)`, `glyph=(32,1,23,14)`). Fix: added the status-presentation two-point inter-item spacing. Post-fix evidence: the strict AppKit assertion requires the percentage frame's maximum X to be no greater than the matching renderer glyph's minimum X.
-4. Selection was made atomic across the two existing persisted settings before either existing notification is emitted. Mouse, Space, arrow/Home/End, Tab order, AX radio values, external style/percentage notifications, high contrast, focus redraw, and full-card hit testing pass without an intermediate selected preset.
-5. The final captures were produced through `cacheDisplay` without ordering the window front or making it key. This avoids stealing focus while still rendering the real shipping AppKit view hierarchy. Full and focused same-input comparisons show no remaining P0/P1/P2 visual issue. The inactive traffic-light color and missing WindowServer shadow are capture-state differences outside the app-owned settings content.
+1. [P1] The first implementation exposed only Wattson and System style cards. The next pass exposed all four appearances but compressed them into one horizontal row and showed only one renderer state per appearance. Fix: retained the four-value product order but converted it to four full-width rows, each containing all seven meaningful production-rendered states.
+2. [P1] A global count alone could have allowed the 28 previews to collect in the wrong row. Fix: the executable contract now requires exactly seven chips, seven visible labels, and seven renderer images inside every individual option row, in production order.
+3. [P1] General duplicated percentage as a separate switch after complete appearances moved to their own page. Fix: removed that row and its observer/action; the list remains exactly 136 points with two 68-point rows.
+4. [P2] The first four-row capture showed the radio circles underneath the final state chip. Fix: made the radio Y position respect the button's flipped coordinate system and recaptured. The final image visibly shows all four circles and the selected inner dot.
+5. Percentage-to-glyph pairing is asserted by matching complete identifiers, a shared direct parent, and left-to-right frame order for all 14 percentages. No percentage overlaps its glyph.
+6. The host Swift suite, hidden AppKit contract, and the real visible AppKit interaction/lifecycle contract passed. The latter ran inside the ARM VM so the maintainer desktop was never activated or disturbed.
 
 ### Follow-up polish
 

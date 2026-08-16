@@ -173,6 +173,9 @@ user-local development build.
 bash scripts/install.sh
 ```
 
-This retains the user-local development path and is not the public v3 package.
-Use `scripts/uninstall.sh` for complete v2/v3 cleanup. Never replace or launch
-the user's installed app merely to perform a headless build check.
+This user-local developer path is available only when the canonical
+`/Applications/Wattson.app` is absent. The script fails closed when the system
+app exists so it cannot register a second app with the same bundle identifier.
+Use a verified native PKG for canonical updates. Use `scripts/uninstall.sh` for
+complete v2/v3 cleanup. Never replace or launch the user's installed app merely
+to perform a headless build check.

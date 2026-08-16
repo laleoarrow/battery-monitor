@@ -582,6 +582,16 @@ class SettingsWindowContractTests(unittest.TestCase):
                 .filter {
                     $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.preview.") == true
                 }
+            let iconStateChips = descendants(ofType: NSBox.self, in: iconPage)
+                .filter {
+                    $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.state.") == true
+                }
+            let iconStateLabels = descendants(ofType: NSTextField.self, in: iconPage)
+                .filter {
+                    $0.identifier?.rawValue.hasPrefix(
+                        "settings.menu-bar-icon.state-label."
+                    ) == true
+                }
             require(
                 approximately((iconHeading as? NSTextField)?.font?.pointSize ?? -1, 22),
                 "Menu Bar Icon heading uses 22-point type"
@@ -593,25 +603,144 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(iconCards.count == 4, "Menu Bar Icon lists all four complete appearances")
             require(
                 iconCards.allSatisfy {
-                    approximately($0.frame.width, 119.75) && approximately($0.frame.height, 166)
+                    approximately($0.frame.width, 503) && approximately($0.frame.height, 80)
                 },
-                "four icon options share the compact row equally"
+                "each complete icon option occupies one compact full-width row: "
+                    + "\(iconCards.map(\.frame))"
             )
-            let iconCardXs = iconCards.map(\.frame.minX).sorted()
+            let iconCardYs = iconCards.map(\.frame.minY).sorted()
             require(
-                iconCardXs.count == 4
-                    && zip(iconCardXs, iconCardXs.dropFirst()).allSatisfy {
-                        approximately($1 - $0, 127.75)
+                iconCardYs.count == 4
+                    && zip(iconCardYs, iconCardYs.dropFirst()).allSatisfy {
+                        approximately($1 - $0, 88)
                     }
-                    && Set(iconCards.map { Int($0.frame.minY.rounded()) }).count == 1,
-                "all four icon options occupy one row with eight-point gaps"
+                    && Set(iconCards.map { Int($0.frame.minX.rounded()) }).count == 1,
+                "four full-width icon rows use eight-point vertical gaps"
             )
-            require(iconPreviews.count == 4, "all four cards contain renderer-backed previews")
+            require(iconStateChips.count == 28, "four rows expose all seven runtime states")
+            require(iconStateLabels.count == 28, "every runtime-state preview is visibly named")
+            let expectedStateLabels = [
+                "Battery", "Full", "Charging", "Low", "Low + AC", "Saver", "Saver + AC",
+            ]
+            let previewStates = MenuBarIconPreviewState.allCases
+            require(
+                previewStates.map(\.visibleLabel) == expectedStateLabels,
+                "preview fixtures use the same visible production order"
+            )
+            let expectedWattsonKeys: [(Int, Bool, BatteryIcon.TintRole)] = [
+                (75, false, .template),
+                (100, true, .template),
+                (72, true, .charging),
+                (10, false, .lowBattery),
+                (20, true, .lowBattery),
+                (42, false, .lowPower),
+                (42, true, .lowPower),
+            ]
+            let expectedNativeKeys: [(Int, Bool)] = [
+                (75, false),
+                (100, false),
+                (100, true),
+                (0, false),
+                (25, false),
+                (50, false),
+                (50, false),
+            ]
+            let testAppearance = NSAppearance(named: .aqua)!
+            for (index, previewState) in previewStates.enumerated() {
+                let wattsonKey = BatteryIcon.renderKey(
+                    for: previewState.snapshot,
+                    mode: previewState.mode,
+                    pressed: false,
+                    style: .wattson,
+                    appearance: testAppearance,
+                    increasedContrast: false
+                )
+                let expectedWattson = expectedWattsonKeys[index]
+                require(
+                    wattsonKey.percent == expectedWattson.0
+                        && wattsonKey.showsBolt == expectedWattson.1
+                        && wattsonKey.tintRole == expectedWattson.2,
+                    "Wattson preview fixture matches its real tint and bolt semantics: "
+                        + previewState.visibleLabel
+                )
+
+                let nativeKey = BatteryIcon.renderKey(
+                    for: previewState.snapshot,
+                    mode: previewState.mode,
+                    pressed: false,
+                    style: .native,
+                    appearance: testAppearance,
+                    increasedContrast: false
+                )
+                let expectedNative = expectedNativeKeys[index]
+                require(
+                    nativeKey.percent == expectedNative.0
+                        && nativeKey.showsBolt == expectedNative.1
+                        && nativeKey.tintRole == .template,
+                    "macOS preview fixture matches its real public-symbol level and bolt: "
+                        + previewState.visibleLabel
+                )
+            }
+            for iconCard in iconCards {
+                let rowChips = descendants(ofType: NSBox.self, in: iconCard)
+                    .filter {
+                        $0.identifier?.rawValue.hasPrefix(
+                            "settings.menu-bar-icon.state."
+                        ) == true
+                    }
+                let rowLabels = descendants(ofType: NSTextField.self, in: iconCard)
+                    .filter {
+                        $0.identifier?.rawValue.hasPrefix(
+                            "settings.menu-bar-icon.state-label."
+                        ) == true
+                    }
+                let rowPreviews = descendants(ofType: NSImageView.self, in: iconCard)
+                    .filter {
+                        $0.identifier?.rawValue.hasPrefix(
+                            "settings.menu-bar-icon.preview."
+                        ) == true
+                    }
+                require(
+                    rowChips.count == 7 && rowLabels.count == 7 && rowPreviews.count == 7,
+                    "every option row contains seven complete state previews"
+                )
+                require(
+                    rowLabels.map(\.stringValue) == expectedStateLabels,
+                    "every option row shows all state labels in production order"
+                )
+                require(
+                    rowChips.allSatisfy {
+                        approximately($0.frame.width, 64)
+                            && approximately($0.frame.height, 38)
+                    },
+                    "state chips stay compact and preserve production icon scale"
+                )
+                let chipXs = rowChips.map(\.frame.minX).sorted()
+                require(
+                    zip(chipXs, chipXs.dropFirst()).allSatisfy {
+                        approximately($1 - $0, 69)
+                    },
+                    "seven state chips fit one row with five-point gaps"
+                )
+            }
+            let stateLabelCounts = Dictionary(
+                grouping: iconStateLabels.map(\.stringValue),
+                by: { $0 }
+            ).mapValues(\.count)
+            for expectedState in [
+                "Battery", "Full", "Charging", "Low", "Low + AC", "Saver", "Saver + AC",
+            ] {
+                require(
+                    stateLabelCounts[expectedState] == 4,
+                    "every option shows the \(expectedState) state"
+                )
+            }
+            require(iconPreviews.count == 28, "all 28 states use renderer-backed previews")
             require(
                 iconPreviews.allSatisfy {
                     ($0.image?.size.width ?? 0) > 0 && ($0.image?.size.height ?? 0) > 0
                 },
-                "all four renderer-backed preview images are nonempty"
+                "all 28 renderer-backed preview images are nonempty"
             )
             let percentagePreviews = descendants(ofType: NSTextField.self, in: iconPage)
                 .filter {
@@ -619,25 +748,44 @@ class SettingsWindowContractTests(unittest.TestCase):
                         "settings.menu-bar-icon.percentage."
                     ) == true
                 }
-            require(percentagePreviews.count == 2, "exactly two complete previews include percentage")
+            require(percentagePreviews.count == 14, "two percentage rows show all seven values")
             require(
-                percentagePreviews.allSatisfy { $0.stringValue == "42% " },
-                "percentage previews use the real 42% menu-bar title"
+                percentagePreviews.map(\.stringValue).sorted()
+                    == [
+                        "10% ", "10% ", "100% ", "100% ", "20% ", "20% ",
+                        "42% ", "42% ", "42% ", "42% ", "72% ", "72% ",
+                        "75% ", "75% ",
+                    ],
+                "percentage rows use every state’s real menu-bar value"
             )
             for percentagePreview in percentagePreviews {
-                let suffix = percentagePreview.identifier?.rawValue
-                    .split(separator: ".").last.map(String.init) ?? ""
+                let matchingIdentifier = percentagePreview.identifier?.rawValue.replacingOccurrences(
+                    of: "settings.menu-bar-icon.percentage.",
+                    with: "settings.menu-bar-icon.preview."
+                )
                 let matchingIcon = iconPreviews.first {
-                    $0.identifier?.rawValue.hasSuffix(suffix) == true
+                    $0.identifier?.rawValue == matchingIdentifier
                 }
                 require(
                     matchingIcon != nil
                         && percentagePreview.superview === matchingIcon?.superview
                         && percentagePreview.frame.maxX <= (matchingIcon?.frame.minX ?? -1) + 1,
-                    "42% sits to the left of its renderer glyph: "
+                    "each percentage sits to the left of its matching renderer glyph: "
                         + "percentage=\(percentagePreview.frame) "
                         + "icon=\(String(describing: matchingIcon?.frame))"
                 )
+                if let presentation = percentagePreview.superview,
+                   let boxContent = presentation.superview,
+                   let stateBox = boxContent.superview as? NSBox {
+                    let contentFrame = presentation.convert(presentation.bounds, to: stateBox)
+                    require(
+                        stateBox.bounds.insetBy(dx: 2, dy: 1).contains(contentFrame),
+                        "percentage and glyph keep safe insets inside their state chip: "
+                            + "content=\(contentFrame) chip=\(stateBox.bounds)"
+                    )
+                } else {
+                    require(false, "percentage preview retains its state-chip hierarchy")
+                }
                 }
             let iconTitles = descendants(ofType: NSTextField.self, in: iconPage)
                 .filter {
@@ -775,6 +923,16 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "external percentage notification selects the matching complete preset"
             )
 
+            wattsonIconOnly.keyDown(with: keyEvent(125))
+            require(
+                Settings.menuBarIconStyle == .wattson && Settings.showsMenuBarPercentage,
+                "Down Arrow advances to the next vertical option row"
+            )
+            wattsonWithPercentage.keyDown(with: keyEvent(126))
+            require(
+                Settings.menuBarIconStyle == .wattson && !Settings.showsMenuBarPercentage,
+                "Up Arrow returns to the previous vertical option row"
+            )
             wattsonIconOnly.keyDown(with: keyEvent(124))
             require(
                 Settings.menuBarIconStyle == .wattson && Settings.showsMenuBarPercentage,
@@ -894,6 +1052,12 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(moduleBoxes.allSatisfy { $0.borderWidth == 1 }, "normal card borders are one point")
             require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x363838 }, "normal cards keep reference sRGB")
             require(
+                iconStateChips.allSatisfy {
+                    $0.borderWidth == 1 && srgbHex($0.borderColor) == 0x363838
+                },
+                "normal state-chip borders keep the compact reference treatment"
+            )
+            require(
                 controller.iconCardBorderWidthForTest("Wattson icon only") == 2,
                 "selected icon card has a clear normal border"
             )
@@ -920,6 +1084,12 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(srgbHex((generalList as? NSBox)?.borderColor) == 0x8D949A, "increased contrast brightens General border")
             require(moduleBoxes.allSatisfy { $0.borderWidth == 2 }, "increased contrast strengthens card borders")
             require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x8D949A }, "increased contrast brightens card borders")
+            require(
+                iconStateChips.allSatisfy {
+                    $0.borderWidth == 2 && srgbHex($0.borderColor) == 0x8D949A
+                },
+                "increased contrast strengthens every state-chip border"
+            )
             require(
                 controller.iconCardBorderWidthForTest("Wattson icon only") == 3,
                 "increased contrast strengthens the selected icon-card border"
@@ -952,6 +1122,12 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(srgbHex((generalList as? NSBox)?.borderColor) == 0x363838, "General border sRGB restores exactly")
             require(moduleBoxes.allSatisfy { $0.borderWidth == 1 }, "card borders restore exactly")
             require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x363838 }, "card border sRGB restores exactly")
+            require(
+                iconStateChips.allSatisfy {
+                    $0.borderWidth == 1 && srgbHex($0.borderColor) == 0x363838
+                },
+                "state-chip contrast styling restores exactly"
+            )
             require(
                 controller.iconCardBorderWidthForTest("Wattson icon only") == 2
                     && srgbHex(controller.iconCardFillColorForTest("Wattson icon only")) == 0x2B362F,
@@ -1340,13 +1516,25 @@ class SettingsWindowContractTests(unittest.TestCase):
         icon_source = source.split(
             "private final class MenuBarIconSettingsSectionController", 1
         )[1].split("private final class ModuleSettingsSectionController", 1)[0]
-        self.assertIn("PowerSnapshot(", icon_source)
-        self.assertIn("percent: 42", icon_source)
-        self.assertIn("plugged: false", icon_source)
+        self.assertIn("var snapshot: PowerSnapshot", source)
+        self.assertIn("PowerSnapshot(", source)
+        for state in (
+            "onBattery",
+            "pluggedFull",
+            "charging",
+            "lowBattery",
+            "lowBatteryPlugged",
+            "lowPower",
+            "lowPowerPlugged",
+        ):
+            self.assertIn(state, source)
+        for percent in (75, 100, 72, 10, 20, 42):
+            self.assertIn(f"percent: {percent}", source)
         self.assertIn("BatteryIcon.image(", icon_source)
-        self.assertIn("mode: .auto", icon_source)
+        self.assertIn("mode: previewState.mode", icon_source)
         self.assertIn("pressed: false", icon_source)
         self.assertIn("style: appearance.iconStyle", icon_source)
+        self.assertIn("MenuBarIconPreviewState.allCases", icon_source)
         self.assertIn("Settings.menuBarIconStyle", icon_source)
         self.assertIn("case .menuBarIconStyle", icon_source)
         self.assertIn("Settings.setMenuBarAppearance(", icon_source)
@@ -1366,6 +1554,7 @@ class SettingsWindowContractTests(unittest.TestCase):
 
         self.assertNotIn("percentageButton", general_source)
         self.assertIn("MenuBarIconAppearance.allCases", icon_source)
+        self.assertIn("MenuBarIconPreviewState.allCases", icon_source)
         self.assertIn("showsPercentage", icon_source)
         self.assertIn("Settings.showsMenuBarPercentage", icon_source)
         for label in (

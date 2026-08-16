@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.11">v3.0.11 candidate notes</a>
+  <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.12">v3.0.12 candidate notes</a>
 </p>
 
 <p align="center">
@@ -39,25 +39,27 @@ where it is going, and how the picture has changed over the last two minutes.
 - A compact native Settings window for General, Menu Bar Icon, and Modules.
 - No account, analytics, cloud service, or external data upload.
 
-## What's new in v3.0.11
+## What's new in v3.0.12
 
-> This is a v3.0.11 test-package candidate; it has not been published.
+> This is a v3.0.12 test-package candidate; it has not been published.
 
-- The dedicated Menu Bar Icon page now places all four complete menu-bar
-  appearances in one row: Wattson icon only, Wattson with percentage, macOS
-  icon only, and macOS with percentage.
-- Every preset uses the real BatteryIcon renderer, and percentage appears to
-  the left of the glyph. General now contains only Launch at Login and Hide
-  System Battery Icon.
+- The dedicated Menu Bar Icon page now lists all four complete menu-bar
+  appearances vertically, one full-width option per row: Wattson icon only,
+  Wattson with percentage, macOS icon only, and macOS with percentage.
+- Every row previews seven real production-rendered states: Battery, Full,
+  Charging, Low, Low + AC, Saver, and Saver + AC. Every preview uses the real
+  BatteryIcon renderer; percentage rows show matching per-state values to the
+  left of each glyph. General now contains only Launch at Login and Hide System
+  Battery Icon.
 - Settings keeps its compact, fixed 720×520 window for General, Menu Bar Icon,
   and Modules.
 
-## Install v3.0.11
+## Install v3.0.12
 
 | Route | Best for | What to do |
 | --- | --- | --- |
-| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.11/Wattson-v3.0.11-macos-universal.dmg), open it, then double-click the enclosed PKG. |
-| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.11/Wattson-v3.0.11-macos-universal.pkg) and follow macOS Installer. |
+| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.12/Wattson-v3.0.12-macos-universal.dmg), open it, then double-click the enclosed PKG. |
+| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.12/Wattson-v3.0.12-macos-universal.pkg) and follow macOS Installer. |
 | **Homebrew** | Terminal installation and updates | Run `brew install --cask laleoarrow/tap/wattson`. |
 
 All three routes install the same universal app at
@@ -71,7 +73,7 @@ macOS administrator prompt is required to install the helper.
 > installer, then use System Settings → Privacy & Security → Open Anyway only
 > when you trust this repository. Older macOS releases may instead offer
 > Control-click → Open. Verify the provided
-> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.11/SHA256SUMS.txt)
+> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.12/SHA256SUMS.txt)
 > before installation.
 
 ### Requirements

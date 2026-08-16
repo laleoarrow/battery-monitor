@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.11`
+- Version: `3.0.12`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +14,11 @@
 
 ## Candidate artifacts
 
-`scripts/release.sh 3.0.11` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.12` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.11-macos-universal.pkg`
-- `Wattson-v3.0.11-macos-universal.dmg`
-- `Wattson-v3.0.11-release-info.txt`
+- `Wattson-v3.0.12-macos-universal.pkg`
+- `Wattson-v3.0.12-macos-universal.dmg`
+- `Wattson-v3.0.12-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -42,9 +42,10 @@ deleting it, the installer asks the root-only helper to migrate only an exact,
 user-owned v2 launch-at-login plist to `/Applications/Wattson.app`. Arbitrary
 or malformed LaunchAgents are left untouched.
 
-The user-local `scripts/install.sh` path remains a developer build. It does not
-expose launch-at-login controls, so it cannot accidentally control a separate
-system installation.
+The user-local `scripts/install.sh` path remains a developer build. It fails
+closed while `/Applications/Wattson.app` exists, preventing a second app with
+the same bundle identifier from being registered. Canonical updates use the
+verified native PKG.
 
 ## User interface
 
@@ -52,10 +53,13 @@ All shipped user-facing copy is English. The settings menu shows the exact
 `CFBundleShortVersionString` as `Wattson Version <version>`.
 
 Settings uses a fixed 720×520 window. The dedicated Menu Bar Icon page places
-all four complete appearances in one row: Wattson icon only, Wattson with
-percentage, macOS icon only, and macOS with percentage. Every preset uses the
-real BatteryIcon renderer, and percentage appears to the left of the glyph.
-General contains only Launch at Login and Hide System Battery Icon.
+all four complete appearances vertically, one full-width option per row:
+Wattson icon only, Wattson with percentage, macOS icon only, and macOS with
+percentage. Every row previews seven real production-rendered states: Battery,
+Full, Charging, Low, Low + AC, Saver, and Saver + AC. Every preview uses the
+real BatteryIcon renderer; percentage rows show matching per-state values to
+the left of each glyph. General contains only Launch at Login and Hide System
+Battery Icon.
 
 The mode selector keeps the v2.1.5 interaction contract:
 
@@ -78,7 +82,7 @@ Headless checks:
 ```bash
 swift test --parallel
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.11
+bash scripts/release.sh 3.0.12
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -101,7 +105,7 @@ runners.
 
 ## Release order
 
-v3.0.11 is a test-package candidate, not a published release. Do not run
+v3.0.12 is a test-package candidate, not a published release. Do not run
 the public promotion steps for this snapshot.
 
 1. Freeze one final commit, push that exact SHA to `main`, and require Headless
@@ -115,22 +119,33 @@ the public promotion steps for this snapshot.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.11` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.12` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.11.
+6. Announce the release only after every public route resolves to v3.0.12.
+
+## v3.0.12 complete runtime-state previews
+
+The v3.0.12 candidate corrects the dedicated Menu Bar Icon page so the user can
+see and select all four complete menu-bar appearances vertically, one
+full-width option per row: Wattson icon only, Wattson with percentage, macOS
+icon only, and macOS with percentage. Every row previews seven real
+production-rendered states: Battery, Full, Charging, Low, Low + AC, Saver, and
+Saver + AC. Every preview uses the real BatteryIcon renderer; percentage rows
+show matching per-state values to the left of each glyph. General contains only
+Launch at Login and Hide System Battery Icon. The Settings window remains fixed
+at 720×520. This candidate supersedes the v3.0.11 test package; neither
+candidate is a published release.
 
 ## v3.0.11 complete menu-bar appearance presets
 
-The v3.0.11 candidate corrects the dedicated Menu Bar Icon page so the user can
-see and select all four complete menu-bar appearances in one row: Wattson icon
-only, Wattson with percentage, macOS icon only, and macOS with percentage.
-Every preset uses the real BatteryIcon renderer, and percentage appears to the
-left of the glyph. General contains only Launch at Login and Hide System Battery
-Icon. The Settings window remains fixed at 720×520. This candidate supersedes
-the v3.0.10 test package; neither candidate is a published release.
+The v3.0.11 candidate first exposed all four complete appearances directly but
+placed the four options together in one horizontal row and showed only one
+renderer state per option. General was reduced to Launch at Login and Hide
+System Battery Icon, and the Settings window remained fixed at 720×520. The
+v3.0.12 candidate supersedes this test package before publication.
 
 ## v3.0.10 Settings and website work
 

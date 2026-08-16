@@ -88,6 +88,11 @@ private enum SettingsStyle {
     static let moduleCardWidth: CGFloat = 233
     static let moduleCardGap: CGFloat = 12
     static let iconCardGap: CGFloat = 8
+    static let iconCardHeight: CGFloat = 80
+    static let iconCardGroupHeight: CGFloat = 344
+    static let iconStateHeight: CGFloat = 38
+    static let iconStateGap: CGFloat = 5
+    static let iconStateCornerRadius: CGFloat = 7
     static let surfaceCornerRadius: CGFloat = 10
     static let modulePreviewSize = NSSize(width: 64, height: 60)
 
@@ -1295,6 +1300,106 @@ private enum MenuBarIconCardKeyCommand {
     case last
 }
 
+enum MenuBarIconPreviewState: CaseIterable {
+    case onBattery
+    case pluggedFull
+    case charging
+    case lowBattery
+    case lowBatteryPlugged
+    case lowPower
+    case lowPowerPlugged
+
+    var identifierSuffix: String {
+        switch self {
+        case .onBattery: return "battery"
+        case .pluggedFull: return "full"
+        case .charging: return "charging"
+        case .lowBattery: return "low"
+        case .lowBatteryPlugged: return "low-ac"
+        case .lowPower: return "saver"
+        case .lowPowerPlugged: return "saver-ac"
+        }
+    }
+
+    var visibleLabel: String {
+        switch self {
+        case .onBattery: return "Battery"
+        case .pluggedFull: return "Full"
+        case .charging: return "Charging"
+        case .lowBattery: return "Low"
+        case .lowBatteryPlugged: return "Low + AC"
+        case .lowPower: return "Saver"
+        case .lowPowerPlugged: return "Saver + AC"
+        }
+    }
+
+    var accessibilityDescription: String {
+        switch self {
+        case .onBattery: return "75 percent on battery"
+        case .pluggedFull: return "100 percent full and connected to power"
+        case .charging: return "72 percent charging"
+        case .lowBattery: return "10 percent low battery"
+        case .lowBatteryPlugged: return "20 percent low battery connected to power"
+        case .lowPower: return "42 percent in Low Power Mode"
+        case .lowPowerPlugged: return "42 percent in Low Power Mode connected to power"
+        }
+    }
+
+    var mode: EnergyMode {
+        switch self {
+        case .lowPower, .lowPowerPlugged: return .low
+        default: return .auto
+        }
+    }
+
+    var fixture: (
+        percent: Int,
+        plugged: Bool,
+        adapterW: Double,
+        batteryW: Double,
+        systemW: Double,
+        lowPowerMode: Bool
+    ) {
+        switch self {
+        case .onBattery:
+            return (percent: 75, plugged: false, adapterW: 0, batteryW: -18,
+                    systemW: 18, lowPowerMode: false)
+        case .pluggedFull:
+            return (percent: 100, plugged: true, adapterW: 42, batteryW: 0,
+                    systemW: 42, lowPowerMode: false)
+        case .charging:
+            return (percent: 72, plugged: true, adapterW: 60, batteryW: 18,
+                    systemW: 42, lowPowerMode: false)
+        case .lowBattery:
+            return (percent: 10, plugged: false, adapterW: 0, batteryW: -12,
+                    systemW: 12, lowPowerMode: false)
+        case .lowBatteryPlugged:
+            return (percent: 20, plugged: true, adapterW: 42, batteryW: 0,
+                    systemW: 42, lowPowerMode: false)
+        case .lowPower:
+            return (percent: 42, plugged: false, adapterW: 0, batteryW: -18,
+                    systemW: 18, lowPowerMode: true)
+        case .lowPowerPlugged:
+            return (percent: 42, plugged: true, adapterW: 42, batteryW: 0,
+                    systemW: 42, lowPowerMode: true)
+        }
+    }
+
+    var snapshot: PowerSnapshot {
+        let fixture = fixture
+        return PowerSnapshot(
+            percent: fixture.percent,
+            plugged: fixture.plugged,
+            adapterW: fixture.adapterW,
+            batteryW: fixture.batteryW,
+            systemW: fixture.systemW,
+            temperatureC: nil,
+            cycleCount: 0,
+            lowPowerMode: fixture.lowPowerMode
+        )
+    }
+}
+
 private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing {
     let menuBarAppearance: MenuBarIconAppearance
     var onKeyboardCommand: ((MenuBarIconCardKeyCommand) -> Void)?
@@ -1304,12 +1409,12 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
 #endif
 
     private let increaseContrast: () -> Bool
+    private var stateBoxes: [NSBox] = []
 
-    /// Matches the status item's native menu-bar font and tabular digit
-    /// spacing, so the percentage previews are complete presentations rather
-    /// than explanatory labels beside an enlarged icon.
+    /// Keeps the menu-bar font family and tabular digit spacing at a compact
+    /// preview size, leaving safe insets around three-digit percentages.
     private static let previewMenuBarFont: NSFont = {
-        let base = NSFont.menuBarFont(ofSize: 0)
+        let base = NSFont.menuBarFont(ofSize: 11)
         let descriptor = base.fontDescriptor.addingAttributes([
             .featureSettings: [[
                 NSFontDescriptor.FeatureKey.typeIdentifier: kNumberSpacingType,
@@ -1317,13 +1422,12 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
                     kMonospacedNumbersSelector,
             ]],
         ])
-        return NSFont(descriptor: descriptor, size: 0) ?? base
+        return NSFont(descriptor: descriptor, size: 11) ?? base
     }()
 
     init(
         appearance: MenuBarIconAppearance,
-        previewImage: NSImage,
-        previewPercent: Int,
+        previews: [(state: MenuBarIconPreviewState, image: NSImage)],
         increaseContrast: @escaping () -> Bool
     ) {
         menuBarAppearance = appearance
@@ -1342,51 +1446,101 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
         setButtonType(.radio)
         setAccessibilityRole(.radioButton)
         setAccessibilityLabel(appearance.accessibilityLabel)
-        setAccessibilityHelp(appearance.accessibilityHelp)
-
-        let preview = NSBox()
-        preview.boxType = .custom
-        preview.titlePosition = .noTitle
-        preview.cornerRadius = 10
-        preview.borderWidth = 1
-        preview.borderColor = SettingsStyle.border
-        preview.fillColor = SettingsStyle.previewBackground
-        preview.setAccessibilityElement(false)
-        preview.translatesAutoresizingMaskIntoConstraints = false
-
-        let imageView = NSImageView()
-        imageView.identifier = NSUserInterfaceItemIdentifier(
-            "settings.menu-bar-icon.preview.\(identifierSuffix)"
+        let stateDescriptions = previews.map(\.state.accessibilityDescription).joined(
+            separator: ", "
         )
-        imageView.image = previewImage
-        imageView.imageScaling = .scaleProportionallyUpOrDown
-        imageView.contentTintColor = .labelColor
-        imageView.setAccessibilityElement(false)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        setAccessibilityHelp("\(appearance.accessibilityHelp) Previews: \(stateDescriptions).")
 
-        var presentationViews: [NSView] = []
-        if appearance.showsPercentage {
-            let percentage = NSTextField(
-                labelWithString: "\(previewPercent)% "
+        let stateViews = previews.map { preview -> NSView in
+            let stateSuffix = "\(identifierSuffix).\(preview.state.identifierSuffix)"
+
+            let stateBox = NSBox()
+            stateBox.identifier = NSUserInterfaceItemIdentifier(
+                "settings.menu-bar-icon.state.\(stateSuffix)"
             )
-            percentage.identifier = NSUserInterfaceItemIdentifier(
-                "settings.menu-bar-icon.percentage.\(identifierSuffix)"
+            let increased = increaseContrast()
+            stateBox.boxType = .custom
+            stateBox.titlePosition = .noTitle
+            stateBox.cornerRadius = SettingsStyle.iconStateCornerRadius
+            stateBox.borderWidth = increased ? 2 : 1
+            stateBox.borderColor = increased
+                ? SettingsStyle.increasedContrastBorder
+                : SettingsStyle.border
+            stateBox.fillColor = SettingsStyle.previewBackground
+            stateBox.setAccessibilityElement(false)
+            stateBox.translatesAutoresizingMaskIntoConstraints = false
+            stateBoxes.append(stateBox)
+
+            let stateLabel = NSTextField(labelWithString: preview.state.visibleLabel)
+            stateLabel.identifier = NSUserInterfaceItemIdentifier(
+                "settings.menu-bar-icon.state-label.\(stateSuffix)"
             )
-            percentage.font = Self.previewMenuBarFont
-            percentage.textColor = .labelColor
-            percentage.lineBreakMode = .byClipping
-            percentage.setAccessibilityElement(false)
-            presentationViews.append(percentage)
+            stateLabel.font = .systemFont(ofSize: 9, weight: .medium)
+            stateLabel.textColor = SettingsStyle.secondaryText
+            stateLabel.alignment = .center
+            stateLabel.lineBreakMode = .byClipping
+            stateLabel.maximumNumberOfLines = 1
+            stateLabel.setAccessibilityElement(false)
+            stateLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            let imageView = NSImageView()
+            imageView.identifier = NSUserInterfaceItemIdentifier(
+                "settings.menu-bar-icon.preview.\(stateSuffix)"
+            )
+            imageView.image = preview.image
+            imageView.imageScaling = .scaleProportionallyUpOrDown
+            imageView.contentTintColor = .labelColor
+            imageView.setAccessibilityElement(false)
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+
+            var presentationViews: [NSView] = []
+            if appearance.showsPercentage {
+                let percentage = NSTextField(
+                    labelWithString: "\(preview.state.fixture.percent)% "
+                )
+                percentage.identifier = NSUserInterfaceItemIdentifier(
+                    "settings.menu-bar-icon.percentage.\(stateSuffix)"
+                )
+                percentage.font = Self.previewMenuBarFont
+                percentage.textColor = .labelColor
+                percentage.lineBreakMode = .byClipping
+                percentage.setAccessibilityElement(false)
+                presentationViews.append(percentage)
+            }
+            presentationViews.append(imageView)
+            let presentation = NSStackView(views: presentationViews)
+            presentation.orientation = .horizontal
+            presentation.alignment = .centerY
+            presentation.distribution = .fill
+            presentation.spacing = 1
+            presentation.setAccessibilityElement(false)
+            presentation.translatesAutoresizingMaskIntoConstraints = false
+
+            stateBox.addSubview(stateLabel)
+            stateBox.addSubview(presentation)
+            NSLayoutConstraint.activate([
+                stateLabel.leadingAnchor.constraint(equalTo: stateBox.leadingAnchor, constant: 2),
+                stateLabel.trailingAnchor.constraint(equalTo: stateBox.trailingAnchor, constant: -2),
+                stateLabel.topAnchor.constraint(equalTo: stateBox.topAnchor, constant: 3),
+
+                presentation.centerXAnchor.constraint(equalTo: stateBox.centerXAnchor),
+                presentation.bottomAnchor.constraint(equalTo: stateBox.bottomAnchor, constant: -3),
+                imageView.widthAnchor.constraint(equalToConstant: BatteryIcon.width),
+                imageView.heightAnchor.constraint(equalToConstant: BatteryIcon.height),
+                stateLabel.bottomAnchor.constraint(
+                    lessThanOrEqualTo: presentation.topAnchor,
+                    constant: -1
+                ),
+            ])
+            return stateBox
         }
-        presentationViews.append(imageView)
-        let presentation = NSStackView(views: presentationViews)
-        presentation.orientation = .horizontal
-        presentation.alignment = .centerY
-        presentation.distribution = .fill
-        presentation.spacing = 2
-        presentation.setAccessibilityElement(false)
-        presentation.translatesAutoresizingMaskIntoConstraints = false
-        preview.addSubview(presentation)
+        let stateRow = NSStackView(views: stateViews)
+        stateRow.orientation = .horizontal
+        stateRow.alignment = .height
+        stateRow.distribution = .fillEqually
+        stateRow.spacing = SettingsStyle.iconStateGap
+        stateRow.setAccessibilityElement(false)
+        stateRow.translatesAutoresizingMaskIntoConstraints = false
 
         let primary = NSTextField(labelWithString: appearance.visibleTitle)
         primary.identifier = NSUserInterfaceItemIdentifier(
@@ -1394,7 +1548,7 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
         )
         primary.font = .systemFont(ofSize: 13, weight: .semibold)
         primary.textColor = SettingsStyle.primaryText
-        primary.alignment = .center
+        primary.alignment = .left
         primary.lineBreakMode = .byClipping
         primary.setAccessibilityElement(false)
         primary.translatesAutoresizingMaskIntoConstraints = false
@@ -1408,34 +1562,27 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
         )
         secondary.font = SettingsStyle.detailFont
         secondary.textColor = SettingsStyle.secondaryText
-        secondary.alignment = .center
+        secondary.alignment = .left
         secondary.lineBreakMode = .byClipping
         secondary.maximumNumberOfLines = 1
         secondary.setAccessibilityElement(false)
         secondary.translatesAutoresizingMaskIntoConstraints = false
 
-        addSubview(preview)
         addSubview(primary)
         addSubview(secondary)
+        addSubview(stateRow)
         NSLayoutConstraint.activate([
-            preview.centerXAnchor.constraint(equalTo: centerXAnchor),
-            preview.topAnchor.constraint(equalTo: topAnchor, constant: 18),
-            preview.widthAnchor.constraint(equalToConstant: 92),
-            preview.heightAnchor.constraint(equalToConstant: 56),
+            primary.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            primary.topAnchor.constraint(equalTo: topAnchor, constant: 8),
 
-            presentation.centerXAnchor.constraint(equalTo: preview.centerXAnchor),
-            presentation.centerYAnchor.constraint(equalTo: preview.centerYAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: BatteryIcon.width),
-            imageView.heightAnchor.constraint(equalToConstant: BatteryIcon.height),
+            secondary.leadingAnchor.constraint(equalTo: primary.trailingAnchor, constant: 8),
+            secondary.firstBaselineAnchor.constraint(equalTo: primary.firstBaselineAnchor),
+            secondary.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -44),
 
-            primary.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            primary.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            primary.topAnchor.constraint(equalTo: preview.bottomAnchor, constant: 14),
-
-            secondary.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            secondary.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            secondary.topAnchor.constraint(equalTo: primary.bottomAnchor, constant: 4),
-            secondary.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -16),
+            stateRow.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            stateRow.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            stateRow.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            stateRow.heightAnchor.constraint(equalToConstant: SettingsStyle.iconStateHeight),
         ])
     }
 
@@ -1494,6 +1641,13 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
     }
 
     func refreshContrastAppearance() {
+        let increased = increaseContrast()
+        stateBoxes.forEach {
+            $0.borderWidth = increased ? 2 : 1
+            $0.borderColor = increased
+                ? SettingsStyle.increasedContrastBorder
+                : SettingsStyle.border
+        }
         needsDisplay = true
     }
 
@@ -1509,9 +1663,9 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
 
     override func keyDown(with event: NSEvent) {
         switch event.keyCode {
-        case 123:
+        case 123, 126:
             onKeyboardCommand?(.previous)
-        case 124:
+        case 124, 125:
             onKeyboardCommand?(.next)
         case 115:
             onKeyboardCommand?(.first)
@@ -1540,9 +1694,10 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
         card.lineWidth = cardBorderWidth
         card.stroke()
 
+        let radioY = isFlipped ? 15 : bounds.maxY - 29
         let radioRect = NSRect(
             x: bounds.maxX - 29,
-            y: bounds.maxY - 29,
+            y: radioY,
             width: 14,
             height: 14
         )
@@ -1575,17 +1730,6 @@ private final class MenuBarIconSettingsSectionController: NSObject,
     let title = "Menu Bar Icon"
     let symbolName = "battery.100"
     let view = NSView()
-
-    private static let previewSnapshot = PowerSnapshot(
-        percent: 42,
-        plugged: false,
-        adapterW: 0,
-        batteryW: -18,
-        systemW: 18,
-        temperatureC: nil,
-        cycleCount: 0,
-        lowPowerMode: false
-    )
 
     private let increaseContrast: () -> Bool
     private var buttons: [MenuBarIconAppearance: MenuBarIconCardButton] = [:]
@@ -1632,16 +1776,19 @@ private final class MenuBarIconSettingsSectionController: NSObject,
         subtitle.translatesAutoresizingMaskIntoConstraints = false
 
         let orderedButtons = MenuBarIconAppearance.allCases.map { appearance in
-            let preview = BatteryIcon.image(
-                for: Self.previewSnapshot,
-                mode: .auto,
-                pressed: false,
-                style: appearance.iconStyle
-            )
+            let previews = MenuBarIconPreviewState.allCases.map { previewState in
+                let snapshot = previewState.snapshot
+                let image = BatteryIcon.image(
+                    for: snapshot,
+                    mode: previewState.mode,
+                    pressed: false,
+                    style: appearance.iconStyle
+                )
+                return (state: previewState, image: image)
+            }
             let button = MenuBarIconCardButton(
                 appearance: appearance,
-                previewImage: preview,
-                previewPercent: Self.previewSnapshot.percent,
+                previews: previews,
                 increaseContrast: increaseContrast
             )
             button.target = self
@@ -1656,8 +1803,8 @@ private final class MenuBarIconSettingsSectionController: NSObject,
 
         let group = NSStackView(views: orderedButtons)
         group.identifier = NSUserInterfaceItemIdentifier("settings.menu-bar-icon.group")
-        group.orientation = .horizontal
-        group.alignment = .height
+        group.orientation = .vertical
+        group.alignment = .leading
         group.distribution = .fillEqually
         group.spacing = SettingsStyle.iconCardGap
         group.setAccessibilityElement(true)
@@ -1684,11 +1831,12 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             group.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             group.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             group.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 14),
-            group.heightAnchor.constraint(equalToConstant: SettingsStyle.moduleCardHeight),
+            group.heightAnchor.constraint(equalToConstant: SettingsStyle.iconCardGroupHeight),
         ])
         orderedButtons.forEach {
+            $0.widthAnchor.constraint(equalTo: group.widthAnchor).isActive = true
             $0.heightAnchor.constraint(
-                equalToConstant: SettingsStyle.moduleCardHeight
+                equalToConstant: SettingsStyle.iconCardHeight
             ).isActive = true
         }
     }

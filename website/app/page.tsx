@@ -14,7 +14,7 @@ const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
 const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
 const RELEASE_API =
   "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
-const FALLBACK_VERSION = "v3.0.11";
+const FALLBACK_VERSION = "v3.0.12";
 const FALLBACK_ASSET_BASE = `${GITHUB_REPO}/releases/download/${FALLBACK_VERSION}`;
 const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
 
@@ -253,13 +253,17 @@ export default function Home() {
               <span className="feature-number">02</span>
               <h3>Native by design</h3>
               <p>
-                The dedicated Menu Bar Icon page puts Wattson’s mark and the
-                macOS-style battery glyph into all four complete appearances in
-                one row: Wattson icon only, Wattson with percentage, macOS icon
-                only, and macOS with percentage. Every preset uses the real
-                BatteryIcon renderer; percentage appears to the left of the
-                glyph. General contains only Launch at Login and Hide System
-                Battery Icon.
+                The dedicated Menu Bar Icon page uses Wattson’s mark and the
+                macOS-style battery glyph across all four complete menu-bar
+                appearances. It lists the appearances vertically, one full-width
+                option per row: Wattson icon only, Wattson with percentage,
+                macOS icon only, and macOS with percentage. Every row previews
+                seven real production-rendered states: Battery, Full, Charging,
+                Low, Low +
+                AC, Saver, and Saver + AC. Every preview uses the real
+                BatteryIcon renderer; percentage rows show matching per-state
+                values to the left of each glyph. General contains only Launch
+                at Login and Hide System Battery Icon.
               </p>
             </article>
 
