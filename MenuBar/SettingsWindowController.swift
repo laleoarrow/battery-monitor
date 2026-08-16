@@ -1472,7 +1472,7 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
             var presentationViews: [NSView] = []
             if appearance.showsPercentage {
                 let percentage = NSTextField(
-                    labelWithString: "\(preview.state.fixture.percent)% "
+                    labelWithString: "\(preview.state.fixture.percent)%"
                 )
                 percentage.identifier = NSUserInterfaceItemIdentifier(
                     "settings.menu-bar-icon.percentage.\(stateSuffix)"
@@ -1488,7 +1488,7 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
             presentation.orientation = .horizontal
             presentation.alignment = .centerY
             presentation.distribution = .fill
-            presentation.spacing = 1
+            presentation.spacing = 2
             presentation.setAccessibilityElement(false)
             presentation.translatesAutoresizingMaskIntoConstraints = false
 

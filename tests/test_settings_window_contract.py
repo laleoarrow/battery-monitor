@@ -760,9 +760,9 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(
                 percentagePreviews.map(\.stringValue).sorted()
                     == [
-                        "10% ", "10% ", "100% ", "100% ", "20% ", "20% ",
-                        "42% ", "42% ", "42% ", "42% ", "72% ", "72% ",
-                        "75% ", "75% ",
+                        "10%", "10%", "100%", "100%", "20%", "20%",
+                        "42%", "42%", "42%", "42%", "72%", "72%",
+                        "75%", "75%",
                     ],
                 "percentage rows use every state’s real menu-bar value"
             )
