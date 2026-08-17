@@ -59,6 +59,10 @@ class SettingsStoreContractTests(unittest.TestCase):
                    "icon style must register a stable string default")
             expect(Settings.MenuBarIconStyle.allCases.map(\.rawValue) == ["wattson", "native"],
                    "icon styles must remain strongly typed and ordered")
+            expect(Settings.checksForUpdatesOnLaunch,
+                   "launch update checking must default on")
+            expect(defaults.object(forKey: "updates.checkOnLaunch") as? Bool == true,
+                   "launch update checking must use a stable registered default")
 
             var changes: [Settings.Change] = []
             var observedAppearances: [(Settings.MenuBarIconStyle, Bool)] = []
@@ -139,6 +143,20 @@ class SettingsStoreContractTests(unittest.TestCase):
                     && observedAppearances.last?.1 == false,
                 "single-dimension atomic notification observes the landed preset"
             )
+
+            changes.removeAll()
+
+            Settings.checksForUpdatesOnLaunch = true
+            expect(changes.isEmpty,
+                   "an unchanged launch update preference must not notify")
+            Settings.checksForUpdatesOnLaunch = false
+            expect(changes == [.checkForUpdatesOnLaunch],
+                   "launch update preference change must notify exactly once")
+            Settings.checksForUpdatesOnLaunch = false
+            expect(changes == [.checkForUpdatesOnLaunch],
+                   "repeating launch update preference must not notify")
+            expect(defaults.object(forKey: "updates.checkOnLaunch") as? Bool == false,
+                   "launch update preference must persist")
 
             changes.removeAll()
 

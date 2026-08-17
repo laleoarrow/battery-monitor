@@ -28,6 +28,7 @@ enum Settings {
     enum Change: Equatable {
         case menuBarPercentage
         case menuBarIconStyle
+        case checkForUpdatesOnLaunch
         case module(Module)
     }
 
@@ -36,10 +37,12 @@ enum Settings {
 
     private static let percentageKey = "menubar.showsPercentage"
     private static let iconStyleKey = "menubar.iconStyle"
+    private static let checkForUpdatesOnLaunchKey = "updates.checkOnLaunch"
     private static let registeredDefaults: [String: Any] = {
         var values: [String: Any] = [
             percentageKey: true,
             iconStyleKey: MenuBarIconStyle.wattson.rawValue,
+            checkForUpdatesOnLaunchKey: true,
         ]
         for module in Module.allCases {
             values[module.defaultsKey] = true
@@ -84,6 +87,18 @@ enum Settings {
             guard menuBarIconStyle != newValue else { return }
             defaults.set(newValue.rawValue, forKey: iconStyleKey)
             postChange(.menuBarIconStyle)
+        }
+    }
+
+    /// Checks the stable GitHub release once per process launch. This is on by
+    /// default, matching the conventional behavior of native Mac apps, and it
+    /// never downloads or installs an update without a separate user action.
+    static var checksForUpdatesOnLaunch: Bool {
+        get { defaults.object(forKey: checkForUpdatesOnLaunchKey) as? Bool ?? true }
+        set {
+            guard checksForUpdatesOnLaunch != newValue else { return }
+            defaults.set(newValue, forKey: checkForUpdatesOnLaunchKey)
+            postChange(.checkForUpdatesOnLaunch)
         }
     }
 

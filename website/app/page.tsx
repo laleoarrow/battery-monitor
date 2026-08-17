@@ -14,7 +14,7 @@ const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
 const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
 const RELEASE_API =
   "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
-const FALLBACK_VERSION = "v3.0.13";
+const FALLBACK_VERSION = "v3.0.14";
 const FALLBACK_ASSET_BASE = `${GITHUB_REPO}/releases/download/${FALLBACK_VERSION}`;
 const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
 
@@ -268,8 +268,11 @@ export default function Home() {
                 Control Center artwork or generic SF Symbols. Every connected
                 state uses the system bolt. In Low Power Mode, only the battery
                 fill is yellow; the outline, cap, and bolt keep the menu-bar
-                foreground colour. General contains only Launch at Login and
-                Hide System Battery Icon. The Settings sidebar uses the real
+                foreground colour. General adds Check for Updates and Check for
+                Updates on Launch. Manual checks read GitHub Latest Release and
+                open its trusted release page; launch checks default on, stay
+                quiet when current or offline, and never download or install
+                automatically. The Settings sidebar uses the real
                 packaged Wattson app icon instead of a separate ECG-style
                 drawing.
               </p>
@@ -302,7 +305,8 @@ export default function Home() {
               <h3>Local, always</h3>
               <p>
                 Battery and power state stay on your Mac. Wattson has no
-                account, no cloud service, no analytics, and nothing to upload.
+                account, analytics, personal telemetry, or data upload. Optional
+                update checks contact only GitHub Releases.
               </p>
             </article>
           </div>

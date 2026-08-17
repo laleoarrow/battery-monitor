@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.13`
+- Version: `3.0.14`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +14,11 @@
 
 ## Candidate artifacts
 
-`scripts/release.sh 3.0.13` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.14` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.13-macos-universal.pkg`
-- `Wattson-v3.0.13-macos-universal.dmg`
-- `Wattson-v3.0.13-release-info.txt`
+- `Wattson-v3.0.14-macos-universal.pkg`
+- `Wattson-v3.0.14-macos-universal.dmg`
+- `Wattson-v3.0.14-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -63,9 +63,12 @@ Control Center battery parts from the running system, including the 23×12
 outline and 11×14 bolt, instead of smaller Control Center artwork or generic SF
 Symbols. Every connected state uses the system bolt. In Low Power Mode, only
 the battery fill is yellow; the outline, cap, and bolt keep the menu-bar
-foreground colour. General contains only Launch at Login and Hide System Battery
-Icon. The sidebar identity uses a PNG derived during packaging from the same
-`AppIcon.icns` that Finder displays, rather than a separate ECG-style drawing.
+foreground colour. General adds Check for Updates and Check for Updates on
+Launch. Manual checks read GitHub Latest Release and open its trusted release
+page; launch checks default on, stay quiet when current or offline, and never
+download or install automatically. The sidebar identity uses a PNG derived
+during packaging from the same `AppIcon.icns` that Finder displays, rather than
+a separate ECG-style drawing.
 
 The mode selector keeps the v2.1.5 interaction contract:
 
@@ -88,7 +91,7 @@ Headless checks:
 ```bash
 swift test --parallel
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.13
+bash scripts/release.sh 3.0.14
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -111,7 +114,7 @@ runners.
 
 ## Release order
 
-v3.0.13 is a test-package candidate, not a published release. Do not run
+v3.0.14 is a test-package candidate, not a published release. Do not run
 the public promotion steps for this snapshot.
 
 1. Freeze one final commit, push that exact SHA to `main`, and require Headless
@@ -125,12 +128,22 @@ the public promotion steps for this snapshot.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.13` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.14` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.13.
+6. Announce the release only after every public route resolves to v3.0.14.
+
+## v3.0.14 update checks
+
+The v3.0.14 candidate adds Check for Updates and Check for Updates on Launch to
+General while retaining Launch at Login and Hide System Battery Icon. Manual
+checks read GitHub Latest Release and open its trusted release page; launch
+checks default on, stay quiet when current or offline, and never download or
+install automatically. The preference is stored with the existing typed
+Settings change notifications. Release parsing rejects drafts, prereleases,
+non-semantic tags, and release links outside the Wattson GitHub repository.
 
 ## v3.0.13 macOS 26 native icon correction
 

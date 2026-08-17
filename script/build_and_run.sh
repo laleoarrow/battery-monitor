@@ -11,6 +11,7 @@ SWIFT_TARGET="arm64-apple-macos12.0"
 LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+APP_VERSION="$(tr -d '\r\n' < "$ROOT_DIR/VERSION")"
 BUILD_DIR="${TMPDIR:-/tmp}/wattson-preview"
 APP_BUNDLE="$BUILD_DIR/$DISPLAY_NAME.app"
 LEGACY_APP_BUNDLE="$ROOT_DIR/dist/Wattson.app"
@@ -66,6 +67,10 @@ cat > "$INFO_PLIST" << PLIST
   <string>$APP_NAME</string>
   <key>CFBundlePackageType</key>
   <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>$APP_VERSION</string>
+  <key>CFBundleVersion</key>
+  <string>$APP_VERSION</string>
   <key>LSMinimumSystemVersion</key>
   <string>$MIN_SYSTEM_VERSION</string>
   <key>LSUIElement</key>

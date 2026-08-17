@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.13">v3.0.13 candidate notes</a>
+  <a href="#whats-new-in-v3014">v3.0.14 candidate notes</a>
 </p>
 
 <p align="center">
@@ -35,13 +35,20 @@ where it is going, and how the picture has changed over the last two minutes.
 - Auto and Low Power controls, plus High Power on supported Macs.
 - Native Liquid Glass on macOS 26 with an AppKit fallback for macOS 12–25.
 - Keyboard, VoiceOver, Reduce Motion, and Reduce Transparency support.
-- Launch-at-login and system battery-icon controls.
+- Launch-at-login, system battery-icon, and update controls.
 - A compact native Settings window for General, Menu Bar Icon, and Modules.
-- No account, analytics, cloud service, or external data upload.
+- No account, analytics, personal telemetry, or external data upload. Optional
+  update checks contact only GitHub Releases.
 
-## What's new in v3.0.13
+## What's new in v3.0.14
 
-> This is a v3.0.13 test-package candidate; it has not been published.
+> This is a v3.0.14 test-package candidate; it has not been published. The
+> latest public release remains v3.0.13.
+
+- General adds Check for Updates and Check for Updates on Launch. Manual checks
+  read GitHub Latest Release and open its trusted release page; launch checks
+  default on, stay quiet when current or offline, and never download or install
+  automatically.
 
 - The dedicated Menu Bar Icon page now lists all four complete menu-bar
   appearances vertically, one full-width option per row: Wattson icon only,
@@ -54,8 +61,7 @@ where it is going, and how the picture has changed over the last two minutes.
   bolt, instead of smaller Control Center artwork or generic SF Symbols. Every
   connected state uses the system bolt. In Low Power Mode, only the battery
   fill is yellow; the outline, cap, and bolt keep the menu-bar foreground
-  colour. General now contains only Launch at Login and Hide System Battery
-  Icon.
+  colour.
 - Settings keeps its compact, fixed 720×520 window for General, Menu Bar Icon,
   and Modules.
 - The Settings sidebar now uses the real packaged Wattson app icon instead of

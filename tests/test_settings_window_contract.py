@@ -10,6 +10,7 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 WINDOW = ROOT / "MenuBar" / "SettingsWindowController.swift"
 SETTINGS = ROOT / "Core" / "Settings.swift"
+UPDATE_CHECKER = ROOT / "Core" / "UpdateChecker.swift"
 HELPER_CLIENT = ROOT / "Core" / "HelperClient.swift"
 SYSTEM_ICON = ROOT / "Core" / "SystemBatteryIcon.swift"
 LOGIN_ITEM = ROOT / "Core" / "LoginItemController.swift"
@@ -214,6 +215,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                 var batteryReads: [(Bool?) -> Void] = []
                 var loginWrites: [(Bool, (Result<LoginItemState, Error>) -> Void)] = []
                 var batteryWrites: [(Bool, (Bool) -> Void)] = []
+                var currentVersion = "3.0.14"
+                var updateChecks: [(Result<UpdateCheckOutcome, Error>) -> Void] = []
+                var openedUpdateURLs: [URL] = []
                 var announcements: [String] = []
             }
 
@@ -235,6 +239,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                             fixture.batteryWrites.append((hidden, completion))
                         },
                         systemBatteryIconDidChange: batteryNotification,
+                        currentVersion: { fixture.currentVersion },
+                        checkForUpdates: { fixture.updateChecks.append($0) },
+                        openUpdateURL: { url in
+                            fixture.openedUpdateURLs.append(url)
+                            return true
+                        },
                         increaseContrast: { fixture.increaseContrast },
                         announceAccessibility: { fixture.announcements.append($0) }
                     )
@@ -381,16 +391,16 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(
                 descendants(ofType: NSView.self, in: view("settings.section.general", in: first))
                     .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
-                    .count == 2,
-                "General retains login and Apple battery rows only"
+                    .count == 4,
+                "General includes login, Apple battery, manual update, and launch update rows"
             )
             let generalList = view("settings.general.list", in: first)
             let generalRows = descendants(ofType: NSView.self, in: generalList)
                 .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
             require(approximately(generalList.frame.width, 503), "compact general list width")
-            require(approximately(generalList.frame.height, 136), "General is exactly 2 × 68 points")
+            require(approximately(generalList.frame.height, 272), "General is exactly 4 × 68 points")
             require((generalList as? NSBox)?.cornerRadius == 10, "compact general list radius")
-            require(generalRows.allSatisfy { approximately($0.frame.height, 68) }, "two 68-point rows")
+            require(generalRows.allSatisfy { approximately($0.frame.height, 68) }, "four 68-point rows")
             require(
                 approximately(
                     (view("settings.general.heading", in: first) as? NSTextField)?.font?.pointSize ?? -1,
@@ -404,8 +414,10 @@ class SettingsWindowContractTests(unittest.TestCase):
                 }
             )
             for (identifier, expectedMinY) in [
-                ("settings.general.row.login", CGFloat(68)),
-                ("settings.general.row.battery", CGFloat(0)),
+                ("settings.general.row.login", CGFloat(204)),
+                ("settings.general.row.battery", CGFloat(136)),
+                ("settings.general.row.update", CGFloat(68)),
+                ("settings.general.row.automatic-updates", CGFloat(0)),
             ] {
                 require(
                     approximately(generalRowsByIdentifier[identifier]?.frame.minY ?? -1, expectedMinY),
@@ -417,19 +429,25 @@ class SettingsWindowContractTests(unittest.TestCase):
 
             let login = button("Launch at Login", in: first)
             let battery = button("Hide System Battery Icon", in: first)
+            let update = button("Check for Updates", in: first)
+            let automaticUpdates = button("Check for Updates on Launch", in: first)
             require(controller.sidebarNextKeyViewForTest === login, "Tab enters first General switch")
             require(controller.lastVisibleSwitchNextKeyViewForTest === controller.sidebarForTest, "General key loop returns to sidebar")
             require(login.accessibilityLabel() == "Launch at Login", "login accessibility label")
             require(battery.accessibilityLabel() == "Hide System Battery Icon", "battery accessibility label")
             require(
-                login.title.isEmpty && battery.title.isEmpty,
+                login.title.isEmpty && battery.title.isEmpty && automaticUpdates.title.isEmpty,
                 "General switches have no clipped visible titles"
             )
             require(
-                [login, battery].allSatisfy {
+                [login, battery, automaticUpdates].allSatisfy {
                     approximately($0.frame.width, 38) && approximately($0.frame.height, 22)
                 },
                 "General uses compact toggle switches"
+            )
+            require(
+                approximately(update.frame.width, 88) && approximately(update.frame.height, 28),
+                "manual update action uses one compact native button"
             )
             let generalVisibleTitles = Set(
                 descendants(ofType: NSTextField.self, in: view("settings.section.general", in: first))
@@ -442,10 +460,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                 [
                     "Launch at Login",
                     "Hide System Battery Icon",
+                    "Check for Updates",
+                    "Check for Updates on Launch",
                 ].contains($0.stringValue)
             }
             require(
-                generalPrimaryLabels.count == 2
+                generalPrimaryLabels.count == 4
                     && generalPrimaryLabels.allSatisfy {
                         approximately($0.font?.pointSize ?? -1, 14)
                     },
@@ -456,9 +476,15 @@ class SettingsWindowContractTests(unittest.TestCase):
                 generalVisibleTitles.contains("Hide System Battery Icon"),
                 "battery primary title remains visible"
             )
+            require(generalVisibleTitles.contains("Check for Updates"),
+                    "manual update primary title remains visible")
+            require(generalVisibleTitles.contains("Check for Updates on Launch"),
+                    "automatic update primary title remains visible")
             require(
                 approximately(label("settings.general.login.detail", in: first).font?.pointSize ?? -1, 11)
-                    && approximately(label("settings.general.battery.detail", in: first).font?.pointSize ?? -1, 11),
+                    && approximately(label("settings.general.battery.detail", in: first).font?.pointSize ?? -1, 11)
+                    && approximately(label("settings.general.update.detail", in: first).font?.pointSize ?? -1, 11)
+                    && approximately(label("settings.general.automatic-updates.detail", in: first).font?.pointSize ?? -1, 11),
                 "General detail labels use 11-point type"
             )
             require(
@@ -470,7 +496,74 @@ class SettingsWindowContractTests(unittest.TestCase):
             )
             require(!(login.accessibilityHelp() ?? "").isEmpty, "login accessibility help")
             require(!(battery.accessibilityHelp() ?? "").isEmpty, "battery accessibility help")
-            require(battery.nextKeyView === controller.sidebarForTest, "second switch returns to sidebar")
+            require(!(update.accessibilityHelp() ?? "").isEmpty, "manual update accessibility help")
+            require(!(automaticUpdates.accessibilityHelp() ?? "").isEmpty,
+                    "automatic update accessibility help")
+            require(login.nextKeyView === battery, "login tabs to battery")
+            require(battery.nextKeyView === update, "battery tabs to manual update")
+            require(update.nextKeyView === automaticUpdates, "manual update tabs to automatic update")
+            require(automaticUpdates.nextKeyView === controller.sidebarForTest,
+                    "automatic update returns to sidebar")
+
+            require(automaticUpdates.state == .on && automaticUpdates.isEnabled,
+                    "launch update checking defaults on")
+            require(
+                label("settings.general.update.detail", in: first).stringValue
+                    == "Current version 3.0.14",
+                "manual update row shows the installed version"
+            )
+            require(
+                label("settings.general.automatic-updates.detail", in: first).stringValue
+                    == "Check GitHub when Wattson opens",
+                "automatic update row explains its launch behavior"
+            )
+
+            automaticUpdates.performClick(nil)
+            require(!Settings.checksForUpdatesOnLaunch && automaticUpdates.state == .off,
+                    "automatic update option persists off")
+            automaticUpdates.performClick(nil)
+            require(Settings.checksForUpdatesOnLaunch && automaticUpdates.state == .on,
+                    "automatic update option persists on")
+
+            update.performClick(nil)
+            require(fixture.updateChecks.count == 1, "manual update check dispatches once")
+            require(!update.isEnabled && update.title == "Checking…",
+                    "manual update button exposes progress")
+            fixture.updateChecks.removeFirst()(.success(.upToDate(currentVersion: "3.0.14")))
+            require(update.isEnabled && update.title == "Check Now",
+                    "up-to-date result restores the action")
+            require(
+                label("settings.general.update.detail", in: first).stringValue
+                    == "Wattson 3.0.14 is up to date",
+                "up-to-date result is visible inline"
+            )
+
+            update.performClick(nil)
+            fixture.updateChecks.removeFirst()(.failure(FixtureError.rejected))
+            require(update.isEnabled && update.title == "Try Again",
+                    "failed update check remains retryable")
+            require(!label("settings.general.update.error", in: first).isHidden,
+                    "failed update check is visible inline")
+
+            update.performClick(nil)
+            let availableRelease = UpdateRelease(
+                version: "3.0.15",
+                pageURL: URL(
+                    string: "https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.15"
+                )!
+            )
+            fixture.updateChecks.removeFirst()(.success(.updateAvailable(availableRelease)))
+            require(update.isEnabled && update.title == "View Update",
+                    "available update exposes its release action")
+            require(
+                label("settings.general.update.detail", in: first).stringValue
+                    == "Wattson 3.0.15 is available",
+                "available version is visible inline"
+            )
+            update.performClick(nil)
+            require(fixture.openedUpdateURLs == [availableRelease.pageURL],
+                    "View Update opens the exact trusted release URL")
+            fixture.announcements.removeAll()
 
             require(fixture.loginReads.count == 1, "refresh requests login state once")
             require(fixture.batteryReads.count == 1, "refresh requests battery state once")
@@ -1155,7 +1248,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let contentHost = view("settings.content.host", in: window)
             controller.selectSectionForTest(identifier: "general")
             content.layoutSubtreeIfNeeded()
-            for generalButton in [login, battery] {
+            for generalButton in [login, battery, update, automaticUpdates] {
                 requireButtonHit(generalButton, through: content, phase: "compact General")
             }
             controller.selectSectionForTest(identifier: "menu-bar-icon")
@@ -1443,6 +1536,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     str(SYSTEM_ICON),
                     str(LOGIN_ITEM),
                     str(SETTINGS),
+                    str(UPDATE_CHECKER),
                     str(POWER_SNAPSHOT),
                     str(ENERGY_MODE),
                     str(BATTERY_ICON),
@@ -1510,6 +1604,8 @@ class SettingsWindowContractTests(unittest.TestCase):
         for title in (
             "Launch at Login",
             "Hide System Battery Icon",
+            "Check for Updates",
+            "Check for Updates on Launch",
             'let identifier = "menu-bar-icon"',
             'let title = "Menu Bar Icon"',
             '"Wattson icon only"',

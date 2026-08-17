@@ -23,6 +23,11 @@ struct SettingsWindowDependencies {
         _ completion: @escaping (Bool) -> Void
     ) -> Void
     let systemBatteryIconDidChange: Notification.Name
+    let currentVersion: () -> String
+    let checkForUpdates: (
+        _ completion: @escaping (Result<UpdateCheckOutcome, Error>) -> Void
+    ) -> Void
+    let openUpdateURL: (_ url: URL) -> Bool
     let increaseContrast: () -> Bool
     let announceAccessibility: (_ message: String) -> Void
 
@@ -43,6 +48,15 @@ struct SettingsWindowDependencies {
             SystemBatteryIconController.setHidden(hidden, completion: completion)
         },
         systemBatteryIconDidChange: SystemBatteryIconController.didChange,
+        currentVersion: {
+            Bundle.main.object(
+                forInfoDictionaryKey: "CFBundleShortVersionString"
+            ) as? String ?? "Unknown"
+        },
+        checkForUpdates: { completion in
+            UpdateChecker.shared.check(completion: completion)
+        },
+        openUpdateURL: { NSWorkspace.shared.open($0) },
         increaseContrast: {
             NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
         },
@@ -81,9 +95,10 @@ private enum SettingsStyle {
     static let sidebarFont = NSFont.systemFont(ofSize: 13, weight: .medium)
 
     static let toggleSize = NSSize(width: 38, height: 22)
-    static let generalListHeight: CGFloat = 136
+    static let generalListHeight: CGFloat = 272
     static let generalRowHeight: CGFloat = 68
     static let generalIconTileSize: CGFloat = 36
+    static let generalActionSize = NSSize(width: 88, height: 28)
     static let moduleCardHeight: CGFloat = 166
     static let moduleCardWidth: CGFloat = 233
     static let moduleCardGap: CGFloat = 12
@@ -677,15 +692,24 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let dependencies: SettingsWindowDependencies
     private let loginButton: SettingsToggleButton
     private let batteryButton: SettingsToggleButton
+    private let updateButton = NSButton()
+    private let automaticUpdateButton: SettingsToggleButton
     private let loginDetail = NSTextField(labelWithString: "")
     private let loginError = NSTextField(labelWithString: "")
     private let batteryDetail = NSTextField(labelWithString: "")
     private let batteryError = NSTextField(labelWithString: "")
+    private let updateDetail = NSTextField(labelWithString: "")
+    private let updateError = NSTextField(labelWithString: "")
+    private let automaticUpdateDetail = NSTextField(labelWithString: "")
 
     private let loginAccessibilityPurpose =
         "Open Wattson automatically after you sign in to this Mac."
     private let batteryAccessibilityPurpose =
         "Hide Apple’s battery icon while keeping Wattson in the menu bar."
+    private let updateAccessibilityPurpose =
+        "Check GitHub for the latest stable Wattson release."
+    private let automaticUpdateAccessibilityPurpose =
+        "Check for a newer stable Wattson release whenever Wattson opens."
 
     private var batteryObserver: NSObjectProtocol?
     private var loginGeneration = 0
@@ -694,6 +718,8 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private var batteryMutationInFlight = false
     private var lastAuthoritativeLoginState: LoginItemState?
     private var lastAuthoritativeBatteryState: Bool?
+    private var updateCheckInFlight = false
+    private var availableRelease: UpdateRelease?
 
     init(dependencies: SettingsWindowDependencies) {
         self.dependencies = dependencies
@@ -703,6 +729,10 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         )
         batteryButton = SettingsToggleButton(
             accessibilityLabel: "Hide System Battery Icon",
+            increaseContrast: dependencies.increaseContrast
+        )
+        automaticUpdateButton = SettingsToggleButton(
+            accessibilityLabel: "Check for Updates on Launch",
             increaseContrast: dependencies.increaseContrast
         )
         super.init()
@@ -726,6 +756,11 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
         refreshLoginItem()
         refreshBatteryIcon()
+        renderAutomaticUpdates()
+        if !updateCheckInFlight, availableRelease == nil,
+           updateError.isHidden, updateDetail.stringValue.isEmpty {
+            renderCurrentVersion()
+        }
     }
 
     private func configureControls() {
@@ -747,6 +782,32 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             batteryAccessibilityPurpose
         )
 
+        updateButton.title = "Check Now"
+        updateButton.bezelStyle = .rounded
+        updateButton.controlSize = .regular
+        updateButton.font = .systemFont(ofSize: 12, weight: .medium)
+        updateButton.target = self
+        updateButton.action = #selector(checkForUpdates(_:))
+        updateButton.setAccessibilityLabel("Check for Updates")
+        updateButton.setAccessibilityHelp(updateAccessibilityPurpose)
+        updateButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            updateButton.widthAnchor.constraint(
+                equalToConstant: SettingsStyle.generalActionSize.width
+            ),
+            updateButton.heightAnchor.constraint(
+                equalToConstant: SettingsStyle.generalActionSize.height
+            ),
+        ])
+
+        configureSwitch(automaticUpdateButton)
+        automaticUpdateButton.target = self
+        automaticUpdateButton.action = #selector(toggleAutomaticUpdates(_:))
+        automaticUpdateButton.setAccessibilityLabel("Check for Updates on Launch")
+        automaticUpdateButton.setAccessibilityHelp(
+            automaticUpdateAccessibilityPurpose
+        )
+
         configureDetailLabel(
             loginDetail,
             identifier: "settings.general.login.detail"
@@ -762,6 +823,18 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         configureErrorLabel(
             batteryError,
             identifier: "settings.general.battery.error"
+        )
+        configureDetailLabel(
+            updateDetail,
+            identifier: "settings.general.update.detail"
+        )
+        configureErrorLabel(
+            updateError,
+            identifier: "settings.general.update.error"
+        )
+        configureDetailLabel(
+            automaticUpdateDetail,
+            identifier: "settings.general.automatic-updates.detail"
         )
 
     }
@@ -816,6 +889,24 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
                 button: batteryButton,
                 detail: batteryDetail,
                 error: batteryError,
+                hasSeparator: true
+            ),
+            row(
+                identifier: "update",
+                symbolName: "arrow.triangle.2.circlepath",
+                visibleTitle: "Check for Updates",
+                button: updateButton,
+                detail: updateDetail,
+                error: updateError,
+                hasSeparator: true
+            ),
+            row(
+                identifier: "automatic-updates",
+                symbolName: "clock.arrow.circlepath",
+                visibleTitle: "Check for Updates on Launch",
+                button: automaticUpdateButton,
+                detail: automaticUpdateDetail,
+                error: nil,
                 hasSeparator: false
             ),
         ])
@@ -1089,6 +1180,107 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
                 }
             }
         }
+    }
+
+    @objc private func checkForUpdates(_ sender: NSButton) {
+        if let availableRelease {
+            guard dependencies.openUpdateURL(availableRelease.pageURL) else {
+                showError(
+                    "macOS couldn’t open the GitHub release. Try again later.",
+                    in: updateError,
+                    for: updateButton,
+                    purpose: updateAccessibilityPurpose
+                )
+                return
+            }
+            clearError(updateError)
+            return
+        }
+        guard !updateCheckInFlight else { return }
+
+        updateCheckInFlight = true
+        clearError(updateError)
+        updateButton.isEnabled = false
+        updateButton.title = "Checking…"
+        updateDetail.stringValue = "Contacting GitHub…"
+        updateAccessibilityHelp(
+            for: updateButton,
+            purpose: updateAccessibilityPurpose,
+            status: updateDetail.stringValue
+        )
+
+        dependencies.checkForUpdates { [weak self] result in
+            self?.onMain { [weak self] in
+                guard let self else { return }
+                self.updateCheckInFlight = false
+                self.updateButton.isEnabled = true
+                switch result {
+                case let .success(.upToDate(currentVersion)):
+                    self.availableRelease = nil
+                    self.updateButton.title = "Check Now"
+                    self.updateDetail.stringValue =
+                        "Wattson \(currentVersion) is up to date"
+                    self.clearError(self.updateError)
+                    self.updateAccessibilityHelp(
+                        for: self.updateButton,
+                        purpose: self.updateAccessibilityPurpose,
+                        status: self.updateDetail.stringValue
+                    )
+                    self.dependencies.announceAccessibility(
+                        self.updateDetail.stringValue
+                    )
+                case let .success(.updateAvailable(release)):
+                    self.availableRelease = release
+                    self.updateButton.title = "View Update"
+                    self.updateDetail.stringValue =
+                        "Wattson \(release.version) is available"
+                    self.clearError(self.updateError)
+                    self.updateAccessibilityHelp(
+                        for: self.updateButton,
+                        purpose: self.updateAccessibilityPurpose,
+                        status: self.updateDetail.stringValue
+                    )
+                    self.dependencies.announceAccessibility(
+                        self.updateDetail.stringValue
+                    )
+                case let .failure(error):
+                    self.availableRelease = nil
+                    self.updateButton.title = "Try Again"
+                    self.renderCurrentVersion()
+                    self.showError(
+                        error.localizedDescription,
+                        in: self.updateError,
+                        for: self.updateButton,
+                        purpose: self.updateAccessibilityPurpose
+                    )
+                }
+            }
+        }
+    }
+
+    @objc private func toggleAutomaticUpdates(_ sender: NSButton) {
+        Settings.checksForUpdatesOnLaunch = sender.state == .on
+        renderAutomaticUpdates()
+    }
+
+    private func renderCurrentVersion() {
+        updateDetail.stringValue = "Current version \(dependencies.currentVersion())"
+        updateAccessibilityHelp(
+            for: updateButton,
+            purpose: updateAccessibilityPurpose,
+            status: updateDetail.stringValue
+        )
+    }
+
+    private func renderAutomaticUpdates() {
+        automaticUpdateButton.state = Settings.checksForUpdatesOnLaunch ? .on : .off
+        automaticUpdateButton.isEnabled = true
+        automaticUpdateDetail.stringValue = "Check GitHub when Wattson opens"
+        updateAccessibilityHelp(
+            for: automaticUpdateButton,
+            purpose: automaticUpdateAccessibilityPurpose,
+            status: automaticUpdateDetail.stringValue
+        )
     }
 
     private func renderLoginItem(_ state: LoginItemState) {
@@ -1832,7 +2024,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .module:
+            case .checkForUpdatesOnLaunch, .module:
                 break
             }
         }

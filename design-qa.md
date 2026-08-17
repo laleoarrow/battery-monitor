@@ -50,7 +50,7 @@ and its visible caption identifies it as a current Wattson AppKit capture.
 
 ### Comparison
 
-The same dark visual language, information hierarchy, system state, and accessibility semantics are preserved. The layout is a true compact reflow rather than a scaled image: 176-point sidebar, 22/14/11-point typography, 38-point navigation rows, two 68-point General rows, a dedicated four-preset Menu Bar Icon page, and 233 × 166-point module cards with 12-point gaps. Native AppKit traffic-light controls replace the oversized painted proxies.
+The same dark visual language, information hierarchy, system state, and accessibility semantics are preserved. The layout is a true compact reflow rather than a scaled image: 176-point sidebar, 22/14/11-point typography, 38-point navigation rows, four 68-point General rows, a dedicated four-preset Menu Bar Icon page, and 233 × 166-point module cards with 12-point gaps. Native AppKit traffic-light controls replace the oversized painted proxies.
 
 The final result removes the large unused General canvas and reduces overall content area by about 35% while retaining readable labels and standard macOS control density. The Modules page keeps both rows in bounds without clipping or crowding.
 
@@ -58,7 +58,7 @@ The final result removes the large unused General canvas and reduces overall con
 
 1. The first compact capture exposed a Modules navigation glyph that crowded its label. The custom oversized glyph path was removed and the screen was recaptured.
 2. A stale second-page snapshot was fixed by giving AppKit a full layout/display turn before capture.
-3. Icon style and percentage are now combined into four complete presets on the dedicated Menu Bar Icon page. General retains only Launch at Login and Hide System Battery Icon.
+3. Icon style and percentage are now combined into four complete presets on the dedicated Menu Bar Icon page. General retains Launch at Login and Hide System Battery Icon and now also exposes the two update controls.
 4. Real AppKit minimize, keyboard navigation, AX/key-loop behavior, retained-window reuse, 1,000 lifecycle iterations, weak release, and FD/RSS bounds passed.
 5. The fixed-size window keeps all three native traffic lights while correctly disabling the zoom control instead of advertising a resize action that cannot change the layout.
 
@@ -100,8 +100,9 @@ cap, bolt, and knockout-mask resources at their native proportions; no Apple
 artwork is copied into the app. A resolution-independent vector fallback keeps
 older supported systems usable if a system asset is unavailable. The concise
 visible copy fits at the compact width, while each AX radio exposes the complete
-preset name and a truthful description. General is reduced to exactly two
-68-point rows, removing the duplicate percentage control.
+preset name and a truthful description. General has four 68-point rows,
+including the two update controls without restoring the duplicate percentage
+control.
 
 ### Required fidelity surfaces
 
@@ -116,7 +117,7 @@ preset name and a truthful description. General is reduced to exactly two
 
 1. [P1] The first implementation exposed only Wattson and System style cards. The next pass exposed all four appearances but compressed them into one horizontal row and showed only one renderer state per appearance. Fix: retained the four-value product order but converted it to four full-width rows, each containing all seven meaningful production-rendered states.
 2. [P1] A global count alone could have allowed the 28 previews to collect in the wrong row. Fix: the executable contract now requires exactly seven chips, seven visible labels, and seven renderer images inside every individual option row, in production order.
-3. [P1] General duplicated percentage as a separate switch after complete appearances moved to their own page. Fix: removed that row and its observer/action; the list remains exactly 136 points with two 68-point rows.
+3. [P1] General duplicated percentage as a separate switch after complete appearances moved to their own page. Fix: removed that row and its observer/action. The current list is 272 points with four 68-point rows after adding the two update controls.
 4. [P2] The first four-row capture showed the radio circles underneath the final state chip. Fix: made the radio Y position respect the button's flipped coordinate system and recaptured. The final image visibly shows all four circles and the selected inner dot.
 5. Percentage-to-glyph pairing is asserted by matching complete identifiers, a shared direct parent, and left-to-right frame order for all 14 percentages. No percentage overlaps its glyph.
 6. The host Swift suite, hidden AppKit contract, and the real visible AppKit interaction/lifecycle contract passed. The latter ran inside the ARM VM so the maintainer desktop was never activated or disturbed.
@@ -124,6 +125,21 @@ preset name and a truthful description. General is reduced to exactly two
 8. [P1] The first Low Power preview left the entire native icon neutral. Fix: match macOS 26 by colouring only the battery's interior fill yellow while keeping the outline, cap, plug, and bolt in the menu-bar foreground colour.
 9. [P1] Direct comparison with the live macOS 26 battery icon showed that the previous native choice still used the 19 × 10 small Control Center outline, a plug for connected-idle states, and a translucent full fill. Fix: load the full-size 23 × 12 outline and 11 × 14 bolt from the running Control Center bundle, use the bolt for every connected state, make normal fill opaque, and preserve the resulting 25 × 14 canvas in Settings previews.
 10. [P1] Replacing the sidebar ECG drawing with `AppIcon.icns` directly produced a dark, detail-free square at 40 points in the offscreen AppKit capture. Fix: packaging derives `AppIconSettings.png` from the exact same ICNS source, and the sidebar loads that representation without adding a second authored brand asset. The ARM VM capture shows the blue-green Wattson mark clearly at the original 40-point footprint.
+
+## Update settings
+
+- Candidate capture: `/tmp/wattson-settings-v3.0.14-general.png` (1440 ×
+  1040 pixels from the real 720 × 520-point AppKit hierarchy).
+- General contains four equal 68-point rows: Launch at Login, Hide System
+  Battery Icon, Check for Updates, and Check for Updates on Launch.
+- The manual action uses a compact native 88 × 28-point button. Its
+  checking, current, failed, available, and View Update states remain inside
+  the same row without resizing the window.
+- The automatic preference uses the existing compact switch style, defaults
+  on, and remains reachable in the keyboard loop after the manual action.
+- The AppKit runtime contract verified every state transition, persistence,
+  full-row hit testing, focus order, accessibility copy, and the trusted update
+  link. The full Swift and Python suites passed after the visual capture.
 
 ### Follow-up polish
 

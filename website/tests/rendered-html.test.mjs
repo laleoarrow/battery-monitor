@@ -58,10 +58,14 @@ test("renders the complete English Wattson release page", async () => {
     html,
     /percentage rows show matching per-state values to the left of each glyph/i,
   );
-  assert.match(html, /General contains only Launch at Login and Hide System Battery Icon/i);
+  assert.match(html, /General adds Check for Updates and Check for Updates on Launch/i);
+  assert.match(html, /Manual checks read GitHub Latest Release/i);
+  assert.match(html, /launch checks default on, stay quiet when current or offline/i);
+  assert.match(html, /never download or install automatically/i);
+  assert.match(html, /Optional update checks contact only GitHub Releases/i);
   assert.match(html, /Settings sidebar uses the real packaged Wattson app icon/i);
   assert.match(html, /720×520/i);
-  assert.match(html, /v3\.0\.13/i);
+  assert.match(html, /v3\.0\.14/i);
   assert.match(html, /release candidate/i);
   assert.match(html, /not Apple-notarized/i);
   assert.match(html, /System Settings[\s\S]*Privacy[\s\S]*Security[\s\S]*Open Anyway/i);
