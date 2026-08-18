@@ -36,6 +36,9 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /brew install --cask laleoarrow\/tap\/wattson/i);
   assert.match(html, /Community build/i);
   assert.match(html, /macOS-style battery glyph/i);
+  assert.match(html, /diagonal adapter plug/i);
+  assert.match(html, /green bracketed charging battery/i);
+  assert.match(html, /24-point Medium node artwork/i);
   assert.match(html, /dedicated Menu Bar Icon page/i);
   assert.match(html, /Wattson icon only/i);
   assert.match(html, /Wattson with percentage/i);
@@ -65,8 +68,8 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /Optional update checks contact only GitHub Releases/i);
   assert.match(html, /Settings sidebar uses the real packaged Wattson app icon/i);
   assert.match(html, /720×520/i);
-  assert.match(html, /v3\.0\.14/i);
-  assert.match(html, /release candidate/i);
+  assert.match(html, /v3\.0\.15/i);
+  assert.match(html, /bundled stable release/i);
   assert.match(html, /not Apple-notarized/i);
   assert.match(html, /System Settings[\s\S]*Privacy[\s\S]*Security[\s\S]*Open Anyway/i);
   assert.doesNotMatch(html, /Control-click/i);
@@ -133,7 +136,7 @@ test("shows the current AppKit popover instead of an invented web mock", async (
     html,
     /wattson-popover-real\.png[^>]*alt="The real Wattson menu bar popover/i,
   );
-  assert.match(html, /Captured from the current Wattson AppKit build\./i);
+  assert.match(html, /Captured from Wattson’s production AppKit hierarchy\./i);
   assert.doesNotMatch(html, /class="app-window"|class="power-map"/i);
   assert.doesNotMatch(page, /historyValues|className="app-window"|67\.1 W|24\.8 W/);
 

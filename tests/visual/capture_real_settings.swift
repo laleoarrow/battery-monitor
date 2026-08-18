@@ -49,8 +49,8 @@ private enum CaptureRealSettings {
             refreshSystemBatteryIcon: { $0(false) },
             setSystemBatteryIconHidden: { _, completion in completion(true) },
             systemBatteryIconDidChange: fixtureNotification,
-            currentVersion: { "3.0.14" },
-            checkForUpdates: { $0(.success(.upToDate(currentVersion: "3.0.14"))) },
+            currentVersion: { "3.0.15" },
+            checkForUpdates: { $0(.success(.upToDate(currentVersion: "3.0.15"))) },
             openUpdateURL: { _ in true },
             increaseContrast: { false },
             announceAccessibility: { _ in }

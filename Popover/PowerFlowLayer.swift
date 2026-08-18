@@ -38,12 +38,20 @@ struct PipeGeometry {
 final class FlowNodeView: NSView {
     static let boxSize: CGFloat = VisualEncoding.nodeSize   // 36
     static let stackWidth: CGFloat = 92
+    private static let powerIconConfiguration =
+        NSImage.SymbolConfiguration(pointSize: 24, weight: .medium)
+    private static let restoredAdapterRotation = CGFloat.pi / 4
+    private static let restoredAdapterImage = rotatedAdapterImage(addsSlash: false)
+    private static let restoredDisconnectedAdapterImage =
+        rotatedAdapterImage(addsSlash: true)
+    private static let restoredChargingBatteryImage = chargingBatteryImage()
 
     private let box = NSView()
     private let icon = NSImageView()
     private let caption = NSTextField(labelWithString: "")
     private let value = NSTextField(labelWithString: "")
     private var breathingColor: NSColor?
+    private var usesEmphasizedPowerIcon = false
 #if DEBUG
     private(set) var breathingInstallationsForTest = 0
 #endif
@@ -82,17 +90,131 @@ final class FlowNodeView: NSView {
         super.layout()
         let size = Self.boxSize
         box.frame = NSRect(x: (bounds.width - size) / 2, y: 0, width: size, height: size)
-        icon.frame = NSRect(x: 9, y: 9, width: size - 18, height: size - 18)
+        icon.frame = usesEmphasizedPowerIcon
+            ? box.bounds
+            : NSRect(x: 9, y: 9, width: size - 18, height: size - 18)
         caption.frame = NSRect(x: 0, y: size + 5, width: bounds.width, height: 14)
         value.frame = NSRect(x: 0, y: size + 20, width: bounds.width, height: 16)
     }
 
     func configure(symbol: String, caption text: String, value valueText: String, tint: NSColor) {
-        icon.image = NSImage(systemSymbolName: symbol, accessibilityDescription: text)
+        let systemImage = NSImage(systemSymbolName: symbol, accessibilityDescription: text)
+        usesEmphasizedPowerIcon = symbol.hasPrefix("powerplug")
+            || symbol.hasPrefix("battery.")
+        icon.imageScaling = usesEmphasizedPowerIcon
+            ? .scaleProportionallyDown
+            : .scaleProportionallyUpOrDown
+        switch symbol {
+        case "powerplug":
+            icon.image = Self.restoredAdapterImage
+        case "powerplug.slash":
+            icon.image = Self.restoredDisconnectedAdapterImage
+        case "battery.100.bolt":
+            icon.image = Self.restoredChargingBatteryImage
+        default:
+            icon.image = usesEmphasizedPowerIcon
+                ? systemImage?.withSymbolConfiguration(Self.powerIconConfiguration)
+                : systemImage
+        }
+        needsLayout = true
         icon.contentTintColor = tint
         caption.stringValue = text
         value.stringValue = valueText
         box.layer?.borderColor = tint.withAlphaComponent(0.34).cgColor
+    }
+
+    private static func rotatedAdapterImage(addsSlash: Bool) -> NSImage? {
+        guard let source = NSImage(
+            systemSymbolName: "powerplug",
+            accessibilityDescription: "Adapter"
+        )?.withSymbolConfiguration(powerIconConfiguration) else { return nil }
+
+        let canvasSize = NSSize(width: 32, height: 32)
+        let sourceMax = max(source.size.width, source.size.height)
+        let scale = min(1, 24 / sourceMax)
+        let drawSize = NSSize(
+            width: source.size.width * scale,
+            height: source.size.height * scale
+        )
+        let image = NSImage(size: canvasSize, flipped: false) { rect in
+            guard let context = NSGraphicsContext.current?.cgContext else { return false }
+            context.saveGState()
+            context.translateBy(x: rect.midX, y: rect.midY)
+            context.rotate(by: restoredAdapterRotation)
+            source.draw(
+                in: NSRect(
+                    x: -drawSize.width / 2,
+                    y: -drawSize.height / 2,
+                    width: drawSize.width,
+                    height: drawSize.height
+                )
+            )
+            context.restoreGState()
+            if addsSlash {
+                context.setStrokeColor(NSColor.black.cgColor)
+                context.setLineWidth(2.2)
+                context.setLineCap(.round)
+                context.move(to: CGPoint(x: 8, y: 24))
+                context.addLine(to: CGPoint(x: 24, y: 8))
+                context.strokePath()
+            }
+            return true
+        }
+        image.isTemplate = true
+        return image
+    }
+
+    private static func chargingBatteryImage() -> NSImage {
+        let image = NSImage(size: NSSize(width: 32, height: 32), flipped: false) { _ in
+            NSColor.black.setStroke()
+            let shell = NSBezierPath()
+            shell.move(to: NSPoint(x: 12.5, y: 24))
+            shell.line(to: NSPoint(x: 9, y: 24))
+            shell.curve(
+                to: NSPoint(x: 6, y: 21),
+                controlPoint1: NSPoint(x: 7.2, y: 24),
+                controlPoint2: NSPoint(x: 6, y: 22.8)
+            )
+            shell.line(to: NSPoint(x: 6, y: 11))
+            shell.curve(
+                to: NSPoint(x: 9, y: 8),
+                controlPoint1: NSPoint(x: 6, y: 9.2),
+                controlPoint2: NSPoint(x: 7.2, y: 8)
+            )
+            shell.line(to: NSPoint(x: 12.5, y: 8))
+            shell.move(to: NSPoint(x: 19.5, y: 24))
+            shell.line(to: NSPoint(x: 23, y: 24))
+            shell.curve(
+                to: NSPoint(x: 26, y: 21),
+                controlPoint1: NSPoint(x: 24.8, y: 24),
+                controlPoint2: NSPoint(x: 26, y: 22.8)
+            )
+            shell.line(to: NSPoint(x: 26, y: 11))
+            shell.curve(
+                to: NSPoint(x: 23, y: 8),
+                controlPoint1: NSPoint(x: 26, y: 9.2),
+                controlPoint2: NSPoint(x: 24.8, y: 8)
+            )
+            shell.line(to: NSPoint(x: 19.5, y: 8))
+            shell.lineWidth = 2.7
+            shell.lineCapStyle = .round
+            shell.lineJoinStyle = .round
+            shell.stroke()
+
+            NSColor.black.setFill()
+            let chargingMark = NSBezierPath()
+            chargingMark.move(to: NSPoint(x: 17.2, y: 24))
+            chargingMark.line(to: NSPoint(x: 11.5, y: 15))
+            chargingMark.line(to: NSPoint(x: 15.5, y: 15))
+            chargingMark.line(to: NSPoint(x: 14.5, y: 8))
+            chargingMark.line(to: NSPoint(x: 21, y: 17))
+            chargingMark.line(to: NSPoint(x: 17, y: 17))
+            chargingMark.close()
+            chargingMark.fill()
+            return true
+        }
+        image.isTemplate = true
+        return image
     }
 
     /// Idle and disconnected nodes stay on screen at reduced opacity. Removing

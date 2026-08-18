@@ -6,7 +6,7 @@ on:
       version:
         description: Stable semantic version without the v prefix
         required: true
-        default: "3.0.14"
+        default: "3.0.15"
         type: string
       candidate_run_id:
         description: Successful Wattson release candidate workflow run ID
@@ -209,6 +209,7 @@ jobs:
           - Manual checks read GitHub Latest Release and open its trusted release page; launch checks default on, stay quiet when current or offline, and never download or install automatically.
           - Uses a compact fixed 720×520 Settings window for General, Menu Bar Icon, and Modules.
           - Uses the real packaged Wattson app icon in the Settings sidebar instead of a separate ECG-style drawing.
+          - Restores the earlier power-flow node artwork: a diagonal adapter plug and a green bracketed charging battery with a central lightning mark, rendered at 24-point Medium inside the existing 36-point wells.
           - Adds a compact grouped website install panel for DMG, PKG, and Homebrew.
           - Uses the real AppKit popover hero instead of a recreated browser mock.
 

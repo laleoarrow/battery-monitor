@@ -126,6 +126,24 @@ control.
 9. [P1] Direct comparison with the live macOS 26 battery icon showed that the previous native choice still used the 19 × 10 small Control Center outline, a plug for connected-idle states, and a translucent full fill. Fix: load the full-size 23 × 12 outline and 11 × 14 bolt from the running Control Center bundle, use the bolt for every connected state, make normal fill opaque, and preserve the resulting 25 × 14 canvas in Settings previews.
 10. [P1] Replacing the sidebar ECG drawing with `AppIcon.icns` directly produced a dark, detail-free square at 40 points in the offscreen AppKit capture. Fix: packaging derives `AppIconSettings.png` from the exact same ICNS source, and the sidebar loads that representation without adding a second authored brand asset. The ARM VM capture shows the blue-green Wattson mark clearly at the original 40-point footprint.
 
+## Restored power-flow node artwork
+
+- User references: the earlier green diagonal adapter plug and the earlier
+  green bracketed charging battery with a central lightning mark.
+- Final production capture:
+  `/tmp/wattson-power-icons-restored-charging-final.png` (656 × 404 pixels,
+  rendered from the real `PowerFlowView` hierarchy).
+- Capture method: hidden `cacheDisplay`; no window was ordered front and the
+  maintainer desktop was not activated.
+- Both restored glyphs use 24-point Medium artwork inside the existing
+  36-point wells. Adapter, battery, and system positions, pipe geometry,
+  animation timing, labels, and hit areas are unchanged.
+- The charging glyph is used only for active charging. Idle/full, discharging,
+  and mixed-supply states retain the production battery levels and their
+  established blue, green, neutral, and amber state colours.
+- Swift (81 tests), Python (407 tests), the release build, and the hidden AppKit
+  capture all passed after the final rendering change.
+
 ## Update settings
 
 - Candidate capture: `/tmp/wattson-settings-v3.0.14-general.png` (1440 ×

@@ -55,6 +55,24 @@ class TopologyContractTests(unittest.TestCase):
         self.assertIn("idleConnection", self.source)
         self.assertIn("lineDashPattern = [3, 6]", self.source)
 
+    def test_adapter_and_battery_restore_the_old_emphasized_symbol_treatment(self):
+        # The approved earlier nodes used explicit 24-point Medium symbols.
+        # Leaving configuration to a small image view makes both power glyphs
+        # thin and undersized on newer macOS releases.
+        self.assertIn(
+            "NSImage.SymbolConfiguration(pointSize: 24, weight: .medium)",
+            self.source,
+        )
+        self.assertIn('symbol.hasPrefix("powerplug")', self.source)
+        self.assertIn('symbol.hasPrefix("battery.")', self.source)
+        self.assertIn("withSymbolConfiguration(Self.powerIconConfiguration)", self.source)
+        self.assertIn("? .scaleProportionallyDown", self.source)
+        self.assertIn("restoredAdapterRotation", self.source)
+        self.assertIn("rotatedAdapterImage(addsSlash:", self.source)
+        self.assertIn("context.rotate(by: restoredAdapterRotation)", self.source)
+        self.assertIn("restoredChargingBatteryImage", self.source)
+        self.assertIn("chargingBatteryImage()", self.source)
+
 
 if __name__ == "__main__":
     unittest.main()

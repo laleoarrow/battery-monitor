@@ -14,7 +14,7 @@ const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
 const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
 const RELEASE_API =
   "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
-const FALLBACK_VERSION = "v3.0.14";
+const FALLBACK_VERSION = "v3.0.15";
 const FALLBACK_ASSET_BASE = `${GITHUB_REPO}/releases/download/${FALLBACK_VERSION}`;
 const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
 
@@ -194,7 +194,7 @@ export default function Home() {
               src="/wattson-popover-real.png"
               width={864}
             />
-            <figcaption>Captured from the current Wattson AppKit build.</figcaption>
+            <figcaption>Captured from Wattson’s production AppKit hierarchy.</figcaption>
           </figure>
         </section>
 
@@ -241,6 +241,9 @@ export default function Home() {
               <p>
                 Follow energy from adapter to battery to system load. Charging,
                 full, on-battery, and mixed-power states each get a distinct read.
+                The restored 24-point Medium node artwork uses a diagonal
+                adapter plug and a green bracketed charging battery with a
+                central lightning mark inside the existing 36-point wells.
               </p>
             </article>
 
@@ -323,7 +326,7 @@ export default function Home() {
                 <span className="live-dot" />
                 <span>{versionLabel}</span>
                 <small>
-                  {release.source === "live" ? "checked on GitHub" : "release candidate"}
+                  {release.source === "live" ? "checked on GitHub" : "bundled stable release"}
                 </small>
               </div>
             </div>
