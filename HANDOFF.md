@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.15`
+- Version: `3.0.16`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +14,11 @@
 
 ## Release artifacts
 
-`scripts/release.sh 3.0.15` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.16` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.15-macos-universal.pkg`
-- `Wattson-v3.0.15-macos-universal.dmg`
-- `Wattson-v3.0.15-release-info.txt`
+- `Wattson-v3.0.16-macos-universal.pkg`
+- `Wattson-v3.0.16-macos-universal.dmg`
+- `Wattson-v3.0.16-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -91,7 +91,7 @@ Headless checks:
 ```bash
 swift test --parallel
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.15
+bash scripts/release.sh 3.0.16
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -114,7 +114,7 @@ runners.
 
 ## Release order
 
-v3.0.15 is the current public release. Its tag, GitHub release assets, local
+v3.0.16 is the current public release. Its tag, GitHub release assets, local
 canonical installation, and repository `VERSION` must remain byte-for-byte
 aligned with the exact tested artifact set.
 
@@ -129,12 +129,18 @@ aligned with the exact tested artifact set.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.15` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.16` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.15.
+6. Announce the release only after every public route resolves to v3.0.16.
+
+## v3.0.16 unified power-flow node scale
+
+The v3.0.16 release gives the Adapter, System, and Battery power-flow node
+icons one shared optical scale. System uses a simplified matching chip glyph,
+while the established semantic source and load colours remain unchanged.
 
 ## v3.0.15 restored power-flow node artwork
 

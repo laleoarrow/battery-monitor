@@ -7,7 +7,7 @@ import Foundation
 private enum CapturePowerFlowFixture {
     static func main() {
         guard CommandLine.arguments.count == 3 else {
-            fputs("usage: capture_power_flow_fixture charging|idle|battery|mixed OUTPUT.png\n", stderr)
+            fputs("usage: capture_power_flow_fixture charging|idle|battery|mixed|website OUTPUT.png\n", stderr)
             exit(2)
         }
 
@@ -55,6 +55,17 @@ private enum CapturePowerFlowFixture {
                 systemW: 59.7,
                 temperatureC: 38.6,
                 cycleCount: 116,
+                lowPowerMode: false
+            )
+        case "website":
+            snapshot = PowerSnapshot(
+                percent: 100,
+                plugged: true,
+                adapterW: 41.7,
+                batteryW: 0,
+                systemW: 41.7,
+                temperatureC: 33.8,
+                cycleCount: 278,
                 lowPowerMode: false
             )
         default:

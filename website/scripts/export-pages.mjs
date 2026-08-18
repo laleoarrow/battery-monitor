@@ -37,6 +37,7 @@ html = html
   .replaceAll("url(/_next/", `url(${basePath}/_next/`)
   .replaceAll('"/favicon.png', `"${basePath}/favicon.png`)
   .replaceAll('"/og.png', `"${basePath}/og.png`)
+  .replaceAll('"/wattson-popover-real.png', `"${basePath}/wattson-popover-real.png`)
   .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
   .replace(/<link\b(?=[^>]*\brel="modulepreload")[^>]*\/?>/gi, "")
   .replace(
@@ -60,6 +61,7 @@ await Promise.all([
   rm(new URL("_next/", outputRoot), { force: true, recursive: true }),
   rm(new URL("favicon.png", outputRoot), { force: true }),
   rm(new URL("og.png", outputRoot), { force: true }),
+  rm(new URL("wattson-popover-real.png", outputRoot), { force: true }),
   rm(new URL("index.html", outputRoot), { force: true }),
   rm(new URL("404.html", outputRoot), { force: true }),
   rm(new URL(".nojekyll", outputRoot), { force: true }),
@@ -76,6 +78,10 @@ await cp(
 );
 await cp(new URL("dist/client/favicon.png", siteRoot), new URL("favicon.png", outputRoot));
 await cp(new URL("dist/client/og.png", siteRoot), new URL("og.png", outputRoot));
+await cp(
+  new URL("dist/client/wattson-popover-real.png", siteRoot),
+  new URL("wattson-popover-real.png", outputRoot),
+);
 await writeFile(new URL("index.html", outputRoot), html, "utf8");
 await writeFile(new URL("404.html", outputRoot), html, "utf8");
 await writeFile(new URL(".nojekyll", outputRoot), "", "utf8");

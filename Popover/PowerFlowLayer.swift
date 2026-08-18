@@ -38,20 +38,36 @@ struct PipeGeometry {
 final class FlowNodeView: NSView {
     static let boxSize: CGFloat = VisualEncoding.nodeSize   // 36
     static let stackWidth: CGFloat = 92
+    private static let nodeIconCanvasSize: CGFloat = 32
+    private static let nodeSymbolDrawExtent: CGFloat = 32
+    private static let batterySymbolDrawExtent: CGFloat = 28.5
     private static let powerIconConfiguration =
         NSImage.SymbolConfiguration(pointSize: 24, weight: .medium)
+    private static let nodeIconStrokeWidth: CGFloat = 2.2
     private static let restoredAdapterRotation = CGFloat.pi / 4
     private static let restoredAdapterImage = rotatedAdapterImage(addsSlash: false)
     private static let restoredDisconnectedAdapterImage =
         rotatedAdapterImage(addsSlash: true)
     private static let restoredChargingBatteryImage = chargingBatteryImage()
+    private static let restoredSystemImage = systemChipImage()
+    private static let normalizedBatteryImages: [String: NSImage] = {
+        let symbols = ["battery.25", "battery.50", "battery.75", "battery.100"]
+        return Dictionary(uniqueKeysWithValues: symbols.compactMap { symbol in
+            nodeSymbolImage(
+                named: symbol,
+                accessibilityDescription: "Battery",
+                drawExtent: batterySymbolDrawExtent
+            ).map {
+                (symbol, $0)
+            }
+        })
+    }()
 
     private let box = NSView()
     private let icon = NSImageView()
     private let caption = NSTextField(labelWithString: "")
     private let value = NSTextField(labelWithString: "")
     private var breathingColor: NSColor?
-    private var usesEmphasizedPowerIcon = false
 #if DEBUG
     private(set) var breathingInstallationsForTest = 0
 #endif
@@ -70,7 +86,7 @@ final class FlowNodeView: NSView {
         box.layer?.cornerCurve = .continuous
         addSubview(box)
 
-        icon.imageScaling = .scaleProportionallyUpOrDown
+        icon.imageScaling = .scaleProportionallyDown
         box.addSubview(icon)
 
         caption.font = .systemFont(ofSize: 11, weight: .regular)
@@ -90,32 +106,13 @@ final class FlowNodeView: NSView {
         super.layout()
         let size = Self.boxSize
         box.frame = NSRect(x: (bounds.width - size) / 2, y: 0, width: size, height: size)
-        icon.frame = usesEmphasizedPowerIcon
-            ? box.bounds
-            : NSRect(x: 9, y: 9, width: size - 18, height: size - 18)
+        icon.frame = box.bounds
         caption.frame = NSRect(x: 0, y: size + 5, width: bounds.width, height: 14)
         value.frame = NSRect(x: 0, y: size + 20, width: bounds.width, height: 16)
     }
 
     func configure(symbol: String, caption text: String, value valueText: String, tint: NSColor) {
-        let systemImage = NSImage(systemSymbolName: symbol, accessibilityDescription: text)
-        usesEmphasizedPowerIcon = symbol.hasPrefix("powerplug")
-            || symbol.hasPrefix("battery.")
-        icon.imageScaling = usesEmphasizedPowerIcon
-            ? .scaleProportionallyDown
-            : .scaleProportionallyUpOrDown
-        switch symbol {
-        case "powerplug":
-            icon.image = Self.restoredAdapterImage
-        case "powerplug.slash":
-            icon.image = Self.restoredDisconnectedAdapterImage
-        case "battery.100.bolt":
-            icon.image = Self.restoredChargingBatteryImage
-        default:
-            icon.image = usesEmphasizedPowerIcon
-                ? systemImage?.withSymbolConfiguration(Self.powerIconConfiguration)
-                : systemImage
-        }
+        icon.image = Self.nodeIconImage(symbol: symbol, accessibilityDescription: text)
         needsLayout = true
         icon.contentTintColor = tint
         caption.stringValue = text
@@ -123,15 +120,52 @@ final class FlowNodeView: NSView {
         box.layer?.borderColor = tint.withAlphaComponent(0.34).cgColor
     }
 
-    private static func rotatedAdapterImage(addsSlash: Bool) -> NSImage? {
-        guard let source = NSImage(
-            systemSymbolName: "powerplug",
-            accessibilityDescription: "Adapter"
-        )?.withSymbolConfiguration(powerIconConfiguration) else { return nil }
+    private static func nodeIconImage(
+        symbol: String,
+        accessibilityDescription: String
+    ) -> NSImage? {
+        switch symbol {
+        case "cpu":
+            return restoredSystemImage
+        case "powerplug":
+            return restoredAdapterImage
+        case "powerplug.slash":
+            return restoredDisconnectedAdapterImage
+        case "battery.100.bolt":
+            return restoredChargingBatteryImage
+        default:
+            return normalizedBatteryImages[symbol]
+                ?? nodeSymbolImage(
+                    named: symbol,
+                    accessibilityDescription: accessibilityDescription
+                )
+        }
+    }
 
-        let canvasSize = NSSize(width: 32, height: 32)
+    private static func rotatedAdapterImage(addsSlash: Bool) -> NSImage? {
+        nodeSymbolImage(
+            named: "powerplug",
+            accessibilityDescription: "Adapter",
+            rotation: restoredAdapterRotation,
+            addsSlash: addsSlash
+        )
+    }
+
+    private static func nodeSymbolImage(
+        named symbol: String,
+        accessibilityDescription: String,
+        rotation: CGFloat = 0,
+        addsSlash: Bool = false,
+        drawExtent: CGFloat = nodeSymbolDrawExtent
+    ) -> NSImage? {
+        guard let source = NSImage(
+            systemSymbolName: symbol,
+            accessibilityDescription: accessibilityDescription
+        )?.withSymbolConfiguration(Self.powerIconConfiguration) else { return nil }
+
+        let canvasSize = NSSize(width: nodeIconCanvasSize, height: nodeIconCanvasSize)
         let sourceMax = max(source.size.width, source.size.height)
-        let scale = min(1, 24 / sourceMax)
+        let scale = min(1, drawExtent / sourceMax)
         let drawSize = NSSize(
             width: source.size.width * scale,
             height: source.size.height * scale
@@ -140,7 +174,7 @@ final class FlowNodeView: NSView {
             guard let context = NSGraphicsContext.current?.cgContext else { return false }
             context.saveGState()
             context.translateBy(x: rect.midX, y: rect.midY)
-            context.rotate(by: restoredAdapterRotation)
+            context.rotate(by: rotation)
             source.draw(
                 in: NSRect(
                     x: -drawSize.width / 2,
@@ -152,12 +186,45 @@ final class FlowNodeView: NSView {
             context.restoreGState()
             if addsSlash {
                 context.setStrokeColor(NSColor.black.cgColor)
-                context.setLineWidth(2.2)
+                context.setLineWidth(nodeIconStrokeWidth)
                 context.setLineCap(.round)
                 context.move(to: CGPoint(x: 8, y: 24))
                 context.addLine(to: CGPoint(x: 24, y: 8))
                 context.strokePath()
             }
+            return true
+        }
+        image.isTemplate = true
+        return image
+    }
+
+    private static func systemChipImage() -> NSImage {
+        let image = NSImage(size: NSSize(width: 32, height: 32), flipped: false) { _ in
+            NSColor.black.setStroke()
+            let chip = NSBezierPath(
+                roundedRect: NSRect(x: 8, y: 8, width: 16, height: 16),
+                xRadius: 3,
+                yRadius: 3
+            )
+            chip.appendRoundedRect(
+                NSRect(x: 12, y: 12, width: 8, height: 8),
+                xRadius: 1.5,
+                yRadius: 1.5
+            )
+            for coordinate in [12.5, 19.5] {
+                chip.move(to: NSPoint(x: coordinate, y: 6))
+                chip.line(to: NSPoint(x: coordinate, y: 8))
+                chip.move(to: NSPoint(x: coordinate, y: 24))
+                chip.line(to: NSPoint(x: coordinate, y: 26))
+                chip.move(to: NSPoint(x: 6, y: coordinate))
+                chip.line(to: NSPoint(x: 8, y: coordinate))
+                chip.move(to: NSPoint(x: 24, y: coordinate))
+                chip.line(to: NSPoint(x: 26, y: coordinate))
+            }
+            chip.lineWidth = nodeIconStrokeWidth
+            chip.lineCapStyle = .round
+            chip.lineJoinStyle = .round
+            chip.stroke()
             return true
         }
         image.isTemplate = true
@@ -196,7 +263,7 @@ final class FlowNodeView: NSView {
                 controlPoint2: NSPoint(x: 24.8, y: 8)
             )
             shell.line(to: NSPoint(x: 19.5, y: 8))
-            shell.lineWidth = 2.7
+            shell.lineWidth = nodeIconStrokeWidth
             shell.lineCapStyle = .round
             shell.lineJoinStyle = .round
             shell.stroke()
@@ -216,6 +283,12 @@ final class FlowNodeView: NSView {
         image.isTemplate = true
         return image
     }
+
+#if DEBUG
+    static func iconImageForTest(symbol: String) -> NSImage? {
+        nodeIconImage(symbol: symbol, accessibilityDescription: symbol)
+    }
+#endif
 
     /// Idle and disconnected nodes stay on screen at reduced opacity. Removing
     /// them makes the frame jump and hides the fact that the component is still

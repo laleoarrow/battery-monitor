@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3015">v3.0.15 release notes</a>
+  <a href="#whats-new-in-v3016">v3.0.16 release notes</a>
 </p>
 
 <p align="center">
@@ -40,9 +40,15 @@ where it is going, and how the picture has changed over the last two minutes.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
 
-## What's new in v3.0.15
+## What's new in v3.0.16
 
-> v3.0.15 is the current public release.
+> v3.0.16 is the current public release.
+
+- Adapter, System, and Battery power-flow node icons now share one optical
+  scale. System uses a simplified matching chip glyph, while the existing
+  semantic source and load colours remain unchanged.
+
+## v3.0.15 restored power-flow node artwork
 
 - Restores the earlier power-flow node artwork: the adapter is again a clear
   diagonal plug, while an actively charging battery uses the green bracketed
@@ -73,12 +79,12 @@ where it is going, and how the picture has changed over the last two minutes.
 - The Settings sidebar now uses the real packaged Wattson app icon instead of
   a separate ECG-style drawing.
 
-## Install v3.0.15
+## Install v3.0.16
 
 | Route | Best for | What to do |
 | --- | --- | --- |
-| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.15/Wattson-v3.0.15-macos-universal.dmg), open it, then double-click the enclosed PKG. |
-| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.15/Wattson-v3.0.15-macos-universal.pkg) and follow macOS Installer. |
+| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.16/Wattson-v3.0.16-macos-universal.dmg), open it, then double-click the enclosed PKG. |
+| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.16/Wattson-v3.0.16-macos-universal.pkg) and follow macOS Installer. |
 | **Homebrew** | Terminal installation and updates | Run `brew install --cask laleoarrow/tap/wattson`. |
 
 All three routes install the same universal app at
@@ -92,7 +98,7 @@ macOS administrator prompt is required to install the helper.
 > installer, then use System Settings → Privacy & Security → Open Anyway only
 > when you trust this repository. Older macOS releases may instead offer
 > Control-click → Open. Verify the provided
-> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.15/SHA256SUMS.txt)
+> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.16/SHA256SUMS.txt)
 > before installation.
 
 ### Requirements

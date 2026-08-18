@@ -29,7 +29,8 @@ At 1280 px the install section is 768.5 px tall and the grouped panel is 760 × 
 - Reported fake-UI baseline: `/Users/leoarrow/.codex/attachments/3627013a-68b6-414f-ad08-c23865ec719e/image-1.png`.
 - Current 1280×720 browser capture: `/tmp/wattson-current-hero.png`.
 - Side-by-side comparison: `/tmp/wattson-hero-before-after.png`.
-- Shipping source capture: `website/public/wattson-popover-real.png` (432×765 pixels).
+- Shipping source capture: `website/public/wattson-popover-real.png`
+  (864×1530 pixels at 2×, representing 432×765 points).
 
 The old web-drawn monitor has been removed. Browser inspection of the final
 hero found zero `.app-window`, `.power-map`, or `.history-bars` mock nodes. The
@@ -143,6 +144,30 @@ control.
   established blue, green, neutral, and amber state colours.
 - Swift (81 tests), Python (407 tests), the release build, and the hidden AppKit
   capture all passed after the final rendering change.
+
+## Unified power-flow node icon family
+
+- User reference: the Adapter, System, and Battery wells looked like three
+  unrelated icon families because their visible extents were approximately
+  17, 14.5, and 28 points despite sharing the same 36-point container.
+- Final four-state production captures:
+  `/tmp/wattson-node-icons-unified.ElX4Uo/charging.png`, `idle.png`,
+  `battery.png`, and `mixed.png` (656 × 404 pixels each).
+- Adapter retains the approved diagonal plug and charging Battery retains the
+  approved bracket-and-lightning silhouette. System now uses a simplified
+  rounded chip drawn with the same 2.2-point line treatment. Static battery
+  levels and the adapter are optically normalised instead of merely sharing an
+  `NSImageView` frame.
+- A real AppKit alpha-bounds test covers the plug, disconnected plug, System,
+  all four static battery levels, and the charging battery. Every glyph is
+  centred on a 32-point canvas, has a 20.5–24.5-point maximum visible extent,
+  keeps at least a 2-point margin, and the largest-to-smallest extent ratio is
+  at most 1.18.
+- Semantic colour remains intentional: System is neutral, active sources use
+  the state colour, and mixed supply keeps Adapter blue and Battery amber.
+- `website/public/wattson-popover-real.png` was refreshed from the same
+  production `PowerFlowView` hierarchy so the public screenshot no longer
+  shows the obsolete horizontal plug.
 
 ## Update settings
 

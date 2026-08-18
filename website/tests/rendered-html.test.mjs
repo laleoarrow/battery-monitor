@@ -39,6 +39,8 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /diagonal adapter plug/i);
   assert.match(html, /green bracketed charging battery/i);
   assert.match(html, /24-point Medium node artwork/i);
+  assert.match(html, /node icons share one optical scale/i);
+  assert.match(html, /simplified matching chip glyph/i);
   assert.match(html, /dedicated Menu Bar Icon page/i);
   assert.match(html, /Wattson icon only/i);
   assert.match(html, /Wattson with percentage/i);
@@ -68,7 +70,7 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /Optional update checks contact only GitHub Releases/i);
   assert.match(html, /Settings sidebar uses the real packaged Wattson app icon/i);
   assert.match(html, /720×520/i);
-  assert.match(html, /v3\.0\.15/i);
+  assert.match(html, /v3\.0\.16/i);
   assert.match(html, /bundled stable release/i);
   assert.match(html, /not Apple-notarized/i);
   assert.match(html, /System Settings[\s\S]*Privacy[\s\S]*Security[\s\S]*Open Anyway/i);
@@ -172,6 +174,9 @@ test("exports a server-independent GitHub Pages document", async () => {
 
   assert.match(html, /<title>Wattson — Live power flow for macOS<\/title>/i);
   assert.match(html, /href="\/battery-monitor\/_next\/static\/css\//i);
+  assert.match(html, /src="\/battery-monitor\/wattson-popover-real\.png"/i);
+  assert.doesNotMatch(html, /_next\/image\?url=%2Fwattson-popover-real\.png/i);
+  await access(new URL("../../docs/wattson-popover-real.png", import.meta.url));
   assert.ok(
     html.includes(
       `href="${assetBase}/Wattson-v${version}-macos-universal.dmg"`,

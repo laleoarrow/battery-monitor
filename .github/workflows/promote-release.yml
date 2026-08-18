@@ -6,7 +6,7 @@ on:
       version:
         description: Stable semantic version without the v prefix
         required: true
-        default: "3.0.15"
+        default: "3.0.16"
         type: string
       candidate_run_id:
         description: Successful Wattson release candidate workflow run ID
@@ -202,6 +202,7 @@ jobs:
             cat <<'EOF'
           This Wattson release is universal for Apple silicon and Intel and supports macOS 12 or later.
 
+          - Gives the Adapter, System, and Battery power-flow node icons one shared optical scale. System uses a simplified matching chip glyph, while the semantic source and load colours remain unchanged.
           - Adds a dedicated Menu Bar Icon page that lists all four complete menu-bar appearances vertically, one full-width option per row: Wattson icon only, Wattson with percentage, macOS 26 icon only, and macOS 26 with percentage.
           - Every row previews seven real production-rendered states: Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC. Every preview uses the real BatteryIcon renderer; percentage rows show matching per-state values to the left of each glyph.
           - The macOS 26 rows use full-size macOS 26 Control Center battery parts from the running system, including the 23×12 outline and 11×14 bolt, instead of smaller Control Center artwork or generic SF Symbols. Every connected state uses the system bolt. In Low Power Mode, only the battery fill is yellow; the outline, cap, and bolt keep the menu-bar foreground colour.
