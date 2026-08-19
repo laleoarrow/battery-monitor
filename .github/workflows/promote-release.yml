@@ -4,9 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Stable semantic version without the v prefix
-        required: true
-        default: "3.0.16"
+        description: Optional; leave blank to read VERSION (without the v prefix)
+        required: false
         type: string
       candidate_run_id:
         description: Successful Wattson release candidate workflow run ID
@@ -202,7 +201,8 @@ jobs:
             cat <<'EOF'
           This Wattson release is universal for Apple silicon and Intel and supports macOS 12 or later.
 
-          - Gives the Adapter, System, and Battery power-flow node icons one shared optical scale. System uses a simplified matching chip glyph, while the semantic source and load colours remain unchanged.
+          - Refines the approved A1 power-flow icon direction with a slightly smaller, lighter treatment: 21-point Regular symbols and 1.6-point custom outlines inside the existing 36-point wells.
+          - Keeps Adapter, System, and Battery on one optical scale. The real visible extents target 19.25–21.5 points and measure 20–21.25 points across the production states, while semantic source and load colours remain unchanged.
           - Adds a dedicated Menu Bar Icon page that lists all four complete menu-bar appearances vertically, one full-width option per row: Wattson icon only, Wattson with percentage, macOS 26 icon only, and macOS 26 with percentage.
           - Every row previews seven real production-rendered states: Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC. Every preview uses the real BatteryIcon renderer; percentage rows show matching per-state values to the left of each glyph.
           - The macOS 26 rows use full-size macOS 26 Control Center battery parts from the running system, including the 23×12 outline and 11×14 bolt, instead of smaller Control Center artwork or generic SF Symbols. Every connected state uses the system bolt. In Low Power Mode, only the battery fill is yellow; the outline, cap, and bolt keep the menu-bar foreground colour.
@@ -210,7 +210,7 @@ jobs:
           - Manual checks read GitHub Latest Release and open its trusted release page; launch checks default on, stay quiet when current or offline, and never download or install automatically.
           - Uses a compact fixed 720×520 Settings window for General, Menu Bar Icon, and Modules.
           - Uses the real packaged Wattson app icon in the Settings sidebar instead of a separate ECG-style drawing.
-          - Restores the earlier power-flow node artwork: a diagonal adapter plug and a green bracketed charging battery with a central lightning mark, rendered at 24-point Medium inside the existing 36-point wells.
+          - Retains the clear diagonal adapter plug, simplified matching System chip, and green bracketed charging battery with a central lightning mark.
           - Adds a compact grouped website install panel for DMG, PKG, and Homebrew.
           - Uses the real AppKit popover hero instead of a recreated browser mock.
 

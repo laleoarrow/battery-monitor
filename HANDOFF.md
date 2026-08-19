@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Version: `3.0.16`
+- Version: `3.0.17`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +14,11 @@
 
 ## Release artifacts
 
-`scripts/release.sh 3.0.16` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.17` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.16-macos-universal.pkg`
-- `Wattson-v3.0.16-macos-universal.dmg`
-- `Wattson-v3.0.16-release-info.txt`
+- `Wattson-v3.0.17-macos-universal.pkg`
+- `Wattson-v3.0.17-macos-universal.dmg`
+- `Wattson-v3.0.17-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -70,6 +70,13 @@ download or install automatically. The sidebar identity uses a PNG derived
 during packaging from the same `AppIcon.icns` that Finder displays, rather than
 a separate ECG-style drawing.
 
+The Adapter, System, and Battery power-flow nodes use the approved A1 direction
+with a slightly smaller, lighter finish: 21-point Regular symbols and 1.6-point
+custom outlines inside the existing 36-point wells. Their real visible extents
+target 19.25–21.5 points and measure 20–21.25 points across the production
+states. The diagonal adapter plug, simplified matching System chip, bracketed
+charging battery, and established semantic state colours remain intact.
+
 The mode selector keeps the v2.1.5 interaction contract:
 
 - The resting selection is no wider than one segment.
@@ -89,9 +96,9 @@ The mode selector keeps the v2.1.5 interaction contract:
 Headless checks:
 
 ```bash
-swift test --parallel
+swift test
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.16
+bash scripts/release.sh 3.0.17
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -114,7 +121,7 @@ runners.
 
 ## Release order
 
-v3.0.16 is the current public release. Its tag, GitHub release assets, local
+v3.0.17 is the current public release. Its tag, GitHub release assets, local
 canonical installation, and repository `VERSION` must remain byte-for-byte
 aligned with the exact tested artifact set.
 
@@ -129,18 +136,29 @@ aligned with the exact tested artifact set.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.16` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.17` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.16.
+6. Announce the release only after every public route resolves to v3.0.17.
 
-## v3.0.16 unified power-flow node scale
+## v3.0.17 lighter power-flow node family
 
-The v3.0.16 release gives the Adapter, System, and Battery power-flow node
-icons one shared optical scale. System uses a simplified matching chip glyph,
-while the established semantic source and load colours remain unchanged.
+The v3.0.17 release refines the approved A1 power-flow icon direction with a
+slightly smaller, lighter finish. Adapter, System, and Battery now use 21-point
+Regular symbols and 1.6-point custom outlines inside the existing 36-point
+wells. Their real visible extents target 19.25–21.5 points and measure
+20–21.25 points across the production states. The clear diagonal adapter plug,
+simplified matching System chip, green bracketed charging battery with its
+central lightning mark, and semantic source and load colours remain unchanged.
+
+## v3.0.16 unified power-flow node scale (historical)
+
+The superseded v3.0.16 release first gave the Adapter, System, and Battery
+power-flow node icons one shared optical scale. System used a simplified
+matching chip glyph, while the established semantic source and load colours
+remained unchanged. v3.0.17 keeps that family and reduces its weight and scale.
 
 ## v3.0.15 restored power-flow node artwork
 

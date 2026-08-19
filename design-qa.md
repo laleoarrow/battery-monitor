@@ -145,7 +145,29 @@ control.
 - Swift (81 tests), Python (407 tests), the release build, and the hidden AppKit
   capture all passed after the final rendering change.
 
-## Unified power-flow node icon family
+## Refined A1 power-flow node icon family
+
+- Selected direction: A1, adjusted slightly smaller and thinner after the
+  user rejected the initial A treatment as too heavy and oversized.
+- Adapter, System, and Battery use a shared 21-point Regular treatment inside
+  the existing 36-point wells. The custom chip, charging battery, and
+  disconnected-plug slash use 1.6-point outlines.
+- The alpha-bounds contract targets 19.25–21.5-point real visible extents. The
+  production renderer measures 20–21.25 points across the plug, disconnected
+  plug, System chip, static battery levels, and bracketed charging battery.
+- The A1 silhouette language remains intact: a clear diagonal adapter plug, a
+  simplified matching System chip, and a bracketed charging battery with a
+  central lightning mark. No node position, flow path, animation, label, or
+  hit-area geometry changed.
+- Semantic colour remains intentional: System is neutral, active sources use
+  the state colour, and mixed supply keeps Adapter blue and Battery amber.
+- Final production captures:
+  `/tmp/wattson-v317-flow.LvNkns/{charging,idle,battery,mixed,website}.png`
+  (656 × 404 pixels each). The same production sources rendered byte-identical
+  PNGs in the macOS 26 ARM test VM, and all three AppKit interaction modes plus
+  the 20,000-iteration animation stress test passed there.
+
+## v3.0.16 unified power-flow node icon family (historical)
 
 - User reference: the Adapter, System, and Battery wells looked like three
   unrelated icon families because their visible extents were approximately

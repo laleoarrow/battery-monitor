@@ -14,7 +14,7 @@ popover.
 - `Popover/`: AppKit views, Liquid Glass selector, layers, and animations.
 - `Helper/wattson-helper.swift`: root LaunchDaemon with a fixed JSON operation
   whitelist and console-user peer validation.
-- `main.swift`: application entry point and installer-readiness signal.
+- `main.swift`: application entry point plus fixed helper health and power probes.
 - `Package.swift`: macOS 12 SwiftPM products for the app and helper.
 
 The public v3 package installs:

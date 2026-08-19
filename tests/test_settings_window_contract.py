@@ -215,7 +215,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 var batteryReads: [(Bool?) -> Void] = []
                 var loginWrites: [(Bool, (Result<LoginItemState, Error>) -> Void)] = []
                 var batteryWrites: [(Bool, (Bool) -> Void)] = []
-                var currentVersion = "3.0.16"
+                var currentVersion = "3.0.17"
                 var updateChecks: [(Result<UpdateCheckOutcome, Error>) -> Void] = []
                 var openedUpdateURLs: [URL] = []
                 var announcements: [String] = []
@@ -509,7 +509,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "launch update checking defaults on")
             require(
                 label("settings.general.update.detail", in: first).stringValue
-                    == "Current version 3.0.16",
+                    == "Current version 3.0.17",
                 "manual update row shows the installed version"
             )
             require(
@@ -529,12 +529,12 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(fixture.updateChecks.count == 1, "manual update check dispatches once")
             require(!update.isEnabled && update.title == "Checking…",
                     "manual update button exposes progress")
-            fixture.updateChecks.removeFirst()(.success(.upToDate(currentVersion: "3.0.16")))
+            fixture.updateChecks.removeFirst()(.success(.upToDate(currentVersion: "3.0.17")))
             require(update.isEnabled && update.title == "Check Now",
                     "up-to-date result restores the action")
             require(
                 label("settings.general.update.detail", in: first).stringValue
-                    == "Wattson 3.0.16 is up to date",
+                    == "Wattson 3.0.17 is up to date",
                 "up-to-date result is visible inline"
             )
 
@@ -547,9 +547,9 @@ class SettingsWindowContractTests(unittest.TestCase):
 
             update.performClick(nil)
             let availableRelease = UpdateRelease(
-                version: "3.0.17",
+                version: "3.0.18",
                 pageURL: URL(
-                    string: "https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.17"
+                    string: "https://github.com/laleoarrow/battery-monitor/releases/tag/v3.0.18"
                 )!
             )
             fixture.updateChecks.removeFirst()(.success(.updateAvailable(availableRelease)))
@@ -557,7 +557,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "available update exposes its release action")
             require(
                 label("settings.general.update.detail", in: first).stringValue
-                    == "Wattson 3.0.17 is available",
+                    == "Wattson 3.0.18 is available",
                 "available version is visible inline"
             )
             update.performClick(nil)

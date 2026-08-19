@@ -27,7 +27,6 @@ let package = Package(
                 "BatteryPowerWidgetExtension.xcodeproj",
                 "HANDOFF.md",
                 "Helper",
-                "Installer",
                 "Packaging",
                 "README.md",
                 "Support",

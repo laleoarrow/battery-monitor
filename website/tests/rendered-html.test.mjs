@@ -38,9 +38,13 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /macOS-style battery glyph/i);
   assert.match(html, /diagonal adapter plug/i);
   assert.match(html, /green bracketed charging battery/i);
-  assert.match(html, /24-point Medium node artwork/i);
-  assert.match(html, /node icons share one optical scale/i);
-  assert.match(html, /simplified matching chip glyph/i);
+  assert.match(html, /approved A1 power-flow icon direction/i);
+  assert.match(html, /slightly smaller[\s\S]*and lighter/i);
+  assert.match(html, /21-point Regular symbols/i);
+  assert.match(html, /1.6-point custom outlines/i);
+  assert.match(html, /real visible extents target 19.25–21.5 points/i);
+  assert.match(html, /measure 20–21.25 points/i);
+  assert.match(html, /simplified matching System chip/i);
   assert.match(html, /dedicated Menu Bar Icon page/i);
   assert.match(html, /Wattson icon only/i);
   assert.match(html, /Wattson with percentage/i);
@@ -70,7 +74,7 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /Optional update checks contact only GitHub Releases/i);
   assert.match(html, /Settings sidebar uses the real packaged Wattson app icon/i);
   assert.match(html, /720×520/i);
-  assert.match(html, /v3\.0\.16/i);
+  assert.match(html, /v3\.0\.17/i);
   assert.match(html, /bundled stable release/i);
   assert.match(html, /not Apple-notarized/i);
   assert.match(html, /System Settings[\s\S]*Privacy[\s\S]*Security[\s\S]*Open Anyway/i);
@@ -226,10 +230,7 @@ test("preserves non-site documentation during the Pages export", async () => {
   ]);
 });
 
-test("keeps release workflow defaults aligned with VERSION", async () => {
-  const version = (
-    await readFile(new URL("../../VERSION", import.meta.url), "utf8")
-  ).trim();
+test("lets release workflows read VERSION when the optional input is blank", async () => {
   const workflowUrls = [
     new URL("../../.github/workflows/promote-release.yml", import.meta.url),
     new URL("../../.github/workflows/macos-helper-install.yml", import.meta.url),
@@ -241,9 +242,10 @@ test("keeps release workflow defaults aligned with VERSION", async () => {
       /^\s+version:\s*\n((?:^\s{8,}.*\n){1,8})/m,
     );
     assert.ok(versionInput, `${workflowUrl.pathname} is missing the version input`);
-    const defaultVersion = versionInput[1].match(
-      /^\s+default:\s*["']?([^"'\s]+)["']?\s*$/m,
-    );
-    assert.equal(defaultVersion?.[1], version, workflowUrl.pathname);
+    assert.match(versionInput[1], /^\s+required:\s*false\s*$/m);
+    assert.match(versionInput[1], /leave blank/i);
+    assert.doesNotMatch(versionInput[1], /^\s+default:/m);
+    assert.match(workflow, /if \[\[ -z "\$WATTSON_VERSION" \]\]; then/);
+    assert.match(workflow, /< VERSION/);
   }
 });

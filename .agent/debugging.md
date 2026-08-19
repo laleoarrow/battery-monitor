@@ -3,7 +3,7 @@
 ## Safe headless checks
 
 ```bash
-swift test --parallel
+swift test
 python3 -m unittest discover -s tests -v
 bash -n scripts/*.sh Packaging/pkg/preinstall Packaging/pkg/postinstall
 git diff --check

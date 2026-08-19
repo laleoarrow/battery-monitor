@@ -39,11 +39,11 @@ final class FlowNodeView: NSView {
     static let boxSize: CGFloat = VisualEncoding.nodeSize   // 36
     static let stackWidth: CGFloat = 92
     private static let nodeIconCanvasSize: CGFloat = 32
-    private static let nodeSymbolDrawExtent: CGFloat = 32
-    private static let batterySymbolDrawExtent: CGFloat = 28.5
+    private static let nodeSymbolDrawExtent: CGFloat = 28
+    private static let batterySymbolDrawExtent: CGFloat = 24.5
     private static let powerIconConfiguration =
-        NSImage.SymbolConfiguration(pointSize: 24, weight: .medium)
-    private static let nodeIconStrokeWidth: CGFloat = 2.2
+        NSImage.SymbolConfiguration(pointSize: 21, weight: .regular)
+    private static let nodeIconStrokeWidth: CGFloat = 1.6
     private static let restoredAdapterRotation = CGFloat.pi / 4
     private static let restoredAdapterImage = rotatedAdapterImage(addsSlash: false)
     private static let restoredDisconnectedAdapterImage =
@@ -147,7 +147,8 @@ final class FlowNodeView: NSView {
             named: "powerplug",
             accessibilityDescription: "Adapter",
             rotation: restoredAdapterRotation,
-            addsSlash: addsSlash
+            addsSlash: addsSlash,
+            centerOffset: CGPoint(x: -0.75, y: 0.25)
         )
     }
 
@@ -156,7 +157,8 @@ final class FlowNodeView: NSView {
         accessibilityDescription: String,
         rotation: CGFloat = 0,
         addsSlash: Bool = false,
-        drawExtent: CGFloat = nodeSymbolDrawExtent
+        drawExtent: CGFloat = nodeSymbolDrawExtent,
+        centerOffset: CGPoint = .zero
     ) -> NSImage? {
         guard let source = NSImage(
             systemSymbolName: symbol,
@@ -173,7 +175,10 @@ final class FlowNodeView: NSView {
         let image = NSImage(size: canvasSize, flipped: false) { rect in
             guard let context = NSGraphicsContext.current?.cgContext else { return false }
             context.saveGState()
-            context.translateBy(x: rect.midX, y: rect.midY)
+            context.translateBy(
+                x: rect.midX + centerOffset.x,
+                y: rect.midY + centerOffset.y
+            )
             context.rotate(by: rotation)
             source.draw(
                 in: NSRect(
@@ -188,8 +193,8 @@ final class FlowNodeView: NSView {
                 context.setStrokeColor(NSColor.black.cgColor)
                 context.setLineWidth(nodeIconStrokeWidth)
                 context.setLineCap(.round)
-                context.move(to: CGPoint(x: 8, y: 24))
-                context.addLine(to: CGPoint(x: 24, y: 8))
+                context.move(to: CGPoint(x: 10, y: 22))
+                context.addLine(to: CGPoint(x: 22, y: 10))
                 context.strokePath()
             }
             return true
@@ -202,24 +207,24 @@ final class FlowNodeView: NSView {
         let image = NSImage(size: NSSize(width: 32, height: 32), flipped: false) { _ in
             NSColor.black.setStroke()
             let chip = NSBezierPath(
-                roundedRect: NSRect(x: 8, y: 8, width: 16, height: 16),
-                xRadius: 3,
-                yRadius: 3
+                roundedRect: NSRect(x: 9.5, y: 9.5, width: 13, height: 13),
+                xRadius: 2.6,
+                yRadius: 2.6
             )
             chip.appendRoundedRect(
-                NSRect(x: 12, y: 12, width: 8, height: 8),
-                xRadius: 1.5,
-                yRadius: 1.5
+                NSRect(x: 12.5, y: 12.5, width: 7, height: 7),
+                xRadius: 1.4,
+                yRadius: 1.4
             )
-            for coordinate in [12.5, 19.5] {
-                chip.move(to: NSPoint(x: coordinate, y: 6))
-                chip.line(to: NSPoint(x: coordinate, y: 8))
-                chip.move(to: NSPoint(x: coordinate, y: 24))
-                chip.line(to: NSPoint(x: coordinate, y: 26))
-                chip.move(to: NSPoint(x: 6, y: coordinate))
-                chip.line(to: NSPoint(x: 8, y: coordinate))
-                chip.move(to: NSPoint(x: 24, y: coordinate))
-                chip.line(to: NSPoint(x: 26, y: coordinate))
+            for coordinate in [12.0, 16.0, 20.0] {
+                chip.move(to: NSPoint(x: coordinate, y: 7))
+                chip.line(to: NSPoint(x: coordinate, y: 9.5))
+                chip.move(to: NSPoint(x: coordinate, y: 22.5))
+                chip.line(to: NSPoint(x: coordinate, y: 25))
+                chip.move(to: NSPoint(x: 7, y: coordinate))
+                chip.line(to: NSPoint(x: 9.5, y: coordinate))
+                chip.move(to: NSPoint(x: 22.5, y: coordinate))
+                chip.line(to: NSPoint(x: 25, y: coordinate))
             }
             chip.lineWidth = nodeIconStrokeWidth
             chip.lineCapStyle = .round
@@ -235,34 +240,34 @@ final class FlowNodeView: NSView {
         let image = NSImage(size: NSSize(width: 32, height: 32), flipped: false) { _ in
             NSColor.black.setStroke()
             let shell = NSBezierPath()
-            shell.move(to: NSPoint(x: 12.5, y: 24))
-            shell.line(to: NSPoint(x: 9, y: 24))
+            shell.move(to: NSPoint(x: 13, y: 23))
+            shell.line(to: NSPoint(x: 9.75, y: 23))
             shell.curve(
-                to: NSPoint(x: 6, y: 21),
-                controlPoint1: NSPoint(x: 7.2, y: 24),
-                controlPoint2: NSPoint(x: 6, y: 22.8)
+                to: NSPoint(x: 7, y: 20.25),
+                controlPoint1: NSPoint(x: 8.1, y: 23),
+                controlPoint2: NSPoint(x: 7, y: 21.9)
             )
-            shell.line(to: NSPoint(x: 6, y: 11))
+            shell.line(to: NSPoint(x: 7, y: 11.75))
             shell.curve(
-                to: NSPoint(x: 9, y: 8),
-                controlPoint1: NSPoint(x: 6, y: 9.2),
-                controlPoint2: NSPoint(x: 7.2, y: 8)
+                to: NSPoint(x: 9.75, y: 9),
+                controlPoint1: NSPoint(x: 7, y: 10.1),
+                controlPoint2: NSPoint(x: 8.1, y: 9)
             )
-            shell.line(to: NSPoint(x: 12.5, y: 8))
-            shell.move(to: NSPoint(x: 19.5, y: 24))
-            shell.line(to: NSPoint(x: 23, y: 24))
+            shell.line(to: NSPoint(x: 13, y: 9))
+            shell.move(to: NSPoint(x: 19, y: 23))
+            shell.line(to: NSPoint(x: 22.25, y: 23))
             shell.curve(
-                to: NSPoint(x: 26, y: 21),
-                controlPoint1: NSPoint(x: 24.8, y: 24),
-                controlPoint2: NSPoint(x: 26, y: 22.8)
+                to: NSPoint(x: 25, y: 20.25),
+                controlPoint1: NSPoint(x: 23.9, y: 23),
+                controlPoint2: NSPoint(x: 25, y: 21.9)
             )
-            shell.line(to: NSPoint(x: 26, y: 11))
+            shell.line(to: NSPoint(x: 25, y: 11.75))
             shell.curve(
-                to: NSPoint(x: 23, y: 8),
-                controlPoint1: NSPoint(x: 26, y: 9.2),
-                controlPoint2: NSPoint(x: 24.8, y: 8)
+                to: NSPoint(x: 22.25, y: 9),
+                controlPoint1: NSPoint(x: 25, y: 10.1),
+                controlPoint2: NSPoint(x: 23.9, y: 9)
             )
-            shell.line(to: NSPoint(x: 19.5, y: 8))
+            shell.line(to: NSPoint(x: 19, y: 9))
             shell.lineWidth = nodeIconStrokeWidth
             shell.lineCapStyle = .round
             shell.lineJoinStyle = .round
@@ -270,12 +275,12 @@ final class FlowNodeView: NSView {
 
             NSColor.black.setFill()
             let chargingMark = NSBezierPath()
-            chargingMark.move(to: NSPoint(x: 17.2, y: 24))
-            chargingMark.line(to: NSPoint(x: 11.5, y: 15))
-            chargingMark.line(to: NSPoint(x: 15.5, y: 15))
-            chargingMark.line(to: NSPoint(x: 14.5, y: 8))
-            chargingMark.line(to: NSPoint(x: 21, y: 17))
-            chargingMark.line(to: NSPoint(x: 17, y: 17))
+            chargingMark.move(to: NSPoint(x: 16.9, y: 22.5))
+            chargingMark.line(to: NSPoint(x: 12.5, y: 15.5))
+            chargingMark.line(to: NSPoint(x: 15.5, y: 15.5))
+            chargingMark.line(to: NSPoint(x: 14.9, y: 10))
+            chargingMark.line(to: NSPoint(x: 20, y: 16.5))
+            chargingMark.line(to: NSPoint(x: 17, y: 16.5))
             chargingMark.close()
             chargingMark.fill()
             return true

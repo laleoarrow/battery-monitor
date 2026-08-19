@@ -68,13 +68,13 @@ final class FlowNodeIconTests: XCTestCase {
         let allMetrics = try symbols.map(metrics)
 
         for (symbol, metric) in zip(symbols, allMetrics) {
-            XCTAssertGreaterThanOrEqual(metric.extent, 20.5, symbol)
-            XCTAssertLessThanOrEqual(metric.extent, 24.5, symbol)
+            XCTAssertGreaterThanOrEqual(metric.extent, 19.25, symbol)
+            XCTAssertLessThanOrEqual(metric.extent, 21.5, symbol)
             XCTAssertEqual(metric.center.x, 16, accuracy: 0.75, symbol)
             XCTAssertEqual(metric.center.y, 16, accuracy: 0.75, symbol)
-            XCTAssertGreaterThanOrEqual(metric.margin, 2, symbol)
+            XCTAssertGreaterThanOrEqual(metric.margin, 4.5, symbol)
         }
         let extents = allMetrics.map(\.extent)
-        XCTAssertLessThanOrEqual(try XCTUnwrap(extents.max()) / XCTUnwrap(extents.min()), 1.18)
+        XCTAssertLessThanOrEqual(try XCTUnwrap(extents.max()) / XCTUnwrap(extents.min()), 1.1)
     }
 }

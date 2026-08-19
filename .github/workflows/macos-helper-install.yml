@@ -4,9 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Version from the repository VERSION file
-        required: true
-        default: "3.0.16"
+        description: Optional; leave blank to read the repository VERSION file
+        required: false
         type: string
       distribution_mode:
         description: Release signing policy

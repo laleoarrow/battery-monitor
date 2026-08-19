@@ -14,7 +14,7 @@ const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
 const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
 const RELEASE_API =
   "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
-const FALLBACK_VERSION = "v3.0.16";
+const FALLBACK_VERSION = "v3.0.17";
 const FALLBACK_ASSET_BASE = `${GITHUB_REPO}/releases/download/${FALLBACK_VERSION}`;
 const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
 
@@ -242,12 +242,15 @@ export default function Home() {
               <p>
                 Follow energy from adapter to battery to system load. Charging,
                 full, on-battery, and mixed-power states each get a distinct read.
-                Adapter, System, and Battery node icons share one optical scale;
-                System uses a simplified matching chip glyph while semantic
-                source and load colours remain unchanged. The restored
-                24-point Medium node artwork uses a diagonal
-                adapter plug and a green bracketed charging battery with a
-                central lightning mark inside the existing 36-point wells.
+                The approved A1 power-flow icon direction is now slightly smaller
+                and lighter:
+                Adapter, System, and Battery use 21-point Regular symbols and
+                1.6-point custom outlines inside the existing 36-point wells.
+                Their real visible extents target 19.25–21.5 points and measure
+                20–21.25 points across the production states. The diagonal
+                adapter plug, simplified matching System chip, green bracketed
+                charging battery with its central lightning mark, and semantic
+                source and load colours remain unchanged.
               </p>
             </article>
 

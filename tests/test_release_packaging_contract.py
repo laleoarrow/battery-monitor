@@ -24,6 +24,7 @@ RELEASE_GUIDE = ROOT / ".agent" / "release.md"
 README = ROOT / "README.md"
 HANDOFF = ROOT / "HANDOFF.md"
 PROMOTE_WORKFLOW = ROOT / ".github" / "workflows" / "promote-release.yml"
+CANDIDATE_WORKFLOW = ROOT / ".github" / "workflows" / "macos-helper-install.yml"
 
 
 class ReleasePackagingContractTests(unittest.TestCase):
@@ -38,9 +39,10 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.readme = README.read_text(encoding="utf-8")
         cls.handoff = HANDOFF.read_text(encoding="utf-8")
         cls.promote_workflow = PROMOTE_WORKFLOW.read_text(encoding="utf-8")
+        cls.candidate_workflow = CANDIDATE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.16\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.17\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -54,6 +56,41 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertNotIn("support-diagnostics-v1.0.0", self.readme)
         normalized_readme = " ".join(self.readme.split())
         normalized_promote_workflow = " ".join(self.promote_workflow.split())
+        current_readme = self.readme.split(
+            "## What's new in v3.0.17", 1
+        )[1].split("## v3.0.16 unified power-flow node scale (historical)", 1)[0]
+        normalized_current_readme = " ".join(current_readme.split())
+        current_handoff = self.handoff.split(
+            "## v3.0.17 lighter power-flow node family", 1
+        )[1].split("## v3.0.16 unified power-flow node scale (historical)", 1)[0]
+        normalized_current_handoff = " ".join(current_handoff.split())
+        historical_v3016 = self.handoff.split(
+            "## v3.0.16 unified power-flow node scale (historical)", 1
+        )[1].split("## v3.0.15 restored power-flow node artwork", 1)[0]
+        normalized_historical_v3016 = " ".join(historical_v3016.split())
+        historical_v3015 = self.handoff.split(
+            "## v3.0.15 restored power-flow node artwork", 1
+        )[1].split("## v3.0.14 update checks", 1)[0]
+        normalized_historical_v3015 = " ".join(historical_v3015.split())
+
+        for current_icon_topic in (
+            "approved A1 power-flow icon direction",
+            "slightly smaller, lighter",
+            "21-point Regular",
+            "1.6-point custom outlines",
+            "existing 36-point wells",
+            "real visible extents target 19.25–21.5 points",
+            "measure 20–21.25 points",
+            "diagonal adapter plug",
+            "simplified matching System chip",
+            "green bracketed charging battery",
+            "central lightning mark",
+            "semantic source and load colours remain unchanged",
+        ):
+            self.assertIn(current_icon_topic, normalized_promote_workflow)
+            self.assertIn(current_icon_topic, normalized_current_readme)
+            self.assertIn(current_icon_topic, normalized_current_handoff)
+
         for current_release_topic in (
             "dedicated Menu Bar Icon page",
             "Wattson icon only",
@@ -76,19 +113,12 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "launch checks default on, stay quiet when current or offline",
             "never download or install automatically",
             "packaged Wattson app icon",
-            "diagonal adapter plug",
-            "green bracketed charging battery with a central lightning mark",
-            "24-point Medium",
-            "existing 36-point wells",
-            "Adapter, System, and Battery power-flow node icons one shared optical scale",
-            "System uses a simplified matching chip glyph",
-            "semantic source and load colours remain unchanged",
             "720×520",
         ):
             self.assertIn(current_release_topic, normalized_promote_workflow)
 
         for user_facing_topic in (
-            "v3.0.16 is the current public release",
+            "v3.0.17 is the current public release",
             "dedicated Menu Bar Icon page",
             "Wattson icon only",
             "Wattson with percentage",
@@ -110,25 +140,10 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "launch checks default on, stay quiet when current or offline",
             "never download or install automatically",
             "packaged Wattson app icon",
-            "clear diagonal plug",
-            "green bracketed battery with a central lightning mark",
-            "24-point Medium",
-            "36-point wells",
-            "Adapter, System, and Battery power-flow node icons now share one optical scale",
-            "System uses a simplified matching chip glyph",
-            "semantic source and load colours remain unchanged",
             "720×520",
         ):
             self.assertIn(user_facing_topic, normalized_readme)
 
-        current_handoff = self.handoff.split(
-            "## v3.0.16 unified power-flow node scale", 1
-        )[1].split("## v3.0.15 restored power-flow node artwork", 1)[0]
-        normalized_current_handoff = " ".join(current_handoff.split())
-        historical_v3015 = self.handoff.split(
-            "## v3.0.15 restored power-flow node artwork", 1
-        )[1].split("## v3.0.14 update checks", 1)[0]
-        normalized_historical_v3015 = " ".join(historical_v3015.split())
         for misleading_install_claim in (
             "Every installer now converges",
             "All installers converge",
@@ -146,12 +161,13 @@ class ReleasePackagingContractTests(unittest.TestCase):
             ):
                 self.assertNotIn(misleading_install_claim, release_surface)
 
-        for current_handoff_topic in (
-            "Adapter, System, and Battery power-flow node icons one shared optical scale",
-            "System uses a simplified matching chip glyph",
-            "semantic source and load colours remain unchanged",
+        for historical_v3016_topic in (
+            "superseded v3.0.16 release",
+            "one shared optical scale",
+            "simplified matching chip glyph",
+            "v3.0.17 keeps that family and reduces its weight and scale",
         ):
-            self.assertIn(current_handoff_topic, normalized_current_handoff)
+            self.assertIn(historical_v3016_topic, normalized_historical_v3016)
 
         for historical_handoff_topic in (
             "clear diagonal plug",
@@ -164,7 +180,10 @@ class ReleasePackagingContractTests(unittest.TestCase):
         ):
             self.assertIn(historical_handoff_topic, normalized_historical_v3015)
 
-        self.assertIn("## v3.0.16 unified power-flow node scale", self.handoff)
+        self.assertIn("## v3.0.17 lighter power-flow node family", self.handoff)
+        self.assertIn(
+            "## v3.0.16 unified power-flow node scale (historical)", self.handoff
+        )
         self.assertIn("## v3.0.15 restored power-flow node artwork", self.handoff)
         self.assertIn("## v3.0.14 update checks", self.handoff)
         self.assertIn("## v3.0.13 macOS 26 native icon correction", self.handoff)
@@ -174,7 +193,11 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn("## v3.0.9 selector and rendering work", self.handoff)
         self.assertIn("## v3.0.8 dynamic Reduce Motion and transaction work", self.handoff)
         self.assertLess(
-            self.handoff.index("## v3.0.16 unified power-flow node scale"),
+            self.handoff.index("## v3.0.17 lighter power-flow node family"),
+            self.handoff.index("## v3.0.16 unified power-flow node scale (historical)"),
+        )
+        self.assertLess(
+            self.handoff.index("## v3.0.16 unified power-flow node scale (historical)"),
             self.handoff.index("## v3.0.15 restored power-flow node artwork"),
         )
         self.assertLess(
@@ -215,6 +238,21 @@ class ReleasePackagingContractTests(unittest.TestCase):
             self.assertNotIn(stale_copy, normalized_readme)
             self.assertNotIn(stale_copy, normalized_promote_workflow)
             self.assertNotIn(stale_copy, normalized_current_handoff)
+
+        self.assertIn("**Verified distribution:**", self.promote_workflow)
+        self.assertIn("Developer ID signed", self.promote_workflow)
+        self.assertIn("Apple accepted both release containers", self.promote_workflow)
+
+    def test_release_workflows_read_repository_version_when_input_is_blank(self):
+        for workflow in (self.candidate_workflow, self.promote_workflow):
+            version_input = workflow.split("      version:\n", 1)[1].split(
+                "        type: string\n", 1
+            )[0]
+            self.assertIn("required: false", version_input)
+            self.assertIn("leave blank", version_input)
+            self.assertNotIn("default:", version_input)
+            self.assertIn('if [[ -z "$WATTSON_VERSION" ]]; then', workflow)
+            self.assertIn("< VERSION", workflow)
 
     def test_release_scripts_are_executable_and_parse_as_bash(self):
         for path in (*SCRIPTS.values(), PREINSTALL, POSTINSTALL):

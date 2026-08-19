@@ -20,6 +20,21 @@ The DMG contains exactly one visible item: the byte-identical native PKG. The
 PKG is the canonical installation surface for DMG, direct download, and the
 Homebrew cask.
 
+When Developer ID credentials are unavailable, a public community release may
+still be promoted through the audited community path. Push one frozen commit to
+`main`, require Headless CI on that SHA, then push the same SHA to the permanent
+`release-candidate` branch and require its community build plus hosted install
+matrix to pass. Download that run's artifact set, verify its manifest and
+checksums, and publish those exact bytes from an annotated tag on the frozen
+SHA. Release notes and metadata must say app/helper ad-hoc, PKG/DMG unsigned,
+and not notarized. Never pass community artifacts through the signed-only
+`promote-release.yml` policy or describe them as Developer ID distribution.
+
+After publishing, synchronize the exact PKG checksum to the Homebrew tap,
+require the tap CI and public Homebrew lifecycle, mark the release latest, and
+deploy Pages from the same tested `main` commit. This public validation chain is
+shared with the signed path; only the signing and notarization claims differ.
+
 ## Developer ID and notarization
 
 The local script still supports an explicit Developer ID path. Set both

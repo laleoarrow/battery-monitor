@@ -60,7 +60,7 @@ class TopologyContractTests(unittest.TestCase):
         # A smaller unconfigured CPU symbol makes the three-node diagram look
         # like it mixes two unrelated icon families.
         self.assertIn(
-            "NSImage.SymbolConfiguration(pointSize: 24, weight: .medium)",
+            "NSImage.SymbolConfiguration(pointSize: 21, weight: .regular)",
             self.source,
         )
         self.assertIn("icon.frame = box.bounds", self.source)
@@ -78,7 +78,7 @@ class TopologyContractTests(unittest.TestCase):
         self.assertIn('case "cpu":', self.source)
         self.assertIn("return restoredSystemImage", self.source)
         self.assertIn("private static func systemChipImage()", self.source)
-        self.assertIn("private static let nodeIconStrokeWidth: CGFloat = 2.2", self.source)
+        self.assertIn("private static let nodeIconStrokeWidth: CGFloat = 1.6", self.source)
         self.assertIn("shell.lineWidth = nodeIconStrokeWidth", self.source)
         self.assertIn("chip.lineWidth = nodeIconStrokeWidth", self.source)
 
