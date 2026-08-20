@@ -1,10 +1,11 @@
 import AppKit
 
-/// Four power states collapse to two geometries. The only thing that moves the
-/// nodes is whether the battery is discharging.
+/// Four power states normally collapse to two geometries. A measured device
+/// output adds one on-battery split without changing the node or pipe count.
 enum FlowLayout {
     case adapterLed   // adapter left-centre, system top-right, battery bottom-right
     case batteryLed   // adapter top-left, battery bottom-left, system centre-right
+    case batteryOutputSplit // battery left-centre, Mac top-right, device bottom-right
 }
 
 /// The single cubic every pipe is built from. Keeping the control points
@@ -87,16 +88,22 @@ final class FlowNodeView: NSView {
         addSubview(box)
 
         icon.imageScaling = .scaleProportionallyDown
+        icon.setAccessibilityElement(false)
+        icon.cell?.setAccessibilityElement(false)
         box.addSubview(icon)
 
         caption.font = .systemFont(ofSize: 11, weight: .regular)
         caption.textColor = PopoverStyle.secondaryText
         caption.alignment = .center
+        caption.setAccessibilityElement(false)
+        caption.cell?.setAccessibilityElement(false)
         addSubview(caption)
 
         value.font = PopoverStyle.mono(12.5)
         value.textColor = PopoverStyle.primaryText
         value.alignment = .center
+        value.setAccessibilityElement(true)
+        value.setAccessibilityRole(.staticText)
         addSubview(value)
     }
 
@@ -117,6 +124,8 @@ final class FlowNodeView: NSView {
         icon.contentTintColor = tint
         caption.stringValue = text
         value.stringValue = valueText
+        value.setAccessibilityLabel(text)
+        value.setAccessibilityValue(valueText)
         box.layer?.borderColor = tint.withAlphaComponent(0.34).cgColor
     }
 
@@ -133,6 +142,14 @@ final class FlowNodeView: NSView {
             return restoredDisconnectedAdapterImage
         case "battery.100.bolt":
             return restoredChargingBatteryImage
+        case "cable.connector":
+            return nodeSymbolImage(
+                named: "cable.connector",
+                accessibilityDescription: accessibilityDescription
+            ) ?? nodeSymbolImage(
+                named: "bolt.horizontal.circle",
+                accessibilityDescription: accessibilityDescription
+            )
         default:
             return normalizedBatteryImages[symbol]
                 ?? nodeSymbolImage(
@@ -292,6 +309,22 @@ final class FlowNodeView: NSView {
 #if DEBUG
     static func iconImageForTest(symbol: String) -> NSImage? {
         nodeIconImage(symbol: symbol, accessibilityDescription: symbol)
+    }
+
+    var presentationForTest: (caption: String, value: String) {
+        (caption.stringValue, value.stringValue)
+    }
+
+    var contentFitsBoundsForTest: Bool {
+        let captionSize = caption.attributedStringValue.size()
+        let valueSize = value.attributedStringValue.size()
+        let captionFits = bounds.contains(caption.frame)
+            && captionSize.width <= caption.bounds.width + 0.5
+            && captionSize.height <= caption.bounds.height + 0.5
+        let valueFits = bounds.contains(value.frame)
+            && valueSize.width <= value.bounds.width + 0.5
+            && valueSize.height <= value.bounds.height + 0.5
+        return captionFits && valueFits && bounds.contains(box.frame)
     }
 #endif
 
@@ -607,6 +640,8 @@ final class PipeBundle {
         guard let motion = gradient.animation(forKey: "flow") as? CABasicAnimation else { return nil }
         return (motion.duration, gradient.speed)
     }
+
+    var thicknessForTest: CGFloat { trough.lineWidth }
 #endif
 }
 
@@ -686,8 +721,19 @@ final class PowerFlowView: PopoverSection {
         update(snapshot: latest, animated: false)
     }
 
+    private func batteryOutputSplitDeviceW(for snapshot: PowerSnapshot) -> Double? {
+        guard snapshot.state == .onBattery,
+              snapshot.batteryW < -PowerSnapshot.epsilon,
+              let deviceOutputW = snapshot.coherentDeviceOutputW,
+              deviceOutputW > PowerSnapshot.epsilon else { return nil }
+        return deviceOutputW
+    }
+
     private func layoutMode(for snapshot: PowerSnapshot) -> FlowLayout {
-        snapshot.batteryW < -PowerSnapshot.epsilon ? .batteryLed : .adapterLed
+        if batteryOutputSplitDeviceW(for: snapshot) != nil {
+            return .batteryOutputSplit
+        }
+        return snapshot.batteryW < -PowerSnapshot.epsilon ? .batteryLed : .adapterLed
     }
 
     /// Node coordinates depend on the layout alone, never on whether a given
@@ -697,6 +743,7 @@ final class PowerFlowView: PopoverSection {
         switch layout {
         case .adapterLed: return Self.adapterLedPositions
         case .batteryLed: return Self.batteryLedPositions
+        case .batteryOutputSplit: return Self.adapterLedPositions
         }
     }
 
@@ -736,7 +783,7 @@ final class PowerFlowView: PopoverSection {
         particlesAreHot = hot
         let count = Int((2 + VisualEncoding.t(total) * 6 + VisualEncoding.over(total) * 5).rounded())
 
-        configureNodes(snapshot: snapshot, color: color)
+        configureNodes(snapshot: snapshot, color: color, layout: layout)
 
         switch layout {
         case .adapterLed:
@@ -785,6 +832,31 @@ final class PowerFlowView: PopoverSection {
                       topology: "batteryLed.1.\(adapterActive)")
 
             idleConnection.path = nil
+
+        case .batteryOutputSplit:
+            let deviceOutputW = batteryOutputSplitDeviceW(for: snapshot) ?? 0
+            let macLoadW = max(snapshot.systemW - deviceOutputW, 0)
+            let upperThickness = VisualEncoding.thickness(macLoadW)
+            let lowerThickness = VisualEncoding.thickness(deviceOutputW)
+            let cy = Self.midY
+
+            // Keep the two outgoing edges tangent under the battery well so
+            // the existing two pipes read as one total splitting by sink.
+            let upperStart = cy - lowerThickness / 2
+            let lowerStart = cy + upperThickness / 2
+
+            configure(bundles[0], geometry: pipeGeometry(from: upperStart, to: Self.topY),
+                      thickness: upperThickness, color: color,
+                      particlePeriod: particlePeriod, motionMultiplier: motionMultiplier,
+                      particles: count, hot: hot, seed: 11, animated: animated,
+                      topology: "batteryOutputSplit.0")
+            configure(bundles[1], geometry: pipeGeometry(from: lowerStart, to: Self.bottomY),
+                      thickness: lowerThickness, color: color,
+                      particlePeriod: particlePeriod, motionMultiplier: motionMultiplier,
+                      particles: count, hot: hot, seed: 29, animated: animated,
+                      topology: "batteryOutputSplit.1")
+
+            idleConnection.path = nil
         }
 
         PopoverStyle.setWithoutAnimation {
@@ -806,7 +878,7 @@ final class PowerFlowView: PopoverSection {
         }
     }
 
-    private func configureNodes(snapshot: PowerSnapshot, color: NSColor) {
+    private func configureNodes(snapshot: PowerSnapshot, color: NSColor, layout: FlowLayout) {
         let batterySymbol: String
         switch snapshot.percent {
         case ..<25: batterySymbol = "battery.25"
@@ -815,7 +887,9 @@ final class PowerFlowView: PopoverSection {
         default: batterySymbol = "battery.100"
         }
 
-        systemNode.configure(symbol: "cpu", caption: "System",
+        let hasPositiveDeviceOutput = snapshot.coherentDeviceOutputW.map { $0 > 0 } ?? false
+        systemNode.configure(symbol: "cpu",
+                             caption: hasPositiveDeviceOutput ? "System Total" : "System",
                              value: PopoverStyle.watts(snapshot.systemW), tint: PopoverStyle.neutral)
         systemNode.setPresence(1)
         systemNode.setBreathing(false, color: color)
@@ -841,12 +915,25 @@ final class PowerFlowView: PopoverSection {
             batteryNode.setBreathing(animationsEnabled, color: color)
 
         case .onBattery:
-            adapterNode.configure(symbol: "powerplug.slash", caption: "Adapter",
-                                  value: "Unplugged", tint: PopoverStyle.neutral)
-            adapterNode.setPresence(0.28)
-            batteryNode.configure(symbol: batterySymbol, caption: "Battery \(snapshot.percent)%",
-                                  value: PopoverStyle.watts(abs(snapshot.batteryW)), tint: color)
-            batteryNode.setPresence(1)
+            if case .batteryOutputSplit = layout,
+               let deviceOutputW = batteryOutputSplitDeviceW(for: snapshot) {
+                let macLoadW = max(snapshot.systemW - deviceOutputW, 0)
+                adapterNode.configure(symbol: batterySymbol, caption: "Battery \(snapshot.percent)%",
+                                      value: PopoverStyle.watts(abs(snapshot.batteryW)), tint: color)
+                adapterNode.setPresence(1)
+                systemNode.configure(symbol: "cpu", caption: "Mac Load",
+                                     value: PopoverStyle.watts(macLoadW), tint: color)
+                batteryNode.configure(symbol: "cable.connector", caption: "Device Output",
+                                      value: PopoverStyle.watts(deviceOutputW), tint: color)
+                batteryNode.setPresence(1)
+            } else {
+                adapterNode.configure(symbol: "powerplug.slash", caption: "Adapter",
+                                      value: "Unplugged", tint: PopoverStyle.neutral)
+                adapterNode.setPresence(0.28)
+                batteryNode.configure(symbol: batterySymbol, caption: "Battery \(snapshot.percent)%",
+                                      value: PopoverStyle.watts(abs(snapshot.batteryW)), tint: color)
+                batteryNode.setPresence(1)
+            }
             batteryNode.setBreathing(false, color: color)
 
         case .mixedSupply:
@@ -871,6 +958,34 @@ final class PowerFlowView: PopoverSection {
     }
 
 #if DEBUG
+    var topologyForTest: String {
+        switch layoutMode(for: latest) {
+        case .adapterLed: return "adapterLed"
+        case .batteryLed: return "batteryLed"
+        case .batteryOutputSplit: return "batteryOutputSplit"
+        }
+    }
+
+    var nodePresentationsForTest: [(caption: String, value: String)] {
+        [adapterNode, batteryNode, systemNode].map(\.presentationForTest)
+    }
+
+    var nodeFramesForTest: [NSRect] {
+        [adapterNode, batteryNode, systemNode].map(\.frame)
+    }
+
+    var nodeContentsFitForTest: Bool {
+        [adapterNode, batteryNode, systemNode].allSatisfy {
+            $0.contentFitsBoundsForTest
+                && $0.frame.minY >= plot.bounds.minY
+                && $0.frame.maxY <= plot.bounds.maxY
+        }
+    }
+
+    var branchThicknessesForTest: [CGFloat] {
+        bundles.map(\.thicknessForTest)
+    }
+
     var breathingMetricsForTest: (running: Int, installations: Int) {
         let nodes = [adapterNode, batteryNode, systemNode]
         return (

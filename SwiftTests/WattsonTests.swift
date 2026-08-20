@@ -476,6 +476,80 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(mixed.conservationError, 0, accuracy: 0.001)
     }
 
+    func testDeviceOutputIsAuxiliaryAndCoherent() {
+        var snapshot = PowerSnapshot(
+            percent: 60, plugged: true, adapterW: 70,
+            batteryW: 20, systemW: 50, deviceOutputW: 7.5
+        )
+        XCTAssertEqual(snapshot.coherentDeviceOutputW, 7.5)
+        XCTAssertEqual(snapshot.totalInputW, 70, accuracy: 0.001)
+        XCTAssertEqual(snapshot.conservationError, 0, accuracy: 0.001)
+
+        for invalid in [50.4, .nan, -1] {
+            snapshot.deviceOutputW = invalid
+            XCTAssertNil(snapshot.coherentDeviceOutputW)
+        }
+        snapshot.deviceOutputW = 50.2
+        XCTAssertEqual(snapshot.coherentDeviceOutputW, 50)
+    }
+
+    func testDeviceOutputParserUsesOnlyValidMeasuredWatts() throws {
+        let details: [Any] = [
+            ["PortIndex": 2, "Watts": 7_078, "PDPowermW": 60_000],
+            ["PortIndex": 3, "Watts": 2_250],
+            ["PDPowermW": NSNumber(value: 140_000)],
+        ]
+        XCTAssertEqual(
+            try XCTUnwrap(BatterySampler.resolvedDeviceOutputW(details)),
+            9.328, accuracy: 0.000_001
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(BatterySampler.resolvedDeviceOutputW([["Watts": 0]])),
+            0, accuracy: 0.000_001
+        )
+
+        for invalidWatts: Any in [kCFBooleanTrue as Any, -1, 7.078, 1_000_001] {
+            XCTAssertNil(BatterySampler.resolvedDeviceOutputW([["Watts": invalidWatts]]))
+        }
+        let invalidDetails: [Any?] = [
+            nil,
+            [Any](),
+            [["PDPowermW": NSNumber(value: 140_000)]],
+            [["PortIndex": 1, "Watts": 2_000],
+             ["PortIndex": 1, "Watts": 3_000]],
+            [["PortIndex": 1, "Watts": 2_000],
+             ["PortIndex": 2, "Watts": "invalid"]],
+        ]
+        for details in invalidDetails {
+            XCTAssertNil(BatterySampler.resolvedDeviceOutputW(details))
+        }
+    }
+
+    func testResolvedSnapshotCarriesDeviceOutputThroughLivePowerMerge() throws {
+        let props: [String: Any] = [
+            "CurrentCapacity": NSNumber(value: 60),
+            "MaxCapacity": NSNumber(value: 100),
+            "ExternalConnected": kCFBooleanTrue as Any,
+            "PowerTelemetryData": [
+                "SystemPowerIn": NSNumber(value: 60_000),
+                "SystemLoad": NSNumber(value: 50_000),
+                "BatteryPower": NSNumber(value: 10_000),
+            ],
+            "PowerOutDetails": [
+                ["Watts": NSNumber(value: 7_500)],
+            ],
+        ]
+        let snapshot = try XCTUnwrap(
+            BatterySampler.resolvedSnapshot(from: props, lowPowerMode: false)
+        )
+        XCTAssertEqual(snapshot.deviceOutputW, 7.5)
+        let fresh = BatterySampler.resolvedLivePower(
+            snapshot: snapshot, adapterW: nil, systemW: 48
+        )
+        XCTAssertEqual(fresh.deviceOutputW, 7.5)
+        XCTAssertEqual(fresh.conservationError, 0, accuracy: 0.001)
+    }
+
     func testLiveSystemPowerPreservesBatteryBranchAndConservation() {
         let stale = PowerSnapshot(
             percent: 60, plugged: true, adapterW: 70, batteryW: 20, systemW: 50
@@ -1019,6 +1093,56 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(gauge.temperatureTextForTest, "0.0°C")
     }
 
+    func testRingGaugeReusesTrailingSlotWithoutChangingGeometry() {
+        let gauge = RingGaugeView()
+        gauge.frame = NSRect(
+            x: 0, y: 0,
+            width: PopoverStyle.contentWidth,
+            height: RingGaugeView.preferredHeight
+        )
+        gauge.layoutSubtreeIfNeeded()
+        let fixedFrames = gauge.visibleReadingFramesForTest
+        var snapshot = PowerSnapshot(
+            percent: 72, plugged: true, adapterW: 68,
+            batteryW: 22.2, systemW: 45.8,
+            temperatureC: 34.2, cycleCount: 116
+        )
+        let sequence: [(Double?, String, String)] = [
+            (nil, "Cycle Count", "116"),
+            (7.5, "Device Output", "7.5 W"),
+            (0, "Device Output", "0.0 W"),
+            (46.2, "Cycle Count", "116"),
+            (nil, "Cycle Count", "116"),
+        ]
+
+        XCTAssertEqual(RingGaugeView.preferredHeight, 138)
+        XCTAssertEqual(gauge.bounds.height, 138)
+        XCTAssertEqual(fixedFrames.count, 8)
+        for (output, caption, value) in sequence {
+            snapshot.deviceOutputW = output
+            gauge.update(snapshot: snapshot)
+            gauge.layoutSubtreeIfNeeded()
+            XCTAssertEqual(gauge.trailingReadingForTest.caption, caption)
+            XCTAssertEqual(gauge.trailingReadingForTest.value, value)
+            XCTAssertEqual(gauge.visibleReadingFramesForTest, fixedFrames)
+            XCTAssertTrue(gauge.statsFitBoundsForTest)
+
+            let children = gauge.accessibilityChildren() ?? []
+            let fields = children.compactMap { $0 as? NSTextField }
+            let trailingElements = fields
+                .filter { $0.accessibilityLabel() == caption }
+            XCTAssertEqual(children.count, 9)
+            XCTAssertEqual(fields.count, 1)
+            XCTAssertEqual(trailingElements.count, 1)
+            XCTAssertEqual(trailingElements.first?.accessibilityRole(), .staticText)
+            XCTAssertEqual(trailingElements.first?.accessibilityValue(), value)
+            XCTAssertEqual(
+                fields.filter { $0.accessibilityLabel() == "Device Output" }.count,
+                caption == "Device Output" ? 1 : 0
+            )
+        }
+    }
+
     func testHistoryIsBoundedAndChronological() {
         let history = PowerHistory()
         for value in 0..<75 {
@@ -1425,6 +1549,102 @@ final class WattsonTests: XCTestCase {
         }
         XCTAssertGreaterThan(yellowPixels, 0, "the battery fill must be yellow")
         XCTAssertGreaterThan(neutralPixels, 0, "the outline must remain menu-bar neutral")
+    }
+
+    func testDeviceOutputPowerFlowLayoutsFallbacksAndAccessibility() {
+        let flow = PowerFlowView()
+        flow.frame = NSRect(
+            x: 0, y: 0, width: PopoverStyle.contentWidth,
+            height: PowerFlowView.preferredHeight
+        )
+        flow.layoutSubtreeIfNeeded()
+
+        func show(_ snapshot: PowerSnapshot) {
+            flow.update(snapshot: snapshot, animated: false)
+            flow.layoutSubtreeIfNeeded()
+        }
+        func onBattery(_ output: Double?) -> PowerSnapshot {
+            PowerSnapshot(
+                percent: 67, plugged: false, adapterW: 0,
+                batteryW: -39.7, systemW: 39.7, deviceOutputW: output
+            )
+        }
+
+        let split = onBattery(12.2)
+        show(split)
+        XCTAssertEqual(flow.topologyForTest, "batteryOutputSplit")
+        let presentations = flow.nodePresentationsForTest
+        XCTAssertEqual(
+            presentations.map { $0.caption },
+            ["Battery 67%", "Device Output", "Mac Load"]
+        )
+        XCTAssertEqual(
+            presentations.map { $0.value },
+            ["39.7 W", "12.2 W", "27.5 W"]
+        )
+        let accessibleFields = (flow.accessibilityChildren() ?? [])
+            .compactMap { $0 as? NSTextField }
+        XCTAssertEqual(accessibleFields.count, 3)
+        XCTAssertEqual(
+            accessibleFields.map { $0.accessibilityLabel() },
+            presentations.map { Optional($0.caption) }
+        )
+        XCTAssertEqual(
+            accessibleFields.map { $0.accessibilityValue() },
+            presentations.map { Optional($0.value) }
+        )
+        XCTAssertTrue(accessibleFields.allSatisfy { $0.accessibilityRole() == .staticText })
+
+        let thicknesses = flow.branchThicknessesForTest
+        XCTAssertEqual(thicknesses[0], VisualEncoding.thickness(27.5), accuracy: 0.001)
+        XCTAssertEqual(thicknesses[1], VisualEncoding.thickness(12.2), accuracy: 0.001)
+        XCTAssertGreaterThan(thicknesses[0], thicknesses[1])
+        XCTAssertEqual(
+            PowerFlowView.preferredHeight,
+            PowerFlowView.plotHeight + PopoverStyle.sectionPadding * 2
+        )
+        XCTAssertEqual(flow.bounds.height, PowerFlowView.preferredHeight)
+        XCTAssertEqual(flow.nodeFramesForTest.count, 3)
+        XCTAssertTrue(flow.nodeContentsFitForTest)
+        let splitFrames = flow.nodeFramesForTest
+        XCTAssertTrue(splitFrames.enumerated().allSatisfy { index, frame in
+            splitFrames.dropFirst(index + 1).allSatisfy {
+                NSIntersectionRect(frame, $0).isEmpty
+            }
+        })
+
+        for output: Double? in [nil, 0, .nan, 40.1] {
+            show(onBattery(output))
+            XCTAssertEqual(flow.topologyForTest, "batteryLed")
+            XCTAssertTrue(flow.nodeContentsFitForTest)
+        }
+        show(split)
+        XCTAssertEqual(flow.topologyForTest, "batteryOutputSplit")
+        XCTAssertEqual(flow.nodeFramesForTest, splitFrames)
+        XCTAssertTrue(flow.nodeContentsFitForTest)
+
+        let charging = PowerSnapshot(
+            percent: 72, plugged: true, adapterW: 68,
+            batteryW: 22.2, systemW: 45.8, deviceOutputW: 7.5
+        )
+        show(charging)
+        XCTAssertEqual(flow.topologyForTest, "adapterLed")
+        XCTAssertEqual(
+            flow.nodePresentationsForTest.map { $0.caption },
+            ["Adapter", "To Battery", "System Total"]
+        )
+
+        let mixed = PowerSnapshot(
+            percent: 41, plugged: true, adapterW: 30,
+            batteryW: -9.7, systemW: 39.7, deviceOutputW: 12.2
+        )
+        show(mixed)
+        XCTAssertEqual(flow.topologyForTest, "batteryLed")
+        XCTAssertEqual(
+            flow.nodePresentationsForTest.map { $0.caption },
+            ["Adapter", "Battery Assist", "System Total"]
+        )
+        XCTAssertTrue(flow.nodeContentsFitForTest)
     }
 
     func testPluggedIdleBreathingIsIdempotentAndStopsWhenHidden() {

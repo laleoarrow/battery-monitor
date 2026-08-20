@@ -69,6 +69,31 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn('percentUnit = NSTextField(labelWithString: "%")', self.ring)
         self.assertIn('percentLabel.stringValue = "\\(snapshot.percent)"', self.ring)
 
+    def test_ring_reuses_cycle_count_slot_for_measured_device_output(self):
+        self.assertIn("for _ in 0..<4", self.ring)
+        self.assertIn("if let deviceOutputW = snapshot.coherentDeviceOutputW", self.ring)
+        self.assertIn('captions[3].stringValue = "Device Output"', self.ring)
+        self.assertIn("values[3].stringValue = PopoverStyle.watts(deviceOutputW)", self.ring)
+        self.assertIn('captions[3].stringValue = "Cycle Count"', self.ring)
+        self.assertIn('values[3].setAccessibilityLabel("Cycle Count")', self.ring)
+        self.assertIn("captions[3].cell?.setAccessibilityElement(false)", self.ring)
+        self.assertIn("values[3].setAccessibilityElement(true)", self.ring)
+        self.assertNotIn("captions[4]", self.ring)
+        self.assertNotIn("values[4]", self.ring)
+
+    def test_ring_height_remains_fixed_at_138_points(self):
+        plot_height = float(
+            re.search(r"plotHeight: CGFloat = (\d+)", self.ring).group(1)
+        )
+        section_padding = float(
+            re.search(r"sectionPadding: CGFloat = (\d+)", self.style).group(1)
+        )
+        self.assertIn(
+            "preferredHeight: CGFloat = plotHeight + PopoverStyle.sectionPadding * 2",
+            self.ring,
+        )
+        self.assertEqual(plot_height + section_padding * 2, 138)
+
     def test_non_particle_motion_uses_one_power_driven_period(self):
         self.assertIn("motionPeriod: CFTimeInterval = 2.4", self.encoding)
         for module in (self.flow, self.ring, self.lanes):
