@@ -23,7 +23,8 @@ class TopologyContractTests(unittest.TestCase):
         self.assertIn("snapshot.state == .onBattery", split_gate)
         self.assertIn("snapshot.batteryW < -PowerSnapshot.epsilon", split_gate)
         self.assertIn("snapshot.coherentDeviceOutputW", split_gate)
-        self.assertIn("deviceOutputW > PowerSnapshot.epsilon", split_gate)
+        self.assertIn("deviceOutputW > 0", split_gate)
+        self.assertNotIn("deviceOutputW > PowerSnapshot.epsilon", split_gate)
 
     def test_device_split_reuses_two_pipes_and_three_nodes(self):
         split = self.source.split("case .batteryOutputSplit:", 1)[1]

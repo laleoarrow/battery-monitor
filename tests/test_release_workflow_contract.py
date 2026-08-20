@@ -181,6 +181,11 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("workflow_dispatch:", PAGES)
         self.assertIn("ref: ${{ github.sha }}", PAGES)
         self.assertNotIn("ref: ${{ inputs.release_tag }}", PAGES)
+        pages_build_header = PAGES.split("jobs:", 1)[1].split("steps:", 1)[0]
+        self.assertIn(
+            "NEXT_PUBLIC_RELEASE_VERSION: ${{ inputs.release_tag }}",
+            pages_build_header,
+        )
         self.assertIn('== "false"', PAGES)
 
     def test_pages_deploys_the_current_tested_main_site(self):

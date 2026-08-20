@@ -14,7 +14,9 @@ const GITHUB_REPO = "https://github.com/laleoarrow/battery-monitor";
 const RELEASES_URL = `${GITHUB_REPO}/releases/latest`;
 const RELEASE_API =
   "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest";
-const FALLBACK_VERSION = "v3.0.17";
+const PUBLIC_FALLBACK_VERSION = "v3.0.17";
+const FALLBACK_VERSION =
+  process.env.NEXT_PUBLIC_RELEASE_VERSION || PUBLIC_FALLBACK_VERSION;
 const FALLBACK_ASSET_BASE = `${GITHUB_REPO}/releases/download/${FALLBACK_VERSION}`;
 const HOMEBREW_COMMAND = "brew install --cask laleoarrow/tap/wattson";
 

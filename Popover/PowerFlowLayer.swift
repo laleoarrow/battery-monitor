@@ -725,7 +725,7 @@ final class PowerFlowView: PopoverSection {
         guard snapshot.state == .onBattery,
               snapshot.batteryW < -PowerSnapshot.epsilon,
               let deviceOutputW = snapshot.coherentDeviceOutputW,
-              deviceOutputW > PowerSnapshot.epsilon else { return nil }
+              deviceOutputW > 0 else { return nil }
         return deviceOutputW
     }
 

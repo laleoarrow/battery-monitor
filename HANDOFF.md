@@ -2,7 +2,8 @@
 
 ## Release identity
 
-- Version: `3.0.17`
+- Candidate version: `3.0.18`
+- Current public release: `3.0.17`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -14,11 +15,11 @@
 
 ## Release artifacts
 
-`scripts/release.sh 3.0.17` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.18` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.17-macos-universal.pkg`
-- `Wattson-v3.0.17-macos-universal.dmg`
-- `Wattson-v3.0.17-release-info.txt`
+- `Wattson-v3.0.18-macos-universal.pkg`
+- `Wattson-v3.0.18-macos-universal.dmg`
+- `Wattson-v3.0.18-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -77,6 +78,19 @@ target 19.25–21.5 points and measure 20–21.25 points across the production
 states. The diagonal adapter plug, simplified matching System chip, bracketed
 charging battery, and established semantic state colours remain intact.
 
+When firmware publishes usable measured per-port output, Wattson reads only
+`PowerOutDetails.Watts` and sums its milliwatt values. `PDPowermW`,
+`FilteredPower`, and `Configured*` remain excluded because they are negotiated
+capabilities or differently scaled data, not measured output. Device Output is
+an auxiliary breakdown of `systemW`, never an additional sink.
+
+The fixed 138-point power summary reuses its trailing Cycle Count slot for
+Device Output. A valid zero remains visible as `0.0 W`. On battery, only a
+positive coherent measurement activates the existing three-node, two-pipe
+split from Battery to Mac Load and Device Output. Zero keeps the standard flow
+while the summary continues to show `Device Output 0.0 W`; only missing or
+incoherent output restores Cycle Count.
+
 The mode selector keeps the v2.1.5 interaction contract:
 
 - The resting selection is no wider than one segment.
@@ -98,7 +112,7 @@ Headless checks:
 ```bash
 swift test
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.17
+bash scripts/release.sh 3.0.18
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -121,9 +135,10 @@ runners.
 
 ## Release order
 
-v3.0.17 is the current public release. Its tag, GitHub release assets, local
-canonical installation, and repository `VERSION` must remain byte-for-byte
-aligned with the exact tested artifact set.
+v3.0.18 is the current release candidate. v3.0.17 remains the current public
+release until the new candidate completes every release gate. The candidate
+commit, artifact set, local canonical installation, and repository `VERSION`
+must remain aligned with the exact tested bytes.
 
 1. Freeze one final commit, push that exact SHA to `main`, and require Headless
    CI to pass.
@@ -136,14 +151,29 @@ aligned with the exact tested artifact set.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.17` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.18` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.17.
+6. Announce the release only after every public route resolves to v3.0.18.
 
-## v3.0.17 lighter power-flow node family
+## v3.0.18 measured attached-device output
+
+Wattson reads only measured per-port `PowerOutDetails.Watts` values and sums
+their milliwatt readings. `PDPowermW`, `FilteredPower`, and `Configured*`
+values remain excluded because they are negotiated capabilities or differently
+scaled data, not measured output. Device Output remains an auxiliary breakdown
+of `systemW`, never an additional sink.
+
+The fixed 138-point power summary reuses its trailing Cycle Count slot for
+Device Output. A valid zero remains visible as `0.0 W`. On battery, only a
+positive coherent measurement activates the existing three-node, two-pipe
+split from Battery to Mac Load and Device Output. Zero output keeps the
+standard flow while the summary continues to show `Device Output 0.0 W`;
+missing or incoherent data restores Cycle Count.
+
+## v3.0.17 lighter power-flow node family (historical)
 
 The v3.0.17 release refines the approved A1 power-flow icon direction with a
 slightly smaller, lighter finish. Adapter, System, and Battery now use 21-point

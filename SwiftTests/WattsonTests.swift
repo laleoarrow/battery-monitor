@@ -1613,6 +1613,28 @@ final class WattsonTests: XCTestCase {
             }
         })
 
+        show(onBattery(0.1))
+        XCTAssertEqual(flow.topologyForTest, "batteryOutputSplit")
+        XCTAssertEqual(
+            flow.nodePresentationsForTest.map { $0.caption },
+            ["Battery 67%", "Device Output", "Mac Load"]
+        )
+        XCTAssertEqual(
+            flow.nodePresentationsForTest.map { $0.value },
+            ["39.7 W", "0.1 W", "39.6 W"]
+        )
+        XCTAssertEqual(
+            flow.branchThicknessesForTest[0],
+            VisualEncoding.thickness(39.6),
+            accuracy: 0.001
+        )
+        XCTAssertEqual(
+            flow.branchThicknessesForTest[1],
+            VisualEncoding.thickness(0.1),
+            accuracy: 0.001
+        )
+        XCTAssertTrue(flow.nodeContentsFitForTest)
+
         for output: Double? in [nil, 0, .nan, 40.1] {
             show(onBattery(output))
             XCTAssertEqual(flow.topologyForTest, "batteryLed")
