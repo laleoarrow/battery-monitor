@@ -68,7 +68,10 @@ let package = Package(
         .testTarget(
             name: "WattsonTests",
             dependencies: ["Wattson"],
-            path: "SwiftTests"
+            path: "SwiftTests",
+            resources: [
+                .copy("Fixtures"),
+            ]
         ),
     ],
     swiftLanguageModes: [.v5]
