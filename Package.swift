@@ -27,6 +27,8 @@ let package = Package(
                 "BatteryPowerWidgetExtension.xcodeproj",
                 "HANDOFF.md",
                 "Helper",
+                "HelperV5",
+                "HelperV5Tests",
                 "Packaging",
                 "README.md",
                 "Support",
@@ -56,14 +58,24 @@ let package = Package(
                 .linkedFramework("IOKit"),
             ]
         ),
+        .target(
+            name: "WattsonHelperV5Support",
+            path: "HelperV5"
+        ),
         .executableTarget(
             name: "WattsonHelper",
+            dependencies: ["WattsonHelperV5Support"],
             path: "Helper",
             exclude: ["com.leoarrow.wattson.helper.plist"],
             sources: ["wattson-helper.swift"],
             linkerSettings: [
                 .linkedFramework("IOKit"),
             ]
+        ),
+        .testTarget(
+            name: "WattsonHelperV5SupportTests",
+            dependencies: ["WattsonHelperV5Support"],
+            path: "HelperV5Tests"
         ),
         .testTarget(
             name: "WattsonTests",
