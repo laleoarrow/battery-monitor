@@ -199,13 +199,24 @@ if [ "$APP_ONLY" = "1" ]; then
     exit 0
 fi
 echo "  🔑 Installing the privileged helper (needs sudo once)"
-HELPER_BUILD="$BUILD_DIR/wattson-helper"
-xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift" \
-    -parse-as-library \
-    -target "$SWIFT_TARGET" \
-    -framework IOKit \
-    -O \
-    -o "$HELPER_BUILD"
+HELPER_SCRATCH_PATH="$BUILD_DIR/swiftpm-helper"
+/usr/bin/swift build \
+    --package-path "$ROOT_DIR" \
+    --scratch-path "$HELPER_SCRATCH_PATH" \
+    --configuration release \
+    --triple "$SWIFT_TARGET" \
+    --product wattson-helper
+HELPER_BUILD="$(
+    /usr/bin/swift build \
+        --package-path "$ROOT_DIR" \
+        --scratch-path "$HELPER_SCRATCH_PATH" \
+        --configuration release \
+        --triple "$SWIFT_TARGET" \
+        --product wattson-helper \
+        --show-bin-path
+)/wattson-helper"
+[[ -f "$HELPER_BUILD" && ! -L "$HELPER_BUILD" ]] \
+    || { echo "SwiftPM did not produce wattson-helper" >&2; exit 1; }
 codesign --force --sign - --identifier "$HELPER_LABEL" "$HELPER_BUILD" >/dev/null
 helper_was_disabled=0
 if ! disabled_services="$(sudo launchctl print-disabled system)"; then

@@ -63,6 +63,15 @@ bootstrap_helper() {
     return 1
 }
 
+run_console_app_probe() {
+    local console_uid="$1"
+    local probe="$2"
+
+    /bin/launchctl asuser "$console_uid" \
+        /usr/bin/sudo -n -u "#$console_uid" -- \
+        "$APP_EXECUTABLE" "$probe"
+}
+
 remove_v2_user_app() {
     local console_record
     local console_user
@@ -214,9 +223,18 @@ bootstrap_helper || fail "helper registration failed"
 
 # Probe the socket only in an interactive install. MDM/loginwindow installs
 # have no console user to authenticate and are valid once launchd is ready.
-console_uid="$(/usr/bin/stat -f '%u' /dev/console 2>/dev/null || true)"
-if [[ "$console_uid" =~ ^[0-9]+$ && "$console_uid" != "0" ]]; then
+console_record="$(/usr/bin/stat -f '%Su:%u' /dev/console 2>/dev/null || true)"
+console_user="${console_record%%:*}"
+console_uid="${console_record##*:}"
+if [[ "$console_user" != "root" && "$console_user" != "loginwindow" ]] \
+    && [[ "$console_user" =~ ^[A-Za-z0-9._-]+$ ]] \
+    && [[ "$console_uid" =~ ^[0-9]+$ && "$console_uid" != "0" ]] \
+    && /bin/launchctl print "gui/$console_uid" >/dev/null 2>&1; then
     "$HELPER_BIN" --health-probe || fail "helper health probe failed"
+    run_console_app_probe "$console_uid" --helper-health-probe \
+        || fail "app v4 helper health probe failed"
+    run_console_app_probe "$console_uid" --helper-v5-observation-probe \
+        || fail "app v5 observation probe failed"
 fi
 
 "$HELPER_BIN" --migrate-legacy-login-item \

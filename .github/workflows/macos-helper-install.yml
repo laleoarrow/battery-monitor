@@ -604,6 +604,7 @@ jobs:
             /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null
             /usr/bin/sudo -n "$HELPER_BIN" --health-probe
             "$APP_BIN" --helper-health-probe
+            "$APP_BIN" --helper-v5-observation-probe
             # Hosted Mac minis have no internal battery, but SMC availability
             # is independent. Exercise the shipped getPower IPC when the
             # runner exposes the fixed keys; older runners may legitimately
@@ -740,6 +741,7 @@ jobs:
           readonly LOGIN_TARGET
           readonly LOGIN_PLIST="$HOME/Library/LaunchAgents/$LOGIN_LABEL.plist"
           MOUNT_DIR="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-v2-dmg.XXXXXX")"
+          CANDIDATE_EXPAND="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-v5-candidate.XXXXXX")"
           V2_STAGE=""
           MOUNTED=0
 
@@ -768,7 +770,8 @@ jobs:
             /usr/bin/sudo -n /bin/rm -f -- \
               "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN" || cleanup_failed=1
             /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1
-            /bin/rm -rf -- "$LEGACY_APP" "$MOUNT_DIR" || cleanup_failed=1
+            /bin/rm -rf -- "$LEGACY_APP" "$MOUNT_DIR" "$CANDIDATE_EXPAND" \
+              || cleanup_failed=1
             /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true
             if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
               echo "helper service remains registered after v2 upgrade cleanup" >&2
@@ -789,6 +792,16 @@ jobs:
 
           [[ "$(/usr/bin/uname -m)" == "arm64" ]]
           [[ -f "$PKG_PATH" && ! -L "$PKG_PATH" ]]
+          /usr/sbin/pkgutil --expand-full "$PKG_PATH" "$CANDIDATE_EXPAND/expanded"
+          CANDIDATE_APP_BIN="$(
+            /usr/bin/find "$CANDIDATE_EXPAND/expanded" \
+              -type f \
+              -path '*/Payload/Applications/Wattson.app/Contents/MacOS/Wattson' \
+              -print
+          )"
+          readonly CANDIDATE_APP_BIN
+          [[ -f "$CANDIDATE_APP_BIN" && ! -L "$CANDIDATE_APP_BIN" ]]
+          [[ "$(/usr/bin/wc -l <<< "$CANDIDATE_APP_BIN" | /usr/bin/tr -d ' ')" == "1" ]]
           /usr/bin/curl \
             --fail \
             --location \
@@ -858,6 +871,20 @@ jobs:
           /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null
           /usr/bin/sudo -n "$HELPER_BIN" --health-probe
 
+          # A legacy v2 helper remains a valid v4 peer, but must never satisfy
+          # the strict v5 capability gate exposed by the candidate app.
+          set +e
+          legacy_v5_probe_output="$(
+            "$CANDIDATE_APP_BIN" --helper-v5-observation-probe 2>&1
+          )"
+          legacy_v5_probe_status="$?"
+          set -e
+          [[ "$legacy_v5_probe_status" != "0" ]]
+          case "$legacy_v5_probe_output" in
+            *helperV5=legacy*|*helperV5=failed*) ;;
+            *) echo "candidate v5 probe returned unexpected legacy result" >&2; exit 1 ;;
+          esac
+
           /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null
           MOUNTED=0
           /usr/bin/sudo -n /bin/rm -rf -- "$V2_STAGE"
@@ -880,6 +907,8 @@ jobs:
           /usr/bin/sudo -n /usr/bin/codesign --verify --strict "$HELPER_BIN"
           /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null
           /usr/bin/sudo -n "$HELPER_BIN" --health-probe
+          "$APP_BIN" --helper-health-probe
+          "$APP_BIN" --helper-v5-observation-probe
           [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]]
           echo "v2.1.5 upgrade and cleanup checks passed."
 

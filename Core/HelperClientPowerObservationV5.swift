@@ -258,7 +258,7 @@ struct UnixSocketPowerObservationTransport: PowerObservationFrameTransport {
                     return .frame(Data(data[..<newline]))
                 }
             } else if count == 0 {
-                return incompleteOrNoResponse(data)
+                return completeFrameAtEOFOrIncomplete(data)
             } else if errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK {
                 continue
             } else {
@@ -267,6 +267,16 @@ struct UnixSocketPowerObservationTransport: PowerObservationFrameTransport {
         }
         // A frame that exactly fills the bound without a newline is truncated.
         return .incompleteFrame(data)
+    }
+
+    private func completeFrameAtEOFOrIncomplete(
+        _ data: Data
+    ) -> PowerObservationFrameExchange {
+        guard !data.isEmpty else { return .noResponse }
+        guard (try? JSONSerialization.jsonObject(with: data)) != nil else {
+            return .incompleteFrame(data)
+        }
+        return .frame(data)
     }
 
     private func incompleteOrNoResponse(

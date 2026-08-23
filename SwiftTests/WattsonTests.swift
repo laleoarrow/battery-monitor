@@ -481,16 +481,21 @@ final class WattsonTests: XCTestCase {
             percent: 60, plugged: true, adapterW: 70,
             batteryW: 20, systemW: 50, deviceOutputW: 7.5
         )
+        let totalInputW = snapshot.totalInputW
+        let conservationError = snapshot.conservationError
         XCTAssertEqual(snapshot.coherentDeviceOutputW, 7.5)
         XCTAssertEqual(snapshot.totalInputW, 70, accuracy: 0.001)
         XCTAssertEqual(snapshot.conservationError, 0, accuracy: 0.001)
 
-        for invalid in [50.4, .nan, -1] {
+        snapshot.deviceOutputW = 50
+        XCTAssertEqual(snapshot.coherentDeviceOutputW, 50)
+
+        for invalid in [50.2, .nan, -1] {
             snapshot.deviceOutputW = invalid
             XCTAssertNil(snapshot.coherentDeviceOutputW)
+            XCTAssertEqual(snapshot.totalInputW, totalInputW, accuracy: 0.001)
+            XCTAssertEqual(snapshot.conservationError, conservationError, accuracy: 0.001)
         }
-        snapshot.deviceOutputW = 50.2
-        XCTAssertEqual(snapshot.coherentDeviceOutputW, 50)
     }
 
     func testDeviceOutputParserUsesOnlyValidMeasuredWatts() throws {
@@ -1143,6 +1148,73 @@ final class WattsonTests: XCTestCase {
         }
     }
 
+    func testPositiveCoherentDeviceOutputUsesSystemTotalAcrossInstrumentLabels() throws {
+        let gauge = RingGaugeView()
+        let lanes = LaneView()
+        gauge.frame = NSRect(
+            x: 0, y: 0,
+            width: PopoverStyle.contentWidth,
+            height: RingGaugeView.preferredHeight
+        )
+        lanes.frame = NSRect(
+            x: 0, y: 0,
+            width: PopoverStyle.contentWidth,
+            height: LaneView.preferredHeight
+        )
+
+        func caption(_ text: String, in view: NSView) -> NSTextField? {
+            view.subviews.compactMap { $0 as? NSTextField }.first {
+                $0.stringValue == text
+            }
+        }
+
+        func assertSystemCaption(
+            _ expected: String,
+            snapshot: PowerSnapshot,
+            file: StaticString = #filePath,
+            line: UInt = #line
+        ) throws {
+            gauge.update(snapshot: snapshot)
+            lanes.update(snapshot: snapshot)
+            gauge.layoutSubtreeIfNeeded()
+            lanes.layoutSubtreeIfNeeded()
+
+            for view in [gauge, lanes] {
+                let field = try XCTUnwrap(caption(expected, in: view), file: file, line: line)
+                XCTAssertEqual(
+                    field.accessibilityValue(),
+                    expected,
+                    file: file,
+                    line: line
+                )
+                let other = expected == "System Total" ? "System Load" : "System Total"
+                XCTAssertNil(caption(other, in: view), file: file, line: line)
+            }
+        }
+
+        let baseline = PowerSnapshot(
+            percent: 67, plugged: false, adapterW: 0,
+            batteryW: -39.7, systemW: 39.7
+        )
+        try assertSystemCaption("System Load", snapshot: baseline)
+
+        var measuredZero = baseline
+        measuredZero.deviceOutputW = 0
+        try assertSystemCaption("System Load", snapshot: measuredZero)
+
+        var split = baseline
+        split.deviceOutputW = 12.2
+        try assertSystemCaption("System Total", snapshot: split)
+        XCTAssertEqual(split.totalInputW, baseline.totalInputW, accuracy: 0.001)
+        XCTAssertEqual(split.conservationError, baseline.conservationError, accuracy: 0.001)
+
+        var inconsistent = baseline
+        inconsistent.deviceOutputW = 39.8
+        try assertSystemCaption("System Load", snapshot: inconsistent)
+        XCTAssertEqual(inconsistent.deviceOutputW, 39.8)
+        XCTAssertNil(inconsistent.coherentDeviceOutputW)
+    }
+
     func testHistoryIsBoundedAndChronological() {
         let history = PowerHistory()
         for value in 0..<75 {
@@ -1635,7 +1707,7 @@ final class WattsonTests: XCTestCase {
         )
         XCTAssertTrue(flow.nodeContentsFitForTest)
 
-        for output: Double? in [nil, 0, .nan, 40.1] {
+        for output: Double? in [nil, 0, .nan, 39.8, 40.1] {
             show(onBattery(output))
             XCTAssertEqual(flow.topologyForTest, "batteryLed")
             XCTAssertTrue(flow.nodeContentsFitForTest)

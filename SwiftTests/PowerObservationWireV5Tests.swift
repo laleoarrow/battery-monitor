@@ -1,3 +1,5 @@
+import Darwin
+import Foundation
 import XCTest
 @testable import Wattson
 
@@ -22,6 +24,145 @@ final class PowerObservationWireV5Tests: XCTestCase {
             requests.append(request)
             maximums.append(maximumResponseBytes)
             return responses.isEmpty ? .noResponse : responses.removeFirst()
+        }
+    }
+
+    final class RealUnixSocketServer: @unchecked Sendable {
+        private let socketPath: String
+        private let listener: Int32
+        private let responses: [Data]
+        private let completion = DispatchSemaphore(value: 0)
+        private let lock = NSLock()
+        private var recordedRequests: [Data] = []
+
+        init(responses: [Data]) throws {
+            self.responses = responses
+            socketPath = "/tmp/wattson-wire-v5-\(UUID().uuidString).sock"
+            listener = Darwin.socket(AF_UNIX, SOCK_STREAM, 0)
+            guard listener >= 0 else { throw POSIXError(.ENFILE) }
+
+            var address = sockaddr_un()
+            address.sun_family = sa_family_t(AF_UNIX)
+            let pathBytes = Array(socketPath.utf8)
+            guard pathBytes.count < MemoryLayout.size(ofValue: address.sun_path) else {
+                Darwin.close(listener)
+                throw POSIXError(.ENAMETOOLONG)
+            }
+            withUnsafeMutableBytes(of: &address.sun_path) { raw in
+                raw.copyBytes(from: pathBytes)
+            }
+            let addressSize = socklen_t(MemoryLayout<sockaddr_un>.size)
+            let bound = withUnsafePointer(to: &address) { pointer in
+                pointer.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                    Darwin.bind(listener, $0, addressSize)
+                }
+            }
+            guard bound == 0, Darwin.listen(listener, 4) == 0 else {
+                let failure = POSIXErrorCode(rawValue: errno) ?? .EIO
+                Darwin.close(listener)
+                Darwin.unlink(socketPath)
+                throw POSIXError(failure)
+            }
+        }
+
+        var path: String { socketPath }
+
+        var requests: [Data] {
+            lock.lock()
+            defer { lock.unlock() }
+            return recordedRequests
+        }
+
+        func start() {
+            DispatchQueue.global(qos: .userInitiated).async { [self] in
+                defer {
+                    Darwin.close(listener)
+                    Darwin.unlink(socketPath)
+                    completion.signal()
+                }
+
+                for (index, response) in responses.enumerated() {
+                    if index > 0 {
+                        var descriptor = pollfd(
+                            fd: listener,
+                            events: Int16(POLLIN),
+                            revents: 0
+                        )
+                        guard Darwin.poll(&descriptor, 1, 750) > 0 else { return }
+                    }
+                    guard let fd = acceptConnection() else { return }
+                    record(readLine(from: fd))
+                    _ = writeAll(response, to: fd)
+                    Darwin.close(fd)
+                }
+            }
+        }
+
+        func waitForCompletion() -> Bool {
+            completion.wait(timeout: .now() + 4) == .success
+        }
+
+        private func acceptConnection() -> Int32? {
+            while true {
+                let fd = Darwin.accept(listener, nil, nil)
+                if fd >= 0 {
+                    var noSigPipe: Int32 = 1
+                    _ = setsockopt(
+                        fd,
+                        SOL_SOCKET,
+                        SO_NOSIGPIPE,
+                        &noSigPipe,
+                        socklen_t(MemoryLayout<Int32>.size)
+                    )
+                    return fd
+                }
+                if errno != EINTR { return nil }
+            }
+        }
+
+        private func readLine(from fd: Int32) -> Data {
+            var data = Data()
+            var byte: UInt8 = 0
+            while data.count < 8_192 {
+                let count = Darwin.recv(fd, &byte, 1, 0)
+                if count == 1 {
+                    data.append(byte)
+                    if byte == UInt8(ascii: "\n") { break }
+                } else if count < 0, errno == EINTR {
+                    continue
+                } else {
+                    break
+                }
+            }
+            return data
+        }
+
+        private func record(_ request: Data) {
+            lock.lock()
+            recordedRequests.append(request)
+            lock.unlock()
+        }
+
+        private func writeAll(_ data: Data, to fd: Int32) -> Bool {
+            data.withUnsafeBytes { raw in
+                guard let base = raw.baseAddress else { return data.isEmpty }
+                var offset = 0
+                while offset < raw.count {
+                    let count = Darwin.write(
+                        fd,
+                        base.advanced(by: offset),
+                        raw.count - offset
+                    )
+                    if count > 0 {
+                        offset += count
+                    } else if count < 0, errno == EINTR {
+                        continue
+                    } else {
+                        return false
+                    }
+                }
+                return true
+            }
         }
     }
 
@@ -283,6 +424,67 @@ final class PowerObservationWireV5Tests: XCTestCase {
         XCTAssertEqual(transport.requests.count, 2)
     }
 
+    func testRealOldHelperUnversionedEOFPerformsExactlyOneV4Fallback() throws {
+        let server = try RealUnixSocketServer(responses: [
+            Data(#"{"ok":false,"error":"malformed"}"#.utf8),
+            legacyFrame(adapter: 30, system: 20) + Data([UInt8(ascii: "\n")]),
+        ])
+        server.start()
+
+        let result = PowerObservationV5Client(
+            transport: UnixSocketPowerObservationTransport(socketPath: server.path),
+            timeoutSeconds: 1
+        ).fetch(clientSequence: 21)
+        XCTAssertTrue(server.waitForCompletion())
+
+        guard case let .legacyV4(power) = result else {
+            return XCTFail("complete unversioned EOF must retry v4 exactly once, got \(result)")
+        }
+        XCTAssertEqual(power.adapterW, 30)
+        XCTAssertEqual(power.systemW, 20)
+        XCTAssertEqual(server.requests.count, 2)
+        XCTAssertEqual(try protocolVersion(in: server.requests[0]), 5)
+        XCTAssertEqual(try protocolVersion(in: server.requests[1]), 4)
+    }
+
+    func testRealCompleteMalformedClaimedV5EOFNeverFallsBack() throws {
+        let server = try RealUnixSocketServer(responses: [
+            Data(#"{"_wattsonProtocol":5,"ok":false}"#.utf8),
+            legacyFrame(adapter: 1, system: 1) + Data([UInt8(ascii: "\n")]),
+        ])
+        server.start()
+
+        XCTAssertEqual(
+            PowerObservationV5Client(
+                transport: UnixSocketPowerObservationTransport(socketPath: server.path),
+                timeoutSeconds: 1
+            ).fetch(clientSequence: 22),
+            .failed(.invalidV5(.missingTopLevelField))
+        )
+        XCTAssertTrue(server.waitForCompletion())
+        XCTAssertEqual(server.requests.count, 1)
+        XCTAssertEqual(try protocolVersion(in: server.requests[0]), 5)
+    }
+
+    func testRealTruncatedClaimedV5EOFNeverFallsBack() throws {
+        let server = try RealUnixSocketServer(responses: [
+            Data(#"{"_wattsonProtocol":5,"ok":"#.utf8),
+            legacyFrame(adapter: 1, system: 1) + Data([UInt8(ascii: "\n")]),
+        ])
+        server.start()
+
+        XCTAssertEqual(
+            PowerObservationV5Client(
+                transport: UnixSocketPowerObservationTransport(socketPath: server.path),
+                timeoutSeconds: 1
+            ).fetch(clientSequence: 23),
+            .failed(.truncatedV5Frame)
+        )
+        XCTAssertTrue(server.waitForCompletion())
+        XCTAssertEqual(server.requests.count, 1)
+        XCTAssertEqual(try protocolVersion(in: server.requests[0]), 5)
+    }
+
     func testMalformedClaimedV5NeverFallsBack() throws {
         var object = try responseObject(validResponse(sequence: 2))
         object.removeValue(forKey: "keys")
@@ -487,5 +689,12 @@ final class PowerObservationWireV5Tests: XCTestCase {
         if let adapter { object["adapterW"] = adapter }
         if let system { object["systemW"] = system }
         return try! JSONSerialization.data(withJSONObject: object, options: [.sortedKeys])
+    }
+
+    private func protocolVersion(in request: Data) throws -> Int {
+        let object = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: request) as? [String: Any]
+        )
+        return try XCTUnwrap((object["_wattsonProtocol"] as? NSNumber)?.intValue)
     }
 }

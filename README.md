@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3018">v3.0.18 candidate notes</a>
+  <a href="#whats-new-in-v3019">v3.0.19 candidate notes</a>
 </p>
 
 <p align="center">
@@ -41,9 +41,28 @@ where it is going, and how the picture has changed over the last two minutes.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
 
-## What's new in v3.0.18
+## What's new in v3.0.19
 
-> v3.0.18 is the current release candidate. v3.0.17 remains the current public release until the candidate completes the release gates.
+> v3.0.19 is the current release candidate. v3.0.17 remains the current public release until the candidate completes the release gates.
+
+- Adds the strict, read-only helper protocol v5 for fixed `PDTR`, `PSTR`, and
+  `PPBR` observations. Complete and typed partial v5 responses are
+  authoritative; malformed or truncated claimed-v5 frames fail closed, while
+  an older helper receives exactly one compatible v4 fallback.
+- Runs the evidence-backed power resolver in production shadow mode. Direct
+  observations can feed the established display resolver, but unproven PSTR
+  band correction remains disabled and any missing, stale, or invalid evidence
+  falls back without changing the visible power model.
+- Preserves measured Device Output as an auxiliary breakdown of System Load,
+  never an additional load. It is no longer silently clamped: only a positive
+  coherent value can split the existing three-node flow into Mac Load and
+  Device Output, and those views label the unsplit rail as System Total. A
+  valid zero remains visible; unavailable or incoherent readings restore Cycle
+  Count. Firmware publication can still be delayed.
+- Makes the native PKG verify both the existing v4 helper health surface and
+  the strict v5 observation surface after installation.
+
+## v3.0.18 measured attached-device output (historical)
 
 - Shows measured power delivered to attached devices when the Mac publishes a
   usable reading. Device Output is an auxiliary breakdown of System Load, not

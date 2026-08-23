@@ -17,6 +17,7 @@ RUN_SCRIPT = ROOT / "script" / "build_and_run.sh"
 VERIFY_INTERACTION = ROOT / "scripts" / "verify_interaction.sh"
 APP_ENTITLEMENTS = ROOT / "BatteryPowerApp.entitlements"
 CI_HELPER_WORKFLOW = ROOT / ".github" / "workflows" / "macos-helper-install.yml"
+MAIN = ROOT / "main.swift"
 
 
 class InstallMigrationContractTests(unittest.TestCase):
@@ -33,6 +34,7 @@ class InstallMigrationContractTests(unittest.TestCase):
         cls.verify_interaction = VERIFY_INTERACTION.read_text(encoding="utf-8")
         cls.entitlements = APP_ENTITLEMENTS.read_text(encoding="utf-8")
         cls.ci_helper_workflow = CI_HELPER_WORKFLOW.read_text(encoding="utf-8")
+        cls.main = MAIN.read_text(encoding="utf-8")
 
     def test_uses_the_new_identity(self):
         self.assertIn("com.leoarrow.wattson", self.install)
@@ -82,6 +84,41 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn("/Library/PrivilegedHelperTools/", self.install)
         self.assertIn("launchctl bootstrap system", self.install)
 
+    def test_developer_install_builds_the_complete_swiftpm_helper_product(self):
+        helper_build = self.install.split(
+            'echo "  🔑 Installing the privileged helper (needs sudo once)"', 1
+        )[1].split(
+            'codesign --force --sign - --identifier "$HELPER_LABEL"', 1
+        )[0]
+        self.assertIn("/usr/bin/swift build", helper_build)
+        self.assertIn("--product wattson-helper", helper_build)
+        self.assertIn("--scratch-path", helper_build)
+        self.assertIn("--show-bin-path", helper_build)
+        self.assertNotIn("swiftc", helper_build)
+        self.assertNotIn("Helper/wattson-helper.swift", helper_build)
+
+    def test_release_v5_probe_is_strict_fixed_output_and_precedes_appkit(self):
+        probe_start = self.main.index(
+            'if CommandLine.arguments.contains("--helper-v5-observation-probe")'
+        )
+        app_start = self.main.index("let app = NSApplication.shared")
+        self.assertLess(probe_start, app_start)
+        probe_end = self.main.index(
+            'if CommandLine.arguments.contains("--helper-health-probe")', probe_start
+        )
+        probe = self.main[probe_start:probe_end]
+        self.assertIn("HelperClient.powerObservation(", probe)
+        self.assertIn('print("helperV5=v5")', probe)
+        self.assertNotIn("response.", probe)
+        self.assertNotIn("String(format:", probe)
+
+        v5 = probe.split("case .v5", 1)[1].split("case .legacyV4", 1)[0]
+        legacy = probe.split("case .legacyV4", 1)[1].split("case .failed", 1)[0]
+        failed = probe.split("case .failed", 1)[1]
+        self.assertIn("exit(0)", v5)
+        self.assertIn("exit(1)", legacy)
+        self.assertIn("exit(1)", failed)
+
     def test_uninstall_removes_the_helper(self):
         self.assertIn('HELPER_LABEL="com.leoarrow.wattson.helper"', self.uninstall)
         self.assertIn('HELPER_TARGET="system/$HELPER_LABEL"', self.uninstall)
@@ -95,7 +132,7 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.18")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.19")
         self.assertIn('VERSION_FILE="$ROOT_DIR/VERSION"', self.package)
         self.assertIn('Contents/MacOS/Wattson', self.package_pkg)
 
@@ -231,6 +268,9 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn("verify_app_launch_stability", self.ci_helper_workflow)
         self.assertIn('--helper-health-probe', self.ci_helper_workflow)
         self.assertIn('--helper-power-probe', self.ci_helper_workflow)
+        self.assertGreaterEqual(
+            self.ci_helper_workflow.count('--helper-v5-observation-probe'), 3
+        )
         self.assertIn("/usr/sbin/ioreg -r -c AppleSmartBattery", self.ci_helper_workflow)
         self.assertIn('[[ "$battery_registry" == *AppleSmartBattery* ]]', self.ci_helper_workflow)
         self.assertNotIn("| /usr/bin/grep -q AppleSmartBattery", self.ci_helper_workflow)

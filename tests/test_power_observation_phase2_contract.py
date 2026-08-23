@@ -6,6 +6,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 CORE = ROOT / "Core"
 HELPER_V5 = ROOT / "HelperV5" / "PowerObservationV5Support.swift"
 PACKAGE = ROOT / "Package.swift"
+STATUS = ROOT / "MenuBar" / "StatusItemController.swift"
 
 
 class PowerObservationPhase2ContractTests(unittest.TestCase):
@@ -17,6 +18,9 @@ class PowerObservationPhase2ContractTests(unittest.TestCase):
         cls.fusion = (CORE / "PowerObservationFusion.swift").read_text(encoding="utf-8")
         cls.shadow = (CORE / "PowerObservationShadow.swift").read_text(encoding="utf-8")
         cls.replay = (CORE / "PowerObservationFusionReplay.swift").read_text(encoding="utf-8")
+        cls.reader = (CORE / "AppleSmartBatteryPowerObservationReader.swift").read_text(encoding="utf-8")
+        cls.runtime = (CORE / "PowerObservationRuntimeController.swift").read_text(encoding="utf-8")
+        cls.status = STATUS.read_text(encoding="utf-8")
         cls.helper = HELPER_V5.read_text(encoding="utf-8")
 
     def test_package_compiles_helper_v5_support_without_changing_existing_helper_source(self):
@@ -209,6 +213,57 @@ class PowerObservationPhase2ContractTests(unittest.TestCase):
         self.assertIn('userVisibleValuesUnchanged: !resolution.userVisibleEligible', self.shadow)
         self.assertNotIn('os_log', self.shadow)
         self.assertNotIn('UserDefaults', self.shadow)
+
+    def test_production_reader_is_allowlisted_and_never_materializes_registry_dictionary(self):
+        for required in (
+            '"ExternalConnected"',
+            '"IsCharging"',
+            '"Voltage"',
+            '"InstantAmperage"',
+            '"Amperage"',
+            '"PowerTelemetryData"',
+            '"PowerOutDetails"',
+            'IORegistryEntryCreateCFProperty',
+            'maximumTrackingGapNanoseconds',
+            'resetFreshness()',
+        ):
+            self.assertIn(required, self.reader)
+        self.assertNotIn('IORegistryEntryCreateCFProperties', self.reader)
+        for forbidden in (
+            '"Serial"', '"SerialNumber"', '"UUID"',
+            '"DeviceName"', '"ProductName"', '"VendorName"',
+            '"IORegistryPath"',
+        ):
+            self.assertNotIn(forbidden, self.reader)
+
+    def test_runtime_keeps_nil_policy_shadow_only_and_uses_no_ppbr_direction(self):
+        self.assertIn('policy: nil', self.runtime)
+        self.assertIn('assert(!resolution.userVisibleEligible)', self.runtime)
+        self.assertIn('PowerObservationShadowEvaluator.compare(', self.runtime)
+        self.assertIn('let adapter = watts("PDTR")', self.runtime)
+        self.assertIn('let system = watts("PSTR")', self.runtime)
+        self.assertIn('source: .batteryVoltageTimesCurrent', self.runtime)
+        self.assertIn('if residual != 0', self.runtime)
+        visible = self.runtime.split('private func resolvedLegacySnapshot', 1)[1].split(
+            'private static func monotonicNow', 1
+        )[0]
+        self.assertNotIn('PPBR', visible)
+        self.assertNotIn('PSTRBandPolicy(', self.runtime)
+
+    def test_status_controller_never_publishes_shadow_resolution(self):
+        finish = self.status.split('private func finishSample', 1)[1].split(
+            'private func refreshPresentation', 1
+        )[0]
+        self.assertIn('result.visibleSnapshot', finish)
+        self.assertNotIn('result.resolution', finish)
+        self.assertIn('requiresFreshFollowUp', finish)
+
+    def test_runtime_preserves_v4_and_failure_paths_and_parallelizes_acquisition(self):
+        self.assertIn('case let .legacyV4(power):', self.runtime)
+        self.assertIn('case .failed:', self.runtime)
+        self.assertIn('guard let livePower else { return snapshot }', self.runtime)
+        self.assertEqual(self.runtime.count('acquisitionQueue.async'), 3)
+        self.assertIn('group.wait()', self.runtime)
 
     def test_no_phase1_raw_schema_or_existing_helper_file_is_redeclared(self):
         combined = self.wire + self.client + self.fusion + self.shadow + self.replay + self.helper

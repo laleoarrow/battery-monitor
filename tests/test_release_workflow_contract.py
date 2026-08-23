@@ -32,6 +32,18 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("WATTSON_FORCE_REDUCE_TRANSPARENCY=1", CANDIDATE)
         self.assertIn("scripts/verify_animation_stress.sh", CANDIDATE)
 
+    def test_installed_matrix_gates_v5_and_rejects_legacy_as_v5(self):
+        self.assertGreaterEqual(CANDIDATE.count("--helper-v5-observation-probe"), 3)
+        upgrade = CANDIDATE.split(
+            "- name: Test upgrade from the published v2.1.5 release", 1
+        )[1].split("- name: Upload installation logs", 1)[0]
+        legacy_gate = upgrade.index("legacy_v5_probe_status")
+        install = upgrade.index("Upgrading the exact v2.1.5 app")
+        upgraded_v5 = upgrade.rindex('"$APP_BIN" --helper-v5-observation-probe')
+        self.assertLess(legacy_gate, install)
+        self.assertLess(install, upgraded_v5)
+        self.assertIn('[[ "$legacy_v5_probe_status" != "0" ]]', upgrade)
+
     def test_normal_swift_and_appkit_gates_override_runner_accessibility_defaults(self):
         for workflow in (CI, CANDIDATE):
             self.assertIn("WATTSON_FORCE_REDUCE_MOTION=0", workflow)

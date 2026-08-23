@@ -132,6 +132,8 @@ final class RingGaugeView: PopoverSection {
         percentLabel.stringValue = "\(snapshot.percent)"
         percentLabel.textColor = snapshot.percent <= 20 ? PopoverStyle.red : PopoverStyle.primaryText
 
+        let hasPositiveDeviceOutput = snapshot.coherentDeviceOutputW.map { $0 > 0 } ?? false
+        captions[0].stringValue = hasPositiveDeviceOutput ? "System Total" : "System Load"
         captions[1].stringValue = PopoverStyle.batteryFlowLabel(snapshot.state)
         values[0].stringValue = PopoverStyle.watts(snapshot.systemW)
         values[1].stringValue = snapshot.state == .pluggedIdle

@@ -40,6 +40,18 @@ verify_binary() {
     done
 }
 
+verify_v5_protocol_surface() {
+    local app_executable="$1"
+    local helper_executable="$2"
+
+    /usr/bin/strings "$app_executable" \
+        | /usr/bin/grep -F -- "--helper-v5-observation-probe" >/dev/null \
+        || fail "release app is missing the strict helper v5 probe"
+    /usr/bin/strings "$helper_executable" \
+        | /usr/bin/grep -F -- "getPowerObservation" >/dev/null \
+        || fail "release helper is missing the v5 observation operation"
+}
+
 verify_app_bundle() {
     local app_dir="$1"
 
@@ -224,6 +236,7 @@ verify_app_bundle "$APP_DIR"
 
 verify_binary "$APP_EXECUTABLE"
 verify_binary "$HELPER_EXECUTABLE"
+verify_v5_protocol_surface "$APP_EXECUTABLE" "$HELPER_EXECUTABLE"
 /usr/bin/codesign --verify --deep --strict "$APP_DIR"
 /usr/bin/codesign --verify --strict "$HELPER_EXECUTABLE"
 [[ -f "$BUILD_METADATA" ]]
@@ -297,6 +310,7 @@ PACKAGED_APP_EXECUTABLE="$PACKAGED_APP_DIR/Contents/MacOS/Wattson"
 verify_app_bundle "$PACKAGED_APP_DIR"
 verify_binary "$PACKAGED_APP_EXECUTABLE"
 verify_binary "$PACKAGED_HELPER_EXECUTABLE"
+verify_v5_protocol_surface "$PACKAGED_APP_EXECUTABLE" "$PACKAGED_HELPER_EXECUTABLE"
 /usr/bin/codesign --verify --deep --strict "$PACKAGED_APP_DIR"
 /usr/bin/codesign --verify --strict "$PACKAGED_HELPER_EXECUTABLE"
 

@@ -167,6 +167,8 @@ final class StatusItemController: NSObject {
         label: "com.leoarrow.wattson.sampler",
         qos: .userInitiated
     )
+    private let powerObservationRuntime =
+        PowerObservationRuntimeController()
 
     private var snapshot = PowerSnapshot()
     private var historyTimer: Timer?
@@ -181,6 +183,8 @@ final class StatusItemController: NSObject {
     private var hasUsableSnapshot: Bool { startupAvailability.hasUsableSnapshot }
     private var isDegraded: Bool { startupAvailability.isDegraded }
     private var sampleRequests = SampleRequestCoalescer()
+    private var pendingPowerObservationEvent:
+        PowerObservationRuntimeEvent = .normal
     private var pressed = false
     private var clickRouter = ClickRouter()
     private var rightClickModes = RightClickModeSequence()
@@ -246,7 +250,11 @@ final class StatusItemController: NSObject {
             // stale pre-sleep power route is never left visible after wake.
             self.history.reset()
             self.refreshPresentation()
-            self.sampleNow(recordHistory: true, requiresFreshFollowUp: true)
+            self.sampleNow(
+                recordHistory: true,
+                requiresFreshFollowUp: true,
+                event: .sleepWake
+            )
         }
         startEventDrivenUpdates()
         startHistoryClock()
@@ -478,7 +486,11 @@ final class StatusItemController: NSObject {
         guard let source = IOPSNotificationCreateRunLoopSource({ raw in
             guard let raw else { return }
             let controller = Unmanaged<StatusItemController>.fromOpaque(raw).takeUnretainedValue()
-            controller.sampleNow(recordHistory: false, requiresFreshFollowUp: true)
+            controller.sampleNow(
+                recordHistory: false,
+                requiresFreshFollowUp: true,
+                event: .powerSourceTransition
+            )
         }, context)?.takeRetainedValue() else { return }
         powerSourceRunLoopSource = source
         CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)
@@ -516,25 +528,31 @@ final class StatusItemController: NSObject {
 
     fileprivate func sampleNow(
         recordHistory: Bool,
-        requiresFreshFollowUp: Bool = false
+        requiresFreshFollowUp: Bool = false,
+        event: PowerObservationRuntimeEvent = .normal
     ) {
         dispatchPrecondition(condition: .onQueue(.main))
+        pendingPowerObservationEvent =
+            pendingPowerObservationEvent.merging(event)
         guard sampleRequests.request(
             recordHistory: recordHistory,
             requiresFreshFollowUp: requiresFreshFollowUp
         ) else { return }
+        let runtimeEvent = pendingPowerObservationEvent
+        pendingPowerObservationEvent = .normal
         samplingQueue.async { [weak self] in
-            let fresh = BatterySampler.sample()
-            let livePower = HelperClient.livePower()
+            guard let self else { return }
+            let result = self.powerObservationRuntime.sample(
+                event: runtimeEvent
+            )
             DispatchQueue.main.async { [weak self] in
-                self?.finishSample(fresh, livePower: livePower)
+                self?.finishSample(result)
             }
         }
     }
 
     private func finishSample(
-        _ fresh: PowerSnapshot?,
-        livePower: HelperClient.LivePower?
+        _ result: PowerObservationRuntimeSample
     ) {
         dispatchPrecondition(condition: .onQueue(.main))
         let completedRequest = sampleRequests.complete()
@@ -548,16 +566,8 @@ final class StatusItemController: NSObject {
             return
         }
 
-        var resolved = fresh
-        if let fresh, let live = livePower {
-            resolved = BatterySampler.resolvedLivePower(
-                snapshot: fresh,
-                adapterW: live.adapterW,
-                systemW: live.systemW
-            )
-        }
         let availabilityPlan = startupAvailability.finish(
-            resolved,
+            result.visibleSnapshot,
             recordHistory: completedRequest.recordHistory
         )
         if let fresh = availabilityPlan.snapshot {
