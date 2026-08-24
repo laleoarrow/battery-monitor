@@ -151,10 +151,10 @@ class SamplerContractTests(unittest.TestCase):
             require(valid!.percent == 67 && valid!.plugged && valid!.cycleCount == 42
                         && valid!.lowPowerMode,
                     "valid identity fields are preserved")
-            require(near(valid!.adapterW, 60) && near(valid!.batteryW, 20)
+            require(near(valid!.adapterW, 52) && near(valid!.batteryW, 12)
                         && near(valid!.systemW, 40)
                         && near(valid!.conservationError, 0),
-                    "valid coherent telemetry behavior is preserved")
+                    "valid signed battery direction is preserved")
 
             for raw: Any in [
                 NSNumber(value: -1), NSNumber(value: Int32.min),
@@ -439,9 +439,10 @@ class SamplerContractTests(unittest.TestCase):
         self.assertIn("else { return snapshot }", self.source)
 
     def test_iokit_source_and_sink_signs_are_normalized_to_the_core_model(self):
-        # Firmware can expose the same physical sample with either raw sign,
-        # and IsCharging can stay true during mixed supply. Source minus sink
-        # is therefore the authoritative direction when both totals exist.
+        # Firmware can expose BatteryPower with either raw sign, IsCharging can
+        # lag, and the source/load totals can be sampled asynchronously. A valid
+        # signed V×I is therefore the direction authority; source minus sink is
+        # the conservative fallback only when signed current is unavailable.
         self.assertIn('telemetry["BatteryPower"]', self.source)
         self.assertIn('optionalBoolValue(props["IsCharging"])', self.source)
         self.assertIn("parsedPowerTelemetry", self.source)
@@ -498,6 +499,59 @@ class SamplerContractTests(unittest.TestCase):
             require(liveMixed.state == .mixedSupply
                         && near(liveMixed.conservationError, 0),
                     "mixed supply overrides stale IsCharging")
+
+            let asynchronousIdle = resolved(
+                -7_200, charging: false, plugged: true,
+                systemIn: 41_500, load: 48_700,
+                fallback: -7.2, instant: 0
+            )
+            require(near(asynchronousIdle.adapterW, 48.7)
+                        && near(asynchronousIdle.batteryW, 0)
+                        && near(asynchronousIdle.systemW, 48.7)
+                        && asynchronousIdle.state == .pluggedIdle
+                        && near(asynchronousIdle.totalInputW, 48.7)
+                        && near(asynchronousIdle.conservationError, 0),
+                    "zero signed current rejects an asynchronous false mixed state")
+
+            let signedMixed = resolved(
+                -7_200, charging: false, plugged: true,
+                systemIn: 60_000, load: 40_000,
+                fallback: -7.2, instant: -12
+            )
+            require(near(signedMixed.adapterW, 28)
+                        && near(signedMixed.batteryW, -12)
+                        && near(signedMixed.systemW, 40)
+                        && signedMixed.state == .mixedSupply
+                        && near(signedMixed.conservationError, 0),
+                    "negative signed current overrides a false charging residual")
+
+            let signedCharging = resolved(
+                7_200, charging: false, plugged: true,
+                systemIn: 41_500, load: 48_700,
+                fallback: 7.2, instant: 7.2
+            )
+            require(near(signedCharging.adapterW, 55.9)
+                        && near(signedCharging.batteryW, 7.2)
+                        && near(signedCharging.systemW, 48.7)
+                        && signedCharging.state == .charging
+                        && near(signedCharging.conservationError, 0),
+                    "positive signed current overrides a false mixed residual")
+
+            for invalidInstant: Double? in [
+                nil, .nan, .infinity, -.infinity, 1_001, -1_001,
+            ] {
+                let fallback = resolved(
+                    -7_200, charging: false, plugged: true,
+                    systemIn: 60_000, load: 40_000,
+                    fallback: -7.2, instant: invalidInstant
+                )
+                require(near(fallback.adapterW, 60)
+                            && near(fallback.batteryW, 20)
+                            && near(fallback.systemW, 40)
+                            && fallback.state == .charging
+                            && near(fallback.conservationError, 0),
+                        "invalid signed current falls back to source minus load")
+            }
 
             let charging = resolved(20_000, charging: false, plugged: true,
                                     systemIn: 50_000, load: 30_000)
@@ -686,11 +740,11 @@ class SamplerContractTests(unittest.TestCase):
             let coherentSource = resolved(9_000, charging: false, plugged: true,
                                           systemIn: 60_000, load: 40_000,
                                           fallback: 9, instant: -12)
-            require(coherentSource.adapterW == 60 && coherentSource.batteryW == 20
+            require(coherentSource.adapterW == 28 && coherentSource.batteryW == -12
                         && coherentSource.systemW == 40
-                        && coherentSource.state == .charging
+                        && coherentSource.state == .mixedSupply
                         && coherentSource.conservationError == 0,
-                    "positive source telemetry remains authoritative")
+                    "signed current remains authoritative with complete totals")
 
             for (snapshot, expectedBattery, expectedAdapter) in [
                 (transitionCharge, 24.0, 69.0),

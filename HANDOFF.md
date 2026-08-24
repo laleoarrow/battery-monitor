@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Candidate version: `3.0.20`
+- Candidate version: `3.0.21`
 - Current public release: `3.0.17`
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
@@ -15,11 +15,11 @@
 
 ## Release artifacts
 
-`scripts/release.sh 3.0.20` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.21` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.20-macos-universal.pkg`
-- `Wattson-v3.0.20-macos-universal.dmg`
-- `Wattson-v3.0.20-release-info.txt`
+- `Wattson-v3.0.21-macos-universal.pkg`
+- `Wattson-v3.0.21-macos-universal.dmg`
+- `Wattson-v3.0.21-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -118,7 +118,7 @@ Headless checks:
 ```bash
 swift test
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.20
+bash scripts/release.sh 3.0.21
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -141,7 +141,7 @@ runners.
 
 ## Release order
 
-v3.0.20 is the current release candidate. v3.0.17 remains the current public
+v3.0.21 is the current release candidate. v3.0.17 remains the current public
 release until the new candidate completes every release gate. The candidate
 commit, artifact set, local canonical installation, and repository `VERSION`
 must remain aligned with the exact tested bytes.
@@ -157,14 +157,21 @@ must remain aligned with the exact tested bytes.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.20` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.21` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.20.
+6. Announce the release only after every public route resolves to v3.0.21.
 
-## v3.0.20 strict power observation runtime
+## v3.0.21 strict power observation runtime
+
+The visible resolver now uses signed battery voltage × current to govern
+battery direction when direct adapter and system rails arrive
+asynchronously. This prevents an iPhone measured under Device Output from being
+paired with an invented Battery Assist or Mixed Power state when signed battery
+current is zero. This corrects flow consistency only; it does not claim
+external-meter absolute accuracy.
 
 The helper now exposes a strict, read-only `getPowerObservation` protocol v5
 surface. It reads only the fixed `PDTR`, `PSTR`, and `PPBR` SMC keys, preserves

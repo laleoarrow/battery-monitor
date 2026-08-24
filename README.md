@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3020">v3.0.20 candidate notes</a>
+  <a href="#whats-new-in-v3021">v3.0.21 candidate notes</a>
 </p>
 
 <p align="center">
@@ -41,9 +41,15 @@ where it is going, and how the picture has changed over the last two minutes.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
 
-## What's new in v3.0.20
+## What's new in v3.0.21
 
-> v3.0.20 is the current release candidate. v3.0.17 remains the current public release until the candidate completes the release gates.
+> v3.0.21 is the current release candidate. v3.0.17 remains the current public release until the candidate completes the release gates.
+
+- Uses signed battery voltage × current to govern battery-flow direction when
+  direct adapter and system rails arrive asynchronously. This prevents an
+  attached iPhone reported as Device Output from being paired with a false
+  Battery Assist or Mixed Power state. It corrects flow consistency only and
+  does not claim external-meter absolute accuracy.
 
 - Adds the strict, read-only helper protocol v5 for fixed `PDTR`, `PSTR`, and
   `PPBR` observations. Complete and typed partial v5 responses are

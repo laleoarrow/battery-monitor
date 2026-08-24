@@ -555,6 +555,116 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(fresh.conservationError, 0, accuracy: 0.001)
     }
 
+    func testSignedBatteryCurrentOverridesAsynchronousTotalsAndKeepsDeviceOutputAuxiliary() throws {
+        func snapshot(
+            instantAmperage: Int,
+            systemPowerIn: Int,
+            systemLoad: Int,
+            deviceOutput: Int? = nil
+        ) throws -> PowerSnapshot {
+            var props: [String: Any] = [
+                "CurrentCapacity": NSNumber(value: 100),
+                "MaxCapacity": NSNumber(value: 100),
+                "ExternalConnected": kCFBooleanTrue as Any,
+                "IsCharging": kCFBooleanFalse as Any,
+                "Voltage": NSNumber(value: 12_000),
+                "InstantAmperage": NSNumber(value: instantAmperage),
+                "Amperage": NSNumber(value: instantAmperage),
+                "PowerTelemetryData": [
+                    "SystemPowerIn": NSNumber(value: systemPowerIn),
+                    "SystemLoad": NSNumber(value: systemLoad),
+                    "BatteryPower": NSNumber(value: systemPowerIn - systemLoad),
+                ],
+            ]
+            if let deviceOutput {
+                props["PowerOutDetails"] = [[
+                    "PortIndex": NSNumber(value: 1),
+                    "Watts": NSNumber(value: deviceOutput),
+                ]]
+            }
+            return try XCTUnwrap(
+                BatterySampler.resolvedSnapshot(from: props, lowPowerMode: false)
+            )
+        }
+
+        // ExternalConnected and IsCharging update promptly, while the two
+        // source/sink totals can straddle different firmware generations. A
+        // measured zero signed battery current agrees with the idle flag and
+        // must prevent their temporary deficit from becoming Battery Assist.
+        let idle = try snapshot(
+            instantAmperage: 0,
+            systemPowerIn: 41_500,
+            systemLoad: 48_700,
+            deviceOutput: 14_083
+        )
+        XCTAssertEqual(idle.adapterW, 48.7, accuracy: 0.001)
+        XCTAssertEqual(idle.batteryW, 0, accuracy: 0.001)
+        XCTAssertEqual(idle.systemW, 48.7, accuracy: 0.001)
+        XCTAssertEqual(idle.state, .pluggedIdle)
+        XCTAssertEqual(try XCTUnwrap(idle.deviceOutputW), 14.083, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(idle.coherentDeviceOutputW), 14.083, accuracy: 0.001)
+        XCTAssertEqual(idle.totalInputW, 48.7, accuracy: 0.001)
+        XCTAssertEqual(idle.conservationError, 0, accuracy: 0.001)
+
+        let flow = PowerFlowView()
+        flow.frame = NSRect(
+            x: 0, y: 0, width: PopoverStyle.contentWidth,
+            height: PowerFlowView.preferredHeight
+        )
+        flow.update(snapshot: idle, animated: false)
+        flow.layoutSubtreeIfNeeded()
+        XCTAssertEqual(flow.topologyForTest, "adapterLed")
+        XCTAssertEqual(
+            flow.nodePresentationsForTest.map { $0.caption },
+            ["Adapter", "Battery · Full", "System Total"]
+        )
+        let deviceReadout = (flow.accessibilityChildren() ?? [])
+            .compactMap { $0 as? NSTextField }
+            .filter { $0.accessibilityLabel() == "Device Output" }
+        XCTAssertEqual(deviceReadout.map(\.stringValue), ["Device Output · 14.1 W"])
+
+        // Signed V×I remains the direction authority when non-zero, even when
+        // the independently sampled source/load totals imply the opposite.
+        let mixed = try snapshot(
+            instantAmperage: -1_000,
+            systemPowerIn: 60_000,
+            systemLoad: 40_000
+        )
+        XCTAssertEqual(mixed.adapterW, 28, accuracy: 0.001)
+        XCTAssertEqual(mixed.batteryW, -12, accuracy: 0.001)
+        XCTAssertEqual(mixed.systemW, 40, accuracy: 0.001)
+        XCTAssertEqual(mixed.state, .mixedSupply)
+        XCTAssertEqual(mixed.conservationError, 0, accuracy: 0.001)
+
+        let charging = try snapshot(
+            instantAmperage: 600,
+            systemPowerIn: 41_500,
+            systemLoad: 48_700
+        )
+        XCTAssertEqual(charging.adapterW, 55.9, accuracy: 0.001)
+        XCTAssertEqual(charging.batteryW, 7.2, accuracy: 0.001)
+        XCTAssertEqual(charging.systemW, 48.7, accuracy: 0.001)
+        XCTAssertEqual(charging.state, .charging)
+        XCTAssertEqual(charging.conservationError, 0, accuracy: 0.001)
+
+        for invalidInstant: Double? in [
+            nil, .nan, .infinity, -.infinity, 1_001, -1_001,
+        ] {
+            let fallback = BatterySampler.resolvedPower(
+                plugged: true,
+                chargingHint: false,
+                systemPowerIn: 60_000,
+                systemLoad: 40_000,
+                batteryPower: -7_200,
+                fallbackBatteryW: -7.2,
+                instantBatteryW: invalidInstant
+            )
+            XCTAssertEqual(fallback.adapterW, 60, accuracy: 0.001)
+            XCTAssertEqual(fallback.batteryW, 20, accuracy: 0.001)
+            XCTAssertEqual(fallback.systemW, 40, accuracy: 0.001)
+        }
+    }
+
     func testLiveSystemPowerPreservesBatteryBranchAndConservation() {
         let stale = PowerSnapshot(
             percent: 60, plugged: true, adapterW: 70, batteryW: 20, systemW: 50
@@ -948,7 +1058,8 @@ final class WattsonTests: XCTestCase {
             ("zero load charge", true, false, 0, 0, 24, 24, 24, 0, .charging),
             ("zero load mixed", true, true, 0, 0, -12, 0, -12, 12, .mixedSupply),
             ("unplug old AC", false, true, 60_000, 40_000, 24, 0, -40, 40, .onBattery),
-            ("coherent source", true, false, 60_000, 40_000, -12, 60, 20, 40, .charging),
+            ("signed current overrides asynchronous totals", true, false,
+             60_000, 40_000, -12, 28, -12, 40, .mixedSupply),
         ]
         for (name, plugged, hint, source, load, instant,
              adapter, battery, system, state) in cases {
