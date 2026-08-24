@@ -129,7 +129,7 @@ final class FlowNodeView: NSView {
         box.layer?.borderColor = tint.withAlphaComponent(0.34).cgColor
     }
 
-    private static func nodeIconImage(
+    fileprivate static func nodeIconImage(
         symbol: String,
         accessibilityDescription: String
     ) -> NSImage? {
@@ -142,6 +142,14 @@ final class FlowNodeView: NSView {
             return restoredDisconnectedAdapterImage
         case "battery.100.bolt":
             return restoredChargingBatteryImage
+        case "cable.connector.horizontal":
+            return nodeSymbolImage(
+                named: "cable.connector.horizontal",
+                accessibilityDescription: accessibilityDescription
+            ) ?? nodeIconImage(
+                symbol: "cable.connector",
+                accessibilityDescription: accessibilityDescription
+            )
         case "cable.connector":
             return nodeSymbolImage(
                 named: "cable.connector",
@@ -657,6 +665,9 @@ final class PowerFlowView: PopoverSection {
     static let plotHeight: CGFloat = 176
     private static let deviceOutputReadoutHeight: CGFloat = 17
     private static let deviceOutputReadoutSlotHeight: CGFloat = 22
+    private static let deviceOutputWellSize: CGFloat = 26
+    private static let deviceOutputIconSize: CGFloat = 16
+    private static let deviceOutputAccessoryGap: CGFloat = 8
     static let preferredHeight: CGFloat =
         plotHeight + deviceOutputReadoutSlotHeight + PopoverStyle.sectionPadding * 2
     /// Enter the stronger particle style at saturation, but do not leave it for
@@ -694,6 +705,8 @@ final class PowerFlowView: PopoverSection {
     private let adapterNode = FlowNodeView()
     private let batteryNode = FlowNodeView()
     private let systemNode = FlowNodeView()
+    private let pluggedDeviceOutputWell = NSView()
+    private let pluggedDeviceOutputIcon = NSImageView()
     private let pluggedDeviceOutputReadout = DeviceOutputReadout(labelWithString: "")
     private let idleConnection = CAShapeLayer()
     private let bundles = (0..<2).map { _ in PipeBundle() }
@@ -716,9 +729,24 @@ final class PowerFlowView: PopoverSection {
 
         [adapterNode, batteryNode, systemNode].forEach(plot.addSubview)
 
+        pluggedDeviceOutputWell.wantsLayer = true
+        pluggedDeviceOutputWell.layer?.backgroundColor = PopoverStyle.well.cgColor
+        pluggedDeviceOutputWell.layer?.borderColor = PopoverStyle.wellBorder.cgColor
+        pluggedDeviceOutputWell.layer?.borderWidth = 0.5
+        pluggedDeviceOutputWell.layer?.cornerRadius = 8
+        pluggedDeviceOutputWell.layer?.cornerCurve = .continuous
+        pluggedDeviceOutputWell.isHidden = true
+        pluggedDeviceOutputWell.setAccessibilityElement(false)
+        addSubview(pluggedDeviceOutputWell)
+
+        pluggedDeviceOutputIcon.imageScaling = .scaleProportionallyDown
+        pluggedDeviceOutputIcon.setAccessibilityElement(false)
+        pluggedDeviceOutputIcon.cell?.setAccessibilityElement(false)
+        pluggedDeviceOutputWell.addSubview(pluggedDeviceOutputIcon)
+
         pluggedDeviceOutputReadout.font = PopoverStyle.mono(11, .regular)
         pluggedDeviceOutputReadout.textColor = PopoverStyle.secondaryText
-        pluggedDeviceOutputReadout.alignment = .center
+        pluggedDeviceOutputReadout.alignment = .left
         pluggedDeviceOutputReadout.isHidden = true
         pluggedDeviceOutputReadout.setAccessibilityElement(false)
         addSubview(pluggedDeviceOutputReadout)
@@ -730,12 +758,7 @@ final class PowerFlowView: PopoverSection {
         super.layout()
         plot.frame = NSRect(x: 0, y: PopoverStyle.sectionPadding,
                             width: bounds.width, height: Self.plotHeight)
-        pluggedDeviceOutputReadout.frame = NSRect(
-            x: 0,
-            y: PopoverStyle.sectionPadding + Self.plotHeight + 3,
-            width: bounds.width,
-            height: Self.deviceOutputReadoutHeight
-        )
+        layoutPluggedDeviceOutputAccessory()
         PopoverStyle.setWithoutAnimation {
             self.bundles.forEach { $0.container.frame = self.plot.bounds }
             self.idleConnection.frame = self.plot.bounds
@@ -744,6 +767,35 @@ final class PowerFlowView: PopoverSection {
         // pass, and everything derived from bounds — pipe geometry, the fade
         // mask — is nonsense until the plot has a size.
         update(snapshot: latest, animated: false)
+    }
+
+    private func layoutPluggedDeviceOutputAccessory() {
+        let textWidth = ceil(pluggedDeviceOutputReadout.fittingSize.width)
+        let groupWidth = Self.deviceOutputWellSize
+            + Self.deviceOutputAccessoryGap
+            + textWidth
+        let groupX = floor((bounds.width - groupWidth) / 2)
+        let readoutY = PopoverStyle.sectionPadding + Self.plotHeight + 3
+        let readoutMidY = readoutY + Self.deviceOutputReadoutHeight / 2
+
+        pluggedDeviceOutputWell.frame = NSRect(
+            x: groupX,
+            y: readoutMidY - Self.deviceOutputWellSize / 2,
+            width: Self.deviceOutputWellSize,
+            height: Self.deviceOutputWellSize
+        )
+        pluggedDeviceOutputIcon.frame = NSRect(
+            x: (Self.deviceOutputWellSize - Self.deviceOutputIconSize) / 2,
+            y: (Self.deviceOutputWellSize - Self.deviceOutputIconSize) / 2,
+            width: Self.deviceOutputIconSize,
+            height: Self.deviceOutputIconSize
+        )
+        pluggedDeviceOutputReadout.frame = NSRect(
+            x: pluggedDeviceOutputWell.frame.maxX + Self.deviceOutputAccessoryGap,
+            y: readoutY,
+            width: textWidth,
+            height: Self.deviceOutputReadoutHeight
+        )
     }
 
     private func batteryOutputSplitDeviceW(for snapshot: PowerSnapshot) -> Double? {
@@ -903,10 +955,14 @@ final class PowerFlowView: PopoverSection {
             pluggedDeviceOutputReadout.setAccessibilityLabel(nil)
             pluggedDeviceOutputReadout.setAccessibilityValue(nil)
             pluggedDeviceOutputReadout.setAccessibilityElement(false)
+            pluggedDeviceOutputIcon.image = nil
+            pluggedDeviceOutputIcon.contentTintColor = nil
+            pluggedDeviceOutputWell.isHidden = true
             return
         }
 
         let value = PopoverStyle.watts(deviceOutputW)
+        let tint = PopoverStyle.stateColor(snapshot.state)
         pluggedDeviceOutputReadout.stringValue = "Device Output · \(value)"
         pluggedDeviceOutputReadout.spokenValue = value
         pluggedDeviceOutputReadout.isHidden = false
@@ -914,6 +970,14 @@ final class PowerFlowView: PopoverSection {
         pluggedDeviceOutputReadout.setAccessibilityRole(.staticText)
         pluggedDeviceOutputReadout.setAccessibilityLabel("Device Output")
         pluggedDeviceOutputReadout.setAccessibilityValue(value)
+        pluggedDeviceOutputIcon.image = FlowNodeView.nodeIconImage(
+            symbol: "cable.connector.horizontal",
+            accessibilityDescription: "Device Output"
+        )
+        pluggedDeviceOutputIcon.contentTintColor = tint
+        pluggedDeviceOutputWell.layer?.borderColor = tint.withAlphaComponent(0.34).cgColor
+        pluggedDeviceOutputWell.isHidden = false
+        layoutPluggedDeviceOutputAccessory()
     }
 
     private func configure(_ bundle: PipeBundle, geometry: PipeGeometry, thickness: CGFloat,

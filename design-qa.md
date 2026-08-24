@@ -210,4 +210,79 @@ control.
 
 No P3 item is required for this correction.
 
+## v3.0.22 inline Device Output icon
+
+### Source and implementation
+
+- Selected visual truth: `/Users/leoarrow/.codex/generated_images/01a01de2-549c-7111-8c6d-56eb04196ce7/exec-11bac02a-59e7-48be-8fe0-9c997944981c.png`.
+- Source raster: 908 × 1732 pixels. The relevant flow region was normalized to
+  656 × 448 pixels for comparison.
+- Production AppKit capture: `/tmp/wattson-inline-icon-qa/idle-device-horizontal.png`
+  (656 × 448 pixels, representing the 328 × 224-point `PowerFlowView`
+  at Retina 2× density).
+- Full flow comparison: `/tmp/wattson-inline-icon-qa/combined-flow-comparison.png`.
+- Focused readout comparison: `/tmp/wattson-inline-icon-qa/combined-row-comparison.png`.
+- State: dark appearance, plugged and full, with a positive coherent measured
+  Device Output. The source uses 35.5 W / 3.1 W presentation values; the
+  production fixture intentionally uses the hardware regression values
+  48.7 W / 14.083 W. Geometry and formatting, rather than numeric equality,
+  are the comparison target.
+
+### Comparison
+
+The implementation preserves the current Wattson composition exactly: three
+power nodes, two cubic pipes, the 176-point plot, the existing 22-point readout
+slot, and the 224-point section height. The only new visible element is a
+compact connector well immediately to the left of the existing
+`Device Output · W` text. The 26 × 26-point continuous-radius well and
+16-point SF Symbol follow the same compact token used by the production lanes.
+The icon and content-hugging text are centred as one group with an eight-point
+gap.
+
+The focused comparison confirms that the connector is a real horizontal SF
+Symbol rather than a text glyph or drawn approximation. Its exact silhouette
+is intentionally the system `cable.connector.horizontal`, with runtime fallback
+to `cable.connector`; the generated mock's port-like outline is not copied as
+custom artwork. The well and icon are decorative for accessibility. The
+existing text remains the sole static-text element with label `Device Output`
+and the formatted wattage as its value.
+
+### Required fidelity surfaces
+
+- Fonts and typography: the existing 11-point regular monospaced readout,
+  secondary text colour, baseline, wording, and one-line behavior are unchanged.
+- Spacing and layout rhythm: the accessory uses the selected compact treatment;
+  the icon/text group is centred, the gap is eight points, and all node, pipe,
+  separator, ring, lane, history, and footer positions remain unchanged.
+- Colors and visual tokens: the well reuses `PopoverStyle.well`; its hairline
+  and icon follow the existing blue, green, or amber power-state tint.
+- Image quality and asset fidelity: the icon is a vector SF Symbol rendered by
+  AppKit, with a semantic fallback chain. No emoji, text symbol, handcrafted
+  SVG, raster placeholder, or new custom asset is used.
+- Copy and content: `Device Output · <watts>` is unchanged. Invalid, absent,
+  zero, non-finite, or greater-than-System output still hides the complete
+  accessory. On-battery mode retains its existing full Device Output node and
+  does not duplicate the inline icon.
+- Interaction and accessibility: no new hit target or VoiceOver stop was added.
+  Tests cover show/hide/show transitions, invalid values, on-battery duplicate
+  prevention, unchanged topology, and unchanged power totals/conservation.
+
+### QA history
+
+1. [P2] The first production capture used vertical `cable.connector`. At the
+   compact size it collapsed into a thin vertical mark and did not match the
+   selected horizontal connector treatment. Fix: use
+   `cable.connector.horizontal` first, with runtime fallback to the original
+   connector and then the existing safe symbol fallback.
+2. The post-fix production capture was rendered again from the real
+   `PowerFlowView` hierarchy. The combined full-region and focused-row
+   comparisons show no remaining actionable P0, P1, or P2 differences.
+3. Missing, invalid, zero, charging, full, mixed, edge-equal-to-System, and
+   on-battery states are executable regression cases. The graph remains three
+   nodes and two pipes in every state.
+
+### Follow-up polish
+
+No P3 item is required for the selected micro-adjustment.
+
 final result: passed

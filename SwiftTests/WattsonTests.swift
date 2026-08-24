@@ -1751,7 +1751,52 @@ final class WattsonTests: XCTestCase {
                 .compactMap { $0 as? NSTextField }
                 .filter { $0.accessibilityLabel() == "Device Output" }
         }
-        func assertPluggedDeviceOutputReadout(
+        let inlineDeviceOutputIconData = FlowNodeView
+            .iconImageForTest(symbol: "cable.connector.horizontal")?
+            .tiffRepresentation
+        let nodeDeviceOutputIconData = FlowNodeView
+            .iconImageForTest(symbol: "cable.connector")?
+            .tiffRepresentation
+        XCTAssertNotNil(inlineDeviceOutputIconData)
+        XCTAssertNotNil(nodeDeviceOutputIconData)
+
+        func descendants(of view: NSView) -> [NSView] {
+            view.subviews + view.subviews.flatMap(descendants(of:))
+        }
+
+        func isEffectivelyVisible(_ view: NSView) -> Bool {
+            var candidate: NSView? = view
+            while let current = candidate {
+                if current.isHidden || current.alphaValue <= 0 { return false }
+                candidate = current.superview
+            }
+            return true
+        }
+        func visibleIconViews() -> [NSImageView] {
+            descendants(of: flow)
+                .compactMap { $0 as? NSImageView }
+                .filter { $0.image != nil && isEffectivelyVisible($0) }
+        }
+
+        func iconViews(matching imageData: Data?, visibleOnly: Bool = false) -> [NSImageView] {
+            guard let imageData else { return [] }
+            let icons = descendants(of: flow)
+                .compactMap { $0 as? NSImageView }
+                .filter {
+                $0.image?.tiffRepresentation == imageData
+            }
+            return visibleOnly ? icons.filter(isEffectivelyVisible) : icons
+        }
+
+        func inlineDeviceOutputIconViews(visibleOnly: Bool = false) -> [NSImageView] {
+            iconViews(matching: inlineDeviceOutputIconData, visibleOnly: visibleOnly)
+        }
+
+        func nodeDeviceOutputIconViews(visibleOnly: Bool = false) -> [NSImageView] {
+            iconViews(matching: nodeDeviceOutputIconData, visibleOnly: visibleOnly)
+        }
+
+        func assertPluggedDeviceOutputAccessory(
             _ watts: Double,
             file: StaticString = #filePath,
             line: UInt = #line
@@ -1760,16 +1805,93 @@ final class WattsonTests: XCTestCase {
             XCTAssertEqual(fields.count, 1, file: file, line: line)
             guard let readout = fields.first else { return }
             let value = PopoverStyle.watts(watts)
-            XCTAssertEqual(readout.stringValue, "Device Output · \(value)", file: file, line: line)
+            XCTAssertEqual(
+                readout.stringValue,
+                "Device Output · \(value)",
+                file: file,
+                line: line
+            )
             XCTAssertEqual(readout.accessibilityRole(), .staticText, file: file, line: line)
             XCTAssertEqual(readout.accessibilityLabel(), "Device Output", file: file, line: line)
             XCTAssertEqual(readout.accessibilityValue(), value, file: file, line: line)
+
+            XCTAssertEqual(flow.nodePresentationsForTest.count, 3, file: file, line: line)
+            XCTAssertEqual(flow.nodeFramesForTest.count, 3, file: file, line: line)
+            XCTAssertEqual(flow.branchThicknessesForTest.count, 2, file: file, line: line)
+
+            let deviceIcons = inlineDeviceOutputIconViews()
+            XCTAssertEqual(
+                deviceIcons.count,
+                1,
+                "plugged Device Output must own exactly one cable icon",
+                file: file,
+                line: line
+            )
+            XCTAssertEqual(
+                inlineDeviceOutputIconViews(visibleOnly: true).count,
+                1,
+                "the inline cable icon must be visible with the readout",
+                file: file,
+                line: line
+            )
+            XCTAssertEqual(
+                visibleIconViews().count,
+                4,
+                "the three graph nodes plus one inline cable icon must be visible",
+                file: file,
+                line: line
+            )
+
+            guard let icon = deviceIcons.first,
+                  let well = icon.superview else { return }
+            XCTAssertFalse(icon.isAccessibilityElement(), file: file, line: line)
+            XCTAssertFalse(icon.cell?.isAccessibilityElement() ?? true, file: file, line: line)
+            XCTAssertEqual(well.bounds.width, 26, accuracy: 0.5, file: file, line: line)
+            XCTAssertEqual(well.bounds.height, 26, accuracy: 0.5, file: file, line: line)
+            XCTAssertEqual(well.layer?.cornerRadius ?? 0, 8, accuracy: 1, file: file, line: line)
+            XCTAssertEqual(well.layer?.borderWidth ?? 0, 0.5, accuracy: 0.01, file: file, line: line)
+            XCTAssertNotNil(well.layer?.backgroundColor, file: file, line: line)
+            XCTAssertNotNil(well.layer?.borderColor, file: file, line: line)
+
+            let wellFrame = flow.convert(well.bounds, from: well)
+            let readoutFrame = flow.convert(readout.bounds, from: readout)
+            XCTAssertLessThan(wellFrame.maxX, readoutFrame.minX, file: file, line: line)
+            let gap = readoutFrame.minX - wellFrame.maxX
+            XCTAssertGreaterThanOrEqual(gap, 4, file: file, line: line)
+            XCTAssertLessThanOrEqual(gap, 8, file: file, line: line)
+            XCTAssertEqual(wellFrame.midY, readoutFrame.midY, accuracy: 1, file: file, line: line)
+            XCTAssertEqual(
+                wellFrame.union(readoutFrame).midX,
+                flow.bounds.midX,
+                accuracy: 0.75,
+                "icon and text must be centred as one inline group",
+                file: file,
+                line: line
+            )
+            XCTAssertLessThan(
+                readoutFrame.width,
+                flow.bounds.width / 2,
+                "the text frame must hug its content so the combined group can be centred",
+                file: file,
+                line: line
+            )
         }
-        func assertNoDeviceOutputReadout(
+
+        func assertNoPluggedDeviceOutputAccessory(
             file: StaticString = #filePath,
             line: UInt = #line
         ) {
             XCTAssertTrue(deviceOutputFields().isEmpty, file: file, line: line)
+            XCTAssertTrue(
+                inlineDeviceOutputIconViews().isEmpty,
+                "hidden/invalid Device Output must clear the accessory icon image",
+                file: file,
+                line: line
+            )
+            XCTAssertEqual(visibleIconViews().count, 3, file: file, line: line)
+            XCTAssertEqual(flow.nodePresentationsForTest.count, 3, file: file, line: line)
+            XCTAssertEqual(flow.nodeFramesForTest.count, 3, file: file, line: line)
+            XCTAssertEqual(flow.branchThicknessesForTest.count, 2, file: file, line: line)
         }
         func onBattery(_ output: Double?) -> PowerSnapshot {
             PowerSnapshot(
@@ -1803,14 +1925,22 @@ final class WattsonTests: XCTestCase {
         )
         XCTAssertTrue(accessibleFields.allSatisfy { $0.accessibilityRole() == .staticText })
         XCTAssertEqual(deviceOutputFields().map(\.stringValue), ["12.2 W"])
+        XCTAssertEqual(nodeDeviceOutputIconViews().count, 1)
+        XCTAssertTrue(inlineDeviceOutputIconViews().isEmpty)
+        XCTAssertEqual(
+            visibleIconViews().count,
+            3,
+            "on-battery already uses a Device Output node and must not add an accessory duplicate"
+        )
+        XCTAssertEqual(flow.branchThicknessesForTest.count, 2)
 
         let thicknesses = flow.branchThicknessesForTest
         XCTAssertEqual(thicknesses[0], VisualEncoding.thickness(27.5), accuracy: 0.001)
         XCTAssertEqual(thicknesses[1], VisualEncoding.thickness(12.2), accuracy: 0.001)
         XCTAssertGreaterThan(thicknesses[0], thicknesses[1])
-        XCTAssertGreaterThanOrEqual(
+        XCTAssertEqual(
             PowerFlowView.preferredHeight,
-            PowerFlowView.plotHeight + PopoverStyle.sectionPadding * 2
+            PowerFlowView.plotHeight + 22 + PopoverStyle.sectionPadding * 2
         )
         XCTAssertEqual(flow.bounds.height, PowerFlowView.preferredHeight)
         XCTAssertEqual(flow.nodeFramesForTest.count, 3)
@@ -1847,7 +1977,7 @@ final class WattsonTests: XCTestCase {
         for output: Double? in [nil, 0, -.leastNonzeroMagnitude, -1, .nan, .infinity, 39.8, 40.1] {
             show(onBattery(output))
             XCTAssertEqual(flow.topologyForTest, "batteryLed")
-            assertNoDeviceOutputReadout()
+            assertNoPluggedDeviceOutputAccessory()
             XCTAssertTrue(flow.nodeContentsFitForTest)
         }
         show(split)
@@ -1862,8 +1992,9 @@ final class WattsonTests: XCTestCase {
         var chargingWithoutDeviceOutput = charging
         chargingWithoutDeviceOutput.deviceOutputW = nil
         show(chargingWithoutDeviceOutput)
-        assertNoDeviceOutputReadout()
+        assertNoPluggedDeviceOutputAccessory()
         let chargingBaselineThicknesses = flow.branchThicknessesForTest
+        let chargingBaselineNodeFrames = flow.nodeFramesForTest
 
         show(charging)
         XCTAssertEqual(flow.topologyForTest, "adapterLed")
@@ -1872,7 +2003,8 @@ final class WattsonTests: XCTestCase {
             ["Adapter", "To Battery", "System Total"]
         )
         XCTAssertEqual(flow.branchThicknessesForTest, chargingBaselineThicknesses)
-        assertPluggedDeviceOutputReadout(7.5)
+        XCTAssertEqual(flow.nodeFramesForTest, chargingBaselineNodeFrames)
+        assertPluggedDeviceOutputAccessory(7.5)
         XCTAssertEqual(charging.totalInputW, 68, accuracy: 0.001)
         XCTAssertEqual(charging.conservationError, 0, accuracy: 0.001)
 
@@ -1880,13 +2012,22 @@ final class WattsonTests: XCTestCase {
             percent: 100, plugged: true, adapterW: 52,
             batteryW: 0, systemW: 52, deviceOutputW: 7.5
         )
+        var pluggedIdleWithoutDeviceOutput = pluggedIdle
+        pluggedIdleWithoutDeviceOutput.deviceOutputW = nil
+        show(pluggedIdleWithoutDeviceOutput)
+        assertNoPluggedDeviceOutputAccessory()
+        let pluggedIdleBaselineThicknesses = flow.branchThicknessesForTest
+        let pluggedIdleBaselineNodeFrames = flow.nodeFramesForTest
+
         show(pluggedIdle)
         XCTAssertEqual(flow.topologyForTest, "adapterLed")
         XCTAssertEqual(
             flow.nodePresentationsForTest.map { $0.caption },
             ["Adapter", "Battery · Full", "System Total"]
         )
-        assertPluggedDeviceOutputReadout(7.5)
+        XCTAssertEqual(flow.branchThicknessesForTest, pluggedIdleBaselineThicknesses)
+        XCTAssertEqual(flow.nodeFramesForTest, pluggedIdleBaselineNodeFrames)
+        assertPluggedDeviceOutputAccessory(7.5)
         XCTAssertEqual(pluggedIdle.totalInputW, 52, accuracy: 0.001)
         XCTAssertEqual(pluggedIdle.conservationError, 0, accuracy: 0.001)
 
@@ -1894,13 +2035,22 @@ final class WattsonTests: XCTestCase {
             percent: 41, plugged: true, adapterW: 30,
             batteryW: -9.7, systemW: 39.7, deviceOutputW: 12.2
         )
+        var mixedWithoutDeviceOutput = mixed
+        mixedWithoutDeviceOutput.deviceOutputW = nil
+        show(mixedWithoutDeviceOutput)
+        assertNoPluggedDeviceOutputAccessory()
+        let mixedBaselineThicknesses = flow.branchThicknessesForTest
+        let mixedBaselineNodeFrames = flow.nodeFramesForTest
+
         show(mixed)
         XCTAssertEqual(flow.topologyForTest, "batteryLed")
         XCTAssertEqual(
             flow.nodePresentationsForTest.map { $0.caption },
             ["Adapter", "Battery Assist", "System Total"]
         )
-        assertPluggedDeviceOutputReadout(12.2)
+        XCTAssertEqual(flow.branchThicknessesForTest, mixedBaselineThicknesses)
+        XCTAssertEqual(flow.nodeFramesForTest, mixedBaselineNodeFrames)
+        assertPluggedDeviceOutputAccessory(12.2)
         XCTAssertEqual(mixed.totalInputW, 39.7, accuracy: 0.001)
         XCTAssertEqual(mixed.conservationError, 0, accuracy: 0.001)
         XCTAssertTrue(flow.nodeContentsFitForTest)
@@ -1910,7 +2060,9 @@ final class WattsonTests: XCTestCase {
             invalid.deviceOutputW = output
             show(invalid)
             XCTAssertEqual(flow.topologyForTest, "adapterLed")
-            assertNoDeviceOutputReadout()
+            assertNoPluggedDeviceOutputAccessory()
+            XCTAssertEqual(flow.branchThicknessesForTest, chargingBaselineThicknesses)
+            XCTAssertEqual(flow.nodeFramesForTest, chargingBaselineNodeFrames)
             XCTAssertEqual(invalid.totalInputW, 68, accuracy: 0.001)
             XCTAssertEqual(invalid.conservationError, 0, accuracy: 0.001)
         }
@@ -1918,12 +2070,20 @@ final class WattsonTests: XCTestCase {
         var allSystemPowerLeavesThroughDevice = charging
         allSystemPowerLeavesThroughDevice.deviceOutputW = charging.systemW
         show(allSystemPowerLeavesThroughDevice)
-        assertPluggedDeviceOutputReadout(charging.systemW)
+        XCTAssertEqual(flow.branchThicknessesForTest, chargingBaselineThicknesses)
+        XCTAssertEqual(flow.nodeFramesForTest, chargingBaselineNodeFrames)
+        assertPluggedDeviceOutputAccessory(charging.systemW)
 
         show(onBattery(12.2))
         XCTAssertEqual(flow.topologyForTest, "batteryOutputSplit")
         XCTAssertEqual(deviceOutputFields().count, 1, "on-battery split must not add a duplicate readout")
         XCTAssertEqual(deviceOutputFields().first?.stringValue, "12.2 W")
+        XCTAssertEqual(nodeDeviceOutputIconViews().count, 1)
+        XCTAssertTrue(inlineDeviceOutputIconViews().isEmpty)
+        XCTAssertEqual(visibleIconViews().count, 3)
+        XCTAssertEqual(flow.nodePresentationsForTest.count, 3)
+        XCTAssertEqual(flow.nodeFramesForTest.count, 3)
+        XCTAssertEqual(flow.branchThicknessesForTest.count, 2)
     }
 
     func testPluggedIdleBreathingIsIdempotentAndStopsWhenHidden() {
