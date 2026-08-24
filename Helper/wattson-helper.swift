@@ -2,6 +2,7 @@ import Darwin
 import Foundation
 import IOKit
 import os
+import WattsonHelperV5Support
 
 private let log = OSLog(subsystem: "com.leoarrow.wattson.helper", category: "ipc")
 // launchd's default same-job spawn throttle is 10 seconds. Staying alive past
@@ -15,6 +16,12 @@ private let loginAgentLabel = "com.leoarrow.wattson.login"
 private let wattsonBundleIdentifier = "com.leoarrow.wattson"
 private let helperSocketPath = "/var/run/wattson-helper.sock"
 private let helperExecutablePath = "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper"
+private let powerObservationV5Service = HelperV5PowerObservationService(
+    reader: HelperPowerObservationV5Reader(
+        backend: SystemHelperV5SMCBackend(),
+        clock: SystemHelperV5ContinuousClock()
+    )
+)
 
 // AppleSMC's read-only user-client protocol uses this frozen 80-byte structure.
 // Wattson deliberately exposes only the two fixed whole-machine power keys below;
@@ -307,9 +314,14 @@ private func validProtocolVersion(in object: [String: Any]) -> Bool {
         && number.doubleValue == Double(wattsonProtocolVersion)
 }
 
+private struct ParsedSocketFrame {
+    let data: Data
+    let object: [String: Any]
+}
+
 private enum SocketFrameParseResult {
     case incomplete
-    case complete([String: Any])
+    case complete(ParsedSocketFrame)
     case malformed
 }
 
@@ -318,14 +330,15 @@ private enum SocketFrameParseResult {
 private func parseSocketFrame(_ data: Data) -> SocketFrameParseResult {
     if let newline = data.firstIndex(of: UInt8(ascii: "\n")) {
         let frame = Data(data[..<newline])
-        guard let object = try? JSONSerialization.jsonObject(with: frame) as? [String: Any],
-              validProtocolVersion(in: object) else { return .malformed }
-        return .complete(object)
+        guard let object = try? JSONSerialization.jsonObject(with: frame) as? [String: Any] else {
+            return .malformed
+        }
+        return .complete(ParsedSocketFrame(data: frame, object: object))
     }
 
     if let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
         if object["_wattsonProtocol"] != nil { return .incomplete }
-        return .complete(object)
+        return .complete(ParsedSocketFrame(data: data, object: object))
     }
     return .incomplete
 }
@@ -356,8 +369,8 @@ private func readJSONObject(from fd: Int32) -> [String: Any]? {
         if count > 0 {
             data.append(contentsOf: buffer.prefix(count))
             switch parseSocketFrame(data) {
-            case let .complete(object):
-                return object
+            case let .complete(frame):
+                return frame.object
             case .malformed:
                 return nil
             case .incomplete:
@@ -406,6 +419,7 @@ private struct SocketRequest {
     let fd: Int32
     let peerUID: uid_t
     let continuousDeadline: UInt64
+    let frame: Data
     let object: [String: Any]
 }
 
@@ -570,13 +584,14 @@ private struct SocketRequestInbox {
             if byteCount > 0 {
                 reading[index].data.append(contentsOf: buffer.prefix(byteCount))
                 switch parseSocketFrame(reading[index].data) {
-                case let .complete(object):
+                case let .complete(frame):
                     let client = reading.remove(at: index)
                     ready.append(SocketRequest(
                         fd: client.fd,
                         peerUID: client.peerUID,
                         continuousDeadline: client.continuousDeadline,
-                        object: object
+                        frame: frame.data,
+                        object: frame.object
                     ))
                     return
                 case .malformed:
@@ -1271,8 +1286,29 @@ private func handle(_ request: SocketRequest) {
         return
     }
 
+    switch powerObservationV5Service.handle(frame: request.frame) {
+    case let .response(line):
+        guard line.count <= HelperV5ResponsePayload.maximumResponseBytes,
+              line.last == UInt8(ascii: "\n") else {
+            let malformed = Data(#"{"_wattsonProtocol":5,"ok":false}"#.utf8)
+                + Data([UInt8(ascii: "\n")])
+            _ = writeAll(malformed, to: fd)
+            return
+        }
+        _ = writeAll(line, to: fd)
+        return
+    case .malformed:
+        let malformed = Data(#"{"_wattsonProtocol":5,"ok":false}"#.utf8)
+            + Data([UInt8(ascii: "\n")])
+        _ = writeAll(malformed, to: fd)
+        return
+    case .notV5:
+        break
+    }
+
     let object = request.object
-    guard let op = object["op"] as? String else {
+    guard validProtocolVersion(in: object),
+          let op = object["op"] as? String else {
         _ = writeAll(Data(#"{"ok":false,"error":"malformed"}"#.utf8), to: fd)
         return
     }

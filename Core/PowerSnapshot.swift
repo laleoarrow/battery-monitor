@@ -39,14 +39,15 @@ struct PowerSnapshot {
     }
 
     /// A device reading can outlive the independently sampled system total.
-    /// Only expose it as a breakdown while the two samples remain coherent.
+    /// Keep the raw auxiliary measurement above, but only use it to derive a
+    /// Mac-load breakdown while it fits inside the current system total.
     var coherentDeviceOutputW: Double? {
         guard let deviceOutputW,
               deviceOutputW.isFinite,
               systemW.isFinite,
               deviceOutputW >= 0,
-              deviceOutputW <= systemW + Self.epsilon else { return nil }
-        return min(deviceOutputW, systemW)
+              deviceOutputW <= systemW else { return nil }
+        return deviceOutputW
     }
 
     var state: PowerState {

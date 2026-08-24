@@ -28,7 +28,9 @@ class PowerModelContractTests(unittest.TestCase):
     def test_device_output_is_an_optional_auxiliary_breakdown(self):
         self.assertIn("var deviceOutputW: Double? = nil", self.source)
         self.assertIn("var coherentDeviceOutputW: Double?", self.source)
-        self.assertIn("deviceOutputW <= systemW + Self.epsilon", self.source)
+        self.assertIn("deviceOutputW <= systemW", self.source)
+        self.assertIn("return deviceOutputW", self.source)
+        self.assertNotIn("min(deviceOutputW, systemW)", self.source)
         total = self.source.split("var totalInputW", 1)[1].split("var conservationError", 1)[0]
         conservation = self.source.split("var conservationError", 1)[1].split(
             "var coherentDeviceOutputW", 1

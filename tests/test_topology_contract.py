@@ -42,10 +42,39 @@ class TopologyContractTests(unittest.TestCase):
         self.assertIn("tint: PopoverStyle.amber", mixed)
 
     def test_keeps_exactly_two_pipe_bundles_and_three_node_views(self):
-        # Constant layer and view counts are what make every transition a pure
-        # property interpolation instead of an add/remove.
+        # Plugged Device Output is only an inline accessory below the existing
+        # plot. It must not grow the stable graph into a fourth node/third pipe.
         self.assertIn("(0..<2).map", self.source)
         self.assertIn("[adapterNode, batteryNode, systemNode]", self.source)
+        self.assertIn("pluggedDeviceOutputReadout", self.source)
+        self.assertNotIn("deviceOutputNode", self.source)
+        self.assertNotIn("bundles[2]", self.source)
+
+    def test_inline_device_accessory_preserves_the_existing_height_slot(self):
+        # The selected treatment is a surgical enhancement of the existing
+        # one-line readout, not a taller fourth-row card.
+        self.assertIn("deviceOutputReadoutSlotHeight: CGFloat = 22", self.source)
+        self.assertIn(
+            "plotHeight + deviceOutputReadoutSlotHeight + PopoverStyle.sectionPadding * 2",
+            self.source,
+        )
+
+    def test_device_output_uses_one_shared_port_icon_template(self):
+        icon_factory = self.source.split(
+            "fileprivate static func nodeIconImage", 1
+        )[1].split("private static func rotatedAdapterImage", 1)[0]
+        plugged = self.source.split(
+            "private func configurePluggedDeviceOutputReadout", 1
+        )[1].split("private func configure(_ bundle", 1)[0]
+        on_battery = self.source.split("case .onBattery:", 1)[1].split(
+            "case .mixedSupply:", 1
+        )[0]
+
+        self.assertIn('case "device.output.port":', icon_factory)
+        self.assertIn('symbol: "device.output.port"', plugged)
+        self.assertIn('symbol: "device.output.port"', on_battery)
+        self.assertNotIn('symbol: "cable.connector.horizontal"', plugged)
+        self.assertNotIn('symbol: "cable.connector"', on_battery)
 
     def test_layout_positions_depend_only_on_layout(self):
         # Filling the gap left by a disconnected adapter puts the battery box

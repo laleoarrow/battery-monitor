@@ -210,4 +210,157 @@ control.
 
 No P3 item is required for this correction.
 
+## v3.0.22 inline Device Output icon
+
+### Source and implementation
+
+- Selected visual truth: `/Users/leoarrow/.codex/generated_images/01a01de2-549c-7111-8c6d-56eb04196ce7/exec-11bac02a-59e7-48be-8fe0-9c997944981c.png`.
+- Source raster: 908 × 1732 pixels. The relevant flow region was normalized to
+  656 × 448 pixels for comparison.
+- Production AppKit capture: `/tmp/wattson-inline-icon-qa/idle-device-horizontal.png`
+  (656 × 448 pixels, representing the 328 × 224-point `PowerFlowView`
+  at Retina 2× density).
+- Full flow comparison: `/tmp/wattson-inline-icon-qa/combined-flow-comparison.png`.
+- Focused readout comparison: `/tmp/wattson-inline-icon-qa/combined-row-comparison.png`.
+- State: dark appearance, plugged and full, with a positive coherent measured
+  Device Output. The source uses 35.5 W / 3.1 W presentation values; the
+  production fixture intentionally uses the hardware regression values
+  48.7 W / 14.083 W. Geometry and formatting, rather than numeric equality,
+  are the comparison target.
+
+### Comparison
+
+The implementation preserves the current Wattson composition exactly: three
+power nodes, two cubic pipes, the 176-point plot, the existing 22-point readout
+slot, and the 224-point section height. The only new visible element is a
+compact connector well immediately to the left of the existing
+`Device Output · W` text. The 26 × 26-point continuous-radius well and
+16-point SF Symbol follow the same compact token used by the production lanes.
+The icon and content-hugging text are centred as one group with an eight-point
+gap.
+
+The focused comparison confirms that the connector is a real horizontal SF
+Symbol rather than a text glyph or drawn approximation. Its exact silhouette
+is intentionally the system `cable.connector.horizontal`, with runtime fallback
+to `cable.connector`; the generated mock's port-like outline is not copied as
+custom artwork. The well and icon are decorative for accessibility. The
+existing text remains the sole static-text element with label `Device Output`
+and the formatted wattage as its value.
+
+### Required fidelity surfaces
+
+- Fonts and typography: the existing 11-point regular monospaced readout,
+  secondary text colour, baseline, wording, and one-line behavior are unchanged.
+- Spacing and layout rhythm: the accessory uses the selected compact treatment;
+  the icon/text group is centred, the gap is eight points, and all node, pipe,
+  separator, ring, lane, history, and footer positions remain unchanged.
+- Colors and visual tokens: the well reuses `PopoverStyle.well`; its hairline
+  and icon follow the existing blue, green, or amber power-state tint.
+- Image quality and asset fidelity: the icon is a vector SF Symbol rendered by
+  AppKit, with a semantic fallback chain. No emoji, text symbol, handcrafted
+  SVG, raster placeholder, or new custom asset is used.
+- Copy and content: `Device Output · <watts>` is unchanged. Invalid, absent,
+  zero, non-finite, or greater-than-System output still hides the complete
+  accessory. On-battery mode retains its existing full Device Output node and
+  does not duplicate the inline icon.
+- Interaction and accessibility: no new hit target or VoiceOver stop was added.
+  Tests cover show/hide/show transitions, invalid values, on-battery duplicate
+  prevention, unchanged topology, and unchanged power totals/conservation.
+
+### QA history
+
+1. [P2] The first production capture used vertical `cable.connector`. At the
+   compact size it collapsed into a thin vertical mark and did not match the
+   selected horizontal connector treatment. Fix: use
+   `cable.connector.horizontal` first, with runtime fallback to the original
+   connector and then the existing safe symbol fallback.
+2. The post-fix production capture was rendered again from the real
+   `PowerFlowView` hierarchy. The combined full-region and focused-row
+   comparisons show no remaining actionable P0, P1, or P2 differences.
+3. Missing, invalid, zero, charging, full, mixed, edge-equal-to-System, and
+   on-battery states are executable regression cases. The graph remains three
+   nodes and two pipes in every state.
+
+### Follow-up polish
+
+No P3 item is required for the selected micro-adjustment.
+
+final result: passed
+
+## v3.0.23 shared Device Output port template
+
+### Source and implementation
+
+- Selected visual truth: `/Users/leoarrow/.codex/generated_images/01a01de2-549c-7111-8c6d-56eb04196ce7/exec-11bac02a-59e7-48be-8fe0-9c997944981c.png`.
+- Extracted source asset: `design/icon/device-output-port-template.png`
+  (64 × 64 pixels; SHA-256
+  `66bec3f39703faf1d5bf135d9e0dda919c95ce6e8450ec0d3e25091039797f4c`).
+- Plugged production capture: `/tmp/wattson-port-template-qa/idle-device.png`
+  (656 × 448 pixels, representing the 328 × 224-point
+  `PowerFlowView` at Retina 2× density).
+- On-battery production capture:
+  `/tmp/wattson-port-template-qa/battery-device.png` (656 × 448 pixels).
+- Full source/plugged/on-battery comparison:
+  `/tmp/wattson-port-template-qa/source-idle-battery-comparison.png`.
+- Focused icon comparison:
+  `/tmp/wattson-port-template-qa/focused-icons-comparison.png`.
+
+### Comparison
+
+The previous candidate used two different system cable glyphs: a horizontal
+connector for the compact plugged-state accessory and a vertical connector for
+the full on-battery Device Output node. Neither reproduced the selected
+design's closed horizontal port outline consistently. v3.0.23 replaces both
+call sites with one `device.output.port` template extracted from the selected
+visual source.
+
+The real AppKit captures confirm that the compact plugged-state icon now reads
+as a closed device port rather than a short blue line or dot. The on-battery
+node uses the same silhouette at the existing full-node scale and neutral tint.
+The icon therefore changes scale and semantic colour with its established
+context, but not its visual language.
+
+### Required fidelity surfaces
+
+- Layout and typography: the existing three-node/two-pipe topologies,
+  176-point plot, 22-point plugged readout slot, 224-point section height,
+  node and pipe positions, labels, fonts, and watt formatting are unchanged.
+- Colors and visual tokens: plugged output keeps the current state tint in its
+  26 × 26-point compact well; the on-battery node keeps the same neutral
+  treatment as the other downstream load node.
+- Image fidelity: both render paths consume the same extracted closed-port
+  raster template. The runtime does not substitute either
+  `cable.connector.horizontal` or `cable.connector` at the Device Output call
+  sites.
+- Power semantics: Device Output remains an auxiliary breakdown of System
+  Total. The correction does not change totals, conservation math, recognition
+  timing, or the eligibility of any reading.
+- Accessibility: the compact icon remains decorative and the existing
+  `Device Output` readout remains the sole plugged-state accessibility element.
+  The on-battery node retains its existing label and value. Runtime regression
+  tests cover uniqueness and ghost cleanup; the screenshots alone are not a
+  complete accessibility audit.
+
+### QA history
+
+1. [P2 resolved] The v3.0.22 SF Symbols did not match the selected closed-port
+   design and differed between plugged and on-battery presentations. The shared
+   extracted template removes that inconsistency.
+2. The final visual audit compared the selected source, real plugged-state
+   render, and real on-battery render in one normalized image. It found
+   P0 = 0, P1 = 0, and P2 = 0.
+3. [P3 accepted] The selected mock uses a slightly wider icon well and softer
+   shadow. Production retains the tighter 26 × 26-point near-square well and
+   more restrained shadow to preserve the requested micro-adjustment scope and
+   the current Wattson layout.
+4. Focused Swift regression testing verifies one shared port template in both
+   states, unchanged accessibility and ghost cleanup, and exactly three nodes
+   and two pipes. Static topology testing separately locks the shared token and
+   unchanged geometry/math contract.
+
+### Follow-up polish
+
+No P0, P1, or P2 item remains. The single P3 difference is accepted and does
+not require another layout change.
+
 final result: passed

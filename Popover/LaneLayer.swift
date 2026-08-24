@@ -92,13 +92,15 @@ final class LaneView: PopoverSection {
             : PopoverStyle.stateColor(snapshot.state)
         let systemWatts = snapshot.systemW
         let batteryWatts = snapshot.state == .pluggedIdle ? 0 : abs(snapshot.batteryW)
+        let hasPositiveDeviceOutput = snapshot.coherentDeviceOutputW.map { $0 > 0 } ?? false
+        let systemCaption = hasPositiveDeviceOutput ? "System Total" : "System Load"
 
         // Normalise against the larger lane so the ratio between them is exact
         // and the dominant lane always fills its track.
         let ceiling = max(systemWatts, batteryWatts, 0.1)
         motionMultiplier = VisualEncoding.multiplier(snapshot.totalInputW)
 
-        apply(lanes[0], symbol: "cpu", caption: "System Load", watts: systemWatts,
+        apply(lanes[0], symbol: "cpu", caption: systemCaption, watts: systemWatts,
               ceiling: ceiling, color: color)
         apply(lanes[1],
               symbol: snapshot.state == .charging ? "battery.100.bolt" : "battery.50",

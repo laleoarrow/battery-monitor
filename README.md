@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3018">v3.0.18 candidate notes</a>
+  <a href="#whats-new-in-v3023">v3.0.23 candidate notes</a>
 </p>
 
 <p align="center">
@@ -41,9 +41,45 @@ where it is going, and how the picture has changed over the last two minutes.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
 
-## What's new in v3.0.18
+## What's new in v3.0.23
 
-> v3.0.18 is the current release candidate. v3.0.17 remains the current public release until the candidate completes the release gates.
+> v3.0.23 is the current release candidate. v3.0.17 remains the current public release until the candidate completes the release gates.
+
+- Device Output now uses one closed port template extracted from the selected
+  visual source. The compact plugged-state accessory and the existing
+  on-battery Device Output node reuse that same template, replacing their
+  inconsistent cable-connector glyphs. The existing inline readout, three-node
+  and two-pipe layouts, popover height, power totals, and conservation math are
+  unchanged. This presentation-only correction does not accelerate firmware
+  publication or hardware recognition.
+
+- Uses signed battery voltage × current to govern battery-flow direction when
+  direct adapter and system rails arrive asynchronously. This prevents an
+  attached iPhone reported as Device Output from being paired with a false
+  Battery Assist or Mixed Power state. It corrects flow consistency only and
+  does not claim external-meter absolute accuracy.
+
+- Adds the strict, read-only helper protocol v5 for fixed `PDTR`, `PSTR`, and
+  `PPBR` observations. Complete and typed partial v5 responses are
+  authoritative; malformed or truncated claimed-v5 frames fail closed, while
+  an older helper receives exactly one compatible v4 fallback.
+- Runs the evidence-backed power resolver in production shadow mode. Direct
+  observations can feed the established display resolver, but unproven PSTR
+  band correction remains disabled and any missing, stale, or invalid evidence
+  falls back without changing the visible power model.
+- Preserves measured Device Output as an auxiliary breakdown of System Load,
+  never an additional load. In plugged, charging, and mixed-supply states, a
+  positive coherent Device Output is now clear in the main Power Flow as an
+  auxiliary readout: it is included in System Total and never double-counted.
+  On battery, the existing positive-coherent three-node split into Mac Load and
+  Device Output continues unchanged. A valid zero remains visible in the power
+  summary; unavailable or incoherent readings restore Cycle Count. Firmware
+  publication can still be delayed. This presentation change does not claim
+  external-meter absolute accuracy.
+- Makes the native PKG verify both the existing v4 helper health surface and
+  the strict v5 observation surface after installation.
+
+## v3.0.18 measured attached-device output (historical)
 
 - Shows measured power delivered to attached devices when the Mac publishes a
   usable reading. Device Output is an auxiliary breakdown of System Load, not

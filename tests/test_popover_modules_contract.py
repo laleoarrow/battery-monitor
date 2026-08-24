@@ -81,6 +81,12 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertNotIn("captions[4]", self.ring)
         self.assertNotIn("values[4]", self.ring)
 
+    def test_positive_coherent_device_output_uses_system_total_in_ring_and_lanes(self):
+        for source in (self.ring, self.lanes):
+            self.assertIn("snapshot.coherentDeviceOutputW", source)
+            self.assertIn('"System Total"', source)
+            self.assertIn('"System Load"', source)
+
     def test_ring_height_remains_fixed_at_138_points(self):
         plot_height = float(
             re.search(r"plotHeight: CGFloat = (\d+)", self.ring).group(1)

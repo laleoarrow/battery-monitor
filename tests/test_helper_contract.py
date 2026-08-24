@@ -9,6 +9,8 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 HELPER_SOURCE = ROOT / "Helper" / "wattson-helper.swift"
 HELPER_PLIST = ROOT / "Helper" / "com.leoarrow.wattson.helper.plist"
 CLIENT_SOURCE = ROOT / "Core" / "HelperClient.swift"
+V5_CLIENT_SOURCE = ROOT / "Core" / "HelperClientPowerObservationV5.swift"
+V5_SUPPORT_SOURCE = ROOT / "HelperV5" / "PowerObservationV5Support.swift"
 APP_MAIN_SOURCE = ROOT / "main.swift"
 PACKAGE_SOURCE = ROOT / "Package.swift"
 INSTALL_SCRIPT = ROOT / "scripts" / "install.sh"
@@ -19,6 +21,7 @@ class HelperContractTests(unittest.TestCase):
     def setUpClass(cls):
         cls.source = HELPER_SOURCE.read_text(encoding="utf-8")
         cls.client_source = CLIENT_SOURCE.read_text(encoding="utf-8")
+        cls.v5_client_source = V5_CLIENT_SOURCE.read_text(encoding="utf-8")
         cls.app_main_source = APP_MAIN_SOURCE.read_text(encoding="utf-8")
         cls.package_source = PACKAGE_SOURCE.read_text(encoding="utf-8")
         cls.install_script = INSTALL_SCRIPT.read_text(encoding="utf-8")
@@ -476,6 +479,46 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn("default:", self.source)
         self.assertIn("os_log", self.source)
 
+    def test_v5_dispatch_preserves_raw_frame_and_runs_after_peer_revalidation(self):
+        self.assertIn("import WattsonHelperV5Support", self.source)
+        socket_request = self.source.split("private struct SocketRequest", 1)[1].split(
+            "private enum ReadySocketRequestResult", 1
+        )[0]
+        self.assertIn("let frame: Data", socket_request)
+
+        execution = self.source.split("private func handle", 1)[1].split("@main", 1)[0]
+        peer_revalidation = execution.index("peerUID == consoleUID()")
+        strict_v5_dispatch = execution.index("powerObservationV5Service.handle(")
+        self.assertLess(peer_revalidation, strict_v5_dispatch)
+        self.assertIn("frame: request.frame", execution)
+        self.assertIn("case .notV5:", execution)
+        self.assertIn('case "getPower":', execution)
+
+    def test_v5_dispatch_keeps_request_cap_and_bounds_newline_response(self):
+        self.assertIn("private let maximumSocketMessageBytes = 512", self.source)
+        execution = self.source.split("private func handle", 1)[1].split("@main", 1)[0]
+        self.assertIn("HelperV5ResponsePayload.maximumResponseBytes", execution)
+        self.assertIn('line.last == UInt8(ascii: "\\n")', execution)
+        self.assertIn("line.count <=", execution)
+
+    def test_v5_malformed_claim_is_fail_closed_without_entering_v4_switch(self):
+        execution = self.source.split("private func handle", 1)[1].split("@main", 1)[0]
+        malformed = execution.split("case .malformed:", 1)[1].split(
+            "case .notV5:", 1
+        )[0]
+        self.assertIn('"_wattsonProtocol":5', malformed)
+        self.assertIn("return", malformed)
+        self.assertNotIn('case "getPower":', malformed)
+
+    def test_v5_client_only_treats_complete_json_at_eof_as_a_frame(self):
+        self.assertIn("completeFrameAtEOFOrIncomplete", self.v5_client_source)
+        eof_classifier = self.v5_client_source.split(
+            "private func completeFrameAtEOFOrIncomplete", 1
+        )[1].split("private func incompleteOrNoResponse", 1)[0]
+        self.assertIn("JSONSerialization.jsonObject(with: data)", eof_classifier)
+        self.assertIn("return .frame(data)", eof_classifier)
+        self.assertIn("return .incompleteFrame(data)", eof_classifier)
+
     def test_smc_power_endpoint_has_fixed_read_only_keys(self):
         self.assertIn("import IOKit", self.source)
         self.assertIn("0x5044_5452", self.source)  # PDTR
@@ -619,7 +662,35 @@ class HelperContractTests(unittest.TestCase):
         )
         self.assertEqual(sdk_result.returncode, 0, sdk_result.stderr)
         with tempfile.TemporaryDirectory() as directory:
-            executable_path = pathlib.Path(directory) / "wattson-helper-x86_64"
+            build_directory = pathlib.Path(directory)
+            executable_path = build_directory / "wattson-helper-x86_64"
+            support_object = build_directory / "WattsonHelperV5Support.o"
+            support_module = build_directory / "WattsonHelperV5Support.swiftmodule"
+            support_result = subprocess.run(
+                [
+                    "/usr/bin/xcrun",
+                    "swiftc",
+                    "-target",
+                    "x86_64-apple-macosx12.0",
+                    "-sdk",
+                    sdk_result.stdout.strip(),
+                    "-parse-as-library",
+                    "-emit-module",
+                    "-emit-object",
+                    "-module-name",
+                    "WattsonHelperV5Support",
+                    str(V5_SUPPORT_SOURCE),
+                    "-emit-module-path",
+                    str(support_module),
+                    "-o",
+                    str(support_object),
+                ],
+                check=False,
+                text=True,
+                capture_output=True,
+                timeout=120,
+            )
+            self.assertEqual(support_result.returncode, 0, support_result.stderr)
             compile_result = subprocess.run(
                 [
                     "/usr/bin/xcrun",
@@ -629,7 +700,10 @@ class HelperContractTests(unittest.TestCase):
                     "-sdk",
                     sdk_result.stdout.strip(),
                     "-parse-as-library",
+                    "-I",
+                    str(build_directory),
                     str(HELPER_SOURCE),
+                    str(support_object),
                     "-framework",
                     "IOKit",
                     "-o",
@@ -689,9 +763,12 @@ class HelperContractTests(unittest.TestCase):
         )[0]
         self.assertIn('.linkedFramework("IOKit")', helper_target)
         helper_compile = self.install_script.split(
-            'xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift"', 1
+            'echo "  🔑 Installing the privileged helper', 1
         )[1].split("codesign", 1)[0]
-        self.assertIn("-framework IOKit", helper_compile)
+        self.assertIn("/usr/bin/swift build", helper_compile)
+        self.assertIn("--product wattson-helper", helper_compile)
+        self.assertIn("--configuration release", helper_compile)
+        self.assertNotIn('xcrun swiftc "$ROOT_DIR/Helper/wattson-helper.swift"', helper_compile)
 
     def test_launch_agent_is_user_owned_and_opens_the_canonical_app(self):
         self.assertIn(r'"Library/LaunchAgents/\(loginAgentLabel).plist"', self.source)

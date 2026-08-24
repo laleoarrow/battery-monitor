@@ -201,8 +201,10 @@ jobs:
             cat <<'EOF'
           This Wattson release is universal for Apple silicon and Intel and supports macOS 12 or later.
 
-          - Shows measured power delivered to attached devices when the Mac publishes a usable reading. Device Output is an auxiliary breakdown of System Load, not an additional load.
-          - Keeps the popover geometry unchanged: Device Output reuses the existing Cycle Count slot, and a positive coherent on-battery reading splits the existing three-node flow into Mac Load and Device Output. A measured zero remains visible; unavailable or incoherent readings restore the previous presentation.
+          - Adds a strict read-only helper protocol v5 for fixed PDTR, PSTR, and PPBR observations, with fail-closed claimed-v5 framing and exactly one v4 compatibility fallback for an older helper.
+          - Runs the evidence-backed power resolver in production shadow mode. Unproven PSTR band correction stays disabled, and missing, stale, partial, or invalid evidence falls back without changing the visible power model.
+          - Shows measured power delivered to attached devices when the Mac publishes a usable reading. Device Output is an auxiliary breakdown of System Load, not an additional load, and firmware publication can still be delayed.
+          - Keeps the popover geometry unchanged: Device Output reuses the existing Cycle Count slot, and a positive coherent on-battery reading splits the existing three-node flow into Mac Load and Device Output. Values are never silently clamped; System Total labels the unsplit rail. A measured zero remains visible; unavailable or incoherent readings restore the previous presentation.
           - Refines the approved A1 power-flow icon direction with a slightly smaller, lighter treatment: 21-point Regular symbols and 1.6-point custom outlines inside the existing 36-point wells.
           - Keeps Adapter, System, and Battery on one optical scale. The real visible extents target 19.25–21.5 points and measure 20–21.25 points across the production states, while semantic source and load colours remain unchanged.
           - Adds a dedicated Menu Bar Icon page that lists all four complete menu-bar appearances vertically, one full-width option per row: Wattson icon only, Wattson with percentage, macOS 26 icon only, and macOS 26 with percentage.

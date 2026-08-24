@@ -218,9 +218,8 @@ class StatusItemContractTests(unittest.TestCase):
         )[0]
         self.assertIn("history.reset()", wake)
         self.assertIn("refreshPresentation()", wake)
-        self.assertIn(
-            "sampleNow(recordHistory: true, requiresFreshFollowUp: true)", wake
-        )
+        self.assertIn("requiresFreshFollowUp: true", wake)
+        self.assertIn("event: .sleepWake", wake)
 
     def test_history_clock_is_two_seconds_and_display_clock_is_one(self):
         self.assertIn("historyInterval: TimeInterval = 2", self.source)
@@ -240,6 +239,7 @@ class StatusItemContractTests(unittest.TestCase):
             "private func startHistoryClock", 1
         )[0]
         self.assertIn("requiresFreshFollowUp: true", event_updates)
+        self.assertIn("event: .powerSourceTransition", event_updates)
         history_clock = self.source.split("private func startHistoryClock", 1)[1].split(
             "private func startDisplayClock", 1
         )[0]
@@ -293,9 +293,10 @@ class StatusItemContractTests(unittest.TestCase):
             "private func refreshPresentation", 1
         )[0]
         self.assertIn("samplingQueue.async", sampling)
-        self.assertIn("HelperClient.livePower()", sampling)
-        self.assertNotIn("HelperClient.livePower()", finish)
-        self.assertIn("BatterySampler.resolvedLivePower", finish)
+        self.assertIn("powerObservationRuntime.sample", sampling)
+        self.assertIn("result.visibleSnapshot", finish)
+        self.assertNotIn("result.resolution", finish)
+        self.assertNotIn("userVisibleEligible", finish)
 
     def test_display_clock_stops_when_the_popover_closes(self):
         self.assertIn("displayTimer?.invalidate()", self.source)

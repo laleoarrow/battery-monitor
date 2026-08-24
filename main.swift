@@ -16,6 +16,22 @@ if CommandLine.arguments.contains(
 }
 #endif
 
+if CommandLine.arguments.contains("--helper-v5-observation-probe") {
+    switch HelperClient.powerObservation(clientSequence: 0) {
+    case .v5:
+        // A typed v5 failure or partial response still proves that both ends
+        // negotiated v5. Keep probe output fixed so it cannot expose payloads.
+        print("helperV5=v5")
+        exit(0)
+    case .legacyV4:
+        fputs("helperV5=legacy\n", stderr)
+        exit(1)
+    case .failed:
+        fputs("helperV5=failed\n", stderr)
+        exit(1)
+    }
+}
+
 if CommandLine.arguments.contains("--helper-health-probe") {
     exit(HelperClient.isHealthy() ? 0 : 1)
 }

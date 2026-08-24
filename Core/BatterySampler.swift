@@ -285,9 +285,23 @@ enum BatterySampler {
         }
 
         if let adapter, let system {
-            // This is the only direction source robust to stale IsCharging and
-            // BatteryPower sign flips. Keeping the exact difference also keeps
-            // conservation exact; PowerSnapshot.state owns the ±0.3 W deadband.
+            // SystemPowerIn and SystemLoad can advance on different firmware
+            // sample boundaries, especially while a port is delivering power.
+            // Prefer the direct signed battery current when it is available,
+            // then rebuild the source total around the system branch so the
+            // independently sampled totals cannot invent charge or discharge.
+            if let instantBatteryW,
+               instantBatteryW.isFinite,
+               abs(instantBatteryW) <= maxBatteryPowerWatts {
+                let batteryW = min(
+                    max(instantBatteryW, -system),
+                    maxBatteryPowerWatts - system
+                )
+                return (system + batteryW, batteryW, system)
+            }
+
+            // Without signed current evidence, preserve the legacy conservative
+            // fallback and its exact Core conservation relationship.
             return (adapter, adapter - system, system)
         }
 
