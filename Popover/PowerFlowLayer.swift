@@ -646,8 +646,19 @@ final class PipeBundle {
 }
 
 final class PowerFlowView: PopoverSection {
+    private final class DeviceOutputReadout: NSTextField {
+        var spokenValue: String?
+
+        override func accessibilityValue() -> String? {
+            spokenValue ?? super.accessibilityValue()
+        }
+    }
+
     static let plotHeight: CGFloat = 176
-    static let preferredHeight: CGFloat = plotHeight + PopoverStyle.sectionPadding * 2
+    private static let deviceOutputReadoutHeight: CGFloat = 17
+    private static let deviceOutputReadoutSlotHeight: CGFloat = 22
+    static let preferredHeight: CGFloat =
+        plotHeight + deviceOutputReadoutSlotHeight + PopoverStyle.sectionPadding * 2
     /// Enter the stronger particle style at saturation, but do not leave it for
     /// ordinary 1 Hz telemetry noise around 100 W. Without this band, 99.9 /
     /// 100.1 W rebuilt every particle and its animations on alternating samples.
@@ -683,6 +694,7 @@ final class PowerFlowView: PopoverSection {
     private let adapterNode = FlowNodeView()
     private let batteryNode = FlowNodeView()
     private let systemNode = FlowNodeView()
+    private let pluggedDeviceOutputReadout = DeviceOutputReadout(labelWithString: "")
     private let idleConnection = CAShapeLayer()
     private let bundles = (0..<2).map { _ in PipeBundle() }
 
@@ -703,6 +715,13 @@ final class PowerFlowView: PopoverSection {
         bundles.forEach { plot.layer?.addSublayer($0.container) }
 
         [adapterNode, batteryNode, systemNode].forEach(plot.addSubview)
+
+        pluggedDeviceOutputReadout.font = PopoverStyle.mono(11, .regular)
+        pluggedDeviceOutputReadout.textColor = PopoverStyle.secondaryText
+        pluggedDeviceOutputReadout.alignment = .center
+        pluggedDeviceOutputReadout.isHidden = true
+        pluggedDeviceOutputReadout.setAccessibilityElement(false)
+        addSubview(pluggedDeviceOutputReadout)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -711,6 +730,12 @@ final class PowerFlowView: PopoverSection {
         super.layout()
         plot.frame = NSRect(x: 0, y: PopoverStyle.sectionPadding,
                             width: bounds.width, height: Self.plotHeight)
+        pluggedDeviceOutputReadout.frame = NSRect(
+            x: 0,
+            y: PopoverStyle.sectionPadding + Self.plotHeight + 3,
+            width: bounds.width,
+            height: Self.deviceOutputReadoutHeight
+        )
         PopoverStyle.setWithoutAnimation {
             self.bundles.forEach { $0.container.frame = self.plot.bounds }
             self.idleConnection.frame = self.plot.bounds
@@ -770,6 +795,7 @@ final class PowerFlowView: PopoverSection {
         latest = snapshot
         let layout = layoutMode(for: snapshot)
         applyPositions(for: layout)
+        configurePluggedDeviceOutputReadout(for: snapshot)
 
         let color = PopoverStyle.stateColor(snapshot.state)
         let total = snapshot.totalInputW
@@ -862,6 +888,32 @@ final class PowerFlowView: PopoverSection {
         PopoverStyle.setWithoutAnimation {
             self.idleConnection.opacity = self.idleConnection.path == nil ? 0 : 1
         }
+    }
+
+    /// Plugged topologies already spend the fixed three nodes on source,
+    /// battery and System Total. Show measured downstream output as a compact
+    /// breakdown of that total without adding a fourth node or another pipe.
+    private func configurePluggedDeviceOutputReadout(for snapshot: PowerSnapshot) {
+        guard snapshot.state != .onBattery,
+              let deviceOutputW = snapshot.coherentDeviceOutputW,
+              deviceOutputW > 0 else {
+            pluggedDeviceOutputReadout.stringValue = ""
+            pluggedDeviceOutputReadout.spokenValue = nil
+            pluggedDeviceOutputReadout.isHidden = true
+            pluggedDeviceOutputReadout.setAccessibilityLabel(nil)
+            pluggedDeviceOutputReadout.setAccessibilityValue(nil)
+            pluggedDeviceOutputReadout.setAccessibilityElement(false)
+            return
+        }
+
+        let value = PopoverStyle.watts(deviceOutputW)
+        pluggedDeviceOutputReadout.stringValue = "Device Output · \(value)"
+        pluggedDeviceOutputReadout.spokenValue = value
+        pluggedDeviceOutputReadout.isHidden = false
+        pluggedDeviceOutputReadout.setAccessibilityElement(true)
+        pluggedDeviceOutputReadout.setAccessibilityRole(.staticText)
+        pluggedDeviceOutputReadout.setAccessibilityLabel("Device Output")
+        pluggedDeviceOutputReadout.setAccessibilityValue(value)
     }
 
     private func configure(_ bundle: PipeBundle, geometry: PipeGeometry, thickness: CGFloat,

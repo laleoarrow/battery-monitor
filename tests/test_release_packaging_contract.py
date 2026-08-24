@@ -42,7 +42,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.candidate_workflow = CANDIDATE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.19\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.20\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -57,11 +57,11 @@ class ReleasePackagingContractTests(unittest.TestCase):
         normalized_readme = " ".join(self.readme.split())
         normalized_promote_workflow = " ".join(self.promote_workflow.split())
         current_readme = self.readme.split(
-            "## What's new in v3.0.19", 1
+            "## What's new in v3.0.20", 1
         )[1].split("## v3.0.18 measured attached-device output (historical)", 1)[0]
         normalized_current_readme = " ".join(current_readme.split())
         current_handoff = self.handoff.split(
-            "## v3.0.19 strict power observation runtime", 1
+            "## v3.0.20 strict power observation runtime", 1
         )[1].split("## v3.0.18 measured attached-device output (historical)", 1)[0]
         normalized_current_handoff = " ".join(current_handoff.split())
         historical_v3017 = self.handoff.split(
@@ -107,6 +107,16 @@ class ReleasePackagingContractTests(unittest.TestCase):
             self.assertIn(candidate_topic, normalized_promote_workflow)
             self.assertIn(candidate_topic, normalized_current_readme)
             self.assertIn(candidate_topic, normalized_current_handoff)
+
+        for plugged_output_topic in (
+            "plugged, charging, and mixed-supply states",
+            "auxiliary readout",
+            "included in System Total",
+            "never double-counted",
+            "does not claim external-meter absolute accuracy",
+        ):
+            self.assertIn(plugged_output_topic, normalized_current_readme)
+            self.assertIn(plugged_output_topic, normalized_current_handoff)
 
         for technical_topic in (
             "`PowerOutDetails.Watts`",
@@ -209,7 +219,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         ):
             self.assertIn(historical_handoff_topic, normalized_historical_v3015)
 
-        self.assertIn("## v3.0.19 strict power observation runtime", self.handoff)
+        self.assertIn("## v3.0.20 strict power observation runtime", self.handoff)
         self.assertIn(
             "## v3.0.18 measured attached-device output (historical)", self.handoff
         )
@@ -228,7 +238,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn("## v3.0.9 selector and rendering work", self.handoff)
         self.assertIn("## v3.0.8 dynamic Reduce Motion and transaction work", self.handoff)
         self.assertLess(
-            self.handoff.index("## v3.0.19 strict power observation runtime"),
+            self.handoff.index("## v3.0.20 strict power observation runtime"),
             self.handoff.index("## v3.0.18 measured attached-device output (historical)"),
         )
         self.assertLess(
