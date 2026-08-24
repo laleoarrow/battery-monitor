@@ -54,8 +54,12 @@ final class PopoverPreviewWindowController: NSWindowController {
         switch state {
         case "charging":
             return PowerSnapshot(percent: 72, plugged: true, adapterW: 68, batteryW: 22.2, systemW: 45.8, temperatureC: 34.2, cycleCount: 116, lowPowerMode: false)
+        case "device":
+            return PowerSnapshot(percent: 72, plugged: true, adapterW: 68, batteryW: 22.2, systemW: 45.8, deviceOutputW: 7.5, temperatureC: 34.2, cycleCount: 116, lowPowerMode: false)
         case "battery":
             return PowerSnapshot(percent: 41, plugged: false, adapterW: 0, batteryW: -36.9, systemW: 36.9, temperatureC: 33.1, cycleCount: 116, lowPowerMode: false)
+        case "battery-device":
+            return PowerSnapshot(percent: 67, plugged: false, adapterW: 0, batteryW: -39.7, systemW: 39.7, deviceOutputW: 12.2, temperatureC: 33.1, cycleCount: 116, lowPowerMode: false)
         case "mixed":
             return PowerSnapshot(percent: 18, plugged: true, adapterW: 28, batteryW: -31.7, systemW: 59.7, temperatureC: 38.6, cycleCount: 116, lowPowerMode: false)
         case "high":

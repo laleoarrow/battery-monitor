@@ -95,7 +95,7 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.17")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.18")
         self.assertIn('VERSION_FILE="$ROOT_DIR/VERSION"', self.package)
         self.assertIn('Contents/MacOS/Wattson', self.package_pkg)
 

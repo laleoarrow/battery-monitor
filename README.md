@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3017">v3.0.17 release notes</a>
+  <a href="#whats-new-in-v3018">v3.0.18 candidate notes</a>
 </p>
 
 <p align="center">
@@ -31,7 +31,8 @@ calm live map. Open it from the menu bar to see where power is coming from,
 where it is going, and how the picture has changed over the last two minutes.
 
 - Four distinct charging, full, on-battery, and mixed-supply states.
-- Live system load, adapter input, battery flow, temperature, and cycle count.
+- Live system load, adapter input, battery flow, temperature, cycle count, and
+  measured attached-device output when the Mac publishes it.
 - Auto and Low Power controls, plus High Power on supported Macs.
 - Native Liquid Glass on macOS 26 with an AppKit fallback for macOS 12–25.
 - Keyboard, VoiceOver, Reduce Motion, and Reduce Transparency support.
@@ -40,9 +41,19 @@ where it is going, and how the picture has changed over the last two minutes.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
 
-## What's new in v3.0.17
+## What's new in v3.0.18
 
-> v3.0.17 is the current public release.
+> v3.0.18 is the current release candidate. v3.0.17 remains the current public release until the candidate completes the release gates.
+
+- Shows measured power delivered to attached devices when the Mac publishes a
+  usable reading. Device Output is an auxiliary breakdown of System Load, not
+  an additional load.
+- Keeps the popover geometry unchanged: Device Output reuses the existing Cycle
+  Count slot, and a positive coherent on-battery reading splits the existing
+  three-node flow into Mac Load and Device Output. A measured zero remains
+  visible; unavailable or incoherent readings restore the previous presentation.
+
+## v3.0.17 lighter power-flow node family (historical)
 
 - Refines the approved A1 power-flow icon direction with a slightly smaller,
   lighter treatment: 21-point Regular symbols and 1.6-point custom outlines

@@ -23,6 +23,16 @@ async function render() {
   );
 }
 
+async function configuredReleaseVersion() {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const fallback = page.match(/const PUBLIC_FALLBACK_VERSION = "(v\d+\.\d+\.\d+)";/);
+  assert.ok(fallback, "website source must declare a public fallback version");
+  assert.match(page, /process\.env\.NEXT_PUBLIC_RELEASE_VERSION/);
+  const version = process.env.NEXT_PUBLIC_RELEASE_VERSION || fallback[1];
+  assert.match(version, /^v\d+\.\d+\.\d+$/);
+  return version;
+}
+
 test("renders the complete English Wattson release page", async () => {
   const response = await render();
   assert.equal(response.status, 200);
@@ -74,7 +84,8 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /Optional update checks contact only GitHub Releases/i);
   assert.match(html, /Settings sidebar uses the real packaged Wattson app icon/i);
   assert.match(html, /720×520/i);
-  assert.match(html, /v3\.0\.17/i);
+  const expectedVersion = await configuredReleaseVersion();
+  assert.match(html, new RegExp(expectedVersion.replaceAll(".", "\\."), "i"));
   assert.match(html, /bundled stable release/i);
   assert.match(html, /not Apple-notarized/i);
   assert.match(html, /System Settings[\s\S]*Privacy[\s\S]*Security[\s\S]*Open Anyway/i);
@@ -168,9 +179,8 @@ test("ships the required static assets", async () => {
 
 test("exports a server-independent GitHub Pages document", async () => {
   const html = await readFile(new URL("../../docs/index.html", import.meta.url), "utf8");
-  const version = (
-    await readFile(new URL("../../VERSION", import.meta.url), "utf8")
-  ).trim();
+  const configuredVersion = await configuredReleaseVersion();
+  const version = configuredVersion.slice(1);
   const assets = await readdir(new URL("../../docs/_next/", import.meta.url), {
     recursive: true,
   });

@@ -3,6 +3,19 @@ import Darwin
 
 // Swift only allows top-level statements in a file named main.swift.
 
+#if DEBUG
+if CommandLine.arguments.contains(
+    "--power-observation-capture"
+) {
+    let exitCode = PowerObservationCaptureCommand.run(
+        arguments: Array(
+            CommandLine.arguments.dropFirst()
+        )
+    )
+    exit(exitCode)
+}
+#endif
+
 if CommandLine.arguments.contains("--helper-health-probe") {
     exit(HelperClient.isHealthy() ? 0 : 1)
 }

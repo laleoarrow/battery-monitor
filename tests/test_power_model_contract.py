@@ -25,6 +25,17 @@ class PowerModelContractTests(unittest.TestCase):
     def test_total_input_sums_adapter_and_battery_output(self):
         self.assertIn("adapterW + max(-batteryW, 0)", self.source)
 
+    def test_device_output_is_an_optional_auxiliary_breakdown(self):
+        self.assertIn("var deviceOutputW: Double? = nil", self.source)
+        self.assertIn("var coherentDeviceOutputW: Double?", self.source)
+        self.assertIn("deviceOutputW <= systemW + Self.epsilon", self.source)
+        total = self.source.split("var totalInputW", 1)[1].split("var conservationError", 1)[0]
+        conservation = self.source.split("var conservationError", 1)[1].split(
+            "var coherentDeviceOutputW", 1
+        )[0]
+        self.assertNotIn("deviceOutputW", total)
+        self.assertNotIn("deviceOutputW", conservation)
+
     def test_conservation_error_is_exposed_for_assertions(self):
         self.assertIn("var conservationError: Double", self.source)
 

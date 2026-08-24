@@ -17,6 +17,10 @@ class SamplerContractTests(unittest.TestCase):
         self.assertIn('IOServiceMatching("AppleSmartBattery")', self.source)
         self.assertIn("IORegistryEntryCreateCFProperty", self.source)
         self.assertNotIn("IORegistryEntryCreateCFProperties", self.source)
+        property_reader = self.source.split("private static func batteryProperties", 1)[1].split(
+            "// Values are raw", 1
+        )[0]
+        self.assertIn('"PowerOutDetails"', property_reader)
         for key in (
             "CurrentCapacity",
             "MaxCapacity",
@@ -51,11 +55,24 @@ class SamplerContractTests(unittest.TestCase):
             "systemPowerIn == nil || systemPowerIn == 0", self.source
         )
 
-    def test_never_forks_ioreg(self):
+    def test_never_forks_registry_or_profiler_tools(self):
         # One process spawn per second was the single largest cost in the old
         # implementation.
         self.assertNotIn("Process()", self.source)
         self.assertNotIn("ioreg", self.source)
+        self.assertNotIn("system_profiler", self.source)
+
+    def test_power_out_details_uses_only_measured_watts(self):
+        parser = self.source.split("static func resolvedDeviceOutputW", 1)[1].split(
+            "static func resolvedPower", 1
+        )[0]
+        self.assertIn('entry["Watts"]', parser)
+        for unmeasured in ("PDPowermW", "FilteredPower"):
+            self.assertNotIn(f'entry["{unmeasured}"]', parser)
+        self.assertNotIn('entry["Configured', parser)
+        self.assertIn(
+            'resolvedDeviceOutputW(props["PowerOutDetails"])', self.source
+        )
 
     def test_sign_extends_twos_complement_fields(self):
         # Negative amperage surfaces as a large unsigned value.

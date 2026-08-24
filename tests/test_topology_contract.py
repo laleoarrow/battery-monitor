@@ -10,11 +10,29 @@ class TopologyContractTests(unittest.TestCase):
     def setUpClass(cls):
         cls.source = SOURCE.read_text(encoding="utf-8")
 
-    def test_has_two_layouts_and_all_four_power_states(self):
-        self.assertIn("case adapterLed", self.source)
-        self.assertIn("case batteryLed", self.source)
+    def test_has_three_layouts_and_all_four_power_states(self):
+        for layout in ("case adapterLed", "case batteryLed", "case batteryOutputSplit"):
+            self.assertIn(layout, self.source)
         for state in ("case .charging", "case .pluggedIdle", "case .onBattery", "case .mixedSupply"):
             self.assertIn(state, self.source)
+
+    def test_device_split_requires_valid_on_battery_measurement(self):
+        split_gate = self.source.split(
+            "private func batteryOutputSplitDeviceW", 1
+        )[1].split("private func layoutMode", 1)[0]
+        self.assertIn("snapshot.state == .onBattery", split_gate)
+        self.assertIn("snapshot.batteryW < -PowerSnapshot.epsilon", split_gate)
+        self.assertIn("snapshot.coherentDeviceOutputW", split_gate)
+        self.assertIn("deviceOutputW > 0", split_gate)
+        self.assertNotIn("deviceOutputW > PowerSnapshot.epsilon", split_gate)
+
+    def test_device_split_reuses_two_pipes_and_three_nodes(self):
+        split = self.source.split("case .batteryOutputSplit:", 1)[1]
+        self.assertIn("snapshot.systemW - deviceOutputW", split)
+        self.assertIn('caption: "Mac Load"', split)
+        self.assertIn('caption: "Device Output"', split)
+        self.assertIn('topology: "batteryOutputSplit.0"', split)
+        self.assertIn('topology: "batteryOutputSplit.1"', split)
 
     def test_mixed_supply_keeps_adapter_blue_and_battery_orange(self):
         # Orange carries information here: the charger cannot keep up and the

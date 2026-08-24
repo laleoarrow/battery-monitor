@@ -69,6 +69,11 @@ final class RingGaugeView: PopoverSection {
             let field = label("--", size: 15, color: PopoverStyle.primaryText, mono: true)
             values.append(field)
         }
+        captions[3].setAccessibilityElement(false)
+        captions[3].cell?.setAccessibilityElement(false)
+        values[3].setAccessibilityElement(true)
+        values[3].setAccessibilityRole(.staticText)
+        values[3].setAccessibilityLabel("Cycle Count")
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -78,7 +83,8 @@ final class RingGaugeView: PopoverSection {
         percentLabel.frame = NSRect(x: Self.centre.x - 40, y: Self.centre.y - 20, width: 80, height: 28)
         percentUnit.frame = NSRect(x: Self.centre.x - 40, y: Self.centre.y + 8, width: 80, height: 14)
 
-        // Two columns beside the ring.
+        // Two columns beside the ring. The trailing slot may change content,
+        // but its geometry remains identical.
         for index in 0..<4 {
             let column = index % 2
             let row = index / 2
@@ -133,7 +139,15 @@ final class RingGaugeView: PopoverSection {
         values[2].stringValue = snapshot.temperatureC.map {
             String(format: "%.1f°C", $0)
         } ?? "—"
-        values[3].stringValue = "\(snapshot.cycleCount)"
+        if let deviceOutputW = snapshot.coherentDeviceOutputW {
+            captions[3].stringValue = "Device Output"
+            values[3].stringValue = PopoverStyle.watts(deviceOutputW)
+            values[3].setAccessibilityLabel("Device Output")
+        } else {
+            captions[3].stringValue = "Cycle Count"
+            values[3].stringValue = "\(snapshot.cycleCount)"
+            values[3].setAccessibilityLabel("Cycle Count")
+        }
 
         PopoverStyle.setWithoutAnimation {
             self.charge.strokeColor = (snapshot.percent <= 20 ? PopoverStyle.red : color).cgColor
@@ -166,6 +180,22 @@ final class RingGaugeView: PopoverSection {
 
 #if DEBUG
     var temperatureTextForTest: String { values[2].stringValue }
+    var trailingReadingForTest: (caption: String, value: String) {
+        (captions[3].stringValue, values[3].stringValue)
+    }
+    var visibleReadingFramesForTest: [NSRect] {
+        captions.indices.flatMap { [captions[$0].frame, values[$0].frame] }
+    }
+    var statsFitBoundsForTest: Bool {
+        let visibleFields = captions.indices.flatMap { index -> [NSTextField] in
+            [captions[index], values[index]]
+        }
+        return visibleFields.allSatisfy { field in
+            bounds.contains(field.frame)
+                && field.attributedStringValue.size().width <= field.bounds.width + 0.5
+                && field.attributedStringValue.size().height <= field.bounds.height + 0.5
+        }
+    }
 
     func rotationMetricsForTest() -> (duration: CFTimeInterval, layerSpeed: Float)? {
         guard let motion = arcHost.animation(forKey: "spin") as? CABasicAnimation else { return nil }

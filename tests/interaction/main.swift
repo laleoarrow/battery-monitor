@@ -991,7 +991,48 @@ let ringView = RingGaugeView()
 ringView.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
                         height: RingGaugeView.preferredHeight)
 ringView.layoutSubtreeIfNeeded()
-ringView.update(snapshot: sharedMotionSnapshot)
+let baselineRingFrames = ringView.visibleReadingFramesForTest
+
+func ringPresentationMatches(_ snapshot: PowerSnapshot,
+                             caption: String, value: String) -> Bool {
+    ringView.update(snapshot: snapshot)
+    let trailing = ringView.trailingReadingForTest
+    let accessibilityChildren = ringView.accessibilityChildren() ?? []
+    let trailingElements = accessibilityChildren.compactMap { $0 as? NSTextField }
+        .filter { $0.accessibilityLabel() == caption }
+    return trailing.caption == caption
+        && trailing.value == value
+        && accessibilityChildren.count == 9
+        && trailingElements.count == 1
+        && trailingElements.first?.accessibilityRole() == .staticText
+        && trailingElements.first?.accessibilityValue() == value
+        && ringView.visibleReadingFramesForTest.count == 8
+        && ringView.visibleReadingFramesForTest == baselineRingFrames
+        && ringView.statsFitBoundsForTest
+}
+
+check("外接设备输出未测到时保留原四格布局",
+      RingGaugeView.preferredHeight == 138
+          && ringView.bounds.height == 138
+          && baselineRingFrames.count == 8
+          && ringPresentationMatches(sharedMotionSnapshot,
+                                     caption: "Cycle Count", value: "116"))
+
+var measuredDeviceOutput = sharedMotionSnapshot
+measuredDeviceOutput.deviceOutputW = 7.5
+check("外接设备输出显示实测标签和功率",
+      ringPresentationMatches(measuredDeviceOutput,
+                              caption: "Device Output", value: "7.5 W"))
+
+var measuredZeroDeviceOutput = sharedMotionSnapshot
+measuredZeroDeviceOutput.deviceOutputW = 0
+check("实测零输出与不可用数据保持可区分",
+      ringPresentationMatches(measuredZeroDeviceOutput,
+                              caption: "Device Output", value: "0.0 W"))
+
+check("输出数据变为不可用后恢复循环次数",
+      ringPresentationMatches(sharedMotionSnapshot,
+                              caption: "Cycle Count", value: "116"))
 ringView.setAnimationsEnabled(true)
 
 laneView.update(snapshot: sharedMotionSnapshot)

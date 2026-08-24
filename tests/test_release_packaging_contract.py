@@ -42,7 +42,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.candidate_workflow = CANDIDATE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.17\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.18\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -57,13 +57,17 @@ class ReleasePackagingContractTests(unittest.TestCase):
         normalized_readme = " ".join(self.readme.split())
         normalized_promote_workflow = " ".join(self.promote_workflow.split())
         current_readme = self.readme.split(
-            "## What's new in v3.0.17", 1
-        )[1].split("## v3.0.16 unified power-flow node scale (historical)", 1)[0]
+            "## What's new in v3.0.18", 1
+        )[1].split("## v3.0.17 lighter power-flow node family (historical)", 1)[0]
         normalized_current_readme = " ".join(current_readme.split())
         current_handoff = self.handoff.split(
-            "## v3.0.17 lighter power-flow node family", 1
-        )[1].split("## v3.0.16 unified power-flow node scale (historical)", 1)[0]
+            "## v3.0.18 measured attached-device output", 1
+        )[1].split("## v3.0.17 lighter power-flow node family (historical)", 1)[0]
         normalized_current_handoff = " ".join(current_handoff.split())
+        historical_v3017 = self.handoff.split(
+            "## v3.0.17 lighter power-flow node family (historical)", 1
+        )[1].split("## v3.0.16 unified power-flow node scale (historical)", 1)[0]
+        normalized_historical_v3017 = " ".join(historical_v3017.split())
         historical_v3016 = self.handoff.split(
             "## v3.0.16 unified power-flow node scale (historical)", 1
         )[1].split("## v3.0.15 restored power-flow node artwork", 1)[0]
@@ -88,8 +92,33 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "semantic source and load colours remain unchanged",
         ):
             self.assertIn(current_icon_topic, normalized_promote_workflow)
-            self.assertIn(current_icon_topic, normalized_current_readme)
-            self.assertIn(current_icon_topic, normalized_current_handoff)
+            self.assertIn(current_icon_topic, normalized_historical_v3017)
+
+        for candidate_topic in (
+            "Device Output",
+            "auxiliary breakdown",
+            "Cycle Count",
+            "positive coherent",
+            "three-node",
+            "Mac Load",
+            "measured",
+            "incoherent",
+        ):
+            self.assertIn(candidate_topic, normalized_promote_workflow)
+            self.assertIn(candidate_topic, normalized_current_readme)
+            self.assertIn(candidate_topic, normalized_current_handoff)
+
+        for technical_topic in (
+            "`PowerOutDetails.Watts`",
+            "`PDPowermW`",
+            "`FilteredPower`",
+            "`Configured*`",
+            "auxiliary breakdown of `systemW`",
+            "fixed 138-point",
+            "valid zero",
+            "three-node, two-pipe split",
+        ):
+            self.assertIn(technical_topic, normalized_current_handoff)
 
         for current_release_topic in (
             "dedicated Menu Bar Icon page",
@@ -118,7 +147,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
             self.assertIn(current_release_topic, normalized_promote_workflow)
 
         for user_facing_topic in (
-            "v3.0.17 is the current public release",
+            "v3.0.17 remains the current public release",
             "dedicated Menu Bar Icon page",
             "Wattson icon only",
             "Wattson with percentage",
@@ -180,7 +209,10 @@ class ReleasePackagingContractTests(unittest.TestCase):
         ):
             self.assertIn(historical_handoff_topic, normalized_historical_v3015)
 
-        self.assertIn("## v3.0.17 lighter power-flow node family", self.handoff)
+        self.assertIn("## v3.0.18 measured attached-device output", self.handoff)
+        self.assertIn(
+            "## v3.0.17 lighter power-flow node family (historical)", self.handoff
+        )
         self.assertIn(
             "## v3.0.16 unified power-flow node scale (historical)", self.handoff
         )
@@ -193,7 +225,11 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn("## v3.0.9 selector and rendering work", self.handoff)
         self.assertIn("## v3.0.8 dynamic Reduce Motion and transaction work", self.handoff)
         self.assertLess(
-            self.handoff.index("## v3.0.17 lighter power-flow node family"),
+            self.handoff.index("## v3.0.18 measured attached-device output"),
+            self.handoff.index("## v3.0.17 lighter power-flow node family (historical)"),
+        )
+        self.assertLess(
+            self.handoff.index("## v3.0.17 lighter power-flow node family (historical)"),
             self.handoff.index("## v3.0.16 unified power-flow node scale (historical)"),
         )
         self.assertLess(
