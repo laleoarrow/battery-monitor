@@ -42,7 +42,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.candidate_workflow = CANDIDATE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.22\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.23\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -57,11 +57,11 @@ class ReleasePackagingContractTests(unittest.TestCase):
         normalized_readme = " ".join(self.readme.split())
         normalized_promote_workflow = " ".join(self.promote_workflow.split())
         current_readme = self.readme.split(
-            "## What's new in v3.0.22", 1
+            "## What's new in v3.0.23", 1
         )[1].split("## v3.0.18 measured attached-device output (historical)", 1)[0]
         normalized_current_readme = " ".join(current_readme.split())
         current_handoff = self.handoff.split(
-            "## v3.0.22 strict power observation runtime", 1
+            "## v3.0.23 strict power observation runtime", 1
         )[1].split("## v3.0.18 measured attached-device output (historical)", 1)[0]
         normalized_current_handoff = " ".join(current_handoff.split())
         historical_v3017 = self.handoff.split(
@@ -132,14 +132,16 @@ class ReleasePackagingContractTests(unittest.TestCase):
             self.assertIn(battery_direction_topic, normalized_current_handoff)
 
         for connector_topic in (
-            "plugged, charging, and mixed-supply states",
-            "measured Device Output keeps",
+            "one closed port template extracted from the selected visual source",
+            "compact plugged-state accessory",
+            "existing on-battery Device Output node",
+            "reuse that same template",
+            "inconsistent cable-connector glyphs",
             "existing inline readout",
-            "compact horizontal connector icon",
-            "established visual style",
-            "adds no node or pipe",
-            "does not change popover height or power math",
-            "on-battery split unchanged",
+            "three-node and two-pipe layouts",
+            "popover height",
+            "power totals",
+            "conservation math",
             "does not accelerate firmware publication or hardware recognition",
         ):
             self.assertIn(connector_topic, normalized_current_readme)
@@ -246,7 +248,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         ):
             self.assertIn(historical_handoff_topic, normalized_historical_v3015)
 
-        self.assertIn("## v3.0.22 strict power observation runtime", self.handoff)
+        self.assertIn("## v3.0.23 strict power observation runtime", self.handoff)
         self.assertIn(
             "## v3.0.18 measured attached-device output (historical)", self.handoff
         )
@@ -265,7 +267,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn("## v3.0.9 selector and rendering work", self.handoff)
         self.assertIn("## v3.0.8 dynamic Reduce Motion and transaction work", self.handoff)
         self.assertLess(
-            self.handoff.index("## v3.0.22 strict power observation runtime"),
+            self.handoff.index("## v3.0.23 strict power observation runtime"),
             self.handoff.index("## v3.0.18 measured attached-device output (historical)"),
         )
         self.assertLess(

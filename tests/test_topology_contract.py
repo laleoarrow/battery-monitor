@@ -59,6 +59,23 @@ class TopologyContractTests(unittest.TestCase):
             self.source,
         )
 
+    def test_device_output_uses_one_shared_port_icon_template(self):
+        icon_factory = self.source.split(
+            "fileprivate static func nodeIconImage", 1
+        )[1].split("private static func rotatedAdapterImage", 1)[0]
+        plugged = self.source.split(
+            "private func configurePluggedDeviceOutputReadout", 1
+        )[1].split("private func configure(_ bundle", 1)[0]
+        on_battery = self.source.split("case .onBattery:", 1)[1].split(
+            "case .mixedSupply:", 1
+        )[0]
+
+        self.assertIn('case "device.output.port":', icon_factory)
+        self.assertIn('symbol: "device.output.port"', plugged)
+        self.assertIn('symbol: "device.output.port"', on_battery)
+        self.assertNotIn('symbol: "cable.connector.horizontal"', plugged)
+        self.assertNotIn('symbol: "cable.connector"', on_battery)
+
     def test_layout_positions_depend_only_on_layout(self):
         # Filling the gap left by a disconnected adapter puts the battery box
         # straight on top of the adapter's caption.

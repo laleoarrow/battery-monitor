@@ -286,3 +286,81 @@ and the formatted wattage as its value.
 No P3 item is required for the selected micro-adjustment.
 
 final result: passed
+
+## v3.0.23 shared Device Output port template
+
+### Source and implementation
+
+- Selected visual truth: `/Users/leoarrow/.codex/generated_images/01a01de2-549c-7111-8c6d-56eb04196ce7/exec-11bac02a-59e7-48be-8fe0-9c997944981c.png`.
+- Extracted source asset: `design/icon/device-output-port-template.png`
+  (64 × 64 pixels; SHA-256
+  `66bec3f39703faf1d5bf135d9e0dda919c95ce6e8450ec0d3e25091039797f4c`).
+- Plugged production capture: `/tmp/wattson-port-template-qa/idle-device.png`
+  (656 × 448 pixels, representing the 328 × 224-point
+  `PowerFlowView` at Retina 2× density).
+- On-battery production capture:
+  `/tmp/wattson-port-template-qa/battery-device.png` (656 × 448 pixels).
+- Full source/plugged/on-battery comparison:
+  `/tmp/wattson-port-template-qa/source-idle-battery-comparison.png`.
+- Focused icon comparison:
+  `/tmp/wattson-port-template-qa/focused-icons-comparison.png`.
+
+### Comparison
+
+The previous candidate used two different system cable glyphs: a horizontal
+connector for the compact plugged-state accessory and a vertical connector for
+the full on-battery Device Output node. Neither reproduced the selected
+design's closed horizontal port outline consistently. v3.0.23 replaces both
+call sites with one `device.output.port` template extracted from the selected
+visual source.
+
+The real AppKit captures confirm that the compact plugged-state icon now reads
+as a closed device port rather than a short blue line or dot. The on-battery
+node uses the same silhouette at the existing full-node scale and neutral tint.
+The icon therefore changes scale and semantic colour with its established
+context, but not its visual language.
+
+### Required fidelity surfaces
+
+- Layout and typography: the existing three-node/two-pipe topologies,
+  176-point plot, 22-point plugged readout slot, 224-point section height,
+  node and pipe positions, labels, fonts, and watt formatting are unchanged.
+- Colors and visual tokens: plugged output keeps the current state tint in its
+  26 × 26-point compact well; the on-battery node keeps the same neutral
+  treatment as the other downstream load node.
+- Image fidelity: both render paths consume the same extracted closed-port
+  raster template. The runtime does not substitute either
+  `cable.connector.horizontal` or `cable.connector` at the Device Output call
+  sites.
+- Power semantics: Device Output remains an auxiliary breakdown of System
+  Total. The correction does not change totals, conservation math, recognition
+  timing, or the eligibility of any reading.
+- Accessibility: the compact icon remains decorative and the existing
+  `Device Output` readout remains the sole plugged-state accessibility element.
+  The on-battery node retains its existing label and value. Runtime regression
+  tests cover uniqueness and ghost cleanup; the screenshots alone are not a
+  complete accessibility audit.
+
+### QA history
+
+1. [P2 resolved] The v3.0.22 SF Symbols did not match the selected closed-port
+   design and differed between plugged and on-battery presentations. The shared
+   extracted template removes that inconsistency.
+2. The final visual audit compared the selected source, real plugged-state
+   render, and real on-battery render in one normalized image. It found
+   P0 = 0, P1 = 0, and P2 = 0.
+3. [P3 accepted] The selected mock uses a slightly wider icon well and softer
+   shadow. Production retains the tighter 26 × 26-point near-square well and
+   more restrained shadow to preserve the requested micro-adjustment scope and
+   the current Wattson layout.
+4. Focused Swift regression testing verifies one shared port template in both
+   states, unchanged accessibility and ghost cleanup, and exactly three nodes
+   and two pipes. Static topology testing separately locks the shared token and
+   unchanged geometry/math contract.
+
+### Follow-up polish
+
+No P0, P1, or P2 item remains. The single P3 difference is accepted and does
+not require another layout change.
+
+final result: passed

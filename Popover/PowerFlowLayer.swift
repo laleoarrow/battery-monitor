@@ -51,6 +51,45 @@ final class FlowNodeView: NSView {
         rotatedAdapterImage(addsSlash: true)
     private static let restoredChargingBatteryImage = chargingBatteryImage()
     private static let restoredSystemImage = systemChipImage()
+    /// Byte-for-byte copy of design/icon/device-output-port-template.png,
+    /// extracted from the selected design rather than recreated in code.
+    private static let deviceOutputPortTemplateImage: NSImage? = {
+        let base64 = """
+        iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAB3RJTUUH6ggYDwsq7cXx1QAAApNJ
+        REFUaN7tlr1rFEEYh591l93cJZETAomFwYAQsQgWKTSCIKSwTaOCYGUhiFpZpcp/IArBKhBI60cn
+        IklhY1CLCCnEIiomYjDKXe5yt3e3cz+LDDERL2H3wMZ5ttidnXnf+b3vfILD4XA4HA6Hw/G/4x3c
+        RBP0kwABIQZDQgD4hOQx1AFo2DdAjSqQB754LzvUp27NKVasptLT1Kpmda2DDGiQR4yyzhJVQgJ8
+        AIzNRw8BdWoA1AGDDzQw5GwG4CjHeOZdyRZ9l95LWtR1Dfy1vq14eQp0WIMa0k0tS7qdTcCkpGWN
+        ZDL+7WVGTcXqa1ffPoouysA97y7oCJfpIQLAAD45++1j8KkAEJIH6tRIAMMn7wnoHPNE3PHup1V+
+        UdKqxgG0kGEKStI4qFslSbPt+jnUVkEdCCiCznABECIhQSmiOA3eFgbobdckaGtcBjvrfTtYG7YU
+        Ysjj2+ETYPb42cDQv6tsdnykElADDBGwDsBzHmAICWngkyckT0iDKgZjt6UCeb4yT4FpRoAPAKzT
+        Z+dPGjQk6bPOA+idYo2msh5QLGkIQC8kLaTPQGNX4m4x5r1NI8D7prOMeR8ByAHF9Bk4IamiqdSG
+        f/oZ0YqUwY8CtSStbA9CBwLmJEkns5hOSSrpja5m7rxbk4olzbRvs/9h9JgJNvnBa4qU7SHUwGCA
+        hIiQ7UUGBkOITy8hDYoUqXKcU4zRzxrD3lbWGB7qu0pqSYrVVFOxfSqqKFZLTfu3op+K1dqzD7bU
+        UkmL+58mB15IdINLFAgpEpGz8UYkGCJyO2vFpwbkiMjh02D7OF7iKdPeZkcCQB7DFChjCDH4+HZb
+        8W0ZfAJ7R0iIrKQQeOWtZUy9w+FwOBwOh8Ph+Hf8Am/+sFQHMOr3AAAAAElFTkSuQmCC
+        """
+        guard let data = Data(
+            base64Encoded: base64,
+            options: .ignoreUnknownCharacters
+        ), let source = NSImage(data: data) else { return nil }
+
+        // The source PNG intentionally keeps transparent extraction padding.
+        // Crop only that padding while rendering its real pixels into the same
+        // 32-point template canvas used by the other node icons. At 16 points
+        // the visible port is 14 x 6.65 points, matching the selected design.
+        let image = NSImage(size: NSSize(width: 32, height: 32), flipped: false) { _ in
+            source.draw(
+                in: NSRect(x: 2, y: 9.35, width: 28, height: 13.3),
+                from: NSRect(x: 11, y: 23, width: 40, height: 19),
+                operation: .sourceOver,
+                fraction: 1
+            )
+            return true
+        }
+        image.isTemplate = true
+        return image
+    }()
     private static let normalizedBatteryImages: [String: NSImage] = {
         let symbols = ["battery.25", "battery.50", "battery.75", "battery.100"]
         return Dictionary(uniqueKeysWithValues: symbols.compactMap { symbol in
@@ -142,6 +181,8 @@ final class FlowNodeView: NSView {
             return restoredDisconnectedAdapterImage
         case "battery.100.bolt":
             return restoredChargingBatteryImage
+        case "device.output.port":
+            return deviceOutputPortTemplateImage
         case "cable.connector.horizontal":
             return nodeSymbolImage(
                 named: "cable.connector.horizontal",
@@ -971,7 +1012,7 @@ final class PowerFlowView: PopoverSection {
         pluggedDeviceOutputReadout.setAccessibilityLabel("Device Output")
         pluggedDeviceOutputReadout.setAccessibilityValue(value)
         pluggedDeviceOutputIcon.image = FlowNodeView.nodeIconImage(
-            symbol: "cable.connector.horizontal",
+            symbol: "device.output.port",
             accessibilityDescription: "Device Output"
         )
         pluggedDeviceOutputIcon.contentTintColor = tint
@@ -1039,7 +1080,7 @@ final class PowerFlowView: PopoverSection {
                 adapterNode.setPresence(1)
                 systemNode.configure(symbol: "cpu", caption: "Mac Load",
                                      value: PopoverStyle.watts(macLoadW), tint: color)
-                batteryNode.configure(symbol: "cable.connector", caption: "Device Output",
+                batteryNode.configure(symbol: "device.output.port", caption: "Device Output",
                                       value: PopoverStyle.watts(deviceOutputW), tint: color)
                 batteryNode.setPresence(1)
             } else {

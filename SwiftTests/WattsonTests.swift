@@ -1751,14 +1751,10 @@ final class WattsonTests: XCTestCase {
                 .compactMap { $0 as? NSTextField }
                 .filter { $0.accessibilityLabel() == "Device Output" }
         }
-        let inlineDeviceOutputIconData = FlowNodeView
-            .iconImageForTest(symbol: "cable.connector.horizontal")?
+        let deviceOutputPortIconData = FlowNodeView
+            .iconImageForTest(symbol: "device.output.port")?
             .tiffRepresentation
-        let nodeDeviceOutputIconData = FlowNodeView
-            .iconImageForTest(symbol: "cable.connector")?
-            .tiffRepresentation
-        XCTAssertNotNil(inlineDeviceOutputIconData)
-        XCTAssertNotNil(nodeDeviceOutputIconData)
+        XCTAssertNotNil(deviceOutputPortIconData)
 
         func descendants(of view: NSView) -> [NSView] {
             view.subviews + view.subviews.flatMap(descendants(of:))
@@ -1788,12 +1784,8 @@ final class WattsonTests: XCTestCase {
             return visibleOnly ? icons.filter(isEffectivelyVisible) : icons
         }
 
-        func inlineDeviceOutputIconViews(visibleOnly: Bool = false) -> [NSImageView] {
-            iconViews(matching: inlineDeviceOutputIconData, visibleOnly: visibleOnly)
-        }
-
-        func nodeDeviceOutputIconViews(visibleOnly: Bool = false) -> [NSImageView] {
-            iconViews(matching: nodeDeviceOutputIconData, visibleOnly: visibleOnly)
+        func deviceOutputPortIconViews(visibleOnly: Bool = false) -> [NSImageView] {
+            iconViews(matching: deviceOutputPortIconData, visibleOnly: visibleOnly)
         }
 
         func assertPluggedDeviceOutputAccessory(
@@ -1819,18 +1811,18 @@ final class WattsonTests: XCTestCase {
             XCTAssertEqual(flow.nodeFramesForTest.count, 3, file: file, line: line)
             XCTAssertEqual(flow.branchThicknessesForTest.count, 2, file: file, line: line)
 
-            let deviceIcons = inlineDeviceOutputIconViews()
+            let deviceIcons = deviceOutputPortIconViews()
             XCTAssertEqual(
                 deviceIcons.count,
                 1,
-                "plugged Device Output must own exactly one cable icon",
+                "plugged Device Output must own exactly one port-template icon",
                 file: file,
                 line: line
             )
             XCTAssertEqual(
-                inlineDeviceOutputIconViews(visibleOnly: true).count,
+                deviceOutputPortIconViews(visibleOnly: true).count,
                 1,
-                "the inline cable icon must be visible with the readout",
+                "the inline port-template icon must be visible with the readout",
                 file: file,
                 line: line
             )
@@ -1883,7 +1875,7 @@ final class WattsonTests: XCTestCase {
         ) {
             XCTAssertTrue(deviceOutputFields().isEmpty, file: file, line: line)
             XCTAssertTrue(
-                inlineDeviceOutputIconViews().isEmpty,
+                deviceOutputPortIconViews().isEmpty,
                 "hidden/invalid Device Output must clear the accessory icon image",
                 file: file,
                 line: line
@@ -1925,8 +1917,11 @@ final class WattsonTests: XCTestCase {
         )
         XCTAssertTrue(accessibleFields.allSatisfy { $0.accessibilityRole() == .staticText })
         XCTAssertEqual(deviceOutputFields().map(\.stringValue), ["12.2 W"])
-        XCTAssertEqual(nodeDeviceOutputIconViews().count, 1)
-        XCTAssertTrue(inlineDeviceOutputIconViews().isEmpty)
+        XCTAssertEqual(
+            deviceOutputPortIconViews().count,
+            1,
+            "on-battery Device Output must reuse the same port-template icon"
+        )
         XCTAssertEqual(
             visibleIconViews().count,
             3,
@@ -2078,8 +2073,11 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(flow.topologyForTest, "batteryOutputSplit")
         XCTAssertEqual(deviceOutputFields().count, 1, "on-battery split must not add a duplicate readout")
         XCTAssertEqual(deviceOutputFields().first?.stringValue, "12.2 W")
-        XCTAssertEqual(nodeDeviceOutputIconViews().count, 1)
-        XCTAssertTrue(inlineDeviceOutputIconViews().isEmpty)
+        XCTAssertEqual(
+            deviceOutputPortIconViews().count,
+            1,
+            "on-battery Device Output must reuse the same port-template icon"
+        )
         XCTAssertEqual(visibleIconViews().count, 3)
         XCTAssertEqual(flow.nodePresentationsForTest.count, 3)
         XCTAssertEqual(flow.nodeFramesForTest.count, 3)

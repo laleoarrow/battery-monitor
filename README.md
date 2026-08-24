@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3022">v3.0.22 candidate notes</a>
+  <a href="#whats-new-in-v3023">v3.0.23 candidate notes</a>
 </p>
 
 <p align="center">
@@ -41,16 +41,17 @@ where it is going, and how the picture has changed over the last two minutes.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
 
-## What's new in v3.0.22
+## What's new in v3.0.23
 
-> v3.0.22 is the current release candidate. v3.0.17 remains the current public release until the candidate completes the release gates.
+> v3.0.23 is the current release candidate. v3.0.17 remains the current public release until the candidate completes the release gates.
 
-- In plugged, charging, and mixed-supply states, measured Device Output keeps
-  its existing inline readout and adds a compact horizontal connector icon in
-  the established visual style. This presentation-only change adds no node or
-  pipe, does not change popover height or power math, and leaves the on-battery
-  split unchanged. It does not accelerate firmware publication or hardware
-  recognition.
+- Device Output now uses one closed port template extracted from the selected
+  visual source. The compact plugged-state accessory and the existing
+  on-battery Device Output node reuse that same template, replacing their
+  inconsistent cable-connector glyphs. The existing inline readout, three-node
+  and two-pipe layouts, popover height, power totals, and conservation math are
+  unchanged. This presentation-only correction does not accelerate firmware
+  publication or hardware recognition.
 
 - Uses signed battery voltage × current to govern battery-flow direction when
   direct adapter and system rails arrive asynchronously. This prevents an
