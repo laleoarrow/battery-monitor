@@ -54,14 +54,18 @@ enum Settings {
     private static var testDefaults: UserDefaults?
 #endif
 
-    private static var defaults: UserDefaults {
-#if DEBUG
-        let defaults = testDefaults ?? .standard
-#else
+    private static let productionDefaults: UserDefaults = {
         let defaults = UserDefaults.standard
-#endif
         defaults.register(defaults: registeredDefaults)
         return defaults
+    }()
+
+    private static var defaults: UserDefaults {
+#if DEBUG
+        return testDefaults ?? productionDefaults
+#else
+        return productionDefaults
+#endif
     }
 
     /// Matches the system battery's "Show Percentage". On by default.

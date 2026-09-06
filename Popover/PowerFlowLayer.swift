@@ -11,7 +11,7 @@ enum FlowLayout {
 /// The single cubic every pipe is built from. Keeping the control points
 /// explicit lets particles be seated analytically along the curve instead of
 /// depending on an animation having started.
-struct PipeGeometry {
+struct PipeGeometry: Equatable {
     var start: CGPoint
     var control1: CGPoint
     var control2: CGPoint
@@ -441,6 +441,11 @@ final class PipeBundle {
     private var particlesAreAnimating = false
     private var particleTopology = ""
     private var geometry = PipeGeometry(start: .zero, control1: .zero, control2: .zero, end: .zero)
+    private var particleGeometry: PipeGeometry?
+#if DEBUG
+    private(set) var particleGeometryUpdatesForTest = 0
+    private(set) var particleRideInstallationsForTest = 0
+#endif
 
     init() {
         trough.fillColor = nil
@@ -574,11 +579,15 @@ final class PipeBundle {
         particles.forEach { $0.removeFromSuperlayer() }
         particles.removeAll()
         particleOffsets.removeAll()
+        particleGeometry = nil
         guard wanted > 0 else { return }
 
         var rng = SeededRNG(seed: seed)
         let tint = hot ? PopoverStyle.saturationParticle : NSColor.white
         let basePath = geometry.path
+#if DEBUG
+        particleGeometryUpdatesForTest += 1
+#endif
 
         for index in 0..<wanted {
             let offset = (rng.nextUnit() * 2 - 1) * thickness * 0.36
@@ -634,8 +643,12 @@ final class PipeBundle {
             fade.isRemovedOnCompletion = false
 
             dot.add(ride, forKey: "ride")
+#if DEBUG
+            particleRideInstallationsForTest += 1
+#endif
             dot.add(fade, forKey: "fade")
         }
+        particleGeometry = geometry
         retimeParticles(period: period)
     }
 
@@ -644,8 +657,14 @@ final class PipeBundle {
     /// can move a split point without changing topology; leaving the original
     /// path in place made the sparks drift beside the pipe.
     private func retargetParticlesToCurrentGeometry() {
-        guard particles.count == particleOffsets.count, !particles.isEmpty else { return }
+        // `apply` also runs for wattage and color changes. Only rebuild ride
+        // paths when their actual curve changes; keep speed retiming separate.
+        guard particleGeometry != geometry,
+              particles.count == particleOffsets.count, !particles.isEmpty else { return }
         let basePath = geometry.path
+#if DEBUG
+        particleGeometryUpdatesForTest += 1
+#endif
         let count = CGFloat(particles.count)
 
         for (index, pair) in zip(particles, particleOffsets).enumerated() {
@@ -676,7 +695,11 @@ final class PipeBundle {
             // The original animation is immutable once attached. Recreate its
             // timing exactly and replace only the path, preserving the phase.
             dot.add(ride, forKey: "ride")
+#if DEBUG
+            particleRideInstallationsForTest += 1
+#endif
         }
+        particleGeometry = geometry
     }
 
     private func retimeParticles(period: CFTimeInterval) {
@@ -691,6 +714,7 @@ final class PipeBundle {
     }
 
     var thicknessForTest: CGFloat { trough.lineWidth }
+    var particleLayersForTest: [CALayer] { particles }
 #endif
 }
 
@@ -1151,6 +1175,18 @@ final class PowerFlowView: PopoverSection {
 
     var branchThicknessesForTest: [CGFloat] {
         bundles.map(\.thicknessForTest)
+    }
+
+    var particleGeometryUpdatesForTest: Int {
+        bundles.reduce(0) { $0 + $1.particleGeometryUpdatesForTest }
+    }
+
+    var particleRideInstallationsForTest: Int {
+        bundles.reduce(0) { $0 + $1.particleRideInstallationsForTest }
+    }
+
+    var particleLayersForTest: [CALayer] {
+        bundles.flatMap(\.particleLayersForTest)
     }
 
     var breathingMetricsForTest: (running: Int, installations: Int) {

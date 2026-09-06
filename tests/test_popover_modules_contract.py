@@ -211,10 +211,20 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertNotIn("rebuildPaths()", update)
 
     def test_history_intent_is_carried_through_sample_availability(self):
-        self.assertIn("sampleNow(recordHistory: true)", self.status)
-        self.assertIn("sampleNow(recordHistory: false)", self.status)
+        cadence = self.status.split("struct SamplingCadence", 1)[1].split(
+            "final class StatusItemController", 1
+        )[0]
+        self.assertIn("guard now >= nextHistoryTime else { return false }", cadence)
+        self.assertIn("resetHistory(at: now)", cadence)
+        self.assertIn("return true", cadence)
+        periodic = self.status.split("private func scheduleSamplingClock()", 1)[1].split(
+            "private func startDisplayClock()", 1
+        )[0]
+        self.assertIn("let recordHistory = self.samplingCadence.takeHistoryRequest", periodic)
+        self.assertIn("self.sampleNow(recordHistory: recordHistory)", periodic)
         self.assertIn("recordHistory: completedRequest.recordHistory", self.status)
         self.assertIn("if availabilityPlan.shouldRecordHistory", self.status)
+        self.assertIn("history.append(fresh.totalInputW)", self.status)
 
     def test_status_controller_pushes_live_data_into_the_popover(self):
         self.assertIn("popover.update(", self.status)

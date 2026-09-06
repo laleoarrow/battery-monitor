@@ -1121,6 +1121,7 @@ let interactionSettings = SettingsWindowController(
     frameAutosaveName: nil
 )
 let settingsOwner = StatusItemController()
+settingsOwner.configureSamplingRequestsForTest { _, _, _ in }
 settingsOwner.configureSettingsWindowForTest(interactionSettings)
 settingsOwner.wireSettingsPresentationForTest()
 
@@ -1249,6 +1250,82 @@ SystemBatteryIconController.resetTestConfiguration()
 Settings.resetTestConfiguration()
 settingsDefaults.removePersistentDomain(forName: settingsSuiteName)
 NSApp.mainMenu = previousMainMenu
+
+// ---- 11. 真实控制器单采样时钟：重排 timer 不能吞掉打开事件 ----
+// Intercept before the production coalescer/runtime so these checks exercise
+// actual Timer replacement and deferred controller callbacks without IOKit or
+// an installed helper. Reducer/history timing has separate deterministic tests.
+weak var releasedSamplingOwner: StatusItemController?
+autoreleasepool {
+    let owner = StatusItemController()
+    releasedSamplingOwner = owner
+    var requests: [(history: Bool, fresh: Bool, supersedes: Bool)] = []
+    owner.configureSamplingRequestsForTest { history, fresh, supersedes in
+        requests.append((history, fresh, supersedes))
+    }
+    owner.setSamplingDisplayActiveForTest(true)
+    let openingTimer = owner.samplingTimerForTest
+    check("打开控制器创建有效的单采样 timer",
+          openingTimer?.isValid == true
+              && openingTimer?.tolerance == SamplingCadence.displayTolerance
+              && owner.displayClockIsRunningForTest)
+
+    // Force the periodic callback before DispatchQueue.main drains the opening
+    // callback. It replaces the Timer, but not the identity of the opening.
+    openingTimer?.fire()
+    let periodicReplacement = owner.samplingTimerForTest
+    check("周期回调使旧 timer 失效并安排唯一有效替代",
+          openingTimer?.isValid == false
+              && periodicReplacement?.isValid == true
+              && periodicReplacement !== openingTimer)
+    check("手动周期回调不读取硬件且不要求额外 fresh follow-up",
+          requests.count == 1 && requests.first?.fresh == false
+              && requests.first?.supersedes == false)
+    var openingQueueDrained = false
+    DispatchQueue.main.async { openingQueueDrained = true }
+    _ = runApplication(until: { openingQueueDrained }, timeout: 1)
+    check("timer 重建后真实打开回调仍请求一次 fresh follow-up",
+          openingQueueDrained && requests.filter { $0.fresh }.count == 1
+              && requests.allSatisfy { !$0.supersedes },
+          "requests=\(requests)")
+
+    let visibleTimer = owner.samplingTimerForTest
+    owner.setSamplingDisplayActiveForTest(false)
+    let hiddenTimer = owner.samplingTimerForTest
+    check("关闭显示保留有效后台采样而不是停止全部采样",
+          !owner.displayClockIsRunningForTest
+              && visibleTimer?.isValid == false
+              && hiddenTimer?.isValid == true
+              && hiddenTimer !== visibleTimer
+              && hiddenTimer?.tolerance == SamplingCadence.historyTolerance)
+    requests.removeAll()
+    hiddenTimer?.fire()
+    check("关闭后的真实 timer 仍能请求采样并继续重排",
+          requests.count == 1 && requests.first?.fresh == false
+              && hiddenTimer?.isValid == false
+              && owner.samplingTimerForTest?.isValid == true)
+
+    // Neither opening callback has run when the visibility changes again.
+    requests.removeAll()
+    owner.setSamplingDisplayActiveForTest(true)
+    let supersededOpeningTimer = owner.samplingTimerForTest
+    owner.setSamplingDisplayActiveForTest(false)
+    owner.setSamplingDisplayActiveForTest(true)
+    let currentOpeningTimer = owner.samplingTimerForTest
+    check("快速关闭重开只保留当前打开的有效 timer",
+          supersededOpeningTimer?.isValid == false
+              && currentOpeningTimer?.isValid == true
+              && currentOpeningTimer !== supersededOpeningTimer)
+    var reopeningQueueDrained = false
+    DispatchQueue.main.async { reopeningQueueDrained = true }
+    _ = runApplication(until: { reopeningQueueDrained }, timeout: 1)
+    check("真实关闭重开拒绝旧打开回调且保留一次当前 fresh 请求",
+          reopeningQueueDrained && requests.filter { $0.fresh }.count == 1
+              && owner.samplingTimerForTest?.isValid == true,
+          "requests=\(requests)")
+    owner.setSamplingDisplayActiveForTest(false)
+}
+check("单采样 timer 和采集拦截器不会保留控制器", releasedSamplingOwner == nil)
 
 NSStatusBar.system.removeStatusItem(item)
 if !pass {
