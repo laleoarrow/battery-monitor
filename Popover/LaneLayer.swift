@@ -104,7 +104,7 @@ final class LaneView: PopoverSection {
               ceiling: ceiling, color: color)
         apply(lanes[1],
               symbol: snapshot.state == .charging ? "battery.100.bolt" : "battery.50",
-              caption: PopoverStyle.batteryFlowLabel(snapshot.state),
+              caption: PopoverStyle.batteryFlowLabel(snapshot),
               watts: batteryWatts, ceiling: ceiling, color: color)
     }
 

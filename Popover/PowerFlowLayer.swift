@@ -851,7 +851,13 @@ final class PowerFlowView: PopoverSection {
         if batteryOutputSplitDeviceW(for: snapshot) != nil {
             return .batteryOutputSplit
         }
-        return snapshot.batteryW < -PowerSnapshot.epsilon ? .batteryLed : .adapterLed
+        return snapshot.state == .onBattery
+            || snapshot.batteryW < -PowerSnapshot.epsilon ? .batteryLed : .adapterLed
+    }
+
+    private func flowThickness(_ watts: Double) -> CGFloat {
+        guard watts.isFinite, watts > 0 else { return 0 }
+        return VisualEncoding.thickness(watts)
     }
 
     /// Node coordinates depend on the layout alone, never on whether a given
@@ -907,8 +913,8 @@ final class PowerFlowView: PopoverSection {
         switch layout {
         case .adapterLed:
             let charging = snapshot.batteryW > PowerSnapshot.epsilon
-            let upperThickness = VisualEncoding.thickness(snapshot.systemW)
-            let lowerThickness = charging ? VisualEncoding.thickness(abs(snapshot.batteryW)) : 0
+            let upperThickness = flowThickness(snapshot.systemW)
+            let lowerThickness = charging ? flowThickness(abs(snapshot.batteryW)) : 0
             let cy = Self.midY
 
             // Tangency: the two pipes share an edge at the node centre, so a
@@ -931,8 +937,8 @@ final class PowerFlowView: PopoverSection {
 
         case .batteryLed:
             let adapterActive = snapshot.adapterW > PowerSnapshot.epsilon
-            let upperThickness = adapterActive ? VisualEncoding.thickness(snapshot.adapterW) : 0
-            let lowerThickness = VisualEncoding.thickness(abs(snapshot.batteryW))
+            let upperThickness = adapterActive ? flowThickness(snapshot.adapterW) : 0
+            let lowerThickness = flowThickness(abs(snapshot.batteryW))
             let cy = Self.midY
 
             let upperEnd = cy - lowerThickness / 2
@@ -955,8 +961,8 @@ final class PowerFlowView: PopoverSection {
         case .batteryOutputSplit:
             let deviceOutputW = batteryOutputSplitDeviceW(for: snapshot) ?? 0
             let macLoadW = max(snapshot.systemW - deviceOutputW, 0)
-            let upperThickness = VisualEncoding.thickness(macLoadW)
-            let lowerThickness = VisualEncoding.thickness(deviceOutputW)
+            let upperThickness = flowThickness(macLoadW)
+            let lowerThickness = flowThickness(deviceOutputW)
             let cy = Self.midY
 
             // Keep the two outgoing edges tangent under the battery well so
@@ -1027,11 +1033,14 @@ final class PowerFlowView: PopoverSection {
                            hot: Bool, seed: UInt64, animated: Bool, topology: String) {
         bundle.apply(geometry: geometry, thickness: thickness, color: color,
                      bounds: plot.bounds, animated: animated)
+        let carriesPower = thickness > 0.5
         bundle.rebuildParticles(count: particles, thickness: thickness, color: color,
                                 period: particlePeriod, seed: seed, hot: hot,
-                                animating: animationsEnabled, topology: topology)
-        if animationsEnabled {
+                                animating: animationsEnabled && carriesPower, topology: topology)
+        if animationsEnabled && carriesPower {
             bundle.startFlow(multiplier: motionMultiplier, width: plot.bounds.width)
+        } else {
+            bundle.stopFlow()
         }
     }
 
@@ -1066,7 +1075,8 @@ final class PowerFlowView: PopoverSection {
             adapterNode.configure(symbol: "powerplug", caption: "Adapter",
                                   value: PopoverStyle.watts(snapshot.adapterW), tint: color)
             adapterNode.setPresence(1)
-            batteryNode.configure(symbol: batterySymbol, caption: "Battery · Full",
+            batteryNode.configure(symbol: batterySymbol,
+                                  caption: "Battery · \(PopoverStyle.batteryFlowLabel(snapshot))",
                                   value: "\(snapshot.percent) %", tint: color)
             batteryNode.setPresence(0.6)
             batteryNode.setBreathing(animationsEnabled, color: color)

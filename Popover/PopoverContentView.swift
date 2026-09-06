@@ -55,7 +55,7 @@ final class PopoverHeaderView: PopoverSection {
             state.stringValue = String(format: "Data Issue · Imbalance %+.1f W", snapshot.conservationError)
             state.textColor = PopoverStyle.red
         } else {
-            state.stringValue = PopoverStyle.stateTitle(snapshot.state)
+            state.stringValue = PopoverStyle.stateTitle(snapshot)
             state.textColor = PopoverStyle.secondaryText
         }
         percent.stringValue = "\(snapshot.percent)%"
@@ -373,6 +373,7 @@ final class PopoverContentViewController: NSViewController {
     private var presentationActive = false
     private var animationsEnabled = false
     private var latestSnapshot = PowerSnapshot()
+    private var latestDegraded = false
     private var latestHistory: [Double] = []
     private var latestPeak: Double = 0
     private var systemBatteryIconHidden: Bool?
@@ -417,6 +418,9 @@ final class PopoverContentViewController: NSViewController {
         latestSnapshot = snapshot
         latestHistory = history
         latestPeak = peak
+        let degradationChanged = latestDegraded != degraded
+        latestDegraded = degraded
+        if degradationChanged { setAnimationsEnabled(animationsEnabled) }
 
         header.update(snapshot: snapshot, degraded: degraded)
         for module in PopoverModule.allCases where isVisible(module) {
@@ -431,7 +435,7 @@ final class PopoverContentViewController: NSViewController {
 #endif
         switch module {
         case .flow:
-            flowView.update(snapshot: latestSnapshot, animated: animationsEnabled)
+            flowView.update(snapshot: latestSnapshot, animated: animationsEnabled && !latestDegraded)
         case .ring:
             ringView.update(snapshot: latestSnapshot)
         case .lanes:
@@ -477,10 +481,13 @@ final class PopoverContentViewController: NSViewController {
 
     func setAnimationsEnabled(_ enabled: Bool) {
         animationsEnabled = enabled
-        flowView.setAnimationsEnabled(enabled && !flowView.isHidden)
-        ringView.setAnimationsEnabled(enabled && !ringView.isHidden)
-        laneView.setAnimationsEnabled(enabled && !laneView.isHidden)
-        if !enabled, let root = view.layer {
+        // Keep the requested policy so a fresh reading can resume motion, but
+        // never animate stale telemetry as if it were a live power flow.
+        let allowsMotion = enabled && !latestDegraded
+        flowView.setAnimationsEnabled(allowsMotion && !flowView.isHidden)
+        ringView.setAnimationsEnabled(allowsMotion && !ringView.isHidden)
+        laneView.setAnimationsEnabled(allowsMotion && !laneView.isHidden)
+        if !allowsMotion, let root = view.layer {
             removeAnimationsRecursively(from: root)
         }
     }
