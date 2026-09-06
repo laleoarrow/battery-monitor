@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3023">v3.0.23 candidate notes</a>
+  <a href="#whats-new-in-v3024">v3.0.24 notes</a>
 </p>
 
 <p align="center">
@@ -41,9 +41,24 @@ where it is going, and how the picture has changed over the last two minutes.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
 
-## What's new in v3.0.23
+## What's new in v3.0.24
 
-> v3.0.23 is the current release candidate. v3.0.17 remains the current public release until the candidate completes the release gates.
+The Download link above always points to the latest release that has completed
+the public installation gates; a source version alone is not a published update.
+
+- Shares one allowlisted battery acquisition between the visible display and
+  shadow observer. Each sample now requests 12 registry properties instead of
+  19, with one service lookup instead of two. The helper still runs concurrently.
+  This reduces duplicate work and cross-read disagreement, not firmware update
+  latency; it is not a measured battery-life improvement.
+- Rejects malformed or oversized Device Output arrays without inventing a
+  zero-watt reading. Missing measurements remain unavailable, while valid
+  measured zero is preserved.
+- Includes the v3.0.23 improvements below, including the selected closed-port
+  icon. Existing power-flow geometry and the evidence-gated display policy stay
+  unchanged.
+
+## What's new in v3.0.23
 
 - Device Output now uses one closed port template extracted from the selected
   visual source. The compact plugged-state accessory and the existing

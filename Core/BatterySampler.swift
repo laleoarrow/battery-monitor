@@ -21,22 +21,10 @@ enum BatterySampler {
     }
 
     static func sampleResult() -> SampleResult {
-        let result = sampleResult(
+        sampleResult(
             from: batteryProperties(),
             lowPowerMode: ProcessInfo.processInfo.isLowPowerModeEnabled
         )
-        guard case let .snapshot(snapshot) = result else { return result }
-
-        // A conservation break means a field was parsed wrong. Say so loudly
-        // rather than rendering a plausible lie.
-        if abs(snapshot.conservationError) > 2.0 {
-            os_log("conservation broken by %{public}.2f W — adapter=%{public}.2f battery=%{public}.2f system=%{public}.2f",
-                   log: OSLog(subsystem: "com.leoarrow.wattson", category: "sampler"),
-                   type: .error,
-                   snapshot.conservationError, snapshot.adapterW, snapshot.batteryW, snapshot.systemW)
-        }
-
-        return .snapshot(snapshot)
     }
 
     static func sampleResult(
@@ -48,6 +36,16 @@ enum BatterySampler {
             from: props,
             lowPowerMode: lowPowerMode
         ) else { return .temporarilyUnavailable }
+
+        // A conservation break means a field was parsed wrong. Say so loudly
+        // rather than rendering a plausible lie.
+        if abs(snapshot.conservationError) > 2.0 {
+            os_log("conservation broken by %{public}.2f W — adapter=%{public}.2f battery=%{public}.2f system=%{public}.2f",
+                   log: OSLog(subsystem: "com.leoarrow.wattson", category: "sampler"),
+                   type: .error,
+                   snapshot.conservationError, snapshot.adapterW, snapshot.batteryW, snapshot.systemW)
+        }
+
         return .snapshot(snapshot)
     }
 
@@ -203,7 +201,7 @@ enum BatterySampler {
     /// PDPowermW, FilteredPower, Configured* fields, and USB allocations are
     /// negotiated capabilities or differently scaled values, not substitutes.
     static func resolvedDeviceOutputW(_ raw: Any?) -> Double? {
-        guard let entries = raw as? [Any] else { return nil }
+        guard let entries = raw as? NSArray, entries.count <= 64 else { return nil }
 
         var totalMilliwatts = 0
         var measuredPortCount = 0

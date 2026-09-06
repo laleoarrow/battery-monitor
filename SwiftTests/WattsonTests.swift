@@ -530,6 +530,17 @@ final class WattsonTests: XCTestCase {
         }
     }
 
+    func testDeviceOutputRejectsOversizedPortArraysWithoutReportingZero() {
+        let maximumPorts = Array(repeating: ["Watts": 0], count: 64)
+        XCTAssertEqual(BatterySampler.resolvedDeviceOutputW(maximumPorts), 0)
+        XCTAssertNil(BatterySampler.resolvedDeviceOutputW(
+            maximumPorts + [["Watts": 0]]
+        ))
+        XCTAssertNil(BatterySampler.resolvedDeviceOutputW(
+            Array(repeating: ["PDPowermW": 0], count: 64) + [["Watts": 100]]
+        ))
+    }
+
     func testResolvedSnapshotCarriesDeviceOutputThroughLivePowerMerge() throws {
         let props: [String: Any] = [
             "CurrentCapacity": NSNumber(value: 60),

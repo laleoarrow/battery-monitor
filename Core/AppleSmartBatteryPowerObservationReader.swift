@@ -17,8 +17,13 @@ protocol AppleSmartBatteryPowerRawSnapshotReading {
     ) -> AppleSmartBatteryPowerRawSnapshot
 }
 
+struct AppleSmartBatteryPowerSample {
+    let visibleSnapshot: PowerSnapshot?
+    let observation: AppleSmartBatteryObservation
+}
+
 protocol AppleSmartBatteryPowerObservationReading: AnyObject {
-    func readObservation() -> AppleSmartBatteryObservation
+    func readRuntimeSample() -> AppleSmartBatteryPowerSample
     func resetFreshness()
 }
 
@@ -33,6 +38,10 @@ final class AppleSmartBatteryPowerObservationReader:
         "Amperage",
         "PowerTelemetryData",
         "PowerOutDetails",
+    ]
+    static let runtimePropertyAllowlist = propertyAllowlist + [
+        "CurrentCapacity", "MaxCapacity", "CycleCount",
+        "Temperature", "VirtualTemperature",
     ]
 
     private static let telemetryAllowlist = [
@@ -51,6 +60,7 @@ final class AppleSmartBatteryPowerObservationReader:
 
     private let backend: any AppleSmartBatteryPowerRawSnapshotReading
     private let clock: () -> UInt64
+    private let lowPowerMode: () -> Bool
     private let maximumTrackingGapNanoseconds: UInt64
     private let trackerLock = NSLock()
     private var previousTelemetryToken: String?
@@ -64,22 +74,58 @@ final class AppleSmartBatteryPowerObservationReader:
             AppleSmartBatteryPowerObservationReader.monotonicNow,
         maximumTrackingGapNanoseconds: UInt64 =
             AppleSmartBatteryPowerObservationReader
-                .defaultTrackingGapNanoseconds
+                .defaultTrackingGapNanoseconds,
+        lowPowerMode: @escaping () -> Bool = {
+            ProcessInfo.processInfo.isLowPowerModeEnabled
+        }
     ) {
         self.backend = backend
         self.clock = clock
         self.maximumTrackingGapNanoseconds = maximumTrackingGapNanoseconds
+        self.lowPowerMode = lowPowerMode
     }
 
     func readObservation() -> AppleSmartBatteryObservation {
+        let (raw, capture) = readRaw(keys: Self.propertyAllowlist)
+        return observation(from: raw, capture: capture)
+    }
+
+    func readRuntimeSample() -> AppleSmartBatteryPowerSample {
+        // Both consumers see the same acquired field values. Individual
+        // registry properties still have no firmware-level atomicity guarantee.
+        let (raw, capture) = readRaw(keys: Self.runtimePropertyAllowlist)
+        let snapshot: PowerSnapshot?
+        if case let .snapshot(value) = BatterySampler.sampleResult(
+            from: raw.servicePresent ? raw.properties : nil,
+            lowPowerMode: lowPowerMode()
+        ) {
+            snapshot = value
+        } else {
+            snapshot = nil
+        }
+        return AppleSmartBatteryPowerSample(
+            visibleSnapshot: snapshot,
+            observation: observation(from: raw, capture: capture)
+        )
+    }
+
+    private func readRaw(
+        keys: [String]
+    ) -> (AppleSmartBatteryPowerRawSnapshot, MonotonicInterval) {
         let started = clock()
-        let raw = backend.readAllowlistedProperties(Self.propertyAllowlist)
+        let raw = backend.readAllowlistedProperties(keys)
         let ended = max(started, clock())
         let capture = try! MonotonicInterval(
             startedContinuousNanoseconds: started,
             endedContinuousNanoseconds: ended
         )
+        return (raw, capture)
+    }
 
+    private func observation(
+        from raw: AppleSmartBatteryPowerRawSnapshot,
+        capture: MonotonicInterval
+    ) -> AppleSmartBatteryObservation {
         guard raw.servicePresent else {
             resetFreshness()
             return .canonicalFixtureMissing(capture: capture)
@@ -302,8 +348,24 @@ final class AppleSmartBatteryPowerObservationReader:
         guard properties.keys.contains("PowerOutDetails") else {
             return .canonicalFixtureMissing(capture: capture)
         }
-        guard let rawPorts = arrayValue(properties["PowerOutDetails"]) else {
-            return .canonicalFixtureMissing(capture: capture)
+        // Bound per-sample work before bridging or traversing port entries.
+        // Invalid data is not evidence of a real zero-watt output.
+        guard let rawPorts = properties["PowerOutDetails"] as? NSArray,
+              rawPorts.count <= 64 else {
+            return DeviceOutputObservation(
+                fieldPresence: .invalid,
+                capture: capture,
+                ports: [],
+                measuredTotalWatts: try invalidPowerReading(
+                    "battery.deviceOutput.measuredTotalWatts",
+                    source: .derivedAggregate,
+                    kind: .derived,
+                    semantic: .deviceOutputMeasuredTotal,
+                    capture: capture,
+                    issue: "PowerOutDetails must contain at most 64 ports"
+                ),
+                completeness: .unknown
+            )
         }
 
         var ports: [DeviceOutputPortObservation] = []
@@ -859,12 +921,6 @@ private func projectedDictionary(
         }
     }
     return projected
-}
-
-private func arrayValue(_ raw: Any?) -> [Any]? {
-    if let values = raw as? [Any] { return values }
-    if let values = raw as? NSArray { return values.map { $0 } }
-    return nil
 }
 
 struct SystemAppleSmartBatteryPowerRawSnapshotReader:

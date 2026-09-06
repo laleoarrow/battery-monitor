@@ -4,11 +4,13 @@ import XCTest
 
 final class PowerObservationRuntimeTests: XCTestCase {
     func testNilPolicyNeverMakesRuntimeResolutionVisible() throws {
-        let reader = RuntimeBatteryReader(observation: missingBattery())
+        let reader = RuntimeBatteryReader(
+            observation: missingBattery(),
+            snapshot: snapshot(adapter: 20, battery: 5, system: 15)
+        )
         let recorder = RuntimeShadowRecorder()
         let runtime = PowerObservationRuntimeController(
             batteryReader: reader,
-            legacySnapshot: { self.snapshot(adapter: 20, battery: 5, system: 15) },
             helperObservation: { sequence in
                 .v5(self.response(sequence: sequence, pdtr: 70, pstr: 40))
             },
@@ -103,10 +105,12 @@ final class PowerObservationRuntimeTests: XCTestCase {
     }
 
     func testSequenceIsMonotonicAndEventsResetReaderFreshness() {
-        let reader = RuntimeBatteryReader(observation: missingBattery())
+        let reader = RuntimeBatteryReader(
+            observation: missingBattery(),
+            snapshot: snapshot(adapter: 0, battery: -10, system: 10)
+        )
         let runtime = PowerObservationRuntimeController(
             batteryReader: reader,
-            legacySnapshot: { self.snapshot(adapter: 0, battery: -10, system: 10) },
             helperObservation: { _ in .failed(.legacyV4Unavailable) },
             clock: RuntimeClock(values: [10, 20, 30, 40, 50, 60]).next,
             shadowRecorder: RuntimeShadowRecorder()
@@ -125,8 +129,10 @@ final class PowerObservationRuntimeTests: XCTestCase {
             averageCurrent: nil
         )
         let runtime = PowerObservationRuntimeController(
-            batteryReader: RuntimeBatteryReader(observation: battery),
-            legacySnapshot: { self.snapshot(adapter: 20, battery: -3, system: 23) },
+            batteryReader: RuntimeBatteryReader(
+                observation: battery,
+                snapshot: snapshot(adapter: 20, battery: -3, system: 23)
+            ),
             helperObservation: { sequence in
                 .v5(self.response(sequence: sequence, pdtr: 20, pstr: 23))
             },
@@ -151,11 +157,9 @@ final class PowerObservationRuntimeTests: XCTestCase {
         )
         let averageOnlyRuntime = PowerObservationRuntimeController(
             batteryReader: RuntimeBatteryReader(
-                observation: averageOnlyBattery
+                observation: averageOnlyBattery,
+                snapshot: snapshot(adapter: 20, battery: -3, system: 23)
             ),
-            legacySnapshot: {
-                self.snapshot(adapter: 20, battery: -3, system: 23)
-            },
             helperObservation: { sequence in
                 .v5(self.response(
                     sequence: sequence,
@@ -268,13 +272,134 @@ final class PowerObservationRuntimeTests: XCTestCase {
         )
     }
 
+    func testRuntimeReadsBatteryFieldsOnceForVisibleAndShadowAcrossPowerStates() throws {
+        let backend = RuntimeBatteryBackend(properties: [:])
+        let reader = AppleSmartBatteryPowerObservationReader(
+            backend: backend,
+            clock: RuntimeClock(values: Array(0..<20)).next,
+            lowPowerMode: { true }
+        )
+        let runtime = PowerObservationRuntimeController(
+            batteryReader: reader,
+            helperObservation: { _ in .failed(.legacyV4Unavailable) },
+            clock: { 100 },
+            shadowRecorder: RuntimeShadowRecorder()
+        )
+        let cases: [(Bool, Int, Int, Int, PowerState)] = [
+            (true, 1_000, 70, 7_000, .charging),
+            (true, 0, 100, 0, .pluggedIdle),
+            (false, -1_000, 70, 5_000, .onBattery),
+            (true, -500, 70, 5_000, .mixedSupply),
+            (false, -1_000, 5, 0, .onBattery),
+        ]
+        for (index, item) in cases.enumerated() {
+            let (plugged, current, percent, output, state) = item
+            var properties = telemetryProperties()
+            properties["ExternalConnected"] = NSNumber(value: plugged)
+            properties["InstantAmperage"] = NSNumber(value: current)
+            properties["CurrentCapacity"] = NSNumber(value: percent)
+            properties["CycleCount"] = NSNumber(value: 282)
+            properties["Temperature"] = NSNumber(value: 3_400)
+            properties["PowerOutDetails"] = [["Watts": output]]
+            backend.properties = properties
+
+            let result = runtime.sample(event: .powerSourceTransition)
+            let visible = try XCTUnwrap(result.visibleSnapshot)
+            XCTAssertEqual(backend.requestedKeys.count, index + 1)
+            XCTAssertEqual(backend.requestedKeys.last,
+                           AppleSmartBatteryPowerObservationReader.runtimePropertyAllowlist)
+            XCTAssertEqual(visible.state, state)
+            XCTAssertEqual(visible.percent, percent)
+            XCTAssertEqual(visible.cycleCount, 282)
+            XCTAssertTrue(visible.lowPowerMode)
+            XCTAssertEqual(visible.deviceOutputW, Double(output) / 1_000)
+            XCTAssertEqual(result.resolution.deviceOutputAuxiliary?.watts,
+                           visible.deviceOutputW)
+            XCTAssertEqual(result.resolution.battery?.signedWatts,
+                           Double(current) * 12_000 / 1_000_000)
+            XCTAssertFalse(result.resolution.userVisibleEligible)
+        }
+        let keys = try XCTUnwrap(backend.requestedKeys.first)
+        XCTAssertEqual(keys.count, 12)
+        XCTAssertEqual(Set(keys).count, keys.count)
+    }
+
+    func testSharedSampleDoesNotReuseBatteryOrUSBValuesAfterRemoval() throws {
+        var properties = telemetryProperties()
+        properties["PowerOutDetails"] = [["Watts": 7_000]]
+        let backend = RuntimeBatteryBackend(properties: properties)
+        let reader = AppleSmartBatteryPowerObservationReader(
+            backend: backend,
+            clock: RuntimeClock(values: Array(0..<10)).next,
+            lowPowerMode: { false }
+        )
+        XCTAssertEqual(reader.readRuntimeSample().visibleSnapshot?.deviceOutputW, 7)
+        backend.properties.removeValue(forKey: "PowerOutDetails")
+        let removed = reader.readRuntimeSample()
+        XCTAssertNil(removed.visibleSnapshot?.deviceOutputW)
+        XCTAssertEqual(removed.observation.deviceOutput.fieldPresence, .missing)
+
+        backend.properties.removeValue(forKey: "CurrentCapacity")
+        let partial = reader.readRuntimeSample()
+        XCTAssertNil(partial.visibleSnapshot)
+        XCTAssertEqual(partial.observation.servicePresence, .present)
+        XCTAssertEqual(partial.observation.voltageMillivolts.value, 12_000)
+
+        backend.servicePresent = false
+        let absent = reader.readRuntimeSample()
+        XCTAssertNil(absent.visibleSnapshot)
+        XCTAssertEqual(absent.observation.servicePresence, .missing)
+    }
+
+    func testSharedBatteryAcquisitionStillRunsConcurrentlyWithHelper() {
+        let batteryStarted = DispatchSemaphore(value: 0)
+        let helperStarted = DispatchSemaphore(value: 0)
+        let backend = RuntimeBatteryBackend(properties: telemetryProperties())
+        backend.onRead = {
+            batteryStarted.signal()
+            XCTAssertEqual(helperStarted.wait(timeout: .now() + 2), .success)
+        }
+        let runtime = PowerObservationRuntimeController(
+            batteryReader: AppleSmartBatteryPowerObservationReader(
+                backend: backend, lowPowerMode: { false }
+            ),
+            helperObservation: { _ in
+                helperStarted.signal()
+                XCTAssertEqual(batteryStarted.wait(timeout: .now() + 2), .success)
+                return .failed(.legacyV4Unavailable)
+            },
+            clock: { 100 },
+            shadowRecorder: RuntimeShadowRecorder()
+        )
+        XCTAssertNotNil(runtime.sample(event: .normal).visibleSnapshot)
+        XCTAssertEqual(backend.requestedKeys.count, 1)
+    }
+
+    func testReaderRejectsMalformedAndOversizedDeviceOutputWithoutInventingZero() {
+        for details: Any in ["invalid", Array(repeating: ["Watts": 0], count: 65)] {
+            var properties = telemetryProperties()
+            properties["PowerOutDetails"] = details
+            let reader = AppleSmartBatteryPowerObservationReader(
+                backend: RuntimeBatteryBackend(properties: properties),
+                clock: RuntimeClock(values: [0, 10]).next
+            )
+            let observation = reader.readObservation()
+            XCTAssertEqual(observation.servicePresence, .present)
+            XCTAssertEqual(observation.deviceOutput.fieldPresence, .invalid)
+            XCTAssertEqual(observation.deviceOutput.measuredTotalWatts.presence, .invalid)
+            XCTAssertNil(observation.deviceOutput.measuredTotalWatts.watts)
+            XCTAssertTrue(observation.deviceOutput.ports.isEmpty)
+        }
+    }
+
     private func makeRuntime(
         snapshot: PowerSnapshot,
         helperResult: @escaping (UInt64) -> HelperPowerObservationFetchResult
     ) -> PowerObservationRuntimeController {
         PowerObservationRuntimeController(
-            batteryReader: RuntimeBatteryReader(observation: missingBattery()),
-            legacySnapshot: { snapshot },
+            batteryReader: RuntimeBatteryReader(
+                observation: missingBattery(), snapshot: snapshot
+            ),
             helperObservation: helperResult,
             clock: RuntimeClock(values: [100, 200]).next,
             shadowRecorder: RuntimeShadowRecorder()
@@ -449,14 +574,18 @@ private final class RuntimeBatteryReader:
     AppleSmartBatteryPowerObservationReading
 {
     let observation: AppleSmartBatteryObservation
+    let snapshot: PowerSnapshot?
     private(set) var resetCount = 0
 
-    init(observation: AppleSmartBatteryObservation) {
+    init(observation: AppleSmartBatteryObservation, snapshot: PowerSnapshot?) {
         self.observation = observation
+        self.snapshot = snapshot
     }
 
-    func readObservation() -> AppleSmartBatteryObservation {
-        observation
+    func readRuntimeSample() -> AppleSmartBatteryPowerSample {
+        AppleSmartBatteryPowerSample(
+            visibleSnapshot: snapshot, observation: observation
+        )
     }
 
     func resetFreshness() {
@@ -467,7 +596,9 @@ private final class RuntimeBatteryReader:
 private final class RuntimeBatteryBackend:
     AppleSmartBatteryPowerRawSnapshotReading
 {
-    let properties: [String: Any]
+    var properties: [String: Any]
+    var servicePresent = true
+    var onRead: (() -> Void)?
     private(set) var requestedKeys: [[String]] = []
 
     init(properties: [String: Any]) {
@@ -478,9 +609,10 @@ private final class RuntimeBatteryBackend:
         _ keys: [String]
     ) -> AppleSmartBatteryPowerRawSnapshot {
         requestedKeys.append(keys)
+        onRead?()
         return AppleSmartBatteryPowerRawSnapshot(
-            servicePresent: true,
-            properties: properties
+            servicePresent: servicePresent,
+            properties: properties.filter { keys.contains($0.key) }
         )
     }
 }
