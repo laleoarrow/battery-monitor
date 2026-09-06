@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3024">v3.0.24 notes</a>
+  <a href="#whats-new-in-v3025">v3.0.25 notes</a>
 </p>
 
 <p align="center">
@@ -40,6 +40,17 @@ where it is going, and how the picture has changed over the last two minutes.
 - A compact native Settings window for General, Menu Bar Icon, and Modules.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
+
+## What's new in v3.0.25
+
+- Completed samples keep updating the display and history during a sustained
+  stream of power-source notifications, while one fresh follow-up remains
+  coalesced. A notification no longer indefinitely suppresses every result.
+- Wake events still invalidate a sample started before wake and transfer its
+  history request to the fresh sample, avoiding stale post-wake publication.
+- Keeps the v3.0.24 shared acquisition, measured-only Device Output, and
+  selected port artwork. This fixes software refresh starvation; firmware
+  measurement delays and absolute accuracy are not claimed to be solved.
 
 ## What's new in v3.0.24
 
