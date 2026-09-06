@@ -58,7 +58,9 @@ class FailurePathContractTests(unittest.TestCase):
         self.assertIn("SampleRequestCoalescer", self.status)
         self.assertIn("sampleRequests.request", sampling)
         self.assertIn("DispatchGroup()", self.runtime)
-        self.assertEqual(self.runtime.count("acquisitionQueue.async"), 3)
+        self.assertEqual(self.runtime.count("acquisitionQueue.async"), 2)
+        self.assertIn("batteryReader.readRuntimeSample()", self.runtime)
+        self.assertNotIn("legacySnapshot()", self.runtime)
 
     def test_logs_the_raw_fields_when_conservation_breaks(self):
         self.assertIn("conservationError", self.sampler)

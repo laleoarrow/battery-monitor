@@ -62,7 +62,6 @@ final class PrivacySafePowerObservationShadowRecorder:
 
 final class PowerObservationRuntimeController {
     private let batteryReader: any AppleSmartBatteryPowerObservationReading
-    private let legacySnapshot: () -> PowerSnapshot?
     private let helperObservation:
         (UInt64) -> HelperPowerObservationFetchResult
     private let clock: () -> UInt64
@@ -79,7 +78,6 @@ final class PowerObservationRuntimeController {
     convenience init() {
         self.init(
             batteryReader: AppleSmartBatteryPowerObservationReader(),
-            legacySnapshot: BatterySampler.sample,
             helperObservation: { sequence in
                 HelperClient.powerObservation(clientSequence: sequence)
             },
@@ -90,14 +88,12 @@ final class PowerObservationRuntimeController {
 
     init(
         batteryReader: any AppleSmartBatteryPowerObservationReading,
-        legacySnapshot: @escaping () -> PowerSnapshot?,
         helperObservation: @escaping
             (UInt64) -> HelperPowerObservationFetchResult,
         clock: @escaping () -> UInt64,
         shadowRecorder: any PowerObservationShadowRecording
     ) {
         self.batteryReader = batteryReader
-        self.legacySnapshot = legacySnapshot
         self.helperObservation = helperObservation
         self.clock = clock
         self.shadowRecorder = shadowRecorder
@@ -182,13 +178,8 @@ final class PowerObservationRuntimeController {
         let box = RuntimeAcquisitionBox()
 
         group.enter()
-        acquisitionQueue.async { [legacySnapshot] in
-            box.setLegacy(legacySnapshot())
-            group.leave()
-        }
-        group.enter()
         acquisitionQueue.async { [batteryReader] in
-            box.setBattery(batteryReader.readObservation())
+            box.setBattery(batteryReader.readRuntimeSample())
             group.leave()
         }
         group.enter()
@@ -341,15 +332,10 @@ private final class RuntimeAcquisitionBox {
     private var battery: AppleSmartBatteryObservation?
     private var helper: HelperPowerObservationFetchResult?
 
-    func setLegacy(_ value: PowerSnapshot?) {
+    func setBattery(_ value: AppleSmartBatteryPowerSample) {
         lock.lock()
-        legacy = value
-        lock.unlock()
-    }
-
-    func setBattery(_ value: AppleSmartBatteryObservation) {
-        lock.lock()
-        battery = value
+        legacy = value.visibleSnapshot
+        battery = value.observation
         lock.unlock()
     }
 

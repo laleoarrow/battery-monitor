@@ -42,7 +42,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.candidate_workflow = CANDIDATE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.23\n")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.24\n")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -186,7 +186,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
             self.assertIn(current_release_topic, normalized_promote_workflow)
 
         for user_facing_topic in (
-            "v3.0.17 remains the current public release",
+            "a source version alone is not a published update",
             "dedicated Menu Bar Icon page",
             "Wattson icon only",
             "Wattson with percentage",

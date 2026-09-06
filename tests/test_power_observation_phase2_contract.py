@@ -262,7 +262,8 @@ class PowerObservationPhase2ContractTests(unittest.TestCase):
         self.assertIn('case let .legacyV4(power):', self.runtime)
         self.assertIn('case .failed:', self.runtime)
         self.assertIn('guard let livePower else { return snapshot }', self.runtime)
-        self.assertEqual(self.runtime.count('acquisitionQueue.async'), 3)
+        self.assertEqual(self.runtime.count('acquisitionQueue.async'), 2)
+        self.assertIn('batteryReader.readRuntimeSample()', self.runtime)
         self.assertIn('group.wait()', self.runtime)
 
     def test_no_phase1_raw_schema_or_existing_helper_file_is_redeclared(self):

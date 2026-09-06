@@ -2,8 +2,8 @@
 
 ## Release identity
 
-- Candidate version: `3.0.23`
-- Current public release: `3.0.17`
+- Source version: `3.0.24`
+- Current public release: verify GitHub Releases/latest, not this source version
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
 - Bundle identifier: `com.leoarrow.wattson`
@@ -15,11 +15,11 @@
 
 ## Release artifacts
 
-`scripts/release.sh 3.0.23` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.24` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.23-macos-universal.pkg`
-- `Wattson-v3.0.23-macos-universal.dmg`
-- `Wattson-v3.0.23-release-info.txt`
+- `Wattson-v3.0.24-macos-universal.pkg`
+- `Wattson-v3.0.24-macos-universal.dmg`
+- `Wattson-v3.0.24-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -118,7 +118,7 @@ Headless checks:
 ```bash
 swift test
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.23
+bash scripts/release.sh 3.0.24
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -141,8 +141,8 @@ runners.
 
 ## Release order
 
-v3.0.23 is the current release candidate. v3.0.17 remains the current public
-release until the new candidate completes every release gate. The candidate
+v3.0.24 must complete every release gate before replacing the latest public
+release. Verify the live release status on GitHub. The candidate
 commit, artifact set, local canonical installation, and repository `VERSION`
 must remain aligned with the exact tested bytes.
 
@@ -157,12 +157,34 @@ must remain aligned with the exact tested bytes.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.23` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.24` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.23.
+6. Announce the release only after every public route resolves to v3.0.24.
+
+## v3.0.24 shared battery acquisition
+
+The production controller acquires one allowlisted battery sample and one
+concurrent helper response. The display parser and typed shadow reader consume
+the same acquired registry values (12 unique property requests rather than
+12 + 7). Individual firmware properties are still asynchronous; this is not an
+atomic hardware snapshot or a claim of faster USB recognition.
+
+Both production consumers reject PowerOutDetails arrays longer than 64 entries
+before per-port traversal. A malformed array is invalid in shadow evidence and
+unavailable in the display, never a manufactured zero. Raw DEBUG capture/schema
+files are unchanged and remain the authority for lossless evidence.
+
+The selected v3.0.23 port artwork, legacy display resolver, v4 fallback,
+nil PSTR policy and userVisibleEligible == false gate are preserved. No
+absolute-accuracy, wrap-correction, or new hardware-profile claim is made.
+
+Regression tests cover shared acquisition counts, charging/full/battery/mixed/
+low-battery states, Low Power, removed USB fields, partial/absent battery data,
+helper concurrency and oversized/malformed output. Continue the installation
+and public distribution gates above after the source tests pass.
 
 ## v3.0.23 strict power observation runtime
 
