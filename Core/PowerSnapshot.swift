@@ -18,10 +18,12 @@ struct PowerSnapshot {
     var batteryW: Double = 0
     /// System consumption. Always non-negative.
     var systemW: Double = 0
-    /// Measured power delivered to attached devices, summed across ports.
+    /// Available measured power delivered to attached devices, summed across ports.
     /// `nil` means this hardware sample did not publish a usable measurement.
+    /// A partial sum must not be subtracted to derive an exact Mac-only load.
     /// This is an auxiliary breakdown of `systemW`, not another power sink.
     var deviceOutputW: Double? = nil
+    var deviceOutputIsComplete: Bool = true
     var temperatureC: Double? = nil
     var cycleCount: Int = 0
     var lowPowerMode: Bool = false
@@ -42,7 +44,8 @@ struct PowerSnapshot {
     /// Keep the raw auxiliary measurement above, but only use it to derive a
     /// Mac-load breakdown while it fits inside the current system total.
     var coherentDeviceOutputW: Double? {
-        guard let deviceOutputW,
+        guard deviceOutputIsComplete,
+              let deviceOutputW,
               deviceOutputW.isFinite,
               systemW.isFinite,
               deviceOutputW >= 0,

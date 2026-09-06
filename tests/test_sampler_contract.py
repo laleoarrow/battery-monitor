@@ -63,7 +63,7 @@ class SamplerContractTests(unittest.TestCase):
         self.assertNotIn("system_profiler", self.source)
 
     def test_power_out_details_uses_only_measured_watts(self):
-        parser = self.source.split("static func resolvedDeviceOutputW", 1)[1].split(
+        parser = self.source.split("private static func parsedDeviceOutput", 1)[1].split(
             "static func resolvedPower", 1
         )[0]
         self.assertIn('entry["Watts"]', parser)
@@ -71,8 +71,19 @@ class SamplerContractTests(unittest.TestCase):
             self.assertNotIn(f'entry["{unmeasured}"]', parser)
         self.assertNotIn('entry["Configured', parser)
         self.assertIn(
-            'resolvedDeviceOutputW(props["PowerOutDetails"])', self.source
+            'let deviceOutput = parsedDeviceOutput(props["PowerOutDetails"])',
+            self.source,
         )
+        self.assertIn("snapshot.deviceOutputW = deviceOutput?.watts", self.source)
+        self.assertIn(
+            "snapshot.deviceOutputIsComplete = deviceOutput?.isComplete ?? false",
+            self.source,
+        )
+        self.assertIn("isComplete: measuredPortCount == entries.count", parser)
+        wrapper = self.source.split("static func resolvedDeviceOutputW", 1)[1].split(
+            "private static func parsedDeviceOutput", 1
+        )[0]
+        self.assertIn("parsedDeviceOutput(raw)?.watts", wrapper)
 
     def test_sign_extends_twos_complement_fields(self):
         # Negative amperage surfaces as a large unsigned value.

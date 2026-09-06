@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3025">v3.0.25 notes</a>
+  <a href="#whats-new-in-v3026">v3.0.26 notes</a>
 </p>
 
 <p align="center">
@@ -40,6 +40,21 @@ where it is going, and how the picture has changed over the last two minutes.
 - A compact native Settings window for General, Menu Bar Icon, and Modules.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
+
+## What's new in v3.0.26
+
+- A disconnected adapter never becomes the power-flow source at low or zero
+  battery load. Zero-watt branches do not animate as active power transfers.
+- Last-known readings stop moving when acquisition fails and resume only after
+  fresh data arrives. Plugged-in batteries below 100% say Not Charging/Idle,
+  rather than Full.
+- Valid instantaneous discharge is retained when telemetry totals and average
+  current are missing. Anonymous USB output entries no longer collide with
+  explicitly numbered ports merely because their array order changes.
+- Partial USB measurements retain their known sum without masquerading as a
+  complete output total or being subtracted to produce an exact Mac Load.
+- History and peak now expire after 120 real seconds even when sampling slows
+  down or stops. Existing layout, artwork, and evidence-gated fusion remain.
 
 ## What's new in v3.0.25
 

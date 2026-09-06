@@ -134,7 +134,7 @@ final class RingGaugeView: PopoverSection {
 
         let hasPositiveDeviceOutput = snapshot.coherentDeviceOutputW.map { $0 > 0 } ?? false
         captions[0].stringValue = hasPositiveDeviceOutput ? "System Total" : "System Load"
-        captions[1].stringValue = PopoverStyle.batteryFlowLabel(snapshot.state)
+        captions[1].stringValue = PopoverStyle.batteryFlowLabel(snapshot)
         values[0].stringValue = PopoverStyle.watts(snapshot.systemW)
         values[1].stringValue = snapshot.state == .pluggedIdle
             ? "0.0 W" : PopoverStyle.watts(abs(snapshot.batteryW))

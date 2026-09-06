@@ -40,19 +40,20 @@ enum PopoverStyle {
         }
     }
 
-    static func stateTitle(_ state: PowerState) -> String {
-        switch state {
+    static func stateTitle(_ snapshot: PowerSnapshot) -> String {
+        switch snapshot.state {
         case .charging: return "Charging"
-        case .pluggedIdle: return "Plugged In · Full"
+        case .pluggedIdle:
+            return snapshot.percent >= 100 ? "Plugged In · Full" : "Plugged In · Not Charging"
         case .onBattery: return "On Battery"
         case .mixedSupply: return "Mixed Power · Adapter Limited"
         }
     }
 
-    static func batteryFlowLabel(_ state: PowerState) -> String {
-        switch state {
+    static func batteryFlowLabel(_ snapshot: PowerSnapshot) -> String {
+        switch snapshot.state {
         case .charging: return "To Battery"
-        case .pluggedIdle: return "Full"
+        case .pluggedIdle: return snapshot.percent >= 100 ? "Full" : "Idle"
         case .onBattery: return "Battery Output"
         case .mixedSupply: return "Battery Assist"
         }

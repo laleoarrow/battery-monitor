@@ -102,7 +102,9 @@ enum BatterySampler {
         snapshot.adapterW = power.adapterW
         snapshot.batteryW = power.batteryW
         snapshot.systemW = power.systemW
-        snapshot.deviceOutputW = resolvedDeviceOutputW(props["PowerOutDetails"])
+        let deviceOutput = parsedDeviceOutput(props["PowerOutDetails"])
+        snapshot.deviceOutputW = deviceOutput?.watts
+        snapshot.deviceOutputIsComplete = deviceOutput?.isComplete ?? false
 
         snapshot.lowPowerMode = lowPowerMode
         return snapshot
@@ -201,27 +203,31 @@ enum BatterySampler {
     /// PDPowermW, FilteredPower, Configured* fields, and USB allocations are
     /// negotiated capabilities or differently scaled values, not substitutes.
     static func resolvedDeviceOutputW(_ raw: Any?) -> Double? {
+        parsedDeviceOutput(raw)?.watts
+    }
+
+    private static func parsedDeviceOutput(
+        _ raw: Any?
+    ) -> (watts: Double, isComplete: Bool)? {
         guard let entries = raw as? NSArray, entries.count <= 64 else { return nil }
 
         var totalMilliwatts = 0
         var measuredPortCount = 0
         var measuredPorts = Set<Int>()
-        for (offset, rawEntry) in entries.enumerated() {
+        for rawEntry in entries {
             guard let entry = rawEntry as? [String: Any] else { return nil }
             guard entry["Watts"] != nil else { continue }
             guard let milliwatts = validTelemetryMilliwatts(
                 optionalIntValue(entry["Watts"]), signed: false
             ) else { return nil }
 
-            let portIndex: Int
             if entry["PortIndex"] != nil {
                 guard let parsed = optionalIntValue(entry["PortIndex"]),
                       (1...64).contains(parsed) else { return nil }
-                portIndex = parsed
-            } else {
-                portIndex = offset + 1
+                // An array position is not a hardware port identity. Only
+                // explicit identifiers can establish a duplicate measurement.
+                guard measuredPorts.insert(parsed).inserted else { return nil }
             }
-            guard measuredPorts.insert(portIndex).inserted else { return nil }
             guard totalMilliwatts <= maxTelemetryMilliwatts - milliwatts else {
                 return nil
             }
@@ -230,7 +236,10 @@ enum BatterySampler {
         }
 
         guard measuredPortCount > 0 else { return nil }
-        return Double(totalMilliwatts) / 1_000.0
+        return (
+            watts: Double(totalMilliwatts) / 1_000.0,
+            isComplete: measuredPortCount == entries.count
+        )
     }
 
     static func resolvedPower(
@@ -254,13 +263,22 @@ enum BatterySampler {
             && abs(fallbackBatteryW) <= maxBatteryPowerWatts
             ? abs(fallbackBatteryW)
             : 0
-        let batteryMagnitude = validTelemetryMilliwatts(
+        let observedBatteryMagnitude = validTelemetryMilliwatts(
             batteryPower, signed: true
         ).map { abs(Double($0)) / 1000.0 }
-            ?? fallbackMagnitude
+        let batteryMagnitude = observedBatteryMagnitude ?? fallbackMagnitude
 
         if !plugged {
-            let systemW = system ?? batteryMagnitude
+            // Without either telemetry total, retain valid instantaneous
+            // discharge before falling back to the average current. A stale
+            // positive current after unplugging is not discharge evidence.
+            let instantDischarge = instantBatteryW.flatMap { value in
+                value.isFinite && (-maxBatteryPowerWatts...0).contains(value)
+                    ? -value : nil
+            }
+            let averageDischarge = fallbackBatteryW <= 0 ? fallbackMagnitude : 0
+            let systemW = system ?? observedBatteryMagnitude
+                ?? instantDischarge ?? averageDischarge
             return (0, systemW > 0 ? -systemW : 0, systemW)
         }
 

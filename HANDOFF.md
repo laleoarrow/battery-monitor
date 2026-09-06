@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Source version: `3.0.25`
+- Source version: `3.0.26`
 - Current public release: verify GitHub Releases/latest, not this source version
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
@@ -15,11 +15,11 @@
 
 ## Release artifacts
 
-`scripts/release.sh 3.0.25` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.26` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.25-macos-universal.pkg`
-- `Wattson-v3.0.25-macos-universal.dmg`
-- `Wattson-v3.0.25-release-info.txt`
+- `Wattson-v3.0.26-macos-universal.pkg`
+- `Wattson-v3.0.26-macos-universal.dmg`
+- `Wattson-v3.0.26-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -89,7 +89,9 @@ Device Output. A valid zero remains visible as `0.0 W`. On battery, only a
 positive coherent measurement activates the existing three-node, two-pipe
 split from Battery to Mac Load and Device Output. Zero keeps the standard flow
 while the summary continues to show `Device Output 0.0 W`; only missing or
-incoherent output restores Cycle Count.
+incoherent or partial output restores Cycle Count. Partial per-port sums stay
+available in the sample with an explicit completeness flag, but cannot be
+used as an exact total or subtracted to label Mac Load.
 
 In plugged, charging, and mixed-supply states, a coherent positive Device
 Output is also clear in the main Power Flow as an auxiliary readout. It remains
@@ -118,7 +120,7 @@ Headless checks:
 ```bash
 swift test
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.25
+bash scripts/release.sh 3.0.26
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -141,7 +143,7 @@ runners.
 
 ## Release order
 
-v3.0.25 must complete every release gate before replacing the latest public
+v3.0.26 must complete every release gate before replacing the latest public
 release. Verify the live release status on GitHub. The candidate
 commit, artifact set, local canonical installation, and repository `VERSION`
 must remain aligned with the exact tested bytes.
@@ -157,12 +159,34 @@ must remain aligned with the exact tested bytes.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.25` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.26` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.25.
+6. Announce the release only after every public route resolves to v3.0.26.
+
+## v3.0.26 incomplete-data and presentation fixes
+
+On battery, existing system and battery telemetry totals retain priority. If
+both are unavailable, a valid non-positive instantaneous V×I is used before
+the average-current fallback; stale positive current is not discharge evidence.
+USB deduplication uses only explicit valid port identifiers, never fabricated
+identifiers from array positions. Partial output keeps its measured sum and
+completeness separately; only a complete coherent total drives a breakdown.
+
+Disconnected low/zero-load snapshots use the battery-led topology. Zero-watt
+branches have no active pipe or particles, without changing the positive-power
+encoding curve. Degraded snapshots freeze measurement motion across reopen
+and module toggles; a fresh snapshot restores the requested animation policy.
+Connected-idle batteries below 100% use Not Charging/Idle, not Full.
+
+The 60-entry history ring also expires readings at 120 monotonic seconds,
+including on presentation without a new sample. Cached peak/order are rebuilt
+only after actual mutation or expiration. Wake still resets the history.
+
+These are software fallback and presentation corrections, not a claim that
+firmware updates USB data immediately or that watt-level accuracy was calibrated.
 
 ## v3.0.25 event sampling liveness
 
