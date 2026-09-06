@@ -218,6 +218,7 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("depends_on macos: :monterey", HOMEBREW)
         self.assertNotIn('desc "Native macOS', HOMEBREW)
         self.assertNotIn('depends_on macos: ">= :monterey"', HOMEBREW)
+        self.assertNotIn("verified:", HOMEBREW)
 
     def test_homebrew_accepts_only_strict_supported_release_metadata(self):
         self.assertIn("assert_metadata_key_once", HOMEBREW)

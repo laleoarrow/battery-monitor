@@ -163,8 +163,7 @@ jobs:
             version "$VERSION"
             sha256 "$SHA256"
 
-            url "https://github.com/laleoarrow/battery-monitor/releases/download/v#{version}/Wattson-v#{version}-macos-universal.pkg",
-                verified: "github.com/laleoarrow/battery-monitor/"
+            url "https://github.com/laleoarrow/battery-monitor/releases/download/v#{version}/Wattson-v#{version}-macos-universal.pkg"
             name "Wattson"
             desc "Real-time menu-bar power-flow monitor"
             homepage "https://github.com/laleoarrow/battery-monitor"
