@@ -98,11 +98,11 @@ struct StartupAvailabilityReducer {
     }
 }
 
-/// Coalesces the two periodic clocks into the sample already in flight, while
+/// Coalesces periodic requests into the sample already in flight, while
 /// retaining one follow-up for an event that happened after that sample began.
 /// Ordinary notifications do not invalidate completed work; wake does, because
 /// a pre-sleep acquisition must not repopulate the newly reset history.
-/// This keeps coincident 1 s/2 s timer ticks from doubling IOKit/helper work.
+/// A slow acquisition never causes a queue of periodic catch-up work.
 struct SampleRequestCoalescer {
     struct Completion {
         let recordHistory: Bool
@@ -146,6 +146,52 @@ struct SampleRequestCoalescer {
     }
 }
 
+/// One sampling clock supplies both visible updates and history. Aligning the
+/// visible tick to the history deadline avoids a second read at another phase.
+struct SamplingCadence {
+    static let historyInterval: TimeInterval = 2
+    static let displayInterval: TimeInterval = 1
+    static let historyTolerance: TimeInterval = 0.2
+    static let displayTolerance: TimeInterval = 0.1
+
+    var displayIsActive = false {
+        didSet {
+            if displayIsActive != oldValue { displayGeneration += 1 }
+        }
+    }
+    private(set) var displayGeneration = 0
+    private var nextHistoryTime: TimeInterval
+
+    init(now: TimeInterval) {
+        nextHistoryTime = now + Self.historyInterval
+    }
+
+    var tolerance: TimeInterval {
+        displayIsActive ? Self.displayTolerance : Self.historyTolerance
+    }
+
+    func isCurrentOpening(_ generation: Int) -> Bool {
+        displayIsActive && displayGeneration == generation
+    }
+
+    func nextDelay(at now: TimeInterval) -> TimeInterval {
+        let remaining = max(0, nextHistoryTime - now)
+        return displayIsActive && remaining > Self.displayInterval
+            ? remaining - Self.displayInterval : remaining
+    }
+
+    mutating func takeHistoryRequest(at now: TimeInterval) -> Bool {
+        guard now >= nextHistoryTime else { return false }
+        resetHistory(at: now)
+        return true
+    }
+
+    mutating func resetHistory(at now: TimeInterval) {
+        // A delayed tick requests one current reading, never missed samples.
+        nextHistoryTime = now + Self.historyInterval
+    }
+}
+
 final class StatusItemController: NSObject {
     /// The system menu bar font with tabular figures switched on. Deriving from
     /// menuBarFont keeps size and weight identical to every neighbouring item;
@@ -161,11 +207,6 @@ final class StatusItemController: NSObject {
         return NSFont(descriptor: descriptor, size: 0) ?? base
     }()
 
-    private static let historyInterval: TimeInterval = 2
-    private static let historyTolerance: TimeInterval = 0.2
-    private static let displayInterval: TimeInterval = 1
-    private static let displayTolerance: TimeInterval = 0.1
-
     private let log = OSLog(subsystem: "com.leoarrow.wattson", category: "menubar")
 
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -180,8 +221,8 @@ final class StatusItemController: NSObject {
         PowerObservationRuntimeController()
 
     private var snapshot = PowerSnapshot()
-    private var historyTimer: Timer?
-    private var displayTimer: Timer?
+    private var samplingTimer: Timer?
+    private var samplingCadence = SamplingCadence(now: ProcessInfo.processInfo.systemUptime)
     private var powerSourceRunLoopSource: CFRunLoopSource?
     private var energyModeObserver: NSObjectProtocol?
     private var settingsObserver: NSObjectProtocol?
@@ -199,6 +240,9 @@ final class StatusItemController: NSObject {
     private var rightClickModes = RightClickModeSequence()
     private var renderedStatusIconKey: BatteryIcon.RenderKey?
     private var renderedStatusButtonPresentation: StatusButtonPresentation?
+#if DEBUG
+    private var sampleRequestInterceptorForTest: ((Bool, Bool, Bool) -> Void)?
+#endif
 
     func start() -> Bool {
         guard !started else { return true }
@@ -247,8 +291,15 @@ final class StatusItemController: NSObject {
         }
         settingsObserver = NotificationCenter.default.addObserver(
             forName: Settings.didChange, object: nil, queue: .main
-        ) { [weak self] _ in
-            self?.refreshPresentation()
+        ) { [weak self] notification in
+            switch notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change {
+            case .menuBarPercentage, .menuBarIconStyle:
+                self?.refreshStatusItem()
+            case .module, .checkForUpdatesOnLaunch:
+                break
+            case nil:
+                self?.refreshPresentation()
+            }
         }
         installSystemBatteryIconObservationIfNeeded()
         wakeObserver = NSWorkspace.shared.notificationCenter.addObserver(
@@ -258,6 +309,9 @@ final class StatusItemController: NSObject {
             // Timers may be coalesced across sleep. Refresh immediately so a
             // stale pre-sleep power route is never left visible after wake.
             self.history.reset()
+            self.samplingCadence.resetHistory(at: ProcessInfo.processInfo.systemUptime)
+            self.scheduleSamplingClock()
+            _ = self.startupAvailability.finish(nil, recordHistory: false)
             self.refreshPresentation()
             self.sampleNow(
                 recordHistory: true,
@@ -267,7 +321,8 @@ final class StatusItemController: NSObject {
             )
         }
         startEventDrivenUpdates()
-        startHistoryClock()
+        samplingCadence.resetHistory(at: ProcessInfo.processInfo.systemUptime)
+        scheduleSamplingClock()
         LoginItemController.refresh()
         refreshPresentation()
         if startupPlan.shouldRetry {
@@ -277,8 +332,7 @@ final class StatusItemController: NSObject {
     }
 
     deinit {
-        historyTimer?.invalidate()
-        displayTimer?.invalidate()
+        samplingTimer?.invalidate()
         if let powerSourceRunLoopSource {
             CFRunLoopSourceInvalidate(powerSourceRunLoopSource)
         }
@@ -506,34 +560,46 @@ final class StatusItemController: NSObject {
         CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)
     }
 
-    private func startHistoryClock() {
-        let timer = Timer(timeInterval: Self.historyInterval, repeats: true) { [weak self] _ in
-            self?.sampleNow(recordHistory: true)
+    private func scheduleSamplingClock() {
+        samplingTimer?.invalidate()
+        let delay = samplingCadence.nextDelay(at: ProcessInfo.processInfo.systemUptime)
+        let timer = Timer(
+            fire: Date(timeIntervalSinceNow: delay), interval: 0, repeats: false
+        ) { [weak self] _ in
+            guard let self else { return }
+            let recordHistory = self.samplingCadence.takeHistoryRequest(
+                at: ProcessInfo.processInfo.systemUptime
+            )
+            self.sampleNow(recordHistory: recordHistory)
+            self.scheduleSamplingClock()
         }
-        timer.tolerance = Self.historyTolerance
-        historyTimer = timer
+        timer.tolerance = samplingCadence.tolerance
+        samplingTimer = timer
         RunLoop.main.add(timer, forMode: .common)
     }
 
     private func startDisplayClock() {
-        guard displayTimer == nil else { return }
-        let timer = Timer(timeInterval: Self.displayInterval, repeats: true) { [weak self] _ in
-            self?.sampleNow(recordHistory: false)
-        }
-        timer.tolerance = Self.displayTolerance
-        displayTimer = timer
-        RunLoop.main.add(timer, forMode: .common)
+        guard !samplingCadence.displayIsActive else { return }
+        samplingCadence.displayIsActive = true
+        scheduleSamplingClock()
+        let openingGeneration = samplingCadence.displayGeneration
         // Let NSPopover hand its first frame to the window server before doing
         // a fresh IOKit read and rebuilding the animated modules.
         DispatchQueue.main.async { [weak self] in
-            guard self?.displayTimer != nil else { return }
-            self?.sampleNow(recordHistory: false, requiresFreshFollowUp: true)
+            guard let self,
+                  self.samplingCadence.isCurrentOpening(openingGeneration) else { return }
+            let recordHistory = self.samplingCadence.takeHistoryRequest(
+                at: ProcessInfo.processInfo.systemUptime
+            )
+            self.sampleNow(recordHistory: recordHistory, requiresFreshFollowUp: true)
+            self.scheduleSamplingClock()
         }
     }
 
     private func stopDisplayClock() {
-        displayTimer?.invalidate()
-        displayTimer = nil
+        guard samplingCadence.displayIsActive else { return }
+        samplingCadence.displayIsActive = false
+        scheduleSamplingClock()
     }
 
     fileprivate func sampleNow(
@@ -543,6 +609,12 @@ final class StatusItemController: NSObject {
         event: PowerObservationRuntimeEvent = .normal
     ) {
         dispatchPrecondition(condition: .onQueue(.main))
+#if DEBUG
+        if let sampleRequestInterceptorForTest {
+            sampleRequestInterceptorForTest(recordHistory, requiresFreshFollowUp, supersedesCurrent)
+            return
+        }
+#endif
         pendingPowerObservationEvent =
             pendingPowerObservationEvent.merging(event)
         guard sampleRequests.request(
@@ -661,6 +733,16 @@ final class StatusItemController: NSObject {
 
 #if DEBUG
 extension StatusItemController {
+    func configureSamplingRequestsForTest(_ handler: @escaping (Bool, Bool, Bool) -> Void) {
+        sampleRequestInterceptorForTest = handler
+    }
+
+    func setSamplingDisplayActiveForTest(_ active: Bool) {
+        active ? startDisplayClock() : stopDisplayClock()
+    }
+
+    var samplingTimerForTest: Timer? { samplingTimer }
+
     func configureSettingsWindowForTest(_ controller: SettingsWindowController) {
         settingsWindowController = controller
     }
@@ -677,7 +759,9 @@ extension StatusItemController {
     }
     var popoverIsOpenForTest: Bool { popover.isOpen }
     var popoverIsWatchingOutsideClicksForTest: Bool { popover.isWatchingOutsideClicks }
-    var displayClockIsRunningForTest: Bool { displayTimer != nil }
+    var displayClockIsRunningForTest: Bool {
+        samplingCadence.displayIsActive && samplingTimer != nil
+    }
 
     func startDisplayClockForSettingsCommandTest() { startDisplayClock() }
 

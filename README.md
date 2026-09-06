@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3026">v3.0.26 notes</a>
+  <a href="#whats-new-in-v3027">v3.0.27 notes</a>
 </p>
 
 <p align="center">
@@ -40,6 +40,23 @@ where it is going, and how the picture has changed over the last two minutes.
 - A compact native Settings window for General, Menu Bar Icon, and Modules.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
+
+## What's new in v3.0.27
+
+- One sampling clock now serves both visible updates and history, avoiding
+  independent timer phases while retaining immediate event-driven refreshes.
+  Hidden polling stays at two seconds; slow reads do not create catch-up work.
+- Identical power-flow curves reuse particle paths and running animations.
+  Real split changes still retarget them without restarting particle phases;
+  speed, topology, and animation accessibility changes remain live.
+- Preference defaults register once per store, not on every read. Settings
+  changes refresh only affected presentation; preference values are not cached.
+- Wake immediately marks pre-sleep readings stale until fresh data arrives.
+  Opening refreshes survive periodic timer rearming, while callbacks from a
+  closed panel cannot affect a later reopening.
+- Existing artwork, layout, measured-only Device Output and evidence-gated
+  fusion are unchanged. These reduce redundant work; they are not claims of
+  universally higher FPS, lower RAM use, or improved sensor accuracy.
 
 ## What's new in v3.0.26
 

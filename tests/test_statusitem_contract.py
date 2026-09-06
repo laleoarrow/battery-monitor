@@ -222,40 +222,97 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("supersedesCurrent: true", wake)
         self.assertIn("event: .sleepWake", wake)
 
-    def test_history_clock_is_two_seconds_and_display_clock_is_one(self):
+    def test_wake_marks_last_reading_stale_before_repainting(self):
+        wake = self.source.split("NSWorkspace.didWakeNotification", 1)[1].split(
+            "startEventDrivenUpdates()", 1
+        )[0]
+        invalidation = "startupAvailability.finish(nil, recordHistory: false)"
+        self.assertIn(invalidation, wake)
+        self.assertLess(wake.index(invalidation), wake.index("refreshPresentation()"))
+        self.assertLess(wake.index("refreshPresentation()"), wake.index("sampleNow("))
+
+    def test_typed_settings_changes_refresh_only_the_affected_surface(self):
+        observer = self.source.split("forName: Settings.didChange", 1)[1].split(
+            "installSystemBatteryIconObservationIfNeeded()", 1
+        )[0]
+        self.assertIn("Settings.changeUserInfoKey", observer)
+        self.assertIn("case .menuBarPercentage, .menuBarIconStyle:", observer)
+        self.assertIn("case .module, .checkForUpdatesOnLaunch:", observer)
+        status_scope = observer.split("case .menuBarPercentage, .menuBarIconStyle:", 1)[1].split("case", 1)[0]
+        self.assertIn("refreshStatusItem()", status_scope)
+        self.assertNotIn("refreshPresentation()", status_scope)
+        ignored_scope = observer.split("case .module, .checkForUpdatesOnLaunch:", 1)[1].split("case", 1)[0]
+        self.assertNotIn("refresh", ignored_scope)
+        self.assertIn("case nil:", observer)
+        unknown_scope = observer.split("case nil:", 1)[1]
+        self.assertIn("refreshPresentation()", unknown_scope)
+
+    def test_history_cadence_is_two_seconds_and_visible_cadence_is_one(self):
         self.assertIn("historyInterval: TimeInterval = 2", self.source)
         self.assertIn("displayInterval: TimeInterval = 1", self.source)
 
-    def test_sampling_timers_have_coalescing_tolerance(self):
+    def test_one_sampling_clock_owns_both_history_and_visible_ticks(self):
+        self.assertNotIn("private var historyTimer:", self.source)
+        self.assertNotIn("private var displayTimer:", self.source)
+        self.assertEqual(self.source.count("private var samplingTimer: Timer?"), 1)
+        self.assertEqual(self.source.count("RunLoop.main.add(timer, forMode: .common)"), 1)
+        self.assertIn("SamplingCadence", self.source)
+        self.assertIn("interval: 0, repeats: false", self.source)
+
+    def test_sampling_interception_is_debug_only_and_precedes_all_hardware_work(self):
+        debug_depth = 0
+        for line in self.source.splitlines():
+            if line.strip() == "#if DEBUG":
+                debug_depth += 1
+            elif line.strip() == "#endif":
+                debug_depth -= 1
+            if "sampleRequestInterceptorForTest" in line or "configureSamplingRequestsForTest" in line:
+                self.assertGreater(debug_depth, 0, line)
+        self.assertEqual(debug_depth, 0)
+        sampling = self.source.split("fileprivate func sampleNow", 1)[1].split(
+            "private func finishSample", 1
+        )[0]
+        self.assertLess(sampling.index("sampleRequestInterceptorForTest"),
+                        sampling.index("pendingPowerObservationEvent"))
+        self.assertLess(sampling.index("sampleRequestInterceptorForTest"),
+                        sampling.index("samplingQueue.async"))
+        interception = sampling.split("if let sampleRequestInterceptorForTest", 1)[1].split("#endif", 1)[0]
+        self.assertIn("return", interception)
+
+    def test_sampling_clock_has_visibility_appropriate_coalescing_tolerance(self):
         self.assertIn("historyTolerance: TimeInterval = 0.2", self.source)
         self.assertIn("displayTolerance: TimeInterval = 0.1", self.source)
-        self.assertIn("timer.tolerance = Self.historyTolerance", self.source)
-        self.assertIn("timer.tolerance = Self.displayTolerance", self.source)
+        self.assertIn("timer.tolerance = samplingCadence.tolerance", self.source)
+        self.assertIn("displayIsActive ? Self.displayTolerance : Self.historyTolerance", self.source)
 
     def test_periodic_ticks_coalesce_but_events_keep_one_fresh_follow_up(self):
         self.assertIn("struct SampleRequestCoalescer", self.source)
         self.assertIn("freshFollowUpRequested", self.source)
         self.assertNotIn("private var resampleRequested", self.source)
         event_updates = self.source.split("private func startEventDrivenUpdates", 1)[1].split(
-            "private func startHistoryClock", 1
+            "private func scheduleSamplingClock", 1
         )[0]
         self.assertIn("requiresFreshFollowUp: true", event_updates)
         self.assertNotIn("supersedesCurrent: true", event_updates)
         self.assertIn("event: .powerSourceTransition", event_updates)
-        history_clock = self.source.split("private func startHistoryClock", 1)[1].split(
+        sampling_clock = self.source.split("private func scheduleSamplingClock", 1)[1].split(
             "private func startDisplayClock", 1
         )[0]
         display_clock = self.source.split("private func startDisplayClock", 1)[1].split(
             "private func stopDisplayClock", 1
         )[0]
-        self.assertNotIn("requiresFreshFollowUp: true", history_clock)
-        self.assertNotIn("supersedesCurrent: true", history_clock)
+        self.assertNotIn("requiresFreshFollowUp: true", sampling_clock)
+        self.assertNotIn("supersedesCurrent: true", sampling_clock)
+        self.assertIn("samplingCadence.takeHistoryRequest", sampling_clock)
         repeating_display = display_clock.split("DispatchQueue.main.async", 1)[0]
         self.assertNotIn("requiresFreshFollowUp: true", repeating_display)
         self.assertNotIn("supersedesCurrent: true", repeating_display)
         deferred_open = display_clock.split("DispatchQueue.main.async", 1)[1]
         self.assertIn("requiresFreshFollowUp: true", deferred_open)
         self.assertNotIn("supersedesCurrent: true", deferred_open)
+        self.assertIn("samplingCadence.isCurrentOpening(openingGeneration)", deferred_open)
+        self.assertNotIn("self.samplingTimer ===", deferred_open)
+        self.assertIn("samplingCadence.takeHistoryRequest", deferred_open)
         finish = self.source.split("private func finishSample", 1)[1].split(
             "private func refreshPresentation", 1
         )[0]
@@ -273,14 +330,13 @@ class StatusItemContractTests(unittest.TestCase):
     def test_sampling_lifecycle_is_idempotent_and_cleans_up_sources(self):
         self.assertIn("guard !started else { return true }", self.source)
         self.assertIn("deinit", self.source)
-        self.assertIn("historyTimer?.invalidate()", self.source)
-        self.assertIn("displayTimer?.invalidate()", self.source)
+        self.assertIn("samplingTimer?.invalidate()", self.source)
         self.assertIn("CFRunLoopSourceInvalidate", self.source)
         self.assertIn("removeObserver", self.source)
 
     def test_sampling_sources_continue_during_menu_tracking(self):
         self.assertIn("CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)", self.source)
-        self.assertEqual(self.source.count("RunLoop.main.add(timer, forMode: .common)"), 2)
+        self.assertEqual(self.source.count("RunLoop.main.add(timer, forMode: .common)"), 1)
 
     def test_unchanged_status_button_chrome_is_not_reassigned(self):
         refresh = self.source.split("private func refreshStatusItem()", 1)[1]
@@ -317,7 +373,12 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertNotIn("userVisibleEligible", finish)
 
     def test_display_clock_stops_when_the_popover_closes(self):
-        self.assertIn("displayTimer?.invalidate()", self.source)
+        closing = self.source.split("private func stopDisplayClock()", 1)[1].split(
+            "fileprivate func sampleNow", 1
+        )[0]
+        self.assertIn("guard samplingCadence.displayIsActive", closing)
+        self.assertIn("samplingCadence.displayIsActive = false", closing)
+        self.assertIn("scheduleSamplingClock()", closing)
 
     def test_popover_is_transient_and_hangs_below_the_item(self):
         self.assertIn(".transient", self.popover)
