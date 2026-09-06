@@ -219,6 +219,7 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("history.reset()", wake)
         self.assertIn("refreshPresentation()", wake)
         self.assertIn("requiresFreshFollowUp: true", wake)
+        self.assertIn("supersedesCurrent: true", wake)
         self.assertIn("event: .sleepWake", wake)
 
     def test_history_clock_is_two_seconds_and_display_clock_is_one(self):
@@ -239,6 +240,7 @@ class StatusItemContractTests(unittest.TestCase):
             "private func startHistoryClock", 1
         )[0]
         self.assertIn("requiresFreshFollowUp: true", event_updates)
+        self.assertNotIn("supersedesCurrent: true", event_updates)
         self.assertIn("event: .powerSourceTransition", event_updates)
         history_clock = self.source.split("private func startHistoryClock", 1)[1].split(
             "private func startDisplayClock", 1
@@ -247,17 +249,25 @@ class StatusItemContractTests(unittest.TestCase):
             "private func stopDisplayClock", 1
         )[0]
         self.assertNotIn("requiresFreshFollowUp: true", history_clock)
+        self.assertNotIn("supersedesCurrent: true", history_clock)
         repeating_display = display_clock.split("DispatchQueue.main.async", 1)[0]
         self.assertNotIn("requiresFreshFollowUp: true", repeating_display)
+        self.assertNotIn("supersedesCurrent: true", repeating_display)
         deferred_open = display_clock.split("DispatchQueue.main.async", 1)[1]
         self.assertIn("requiresFreshFollowUp: true", deferred_open)
+        self.assertNotIn("supersedesCurrent: true", deferred_open)
         finish = self.source.split("private func finishSample", 1)[1].split(
             "private func refreshPresentation", 1
         )[0]
-        follow_up = "sampleNow(recordHistory: completedRequest.recordHistory)"
+        self.assertIn("if completedRequest.publishCurrent", finish)
+        follow_up = "if completedRequest.requiresFreshFollowUp"
         self.assertIn(follow_up, finish)
         self.assertLess(
-            finish.index(follow_up), finish.index("startupAvailability.finish")
+            finish.index("startupAvailability.finish"), finish.index(follow_up)
+        )
+        self.assertIn(
+            "completedRequest.recordHistory && !completedRequest.publishCurrent",
+            finish,
         )
 
     def test_sampling_lifecycle_is_idempotent_and_cleans_up_sources(self):
@@ -293,6 +303,14 @@ class StatusItemContractTests(unittest.TestCase):
             "private func refreshPresentation", 1
         )[0]
         self.assertIn("samplingQueue.async", sampling)
+        self.assertLess(
+            sampling.index("pendingPowerObservationEvent.merging(event)"),
+            sampling.index("guard sampleRequests.request"),
+        )
+        self.assertLess(
+            sampling.index(") else { return }"),
+            sampling.index("pendingPowerObservationEvent = .normal"),
+        )
         self.assertIn("powerObservationRuntime.sample", sampling)
         self.assertIn("result.visibleSnapshot", finish)
         self.assertNotIn("result.resolution", finish)

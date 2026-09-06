@@ -2,7 +2,7 @@
 
 ## Release identity
 
-- Source version: `3.0.24`
+- Source version: `3.0.25`
 - Current public release: verify GitHub Releases/latest, not this source version
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
@@ -15,11 +15,11 @@
 
 ## Release artifacts
 
-`scripts/release.sh 3.0.24` builds one universal app/helper pair and produces:
+`scripts/release.sh 3.0.25` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.24-macos-universal.pkg`
-- `Wattson-v3.0.24-macos-universal.dmg`
-- `Wattson-v3.0.24-release-info.txt`
+- `Wattson-v3.0.25-macos-universal.pkg`
+- `Wattson-v3.0.25-macos-universal.dmg`
+- `Wattson-v3.0.25-release-info.txt`
 - `SHA256SUMS.txt`
 
 The DMG contains exactly one visible item: a byte-identical copy of the PKG.
@@ -118,7 +118,7 @@ Headless checks:
 ```bash
 swift test
 python3 -m unittest discover -s tests -v
-bash scripts/release.sh 3.0.24
+bash scripts/release.sh 3.0.25
 ```
 
 Visible AppKit checks must be run only in an available GUI session:
@@ -141,7 +141,7 @@ runners.
 
 ## Release order
 
-v3.0.24 must complete every release gate before replacing the latest public
+v3.0.25 must complete every release gate before replacing the latest public
 release. Verify the live release status on GitHub. The candidate
 commit, artifact set, local canonical installation, and repository `VERSION`
 must remain aligned with the exact tested bytes.
@@ -157,12 +157,26 @@ must remain aligned with the exact tested bytes.
    that signed-only promotion path.
 4. For a community release, download the exact artifact set from the successful
    branch candidate, verify its manifest and checksums again, create the
-   annotated `v3.0.24` tag on the frozen SHA, and publish those unchanged bytes
+   annotated `v3.0.25` tag on the frozen SHA, and publish those unchanged bytes
    with explicit ad-hoc/unsigned/not-notarized wording.
 5. Synchronize the Homebrew cask to that exact PKG checksum and require both
    tap CI and the public Intel/Apple-silicon lifecycle tests before marking the
    release latest and deploying the tag-pinned GitHub Pages site.
-6. Announce the release only after every public route resolves to v3.0.24.
+6. Announce the release only after every public route resolves to v3.0.25.
+
+## v3.0.25 event sampling liveness
+
+Ordinary power-source notifications request a coalesced follow-up without
+discarding the already completed sample. Sustained notifications can therefore
+no longer indefinitely suppress display and history updates. Wake requests
+remain stronger: a sample started before wake is not published, and its
+history request is transferred to the next acquisition. Periodic timer ticks
+still share an in-flight sample and do not create unnecessary follow-ups.
+
+The regression covers repeated notifications across many completed samples,
+not just one burst followed by silence. No additional 500 ms polling timer was
+added: the existing periodic reads remain, and firmware must still publish a
+valid measured PowerOutDetails value before Wattson can display Device Output.
 
 ## v3.0.24 shared battery acquisition
 

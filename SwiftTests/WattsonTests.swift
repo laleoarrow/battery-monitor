@@ -1510,6 +1510,7 @@ final class WattsonTests: XCTestCase {
         let completed = requests.complete()
         XCTAssertTrue(completed.recordHistory)
         XCTAssertFalse(completed.requiresFreshFollowUp)
+        XCTAssertTrue(completed.publishCurrent)
         XCTAssertFalse(requests.isInFlight)
         XCTAssertTrue(requests.request(
             recordHistory: false, requiresFreshFollowUp: false
@@ -1531,16 +1532,127 @@ final class WattsonTests: XCTestCase {
         let first = requests.complete()
         XCTAssertTrue(first.recordHistory)
         XCTAssertTrue(first.requiresFreshFollowUp)
+        XCTAssertTrue(first.publishCurrent)
 
-        // The controller discards the superseded result and carries the history
-        // request into this one post-event follow-up.
+        // Ordinary events keep one follow-up without discarding completed work
+        // or recording the same coalesced history request twice.
         XCTAssertTrue(requests.request(
-            recordHistory: first.recordHistory, requiresFreshFollowUp: false
+            recordHistory: first.recordHistory && !first.publishCurrent,
+            requiresFreshFollowUp: false
         ))
         let second = requests.complete()
-        XCTAssertTrue(second.recordHistory)
+        XCTAssertFalse(second.recordHistory)
         XCTAssertFalse(second.requiresFreshFollowUp)
+        XCTAssertTrue(second.publishCurrent)
         XCTAssertFalse(requests.isInFlight)
+    }
+
+    func testContinuousEventSamplesDoNotStarvePublication() {
+        var requests = SampleRequestCoalescer()
+        var publications = 0
+        var historyRecords = 0
+        XCTAssertTrue(requests.request(
+            recordHistory: false, requiresFreshFollowUp: false
+        ))
+
+        for index in 0..<100 {
+            XCTAssertFalse(requests.request(
+                recordHistory: index.isMultiple(of: 2),
+                requiresFreshFollowUp: false
+            ))
+            XCTAssertFalse(requests.request(
+                recordHistory: false, requiresFreshFollowUp: true
+            ))
+            let completed = requests.complete()
+            XCTAssertTrue(completed.requiresFreshFollowUp)
+            // Mirror finishSample: only non-superseded results are published.
+            if completed.publishCurrent {
+                publications += 1
+                if completed.recordHistory { historyRecords += 1 }
+            }
+            XCTAssertTrue(requests.request(
+                recordHistory: completed.recordHistory && !completed.publishCurrent,
+                requiresFreshFollowUp: false
+            ))
+        }
+
+        XCTAssertEqual(publications, 100)
+        XCTAssertEqual(historyRecords, 50)
+        let final = requests.complete()
+        XCTAssertTrue(final.publishCurrent)
+        XCTAssertFalse(final.requiresFreshFollowUp)
+        XCTAssertFalse(final.recordHistory)
+    }
+
+    func testWakeSampleSupersedesUntilOnePostWakeAcquisitionCompletes() {
+        var requests = SampleRequestCoalescer()
+        XCTAssertTrue(requests.request(
+            recordHistory: true, requiresFreshFollowUp: false
+        ))
+        XCTAssertFalse(requests.request(
+            recordHistory: false, requiresFreshFollowUp: true
+        ))
+        XCTAssertFalse(requests.request(
+            recordHistory: true, requiresFreshFollowUp: true,
+            supersedesCurrent: true
+        ))
+        // Later ordinary notifications must not downgrade wake invalidation.
+        XCTAssertFalse(requests.request(
+            recordHistory: false, requiresFreshFollowUp: true
+        ))
+        let beforeWake = requests.complete()
+        XCTAssertFalse(beforeWake.publishCurrent)
+        XCTAssertTrue(beforeWake.requiresFreshFollowUp)
+        XCTAssertTrue(beforeWake.recordHistory)
+
+        XCTAssertTrue(requests.request(
+            recordHistory: beforeWake.recordHistory && !beforeWake.publishCurrent,
+            requiresFreshFollowUp: false
+        ))
+        // A post-wake IOPS event keeps a follow-up but does not suppress the
+        // first acquisition started after wake or its single history record.
+        XCTAssertFalse(requests.request(
+            recordHistory: false, requiresFreshFollowUp: true
+        ))
+        let afterWake = requests.complete()
+        XCTAssertTrue(afterWake.publishCurrent)
+        XCTAssertTrue(afterWake.recordHistory)
+        XCTAssertTrue(afterWake.requiresFreshFollowUp)
+        XCTAssertTrue(requests.request(
+            recordHistory: afterWake.recordHistory && !afterWake.publishCurrent,
+            requiresFreshFollowUp: false
+        ))
+        let final = requests.complete()
+        XCTAssertTrue(final.publishCurrent)
+        XCTAssertFalse(final.recordHistory)
+        XCTAssertFalse(final.requiresFreshFollowUp)
+    }
+
+    func testIdleWakeSamplePublishesWithoutUnnecessaryFollowUp() {
+        var requests = SampleRequestCoalescer()
+        XCTAssertTrue(requests.request(
+            recordHistory: true, requiresFreshFollowUp: true,
+            supersedesCurrent: true
+        ))
+        let completed = requests.complete()
+        XCTAssertTrue(completed.publishCurrent)
+        XCTAssertTrue(completed.recordHistory)
+        XCTAssertFalse(completed.requiresFreshFollowUp)
+    }
+
+    func testSupersedingSampleAlwaysRetainsAFreshFollowUp() {
+        var requests = SampleRequestCoalescer()
+        XCTAssertTrue(requests.request(
+            recordHistory: false, requiresFreshFollowUp: false
+        ))
+        XCTAssertFalse(requests.request(
+            recordHistory: true, requiresFreshFollowUp: false,
+            supersedesCurrent: true
+        ))
+        let completed = requests.complete()
+        XCTAssertFalse(completed.publishCurrent)
+        XCTAssertTrue(completed.recordHistory)
+        XCTAssertTrue(completed.requiresFreshFollowUp)
     }
 
     func testHistoryViewSkipsAnIdenticalPathRebuild() {

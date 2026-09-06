@@ -100,24 +100,31 @@ struct StartupAvailabilityReducer {
 
 /// Coalesces the two periodic clocks into the sample already in flight, while
 /// retaining one follow-up for an event that happened after that sample began.
+/// Ordinary notifications do not invalidate completed work; wake does, because
+/// a pre-sleep acquisition must not repopulate the newly reset history.
 /// This keeps coincident 1 s/2 s timer ticks from doubling IOKit/helper work.
 struct SampleRequestCoalescer {
     struct Completion {
         let recordHistory: Bool
         let requiresFreshFollowUp: Bool
+        let publishCurrent: Bool
     }
 
     private(set) var isInFlight = false
     private var historyRequested = false
     private var freshFollowUpRequested = false
+    private var currentSuperseded = false
 
     mutating func request(
         recordHistory: Bool,
-        requiresFreshFollowUp: Bool
+        requiresFreshFollowUp: Bool,
+        supersedesCurrent: Bool = false
     ) -> Bool {
         historyRequested = historyRequested || recordHistory
         guard !isInFlight else {
-            freshFollowUpRequested = freshFollowUpRequested || requiresFreshFollowUp
+            freshFollowUpRequested = freshFollowUpRequested
+                || requiresFreshFollowUp || supersedesCurrent
+            currentSuperseded = currentSuperseded || supersedesCurrent
             return false
         }
         isInFlight = true
@@ -128,11 +135,13 @@ struct SampleRequestCoalescer {
         precondition(isInFlight)
         let completion = Completion(
             recordHistory: historyRequested,
-            requiresFreshFollowUp: freshFollowUpRequested
+            requiresFreshFollowUp: freshFollowUpRequested,
+            publishCurrent: !currentSuperseded
         )
         isInFlight = false
         historyRequested = false
         freshFollowUpRequested = false
+        currentSuperseded = false
         return completion
     }
 }
@@ -253,6 +262,7 @@ final class StatusItemController: NSObject {
             self.sampleNow(
                 recordHistory: true,
                 requiresFreshFollowUp: true,
+                supersedesCurrent: true,
                 event: .sleepWake
             )
         }
@@ -529,6 +539,7 @@ final class StatusItemController: NSObject {
     fileprivate func sampleNow(
         recordHistory: Bool,
         requiresFreshFollowUp: Bool = false,
+        supersedesCurrent: Bool = false,
         event: PowerObservationRuntimeEvent = .normal
     ) {
         dispatchPrecondition(condition: .onQueue(.main))
@@ -536,7 +547,8 @@ final class StatusItemController: NSObject {
             pendingPowerObservationEvent.merging(event)
         guard sampleRequests.request(
             recordHistory: recordHistory,
-            requiresFreshFollowUp: requiresFreshFollowUp
+            requiresFreshFollowUp: requiresFreshFollowUp,
+            supersedesCurrent: supersedesCurrent
         ) else { return }
         let runtimeEvent = pendingPowerObservationEvent
         pendingPowerObservationEvent = .normal
@@ -557,26 +569,28 @@ final class StatusItemController: NSObject {
         dispatchPrecondition(condition: .onQueue(.main))
         let completedRequest = sampleRequests.complete()
 
-        // An IOPS/wake event happened after this acquisition began, so this
-        // result is already superseded. Do not briefly publish it or attach a
-        // coincident history tick to the wrong side of the transition; carry
-        // that tick into the one retained post-event acquisition instead.
-        if completedRequest.requiresFreshFollowUp {
-            sampleNow(recordHistory: completedRequest.recordHistory)
-            return
+        // IOPS notifications can continue throughout successive acquisitions.
+        // Publish completed work before following them up so updates cannot
+        // starve. Only wake invalidates the in-flight result and its history.
+        if completedRequest.publishCurrent {
+            let availabilityPlan = startupAvailability.finish(
+                result.visibleSnapshot,
+                recordHistory: completedRequest.recordHistory
+            )
+            if let fresh = availabilityPlan.snapshot {
+                snapshot = fresh
+                if availabilityPlan.shouldRecordHistory {
+                    history.append(fresh.totalInputW)
+                }
+            }
+            refreshPresentation()
         }
 
-        let availabilityPlan = startupAvailability.finish(
-            result.visibleSnapshot,
-            recordHistory: completedRequest.recordHistory
-        )
-        if let fresh = availabilityPlan.snapshot {
-            snapshot = fresh
-            if availabilityPlan.shouldRecordHistory {
-                history.append(fresh.totalInputW)
-            }
+        if completedRequest.requiresFreshFollowUp {
+            sampleNow(
+                recordHistory: completedRequest.recordHistory && !completedRequest.publishCurrent
+            )
         }
-        refreshPresentation()
     }
 
     private func refreshPresentation() {
