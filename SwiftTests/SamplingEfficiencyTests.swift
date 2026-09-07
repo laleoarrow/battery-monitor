@@ -93,10 +93,6 @@ final class SamplingEfficiencyTests: XCTestCase {
             }
             XCTAssertEqual(historyTimes, [2, 4, 6, 8, 10], "phase=\(phase)")
             XCTAssertEqual(sampleTimes.filter { $0 <= phase + 2 }.count, 2)
-            // The previous clocks at [phase+1, phase+2] and [2] requested
-            // three independent acquisitions when each read completed quickly.
-            let previousFirstTwoSeconds = [phase + 1, phase + 2, 2]
-            XCTAssertEqual(Set(previousFirstTwoSeconds).count, 3)
             XCTAssertLessThanOrEqual(sampleTimes.last!, phase + 10)
         }
     }

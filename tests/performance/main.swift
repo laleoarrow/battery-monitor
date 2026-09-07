@@ -4,21 +4,13 @@ import Foundation
 // Controlled production-renderer microbenchmark. Run the same optimized build
 // flags, fixtures and iteration count on both revisions in an isolated GUI VM.
 // This measures update/commit cost, not real display FPS or whole-app energy.
-final class CountingDefaults: UserDefaults, @unchecked Sendable {
-    private(set) var registrations = 0
-    override func register(defaults registrationDictionary: [String: Any]) {
-        registrations += 1
-        super.register(defaults: registrationDictionary)
-    }
-}
-
 let iterations = CommandLine.arguments.dropFirst().first.flatMap(Int.init) ?? 2_000
 precondition((100...20_000).contains(iterations))
 _ = NSApplication.shared
 NSApp.setActivationPolicy(.accessory)
 NSApp.finishLaunching()
 let suite = "Wattson.Performance.\(UUID().uuidString)"
-let defaults = CountingDefaults(suiteName: suite)!
+let defaults = UserDefaults(suiteName: suite)!
 Settings.configureForTest(defaults: defaults)
 defer {
     Settings.resetTestConfiguration()
@@ -51,7 +43,6 @@ measure("seven_preference_reads") { _ in
     _ = Settings.checksForUpdatesOnLaunch
     for module in Settings.Module.allCases { _ = Settings.isModuleVisible(module) }
 }
-print("PREFERENCE_REGISTRATIONS \(defaults.registrations)")
 
 func snapshot(_ index: Int, device: Bool, moving: Bool) -> PowerSnapshot {
     let system = moving && !device ? 30 + Double(index % 3) : 30.0

@@ -38,33 +38,16 @@ enum Settings {
     private static let percentageKey = "menubar.showsPercentage"
     private static let iconStyleKey = "menubar.iconStyle"
     private static let checkForUpdatesOnLaunchKey = "updates.checkOnLaunch"
-    private static let registeredDefaults: [String: Any] = {
-        var values: [String: Any] = [
-            percentageKey: true,
-            iconStyleKey: MenuBarIconStyle.wattson.rawValue,
-            checkForUpdatesOnLaunchKey: true,
-        ]
-        for module in Module.allCases {
-            values[module.defaultsKey] = true
-        }
-        return values
-    }()
-
 #if DEBUG
     private static var testDefaults: UserDefaults?
 #endif
 
-    private static let productionDefaults: UserDefaults = {
-        let defaults = UserDefaults.standard
-        defaults.register(defaults: registeredDefaults)
-        return defaults
-    }()
-
+    // Each typed getter owns its fallback; no second default table is needed.
     private static var defaults: UserDefaults {
 #if DEBUG
-        return testDefaults ?? productionDefaults
+        return testDefaults ?? .standard
 #else
-        return productionDefaults
+        return .standard
 #endif
     }
 
@@ -145,7 +128,6 @@ enum Settings {
 #if DEBUG
     static func configureForTest(defaults: UserDefaults) {
         testDefaults = defaults
-        defaults.register(defaults: registeredDefaults)
     }
 
     static func resetTestConfiguration() {

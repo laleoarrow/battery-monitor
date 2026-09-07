@@ -15,15 +15,6 @@ class SettingsStoreContractTests(unittest.TestCase):
             r'''
             import Foundation
 
-            final class CountingUserDefaults: UserDefaults, @unchecked Sendable {
-                private(set) var registrationCount = 0
-
-                override func register(defaults registrationDictionary: [String: Any]) {
-                    registrationCount += 1
-                    super.register(defaults: registrationDictionary)
-                }
-            }
-
             func expect(_ condition: @autoclosure () -> Bool, _ message: String) {
                 guard condition() else {
                     FileHandle.standardError.write(Data("FAIL: \(message)\n".utf8))
@@ -32,7 +23,7 @@ class SettingsStoreContractTests(unittest.TestCase):
             }
 
             let suiteName = "com.leoarrow.wattson.tests.settings.\(UUID().uuidString)"
-            guard let defaults = CountingUserDefaults(suiteName: suiteName) else {
+            guard let defaults = UserDefaults(suiteName: suiteName) else {
                 fatalError("could not create isolated defaults suite")
             }
             defaults.removePersistentDomain(forName: suiteName)
@@ -56,31 +47,16 @@ class SettingsStoreContractTests(unittest.TestCase):
                 expect(module.title == title, "wrong title for \(module.rawValue)")
                 expect(module.defaultsKey == key, "wrong key for \(module.rawValue)")
                 expect(Settings.isModuleVisible(module), "\(module.rawValue) must default visible")
-                expect(defaults.object(forKey: key) as? Bool == true,
-                       "\(key) must be registered true")
             }
             expect(Settings.showsMenuBarPercentage, "percentage must default on")
-            expect(defaults.object(forKey: "menubar.showsPercentage") as? Bool == true,
-                   "existing percentage key must remain registered true")
             expect(Settings.menuBarIconStyle == .wattson,
                    "existing users must retain the Wattson icon by default")
-            expect(defaults.string(forKey: "menubar.iconStyle") == "wattson",
-                   "icon style must register a stable string default")
             expect(Settings.MenuBarIconStyle.allCases.map(\.rawValue) == ["wattson", "native"],
                    "icon styles must remain strongly typed and ordered")
             expect(Settings.checksForUpdatesOnLaunch,
                    "launch update checking must default on")
-            expect(defaults.object(forKey: "updates.checkOnLaunch") as? Bool == true,
-                   "launch update checking must use a stable registered default")
-
-            for _ in 0..<25 {
-                _ = Settings.menuBarIconStyle
-                _ = Settings.showsMenuBarPercentage
-                _ = Settings.checksForUpdatesOnLaunch
-                Settings.Module.allCases.forEach { _ = Settings.isModuleVisible($0) }
-            }
-            expect(defaults.registrationCount == 1,
-                   "preference reads must not re-register defaults")
+            expect((defaults.persistentDomain(forName: suiteName) ?? [:]).isEmpty,
+                   "reading defaults must not persist preferences")
 
             var changes: [Settings.Change] = []
             var observedAppearances: [(Settings.MenuBarIconStyle, Bool)] = []
@@ -194,16 +170,36 @@ class SettingsStoreContractTests(unittest.TestCase):
             expect(keptNilObject, "legacy notification object must remain nil")
 
             let secondSuite = suiteName + ".second"
-            let secondDefaults = CountingUserDefaults(suiteName: secondSuite)!
+            let secondDefaults = UserDefaults(suiteName: secondSuite)!
             defer { secondDefaults.removePersistentDomain(forName: secondSuite) }
             Settings.configureForTest(defaults: secondDefaults)
             expect(Settings.showsMenuBarPercentage && Settings.isModuleVisible(.flow),
-                   "a fresh suite must retain its own registered defaults")
+                   "a fresh suite must retain its own default values")
             secondDefaults.set(false, forKey: "menubar.showsPercentage")
             expect(!Settings.showsMenuBarPercentage,
                    "external preference changes must remain immediately visible")
-            expect(secondDefaults.registrationCount == 1,
-                   "switching suites registers once, not once per read")
+            secondDefaults.removeObject(forKey: "menubar.showsPercentage")
+            expect(Settings.showsMenuBarPercentage,
+                   "removing a preference must restore its default")
+            secondDefaults.set(["invalid"], forKey: "menubar.showsPercentage")
+            secondDefaults.set(["invalid"], forKey: "updates.checkOnLaunch")
+            secondDefaults.set(["invalid"], forKey: "menubar.iconStyle")
+            expect(Settings.showsMenuBarPercentage && Settings.checksForUpdatesOnLaunch
+                       && Settings.menuBarIconStyle == .wattson,
+                   "invalid stored types must fall back to safe defaults")
+            for module in Settings.Module.allCases {
+                secondDefaults.set(false, forKey: module.defaultsKey)
+                expect(!Settings.isModuleVisible(module), "external module writes must stay visible")
+                secondDefaults.removeObject(forKey: module.defaultsKey)
+                expect(Settings.isModuleVisible(module), "removed module values must default visible")
+                secondDefaults.set(["invalid"], forKey: module.defaultsKey)
+                expect(Settings.isModuleVisible(module), "invalid module values must default visible")
+            }
+
+            Settings.configureForTest(defaults: UserDefaults(suiteName: suiteName)!)
+            expect(!Settings.showsMenuBarPercentage && !Settings.checksForUpdatesOnLaunch
+                       && !Settings.isModuleVisible(.flow),
+                   "reopening the original suite must preserve its saved choices")
             '''
         )
 

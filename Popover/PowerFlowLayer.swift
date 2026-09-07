@@ -436,7 +436,6 @@ final class PipeBundle {
 
     private var particles: [CALayer] = []
     private var particleOffsets: [CGFloat] = []
-    private var particleCount = -1
     private var particlesAreHot = false
     private var particlesAreAnimating = false
     private var particleTopology = ""
@@ -541,16 +540,17 @@ final class PipeBundle {
                           period: CFTimeInterval, seed: UInt64, hot: Bool,
                           animating: Bool, topology: String) {
         let requested = thickness > 0.5 ? count : 0
+        let existingCount = particles.count
 
         // Hysteresis. The count is a rounded function of a continuously drifting
         // reading, so it oscillates across a boundary — 43 W wants five sparks
         // and 45 W wants six, and the pool rebuilt on every crossing. One spark
         // either way is invisible; churning the pool at 1 Hz is not.
         let wanted: Int
-        if particleCount < 0 || requested == 0 || particleCount == 0 {
+        if requested == 0 || existingCount == 0 {
             wanted = requested
         } else {
-            wanted = abs(requested - particleCount) >= 2 ? requested : particleCount
+            wanted = abs(requested - existingCount) >= 2 ? requested : existingCount
         }
 
         // Everything the pool is built from has to be in this key. Guarding on
@@ -562,7 +562,7 @@ final class PipeBundle {
         // reading: whatever the quantisation, the value oscillates across its
         // own boundary and the pool churns at 1 Hz. Topology is discrete, and
         // sub-point drift in the path is not visible.
-        guard wanted != particleCount
+        guard wanted != existingCount
             || hot != particlesAreHot
             || animating != particlesAreAnimating
             || topology != particleTopology
@@ -571,7 +571,6 @@ final class PipeBundle {
             retimeParticles(period: period)
             return
         }
-        particleCount = wanted
         particlesAreHot = hot
         particlesAreAnimating = animating
         particleTopology = topology
