@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3027">v3.0.27 notes</a>
+  <a href="#whats-new-in-v3028">v3.0.28 notes</a>
 </p>
 
 <p align="center">
@@ -40,6 +40,17 @@ where it is going, and how the picture has changed over the last two minutes.
 - A compact native Settings window for General, Menu Bar Icon, and Modules.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
+
+## What's new in v3.0.28
+
+- Preference defaults now live only in the typed settings getters; the redundant
+  registration table and initialization wrapper have been removed. Saved choices,
+  fallback values and live preference changes keep their existing behavior.
+- Particle pools use their actual layer count instead of a separately synchronized
+  counter. Empty-pool recovery and count hysteresis remain covered by regression
+  tests, alongside the existing animation phase and geometry checks.
+- This is an internal simplification release: artwork, layout, sensor policy and
+  displayed power semantics are unchanged. No new FPS, RAM or battery-life claim.
 
 ## What's new in v3.0.27
 

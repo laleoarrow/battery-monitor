@@ -48,7 +48,7 @@ class ParticleContractTests(unittest.TestCase):
         # Guarding on the count alone let particles keep whatever they were born
         # with: reopening the popover left them frozen, and a topology change
         # left them riding the previous curve.
-        guard = self.flow.split("guard wanted != particleCount", 1)[1].split("else {", 1)[0]
+        guard = self.flow.split("guard wanted != existingCount", 1)[1].split("else {", 1)[0]
         for term in ("particlesAreHot", "particlesAreAnimating", "particleTopology"):
             self.assertIn(term, guard)
 
@@ -58,14 +58,14 @@ class ParticleContractTests(unittest.TestCase):
         # thickness rebuilt on 95% of samples; keying on the curve's
         # coordinates did the same, because tangency derives them from
         # thickness. Topology is discrete.
-        guard = self.flow.split("guard wanted != particleCount", 1)[1].split("else {", 1)[0]
+        guard = self.flow.split("guard wanted != existingCount", 1)[1].split("else {", 1)[0]
         for continuous in ("thickness", "geometry.start", "geometry.end"):
             self.assertNotIn(continuous, guard)
 
     def test_particle_count_has_hysteresis(self):
         # The count is a rounded function of a drifting reading, so it flips
         # back and forth at a boundary. One spark either way is invisible.
-        self.assertIn("abs(requested - particleCount) >= 2", self.flow)
+        self.assertIn("abs(requested - existingCount) >= 2", self.flow)
 
     def test_hot_style_has_hysteresis_at_the_saturation_boundary(self):
         # 99.9/100.1 W telemetry noise must not rebuild the entire pool and its

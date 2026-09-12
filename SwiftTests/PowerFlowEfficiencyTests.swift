@@ -117,6 +117,22 @@ final class PowerFlowEfficiencyTests: XCTestCase {
         }
     }
 
+    func testEmptyPoolAndSingleParticleHysteresis() throws {
+        let pipe = PipeBundle()
+        configure(pipe, geometry: curve, count: 0, animating: false, topology: "")
+        XCTAssertTrue(pipe.particleLayersForTest.isEmpty)
+        XCTAssertEqual(pipe.particleGeometryUpdatesForTest, 0)
+
+        for (requested, expected, installations) in [(1, 1, 1), (2, 1, 1),
+                                                     (3, 3, 4), (2, 3, 4),
+                                                     (0, 0, 4), (1, 1, 5)] {
+            configure(pipe, geometry: curve, count: requested)
+            XCTAssertEqual(pipe.particleLayersForTest.count, expected)
+            XCTAssertEqual(try rides(pipe.particleLayersForTest).count, expected)
+            XCTAssertEqual(pipe.particleRideInstallationsForTest, installations)
+        }
+    }
+
     func testPoolAndTopologyChangesStillInstallRidesForEveryNewParticle() {
         let pipe = PipeBundle()
         configure(pipe, geometry: curve)

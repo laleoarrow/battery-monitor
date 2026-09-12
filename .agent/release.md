@@ -182,6 +182,17 @@ user-local development build.
    /usr/bin/open -n /Applications/Wattson.app
    ```
 
+## Release email to Cody
+
+After a new stable release passes the public release gates, send Cody a concise
+Chinese update email with verified release highlights, the release-page link,
+direct PKG/DMG download links, and brief installation/signing guidance. Use the
+confirmed recipients from the previous Wattson-to-Cody correspondence; do not
+store personal email addresses in this public repository. Check Sent mail for
+that version first to avoid duplicates. Send download links, not executable
+attachments. Do not advertise unreleased commits as a downloadable version or
+claim unmeasured accuracy, performance or energy improvements.
+
 ## Local developer install
 
 ```bash
