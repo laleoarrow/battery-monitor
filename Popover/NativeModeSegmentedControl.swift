@@ -42,6 +42,12 @@ final class NativeModeSegmentedControl: NSSegmentedControl {
         enabledModes.contains(true)
     }
 
+    override func becomeFirstResponder() -> Bool {
+        guard super.becomeFirstResponder() else { return false }
+        scrollToVisible(bounds.insetBy(dx: -2, dy: -2))
+        return true
+    }
+
     func update(selected: EnergyMode, enabledModes available: [EnergyMode]) {
         enabledModes = modes.map(available.contains)
         for index in modes.indices {

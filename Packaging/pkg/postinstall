@@ -18,6 +18,47 @@ fail() {
     exit 1
 }
 
+recover_monitoring() {
+    local console_record console_user console_uid
+
+    # A failed helper update must not strand an otherwise valid monitor. Never
+    # execute app code as root or relax signature/quarantine checks to recover.
+    [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]] || return 1
+    [[ -d "$APP_DIR/Contents" && ! -L "$APP_DIR/Contents" ]] || return 1
+    [[ -d "$APP_DIR/Contents/MacOS" && ! -L "$APP_DIR/Contents/MacOS" ]] || return 1
+    [[ -f "$APP_EXECUTABLE" && ! -L "$APP_EXECUTABLE" ]] || return 1
+    [[ -f "$APP_DIR/Contents/Info.plist" && ! -L "$APP_DIR/Contents/Info.plist" ]] || return 1
+    [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist" 2>/dev/null)" == "$APP_BUNDLE_ID" ]] \
+        || return 1
+    /usr/bin/codesign --verify --deep --strict "$APP_DIR" || return 1
+
+    console_record="$(/usr/bin/stat -f '%Su:%u' /dev/console 2>/dev/null)" || return 1
+    console_user="${console_record%%:*}"
+    console_uid="${console_record##*:}"
+    [[ "$console_user" != "root" && "$console_user" != "loginwindow" ]] || return 1
+    [[ "$console_user" =~ ^[A-Za-z0-9._-]+$ && "$console_uid" =~ ^[1-9][0-9]*$ ]] || return 1
+    [[ "$(/usr/bin/id -u "$console_user" 2>/dev/null)" == "$console_uid" ]] || return 1
+    /bin/launchctl print "gui/$console_uid" >/dev/null 2>&1 || return 1
+    [[ "$(/usr/bin/stat -f '%Su:%u' /dev/console 2>/dev/null)" == "$console_record" ]] || return 1
+    /bin/launchctl asuser "$console_uid" \
+        /usr/bin/sudo -n -u "#$console_uid" -- \
+        /usr/bin/open -g "$APP_DIR"
+}
+
+finish_installation() {
+    local installation_status="$1"
+    trap - EXIT
+    if [[ "$installation_status" != "0" ]]; then
+        echo "Wattson postinstall: installation failed; repair with the full PKG from https://github.com/laleoarrow/battery-monitor/releases/latest" >&2
+        if recover_monitoring; then
+            echo "Wattson postinstall: requested a monitoring restart for the console user; helper controls may remain unavailable." >&2
+        else
+            echo "Wattson postinstall: automatic restart was unavailable. After repairing the installation, open /Applications/Wattson.app; no system security settings were changed." >&2
+        fi
+    fi
+    exit "$installation_status"
+}
+
 validate_payload_shape() {
     [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]] || fail "canonical app is missing"
     [[ -f "$APP_EXECUTABLE" && ! -L "$APP_EXECUTABLE" ]] \
@@ -209,6 +250,7 @@ remove_legacy_battery_power_app() {
 
 [[ "$(/usr/bin/id -u)" == "0" ]] || fail "Installer did not run as root"
 [[ "${3:-/}" == "/" ]] || fail "Wattson can only be installed on the startup volume"
+trap 'finish_installation "$?"' EXIT
 
 validate_payload_shape
 /usr/sbin/chown root:wheel "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST"

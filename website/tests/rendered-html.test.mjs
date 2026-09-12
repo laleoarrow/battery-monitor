@@ -45,6 +45,8 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /Download PKG/i);
   assert.match(html, /brew install --cask laleoarrow\/tap\/wattson/i);
   assert.match(html, /Community build/i);
+  assert.match(html, /system Light and Dark Mode/i);
+  assert.match(html, /scrolls on short screens without shrinking/i);
   assert.match(html, /macOS-style battery glyph/i);
   assert.match(html, /diagonal adapter plug/i);
   assert.match(html, /green bracketed charging battery/i);
@@ -112,7 +114,7 @@ test("groups the install routes in one compact, accessible panel", async () => {
   );
   assert.match(
     html,
-    /class="install-row install-row-recommended"[\s\S]*?Recommended[\s\S]*?Download DMG/i,
+    /class="install-row install-row-recommended"[\s\S]*?Read-only monitoring[\s\S]*?Download DMG/i,
   );
   assert.match(
     html,
@@ -124,6 +126,17 @@ test("groups the install routes in one compact, accessible panel", async () => {
   );
   assert.match(html, /class="trust-note"[\s\S]*?Inspect releases/i);
   assert.doesNotMatch(html, /class="install-grid"|class="install-card\b/i);
+  assert.match(html, /Drag <strong>Wattson\.app<\/strong> to Applications/i);
+  assert.match(html, /App-only monitoring installs no helper/i);
+  assert.match(html, /requests no administrator authorization on launch/i);
+  assert.match(html, /Older images containing only a PKG use the full installer/i);
+  assert.match(html, /require administrator approval/i);
+  assert.match(html, /Use PKG again to update the App, helper, and receipt together/i);
+  assert.match(html, /Full PKG installation and updates from Terminal/i);
+  assert.match(html, /Read-only monitoring uses available battery data/i);
+  assert.match(html, /does not include helper-backed SMC readings or bypass Gatekeeper/i);
+  assert.match(html, /Copying into Applications can separately require approval/i);
+  assert.doesNotMatch(html, /double-click the enclosed|disk-image wrapper/i);
 
   assert.match(page, /className="install-shell"/);
   assert.match(

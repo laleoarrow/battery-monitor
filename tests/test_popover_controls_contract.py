@@ -459,12 +459,18 @@ class PopoverControlsContractTests(unittest.TestCase):
             "\n    func update(hostFrameInTrack:", 1
         )[0]
         self.assertIn("sampleLayer.isHidden = !samplingEnabled", material)
-        self.assertIn("alpha: 1", material)
+        self.assertIn("opaqueModeSliderSelection", material)
+        opaque = self.slider.split("private func opaqueModeSliderSelection", 1)[1].split(
+            "\n}", 1
+        )[0]
+        self.assertIn("alpha: 1", opaque)
+        self.assertIn("PopoverStyle.isDark", opaque)
 
         native = self.slider.split("private static func applyNativeSurface", 1)[1].split(
             "\n        func applyTint", 1
         )[0]
-        self.assertIn("NSColor(white: lifted ? 0.22 : 0.27, alpha: 1)", native)
+        self.assertIn("opaqueModeSliderSelection", native)
+        self.assertIn("performAsCurrentDrawingAppearance", native)
         self.assertIn(": NSColor.clear", native)
 
     def test_fallback_refraction_is_scoped_to_lifted_direct_drag(self):

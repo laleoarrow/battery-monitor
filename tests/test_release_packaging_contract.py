@@ -42,7 +42,8 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.candidate_workflow = CANDIDATE_WORKFLOW.read_text(encoding="utf-8")
 
     def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8"), "3.0.28\n")
+        self.assertRegex((ROOT / "VERSION").read_text(encoding="utf-8"),
+                         r"\A3\.[0-9]+\.[0-9]+\n\Z")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")
@@ -402,7 +403,19 @@ class ReleasePackagingContractTests(unittest.TestCase):
         )
         self.assertNotIn("NSStatusItem", self.postinstall)
         self.assertNotIn("--installer-ready-token", self.postinstall)
-        self.assertNotIn("/usr/bin/open", self.postinstall)
+        recovery = self.postinstall.split("recover_monitoring() {", 1)[1].split("\n}\n", 1)[0]
+        finish = self.postinstall.split("finish_installation() {", 1)[1].split("\n}\n", 1)[0]
+        successful_install = self.postinstall.split('trap \'finish_installation "$?"\' EXIT', 1)[1]
+        self.assertEqual(self.postinstall.count("/usr/bin/open"), 1)
+        self.assertIn('/usr/bin/codesign --verify --deep --strict "$APP_DIR" || return 1', recovery)
+        self.assertIn('/bin/launchctl asuser "$console_uid"', recovery)
+        self.assertIn('/usr/bin/sudo -n -u "#$console_uid" --', recovery)
+        self.assertIn('/usr/bin/open -g "$APP_DIR"', recovery)
+        self.assertIn('if [[ "$installation_status" != "0" ]]; then', finish)
+        self.assertIn('if recover_monitoring; then', finish)
+        self.assertIn('exit "$installation_status"', finish)
+        self.assertNotIn("/usr/bin/open", successful_install)
+        self.assertNotIn("recover_monitoring", successful_install)
 
     def test_interactive_pkg_install_probes_v4_and_v5_as_console_user(self):
         probe = self.postinstall.split(
@@ -435,14 +448,24 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn('/usr/bin/sudo -n -u "#$console_uid"', self.postinstall)
         self.assertNotIn('rm -rf -- "$home_dir"', self.postinstall)
 
-    def test_dmg_contains_the_exact_pkg_and_no_second_install_surface(self):
+    def test_dmg_contains_the_same_app_without_the_privileged_installer(self):
         package = self.source["package_dmg.sh"]
         verify = self.source["verify_dmg.sh"]
-        self.assertIn('/bin/cp "$PKG_PATH" "$STAGING_DIR/$PKG_NAME"', package)
-        self.assertIn('/usr/bin/cmp -s "$PKG_PATH" "$STAGING_DIR/$PKG_NAME"', package)
-        self.assertIn('/usr/bin/cmp -s "$EXPECTED_PKG" "$EMBEDDED_PKG"', verify)
-        self.assertIn("DMG must expose exactly one installer PKG", verify)
-        self.assertNotIn("Wattson.app", package)
+        self.assertIn('/usr/bin/ditto --noextattr --noqtn "$APP_DIR" "$STAGING_DIR/$APP_NAME.app"', package)
+        self.assertIn('/usr/bin/diff -qr "$APP_DIR" "$STAGING_DIR/$APP_NAME.app"', package)
+        self.assertIn('/bin/ln -s /Applications "$STAGING_DIR/Applications"', package)
+        self.assertIn('/usr/bin/diff -qr "$EXPECTED_APP" "$EMBEDDED_APP"', verify)
+        self.assertIn("DMG must expose only Wattson.app and an Applications link", verify)
+        self.assertIn('/usr/bin/readlink "$MOUNT_DIR/Applications"', verify)
+        self.assertIn('/usr/bin/codesign --verify --deep --strict "$EMBEDDED_APP"', verify)
+        self.assertIn('lipo "$APP_BIN" -verify_arch arm64 x86_64', verify)
+        self.assertIn(
+            'verify_dmg.sh" "$DMG_PATH" "$PACKAGED_APP_DIR"',
+            self.source["verify_release.sh"],
+        )
+        self.assertNotIn("PKG_PATH", package)
+        self.assertNotIn("PrivilegedHelperTools", package)
+        self.assertNotIn("sudo", package)
         self.assertNotIn("Install Wattson.app", package)
 
     def test_notarization_is_opt_in_and_claimed_only_after_acceptance(self):
@@ -492,6 +515,8 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn('/usr/bin/shasum -a 256 "$PKG_NAME"', release)
         self.assertIn('/usr/bin/shasum -a 256 "$DMG_NAME"', release)
         self.assertIn('/usr/bin/shasum -a 256 -c', release)
+        self.assertIn("dmg_contents=app-only", release)
+        self.assertIn("pkg_contents=app-and-helper", release)
 
     def test_stable_release_requires_installing_verified_public_pkg_locally(self):
         guide = self.release_guide

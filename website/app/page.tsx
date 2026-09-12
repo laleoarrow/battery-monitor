@@ -265,6 +265,10 @@ export default function Home() {
               <span className="feature-number">02</span>
               <h3>Native by design</h3>
               <p>
+                The popover follows system Light and Dark Mode, retains its
+                native material, and scrolls on short screens without shrinking
+                the instruments. Reduce Transparency, Reduce Motion, Increase
+                Contrast, and visible keyboard focus remain supported.
                 The dedicated Menu Bar Icon page uses Wattson’s mark and the
                 macOS-style battery glyph across all four complete menu-bar
                 appearances. It lists the appearances vertically, one full-width
@@ -346,11 +350,13 @@ export default function Home() {
                   <FileArchive size={24} strokeWidth={1.7} />
                 </span>
                 <div className="install-copy">
-                  <span className="recommended-label">Recommended</span>
+                  <span className="recommended-label">Read-only monitoring</span>
                   <h3>Disk image</h3>
                   <p>
-                    Open the image, then double-click the enclosed
-                    <strong> Wattson PKG</strong> and follow macOS Installer.
+                    Drag <strong>Wattson.app</strong> to Applications. App-only
+                    monitoring installs no helper and requests no administrator
+                    authorization on launch. Older images containing only a PKG
+                    use the full installer and require administrator approval.
                   </p>
                 </div>
                 <ReleaseLink className="install-action primary-action" href={release.dmgUrl}>
@@ -365,8 +371,9 @@ export default function Home() {
                 <div className="install-copy">
                   <h3>Package installer</h3>
                   <p>
-                    Download the same universal installer package directly,
-                    without the disk-image wrapper.
+                    Full installation: the same universal App plus its helper.
+                    Requires administrator approval. Already installed with PKG?
+                    Use PKG again to update the App, helper, and receipt together.
                   </p>
                 </div>
                 <ReleaseLink className="install-action" href={release.pkgUrl}>
@@ -380,7 +387,10 @@ export default function Home() {
                 </span>
                 <div className="install-copy">
                   <h3>Homebrew</h3>
-                  <p>Install or update from Terminal with the community tap.</p>
+                  <p>
+                    Full PKG installation and updates from Terminal, including
+                    the helper and administrator approval.
+                  </p>
                 </div>
                 <div className="command-box">
                   <code>{HOMEBREW_COMMAND}</code>
@@ -410,10 +420,14 @@ export default function Home() {
                 <p>
                   <strong>Transparent about trust.</strong> The app and helper are
                   ad-hoc signed; the PKG and DMG are unsigned and not
-                  Apple-notarized. On macOS 15 or later, first try to open the
+                  Apple-notarized. Read-only monitoring uses available battery
+                  data; it does not include helper-backed SMC readings or bypass
+                  Gatekeeper. On macOS 15 or later, first try to open the App or
                   installer, then use System Settings → Privacy &amp; Security →
                   Open Anyway only if you trust this release. Review the source
                   and compare the provided SHA-256 checksum before installing.
+                  Copying into Applications can separately require approval if
+                  your account cannot write to that folder.
                 </p>
               </div>
               <a href={`${GITHUB_REPO}/releases`} rel="noreferrer" target="_blank">

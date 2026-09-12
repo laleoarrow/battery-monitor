@@ -86,6 +86,14 @@ final class PopoverHeaderView: PopoverSection {
 #endif
 }
 
+private final class PopoverButton: NSButton {
+    override func becomeFirstResponder() -> Bool {
+        guard super.becomeFirstResponder() else { return false }
+        scrollToVisible(bounds.insetBy(dx: -2, dy: -2))
+        return true
+    }
+}
+
 /// Three-position mode control and system-battery visibility choice.
 ///
 /// The tactile 2A slider remains the normal presentation. macOS Reduce Motion
@@ -119,13 +127,13 @@ final class PopoverFooterView: PopoverSection {
     private let modes: [EnergyMode] = [.auto, .low, .high]
     private lazy var modeControl = ModeSliderView(modes: modes)
     private lazy var reducedMotionModeControl = NativeModeSegmentedControl(modes: modes)
-    private lazy var systemBatteryIconButton = NSButton(
+    private lazy var systemBatteryIconButton = PopoverButton(
         checkboxWithTitle: "Hide System Battery Icon",
         target: self,
         action: #selector(systemBatteryIconChanged)
     )
     private let hint = NSTextField(labelWithString: "Right-click to switch modes")
-    private let settingsButton = NSButton()
+    private let settingsButton = PopoverButton()
 
     private var selected: EnergyMode = .auto
     private var pendingMode: EnergyMode?
@@ -360,8 +368,45 @@ final class PopoverFooterView: PopoverSection {
 #endif
 }
 
+private final class PopoverSurfaceView: NSView {
+    var appearanceDidChange: (() -> Void)?
+    weak var initialFocusView: NSView?
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        // Mouse opening must not focus a footer button and scroll away from
+        // the heading. Tab can then enter the controls through AppKit's loop.
+        window?.initialFirstResponder = initialFocusView
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        appearanceDidChange?()
+    }
+}
+
+private final class PopoverDocumentView: NSView {
+    override var isFlipped: Bool { true }
+}
+
+private final class PopoverScrollView: NSScrollView {
+    override func tile() {
+        super.tile()
+        // AppKit may select a legacy scroller when the window attaches or the
+        // system preference changes. Give its gutter space without clipping
+        // or scaling the fixed-width instruments.
+        if let documentView, contentSize.width > 0,
+           documentView.frame.width != contentSize.width {
+            documentView.setFrameSize(NSSize(width: contentSize.width,
+                                             height: documentView.frame.height))
+        }
+    }
+}
+
 final class PopoverContentViewController: NSViewController {
     private let stack = NSStackView()
+    private let scrollView = PopoverScrollView()
+    private let documentView = PopoverDocumentView()
     private let header = PopoverHeaderView()
     private let flowView = PowerFlowView()
     private let ringView = RingGaugeView()
@@ -382,6 +427,7 @@ final class PopoverContentViewController: NSViewController {
         ((Bool, @escaping (Bool) -> Void) -> Void)?
     private var settingsHandler: (() -> Void)?
     private var settingsObserver: NSObjectProtocol?
+    private var displayOptionsObserver: NSObjectProtocol?
 #if DEBUG
     private(set) var moduleUpdateCountsForTest: [PopoverModule: Int] = [:]
     private(set) var footerUpdateCountForTest = 0
@@ -392,17 +438,58 @@ final class PopoverContentViewController: NSViewController {
         if let settingsObserver {
             NotificationCenter.default.removeObserver(settingsObserver)
         }
+        if let displayOptionsObserver {
+            NSWorkspace.shared.notificationCenter.removeObserver(displayOptionsObserver)
+        }
     }
 
     override func loadView() {
-        let root = NSView(frame: NSRect(x: 0, y: 0, width: PopoverStyle.width, height: 1))
+        let root = PopoverSurfaceView(frame: NSRect(x: 0, y: 0, width: PopoverStyle.width, height: 1))
+        root.initialFocusView = scrollView
         root.wantsLayer = true
-        root.layer?.backgroundColor = PopoverStyle.surface.cgColor
-        // The prototype is a dark instrument panel. Letting the popover follow
-        // a light system appearance would wash every colour decision out.
-        root.appearance = NSAppearance(named: .darkAqua)
+        // NSPopover supplies the native adaptive material. An extra effect
+        // view here would cover its system glass on newer macOS versions.
         view = root
         buildContent()
+        root.appearanceDidChange = { [weak self] in self?.refreshAppearance() }
+        displayOptionsObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+            object: NSWorkspace.shared, queue: .main
+        ) { [weak self] _ in self?.refreshAppearance() }
+        refreshAppearance()
+    }
+
+    func setViewportHeight(_ height: CGFloat) {
+        _ = view
+        view.setFrameSize(NSSize(width: PopoverStyle.width, height: height))
+        documentView.setFrameSize(NSSize(width: PopoverStyle.width, height: preferredHeight))
+        scrollView.hasVerticalScroller = height < preferredHeight
+        view.layoutSubtreeIfNeeded()
+        scrollView.tile()
+        // Clamp the old scroll offset when hiding modules or moving to a taller
+        // display; do not reset it on the 1 Hz telemetry update.
+        let offset = min(scrollView.contentView.bounds.minY, max(preferredHeight - height, 0))
+        scrollView.contentView.scroll(to: NSPoint(x: 0, y: max(offset, 0)))
+        scrollView.reflectScrolledClipView(scrollView.contentView)
+    }
+
+    private func refreshAppearance() {
+        view.effectiveAppearance.performAsCurrentDrawingAppearance {
+            var reduceTransparency = NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency
+#if DEBUG
+            if let value = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] {
+                reduceTransparency = value == "1"
+            }
+#endif
+            // Standard popover material owns normal rendering. The explicit
+            // opaque fallback also makes the opt-in GUI test deterministic.
+            view.layer?.backgroundColor = reduceTransparency ? PopoverStyle.surface.cgColor : nil
+            for section in [header, flowView, ringView, laneView, historyView, footer] {
+                section.refreshAppearance()
+            }
+            update(snapshot: latestSnapshot, history: latestHistory,
+                   peak: latestPeak, degraded: latestDegraded)
+        }
     }
 
     var preferredHeight: CGFloat {
@@ -422,11 +509,13 @@ final class PopoverContentViewController: NSViewController {
         latestDegraded = degraded
         if degradationChanged { setAnimationsEnabled(animationsEnabled) }
 
-        header.update(snapshot: snapshot, degraded: degraded)
-        for module in PopoverModule.allCases where isVisible(module) {
-            updateModule(module)
+        view.effectiveAppearance.performAsCurrentDrawingAppearance {
+            header.update(snapshot: snapshot, degraded: degraded)
+            for module in PopoverModule.allCases where isVisible(module) {
+                updateModule(module)
+            }
+            updateFooter()
         }
-        updateFooter()
     }
 
     private func updateModule(_ module: PopoverModule) {
@@ -514,14 +603,28 @@ final class PopoverContentViewController: NSViewController {
         stack.distribution = .fill
         stack.spacing = 0
         stack.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stack)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.drawsBackground = false
+        scrollView.contentView.drawsBackground = false
+        scrollView.borderType = .noBorder
+        scrollView.autohidesScrollers = true
+        scrollView.hasHorizontalScroller = false
+        scrollView.documentView = documentView
+        // tile() tracks the actual clip width. Autoresizing from the initial
+        // zero-sized clip would instead add the viewport width twice.
+        documentView.addSubview(stack)
+        view.addSubview(scrollView)
 
         [header, flowView, ringView, laneView, historyView, footer].forEach(stack.addArrangedSubview)
 
         NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: PopoverStyle.sideInset),
-            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -PopoverStyle.sideInset),
-            stack.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stack.widthAnchor.constraint(equalToConstant: PopoverStyle.contentWidth),
+            stack.centerXAnchor.constraint(equalTo: documentView.centerXAnchor),
+            stack.topAnchor.constraint(equalTo: documentView.topAnchor, constant: 12),
             header.heightAnchor.constraint(equalToConstant: PopoverHeaderView.preferredHeight),
             flowView.heightAnchor.constraint(equalToConstant: PowerFlowView.preferredHeight),
             ringView.heightAnchor.constraint(equalToConstant: RingGaugeView.preferredHeight),

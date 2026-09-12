@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build, package, optionally notarize, verify, and checksum one Wattson release.
+# Build one app for a helper-free DMG and a full PKG; verify both before checksums.
 set -euo pipefail
 umask 022
 
@@ -117,6 +117,8 @@ BUILD_NUMBER="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' \
     printf 'minimum_macos=12.0\n'
     printf 'install_path=/Applications/Wattson.app\n'
     printf 'helper_path=/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper\n'
+    printf 'dmg_contents=app-only\n'
+    printf 'pkg_contents=app-and-helper\n'
     printf 'distribution_mode=%s\n' "$DISTRIBUTION_MODE"
     printf 'app_signature=%s\n' "$APP_SIGNATURE"
     printf 'helper_signature=%s\n' "$HELPER_SIGNATURE"

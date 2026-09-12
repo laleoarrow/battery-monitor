@@ -1,5 +1,11 @@
 import AppKit
 
+private func opaqueModeSliderSelection(in appearance: NSAppearance, lifted: Bool) -> NSColor {
+    NSColor(white: PopoverStyle.isDark(appearance)
+        ? (lifted ? 0.22 : 0.27)
+        : (lifted ? 0.94 : 0.88), alpha: 1)
+}
+
 /// Public Core Animation primitives provide a consistent optical edge for the
 /// macOS 12–25 sampled-lens fallback. Native Liquid Glass draws its own edge.
 private final class OpticalLensChromeView: NSView {
@@ -24,25 +30,32 @@ private final class OpticalLensChromeView: NSView {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     func apply(reduceTransparency: Bool, lifted: Bool) {
-        rimWidth = reduceTransparency ? 1.5 : (lifted ? 1.15 : 0.9)
-        layer?.backgroundColor = reduceTransparency
-            ? NSColor(white: lifted ? 0.22 : 0.27, alpha: 1).cgColor
-            : NSColor.clear.cgColor
-        rimLayer.lineWidth = rimWidth
-        rimLayer.strokeColor = NSColor.white.withAlphaComponent(
-            reduceTransparency ? 0.58 : (lifted ? 0.52 : 0.36)
-        ).cgColor
-        innerEdgeLayer.lineWidth = reduceTransparency ? 0.75 : 0.55
-        innerEdgeLayer.strokeColor = NSColor.black.withAlphaComponent(
-            reduceTransparency ? 0.28 : 0.18
-        ).cgColor
-        causticLayer.isHidden = reduceTransparency
-        causticLayer.colors = [
-            NSColor.white.withAlphaComponent(lifted ? 0.30 : 0.18).cgColor,
-            NSColor.white.withAlphaComponent(0.03).cgColor,
-            NSColor.black.withAlphaComponent(lifted ? 0.07 : 0.04).cgColor,
-            NSColor.white.withAlphaComponent(lifted ? 0.16 : 0.09).cgColor,
-        ]
+        let increasedContrast = PopoverStyle.isHighContrast(effectiveAppearance)
+        rimWidth = reduceTransparency || increasedContrast ? 1.5 : (lifted ? 1.15 : 0.9)
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            let edge = PopoverStyle.isDark(self.effectiveAppearance)
+                ? NSColor.white : NSColor.black
+            let innerEdge = PopoverStyle.isDark(self.effectiveAppearance)
+                ? NSColor.black : NSColor.white
+            self.layer?.backgroundColor = reduceTransparency
+                ? opaqueModeSliderSelection(in: self.effectiveAppearance, lifted: lifted).cgColor
+                : NSColor.clear.cgColor
+            self.rimLayer.lineWidth = self.rimWidth
+            self.rimLayer.strokeColor = edge.withAlphaComponent(
+                increasedContrast ? 0.85 : (reduceTransparency ? 0.58 : (lifted ? 0.52 : 0.36))
+            ).cgColor
+            self.innerEdgeLayer.lineWidth = reduceTransparency ? 0.75 : 0.55
+            self.innerEdgeLayer.strokeColor = innerEdge.withAlphaComponent(
+                reduceTransparency ? 0.28 : 0.18
+            ).cgColor
+            self.causticLayer.isHidden = reduceTransparency
+            self.causticLayer.colors = [
+                edge.withAlphaComponent(lifted ? 0.30 : 0.18).cgColor,
+                edge.withAlphaComponent(0.03).cgColor,
+                innerEdge.withAlphaComponent(lifted ? 0.07 : 0.04).cgColor,
+                edge.withAlphaComponent(lifted ? 0.16 : 0.09).cgColor,
+            ]
+        }
         causticLayer.locations = [0, 0.24, 0.70, 1]
         causticLayer.startPoint = CGPoint(x: 0.04, y: 0.02)
         causticLayer.endPoint = CGPoint(x: 0.96, y: 0.98)
@@ -111,6 +124,7 @@ private final class LegacyOpticalLensView: NSView {
     func install(sample image: CGImage) {
         sampleImage = image
         sampleLayer.contents = image
+        sampleLayer.isHidden = !samplingEnabled
         sampleLayer.contentsScale = window?.backingScaleFactor
             ?? NSScreen.main?.backingScaleFactor
             ?? 2
@@ -120,11 +134,22 @@ private final class LegacyOpticalLensView: NSView {
     func applyMaterial(reduceTransparency: Bool, lifted: Bool) {
         self.reduceTransparency = reduceTransparency
         self.lifted = lifted
-        layer?.backgroundColor = reduceTransparency
-            ? NSColor(white: lifted ? 0.22 : 0.27, alpha: 1).cgColor
-            : NSColor.white.withAlphaComponent(lifted ? 0.075 : 0.105).cgColor
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            let highlight = PopoverStyle.isDark(self.effectiveAppearance)
+                ? NSColor.white : NSColor.black
+            self.layer?.backgroundColor = reduceTransparency
+                ? opaqueModeSliderSelection(in: self.effectiveAppearance, lifted: lifted).cgColor
+                : highlight.withAlphaComponent(lifted ? 0.075 : 0.105).cgColor
+        }
         sampleLayer.isHidden = !samplingEnabled
         chromeView.apply(reduceTransparency: reduceTransparency, lifted: lifted)
+        updateSamplingRect()
+    }
+
+    func invalidateSample() {
+        sampleImage = nil
+        sampleLayer.contents = nil
+        sampleLayer.isHidden = true
         updateSamplingRect()
     }
 
@@ -217,6 +242,7 @@ final class ModeSliderView: NSView {
     private let trackView = NSView()
     private let trackContent = NSView()
     private let knobHost = NSView()
+    private let keyboardFocusMarker = CALayer()
 
     private var trackGlass: NSView?
     private var nativeGlassContainer: NSView?
@@ -244,20 +270,22 @@ final class ModeSliderView: NSView {
         private static func applyNativeSurface(_ view: NSView, lifted: Bool) {
             let reduceTransparency = ModeSliderView.reducesTransparency
             let fill = reduceTransparency
-                ? NSColor(white: lifted ? 0.22 : 0.27, alpha: 1)
+                ? opaqueModeSliderSelection(in: view.effectiveAppearance, lifted: lifted)
                 : NSColor.clear
-            view.alphaValue = reduceTransparency
+            view.alphaValue = reduceTransparency || PopoverStyle.isHighContrast(view.effectiveAppearance)
                 ? 1
                 : (lifted ? ModeSliderView.nativeActiveGlassOpacity
                           : ModeSliderView.nativeRestingGlassOpacity)
-            view.layer?.backgroundColor = fill.cgColor
-            view.layer?.borderWidth = 0
-            if #available(macOS 26.0, *),
-               let glass = view as? NSGlassEffectView,
-               let content = glass.contentView {
-                content.wantsLayer = true
-                content.layer?.backgroundColor = fill.cgColor
-                content.layer?.borderWidth = 0
+            view.effectiveAppearance.performAsCurrentDrawingAppearance {
+                view.layer?.backgroundColor = fill.cgColor
+                view.layer?.borderWidth = 0
+                if #available(macOS 26.0, *),
+                   let glass = view as? NSGlassEffectView,
+                   let content = glass.contentView {
+                    content.wantsLayer = true
+                    content.layer?.backgroundColor = fill.cgColor
+                    content.layer?.borderWidth = 0
+                }
             }
         }
 
@@ -333,6 +361,15 @@ final class ModeSliderView: NSView {
     var fallbackLensMagnificationForTest: CGFloat? { fallbackLens?.magnification }
     var fallbackLensSamplingEnabledForTest: Bool? { fallbackLens?.samplingEnabled }
     var fallbackLensCaptureCountForTest: Int { opticalSnapshotCaptureCount }
+    var trackFillForTest: CGColor? { trackView.layer?.backgroundColor }
+    var selectorFillForTest: CGColor? { knob?.view.layer?.backgroundColor }
+    var activeLabelColorForTest: NSColor? { activeLabels.first?.textColor }
+    var opticalSnapshotDirtyForTest: Bool { opticalSnapshotDirty }
+    var keyboardFocusMarkerVisibleForTest: Bool { !keyboardFocusMarker.isHidden }
+    func installOpticalSnapshotForTest(_ image: CGImage) {
+        fallbackLens?.install(sample: image)
+        opticalSnapshotDirty = false
+    }
     var detentCentreForTest: (Int) -> CGFloat { { self.knobFrame(at: $0).midX } }
     var knobScaleForTest: CGSize {
         let base = knobFrame(at: selectedIndex)
@@ -554,11 +591,14 @@ final class ModeSliderView: NSView {
         setAccessibilityOrientation(.horizontal)
         setAccessibilityMinValue(NSNumber(value: 0))
         setAccessibilityMaxValue(NSNumber(value: max(modes.count - 1, 0)))
-        // This compact popover already exposes the selected label in the
-        // current semantic accent.
-        // AppKit's full-control accent ring reads as a second, unrelated glass
-        // outline after a mouse click, so keep keyboard semantics without it.
+        // Keep the full bar free of a second glass outline. Keyboard focus is
+        // marked only beneath the moving selection, not around every detent.
         focusRingType = .none
+        keyboardFocusMarker.isHidden = true
+        keyboardFocusMarker.cornerRadius = 1
+        keyboardFocusMarker.zPosition = 1
+        keyboardFocusMarker.actions = ["position": NSNull(), "bounds": NSNull()]
+        knobHost.layer?.addSublayer(keyboardFocusMarker)
         updateAccessibilityValue(announce: false)
     }
 
@@ -576,6 +616,19 @@ final class ModeSliderView: NSView {
     }
 
     override var acceptsFirstResponder: Bool { enabled.contains(true) }
+
+    override func becomeFirstResponder() -> Bool {
+        guard super.becomeFirstResponder() else { return false }
+        scrollToVisible(bounds)
+        PopoverStyle.setWithoutAnimation { self.keyboardFocusMarker.isHidden = false }
+        return true
+    }
+
+    override func resignFirstResponder() -> Bool {
+        guard super.resignFirstResponder() else { return false }
+        PopoverStyle.setWithoutAnimation { self.keyboardFocusMarker.isHidden = true }
+        return true
+    }
 
     override func keyDown(with event: NSEvent) {
         switch event.keyCode {
@@ -690,9 +743,8 @@ final class ModeSliderView: NSView {
         knobHost.layer?.cornerCurve = .continuous
 
         if !usesNativeGlass {
-            trackView.layer?.backgroundColor = PopoverStyle.well.cgColor
             trackView.layer?.borderWidth = 0.5
-            trackView.layer?.borderColor = PopoverStyle.wellBorder.withAlphaComponent(0.78).cgColor
+            applyTrackTint(currentTint)
         }
 
         // Native Liquid Glass supplies the surface elevation. The older-system
@@ -740,15 +792,20 @@ final class ModeSliderView: NSView {
     /// the selected foreground. Preserve that hierarchy in the fallback too.
     private func applyTrackTint(_: NSColor) {
         guard !usesNativeGlass else { return }
-        trackView.layer?.borderColor = PopoverStyle.wellBorder.withAlphaComponent(
-            Self.reducesTransparency ? 0.92 : 0.78
-        ).cgColor
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            self.trackView.layer?.backgroundColor = PopoverStyle.well.cgColor
+            self.trackView.layer?.borderColor = PopoverStyle.wellBorder.withAlphaComponent(
+                Self.reducesTransparency ? 0.92 : 0.78
+            ).cgColor
+        }
     }
 
     /// Core Animation would otherwise derive the shadow from the glass alpha on
     /// every frame. A fixed bounds-relative path stays cheap while the host is
     /// moved and scaled by the compositor.
     private func updateShadowPath() {
+        keyboardFocusMarker.frame = CGRect(x: (knobHost.bounds.width - 14) / 2,
+                                           y: 3, width: 14, height: 2)
         guard !usesNativeGlass else { return }
         let lifted = dragging && movedWhileDragging && !reducesMotion
         let radius = knobHost.bounds.height / 2
@@ -854,8 +911,12 @@ final class ModeSliderView: NSView {
 
     override func viewDidChangeEffectiveAppearance() {
         super.viewDidChangeEffectiveAppearance()
-        invalidateOpticalSnapshot()
-        needsLayout = true
+        // CGColors and sampled pixels do not follow dynamic NSColors by
+        // themselves. Discard the previous material before the next capture.
+        PopoverStyle.setWithoutAnimation {
+            self.fallbackLens?.invalidateSample()
+            self.refreshDisplayOptions()
+        }
     }
 
     override func viewDidChangeBackingProperties() {
@@ -1409,14 +1470,21 @@ final class ModeSliderView: NSView {
     }
 
     private func refreshLabelPalette() {
-        let active = currentTint.blended(withFraction: 0.14, of: .white) ?? currentTint
-        for index in labels.indices {
-            labels[index].textColor = enabled[index]
-                ? PopoverStyle.secondaryText
-                : PopoverStyle.tertiaryText
-            activeLabels[index].textColor = enabled[index]
-                ? active
-                : PopoverStyle.tertiaryText
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            self.keyboardFocusMarker.backgroundColor = NSColor.keyboardFocusIndicatorColor
+                .withAlphaComponent(1).cgColor
+            let foreground = PopoverStyle.isDark(self.effectiveAppearance)
+                ? NSColor.white : NSColor.black
+            let active = self.currentTint.blended(withFraction: 0.14, of: foreground)
+                ?? self.currentTint
+            for index in self.labels.indices {
+                self.labels[index].textColor = self.enabled[index]
+                    ? PopoverStyle.secondaryText
+                    : PopoverStyle.tertiaryText
+                self.activeLabels[index].textColor = self.enabled[index]
+                    ? active
+                    : PopoverStyle.tertiaryText
+            }
         }
     }
 

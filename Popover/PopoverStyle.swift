@@ -1,35 +1,73 @@
 import AppKit
 
-/// Values transcribed from the approved prototype. One dark surface divided by
+/// Geometry from the approved prototype. One adaptive surface divided by
 /// hairlines — not four bordered cards, which stack edges and paddings on top
 /// of each other and read as clutter.
 enum PopoverStyle {
     static let width: CGFloat = 360
-    static let contentWidth: CGFloat = 328
     static let sectionPadding: CGFloat = 13
     static let sideInset: CGFloat = 16
+    static let contentWidth: CGFloat = width - 2 * sideInset
 
-    static let surface = NSColor(rgb: 0x1C1C20)
-    static let surfaceBorder = NSColor(rgb: 0x37373D)
-    static let separator = NSColor(rgb: 0x2C2C31)
-    static let well = NSColor(rgb: 0x2A2A30)
-    static let wellBorder = NSColor(rgb: 0x3A3A42)
-    static let trough = NSColor(rgb: 0x3A3A44)
-    static let ringTrack = NSColor(rgb: 0x2E2E35)
+    static let surface = NSColor.windowBackgroundColor
+    static let separator = adaptive(light: 0xD2D2D8, dark: 0x2C2C31,
+                                    contrastLight: 0x73737B, contrastDark: 0x8E8E95)
+    static let well = adaptive(light: 0xE4E4E9, dark: 0x2A2A30)
+    static let wellBorder = adaptive(light: 0xB4B4BC, dark: 0x3A3A42,
+                                     contrastLight: 0x63636B, contrastDark: 0xA0A0A8)
+    static let trough = adaptive(light: 0xC4C4CE, dark: 0x3A3A44,
+                                 contrastLight: 0x8C8C96, contrastDark: 0x777783)
+    static let ringTrack = adaptive(light: 0xD7D7DE, dark: 0x2E2E35)
 
-    static let primaryText = NSColor(rgb: 0xEDEDEF)
-    static let secondaryText = NSColor(rgb: 0x8E8E95)
-    static let tertiaryText = NSColor(rgb: 0x6E6E76)
+    static let primaryText = NSColor.labelColor
+    static let secondaryText = NSColor.secondaryLabelColor
+    static let tertiaryText = NSColor.secondaryLabelColor
 
-    static let green = NSColor(rgb: 0x30D158)
-    static let blue = NSColor(rgb: 0x0A84FF)
-    static let amber = NSColor(rgb: 0xFF9F0A)
-    static let neutral = NSColor(rgb: 0xC7C7CC)
-    static let red = NSColor(rgb: 0xFF453A)
+    // Preserve the power-state meanings. Deeper light-mode colors keep small
+    // readings legible without changing geometry or adding decorative fills.
+    static let green = adaptive(light: 0x18783A, dark: 0x30D158)
+    static let blue = adaptive(light: 0x0064CF, dark: 0x0A84FF)
+    static let amber = adaptive(light: 0x9B5700, dark: 0xFF9F0A)
+    static let neutral = adaptive(light: 0x565662, dark: 0xC7C7CC)
+    static let red = adaptive(light: 0xC72528, dark: 0xFF453A)
 
     /// Real arcs are blue-white, and yellow is already spoken for by the menu
     /// bar icon's low-power state.
     static let saturationParticle = NSColor(rgb: 0xDBEAFF)
+
+    static func isDark(_ appearance: NSAppearance) -> Bool {
+        appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+    }
+
+    static func isHighContrast(_ appearance: NSAppearance) -> Bool {
+#if DEBUG
+        if let forced = ProcessInfo.processInfo.environment["WATTSON_FORCE_INCREASE_CONTRAST"] {
+            return forced == "1"
+        }
+#endif
+        if NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast { return true }
+        let match = appearance.bestMatch(from: [
+            .aqua, .darkAqua, .accessibilityHighContrastAqua,
+            .accessibilityHighContrastDarkAqua,
+        ])
+        return match == .accessibilityHighContrastAqua
+            || match == .accessibilityHighContrastDarkAqua
+    }
+
+    private static func adaptive(light: UInt32, dark: UInt32,
+                                 contrastLight: UInt32? = nil,
+                                 contrastDark: UInt32? = nil) -> NSColor {
+        let lightColor = NSColor(rgb: light)
+        let darkColor = NSColor(rgb: dark)
+        let lightContrast = NSColor(rgb: contrastLight ?? light)
+        let darkContrast = NSColor(rgb: contrastDark ?? dark)
+        return NSColor(name: nil) { appearance in
+            if isHighContrast(appearance) {
+                return isDark(appearance) ? darkContrast : lightContrast
+            }
+            return isDark(appearance) ? darkColor : lightColor
+        }
+    }
 
     static func stateColor(_ state: PowerState) -> NSColor {
         switch state {
@@ -109,6 +147,21 @@ class PopoverSection: NSView {
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        refreshAppearance()
+    }
+
+    /// CGColors are resolved values, unlike NSTextField's dynamic NSColors.
+    /// Refresh them in this view's appearance, not the application's global one.
+    func refreshAppearance() {
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            PopoverStyle.setWithoutAnimation {
+                self.topLine.backgroundColor = PopoverStyle.separator.cgColor
+            }
+        }
+    }
 
     override func layout() {
         super.layout()

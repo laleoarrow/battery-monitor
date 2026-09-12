@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3028">v3.0.28 notes</a>
+  <a href="#whats-new-in-v3029">v3.0.29 notes</a>
 </p>
 
 <p align="center">
@@ -35,11 +35,31 @@ where it is going, and how the picture has changed over the last two minutes.
   measured attached-device output when the Mac publishes it.
 - Auto and Low Power controls, plus High Power on supported Macs.
 - Native Liquid Glass on macOS 26 with an AppKit fallback for macOS 12–25.
-- Keyboard, VoiceOver, Reduce Motion, and Reduce Transparency support.
+- System Light/Dark appearance, keyboard, VoiceOver, Reduce Motion,
+  Reduce Transparency, and Increase Contrast support.
 - Launch-at-login, system battery-icon, and update controls.
 - A compact native Settings window for General, Menu Bar Icon, and Modules.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
+
+## What's new in v3.0.29
+
+- The popover follows system Light/Dark appearance, using its native material
+  and adaptive instrument colors. Existing power-flow artwork and meanings
+  stay intact; Reduce Transparency provides an opaque fallback.
+- Short screens use native vertical scrolling without scaling the instruments.
+  Placement follows the status item's actual display, including negative screen
+  coordinates; detached or offscreen anchors do not open misplaced panels.
+- Keyboard focus and high-contrast mode remain visible in both the macOS 26
+  native selector and the macOS 12–25 fallback.
+- The DMG offers app-only monitoring without a helper or automatic administrator
+  prompt. PKG/Homebrew remain the full App/helper route, including synchronized
+  upgrades for existing PKG installations.
+- Settings offers Enable/Repair Controls when the helper is unavailable. Failed
+  PKG setup preserves its error and attempts to reopen the verified App as the
+  logged-in user so monitoring can continue; it never launches the App as root.
+- This remains an ad-hoc community build, not Apple-notarized. It does not claim
+  zero Gatekeeper friction, new sensor accuracy, or measured FPS/battery savings.
 
 ## What's new in v3.0.28
 
@@ -206,26 +226,42 @@ the public installation gates; a source version alone is not a published update.
 - The Settings sidebar now uses the real packaged Wattson app icon instead of
   a separate ECG-style drawing.
 
-## Install v3.0.17
+## Install
+
+Choose an asset from the [latest published release](https://github.com/laleoarrow/battery-monitor/releases/latest).
+The app-only DMG route below applies to images containing `Wattson.app`.
+Older published DMGs, including v3.0.28, contain a PKG instead: opening that
+installer performs the full installation and requires administrator approval.
+Source changes alone do not mean a new app-only DMG has been published.
 
 | Route | Best for | What to do |
 | --- | --- | --- |
-| **DMG** · Recommended | Guided installation | [Download the universal DMG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.17/Wattson-v3.0.17-macos-universal.dmg), open it, then double-click the enclosed PKG. |
-| **PKG** | Direct installation | [Download the universal PKG](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.17/Wattson-v3.0.17-macos-universal.pkg) and follow macOS Installer. |
-| **Homebrew** | Terminal installation and updates | Run `brew install --cask laleoarrow/tap/wattson`. |
+| **DMG** | Read-only monitoring | Open the universal DMG and drag `Wattson.app` to `Applications`. This installs no helper or package receipt and does not request administrator authorization to start monitoring. |
+| **PKG** | Full installation and existing PKG upgrades | Open the universal PKG and follow macOS Installer to install or update the app and helper together. |
+| **Homebrew** | Full installation and terminal updates | Run `brew install --cask laleoarrow/tap/wattson`; the cask uses the PKG. |
 
-All three routes install the same universal app at
-`/Applications/Wattson.app` and the same on-demand helper at
-`/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper`. The standard
-macOS administrator prompt is required to install the helper.
+Both artifacts contain the same universal app for `/Applications/Wattson.app`.
+Without the helper, Wattson monitors the battery data macOS makes available;
+helper-backed SMC readings and privileged controls are not available merely
+because the app is installed. PKG and Homebrew also install the on-demand
+helper at `/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper` and require
+the standard macOS administrator prompt. Opening the app-only version does not
+automatically install the helper.
+Copying into the system Applications folder can still require administrator
+approval if your account lacks write access; that and Gatekeeper approval are
+separate from Wattson's helper setup.
+
+**Already installed with PKG or Homebrew?** Update through PKG or Homebrew.
+Dragging in a new App does not update the existing helper or package receipt.
 
 > [!IMPORTANT]
 > Wattson.app and its privileged helper are ad-hoc signed. The PKG and DMG are
-> unsigned and not Apple-notarized. On macOS 15 or later, first try to open the
+> unsigned and not Apple-notarized. App-only monitoring does not remove
+> Gatekeeper's trust checks. On macOS 15 or later, first try to open the App or
 > installer, then use System Settings → Privacy & Security → Open Anyway only
 > when you trust this repository. Older macOS releases may instead offer
 > Control-click → Open. Verify the provided
-> [SHA-256 manifest](https://github.com/laleoarrow/battery-monitor/releases/download/v3.0.17/SHA256SUMS.txt)
+> SHA-256 manifest from the same release
 > before installation.
 
 ### Requirements
@@ -246,9 +282,14 @@ brew upgrade --cask laleoarrow/tap/wattson
 brew uninstall --cask laleoarrow/tap/wattson
 ```
 
-For a direct DMG or PKG installation, open a newer PKG to update. To uninstall,
-download or clone this repository and run the included tested uninstaller from
-the repository root:
+For a PKG installation (including older DMGs containing a PKG), open a newer PKG
+to update both the app and helper. For an app-only installation with no helper
+or receipt, quit Wattson and replace `/Applications/Wattson.app` with the App
+from a newer app-only DMG; to uninstall only that App, move it to Trash. Use the
+PKG to move from read-only monitoring to the full installation.
+
+For complete cleanup of a full installation, download or clone this repository
+and run the included tested uninstaller from the repository root:
 
 ```bash
 bash scripts/uninstall.sh
@@ -278,10 +319,10 @@ cannot override macOS status-item placement.
 The control remains disabled when the Mac does not expose High Power mode. This
 is expected on unsupported hardware.
 
-### macOS blocks the installer
+### macOS blocks the App or installer
 
 Review the community-build notice above and the release checksums first. On
-macOS 15 or later, try opening the installer once, then go to System Settings →
+macOS 15 or later, try opening the App or installer once, then go to System Settings →
 Privacy & Security and choose Open Anyway. Older macOS releases may offer
 Finder’s Control-click → Open.
 
@@ -312,8 +353,9 @@ bash scripts/release.sh "$(tr -d '\r\n' < VERSION)"
 ```
 
 The release build produces a universal `arm64` + `x86_64` app targeting macOS
-12, a PKG, a DMG containing that exact PKG, release metadata, and
-`SHA256SUMS.txt`.
+12, a full App/helper PKG, an app-only DMG with an Applications shortcut, release
+metadata, and `SHA256SUMS.txt`. The App in the DMG must be byte-identical to the
+App in the same PKG. Building these artifacts does not publish a release.
 
 ## Project links
 

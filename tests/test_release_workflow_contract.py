@@ -57,24 +57,79 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("workflow_dispatch:main", PROMOTE)
         self.assertNotIn("push:release-candidate", PROMOTE)
         self.assertIn(
-            "github.event.workflow_run.event == 'workflow_dispatch'", PROMOTE
+            "github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'",
+            PROMOTE,
         )
-        self.assertIn("github.event.workflow_run.head_branch == 'main'", PROMOTE)
+        self.assertNotIn("workflow_run:", PROMOTE)
+        self.assertNotIn("github.event.workflow_run", PROMOTE)
         self.assertIn('== "$GITHUB_SHA"', PROMOTE)
 
-    def test_release_candidate_push_stays_community_test_only(self):
-        self.assertIn("branches:\n      - release-candidate", CANDIDATE)
+    def test_release_candidate_is_manual_main_only_and_defaults_to_community(self):
+        self.assertNotIn("\n  push:", CANDIDATE)
+        self.assertNotIn("refs/heads/release-candidate", CANDIDATE)
+        self.assertIn("workflow_dispatch:", CANDIDATE)
+        self.assertIn(
+            "github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'",
+            CANDIDATE,
+        )
         self.assertIn("candidate_version:", CANDIDATE)
         self.assertIn("distribution_mode:", CANDIDATE)
-        self.assertIn("default: developer-id-notarized", CANDIDATE)
+        self.assertIn("default: community-ad-hoc", CANDIDATE)
         self.assertIn("steps.resolve-version.outputs.version", CANDIDATE)
-        self.assertIn('DISTRIBUTION_MODE="community-ad-hoc"', CANDIDATE)
+        self.assertIn('DISTRIBUTION_MODE="$REQUESTED_DISTRIBUTION_MODE"', CANDIDATE)
         self.assertIn("NOTARIZE_RELEASE=0", CANDIDATE)
-        self.assertIn("workflow_run:", PROMOTE)
-        self.assertIn("github.event.workflow_run.conclusion == 'success'", PROMOTE)
-        self.assertNotIn(
-            "github.event.workflow_run.head_branch == 'release-candidate'", PROMOTE
+        self.assertNotIn("gh release create", CANDIDATE)
+        self.assertNotIn("gh workflow run promote-release", CANDIDATE)
+
+    def test_candidate_requires_headless_ci_on_the_current_main_sha_before_building(self):
+        gate = CANDIDATE.split(
+            "- name: Require Headless CI on the frozen main commit", 1
+        )[1].split("- name: Resolve and validate the candidate version", 1)[0]
+        self.assertIn('[[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]', gate)
+        self.assertIn('[[ "$GITHUB_REF" == "refs/heads/main" ]]', gate)
+        self.assertIn("git/ref/heads/main", gate)
+        self.assertIn('[[ "$GITHUB_SHA" == "$MAIN_SHA" ]]', gate)
+        self.assertIn("actions/workflows/ci.yml/runs", gate)
+        self.assertIn('-f branch=main -f event=push -f head_sha="$GITHUB_SHA"', gate)
+        for identity in (
+            ".head_sha == $sha", '.head_branch == "main"', '.event == "push"',
+            '.status == "completed"', '.conclusion == "success"',
+        ):
+            self.assertIn(identity, gate)
+
+    def test_dmg_app_matches_candidate_pkg_and_runs_without_privileged_install(self):
+        self.assertIn(
+            '/bin/bash scripts/verify_dmg.sh "$DMG_PATH" "$PACKAGED_APP_DIR"',
+            CANDIDATE,
         )
+        lifecycle = CANDIDATE.split(
+            "- name: Test helper-free DMG copy launch and removal without elevation", 1
+        )[1].split("- name: Test first install and disabled-service reinstall", 1)[0]
+        self.assertIn('[[ "$(/usr/bin/id -u)" != "0" ]]', lifecycle)
+        self.assertIn("assert_no_privileged_install()", lifecycle)
+        self.assertIn("pkgutil --pkg-info com.leoarrow.wattson.pkg", lifecycle)
+        self.assertIn('launchctl print "system/$HELPER_LABEL"', lifecycle)
+        self.assertIn('for copy_attempt in 1 2', lifecycle)
+        self.assertIn('/usr/bin/ditto "$MOUNT_DIR/Wattson.app" "$APP_DIR"', lifecycle)
+        self.assertIn('/usr/bin/diff -qr "$MOUNT_DIR/Wattson.app" "$APP_DIR"', lifecycle)
+        self.assertIn('battery_registry="$(/usr/sbin/ioreg -r -c AppleSmartBattery 2>/dev/null)"', lifecycle)
+        self.assertIn('[[ "$battery_registry" == *AppleSmartBattery* ]]', lifecycle)
+        self.assertNotIn("| /usr/bin/grep -q AppleSmartBattery", lifecycle)
+        self.assertIn('[[ "$has_battery" == "0" && "$app_status" == "0" ]]', lifecycle)
+        self.assertIn('[[ ! -e "$APP_DIR" && ! -L "$APP_DIR" ]]', lifecycle)
+        self.assertGreaterEqual(lifecycle.count("assert_no_privileged_install"), 4)
+        self.assertNotIn("sudo", lifecycle)
+        self.assertNotIn("/usr/sbin/installer", lifecycle)
+        self.assertNotIn("launchctl bootstrap", lifecycle)
+        upgrade = CANDIDATE.split(
+            'echo "Running the shipped uninstaller, then upgrading an app-only copy..."', 1
+        )[1].split("- name: Test upgrade from the published v2.1.5 release", 1)[0]
+        seed = upgrade.index('/usr/bin/ditto "$APP_ONLY_SOURCE" "$APP_DIR"')
+        full_install = upgrade.index('/usr/sbin/installer', seed)
+        self.assertLess(seed, full_install)
+        self.assertIn('[[ ! -e "$HELPER_BIN" && ! -e "$HELPER_PLIST" && ! -e "$HELPER_SOCKET" ]]', upgrade[seed:full_install])
+        self.assertIn("verify_install", upgrade[full_install:])
+        self.assertIn("verify_app_launch_stability", upgrade[full_install:])
 
     def test_signed_candidate_is_main_only_and_environment_protected(self):
         self.assertIn("github.ref == 'refs/heads/main'", CANDIDATE)
@@ -268,19 +323,17 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertNotIn('HOMEBREW_NO_REQUIRE_TAP_TRUST', install)
         self.assertLess(install.index(cleanup), install.index(wattson_tap))
 
-    def test_homebrew_recovery_resolves_the_tag_from_the_current_main_sha(self):
+    def test_homebrew_manual_entry_resolves_the_tag_from_the_current_main_sha(self):
         prepare = HOMEBREW_INSTALL.split("  prepare:", 1)[1].split(
             "\n  install:", 1
         )[0]
-        self.assertIn("push:\n    branches:\n      - 'homebrew-ready/v*'", HOMEBREW_INSTALL)
+        self.assertNotIn("\n  push:", HOMEBREW_INSTALL)
+        self.assertNotIn("homebrew-ready", HOMEBREW_INSTALL)
         self.assertIn(
             "github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'",
             prepare,
         )
-        self.assertIn("push:refs/heads/homebrew-ready/v*", prepare)
-        self.assertIn(
-            'RELEASE_TAG="${GITHUB_REF#refs/heads/homebrew-ready/}"', prepare
-        )
+        self.assertIn('[[ "$GITHUB_REF" == "refs/heads/main" ]]', prepare)
         self.assertIn('RELEASE_TAG="$REQUESTED_TAG"', prepare)
         self.assertIn("release_tag: ${{ steps.resolve.outputs.release_tag }}", prepare)
         self.assertIn("git/ref/heads/main", prepare)

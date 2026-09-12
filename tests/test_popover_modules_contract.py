@@ -160,7 +160,8 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("lastPeak", self.history)
         self.assertIn("lastColor", self.history)
         self.assertIn("samples == lastSamples", self.history)
-        self.assertIn("lastColor.isEqual(color)", self.history)
+        self.assertIn("lastColor.isEqual(resolvedColor)", self.history)
+        self.assertIn("effectiveAppearance.performAsCurrentDrawingAppearance", self.history)
 
     def test_module_visibility_uses_the_shared_typed_settings_store(self):
         self.assertIn("typealias PopoverModule = Settings.Module", self.content)

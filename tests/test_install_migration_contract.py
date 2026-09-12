@@ -9,6 +9,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 INSTALL = ROOT / "scripts" / "install.sh"
 UNINSTALL = ROOT / "scripts" / "uninstall.sh"
 PACKAGE = ROOT / "scripts" / "package_dmg.sh"
+VERIFY_DMG = ROOT / "scripts" / "verify_dmg.sh"
 PACKAGE_PKG = ROOT / "scripts" / "package_pkg.sh"
 BUILD_RELEASE = ROOT / "scripts" / "build_release.sh"
 PKG_POSTINSTALL = ROOT / "Packaging" / "pkg" / "postinstall"
@@ -26,6 +27,7 @@ class InstallMigrationContractTests(unittest.TestCase):
         cls.install = INSTALL.read_text(encoding="utf-8")
         cls.uninstall = UNINSTALL.read_text(encoding="utf-8")
         cls.package = PACKAGE.read_text(encoding="utf-8")
+        cls.verify_dmg = VERIFY_DMG.read_text(encoding="utf-8")
         cls.package_pkg = PACKAGE_PKG.read_text(encoding="utf-8")
         cls.build_release = BUILD_RELEASE.read_text(encoding="utf-8")
         cls.pkg_postinstall = PKG_POSTINSTALL.read_text(encoding="utf-8")
@@ -132,7 +134,6 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_release_package_uses_the_wattson_identity(self):
         self.assertIn('APP_NAME="Wattson"', self.package)
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "3.0.28")
         self.assertIn('VERSION_FILE="$ROOT_DIR/VERSION"', self.package)
         self.assertIn('Contents/MacOS/Wattson', self.package_pkg)
 
@@ -148,16 +149,18 @@ class InstallMigrationContractTests(unittest.TestCase):
             self.assertIn("AppIconSettings.png", build_script)
             self.assertIn("sips -s format png", build_script)
 
-    def test_release_dmg_wraps_the_exact_native_pkg(self):
-        self.assertIn('/bin/cp "$PKG_PATH" "$STAGING_DIR/$PKG_NAME"', self.package)
-        self.assertIn('/usr/bin/cmp -s "$PKG_PATH" "$STAGING_DIR/$PKG_NAME"', self.package)
+    def test_release_dmg_contains_the_same_app_without_installing_a_helper(self):
+        self.assertIn('/usr/bin/ditto --noextattr --noqtn "$APP_DIR" "$STAGING_DIR/$APP_NAME.app"', self.package)
+        self.assertIn('/usr/bin/diff -qr "$APP_DIR" "$STAGING_DIR/$APP_NAME.app"', self.package)
         self.assertIn("getconf DARWIN_USER_TEMP_DIR", self.package)
-        self.assertIn('macos-universal.pkg', self.package)
+        self.assertIn('macos-universal.dmg', self.package)
         self.assertNotIn('install.sh" --app-only', self.package)
         self.assertNotIn('Wattson.zip', self.package)
         self.assertNotIn('Install Wattson.command', self.package)
         self.assertNotIn('Quick Start.txt', self.package)
-        self.assertNotIn('ln -s /Applications', self.package)
+        self.assertIn('ln -s /Applications "$STAGING_DIR/Applications"', self.package)
+        self.assertNotIn("/usr/sbin/installer", self.package)
+        self.assertNotIn("PrivilegedHelperTools", self.package)
 
     def test_packaging_destination_rejects_a_spoofed_tmpdir(self):
         # Keep the spoof outside DARWIN_USER_TEMP_DIR even when a release gate
@@ -187,7 +190,11 @@ class InstallMigrationContractTests(unittest.TestCase):
     def test_release_dmg_is_world_traversable_and_not_spotlight_indexed(self):
         self.assertIn('chmod 755 "$STAGING_DIR"', self.package)
         self.assertIn('.metadata_never_index', self.package)
-        self.assertIn('chmod -R a+rX "$STAGING_DIR"', self.package)
+        self.assertIn('chmod 644 "$STAGING_DIR/.metadata_never_index"', self.package)
+        self.assertIn('(( (path_mode_value & 5) == 5 ))', self.verify_dmg)
+        self.assertIn('(( (path_mode_value & 4) == 4 ))', self.verify_dmg)
+        self.assertIn('directory is not world-readable/traversable', self.verify_dmg)
+        self.assertIn('file is not world-readable', self.verify_dmg)
         self.assertIn('verify_dmg.sh', self.package)
 
     def test_native_pkg_preserves_the_privileged_features(self):
@@ -243,7 +250,11 @@ class InstallMigrationContractTests(unittest.TestCase):
     def test_remote_v3_install_is_explicit_and_ephemeral(self):
         self.assertIn("workflow_dispatch:", self.ci_helper_workflow)
         self.assertNotIn("pull_request:", self.ci_helper_workflow)
-        self.assertIn("\n  push:\n    branches:\n      - release-candidate", self.ci_helper_workflow)
+        self.assertNotIn("\n  push:", self.ci_helper_workflow)
+        self.assertIn(
+            "github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'",
+            self.ci_helper_workflow,
+        )
         self.assertNotIn("branches-ignore:", self.ci_helper_workflow)
         self.assertIn("runs-on: macos-26", self.ci_helper_workflow)
         for runner in ("macos-14", "macos-15", "macos-26", "macos-15-intel", "macos-26-intel"):
@@ -316,7 +327,8 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn('spctl --assess --type execute', workflow)
         self.assertIn('spctl --assess --type install', workflow)
         self.assertIn('--context context:primary-signature', workflow)
-        self.assertIn('/usr/bin/cmp -s "$PKG_PATH" "$MOUNT_DIR/$PKG_NAME"', workflow)
+        self.assertIn('/bin/bash scripts/verify_dmg.sh "$DMG_PATH" "$PACKAGED_APP_DIR"', workflow)
+        self.assertIn('/usr/bin/diff -qr "$EXPECTED_APP" "$EMBEDDED_APP"', self.verify_dmg)
 
     def test_preview_build_does_not_create_a_searchable_dist_app(self):
         self.assertNotIn('APP_BUNDLE="$DIST_DIR/$APP_NAME.app"', self.run_script)

@@ -71,15 +71,19 @@ final class HistoryView: PopoverSection {
     }
 
     func update(samples: [Double], peak: Double, color: NSColor) {
+        var resolvedColor = color
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            resolvedColor = color.usingColorSpace(.sRGB) ?? color
+        }
         if samples == lastSamples,
            peak == lastPeak,
            let lastColor,
-           lastColor.isEqual(color) {
+           lastColor.isEqual(resolvedColor) {
             return
         }
         lastSamples = samples
         lastPeak = peak
-        lastColor = color
+        lastColor = resolvedColor
 #if DEBUG
         renderCountForTest += 1
 #endif
@@ -116,17 +120,17 @@ final class HistoryView: PopoverSection {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         line.path = stroke
-        line.strokeColor = color.cgColor
+        line.strokeColor = resolvedColor.cgColor
 
         gradientMask.path = filled
-        areaGradient.colors = [color.withAlphaComponent(0.38).cgColor,
-                               color.withAlphaComponent(0.03).cgColor]
+        areaGradient.colors = [resolvedColor.withAlphaComponent(0.38).cgColor,
+                               resolvedColor.withAlphaComponent(0.03).cgColor]
         areaGradient.startPoint = CGPoint(x: 0.5, y: 0)
         areaGradient.endPoint = CGPoint(x: 0.5, y: 1)
 
         let last = point(samples.count - 1)
         head.frame = CGRect(x: last.x - 2.6, y: last.y - 2.6, width: 5.2, height: 5.2)
-        head.backgroundColor = color.cgColor
+        head.backgroundColor = resolvedColor.cgColor
         head.opacity = 1
         CATransaction.commit()
     }

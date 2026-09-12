@@ -16,24 +16,36 @@ The command builds and verifies:
 - `Wattson-v<version>-release-info.txt`
 - `SHA256SUMS.txt`
 
-The DMG contains exactly one visible item: the byte-identical native PKG. The
-PKG is the canonical installation surface for DMG, direct download, and the
-Homebrew cask.
+The DMG contains `Wattson.app` and an `Applications` shortcut. Its app must match
+the app inside the same candidate PKG byte for byte. The DMG installs no helper,
+LaunchDaemon, socket, or package receipt: it is the drag-and-drop, read-only
+monitoring route. Readings depend on available unprivileged battery telemetry;
+do not promise helper-backed SMC coverage. Launch must not trigger an automatic
+administrator prompt. The PKG and Homebrew remain the full app/helper route and
+are required for synchronized upgrades of existing PKG installations. A plain
+App replacement does not upgrade an existing helper or receipt. Older public
+DMGs contain the PKG; preserve that distinction in user-facing instructions.
 
 When Developer ID credentials are unavailable, a public community release may
-still be promoted through the audited community path. Push one frozen commit to
-`main`, require Headless CI on that SHA, then push the same SHA to the permanent
-`release-candidate` branch and require its community build plus hosted install
-matrix to pass. Download that run's artifact set, verify its manifest and
-checksums, and publish those exact bytes from an annotated tag on the frozen
-SHA. Release notes and metadata must say app/helper ad-hoc, PKG/DMG unsigned,
-and not notarized. Never pass community artifacts through the signed-only
-`promote-release.yml` policy or describe them as Developer ID distribution.
+still be published through the audited community path. Push one frozen commit
+to `main`, require Headless CI on that exact SHA, then manually run **Wattson
+release candidate** on `main` with `distribution_mode=community-ad-hoc` (the
+default). Require its build and hosted install matrix to pass on the same SHA.
+Download that run's artifact set, verify its manifest and checksums, and review
+it before publishing those exact bytes from an annotated tag on the frozen SHA
+with `--latest=false`. Do not replace existing tags or public assets. Release
+notes and metadata must say app/helper ad-hoc, PKG/DMG unsigned, and not
+notarized; the app-only route does not bypass Gatekeeper. Never pass community
+artifacts through the signed-only `promote-release.yml` policy or describe
+them as Developer ID distribution. No candidate build automatically publishes a
+release, and no permanent `release-candidate` branch is used.
 
 After publishing, synchronize the exact PKG checksum to the Homebrew tap,
-require the tap CI and public Homebrew lifecycle, mark the release latest, and
-deploy Pages from the same tested `main` commit. This public validation chain is
-shared with the signed path; only the signing and notarization claims differ.
+require exact-tap-SHA CI and the public Homebrew lifecycle. Successful public
+Intel and Apple-silicon jobs automatically mark the release latest and dispatch
+Pages from the same tested `main` commit; do not duplicate those actions. This
+public validation chain is shared with the signed path; only the signing and
+notarization claims differ. Keep `main` frozen through the Pages gate.
 
 ## Developer ID and notarization
 
@@ -45,7 +57,7 @@ Team API-key variables: `WATTSON_NOTARY_KEY_PATH`, `WATTSON_NOTARY_KEY_ID`, and
 returned `Accepted`, the notarization log contains no issues, and
 `stapler validate` passed.
 
-The unattended authenticated path is the **Wattson release candidate** GitHub
+The authenticated candidate path is the **Wattson release candidate** GitHub
 workflow. Configure a `release-signing` Environment that permits deployments
 from `main` only. A required reviewer is optional; omit it when the release
 must continue unattended. Store only these values in that Environment:
@@ -71,19 +83,20 @@ API key cannot be used by `notarytool`. Keep `community-ci` free of signing
 secrets.
 
 After increasing `VERSION` and pushing the exact release commit to `main`, open
-Actions, choose **Wattson release candidate**, and run it on `main`. Leave
-`distribution_mode` at `developer-id-notarized`. That single dispatch imports
+Actions, choose **Wattson release candidate**, and run it on `main`. Explicitly
+select `distribution_mode=developer-id-notarized`. That dispatch imports
 the credentials into a temporary keychain, signs the helper/app/PKG/DMG,
 notarizes and staples the PKG and DMG, deletes the credentials, and uploads one
 artifact set. Fresh GitHub-hosted macOS 14, 15, and 26 runners on Intel and
 Apple silicon then install, reinstall, upgrade, launch, and uninstall those
-exact bytes. A fully successful signed run automatically starts stable
-promotion, Homebrew validation, public install tests, and Pages deployment.
-Do not reuse or replace an existing release tag.
+exact bytes. After reviewing a fully successful signed run, manually dispatch
+`promote-release.yml` on `main` with its `candidate_run_id`. Promotion is
+manual-only; its signing, notarization, exact-SHA and public validation gates
+remain mandatory. Do not reuse or replace an existing release tag.
 
-Pushes to `release-candidate` and manual `community-ad-hoc` runs remain
-credential-free compatibility tests. They never auto-promote to a stable
-release.
+Manual `community-ad-hoc` candidates remain credential-free. They may be
+published only through the separately reviewed community path above, never
+through the signed promotion workflow.
 
 ## Required release gate
 
@@ -93,10 +106,14 @@ release.
 3. Release artifacts build locally and their checksums verify.
 4. One uploaded artifact set passes fresh-runner install, helper health,
    disabled-service reinstall, upgrade, app-process launch stability, and
-   uninstall cleanup on the declared Intel/Apple-silicon macOS matrix. The real
+   uninstall cleanup on the declared Intel/Apple-silicon macOS matrix. Also
+   validate fresh DMG read-only launch without a helper, receipt or automatic
+   authorization, DMG-to-PKG upgrade, and identical App bytes across both
+   artifacts. The real
    menu-bar readiness path remains covered by the AppKit interaction suite on a
    battery-equipped Mac because hosted Mac mini runners have no internal battery.
-5. GitHub headless CI and the release-candidate matrix are green.
+5. GitHub Headless CI and the manually dispatched candidate matrix are green
+   for the exact frozen `main` SHA.
 6. Create the annotated tag and stable GitHub release from that exact commit
    and exact candidate artifact bytes.
 7. Promotion explicitly dispatches Homebrew validation/synchronization because
@@ -112,12 +129,12 @@ release.
    GitHub Pages must already use **GitHub Actions** as its publishing source.
    Announce the release only after Pages is green.
 
-For an unattended authenticated release, push the final commit to `main`,
-freeze it, and manually start the signed candidate once. Promotion rejects a
+For an authenticated release, push the final commit to `main`, freeze it, and
+manually start the signed candidate once. After review, manually dispatch
+promotion with that successful run ID. Promotion rejects a
 candidate unless it was manually dispatched from `main`, completed successfully,
 matches the frozen `main` SHA and successful Headless CI, and reports Developer
-ID signatures plus accepted/stapled notarization. Manual promotion remains an
-audited fallback for the same successful candidate run ID.
+ID signatures plus accepted/stapled notarization.
 
 If `HOMEBREW_TAP_TOKEN` is unavailable, the release workflow still downloads
 and verifies every stable asset and generates the exact cask, but then fails
@@ -125,22 +142,18 @@ closed without pushing or dispatching later stages. Sync that cask from a
 trusted maintainer checkout and require the separate `laleoarrow/homebrew-tap`
 CI run to pass before continuing.
 
-After a trusted manual tap sync, push the current `main` commit to the recovery
-branch `homebrew-ready/v<version>`. That branch is only a signal to resume the
-public validation chain: the workflow derives the release tag from the branch,
-requires the recovery commit to equal the current remote `main` SHA and requires
-a successful Headless CI `push` run for that same SHA. It then downloads the
-stable PKG, DMG, release metadata, and checksum manifest, verifies all checksums,
-requires the public cask to contain that exact version and PKG SHA, and requires
-the exact public tap commit's `tests.yml` push run to have completed successfully
-before starting either hosted-macOS lifecycle job. The recovery tag must match
-the `VERSION` file at current `main`; each runner disables Homebrew auto-update
-and requires its tapped repository to remain at that exact tested commit.
-
-A manual `workflow_dispatch` from `main` with an explicit release tag remains
-the audited fallback and passes through the same fail-closed checks. Neither
-entry path may mark the release latest or dispatch Pages until both the Intel
-and Apple-silicon public install/helper/uninstall lifecycles succeed.
+After a trusted manual tap sync, manually dispatch `homebrew-install-test.yml`
+from `main` with the explicit release tag. No `homebrew-ready` recovery branch
+is used. The workflow requires the dispatched commit to equal current remote
+`main` and a successful Headless CI `push` run for that same SHA. It downloads
+the stable PKG, DMG, release metadata, and checksum manifest, verifies all
+checksums, requires the public cask to contain that exact version and PKG SHA,
+and requires the exact public tap commit's `tests.yml` push run to have succeeded
+before starting either hosted-macOS lifecycle job. The tag must match `VERSION`
+at current `main`; each runner disables Homebrew auto-update and requires its
+tapped repository to remain at that exact tested commit. The workflow may not
+mark the release latest or dispatch Pages until both the Intel and Apple-silicon
+public install/helper/uninstall lifecycles succeed.
 
 The Pages workflow requires successful Headless CI for the exact current
 `main` commit and requires its `VERSION` to match the supplied stable release
@@ -202,6 +215,6 @@ bash scripts/install.sh
 This user-local developer path is available only when the canonical
 `/Applications/Wattson.app` is absent. The script fails closed when the system
 app exists so it cannot register a second app with the same bundle identifier.
-Use a verified native PKG for canonical updates. Use `scripts/uninstall.sh` for
+Use a verified native PKG to update existing full PKG installations. Use `scripts/uninstall.sh` for
 complete v2/v3 cleanup. Never replace or launch the user's installed app merely
 to perform a headless build check.

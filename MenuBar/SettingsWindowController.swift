@@ -684,6 +684,10 @@ private final class StaticModulePreviewView: NSView {
 }
 
 private final class GeneralSettingsSectionController: NSObject, SettingsSectionController {
+    private static let controlsInstallerURL = URL(
+        string: "https://github.com/laleoarrow/battery-monitor/releases/latest"
+    )!
+
     let identifier = "general"
     let title = "General"
     let symbolName = "gearshape"
@@ -701,6 +705,11 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let updateDetail = NSTextField(labelWithString: "")
     private let updateError = NSTextField(labelWithString: "")
     private let automaticUpdateDetail = NSTextField(labelWithString: "")
+    private let controlsRecovery = NSStackView()
+    private let controlsRecoveryDetail = NSTextField(wrappingLabelWithString:
+        "Monitoring continues using battery telemetry. The full PKG adds system controls and live SMC power. You can cancel installation and keep monitoring."
+    )
+    private let controlsRecoveryButton = NSButton()
 
     private let loginAccessibilityPurpose =
         "Open Wattson automatically after you sign in to this Mac."
@@ -720,6 +729,8 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private var lastAuthoritativeBatteryState: Bool?
     private var updateCheckInFlight = false
     private var availableRelease: UpdateRelease?
+    private var loginNeedsRecovery = false
+    private var batteryNeedsRecovery = false
 
     init(dependencies: SettingsWindowDependencies) {
         self.dependencies = dependencies
@@ -836,7 +847,23 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             automaticUpdateDetail,
             identifier: "settings.general.automatic-updates.detail"
         )
-
+        controlsRecoveryDetail.font = SettingsStyle.detailFont
+        controlsRecoveryDetail.textColor = .secondaryLabelColor
+        controlsRecoveryDetail.setAccessibilityIdentifier("settings.general.controls-recovery.detail")
+        controlsRecoveryButton.title = "Enable Controls…"
+        controlsRecoveryButton.bezelStyle = .rounded
+        controlsRecoveryButton.controlSize = .regular
+        controlsRecoveryButton.font = .systemFont(ofSize: 12, weight: .medium)
+        controlsRecoveryButton.image = NSImage(
+            systemSymbolName: "arrow.up.right.square", accessibilityDescription: nil
+        )
+        controlsRecoveryButton.imagePosition = .imageLeading
+        controlsRecoveryButton.target = self
+        controlsRecoveryButton.action = #selector(openControlsInstaller(_:))
+        controlsRecoveryButton.setAccessibilityIdentifier("settings.general.controls-recovery.button")
+        controlsRecoveryButton.setAccessibilityHelp(
+            "Open Wattson’s official GitHub release for the optional full PKG installer. No download or authorization starts automatically."
+        )
     }
 
     private func configureSwitch(_ button: NSButton) {
@@ -936,6 +963,15 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
         view.addSubview(heading)
         view.addSubview(list)
+        controlsRecovery.orientation = .vertical
+        controlsRecovery.alignment = .leading
+        controlsRecovery.spacing = 8
+        controlsRecovery.translatesAutoresizingMaskIntoConstraints = false
+        controlsRecovery.identifier = NSUserInterfaceItemIdentifier("settings.general.controls-recovery")
+        controlsRecovery.addArrangedSubview(controlsRecoveryDetail)
+        controlsRecovery.addArrangedSubview(controlsRecoveryButton)
+        controlsRecovery.isHidden = true
+        view.addSubview(controlsRecovery)
 
         NSLayoutConstraint.activate([
             heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
@@ -952,6 +988,12 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             rows.trailingAnchor.constraint(equalTo: list.trailingAnchor),
             rows.topAnchor.constraint(equalTo: list.topAnchor),
             rows.bottomAnchor.constraint(equalTo: list.bottomAnchor),
+
+            controlsRecovery.leadingAnchor.constraint(equalTo: list.leadingAnchor, constant: 2),
+            controlsRecovery.trailingAnchor.constraint(equalTo: list.trailingAnchor, constant: -2),
+            controlsRecovery.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12),
+            controlsRecovery.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
+            controlsRecoveryDetail.widthAnchor.constraint(equalTo: controlsRecovery.widthAnchor),
         ])
     }
 
@@ -1286,10 +1328,12 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private func renderLoginItem(_ state: LoginItemState) {
         switch state {
         case .enabled:
+            loginNeedsRecovery = false
             loginButton.state = .on
             loginButton.isEnabled = true
             loginDetail.stringValue = "Open Wattson when you sign in"
         case .notRegistered:
+            loginNeedsRecovery = false
             loginButton.state = .off
             loginButton.isEnabled = true
             loginDetail.stringValue = "Open Wattson when you sign in"
@@ -1298,10 +1342,12 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             loginButton.isEnabled = false
             loginDetail.stringValue = "Checking…"
         case .unavailable:
+            loginNeedsRecovery = true
             loginButton.state = .mixed
             loginButton.isEnabled = false
             loginDetail.stringValue = "Full installer required"
         case .readFailed:
+            loginNeedsRecovery = true
             loginButton.state = .mixed
             loginButton.isEnabled = false
             loginDetail.stringValue = "Status unavailable"
@@ -1311,6 +1357,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             purpose: loginAccessibilityPurpose,
             status: loginDetail.stringValue
         )
+        renderControlsRecovery()
     }
 
     private func renderBatteryIconChecking() {
@@ -1325,6 +1372,8 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     }
 
     private func renderBatteryIcon(_ hidden: Bool?) {
+        batteryNeedsRecovery = hidden == nil
+        renderControlsRecovery()
         guard let hidden else {
             batteryButton.state = .mixed
             batteryButton.isEnabled = false
@@ -1346,6 +1395,33 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             purpose: batteryAccessibilityPurpose,
             status: batteryDetail.stringValue
         )
+    }
+
+    private func renderControlsRecovery() {
+        let helperAvailable = dependencies.helperAvailable()
+        controlsRecovery.isHidden = helperAvailable && !loginNeedsRecovery && !batteryNeedsRecovery
+        controlsRecoveryButton.title = helperAvailable ? "Repair Controls…" : "Enable Controls…"
+        // Keep the optional recovery action in the existing explicit Tab loop
+        // only while it is visible; no window rebuild or extra status poll.
+        if controlsRecovery.isHidden {
+            if automaticUpdateButton.nextKeyView === controlsRecoveryButton {
+                automaticUpdateButton.nextKeyView = controlsRecoveryButton.nextKeyView
+                controlsRecoveryButton.nextKeyView = nil
+            }
+        } else if automaticUpdateButton.nextKeyView !== controlsRecoveryButton {
+            controlsRecoveryButton.nextKeyView = automaticUpdateButton.nextKeyView
+            automaticUpdateButton.nextKeyView = controlsRecoveryButton
+        }
+    }
+
+    @objc private func openControlsInstaller(_ sender: NSButton) {
+        guard !controlsRecovery.isHidden else { return }
+        guard dependencies.openUpdateURL(Self.controlsInstallerURL) else {
+            controlsRecoveryDetail.stringValue =
+                "Couldn’t open GitHub. Monitoring is still available. Try again later for the full PKG with system controls and live SMC power."
+            dependencies.announceAccessibility(controlsRecoveryDetail.stringValue)
+            return
+        }
     }
 
     private func rememberAuthoritativeLoginState(_ state: LoginItemState) {
@@ -2633,6 +2709,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     }
 
     private func switchButtons(in view: NSView) -> [NSButton] {
+        guard !view.isHidden else { return [] }
         var buttons: [NSButton] = []
         if let button = view as? NSButton {
             buttons.append(button)

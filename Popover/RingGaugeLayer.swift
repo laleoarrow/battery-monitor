@@ -125,6 +125,12 @@ final class RingGaugeView: PopoverSection {
     }
 
     func update(snapshot: PowerSnapshot) {
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            updateContents(snapshot: snapshot)
+        }
+    }
+
+    private func updateContents(snapshot: PowerSnapshot) {
         let color = PopoverStyle.stateColor(snapshot.state)
         intensity = VisualEncoding.t(snapshot.totalInputW)
         motionMultiplier = VisualEncoding.multiplier(snapshot.totalInputW)
@@ -152,6 +158,7 @@ final class RingGaugeView: PopoverSection {
         }
 
         PopoverStyle.setWithoutAnimation {
+            self.track.strokeColor = PopoverStyle.ringTrack.cgColor
             self.charge.strokeColor = (snapshot.percent <= 20 ? PopoverStyle.red : color).cgColor
             self.charge.strokeEnd = CGFloat(snapshot.percent) / 100
             let arcColor = snapshot.state == .mixedSupply ? PopoverStyle.blue : color

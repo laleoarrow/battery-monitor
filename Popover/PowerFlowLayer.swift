@@ -165,6 +165,7 @@ final class FlowNodeView: NSView {
         value.stringValue = valueText
         value.setAccessibilityLabel(text)
         value.setAccessibilityValue(valueText)
+        box.layer?.backgroundColor = PopoverStyle.well.cgColor
         box.layer?.borderColor = tint.withAlphaComponent(0.34).cgColor
     }
 
@@ -387,13 +388,14 @@ final class FlowNodeView: NSView {
             stopBreathing()
             return
         }
+        let resolvedColor = color.usingColorSpace(.sRGB) ?? color
         if let breathingColor,
-           breathingColor.isEqual(color),
+           breathingColor.isEqual(resolvedColor),
            box.layer?.animation(forKey: "breathe") != nil {
             return
         }
         stopBreathing()
-        breathingColor = color
+        breathingColor = resolvedColor
         let pulse = CABasicAnimation(keyPath: "borderColor")
         pulse.fromValue = color.withAlphaComponent(0.18).cgColor
         pulse.toValue = color.withAlphaComponent(0.85).cgColor
@@ -469,6 +471,7 @@ final class PipeBundle {
         let path = newGeometry.path
 
         let update = {
+            self.trough.strokeColor = PopoverStyle.trough.cgColor
             self.trough.path = path
             self.trough.lineWidth = thickness
             self.trough.frame = bounds
@@ -914,6 +917,14 @@ final class PowerFlowView: PopoverSection {
     }
 
     func update(snapshot: PowerSnapshot, animated: Bool) {
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            updateContents(snapshot: snapshot, animated: animated)
+        }
+    }
+
+    private func updateContents(snapshot: PowerSnapshot, animated: Bool) {
+        pluggedDeviceOutputWell.layer?.backgroundColor = PopoverStyle.well.cgColor
+        idleConnection.strokeColor = PopoverStyle.neutral.withAlphaComponent(0.45).cgColor
         latest = snapshot
         let layout = layoutMode(for: snapshot)
         applyPositions(for: layout)
