@@ -3,12 +3,196 @@ import XCTest
 @testable import Wattson
 
 final class NativeModeSegmentedControlTests: XCTestCase {
+    private var suiteName = ""
+    private var previousReduceMotion: String?
+
+    override func setUp() {
+        super.setUp()
+        suiteName = "Wattson.NativeModeTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defaults.removePersistentDomain(forName: suiteName)
+        Settings.configureForTest(defaults: defaults)
+        previousReduceMotion = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+    }
+
+    override func tearDown() {
+        Settings.resetTestConfiguration()
+        UserDefaults(suiteName: suiteName)?.removePersistentDomain(forName: suiteName)
+        if let previousReduceMotion {
+            setenv("WATTSON_FORCE_REDUCE_MOTION", previousReduceMotion, 1)
+        } else {
+            unsetenv("WATTSON_FORCE_REDUCE_MOTION")
+        }
+        super.tearDown()
+    }
+
     private func modeSlider(in footer: PopoverFooterView) -> ModeSliderView {
         footer.subviews.compactMap { $0 as? ModeSliderView }.first!
     }
 
     private func nativeControl(in footer: PopoverFooterView) -> NativeModeSegmentedControl {
         footer.subviews.compactMap { $0 as? NativeModeSegmentedControl }.first!
+    }
+
+    private func menuButton(in footer: PopoverFooterView) -> NSButton {
+        footer.subviews.compactMap { $0 as? NSButton }.first {
+            $0.action == NSSelectorFromString("showMenu")
+        }!
+    }
+
+    func testGlassChoiceAtConstructionUsesNativeControlsOnlyOnSupportedSystems() {
+        Settings.liquidGlassEnabled = true
+        let footer = PopoverFooterView()
+        footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                              height: PopoverFooterView.preferredHeight)
+        footer.layoutSubtreeIfNeeded()
+        let menu = menuButton(in: footer)
+        if #available(macOS 26.0, *) {
+            XCTAssertTrue(modeSlider(in: footer).isHidden)
+            XCTAssertFalse(nativeControl(in: footer).isHidden)
+            XCTAssertTrue(menu.isBordered)
+            XCTAssertEqual(menu.bezelStyle, .glass)
+            XCTAssertEqual(menu.frame.size, NSSize(width: 30, height: 30))
+        } else {
+            XCTAssertFalse(modeSlider(in: footer).isHidden)
+            XCTAssertTrue(nativeControl(in: footer).isHidden)
+            XCTAssertFalse(menu.isBordered)
+            XCTAssertEqual(menu.frame.size, NSSize(width: 22, height: 20))
+        }
+    }
+
+    func testGlassRuntimeTogglePreservesFocusSelectionAndExactBaselineGeometry() throws {
+        guard #available(macOS 26.0, *) else { return }
+        _ = NSApplication.shared
+        let footer = PopoverFooterView()
+        footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                              height: PopoverFooterView.preferredHeight)
+        footer.update(mode: .low, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue)
+        footer.layoutSubtreeIfNeeded()
+        let slider = modeSlider(in: footer)
+        let native = nativeControl(in: footer)
+        let menu = menuButton(in: footer)
+        let baselineModeFrame = slider.frame
+        let baselineMenuFrame = menu.frame
+        let baselineKnobOpacity = slider.nativeSelectorOpacityForTest
+        let window = NSWindow(contentRect: footer.bounds, styleMask: [.borderless],
+                              backing: .buffered, defer: false)
+        defer { window.orderOut(nil) }
+        window.contentView = footer
+        XCTAssertFalse(Settings.liquidGlassEnabled)
+        XCTAssertFalse(slider.isHidden)
+        XCTAssertTrue(native.isHidden)
+        XCTAssertFalse(menu.isBordered)
+        XCTAssertEqual(baselineMenuFrame,
+                       NSRect(x: footer.bounds.width - 22, y: 42, width: 22, height: 20))
+        XCTAssertTrue(window.makeFirstResponder(slider))
+
+        Settings.liquidGlassEnabled = true
+        footer.layoutSubtreeIfNeeded()
+        XCTAssertTrue(slider.isHidden)
+        XCTAssertFalse(native.isHidden)
+        XCTAssertEqual(native.selectedModeForTest, .low)
+        XCTAssertTrue(window.firstResponder === native)
+        XCTAssertEqual(native.frame, baselineModeFrame)
+        XCTAssertGreaterThan(menu.frame.minX, native.frame.maxX)
+        XCTAssertEqual(menu.bezelStyle, .glass)
+        XCTAssertTrue(menu.isBordered)
+
+        Settings.liquidGlassEnabled = false
+        footer.layoutSubtreeIfNeeded()
+        XCTAssertFalse(slider.isHidden)
+        XCTAssertTrue(native.isHidden)
+        XCTAssertTrue(window.firstResponder === slider)
+        XCTAssertEqual(slider.selectedIndexForTest, 1)
+        XCTAssertEqual(slider.frame, baselineModeFrame)
+        XCTAssertEqual(menu.frame, baselineMenuFrame)
+        XCTAssertEqual(slider.nativeSelectorOpacityForTest, baselineKnobOpacity)
+        XCTAssertFalse(menu.isBordered)
+        XCTAssertEqual(menu.contentTintColor, PopoverStyle.secondaryText)
+
+        var openedMenu: NSButton?
+        footer.onShowMenu = { openedMenu = $0 }
+        menu.performClick(nil)
+        XCTAssertTrue(openedMenu === menu)
+    }
+
+    func testGlassToggleDoesNotDuplicatePendingModeRequestsOrLoseRollback() throws {
+        guard #available(macOS 26.0, *) else { return }
+        let footer = PopoverFooterView()
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue)
+        let slider = modeSlider(in: footer)
+        let native = nativeControl(in: footer)
+        var requests: [EnergyMode] = []
+        var completion: ((EnergyMode?) -> Void)?
+        footer.onSelect = { mode, callback in
+            requests.append(mode)
+            completion = callback
+        }
+        slider.keyDown(with: try keyEvent(124))
+        Settings.liquidGlassEnabled = true
+        XCTAssertEqual(requests, [.low])
+        XCTAssertEqual(native.selectedModeForTest, .low)
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemGreen)
+        Settings.liquidGlassEnabled = false
+        XCTAssertEqual(slider.selectedIndexForTest, 1)
+        completion?(nil)
+        XCTAssertEqual(slider.selectedIndexForTest, 0)
+
+        Settings.liquidGlassEnabled = true
+        native.selectModeForTest(.low)
+        Settings.liquidGlassEnabled = false
+        completion?(.low)
+        XCTAssertEqual(slider.selectedIndexForTest, 1)
+        XCTAssertEqual(requests, [.low, .low])
+    }
+
+    func testDisablingGlassStillHonorsReduceMotionAndKeepsMenuFocus() {
+        guard #available(macOS 26.0, *) else { return }
+        _ = NSApplication.shared
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
+        let footer = PopoverFooterView()
+        footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                              height: PopoverFooterView.preferredHeight)
+        let menu = menuButton(in: footer)
+        let window = NSWindow(contentRect: footer.bounds, styleMask: [.borderless],
+                              backing: .buffered, defer: false)
+        defer { window.orderOut(nil) }
+        window.contentView = footer
+        XCTAssertTrue(window.makeFirstResponder(menu))
+        Settings.liquidGlassEnabled = true
+        Settings.liquidGlassEnabled = false
+        XCTAssertTrue(modeSlider(in: footer).isHidden)
+        XCTAssertFalse(nativeControl(in: footer).isHidden)
+        XCTAssertFalse(menu.isBordered)
+        XCTAssertTrue(window.firstResponder === menu)
+    }
+
+    func testUnrelatedSettingsDoNotReselectOrRestyleModeControls() {
+        let footer = PopoverFooterView()
+        footer.update(mode: .low, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue)
+        let slider = modeSlider(in: footer)
+        let baseline = slider.highlightCallCountForTest
+        Settings.showsMenuBarPercentage.toggle()
+        Settings.setModule(.flow, visible: false)
+        Settings.checksForUpdatesOnLaunch.toggle()
+        XCTAssertFalse(slider.isHidden)
+        XCTAssertEqual(slider.selectedIndexForTest, 1)
+        XCTAssertEqual(slider.highlightCallCountForTest, baseline)
+    }
+
+    func testAppearanceObserversDoNotRetainFooter() {
+        weak var releasedFooter: PopoverFooterView?
+        autoreleasepool {
+            let footer = PopoverFooterView()
+            releasedFooter = footer
+        }
+        XCTAssertNil(releasedFooter)
+        Settings.liquidGlassEnabled = true
     }
 
     private func keyEvent(_ keyCode: UInt16) throws -> NSEvent {

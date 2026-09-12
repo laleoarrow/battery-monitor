@@ -107,6 +107,25 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("bounds.width - 46", self.content)
         self.assertIn("bounds.width - 22", self.content)
 
+    def test_optional_glass_menu_button_uses_system_style_and_restores_baseline(self):
+        footer = self.content.split("final class PopoverFooterView", 1)[1].split(
+            "final class PopoverContentViewController", 1
+        )[0]
+        self.assertIn("if #available(macOS 26.0, *), Settings.usesLiquidGlass", footer)
+        self.assertIn("settingsButton.bezelStyle = .glass", footer)
+        self.assertIn("settingsButton.isBordered = true", footer)
+        self.assertIn("settingsButton.isBordered = false", footer)
+        self.assertIn("settingsButton.contentTintColor = PopoverStyle.secondaryText", footer)
+        self.assertIn("x: bounds.width - 30, y: 36, width: 30, height: 30", footer)
+        self.assertIn("x: bounds.width - 22, y: 42, width: 22, height: 20", footer)
+        self.assertNotIn("NSGlassEffectView", footer)
+
+    def test_glass_interaction_isolates_preferences_before_constructing_views(self):
+        interaction = (ROOT / "tests" / "interaction" / "main.swift").read_text()
+        self.assertLess(interaction.index("Settings.configureForTest(defaults:"),
+                        interaction.index("NSApplication.shared"))
+        self.assertEqual(interaction.count("Settings.configureForTest(defaults:"), 1)
+
     def test_settings_menu_reports_the_running_bundle_version(self):
         menu = self.content.split("private func showModuleMenu", 1)[1].split(
             "@objc private func quitApp", 1

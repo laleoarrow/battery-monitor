@@ -111,24 +111,35 @@ private enum SettingsStyle {
     static let surfaceCornerRadius: CGFloat = 10
     static let modulePreviewSize = NSSize(width: 64, height: 60)
 
-    static let contentBackground = color(hex: 0x151618)
-    static let sidebarBackground = color(hex: 0x1E1F21)
-    static let surfaceBackground = color(hex: 0x191A1C)
-    static let tileBackground = color(hex: 0x202124)
-    static let previewBackground = color(hex: 0x1A1B1C)
-    static let selection = color(hex: 0x2B362F)
-    static let green = color(hex: 0x68C367)
-    static let border = color(hex: 0x363838)
-    static let divider = color(hex: 0x363838)
+    static let contentBackground = adaptive(0x151618, .windowBackgroundColor)
+    static let sidebarBackground = adaptive(0x1E1F21, .clear)
+    static let surfaceBackground = adaptive(0x191A1C, .controlBackgroundColor)
+    static let tileBackground = adaptive(0x202124, .quaternaryLabelColor)
+    static let previewBackground = adaptive(0x1A1B1C, .controlBackgroundColor)
+    static let selection = adaptive(0x2B362F, .selectedContentBackgroundColor)
+    static let green = adaptive(0x68C367, .controlAccentColor)
+    static let border = adaptive(0x363838, .separatorColor)
+    static let divider = adaptive(0x363838, .separatorColor)
     static let toggleOff = color(hex: 0x2E3032)
-    static let increasedContrastSelection = color(hex: 0x3B5944)
-    static let increasedContrastSelectionBorder = color(hex: 0x8AD88E)
-    static let increasedContrastBorder = color(hex: 0x8D949A)
+    static let increasedContrastSelection = adaptive(0x3B5944, .selectedContentBackgroundColor)
+    static let increasedContrastSelectionBorder = adaptive(0x8AD88E, .controlAccentColor)
+    static let increasedContrastBorder = adaptive(0x8D949A, .labelColor)
     static let increasedContrastToggleOff = color(hex: 0x575B5F)
     static let increasedContrastToggleBorder = color(hex: 0xB9C0C6)
-    static let headingText = color(hex: 0xF4F4F4)
-    static let primaryText = color(hex: 0xE9E9E9)
-    static let secondaryText = color(hex: 0xA0A0A2)
+    static let headingText = adaptive(0xF4F4F4, .labelColor)
+    static let primaryText = adaptive(0xE9E9E9, .labelColor)
+    static let secondaryText = adaptive(0xA0A0A2, .secondaryLabelColor)
+
+    private static func adaptive(_ baseline: UInt32, _ system: NSColor) -> NSColor {
+        NSColor(name: nil) { appearance in
+            guard Settings.usesLiquidGlass else { return color(hex: baseline) }
+            var resolved = system
+            appearance.performAsCurrentDrawingAppearance {
+                resolved = system.usingColorSpace(.deviceRGB) ?? system
+            }
+            return resolved
+        }
+    }
 
     private static func color(hex: UInt32, alpha: CGFloat = 1) -> NSColor {
         NSColor(
@@ -157,7 +168,14 @@ private final class SettingsFillView: NSView {
     override var wantsUpdateLayer: Bool { true }
 
     override func updateLayer() {
-        layer?.backgroundColor = fillColor.cgColor
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            layer?.backgroundColor = fillColor.cgColor
+        }
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        needsDisplay = true
     }
 }
 
@@ -190,6 +208,7 @@ private final class SettingsAdaptiveBorderBox: NSBox, SettingsContrastRefreshing
 
 private final class SettingsToggleButton: NSButton, SettingsContrastRefreshing {
     private let increaseContrast: () -> Bool
+    let nativeSwitch = NSSwitch()
 
     init(
         accessibilityLabel: String,
@@ -210,6 +229,16 @@ private final class SettingsToggleButton: NSButton, SettingsContrastRefreshing {
         setAccessibilityLabel(accessibilityLabel)
         setAccessibilityRole(.checkBox)
         translatesAutoresizingMaskIntoConstraints = false
+        nativeSwitch.target = self
+        nativeSwitch.action = #selector(toggleNativeSwitch(_:))
+        nativeSwitch.setAccessibilityLabel(accessibilityLabel)
+        nativeSwitch.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(nativeSwitch)
+        NSLayoutConstraint.activate([
+            nativeSwitch.centerXAnchor.constraint(equalTo: centerXAnchor),
+            nativeSwitch.centerYAnchor.constraint(equalTo: centerYAnchor),
+        ])
+        refreshContrastAppearance()
     }
 
     @available(*, unavailable)
@@ -218,6 +247,40 @@ private final class SettingsToggleButton: NSButton, SettingsContrastRefreshing {
     }
 
     override var intrinsicContentSize: NSSize { SettingsStyle.toggleSize }
+
+    override var state: NSControl.StateValue {
+        didSet { refreshNativeState() }
+    }
+
+    override var isEnabled: Bool {
+        didSet { refreshNativeState() }
+    }
+
+    override var acceptsFirstResponder: Bool {
+        Settings.usesLiquidGlass ? false : super.acceptsFirstResponder
+    }
+
+    override func setAccessibilityHelp(_ help: String?) {
+        super.setAccessibilityHelp(help)
+        nativeSwitch.setAccessibilityHelp(help)
+    }
+
+    @objc private func toggleNativeSwitch(_ sender: NSSwitch) {
+        guard isEnabled, state != .mixed else {
+            refreshNativeState()
+            return
+        }
+        state = sender.state
+        if let action { sendAction(action, to: target) }
+    }
+
+    private func refreshNativeState() {
+        // NSSwitch interprets .mixed as .on. Unknown helper state must not
+        // claim an enabled setting; the row detail and AX description explain it.
+        nativeSwitch.state = state == .on ? .on : .off
+        nativeSwitch.isEnabled = isEnabled && state != .mixed
+        nativeSwitch.setAccessibilityValueDescription(state == .mixed ? "Unknown" : nil)
+    }
 
     var trackColor: NSColor {
         guard state != .on else { return SettingsStyle.green }
@@ -236,6 +299,9 @@ private final class SettingsToggleButton: NSButton, SettingsContrastRefreshing {
     }
 
     func refreshContrastAppearance() {
+        nativeSwitch.isHidden = !Settings.usesLiquidGlass
+        refreshNativeState()
+        setAccessibilityElement(!Settings.usesLiquidGlass)
         needsDisplay = true
     }
 
@@ -245,6 +311,7 @@ private final class SettingsToggleButton: NSButton, SettingsContrastRefreshing {
     }
 
     override func draw(_ dirtyRect: NSRect) {
+        guard !Settings.usesLiquidGlass else { return }
         let trackRect = bounds.insetBy(dx: 1, dy: 1)
         let track = NSBezierPath(
             roundedRect: trackRect,
@@ -331,6 +398,7 @@ private final class SettingsSidebarRowView: NSTableRowView, SettingsContrastRefr
 
     override func drawBackground(in dirtyRect: NSRect) {
         super.drawBackground(in: dirtyRect)
+        guard !Settings.usesLiquidGlass else { return }
         guard isSelected else { return }
         selectionFillColor.setFill()
         let selection = NSBezierPath(
@@ -351,7 +419,9 @@ private final class SettingsSidebarRowView: NSTableRowView, SettingsContrastRefr
         outline.stroke()
     }
 
-    override func drawSelection(in dirtyRect: NSRect) {}
+    override func drawSelection(in dirtyRect: NSRect) {
+        if Settings.usesLiquidGlass { super.drawSelection(in: dirtyRect) }
+    }
 }
 
 private final class DynamicSeparatorView: NSView, SettingsContrastRefreshing {
@@ -401,9 +471,11 @@ private final class DynamicSeparatorView: NSView, SettingsContrastRefreshing {
     private func updateStrokeLayers() {
         let increased = increaseContrast()
         layer?.masksToBounds = false
-        layer?.backgroundColor = increased ? NSColor.clear.cgColor : SettingsStyle.divider.cgColor
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            layer?.backgroundColor = increased ? NSColor.clear.cgColor : SettingsStyle.divider.cgColor
+            increasedContrastStroke.backgroundColor = strokeColor.cgColor
+        }
         increasedContrastStroke.isHidden = !increased
-        increasedContrastStroke.backgroundColor = strokeColor.cgColor
         increasedContrastStroke.frame = NSRect(
             x: (bounds.width - visualStrokeWidth) / 2,
             y: 0,
@@ -1403,14 +1475,16 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         controlsRecoveryButton.title = helperAvailable ? "Repair Controls…" : "Enable Controls…"
         // Keep the optional recovery action in the existing explicit Tab loop
         // only while it is visible; no window rebuild or extra status poll.
+        let precedingControl: NSView = Settings.usesLiquidGlass
+            ? automaticUpdateButton.nativeSwitch : automaticUpdateButton
         if controlsRecovery.isHidden {
-            if automaticUpdateButton.nextKeyView === controlsRecoveryButton {
-                automaticUpdateButton.nextKeyView = controlsRecoveryButton.nextKeyView
+            if precedingControl.nextKeyView === controlsRecoveryButton {
+                precedingControl.nextKeyView = controlsRecoveryButton.nextKeyView
                 controlsRecoveryButton.nextKeyView = nil
             }
-        } else if automaticUpdateButton.nextKeyView !== controlsRecoveryButton {
-            controlsRecoveryButton.nextKeyView = automaticUpdateButton.nextKeyView
-            automaticUpdateButton.nextKeyView = controlsRecoveryButton
+        } else if precedingControl.nextKeyView !== controlsRecoveryButton {
+            controlsRecoveryButton.nextKeyView = precedingControl.nextKeyView
+            precedingControl.nextKeyView = controlsRecoveryButton
         }
     }
 
@@ -2100,7 +2174,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .checkForUpdatesOnLaunch, .module:
+            case .checkForUpdatesOnLaunch, .module, .liquidGlassAppearance:
                 break
             }
         }
@@ -2372,9 +2446,13 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     private let sections: [SettingsSectionController]
     private let increaseContrast: () -> Bool
     private let sidebar = NSTableView()
+    private let sidebarMaterial = NSVisualEffectView()
+    private let liquidGlassSwitch = NSSwitch()
+    private let identityIcon = NSImageView()
     private let contentHost = NSView()
     private let divider: DynamicSeparatorView
     private var accessibilityDisplayObserver: NSObjectProtocol?
+    private var appearanceObserver: NSObjectProtocol?
     private var selectedSectionIndex = 0
 
     static func defaultSections(
@@ -2419,7 +2497,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             backing: .buffered,
             defer: false
         )
-        window.appearance = NSAppearance(named: .darkAqua)
+        window.appearance = Settings.usesLiquidGlass ? nil : NSAppearance(named: .darkAqua)
         window.backgroundColor = SettingsStyle.contentBackground
         window.title = "Wattson Settings"
         window.titleVisibility = .hidden
@@ -2442,7 +2520,14 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
         configureContent()
         installAccessibilityDisplayObserver()
-        refreshContrastAppearance()
+        appearanceObserver = NotificationCenter.default.addObserver(
+            forName: Settings.didChange, object: nil, queue: .main
+        ) { [weak self] notification in
+            guard notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
+                    == .liquidGlassAppearance else { return }
+            self?.refreshLiquidGlassAppearance()
+        }
+        refreshLiquidGlassAppearance()
         if let frameAutosaveName {
             // NSWindowController initialization clears a name assigned before
             // it takes ownership, so install autosave after `super.init`.
@@ -2452,6 +2537,9 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     }
 
     deinit {
+        if let appearanceObserver {
+            NotificationCenter.default.removeObserver(appearanceObserver)
+        }
         if let accessibilityDisplayObserver {
             NSWorkspace.shared.notificationCenter.removeObserver(
                 accessibilityDisplayObserver
@@ -2486,7 +2574,46 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
     private func refreshContrastAppearance(in view: NSView) {
         (view as? SettingsContrastRefreshing)?.refreshContrastAppearance()
+        view.needsDisplay = true
         view.subviews.forEach { refreshContrastAppearance(in: $0) }
+    }
+
+    private func refreshLiquidGlassAppearance() {
+        guard let window else { return }
+        let enabled = Settings.usesLiquidGlass
+        // Keep the section controllers and their in-flight operations intact.
+        // Appearance is never a reason to re-query the privileged helper.
+        let focusedToggle = window.firstResponder as? SettingsToggleButton
+            ?? (window.firstResponder as? NSSwitch)?.superview as? SettingsToggleButton
+        window.appearance = enabled ? nil : NSAppearance(named: .darkAqua)
+        window.backgroundColor = SettingsStyle.contentBackground
+        sidebarMaterial.isHidden = !enabled
+        sidebar.selectionHighlightStyle = enabled ? .regular : .none
+        liquidGlassSwitch.state = Settings.liquidGlassEnabled ? .on : .off
+        let baselineIconPath = Bundle.main.path(forResource: "AppIconSettings", ofType: "png")
+        let glassIconPath = enabled
+            ? Bundle.main.path(forResource: "AppIconGlassSettings", ofType: "png") : nil
+        identityIcon.image = (glassIconPath ?? baselineIconPath).flatMap(NSImage.init(contentsOfFile:))
+            ?? NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath)
+        for section in sections {
+            for button in switchButtons(in: section.view)
+                where type(of: button) == NSButton.self {
+                if #available(macOS 26, *) {
+                    button.bezelStyle = enabled ? .glass : .rounded
+                }
+            }
+        }
+        if let content = window.contentView { refreshContrastAppearance(in: content) }
+        // Non-visible sections remain owned but are not children of the window.
+        refreshContrastAppearance()
+        updateVisibleSwitchKeyLoop()
+        if let focusedToggle {
+            window.makeFirstResponder(enabled ? focusedToggle.nativeSwitch : focusedToggle)
+        }
+    }
+
+    @objc private func toggleLiquidGlass(_ sender: NSSwitch) {
+        Settings.liquidGlassEnabled = sender.state == .on
     }
 
     @available(*, unavailable)
@@ -2538,6 +2665,10 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         let sidebarContainer = SettingsFillView(color: SettingsStyle.sidebarBackground)
         sidebarContainer.identifier = NSUserInterfaceItemIdentifier("settings.sidebar")
         sidebarContainer.translatesAutoresizingMaskIntoConstraints = false
+        sidebarMaterial.material = .sidebar
+        sidebarMaterial.blendingMode = .behindWindow
+        sidebarMaterial.state = .followsWindowActiveState
+        sidebarMaterial.translatesAutoresizingMaskIntoConstraints = false
 
         let identity = makeIdentityView()
         let trafficSafeArea = NSView()
@@ -2546,6 +2677,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         )
         trafficSafeArea.translatesAutoresizingMaskIntoConstraints = false
         let navigation = makeNavigationView()
+        let appearanceOption = makeAppearanceOption()
         divider.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.divider")
         divider.translatesAutoresizingMaskIntoConstraints = false
 
@@ -2555,15 +2687,24 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         root.addSubview(sidebarContainer)
         root.addSubview(divider)
         root.addSubview(contentHost)
+        sidebarContainer.addSubview(sidebarMaterial)
         sidebarContainer.addSubview(identity)
         sidebarContainer.addSubview(trafficSafeArea)
         sidebarContainer.addSubview(navigation)
+        sidebarContainer.addSubview(appearanceOption)
 
         NSLayoutConstraint.activate([
             sidebarContainer.leadingAnchor.constraint(equalTo: root.leadingAnchor),
             sidebarContainer.topAnchor.constraint(equalTo: root.topAnchor),
             sidebarContainer.bottomAnchor.constraint(equalTo: root.bottomAnchor),
             sidebarContainer.widthAnchor.constraint(equalToConstant: SettingsStyle.sidebarWidth),
+            sidebarMaterial.leadingAnchor.constraint(equalTo: sidebarContainer.leadingAnchor),
+            sidebarMaterial.trailingAnchor.constraint(equalTo: sidebarContainer.trailingAnchor),
+            sidebarMaterial.topAnchor.constraint(equalTo: sidebarContainer.topAnchor),
+            sidebarMaterial.bottomAnchor.constraint(equalTo: sidebarContainer.bottomAnchor),
+            appearanceOption.leadingAnchor.constraint(equalTo: sidebarContainer.leadingAnchor, constant: 16),
+            appearanceOption.trailingAnchor.constraint(equalTo: sidebarContainer.trailingAnchor, constant: -16),
+            appearanceOption.bottomAnchor.constraint(equalTo: sidebarContainer.bottomAnchor, constant: -20),
 
             trafficSafeArea.leadingAnchor.constraint(equalTo: sidebarContainer.leadingAnchor),
             trafficSafeArea.trailingAnchor.constraint(equalTo: sidebarContainer.trailingAnchor),
@@ -2632,7 +2773,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         identity.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.identity")
         identity.translatesAutoresizingMaskIntoConstraints = false
 
-        let iconTile = NSImageView()
+        let iconTile = identityIcon
         iconTile.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.identity.tile")
         let appIconPath = Bundle.main.path(
             forResource: "AppIconSettings",
@@ -2661,6 +2802,38 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             name.centerYAnchor.constraint(equalTo: iconTile.centerYAnchor),
         ])
         return identity
+    }
+
+    private func makeAppearanceOption() -> NSView {
+        let title = NSTextField(labelWithString: "Liquid Glass")
+        title.font = SettingsStyle.sidebarFont
+        title.textColor = SettingsStyle.primaryText
+        liquidGlassSwitch.identifier = NSUserInterfaceItemIdentifier("settings.appearance.liquid-glass")
+        liquidGlassSwitch.setAccessibilityLabel("Global Liquid Glass")
+        liquidGlassSwitch.target = self
+        liquidGlassSwitch.action = #selector(toggleLiquidGlass(_:))
+        let available: Bool
+        if #available(macOS 26, *) { available = true } else { available = false }
+        liquidGlassSwitch.isEnabled = available
+        let explanation = available
+            ? "Use system glass throughout Wattson. Off keeps the classic appearance."
+            : "Requires macOS 26 or later. Classic appearance is available on this Mac."
+        liquidGlassSwitch.setAccessibilityHelp(explanation)
+        let detail = NSTextField(wrappingLabelWithString: explanation)
+        detail.font = SettingsStyle.detailFont
+        detail.textColor = SettingsStyle.secondaryText
+        detail.setContentCompressionResistancePriority(.required, for: .vertical)
+        let row = NSStackView(views: [title, liquidGlassSwitch])
+        row.distribution = .equalSpacing
+        row.alignment = .centerY
+        let option = NSStackView(views: [row, detail])
+        option.orientation = .vertical
+        option.alignment = .leading
+        option.spacing = 6
+        option.translatesAutoresizingMaskIntoConstraints = false
+        row.widthAnchor.constraint(equalTo: option.widthAnchor).isActive = true
+        detail.widthAnchor.constraint(equalTo: option.widthAnchor).isActive = true
+        return option
     }
 
     private func makeNavigationView() -> NSView {
@@ -2696,12 +2869,18 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     }
 
     private func updateVisibleSwitchKeyLoop() {
-        let switches = switchButtons(in: sections[selectedSectionIndex].view)
+        let switches: [NSView] = switchButtons(in: sections[selectedSectionIndex].view).map {
+            if Settings.usesLiquidGlass, let toggle = $0 as? SettingsToggleButton {
+                return toggle.nativeSwitch
+            }
+            return $0
+        }
         sidebar.nextKeyView = switches.first
         for (current, next) in zip(switches, switches.dropFirst()) {
             current.nextKeyView = next
         }
-        switches.last?.nextKeyView = sidebar
+        switches.last?.nextKeyView = liquidGlassSwitch.isEnabled ? liquidGlassSwitch : sidebar
+        liquidGlassSwitch.nextKeyView = sidebar
     }
 
     private func firstSwitch(in view: NSView) -> NSButton? {

@@ -24,10 +24,11 @@ class ReduceMotionModeControlContractTests(unittest.TestCase):
         self.assertIn("WATTSON_FORCE_REDUCE_MOTION", footer)
         self.assertIn("accessibilityDisplayShouldReduceMotion", footer)
         self.assertIn("accessibilityDisplayOptionsDidChangeNotification", footer)
-        self.assertIn("modeControl.isHidden = reduceMotion", footer)
-        self.assertIn("reducedMotionModeControl.isHidden = !reduceMotion", footer)
+        self.assertIn("let useNativeControl = reduceMotion || Settings.usesLiquidGlass", footer)
+        self.assertIn("modeControl.isHidden = useNativeControl", footer)
+        self.assertIn("nativeModeControl.isHidden = !useNativeControl", footer)
 
-    def test_runtime_choice_is_accessibility_state_not_a_saved_preference(self):
+    def test_native_control_does_not_own_appearance_or_accessibility_preferences(self):
         footer = CONTENT.split("final class PopoverFooterView", 1)[1].split(
             "final class PopoverContentViewController", 1
         )[0]
@@ -57,6 +58,22 @@ class ReduceMotionModeControlContractTests(unittest.TestCase):
         self.assertIn("override func keyDown", NATIVE)
         self.assertIn("accessibilityPerformIncrement", NATIVE)
         self.assertIn("accessibilityPerformDecrement", NATIVE)
+
+    def test_glass_preference_changes_only_footer_presentation_and_keeps_focus(self):
+        footer = CONTENT.split("final class PopoverFooterView", 1)[1].split(
+            "final class PopoverContentViewController", 1
+        )[0]
+        self.assertIn("forName: Settings.didChange", footer)
+        self.assertIn("case .liquidGlassAppearance = change", footer)
+        self.assertIn("NotificationCenter.default.removeObserver(settingsObserver)", footer)
+        refresh = footer.split("private func refreshDisplayOptions(reduceMotion:", 1)[1].split(
+            "@objc private func systemBatteryIconChanged", 1
+        )[0]
+        self.assertIn("window?.firstResponder === previousControl", refresh)
+        self.assertIn("window?.makeFirstResponder(nextControl)", refresh)
+        self.assertNotIn("pendingMode =", refresh)
+        self.assertNotIn("requestModeSelection(", refresh)
+        self.assertNotIn("Timer", refresh)
 
 
 if __name__ == "__main__":

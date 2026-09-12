@@ -1,6 +1,6 @@
 import AppKit
 
-/// Motion-free power-mode chooser used when macOS Reduce Motion is enabled.
+/// Native power-mode chooser for Liquid Glass and macOS Reduce Motion.
 /// AppKit owns all drawing; this class only keeps the three native segments
 /// equal and reports user intent. The footer owns confirmation and rollback.
 final class NativeModeSegmentedControl: NSSegmentedControl {

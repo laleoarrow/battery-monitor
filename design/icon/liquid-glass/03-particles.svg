@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>Wattson travelling light particles</title>
+  <desc>The four v4.0.0 particle centers sampled on the cubic at t = 0.17, 0.41, 0.64, 0.87; original radii 13, 23, 17, 10. Halos are omitted.</desc>
+  <g fill="rgb(89.8%,94.9%,100%)">
+    <circle cx="340.615826" cy="646.016588" r="13"/>
+    <circle cx="465.260642" cy="548.137196" r="23"/>
+    <circle cx="579.570688" cy="433.874944" r="17"/>
+    <circle cx="703.809006" cy="349.651428" r="10"/>
+  </g>
+</svg>

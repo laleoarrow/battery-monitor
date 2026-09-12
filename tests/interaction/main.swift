@@ -1,4 +1,10 @@
 import AppKit
+// Isolate appearance before any popover/footer is constructed; an installed
+// app's saved choice must not change which baseline this harness exercises.
+let settingsSuiteName = "Wattson.SettingsCommandInteraction.\(UUID().uuidString)"
+let settingsDefaults = UserDefaults(suiteName: settingsSuiteName)!
+settingsDefaults.removePersistentDomain(forName: settingsSuiteName)
+Settings.configureForTest(defaults: settingsDefaults)
 let app = NSApplication.shared
 app.setActivationPolicy(.accessory)
 func log(_ s: String) { print(s); fflush(stdout) }
@@ -1138,6 +1144,88 @@ check("读取失败优先于守恒偏差",
       degradedState.text == "Read Failed · Last Reading"
           && degradedState.color?.isEqual(PopoverStyle.red) == true)
 
+// ---- 9b. 全局 Liquid Glass：原生控件、即时切换与原版恢复 ----
+// Only DEBUG-local overrides and isolated defaults change. This never writes
+// the user's accessibility preferences or sends a real helper mutation.
+do {
+    let previous = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
+    defer {
+        Settings.liquidGlassEnabled = false
+        if let previous {
+            setenv("WATTSON_FORCE_REDUCE_MOTION", previous, 1)
+        } else {
+            unsetenv("WATTSON_FORCE_REDUCE_MOTION")
+        }
+    }
+    setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+    let footer = PopoverFooterView()
+    footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                          height: PopoverFooterView.preferredHeight)
+    footer.update(mode: .auto, helperInstalled: true,
+                  systemBatteryIconHidden: false, tint: .systemBlue)
+    let footerWindow = NSWindow(contentRect: footer.bounds,
+                                 styleMask: [.titled, .closable],
+                                 backing: .buffered, defer: false)
+    footerWindow.isReleasedWhenClosed = false
+    footerWindow.title = "Wattson Appearance Interaction"
+    footerWindow.contentView = footer
+    footer.layoutSubtreeIfNeeded()
+    if let baseline = footer.subviews.compactMap({ $0 as? ModeSliderView }).first,
+       let native = footer.subviews.compactMap({ $0 as? NativeModeSegmentedControl }).first,
+       let menu = footer.subviews.compactMap({ $0 as? NSButton }).first(where: {
+           $0.action == NSSelectorFromString("showMenu")
+       }) {
+        let originalModeFrame = baseline.frame
+        let originalMenuFrame = menu.frame
+        check("外观默认关闭并保持原版控件和菜单按钮尺寸",
+              !Settings.liquidGlassEnabled && !baseline.isHidden && native.isHidden
+                  && !menu.isBordered && menu.frame.size == NSSize(width: 22, height: 20))
+        if #available(macOS 26.0, *) {
+            footerWindow.makeKeyAndOrderFront(nil)
+            _ = runApplication(until: { footerWindow.isKeyWindow }, timeout: 1)
+            _ = footerWindow.makeFirstResponder(baseline)
+            Settings.liquidGlassEnabled = true
+            footer.layoutSubtreeIfNeeded()
+            check("全局玻璃立即使用原生分段控件并转移键盘焦点",
+                  baseline.isHidden && !native.isHidden
+                      && footerWindow.firstResponder === native
+                      && native.frame == originalModeFrame)
+            check("原生玻璃菜单按钮可点击且不与档位控件重叠",
+                  menu.isBordered && menu.bezelStyle == .glass
+                      && menu.frame.size == NSSize(width: 30, height: 30)
+                      && menu.frame.minX > native.frame.maxX)
+            var requests = 0
+            var completion: ((EnergyMode?) -> Void)?
+            footer.onSelect = { _, callback in requests += 1; completion = callback }
+            native.selectModeForTest(.low)
+            Settings.liquidGlassEnabled = false
+            footer.layoutSubtreeIfNeeded()
+            check("关闭全局玻璃恢复原版几何并保留待确认档位和焦点",
+                  !baseline.isHidden && native.isHidden
+                      && footerWindow.firstResponder === baseline
+                      && baseline.frame == originalModeFrame && menu.frame == originalMenuFrame
+                      && !menu.isBordered && baseline.selectedIndexForTest == 1
+                      && requests == 1)
+            completion?(nil)
+            check("跨外观切换的失败回调仍回滚档位且没有重复写入",
+                  baseline.selectedIndexForTest == 0 && requests == 1)
+            setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
+            Settings.liquidGlassEnabled = true
+            Settings.liquidGlassEnabled = false
+            check("关闭玻璃不关闭用户的减少动态效果",
+                  baseline.isHidden && !native.isHidden && !menu.isBordered)
+        } else {
+            Settings.liquidGlassEnabled = true
+            check("旧 macOS 保存选择但不假装支持原生全局玻璃",
+                  !Settings.usesLiquidGlass && !baseline.isHidden
+                      && native.isHidden && !menu.isBordered)
+        }
+    } else {
+        check("外观交互测试具备原版、原生和菜单控件", false)
+    }
+    footerWindow.close()
+}
+
 // ---- 10. Settings 命令：一个窗口、同一入口、单一系统状态 ----
 final class InteractionSettingsSection: SettingsSectionController {
     let identifier = "interaction"
@@ -1152,11 +1240,6 @@ final class InteractionSettingsSection: SettingsSectionController {
         onRefresh?()
     }
 }
-
-let settingsSuiteName = "Wattson.SettingsCommandInteraction.\(UUID().uuidString)"
-let settingsDefaults = UserDefaults(suiteName: settingsSuiteName)!
-settingsDefaults.removePersistentDomain(forName: settingsSuiteName)
-Settings.configureForTest(defaults: settingsDefaults)
 
 let interactionSection = InteractionSettingsSection()
 let interactionSettings = SettingsWindowController(
@@ -1290,8 +1373,6 @@ check("系统电池图标观察者不阻止 StatusItem 释放",
 
 firstSettingsWindow?.close()
 SystemBatteryIconController.resetTestConfiguration()
-Settings.resetTestConfiguration()
-settingsDefaults.removePersistentDomain(forName: settingsSuiteName)
 NSApp.mainMenu = previousMainMenu
 
 // ---- 11. 真实控制器单采样时钟：重排 timer 不能吞掉打开事件 ----
@@ -1416,6 +1497,8 @@ if let orphanedButton = orphanedItem.button {
 }
 
 NSStatusBar.system.removeStatusItem(item)
+Settings.resetTestConfiguration()
+settingsDefaults.removePersistentDomain(forName: settingsSuiteName)
 if !pass {
     log("\nSOME_CHECKS_FAILED")
     exit(1)

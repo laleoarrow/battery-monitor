@@ -61,6 +61,18 @@ Homebrew/Pages gates.
 - High Power mode is exposed only when the hardware reports support.
 - macOS 26 uses native Liquid Glass; macOS 12–25 use the AppKit fallback.
 
+The Settings sidebar also offers an opt-in **Liquid Glass** presentation on
+macOS 26 and later. It defaults off to retain the 4.0.0 presentation. The switch
+changes Settings materials/controls and the popover's native mode chooser;
+it does not change power computation, helper requests, or data instrumentation.
+Off restores the original app presentation, not an operating-system-wide
+disable of Apple's materials. Accessibility preferences remain authoritative.
+
+The installed primary icon is separate from this runtime preference. The
+classic ICNS remains unchanged; `design/icon/liquid-glass/` contains source
+layers awaiting Icon Composer composition and validation, not a shipping
+layered icon. Never mutate a signed app bundle to implement a theme switch.
+
 `BatteryPowerWidgetExtension.swift` and the legacy Python implementation remain
 reference/test surfaces; the currently shipped app bundle is the AppKit
 menu-bar product.

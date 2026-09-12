@@ -237,11 +237,16 @@ class StatusItemContractTests(unittest.TestCase):
         )[0]
         self.assertIn("Settings.changeUserInfoKey", observer)
         self.assertIn("case .menuBarPercentage, .menuBarIconStyle:", observer)
-        self.assertIn("case .module, .checkForUpdatesOnLaunch:", observer)
+        self.assertIn(
+            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance:\n                break",
+            observer,
+        )
         status_scope = observer.split("case .menuBarPercentage, .menuBarIconStyle:", 1)[1].split("case", 1)[0]
         self.assertIn("refreshStatusItem()", status_scope)
         self.assertNotIn("refreshPresentation()", status_scope)
-        ignored_scope = observer.split("case .module, .checkForUpdatesOnLaunch:", 1)[1].split("case", 1)[0]
+        ignored_scope = observer.split(
+            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance:", 1
+        )[1].split("case", 1)[0]
         self.assertNotIn("refresh", ignored_scope)
         self.assertIn("case nil:", observer)
         unknown_scope = observer.split("case nil:", 1)[1]
