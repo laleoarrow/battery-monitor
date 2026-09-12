@@ -9,7 +9,9 @@
     <key>CFBundleExecutable</key>
     <string>Wattson</string>
     <key>CFBundleIconFile</key>
-    <string>AppIcon</string>
+    <string>WattsonGlass</string>
+    <key>CFBundleIconName</key>
+    <string>WattsonGlass</string>
     <key>CFBundleIdentifier</key>
     <string>com.leoarrow.wattson</string>
     <key>CFBundleInfoDictionaryVersion</key>

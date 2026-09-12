@@ -206,6 +206,31 @@ that version first to avoid duplicates. Send download links, not executable
 attachments. Do not advertise unreleased commits as a downloadable version or
 claim unmeasured accuracy, performance or energy improvements.
 
+## Visual release overview for Cody and GitHub
+
+For the next UI release, turn the visual review into an easy-to-browse,
+version-labeled gallery with Light/Dark pairs and short power-state captions.
+Include representative inline screenshots and a full-gallery link in both the
+Cody release email and GitHub release notes. Use public HTTPS image/gallery
+URLs, never local Markdown image paths. Verify the links without repository
+authentication before sending; keep screenshot assets separate from the four
+checksum-gated installer release assets unless that contract is explicitly revised.
+
+The existing `dist/adaptive-monitoring-20260912/VISUAL-REVIEW.md` contains eight
+Light/Dark state pairs from real AppKit view-owned renders with fixed fixtures,
+Reduce Transparency enabled and only the top scroll viewport visible. Preserve
+that evidence and label it honestly; it is not a full-window Liquid Glass or
+animation demonstration. After a visual change, capture the corresponding new
+build and identify its version. A Liquid Glass claim needs real composited-window
+evidence (and a brief real recording for motion), not opaque captures or AI mocks.
+If capture permission or evidence is unavailable, disclose that limitation and
+do not change system privacy settings to obtain it.
+
+Send this visual overview with the next validated UI release, not as an extra
+duplicate notification for an already-sent release. Keep download/signing guidance
+and the existing Sent-mail duplicate check. Do not overwrite old screenshots or
+published installers while preparing the new presentation.
+
 ## Local developer install
 
 ```bash

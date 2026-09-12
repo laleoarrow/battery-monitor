@@ -15,6 +15,7 @@ APP_NAME="Wattson"
 HELPER_LABEL="com.leoarrow.wattson.helper"
 BUILD_ROOT="$ROOT_DIR/.build/release"
 SWIFTPM_BUILD_DIR="$BUILD_ROOT/swiftpm"
+ICON_BUILD_DIR="$BUILD_ROOT/icon-assets"
 APP_DIR="$BUILD_ROOT/${APP_NAME}.app"
 APP_EXECUTABLE="$APP_DIR/Contents/MacOS/$APP_NAME"
 HELPER_EXECUTABLE="$BUILD_ROOT/$HELPER_LABEL"
@@ -35,6 +36,8 @@ BUILD_NUMBER="${WATTSON_BUILD_NUMBER:-$APP_VERSION}"
 
 [[ -f "$ROOT_DIR/Package.swift" ]] || fail "missing Package.swift"
 [[ -f "$ROOT_DIR/Packaging/AppInfo.plist" ]] || fail "missing Packaging/AppInfo.plist"
+[[ -f "$ROOT_DIR/design/icon/WattsonGlass.icon/icon.json" ]] \
+    || fail "missing native WattsonGlass.icon source"
 
 /bin/rm -rf -- "$BUILD_ROOT"
 /bin/mkdir -p "$BUILD_ROOT"
@@ -87,6 +90,21 @@ verify_universal_binary "$BUILT_HELPER_EXECUTABLE"
 /bin/cp "$ROOT_DIR/design/icon/AppIcon.icns" "$APP_DIR/Contents/Resources/AppIcon.icns"
 /usr/bin/sips -s format png "$ROOT_DIR/design/icon/AppIcon.icns" \
     --out "$APP_DIR/Contents/Resources/AppIconSettings.png" >/dev/null
+
+/bin/mkdir -p "$ICON_BUILD_DIR"
+/usr/bin/xcrun actool "$ROOT_DIR/design/icon/WattsonGlass.icon" \
+    --compile "$ICON_BUILD_DIR" \
+    --platform macosx --target-device mac \
+    --minimum-deployment-target "$MIN_MACOS_VERSION" \
+    --app-icon WattsonGlass --standalone-icon-behavior all \
+    --output-partial-info-plist "$ICON_BUILD_DIR/icon-info.plist" \
+    --output-format human-readable-text --warnings --notices
+/bin/cp "$ICON_BUILD_DIR/Assets.car" "$ICON_BUILD_DIR/WattsonGlass.icns" \
+    "$APP_DIR/Contents/Resources/"
+/usr/bin/sips -s format png "$ICON_BUILD_DIR/WattsonGlass.icns" \
+    --out "$APP_DIR/Contents/Resources/AppIconGlassSettings.png" >/dev/null
+# The template selects WattsonGlass for both the layered system icon and its
+# static fallback. Keep the classic resources for Settings, not a bundle rewrite.
 /usr/bin/plutil -replace CFBundleShortVersionString -string "$APP_VERSION" \
     "$APP_DIR/Contents/Info.plist"
 /usr/bin/plutil -replace CFBundleVersion -string "$BUILD_NUMBER" \

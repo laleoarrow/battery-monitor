@@ -4,6 +4,7 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "Popover" / "PopoverContentView.swift"
 SLIDER = ROOT / "Popover" / "ModeSliderView.swift"
+GLASS_MODE = ROOT / "Popover" / "NativeGlassModeControl.swift"
 STATUS = ROOT / "MenuBar" / "StatusItemController.swift"
 SYSTEM_ICON = ROOT / "Core" / "SystemBatteryIcon.swift"
 ENERGY_MODE = ROOT / "Core" / "EnergyMode.swift"
@@ -15,6 +16,7 @@ class PopoverControlsContractTests(unittest.TestCase):
     def setUpClass(cls):
         cls.content = CONTENT.read_text(encoding="utf-8")
         cls.slider = SLIDER.read_text(encoding="utf-8")
+        cls.glass_mode = GLASS_MODE.read_text(encoding="utf-8")
         cls.status = STATUS.read_text(encoding="utf-8")
         cls.system_icon = SYSTEM_ICON.read_text(encoding="utf-8")
         cls.energy_mode = ENERGY_MODE.read_text(encoding="utf-8")
@@ -106,6 +108,101 @@ class PopoverControlsContractTests(unittest.TestCase):
     def test_lifted_capsule_reserves_space_before_the_settings_button(self):
         self.assertIn("bounds.width - 46", self.content)
         self.assertIn("bounds.width - 22", self.content)
+
+    def test_optional_glass_menu_button_uses_system_style_and_restores_baseline(self):
+        footer = self.content.split("final class PopoverFooterView", 1)[1].split(
+            "\nprivate final class PopoverSurfaceView", 1
+        )[0]
+        refresh = footer.split("private func refreshDisplayOptions(reduceMotion:", 1)[1].split(
+            "\n    @objc private func systemBatteryIconChanged", 1
+        )[0]
+        glass, classic = refresh.split("        } else {", 1)
+        self.assertIn("if #available(macOS 26.0, *), Settings.usesLiquidGlass", glass)
+        # Classic Reduce Motion retains its own native segmented appearance.
+        self.assertNotIn("nativeModeControl.cell?.isBordered", footer)
+        self.assertNotIn("nativeModeControl.borderShape =", footer)
+        self.assertIn("settingsButton.bezelStyle = .glass", glass)
+        self.assertIn("settingsButton.borderShape = .circle", glass)
+        self.assertIn("settingsButton.isBordered = true", glass)
+        self.assertIn("settingsButton.contentTintColor = nil", glass)
+        self.assertIn("settingsButton.borderShape = .automatic", classic)
+        self.assertIn("settingsButton.bezelStyle = .rounded", classic)
+        self.assertIn("settingsButton.isBordered = false", classic)
+        self.assertIn("settingsButton.contentTintColor = PopoverStyle.secondaryText", classic)
+        self.assertIn("addSubview(settingsButton)", classic)
+        self.assertIn("glassControls?.isHidden = true", classic)
+        # The focused glass child and menu must retain keyboard continuity when
+        # switching the appearance, including when Reduce Motion is enabled.
+        self.assertNotIn("else { return }", refresh)
+        self.assertIn("let useGlassControl = Settings.usesLiquidGlass", refresh)
+        self.assertIn("let useNativeControl = reduceMotion && !useGlassControl", refresh)
+        self.assertIn("isDescendant(of: previousControl)", refresh)
+        self.assertIn("glassModeControl?.keyboardFocusView", refresh)
+        for capture in ("let transferFocus =", "let restoreMenuFocus ="):
+            self.assertLess(refresh.index(capture),
+                            refresh.index("glassControlsContent.addSubview(settingsButton)"))
+        self.assertIn("if transferFocus, previousControl !== nextControl {", refresh)
+        self.assertIn("window?.makeFirstResponder(focusView)", refresh)
+        self.assertIn("if restoreMenuFocus { window?.makeFirstResponder(settingsButton) }", refresh)
+
+    def test_footer_glass_operations_use_one_container_and_native_button_surfaces(self):
+        footer = self.content.split("final class PopoverFooterView", 1)[1].split(
+            "\nprivate final class PopoverSurfaceView", 1
+        )[0]
+        self.assertEqual(footer.count("NSGlassEffectContainerView(frame:"), 1)
+        self.assertNotIn("NSGlassEffectView", footer)
+        self.assertIn("if glassControls == nil {", footer)
+        self.assertIn("container.spacing = 0", footer)
+        self.assertIn("container.contentView = glassControlsContent", footer)
+        self.assertIn("let control = NativeGlassModeControl(modes: modes)", footer)
+        self.assertIn("glassControlsContent.addSubview(control)", footer)
+        self.assertIn("glassControlsContent.addSubview(settingsButton)", footer)
+        self.assertNotIn("container.addSubview", footer)
+        self.assertIn("button.setButtonType(.pushOnPushOff)", self.glass_mode)
+        self.assertIn("button.allowsMixedState = false", self.glass_mode)
+        self.assertIn("button.isBordered = true", self.glass_mode)
+        self.assertIn("button.bezelStyle = .glass", self.glass_mode)
+        self.assertIn("button.borderShape = .capsule", self.glass_mode)
+        self.assertIn("button.tintProminence = selected ? .primary : .none", self.glass_mode)
+        # Each button owns its system material, without an extra glass well or
+        # painted selection surface. Only native prominence marks selection.
+        self.assertNotIn("NSGlassEffectView", self.glass_mode)
+        self.assertNotIn("NSGlassEffectContainerView", self.glass_mode)
+        for source in (footer, self.glass_mode):
+            self.assertNotIn(".tintColor", source)
+            self.assertNotIn("backgroundColor =", source)
+            self.assertNotIn("setValue(", source)
+
+    def test_footer_glass_geometry_preserves_classic_row_and_total_height(self):
+        footer = self.content.split("final class PopoverFooterView", 1)[1].split(
+            "\nprivate final class PopoverSurfaceView", 1
+        )[0]
+        layout = footer.split("override func layout()", 1)[1].split("\n    func update(", 1)[0]
+        self.assertIn("static let preferredHeight: CGFloat = 78", footer)
+        self.assertIn("systemBatteryIconButton.frame = NSRect(x: 0, y: 10, width: 168, height: 20)", layout)
+        self.assertIn("hint.frame = NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)", layout)
+        self.assertIn("x: 0, y: 36, width: bounds.width - 46", layout)
+        self.assertIn("height: ModeSliderView.preferredHeight", layout)
+        self.assertIn("modeControl.frame = modeFrame", layout)
+        self.assertIn("nativeModeControl.frame = modeFrame", layout)
+        glass, classic = layout.split("if Settings.usesLiquidGlass {", 1)[1].split("} else {", 1)
+        self.assertIn("glassControls?.frame = NSRect(x: 0, y: 36, width: bounds.width, height: 38)", glass)
+        self.assertIn("glassControlsContent.frame = glassControls?.bounds ?? .zero", glass)
+        self.assertIn("glassModeControl?.frame = NSRect(x: 0, y: 0, width: modeFrame.width, height: 38)", glass)
+        self.assertIn("settingsButton.frame = NSRect(x: bounds.width - 38, y: 0, width: 38, height: 38)", glass)
+        self.assertIn("settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)", classic)
+        self.assertIn("static let preferredHeight: CGFloat = 38", self.glass_mode)
+        self.assertIn("private static let buttonSpacing: CGFloat = 6", self.glass_mode)
+        self.assertIn("bounds.width - CGFloat(buttons.count - 1) * Self.buttonSpacing", self.glass_mode)
+        self.assertIn("/ CGFloat(buttons.count)", self.glass_mode)
+        self.assertIn("CGFloat(index) * (width + Self.buttonSpacing)", self.glass_mode)
+        self.assertIn("y: 0, width: width, height: bounds.height", self.glass_mode)
+
+    def test_glass_interaction_isolates_preferences_before_constructing_views(self):
+        interaction = (ROOT / "tests" / "interaction" / "main.swift").read_text()
+        self.assertLess(interaction.index("Settings.configureForTest(defaults:"),
+                        interaction.index("NSApplication.shared"))
+        self.assertEqual(interaction.count("Settings.configureForTest(defaults:"), 1)
 
     def test_settings_menu_reports_the_running_bundle_version(self):
         menu = self.content.split("private func showModuleMenu", 1)[1].split(

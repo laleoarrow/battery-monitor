@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>Wattson energy curve</title>
+  <desc>The v4.0.0 energy silhouette and blue-green palette. This opaque pigment gradient contains no lighting or glass effects; Icon Composer supplies those effects.</desc>
+  <defs>
+    <linearGradient id="energy-color" gradientUnits="userSpaceOnUse" x1="240" y1="672" x2="784" y2="334">
+      <stop offset="0" stop-color="rgb(3.9%,51.8%,100%)"/>
+      <stop offset="0.32" stop-color="rgb(3.9%,51.8%,100%)"/>
+      <stop offset="0.66" stop-color="rgb(18.8%,82%,34.5%)"/>
+      <stop offset="1" stop-color="rgb(18.8%,82%,34.5%)"/>
+    </linearGradient>
+  </defs>
+  <path d="M 240 672 C 452 672 566 334 784 334" fill="none" stroke="url(#energy-color)" stroke-width="134" stroke-linecap="round"/>
+</svg>

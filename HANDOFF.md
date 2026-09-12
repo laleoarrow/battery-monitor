@@ -1,8 +1,8 @@
-# Wattson v3 handoff
+# Wattson handoff
 
 ## Release identity
 
-- Source version: `3.0.26`
+- Source version: `4.1.0`
 - Current public release: verify GitHub Releases/latest, not this source version
 - Source of truth: `VERSION`
 - App: `/Applications/Wattson.app`
@@ -15,15 +15,20 @@
 
 ## Release artifacts
 
-`scripts/release.sh 3.0.26` builds one universal app/helper pair and produces:
+`scripts/release.sh 4.1.0` builds one universal app/helper pair and produces:
 
-- `Wattson-v3.0.26-macos-universal.pkg`
-- `Wattson-v3.0.26-macos-universal.dmg`
-- `Wattson-v3.0.26-release-info.txt`
+- `Wattson-v4.1.0-macos-universal.pkg`
+- `Wattson-v4.1.0-macos-universal.dmg`
+- `Wattson-v4.1.0-release-info.txt`
 - `SHA256SUMS.txt`
 
-The DMG contains exactly one visible item: a byte-identical copy of the PKG.
-The same PKG is used for the direct download and Homebrew cask.
+The DMG contains the app and an Applications shortcut, without a helper or
+package receipt. Its app is byte-identical to the one inside the full PKG.
+The same PKG is used for the direct full-install download and Homebrew cask.
+
+The optional Liquid Glass presentation is documented in `.agent/liquid-glass.md`.
+Its preference defaults off; macOS 26 glass mode uses system Dark Aqua rather
+than an opaque custom panel. Source version alone does not establish publication.
 
 The default test-package build follows the iData community distribution model. The
 app and helper are ad-hoc signed; the PKG and DMG are not Developer ID signed

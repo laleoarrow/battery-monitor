@@ -29,6 +29,7 @@ enum Settings {
         case menuBarPercentage
         case menuBarIconStyle
         case checkForUpdatesOnLaunch
+        case liquidGlassAppearance
         case module(Module)
     }
 
@@ -38,6 +39,7 @@ enum Settings {
     private static let percentageKey = "menubar.showsPercentage"
     private static let iconStyleKey = "menubar.iconStyle"
     private static let checkForUpdatesOnLaunchKey = "updates.checkOnLaunch"
+    private static let liquidGlassKey = "appearance.liquidGlassEnabled"
 #if DEBUG
     private static var testDefaults: UserDefaults?
 #endif
@@ -87,6 +89,24 @@ enum Settings {
             defaults.set(newValue, forKey: checkForUpdatesOnLaunchKey)
             postChange(.checkForUpdatesOnLaunch)
         }
+    }
+
+    /// Opt-in presentation only. Upgrades retain the 4.0.0 appearance, including
+    /// the materials supplied by the operating system in that version.
+    static var liquidGlassEnabled: Bool {
+        get { defaults.object(forKey: liquidGlassKey) as? Bool ?? false }
+        set {
+            guard liquidGlassEnabled != newValue else { return }
+            defaults.set(newValue, forKey: liquidGlassKey)
+            postChange(.liquidGlassAppearance)
+        }
+    }
+
+    /// Keep the saved choice when moving between OS versions; never simulate
+    /// native Liquid Glass on systems that do not provide it.
+    static var usesLiquidGlass: Bool {
+        if #available(macOS 26.0, *) { return liquidGlassEnabled }
+        return false
     }
 
     /// Lands both dimensions of a complete menu-bar appearance before either

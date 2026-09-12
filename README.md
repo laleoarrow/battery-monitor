@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v400">v4.0.0 notes</a>
+  <a href="#whats-new-in-v410">v4.1.0 notes</a>
 </p>
 
 <p align="center">
@@ -41,6 +41,38 @@ where it is going, and how the picture has changed over the last two minutes.
 - A compact native Settings window for General, Menu Bar Icon, and Modules.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
+
+## What's new in v4.1.0
+
+These are source-version notes; the [Releases page](https://github.com/laleoarrow/battery-monitor/releases)
+is authoritative for available downloads.
+
+- An optional **Liquid Glass** switch in Settings applies native macOS 26
+  presentation throughout Wattson's functional UI: the main popover, mode
+  chooser, settings trigger, sidebar, switches and action buttons.
+- The mode row uses three native glass buttons and a separate round menu
+  button, without the ordinary segmented well or an extra painted glass layer.
+- Glass mode uses the system's dark appearance for a restrained near-black
+  presentation. It does not put an opaque black overlay over native materials.
+  Classic mode preserves the prior popover's system Light/Dark adaptation and
+  the classic dark Settings window. The new switch defaults off.
+- Live appearance switching retains open windows, the selected settings page,
+  keyboard focus and pending operations. It never changes the Mac's power mode
+  or requests new helper data just to change appearance.
+- Existing energy-flow artwork, power calculations, measured-only Device
+  Output and graphs are unchanged. They remain readable content rather than
+  additional glass controls. System accessibility preferences retain priority.
+- The app icon uses Apple's layered Icon Composer format with a near-black
+  background and blue-green energy curve, plus a static fallback on older
+  systems. The in-app appearance switch does not replace the Finder/Dock icon;
+  classic icon resources and the previous release remain preserved.
+- macOS 12–25 continue to use the classic presentation. This remains a
+  community distribution without paid Developer ID signing or notarization;
+  the visual update does not imply new accuracy or measured energy savings.
+
+See the [component-by-component adoption review](.agent/liquid-glass.md) for
+the implementation boundaries and Apple's guidance, and the
+[4.1.0 real-window gallery](design/releases/v4.1.0/README.md) for visual examples.
 
 ## What's new in v4.0.0
 

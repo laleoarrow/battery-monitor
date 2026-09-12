@@ -55,6 +55,8 @@ class SettingsStoreContractTests(unittest.TestCase):
                    "icon styles must remain strongly typed and ordered")
             expect(Settings.checksForUpdatesOnLaunch,
                    "launch update checking must default on")
+            expect(!Settings.liquidGlassEnabled && !Settings.usesLiquidGlass,
+                   "upgrades must retain the classic appearance until opted in")
             expect((defaults.persistentDomain(forName: suiteName) ?? [:]).isEmpty,
                    "reading defaults must not persist preferences")
 
@@ -154,6 +156,28 @@ class SettingsStoreContractTests(unittest.TestCase):
 
             changes.removeAll()
 
+            Settings.liquidGlassEnabled = false
+            expect(changes.isEmpty, "an unchanged appearance must not notify")
+            Settings.liquidGlassEnabled = true
+            expect(changes == [.liquidGlassAppearance],
+                   "appearance change must emit exactly one typed notification")
+            expect(defaults.object(forKey: "appearance.liquidGlassEnabled") as? Bool == true,
+                   "appearance opt-in must be persisted before notification")
+            if #available(macOS 26.0, *) {
+                expect(Settings.usesLiquidGlass, "supported systems honor the opt-in")
+            } else {
+                expect(!Settings.usesLiquidGlass, "older systems keep the classic appearance")
+            }
+            Settings.liquidGlassEnabled = true
+            expect(changes == [.liquidGlassAppearance],
+                   "repeating the appearance must not notify")
+            Settings.liquidGlassEnabled = false
+            expect(changes == [.liquidGlassAppearance, .liquidGlassAppearance]
+                       && !Settings.usesLiquidGlass,
+                   "turning off immediately restores classic appearance")
+            Settings.liquidGlassEnabled = true
+            changes.removeAll()
+
             Settings.setModule(.flow, visible: true)
             expect(changes.isEmpty,
                    "an unchanged module must not notify")
@@ -175,6 +199,13 @@ class SettingsStoreContractTests(unittest.TestCase):
             Settings.configureForTest(defaults: secondDefaults)
             expect(Settings.showsMenuBarPercentage && Settings.isModuleVisible(.flow),
                    "a fresh suite must retain its own default values")
+            expect(!Settings.liquidGlassEnabled, "fresh suites must not inherit the opt-in")
+            secondDefaults.set(true, forKey: "appearance.liquidGlassEnabled")
+            expect(Settings.liquidGlassEnabled, "appearance reads external writes immediately")
+            secondDefaults.removeObject(forKey: "appearance.liquidGlassEnabled")
+            expect(!Settings.liquidGlassEnabled, "removing opt-in restores classic default")
+            secondDefaults.set(["invalid"], forKey: "appearance.liquidGlassEnabled")
+            expect(!Settings.liquidGlassEnabled, "invalid appearance values fail to classic")
             secondDefaults.set(false, forKey: "menubar.showsPercentage")
             expect(!Settings.showsMenuBarPercentage,
                    "external preference changes must remain immediately visible")
@@ -200,6 +231,8 @@ class SettingsStoreContractTests(unittest.TestCase):
             expect(!Settings.showsMenuBarPercentage && !Settings.checksForUpdatesOnLaunch
                        && !Settings.isModuleVisible(.flow),
                    "reopening the original suite must preserve its saved choices")
+            expect(Settings.liquidGlassEnabled,
+                   "reopening the original suite must preserve the appearance opt-in")
             '''
         )
 

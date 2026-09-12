@@ -276,6 +276,21 @@ class SettingsWindowContractTests(unittest.TestCase):
             )
 
             let first = controller.windowForTest
+            let glassSwitch = view("settings.appearance.liquid-glass", in: first) as! NSSwitch
+            let keyLoopEnd: NSView = glassSwitch.isEnabled ? glassSwitch : controller.sidebarForTest
+            require(glassSwitch.state == .off && !Settings.liquidGlassEnabled,
+                "global Liquid Glass defaults off")
+            require(glassSwitch.accessibilityLabel() == "Global Liquid Glass",
+                "appearance switch has an accessible purpose")
+            require(glassSwitch.nextKeyView === controller.sidebarForTest,
+                "appearance switch returns keyboard navigation to sidebar")
+            if #available(macOS 26, *) {
+                require(glassSwitch.isEnabled, "native Liquid Glass is selectable on macOS 26")
+            } else {
+                require(!glassSwitch.isEnabled, "unsupported OS cannot enable native Liquid Glass")
+                require(glassSwitch.accessibilityHelp()?.contains("Requires macOS 26") == true,
+                    "unsupported OS explains the compatibility boundary")
+            }
             require(first?.isVisible == false, "ordinary contract does not show a window")
             require(first?.isReleasedWhenClosed == false, "retained")
             require(first?.isRestorable == false, "not visibility-restored")
@@ -432,7 +447,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let update = button("Check for Updates", in: first)
             let automaticUpdates = button("Check for Updates on Launch", in: first)
             require(controller.sidebarNextKeyViewForTest === login, "Tab enters first General switch")
-            require(controller.lastVisibleSwitchNextKeyViewForTest === controller.sidebarForTest, "General key loop returns to sidebar")
+            require(controller.lastVisibleSwitchNextKeyViewForTest === keyLoopEnd, "General key loop includes appearance option")
             require(login.accessibilityLabel() == "Launch at Login", "login accessibility label")
             require(battery.accessibilityLabel() == "Hide System Battery Icon", "battery accessibility label")
             require(
@@ -502,7 +517,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(login.nextKeyView === battery, "login tabs to battery")
             require(battery.nextKeyView === update, "battery tabs to manual update")
             require(update.nextKeyView === automaticUpdates, "manual update tabs to automatic update")
-            require(automaticUpdates.nextKeyView === controller.sidebarForTest,
+            require(automaticUpdates.nextKeyView === keyLoopEnd,
                     "automatic update returns to sidebar")
 
             require(automaticUpdates.state == .on && automaticUpdates.isEnabled,
@@ -949,7 +964,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(wattsonIconOnly.nextKeyView === wattsonWithPercentage, "Tab reaches preset two")
             require(wattsonWithPercentage.nextKeyView === macOSIconOnly, "Tab reaches preset three")
             require(macOSIconOnly.nextKeyView === macOSWithPercentage, "Tab reaches preset four")
-            require(macOSWithPercentage.nextKeyView === controller.sidebarForTest, "icon Tab loop returns to sidebar")
+            require(macOSWithPercentage.nextKeyView === keyLoopEnd, "icon Tab loop includes appearance option")
 
             macOSWithPercentage.accessibilityPerformPress()
             require(
@@ -1137,7 +1152,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             }
             let flow = button(Settings.Module.flow.title, in: first)
             require(controller.sidebarNextKeyViewForTest === flow, "Tab enters first Modules switch")
-            require(controller.lastVisibleSwitchNextKeyViewForTest === controller.sidebarForTest, "Modules key loop returns to sidebar")
+            require(controller.lastVisibleSwitchNextKeyViewForTest === keyLoopEnd, "Modules key loop includes appearance option")
             flow.performClick(nil)
             require(!Settings.isModuleVisible(.flow), "module writes through shared Settings store")
             Settings.setModule(.flow, visible: true)
@@ -1289,6 +1304,162 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(stableWindow === controller.windowForTest, "switches keep one window")
             require(stableSectionViews == controller.sectionViewIdentitiesForTest, "switches reuse section views")
 
+            if #available(macOS 26, *) {
+                controller.selectSectionForTest(identifier: "general")
+                let oldIcon = (identityTile as! NSImageView).image
+                let oldLogin = login.state
+                let oldBattery = battery.state
+                let loginReads = fixture.loginReads.count
+                let batteryReads = fixture.batteryReads.count
+                let loginWrites = fixture.loginWrites.count
+                let batteryWrites = fixture.batteryWrites.count
+                let updateChecks = fixture.updateChecks.count
+                let originalUpdatePreference = Settings.checksForUpdatesOnLaunch
+                window.makeFirstResponder(automaticUpdates)
+                Settings.liquidGlassEnabled = true
+                require(first?.appearance?.name == .darkAqua, "glass preserves the requested dark appearance")
+                require(controller.sidebarForTest.selectionHighlightStyle == .regular,
+                    "glass sidebar uses system selection")
+                let switches = descendants(ofType: NSSwitch.self, in: content).filter { !$0.isHidden }
+                require(switches.count == 4, "General exposes three native switches and one global switch")
+                let nativeLogin = switches.first { $0.accessibilityLabel() == "Launch at Login" }!
+                let nativeUpdates = switches.first { $0.accessibilityLabel() == "Check for Updates on Launch" }!
+                require(window.firstResponder === nativeUpdates,
+                    "focused baseline switch transfers focus to the same native control")
+                require(controller.sidebarNextKeyViewForTest === nativeLogin,
+                    "glass keyboard loop reaches the native switch")
+                require(!login.isAccessibilityElement() && nativeLogin.isAccessibilityElement(),
+                    "native switch has one accessible control, not a duplicate wrapper")
+                require(nativeLogin.state == (oldLogin == .on ? .on : .off)
+                    && nativeLogin.isEnabled == (login.isEnabled && oldLogin != .mixed),
+                    "glass retains authoritative toggle state")
+                require(nativeLogin.accessibilityHelp() == login.accessibilityHelp(),
+                    "native switch keeps current help and recovery details")
+                require(update.bezelStyle == .glass, "primary action uses the native glass bezel")
+                let heading = descendants(ofType: NSTextField.self, in: content)
+                    .first { $0.stringValue == "General" && $0.font?.pointSize == 22 }!
+                for appearanceName in [NSAppearance.Name.aqua, .darkAqua] {
+                    NSAppearance(named: appearanceName)!.performAsCurrentDrawingAppearance {
+                        require(srgbHex(heading.textColor) == srgbHex(.labelColor),
+                            "glass content uses semantic text in both system appearances")
+                    }
+                }
+                require(stableWindow === controller.windowForTest
+                    && stableSectionViews == controller.sectionViewIdentitiesForTest,
+                    "appearance toggle does not rebuild the window or sections")
+                require(controller.visibleSectionIdentifierForTest == "general",
+                    "appearance toggle preserves the selected page")
+                require(fixture.loginReads.count == loginReads
+                    && fixture.batteryReads.count == batteryReads
+                    && fixture.loginWrites.count == loginWrites
+                    && fixture.batteryWrites.count == batteryWrites
+                    && fixture.updateChecks.count == updateChecks,
+                    "appearance toggle performs no helper or update request")
+                nativeUpdates.state = originalUpdatePreference ? .off : .on
+                nativeUpdates.sendAction(nativeUpdates.action!, to: nativeUpdates.target)
+                require(Settings.checksForUpdatesOnLaunch != originalUpdatePreference,
+                    "native switch routes the existing settings action")
+                Settings.checksForUpdatesOnLaunch = originalUpdatePreference
+                Settings.liquidGlassEnabled = false
+                require(first?.appearance?.name == .darkAqua, "off restores baseline dark window")
+                require(update.bezelStyle == .rounded, "off restores baseline primary bezel")
+                require(controller.sidebarForTest.selectionHighlightStyle == .none,
+                    "off restores baseline custom sidebar selection")
+                require(login.isAccessibilityElement() && nativeLogin.isHidden,
+                    "off restores the baseline switch and removes duplicate native accessibility")
+                require(window.firstResponder === automaticUpdates,
+                    "disabling glass restores focus to the same baseline control")
+                require(login.state == oldLogin && battery.state == oldBattery,
+                    "round trip preserves authoritative control state")
+                require((identityTile as! NSImageView).image?.tiffRepresentation == oldIcon?.tiffRepresentation,
+                    "off restores the baseline in-app icon")
+                require(srgbHex(controller.dividerColorForTest) == 0x363838,
+                    "off restores exact baseline palette")
+                let root = view("settings.root", in: window)
+                for enabled in [false, true, false] {
+                    Settings.liquidGlassEnabled = enabled
+                    window.appearance = NSAppearance(named: .darkAqua)
+                    root.updateLayer()
+                    let expected = enabled
+                        ? srgbHex(.windowBackgroundColor) : UInt32(0x151618)
+                    NSAppearance(named: .darkAqua)!.performAsCurrentDrawingAppearance {
+                        require(srgbHex(root.layer?.backgroundColor.flatMap(NSColor.init(cgColor:)))
+                            == (enabled ? srgbHex(.windowBackgroundColor) : expected),
+                            "same-appearance off/on/off resolves the correct CGColor")
+                    }
+                }
+                Settings.liquidGlassEnabled = true
+                let glassFixture = FixtureState()
+                let glassController = SettingsWindowController(
+                    dependencies: .fixture(glassFixture, batteryNotification: batteryNotification),
+                    frameAutosaveName: nil
+                )
+                let glassWindow = glassController.windowForTest!
+                let glassControls = descendants(ofType: NSSwitch.self, in: glassWindow.contentView!)
+                let initialNativeLogin = glassControls
+                    .first { $0.accessibilityLabel() == "Launch at Login" }!
+                require(glassWindow.appearance?.name == .darkAqua && !glassWindow.isVisible,
+                    "glass-on initialization uses dark appearance without showing a window")
+                require(glassController.sidebarNextKeyViewForTest === initialNativeLogin,
+                    "glass-on initialization immediately has the native key loop")
+                let nativeAutomaticUpdates = glassControls
+                    .first { $0.accessibilityLabel() == "Check for Updates on Launch" }!
+                let globalAppearance = glassControls
+                    .first { $0.accessibilityLabel() == "Global Liquid Glass" }!
+                let recoveryButton = descendants(ofType: NSButton.self, in: glassWindow.contentView!)
+                    .first { $0.accessibilityIdentifier() == "settings.general.controls-recovery.button" }!
+                require(nativeAutomaticUpdates.nextKeyView === globalAppearance,
+                    "native key loop initially bypasses hidden recovery")
+                let nativeBattery = glassControls
+                    .first { $0.accessibilityLabel() == "Hide System Battery Icon" }!
+                glassController.refreshSectionsForTest()
+                for nativeUnknown in [initialNativeLogin, nativeBattery] {
+                    require(nativeUnknown.state == .off && !nativeUnknown.isEnabled,
+                        "checking state never becomes an on NSSwitch")
+                    require(nativeUnknown.accessibilityValueDescription() == "Unknown"
+                        && nativeUnknown.accessibilityHelp()?.contains("Checking") == true,
+                        "disabled checking switch explains unknown state to accessibility")
+                    nativeUnknown.sendAction(nativeUnknown.action!, to: nativeUnknown.target)
+                }
+                require(glassFixture.loginWrites.isEmpty && glassFixture.batteryWrites.isEmpty,
+                    "unknown controls cannot submit a setting change")
+                glassFixture.loginReads.removeFirst()(.readFailed)
+                glassFixture.batteryReads.removeFirst()(nil)
+                for nativeUnknown in [initialNativeLogin, nativeBattery] {
+                    require(nativeUnknown.state == .off && !nativeUnknown.isEnabled,
+                        "failed helper read never shows the setting as on")
+                    require(nativeUnknown.accessibilityValueDescription() == "Unknown"
+                        && nativeUnknown.accessibilityHelp()?.contains("Status unavailable") == true,
+                        "failed helper read remains explicit in accessibility")
+                }
+                require(nativeAutomaticUpdates.nextKeyView === recoveryButton
+                    && recoveryButton.nextKeyView === globalAppearance,
+                    "async helper failure adds Repair Controls to the active native key loop")
+                glassFixture.helperAvailable = false
+                glassController.refreshSectionsForTest()
+                glassFixture.loginReads.removeFirst()(.unavailable)
+                glassFixture.batteryReads.removeFirst()(nil)
+                require(initialNativeLogin.state == .off && nativeBattery.state == .off
+                    && initialNativeLogin.accessibilityHelp()?.contains("Full installer required") == true,
+                    "unavailable helper does not masquerade as enabled settings")
+                require(recoveryButton.title == "Enable Controls…"
+                    && nativeAutomaticUpdates.nextKeyView === recoveryButton,
+                    "missing helper retains the reachable Enable Controls action")
+                glassFixture.helperAvailable = true
+                glassController.refreshSectionsForTest()
+                glassFixture.loginReads.removeFirst()(.enabled)
+                glassFixture.batteryReads.removeFirst()(false)
+                require(initialNativeLogin.state == .on && initialNativeLogin.isEnabled
+                    && nativeBattery.state == .off && nativeBattery.isEnabled,
+                    "authoritative recovery restores true binary native state")
+                require(initialNativeLogin.accessibilityValueDescription() != "Unknown",
+                    "authoritative recovery clears the unknown accessibility description")
+                require(nativeAutomaticUpdates.nextKeyView === globalAppearance
+                    && recoveryButton.nextKeyView == nil,
+                    "async helper recovery removes the hidden action without breaking the native key loop")
+                Settings.liquidGlassEnabled = false
+            }
+
             // A repeated refresh starts a newer read. Its result wins even if
             // an older fixture completion arrives afterward.
             controller.refreshSectionsForTest()
@@ -1296,6 +1467,13 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(fixture.loginReads.count == 2, "repeated refreshes reuse the window")
             let olderLoginRead = fixture.loginReads.removeFirst()
             let newerLoginRead = fixture.loginReads.removeFirst()
+            if #available(macOS 26, *) {
+                Settings.liquidGlassEnabled = true
+                require(!login.isEnabled, "theme switch preserves in-flight disabled control")
+                require(fixture.loginReads.isEmpty, "theme does not start another login read")
+                Settings.liquidGlassEnabled = false
+                require(!login.isEnabled, "theme round trip keeps operation in flight")
+            }
             newerLoginRead(.notRegistered)
             olderLoginRead(.enabled)
             require(login.state == .off && login.isEnabled, "stale login refresh ignored")
@@ -1528,6 +1706,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 [
                     "xcrun",
                     "swiftc",
+                    "-warnings-as-errors",
                     "-D",
                     "DEBUG",
                     "-framework",
@@ -1598,6 +1777,44 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast", source)
         self.assertIn("NSWorkspace.accessibilityDisplayOptionsDidChangeNotification", source)
         self.assertIn("NSWorkspace.shared.notificationCenter", source)
+
+    def test_liquid_glass_is_an_appearance_only_native_opt_in(self):
+        source = WINDOW.read_text(encoding="utf-8")
+        appearance_refresh = source.split(
+            "private func refreshLiquidGlassAppearance()", 1
+        )[1].split("@objc private func toggleLiquidGlass", 1)[0]
+        self.assertNotIn("refreshSections()", appearance_refresh)
+        self.assertNotIn(".refresh()", appearance_refresh)
+        self.assertNotIn("configureContent()", appearance_refresh)
+        self.assertNotIn("showSection(", appearance_refresh)
+        self.assertIn("Settings.liquidGlassEnabled", source)
+        self.assertIn("Settings.usesLiquidGlass", source)
+        self.assertIn("let nativeSwitch = NSSwitch()", source)
+        self.assertIn("sidebarMaterial.material = .sidebar", source)
+        self.assertIn(".followsWindowActiveState", source)
+        self.assertIn("enabled ? .glass : .rounded", source)
+        self.assertIn('forResource: "AppIconGlassSettings"', source)
+        self.assertNotIn("NSGlassEffectView", source)
+        self.assertIn("static let generalListHeight: CGFloat = 272", source)
+
+    def test_glass_selected_icon_indicator_uses_contrasting_foreground_only(self):
+        source = WINDOW.read_text(encoding="utf-8")
+        card = source.split("private final class MenuBarIconCardButton", 1)[1].split(
+            "private final class MenuBarIconSettingsSectionController", 1
+        )[0]
+        radio = card.split("let radio = NSBezierPath(ovalIn: radioRect)", 1)[1].split(
+            "if window?.firstResponder === self", 1
+        )[0]
+        self.assertIn(
+            "let radioColor = state == .on && Settings.usesLiquidGlass\n"
+            "            ? NSColor.selectedControlTextColor : cardBorderColor",
+            radio,
+        )
+        self.assertIn("radioColor.setStroke()", radio)
+        self.assertIn("radioColor.setFill()", radio)
+        self.assertIn("if state == .on {", radio)
+        self.assertIn("cardBorderColor.setStroke()\n        card.lineWidth", card)
+        self.assertEqual(source.count("NSColor.selectedControlTextColor"), 1)
 
     def test_default_sections_use_only_existing_settings(self):
         source = WINDOW.read_text(encoding="utf-8")

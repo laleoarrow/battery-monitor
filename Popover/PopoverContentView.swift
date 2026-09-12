@@ -96,8 +96,8 @@ private final class PopoverButton: NSButton {
 
 /// Three-position mode control and system-battery visibility choice.
 ///
-/// The tactile 2A slider remains the normal presentation. macOS Reduce Motion
-/// swaps it for a standard 2C segmented control without adding a saved setting.
+/// The tactile 2A slider remains the baseline presentation. Classic Reduce
+/// Motion uses native segments; Liquid Glass uses native glass buttons.
 final class PopoverFooterView: PopoverSection {
     static let preferredHeight: CGFloat = 78
 
@@ -105,11 +105,13 @@ final class PopoverFooterView: PopoverSection {
         let selected: EnergyMode
         let enabledModes: [EnergyMode]
         let tint: NSColor
+        let busy: Bool
 
-        func matches(selected: EnergyMode, enabledModes: [EnergyMode], tint: NSColor) -> Bool {
+        func matches(selected: EnergyMode, enabledModes: [EnergyMode], tint: NSColor, busy: Bool) -> Bool {
             self.selected == selected
                 && self.enabledModes == enabledModes
                 && self.tint.isEqual(tint)
+                && self.busy == busy
         }
     }
 
@@ -126,7 +128,7 @@ final class PopoverFooterView: PopoverSection {
 
     private let modes: [EnergyMode] = [.auto, .low, .high]
     private lazy var modeControl = ModeSliderView(modes: modes)
-    private lazy var reducedMotionModeControl = NativeModeSegmentedControl(modes: modes)
+    private lazy var nativeModeControl = NativeModeSegmentedControl(modes: modes)
     private lazy var systemBatteryIconButton = PopoverButton(
         checkboxWithTitle: "Hide System Battery Icon",
         target: self,
@@ -134,6 +136,9 @@ final class PopoverFooterView: PopoverSection {
     )
     private let hint = NSTextField(labelWithString: "Right-click to switch modes")
     private let settingsButton = PopoverButton()
+    private var glassControls: NSView?
+    private var glassModeControl: NativeGlassModeControl?
+    private let glassControlsContent = NSView()
 
     private var selected: EnergyMode = .auto
     private var pendingMode: EnergyMode?
@@ -144,8 +149,9 @@ final class PopoverFooterView: PopoverSection {
     private var systemBatteryIconHidden: Bool?
     private var helperInstalled = false
     private var systemBatteryIconUpdateInFlight = false
-    private var reducesMotion = false
+    private var usesNativeModeControl = false
     private var displayOptionsObserver: NSObjectProtocol?
+    private var settingsObserver: NSObjectProtocol?
     var onSelect: ((EnergyMode, @escaping (EnergyMode?) -> Void) -> Void)?
     var onSystemBatteryIconToggle: ((Bool, @escaping (Bool) -> Void) -> Void)?
     var onShowMenu: ((NSButton) -> Void)?
@@ -162,18 +168,10 @@ final class PopoverFooterView: PopoverSection {
         }
         addSubview(modeControl)
 
-        reducedMotionModeControl.onSelect = { [weak self] mode in
+        nativeModeControl.onSelect = { [weak self] mode in
             self?.requestModeSelection(mode)
         }
-        addSubview(reducedMotionModeControl)
-        refreshDisplayOptions(reduceMotion: Self.systemReducesMotion)
-        displayOptionsObserver = NSWorkspace.shared.notificationCenter.addObserver(
-            forName: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
-            object: NSWorkspace.shared,
-            queue: .main
-        ) { [weak self] _ in
-            self?.refreshDisplayOptions()
-        }
+        addSubview(nativeModeControl)
 
         systemBatteryIconButton.controlSize = .small
         systemBatteryIconButton.font = .systemFont(ofSize: 11, weight: .regular)
@@ -192,6 +190,25 @@ final class PopoverFooterView: PopoverSection {
         settingsButton.target = self
         settingsButton.action = #selector(showMenu)
         addSubview(settingsButton)
+
+        refreshDisplayOptions()
+        displayOptionsObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+            object: NSWorkspace.shared,
+            queue: .main
+        ) { [weak self] _ in
+            self?.refreshDisplayOptions()
+        }
+        settingsObserver = NotificationCenter.default.addObserver(
+            forName: Settings.didChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            guard let change = notification.userInfo?[Settings.changeUserInfoKey]
+                    as? Settings.Change,
+                  case .liquidGlassAppearance = change else { return }
+            self?.refreshDisplayOptions()
+        }
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -199,6 +216,9 @@ final class PopoverFooterView: PopoverSection {
     deinit {
         if let displayOptionsObserver {
             NSWorkspace.shared.notificationCenter.removeObserver(displayOptionsObserver)
+        }
+        if let settingsObserver {
+            NotificationCenter.default.removeObserver(settingsObserver)
         }
     }
 
@@ -209,8 +229,17 @@ final class PopoverFooterView: PopoverSection {
         let modeFrame = NSRect(x: 0, y: 36, width: bounds.width - 46,
                                height: ModeSliderView.preferredHeight)
         modeControl.frame = modeFrame
-        reducedMotionModeControl.frame = modeFrame
-        settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
+        nativeModeControl.frame = modeFrame
+        if Settings.usesLiquidGlass {
+            // Each button owns its glass. A single container batches the row
+            // without adding an opaque segmented well or another glass layer.
+            glassControls?.frame = NSRect(x: 0, y: 36, width: bounds.width, height: 38)
+            glassControlsContent.frame = glassControls?.bounds ?? .zero
+            glassModeControl?.frame = NSRect(x: 0, y: 0, width: modeFrame.width, height: 38)
+            settingsButton.frame = NSRect(x: bounds.width - 38, y: 0, width: 38, height: 38)
+        } else {
+            settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
+        }
     }
 
     func update(mode: EnergyMode, helperInstalled: Bool, systemBatteryIconHidden: Bool?,
@@ -305,7 +334,8 @@ final class PopoverFooterView: PopoverSection {
         if synchronizedModePresentation?.matches(
             selected: displayedMode,
             enabledModes: enabledModes,
-            tint: currentTint
+            tint: currentTint,
+            busy: pendingMode != nil
         ) == true {
             return
         }
@@ -314,11 +344,14 @@ final class PopoverFooterView: PopoverSection {
             enabledModes: enabledModes,
             tint: currentTint
         )
-        reducedMotionModeControl.update(selected: displayedMode, enabledModes: enabledModes)
+        nativeModeControl.update(selected: displayedMode, enabledModes: enabledModes)
+        glassModeControl?.update(selected: displayedMode,
+                                 enabledModes: pendingMode == nil ? enabledModes : [])
         synchronizedModePresentation = ModeControlPresentation(
             selected: displayedMode,
             enabledModes: enabledModes,
-            tint: currentTint
+            tint: currentTint,
+            busy: pendingMode != nil
         )
     }
 
@@ -327,17 +360,62 @@ final class PopoverFooterView: PopoverSection {
     }
 
     private func refreshDisplayOptions(reduceMotion: Bool) {
-        guard reduceMotion != reducesMotion
-                || modeControl.isHidden != reduceMotion
-                || reducedMotionModeControl.isHidden == reduceMotion else { return }
-        let previousControl: NSView = reducesMotion ? reducedMotionModeControl : modeControl
-        let nextControl: NSView = reduceMotion ? reducedMotionModeControl : modeControl
+        let previousControl: NSView = glassControls?.isHidden == false
+            ? (glassModeControl ?? modeControl)
+            : (usesNativeModeControl ? nativeModeControl : modeControl)
         let transferFocus = window?.firstResponder === previousControl
-        reducesMotion = reduceMotion
-        modeControl.isHidden = reduceMotion
-        reducedMotionModeControl.isHidden = !reduceMotion
-        if transferFocus { window?.makeFirstResponder(nextControl) }
+            || (window?.firstResponder as? NSView)?.isDescendant(of: previousControl) == true
+        let restoreMenuFocus = window?.firstResponder === settingsButton
+        if #available(macOS 26.0, *), Settings.usesLiquidGlass {
+            if glassControls == nil {
+                let container = NSGlassEffectContainerView(frame: .zero)
+                container.spacing = 0
+                container.contentView = glassControlsContent
+                addSubview(container)
+                glassControls = container
+
+                let control = NativeGlassModeControl(modes: modes)
+                control.onSelect = { [weak self] mode in self?.requestModeSelection(mode) }
+                control.update(selected: pendingMode ?? selected,
+                               enabledModes: pendingMode == nil ? enabledModes : [])
+                glassControlsContent.addSubview(control)
+                glassModeControl = control
+            }
+            if settingsButton.superview !== glassControlsContent {
+                glassControlsContent.addSubview(settingsButton)
+            }
+            glassControls?.isHidden = false
+            settingsButton.bezelStyle = .glass
+            settingsButton.borderShape = .circle
+            settingsButton.isBordered = true
+            settingsButton.contentTintColor = nil
+        } else {
+            if settingsButton.superview !== self {
+                addSubview(settingsButton)
+            }
+            glassControls?.isHidden = true
+            if #available(macOS 26.0, *) {
+                settingsButton.borderShape = .automatic
+            }
+            settingsButton.bezelStyle = .rounded
+            settingsButton.isBordered = false
+            settingsButton.contentTintColor = PopoverStyle.secondaryText
+        }
         needsLayout = true
+
+        let useGlassControl = Settings.usesLiquidGlass
+        let useNativeControl = reduceMotion && !useGlassControl
+        let nextControl: NSView = useGlassControl
+            ? (glassModeControl ?? modeControl)
+            : (useNativeControl ? nativeModeControl : modeControl)
+        usesNativeModeControl = useNativeControl
+        modeControl.isHidden = useNativeControl || useGlassControl
+        nativeModeControl.isHidden = !useNativeControl
+        if transferFocus, previousControl !== nextControl {
+            let focusView = useGlassControl ? (glassModeControl?.keyboardFocusView ?? nextControl) : nextControl
+            window?.makeFirstResponder(focusView)
+        }
+        if restoreMenuFocus { window?.makeFirstResponder(settingsButton) }
     }
 
     @objc private func systemBatteryIconChanged(_ sender: NSButton) {

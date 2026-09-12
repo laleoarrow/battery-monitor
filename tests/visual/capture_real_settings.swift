@@ -7,12 +7,13 @@ import Foundation
 /// Build with `-D DEBUG` so the harness can select each retained settings page.
 /// The retained window is never ordered front or made key; AppKit renders its
 /// real frame hierarchy into a bitmap cache without interrupting the active
-/// desktop. Pass a section identifier and one output PNG path.
+/// desktop. Pass a section, output PNG path, and optional appearance choices.
+/// A view-cache image verifies layout, not WindowServer-composited Liquid Glass.
 @main
 private enum CaptureRealSettings {
     static func main() {
-        guard CommandLine.arguments.count == 3 else {
-            fputs("usage: capture_real_settings general|menu-bar-icon|modules OUTPUT.png\n", stderr)
+        guard (3...5).contains(CommandLine.arguments.count) else {
+            fputs("usage: capture_real_settings general|menu-bar-icon|modules OUTPUT.png [classic|glass] [light|dark]\n", stderr)
             exit(2)
         }
         let section = CommandLine.arguments[1]
@@ -24,6 +25,13 @@ private enum CaptureRealSettings {
         let app = NSApplication.shared
         app.setActivationPolicy(.accessory)
         app.finishLaunching()
+        let theme = CommandLine.arguments.count > 3 ? CommandLine.arguments[3] : "classic"
+        let appearance = CommandLine.arguments.count > 4 ? CommandLine.arguments[4] : "dark"
+        guard ["classic", "glass"].contains(theme), ["light", "dark"].contains(appearance) else {
+            fputs("invalid theme or appearance\n", stderr)
+            exit(2)
+        }
+        app.appearance = NSAppearance(named: appearance == "light" ? .aqua : .darkAqua)
 
         let suiteName = "Wattson.SettingsCapture.\(UUID().uuidString)"
         guard let defaults = UserDefaults(suiteName: suiteName) else {
@@ -32,12 +40,15 @@ private enum CaptureRealSettings {
         }
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)
+        Settings.liquidGlassEnabled = theme == "glass"
         defer {
             Settings.resetTestConfiguration()
             defaults.removePersistentDomain(forName: suiteName)
         }
 
         let fixtureNotification = Notification.Name("Wattson.SettingsCapture.Battery")
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+            ?? "Development Build"
         let dependencies = SettingsWindowDependencies(
             loginItemState: { .enabled },
             refreshLoginItem: { $0(.enabled) },
@@ -49,8 +60,8 @@ private enum CaptureRealSettings {
             refreshSystemBatteryIcon: { $0(false) },
             setSystemBatteryIconHidden: { _, completion in completion(true) },
             systemBatteryIconDidChange: fixtureNotification,
-            currentVersion: { "3.0.17" },
-            checkForUpdates: { $0(.success(.upToDate(currentVersion: "3.0.17"))) },
+            currentVersion: { version },
+            checkForUpdates: { $0(.success(.upToDate(currentVersion: version))) },
             openUpdateURL: { _ in true },
             increaseContrast: { false },
             announceAccessibility: { _ in }
@@ -79,6 +90,7 @@ private enum CaptureRealSettings {
             exit(2)
         }
         window.close()
+        print("Settings layout capture: theme=\(theme) appearance=\(appearance) glassEffective=\(Settings.usesLiquidGlass) compositedGlassEvidence=false")
     }
 
     private static func capture(

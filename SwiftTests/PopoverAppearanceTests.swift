@@ -3,6 +3,81 @@ import XCTest
 @testable import Wattson
 
 final class PopoverAppearanceTests: XCTestCase {
+    func testGlassUsesDarkSystemPopoverAndRestoresClassicWithoutRebuilding() throws {
+        _ = NSApplication.shared
+        let suite = "Wattson.PopoverAppearance.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        Settings.configureForTest(defaults: defaults)
+        defer {
+            Settings.resetTestConfiguration()
+            defaults.removePersistentDomain(forName: suite)
+        }
+        let controller = PopoverController()
+        let root = try XCTUnwrap(controller.contentViewForTest)
+        let frame = root.frame
+        let window = controller.contentWindowForTest
+        var modeRequests = 0
+        var batteryRequests = 0
+        controller.setModeSelectHandler { _, _ in modeRequests += 1 }
+        controller.setSystemBatteryIconToggleHandler { _, _ in batteryRequests += 1 }
+        controller.update(snapshot: PowerSnapshot(percent: 72, plugged: true,
+            adapterW: 60, batteryW: 20, systemW: 40), history: [32, 40], peak: 40,
+            degraded: false)
+        XCTAssertNil(controller.popoverAppearanceForTest)
+        for enabled in [true, false, true, false] {
+            Settings.liquidGlassEnabled = enabled
+            if #available(macOS 26, *), enabled {
+                XCTAssertEqual(controller.popoverAppearanceForTest?.name, .darkAqua)
+            } else {
+                XCTAssertNil(controller.popoverAppearanceForTest)
+            }
+            XCTAssertTrue(controller.contentViewForTest === root)
+            XCTAssertTrue(controller.contentWindowForTest === window)
+            XCTAssertEqual(root.frame, frame)
+            XCTAssertEqual(controller.cachedPercentForTest, 72)
+            XCTAssertFalse(controller.isOpen)
+            XCTAssertFalse(controller.isShownForTest)
+            XCTAssertFalse(controller.isWatchingOutsideClicks)
+            XCTAssertEqual(controller.contentRenderCountForTest, 0)
+            XCTAssertEqual(modeRequests, 0)
+            XCTAssertEqual(batteryRequests, 0)
+        }
+        Settings.liquidGlassEnabled = true
+        let existingAppearance = controller.popoverAppearanceForTest
+        Settings.showsMenuBarPercentage.toggle()
+        XCTAssertTrue(controller.popoverAppearanceForTest === existingAppearance)
+        XCTAssertTrue(controller.contentViewForTest === root)
+        XCTAssertEqual(modeRequests + batteryRequests, 0)
+    }
+
+    func testGlassPopoverInitialAppearanceAndObserverLifetime() throws {
+        _ = NSApplication.shared
+        let suite = "Wattson.PopoverAppearanceLifetime.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        Settings.configureForTest(defaults: defaults)
+        defer {
+            Settings.resetTestConfiguration()
+            defaults.removePersistentDomain(forName: suite)
+        }
+        Settings.liquidGlassEnabled = true
+        weak var releasedController: PopoverController?
+        autoreleasepool {
+            let controller = PopoverController()
+            releasedController = controller
+            if #available(macOS 26, *) {
+                XCTAssertEqual(controller.popoverAppearanceForTest?.name, .darkAqua)
+            } else {
+                XCTAssertNil(controller.popoverAppearanceForTest)
+                XCTAssertFalse(Settings.usesLiquidGlass)
+            }
+            XCTAssertFalse(controller.isOpen)
+        }
+        XCTAssertNil(releasedController)
+        Settings.liquidGlassEnabled = false
+        Settings.liquidGlassEnabled = true
+        XCTAssertNil(releasedController)
+    }
+
     private func resolved(_ color: NSColor, _ appearance: NSAppearance) -> NSColor {
         var result = color
         appearance.performAsCurrentDrawingAppearance {
