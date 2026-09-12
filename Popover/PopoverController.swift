@@ -30,6 +30,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     private var latestPresentation: Presentation?
     private var latestSystemBatteryIconHidden: Bool?
     private var displayOptionsObserver: NSObjectProtocol?
+    private var screenParametersObserver: NSObjectProtocol?
+    private weak var anchorButton: NSStatusBarButton?
 #if DEBUG
     private(set) var contentRenderCountForTest = 0
 #endif
@@ -48,12 +50,12 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     override init() {
         super.init()
         popover.contentViewController = content
-        popover.contentSize = NSSize(width: PopoverStyle.width, height: content.preferredHeight)
+        setContentSize(NSSize(width: PopoverStyle.width, height: content.preferredHeight))
         popover.behavior = .transient
         popover.animates = true
         popover.delegate = self
-        content.heightDidChange = { [weak self] height in
-            self?.popover.contentSize = NSSize(width: PopoverStyle.width, height: height)
+        content.heightDidChange = { [weak self] _ in
+            self?.refreshPlacement()
         }
         content.setSettingsHandler { [weak self] in
             self?.closeBeforePresentingSettings()
@@ -65,11 +67,21 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         ) { [weak self] _ in
             self?.refreshDisplayOptions()
         }
+        screenParametersObserver = NotificationCenter.default.addObserver(
+            forName: NSApplication.didChangeScreenParametersNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.refreshPlacement()
+        }
     }
 
     deinit {
         if let displayOptionsObserver {
             NSWorkspace.shared.notificationCenter.removeObserver(displayOptionsObserver)
+        }
+        if let screenParametersObserver {
+            NotificationCenter.default.removeObserver(screenParametersObserver)
         }
         stopWatchingForOutsideClicks()
     }
@@ -131,6 +143,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
 
     private func open(relativeTo button: NSStatusBarButton,
                       skipExternalRefreshes: Bool = false) {
+        guard let positioningRect = applyPlacement(relativeTo: button) else { return }
         let reduceMotion = Self.reducesMotion
         popover.animates = !reduceMotion
         let reopeningDuringDismissal = popover.isShown
@@ -141,8 +154,9 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         applyLatestPresentation()
         // Showing while a previous close is still animating is fine — AppKit
         // takes over the fade rather than dropping the request.
-        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .maxY)
+        popover.show(relativeTo: positioningRect, of: button, preferredEdge: .maxY)
         guard popover.isShown else { return }   // never leave a monitor behind
+        anchorButton = button
         content.setPresentationActive(true)
         // Stop persistent module motion before installing the permitted reduced-
         // motion fade; disabling content animations also clears the root layer.
@@ -170,6 +184,38 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         visibilityHandler?(true)
     }
 
+    private func setContentSize(_ size: NSSize) {
+        content.setViewportHeight(size.height)
+        if popover.contentSize != size { popover.contentSize = size }
+    }
+
+    private func applyPlacement(relativeTo button: NSStatusBarButton) -> NSRect? {
+        guard let window = button.window, window.isVisible,
+              !button.isHiddenOrHasHiddenAncestor else { return nil }
+        let anchor = window.convertToScreen(button.convert(button.bounds, to: nil))
+        let displays = NSScreen.screens.map {
+            PopoverPlacement.Display(frame: $0.frame, visibleFrame: $0.visibleFrame)
+        }
+        guard let placement = PopoverPlacement.resolve(
+            anchor: anchor,
+            displays: displays,
+            naturalSize: NSSize(width: PopoverStyle.width, height: content.preferredHeight)
+        ) else { return nil }
+        setContentSize(placement.contentSize)
+        return button.convert(window.convertFromScreen(placement.anchorFrame), from: nil)
+    }
+
+    private func refreshPlacement() {
+        guard wantsOpen else {
+            setContentSize(NSSize(width: PopoverStyle.width, height: content.preferredHeight))
+            return
+        }
+        guard let anchorButton, applyPlacement(relativeTo: anchorButton) != nil else {
+            close()
+            return
+        }
+    }
+
     private func refreshDisplayOptions() {
         let reduceMotion = Self.reducesMotion
         popover.animates = !reduceMotion
@@ -193,6 +239,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
 
     private func close() {
         wantsOpen = false
+        anchorButton = nil
         content.setPresentationActive(false)
         stopWatchingForOutsideClicks()
         popover.performClose(nil)
@@ -220,6 +267,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         // going through `close()`. Leaving it set would make the next click
         // read as "close" and be swallowed.
         wantsOpen = false
+        anchorButton = nil
         content.setPresentationActive(false)
         stopWatchingForOutsideClicks()
         content.setAnimationsEnabled(false)

@@ -22,11 +22,13 @@ final class PopoverPreviewWindowController: NSWindowController {
         }
         panel.contentViewController = content
         panel.setContentSize(NSSize(width: PopoverStyle.width, height: content.preferredHeight))
+        content.setViewportHeight(content.preferredHeight)
         super.init(window: panel)
 
-        content.heightDidChange = { [weak panel] height in
+        content.heightDidChange = { [weak panel, weak content] height in
             guard let panel else { return }
             panel.setContentSize(NSSize(width: PopoverStyle.width, height: height))
+            content?.setViewportHeight(height)
         }
 
         let snapshot = Self.snapshot(for: state)

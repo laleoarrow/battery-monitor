@@ -86,6 +86,12 @@ final class LaneView: PopoverSection {
     }
 
     func update(snapshot: PowerSnapshot) {
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            updateContents(snapshot: snapshot)
+        }
+    }
+
+    private func updateContents(snapshot: PowerSnapshot) {
         latest = snapshot
         let color = snapshot.state == .mixedSupply
             ? PopoverStyle.blue
@@ -110,6 +116,8 @@ final class LaneView: PopoverSection {
 
     private func apply(_ lane: Lane, symbol: String, caption: String,
                        watts: Double, ceiling: Double, color: NSColor) {
+        lane.well.backgroundColor = PopoverStyle.well.cgColor
+        lane.track.backgroundColor = PopoverStyle.well.cgColor
         lane.icon.image = NSImage(systemSymbolName: symbol, accessibilityDescription: caption)
         lane.icon.contentTintColor = color
         lane.value.stringValue = PopoverStyle.watts(watts)
@@ -142,6 +150,19 @@ final class LaneView: PopoverSection {
                 lane.sweep.removeAnimation(forKey: "sweep")
                 lane.sweepWidth = 0
             }
+        }
+    }
+
+    override func refreshAppearance() {
+        super.refreshAppearance()
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            PopoverStyle.setWithoutAnimation {
+                for lane in self.lanes {
+                    lane.well.backgroundColor = PopoverStyle.well.cgColor
+                    lane.track.backgroundColor = PopoverStyle.well.cgColor
+                }
+            }
+            if let latest { update(snapshot: latest) }
         }
     }
 

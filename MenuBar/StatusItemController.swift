@@ -209,6 +209,9 @@ final class StatusItemController: NSObject {
 
     private let log = OSLog(subsystem: "com.leoarrow.wattson", category: "menubar")
 
+    // Keep AppKit's automatically assigned autosave identity for this single
+    // status item. Replacing it with a new name would abandon existing users'
+    // saved position/visibility; AppKit owns persistence and display recovery.
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let popover = PopoverController()
     private lazy var settingsWindowController = SettingsWindowController()

@@ -10,16 +10,14 @@ on:
       distribution_mode:
         description: Release signing policy
         required: true
-        default: developer-id-notarized
+        default: community-ad-hoc
         type: choice
         options:
           - developer-id-notarized
           - community-ad-hoc
-  push:
-    branches:
-      - release-candidate
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -29,10 +27,7 @@ concurrency:
 jobs:
   build:
     name: Build universal PKG and DMG once
-    if: >-
-      github.event_name == 'push' ||
-      inputs.distribution_mode == 'community-ad-hoc' ||
-      github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: macos-26
     timeout-minutes: 45
     environment: ${{ inputs.distribution_mode == 'developer-id-notarized' && 'release-signing' || 'community-ci' }}
@@ -41,6 +36,7 @@ jobs:
       distribution_mode: ${{ steps.resolve-version.outputs.distribution_mode }}
       signing_team_id: ${{ steps.import-signing-assets.outputs.team_id }}
     env:
+      GH_TOKEN: ${{ github.token }}
       WATTSON_VERSION: ${{ inputs.version }}
       REQUESTED_DISTRIBUTION_MODE: ${{ inputs.distribution_mode }}
     steps:
@@ -48,6 +44,23 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Require Headless CI on the frozen main commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]
+          [[ "$GITHUB_REF" == "refs/heads/main" ]]
+          MAIN_SHA="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)"
+          [[ "$GITHUB_SHA" == "$MAIN_SHA" ]]
+          gh api --method GET \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs" \
+            -f branch=main -f event=push -f head_sha="$GITHUB_SHA" -f per_page=100 \
+            | jq -e --arg sha "$GITHUB_SHA" '
+                any(.workflow_runs[];
+                  .head_sha == $sha and .head_branch == "main" and
+                  .event == "push" and .status == "completed" and
+                  .conclusion == "success")' >/dev/null
 
       - name: Resolve and validate the candidate version
         id: resolve-version
@@ -59,26 +72,20 @@ jobs:
           fi
           [[ "$WATTSON_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
           [[ "$(/usr/bin/tr -d '\r\n' < VERSION)" == "$WATTSON_VERSION" ]]
-          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
-            [[ "$GITHUB_REF" == "refs/heads/release-candidate" ]]
-            DISTRIBUTION_MODE="community-ad-hoc"
-            NOTARIZE_RELEASE=0
-          else
-            DISTRIBUTION_MODE="$REQUESTED_DISTRIBUTION_MODE"
-            case "$DISTRIBUTION_MODE" in
-              developer-id-notarized)
-                [[ "$GITHUB_REF" == "refs/heads/main" ]]
-                NOTARIZE_RELEASE=1
-                ;;
-              community-ad-hoc)
-                NOTARIZE_RELEASE=0
-                ;;
-              *)
-                echo "unsupported distribution mode: $DISTRIBUTION_MODE" >&2
-                exit 1
-                ;;
-            esac
-          fi
+          [[ "$GITHUB_REF" == "refs/heads/main" ]]
+          DISTRIBUTION_MODE="$REQUESTED_DISTRIBUTION_MODE"
+          case "$DISTRIBUTION_MODE" in
+            developer-id-notarized)
+              NOTARIZE_RELEASE=1
+              ;;
+            community-ad-hoc)
+              NOTARIZE_RELEASE=0
+              ;;
+            *)
+              echo "unsupported distribution mode: $DISTRIBUTION_MODE" >&2
+              exit 1
+              ;;
+          esac
           echo "WATTSON_VERSION=$WATTSON_VERSION" >> "$GITHUB_ENV"
           {
             echo "version=$WATTSON_VERSION"
@@ -373,6 +380,8 @@ jobs:
           assert_metadata_line "architectures=arm64,x86_64"
           assert_metadata_line "minimum_macos=12.0"
           assert_metadata_line "install_path=/Applications/Wattson.app"
+          assert_metadata_line "dmg_contents=app-only"
+          assert_metadata_line "pkg_contents=app-and-helper"
           for metadata_key in \
             distribution_mode \
             app_signature \
@@ -415,17 +424,11 @@ jobs:
 
           EXPAND_BASE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-pkg.XXXXXX")"
           EXPAND_DIR="$EXPAND_BASE/expanded"
-          MOUNT_DIR="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-dmg.XXXXXX")"
           assert_runner_temp_path "$EXPAND_BASE"
-          assert_runner_temp_path "$MOUNT_DIR"
-          MOUNTED=0
           cleanup() {
             local status="$?"
             trap - EXIT
-            if [[ "$MOUNTED" == "1" ]]; then
-              /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null 2>&1 || status=1
-            fi
-            /bin/rm -rf -- "$EXPAND_BASE" "$MOUNT_DIR" || status=1
+            /bin/rm -rf -- "$EXPAND_BASE" || status=1
             exit "$status"
           }
           trap cleanup EXIT
@@ -502,16 +505,100 @@ jobs:
               "$DMG_PATH"
           fi
 
-          /usr/bin/hdiutil attach \
-            -nobrowse \
-            -readonly \
-            -mountpoint "$MOUNT_DIR" \
-            "$DMG_PATH" >/dev/null
-          MOUNTED=1
-          [[ -f "$MOUNT_DIR/$PKG_NAME" && ! -L "$MOUNT_DIR/$PKG_NAME" ]]
-          /usr/bin/cmp -s "$PKG_PATH" "$MOUNT_DIR/$PKG_NAME"
-          /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null
+          # Compare the complete DMG app with this candidate's expanded PKG,
+          # never with a locally rebuilt app or a different candidate run.
+          /bin/bash scripts/verify_dmg.sh "$DMG_PATH" "$PACKAGED_APP_DIR"
+
+      - name: Test helper-free DMG copy launch and removal without elevation
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "${GITHUB_ACTIONS:-}" == "true" ]]
+          [[ "${RUNNER_OS:-}" == "macOS" ]]
+          [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]]
+          [[ "$(/usr/bin/id -u)" != "0" ]]
+
+          readonly DMG_PATH="$RUNNER_TEMP/wattson-release/Wattson-v${WATTSON_VERSION}-macos-universal.dmg"
+          READONLY_ROOT="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-readonly.XXXXXX")"
+          case "$READONLY_ROOT" in "$RUNNER_TEMP"/wattson-readonly.*) ;; *) exit 1 ;; esac
+          readonly READONLY_ROOT
+          readonly MOUNT_DIR="$READONLY_ROOT/mount"
+          readonly APP_DIR="$READONLY_ROOT/Wattson.app"
+          readonly APP_BIN="$APP_DIR/Contents/MacOS/Wattson"
+          readonly HELPER_LABEL="com.leoarrow.wattson.helper"
+          APP_PID=""
           MOUNTED=0
+
+          cleanup() {
+            local status="$?"
+            trap - EXIT
+            if [[ -n "$APP_PID" ]]; then
+              /bin/kill "$APP_PID" >/dev/null 2>&1 || true
+              wait "$APP_PID" >/dev/null 2>&1 || true
+            fi
+            if [[ "$MOUNTED" == "1" ]]; then
+              /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null 2>&1 || exit 1
+            fi
+            /bin/rm -rf -- "$READONLY_ROOT" || status=1
+            exit "$status"
+          }
+          trap cleanup EXIT
+
+          assert_no_privileged_install() {
+            local path
+            for path in \
+              /Applications/Wattson.app \
+              "/Library/PrivilegedHelperTools/$HELPER_LABEL" \
+              "/Library/LaunchDaemons/$HELPER_LABEL.plist" \
+              /var/run/wattson-helper.sock; do
+              [[ ! -e "$path" && ! -L "$path" ]]
+            done
+            if /usr/sbin/pkgutil --pkg-info com.leoarrow.wattson.pkg >/dev/null 2>&1; then
+              echo "read-only copying must not create a package receipt" >&2
+              return 1
+            fi
+            if /bin/launchctl print "system/$HELPER_LABEL" >/dev/null 2>&1; then
+              echo "read-only copying must not register the helper" >&2
+              return 1
+            fi
+          }
+
+          assert_no_privileged_install
+          /bin/mkdir "$MOUNT_DIR"
+          /usr/bin/hdiutil attach -nobrowse -readonly -mountpoint "$MOUNT_DIR" "$DMG_PATH" >/dev/null
+          MOUNTED=1
+          # A user-writable destination exercises copying without granting the
+          # runner any privileged install operation. Repeat to cover replacement.
+          for copy_attempt in 1 2; do
+            /usr/bin/ditto "$MOUNT_DIR/Wattson.app" "$APP_DIR"
+            /usr/bin/diff -qr "$MOUNT_DIR/Wattson.app" "$APP_DIR"
+            /usr/bin/codesign --verify --deep --strict "$APP_DIR"
+            [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]]
+            has_battery=0
+            battery_registry="$(/usr/sbin/ioreg -r -c AppleSmartBattery 2>/dev/null)"
+            if [[ "$battery_registry" == *AppleSmartBattery* ]]; then
+              has_battery=1
+            fi
+            "$APP_BIN" >"$RUNNER_TEMP/wattson-readonly-$copy_attempt.log" 2>&1 &
+            APP_PID="$!"
+            /bin/sleep 2
+            if /bin/kill -0 "$APP_PID" >/dev/null 2>&1; then
+              /bin/kill "$APP_PID"
+              wait "$APP_PID" >/dev/null 2>&1 || true
+            else
+              app_status=0
+              wait "$APP_PID" || app_status="$?"
+              # Hosted Mac minis may exit cleanly without a battery. Real
+              # missing-helper monitoring stays covered by the AppKit suite.
+              [[ "$has_battery" == "0" && "$app_status" == "0" ]]
+            fi
+            APP_PID=""
+            assert_no_privileged_install
+          done
+          /bin/rm -rf -- "$APP_DIR"
+          [[ ! -e "$APP_DIR" && ! -L "$APP_DIR" ]]
+          assert_no_privileged_install
+          echo "Helper-free DMG copy, replacement, launch and removal passed without elevation."
 
       - name: Test first install and disabled-service reinstall
         shell: bash
@@ -535,6 +622,10 @@ jobs:
           readonly USER_SUPPORT="$HOME/Library/Application Support/Wattson"
           readonly USER_CONTAINER="$HOME/Library/Containers/com.leoarrow.wattson"
           readonly USER_PREFERENCES="$HOME/Library/Preferences/com.leoarrow.wattson.plist"
+          readonly SANDBOX_PREFERENCES="$USER_CONTAINER/Data/Library/Preferences/com.leoarrow.wattson.plist"
+          APP_ONLY_STAGE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-app-only-upgrade.XXXXXX")"
+          case "$APP_ONLY_STAGE" in "$RUNNER_TEMP"/wattson-app-only-upgrade.*) ;; *) exit 1 ;; esac
+          readonly APP_ONLY_STAGE
           APP_PID=""
 
           cleanup() {
@@ -560,6 +651,7 @@ jobs:
             /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1
             /bin/rm -rf -- "$LEGACY_APP" "$USER_SUPPORT" "$USER_CONTAINER" \
               || cleanup_failed=1
+            /bin/rm -rf -- "$APP_ONLY_STAGE" || cleanup_failed=1
             /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true
 
             if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
@@ -588,12 +680,14 @@ jobs:
           trap cleanup EXIT
 
           verify_install() {
+            local expected_version="${1:-$WATTSON_VERSION}"
             local disabled_state
             [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]]
             [[ -f "$APP_BIN" && ! -L "$APP_BIN" ]]
             [[ -f "$HELPER_BIN" && ! -L "$HELPER_BIN" ]]
             [[ -f "$HELPER_PLIST" && ! -L "$HELPER_PLIST" ]]
-            [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]]
+            [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]]
+            [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]]
             [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]]
             /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
             /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64
@@ -611,7 +705,7 @@ jobs:
             # report them unavailable and retain the public IOKit fallback.
             "$APP_BIN" --helper-power-probe \
               || echo "fixed SMC power keys unavailable on this runner"
-            [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]]
+            [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$expected_version" ]]
             disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"
             case "$disabled_state" in
               *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*) return 1 ;;
@@ -654,6 +748,22 @@ jobs:
             APP_PID=""
           }
 
+          uninstall_and_verify() {
+            /bin/bash scripts/uninstall.sh \
+              2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-uninstall.log"
+            for removed_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do
+              [[ ! -e "$removed_path" && ! -L "$removed_path" ]]
+            done
+            if /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then
+              echo "the shipped uninstaller left the package receipt" >&2
+              return 1
+            fi
+            if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+              echo "the shipped uninstaller left the helper registered" >&2
+              return 1
+            fi
+          }
+
           [[ "${GITHUB_ACTIONS:-}" == "true" ]]
           [[ "${RUNNER_OS:-}" == "macOS" ]]
           [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]]
@@ -691,21 +801,64 @@ jobs:
             2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-install.log"
           verify_install
 
-          echo "Running the shipped uninstaller, then reinstalling once more..."
-          /bin/bash scripts/uninstall.sh \
-            2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-uninstall.log"
-          for removed_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do
-            [[ ! -e "$removed_path" && ! -L "$removed_path" ]]
+          echo "Testing the published 3.0.28 PKG upgrade baseline..."
+          uninstall_and_verify
+          # This immutable public release is a test baseline, not the candidate.
+          readonly BASELINE_VERSION="3.0.28"
+          readonly BASELINE_SHA="86db43a02a79769cd02f022cf6bd5721cdbb96927a83a67e9f144dc8d27127da"
+          readonly BASELINE_PKG="$APP_ONLY_STAGE/Wattson-v${BASELINE_VERSION}-macos-universal.pkg"
+          /usr/bin/curl --fail --location --proto '=https' --tlsv1.2 \
+            --retry 3 --retry-delay 2 --output "$BASELINE_PKG" \
+            "https://github.com/laleoarrow/battery-monitor/releases/download/v${BASELINE_VERSION}/Wattson-v${BASELINE_VERSION}-macos-universal.pkg"
+          [[ "$(/usr/bin/shasum -a 256 "$BASELINE_PKG" | /usr/bin/awk '{print $1}')" == "$BASELINE_SHA" ]]
+          /usr/sbin/pkgutil --expand-full "$BASELINE_PKG" "$APP_ONLY_STAGE/baseline"
+          readonly BASELINE_PAYLOAD="$APP_ONLY_STAGE/baseline/Wattson-component.pkg/Payload"
+          /usr/bin/sudo -n /usr/sbin/installer -verboseR -pkg "$BASELINE_PKG" -target / \
+            2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"
+          verify_install "$BASELINE_VERSION"
+          /usr/bin/diff -qr "$BASELINE_PAYLOAD/Applications/Wattson.app" "$APP_DIR"
+          /usr/bin/sudo -n /usr/bin/cmp -s "$BASELINE_PAYLOAD/Library/PrivilegedHelperTools/$HELPER_LABEL" "$HELPER_BIN"
+          verify_app_launch_stability
+          # Let the real sandboxed baseline create its container before seeding
+          # the UserDefaults.standard plist, never the non-sandbox domain.
+          for preference_directory in \
+            "$USER_CONTAINER" "$USER_CONTAINER/Data" \
+            "$USER_CONTAINER/Data/Library" "$USER_CONTAINER/Data/Library/Preferences"; do
+            [[ -d "$preference_directory" && ! -L "$preference_directory" ]]
+            [[ "$(/usr/bin/stat -f '%u' "$preference_directory")" == "$(/usr/bin/id -u)" ]]
           done
-          if /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then
-            echo "the shipped uninstaller left the package receipt" >&2
-            exit 1
-          fi
-          if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
-            echo "the shipped uninstaller left the helper registered" >&2
-            exit 1
-          fi
+          [[ ! -L "$SANDBOX_PREFERENCES" ]]
+          [[ ! -e "$SANDBOX_PREFERENCES" || -f "$SANDBOX_PREFERENCES" ]]
+          /usr/bin/defaults write "$SANDBOX_PREFERENCES" updates.checkOnLaunch -bool false
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]]
 
+          /usr/sbin/pkgutil --expand-full "$PKG_PATH" "$APP_ONLY_STAGE/expanded"
+          readonly CANDIDATE_PAYLOAD="$APP_ONLY_STAGE/expanded/Wattson-component.pkg/Payload"
+          readonly APP_ONLY_SOURCE="$CANDIDATE_PAYLOAD/Applications/Wattson.app"
+          /usr/bin/sudo -n /usr/sbin/installer -verboseR -pkg "$PKG_PATH" -target / \
+            2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"
+          verify_install
+          /usr/bin/diff -qr "$APP_ONLY_SOURCE" "$APP_DIR"
+          /usr/bin/sudo -n /usr/bin/cmp -s "$CANDIDATE_PAYLOAD/Library/PrivilegedHelperTools/$HELPER_LABEL" "$HELPER_BIN"
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]]
+          verify_app_launch_stability
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]]
+          # Batteryless hosted runners may exit before Settings is consumed;
+          # this proves installer preservation of the correct sandbox file,
+          # not that a visible UI read and applied the preference.
+          echo "Public $BASELINE_VERSION ($BASELINE_SHA) to $WATTSON_VERSION: receipt, exact App/helper bytes, health, launch and sandbox preference-file preservation passed (not a UI-read assertion)." \
+            | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"
+
+          echo "Running the shipped uninstaller, then upgrading an app-only copy..."
+          uninstall_and_verify
+
+          # Seed only the App, which was already proved byte-identical to the
+          # DMG App. This is fixture setup for the privileged upgrade, not the
+          # separate no-elevation copy test above. No helper or receipt exists.
+          [[ -d "$APP_ONLY_SOURCE" && ! -L "$APP_ONLY_SOURCE" ]]
+          /usr/bin/sudo -n /usr/bin/ditto "$APP_ONLY_SOURCE" "$APP_DIR"
+          /usr/bin/diff -qr "$APP_ONLY_SOURCE" "$APP_DIR"
+          [[ ! -e "$HELPER_BIN" && ! -e "$HELPER_PLIST" && ! -e "$HELPER_SOCKET" ]]
           /usr/bin/sudo -n /usr/sbin/installer \
             -verboseR \
             -pkg "$PKG_PATH" \
@@ -714,7 +867,7 @@ jobs:
           verify_install
           verify_app_launch_stability
 
-          echo "First install, disabled-service reinstall, uninstall, reinstall, app launch, and cleanup checks passed."
+          echo "First install, disabled-service reinstall, public v3 upgrade, uninstall, app-only upgrade, app launch, and cleanup checks passed."
 
       - name: Test upgrade from the published v2.1.5 release
         if: matrix.test_v2_upgrade

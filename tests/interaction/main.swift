@@ -134,6 +134,33 @@ if !screenLocked {
     check("关闭时只缓存最新数据而不渲染隐藏弹窗",
           p.contentRenderCountForTest == 0 && p.cachedPercentForTest == 100)
     check("初始未监听外部点击", !p.isWatchingOutsideClicks)
+    let anchorReady = runApplication(until: {
+        guard let window = button.window, window.isVisible,
+              !button.isHiddenOrHasHiddenAncestor else { return false }
+        let anchor = window.convertToScreen(button.convert(button.bounds, to: nil))
+        return PopoverPlacement.resolve(
+            anchor: anchor,
+            displays: NSScreen.screens.map {
+                PopoverPlacement.Display(frame: $0.frame, visibleFrame: $0.visibleFrame)
+            },
+            naturalSize: p.contentViewForTest?.frame.size ?? .zero
+        ) != nil
+    }, timeout: 2)
+    check("真实状态项完成初始屏幕定位后才模拟点击", anchorReady)
+    if let anchorWindow = button.window {
+        let anchor = anchorWindow.convertToScreen(button.convert(button.bounds, to: nil))
+        let displays = NSScreen.screens.map {
+            PopoverPlacement.Display(frame: $0.frame, visibleFrame: $0.visibleFrame)
+        }
+        let placement = PopoverPlacement.resolve(
+            anchor: anchor, displays: displays,
+            naturalSize: p.contentViewForTest?.frame.size ?? .zero
+        )
+        let displayDescription = displays.map { "frame=\($0.frame) visible=\($0.visibleFrame)" }
+        log("INITIAL_ANCHOR windowVisible=\(anchorWindow.isVisible) hidden=\(button.isHiddenOrHasHiddenAncestor) buttonFrame=\(button.frame) buttonBounds=\(button.bounds) windowFrame=\(anchorWindow.frame) anchor=\(anchor) screens=\(displayDescription) resolved=\(String(describing: placement))")
+    } else {
+        log("INITIAL_ANCHOR window=nil buttonFrame=\(button.frame) buttonBounds=\(button.bounds)")
+    }
     p.toggle(relativeTo: button)
     check("展示前恰好渲染一次最新缓存数据", p.contentRenderCountForTest == 1)
     check("点击打开会安排一次平滑入场动画", p.entranceAnimationCountForTest == 1)
@@ -326,6 +353,9 @@ check("静止选中片与轨道使用同心圆角",
              slider.bounds.height / 2))
 
 let allowsNativeGlass = ProcessInfo.processInfo.environment["WATTSON_FORCE_LEGACY_KNOB"] != "1"
+let expectsHighContrast = ProcessInfo.processInfo.environment["WATTSON_FORCE_INCREASE_CONTRAST"]
+    .map { $0 == "1" } ?? NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
+let expectedRestingGlassOpacity: CGFloat = expectsHighContrast ? 1 : 0.045
 let expectsNativeGlass: Bool
 if #available(macOS 26.0, *) {
     expectsNativeGlass = allowsNativeGlass
@@ -349,14 +379,16 @@ if expectsNativeGlass {
               "selector=\(selectorFill) "
                   + "content=\(slider.nativeSelectorContentFillAlphaForTest ?? -1)")
     } else {
-        check("原生材质用 Regular 底轨与 Clear 移动透镜",
+        check(expectsHighContrast
+                  ? "增强对比度保留 Regular/Clear 原生玻璃的完整边缘"
+                  : "原生材质用 Regular 底轨与 Clear 移动透镜",
               nativeStructureMatches
                   && selectorFill <= 0.001
                   && (slider.nativeSelectorContentFillAlphaForTest ?? 1) <= 0.001
-                  && abs((slider.nativeSelectorOpacityForTest ?? -1) - 0.045) < 0.001,
+                  && abs((slider.nativeSelectorOpacityForTest ?? -1) - expectedRestingGlassOpacity) < 0.001,
               "track=\(String(describing: slider.nativeTrackStyleForTest)) "
                   + "selector=\(String(describing: slider.nativeSelectorStyleForTest)) "
-                  + "fill=\(selectorFill)")
+                  + "fill=\(selectorFill) opacity=\(slider.nativeSelectorOpacityForTest ?? -1)")
     }
 } else {
     check("旧系统路径不向普通 NSView 发送 Liquid Glass 属性",
@@ -428,8 +460,11 @@ do {
                   liftedFill >= 0.999
                       && (slider.nativeSelectorContentFillAlphaForTest ?? 0) >= 0.999)
         } else {
-            let expectedDragOpacity: CGFloat = slider.reducesMotionForTest ? 0.045 : 0.14
-            check("开始拖动后 Clear 折射透镜仍保持原生材质",
+            let expectedDragOpacity: CGFloat = expectsHighContrast
+                ? 1 : (slider.reducesMotionForTest ? 0.045 : 0.14)
+            check(expectsHighContrast
+                      ? "增强对比度拖动仍保持完整的原生 Clear 玻璃边缘"
+                      : "开始拖动后 Clear 折射透镜仍保持原生材质",
                   liftedFill <= 0.001
                       && (slider.nativeSelectorContentFillAlphaForTest ?? 1) <= 0.001
                       && abs((slider.nativeSelectorOpacityForTest ?? -1) - expectedDragOpacity) < 0.001
@@ -497,8 +532,16 @@ do {
     spin(0.3)
     if expectsNativeGlass,
        ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] != "1" {
-        check("吸附完成后恢复近乎透明的静止玻璃",
-              abs((slider.nativeSelectorOpacityForTest ?? -1) - 0.045) < 0.001)
+        check(expectsHighContrast
+                  ? "增强对比度吸附后保留原生边缘且不叠加自绘底色"
+                  : "吸附完成后恢复近乎透明的静止玻璃",
+              abs((slider.nativeSelectorOpacityForTest ?? -1) - expectedRestingGlassOpacity) < 0.001
+                  && (slider.nativeSelectorFillAlphaForTest ?? 1) <= 0.001
+                  && (slider.nativeSelectorContentFillAlphaForTest ?? 1) <= 0.001
+                  && slider.nativeSelectorStyleForTest == 1
+                  && slider.nativeSelectorBorderWidthForTest == 0
+                  && slider.nativeSelectorHasCustomChromeForTest == false,
+              "opacity=\(slider.nativeSelectorOpacityForTest ?? -1)")
     }
 }
 
@@ -1326,6 +1369,51 @@ autoreleasepool {
     owner.setSamplingDisplayActiveForTest(false)
 }
 check("单采样 timer 和采集拦截器不会保留控制器", releasedSamplingOwner == nil)
+
+// ---- 13. 短屏只缩小 viewport，仪表保持原尺寸，失效 anchor 不产生展示状态 ----
+let viewportContent = PopoverContentViewController()
+let naturalViewportHeight = viewportContent.preferredHeight
+let shortViewportHeight = min(240, naturalViewportHeight / 2)
+viewportContent.setViewportHeight(shortViewportHeight)
+viewportContent.view.layoutSubtreeIfNeeded()
+func firstScrollView(in view: NSView) -> NSScrollView? {
+    if let scroll = view as? NSScrollView { return scroll }
+    return view.subviews.lazy.compactMap { firstScrollView(in: $0) }.first
+}
+if let scroll = firstScrollView(in: viewportContent.view), let document = scroll.documentView {
+    check("短屏保持自然内容高度并提供原生滚动 viewport",
+          abs(viewportContent.preferredHeight - naturalViewportHeight) < 0.5
+              && document.frame.height >= naturalViewportHeight - 0.5
+              && scroll.contentSize.height <= shortViewportHeight + 0.5
+              && scroll.documentVisibleRect.height < document.frame.height)
+    scroll.contentView.scroll(to: NSPoint(x: 0, y: document.frame.height - scroll.contentSize.height))
+    scroll.reflectScrolledClipView(scroll.contentView)
+    check("短屏可滚到内容底部而不是裁掉 footer",
+          scroll.documentVisibleRect.maxY >= document.frame.maxY - 0.5)
+    viewportContent.setViewportHeight(naturalViewportHeight)
+    viewportContent.view.layoutSubtreeIfNeeded()
+    check("恢复足够高度后全量内容重新可见",
+          scroll.documentVisibleRect.height >= document.frame.height - 0.5)
+} else {
+    check("短屏内容存在原生滚动容器", false)
+}
+
+let orphanedItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+if let orphanedButton = orphanedItem.button {
+    NSStatusBar.system.removeStatusItem(orphanedItem)
+    orphanedButton.removeFromSuperview()
+    let anchorlessPopover = PopoverController()
+    var invalidAnchorVisibilityEvents = 0
+    anchorlessPopover.onVisibilityChange { _ in invalidAnchorVisibilityEvents += 1 }
+    anchorlessPopover.toggle(relativeTo: orphanedButton)
+    check("无 window 的失效状态项 anchor 不展示也不遗留监听",
+          !anchorlessPopover.isOpen && !anchorlessPopover.isShownForTest
+              && !anchorlessPopover.isWatchingOutsideClicks
+              && invalidAnchorVisibilityEvents == 0)
+} else {
+    NSStatusBar.system.removeStatusItem(orphanedItem)
+    check("状态项 anchor 回归具备测试 button", false)
+}
 
 NSStatusBar.system.removeStatusItem(item)
 if !pass {

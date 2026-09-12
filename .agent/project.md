@@ -17,11 +17,19 @@ popover.
 - `main.swift`: application entry point plus fixed helper health and power probes.
 - `Package.swift`: macOS 12 SwiftPM products for the app and helper.
 
-The public v3 package installs:
+The full PKG installation (also used by Homebrew) installs:
 
 - `/Applications/Wattson.app`
 - `/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper`
 - `/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist`
+
+The app-only DMG contains the same universal `Wattson.app` and an Applications
+shortcut. Dragging the app into `/Applications` installs no helper or package
+receipt. Read-only monitoring remains available without the helper, using the
+battery data macOS exposes; helper-backed SMC readings and privileged controls
+are not implied. Opening the app does not request administrator authorization.
+Existing PKG installations must update through PKG so the app, helper, and
+receipt stay in sync.
 
 The helper is activated through `/var/run/wattson-helper.sock` and exits after
 12 idle seconds. It exposes fixed read-only whole-machine power sensors plus
@@ -31,15 +39,20 @@ launch-at-login agent. Clients cannot supply an SMC key or SMC write command.
 ## Distribution architecture
 
 `VERSION` is the release-version source. `scripts/release.sh` builds one
-universal app/helper pair, creates one native PKG, wraps those exact PKG bytes
-in a DMG, verifies both, and emits SHA-256 checksums plus truthful signing
-metadata.
+universal app/helper pair, packages the full installation as a native PKG and
+the same app as an app-only DMG, verifies their app contents match, and emits
+SHA-256 checksums plus truthful signing metadata. Older published DMGs contain
+the PKG instead; do not describe those historical assets as app-only downloads.
 
-The local script default is `community-ad-hoc`: app/helper ad-hoc signed,
-PKG/DMG unsigned, and no notarization claim. Those builds remain compatibility
-test artifacts. Automatic stable promotion requires the protected GitHub
-Developer ID path, accepted PKG/DMG notarization, stapled tickets, and the full
-hosted-macOS install matrix.
+The script and manually dispatched candidate default is `community-ad-hoc`:
+app/helper ad-hoc signed, PKG/DMG unsigned, and not notarized. An app-only install
+does not remove Gatekeeper trust requirements. Candidate builds run from tested,
+frozen `main`; no persistent candidate or recovery branch is required. Community
+publication requires explicit review of the successful candidate and publishes
+its exact bytes. Developer ID is an explicit candidate option; its separate
+manual promotion additionally requires accepted PKG/DMG notarization and
+stapled tickets. Both paths retain the hosted-macOS install matrix and public
+Homebrew/Pages gates.
 
 ## Compatibility
 
@@ -49,5 +62,5 @@ hosted-macOS install matrix.
 - macOS 26 uses native Liquid Glass; macOS 12–25 use the AppKit fallback.
 
 `BatteryPowerWidgetExtension.swift` and the legacy Python implementation remain
-reference/test surfaces; the currently shipped v3 app bundle is the AppKit
+reference/test surfaces; the currently shipped app bundle is the AppKit
 menu-bar product.

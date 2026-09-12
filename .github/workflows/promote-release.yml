@@ -11,11 +11,6 @@ on:
         description: Successful Wattson release candidate workflow run ID
         required: true
         type: string
-  workflow_run:
-    workflows:
-      - Wattson release candidate
-    types:
-      - completed
 
 permissions:
   actions: write
@@ -28,28 +23,25 @@ concurrency:
 jobs:
   promote:
     name: Publish the exact tested artifact bytes
-    if: >-
-      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'workflow_run' &&
-       github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.event == 'workflow_dispatch' &&
-       github.event.workflow_run.head_branch == 'main')
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       GH_TOKEN: ${{ github.token }}
       WATTSON_VERSION: ${{ inputs.version }}
-      CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id || github.event.workflow_run.id }}
+      CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
     steps:
       - name: Check out the exact main commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
-      - name: Resolve the automatic promotion inputs
+      - name: Resolve the reviewed promotion inputs
         shell: bash
         run: |
           set -euo pipefail
+          MAIN_SHA="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)"
+          [[ "$GITHUB_SHA" == "$MAIN_SHA" ]]
           if [[ -z "$WATTSON_VERSION" ]]; then
             WATTSON_VERSION="$(tr -d '\r\n' < VERSION)"
           fi

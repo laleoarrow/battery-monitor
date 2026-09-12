@@ -1,5 +1,5 @@
 #!/bin/bash
-# Wrap the exact native installer PKG in a read-only distribution DMG.
+# Package the same release app for helper-free drag-to-Applications monitoring.
 set -euo pipefail
 umask 022
 
@@ -11,6 +11,7 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 VERSION_FILE="$ROOT_DIR/VERSION"
 APP_NAME="Wattson"
 DIST_DIR="$ROOT_DIR/dist"
+APP_DIR="$ROOT_DIR/.build/release/$APP_NAME.app"
 
 fail() {
     echo "package_dmg.sh: $*" >&2
@@ -24,14 +25,14 @@ REQUESTED_VERSION="${1:-$APP_VERSION}"
     || fail "requested version $REQUESTED_VERSION does not match VERSION ($APP_VERSION)"
 [[ "$APP_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "invalid VERSION"
 
-PKG_NAME="${APP_NAME}-v${APP_VERSION}-macos-universal.pkg"
 DMG_NAME="${APP_NAME}-v${APP_VERSION}-macos-universal.dmg"
-PKG_PATH="$DIST_DIR/$PKG_NAME"
 DMG_PATH="$DIST_DIR/$DMG_NAME"
-[[ -f "$PKG_PATH" && ! -L "$PKG_PATH" ]] \
-    || fail "missing $PKG_PATH; run scripts/package_pkg.sh first"
-/usr/sbin/pkgutil --payload-files "$PKG_PATH" >/dev/null \
-    || fail "input is not a readable flat package: $PKG_PATH"
+[[ -d "$APP_DIR" && ! -L "$APP_DIR" ]] \
+    || fail "missing $APP_DIR; run scripts/build_release.sh first"
+[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$APP_VERSION" ]] \
+    || fail "release app version does not match VERSION"
+/usr/bin/codesign --verify --deep --strict "$APP_DIR"
+/bin/mkdir -p "$DIST_DIR"
 
 SYSTEM_TEMP_ROOT="$(/usr/bin/getconf DARWIN_USER_TEMP_DIR)"
 SYSTEM_TEMP_ROOT="$(cd -P -- "$SYSTEM_TEMP_ROOT" && pwd)"
@@ -42,13 +43,13 @@ cleanup() {
 }
 trap cleanup EXIT
 
-/bin/cp "$PKG_PATH" "$STAGING_DIR/$PKG_NAME"
-/usr/bin/cmp -s "$PKG_PATH" "$STAGING_DIR/$PKG_NAME" \
-    || fail "staged PKG does not match the release PKG"
+/usr/bin/ditto --noextattr --noqtn "$APP_DIR" "$STAGING_DIR/$APP_NAME.app"
+/usr/bin/diff -qr "$APP_DIR" "$STAGING_DIR/$APP_NAME.app" \
+    || fail "staged app does not match the release app"
+/bin/ln -s /Applications "$STAGING_DIR/Applications"
 /usr/bin/touch "$STAGING_DIR/.metadata_never_index"
-/bin/chmod 644 "$STAGING_DIR/$PKG_NAME" "$STAGING_DIR/.metadata_never_index"
+/bin/chmod 644 "$STAGING_DIR/.metadata_never_index"
 /bin/chmod 755 "$STAGING_DIR"
-/bin/chmod -R a+rX "$STAGING_DIR"
 
 /bin/rm -f -- "$DMG_PATH"
 /usr/bin/hdiutil create \
@@ -74,7 +75,7 @@ fi
 
 /usr/bin/hdiutil verify "$DMG_PATH" >/dev/null
 WATTSON_EXPECT_DMG_SIGNED="$([[ "$DMG_SIGNING_MODE" == "developer-id" ]] && echo 1 || echo 0)" \
-    /bin/bash "$SCRIPT_DIR/verify_dmg.sh" "$DMG_PATH" "$PKG_PATH"
+    /bin/bash "$SCRIPT_DIR/verify_dmg.sh" "$DMG_PATH" "$APP_DIR"
 
 echo "Created $DMG_SIGNING_MODE DMG: $DMG_PATH"
 if [[ "${WATTSON_RELEASE_ORCHESTRATED:-0}" == "1" ]]; then

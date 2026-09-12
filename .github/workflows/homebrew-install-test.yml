@@ -7,24 +7,19 @@ on:
         description: Existing stable Wattson release tag
         required: true
         type: string
-  push:
-    branches:
-      - 'homebrew-ready/v*'
 
 permissions:
   actions: read
   contents: read
 
 concurrency:
-  group: homebrew-install-${{ inputs.release_tag || github.ref_name }}
+  group: homebrew-install-${{ inputs.release_tag }}
   cancel-in-progress: false
 
 jobs:
   prepare:
-    name: Verify the public release and Homebrew recovery
-    if: >-
-      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/homebrew-ready/v'))
+    name: Verify the public release and tested Homebrew cask
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
@@ -35,25 +30,15 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       REQUESTED_TAG: ${{ inputs.release_tag }}
     steps:
-      - name: Resolve a recovery tag from the current main commit
+      - name: Resolve the release tag from the current main commit
         id: resolve
         shell: bash
         run: |
           set -euo pipefail
 
-          case "$GITHUB_EVENT_NAME:$GITHUB_REF" in
-            workflow_dispatch:refs/heads/main)
-              RELEASE_TAG="$REQUESTED_TAG"
-              ;;
-            push:refs/heads/homebrew-ready/v*)
-              RELEASE_TAG="${GITHUB_REF#refs/heads/homebrew-ready/}"
-              ;;
-            *)
-              echo "Unsupported Homebrew lifecycle trigger: $GITHUB_EVENT_NAME:$GITHUB_REF" >&2
-              exit 1
-              ;;
-          esac
-          readonly RELEASE_TAG
+          [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]
+          [[ "$GITHUB_REF" == "refs/heads/main" ]]
+          readonly RELEASE_TAG="$REQUESTED_TAG"
           [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
 
           MAIN_SHA="$(
@@ -66,7 +51,7 @@ jobs:
           readonly MAIN_SHA
           [[ "$MAIN_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$GITHUB_SHA" == "$MAIN_SHA" ]] || {
-            echo "Recovery branches must point at the current main commit." >&2
+            echo "The lifecycle must use the current main commit." >&2
             exit 1
           }
 
@@ -84,7 +69,7 @@ jobs:
           readonly SOURCE_VERSION
           [[ "$SOURCE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
           [[ "$RELEASE_TAG" == "v$SOURCE_VERSION" ]] || {
-            echo "The recovery tag must match VERSION at the current main commit." >&2
+            echo "The release tag must match VERSION at the current main commit." >&2
             exit 1
           }
 

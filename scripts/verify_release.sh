@@ -338,5 +338,5 @@ if [[ "$EXPECT_NOTARIZED" == "1" ]]; then
     /usr/bin/xcrun stapler validate -v "$DMG_PATH"
 fi
 
-/bin/bash "$SCRIPT_DIR/verify_dmg.sh" "$DMG_PATH" "$PKG_PATH"
-echo "Verified Wattson $APP_VERSION PKG and byte-identical DMG wrapper"
+/bin/bash "$SCRIPT_DIR/verify_dmg.sh" "$DMG_PATH" "$PACKAGED_APP_DIR"
+echo "Verified Wattson $APP_VERSION: full PKG and DMG contain byte-identical apps"
