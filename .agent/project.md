@@ -62,5 +62,5 @@ Homebrew/Pages gates.
 - macOS 26 uses native Liquid Glass; macOS 12–25 use the AppKit fallback.
 
 `BatteryPowerWidgetExtension.swift` and the legacy Python implementation remain
-reference/test surfaces; the currently shipped v3 app bundle is the AppKit
+reference/test surfaces; the currently shipped app bundle is the AppKit
 menu-bar product.

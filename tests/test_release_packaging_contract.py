@@ -41,9 +41,9 @@ class ReleasePackagingContractTests(unittest.TestCase):
         cls.promote_workflow = PROMOTE_WORKFLOW.read_text(encoding="utf-8")
         cls.candidate_workflow = CANDIDATE_WORKFLOW.read_text(encoding="utf-8")
 
-    def test_version_is_the_single_v3_source_and_plist_template_is_english(self):
+    def test_version_is_the_single_source_and_plist_template_is_english(self):
         self.assertRegex((ROOT / "VERSION").read_text(encoding="utf-8"),
-                         r"\A3\.[0-9]+\.[0-9]+\n\Z")
+                         r"\A[0-9]+\.[0-9]+\.[0-9]+\n\Z")
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIdentifier"], "com.leoarrow.wattson")

@@ -146,6 +146,108 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         )
         self.assertIn("NOTARIZE_RELEASE=1", CANDIDATE)
 
+    def test_public_v3_pkg_upgrade_uses_pinned_bytes_on_every_install_runner(self):
+        lifecycle = CANDIDATE.split(
+            "- name: Test first install and disabled-service reinstall", 1
+        )[1].split("- name: Test upgrade from the published v2.1.5 release", 1)[0]
+        upgrade = lifecycle.split(
+            'echo "Testing the published 3.0.28 PKG upgrade baseline..."', 1
+        )[1].split(
+            'echo "Running the shipped uninstaller, then upgrading an app-only copy..."', 1
+        )[0]
+        self.assertNotIn("\n        if:", lifecycle)
+        self.assertIn('[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]]', lifecycle)
+        self.assertIn('readonly BASELINE_VERSION="3.0.28"', upgrade)
+        self.assertIn(
+            'readonly BASELINE_SHA="86db43a02a79769cd02f022cf6bd5721cdbb96927a83a67e9f144dc8d27127da"',
+            upgrade,
+        )
+        self.assertIn(
+            "https://github.com/laleoarrow/battery-monitor/releases/download/"
+            "v${BASELINE_VERSION}/Wattson-v${BASELINE_VERSION}-macos-universal.pkg",
+            upgrade,
+        )
+        self.assertIn("--fail --location --proto '=https' --tlsv1.2", upgrade)
+        self.assertLess(upgrade.index("shasum -a 256"), upgrade.index("pkgutil --expand-full"))
+        baseline_install = upgrade.index('-pkg "$BASELINE_PKG" -target /')
+        baseline_health = upgrade.index('verify_install "$BASELINE_VERSION"')
+        candidate_install = upgrade.index('-pkg "$PKG_PATH" -target /')
+        self.assertLess(upgrade.index("shasum -a 256"), baseline_install)
+        self.assertLess(baseline_install, baseline_health)
+        self.assertLess(baseline_health, candidate_install)
+        self.assertIn("verify_install\n", upgrade[candidate_install:])
+        self.assertNotIn("scripts/build_release.sh", upgrade)
+        self.assertNotIn(".build/", upgrade)
+        self.assertNotIn("--allowUntrusted", upgrade)
+        self.assertNotIn("spctl", upgrade)
+        self.assertNotIn("tccutil", upgrade)
+        self.assertNotIn("xattr", upgrade)
+        self.assertEqual(upgrade.count("verify_app_launch_stability"), 2)
+        self.assertIn('"$RUNNER_TEMP/wattson-v3-upgrade.log"', upgrade)
+        self.assertIn('/bin/rm -rf -- "$APP_ONLY_STAGE"', lifecycle)
+        self.assertEqual(lifecycle.count("          uninstall_and_verify\n"), 2)
+
+    def test_public_v3_upgrade_preserves_preferences_and_exact_installed_payloads(self):
+        lifecycle = CANDIDATE.split(
+            "- name: Test first install and disabled-service reinstall", 1
+        )[1].split("- name: Test upgrade from the published v2.1.5 release", 1)[0]
+        verify = lifecycle.split("verify_install() {", 1)[1].split(
+            "verify_app_launch_stability()", 1
+        )[0]
+        self.assertIn('local expected_version="${1:-$WATTSON_VERSION}"', verify)
+        for field in ("CFBundleShortVersionString", "CFBundleVersion"):
+            self.assertIn(
+                f"Print :{field}' \"$APP_DIR/Contents/Info.plist\")\" == \"$expected_version\"",
+                verify,
+            )
+        self.assertIn('pkgutil --pkg-info "$RECEIPT"', verify)
+        self.assertEqual(verify.count('== "$expected_version"'), 3)
+        for probe in ("--health-probe", "--helper-health-probe", "--helper-v5-observation-probe"):
+            self.assertIn(probe, verify)
+        self.assertIn('codesign --verify --deep --strict "$APP_DIR"', verify)
+        self.assertIn('codesign --verify --strict "$HELPER_BIN"', verify)
+        for source in (
+            '"$BASELINE_PAYLOAD/Applications/Wattson.app"', '"$APP_ONLY_SOURCE"',
+        ):
+            self.assertIn(f'/usr/bin/diff -qr {source} "$APP_DIR"', lifecycle)
+        for payload in ("BASELINE_PAYLOAD", "CANDIDATE_PAYLOAD"):
+            self.assertIn(
+                f'/usr/bin/sudo -n /usr/bin/cmp -s "${payload}/Library/PrivilegedHelperTools/$HELPER_LABEL" "$HELPER_BIN"',
+                lifecycle,
+            )
+        preference = "Print :updates.checkOnLaunch"
+        self.assertEqual(lifecycle.count(preference), 3)
+        self.assertIn(
+            'readonly SANDBOX_PREFERENCES="$USER_CONTAINER/Data/Library/Preferences/com.leoarrow.wattson.plist"',
+            lifecycle,
+        )
+        self.assertIn('/usr/bin/defaults write "$SANDBOX_PREFERENCES" updates.checkOnLaunch -bool false', lifecycle)
+        self.assertNotIn("/usr/bin/defaults write com.leoarrow.wattson", lifecycle)
+        self.assertEqual(lifecycle.count(
+            '\'Print :updates.checkOnLaunch\' "$SANDBOX_PREFERENCES")" == "false"'
+        ), 3)
+        self.assertNotIn('\'Print :updates.checkOnLaunch\' "$USER_PREFERENCES"', lifecycle)
+        preference_seed = lifecycle.index("/usr/bin/defaults write")
+        baseline_health = lifecycle.index('verify_install "$BASELINE_VERSION"')
+        baseline_launch = lifecycle.index("verify_app_launch_stability", baseline_health)
+        self.assertLess(baseline_launch, preference_seed)
+        path_validation = lifecycle[baseline_launch:preference_seed]
+        for component in (
+            '"$USER_CONTAINER"', '"$USER_CONTAINER/Data"',
+            '"$USER_CONTAINER/Data/Library"', '"$USER_CONTAINER/Data/Library/Preferences"',
+        ):
+            self.assertIn(component, path_validation)
+        self.assertIn('[[ -d "$preference_directory" && ! -L "$preference_directory" ]]', path_validation)
+        self.assertIn('stat -f \'%u\' "$preference_directory"', path_validation)
+        self.assertIn('[[ ! -L "$SANDBOX_PREFERENCES" ]]', path_validation)
+        self.assertIn('[[ ! -e "$SANDBOX_PREFERENCES" || -f "$SANDBOX_PREFERENCES" ]]', path_validation)
+        self.assertNotIn("/bin/mkdir", path_validation)
+        candidate_install = lifecycle.index('-pkg "$PKG_PATH" -target /', preference_seed)
+        self.assertLess(lifecycle.index(preference, preference_seed), candidate_install)
+        self.assertEqual(lifecycle[candidate_install:].count(preference), 2)
+        self.assertIn('[[ "$has_battery" == "0" && "$exit_status" == "0" ]]', lifecycle)
+        self.assertIn("not a UI-read assertion", lifecycle)
+
     def test_candidate_imports_separate_credentials_into_a_temporary_keychain(self):
         for credential in (
             "MACOS_APP_CERT_P12_BASE64",

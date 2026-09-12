@@ -622,6 +622,7 @@ jobs:
           readonly USER_SUPPORT="$HOME/Library/Application Support/Wattson"
           readonly USER_CONTAINER="$HOME/Library/Containers/com.leoarrow.wattson"
           readonly USER_PREFERENCES="$HOME/Library/Preferences/com.leoarrow.wattson.plist"
+          readonly SANDBOX_PREFERENCES="$USER_CONTAINER/Data/Library/Preferences/com.leoarrow.wattson.plist"
           APP_ONLY_STAGE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-app-only-upgrade.XXXXXX")"
           case "$APP_ONLY_STAGE" in "$RUNNER_TEMP"/wattson-app-only-upgrade.*) ;; *) exit 1 ;; esac
           readonly APP_ONLY_STAGE
@@ -679,12 +680,14 @@ jobs:
           trap cleanup EXIT
 
           verify_install() {
+            local expected_version="${1:-$WATTSON_VERSION}"
             local disabled_state
             [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]]
             [[ -f "$APP_BIN" && ! -L "$APP_BIN" ]]
             [[ -f "$HELPER_BIN" && ! -L "$HELPER_BIN" ]]
             [[ -f "$HELPER_PLIST" && ! -L "$HELPER_PLIST" ]]
-            [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]]
+            [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]]
+            [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]]
             [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]]
             /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
             /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64
@@ -702,7 +705,7 @@ jobs:
             # report them unavailable and retain the public IOKit fallback.
             "$APP_BIN" --helper-power-probe \
               || echo "fixed SMC power keys unavailable on this runner"
-            [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]]
+            [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$expected_version" ]]
             disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"
             case "$disabled_state" in
               *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*) return 1 ;;
@@ -745,6 +748,22 @@ jobs:
             APP_PID=""
           }
 
+          uninstall_and_verify() {
+            /bin/bash scripts/uninstall.sh \
+              2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-uninstall.log"
+            for removed_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do
+              [[ ! -e "$removed_path" && ! -L "$removed_path" ]]
+            done
+            if /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then
+              echo "the shipped uninstaller left the package receipt" >&2
+              return 1
+            fi
+            if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
+              echo "the shipped uninstaller left the helper registered" >&2
+              return 1
+            fi
+          }
+
           [[ "${GITHUB_ACTIONS:-}" == "true" ]]
           [[ "${RUNNER_OS:-}" == "macOS" ]]
           [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]]
@@ -782,26 +801,60 @@ jobs:
             2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-install.log"
           verify_install
 
-          echo "Running the shipped uninstaller, then upgrading an app-only copy..."
-          /bin/bash scripts/uninstall.sh \
-            2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-uninstall.log"
-          for removed_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do
-            [[ ! -e "$removed_path" && ! -L "$removed_path" ]]
+          echo "Testing the published 3.0.28 PKG upgrade baseline..."
+          uninstall_and_verify
+          # This immutable public release is a test baseline, not the candidate.
+          readonly BASELINE_VERSION="3.0.28"
+          readonly BASELINE_SHA="86db43a02a79769cd02f022cf6bd5721cdbb96927a83a67e9f144dc8d27127da"
+          readonly BASELINE_PKG="$APP_ONLY_STAGE/Wattson-v${BASELINE_VERSION}-macos-universal.pkg"
+          /usr/bin/curl --fail --location --proto '=https' --tlsv1.2 \
+            --retry 3 --retry-delay 2 --output "$BASELINE_PKG" \
+            "https://github.com/laleoarrow/battery-monitor/releases/download/v${BASELINE_VERSION}/Wattson-v${BASELINE_VERSION}-macos-universal.pkg"
+          [[ "$(/usr/bin/shasum -a 256 "$BASELINE_PKG" | /usr/bin/awk '{print $1}')" == "$BASELINE_SHA" ]]
+          /usr/sbin/pkgutil --expand-full "$BASELINE_PKG" "$APP_ONLY_STAGE/baseline"
+          readonly BASELINE_PAYLOAD="$APP_ONLY_STAGE/baseline/Wattson-component.pkg/Payload"
+          /usr/bin/sudo -n /usr/sbin/installer -verboseR -pkg "$BASELINE_PKG" -target / \
+            2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"
+          verify_install "$BASELINE_VERSION"
+          /usr/bin/diff -qr "$BASELINE_PAYLOAD/Applications/Wattson.app" "$APP_DIR"
+          /usr/bin/sudo -n /usr/bin/cmp -s "$BASELINE_PAYLOAD/Library/PrivilegedHelperTools/$HELPER_LABEL" "$HELPER_BIN"
+          verify_app_launch_stability
+          # Let the real sandboxed baseline create its container before seeding
+          # the UserDefaults.standard plist, never the non-sandbox domain.
+          for preference_directory in \
+            "$USER_CONTAINER" "$USER_CONTAINER/Data" \
+            "$USER_CONTAINER/Data/Library" "$USER_CONTAINER/Data/Library/Preferences"; do
+            [[ -d "$preference_directory" && ! -L "$preference_directory" ]]
+            [[ "$(/usr/bin/stat -f '%u' "$preference_directory")" == "$(/usr/bin/id -u)" ]]
           done
-          if /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then
-            echo "the shipped uninstaller left the package receipt" >&2
-            exit 1
-          fi
-          if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
-            echo "the shipped uninstaller left the helper registered" >&2
-            exit 1
-          fi
+          [[ ! -L "$SANDBOX_PREFERENCES" ]]
+          [[ ! -e "$SANDBOX_PREFERENCES" || -f "$SANDBOX_PREFERENCES" ]]
+          /usr/bin/defaults write "$SANDBOX_PREFERENCES" updates.checkOnLaunch -bool false
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]]
+
+          /usr/sbin/pkgutil --expand-full "$PKG_PATH" "$APP_ONLY_STAGE/expanded"
+          readonly CANDIDATE_PAYLOAD="$APP_ONLY_STAGE/expanded/Wattson-component.pkg/Payload"
+          readonly APP_ONLY_SOURCE="$CANDIDATE_PAYLOAD/Applications/Wattson.app"
+          /usr/bin/sudo -n /usr/sbin/installer -verboseR -pkg "$PKG_PATH" -target / \
+            2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"
+          verify_install
+          /usr/bin/diff -qr "$APP_ONLY_SOURCE" "$APP_DIR"
+          /usr/bin/sudo -n /usr/bin/cmp -s "$CANDIDATE_PAYLOAD/Library/PrivilegedHelperTools/$HELPER_LABEL" "$HELPER_BIN"
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]]
+          verify_app_launch_stability
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]]
+          # Batteryless hosted runners may exit before Settings is consumed;
+          # this proves installer preservation of the correct sandbox file,
+          # not that a visible UI read and applied the preference.
+          echo "Public $BASELINE_VERSION ($BASELINE_SHA) to $WATTSON_VERSION: receipt, exact App/helper bytes, health, launch and sandbox preference-file preservation passed (not a UI-read assertion)." \
+            | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"
+
+          echo "Running the shipped uninstaller, then upgrading an app-only copy..."
+          uninstall_and_verify
 
           # Seed only the App, which was already proved byte-identical to the
           # DMG App. This is fixture setup for the privileged upgrade, not the
           # separate no-elevation copy test above. No helper or receipt exists.
-          /usr/sbin/pkgutil --expand-full "$PKG_PATH" "$APP_ONLY_STAGE/expanded"
-          readonly APP_ONLY_SOURCE="$APP_ONLY_STAGE/expanded/Wattson-component.pkg/Payload/Applications/Wattson.app"
           [[ -d "$APP_ONLY_SOURCE" && ! -L "$APP_ONLY_SOURCE" ]]
           /usr/bin/sudo -n /usr/bin/ditto "$APP_ONLY_SOURCE" "$APP_DIR"
           /usr/bin/diff -qr "$APP_ONLY_SOURCE" "$APP_DIR"
@@ -814,7 +867,7 @@ jobs:
           verify_install
           verify_app_launch_stability
 
-          echo "First install, disabled-service reinstall, uninstall, app-only upgrade, app launch, and cleanup checks passed."
+          echo "First install, disabled-service reinstall, public v3 upgrade, uninstall, app-only upgrade, app launch, and cleanup checks passed."
 
       - name: Test upgrade from the published v2.1.5 release
         if: matrix.test_v2_upgrade

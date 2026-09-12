@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v3029">v3.0.29 notes</a>
+  <a href="#whats-new-in-v400">v4.0.0 notes</a>
 </p>
 
 <p align="center">
@@ -42,7 +42,7 @@ where it is going, and how the picture has changed over the last two minutes.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
 
-## What's new in v3.0.29
+## What's new in v4.0.0
 
 - The popover follows system Light/Dark appearance, using its native material
   and adaptive instrument colors. Existing power-flow artwork and meanings
