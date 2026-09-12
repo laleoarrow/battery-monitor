@@ -74,15 +74,18 @@ instrumentation.
 Off restores the original app presentation, not an operating-system-wide
 disable of Apple's materials. Accessibility preferences remain authoritative.
 
-The main popover footer provides a distinct floating
-navigation capsule: an NSSegmentedControl inside NSGlassEffectView, beside a
-separate native `.glass` settings button, both in one
-NSGlassEffectContainerView with spacing 0. The classic geometry and Dark Aqua
-direction remain in scope; power flow, ring, lanes and history remain content
-without additional glass cards. UI4 real composited review covers six dark
+The main popover footer now replaces the UI4 ordinary segmented
+control inside a glass surface with three mutually exclusive native `.glass`
+NSButtons and a separate round settings button, sharing one
+NSGlassEffectContainerView with spacing 0. UI6's real-window comparison selected
+the pure AppKit pattern: labels fit without a SwiftUI bridge, ordinary gray
+segmented well, or extra outer glass surface. UI7 passes 829 real GUI assertion
+executions in five modes and a 20,000-iteration stress test. Eight versioned
+real-window screenshots show the final footer. Classic geometry and Dark Aqua
+remain in scope; power flow, ring, lanes and history remain content without
+additional glass cards. Earlier UI4 real composited review covers six dark
 power fixtures, battery/mixed USB output, one Light-host/Classic comparison
-and all three Settings pages. The isolated UI4b matrix passes 794 assertion
-executions across five modes, including accessibility preference overrides.
+and all three Settings pages; those earlier images are not final-footer evidence.
 This is not a full appearance cross-product or manual VoiceOver review. See
 [Liquid Glass review](liquid-glass.md) for outstanding acceptance work.
 
@@ -92,15 +95,21 @@ layers for the native `design/icon/WattsonGlass.icon` document. Release builds
 compile it with actool and include its layered catalog and a settings preview
 before signing. The primary-icon plist selection is separate from the runtime
 option; never mutate a signed app bundle to implement a theme switch.
-The shipping primary-system-icon choice is still undecided. Mono/Tinted Dark
-contrast and all six native appearances at small sizes need review. The open
-Edited Composer document has a different layer order and background from the
-disk source. Its separate saved copy is preserved under
+The 4.1.0 primary system icon is `WattsonGlass`, using the compiled layered
+catalog and its generated static ICNS fallback; both plist icon keys are
+required by release verification. The classic icon remains a preserved resource
+and Settings comparison. The runtime appearance switch does not mutate the
+signed Finder/Dock icon. A Mono-only white energy fill improves silhouette
+separation without changing Default/Dark exports. Small monochrome particles
+remain tonal decoration, not guaranteed individually legible at 32 px.
+The formerly open Edited Composer document had a different layer order and
+background. Its separate saved copy remains preserved under
 `dist/liquid-glass-option-20260913/icon-refinement/WattsonGlass-Edited-Preserved.icon`;
-do not discard the original or overwrite the canonical source during review.
+the stale editor window is now closed. The canonical three-layer source was
+restored and hash-verified after Composer reverted the old document on close.
 
-Successful CI run `34708726238` covers earlier commit `2f6ae614b1b7`, not the
-pending footer revision. New source requires fresh tests and exact-commit CI,
+Successful CI run `34710861967` covers commit `41826300c3f2`, not the
+pending native-button and icon revision. New source requires fresh tests and exact-commit CI,
 followed by the 4.1.0 packaging and release gates in [release.md](release.md).
 These development decisions do not announce or validate a 4.1.0 release.
 

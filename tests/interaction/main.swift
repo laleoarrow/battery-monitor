@@ -1185,38 +1185,65 @@ do {
               !Settings.liquidGlassEnabled && !baseline.isHidden && native.isHidden
                   && !menu.isBordered && menu.frame.size == NSSize(width: 22, height: 20))
         if #available(macOS 26.0, *) {
-            footerWindow.makeKeyAndOrderFront(nil)
-            _ = runApplication(until: { footerWindow.isKeyWindow }, timeout: 1)
+            // Match Settings' verified accessory-app activation, inside the
+            // application event loop. Cooperative activate() alone may decline.
+            DispatchQueue.main.async {
+                footerWindow.makeKeyAndOrderFront(nil)
+                NSRunningApplication.current.activate(options: [.activateAllWindows])
+                app.activate(ignoringOtherApps: true)
+                DispatchQueue.main.async {
+                    guard footerWindow.isVisible else { return }
+                    footerWindow.makeKeyAndOrderFront(nil)
+                }
+            }
+            let footerKeyboardReady = runApplication(
+                until: { app.isActive && footerWindow.isKeyWindow }, timeout: 2
+            )
+            check("玻璃键盘交互前测试 App 已激活且窗口真正获得 key 状态", footerKeyboardReady,
+                  "active=\(app.isActive) key=\(footerWindow.isKeyWindow) canKey=\(footerWindow.canBecomeKey) keyTitle=\(app.keyWindow?.title ?? "nil")")
             _ = footerWindow.makeFirstResponder(baseline)
             Settings.liquidGlassEnabled = true
             footer.layoutSubtreeIfNeeded()
-            check("全局玻璃立即使用原生分段控件并转移键盘焦点",
-                  baseline.isHidden && !native.isHidden
-                      && footerWindow.firstResponder === native
-                      && native.convert(native.bounds, to: footer)
-                          == NSRect(x: 4, y: 40, width: originalModeFrame.width - 8, height: 30)
+            let glass = footerDescendants(footer).compactMap { $0 as? NativeGlassModeControl }.first!
+            let glassButtons = glass.subviews.compactMap { $0 as? NSButton }
+            func logGlassFocus(_ stage: String) {
+                let responder = footerWindow.firstResponder
+                let view = responder as? NSView
+                let description = responder.map { String(describing: type(of: $0)) } ?? "nil"
+                let title = (responder as? NSButton)?.title ?? ""
+                log("GLASS_FOCUS stage=\(stage) active=\(app.isActive) key=\(footerWindow.isKeyWindow) responder=\(description) title=\(title) group=\(responder === glass) child=\(view?.isDescendant(of: glass) == true) menu=\(responder === menu) classic=\(responder === baseline) enabled=\(glassButtons.map(\.isEnabled)) selected=\(String(describing: glass.selectedModeForTest))")
+            }
+            logGlassFocus("glass-enabled")
+            check("全局玻璃立即使用三个原生玻璃按钮并转移键盘焦点",
+                  baseline.isHidden && native.isHidden && !glass.isHiddenOrHasHiddenAncestor
+                      && footerWindow.firstResponder === glass.keyboardFocusView
+                      && glass.convert(glass.bounds, to: footer)
+                          == NSRect(x: 0, y: 36, width: originalModeFrame.width, height: 38)
+                      && glassButtons.count == 3
+                      && glassButtons.map(\.title) == ["Auto", "Low Power", "High Power"]
                       && native.cell?.isBordered == originalNativeBordered)
             let operationContainers = footer.subviews.compactMap { $0 as? NSGlassEffectContainerView }
             let operationContainer = operationContainers.first
             let operationContent = operationContainer?.contentView
             let operationSurfaces = operationContent?.subviews.compactMap { $0 as? NSGlassEffectView } ?? []
-            let modeSurface = operationSurfaces.first
-            let modeSurfaceFrame = modeSurface.map { $0.convert($0.bounds, to: footer) }
+            let modeSurfaceFrame = glass.convert(glass.bounds, to: footer)
             let glassMenuFrame = menu.convert(menu.bounds, to: footer)
-            check("底部操作层使用单一可复用原生容器和独立规则玻璃胶囊",
-                  operationContainers.count == 1 && operationSurfaces.count == 1
+            check("底部操作层使用单一容器且没有重复玻璃或不透明分段底槽",
+                  operationContainers.count == 1 && operationSurfaces.isEmpty
                       && operationContainer?.spacing == 0
                       && operationContainer?.isHidden == false
-                      && native.superview === modeSurface?.contentView
+                      && glass.superview === operationContent
+                      && native.superview === footer && native.isHidden
                       && menu.superview === operationContent
-                      && modeSurface?.style == .regular && modeSurface?.cornerRadius == 19
-                      && modeSurface?.tintColor == nil
+                      && glass.layer?.backgroundColor == nil
+                      && glassButtons.allSatisfy { $0.isBordered && $0.bezelStyle == .glass
+                          && $0.borderShape == .capsule && $0.frame.height == 38 }
                       && modeSurfaceFrame == NSRect(x: 0, y: 36, width: footer.bounds.width - 46, height: 38))
             check("原生玻璃菜单按钮可点击且不与档位控件重叠",
                   menu.isBordered && menu.bezelStyle == .glass
-                      && menu.borderShape == .circle && native.borderShape == .capsule
+                      && menu.borderShape == .circle
                       && glassMenuFrame == NSRect(x: footer.bounds.width - 38, y: 36, width: 38, height: 38)
-                      && modeSurfaceFrame.map { glassMenuFrame.minX - $0.maxX == 8 } == true)
+                      && glassMenuFrame.minX - modeSurfaceFrame.maxX == 8)
             let menuLocalPoint = NSPoint(x: glassMenuFrame.midX, y: glassMenuFrame.midY)
             let localPointHit = footer.hitTest(menuLocalPoint)
             // NSView.hitTest takes its superview's coordinates, including the
@@ -1225,24 +1252,53 @@ do {
             let menuHit = footer.hitTest(menuParentPoint)
             var menuRequests = 0
             footer.onShowMenu = { sender in if sender === menu { menuRequests += 1 } }
+            logGlassFocus("before-menu-click")
             menu.performClick(nil)
+            logGlassFocus("after-menu-click")
             log("GLASS_MENU_HIT localPoint=\(menuLocalPoint) localPointHit=\(localPointHit.map { String(describing: type(of: $0)) } ?? "nil") parentPoint=\(menuParentPoint) parentPointHit=\(menuHit.map { String(describing: type(of: $0)) } ?? "nil") menuRequests=\(menuRequests)")
             check("嵌套玻璃不吞掉菜单点击或复制菜单动作",
                   (menuHit === menu || menuHit?.isDescendant(of: menu) == true)
                       && menuRequests == 1)
-            native.update(selected: .auto, enabledModes: [.auto, .low])
-            check("玻璃分段仍保留原生可访问性与禁用档位",
-                  native.cell?.accessibilityRole() == .radioGroup
-                      && native.accessibilityLabel() == "Power Mode"
-                      && native.accessibilityValueDescription() == "Auto"
-                      && native.cell?.accessibilityChildren()?.count == 3
-                      && !native.isEnabled(forSegment: 2))
+            glass.update(selected: .auto, enabledModes: [.auto, .low])
+            logGlassFocus("after-availability-update")
+            check("玻璃按钮组保留可访问性标签、选中语义与禁用档位",
+                  glass.accessibilityRole() == .radioGroup
+                      && glass.accessibilityLabel() == "Power Mode"
+                      && glass.accessibilityValueDescription() == "Auto"
+                      && glass.accessibilityChildren()?.count == 3
+                      && glassButtons.allSatisfy { !$0.isAccessibilityElement()
+                          && $0.cell?.isAccessibilityElement() == true
+                          && $0.cell?.accessibilityRole() == .checkBox
+                          && $0.cell?.accessibilityLabel() == $0.title
+                          && ($0.cell?.accessibilityChildren()?.count ?? 0) == 0 }
+                      && glassButtons.map(\.state) == [.on, .off, .off]
+                      && (glassButtons[0].cell?.accessibilityValue() as? NSNumber)?.intValue == 1
+                      && !glassButtons[2].isEnabled)
             var requests = 0
             var completion: ((EnergyMode?) -> Void)?
             footer.onSelect = { _, callback in requests += 1; completion = callback }
-            native.selectModeForTest(.low)
+            glassButtons[0].performClick(nil)
+            logGlassFocus("after-selected-click")
+            glassButtons[2].performClick(nil)
+            logGlassFocus("after-disabled-click")
+            check("已选模式重复点击不取消选择且禁用模式不发起请求",
+                  requests == 0 && glassButtons.map(\.state) == [.on, .off, .off])
+            glassButtons[1].performClick(nil)
+            logGlassFocus("after-low-request")
+            check("真实键盘窗口中忙时焦点暂存于玻璃模式组而不退回窗口",
+                  footerWindow.isKeyWindow && footerWindow.firstResponder === glass)
+            glass.selectModeForTest(.auto)
+            glassButtons[0].performClick(nil)
+            logGlassFocus("after-busy-rejected-clicks")
+            check("玻璃模式等待确认时禁用全部按钮并拒绝重复请求",
+                  requests == 1 && glass.selectedModeForTest == .low
+                      && glassButtons.allSatisfy { !$0.isEnabled }
+                      && !glass.accessibilityPerformIncrement()
+                      && !glass.accessibilityPerformDecrement())
             Settings.liquidGlassEnabled = false
             footer.layoutSubtreeIfNeeded()
+            logGlassFocus("after-glass-disabled")
+            log("GLASS_RESTORE sliderVisible=\(!baseline.isHidden) nativeHidden=\(native.isHidden) focus=\(footerWindow.firstResponder === baseline) modeFrame=\(baseline.frame) expectedModeFrame=\(originalModeFrame) menuFrame=\(menu.frame) expectedMenuFrame=\(originalMenuFrame) nativeParent=\(native.superview === footer) menuParent=\(menu.superview === footer) nativeBordered=\(String(describing: native.cell?.isBordered)) expectedBordered=\(String(describing: originalNativeBordered)) containerHidden=\(String(describing: operationContainer?.isHidden)) menuBordered=\(menu.isBordered) selectedIndex=\(baseline.selectedIndexForTest) requests=\(requests)")
             check("关闭全局玻璃恢复原版几何并保留待确认档位和焦点",
                   !baseline.isHidden && native.isHidden
                       && footerWindow.firstResponder === baseline
@@ -1254,22 +1310,27 @@ do {
                       && requests == 1)
             completion?(nil)
             check("跨外观切换的失败回调仍回滚档位且没有重复写入",
-                  baseline.selectedIndexForTest == 0 && requests == 1)
+                  baseline.selectedIndexForTest == 0 && glass.selectedModeForTest == .auto
+                      && glassButtons[0].isEnabled && glassButtons[1].isEnabled && requests == 1)
             setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
             Settings.liquidGlassEnabled = true
             check("再次开启玻璃复用原有操作宿主而不堆积容器",
                   footer.subviews.compactMap { $0 as? NSGlassEffectContainerView }.count == 1
                       && footer.subviews.contains { $0 === operationContainer }
-                      && native.superview === modeSurface?.contentView
+                      && glass.superview === operationContent
+                      && zip(glass.subviews.compactMap { $0 as? NSButton }, glassButtons).allSatisfy { $0 === $1 }
                       && operationContainer?.isHidden == false)
-            for focused in [native as NSView, menu as NSView] {
+            for focused in [glass.keyboardFocusView, menu as NSView] {
                 _ = footerWindow.makeFirstResponder(focused)
                 for enabled in [false, true, false] {
                     Settings.liquidGlassEnabled = enabled
                     footer.layoutSubtreeIfNeeded()
-                    check("减少动态效果下原生到原生切换保留键盘焦点及独立玻璃宿主",
-                          footerWindow.firstResponder === focused
-                              && !native.isHiddenOrHasHiddenAncestor
+                    let expectedFocus: NSView = focused === menu ? menu
+                        : (enabled ? glass.keyboardFocusView : native)
+                    check("减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点",
+                          footerWindow.firstResponder === expectedFocus
+                              && native.isHiddenOrHasHiddenAncestor == enabled
+                              && glass.isHiddenOrHasHiddenAncestor == !enabled
                               && baseline.isHidden
                               && operationContainer?.isHidden == !enabled
                               && native.cell?.isBordered == originalNativeBordered
@@ -1279,6 +1340,22 @@ do {
             check("关闭玻璃不关闭用户的减少动态效果",
                   baseline.isHidden && !native.isHidden && !menu.isBordered
                       && native.frame == originalModeFrame && menu.frame == originalMenuFrame)
+            Settings.liquidGlassEnabled = true
+            _ = footerWindow.makeFirstResponder(glass.keyboardFocusView)
+            glassButtons[1].performClick(nil)
+            check("第二次模式请求仍暂存键盘焦点并禁用所有档位",
+                  footerWindow.firstResponder === glass && glassButtons.allSatisfy { !$0.isEnabled }
+                      && requests == 2)
+            completion?(.low)
+            check("确认完成后焦点恢复到实际选中且可用的玻璃按钮",
+                  footerWindow.firstResponder === glassButtons[1]
+                      && glass.selectedModeForTest == .low && glassButtons[1].isEnabled)
+            glassButtons[0].performClick(nil)
+            _ = footerWindow.makeFirstResponder(menu)
+            completion?(nil)
+            check("用户已将焦点移到菜单时失败恢复不抢回模式焦点",
+                  footerWindow.firstResponder === menu && glass.selectedModeForTest == .low
+                      && glassButtons[1].isEnabled && requests == 3 && menuRequests == 1)
         } else {
             Settings.liquidGlassEnabled = true
             check("旧 macOS 保存选择但不假装支持原生全局玻璃",

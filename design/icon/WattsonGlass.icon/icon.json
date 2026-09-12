@@ -11,6 +11,14 @@
           "name" : "03-particles"
         },
         {
+          "fill-specializations" : [
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "solid" : "extended-srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            }
+          ],
           "image-name" : "02-energy.svg",
           "name" : "02-energy"
         },

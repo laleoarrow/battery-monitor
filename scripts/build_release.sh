@@ -103,8 +103,8 @@ verify_universal_binary "$BUILT_HELPER_EXECUTABLE"
     "$APP_DIR/Contents/Resources/"
 /usr/bin/sips -s format png "$ICON_BUILD_DIR/WattsonGlass.icns" \
     --out "$APP_DIR/Contents/Resources/AppIconGlassSettings.png" >/dev/null
-# Resources only: retain the template's primary icon while that choice is pending.
-# The generated icon-info.plist is intentionally not merged into the app.
+# The template selects WattsonGlass for both the layered system icon and its
+# static fallback. Keep the classic resources for Settings, not a bundle rewrite.
 /usr/bin/plutil -replace CFBundleShortVersionString -string "$APP_VERSION" \
     "$APP_DIR/Contents/Info.plist"
 /usr/bin/plutil -replace CFBundleVersion -string "$BUILD_NUMBER" \

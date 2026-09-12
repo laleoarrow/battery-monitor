@@ -386,8 +386,8 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertNotIn("ictool", build)
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
             info = plistlib.load(handle)
-        self.assertEqual(info["CFBundleIconFile"], "AppIcon")
-        self.assertNotIn("CFBundleIconName", info)
+        self.assertEqual(info["CFBundleIconFile"], "WattsonGlass")
+        self.assertEqual(info["CFBundleIconName"], "WattsonGlass")
 
     def test_release_verifier_requires_classic_and_native_icon_resources(self):
         verify = self.source["verify_release.sh"]
@@ -399,7 +399,8 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn('-f "$app_dir/Contents/Resources/$icon_resource"', verify)
         self.assertIn('! -L "$app_dir/Contents/Resources/$icon_resource"', verify)
         self.assertIn('-s "$app_dir/Contents/Resources/$icon_resource"', verify)
-        self.assertIn("Print :CFBundleIconName", verify)
+        self.assertIn("for icon_key in CFBundleIconFile CFBundleIconName", verify)
+        self.assertIn('Print :$icon_key', verify)
         self.assertIn('[[ "$icon_name" == "WattsonGlass" ]]', verify)
 
     def test_bundle_verifier_rejects_invalid_native_icon_resources(self):
@@ -420,7 +421,8 @@ class ReleasePackagingContractTests(unittest.TestCase):
                 "CFBundleIdentifier": "com.leoarrow.wattson",
                 "CFBundleShortVersionString": "0.0.0",
                 "LSMinimumSystemVersion": "12.0",
-                "CFBundleIconFile": "AppIcon",
+                "CFBundleIconFile": "WattsonGlass",
+                "CFBundleIconName": "WattsonGlass",
             }
             info_path.write_bytes(plistlib.dumps(info))
             for name in (
@@ -451,12 +453,18 @@ class ReleasePackagingContractTests(unittest.TestCase):
                         if resource.exists() or resource.is_symlink():
                             resource.unlink()
                         resource.write_bytes(b"fixture")
-            info["CFBundleIconName"] = "WattsonGlass"
+            for key in ("CFBundleIconFile", "CFBundleIconName"):
+                for invalid_value in (None, "AppIcon", "MissingIcon"):
+                    with self.subTest(key=key, value=invalid_value):
+                        if invalid_value is None:
+                            info.pop(key)
+                        else:
+                            info[key] = invalid_value
+                        info_path.write_bytes(plistlib.dumps(info))
+                        self.assertNotEqual(verify_bundle().returncode, 0)
+                        info[key] = "WattsonGlass"
             info_path.write_bytes(plistlib.dumps(info))
             self.assertEqual(verify_bundle().returncode, 0)
-            info["CFBundleIconName"] = "MissingIcon"
-            info_path.write_bytes(plistlib.dumps(info))
-            self.assertNotEqual(verify_bundle().returncode, 0)
 
     def test_pkg_owns_the_canonical_app_and_full_helper_payload(self):
         package = self.source["package_pkg.sh"]

@@ -96,8 +96,8 @@ private final class PopoverButton: NSButton {
 
 /// Three-position mode control and system-battery visibility choice.
 ///
-/// The tactile 2A slider remains the baseline presentation. Liquid Glass and
-/// macOS Reduce Motion use the standard segmented control and its system styling.
+/// The tactile 2A slider remains the baseline presentation. Classic Reduce
+/// Motion uses native segments; Liquid Glass uses native glass buttons.
 final class PopoverFooterView: PopoverSection {
     static let preferredHeight: CGFloat = 78
 
@@ -105,11 +105,13 @@ final class PopoverFooterView: PopoverSection {
         let selected: EnergyMode
         let enabledModes: [EnergyMode]
         let tint: NSColor
+        let busy: Bool
 
-        func matches(selected: EnergyMode, enabledModes: [EnergyMode], tint: NSColor) -> Bool {
+        func matches(selected: EnergyMode, enabledModes: [EnergyMode], tint: NSColor, busy: Bool) -> Bool {
             self.selected == selected
                 && self.enabledModes == enabledModes
                 && self.tint.isEqual(tint)
+                && self.busy == busy
         }
     }
 
@@ -135,9 +137,8 @@ final class PopoverFooterView: PopoverSection {
     private let hint = NSTextField(labelWithString: "Right-click to switch modes")
     private let settingsButton = PopoverButton()
     private var glassControls: NSView?
-    private var glassModeSurface: NSView?
+    private var glassModeControl: NativeGlassModeControl?
     private let glassControlsContent = NSView()
-    private let glassModeContent = NSView()
 
     private var selected: EnergyMode = .auto
     private var pendingMode: EnergyMode?
@@ -228,17 +229,15 @@ final class PopoverFooterView: PopoverSection {
         let modeFrame = NSRect(x: 0, y: 36, width: bounds.width - 46,
                                height: ModeSliderView.preferredHeight)
         modeControl.frame = modeFrame
+        nativeModeControl.frame = modeFrame
         if Settings.usesLiquidGlass {
-            // Two distinct native surfaces, with breathing room around the
-            // power-mode group. The data sections keep their existing geometry.
+            // Each button owns its glass. A single container batches the row
+            // without adding an opaque segmented well or another glass layer.
             glassControls?.frame = NSRect(x: 0, y: 36, width: bounds.width, height: 38)
             glassControlsContent.frame = glassControls?.bounds ?? .zero
-            glassModeSurface?.frame = NSRect(x: 0, y: 0, width: modeFrame.width, height: 38)
-            glassModeContent.frame = glassModeSurface?.bounds ?? .zero
-            nativeModeControl.frame = glassModeContent.bounds.insetBy(dx: 4, dy: 4)
+            glassModeControl?.frame = NSRect(x: 0, y: 0, width: modeFrame.width, height: 38)
             settingsButton.frame = NSRect(x: bounds.width - 38, y: 0, width: 38, height: 38)
         } else {
-            nativeModeControl.frame = modeFrame
             settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
         }
     }
@@ -335,7 +334,8 @@ final class PopoverFooterView: PopoverSection {
         if synchronizedModePresentation?.matches(
             selected: displayedMode,
             enabledModes: enabledModes,
-            tint: currentTint
+            tint: currentTint,
+            busy: pendingMode != nil
         ) == true {
             return
         }
@@ -345,10 +345,13 @@ final class PopoverFooterView: PopoverSection {
             tint: currentTint
         )
         nativeModeControl.update(selected: displayedMode, enabledModes: enabledModes)
+        glassModeControl?.update(selected: displayedMode,
+                                 enabledModes: pendingMode == nil ? enabledModes : [])
         synchronizedModePresentation = ModeControlPresentation(
             selected: displayedMode,
             enabledModes: enabledModes,
-            tint: currentTint
+            tint: currentTint,
+            busy: pendingMode != nil
         )
     }
 
@@ -357,8 +360,11 @@ final class PopoverFooterView: PopoverSection {
     }
 
     private func refreshDisplayOptions(reduceMotion: Bool) {
-        let previousControl: NSView = usesNativeModeControl ? nativeModeControl : modeControl
+        let previousControl: NSView = glassControls?.isHidden == false
+            ? (glassModeControl ?? modeControl)
+            : (usesNativeModeControl ? nativeModeControl : modeControl)
         let transferFocus = window?.firstResponder === previousControl
+            || (window?.firstResponder as? NSView)?.isDescendant(of: previousControl) == true
         let restoreMenuFocus = window?.firstResponder === settingsButton
         if #available(macOS 26.0, *), Settings.usesLiquidGlass {
             if glassControls == nil {
@@ -368,33 +374,27 @@ final class PopoverFooterView: PopoverSection {
                 addSubview(container)
                 glassControls = container
 
-                let surface = NSGlassEffectView(frame: .zero)
-                surface.style = .regular
-                surface.cornerRadius = 19
-                surface.contentView = glassModeContent
-                glassControlsContent.addSubview(surface)
-                glassModeSurface = surface
+                let control = NativeGlassModeControl(modes: modes)
+                control.onSelect = { [weak self] mode in self?.requestModeSelection(mode) }
+                control.update(selected: pendingMode ?? selected,
+                               enabledModes: pendingMode == nil ? enabledModes : [])
+                glassControlsContent.addSubview(control)
+                glassModeControl = control
             }
-            if nativeModeControl.superview !== glassModeContent {
-                glassModeContent.addSubview(nativeModeControl)
+            if settingsButton.superview !== glassControlsContent {
                 glassControlsContent.addSubview(settingsButton)
             }
             glassControls?.isHidden = false
-            // Keep AppKit's selected-segment bezel: removing it also removes
-            // the persistent selection indicator in the native control.
-            nativeModeControl.borderShape = .capsule
             settingsButton.bezelStyle = .glass
             settingsButton.borderShape = .circle
             settingsButton.isBordered = true
-            settingsButton.contentTintColor = .labelColor
+            settingsButton.contentTintColor = nil
         } else {
-            if nativeModeControl.superview !== self {
-                addSubview(nativeModeControl)
+            if settingsButton.superview !== self {
                 addSubview(settingsButton)
             }
             glassControls?.isHidden = true
             if #available(macOS 26.0, *) {
-                nativeModeControl.borderShape = .automatic
                 settingsButton.borderShape = .automatic
             }
             settingsButton.bezelStyle = .rounded
@@ -403,12 +403,18 @@ final class PopoverFooterView: PopoverSection {
         }
         needsLayout = true
 
-        let useNativeControl = reduceMotion || Settings.usesLiquidGlass
-        let nextControl: NSView = useNativeControl ? nativeModeControl : modeControl
+        let useGlassControl = Settings.usesLiquidGlass
+        let useNativeControl = reduceMotion && !useGlassControl
+        let nextControl: NSView = useGlassControl
+            ? (glassModeControl ?? modeControl)
+            : (useNativeControl ? nativeModeControl : modeControl)
         usesNativeModeControl = useNativeControl
-        modeControl.isHidden = useNativeControl
+        modeControl.isHidden = useNativeControl || useGlassControl
         nativeModeControl.isHidden = !useNativeControl
-        if transferFocus { window?.makeFirstResponder(nextControl) }
+        if transferFocus, previousControl !== nextControl {
+            let focusView = useGlassControl ? (glassModeControl?.keyboardFocusView ?? nextControl) : nextControl
+            window?.makeFirstResponder(focusView)
+        }
         if restoreMenuFocus { window?.makeFirstResponder(settingsButton) }
     }
 
