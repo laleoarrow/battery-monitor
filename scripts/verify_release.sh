@@ -54,6 +54,8 @@ verify_v5_protocol_surface() {
 
 verify_app_bundle() {
     local app_dir="$1"
+    local icon_resource
+    local icon_name
 
     [[ -d "$app_dir" && ! -L "$app_dir" ]] || fail "missing release app: $app_dir"
     /usr/bin/plutil -lint "$app_dir/Contents/Info.plist" >/dev/null
@@ -63,6 +65,16 @@ verify_app_bundle() {
         || fail "app version does not match VERSION: $app_dir"
     [[ "$(/usr/libexec/PlistBuddy -c 'Print :LSMinimumSystemVersion' "$app_dir/Contents/Info.plist")" == "$MIN_MACOS_VERSION" ]] \
         || fail "Info.plist has the wrong minimum macOS version: $app_dir"
+    for icon_resource in AppIcon.icns AppIconSettings.png Assets.car WattsonGlass.icns AppIconGlassSettings.png; do
+        [[ -f "$app_dir/Contents/Resources/$icon_resource" \
+            && ! -L "$app_dir/Contents/Resources/$icon_resource" \
+            && -s "$app_dir/Contents/Resources/$icon_resource" ]] \
+            || fail "missing, empty, or symlinked icon resource: $app_dir/$icon_resource"
+    done
+    if icon_name="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconName' "$app_dir/Contents/Info.plist" 2>/dev/null)"; then
+        [[ "$icon_name" == "WattsonGlass" ]] \
+            || fail "CFBundleIconName does not match the compiled icon: $app_dir"
+    fi
     if /usr/bin/find "$app_dir/Contents/Resources" -name InfoPlist.strings -print -quit \
         | /usr/bin/grep -q .; then
         fail "release app must keep the Wattson name in every locale: $app_dir"

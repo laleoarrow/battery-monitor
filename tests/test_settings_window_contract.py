@@ -1317,7 +1317,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 let originalUpdatePreference = Settings.checksForUpdatesOnLaunch
                 window.makeFirstResponder(automaticUpdates)
                 Settings.liquidGlassEnabled = true
-                require(first?.appearance == nil, "glass inherits the system appearance")
+                require(first?.appearance?.name == .darkAqua, "glass preserves the requested dark appearance")
                 require(controller.sidebarForTest.selectionHighlightStyle == .regular,
                     "glass sidebar uses system selection")
                 let switches = descendants(ofType: NSSwitch.self, in: content).filter { !$0.isHidden }
@@ -1398,8 +1398,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                 let glassControls = descendants(ofType: NSSwitch.self, in: glassWindow.contentView!)
                 let initialNativeLogin = glassControls
                     .first { $0.accessibilityLabel() == "Launch at Login" }!
-                require(glassWindow.appearance == nil && !glassWindow.isVisible,
-                    "glass-on initialization follows the system without showing a window")
+                require(glassWindow.appearance?.name == .darkAqua && !glassWindow.isVisible,
+                    "glass-on initialization uses dark appearance without showing a window")
                 require(glassController.sidebarNextKeyViewForTest === initialNativeLogin,
                     "glass-on initialization immediately has the native key loop")
                 let nativeAutomaticUpdates = glassControls
@@ -1796,6 +1796,25 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn('forResource: "AppIconGlassSettings"', source)
         self.assertNotIn("NSGlassEffectView", source)
         self.assertIn("static let generalListHeight: CGFloat = 272", source)
+
+    def test_glass_selected_icon_indicator_uses_contrasting_foreground_only(self):
+        source = WINDOW.read_text(encoding="utf-8")
+        card = source.split("private final class MenuBarIconCardButton", 1)[1].split(
+            "private final class MenuBarIconSettingsSectionController", 1
+        )[0]
+        radio = card.split("let radio = NSBezierPath(ovalIn: radioRect)", 1)[1].split(
+            "if window?.firstResponder === self", 1
+        )[0]
+        self.assertIn(
+            "let radioColor = state == .on && Settings.usesLiquidGlass\n"
+            "            ? NSColor.selectedControlTextColor : cardBorderColor",
+            radio,
+        )
+        self.assertIn("radioColor.setStroke()", radio)
+        self.assertIn("radioColor.setFill()", radio)
+        self.assertIn("if state == .on {", radio)
+        self.assertIn("cardBorderColor.setStroke()\n        card.lineWidth", card)
+        self.assertEqual(source.count("NSColor.selectedControlTextColor"), 1)
 
     def test_default_sections_use_only_existing_settings(self):
         source = WINDOW.read_text(encoding="utf-8")

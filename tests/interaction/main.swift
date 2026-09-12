@@ -1226,6 +1226,53 @@ do {
     footerWindow.close()
 }
 
+// The theme belongs to NSPopover itself, not an opaque content overlay.
+// Showing this fixture skips external refreshes; switching appearance must
+// keep the existing window/root and must not reopen the popover.
+if !screenLocked {
+    let previousAppAppearance = app.appearance
+    app.appearance = NSAppearance(named: .aqua)
+    let glassPanel = PopoverController()
+    var themeVisibilityEvents = 0
+    var themeModeRequests = 0
+    var themeBatteryRequests = 0
+    glassPanel.onVisibilityChange { _ in themeVisibilityEvents += 1 }
+    glassPanel.setModeSelectHandler { _, _ in themeModeRequests += 1 }
+    glassPanel.setSystemBatteryIconToggleHandler { _, _ in themeBatteryRequests += 1 }
+    glassPanel.update(snapshot: headerSnapshots[0], history: [40, 45.8],
+                      peak: 45.8, degraded: false)
+    glassPanel.openForSettingsCommandTest(relativeTo: button)
+    _ = runApplication(until: { glassPanel.isShownForTest }, timeout: 1)
+    let originalRoot = glassPanel.contentViewForTest
+    let originalWindow = glassPanel.contentWindowForTest
+    let originalFrame = originalRoot?.frame
+    check("主面板关闭玻璃时保留系统默认外观", glassPanel.popoverAppearanceForTest == nil)
+    for enabled in [true, false, true] {
+        Settings.liquidGlassEnabled = enabled
+        spin(0.05)
+        if #available(macOS 26, *), enabled {
+            check("主面板玻璃外壳及内容使用统一深色外观",
+                  glassPanel.popoverAppearanceForTest?.name == .darkAqua
+                      && originalRoot.map { PopoverStyle.isDark($0.effectiveAppearance) } == true)
+        } else {
+            check("关闭或不支持玻璃时恢复原有 NSPopover 外观",
+                  glassPanel.popoverAppearanceForTest == nil)
+        }
+        check("切换主面板玻璃保留真实窗口和根视图且不重复展示或写入",
+              glassPanel.isShownForTest && glassPanel.isOpen
+                  && glassPanel.contentViewForTest === originalRoot
+                  && glassPanel.contentWindowForTest === originalWindow
+                  && originalRoot?.frame == originalFrame
+                  && themeVisibilityEvents == 1
+                  && themeModeRequests == 0 && themeBatteryRequests == 0
+                  && glassPanel.cachedPercentForTest == headerSnapshots[0].percent)
+    }
+    Settings.liquidGlassEnabled = false
+    glassPanel.handleOutsideClick()
+    _ = runApplication(until: { !glassPanel.isShownForTest }, timeout: 1)
+    app.appearance = previousAppAppearance
+}
+
 // ---- 10. Settings 命令：一个窗口、同一入口、单一系统状态 ----
 final class InteractionSettingsSection: SettingsSectionController {
     let identifier = "interaction"

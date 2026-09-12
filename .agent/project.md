@@ -63,15 +63,22 @@ Homebrew/Pages gates.
 
 The Settings sidebar also offers an opt-in **Liquid Glass** presentation on
 macOS 26 and later. It defaults off to retain the 4.0.0 presentation. The switch
-changes Settings materials/controls and the popover's native mode chooser;
-it does not change power computation, helper requests, or data instrumentation.
+changes Settings materials/controls and the popover's native mode chooser,
+and requests the system's Dark Aqua appearance for the whole glass popover.
+This preserves the requested near-black visual direction without placing an
+opaque black overlay over the system material. Classic popovers keep their
+existing system Light/Dark adaptation; Settings retains its dark composition
+in both modes. It does not change power computation, helper requests, or data
+instrumentation.
 Off restores the original app presentation, not an operating-system-wide
 disable of Apple's materials. Accessibility preferences remain authoritative.
 
 The installed primary icon is separate from this runtime preference. The
-classic ICNS remains unchanged; `design/icon/liquid-glass/` contains source
-layers awaiting Icon Composer composition and validation, not a shipping
-layered icon. Never mutate a signed app bundle to implement a theme switch.
+classic ICNS remains unchanged; `design/icon/liquid-glass/` contains the source
+layers for the native `design/icon/WattsonGlass.icon` document. Release builds
+compile it with actool and include its layered catalog and a settings preview
+before signing. The primary-icon plist selection is separate from the runtime
+option; never mutate a signed app bundle to implement a theme switch.
 
 `BatteryPowerWidgetExtension.swift` and the legacy Python implementation remain
 reference/test surfaces; the currently shipped app bundle is the AppKit

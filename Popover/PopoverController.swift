@@ -31,6 +31,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     private var latestSystemBatteryIconHidden: Bool?
     private var displayOptionsObserver: NSObjectProtocol?
     private var screenParametersObserver: NSObjectProtocol?
+    private var appearanceObserver: NSObjectProtocol?
     private weak var anchorButton: NSStatusBarButton?
 #if DEBUG
     private(set) var contentRenderCountForTest = 0
@@ -49,6 +50,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
 
     override init() {
         super.init()
+        refreshLiquidGlassAppearance()
         popover.contentViewController = content
         setContentSize(NSSize(width: PopoverStyle.width, height: content.preferredHeight))
         popover.behavior = .transient
@@ -74,6 +76,13 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         ) { [weak self] _ in
             self?.refreshPlacement()
         }
+        appearanceObserver = NotificationCenter.default.addObserver(
+            forName: Settings.didChange, object: nil, queue: .main
+        ) { [weak self] notification in
+            guard notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
+                    == .liquidGlassAppearance else { return }
+            self?.refreshLiquidGlassAppearance()
+        }
     }
 
     deinit {
@@ -83,7 +92,16 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         if let screenParametersObserver {
             NotificationCenter.default.removeObserver(screenParametersObserver)
         }
+        if let appearanceObserver {
+            NotificationCenter.default.removeObserver(appearanceObserver)
+        }
         stopWatchingForOutsideClicks()
+    }
+
+    private func refreshLiquidGlassAppearance() {
+        // Set the appearance on the system popover, so its material and all
+        // content inherit the same dark treatment without an opaque overlay.
+        popover.appearance = Settings.usesLiquidGlass ? NSAppearance(named: .darkAqua) : nil
     }
 
     /// What the user last asked for, which is not the same as what AppKit is
@@ -379,6 +397,7 @@ extension PopoverController {
     /// which is the entire reason `setAnimationsEnabled(false)` exists.
     var contentWindowForTest: NSWindow? { popoverForTest.contentViewController?.view.window }
     var contentViewForTest: NSView? { popoverForTest.contentViewController?.view }
+    var popoverAppearanceForTest: NSAppearance? { popoverForTest.appearance }
 
     var runningAnimationCountForTest: Int {
         func count(_ layer: CALayer) -> Int {

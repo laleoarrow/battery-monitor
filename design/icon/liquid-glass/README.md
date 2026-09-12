@@ -2,8 +2,9 @@
 
 These editable SVGs derive directly from `../make_icon.swift` at `v4.0.0`.
 They contain the original curve and particle geometry, with material styling
-left for Icon Composer. They are source artwork, not a compiled Liquid Glass
-app icon or a pixel-identical recreation of the classic rendered icon.
+left for Icon Composer. They are source artwork, not a pixel-identical recreation
+of the classic rendered icon. The companion `../WattsonGlass.icon` was created
+with the real Icon Composer and contains copies of the three foreground SVGs.
 
 ## Provenance
 
@@ -19,7 +20,7 @@ app icon or a pixel-identical recreation of the classic rendered icon.
 | --- | --- |
 | `00-background-reference.svg` | Optional solid background color reference. Prefer setting the final background fill in Icon Composer and omitting this graphic layer. |
 | `01-track.svg` | Original dark track, 134 units wide with round caps. |
-| `02-energy.svg` | Original energy silhouette, initially colored with `flowCold`; set its blue-to-green treatment in Icon Composer. |
+| `02-energy.svg` | Original energy silhouette with an opaque blue-to-green pigment gradient. Icon Composer supplies optical effects. |
 | `03-particles.svg` | Four original particle cores; Composer supplies any material effects. |
 
 Every file has a 1024 × 1024 canvas. Preserve the shared canvas and alignment
@@ -51,21 +52,27 @@ The classic background ran from `backBottom` at the bottom to `backTop` at the
 top. Its energy gradient used the source AppKit angle of 42° with stops
 `flowCold / alpha 0.22 @ 0.00`, `flowCold @ 0.32`, `flowWarm @ 0.66`, and
 `flowWarm / alpha 0.22 @ 1.00`. These are provenance values for visual comparison,
-not assumed equivalents of Composer's gradient coordinates or controls. Apply
-and review color, translucency, and lighting in Composer.
+not assumed equivalents of Composer's gradient coordinates or controls. The new
+SVG retains the original color-stop fractions but aligns its pigment gradient
+between the curve endpoints and keeps the stops opaque. It does not reproduce
+the old endpoint alpha fade or imply baked glass. Apply and review translucency
+and lighting in Composer.
 
 The SVGs intentionally omit the old rounded canvas mask and inset, background
-gradient, top-edge highlight, energy gradient and opacity stops, and particle
-halos. No SVG filters, masks, clipping paths, shadows, or blur are present.
+gradient, top-edge highlight, energy opacity stops, and particle halos. The only
+SVG gradient is foreground color. No SVG filters, masks, clipping paths,
+shadows, or blur are present.
 This follows Apple's guidance to leave masking and optical effects to the
 system and configure background and material properties in Composer.
 
 ## Next step and verification
 
-Import the foreground SVGs into Icon Composer, configure its background and
-layer/group effects, and save a native `.icon` document. Review the default,
-dark, clear, and tinted appearances, including small sizes. These SVGs alone
-do not implement those appearances or change any installed app icon.
+The companion document uses a near-black Composer background based on
+`backBottom`. Its layer list is front to back: particles, energy, track. Keep
+the foreground asset copies synchronized when editing these SVGs. The document
+retains Composer-generated material settings; no private rendering API is used.
+Review its default, dark, clear, and tinted appearances, including small sizes.
+These assets do not change any installed app icon.
 
 Check XML syntax from the repository root with:
 

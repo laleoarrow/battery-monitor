@@ -2,6 +2,7 @@ import pathlib
 import plistlib
 import stat
 import subprocess
+import tempfile
 import unittest
 
 
@@ -369,6 +370,93 @@ class ReleasePackagingContractTests(unittest.TestCase):
         helper_signing = build.index('--identifier "$HELPER_LABEL"')
         app_signing = build.index('--entitlements "$ROOT_DIR/BatteryPowerApp.entitlements"')
         self.assertLess(helper_signing, app_signing)
+
+    def test_native_icon_resources_are_built_before_app_signing(self):
+        build = self.source["build_release.sh"]
+        self.assertIn('ICON_BUILD_DIR="$BUILD_ROOT/icon-assets"', build)
+        self.assertIn('actool "$ROOT_DIR/design/icon/WattsonGlass.icon"', build)
+        self.assertIn('--minimum-deployment-target "$MIN_MACOS_VERSION"', build)
+        self.assertIn('--app-icon WattsonGlass --standalone-icon-behavior all', build)
+        self.assertIn('"$ICON_BUILD_DIR/Assets.car" "$ICON_BUILD_DIR/WattsonGlass.icns"', build)
+        self.assertIn('sips -s format png "$ICON_BUILD_DIR/WattsonGlass.icns"', build)
+        app_signing = build.index('--entitlements "$ROOT_DIR/BatteryPowerApp.entitlements"')
+        for resource in ("AppIconSettings.png", "AppIconGlassSettings.png"):
+            self.assertLess(build.index(resource), app_signing)
+        self.assertLess(build.index("/usr/bin/xcrun actool"), app_signing)
+        self.assertNotIn("ictool", build)
+        with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
+            info = plistlib.load(handle)
+        self.assertEqual(info["CFBundleIconFile"], "AppIcon")
+        self.assertNotIn("CFBundleIconName", info)
+
+    def test_release_verifier_requires_classic_and_native_icon_resources(self):
+        verify = self.source["verify_release.sh"]
+        for resource in (
+            "AppIcon.icns", "AppIconSettings.png", "Assets.car",
+            "WattsonGlass.icns", "AppIconGlassSettings.png",
+        ):
+            self.assertIn(resource, verify)
+        self.assertIn('-f "$app_dir/Contents/Resources/$icon_resource"', verify)
+        self.assertIn('! -L "$app_dir/Contents/Resources/$icon_resource"', verify)
+        self.assertIn('-s "$app_dir/Contents/Resources/$icon_resource"', verify)
+        self.assertIn("Print :CFBundleIconName", verify)
+        self.assertIn('[[ "$icon_name" == "WattsonGlass" ]]', verify)
+
+    def test_bundle_verifier_rejects_invalid_native_icon_resources(self):
+        verifier = "verify_app_bundle() {" + self.source["verify_release.sh"].split(
+            "verify_app_bundle() {", 1
+        )[1].split("\nverify_expected_team_id()", 1)[0]
+        shell = (
+            "set -euo pipefail\nAPP_VERSION=0.0.0\nMIN_MACOS_VERSION=12.0\n"
+            'fail() { echo "$*" >&2; exit 1; }\n' + verifier
+            + '\nverify_app_bundle "$1"\n'
+        )
+        with tempfile.TemporaryDirectory(prefix="wattson-icon-verifier-") as temp:
+            app = pathlib.Path(temp) / "Wattson.app"
+            resources = app / "Contents" / "Resources"
+            resources.mkdir(parents=True)
+            info_path = app / "Contents" / "Info.plist"
+            info = {
+                "CFBundleIdentifier": "com.leoarrow.wattson",
+                "CFBundleShortVersionString": "0.0.0",
+                "LSMinimumSystemVersion": "12.0",
+                "CFBundleIconFile": "AppIcon",
+            }
+            info_path.write_bytes(plistlib.dumps(info))
+            for name in (
+                "AppIcon.icns", "AppIconSettings.png", "Assets.car",
+                "WattsonGlass.icns", "AppIconGlassSettings.png",
+            ):
+                (resources / name).write_bytes(b"fixture")
+
+            def verify_bundle():
+                return subprocess.run(
+                    ["/bin/bash", "-c", shell, "icon-verifier", str(app)],
+                    capture_output=True, text=True, check=False,
+                )
+
+            self.assertEqual(verify_bundle().returncode, 0)
+            for name in ("Assets.car", "WattsonGlass.icns", "AppIconGlassSettings.png"):
+                resource = resources / name
+                for invalid_state in ("missing", "empty", "symlink"):
+                    with self.subTest(resource=name, state=invalid_state):
+                        resource.unlink()
+                        if invalid_state == "empty":
+                            resource.touch()
+                        elif invalid_state == "symlink":
+                            resource.symlink_to("AppIcon.icns")
+                        result = verify_bundle()
+                        self.assertNotEqual(result.returncode, 0)
+                        self.assertIn(name, result.stderr)
+                        if resource.exists() or resource.is_symlink():
+                            resource.unlink()
+                        resource.write_bytes(b"fixture")
+            info["CFBundleIconName"] = "WattsonGlass"
+            info_path.write_bytes(plistlib.dumps(info))
+            self.assertEqual(verify_bundle().returncode, 0)
+            info["CFBundleIconName"] = "MissingIcon"
+            info_path.write_bytes(plistlib.dumps(info))
+            self.assertNotEqual(verify_bundle().returncode, 0)
 
     def test_pkg_owns_the_canonical_app_and_full_helper_payload(self):
         package = self.source["package_pkg.sh"]

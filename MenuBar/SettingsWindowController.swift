@@ -2020,11 +2020,13 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
             height: 14
         )
         let radio = NSBezierPath(ovalIn: radioRect)
-        cardBorderColor.setStroke()
+        let radioColor = state == .on && Settings.usesLiquidGlass
+            ? NSColor.selectedControlTextColor : cardBorderColor
+        radioColor.setStroke()
         radio.lineWidth = state == .on ? 2 : 1.5
         radio.stroke()
         if state == .on {
-            cardBorderColor.setFill()
+            radioColor.setFill()
             NSBezierPath(ovalIn: radioRect.insetBy(dx: 4, dy: 4)).fill()
         }
 
@@ -2497,7 +2499,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             backing: .buffered,
             defer: false
         )
-        window.appearance = Settings.usesLiquidGlass ? nil : NSAppearance(named: .darkAqua)
+        window.appearance = NSAppearance(named: .darkAqua)
         window.backgroundColor = SettingsStyle.contentBackground
         window.title = "Wattson Settings"
         window.titleVisibility = .hidden
@@ -2585,7 +2587,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         // Appearance is never a reason to re-query the privileged helper.
         let focusedToggle = window.firstResponder as? SettingsToggleButton
             ?? (window.firstResponder as? NSSwitch)?.superview as? SettingsToggleButton
-        window.appearance = enabled ? nil : NSAppearance(named: .darkAqua)
+        window.appearance = NSAppearance(named: .darkAqua)
         window.backgroundColor = SettingsStyle.contentBackground
         sidebarMaterial.isHidden = !enabled
         sidebar.selectionHighlightStyle = enabled ? .regular : .none
