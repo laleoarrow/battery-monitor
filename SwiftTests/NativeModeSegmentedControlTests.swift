@@ -27,16 +27,20 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         super.tearDown()
     }
 
+    private func descendants(of view: NSView) -> [NSView] {
+        view.subviews.flatMap { [$0] + descendants(of: $0) }
+    }
+
     private func modeSlider(in footer: PopoverFooterView) -> ModeSliderView {
-        footer.subviews.compactMap { $0 as? ModeSliderView }.first!
+        descendants(of: footer).compactMap { $0 as? ModeSliderView }.first!
     }
 
     private func nativeControl(in footer: PopoverFooterView) -> NativeModeSegmentedControl {
-        footer.subviews.compactMap { $0 as? NativeModeSegmentedControl }.first!
+        descendants(of: footer).compactMap { $0 as? NativeModeSegmentedControl }.first!
     }
 
     private func menuButton(in footer: PopoverFooterView) -> NSButton {
-        footer.subviews.compactMap { $0 as? NSButton }.first {
+        descendants(of: footer).compactMap { $0 as? NSButton }.first {
             $0.action == NSSelectorFromString("showMenu")
         }!
     }
@@ -53,7 +57,8 @@ final class NativeModeSegmentedControlTests: XCTestCase {
             XCTAssertFalse(nativeControl(in: footer).isHidden)
             XCTAssertTrue(menu.isBordered)
             XCTAssertEqual(menu.bezelStyle, .glass)
-            XCTAssertEqual(menu.frame.size, NSSize(width: 30, height: 30))
+            XCTAssertEqual(menu.frame.size, NSSize(width: 38, height: 38))
+            XCTAssertEqual(menu.borderShape, .circle)
         } else {
             XCTAssertFalse(modeSlider(in: footer).isHidden)
             XCTAssertTrue(nativeControl(in: footer).isHidden)
@@ -76,6 +81,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         let menu = menuButton(in: footer)
         let baselineModeFrame = slider.frame
         let baselineMenuFrame = menu.frame
+        let baselineNativeBordered = native.cell?.isBordered
         let baselineKnobOpacity = slider.nativeSelectorOpacityForTest
         let window = NSWindow(contentRect: footer.bounds, styleMask: [.borderless],
                               backing: .buffered, defer: false)
@@ -95,8 +101,11 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         XCTAssertFalse(native.isHidden)
         XCTAssertEqual(native.selectedModeForTest, .low)
         XCTAssertTrue(window.firstResponder === native)
-        XCTAssertEqual(native.frame, baselineModeFrame)
-        XCTAssertGreaterThan(menu.frame.minX, native.frame.maxX)
+        XCTAssertEqual(native.cell?.isBordered, baselineNativeBordered)
+        XCTAssertEqual(native.convert(native.bounds, to: footer),
+                       NSRect(x: 4, y: 40, width: baselineModeFrame.width - 8, height: 30))
+        XCTAssertGreaterThan(menu.convert(menu.bounds, to: footer).minX,
+                             native.convert(native.bounds, to: footer).maxX)
         XCTAssertEqual(menu.bezelStyle, .glass)
         XCTAssertTrue(menu.isBordered)
 
@@ -108,6 +117,9 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         XCTAssertEqual(slider.selectedIndexForTest, 1)
         XCTAssertEqual(slider.frame, baselineModeFrame)
         XCTAssertEqual(menu.frame, baselineMenuFrame)
+        XCTAssertEqual(native.cell?.isBordered, baselineNativeBordered)
+        XCTAssertTrue(native.superview === footer)
+        XCTAssertTrue(menu.superview === footer)
         XCTAssertEqual(slider.nativeSelectorOpacityForTest, baselineKnobOpacity)
         XCTAssertFalse(menu.isBordered)
         XCTAssertEqual(menu.contentTintColor, PopoverStyle.secondaryText)
@@ -158,17 +170,126 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
                               height: PopoverFooterView.preferredHeight)
         let menu = menuButton(in: footer)
+        let native = nativeControl(in: footer)
+        let baselineNativeBordered = native.cell?.isBordered
+        footer.update(mode: .low, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue)
+        footer.layoutSubtreeIfNeeded()
+        let baselineNativeFrame = native.frame
+        let baselineMenuFrame = menu.frame
         let window = NSWindow(contentRect: footer.bounds, styleMask: [.borderless],
                               backing: .buffered, defer: false)
         defer { window.orderOut(nil) }
         window.contentView = footer
-        XCTAssertTrue(window.makeFirstResponder(menu))
+        for focused in [native as NSView, menu as NSView] {
+            XCTAssertTrue(window.makeFirstResponder(focused))
+            for enabled in [true, false, true, false] {
+                Settings.liquidGlassEnabled = enabled
+                footer.layoutSubtreeIfNeeded()
+                XCTAssertTrue(modeSlider(in: footer).isHidden)
+                XCTAssertFalse(native.isHiddenOrHasHiddenAncestor)
+                XCTAssertTrue(window.firstResponder === focused)
+                XCTAssertEqual(native.selectedModeForTest, .low)
+                XCTAssertEqual(menu.isBordered, enabled)
+                if !enabled {
+                    XCTAssertTrue(native.superview === footer)
+                    XCTAssertTrue(menu.superview === footer)
+                    XCTAssertEqual(native.frame, baselineNativeFrame)
+                    XCTAssertEqual(menu.frame, baselineMenuFrame)
+                    XCTAssertEqual(native.cell?.isBordered, baselineNativeBordered)
+                }
+            }
+        }
+    }
+
+    func testGlassOperationLayerUsesOneReusableContainerAndUnpaintedModeSurface() throws {
+        guard #available(macOS 26.0, *) else { return }
+        let footer = PopoverFooterView()
+        footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                              height: PopoverFooterView.preferredHeight)
+        let native = nativeControl(in: footer)
+        let menu = menuButton(in: footer)
+        let baselineNativeBordered = native.cell?.isBordered
+        var originalContainer: NSGlassEffectContainerView?
+        var originalSurface: NSGlassEffectView?
+        for enabled in [true, false, true] {
+            Settings.liquidGlassEnabled = enabled
+            footer.layoutSubtreeIfNeeded()
+            // The classic slider owns its own internal materials; only this
+            // direct footer child is the new operation-layer container.
+            let containers = footer.subviews.compactMap { $0 as? NSGlassEffectContainerView }
+            XCTAssertEqual(containers.count, 1)
+            let container = try XCTUnwrap(containers.first)
+            let content = try XCTUnwrap(container.contentView)
+            let surfaces = content.subviews.compactMap { $0 as? NSGlassEffectView }
+            XCTAssertEqual(surfaces.count, 1)
+            let surface = try XCTUnwrap(surfaces.first)
+            let modeContent = try XCTUnwrap(surface.contentView)
+            if let originalContainer, let originalSurface {
+                XCTAssertTrue(container === originalContainer)
+                XCTAssertTrue(surface === originalSurface)
+            } else {
+                originalContainer = container
+                originalSurface = surface
+            }
+            XCTAssertEqual(container.spacing, 0)
+            XCTAssertEqual(container.isHidden, !enabled)
+            XCTAssertEqual(surface.style, .regular)
+            XCTAssertEqual(surface.cornerRadius, 19)
+            XCTAssertNil(surface.tintColor)
+            XCTAssertTrue(content.layer?.backgroundColor == nil
+                          || content.layer?.backgroundColor?.alpha == 0)
+            XCTAssertTrue(modeContent.layer?.backgroundColor == nil
+                          || modeContent.layer?.backgroundColor?.alpha == 0)
+            XCTAssertEqual(descendants(of: footer).filter { $0 === native }.count, 1)
+            XCTAssertEqual(descendants(of: footer).filter { $0 === menu }.count, 1)
+            if enabled {
+                XCTAssertTrue(native.superview === modeContent)
+                XCTAssertTrue(menu.superview === content)
+                XCTAssertEqual(container.frame, NSRect(x: 0, y: 36, width: footer.bounds.width, height: 38))
+                let modeFrame = surface.convert(surface.bounds, to: footer)
+                let menuFrame = menu.convert(menu.bounds, to: footer)
+                XCTAssertEqual(modeFrame, NSRect(x: 0, y: 36, width: footer.bounds.width - 46, height: 38))
+                XCTAssertEqual(menuFrame, NSRect(x: footer.bounds.width - 38, y: 36, width: 38, height: 38))
+                XCTAssertEqual(menuFrame.minX - modeFrame.maxX, 8)
+                XCTAssertEqual(native.cell?.isBordered, baselineNativeBordered)
+                XCTAssertEqual(native.borderShape, .capsule)
+                XCTAssertEqual(menu.borderShape, .circle)
+            } else {
+                XCTAssertTrue(native.superview === footer)
+                XCTAssertTrue(menu.superview === footer)
+            }
+        }
+    }
+
+    func testGlassSegmentsKeepNativeBezelSelectionAccessibilityAndDisabledActions() {
+        guard #available(macOS 26.0, *) else { return }
+        let footer = PopoverFooterView()
+        let native = nativeControl(in: footer)
+        let baselineNativeBordered = native.cell?.isBordered
         Settings.liquidGlassEnabled = true
-        Settings.liquidGlassEnabled = false
-        XCTAssertTrue(modeSlider(in: footer).isHidden)
-        XCTAssertFalse(nativeControl(in: footer).isHidden)
-        XCTAssertFalse(menu.isBordered)
-        XCTAssertTrue(window.firstResponder === menu)
+        native.update(selected: .low, enabledModes: [.auto, .low])
+        var requests: [EnergyMode] = []
+        native.onSelect = { requests.append($0) }
+        XCTAssertEqual(native.cell?.isBordered, baselineNativeBordered)
+        XCTAssertEqual(native.selectedModeForTest, .low)
+        XCTAssertEqual(native.accessibilityLabel(), "Power Mode")
+        XCTAssertEqual(native.accessibilityValueDescription(), "Low Power")
+        XCTAssertEqual(native.cell?.accessibilityRole(), .radioGroup)
+        XCTAssertEqual(native.cell?.accessibilityChildren()?.count, 3)
+        XCTAssertFalse(native.isEnabled(forSegment: 2))
+        native.selectModeForTest(.high)
+        XCTAssertFalse(native.accessibilityPerformIncrement())
+        XCTAssertTrue(requests.isEmpty)
+        XCTAssertEqual(native.selectedModeForTest, .low)
+        XCTAssertTrue(native.accessibilityPerformDecrement())
+        XCTAssertEqual(requests, [.auto])
+        native.update(selected: .auto, enabledModes: [])
+        XCTAssertFalse(native.isEnabled)
+        XCTAssertFalse(native.isAccessibilityEnabled())
+        XCTAssertFalse(native.accessibilityPerformPress())
+        XCTAssertFalse(native.accessibilityPerformIncrement())
+        XCTAssertEqual(requests, [.auto])
     }
 
     func testUnrelatedSettingsDoNotReselectOrRestyleModeControls() {

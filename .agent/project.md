@@ -61,9 +61,10 @@ Homebrew/Pages gates.
 - High Power mode is exposed only when the hardware reports support.
 - macOS 26 uses native Liquid Glass; macOS 12–25 use the AppKit fallback.
 
-The Settings sidebar also offers an opt-in **Liquid Glass** presentation on
-macOS 26 and later. It defaults off to retain the 4.0.0 presentation. The switch
-changes Settings materials/controls and the popover's native mode chooser,
+The 4.1.0 development source offers an opt-in **Liquid Glass** presentation in
+the Settings sidebar on macOS 26 and later. It defaults off to retain the
+4.0.0 presentation. The switch changes Settings materials/controls and the
+popover's native mode chooser,
 and requests the system's Dark Aqua appearance for the whole glass popover.
 This preserves the requested near-black visual direction without placing an
 opaque black overlay over the system material. Classic popovers keep their
@@ -73,12 +74,35 @@ instrumentation.
 Off restores the original app presentation, not an operating-system-wide
 disable of Apple's materials. Accessibility preferences remain authoritative.
 
+The main popover footer provides a distinct floating
+navigation capsule: an NSSegmentedControl inside NSGlassEffectView, beside a
+separate native `.glass` settings button, both in one
+NSGlassEffectContainerView with spacing 0. The classic geometry and Dark Aqua
+direction remain in scope; power flow, ring, lanes and history remain content
+without additional glass cards. UI4 real composited review covers six dark
+power fixtures, battery/mixed USB output, one Light-host/Classic comparison
+and all three Settings pages. The isolated UI4b matrix passes 794 assertion
+executions across five modes, including accessibility preference overrides.
+This is not a full appearance cross-product or manual VoiceOver review. See
+[Liquid Glass review](liquid-glass.md) for outstanding acceptance work.
+
 The installed primary icon is separate from this runtime preference. The
 classic ICNS remains unchanged; `design/icon/liquid-glass/` contains the source
 layers for the native `design/icon/WattsonGlass.icon` document. Release builds
 compile it with actool and include its layered catalog and a settings preview
 before signing. The primary-icon plist selection is separate from the runtime
 option; never mutate a signed app bundle to implement a theme switch.
+The shipping primary-system-icon choice is still undecided. Mono/Tinted Dark
+contrast and all six native appearances at small sizes need review. The open
+Edited Composer document has a different layer order and background from the
+disk source. Its separate saved copy is preserved under
+`dist/liquid-glass-option-20260913/icon-refinement/WattsonGlass-Edited-Preserved.icon`;
+do not discard the original or overwrite the canonical source during review.
+
+Successful CI run `34708726238` covers earlier commit `2f6ae614b1b7`, not the
+pending footer revision. New source requires fresh tests and exact-commit CI,
+followed by the 4.1.0 packaging and release gates in [release.md](release.md).
+These development decisions do not announce or validate a 4.1.0 release.
 
 `BatteryPowerWidgetExtension.swift` and the legacy Python implementation remain
 reference/test surfaces; the currently shipped app bundle is the AppKit

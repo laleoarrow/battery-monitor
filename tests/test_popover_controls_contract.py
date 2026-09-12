@@ -109,16 +109,79 @@ class PopoverControlsContractTests(unittest.TestCase):
 
     def test_optional_glass_menu_button_uses_system_style_and_restores_baseline(self):
         footer = self.content.split("final class PopoverFooterView", 1)[1].split(
-            "final class PopoverContentViewController", 1
+            "\nprivate final class PopoverSurfaceView", 1
         )[0]
-        self.assertIn("if #available(macOS 26.0, *), Settings.usesLiquidGlass", footer)
-        self.assertIn("settingsButton.bezelStyle = .glass", footer)
-        self.assertIn("settingsButton.isBordered = true", footer)
-        self.assertIn("settingsButton.isBordered = false", footer)
-        self.assertIn("settingsButton.contentTintColor = PopoverStyle.secondaryText", footer)
-        self.assertIn("x: bounds.width - 30, y: 36, width: 30, height: 30", footer)
-        self.assertIn("x: bounds.width - 22, y: 42, width: 22, height: 20", footer)
-        self.assertNotIn("NSGlassEffectView", footer)
+        refresh = footer.split("private func refreshDisplayOptions(reduceMotion:", 1)[1].split(
+            "\n    @objc private func systemBatteryIconChanged", 1
+        )[0]
+        glass, classic = refresh.split("        } else {", 1)
+        self.assertIn("if #available(macOS 26.0, *), Settings.usesLiquidGlass", glass)
+        # AppKit's own bezel supplies the persistent selected-segment indicator.
+        self.assertNotIn("nativeModeControl.cell?.isBordered", footer)
+        self.assertIn("nativeModeControl.borderShape = .capsule", glass)
+        self.assertIn("settingsButton.bezelStyle = .glass", glass)
+        self.assertIn("settingsButton.borderShape = .circle", glass)
+        self.assertIn("settingsButton.isBordered = true", glass)
+        self.assertIn("nativeModeControl.borderShape = .automatic", classic)
+        self.assertIn("settingsButton.borderShape = .automatic", classic)
+        self.assertIn("settingsButton.bezelStyle = .rounded", classic)
+        self.assertIn("settingsButton.isBordered = false", classic)
+        self.assertIn("settingsButton.contentTintColor = PopoverStyle.secondaryText", classic)
+        self.assertIn("addSubview(nativeModeControl)", classic)
+        self.assertIn("addSubview(settingsButton)", classic)
+        self.assertIn("glassControls?.isHidden = true", classic)
+        # Reparenting must also run for native-to-native changes under Reduce
+        # Motion, with the old focus captured before either control moves.
+        self.assertNotIn("else { return }", refresh)
+        self.assertIn("let useNativeControl = reduceMotion || Settings.usesLiquidGlass", refresh)
+        for capture in ("let transferFocus =", "let restoreMenuFocus ="):
+            self.assertLess(refresh.index(capture),
+                            refresh.index("glassModeContent.addSubview(nativeModeControl)"))
+        self.assertIn("if transferFocus { window?.makeFirstResponder(nextControl) }", refresh)
+        self.assertIn("if restoreMenuFocus { window?.makeFirstResponder(settingsButton) }", refresh)
+
+    def test_footer_glass_operations_use_one_native_container_and_group_surface(self):
+        footer = self.content.split("final class PopoverFooterView", 1)[1].split(
+            "\nprivate final class PopoverSurfaceView", 1
+        )[0]
+        self.assertEqual(footer.count("NSGlassEffectContainerView(frame:"), 1)
+        self.assertEqual(footer.count("NSGlassEffectView(frame:"), 1)
+        self.assertIn("if glassControls == nil {", footer)
+        self.assertIn("container.spacing = 0", footer)
+        self.assertIn("container.contentView = glassControlsContent", footer)
+        self.assertIn("surface.style = .regular", footer)
+        self.assertIn("surface.cornerRadius = 19", footer)
+        self.assertIn("surface.contentView = glassModeContent", footer)
+        self.assertIn("glassControlsContent.addSubview(surface)", footer)
+        self.assertIn("glassModeContent.addSubview(nativeModeControl)", footer)
+        self.assertIn("glassControlsContent.addSubview(settingsButton)", footer)
+        self.assertNotIn("surface.addSubview", footer)
+        self.assertNotIn("container.addSubview", footer)
+        # The system material remains untinted, without a hand-painted scrim.
+        self.assertNotIn(".tintColor", footer)
+        self.assertNotIn("backgroundColor =", footer)
+        self.assertNotIn("setValue(", footer)
+
+    def test_footer_glass_geometry_preserves_classic_row_and_total_height(self):
+        footer = self.content.split("final class PopoverFooterView", 1)[1].split(
+            "\nprivate final class PopoverSurfaceView", 1
+        )[0]
+        layout = footer.split("override func layout()", 1)[1].split("\n    func update(", 1)[0]
+        self.assertIn("static let preferredHeight: CGFloat = 78", footer)
+        self.assertIn("systemBatteryIconButton.frame = NSRect(x: 0, y: 10, width: 168, height: 20)", layout)
+        self.assertIn("hint.frame = NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)", layout)
+        self.assertIn("x: 0, y: 36, width: bounds.width - 46", layout)
+        self.assertIn("height: ModeSliderView.preferredHeight", layout)
+        self.assertIn("modeControl.frame = modeFrame", layout)
+        glass, classic = layout.split("if Settings.usesLiquidGlass {", 1)[1].split("} else {", 1)
+        self.assertIn("glassControls?.frame = NSRect(x: 0, y: 36, width: bounds.width, height: 38)", glass)
+        self.assertIn("glassControlsContent.frame = glassControls?.bounds ?? .zero", glass)
+        self.assertIn("glassModeSurface?.frame = NSRect(x: 0, y: 0, width: modeFrame.width, height: 38)", glass)
+        self.assertIn("glassModeContent.frame = glassModeSurface?.bounds ?? .zero", glass)
+        self.assertIn("nativeModeControl.frame = glassModeContent.bounds.insetBy(dx: 4, dy: 4)", glass)
+        self.assertIn("settingsButton.frame = NSRect(x: bounds.width - 38, y: 0, width: 38, height: 38)", glass)
+        self.assertIn("nativeModeControl.frame = modeFrame", classic)
+        self.assertIn("settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)", classic)
 
     def test_glass_interaction_isolates_preferences_before_constructing_views(self):
         interaction = (ROOT / "tests" / "interaction" / "main.swift").read_text()

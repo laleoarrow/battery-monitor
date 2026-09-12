@@ -134,6 +134,10 @@ final class PopoverFooterView: PopoverSection {
     )
     private let hint = NSTextField(labelWithString: "Right-click to switch modes")
     private let settingsButton = PopoverButton()
+    private var glassControls: NSView?
+    private var glassModeSurface: NSView?
+    private let glassControlsContent = NSView()
+    private let glassModeContent = NSView()
 
     private var selected: EnergyMode = .auto
     private var pendingMode: EnergyMode?
@@ -224,10 +228,19 @@ final class PopoverFooterView: PopoverSection {
         let modeFrame = NSRect(x: 0, y: 36, width: bounds.width - 46,
                                height: ModeSliderView.preferredHeight)
         modeControl.frame = modeFrame
-        nativeModeControl.frame = modeFrame
-        settingsButton.frame = Settings.usesLiquidGlass
-            ? NSRect(x: bounds.width - 30, y: 36, width: 30, height: 30)
-            : NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
+        if Settings.usesLiquidGlass {
+            // Two distinct native surfaces, with breathing room around the
+            // power-mode group. The data sections keep their existing geometry.
+            glassControls?.frame = NSRect(x: 0, y: 36, width: bounds.width, height: 38)
+            glassControlsContent.frame = glassControls?.bounds ?? .zero
+            glassModeSurface?.frame = NSRect(x: 0, y: 0, width: modeFrame.width, height: 38)
+            glassModeContent.frame = glassModeSurface?.bounds ?? .zero
+            nativeModeControl.frame = glassModeContent.bounds.insetBy(dx: 4, dy: 4)
+            settingsButton.frame = NSRect(x: bounds.width - 38, y: 0, width: 38, height: 38)
+        } else {
+            nativeModeControl.frame = modeFrame
+            settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
+        }
     }
 
     func update(mode: EnergyMode, helperInstalled: Bool, systemBatteryIconHidden: Bool?,
@@ -344,11 +357,46 @@ final class PopoverFooterView: PopoverSection {
     }
 
     private func refreshDisplayOptions(reduceMotion: Bool) {
+        let previousControl: NSView = usesNativeModeControl ? nativeModeControl : modeControl
+        let transferFocus = window?.firstResponder === previousControl
+        let restoreMenuFocus = window?.firstResponder === settingsButton
         if #available(macOS 26.0, *), Settings.usesLiquidGlass {
+            if glassControls == nil {
+                let container = NSGlassEffectContainerView(frame: .zero)
+                container.spacing = 0
+                container.contentView = glassControlsContent
+                addSubview(container)
+                glassControls = container
+
+                let surface = NSGlassEffectView(frame: .zero)
+                surface.style = .regular
+                surface.cornerRadius = 19
+                surface.contentView = glassModeContent
+                glassControlsContent.addSubview(surface)
+                glassModeSurface = surface
+            }
+            if nativeModeControl.superview !== glassModeContent {
+                glassModeContent.addSubview(nativeModeControl)
+                glassControlsContent.addSubview(settingsButton)
+            }
+            glassControls?.isHidden = false
+            // Keep AppKit's selected-segment bezel: removing it also removes
+            // the persistent selection indicator in the native control.
+            nativeModeControl.borderShape = .capsule
             settingsButton.bezelStyle = .glass
+            settingsButton.borderShape = .circle
             settingsButton.isBordered = true
             settingsButton.contentTintColor = .labelColor
         } else {
+            if nativeModeControl.superview !== self {
+                addSubview(nativeModeControl)
+                addSubview(settingsButton)
+            }
+            glassControls?.isHidden = true
+            if #available(macOS 26.0, *) {
+                nativeModeControl.borderShape = .automatic
+                settingsButton.borderShape = .automatic
+            }
             settingsButton.bezelStyle = .rounded
             settingsButton.isBordered = false
             settingsButton.contentTintColor = PopoverStyle.secondaryText
@@ -356,16 +404,12 @@ final class PopoverFooterView: PopoverSection {
         needsLayout = true
 
         let useNativeControl = reduceMotion || Settings.usesLiquidGlass
-        guard useNativeControl != usesNativeModeControl
-                || modeControl.isHidden != useNativeControl
-                || nativeModeControl.isHidden == useNativeControl else { return }
-        let previousControl: NSView = usesNativeModeControl ? nativeModeControl : modeControl
         let nextControl: NSView = useNativeControl ? nativeModeControl : modeControl
-        let transferFocus = window?.firstResponder === previousControl
         usesNativeModeControl = useNativeControl
         modeControl.isHidden = useNativeControl
         nativeModeControl.isHidden = !useNativeControl
         if transferFocus { window?.makeFirstResponder(nextControl) }
+        if restoreMenuFocus { window?.makeFirstResponder(settingsButton) }
     }
 
     @objc private func systemBatteryIconChanged(_ sender: NSButton) {
