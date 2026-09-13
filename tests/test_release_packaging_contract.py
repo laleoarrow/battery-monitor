@@ -1,10 +1,13 @@
+import json
 import pathlib
 import plistlib
+import re
 import stat
 import struct
 import subprocess
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 import zlib
 
 
@@ -389,6 +392,57 @@ class ReleasePackagingContractTests(unittest.TestCase):
             info = plistlib.load(handle)
         self.assertEqual(info["CFBundleIconFile"], "WattsonGlass")
         self.assertEqual(info["CFBundleIconName"], "WattsonGlass")
+
+    def test_native_icon_layers_match_sources_without_baked_filters(self):
+        icon = ROOT / "design" / "icon" / "WattsonGlass.icon"
+        document = json.loads((icon / "icon.json").read_text(encoding="utf-8"))
+        layers = [layer for group in document["groups"] for layer in group["layers"]]
+        names = ("03-particles.svg", "02-energy.svg", "01-track.svg")
+        self.assertEqual([layer["image-name"] for layer in layers], list(names))
+        for layer in layers:
+            self.assertFalse(layer.get("hidden", False))
+        for name in names:
+            with self.subTest(layer=name):
+                source = ROOT / "design" / "icon" / "liquid-glass" / name
+                self.assertEqual((icon / "Assets" / name).read_bytes(), source.read_bytes())
+                svg = ET.fromstring(source.read_bytes())
+                self.assertEqual([float(value) for value in svg.attrib["viewBox"].split()],
+                                 [0, 0, 1024, 1024])
+                for node in svg.iter():
+                    tag = node.tag.rsplit("}", 1)[-1]
+                    self.assertNotEqual(tag, "filter")
+                    self.assertFalse(tag.startswith("fe"), f"baked SVG effect: {tag}")
+                    self.assertNotIn("filter", node.attrib)
+                    self.assertNotIn("transform", node.attrib)
+                    self.assertNotRegex(node.get("style", ""), r"(?i)\b(?:filter|backdrop-filter)\s*:")
+
+    def test_native_icon_particles_stay_inside_the_original_energy_band(self):
+        assets = ROOT / "design" / "icon" / "WattsonGlass.icon" / "Assets"
+        namespace = {"svg": "http://www.w3.org/2000/svg"}
+        control_points = ((240, 672), (452, 672), (566, 334), (784, 334))
+        band_width = 134
+        for name in ("01-track.svg", "02-energy.svg"):
+            with self.subTest(layer=name):
+                paths = ET.parse(assets / name).findall(".//svg:path", namespace)
+                self.assertEqual(len(paths), 1)
+                path = paths[0]
+                tokens = re.findall(r"[A-Za-z]|[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?", path.attrib["d"])
+                self.assertEqual((tokens[0], tokens[3]), ("M", "C"))
+                self.assertEqual([float(value) for value in tokens[1:3] + tokens[4:]],
+                                 [value for point in control_points for value in point])
+                self.assertEqual(float(path.attrib["stroke-width"]), band_width)
+                self.assertEqual(path.attrib["stroke-linecap"], "round")
+        particles = ET.parse(assets / "03-particles.svg").findall(".//svg:circle", namespace)
+        self.assertEqual(len(particles), 4)
+        for particle, t in zip(particles, (0.17, 0.41, 0.64, 0.87)):
+            with self.subTest(t=t):
+                weights = ((1 - t) ** 3, 3 * (1 - t) ** 2 * t, 3 * (1 - t) * t ** 2, t ** 3)
+                for axis, coordinate in enumerate(("cx", "cy")):
+                    expected = sum(weight * point[axis] for weight, point in zip(weights, control_points))
+                    self.assertAlmostEqual(float(particle.attrib[coordinate]), expected, delta=1e-5)
+                radius = float(particle.attrib["r"])
+                self.assertGreater(radius, 0)
+                self.assertLess(radius, band_width / 2)
 
     def test_release_verifier_requires_classic_and_native_icon_resources(self):
         verify = self.source["verify_release.sh"]

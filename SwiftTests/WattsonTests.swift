@@ -6,15 +6,34 @@ final class WattsonTests: XCTestCase {
         RunLoop.main.run(until: Date().addingTimeInterval(seconds))
     }
 
+    private func animatedSliderFrame(in visibleFrame: NSRect) -> NSRect {
+        let size = NSSize(width: min(300, visibleFrame.width),
+                          height: min(ModeSliderView.preferredHeight, visibleFrame.height))
+        return NSRect(x: visibleFrame.midX - size.width / 2,
+                      y: visibleFrame.midY - size.height / 2,
+                      width: size.width, height: size.height)
+    }
+
+    private func animatedWindowDiagnostics(_ window: NSWindow) -> String {
+        "frame=\(window.frame) screen=\(String(describing: window.screen?.frame)) "
+            + "visibleFrame=\(String(describing: window.screen?.visibleFrame)) "
+            + "visible=\(window.isVisible) alpha=\(window.alphaValue) "
+            + "occlusion=\(window.occlusionState.rawValue) activeSpace=\(window.isOnActiveSpace) "
+            + "liveScreens=\(NSScreen.screens.map { $0.frame })"
+    }
+
     private func makeAnimatedSlider(selected: EnergyMode,
                                     forceLegacyMaterials: Bool = false) -> (ModeSliderView, NSWindow) {
         _ = NSApplication.shared
+        let screen = NSScreen.main ?? NSScreen.screens.first
+        XCTAssertNotNil(screen, "animated slider tests require a live display")
         let slider = forceLegacyMaterials
             ? ModeSliderView(modes: [.auto, .low, .high], forceLegacyMaterialsForTest: true)
             : ModeSliderView(modes: [.auto, .low, .high])
+        // A window display link needs a display-backed frame. Global (20, 20)
+        // need not be on any connected screen in a multi-display arrangement.
         let window = NSWindow(
-            contentRect: NSRect(x: 20, y: 20,
-                                width: 300, height: ModeSliderView.preferredHeight),
+            contentRect: animatedSliderFrame(in: screen?.visibleFrame ?? .zero),
             styleMask: [.borderless], backing: .buffered, defer: false
         )
         window.contentView = slider
@@ -27,6 +46,30 @@ final class WattsonTests: XCTestCase {
         window.orderFrontRegardless()
         spinMainRunLoop(0.05)
         return (slider, window)
+    }
+
+    func testAnimatedSliderFrameFitsPositiveAndNegativeScreenOrigins() {
+        for visibleFrame in [NSRect(x: 0, y: 24, width: 1440, height: 850),
+                             NSRect(x: -1920, y: -1080, width: 1920, height: 1020),
+                             NSRect(x: 2240, y: 110, width: 1280, height: 680),
+                             NSRect(x: -300, y: 50, width: 180, height: 20)] {
+            let frame = animatedSliderFrame(in: visibleFrame)
+            XCTAssertTrue(visibleFrame.contains(frame), "visible=\(visibleFrame) window=\(frame)")
+            XCTAssertEqual(frame.midX, visibleFrame.midX)
+            XCTAssertEqual(frame.midY, visibleFrame.midY)
+            XCTAssertEqual(frame.width, min(300, visibleFrame.width))
+            XCTAssertEqual(frame.height, min(ModeSliderView.preferredHeight, visibleFrame.height))
+        }
+    }
+
+    func testAnimatedSliderWindowIsOnALiveDisplayWhileRemainingTransparent() throws {
+        let (_, window) = makeAnimatedSlider(selected: .auto)
+        defer { window.orderOut(nil) }
+        let screen = try XCTUnwrap(window.screen, animatedWindowDiagnostics(window))
+        XCTAssertTrue(screen.visibleFrame.contains(window.frame), animatedWindowDiagnostics(window))
+        XCTAssertTrue(NSScreen.screens.contains(screen), animatedWindowDiagnostics(window))
+        XCTAssertTrue(window.isVisible, animatedWindowDiagnostics(window))
+        XCTAssertEqual(window.alphaValue, 0)
     }
 
     private func sliderMouseEvent(_ type: NSEvent.EventType, x: CGFloat,
@@ -229,10 +272,10 @@ final class WattsonTests: XCTestCase {
                 intermediateFrames += 1
             }
         }
-        XCTAssertTrue(moved)
-        XCTAssertGreaterThanOrEqual(intermediateFrames, 3)
+        XCTAssertTrue(moved, animatedWindowDiagnostics(window))
+        XCTAssertGreaterThanOrEqual(intermediateFrames, 3, animatedWindowDiagnostics(window))
         XCTAssertEqual(slider.glassViewCentreForTest,
-                       slider.detentCentreForTest(2), accuracy: 0.5)
+                       slider.detentCentreForTest(2), accuracy: 0.5, animatedWindowDiagnostics(window))
     }
 
     func testEnablingReduceMotionStopsEveryModeSliderSettleDriverImmediately() throws {
@@ -388,7 +431,7 @@ final class WattsonTests: XCTestCase {
             XCTAssertGreaterThanOrEqual(visibleBeforeRejection, (path.min() ?? 0) - 0.5)
             XCTAssertLessThanOrEqual(visibleBeforeRejection, (path.max() ?? 0) + 0.5)
             XCTAssertEqual(visibleAfterRejection, visibleBeforeRejection, accuracy: 1)
-            XCTAssertTrue(slider.settleIsAnimatingForTest)
+            XCTAssertTrue(slider.settleIsAnimatingForTest, animatedWindowDiagnostics(window))
         }
 
         spinMainRunLoop(0.4)

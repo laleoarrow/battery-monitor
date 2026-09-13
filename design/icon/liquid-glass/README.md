@@ -1,7 +1,7 @@
 # Wattson Icon Composer source layers
 
 These editable SVGs derive directly from `../make_icon.swift` at `v4.0.0`.
-They contain the original curve and particle geometry, with material styling
+They retain the original curve and particle centers, with material styling
 left for Icon Composer. They are source artwork, not a pixel-identical recreation
 of the classic rendered icon. The companion `../WattsonGlass.icon` was created
 with the real Icon Composer and contains copies of the three foreground SVGs.
@@ -21,7 +21,7 @@ with the real Icon Composer and contains copies of the three foreground SVGs.
 | `00-background-reference.svg` | Optional solid background color reference. Prefer setting the final background fill in Icon Composer and omitting this graphic layer. |
 | `01-track.svg` | Original dark track, 134 units wide with round caps. |
 | `02-energy.svg` | Original energy silhouette with an opaque blue-to-green pigment gradient. Icon Composer supplies optical effects. |
-| `03-particles.svg` | Four original particle cores; Composer supplies any material effects. |
+| `03-particles.svg` | Four slightly enlarged particle cores; Composer supplies their highlights and depth. |
 
 Every file has a 1024 × 1024 canvas. Preserve the shared canvas and alignment
 when importing; do not independently crop, center, or scale the layers. The
@@ -32,7 +32,12 @@ Composer when assessing the final composition.
 The source AppKit cubic is `M 240 352 C 452 352 566 690 784 690`. SVG uses
 top-left coordinates, so `ySVG = 1024 - yAppKit` gives
 `M 240 672 C 452 672 566 334 784 334`. Particle centers are evaluated from that
-same cubic at `t = 0.17, 0.41, 0.64, 0.87`; their radii remain `13, 23, 17, 10`.
+same cubic at `t = 0.17, 0.41, 0.64, 0.87`. Version 4.2 increases their radii
+from `13, 23, 17, 10` to `18, 27, 22, 14`, without moving their centers or
+changing the energy silhouette. The Composer Mono/tinted energy fill uses 75%
+white alpha so the light particles separate from the otherwise white band.
+Default and Dark keep their blue-to-green pigment. Specular shading and
+translucency remain native Composer effects, not painted glow or animation.
 
 ## Color reference for Composer
 
