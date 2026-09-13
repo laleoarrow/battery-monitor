@@ -42,6 +42,9 @@ fi
 mkdir -p "$APP_BUNDLE/Contents/MacOS" "$APP_BUNDLE/Contents/Resources"
 cp "$BUILD_DIR/WattsonGlassPreview" "$APP_BUNDLE/Contents/MacOS/WattsonGlassPreview"
 cp "$ROOT_DIR/Tests/visual/glass_preview_Info.plist" "$APP_BUNDLE/Contents/Info.plist"
+PREVIEW_VERSION="$(tr -d '\r\n' < "$ROOT_DIR/VERSION")"
+/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $PREVIEW_VERSION" "$APP_BUNDLE/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c "Set :CFBundleVersion $PREVIEW_VERSION" "$APP_BUNDLE/Contents/Info.plist"
 cp "$ROOT_DIR/design/icon/AppIcon.icns" "$APP_BUNDLE/Contents/Resources/AppIcon.icns"
 /usr/bin/sips -s format png "$ROOT_DIR/design/icon/AppIcon.icns" \
     --out "$APP_BUNDLE/Contents/Resources/AppIconSettings.png" >/dev/null

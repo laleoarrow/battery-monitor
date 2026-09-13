@@ -108,30 +108,33 @@ private enum SettingsStyle {
     static let iconStateCornerRadius: CGFloat = 7
     static let surfaceCornerRadius: CGFloat = 14
 
-    static let contentBackground = adaptive(0x151618, .windowBackgroundColor)
-    static let canvasBackground = adaptive(0x151618, .clear)
-    static let sidebarBackground = adaptive(0x1E1F21, .clear)
-    static let surfaceBackground = adaptive(0x191A1C, .clear)
-    static let tileBackground = adaptive(0x202124, .clear)
-    static let previewBackground = adaptive(0x1A1B1C, .clear)
-    static let selection = adaptive(0x2B362F, .controlAccentColor.withAlphaComponent(0.10))
-    static let green = adaptive(0x68C367, .controlAccentColor)
-    static let surfaceBorder = adaptive(0x363838, .clear)
-    static let border = adaptive(0x363838, .separatorColor)
-    static let divider = adaptive(0x363838, .separatorColor)
-    static let toggleOff = color(hex: 0x2E3032)
-    static let increasedContrastSelection = adaptive(0x3B5944, .selectedContentBackgroundColor)
-    static let increasedContrastSelectionBorder = adaptive(0x8AD88E, .controlAccentColor)
-    static let increasedContrastBorder = adaptive(0x8D949A, .labelColor)
-    static let increasedContrastToggleOff = color(hex: 0x575B5F)
-    static let increasedContrastToggleBorder = color(hex: 0xB9C0C6)
-    static let headingText = adaptive(0xF4F4F4, .labelColor)
-    static let primaryText = adaptive(0xE9E9E9, .labelColor)
-    static let secondaryText = adaptive(0xA0A0A2, .secondaryLabelColor)
+    static let contentBackground = adaptive(0x151618, .windowBackgroundColor, light: 0xF4F4F6)
+    static let canvasBackground = adaptive(0x151618, .clear, light: 0xF4F4F6)
+    static let sidebarBackground = adaptive(0x1E1F21, .clear, light: 0xE9EAEC)
+    static let surfaceBackground = adaptive(0x191A1C, .clear, light: 0xFFFFFF)
+    static let tileBackground = adaptive(0x202124, .clear, light: 0xE9EAED)
+    static let previewBackground = adaptive(0x1A1B1C, .clear, light: 0xE5E6E8)
+    static let selection = adaptive(0x2B362F, .controlAccentColor.withAlphaComponent(0.10), light: 0xDBEBDD)
+    static let green = adaptive(0x68C367, .controlAccentColor, light: 0x25813B)
+    static let surfaceBorder = adaptive(0x363838, .clear, light: 0xCCD0D3)
+    static let border = adaptive(0x363838, .separatorColor, light: 0xCCD0D3)
+    static let divider = adaptive(0x363838, .separatorColor, light: 0xCCD0D3)
+    static let toggleOff = adaptive(0x2E3032, .quaternaryLabelColor, light: 0xBCBEC3)
+    static let increasedContrastSelection = adaptive(0x3B5944, .selectedContentBackgroundColor, light: 0xCBDDCA)
+    static let increasedContrastSelectionBorder = adaptive(0x8AD88E, .controlAccentColor, light: 0x216A2C)
+    static let increasedContrastBorder = adaptive(0x8D949A, .labelColor, light: 0x5E6268)
+    static let increasedContrastToggleOff = adaptive(0x575B5F, .tertiaryLabelColor, light: 0x8C9096)
+    static let increasedContrastToggleBorder = adaptive(0xB9C0C6, .labelColor, light: 0x484C52)
+    static let headingText = adaptive(0xF4F4F4, .labelColor, light: 0x1C1C1E)
+    static let primaryText = adaptive(0xE9E9E9, .labelColor, light: 0x242426)
+    static let secondaryText = adaptive(0xA0A0A2, .secondaryLabelColor, light: 0x63636A)
 
-    private static func adaptive(_ baseline: UInt32, _ system: NSColor) -> NSColor {
+    private static func adaptive(_ baseline: UInt32, _ system: NSColor, light: UInt32) -> NSColor {
         NSColor(name: nil) { appearance in
-            guard Settings.usesLiquidGlass else { return color(hex: baseline) }
+            guard Settings.usesLiquidGlass else {
+                let isDark = appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+                return color(hex: isDark ? baseline : light)
+            }
             var resolved = system
             appearance.performAsCurrentDrawingAppearance {
                 resolved = system.usingColorSpace(.deviceRGB) ?? system
@@ -580,7 +583,7 @@ private final class SettingsLogoImageView: NSImageView {
     }
 }
 
-private final class SettingsLogoPopupButton: NSPopUpButton {
+private final class SettingsAppearancePopupButton: NSPopUpButton {
     weak var focusScrollView: NSView?
 
     override func becomeFirstResponder() -> Bool {
@@ -625,8 +628,9 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let automaticUpdateButton: SettingsToggleButton
     private let liquidGlassSwitch = NSSwitch()
     private let liquidGlassStylePopup = NSPopUpButton(frame: .zero, pullsDown: false)
-    private let logoPopup = SettingsLogoPopupButton(frame: .zero, pullsDown: false)
-    private let dockPopup = SettingsLogoPopupButton(frame: .zero, pullsDown: false)
+    private let colorSchemePopup = SettingsAppearancePopupButton(frame: .zero, pullsDown: false)
+    private let logoPopup = SettingsAppearancePopupButton(frame: .zero, pullsDown: false)
+    private let dockPopup = SettingsAppearancePopupButton(frame: .zero, pullsDown: false)
     private var appearanceObserver: NSObjectProtocol?
     private let loginDetail = NSTextField(labelWithString: "")
     private let loginError = NSTextField(labelWithString: "")
@@ -973,6 +977,27 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         let heading = NSTextField(labelWithString: "Appearance")
         heading.font = .systemFont(ofSize: 13, weight: .semibold)
         heading.textColor = SettingsStyle.primaryText
+        colorSchemePopup.identifier = NSUserInterfaceItemIdentifier("settings.appearance.color-scheme")
+        colorSchemePopup.setAccessibilityLabel("Theme")
+        colorSchemePopup.setAccessibilityHelp("Choose Light or Dark for Wattson, or System to follow macOS. Applies immediately.")
+        colorSchemePopup.font = .systemFont(ofSize: 12)
+        colorSchemePopup.controlSize = .small
+        colorSchemePopup.target = self
+        colorSchemePopup.action = #selector(selectColorScheme(_:))
+        colorSchemePopup.translatesAutoresizingMaskIntoConstraints = false
+        for scheme in Settings.ColorScheme.allCases {
+            colorSchemePopup.addItem(withTitle: scheme.title)
+            colorSchemePopup.lastItem?.representedObject = scheme.rawValue
+        }
+        let themeLabel = NSTextField(labelWithString: "Theme")
+        themeLabel.font = SettingsStyle.primaryFont
+        themeLabel.textColor = SettingsStyle.primaryText
+        themeLabel.translatesAutoresizingMaskIntoConstraints = false
+        let themeRow = NSView()
+        themeRow.translatesAutoresizingMaskIntoConstraints = false
+        themeRow.addSubview(themeLabel)
+        themeRow.addSubview(colorSchemePopup)
+        colorSchemePopup.focusScrollView = themeRow
         liquidGlassSwitch.identifier = NSUserInterfaceItemIdentifier("settings.appearance.liquid-glass")
         liquidGlassSwitch.setAccessibilityLabel("Global Liquid Glass")
         liquidGlassSwitch.target = self
@@ -1081,6 +1106,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         box.titlePosition = .noTitle
         box.cornerRadius = SettingsStyle.surfaceCornerRadius
         box.fillColor = SettingsStyle.surfaceBackground
+        box.addSubview(themeRow)
         box.addSubview(option)
         box.addSubview(styleRow)
         box.addSubview(logoRow)
@@ -1097,11 +1123,21 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             switchSlot.heightAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.height),
             liquidGlassSwitch.centerXAnchor.constraint(equalTo: switchSlot.centerXAnchor),
             liquidGlassSwitch.centerYAnchor.constraint(equalTo: switchSlot.centerYAnchor),
-            surface.heightAnchor.constraint(equalToConstant: SettingsStyle.generalRowHeight + 32 + 36 + 64),
+            surface.heightAnchor.constraint(equalToConstant: 44 + SettingsStyle.generalRowHeight + 32 + 36 + 64),
             surface.widthAnchor.constraint(equalTo: section.widthAnchor),
+            themeRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
+            themeRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
+            themeRow.topAnchor.constraint(equalTo: box.topAnchor),
+            themeRow.heightAnchor.constraint(equalToConstant: 44),
+            themeLabel.leadingAnchor.constraint(equalTo: themeRow.leadingAnchor, constant: 14),
+            themeLabel.centerYAnchor.constraint(equalTo: themeRow.centerYAnchor),
+            themeLabel.trailingAnchor.constraint(lessThanOrEqualTo: colorSchemePopup.leadingAnchor, constant: -12),
+            colorSchemePopup.trailingAnchor.constraint(equalTo: liquidGlassStylePopup.trailingAnchor),
+            colorSchemePopup.centerYAnchor.constraint(equalTo: themeRow.centerYAnchor),
+            colorSchemePopup.widthAnchor.constraint(equalTo: liquidGlassStylePopup.widthAnchor),
             option.leadingAnchor.constraint(equalTo: box.leadingAnchor),
             option.trailingAnchor.constraint(equalTo: box.trailingAnchor),
-            option.topAnchor.constraint(equalTo: box.topAnchor),
+            option.topAnchor.constraint(equalTo: themeRow.bottomAnchor),
             option.heightAnchor.constraint(equalToConstant: SettingsStyle.generalRowHeight),
             styleRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
             styleRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
@@ -1141,6 +1177,12 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             dockHelp.bottomAnchor.constraint(lessThanOrEqualTo: dockRow.bottomAnchor, constant: -6),
         ])
         return section
+    }
+
+    @objc private func selectColorScheme(_ sender: NSPopUpButton) {
+        guard let value = sender.selectedItem?.representedObject as? String,
+              let scheme = Settings.ColorScheme(rawValue: value) else { return }
+        Settings.colorScheme = scheme
     }
 
     @objc private func toggleLiquidGlass(_ sender: NSSwitch) {
@@ -1185,6 +1227,11 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     }
 
     private func refreshAppearanceControls() {
+        if let item = colorSchemePopup.itemArray.first(where: {
+            $0.representedObject as? String == Settings.colorScheme.rawValue
+        }) {
+            colorSchemePopup.select(item)
+        }
         liquidGlassSwitch.state = Settings.liquidGlassEnabled ? .on : .off
         if !Settings.usesLiquidGlass,
            liquidGlassStylePopup.window?.firstResponder === liquidGlassStylePopup {
@@ -1289,7 +1336,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             forName: Settings.didChange, object: nil, queue: .main
         ) { [weak self] notification in
             let change = notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
-            if change == .liquidGlassAppearance { self?.refreshAppearanceControls() }
+            if change == .liquidGlassAppearance || change == .colorScheme { self?.refreshAppearanceControls() }
             if change == .inAppLogoStyle { self?.refreshLogoControls() }
             if change == nil || change == .dockIconStyle { self?.refreshDockControls() }
         }
@@ -2183,8 +2230,8 @@ private final class MenuBarIconSettingsSectionController: NSObject,
     SettingsSectionController
 {
     let identifier = "menu-bar-icon"
-    let title = "Menu Bar Icon"
-    let symbolName = "battery.100"
+    let title = "Icon"
+    let symbolName = "battery.0"
     let view = NSView()
 
     private let increaseContrast: () -> Bool
@@ -2313,7 +2360,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .checkForUpdatesOnLaunch, .module, .liquidGlassAppearance, .inAppLogoStyle, .dockIconStyle:
+            case .checkForUpdatesOnLaunch, .module, .liquidGlassAppearance, .colorScheme, .inAppLogoStyle, .dockIconStyle:
                 break
             }
         }
@@ -2635,7 +2682,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             backing: .buffered,
             defer: false
         )
-        window.appearance = Settings.usesLiquidGlass ? nil : NSAppearance(named: .darkAqua)
+        window.appearance = Settings.colorScheme.appearance
         window.backgroundColor = SettingsStyle.contentBackground
         window.title = "Wattson Settings"
         window.titleVisibility = .hidden
@@ -2663,6 +2710,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         ) { [weak self] notification in
             let change = notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
             if change == .liquidGlassAppearance { self?.refreshLiquidGlassAppearance() }
+            if change == .colorScheme { self?.refreshColorScheme() }
             if change == .inAppLogoStyle { self?.identityIcon.refreshLogo() }
         }
         refreshLiquidGlassAppearance()
@@ -2716,6 +2764,13 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         view.subviews.forEach { refreshContrastAppearance(in: $0) }
     }
 
+    private func refreshColorScheme() {
+        window?.appearance = Settings.colorScheme.appearance
+        if let content = window?.contentView { refreshContrastAppearance(in: content) }
+        refreshContrastAppearance()
+        identityIcon.refreshLogo()
+    }
+
     private func refreshLiquidGlassAppearance() {
         guard let window else { return }
         let enabled = Settings.usesLiquidGlass
@@ -2724,7 +2779,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         let focusedToggle = window.firstResponder as? SettingsToggleButton
             ?? (window.firstResponder as? NSSwitch)?.superview as? SettingsToggleButton
         let focusedView = window.firstResponder as? NSView
-        window.appearance = enabled ? nil : NSAppearance(named: .darkAqua)
+        window.appearance = Settings.colorScheme.appearance
         window.isOpaque = !enabled
         window.backgroundColor = enabled ? .clear : SettingsStyle.contentBackground
         windowBackdrop.isHidden = !enabled

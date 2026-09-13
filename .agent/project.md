@@ -61,19 +61,16 @@ Homebrew/Pages gates.
 - High Power mode is exposed only when the hardware reports support.
 - macOS 26 uses native Liquid Glass; macOS 12–25 use the AppKit fallback.
 
-The 4.1.0 development source offers an opt-in **Liquid Glass** presentation in
-the Settings sidebar on macOS 26 and later. It defaults off to retain Classic
-styling. The switch changes Settings materials/controls and the
-popover's native mode chooser,
-and requests the system's Dark Aqua appearance for the whole glass popover.
-This preserves the requested near-black visual direction without placing an
-opaque black overlay over the system material. Classic popovers keep their
-existing system Light/Dark adaptation; glass Settings follows system appearance,
-while Classic Settings retains its dark composition. It does not change power computation, helper requests, or data
-instrumentation.
-Off uses Classic styling; shared Settings content improvements apply to both
-styles. This is not an operating-system-wide disable of Apple's materials.
-Accessibility preferences remain authoritative.
+General > Appearance provides an opt-in **Liquid Glass** presentation on
+macOS 26 and later. Classic remains the default. Its material choice is
+independent of **Theme**: System, Light, or Dark. The saved theme applies
+immediately to Settings and both popover hosts; System removes each window's
+appearance override so later macOS appearance changes propagate normally.
+Classic Settings has a light palette alongside its existing dark palette.
+Theme changes retain windows, controls, focus, scroll position and readings,
+and never refresh or mutate privileged controls. The menu-bar icon continues
+to follow the system menu bar. Accessibility preferences remain authoritative.
+This preference does not change macOS appearance or modify signed bundle icons.
 
 Settings now delegates its glass sidebar to `NSSplitViewController` and a native
 sidebar item. The native detail safe area positions the retained content;

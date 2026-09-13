@@ -1,4 +1,5 @@
 import AppKit
+import ScreenCaptureKit
 
 /// A visible fixture host for the shipping views. It never starts Wattson's
 /// application delegate, sampler, helper refreshes, or update checker.
@@ -171,6 +172,18 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         updateFixture()
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
+        if let index = CommandLine.arguments.firstIndex(where: { ["--export-gallery", "--prepare-gallery"].contains($0) }),
+           index + 1 < CommandLine.arguments.count, #available(macOS 14, *) {
+            Task { @MainActor in
+                do {
+                    try await exportGallery(to: URL(fileURLWithPath: CommandLine.arguments[index + 1]))
+                    NSApp.terminate(nil)
+                } catch {
+                    fputs("GALLERY_FAILED: \(error)\n", stderr)
+                    exit(1)
+                }
+            }
+        }
         if CommandLine.arguments.contains("--verify-presentation-cycles") {
             DispatchQueue.main.async { self.verifyPresentationCycles() }
         }
@@ -304,8 +317,8 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
                 self?.updateFixtureFooter()
             },
             systemBatteryIconDidChange: Notification.Name("Wattson.GlassPreview.MockBatteryIcon"),
-            currentVersion: { "Local Fixture Preview" },
-            checkForUpdates: { $0(.success(.upToDate(currentVersion: "Local Fixture Preview"))) },
+            currentVersion: { Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Preview" },
+            checkForUpdates: { $0(.success(.upToDate(currentVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Preview"))) },
             openUpdateURL: { _ in false },
             increaseContrast: { NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast },
             announceAccessibility: { _ in }
@@ -459,6 +472,113 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         popover.updateSystemBatteryIconState(hiddenBatteryIcon)
         updateFixtureFooter()
         updateNote()
+    }
+
+    /// App-owned fixtures captured by WindowServer, with no capture permission prompt.
+    @available(macOS 14, *)
+    @MainActor private func exportGallery(to directory: URL) async throws {
+        let externalCapture = CommandLine.arguments.contains("--prepare-gallery")
+        guard externalCapture || CGPreflightScreenCaptureAccess() else {
+            throw NSError(domain: "WattsonGallery", code: 1,
+                          userInfo: [NSLocalizedDescriptionKey: "Existing screen capture permission required"])
+        }
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        window.contentView?.subviews.filter { $0 !== backdrop && $0 !== anchor }
+            .forEach { $0.isHidden = true }
+        anchor.title = ""
+        anchor.isBordered = false
+        backdrop.diagnostic = false
+        usb.state = .off
+        if let screen = NSScreen.main { window.setFrame(screen.visibleFrame, display: true) }
+
+        func descendants(_ view: NSView) -> [NSView] {
+            [view] + view.subviews.flatMap(descendants)
+        }
+        func capture(_ target: NSWindow, name: String) async throws {
+            NSApp.activate(ignoringOtherApps: true)
+            target.makeKeyAndOrderFront(nil)
+            target.contentView?.layoutSubtreeIfNeeded()
+            try await Task.sleep(nanoseconds: 700_000_000)
+            if externalCapture {
+                let request = try JSONSerialization.data(withJSONObject: ["window": target.windowNumber, "name": name])
+                try request.write(to: directory.appendingPathComponent("frame.json"), options: .atomic)
+                let receipt = directory.appendingPathComponent(name + ".captured")
+                for _ in 0..<600 {
+                    if FileManager.default.fileExists(atPath: receipt.path) {
+                        print("GALLERY_CAPTURED: \(name)")
+                        fflush(stdout)
+                        return
+                    }
+                    try await Task.sleep(nanoseconds: 100_000_000)
+                }
+                throw NSError(domain: "WattsonGallery", code: 5,
+                              userInfo: [NSLocalizedDescriptionKey: "External capture timed out: \(name)"])
+            }
+            let content = try await SCShareableContent.excludingDesktopWindows(true, onScreenWindowsOnly: true)
+            guard let app = content.applications.first(where: { $0.processID == ProcessInfo.processInfo.processIdentifier }),
+                  let item = content.windows.first(where: { $0.windowID == CGWindowID(target.windowNumber) }),
+                  let display = content.displays.first(where: { $0.frame.contains(item.frame.insetBy(dx: -8, dy: -8)) }) else {
+                throw NSError(domain: "WattsonGallery", code: 2,
+                              userInfo: [NSLocalizedDescriptionKey: "Complete window unavailable: \(name)"])
+            }
+            let bounds = item.frame.insetBy(dx: -8, dy: -8)
+            let config = SCStreamConfiguration()
+            config.sourceRect = bounds.offsetBy(dx: -display.frame.minX, dy: -display.frame.minY)
+            config.width = Int(bounds.width * CGFloat(display.width) / display.frame.width)
+            config.height = Int(bounds.height * CGFloat(display.height) / display.frame.height)
+            config.showsCursor = false
+            config.capturesAudio = false
+            let filter = SCContentFilter(display: display, including: [app], exceptingWindows: [])
+            let image = try await SCScreenshotManager.captureImage(contentFilter: filter, configuration: config)
+            let bitmap = NSBitmapImageRep(cgImage: image)
+            guard let png = bitmap.representation(using: .png, properties: [:]) else {
+                throw NSError(domain: "WattsonGallery", code: 3)
+            }
+            try png.write(to: directory.appendingPathComponent(name + ".png"), options: .atomic)
+            print("GALLERY_CAPTURED: \(name) \(config.width)x\(config.height)")
+            fflush(stdout)
+        }
+
+        for scheme in [Settings.ColorScheme.light, .dark] {
+            Settings.colorScheme = scheme
+            NSApp.appearance = scheme.appearance
+            for presentation in [PreviewPresentation.clearGlass, .standardGlass, .classic] {
+                let style = ["classic", "standard", "clear"][presentation.rawValue]
+                presentation.apply()
+                let fixtures = presentation == .clearGlass ? Array(0..<6) : [0]
+                for fixture in fixtures {
+                    powerState.selectItem(at: fixture)
+                    previewMode = fixture == 5 ? .low : .auto
+                    showPopover()
+                    guard let target = popover.contentWindowForTest else {
+                        throw NSError(domain: "WattsonGallery", code: 4)
+                    }
+                    let state = ["charging", "full", "battery", "mixed", "low-battery", "low-power"][fixture]
+                    try await capture(target, name: "\(style)-\(state)-\(scheme.rawValue)")
+                    popover.handleOutsideClick()
+                    try await Task.sleep(nanoseconds: 650_000_000)
+                }
+            }
+            for glass in [true, false] {
+                Settings.liquidGlassEnabled = glass
+                for section in glass ? ["general", "appearance", "menu-bar-icon", "modules"] : ["appearance"] {
+                    showSettingsSection(section == "appearance" ? "general" : section)
+                    let target = settings.windowForTest!
+                    let views = descendants(target.contentView!)
+                    if let scroll = views.first(where: { $0.identifier?.rawValue == "settings.general.scroll" }) as? NSScrollView {
+                        scroll.contentView.scroll(to: .zero)
+                        target.contentView?.layoutSubtreeIfNeeded()
+                        if section == "appearance", let appearance = views.first(where: {
+                            $0.identifier?.rawValue == "settings.general.appearance"
+                        }) { appearance.scrollToVisible(appearance.bounds) }
+                    }
+                    target.makeFirstResponder(nil)
+                    try await capture(target, name: "settings-\(glass ? "glass" : "classic")-\(section)-\(scheme.rawValue)")
+                    target.orderOut(nil)
+                }
+            }
+        }
+        print("GALLERY_COMPLETE: 26 real compositor captures")
     }
 
     private func updateNote() {

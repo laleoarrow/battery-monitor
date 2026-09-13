@@ -15,6 +15,18 @@ enum Settings {
         case clear
     }
 
+    enum ColorScheme: String, CaseIterable {
+        case system, light, dark
+
+        var title: String {
+            switch self {
+            case .system: return "System"
+            case .light: return "Light"
+            case .dark: return "Dark"
+            }
+        }
+    }
+
     /// Branding inside Wattson only, independent of the system and menu-bar icons.
     enum InAppLogoStyle: String, CaseIterable {
         case color
@@ -65,6 +77,7 @@ enum Settings {
         case menuBarIconStyle
         case checkForUpdatesOnLaunch
         case liquidGlassAppearance
+        case colorScheme
         case inAppLogoStyle
         case dockIconStyle
         case module(Module)
@@ -78,6 +91,7 @@ enum Settings {
     private static let checkForUpdatesOnLaunchKey = "updates.checkOnLaunch"
     private static let liquidGlassKey = "appearance.liquidGlassEnabled"
     private static let liquidGlassStyleKey = "appearance.liquidGlassStyle"
+    private static let colorSchemeKey = "appearance.colorScheme"
     private static let inAppLogoStyleKey = "appearance.inAppLogoStyle"
     private static let dockIconStyleKey = "appearance.dockIconStyle"
 #if DEBUG
@@ -155,6 +169,19 @@ enum Settings {
             guard liquidGlassStyle != newValue else { return }
             defaults.set(newValue.rawValue, forKey: liquidGlassStyleKey)
             postChange(.liquidGlassAppearance)
+        }
+    }
+
+    /// Independent of glass materials; System follows macOS without an override.
+    static var colorScheme: ColorScheme {
+        get {
+            guard let value = defaults.string(forKey: colorSchemeKey) else { return .system }
+            return ColorScheme(rawValue: value) ?? .system
+        }
+        set {
+            guard colorScheme != newValue else { return }
+            defaults.set(newValue.rawValue, forKey: colorSchemeKey)
+            postChange(.colorScheme)
         }
     }
 

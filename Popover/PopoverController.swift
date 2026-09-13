@@ -59,6 +59,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
 
     override init() {
         super.init()
+        refreshColorScheme()
         refreshLiquidGlassAppearance()
         popover.contentViewController = content
         setContentSize(NSSize(width: PopoverStyle.width, height: content.preferredHeight))
@@ -88,9 +89,9 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         appearanceObserver = NotificationCenter.default.addObserver(
             forName: Settings.didChange, object: nil, queue: .main
         ) { [weak self] notification in
-            guard notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
-                    == .liquidGlassAppearance else { return }
-            self?.refreshLiquidGlassAppearance()
+            let change = notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
+            if change == .liquidGlassAppearance { self?.refreshLiquidGlassAppearance() }
+            if change == .colorScheme { self?.refreshColorScheme() }
         }
     }
 
@@ -110,9 +111,12 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         glassPanel?.orderOut(nil)
     }
 
+    private func refreshColorScheme() {
+        popover.appearance = Settings.colorScheme.appearance
+        glassPanel?.appearance = Settings.colorScheme.appearance
+    }
+
     private func refreshLiquidGlassAppearance() {
-        // Both hosts inherit application/system appearance. This preference
-        // changes the host/material, not the inherited Light/Dark treatment.
         guard wantsOpen, let button = anchorButton else { return }
         // A material/host change invalidates in-flight pointer interaction.
         // Reparent the same content only after the previous host has stopped.
@@ -208,6 +212,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
             retireClassicHost()
             let panel = GlassPopoverPanel(content: content.view, frame: frame,
                 style: Settings.liquidGlassStyle == .clear ? .clear : .regular)
+            panel.appearance = Settings.colorScheme.appearance
             panel.onDismiss = { [weak self] in self?.close() }
             panel.onEscape = { [weak self] in _ = self?.handleEscape() }
             glassPanel = panel
@@ -265,6 +270,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         popover.close()
         popover.contentViewController = nil
         popover = NSPopover()
+        popover.appearance = Settings.colorScheme.appearance
         popover.behavior = .transient
         popover.delegate = self
         showsRequested = 0
