@@ -38,7 +38,8 @@ where it is going, and how the picture has changed over the last two minutes.
 - System Light/Dark appearance, keyboard, VoiceOver, Reduce Motion,
   Reduce Transparency, and Increase Contrast support.
 - Launch-at-login, system battery-icon, and update controls.
-- A compact native Settings window for General, Menu Bar Icon, and Modules.
+- A compact native Settings window for General, Icon, and Modules.
+- System, Light, and Dark themes, independent of Classic or Liquid Glass styling.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
 

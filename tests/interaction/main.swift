@@ -1686,6 +1686,7 @@ if #available(macOS 26.0, *), !screenLocked {
     defer {
         Settings.liquidGlassEnabled = false
         Settings.liquidGlassStyle = previousStyle
+        Settings.colorScheme = .system
         app.appearance = previousAppAppearance
         for (name, value) in zip(displayOverrides, previousOverrides) {
             if let value { setenv(name, value, 1) } else { unsetenv(name) }
@@ -1807,6 +1808,20 @@ if #available(macOS 26.0, *), !screenLocked {
                           && modeRequests == 0 && batteryRequests == 0)
                 checkInstalledHost("\(style.rawValue) 明暗切换后生产内容仍在当前窗口", glass: true)
             }
+            for scheme in [Settings.ColorScheme.dark, .light, .system] {
+                Settings.colorScheme = scheme
+                let expected = scheme.appearance?.name ?? .aqua
+                let applied = runApplication(until: {
+                    root.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == expected
+                }, timeout: 1)
+                check("\(style.rawValue) 用户主题 \(scheme.rawValue) 即时生效并保留打开的面板",
+                      applied && panel.appearance?.name == scheme.appearance?.name
+                          && controller.glassPanelForTest === panel && controller.contentViewForTest === root
+                          && root.frame == contentFrame && panel.frame == panelFrame
+                          && fields.map(\.stringValue) == fieldValues && fields.map(\.frame) == fieldFrames
+                          && modeRequests == 0 && batteryRequests == 0)
+                checkInstalledHost("\(style.rawValue) 主题选择后内容仍完整", glass: true)
+            }
         } else { check("\(style.rawValue) 明暗测试具备完整生产内容与 A2", false) }
         check("\(style.rawValue) 打开时安装局部和全局监听及生命周期观察",
               controller.isWatchingOutsideClicks && controller.hasLocalEventMonitorForTest
@@ -1892,6 +1907,21 @@ if #available(macOS 26.0, *), !screenLocked {
               && controller.lifetimeObserverCountForTest == 0)
     checkInstalledHost("关闭玻璃后实际 Classic 窗口内容非空", glass: false)
     let retiredClassic = controller.classicPopoverForTest
+    let classicWindow = controller.contentWindowForTest
+    for scheme in [Settings.ColorScheme.dark, .light, .system] {
+        Settings.colorScheme = scheme
+        let expected = scheme.appearance?.name ?? .aqua
+        let applied = runApplication(until: {
+            originalRoot?.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == expected
+        }, timeout: 1)
+        check("Classic 用户主题 \(scheme.rawValue) 即时生效并保留当前窗口",
+              applied && controller.classicPopoverForTest === retiredClassic
+                  && controller.contentWindowForTest === classicWindow
+                  && controller.contentViewForTest === originalRoot
+                  && controller.cachedPercentForTest == headerSnapshots[0].percent
+                  && modeRequests == 0 && batteryRequests == 0)
+        checkInstalledHost("Classic 主题选择后内容仍完整", glass: false)
+    }
     controller.toggle(relativeTo: button)
     let classicWasFading = controller.isShownForTest
     Settings.liquidGlassEnabled = true

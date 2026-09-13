@@ -299,6 +299,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let app = NSApplication.shared
             let originalAppAppearance = app.appearance
             defer { app.appearance = originalAppAppearance }
+            app.appearance = NSAppearance(named: .darkAqua)
             require(app.activationPolicy() != .regular, "fixture must not change activation policy")
 
             func followNativeKeyLoop(
@@ -397,7 +398,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             let glassStyle = view("settings.appearance.liquid-glass-style", in: first) as! NSPopUpButton
             let logoPopup = view("settings.appearance.in-app-logo", in: first) as! NSPopUpButton
             let dockPopup = view("settings.appearance.dock-icon", in: first) as! NSPopUpButton
-            let keyLoopEnd: NSView = glassSwitch.isEnabled ? glassSwitch : logoPopup
+            let colorScheme = view("settings.appearance.color-scheme", in: first) as! NSPopUpButton
+            let keyLoopEnd: NSView = colorScheme
             require(glassSwitch.state == .off && !Settings.liquidGlassEnabled,
                 "global Liquid Glass defaults off")
             require(glassSwitch.accessibilityLabel() == "Global Liquid Glass",
@@ -469,7 +471,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && first?.contentMaxSize == NSSize(width: 720, height: 520),
                 "compact composition cannot be distorted by resizing"
             )
-            require(first?.appearance?.name == .darkAqua, "reference artwork has fixed dark appearance")
+            require(first?.appearance == nil, "System theme inherits macOS appearance")
             require(first?.frameAutosaveName.isEmpty == true, "nil autosave skips persistence")
             require(controller.trafficLightButtonsForTest.count == 3, "three native traffic controls")
             require(
@@ -487,7 +489,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             )
             require(
                 controller.sectionIdentifiersForTest == ["general", "menu-bar-icon", "modules"],
-                "section order is General, Menu Bar Icon, Modules"
+                "section order is General, Icon, Modules"
             )
             require(Set(controller.sectionIdentifiersForTest).count == 3, "unique section identifiers")
             require(controller.selectedSectionIdentifierForTest == "general", "general initially selected")
@@ -550,22 +552,22 @@ class SettingsWindowContractTests(unittest.TestCase):
             let navigationLabels = descendants(ofType: NSTextField.self, in: navigation)
             require(
                 navigationLabels.filter {
-                    ["General", "Menu Bar Icon", "Modules"].contains($0.stringValue)
+                    ["General", "Icon", "Modules"].contains($0.stringValue)
                 }.count == 3
                     && navigationLabels.filter {
-                        ["General", "Menu Bar Icon", "Modules"].contains($0.stringValue)
+                        ["General", "Icon", "Modules"].contains($0.stringValue)
                     }
                     .allSatisfy { approximately($0.font?.pointSize ?? -1, 13) },
                 "navigation labels use 13-point type"
             )
             let iconNavigationLabel = navigationLabels.first {
-                $0.stringValue == "Menu Bar Icon"
+                $0.stringValue == "Icon"
             }
             require(
                 (iconNavigationLabel?.attributedStringValue.size().width
                     ?? .greatestFiniteMagnitude)
                     <= (iconNavigationLabel?.frame.width ?? 0) + 1,
-                "Menu Bar Icon navigation title is fully visible"
+                "Icon navigation title is fully visible"
             )
             require(
                 descendants(ofType: NSView.self, in: view("settings.section.general", in: first))
@@ -585,11 +587,13 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(generalDocument.isFlipped && approximately(generalScroll.documentVisibleRect.minY, 0),
                 "General form starts at the top of its scroll viewport")
             require(generalScroll.documentVisibleRect.contains(
-                glassSwitch.convert(glassSwitch.bounds, to: generalDocument)),
-                "appearance option is fully visible without scrolling in the normal state")
+                colorScheme.convert(colorScheme.bounds, to: generalDocument)),
+                "Theme is visible without scrolling in the normal state")
+            glassStyle.scrollToVisible(glassStyle.bounds)
             require(generalScroll.documentVisibleRect.contains(
                 glassStyle.convert(glassStyle.bounds, to: generalDocument)),
-                "background popup is fully visible without scrolling in the normal state")
+                "background popup is reachable in the scroll view")
+            generalScroll.contentView.scroll(to: .zero)
             require(
                 approximately(
                     (view("settings.general.heading", in: first) as? NSTextField)?.font?.pointSize ?? -1,
@@ -853,11 +857,11 @@ class SettingsWindowContractTests(unittest.TestCase):
             controller.selectSidebarRowForTest(1)
             require(
                 controller.selectedSectionIdentifierForTest == "menu-bar-icon",
-                "Menu Bar Icon is the second section"
+                "Icon is the second section"
             )
             require(
                 controller.visibleSectionIdentifierForTest == "menu-bar-icon",
-                "selection delegate shows Menu Bar Icon"
+                "selection delegate shows Icon"
             )
             require(controller.contentHostSubviewCountForTest == 1, "icon page keeps one hosted view")
             first?.contentView?.layoutSubtreeIfNeeded()
@@ -884,13 +888,13 @@ class SettingsWindowContractTests(unittest.TestCase):
                 }
             require(
                 approximately((iconHeading as? NSTextField)?.font?.pointSize ?? -1, 22),
-                "Menu Bar Icon heading uses 22-point type"
+                "Icon heading uses 22-point type"
             )
             require(
                 approximately((iconSubtitle as? NSTextField)?.font?.pointSize ?? -1, 11),
-                "Menu Bar Icon subtitle uses 11-point type"
+                "Icon subtitle uses 11-point type"
             )
-            require(iconCards.count == 4, "Menu Bar Icon lists all four complete appearances")
+            require(iconCards.count == 4, "Icon lists all four complete appearances")
             require(
                 iconCards.allSatisfy {
                     approximately($0.frame.width, 503) && approximately($0.frame.height, 80)
@@ -1098,7 +1102,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             )
             require(iconGroup.isAccessibilityElement(), "icon choices expose one AX group")
             require(iconGroup.accessibilityRole() == .radioGroup, "icon choices use AX radioGroup")
-            require(iconGroup.accessibilityLabel() == "Menu Bar Icon", "AX group has a useful label")
+            require(iconGroup.accessibilityLabel() == "Icon", "AX group has a useful label")
             require(!(iconGroup.accessibilityHelp() ?? "").isEmpty, "AX group has help")
 
             let wattsonIconOnly = button("Wattson icon only", in: first)
@@ -1133,7 +1137,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             )
             require(
                 controller.sidebarNextKeyViewForTest === wattsonIconOnly,
-                "Tab enters the first Menu Bar Icon card"
+                "Tab enters the first Icon card"
             )
             require(wattsonIconOnly.nextKeyView === wattsonWithPercentage, "Tab reaches preset two")
             require(wattsonWithPercentage.nextKeyView === macOSIconOnly, "Tab reaches preset three")
@@ -1452,7 +1456,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             controller.selectSectionForTest(identifier: "menu-bar-icon")
             content.layoutSubtreeIfNeeded()
             for iconButton in iconButtons {
-                requireButtonHit(iconButton, through: content, phase: "compact Menu Bar Icon")
+                requireButtonHit(iconButton, through: content, phase: "compact Icon")
                 let cardInHost = iconButton.convert(iconButton.bounds, to: contentHost)
                 require(
                     contentHost.bounds.insetBy(dx: -1, dy: -1).contains(cardInHost),
@@ -1488,7 +1492,51 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(stableSectionViews == controller.sectionViewIdentitiesForTest, "switches reuse section views")
 
             controller.selectSectionForTest(identifier: "general")
-            window.appearance = NSAppearance(named: .darkAqua)
+            require(colorScheme.itemTitles == ["System", "Light", "Dark"] && colorScheme.isEnabled,
+                "Theme offers System, Light and Dark independently of glass")
+            let readsBeforeTheme = [fixture.loginReads.count, fixture.batteryReads.count,
+                fixture.loginWrites.count, fixture.batteryWrites.count, fixture.updateChecks.count]
+            let themeWindowFrame = window.frame
+            for glass in [false, true, false] {
+                Settings.liquidGlassEnabled = glass
+                for host in [NSAppearance.Name.aqua, .darkAqua] {
+                    app.appearance = NSAppearance(named: host)
+                    for (index, scheme) in Settings.ColorScheme.allCases.enumerated() {
+                        window.makeFirstResponder(colorScheme)
+                        let scrollOffset = generalScroll.contentView.bounds.origin
+                        colorScheme.selectItem(at: index)
+                        colorScheme.sendAction(colorScheme.action!, to: colorScheme.target)
+                        let expected = scheme.appearance?.name ?? host
+                        require(Settings.colorScheme == scheme
+                            && window.appearance?.name == scheme.appearance?.name
+                            && window.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == expected,
+                            "user Theme selection overrides or follows the host immediately")
+                        let heading = view("settings.general.heading", in: window) as! NSTextField
+                        window.effectiveAppearance.performAsCurrentDrawingAppearance {
+                            let foreground = heading.textColor!.usingColorSpace(.deviceRGB)!.redComponent
+                            require(expected == .aqua ? foreground < 0.3 : foreground > 0.8,
+                                "Classic and glass headings have readable light/dark foregrounds")
+                        }
+                        require(window.firstResponder === colorScheme
+                            && approximately(generalScroll.contentView.bounds.origin.y, scrollOffset.y)
+                            && window.frame == themeWindowFrame
+                            && stableSectionViews == controller.sectionViewIdentitiesForTest,
+                            "Theme changes retain the window, controls, focus and scroll position")
+                    }
+                }
+            }
+            require(readsBeforeTheme == [fixture.loginReads.count, fixture.batteryReads.count,
+                fixture.loginWrites.count, fixture.batteryWrites.count, fixture.updateChecks.count],
+                "Theme changes never query or mutate system controls")
+            Settings.colorScheme = .dark
+            let reopenedTheme = SettingsWindowController(dependencies: dependencies, frameAutosaveName: nil)
+            require(reopenedTheme.windowForTest?.appearance?.name == .darkAqua,
+                "reopening Settings restores the saved theme")
+            Settings.colorScheme = .system
+            require(reopenedTheme.windowForTest?.appearance == nil && window.appearance == nil,
+                "System removes the override from every retained Settings window")
+            app.appearance = NSAppearance(named: .darkAqua)
+            generalScroll.contentView.scroll(to: .zero)
             let originalSystemIcon = app.applicationIconImage?.tiffRepresentation
             let originalMenuStyle = Settings.menuBarIconStyle
             let originalMenuPercentage = Settings.showsMenuBarPercentage
@@ -1587,7 +1635,6 @@ class SettingsWindowContractTests(unittest.TestCase):
 
             if #available(macOS 26, *) {
                 controller.selectSectionForTest(identifier: "general")
-                let oldIcon = (identityTile as! NSImageView).image
                 let oldLogin = login.state
                 let oldBattery = battery.state
                 let loginReads = fixture.loginReads.count
@@ -1764,9 +1811,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "Dock picker stays available in Classic with its saved next-launch choice")
                 require(logoPopup.isEnabled && Settings.inAppLogoStyle == .clear,
                     "glass-off keeps the independent logo selection enabled and saved")
-                require(window.appearance?.name == .darkAqua
-                    && window.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua,
-                    "off restores the baseline dark window even when the app is Light")
+                require(window.appearance == nil
+                    && window.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .aqua,
+                    "Classic keeps following the chosen System theme")
                 require(window.isOpaque && backdrop.isHidden,
                     "off restores the opaque classic window and disables its backdrop")
                 require(descendants(ofType: NSGlassEffectView.self, in: content)
@@ -1781,10 +1828,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "disabling glass restores focus to the same baseline control")
                 require(login.state == oldLogin && battery.state == oldBattery,
                     "round trip preserves authoritative control state")
-                require((identityTile as! NSImageView).image?.tiffRepresentation == oldIcon?.tiffRepresentation,
-                    "off keeps the selected Clear logo with its Classic dark appearance")
-                require(srgbHex(controller.dividerColorForTest) == 0x363838,
-                    "off restores exact baseline palette")
+                require((identityTile as! NSImageView).image?.tiffRepresentation == logoArtwork("AppLogoClearLight").tiffRepresentation,
+                    "Classic Clear logo follows the light window")
+                window.effectiveAppearance.performAsCurrentDrawingAppearance {
+                    require(srgbHex(controller.dividerColorForTest) == 0xCCD0D3,
+                        "Classic resolves its light divider palette")
+                }
                 let root = view("settings.root", in: window)
                 for enabled in [false, true, false] {
                     window.makeFirstResponder(glassSwitch)
@@ -1889,7 +1938,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "normal Glass page can reveal the complete Dock restart explanation")
                 let recoveryButton = descendants(ofType: NSButton.self, in: glassWindow.contentView!)
                     .first { $0.accessibilityIdentifier() == "settings.general.controls-recovery.button" }!
-                require(nativeAutomaticUpdates.nextKeyView === globalAppearance,
+                require(nativeAutomaticUpdates.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow),
                     "native key loop initially bypasses hidden recovery")
                 let nativeBattery = glassControls
                     .first { $0.accessibilityLabel() == "Hide System Battery Icon" }!
@@ -1914,7 +1963,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                         "failed helper read remains explicit in accessibility")
                 }
                 require(nativeAutomaticUpdates.nextKeyView === recoveryButton
-                    && recoveryButton.nextKeyView === globalAppearance,
+                    && recoveryButton.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow),
                     "async helper failure adds Repair Controls to the active native key loop")
                 glassFixture.helperAvailable = false
                 glassController.refreshSectionsForTest()
@@ -1957,7 +2006,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "authoritative recovery restores true binary native state")
                 require(initialNativeLogin.accessibilityValueDescription() != "Unknown",
                     "authoritative recovery clears the unknown accessibility description")
-                require(nativeAutomaticUpdates.nextKeyView === globalAppearance
+                require(nativeAutomaticUpdates.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow)
                     && recoveryButton.nextKeyView == nil,
                     "async helper recovery removes the hidden action without breaking the native key loop")
                 glassWindow.makeFirstResponder(glassBackground)
@@ -2087,7 +2136,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             controller.sidebarForTest.keyDown(with: down)
             require(
                 controller.visibleSectionIdentifierForTest == "menu-bar-icon",
-                "Down key shows Menu Bar Icon"
+                "Down key shows Icon"
             )
             controller.sidebarForTest.keyDown(with: down)
             require(controller.visibleSectionIdentifierForTest == "modules", "second Down key shows Modules")
@@ -2262,6 +2311,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     str(SYSTEM_ICON),
                     str(LOGIN_ITEM),
                     str(SETTINGS),
+                    str(ROOT / "Core" / "SettingsAppearance.swift"),
                     str(UPDATE_CHECKER),
                     str(POWER_SNAPSHOT),
                     str(ENERGY_MODE),
@@ -2417,7 +2467,7 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("dockPopup.addItem(withTitle: style.title)", source)
         self.assertIn("dockPopup.refreshPreviews()", source)
         self.assertIn("if change == nil || change == .dockIconStyle { self?.refreshDockControls() }", source)
-        self.assertIn("private let dockPopup = SettingsLogoPopupButton(", source)
+        self.assertIn("private let dockPopup = SettingsAppearancePopupButton(", source)
         self.assertIn("dockPopup.focusScrollView = dockRow", source)
         self.assertIn("target.scrollToVisible(target.bounds)", source)
         self.assertIn("static let generalListHeight: CGFloat = 272", source)
@@ -2430,7 +2480,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             "Check for Updates",
             "Check for Updates on Launch",
             'let identifier = "menu-bar-icon"',
-            'let title = "Menu Bar Icon"',
+            'let title = "Icon"',
             '"Wattson icon only"',
             '"Wattson with percentage"',
             '"macOS 26 icon only"',
