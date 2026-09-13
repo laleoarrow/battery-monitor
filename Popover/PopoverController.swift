@@ -181,6 +181,9 @@ final class PopoverController: NSObject, NSPopoverDelegate {
 
     private func open(relativeTo button: NSStatusBarButton,
                       skipExternalRefreshes: Bool = false) {
+        // Reuse an open host. Reparenting its content into a second panel
+        // leaves the original native glass window visible but empty.
+        guard !wantsOpen else { refreshPlacement(); return }
         let useGlass = Settings.usesLiquidGlass
         guard var placement = resolvePlacement(relativeTo: button) else { return }
         guard !useGlass || placement.glassPanelFrame(margin: GlassPopoverPanel.contentInset) != nil else { return }

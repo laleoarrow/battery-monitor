@@ -1714,6 +1714,27 @@ if #available(macOS 26.0, *), !screenLocked {
     controller.setSystemBatteryIconToggleHandler { _, _ in batteryRequests += 1 }
     controller.update(snapshot: headerSnapshots[0], history: [40, 45.8], peak: 45.8, degraded: false)
     let originalRoot = controller.contentViewForTest
+    func checkInstalledHost(_ label: String, glass: Bool) {
+        let panel = controller.glassPanelForTest
+        let window = glass ? panel : controller.classicPopoverForTest.contentViewController?.view.window
+        let installedViews = window?.contentView.map { [$0] + hostDescendants($0) } ?? []
+        let fields = installedViews.compactMap { $0 as? NSTextField }
+        let footer = installedViews.compactMap { $0 as? PopoverFooterView }.first
+        let material = panel?.contentView?.subviews.compactMap { $0 as? NSGlassEffectView }.first
+        let rootAttached = originalRoot.map { root in
+            root.window === window && window != nil && installedViews.contains { $0 === root }
+                && root.bounds.width > 0 && root.bounds.height > 0 && !root.isHiddenOrHasHiddenAncestor
+        } ?? false
+        let correctHost = glass
+            ? panel != nil && material?.contentView === originalRoot
+                && material?.style == (Settings.liquidGlassStyle == .clear ? .clear : .regular)
+            : panel == nil && controller.classicPopoverForTest.isShown
+        check(label, controller.isOpen && controller.isShownForTest && window?.isVisible == true
+              && correctHost && rootAttached
+              && fields.contains { !$0.stringValue.isEmpty && !$0.isHiddenOrHasHiddenAncestor }
+              && footer.map { $0.window === window && $0.bounds.width > 0 && $0.bounds.height > 0 } == true,
+              "glass=\(glass) rootAttached=\(rootAttached) fields=\(fields.count) footer=\(footer != nil) correctHost=\(correctHost)")
+    }
     let originalAnchorNotificationSetting = button.postsFrameChangedNotifications
     let otherWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 10, height: 10),
                                styleMask: [.borderless], backing: .buffered, defer: false)
@@ -1741,6 +1762,17 @@ if #available(macOS 26.0, *), !screenLocked {
                   && panel.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .aqua
                   && originalRoot?.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .aqua
                   && controller.cachedPercentForTest == headerSnapshots[0].percent)
+        checkInstalledHost("\(style.rawValue) 当前可见宿主确实挂载完整内容而非空壳", glass: true)
+        let openVisibilityCount = visibilityEvents.count
+        let openObserverCount = controller.lifetimeObserverCountForTest
+        controller.openForSettingsCommandTest(relativeTo: button)
+        controller.openForSettingsCommandTest(relativeTo: button)
+        let visiblePanels = NSApp.windows.filter { $0 is GlassPopoverPanel && $0.isVisible }
+        check("\(style.rawValue) 重复打开复用当前面板且不留下空玻璃壳",
+              controller.glassPanelForTest === panel && visiblePanels.count == 1
+                  && visiblePanels.first === panel && originalRoot?.window === panel
+                  && visibilityEvents.count == openVisibilityCount
+                  && controller.lifetimeObserverCountForTest == openObserverCount)
         if let root = originalRoot, let a2 = hostA2(controller) {
             root.layoutSubtreeIfNeeded()
             let fields = hostDescendants(root).compactMap { $0 as? NSTextField }
@@ -1773,6 +1805,7 @@ if #available(macOS 26.0, *), !screenLocked {
                           && a2.selectedModeForTest == selectedMode && a2.enabledModesForTest == enabledModes
                           && controller.cachedPercentForTest == headerSnapshots[0].percent
                           && modeRequests == 0 && batteryRequests == 0)
+                checkInstalledHost("\(style.rawValue) 明暗切换后生产内容仍在当前窗口", glass: true)
             }
         } else { check("\(style.rawValue) 明暗测试具备完整生产内容与 A2", false) }
         check("\(style.rawValue) 打开时安装局部和全局监听及生命周期观察",
@@ -1844,6 +1877,7 @@ if #available(macOS 26.0, *), !screenLocked {
                   && controller.contentViewForTest === originalRoot && hostA2(controller) === a2
                   && a2.cancellationGenerationForTest > generation && !a2.isDraggingForTest
                   && modeRequests == 0 && batteryRequests == 0)
+        checkInstalledHost("B 转 C 后内容挂载在新玻璃宿主而非退休窗口", glass: true)
     } else { check("样式切换测试具备真实玻璃面板及 A2", false) }
     controller.handleOutsideClick()
 
@@ -1856,6 +1890,7 @@ if #available(macOS 26.0, *), !screenLocked {
           controller.glassPanelForTest == nil && controller.popoverAppearanceForTest == nil
               && controller.contentViewForTest === originalRoot && !controller.hasLocalEventMonitorForTest
               && controller.lifetimeObserverCountForTest == 0)
+    checkInstalledHost("关闭玻璃后实际 Classic 窗口内容非空", glass: false)
     let retiredClassic = controller.classicPopoverForTest
     controller.toggle(relativeTo: button)
     let classicWasFading = controller.isShownForTest
@@ -1868,6 +1903,7 @@ if #available(macOS 26.0, *), !screenLocked {
           controller.glassPanelForTest != nil && controller.isOpen && controller.isShownForTest
               && visibilityEvents.count == eventCount && controller.contentViewForTest === originalRoot,
           "native-fade-observed=\(classicWasFading)")
+    checkInstalledHost("退休 Classic 关闭回调后新玻璃窗口仍持有完整内容", glass: true)
     Settings.liquidGlassEnabled = false
     _ = runApplication(until: { controller.isShownForTest }, timeout: 1)
     check("玻璃转回 Classic 使用新的干净原生计数且保留内容",
@@ -1875,23 +1911,60 @@ if #available(macOS 26.0, *), !screenLocked {
               && controller.classicPopoverForTest !== retiredClassic
               && controller.classicLifecycleCountsForTest.shows > controller.classicLifecycleCountsForTest.closes
               && controller.contentViewForTest === originalRoot)
+    checkInstalledHost("玻璃转回 Classic 后内容确实属于新原生窗口", glass: false)
     controller.toggle(relativeTo: button)
     controller.openForSettingsCommandTest(relativeTo: button)
     spin(1.2)
     check("跨宿主后 Classic 仍支持快速关闭重开且不会被迟到 didClose 拆除",
           controller.isOpen && controller.isShownForTest && controller.isWatchingOutsideClicks
               && controller.classicLifecycleCountsForTest.shows > controller.classicLifecycleCountsForTest.closes)
+    checkInstalledHost("跨宿主后 Classic 关闭重开没有丢失内容", glass: false)
     controller.handleOutsideClick()
     _ = runApplication(until: { !controller.isShownForTest }, timeout: 1.2)
     check("跨宿主及重复重开最终关闭后所有监听归零且没有模式写入",
           hostMonitorsAreRemoved(controller) && !controller.isOpen && modeRequests == 0 && batteryRequests == 0)
 
+    for finalGlass in [false, true] {
+        Settings.liquidGlassEnabled = finalGlass
+        controller.openForSettingsCommandTest(relativeTo: button)
+        _ = runApplication(until: { controller.isShownForTest }, timeout: 1)
+        // No run-loop drain between these writes: both directions must honor
+        // the latest choice, not a queued callback from the intermediate host.
+        Settings.liquidGlassEnabled = !finalGlass
+        Settings.liquidGlassEnabled = finalGlass
+        controller.openForSettingsCommandTest(relativeTo: button)
+        spin(0.65)
+        checkInstalledHost("同 run loop 来回切换最终 glass=\(finalGlass) 宿主和内容一致", glass: finalGlass)
+
+        let closingClassic = controller.classicPopoverForTest
+        controller.toggle(relativeTo: button)
+        Settings.liquidGlassEnabled = !finalGlass
+        controller.openForSettingsCommandTest(relativeTo: button)
+        Settings.liquidGlassEnabled = finalGlass
+        controller.openForSettingsCommandTest(relativeTo: button)
+        if controller.classicPopoverForTest !== closingClassic {
+            controller.popoverDidClose(Notification(name: NSPopover.didCloseNotification, object: closingClassic))
+        }
+        spin(1.2)
+        checkInstalledHost("关闭重开与来回切换交错最终 glass=\(finalGlass) 不出现空壳", glass: finalGlass)
+        controller.handleOutsideClick()
+        _ = runApplication(until: { !controller.isShownForTest }, timeout: 1.2)
+        check("快速迁移最终 glass=\(finalGlass) 关闭后监听清空且没有系统写入",
+              hostMonitorsAreRemoved(controller) && !controller.isOpen && modeRequests == 0 && batteryRequests == 0)
+    }
+
     Settings.liquidGlassEnabled = true
     weak var releasedController: PopoverController?
     weak var releasedPanel: GlassPopoverPanel?
+    weak var releasedRetiredPanel: GlassPopoverPanel?
     autoreleasepool {
         let retiring = PopoverController()
         releasedController = retiring
+        retiring.openForSettingsCommandTest(relativeTo: button)
+        releasedRetiredPanel = retiring.glassPanelForTest
+        Settings.liquidGlassEnabled = false
+        retiring.openForSettingsCommandTest(relativeTo: button)
+        Settings.liquidGlassEnabled = true
         retiring.openForSettingsCommandTest(relativeTo: button)
         releasedPanel = retiring.glassPanelForTest
         check("释放测试先安装了真实玻璃面板监听", retiring.hasLocalEventMonitorForTest
@@ -1899,6 +1972,7 @@ if #available(macOS 26.0, *), !screenLocked {
     }
     check("打开状态释放 controller 不被监视器保留且面板不继续可见",
           releasedController == nil && releasedPanel?.isVisible != true
+              && releasedRetiredPanel?.isVisible != true
               && button.postsFrameChangedNotifications == originalAnchorNotificationSetting)
 }
 

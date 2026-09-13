@@ -8,6 +8,35 @@ A2 draggable control, Standard/Clear popup choices and the completed Settings
 refinement. Validation is in progress; local code and preview are not a published
 release or a claim of pixel identity with Apple's Control Center.
 
+## Latest continuation — 13 September 2026
+
+The repeated-open defect is fixed: an already-open host is reused instead of
+moving its content into a second glass panel and leaving an empty window.
+The preview also avoids a close/reopen merely to change Light/Dark. Its native
+popup now exposes Classic, Standard Glass and Clear Glass independently of the
+diagnostic backdrop. A red preview run reproduced two visible panels; the
+fixed run passed 24 cycles and 120 checks, including delayed close callbacks.
+
+Swift 350/350 and Python 494 tests (four existing opt-in skips) pass. The frozen
+source's six-case AppKit matrix passes 1,483 assertions, Settings' full
+500-cycle release checks, and 20,000 animation iterations. Compiled-input
+manifest SHA-256 is
+`0943e9050d5e323b5f3b412515d7b107cf93495116550cf98ba08b88fb5d0be3`.
+The Settings construction fix retains focus and attaches each page once;
+its interactive hang watchdog is 180 seconds, with the existing iteration,
+memory and file-descriptor bounds unchanged. The final run finished its
+assertions in 101.305 seconds with approximately 1.81 MiB post-warmup growth
+and unchanged file-descriptor count.
+
+Local universal 4.2.0 PKG/DMG verification passes, including byte-identical
+apps. [Current real-window samples](../design/releases/v4.2.0/README.md)
+include the three styles, a Clear Light/Dark pair and a short recording.
+Logs and preserved failed diagnostics are in
+`dist/release-4.2.0-20260913/continuation-20260913/`.
+GitHub CLI authentication remains invalid. Remote release gates and canonical
+installation are pending; neither a 4.2.0 tag nor public assets have been
+created by this continuation. Installed app/helper/receipt remain 4.1.0.
+
 ## Component decisions
 
 | Component | Adoption decision | Verification scope |
@@ -33,9 +62,10 @@ release or a claim of pixel identity with Apple's Control Center.
   while the preview or app is Light. Classic Settings retains its original dark
   appearance. Clear is not automatically legible over every backdrop; inspect
   actual composited text on bright, dark and patterned backgrounds.
-- The visible preview omits the redundant glass-style dropdown and starts in
-  Clear Glass. Its Classic/Glass switch remains. Shipping Settings still keeps
-  the previously requested style choice pending the user's scope confirmation.
+- The visible preview exposes Classic, Standard Glass and Clear Glass in one
+  native popup, starting in Clear Glass. Host Light/Dark and the optional
+  diagnostic stripes are independent controls. Shipping Settings retains its
+  Liquid Glass switch and Standard/Clear style choice.
 - Do not turn every data surface into a glass control. The content remains the
   visual priority, as Apple's guidance requires.
 - Reduce Transparency may make the surface opaque; Reduce Motion suppresses
@@ -163,7 +193,16 @@ live refraction. The disposable Dock probe passed seven separate sandboxed
 launches and 110 checks, including persistence and unchanged bundle hashes.
 Real preview Settings checked the selector and help in both Light and Dark;
 the runtime probe validated API image state, not compositor-visible Dock pixels.
-The earlier full Settings stress harness timeout is still an open release gate.
+The full Settings gate now passes locally on the exact final source: two fresh
+macOS-TestLab runs each passed all eight Settings checks, including every
+original creation/reuse/release, RSS and descriptor assertion. Only the opt-in
+GUI hang watchdog changed to 180 seconds after measured completion slightly
+exceeded the old limit; default headless and compilation remain at 120 seconds,
+with unoptimized builds and all thirteen one-second settling intervals intact.
+See `dist/release-4.2.0-20260913/settings-triage-analysis.md` for exact hashes,
+full resource curves and rejected experiments. This is local resource/functional
+validation, not a production speedup claim; final exact-commit hosted validation
+has not yet executed for these changes.
 
 The recorded CI baseline is successful run
 [34710861967](https://github.com/laleoarrow/battery-monitor/actions/runs/34710861967)
