@@ -2895,10 +2895,9 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         viewportController.view = viewport
         window.contentViewController = viewportController
         sidebar.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
-        tableViewSelectionDidChange(Notification(
-            name: NSTableView.selectionDidChangeNotification,
-            object: sidebar
-        ))
+        // Row zero may already be selected before the delegate is installed.
+        // Ensure the initial page even when there is no selection change.
+        showSection(at: 0)
         configureKeyViewLoop()
         root.layoutSubtreeIfNeeded()
     }
@@ -3062,6 +3061,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         guard sections.indices.contains(index) else { return }
         selectedSectionIndex = index
         let sectionView = sections[index].view
+        guard sectionView.superview !== contentHost else { return }
         contentHost.subviews.forEach { $0.removeFromSuperview() }
         sectionView.translatesAutoresizingMaskIntoConstraints = false
         contentHost.addSubview(sectionView)
@@ -3072,7 +3072,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             sectionView.bottomAnchor.constraint(equalTo: contentHost.bottomAnchor),
         ])
         updateVisibleSwitchKeyLoop()
-        contentHost.layoutSubtreeIfNeeded()
     }
 
     func tableViewSelectionDidChange(_ notification: Notification) {

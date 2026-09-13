@@ -25,11 +25,28 @@ class SettingsWindowContractTests(unittest.TestCase):
         if shutil.which("xcrun") is None:
             self.skipTest("Xcode command line tools are unavailable")
 
+        interactive = os.environ.get("WATTSON_RUN_INTERACTION") == "1"
+        # The full native-window stress workload exceeded the old hang watchdog, not a latency SLA.
+        runtime_timeout = 180 if interactive else 120
+        print(
+            f"settings-contract config: interactive={interactive} "
+            f"runtime-watchdog={runtime_timeout}s compile-watchdog=120s optimization=Onone",
+            flush=True,
+        )
+
         harness = textwrap.dedent(
             r"""
             import AppKit
             import Darwin
             import Foundation
+
+            let contractStarted = ProcessInfo.processInfo.systemUptime
+            func tracePhase(_ phase: String) {
+                let elapsed = ProcessInfo.processInfo.systemUptime - contractStarted
+                let line = String(format: "settings-contract %.3fs %@\n", elapsed, phase)
+                FileHandle.standardError.write(Data(line.utf8))
+            }
+            tracePhase("start")
 
             func require(
                 _ condition: @autoclosure () -> Bool,
@@ -210,6 +227,25 @@ class SettingsWindowContractTests(unittest.TestCase):
                 init(_ value: T?) { self.value = value }
             }
 
+            final class AttachmentTrackingView: NSView {
+                var attachmentCount = 0
+                override var acceptsFirstResponder: Bool { true }
+                override func viewDidMoveToSuperview() {
+                    super.viewDidMoveToSuperview()
+                    if superview != nil { attachmentCount += 1 }
+                }
+            }
+
+            final class SelectionFixtureSection: SettingsSectionController {
+                let identifier: String
+                var title: String { identifier }
+                let symbolName = "gearshape"
+                let trackedView = AttachmentTrackingView()
+                var view: NSView { trackedView }
+                init(_ identifier: String) { self.identifier = identifier }
+                func refresh() {}
+            }
+
             enum FixtureError: LocalizedError {
                 case rejected
                 var errorDescription: String? { "Fixture rejected the update." }
@@ -280,6 +316,48 @@ class SettingsWindowContractTests(unittest.TestCase):
                 fixture,
                 batteryNotification: batteryNotification
             )
+            autoreleasepool {
+                let initialSection = SelectionFixtureSection("initial")
+                let otherSection = SelectionFixtureSection("other")
+                let selectionController = SettingsWindowController(
+                    sections: [initialSection, otherSection],
+                    dependencies: dependencies,
+                    frameAutosaveName: nil
+                )
+                require(selectionController.visibleSectionIdentifierForTest == "initial"
+                    && initialSection.trackedView.attachmentCount == 1,
+                    "native initial selection attaches its page exactly once: "
+                        + "attachments=\(initialSection.trackedView.attachmentCount) "
+                        + "visible=\(selectionController.visibleSectionIdentifierForTest ?? "none") "
+                        + "selectedRow=\(selectionController.sidebarForTest.selectedRow)")
+                guard let selectionWindow = selectionController.windowForTest,
+                      let host = initialSection.view.superview else {
+                    fatalError("initial selection must retain its host and window")
+                }
+                let constraints = host.constraints.map(ObjectIdentifier.init)
+                require(selectionWindow.makeFirstResponder(initialSection.view),
+                    "selection fixture page accepts keyboard focus")
+                selectionController.tableViewSelectionDidChange(Notification(
+                    name: NSTableView.selectionDidChangeNotification,
+                    object: selectionController.sidebarForTest
+                ))
+                require(initialSection.trackedView.attachmentCount == 1
+                    && host.constraints.map(ObjectIdentifier.init) == constraints,
+                    "repeated same-page notification preserves attachment and constraints")
+                require(selectionWindow.firstResponder === initialSection.view,
+                    "repeated same-page notification preserves keyboard focus")
+                selectionController.selectSectionForTest(identifier: "other")
+                require(selectionController.visibleSectionIdentifierForTest == "other"
+                    && otherSection.trackedView.attachmentCount == 1,
+                    "native selection callback attaches the next page once")
+                selectionController.selectSectionForTest(identifier: "initial")
+                require(selectionController.visibleSectionIdentifierForTest == "initial"
+                    && initialSection.trackedView.attachmentCount == 2,
+                    "returning to a page reuses and reattaches it once")
+                selectionWindow.contentView?.layoutSubtreeIfNeeded()
+                require(approximately(initialSection.view.frame, host.bounds),
+                    "deferred section layout fills the host at the normal layout pass")
+            }
             let controller = SettingsWindowController(
                 sections: SettingsWindowController.defaultSections(dependencies: dependencies),
                 dependencies: dependencies,
@@ -1895,6 +1973,7 @@ class SettingsWindowContractTests(unittest.TestCase):
 
             require(app.activationPolicy() != .regular, "show does not change activation policy")
 
+            tracePhase("state, layout, appearance and action assertions complete")
             var headlessControllers: [WeakReference<SettingsWindowController>] = []
             var headlessWindows: [WeakReference<NSWindow>] = []
             autoreleasepool {
@@ -1915,6 +1994,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             }
             require(headlessControllers.allSatisfy { $0.value == nil }, "headless controllers released")
             require(headlessWindows.allSatisfy { $0.value == nil }, "headless windows released")
+            tracePhase("headless 50-controller release assertions complete")
 
             guard ProcessInfo.processInfo.environment["WATTSON_RUN_INTERACTION"] == "1" else {
                 exit(0)
@@ -1990,6 +2070,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             fixture.batteryReads.removeFirst()(false)
             first?.close()
 
+            tracePhase("visible window, keyboard and reopen assertions complete")
             var reuseFixture = FixtureState()
             let reuseDependencies = SettingsWindowDependencies.fixture(
                 reuseFixture,
@@ -2014,11 +2095,14 @@ class SettingsWindowContractTests(unittest.TestCase):
                 reuseRSS <= reuseBaselineRSS + 8 * 1_024 * 1_024,
                 "single-window RSS bounded: \(reuseBaselineRSS) -> \(reuseRSS)"
             )
+            tracePhase("reuse 500-cycle assertions complete")
 
-            func createReleaseBatch() -> (
+            func createReleaseBatch(_ phase: String) -> (
                 controllers: [WeakReference<SettingsWindowController>],
                 windows: [WeakReference<NSWindow>]
             ) {
+                var constructionTime: TimeInterval = 0
+                var presentationTime: TimeInterval = 0
                 var releasedControllers: [WeakReference<SettingsWindowController>] = []
                 var releasedWindows: [WeakReference<NSWindow>] = []
                 autoreleasepool {
@@ -2028,18 +2112,26 @@ class SettingsWindowContractTests(unittest.TestCase):
                             loopFixture,
                             batteryNotification: batteryNotification
                         )
+                        let constructionStarted = ProcessInfo.processInfo.systemUptime
                         var candidate: SettingsWindowController? = SettingsWindowController(
                             dependencies: loopDependencies,
                             frameAutosaveName: nil
                         )
+                        constructionTime += ProcessInfo.processInfo.systemUptime - constructionStarted
                         candidate?.windowForTest?.animationBehavior = .none
+                        let presentationStarted = ProcessInfo.processInfo.systemUptime
                         candidate?.show(activateApp: false)
+                        presentationTime += ProcessInfo.processInfo.systemUptime - presentationStarted
                         releasedControllers.append(WeakReference(candidate))
                         releasedWindows.append(WeakReference(candidate?.windowForTest))
                         candidate?.close()
                         candidate = nil
                     }
                 }
+                tracePhase(String(
+                    format: "%@ 50 created: construction=%.3fs presentation=%.3fs",
+                    phase, constructionTime, presentationTime
+                ))
                 return (releasedControllers, releasedWindows)
             }
 
@@ -2061,8 +2153,9 @@ class SettingsWindowContractTests(unittest.TestCase):
             }
 
             for _ in 0..<3 {
-                drainAndRequireReleased(createReleaseBatch())
+                drainAndRequireReleased(createReleaseBatch("warmup"))
             }
+            tracePhase("warmup 150-controller release assertions complete")
             relieveAllocatorPressure()
             let warmFDs = openFDCount()
             let warmRSS = residentBytes()
@@ -2076,7 +2169,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             var createRSS: [UInt64] = []
 
             for completed in stride(from: 50, through: 500, by: 50) {
-                drainAndRequireReleased(createReleaseBatch())
+                drainAndRequireReleased(createReleaseBatch("stress \(completed)"))
                 relieveAllocatorPressure()
                 let batchRSS = residentBytes()
                 createRSS.append(batchRSS)
@@ -2086,6 +2179,9 @@ class SettingsWindowContractTests(unittest.TestCase):
             }
             let finalFDs = openFDCount()
             let finalRSS = residentBytes()
+            let plateau = createRSS.dropFirst()
+            let plateauSpread = (plateau.max() ?? finalRSS) - (plateau.min() ?? finalRSS)
+            memoryCurve.append("final rss=\(finalRSS) fd=\(finalFDs) plateauSpread=\(plateauSpread)")
             FileHandle.standardError.write(Data((memoryCurve.joined(separator: "; ") + "\n").utf8))
             require(
                 finalFDs <= warmFDs + 2,
@@ -2095,12 +2191,11 @@ class SettingsWindowContractTests(unittest.TestCase):
                 finalRSS <= warmRSS + 8 * 1_024 * 1_024,
                 "create/release RSS bounded after warm150: \(warmRSS) -> \(finalRSS)"
             )
-            let plateau = createRSS.dropFirst()
-            let plateauSpread = (plateau.max() ?? finalRSS) - (plateau.min() ?? finalRSS)
             require(
                 plateauSpread <= 8 * 1_024 * 1_024,
                 "create/release RSS plateaus within 8 MiB after 100 cycles: spread \(plateauSpread)"
             )
+            tracePhase("all assertions complete")
             """
         )
 
@@ -2155,18 +2250,27 @@ class SettingsWindowContractTests(unittest.TestCase):
                 0,
                 f"settings window contract did not compile:\n{compile_result.stderr}",
             )
-            run_result = subprocess.run(
-                [str(executable)],
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=120,
-                env={
-                    **os.environ,
-                    "CFFIXED_USER_HOME": str(isolated_home),
-                },
-            )
-            if os.environ.get("WATTSON_RUN_INTERACTION") == "1":
+            try:
+                run_result = subprocess.run(
+                    [str(executable)],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=runtime_timeout,
+                    env={
+                        **os.environ,
+                        "CFFIXED_USER_HOME": str(isolated_home),
+                    },
+                )
+            except subprocess.TimeoutExpired as error:
+                # Preserve the original timeout failure while exposing the last
+                # completed phase instead of discarding all captured progress.
+                if error.stderr:
+                    output = error.stderr.decode("utf-8", errors="replace") \
+                        if isinstance(error.stderr, bytes) else error.stderr
+                    print(output, end="", flush=True)
+                raise
+            if interactive:
                 print(run_result.stderr, end="")
             self.assertEqual(
                 run_result.returncode,
