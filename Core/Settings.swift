@@ -21,6 +21,30 @@ enum Settings {
         case clear
     }
 
+    /// Applied at launch only. Hidden preserves the menu-bar-only default;
+    /// visible choices use static Dock artwork, never the Finder bundle icon.
+    enum DockIconStyle: String, CaseIterable {
+        case hidden
+        case color
+        case clear
+
+        var title: String {
+            switch self {
+            case .hidden: return "Hidden"
+            case .color: return "Color"
+            case .clear: return "Clear"
+            }
+        }
+
+        func imageResourceName(isDark: Bool) -> String? {
+            switch self {
+            case .hidden: return nil
+            case .color: return "AppDockLogoColor"
+            case .clear: return isDark ? "AppDockLogoClearDark" : "AppDockLogoClearLight"
+            }
+        }
+    }
+
     enum Module: String, CaseIterable {
         case flow, ring, lanes, history
 
@@ -42,6 +66,7 @@ enum Settings {
         case checkForUpdatesOnLaunch
         case liquidGlassAppearance
         case inAppLogoStyle
+        case dockIconStyle
         case module(Module)
     }
 
@@ -54,6 +79,7 @@ enum Settings {
     private static let liquidGlassKey = "appearance.liquidGlassEnabled"
     private static let liquidGlassStyleKey = "appearance.liquidGlassStyle"
     private static let inAppLogoStyleKey = "appearance.inAppLogoStyle"
+    private static let dockIconStyleKey = "appearance.dockIconStyle"
 #if DEBUG
     private static var testDefaults: UserDefaults?
 #endif
@@ -141,6 +167,18 @@ enum Settings {
             guard inAppLogoStyle != newValue else { return }
             defaults.set(newValue.rawValue, forKey: inAppLogoStyleKey)
             postChange(.inAppLogoStyle)
+        }
+    }
+
+    static var dockIconStyle: DockIconStyle {
+        get {
+            guard let value = defaults.string(forKey: dockIconStyleKey) else { return .hidden }
+            return DockIconStyle(rawValue: value) ?? .hidden
+        }
+        set {
+            guard dockIconStyle != newValue else { return }
+            defaults.set(newValue.rawValue, forKey: dockIconStyleKey)
+            postChange(.dockIconStyle)
         }
     }
 

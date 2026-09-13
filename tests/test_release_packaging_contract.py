@@ -32,6 +32,7 @@ HANDOFF = ROOT / "HANDOFF.md"
 PROMOTE_WORKFLOW = ROOT / ".github" / "workflows" / "promote-release.yml"
 CANDIDATE_WORKFLOW = ROOT / ".github" / "workflows" / "macos-helper-install.yml"
 IN_APP_LOGOS = ("AppLogoColor.png", "AppLogoClearLight.png", "AppLogoClearDark.png")
+DOCK_LOGOS = ("AppDockLogoColor.png", "AppDockLogoClearLight.png", "AppDockLogoClearDark.png")
 
 
 class ReleasePackagingContractTests(unittest.TestCase):
@@ -423,7 +424,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         verify = self.source["verify_release.sh"]
         for resource in (
             "AppIcon.icns", "AppIconSettings.png", "Assets.car",
-            "WattsonGlass.icns", *IN_APP_LOGOS,
+            "WattsonGlass.icns", *IN_APP_LOGOS, *DOCK_LOGOS,
         ):
             self.assertIn(resource, verify)
         self.assertIn('-f "$app_dir/Contents/Resources/$icon_resource"', verify)
@@ -448,6 +449,25 @@ class ReleasePackagingContractTests(unittest.TestCase):
                 copy_position = build.index('"$ROOT_DIR/design/icon/in-app-logo/$logo_resource"')
                 self.assertLess(copy_position, build.index("codesign "))
                 for resource in IN_APP_LOGOS:
+                    self.assertLess(build.index(resource), copy_position)
+                self.assertNotIn("ictool", build)
+
+    def test_dock_logos_are_checked_in_and_copied_before_signing(self):
+        for name in DOCK_LOGOS:
+            source = ROOT / "design" / "icon" / "dock-logo" / name
+            with self.subTest(resource=name):
+                self.assertTrue(source.is_file())
+                self.assertFalse(source.is_symlink())
+                data = source.read_bytes()
+                self.assertTrue(data)
+                self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+                self.assertEqual(struct.unpack(">II", data[16:24]), (512, 512))
+        for name in ("build_release.sh", "build_glass_preview.sh", "install.sh"):
+            build = (ROOT / "scripts" / name).read_text(encoding="utf-8")
+            with self.subTest(script=name):
+                copy_position = build.index('"$ROOT_DIR/design/icon/dock-logo/$dock_logo_resource"')
+                self.assertLess(copy_position, build.index("codesign "))
+                for resource in DOCK_LOGOS:
                     self.assertLess(build.index(resource), copy_position)
                 self.assertNotIn("ictool", build)
 
@@ -478,10 +498,11 @@ class ReleasePackagingContractTests(unittest.TestCase):
                 "WattsonGlass.icns",
             ):
                 (resources / name).write_bytes(b"fixture")
-            for name in IN_APP_LOGOS:
-                (resources / name).write_bytes(
-                    (ROOT / "design" / "icon" / "in-app-logo" / name).read_bytes()
-                )
+            for directory, names in (("in-app-logo", IN_APP_LOGOS), ("dock-logo", DOCK_LOGOS)):
+                for name in names:
+                    (resources / name).write_bytes(
+                        (ROOT / "design" / "icon" / directory / name).read_bytes()
+                    )
 
             def verify_bundle():
                 return subprocess.run(
@@ -490,7 +511,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
                 )
 
             self.assertEqual(verify_bundle().returncode, 0)
-            for name in ("Assets.car", "WattsonGlass.icns", *IN_APP_LOGOS):
+            for name in ("Assets.car", "WattsonGlass.icns", *IN_APP_LOGOS, *DOCK_LOGOS):
                 resource = resources / name
                 original_data = resource.read_bytes()
                 for invalid_state in ("missing", "empty", "symlink"):
@@ -499,7 +520,9 @@ class ReleasePackagingContractTests(unittest.TestCase):
                         if invalid_state == "empty":
                             resource.touch()
                         elif invalid_state == "symlink":
-                            resource.symlink_to("AppIcon.icns")
+                            target = pathlib.Path(temp) / "icon-symlink-target"
+                            target.write_bytes(original_data)
+                            resource.symlink_to(target)
                         result = verify_bundle()
                         self.assertNotEqual(result.returncode, 0)
                         self.assertIn(name, result.stderr)
@@ -516,7 +539,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
                 + png_chunk(b"IDAT", zlib.compress(b"\x00\x00\x00\x00\x00"))
                 + png_chunk(b"IEND", b"")
             )
-            for name in IN_APP_LOGOS:
+            for name in (*IN_APP_LOGOS, *DOCK_LOGOS):
                 resource = resources / name
                 original_data = resource.read_bytes()
                 for invalid_data in (
@@ -530,6 +553,18 @@ class ReleasePackagingContractTests(unittest.TestCase):
                         self.assertNotEqual(result.returncode, 0)
                         self.assertIn(name, result.stderr)
                         resource.write_bytes(original_data)
+            for preview_name, dock_name in zip(IN_APP_LOGOS, DOCK_LOGOS):
+                for name, replacement in ((preview_name, dock_name), (dock_name, preview_name)):
+                    with self.subTest(resource=name, wrong_size_source=replacement):
+                        resource = resources / name
+                        original_data = resource.read_bytes()
+                        try:
+                            resource.write_bytes((resources / replacement).read_bytes())
+                            result = verify_bundle()
+                            self.assertNotEqual(result.returncode, 0)
+                            self.assertIn(name, result.stderr)
+                        finally:
+                            resource.write_bytes(original_data)
             for key in ("CFBundleIconFile", "CFBundleIconName"):
                 for invalid_value in (None, "AppIcon", "MissingIcon"):
                     with self.subTest(key=key, value=invalid_value):

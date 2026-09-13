@@ -49,6 +49,10 @@ for logo_resource in AppLogoColor.png AppLogoClearLight.png AppLogoClearDark.png
     cp "$ROOT_DIR/design/icon/in-app-logo/$logo_resource" \
         "$APP_BUNDLE/Contents/Resources/$logo_resource"
 done
+for dock_logo_resource in AppDockLogoColor.png AppDockLogoClearLight.png AppDockLogoClearDark.png; do
+    cp "$ROOT_DIR/design/icon/dock-logo/$dock_logo_resource" \
+        "$APP_BUNDLE/Contents/Resources/$dock_logo_resource"
+done
 /usr/bin/plutil -lint "$APP_BUNDLE/Contents/Info.plist"
 /usr/bin/codesign --force --sign - \
     --entitlements "$ROOT_DIR/Tests/visual/glass_preview.entitlements" "$APP_BUNDLE"

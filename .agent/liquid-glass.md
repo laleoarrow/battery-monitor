@@ -153,6 +153,18 @@ release or a claim of pixel identity with Apple's Control Center.
 
 ## Release boundary
 
+The later Dock-icon request is independent of the earlier UI-material and
+in-app-logo switches: General > Appearance now offers Hidden/Color/Clear,
+applied at the next launch only. Hidden keeps the menu-bar-only default;
+visible choices add a running Dock tile using the public AppKit runtime image
+property and static native 512px exports. Finder and bundle signatures remain
+untouched. Clear selects its Light/Dark rendition at startup; it does not gain
+live refraction. The disposable Dock probe passed seven separate sandboxed
+launches and 110 checks, including persistence and unchanged bundle hashes.
+Real preview Settings checked the selector and help in both Light and Dark;
+the runtime probe validated API image state, not compositor-visible Dock pixels.
+The earlier full Settings stress harness timeout is still an open release gate.
+
 The recorded CI baseline is successful run
 [34710861967](https://github.com/laleoarrow/battery-monitor/actions/runs/34710861967)
 for commit `41826300c3f2b726c5129cced98bd40a89d3a214`. That result predates the

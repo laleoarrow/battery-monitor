@@ -94,6 +94,10 @@ for logo_resource in AppLogoColor.png AppLogoClearLight.png AppLogoClearDark.png
     /bin/cp "$ROOT_DIR/design/icon/in-app-logo/$logo_resource" \
         "$APP_DIR/Contents/Resources/$logo_resource"
 done
+for dock_logo_resource in AppDockLogoColor.png AppDockLogoClearLight.png AppDockLogoClearDark.png; do
+    /bin/cp "$ROOT_DIR/design/icon/dock-logo/$dock_logo_resource" \
+        "$APP_DIR/Contents/Resources/$dock_logo_resource"
+done
 
 /bin/mkdir -p "$ICON_BUILD_DIR"
 /usr/bin/xcrun actool "$ROOT_DIR/design/icon/WattsonGlass.icon" \

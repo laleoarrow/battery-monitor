@@ -581,9 +581,14 @@ private final class SettingsLogoImageView: NSImageView {
 }
 
 private final class SettingsLogoPopupButton: NSPopUpButton {
+    weak var focusScrollView: NSView?
+
     override func becomeFirstResponder() -> Bool {
         let accepted = super.becomeFirstResponder()
-        if accepted { scrollToVisible(bounds) }
+        if accepted {
+            let target = focusScrollView ?? self
+            target.scrollToVisible(target.bounds)
+        }
         return accepted
     }
 
@@ -621,6 +626,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let liquidGlassSwitch = NSSwitch()
     private let liquidGlassStylePopup = NSPopUpButton(frame: .zero, pullsDown: false)
     private let logoPopup = SettingsLogoPopupButton(frame: .zero, pullsDown: false)
+    private let dockPopup = SettingsLogoPopupButton(frame: .zero, pullsDown: false)
     private var appearanceObserver: NSObjectProtocol?
     private let loginDetail = NSTextField(labelWithString: "")
     private let loginError = NSTextField(labelWithString: "")
@@ -1038,6 +1044,38 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         logoRow.translatesAutoresizingMaskIntoConstraints = false
         logoRow.addSubview(logoLabel)
         logoRow.addSubview(logoPopup)
+        dockPopup.identifier = NSUserInterfaceItemIdentifier("settings.appearance.dock-icon")
+        dockPopup.setAccessibilityLabel("Dock Icon")
+        dockPopup.setAccessibilityHelp(
+            "Restart Wattson to apply. Finder icon stays unchanged. Hidden keeps Wattson menu-bar-only."
+        )
+        dockPopup.font = .systemFont(ofSize: 12)
+        dockPopup.controlSize = .small
+        dockPopup.target = self
+        dockPopup.action = #selector(selectDockIcon(_:))
+        dockPopup.translatesAutoresizingMaskIntoConstraints = false
+        for style in Settings.DockIconStyle.allCases {
+            dockPopup.addItem(withTitle: style.title)
+            dockPopup.lastItem?.representedObject = style.rawValue
+        }
+        refreshDockControls()
+        let dockLabel = NSTextField(labelWithString: "Dock Icon")
+        dockLabel.font = SettingsStyle.detailFont
+        dockLabel.textColor = SettingsStyle.secondaryText
+        dockLabel.translatesAutoresizingMaskIntoConstraints = false
+        let dockHelp = NSTextField(wrappingLabelWithString:
+            "Restart Wattson to apply. Finder icon stays unchanged.\nHidden keeps Wattson menu-bar-only."
+        )
+        dockHelp.identifier = NSUserInterfaceItemIdentifier("settings.appearance.dock-icon.help")
+        dockHelp.font = SettingsStyle.detailFont
+        dockHelp.textColor = SettingsStyle.secondaryText
+        dockHelp.translatesAutoresizingMaskIntoConstraints = false
+        let dockRow = NSView()
+        dockRow.translatesAutoresizingMaskIntoConstraints = false
+        dockRow.addSubview(dockLabel)
+        dockRow.addSubview(dockPopup)
+        dockRow.addSubview(dockHelp)
+        dockPopup.focusScrollView = dockRow
         let box = SettingsAdaptiveBorderBox(increaseContrast: dependencies.increaseContrast)
         box.boxType = .custom
         box.titlePosition = .noTitle
@@ -1046,6 +1084,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         box.addSubview(option)
         box.addSubview(styleRow)
         box.addSubview(logoRow)
+        box.addSubview(dockRow)
         option.translatesAutoresizingMaskIntoConstraints = false
         let surface = SettingsGlassSurface(controls: box)
         let section = NSStackView(views: [heading, surface])
@@ -1058,7 +1097,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             switchSlot.heightAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.height),
             liquidGlassSwitch.centerXAnchor.constraint(equalTo: switchSlot.centerXAnchor),
             liquidGlassSwitch.centerYAnchor.constraint(equalTo: switchSlot.centerYAnchor),
-            surface.heightAnchor.constraint(equalToConstant: SettingsStyle.generalRowHeight + 68),
+            surface.heightAnchor.constraint(equalToConstant: SettingsStyle.generalRowHeight + 32 + 36 + 64),
             surface.widthAnchor.constraint(equalTo: section.widthAnchor),
             option.leadingAnchor.constraint(equalTo: box.leadingAnchor),
             option.trailingAnchor.constraint(equalTo: box.trailingAnchor),
@@ -1079,13 +1118,27 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             logoRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
             logoRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
             logoRow.topAnchor.constraint(equalTo: styleRow.bottomAnchor),
-            logoRow.bottomAnchor.constraint(equalTo: box.bottomAnchor),
+            logoRow.heightAnchor.constraint(equalToConstant: 36),
             logoLabel.leadingAnchor.constraint(equalTo: styleLabel.leadingAnchor),
             logoLabel.centerYAnchor.constraint(equalTo: logoRow.centerYAnchor, constant: -4),
             logoLabel.trailingAnchor.constraint(lessThanOrEqualTo: logoPopup.leadingAnchor, constant: -12),
             logoPopup.trailingAnchor.constraint(equalTo: liquidGlassStylePopup.trailingAnchor),
             logoPopup.centerYAnchor.constraint(equalTo: logoLabel.centerYAnchor),
             logoPopup.widthAnchor.constraint(equalTo: liquidGlassStylePopup.widthAnchor),
+            dockRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
+            dockRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
+            dockRow.topAnchor.constraint(equalTo: logoRow.bottomAnchor),
+            dockRow.bottomAnchor.constraint(equalTo: box.bottomAnchor),
+            dockLabel.leadingAnchor.constraint(equalTo: styleLabel.leadingAnchor),
+            dockLabel.centerYAnchor.constraint(equalTo: dockRow.topAnchor, constant: 14),
+            dockLabel.trailingAnchor.constraint(lessThanOrEqualTo: dockPopup.leadingAnchor, constant: -12),
+            dockPopup.trailingAnchor.constraint(equalTo: liquidGlassStylePopup.trailingAnchor),
+            dockPopup.centerYAnchor.constraint(equalTo: dockLabel.centerYAnchor),
+            dockPopup.widthAnchor.constraint(equalTo: liquidGlassStylePopup.widthAnchor),
+            dockHelp.leadingAnchor.constraint(equalTo: dockLabel.leadingAnchor),
+            dockHelp.trailingAnchor.constraint(equalTo: dockRow.trailingAnchor, constant: -14),
+            dockHelp.topAnchor.constraint(equalTo: dockRow.topAnchor, constant: 30),
+            dockHelp.bottomAnchor.constraint(lessThanOrEqualTo: dockRow.bottomAnchor, constant: -6),
         ])
         return section
     }
@@ -1105,6 +1158,21 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         guard let value = sender.selectedItem?.representedObject as? String,
               let style = Settings.InAppLogoStyle(rawValue: value) else { return }
         Settings.inAppLogoStyle = style
+    }
+
+    @objc private func selectDockIcon(_ sender: NSPopUpButton) {
+        guard let value = sender.selectedItem?.representedObject as? String,
+              let style = Settings.DockIconStyle(rawValue: value) else { return }
+        Settings.dockIconStyle = style
+    }
+
+    private func refreshDockControls() {
+        if let item = dockPopup.itemArray.first(where: {
+            $0.representedObject as? String == Settings.dockIconStyle.rawValue
+        }) {
+            dockPopup.select(item)
+        }
+        dockPopup.refreshPreviews()
     }
 
     private func refreshLogoControls() {
@@ -1223,6 +1291,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             let change = notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
             if change == .liquidGlassAppearance { self?.refreshAppearanceControls() }
             if change == .inAppLogoStyle { self?.refreshLogoControls() }
+            if change == nil || change == .dockIconStyle { self?.refreshDockControls() }
         }
         batteryObserver = NotificationCenter.default.addObserver(
             forName: dependencies.systemBatteryIconDidChange,
@@ -2244,7 +2313,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .checkForUpdatesOnLaunch, .module, .liquidGlassAppearance, .inAppLogoStyle:
+            case .checkForUpdatesOnLaunch, .module, .liquidGlassAppearance, .inAppLogoStyle, .dockIconStyle:
                 break
             }
         }

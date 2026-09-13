@@ -111,6 +111,16 @@ General > Appearance. Color/Clear static Icon Composer renditions update the
 Settings identity only; Clear follows that window's Light/Dark appearance.
 This preference never mutates Finder/Dock icons, menu-bar symbols, or bundle
 metadata. The native source and its Mono appearance remain preserved.
+An independent **Dock Icon** choice now offers Hidden (the unchanged default),
+Color, and Clear. Saving affects only the next process launch. On that launch,
+AppDelegate selects a bundled 512px static image with the public
+`applicationIconImage` API and opts into regular activation only for a visible
+choice; Hidden retains the packaged accessory policy. Clear uses the startup
+Light/Dark appearance. The menu-bar item remains, and Dock reopen routes through
+the same guarded Settings presenter as Command-Comma. This does not modify
+Finder icons, signed bundle contents, helper privileges, or the independent
+in-app logo. It is not a native dynamic Clear-icon override or two-installer
+variant scheme.
 The classic ICNS remains unchanged; `design/icon/liquid-glass/` contains the source
 layers for the native `design/icon/WattsonGlass.icon` document. Release builds
 compile it with actool and include its layered catalog and a settings preview

@@ -290,6 +290,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let glassSwitch = view("settings.appearance.liquid-glass", in: first) as! NSSwitch
             let glassStyle = view("settings.appearance.liquid-glass-style", in: first) as! NSPopUpButton
             let logoPopup = view("settings.appearance.in-app-logo", in: first) as! NSPopUpButton
+            let dockPopup = view("settings.appearance.dock-icon", in: first) as! NSPopUpButton
             let keyLoopEnd: NSView = glassSwitch.isEnabled ? glassSwitch : logoPopup
             require(glassSwitch.state == .off && !Settings.liquidGlassEnabled,
                 "global Liquid Glass defaults off")
@@ -312,8 +313,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                 && !glassSwitch.isDescendant(of: view("settings.sidebar", in: first)),
                 "Liquid Glass belongs to General Appearance, outside sidebar navigation")
             require(glassSwitch.nextKeyView === logoPopup
-                && logoPopup.nextKeyView === controller.sidebarForTest,
-                "appearance keyboard loop includes the independent logo choice")
+                && logoPopup.nextKeyView === dockPopup
+                && dockPopup.nextKeyView === controller.sidebarForTest,
+                "appearance keyboard loop includes the independent in-app and Dock choices")
             require(logoPopup.itemTitles == ["Color", "Clear"] && logoPopup.isEnabled
                 && logoPopup.selectedItem?.representedObject as? String == "color",
                 "native logo popup defaults to Color and remains enabled with glass off")
@@ -323,6 +325,20 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "logo picker explains its scope and static previews accessibly")
             require(logoPopup.itemArray.allSatisfy { $0.image?.size == NSSize(width: 24, height: 24) },
                 "both native menu choices have 24-point image previews")
+            require(dockPopup.itemTitles == ["Hidden", "Color", "Clear"]
+                && dockPopup.isEnabled && Settings.dockIconStyle == .hidden
+                && dockPopup.selectedItem?.representedObject as? String == "hidden",
+                "Dock icon defaults to Hidden independently of Liquid Glass")
+            require(dockPopup.itemArray[0].image == nil
+                && dockPopup.itemArray.dropFirst().allSatisfy { $0.image?.size == NSSize(width: 24, height: 24) },
+                "Dock Hidden has no artwork and visible choices have static previews")
+            let dockHelp = view("settings.appearance.dock-icon.help", in: first) as! NSTextField
+            require(dockPopup.accessibilityLabel() == "Dock Icon"
+                && dockPopup.accessibilityHelp()?.contains("Restart Wattson to apply. Finder icon stays unchanged.") == true
+                && dockPopup.accessibilityHelp()?.contains("Hidden keeps Wattson menu-bar-only.") == true
+                && dockHelp.stringValue.contains("Restart Wattson to apply. Finder icon stays unchanged.")
+                && dockHelp.stringValue.contains("Hidden keeps Wattson menu-bar-only.") && !dockHelp.isHidden,
+                "Dock choice visibly and accessibly explains restart, Finder scope and Hidden behavior")
             if #available(macOS 26, *) {
                 require(glassSwitch.isEnabled, "native Liquid Glass is selectable on macOS 26")
             } else {
@@ -1401,12 +1417,62 @@ class SettingsWindowContractTests(unittest.TestCase):
                 && Settings.showsMenuBarPercentage == originalMenuPercentage
                 && app.applicationIconImage?.tiffRepresentation == originalSystemIcon,
                 "in-app logo choice does not mutate menu bar or application system icon")
+            let originalPolicy = app.activationPolicy()
+            let inAppBeforeDock = Settings.inAppLogoStyle
+            let identityBeforeDock = (identityTile as! NSImageView).image?.tiffRepresentation
+            window.makeFirstResponder(dockPopup)
+            for (index, value) in [(1, "color"), (0, "hidden"), (2, "clear")] {
+                dockPopup.selectItem(at: index)
+                dockPopup.sendAction(dockPopup.action!, to: dockPopup.target)
+                require(Settings.dockIconStyle.rawValue == value
+                    && defaults.string(forKey: "appearance.dockIconStyle") == value,
+                    "Dock picker saves its next-launch choice")
+                require(app.activationPolicy() == originalPolicy
+                    && app.applicationIconImage?.tiffRepresentation == originalSystemIcon,
+                    "saving Dock appearance does not immediately change activation policy or system artwork")
+                require(Settings.inAppLogoStyle == inAppBeforeDock
+                    && (identityTile as! NSImageView).image?.tiffRepresentation == identityBeforeDock
+                    && Settings.menuBarIconStyle == originalMenuStyle
+                    && Settings.showsMenuBarPercentage == originalMenuPercentage,
+                    "Dock settings do not overwrite the independent in-app logo or menu-bar preferences")
+                require(window.firstResponder === dockPopup
+                    && stableWindow === controller.windowForTest
+                    && stableSectionViews == controller.sectionViewIdentitiesForTest
+                    && controller.visibleSectionIdentifierForTest == "general",
+                    "Dock preference changes retain focused control, window and page identities")
+            }
+            Settings.dockIconStyle = .hidden
+            require(dockPopup.selectedItem?.representedObject as? String == "hidden",
+                "typed Dock notification synchronizes the visible selection")
+            defaults.set("color", forKey: "appearance.dockIconStyle")
+            NotificationCenter.default.post(name: Settings.didChange, object: nil)
+            require(dockPopup.selectedItem?.representedObject as? String == "color",
+                "untyped settings notification reloads the persisted Dock choice")
+            Settings.dockIconStyle = .clear
+            require(operationsBeforeLogo == [fixture.loginReads.count, fixture.batteryReads.count,
+                fixture.loginWrites.count, fixture.batteryWrites.count, fixture.updateChecks.count],
+                "Dock choices and preference notifications perform no helper request or update check")
+            require(app.activationPolicy() == originalPolicy
+                && app.applicationIconImage?.tiffRepresentation == originalSystemIcon,
+                "Dock notification synchronization never applies the restart-only preference")
             let classicLogoScroll = view("settings.general.scroll", in: window) as! NSScrollView
             content.layoutSubtreeIfNeeded()
             _ = logoPopup.scrollToVisible(logoPopup.bounds)
             require(classicLogoScroll.documentVisibleRect.contains(logoPopup.convert(
                 logoPopup.bounds, to: classicLogoScroll.documentView)),
                 "Classic General can scroll to the full logo control without shrinking existing rows")
+            window.makeFirstResponder(logoPopup)
+            window.selectNextKeyView(nil)
+            require(window.firstResponder === dockPopup
+                && classicLogoScroll.documentVisibleRect.contains(dockPopup.convert(
+                    dockPopup.bounds, to: classicLogoScroll.documentView))
+                && classicLogoScroll.documentVisibleRect.contains(dockHelp.convert(
+                    dockHelp.bounds, to: classicLogoScroll.documentView)),
+                "Classic Tab reveals the Dock picker together with its restart explanation")
+            _ = dockHelp.scrollToVisible(dockHelp.bounds)
+            require(classicLogoScroll.documentVisibleRect.contains(dockHelp.convert(
+                dockHelp.bounds, to: classicLogoScroll.documentView)),
+                "Classic scroll reveals the complete restart explanation")
 
             if #available(macOS 26, *) {
                 controller.selectSectionForTest(identifier: "general")
@@ -1423,8 +1489,11 @@ class SettingsWindowContractTests(unittest.TestCase):
                 Settings.liquidGlassEnabled = true
                 require(glassStyle.isEnabled && glassSwitch.nextKeyView === glassStyle
                     && glassStyle.nextKeyView === logoPopup
-                    && logoPopup.nextKeyView === controller.sidebarForTest,
+                    && logoPopup.nextKeyView === dockPopup
+                    && dockPopup.nextKeyView === controller.sidebarForTest,
                     "glass-on includes the background popup in the General keyboard loop")
+                require(dockPopup.isEnabled && Settings.dockIconStyle == .clear,
+                    "glass-on retains the independent next-launch Dock preference")
                 require(logoPopup.isEnabled && Settings.inAppLogoStyle == .clear,
                     "turning glass on retains the independent Clear logo selection")
                 require(window.appearance == nil
@@ -1528,6 +1597,10 @@ class SettingsWindowContractTests(unittest.TestCase):
                     expectedPreview.size = NSSize(width: 24, height: 24)
                     require(logoPopup.selectedItem?.image?.tiffRepresentation == expectedPreview.tiffRepresentation,
                         "Clear menu preview refreshes to the same effective appearance")
+                    require(dockPopup.selectedItem?.image?.tiffRepresentation == expectedPreview.tiffRepresentation
+                        && app.activationPolicy() == originalPolicy
+                        && app.applicationIconImage?.tiffRepresentation == originalSystemIcon,
+                        "Dock Clear preview adapts to appearance without applying the next-launch setting")
                     require(window.firstResponder === nativeUpdates
                         && nativeUpdates.state == nativeUpdateState
                         && nativeUpdates.isEnabled == nativeUpdateEnabled,
@@ -1573,8 +1646,11 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && glassStyle.selectedItem?.representedObject as? String == "clear",
                     "disabling glass retains its saved background choice")
                 require(glassSwitch.nextKeyView === logoPopup
-                    && logoPopup.nextKeyView === controller.sidebarForTest,
+                    && logoPopup.nextKeyView === dockPopup
+                    && dockPopup.nextKeyView === controller.sidebarForTest,
                     "glass-off removes the disabled style popup from the keyboard loop")
+                require(dockPopup.isEnabled && Settings.dockIconStyle == .clear,
+                    "Dock picker stays available in Classic with its saved next-launch choice")
                 require(logoPopup.isEnabled && Settings.inAppLogoStyle == .clear,
                     "glass-off keeps the independent logo selection enabled and saved")
                 require(window.appearance?.name == .darkAqua
@@ -1636,12 +1712,17 @@ class SettingsWindowContractTests(unittest.TestCase):
                     .first { $0.accessibilityLabel() == "Global Liquid Glass" }!
                 let glassBackground = view("settings.appearance.liquid-glass-style", in: glassWindow) as! NSPopUpButton
                 let restoredLogo = view("settings.appearance.in-app-logo", in: glassWindow) as! NSPopUpButton
+                let restoredDock = view("settings.appearance.dock-icon", in: glassWindow) as! NSPopUpButton
                 require(glassBackground.isEnabled
                     && glassBackground.selectedItem?.representedObject as? String == "clear"
                     && globalAppearance.nextKeyView === glassBackground
                     && glassBackground.nextKeyView === restoredLogo
-                    && restoredLogo.nextKeyView === glassController.sidebarForTest,
+                    && restoredLogo.nextKeyView === restoredDock
+                    && restoredDock.nextKeyView === glassController.sidebarForTest,
                     "new Settings windows restore the background and complete the native key loop")
+                require(restoredDock.isEnabled
+                    && restoredDock.selectedItem?.representedObject as? String == "clear",
+                    "reopening Settings restores the pending Dock choice without needing to restart the app")
                 require(restoredLogo.isEnabled
                     && restoredLogo.selectedItem?.representedObject as? String == "clear"
                     && (view("settings.sidebar.identity.tile", in: glassWindow) as! NSImageView).image?.tiffRepresentation
@@ -1681,6 +1762,22 @@ class SettingsWindowContractTests(unittest.TestCase):
                 glassWindow.selectPreviousKeyView(nil)
                 require(glassWindow.firstResponder === glassBackground,
                     "native reverse Tab returns from logo choice to background choice")
+                glassWindow.makeFirstResponder(restoredLogo)
+                glassWindow.selectNextKeyView(nil)
+                let restoredDockHelp = view("settings.appearance.dock-icon.help", in: glassWindow) as! NSTextField
+                require(glassWindow.firstResponder === restoredDock
+                    && normalGlassScroll.documentVisibleRect.contains(restoredDock.convert(
+                        restoredDock.bounds, to: normalGlassScroll.documentView))
+                    && normalGlassScroll.documentVisibleRect.contains(restoredDockHelp.convert(
+                        restoredDockHelp.bounds, to: normalGlassScroll.documentView)),
+                    "native Tab reveals the Dock picker and restart explanation together")
+                glassWindow.selectPreviousKeyView(nil)
+                require(glassWindow.firstResponder === restoredLogo,
+                    "native reverse Tab returns from Dock to the independent logo choice")
+                _ = restoredDockHelp.scrollToVisible(restoredDockHelp.bounds)
+                require(normalGlassScroll.documentVisibleRect.contains(restoredDockHelp.convert(
+                    restoredDockHelp.bounds, to: normalGlassScroll.documentView)),
+                    "normal Glass page can reveal the complete Dock restart explanation")
                 let recoveryButton = descendants(ofType: NSButton.self, in: glassWindow.contentView!)
                     .first { $0.accessibilityIdentifier() == "settings.general.controls-recovery.button" }!
                 require(nativeAutomaticUpdates.nextKeyView === globalAppearance,
@@ -1734,6 +1831,14 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(recoveryScroll.documentVisibleRect.contains(restoredLogo.convert(
                     restoredLogo.bounds, to: recoveryScroll.documentView)),
                     "expanded recovery help keeps the logo choice reachable")
+                _ = restoredDockHelp.scrollToVisible(restoredDockHelp.bounds)
+                require(recoveryScroll.documentVisibleRect.contains(restoredDockHelp.convert(
+                    restoredDockHelp.bounds, to: recoveryScroll.documentView)),
+                    "expanded recovery help keeps the Dock setting explanation reachable")
+                glassWindow.makeFirstResponder(restoredDock)
+                require(recoveryScroll.documentVisibleRect.contains(restoredDock.convert(
+                    restoredDock.bounds, to: recoveryScroll.documentView)),
+                    "expanded recovery keeps keyboard access to the Dock choice")
                 glassFixture.helperAvailable = true
                 glassController.refreshSectionsForTest()
                 glassFixture.loginReads.removeFirst()(.enabled)
@@ -1756,6 +1861,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(glassWindow.firstResponder === restoredLogo
                     && restoredLogo.isEnabled && Settings.inAppLogoStyle == .clear,
                     "logo focus and saved choice survive material changes")
+                glassWindow.makeFirstResponder(restoredDock)
+                Settings.liquidGlassEnabled = true
+                Settings.liquidGlassEnabled = false
+                require(glassWindow.firstResponder === restoredDock && restoredDock.isEnabled
+                    && Settings.dockIconStyle == .clear && app.activationPolicy() == originalPolicy,
+                    "Dock focus and pending preference survive material changes without taking effect")
             }
 
             // A repeated refresh starts a newer read. Its result wins even if
@@ -2131,7 +2242,7 @@ class SettingsWindowContractTests(unittest.TestCase):
     def test_in_app_logo_uses_static_resources_without_changing_system_icons(self):
         source = WINDOW.read_text(encoding="utf-8")
         logo_action = source.split("@objc private func selectInAppLogo(", 1)[1].split(
-            "private func refreshLogoControls()", 1
+            "@objc private func selectDockIcon(", 1
         )[0]
         self.assertIn("Settings.inAppLogoStyle = style", logo_action)
         self.assertNotIn("Settings.usesLiquidGlass", logo_action)
@@ -2148,6 +2259,33 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("viewDidChangeEffectiveAppearance()", artwork)
         self.assertNotIn("Timer", artwork)
         self.assertNotIn("glassEffect", artwork)
+
+    def test_dock_icon_is_a_separate_restart_only_preference(self):
+        source = WINDOW.read_text(encoding="utf-8")
+        dock_action = source.split("@objc private func selectDockIcon(", 1)[1].split(
+            "private func refreshDockControls()", 1
+        )[0]
+        self.assertIn("Settings.DockIconStyle(rawValue: value)", dock_action)
+        self.assertIn("Settings.dockIconStyle = style", dock_action)
+        for unrelated in ("Settings.usesLiquidGlass", "inAppLogoStyle", "menuBarIconStyle",
+                          "refreshSections", "refreshLiquidGlassAppearance", "refreshLogo"):
+            self.assertNotIn(unrelated, dock_action)
+        for immediate_application in ("setActivationPolicy", "applicationIconImage =", "setIcon(",
+                                      "NSApp.terminate", "Process("):
+            self.assertNotIn(immediate_application, source)
+        self.assertIn('"settings.appearance.dock-icon"', source)
+        self.assertIn('dockPopup.setAccessibilityLabel("Dock Icon")', source)
+        self.assertIn('"settings.appearance.dock-icon.help"', source)
+        self.assertIn("Restart Wattson to apply. Finder icon stays unchanged.", source)
+        self.assertIn("Hidden keeps Wattson menu-bar-only.", source)
+        self.assertIn("for style in Settings.DockIconStyle.allCases", source)
+        self.assertIn("dockPopup.addItem(withTitle: style.title)", source)
+        self.assertIn("dockPopup.refreshPreviews()", source)
+        self.assertIn("if change == nil || change == .dockIconStyle { self?.refreshDockControls() }", source)
+        self.assertIn("private let dockPopup = SettingsLogoPopupButton(", source)
+        self.assertIn("dockPopup.focusScrollView = dockRow", source)
+        self.assertIn("target.scrollToVisible(target.bounds)", source)
+        self.assertIn("static let generalListHeight: CGFloat = 272", source)
 
     def test_default_sections_use_only_existing_settings(self):
         source = WINDOW.read_text(encoding="utf-8")

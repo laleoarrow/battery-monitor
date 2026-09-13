@@ -149,8 +149,8 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("self?.presentSettingsWindow()", self.source)
 
     def test_quick_menu_and_command_comma_share_one_settings_target(self):
-        self.assertEqual(self.source.count("@objc private func showSettings()"), 1)
-        target = self.source.split("@objc private func showSettings()", 1)[1].split(
+        self.assertEqual(self.source.count("@objc func showSettings()"), 1)
+        target = self.source.split("@objc func showSettings()", 1)[1].split(
             "\n    private func", 1
         )[0]
         for operation in (
@@ -172,7 +172,7 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertLess(presenter.index("stopDisplayClock()"),
                         presenter.index("settingsWindowController.show()"))
         menu = self.source.split("private func installMainMenuIfNeeded()", 1)[1].split(
-            "@objc private func showSettings()", 1
+            "@objc func showSettings()", 1
         )[0]
         self.assertIn('title: "Settings…"', menu)
         self.assertIn("#selector(showSettings)", menu)
@@ -183,8 +183,31 @@ class StatusItemContractTests(unittest.TestCase):
 
     def test_settings_command_does_not_mutate_activation_policy(self):
         settings_code = self.source.split("private func installMainMenuIfNeeded()", 1)[1]
-        settings_code += self.app_delegate
+        settings_code += self.app_delegate.split("func applicationShouldHandleReopen", 1)[1]
         self.assertNotIn("setActivationPolicy", settings_code)
+
+    def test_opt_in_dock_icon_is_applied_only_at_launch_without_bundle_mutation(self):
+        launch = self.app_delegate.split("func applicationDidFinishLaunching", 1)[1].split(
+            "private func applyDockIconAtLaunch", 1
+        )[0]
+        self.assertIn("applyDockIconAtLaunch()", launch)
+        self.assertEqual(self.app_delegate.count("applyDockIconAtLaunch()"), 2)
+        dock = self.app_delegate.split("private func applyDockIconAtLaunch", 1)[1].split(
+            "func applicationShouldHandleReopen", 1
+        )[0]
+        self.assertIn("Settings.dockIconStyle.imageResourceName(isDark: isDark)", dock)
+        self.assertIn("let image = NSImage(named: resource) else { return }", dock)
+        self.assertIn("NSApp.applicationIconImage = image", dock)
+        self.assertIn("NSApp.setActivationPolicy(.regular)", dock)
+        self.assertLess(dock.index("else { return }"), dock.index("setActivationPolicy"))
+        for forbidden in ("setIcon(", "HelperClient", "FileManager", "Settings.didChange"):
+            self.assertNotIn(forbidden, self.app_delegate)
+        self.assertIn("<key>LSUIElement</key>\n    <true/>",
+                      (ROOT / "Packaging" / "AppInfo.plist").read_text())
+        entrypoint = (ROOT / "main.swift").read_text()
+        self.assertIn("delegate.onDockReopen = { [weak statusItemController]", entrypoint)
+        self.assertIn("statusItemController?.showSettings()", entrypoint)
+        self.assertIn("guard sender.activationPolicy() == .regular else { return true }", self.app_delegate)
 
     def test_system_battery_state_has_one_authoritative_cache(self):
         self.assertNotIn("systemBatteryIconHidden: Bool?", self.source)
@@ -241,14 +264,14 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("Settings.changeUserInfoKey", observer)
         self.assertIn("case .menuBarPercentage, .menuBarIconStyle:", observer)
         self.assertIn(
-            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .inAppLogoStyle:\n                break",
+            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .inAppLogoStyle, .dockIconStyle:\n                break",
             observer,
         )
         status_scope = observer.split("case .menuBarPercentage, .menuBarIconStyle:", 1)[1].split("case", 1)[0]
         self.assertIn("refreshStatusItem()", status_scope)
         self.assertNotIn("refreshPresentation()", status_scope)
         ignored_scope = observer.split(
-            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .inAppLogoStyle:", 1
+            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .inAppLogoStyle, .dockIconStyle:", 1
         )[1].split("case", 1)[0]
         self.assertNotIn("refresh", ignored_scope)
         self.assertIn("case nil:", observer)
