@@ -298,7 +298,7 @@ final class StatusItemController: NSObject {
             switch notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change {
             case .menuBarPercentage, .menuBarIconStyle:
                 self?.refreshStatusItem()
-            case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance:
+            case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .inAppLogoStyle:
                 break
             case nil:
                 self?.refreshPresentation()

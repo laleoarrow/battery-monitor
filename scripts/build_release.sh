@@ -90,6 +90,10 @@ verify_universal_binary "$BUILT_HELPER_EXECUTABLE"
 /bin/cp "$ROOT_DIR/design/icon/AppIcon.icns" "$APP_DIR/Contents/Resources/AppIcon.icns"
 /usr/bin/sips -s format png "$ROOT_DIR/design/icon/AppIcon.icns" \
     --out "$APP_DIR/Contents/Resources/AppIconSettings.png" >/dev/null
+for logo_resource in AppLogoColor.png AppLogoClearLight.png AppLogoClearDark.png; do
+    /bin/cp "$ROOT_DIR/design/icon/in-app-logo/$logo_resource" \
+        "$APP_DIR/Contents/Resources/$logo_resource"
+done
 
 /bin/mkdir -p "$ICON_BUILD_DIR"
 /usr/bin/xcrun actool "$ROOT_DIR/design/icon/WattsonGlass.icon" \
@@ -101,8 +105,6 @@ verify_universal_binary "$BUILT_HELPER_EXECUTABLE"
     --output-format human-readable-text --warnings --notices
 /bin/cp "$ICON_BUILD_DIR/Assets.car" "$ICON_BUILD_DIR/WattsonGlass.icns" \
     "$APP_DIR/Contents/Resources/"
-/usr/bin/sips -s format png "$ICON_BUILD_DIR/WattsonGlass.icns" \
-    --out "$APP_DIR/Contents/Resources/AppIconGlassSettings.png" >/dev/null
 # The template selects WattsonGlass for both the layered system icon and its
 # static fallback. Keep the classic resources for Settings, not a bundle rewrite.
 /usr/bin/plutil -replace CFBundleShortVersionString -string "$APP_VERSION" \

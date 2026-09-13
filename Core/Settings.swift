@@ -10,6 +10,17 @@ enum Settings {
         case native
     }
 
+    enum LiquidGlassStyle: String, CaseIterable {
+        case regular
+        case clear
+    }
+
+    /// Branding inside Wattson only, independent of the system and menu-bar icons.
+    enum InAppLogoStyle: String, CaseIterable {
+        case color
+        case clear
+    }
+
     enum Module: String, CaseIterable {
         case flow, ring, lanes, history
 
@@ -30,6 +41,7 @@ enum Settings {
         case menuBarIconStyle
         case checkForUpdatesOnLaunch
         case liquidGlassAppearance
+        case inAppLogoStyle
         case module(Module)
     }
 
@@ -40,6 +52,8 @@ enum Settings {
     private static let iconStyleKey = "menubar.iconStyle"
     private static let checkForUpdatesOnLaunchKey = "updates.checkOnLaunch"
     private static let liquidGlassKey = "appearance.liquidGlassEnabled"
+    private static let liquidGlassStyleKey = "appearance.liquidGlassStyle"
+    private static let inAppLogoStyleKey = "appearance.inAppLogoStyle"
 #if DEBUG
     private static var testDefaults: UserDefaults?
 #endif
@@ -99,6 +113,34 @@ enum Settings {
             guard liquidGlassEnabled != newValue else { return }
             defaults.set(newValue, forKey: liquidGlassKey)
             postChange(.liquidGlassAppearance)
+        }
+    }
+
+    /// The popup background choice survives turning glass off or using an
+    /// older macOS version. Unknown values retain the more legible default.
+    static var liquidGlassStyle: LiquidGlassStyle {
+        get {
+            guard let value = defaults.string(forKey: liquidGlassStyleKey) else {
+                return .regular
+            }
+            return LiquidGlassStyle(rawValue: value) ?? .regular
+        }
+        set {
+            guard liquidGlassStyle != newValue else { return }
+            defaults.set(newValue.rawValue, forKey: liquidGlassStyleKey)
+            postChange(.liquidGlassAppearance)
+        }
+    }
+
+    static var inAppLogoStyle: InAppLogoStyle {
+        get {
+            guard let value = defaults.string(forKey: inAppLogoStyleKey) else { return .color }
+            return InAppLogoStyle(rawValue: value) ?? .color
+        }
+        set {
+            guard inAppLogoStyle != newValue else { return }
+            defaults.set(newValue.rawValue, forKey: inAppLogoStyleKey)
+            postChange(.inAppLogoStyle)
         }
     }
 

@@ -57,6 +57,8 @@ verify_app_bundle() {
     local icon_resource
     local icon_name
     local icon_key
+    local logo_resource
+    local image_info
 
     [[ -d "$app_dir" && ! -L "$app_dir" ]] || fail "missing release app: $app_dir"
     /usr/bin/plutil -lint "$app_dir/Contents/Info.plist" >/dev/null
@@ -66,11 +68,21 @@ verify_app_bundle() {
         || fail "app version does not match VERSION: $app_dir"
     [[ "$(/usr/libexec/PlistBuddy -c 'Print :LSMinimumSystemVersion' "$app_dir/Contents/Info.plist")" == "$MIN_MACOS_VERSION" ]] \
         || fail "Info.plist has the wrong minimum macOS version: $app_dir"
-    for icon_resource in AppIcon.icns AppIconSettings.png Assets.car WattsonGlass.icns AppIconGlassSettings.png; do
+    for icon_resource in AppIcon.icns AppIconSettings.png Assets.car WattsonGlass.icns \
+        AppLogoColor.png AppLogoClearLight.png AppLogoClearDark.png; do
         [[ -f "$app_dir/Contents/Resources/$icon_resource" \
             && ! -L "$app_dir/Contents/Resources/$icon_resource" \
             && -s "$app_dir/Contents/Resources/$icon_resource" ]] \
             || fail "missing, empty, or symlinked icon resource: $app_dir/$icon_resource"
+    done
+    for logo_resource in AppLogoColor.png AppLogoClearLight.png AppLogoClearDark.png; do
+        image_info="$(/usr/bin/sips -g format -g pixelWidth -g pixelHeight \
+            "$app_dir/Contents/Resources/$logo_resource")" \
+            || fail "unreadable in-app logo resource: $app_dir/$logo_resource"
+        /usr/bin/grep -Eq '^[[:space:]]+format: png$' <<< "$image_info" \
+            && /usr/bin/grep -Eq '^[[:space:]]+pixelWidth: 128$' <<< "$image_info" \
+            && /usr/bin/grep -Eq '^[[:space:]]+pixelHeight: 128$' <<< "$image_info" \
+            || fail "in-app logo must be a 128x128 PNG: $app_dir/$logo_resource"
     done
     for icon_key in CFBundleIconFile CFBundleIconName; do
         icon_name="$(/usr/libexec/PlistBuddy -c "Print :$icon_key" "$app_dir/Contents/Info.plist" 2>/dev/null)" \

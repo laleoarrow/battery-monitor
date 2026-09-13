@@ -1,35 +1,41 @@
-# Wattson 4.1.0 Liquid Glass review
+# Wattson 4.2.0 Liquid Glass review
 
 Primary guidance: [Apple — Adopting Liquid Glass](https://developer.apple.com/documentation/technologyoverviews/adopting-liquid-glass).
 The runtime option is default-off, presentation-only, and requires macOS 26.
 The classic path remains available on every supported system.
-This is an in-progress 4.1.0 review. The UI4 outer glass capsule still contained
-an ordinary segmented well. UI7 replaces it with genuine native glass buttons;
-the production integration is complete and release validation is in progress.
-Local implementation and review are not a published
-release or a claim of pixel identity with Apple's iPhone navigation examples.
+4.1.0 is the preserved published baseline. The 4.2.0 work integrates the approved
+A2 draggable control, Standard/Clear popup choices and the completed Settings
+refinement. Validation is in progress; local code and preview are not a published
+release or a claim of pixel identity with Apple's Control Center.
 
 ## Component decisions
 
 | Component | Adoption decision | Verification scope |
 | --- | --- | --- |
-| Main popover | Use the existing standard NSPopover. Its content, scroll view and sections remain transparent. Request Dark Aqua for the entire glass popover, not only its content. | Real composited window; dark glass under both host appearances; same geometry and data before/after toggling. |
+| Main popup | Classic retains NSPopover. Glass uses a nonactivating NSPanel with a single NSGlassEffectView, regular or clear, and transparent production content. Regular disables the extra window shadow that caused a second outer outline; Clear retains its accepted treatment. | Real composited windows, all-state layout, screen placement, keyboard/menu/outside-click lifetime and cross-host close/reopen. |
 | Power flow, ring, lanes and history | These are the content, not navigation. Retain their production renderers and semantic colors, without extra glass cards. | Charging, full, battery, mixed supply, low battery, Low Power and attached-device output fixtures. |
-| Mode chooser | Use three mutually exclusive NSButton `.glass` controls, with native selection emphasis and one shared NSGlassEffectContainerView. Remove the ordinary segmented well and extra enclosing glass view. Retain established classic geometry, control and reduced-motion fallback. | Real composited buttons and bounds; pointer, keyboard, disabled modes, in-flight operations and focus transfer. |
-| Settings/quick-menu trigger | Keep a separate round native `.glass` button beside the mode buttons in the same NSGlassEffectContainerView; retain the standard NSMenu. | Distinct button shapes, active/inactive readability, keyboard opening, menu anchoring and close/reopen. |
+| Mode chooser | Approved A2 uses SwiftUI clear interactive glass with one moving capsule and one fixed label set. AppKit owns authoritative pending/rollback state. Reduce Motion, Reduce Transparency and Increase Contrast retain C native buttons; Classic stays unchanged. | Real pointer drag and label clicks, once-per-release requests, cancellation, keyboard, disabled/busy and rollback. Pure model hooks are not pointer evidence. |
+| Settings/quick-menu trigger | A2 has a separate circular interactive glass button anchored to a real mounted NSView for the standard NSMenu. C and Classic retain existing native menu controls. | Distinct shapes, accessibility, menu anchoring and close/reopen. |
 | Settings navigation | Use NSSplitViewController with a native sidebar item and automatic detail safe area. Let AppKit own the floating glass; retain the compact classic sidebar when off. | All three pages, live switching without rebuilding pages or repeating helper requests; preserve focused controls across reparenting. |
-| Settings window and groups | Use a transparent NSWindow over NSVisualEffectView `.underWindowBackground` with `.behindWindow` blending. Use one regular NSGlassEffectView per functional group. Scope NSGlassEffectContainerView to the detail content, leaving the system sidebar outside it. Remove opaque group fills. | Actual compositor captures over different backdrops; all three pages, classic round trip and system Reduce Transparency. |
-| Appearance preference | Place the app-wide Liquid Glass switch in General > Appearance with the same row alignment as other controls. Keep the navigation sidebar free of preferences. | Normal form fits without scrolling; expanded recovery help remains reachable; other pages' Tab loops return to navigation. |
+| Settings window and groups | Use a transparent NSWindow over NSVisualEffectView `.underWindowBackground` with `.behindWindow` blending. Use one regular NSGlassEffectView per functional group. Batch General's two groups inside its scroll document, leaving the fixed heading and sidebar outside the container. Single-group pages need no extra batching ancestor. Remove opaque group fills. | Actual compositor captures over different backdrops; all three pages, scroll clipping, classic round trip and system Reduce Transparency. |
+| Appearance preference | General > Appearance holds the app-wide switch and Standard/Clear popup selection. The saved style survives switching glass off; unsupported/off states disable the style control. Keep navigation free of preferences. | General scrolls as needed for the independent logo choice or recovery help; keyboard focus keeps the logo selector visible and page state is retained. |
 | Settings controls | Native NSSwitch and glass button styles when enabled; semantic text and system accessibility. | Unknown states must remain disabled/explicitly unknown; async recovery controls must keep the active Tab chain. |
 | System menu-bar glyph | Retain the template/semantic battery glyph, not a miniature textured glass illustration. | Legibility and existing seven-state icon previews. |
 | App identity icon | Compose original vector layers in Apple's Icon Composer; use system-generated material and appearance variants. | Native export and asset compilation; primary-system-icon scope is separate from the runtime option. |
+| In-app Logo | General > Appearance offers Color/Clear static Icon Composer renditions, saved independently of glass. Clear artwork follows the window's Light/Dark appearance. | Immediate Settings identity update, reopen/persistence, keyboard, no helper calls and unchanged Finder/Dock/menu-bar icons. PNGs are not live glass. |
 
 ## Material and accessibility boundaries
 
-- Do not cover the whole popover with another background visual-effect view.
-  Native glass buttons supply the footer control material without an extra
-  enclosing glass effect; the popover supplies its own background material.
-- Near-black means system Dark Aqua, not a solid black scrim or a fake blur.
+- Do not insert another backdrop inside NSPopover. The glass panel replaces
+  that host and owns one glass root; it does not paint custom outlines or fake
+  refractive gradients. Diagnostic stripes belong only to the preview backdrop.
+- Glass windows inherit system Light/Dark appearance; do not pin Dark Aqua
+  while the preview or app is Light. Classic Settings retains its original dark
+  appearance. Clear is not automatically legible over every backdrop; inspect
+  actual composited text on bright, dark and patterned backgrounds.
+- The visible preview omits the redundant glass-style dropdown and starts in
+  Clear Glass. Its Classic/Glass switch remains. Shipping Settings still keeps
+  the previously requested style choice pending the user's scope confirmation.
 - Do not turn every data surface into a glass control. The content remains the
   visual priority, as Apple's guidance requires.
 - Reduce Transparency may make the surface opaque; Reduce Motion suppresses
@@ -37,7 +43,7 @@ release or a claim of pixel identity with Apple's iPhone navigation examples.
 - Existing view-cache images prove layout only. Native glass claims require
   real composited-window review; motion claims require actual motion evidence.
 
-## Current verification
+## Preserved Settings and 4.1.0 verification
 
 - The [appearance hierarchy review](../design/settings/appearance-hierarchy/README.md)
   moves Liquid Glass into General and confines the custom effect container to
@@ -143,8 +149,7 @@ release or a claim of pixel identity with Apple's iPhone navigation examples.
 - The primary system app icon is selected as `WattsonGlass`, per the user's
   request to replace the app icon too. The runtime option controls the app UI,
   not the signed Finder/Dock icon; the original ICNS and 4.0 release stay intact.
-- Run the 4.1.0 validation and release gates on the final source and artifacts
-  only after these UI and icon decisions are resolved.
+- Run the 4.2.0 validation and release gates on the final source and artifacts.
 
 ## Release boundary
 
@@ -154,7 +159,8 @@ for commit `41826300c3f2b726c5129cced98bd40a89d3a214`. That result predates the
 UI7 native-button and icon integration. Require hosted CI on the final new frozen commit;
 the earlier hosted run does not validate these working-tree changes.
 
-Source version 4.1.0 is not proof of publication. Keep published 4.0.0 bytes
-unchanged. Require the headless tests, real AppKit interaction, local packaging,
+4.1.0 was subsequently released from `e90deb3920b249514cc86e7cd6ad1a6282cee614`.
+Source version 4.2.0 is not proof of publication. Keep published 4.0.0 and 4.1.0
+bytes unchanged. Require headless tests, real AppKit interaction, local packaging,
 exact-commit hosted installation matrix, public Homebrew lifecycle and Pages
-gates from `release.md` before announcing or installing 4.1.0.
+gates from `release.md` before announcing or installing 4.2.0.

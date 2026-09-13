@@ -50,6 +50,8 @@ final class NativeModeSegmentedControlTests: XCTestCase {
     }
 
     func testGlassChoiceAtConstructionUsesNativeControlsOnlyOnSupportedSystems() {
+        // This suite retains C's native-button contract; A2 has its own suite.
+        if #available(macOS 26.0, *) { setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1) }
         Settings.liquidGlassEnabled = true
         let footer = PopoverFooterView()
         footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
@@ -100,6 +102,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
                        NSRect(x: footer.bounds.width - 22, y: 42, width: 22, height: 20))
         XCTAssertTrue(window.makeFirstResponder(slider))
 
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
         Settings.liquidGlassEnabled = true
         footer.layoutSubtreeIfNeeded()
         let glass = glassControl(in: footer)
@@ -116,6 +119,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         XCTAssertEqual(menu.bezelStyle, .glass)
         XCTAssertTrue(menu.isBordered)
 
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
         Settings.liquidGlassEnabled = false
         footer.layoutSubtreeIfNeeded()
         XCTAssertFalse(slider.isHidden)
@@ -131,7 +135,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         XCTAssertFalse(menu.isBordered)
         XCTAssertEqual(menu.contentTintColor, PopoverStyle.secondaryText)
 
-        var openedMenu: NSButton?
+        var openedMenu: NSView?
         footer.onShowMenu = { openedMenu = $0 }
         menu.performClick(nil)
         XCTAssertTrue(openedMenu === menu)
@@ -150,6 +154,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
             completion = callback
         }
         slider.keyDown(with: try keyEvent(124))
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
         Settings.liquidGlassEnabled = true
         let glass = glassControl(in: footer)
         XCTAssertEqual(requests, [.low])
@@ -157,13 +162,16 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         XCTAssertTrue(glass.subviews.compactMap { $0 as? NSButton }.allSatisfy { !$0.isEnabled })
         footer.update(mode: .auto, helperInstalled: true,
                       systemBatteryIconHidden: false, tint: .systemGreen)
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
         Settings.liquidGlassEnabled = false
         XCTAssertEqual(slider.selectedIndexForTest, 1)
         completion?(nil)
         XCTAssertEqual(slider.selectedIndexForTest, 0)
 
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
         Settings.liquidGlassEnabled = true
         glass.selectModeForTest(.low)
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
         Settings.liquidGlassEnabled = false
         completion?(.low)
         XCTAssertEqual(slider.selectedIndexForTest, 1)
@@ -223,6 +231,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         var originalContainer: NSGlassEffectContainerView?
         var originalGroup: NativeGlassModeControl?
         for enabled in [true, false, true] {
+            setenv("WATTSON_FORCE_REDUCE_MOTION", enabled ? "1" : "0", 1)
             Settings.liquidGlassEnabled = enabled
             footer.layoutSubtreeIfNeeded()
             // The classic slider owns its own internal materials; only this
@@ -270,6 +279,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
 
     func testGlassButtonsKeepNativeSelectionAccessibilityAndDisabledActions() {
         guard #available(macOS 26.0, *) else { return }
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
         let footer = PopoverFooterView()
         Settings.liquidGlassEnabled = true
         let native = glassControl(in: footer)

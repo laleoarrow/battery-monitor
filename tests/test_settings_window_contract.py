@@ -1,5 +1,6 @@
 import os
 import pathlib
+import plistlib
 import shutil
 import subprocess
 import tempfile
@@ -110,6 +111,14 @@ class SettingsWindowContractTests(unittest.TestCase):
                 return UInt32((converted.redComponent * 255).rounded()) << 16
                     | UInt32((converted.greenComponent * 255).rounded()) << 8
                     | UInt32((converted.blueComponent * 255).rounded())
+            }
+
+            func logoArtwork(_ resource: String) -> NSImage {
+                guard let url = Bundle.main.url(forResource: resource, withExtension: "png"),
+                      let image = NSImage(contentsOf: url) else {
+                    fatalError("missing bundled logo fixture: \(resource)")
+                }
+                return image
             }
 
             func requireButtonHit(
@@ -252,6 +261,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             }
 
             let app = NSApplication.shared
+            let originalAppAppearance = app.appearance
+            defer { app.appearance = originalAppAppearance }
             require(app.activationPolicy() != .regular, "fixture must not change activation policy")
 
             let suiteName = "Wattson.SettingsWindowContract.\(UUID().uuidString)"
@@ -277,16 +288,41 @@ class SettingsWindowContractTests(unittest.TestCase):
 
             let first = controller.windowForTest
             let glassSwitch = view("settings.appearance.liquid-glass", in: first) as! NSSwitch
-            let keyLoopEnd: NSView = glassSwitch.isEnabled ? glassSwitch : controller.sidebarForTest
+            let glassStyle = view("settings.appearance.liquid-glass-style", in: first) as! NSPopUpButton
+            let logoPopup = view("settings.appearance.in-app-logo", in: first) as! NSPopUpButton
+            let keyLoopEnd: NSView = glassSwitch.isEnabled ? glassSwitch : logoPopup
             require(glassSwitch.state == .off && !Settings.liquidGlassEnabled,
                 "global Liquid Glass defaults off")
             require(glassSwitch.accessibilityLabel() == "Global Liquid Glass",
                 "appearance switch has an accessible purpose")
+            require(glassStyle.itemTitles == ["Standard Glass", "Clear Glass"]
+                && glassStyle.selectedItem?.representedObject as? String == "regular",
+                "native popup offers the two approved backgrounds with Standard selected by default")
+            require(!glassStyle.isEnabled && Settings.liquidGlassStyle == .regular,
+                "background selection is disabled while Liquid Glass is off")
+            require(glassStyle.accessibilityLabel() == "Popup glass background"
+                && glassStyle.accessibilityHelp()?.contains("more transparency") == true,
+                "background choice has an accessible label and explains its material difference")
+            glassStyle.selectItem(at: 1)
+            glassStyle.sendAction(glassStyle.action!, to: glassStyle.target)
+            require(Settings.liquidGlassStyle == .regular,
+                "a disabled background choice cannot submit an appearance change")
+            glassStyle.selectItem(at: 0)
             require(glassSwitch.isDescendant(of: view("settings.general.appearance", in: first))
                 && !glassSwitch.isDescendant(of: view("settings.sidebar", in: first)),
                 "Liquid Glass belongs to General Appearance, outside sidebar navigation")
-            require(glassSwitch.nextKeyView === controller.sidebarForTest,
-                "appearance switch returns keyboard navigation to sidebar")
+            require(glassSwitch.nextKeyView === logoPopup
+                && logoPopup.nextKeyView === controller.sidebarForTest,
+                "appearance keyboard loop includes the independent logo choice")
+            require(logoPopup.itemTitles == ["Color", "Clear"] && logoPopup.isEnabled
+                && logoPopup.selectedItem?.representedObject as? String == "color",
+                "native logo popup defaults to Color and remains enabled with glass off")
+            require(logoPopup.accessibilityLabel() == "In-App Logo"
+                && logoPopup.accessibilityHelp()?.contains("Finder and menu bar icons stay unchanged") == true
+                && logoPopup.accessibilityHelp()?.contains("static artwork") == true,
+                "logo picker explains its scope and static previews accessibly")
+            require(logoPopup.itemArray.allSatisfy { $0.image?.size == NSSize(width: 24, height: 24) },
+                "both native menu choices have 24-point image previews")
             if #available(macOS 26, *) {
                 require(glassSwitch.isEnabled, "native Liquid Glass is selectable on macOS 26")
             } else {
@@ -361,6 +397,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                 (identityTile as? NSImageView)?.image != nil,
                 "sidebar application icon resolves through AppKit"
             )
+            require((identityTile as! NSImageView).image?.tiffRepresentation
+                == logoArtwork("AppLogoColor").tiffRepresentation,
+                "default sidebar uses the packaged Color logo independently of window material")
             require(approximately(identity.frame.maxY, trafficSafeArea.frame.minY), "identity begins below traffic safe area")
             require(approximately(navigation.frame.minX, 12), "compact navigation leading inset")
             require(approximately(sidebar.frame.maxX - navigation.frame.maxX, 12), "compact navigation trailing inset")
@@ -426,6 +465,9 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(generalScroll.documentVisibleRect.contains(
                 glassSwitch.convert(glassSwitch.bounds, to: generalDocument)),
                 "appearance option is fully visible without scrolling in the normal state")
+            require(generalScroll.documentVisibleRect.contains(
+                glassStyle.convert(glassStyle.bounds, to: generalDocument)),
+                "background popup is fully visible without scrolling in the normal state")
             require(
                 approximately(
                     (view("settings.general.heading", in: first) as? NSTextField)?.font?.pointSize ?? -1,
@@ -1323,6 +1365,49 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(stableWindow === controller.windowForTest, "switches keep one window")
             require(stableSectionViews == controller.sectionViewIdentitiesForTest, "switches reuse section views")
 
+            controller.selectSectionForTest(identifier: "general")
+            window.appearance = NSAppearance(named: .darkAqua)
+            let originalSystemIcon = app.applicationIconImage?.tiffRepresentation
+            let originalMenuStyle = Settings.menuBarIconStyle
+            let originalMenuPercentage = Settings.showsMenuBarPercentage
+            let operationsBeforeLogo = [fixture.loginReads.count, fixture.batteryReads.count,
+                fixture.loginWrites.count, fixture.batteryWrites.count, fixture.updateChecks.count]
+            window.makeFirstResponder(logoPopup)
+            for (index, style, resource) in [(1, "clear", "AppLogoClearDark"),
+                                            (0, "color", "AppLogoColor"),
+                                            (1, "clear", "AppLogoClearDark")] {
+                logoPopup.selectItem(at: index)
+                logoPopup.sendAction(logoPopup.action!, to: logoPopup.target)
+                require(Settings.inAppLogoStyle.rawValue == style
+                    && defaults.string(forKey: "appearance.inAppLogoStyle") == style,
+                    "logo choice persists even when Liquid Glass is off")
+                require((identityTile as! NSImageView).image?.tiffRepresentation
+                    == logoArtwork(resource).tiffRepresentation,
+                    "logo choice immediately updates the retained sidebar image")
+                require(window.firstResponder === logoPopup
+                    && stableWindow === controller.windowForTest
+                    && stableSectionViews == controller.sectionViewIdentitiesForTest
+                    && controller.visibleSectionIdentifierForTest == "general",
+                    "logo changes preserve window, page identities and keyboard focus")
+            }
+            require(operationsBeforeLogo == [fixture.loginReads.count, fixture.batteryReads.count,
+                fixture.loginWrites.count, fixture.batteryWrites.count, fixture.updateChecks.count],
+                "logo selection performs no helper read, write or update check")
+            Settings.inAppLogoStyle = .color
+            require(logoPopup.selectedItem?.representedObject as? String == "color",
+                "external logo changes immediately synchronize the native selection")
+            Settings.inAppLogoStyle = .clear
+            require(Settings.menuBarIconStyle == originalMenuStyle
+                && Settings.showsMenuBarPercentage == originalMenuPercentage
+                && app.applicationIconImage?.tiffRepresentation == originalSystemIcon,
+                "in-app logo choice does not mutate menu bar or application system icon")
+            let classicLogoScroll = view("settings.general.scroll", in: window) as! NSScrollView
+            content.layoutSubtreeIfNeeded()
+            _ = logoPopup.scrollToVisible(logoPopup.bounds)
+            require(classicLogoScroll.documentVisibleRect.contains(logoPopup.convert(
+                logoPopup.bounds, to: classicLogoScroll.documentView)),
+                "Classic General can scroll to the full logo control without shrinking existing rows")
+
             if #available(macOS 26, *) {
                 controller.selectSectionForTest(identifier: "general")
                 let oldIcon = (identityTile as! NSImageView).image
@@ -1336,7 +1421,16 @@ class SettingsWindowContractTests(unittest.TestCase):
                 let originalUpdatePreference = Settings.checksForUpdatesOnLaunch
                 window.makeFirstResponder(automaticUpdates)
                 Settings.liquidGlassEnabled = true
-                require(first?.appearance?.name == .darkAqua, "glass preserves the requested dark appearance")
+                require(glassStyle.isEnabled && glassSwitch.nextKeyView === glassStyle
+                    && glassStyle.nextKeyView === logoPopup
+                    && logoPopup.nextKeyView === controller.sidebarForTest,
+                    "glass-on includes the background popup in the General keyboard loop")
+                require(logoPopup.isEnabled && Settings.inAppLogoStyle == .clear,
+                    "turning glass on retains the independent Clear logo selection")
+                require(window.appearance == nil
+                    && window.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua])
+                        == app.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]),
+                    "glass inherits the app appearance instead of pinning dark mode")
                 require(controller.sidebarForTest.selectionHighlightStyle == .regular,
                     "glass sidebar uses system selection")
                 let nativeSplit = window.contentViewController?.children.first as? NSSplitViewController
@@ -1351,8 +1445,16 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && backdrop.blendingMode == .behindWindow,
                     "window uses the documented behind-window system material")
                 let container = view("settings.glass-container", in: window) as! NSGlassEffectContainerView
-                require(container.contentView === contentHost && container.spacing == 0,
-                    "custom detail surfaces share one native batching container without merging")
+                let glassScroll = view("settings.general.scroll", in: window) as! NSScrollView
+                let fixedHeading = view("settings.general.heading", in: window)
+                require(container === glassScroll.documentView && container.spacing == 0
+                    && container.contentView != nil && container.isFlipped,
+                    "General glass groups share a flipped batching container inside the scroll document")
+                require(container.isDescendant(of: glassScroll.contentView)
+                    && glassScroll.contentView.clipsToBounds
+                    && !fixedHeading.isDescendant(of: container)
+                    && !contentHost.isDescendant(of: container),
+                    "batching elevation stays inside the clip boundary and cannot lift over the fixed heading")
                 require(!controller.sidebarForTest.isDescendant(of: container),
                     "custom glass never lifts the system sidebar into the detail layer")
                 require(divider.isHidden, "glass navigation has no extra painted divider")
@@ -1362,6 +1464,25 @@ class SettingsWindowContractTests(unittest.TestCase):
                 let nativeUpdates = switches.first { $0.accessibilityLabel() == "Check for Updates on Launch" }!
                 require(window.firstResponder === nativeUpdates,
                     "focused baseline switch transfers focus to the same native control")
+                window.makeFirstResponder(glassStyle)
+                glassStyle.selectItem(at: 1)
+                glassStyle.sendAction(glassStyle.action!, to: glassStyle.target)
+                require(Settings.liquidGlassStyle == .clear
+                    && defaults.string(forKey: "appearance.liquidGlassStyle") == "clear",
+                    "native popup persists the selected clear glass background")
+                require(window.firstResponder === glassStyle,
+                    "changing background style preserves keyboard focus")
+                require(fixture.loginReads.count == loginReads
+                    && fixture.batteryReads.count == batteryReads
+                    && fixture.loginWrites.count == loginWrites
+                    && fixture.batteryWrites.count == batteryWrites
+                    && fixture.updateChecks.count == updateChecks,
+                    "background choice performs no helper or update request")
+                Settings.liquidGlassStyle = .regular
+                require(glassStyle.selectedItem?.representedObject as? String == "regular",
+                    "external style changes immediately update the native selection")
+                Settings.liquidGlassStyle = .clear
+                window.makeFirstResponder(nativeUpdates)
                 require(controller.sidebarNextKeyViewForTest === nativeLogin,
                     "glass keyboard loop reaches the native switch")
                 require(!login.isAccessibilityElement() && nativeLogin.isAccessibilityElement(),
@@ -1374,12 +1495,49 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(update.bezelStyle == .glass, "primary action uses the native glass bezel")
                 let heading = descendants(ofType: NSTextField.self, in: content)
                     .first { $0.stringValue == "General" && $0.font?.pointSize == 22 }!
+                let detail = label("settings.general.login.detail", in: window)
+                let surfacesBeforeAppearance = descendants(ofType: NSGlassEffectView.self, in: content)
+                    .map(ObjectIdentifier.init)
+                let nativeUpdateState = nativeUpdates.state
+                let nativeUpdateEnabled = nativeUpdates.isEnabled
+                var resolvedHeadingColors: [UInt32] = []
                 for appearanceName in [NSAppearance.Name.aqua, .darkAqua] {
-                    NSAppearance(named: appearanceName)!.performAsCurrentDrawingAppearance {
-                        require(srgbHex(heading.textColor) == srgbHex(.labelColor),
-                            "glass content uses semantic text in both system appearances")
+                    app.appearance = NSAppearance(named: appearanceName)
+                    require(window.appearance == nil
+                        && window.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == appearanceName,
+                        "retained glass window follows an app appearance change")
+                    for element in [heading, detail, nativeUpdates, container] as [NSView] {
+                        require(element.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua])
+                            == appearanceName,
+                            "native glass controls and labels inherit the actual window appearance")
                     }
+                    heading.effectiveAppearance.performAsCurrentDrawingAppearance {
+                        require(srgbHex(heading.textColor) == srgbHex(.labelColor),
+                            "glass heading resolves semantic text using its effective appearance")
+                        resolvedHeadingColors.append(srgbHex(heading.textColor)!)
+                    }
+                    detail.effectiveAppearance.performAsCurrentDrawingAppearance {
+                        require(srgbHex(detail.textColor) == srgbHex(.secondaryLabelColor),
+                            "glass details resolve secondary text using their effective appearance")
+                    }
+                    let logoResource = appearanceName == .aqua ? "AppLogoClearLight" : "AppLogoClearDark"
+                    require((identityTile as! NSImageView).image?.tiffRepresentation
+                        == logoArtwork(logoResource).tiffRepresentation,
+                        "selected Clear logo refreshes with the retained window effective appearance")
+                    let expectedPreview = logoArtwork(logoResource)
+                    expectedPreview.size = NSSize(width: 24, height: 24)
+                    require(logoPopup.selectedItem?.image?.tiffRepresentation == expectedPreview.tiffRepresentation,
+                        "Clear menu preview refreshes to the same effective appearance")
+                    require(window.firstResponder === nativeUpdates
+                        && nativeUpdates.state == nativeUpdateState
+                        && nativeUpdates.isEnabled == nativeUpdateEnabled,
+                        "system appearance changes preserve focused control and operation state")
+                    require(surfacesBeforeAppearance
+                        == descendants(ofType: NSGlassEffectView.self, in: content).map(ObjectIdentifier.init),
+                        "system appearance changes retain the native glass surfaces")
                 }
+                require(resolvedHeadingColors[0] != resolvedHeadingColors[1],
+                    "Light and Dark appearances actually produce different foreground colors")
                 require(stableWindow === controller.windowForTest
                     && stableSectionViews == controller.sectionViewIdentitiesForTest,
                     "appearance toggle does not rebuild the window or sections")
@@ -1409,8 +1567,19 @@ class SettingsWindowContractTests(unittest.TestCase):
                 controller.selectSectionForTest(identifier: "general")
                 window.makeFirstResponder(descendants(ofType: NSSwitch.self, in: content)
                     .first { $0.accessibilityLabel() == "Check for Updates on Launch" })
+                app.appearance = NSAppearance(named: .aqua)
                 Settings.liquidGlassEnabled = false
-                require(first?.appearance?.name == .darkAqua, "off restores baseline dark window")
+                require(!glassStyle.isEnabled && Settings.liquidGlassStyle == .clear
+                    && glassStyle.selectedItem?.representedObject as? String == "clear",
+                    "disabling glass retains its saved background choice")
+                require(glassSwitch.nextKeyView === logoPopup
+                    && logoPopup.nextKeyView === controller.sidebarForTest,
+                    "glass-off removes the disabled style popup from the keyboard loop")
+                require(logoPopup.isEnabled && Settings.inAppLogoStyle == .clear,
+                    "glass-off keeps the independent logo selection enabled and saved")
+                require(window.appearance?.name == .darkAqua
+                    && window.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua,
+                    "off restores the baseline dark window even when the app is Light")
                 require(window.isOpaque && backdrop.isHidden,
                     "off restores the opaque classic window and disables its backdrop")
                 require(descendants(ofType: NSGlassEffectView.self, in: content)
@@ -1426,7 +1595,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(login.state == oldLogin && battery.state == oldBattery,
                     "round trip preserves authoritative control state")
                 require((identityTile as! NSImageView).image?.tiffRepresentation == oldIcon?.tiffRepresentation,
-                    "off restores the baseline in-app icon")
+                    "off keeps the selected Clear logo with its Classic dark appearance")
                 require(srgbHex(controller.dividerColorForTest) == 0x363838,
                     "off restores exact baseline palette")
                 let root = view("settings.root", in: window)
@@ -1455,14 +1624,63 @@ class SettingsWindowContractTests(unittest.TestCase):
                 let glassControls = descendants(ofType: NSSwitch.self, in: glassWindow.contentView!)
                 let initialNativeLogin = glassControls
                     .first { $0.accessibilityLabel() == "Launch at Login" }!
-                require(glassWindow.appearance?.name == .darkAqua && !glassWindow.isVisible,
-                    "glass-on initialization uses dark appearance without showing a window")
+                require(glassWindow.appearance == nil
+                    && glassWindow.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .aqua
+                    && !glassWindow.isVisible,
+                    "glass-on initialization inherits Light appearance without showing a window")
                 require(glassController.sidebarNextKeyViewForTest === initialNativeLogin,
                     "glass-on initialization immediately has the native key loop")
                 let nativeAutomaticUpdates = glassControls
                     .first { $0.accessibilityLabel() == "Check for Updates on Launch" }!
                 let globalAppearance = glassControls
                     .first { $0.accessibilityLabel() == "Global Liquid Glass" }!
+                let glassBackground = view("settings.appearance.liquid-glass-style", in: glassWindow) as! NSPopUpButton
+                let restoredLogo = view("settings.appearance.in-app-logo", in: glassWindow) as! NSPopUpButton
+                require(glassBackground.isEnabled
+                    && glassBackground.selectedItem?.representedObject as? String == "clear"
+                    && globalAppearance.nextKeyView === glassBackground
+                    && glassBackground.nextKeyView === restoredLogo
+                    && restoredLogo.nextKeyView === glassController.sidebarForTest,
+                    "new Settings windows restore the background and complete the native key loop")
+                require(restoredLogo.isEnabled
+                    && restoredLogo.selectedItem?.representedObject as? String == "clear"
+                    && (view("settings.sidebar.identity.tile", in: glassWindow) as! NSImageView).image?.tiffRepresentation
+                        == logoArtwork("AppLogoClearLight").tiffRepresentation,
+                    "reopened Settings restores the independent logo in its actual Light appearance")
+                glassWindow.contentView?.layoutSubtreeIfNeeded()
+                let normalGlassScroll = view("settings.general.scroll", in: glassWindow) as! NSScrollView
+                let fixedGlassHeading = view("settings.general.heading", in: glassWindow)
+                let headingFrameBeforeScroll = fixedGlassHeading.convert(fixedGlassHeading.bounds, to: nil)
+                require(view("settings.general.controls-recovery", in: glassWindow).isHidden,
+                    "normal glass layout fixture has no expanded recovery help")
+                _ = glassBackground.scrollToVisible(glassBackground.bounds)
+                require(normalGlassScroll.documentVisibleRect.contains(
+                    glassBackground.convert(glassBackground.bounds, to: normalGlassScroll.documentView)),
+                    "normal glass Settings keeps the background choice reachable")
+                _ = restoredLogo.scrollToVisible(restoredLogo.bounds)
+                require(normalGlassScroll.documentVisibleRect.contains(restoredLogo.convert(
+                    restoredLogo.bounds, to: normalGlassScroll.documentView)),
+                    "normal glass Settings keeps the full logo control reachable by scrolling")
+                normalGlassScroll.contentView.scroll(to: .zero)
+                normalGlassScroll.reflectScrolledClipView(normalGlassScroll.contentView)
+                glassWindow.makeFirstResponder(glassBackground)
+                glassWindow.selectNextKeyView(nil)
+                require(glassWindow.firstResponder === restoredLogo,
+                    "native Tab moves from background choice to logo choice")
+                require(normalGlassScroll.documentVisibleRect.contains(restoredLogo.convert(
+                    restoredLogo.bounds, to: normalGlassScroll.documentView)),
+                    "keyboard focus scrolls the full logo control into view")
+                require(fixedGlassHeading.convert(fixedGlassHeading.bounds, to: nil) == headingFrameBeforeScroll
+                    && !fixedGlassHeading.convert(fixedGlassHeading.bounds, to: nil).intersects(
+                        normalGlassScroll.contentView.convert(normalGlassScroll.contentView.bounds, to: nil)),
+                    "scrolling the logo into view leaves the fixed heading outside the clipped form")
+                let visibleGlassList = view("settings.general.list", in: glassWindow)
+                require(normalGlassScroll.contentView.convert(normalGlassScroll.contentView.bounds, to: nil)
+                    .contains(visibleGlassList.convert(visibleGlassList.visibleRect, to: nil)),
+                    "the scrolled first glass group's visible region stays within the clip viewport")
+                glassWindow.selectPreviousKeyView(nil)
+                require(glassWindow.firstResponder === glassBackground,
+                    "native reverse Tab returns from logo choice to background choice")
                 let recoveryButton = descendants(ofType: NSButton.self, in: glassWindow.contentView!)
                     .first { $0.accessibilityIdentifier() == "settings.general.controls-recovery.button" }!
                 require(nativeAutomaticUpdates.nextKeyView === globalAppearance,
@@ -1508,6 +1726,14 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(recoveryScroll.documentVisibleRect.contains(globalAppearance.convert(
                     globalAppearance.bounds, to: recoveryScroll.documentView)),
                     "expanded recovery help does not make Appearance unreachable")
+                _ = glassBackground.scrollToVisible(glassBackground.bounds)
+                require(recoveryScroll.documentVisibleRect.contains(glassBackground.convert(
+                    glassBackground.bounds, to: recoveryScroll.documentView)),
+                    "expanded recovery help does not make the background choice unreachable")
+                _ = restoredLogo.scrollToVisible(restoredLogo.bounds)
+                require(recoveryScroll.documentVisibleRect.contains(restoredLogo.convert(
+                    restoredLogo.bounds, to: recoveryScroll.documentView)),
+                    "expanded recovery help keeps the logo choice reachable")
                 glassFixture.helperAvailable = true
                 glassController.refreshSectionsForTest()
                 glassFixture.loginReads.removeFirst()(.enabled)
@@ -1520,7 +1746,16 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(nativeAutomaticUpdates.nextKeyView === globalAppearance
                     && recoveryButton.nextKeyView == nil,
                     "async helper recovery removes the hidden action without breaking the native key loop")
+                glassWindow.makeFirstResponder(glassBackground)
                 Settings.liquidGlassEnabled = false
+                require(glassWindow.firstResponder === globalAppearance,
+                    "turning glass off moves focus away from the disabled popup to its enable switch")
+                glassWindow.makeFirstResponder(restoredLogo)
+                Settings.liquidGlassEnabled = true
+                Settings.liquidGlassEnabled = false
+                require(glassWindow.firstResponder === restoredLogo
+                    && restoredLogo.isEnabled && Settings.inAppLogoStyle == .clear,
+                    "logo focus and saved choice survive material changes")
             }
 
             // A repeated refresh starts a newer read. Its result wins even if
@@ -1761,7 +1996,19 @@ class SettingsWindowContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="wattson-settings-window-") as temp:
             temp_path = pathlib.Path(temp)
             main = temp_path / "main.swift"
-            executable = temp_path / "settings-window-contract"
+            bundle = temp_path / "SettingsContract.app" / "Contents"
+            resources = bundle / "Resources"
+            resources.mkdir(parents=True)
+            executable = bundle / "MacOS" / "settings-window-contract"
+            executable.parent.mkdir()
+            (bundle / "Info.plist").write_bytes(plistlib.dumps({
+                "CFBundleExecutable": executable.name,
+                "CFBundleIdentifier": "com.leoarrow.wattson.settings-contract",
+                "CFBundlePackageType": "APPL",
+                "LSUIElement": True,
+            }))
+            for resource in ("AppLogoColor", "AppLogoClearLight", "AppLogoClearDark"):
+                shutil.copy2(ROOT / "design" / "icon" / "in-app-logo" / f"{resource}.png", resources)
             isolated_home = temp_path / "isolated-home"
             isolated_home.mkdir()
             main.write_text(harness, encoding="utf-8")
@@ -1818,8 +2065,7 @@ class SettingsWindowContractTests(unittest.TestCase):
 
     def test_source_has_no_timer_and_uses_the_narrow_section_boundary(self):
         source = WINDOW.read_text(encoding="utf-8")
-        self.assertIn('forResource: "AppIconSettings"', source)
-        self.assertIn('ofType: "png"', source)
+        self.assertIn('NSImage(named: "AppIconSettings")', source)
         self.assertIn("NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath)", source)
         self.assertNotIn("ECGIconView", source)
         self.assertIn("protocol SettingsSectionController: AnyObject", source)
@@ -1856,9 +2102,11 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("NSSplitViewItem(sidebarWithViewController: navigation)", source)
         self.assertIn("detailItem.automaticallyAdjustsSafeAreaInsets = true", source)
         self.assertIn("enabled ? .glass : .rounded", source)
-        self.assertIn('forResource: "AppIconGlassSettings"', source)
+        self.assertIn("identityIcon.refreshLogo()", source)
         self.assertIn("glass.contentView = controls", source)
-        self.assertIn("container.contentView = contentHost", source)
+        self.assertIn("container.contentView = document", source)
+        self.assertIn("scroll.documentView = scrollDocument", source)
+        self.assertNotIn("container.contentView = contentHost", source)
         self.assertIn("windowBackdrop.material = .underWindowBackground", source)
         self.assertIn("static let generalListHeight: CGFloat = 272", source)
 
@@ -1879,6 +2127,27 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("if state == .on {", radio)
         self.assertIn("cardBorderColor.setStroke()\n        card.lineWidth", card)
         self.assertNotIn("NSColor.selectedControlTextColor", card)
+
+    def test_in_app_logo_uses_static_resources_without_changing_system_icons(self):
+        source = WINDOW.read_text(encoding="utf-8")
+        logo_action = source.split("@objc private func selectInAppLogo(", 1)[1].split(
+            "private func refreshLogoControls()", 1
+        )[0]
+        self.assertIn("Settings.inAppLogoStyle = style", logo_action)
+        self.assertNotIn("Settings.usesLiquidGlass", logo_action)
+        self.assertNotIn("refreshSections", logo_action)
+        self.assertNotIn("applicationIconImage =", source)
+        self.assertNotIn("setIcon(", source)
+        self.assertIn("Finder and menu bar icons stay unchanged", source)
+        self.assertIn("Previews are static artwork", source)
+        artwork = source.split("private enum SettingsLogoArtwork", 1)[1].split(
+            "private final class GeneralSettingsSectionController", 1
+        )[0]
+        for resource in ("AppLogoColor", "AppLogoClearLight", "AppLogoClearDark"):
+            self.assertIn(f'"{resource}"', artwork)
+        self.assertIn("viewDidChangeEffectiveAppearance()", artwork)
+        self.assertNotIn("Timer", artwork)
+        self.assertNotIn("glassEffect", artwork)
 
     def test_default_sections_use_only_existing_settings(self):
         source = WINDOW.read_text(encoding="utf-8")

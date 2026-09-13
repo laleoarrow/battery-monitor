@@ -169,6 +169,10 @@ if [ -f "$ICON_SRC" ]; then
 else
     echo "  ⚠️  No AppIcon.icns found, skipping icon"
 fi
+for logo_resource in AppLogoColor.png AppLogoClearLight.png AppLogoClearDark.png; do
+    cp "$ROOT_DIR/design/icon/in-app-logo/$logo_resource" \
+        "$APP_DIR/Contents/Resources/$logo_resource"
+done
 
 # 6. Sign and register the app.
 codesign --force --sign - --entitlements "$APP_ENTITLEMENTS" "$APP_DIR" >/dev/null

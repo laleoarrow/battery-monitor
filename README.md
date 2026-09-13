@@ -17,7 +17,7 @@
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
   ·
-  <a href="#whats-new-in-v410">v4.1.0 notes</a>
+  <a href="#whats-new-in-v420">v4.2.0 notes</a>
 </p>
 
 <p align="center">
@@ -41,6 +41,35 @@ where it is going, and how the picture has changed over the last two minutes.
 - A compact native Settings window for General, Menu Bar Icon, and Modules.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
+
+## What's new in v4.2.0
+
+These are source-version notes; the [Releases page](https://github.com/laleoarrow/battery-monitor/releases)
+is authoritative for available downloads.
+
+- **Settings → General → Appearance** keeps the optional Liquid Glass switch
+  and adds **Standard Glass / Clear Glass** for the power popup. Standard is
+  softly frosted; Clear reveals more of the backdrop. Classic remains the
+  default and is still available on every supported system.
+- The glass popup now uses one native macOS 26 glass panel, without stacking
+  another backdrop inside NSPopover. Standard Glass omits the extra window
+  shadow that produced a second dark outline. Classic keeps its native popover.
+- The selected power-mode capsule can be dragged. The app sends a mode request
+  on release, not for every movement. Keyboard, disabled and pending states
+  remain supported; accessibility settings use the simpler native controls.
+- The compact Settings redesign includes a native sidebar, aligned controls,
+  grouped module choices and an Appearance section. Changing appearance does
+  not request new helper data or change the Mac's power mode.
+- Glass windows now follow system Light/Dark appearance instead of keeping
+  light text on a forced-dark surface when the host switches to Light.
+  Classic Settings retains its original dark appearance.
+- **In-App Logo** offers Color and Clear artwork in General > Appearance.
+  The saved selection is independent of Liquid Glass and updates Wattson's
+  Settings identity. These are native Icon Composer static renditions, not a
+  runtime change to the Finder, Dock, or menu-bar icon.
+- The previously released layered Icon Composer icon remains intact and is
+  revalidated, not replaced by the empty diagnostic document. This release
+  does not change power calculations or claim measured performance gains.
 
 ## What's new in v4.1.0
 

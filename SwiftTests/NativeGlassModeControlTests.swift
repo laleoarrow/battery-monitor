@@ -12,7 +12,8 @@ final class NativeGlassModeControlTests: XCTestCase {
         suiteName = "Wattson.NativeGlassModeTests.\(UUID().uuidString)"
         Settings.configureForTest(defaults: UserDefaults(suiteName: suiteName)!)
         previousReduceMotion = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
-        setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+        // C remains the native click-only Glass fallback for Reduce Motion.
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
     }
 
     override func tearDown() {
@@ -190,13 +191,14 @@ final class NativeGlassModeControlTests: XCTestCase {
         var requests = 0
         footer.onSelect = { _, _ in requests += 1 }
         for reduceMotion in [false, true] {
-            setenv("WATTSON_FORCE_REDUCE_MOTION", reduceMotion ? "1" : "0", 1)
             for source in [control as NSView] + originalButtons.filter(\.isEnabled) {
                 XCTAssertTrue(window.makeFirstResponder(source))
-                footer.applyReduceMotionChangeForTest(reduceMotion)
+                footer.applyReduceMotionChangeForTest(true)
                 XCTAssertTrue(window.firstResponder === source, "No control switch must not steal child focus")
+                setenv("WATTSON_FORCE_REDUCE_MOTION", reduceMotion ? "1" : "0", 1)
                 Settings.liquidGlassEnabled = false
                 XCTAssertTrue(window.firstResponder === (reduceMotion ? segmented as NSView : slider))
+                setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
                 Settings.liquidGlassEnabled = true
                 XCTAssertTrue(window.firstResponder === control.keyboardFocusView)
                 XCTAssertTrue(control.keyboardFocusView === originalButtons[1])
@@ -242,8 +244,10 @@ final class NativeGlassModeControlTests: XCTestCase {
         buttons(control)[1].performClick(nil)
         XCTAssertTrue(window.firstResponder === control, "Disable must park focused buttons in the group")
         XCTAssertTrue(buttons(control).allSatisfy { !$0.isEnabled })
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
         Settings.liquidGlassEnabled = false
         XCTAssertTrue(window.firstResponder === slider)
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
         Settings.liquidGlassEnabled = true
         XCTAssertTrue(window.firstResponder === control)
         completion?(.low)

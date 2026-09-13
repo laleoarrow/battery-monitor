@@ -73,13 +73,16 @@ class StatusItemContractTests(unittest.TestCase):
             "func setModeSelectHandler", 1
         )[0]
         self.assertIn("latestPresentation =", update)
-        self.assertIn("guard wantsOpen || popover.isShown else { return }", update)
+        self.assertIn("guard wantsOpen || hostIsShown else { return }", update)
+        self.assertIn("usingGlassPanel ? glassPanel?.isVisible == true : popover.isShown", self.popover)
         opening = self.popover.split("private func open(relativeTo", 1)[1].split(
             "private func close()", 1
         )[0]
         self.assertIn("applyLatestPresentation()", opening)
         self.assertLess(opening.index("applyLatestPresentation()"),
                         opening.index("popover.show"))
+        self.assertLess(opening.index("applyLatestPresentation()"),
+                        opening.index("panel.makeKeyAndOrderFront"))
 
     def test_identical_status_icon_visuals_reuse_the_existing_image(self):
         refresh = self.source.split("private func refreshStatusItem()", 1)[1]
@@ -238,14 +241,14 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("Settings.changeUserInfoKey", observer)
         self.assertIn("case .menuBarPercentage, .menuBarIconStyle:", observer)
         self.assertIn(
-            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance:\n                break",
+            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .inAppLogoStyle:\n                break",
             observer,
         )
         status_scope = observer.split("case .menuBarPercentage, .menuBarIconStyle:", 1)[1].split("case", 1)[0]
         self.assertIn("refreshStatusItem()", status_scope)
         self.assertNotIn("refreshPresentation()", status_scope)
         ignored_scope = observer.split(
-            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance:", 1
+            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .inAppLogoStyle:", 1
         )[1].split("case", 1)[0]
         self.assertNotIn("refresh", ignored_scope)
         self.assertIn("case nil:", observer)
@@ -399,7 +402,7 @@ class StatusItemContractTests(unittest.TestCase):
         opening = self.popover.split("private func open(relativeTo", 1)[1].split(
             "private func close()", 1
         )[0]
-        self.assertIn("let reopeningDuringDismissal = popover.isShown", opening)
+        self.assertIn("let reopeningDuringDismissal = !useGlass && popover.isShown", opening)
         self.assertIn("if !reopeningDuringDismissal", opening)
 
     def test_entrance_animation_honors_reduce_motion(self):

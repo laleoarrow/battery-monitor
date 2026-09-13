@@ -62,6 +62,8 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
     private let theme = NSSegmentedControl()
     private let appearance = NSSegmentedControl()
     private let powerState = NSPopUpButton()
+    private let diagnosticBackdrop = NSButton(checkboxWithTitle: "Diagnostic backdrop (test only)", target: nil, action: nil)
+    private let backdrop = PreviewBackdrop()
     private let usb = NSButton(checkboxWithTitle: "USB device output", target: nil, action: nil)
     private let note = NSTextField(wrappingLabelWithString: "")
     private var popover: PopoverController!
@@ -70,10 +72,12 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
     private var hiddenBatteryIcon = false
     private var loginEnabled = true
     private var previewMode = EnergyMode.auto
+    private var modeRequestCount = 0
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         Settings.configureForTest(defaults: defaults)
         Settings.liquidGlassEnabled = true
+        Settings.liquidGlassStyle = .clear
         Settings.checksForUpdatesOnLaunch = false
         // The production quick menu calls this controller directly. Its
         // existing test sender prevents even that path reaching the helper.
@@ -89,8 +93,10 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         settings.windowForTest?.title = "Wattson Glass Preview — Settings"
         settings.windowForTest?.center()
         popover.setModeSelectHandler { [weak self] mode, completion in
+            self?.modeRequestCount += 1
             self?.previewMode = mode
             completion(mode)
+            self?.updateNote()
         }
         popover.setSystemBatteryIconToggleHandler { [weak self] hidden, completion in
             self?.hiddenBatteryIcon = hidden
@@ -154,6 +160,9 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
                                                y: screen.visibleFrame.maxY - 12))
         }
         guard let content = window.contentView else { return }
+        backdrop.frame = content.bounds
+        backdrop.autoresizingMask = [.width, .height]
+        content.addSubview(backdrop)
         let controls = NSView(frame: NSRect(x: 0, y: content.bounds.height - 360,
                                             width: 470, height: 360))
         content.addSubview(controls)
@@ -164,13 +173,17 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         anchor.action = #selector(showPopover)
         anchor.setAccessibilityLabel("Show Power Popover")
         content.addSubview(anchor)
-        for (title, y) in [("Presentation", 260.0), ("Host appearance", 216.0), ("Power fixture", 172.0)] {
+        diagnosticBackdrop.frame = NSRect(x: 20, y: 332, width: 420, height: 24)
+        diagnosticBackdrop.target = self
+        diagnosticBackdrop.action = #selector(changeBackdrop)
+        controls.addSubview(diagnosticBackdrop)
+        for (title, y) in [("Presentation", 304.0), ("Host appearance", 260.0), ("Power fixture", 216.0)] {
             let label = NSTextField(labelWithString: title)
             label.frame = NSRect(x: 20, y: y, width: 140, height: 24)
             controls.addSubview(label)
         }
-        for (control, labels, y) in [(theme, ["Classic", "Glass"], 256.0),
-                                    (appearance, ["Light", "Dark"], 212.0)] {
+        for (control, labels, y) in [(theme, ["Classic", "Glass"], 300.0),
+                                    (appearance, ["Light", "Dark"], 256.0)] {
             control.segmentCount = 2
             for (index, title) in labels.enumerated() {
                 control.setLabel(title, forSegment: index)
@@ -186,22 +199,22 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         appearance.setAccessibilityLabel("Host appearance")
         powerState.addItems(withTitles: ["Charging", "Plugged In · Full", "On Battery",
                                         "Mixed Supply", "Low Battery", "Low Power"])
-        powerState.frame = NSRect(x: 166, y: 168, width: 280, height: 30)
+        powerState.frame = NSRect(x: 166, y: 212, width: 280, height: 30)
         powerState.target = self
         powerState.action = #selector(changeFixture)
         powerState.setAccessibilityLabel("Power fixture")
         controls.addSubview(powerState)
-        usb.frame = NSRect(x: 166, y: 128, width: 280, height: 24)
+        usb.frame = NSRect(x: 166, y: 172, width: 280, height: 24)
         usb.target = self
         usb.action = #selector(changeFixture)
         controls.addSubview(usb)
         for (index, title) in ["General", "Menu Bar Icon", "Modules"].enumerated() {
             let button = NSButton(title: title, target: self, action: #selector(showSettings(_:)))
             button.tag = index
-            button.frame = NSRect(x: 20 + index * 146, y: 84, width: 140, height: 32)
+            button.frame = NSRect(x: 20 + index * 146, y: 128, width: 140, height: 32)
             controls.addSubview(button)
         }
-        note.frame = NSRect(x: 20, y: 14, width: 430, height: 60)
+        note.frame = NSRect(x: 20, y: 58, width: 430, height: 60)
         note.font = .systemFont(ofSize: 12)
         note.textColor = .secondaryLabelColor
         controls.addSubview(note)
@@ -223,11 +236,18 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         NSApp.appearance = NSAppearance(named: appearance.selectedSegment == 0 ? .aqua : .darkAqua)
         Settings.liquidGlassEnabled = theme.selectedSegment == 1
         updateFixture()
+        showPopover()
     }
 
     @objc private func changeFixture() {
         previewMode = powerState.indexOfSelectedItem == 5 ? .low : .auto
         updateFixture()
+        showPopover()
+    }
+
+    @objc private func changeBackdrop() {
+        backdrop.diagnostic = diagnosticBackdrop.state == .on
+        showPopover()
     }
 
     @objc private func showPopover() {
@@ -269,9 +289,13 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         popover.update(snapshot: sample, history: history, peak: sample.totalInputW, degraded: false)
         popover.updateSystemBatteryIconState(hiddenBatteryIcon)
         updateFixtureFooter()
+        updateNote()
+    }
+
+    private func updateNote() {
         note.stringValue = "Fixed fixture readings; system controls are simulated.\n"
-            + "Host appearance does not override production window appearance.\n"
-            + "Scroll the production popover to inspect its bottom controls."
+            + "Mode requests: \(modeRequestCount) · \(previewMode.title) (mock only).\n"
+            + "Diagnostic backdrop is not part of the shipping app."
     }
 
     private func updateFixtureFooter() {
@@ -286,5 +310,29 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
             view.subviews.forEach { update(in: $0) }
         }
         if let view = popover.contentViewForTest { update(in: view) }
+    }
+}
+
+/// Test-only contrast edges behind the production window, never inside it.
+private final class PreviewBackdrop: NSView {
+    var diagnostic = false { didSet { needsDisplay = true } }
+    override func draw(_ dirtyRect: NSRect) {
+        NSColor.windowBackgroundColor.setFill()
+        bounds.fill()
+        guard diagnostic else { return }
+        let colors: [NSColor] = [.systemBlue, .systemOrange, .systemTeal, .systemPink]
+        for (index, color) in colors.enumerated() {
+            color.withAlphaComponent(0.45).setFill()
+            NSRect(x: CGFloat(index) * bounds.width / 4, y: 0,
+                   width: bounds.width / 4, height: bounds.height).fill()
+        }
+        NSColor.white.withAlphaComponent(0.65).setStroke()
+        let lines = NSBezierPath()
+        lines.lineWidth = 1
+        for x in stride(from: -bounds.height, to: bounds.width, by: 50) {
+            lines.move(to: NSPoint(x: x, y: 0))
+            lines.line(to: NSPoint(x: x + bounds.height * 0.3, y: bounds.height))
+        }
+        lines.stroke()
     }
 }

@@ -1,9 +1,11 @@
 import pathlib
 import plistlib
 import stat
+import struct
 import subprocess
 import tempfile
 import unittest
+import zlib
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -26,6 +28,7 @@ README = ROOT / "README.md"
 HANDOFF = ROOT / "HANDOFF.md"
 PROMOTE_WORKFLOW = ROOT / ".github" / "workflows" / "promote-release.yml"
 CANDIDATE_WORKFLOW = ROOT / ".github" / "workflows" / "macos-helper-install.yml"
+IN_APP_LOGOS = ("AppLogoColor.png", "AppLogoClearLight.png", "AppLogoClearDark.png")
 
 
 class ReleasePackagingContractTests(unittest.TestCase):
@@ -378,10 +381,8 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn('--minimum-deployment-target "$MIN_MACOS_VERSION"', build)
         self.assertIn('--app-icon WattsonGlass --standalone-icon-behavior all', build)
         self.assertIn('"$ICON_BUILD_DIR/Assets.car" "$ICON_BUILD_DIR/WattsonGlass.icns"', build)
-        self.assertIn('sips -s format png "$ICON_BUILD_DIR/WattsonGlass.icns"', build)
         app_signing = build.index('--entitlements "$ROOT_DIR/BatteryPowerApp.entitlements"')
-        for resource in ("AppIconSettings.png", "AppIconGlassSettings.png"):
-            self.assertLess(build.index(resource), app_signing)
+        self.assertLess(build.index("AppIconSettings.png"), app_signing)
         self.assertLess(build.index("/usr/bin/xcrun actool"), app_signing)
         self.assertNotIn("ictool", build)
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
@@ -393,7 +394,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         verify = self.source["verify_release.sh"]
         for resource in (
             "AppIcon.icns", "AppIconSettings.png", "Assets.car",
-            "WattsonGlass.icns", "AppIconGlassSettings.png",
+            "WattsonGlass.icns", *IN_APP_LOGOS,
         ):
             self.assertIn(resource, verify)
         self.assertIn('-f "$app_dir/Contents/Resources/$icon_resource"', verify)
@@ -402,6 +403,24 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn("for icon_key in CFBundleIconFile CFBundleIconName", verify)
         self.assertIn('Print :$icon_key', verify)
         self.assertIn('[[ "$icon_name" == "WattsonGlass" ]]', verify)
+
+    def test_in_app_logos_are_checked_in_and_copied_before_signing(self):
+        for name in IN_APP_LOGOS:
+            source = ROOT / "design" / "icon" / "in-app-logo" / name
+            with self.subTest(resource=name):
+                self.assertTrue(source.is_file())
+                self.assertFalse(source.is_symlink())
+                data = source.read_bytes()
+                self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+                self.assertEqual(struct.unpack(">II", data[16:24]), (128, 128))
+        for name in ("build_release.sh", "build_glass_preview.sh", "install.sh"):
+            build = (ROOT / "scripts" / name).read_text(encoding="utf-8")
+            with self.subTest(script=name):
+                copy_position = build.index('"$ROOT_DIR/design/icon/in-app-logo/$logo_resource"')
+                self.assertLess(copy_position, build.index("codesign "))
+                for resource in IN_APP_LOGOS:
+                    self.assertLess(build.index(resource), copy_position)
+                self.assertNotIn("ictool", build)
 
     def test_bundle_verifier_rejects_invalid_native_icon_resources(self):
         verifier = "verify_app_bundle() {" + self.source["verify_release.sh"].split(
@@ -427,9 +446,13 @@ class ReleasePackagingContractTests(unittest.TestCase):
             info_path.write_bytes(plistlib.dumps(info))
             for name in (
                 "AppIcon.icns", "AppIconSettings.png", "Assets.car",
-                "WattsonGlass.icns", "AppIconGlassSettings.png",
+                "WattsonGlass.icns",
             ):
                 (resources / name).write_bytes(b"fixture")
+            for name in IN_APP_LOGOS:
+                (resources / name).write_bytes(
+                    (ROOT / "design" / "icon" / "in-app-logo" / name).read_bytes()
+                )
 
             def verify_bundle():
                 return subprocess.run(
@@ -438,8 +461,9 @@ class ReleasePackagingContractTests(unittest.TestCase):
                 )
 
             self.assertEqual(verify_bundle().returncode, 0)
-            for name in ("Assets.car", "WattsonGlass.icns", "AppIconGlassSettings.png"):
+            for name in ("Assets.car", "WattsonGlass.icns", *IN_APP_LOGOS):
                 resource = resources / name
+                original_data = resource.read_bytes()
                 for invalid_state in ("missing", "empty", "symlink"):
                     with self.subTest(resource=name, state=invalid_state):
                         resource.unlink()
@@ -452,7 +476,31 @@ class ReleasePackagingContractTests(unittest.TestCase):
                         self.assertIn(name, result.stderr)
                         if resource.exists() or resource.is_symlink():
                             resource.unlink()
-                        resource.write_bytes(b"fixture")
+                        resource.write_bytes(original_data)
+            def png_chunk(kind, data):
+                return (struct.pack(">I", len(data)) + kind + data
+                        + struct.pack(">I", zlib.crc32(kind + data)))
+
+            one_pixel_png = (
+                b"\x89PNG\r\n\x1a\n"
+                + png_chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 6, 0, 0, 0))
+                + png_chunk(b"IDAT", zlib.compress(b"\x00\x00\x00\x00\x00"))
+                + png_chunk(b"IEND", b"")
+            )
+            for name in IN_APP_LOGOS:
+                resource = resources / name
+                original_data = resource.read_bytes()
+                for invalid_data in (
+                    b"not an image",
+                    (ROOT / "design" / "icon" / "AppIcon.icns").read_bytes(),
+                    one_pixel_png,
+                ):
+                    with self.subTest(resource=name, invalid_image=invalid_data[:8]):
+                        resource.write_bytes(invalid_data)
+                        result = verify_bundle()
+                        self.assertNotEqual(result.returncode, 0)
+                        self.assertIn(name, result.stderr)
+                        resource.write_bytes(original_data)
             for key in ("CFBundleIconFile", "CFBundleIconName"):
                 for invalid_value in (None, "AppIcon", "MissingIcon"):
                     with self.subTest(key=key, value=invalid_value):

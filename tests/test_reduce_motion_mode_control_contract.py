@@ -6,6 +6,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 CONTENT = (ROOT / "Popover" / "PopoverContentView.swift").read_text()
 NATIVE = (ROOT / "Popover" / "NativeModeSegmentedControl.swift").read_text()
 GLASS = (ROOT / "Popover" / "NativeGlassModeControl.swift").read_text()
+A2 = (ROOT / "Popover" / "InteractiveGlassModeControl.swift").read_text()
 
 
 class ReduceMotionModeControlContractTests(unittest.TestCase):
@@ -16,7 +17,7 @@ class ReduceMotionModeControlContractTests(unittest.TestCase):
         self.assertNotIn("CAAnimation", NATIVE)
         self.assertNotIn("NSGlassEffectView", NATIVE)
 
-    def test_footer_keeps_2a_and_switches_to_2c_from_system_accessibility(self):
+    def test_footer_keeps_classic_and_selects_a2_or_c_from_system_accessibility(self):
         footer = CONTENT.split("final class PopoverFooterView", 1)[1].split(
             "final class PopoverContentViewController", 1
         )[0]
@@ -27,6 +28,12 @@ class ReduceMotionModeControlContractTests(unittest.TestCase):
         self.assertIn("accessibilityDisplayOptionsDidChangeNotification", footer)
         self.assertIn("if #available(macOS 26.0, *), Settings.usesLiquidGlass", footer)
         self.assertIn("NativeGlassModeControl(modes: modes)", footer)
+        self.assertIn("InteractiveGlassModeControl(modes: modes)", footer)
+        self.assertIn("let useInteractive = Settings.usesLiquidGlass && !reduceMotion", footer)
+        self.assertIn("!Self.systemReducesTransparency", footer)
+        self.assertIn("!PopoverStyle.isHighContrast(effectiveAppearance)", footer)
+        self.assertIn("glassControls?.isHidden = useInteractive", footer)
+        self.assertIn("interactiveGlassControl?.isHidden = !useInteractive", footer)
         self.assertIn("let useGlassControl = Settings.usesLiquidGlass", footer)
         self.assertIn("let useNativeControl = reduceMotion && !useGlassControl", footer)
         self.assertIn("modeControl.isHidden = useNativeControl || useGlassControl", footer)
@@ -36,7 +43,7 @@ class ReduceMotionModeControlContractTests(unittest.TestCase):
         footer = CONTENT.split("final class PopoverFooterView", 1)[1].split(
             "final class PopoverContentViewController", 1
         )[0]
-        for source in (NATIVE, GLASS):
+        for source in (NATIVE, GLASS, A2):
             self.assertNotIn("UserDefaults", source)
             self.assertNotIn("AppStorage", source)
             self.assertNotIn("Settings.", source)
@@ -47,7 +54,7 @@ class ReduceMotionModeControlContractTests(unittest.TestCase):
         footer = CONTENT.split("final class PopoverFooterView", 1)[1].split(
             "final class PopoverContentViewController", 1
         )[0]
-        for source in (NATIVE, GLASS):
+        for source in (NATIVE, GLASS, A2):
             self.assertIn("var onSelect: ((EnergyMode) -> Void)?", source)
             self.assertNotIn("pendingSelectionIndex", source)
             self.assertNotIn("selectionGeneration", source)
@@ -61,6 +68,7 @@ class ReduceMotionModeControlContractTests(unittest.TestCase):
         )[0]
         self.assertIn("nativeModeControl.update(selected: displayedMode, enabledModes: enabledModes)", synchronization)
         self.assertIn("glassModeControl?.update(selected: displayedMode,", synchronization)
+        self.assertIn("(interactiveGlassControl as? InteractiveGlassModeControl)?.update(", synchronization)
         self.assertIn("enabledModes: pendingMode == nil ? enabledModes : []", synchronization)
         # Finishing a request for the already displayed mode must still clear
         # busy state and re-enable the glass buttons after success or rollback.
@@ -121,12 +129,15 @@ class ReduceMotionModeControlContractTests(unittest.TestCase):
         self.assertIn("window?.firstResponder === previousControl", refresh)
         self.assertIn("isDescendant(of: previousControl)", refresh)
         self.assertIn("glassModeControl?.keyboardFocusView", refresh)
+        self.assertIn("interactiveGlassControl as? InteractiveGlassModeControl)?.hasMenuFocus", refresh)
+        self.assertIn("requestMenuFocus()", refresh)
+        self.assertIn("cancelInteraction()", refresh)
         self.assertIn("if transferFocus, previousControl !== nextControl {", refresh)
         self.assertIn("window?.makeFirstResponder(focusView)", refresh)
         self.assertNotRegex(refresh, r"\bpendingMode\s*=(?!=)")
         # Construction wires the callback but does not execute a mode request.
         self.assertIn("control.onSelect = { [weak self] mode in self?.requestModeSelection(mode) }", refresh)
-        self.assertEqual(refresh.count("requestModeSelection("), 1)
+        self.assertEqual(refresh.count("requestModeSelection("), 2)
         self.assertNotIn("Timer", refresh)
 
 
