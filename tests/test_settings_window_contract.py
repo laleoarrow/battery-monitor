@@ -1546,7 +1546,13 @@ class SettingsWindowContractTests(unittest.TestCase):
                     dockPopup.bounds, to: classicLogoScroll.documentView))
                 && classicLogoScroll.documentVisibleRect.contains(dockHelp.convert(
                     dockHelp.bounds, to: classicLogoScroll.documentView)),
-                "Classic Tab reveals the Dock picker together with its restart explanation")
+                "Classic Tab reveals the Dock picker together with its restart explanation: "
+                    + "focused=\(window.firstResponder === dockPopup) "
+                    + "responder=\(String(describing: window.firstResponder)) "
+                    + "visible=\(classicLogoScroll.documentVisibleRect) "
+                    + "picker=\(dockPopup.convert(dockPopup.bounds, to: classicLogoScroll.documentView)) "
+                    + "help=\(dockHelp.convert(dockHelp.bounds, to: classicLogoScroll.documentView)) "
+                    + "scale=\(window.backingScaleFactor) fullKeyboard=\(app.isFullKeyboardAccessEnabled)")
             _ = dockHelp.scrollToVisible(dockHelp.bounds)
             require(classicLogoScroll.documentVisibleRect.contains(dockHelp.convert(
                 dockHelp.bounds, to: classicLogoScroll.documentView)),
