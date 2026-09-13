@@ -282,6 +282,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "global Liquid Glass defaults off")
             require(glassSwitch.accessibilityLabel() == "Global Liquid Glass",
                 "appearance switch has an accessible purpose")
+            require(glassSwitch.isDescendant(of: view("settings.general.appearance", in: first))
+                && !glassSwitch.isDescendant(of: view("settings.sidebar", in: first)),
+                "Liquid Glass belongs to General Appearance, outside sidebar navigation")
             require(glassSwitch.nextKeyView === controller.sidebarForTest,
                 "appearance switch returns keyboard navigation to sidebar")
             if #available(macOS 26, *) {
@@ -406,8 +409,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(
                 descendants(ofType: NSView.self, in: view("settings.section.general", in: first))
                     .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
-                    .count == 4,
-                "General includes login, Apple battery, manual update, and launch update rows"
+                    .count == 5,
+                "General includes four operational rows and a separate appearance row"
             )
             let generalList = view("settings.general.list", in: first)
             let generalRows = descendants(ofType: NSView.self, in: generalList)
@@ -416,6 +419,13 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(approximately(generalList.frame.height, 272), "General is exactly 4 × 68 points")
             require((generalList as? NSBox)?.cornerRadius == 14, "rounded general list radius")
             require(generalRows.allSatisfy { approximately($0.frame.height, 68) }, "four 68-point rows")
+            let generalScroll = view("settings.general.scroll", in: first) as! NSScrollView
+            let generalDocument = generalScroll.documentView!
+            require(generalDocument.isFlipped && approximately(generalScroll.documentVisibleRect.minY, 0),
+                "General form starts at the top of its scroll viewport")
+            require(generalScroll.documentVisibleRect.contains(
+                glassSwitch.convert(glassSwitch.bounds, to: generalDocument)),
+                "appearance option is fully visible without scrolling in the normal state")
             require(
                 approximately(
                     (view("settings.general.heading", in: first) as? NSTextField)?.font?.pointSize ?? -1,
@@ -964,7 +974,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(wattsonIconOnly.nextKeyView === wattsonWithPercentage, "Tab reaches preset two")
             require(wattsonWithPercentage.nextKeyView === macOSIconOnly, "Tab reaches preset three")
             require(macOSIconOnly.nextKeyView === macOSWithPercentage, "Tab reaches preset four")
-            require(macOSWithPercentage.nextKeyView === keyLoopEnd, "icon Tab loop includes appearance option")
+            require(macOSWithPercentage.nextKeyView === controller.sidebarForTest,
+                "icon Tab loop returns to navigation without the General appearance control")
 
             macOSWithPercentage.accessibilityPerformPress()
             require(
@@ -1160,7 +1171,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             }
             let flow = button(Settings.Module.flow.title, in: first)
             require(controller.sidebarNextKeyViewForTest === flow, "Tab enters first Modules switch")
-            require(controller.lastVisibleSwitchNextKeyViewForTest === keyLoopEnd, "Modules key loop includes appearance option")
+            require(controller.lastVisibleSwitchNextKeyViewForTest === controller.sidebarForTest, "Modules key loop returns to navigation")
             flow.performClick(nil)
             require(!Settings.isModuleVisible(.flow), "module writes through shared Settings store")
             Settings.setModule(.flow, visible: true)
@@ -1340,8 +1351,10 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && backdrop.blendingMode == .behindWindow,
                     "window uses the documented behind-window system material")
                 let container = view("settings.glass-container", in: window) as! NSGlassEffectContainerView
-                require(container.contentView === nativeSplit?.view && container.spacing == 0,
-                    "related glass surfaces share one native batching container without merging")
+                require(container.contentView === contentHost && container.spacing == 0,
+                    "custom detail surfaces share one native batching container without merging")
+                require(!controller.sidebarForTest.isDescendant(of: container),
+                    "custom glass never lifts the system sidebar into the detail layer")
                 require(divider.isHidden, "glass navigation has no extra painted divider")
                 let switches = descendants(ofType: NSSwitch.self, in: content).filter { !$0.isHidden }
                 require(switches.count == 4, "General exposes three native switches and one global switch")
@@ -1388,9 +1401,10 @@ class SettingsWindowContractTests(unittest.TestCase):
                     content.layoutSubtreeIfNeeded()
                     let surfaces = descendants(ofType: NSGlassEffectView.self, in: content)
                         .filter { $0.identifier?.rawValue == "settings.control-group.glass" }
-                    require(surfaces.count == 1 && surfaces[0].contentView != nil
-                        && surfaces[0].style == .regular && surfaces[0].tintColor == nil,
-                        "each page uses one untinted native glass group containing its controls")
+                    let expectedGroups = identifier == "general" ? 2 : 1
+                    require(surfaces.count == expectedGroups && surfaces.allSatisfy {
+                        $0.contentView != nil && $0.style == .regular && $0.tintColor == nil
+                    }, "functional groups use untinted native glass containing their controls")
                 }
                 controller.selectSectionForTest(identifier: "general")
                 window.makeFirstResponder(descendants(ofType: NSSwitch.self, in: content)
@@ -1488,6 +1502,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(recoveryButton.title == "Enable Controls…"
                     && nativeAutomaticUpdates.nextKeyView === recoveryButton,
                     "missing helper retains the reachable Enable Controls action")
+                glassWindow.contentView?.layoutSubtreeIfNeeded()
+                let recoveryScroll = view("settings.general.scroll", in: glassWindow) as! NSScrollView
+                _ = globalAppearance.scrollToVisible(globalAppearance.bounds)
+                require(recoveryScroll.documentVisibleRect.contains(globalAppearance.convert(
+                    globalAppearance.bounds, to: recoveryScroll.documentView)),
+                    "expanded recovery help does not make Appearance unreachable")
                 glassFixture.helperAvailable = true
                 glassController.refreshSectionsForTest()
                 glassFixture.loginReads.removeFirst()(.enabled)
@@ -1825,7 +1845,7 @@ class SettingsWindowContractTests(unittest.TestCase):
         source = WINDOW.read_text(encoding="utf-8")
         appearance_refresh = source.split(
             "private func refreshLiquidGlassAppearance()", 1
-        )[1].split("@objc private func toggleLiquidGlass", 1)[0]
+        )[1].split("    @available(*, unavailable)", 1)[0]
         self.assertNotIn("refreshSections()", appearance_refresh)
         self.assertNotIn(".refresh()", appearance_refresh)
         self.assertNotIn("configureContent()", appearance_refresh)
@@ -1838,7 +1858,7 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("enabled ? .glass : .rounded", source)
         self.assertIn('forResource: "AppIconGlassSettings"', source)
         self.assertIn("glass.contentView = controls", source)
-        self.assertIn("container.contentView = split.view", source)
+        self.assertIn("container.contentView = contentHost", source)
         self.assertIn("windowBackdrop.material = .underWindowBackground", source)
         self.assertIn("static let generalListHeight: CGFloat = 272", source)
 

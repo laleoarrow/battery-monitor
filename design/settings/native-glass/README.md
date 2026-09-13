@@ -1,5 +1,10 @@
 # Native glass Settings
 
+This review records commit `916f258`. The subsequent
+[appearance hierarchy revision](../appearance-hierarchy/README.md) moves the
+Liquid Glass preference into General and narrows the custom container scope;
+the captures below retain the earlier sidebar switch placement.
+
 The user's Control Center reference called for material across the Settings
 window, including the backdrop, navigation and functional control groups.
 The previous version had a native sidebar over an opaque window background

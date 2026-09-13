@@ -79,11 +79,13 @@ Settings now delegates its glass sidebar to `NSSplitViewController` and a native
 sidebar item. The native detail safe area positions the retained content;
 appearance changes reparent the existing controls and preserve keyboard focus.
 Glass mode uses a transparent NSWindow over the system behind-window material.
-Each Settings page has one NSGlassEffectView around its control group; a shared
-NSGlassEffectContainerView batches related effects. Opaque group fills are
-removed. Modules use a grouped list with monochrome SF Symbols, 12-point
-descriptions, inset separators and right-aligned switches. See the
-[native glass visual review](../design/settings/native-glass/README.md)
+Functional Settings groups use NSGlassEffectView; a shared container batches
+the custom detail surfaces without enclosing the system sidebar. Liquid Glass
+belongs to General > Appearance, and only joins that page's keyboard loop.
+General scrolls when recovery help expands, while its normal form fits in the
+window. Modules use monochrome SF Symbols, 12-point descriptions, inset
+separators and right-aligned switches. See the
+[appearance hierarchy review](../design/settings/appearance-hierarchy/README.md)
 for actual test-VM window images and verification. This source refinement does
 not replace the canonical installed app or constitute a new release.
 

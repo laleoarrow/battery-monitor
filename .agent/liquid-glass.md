@@ -18,7 +18,8 @@ release or a claim of pixel identity with Apple's iPhone navigation examples.
 | Mode chooser | Use three mutually exclusive NSButton `.glass` controls, with native selection emphasis and one shared NSGlassEffectContainerView. Remove the ordinary segmented well and extra enclosing glass view. Retain established classic geometry, control and reduced-motion fallback. | Real composited buttons and bounds; pointer, keyboard, disabled modes, in-flight operations and focus transfer. |
 | Settings/quick-menu trigger | Keep a separate round native `.glass` button beside the mode buttons in the same NSGlassEffectContainerView; retain the standard NSMenu. | Distinct button shapes, active/inactive readability, keyboard opening, menu anchoring and close/reopen. |
 | Settings navigation | Use NSSplitViewController with a native sidebar item and automatic detail safe area. Let AppKit own the floating glass; retain the compact classic sidebar when off. | All three pages, live switching without rebuilding pages or repeating helper requests; preserve focused controls across reparenting. |
-| Settings window and groups | Use a transparent NSWindow over NSVisualEffectView `.underWindowBackground` with `.behindWindow` blending. Each page has one regular NSGlassEffectView containing its controls; batch related effects with NSGlassEffectContainerView. Remove opaque group fills. | Actual compositor captures over different backdrops; all three pages, classic round trip and system Reduce Transparency. |
+| Settings window and groups | Use a transparent NSWindow over NSVisualEffectView `.underWindowBackground` with `.behindWindow` blending. Use one regular NSGlassEffectView per functional group. Scope NSGlassEffectContainerView to the detail content, leaving the system sidebar outside it. Remove opaque group fills. | Actual compositor captures over different backdrops; all three pages, classic round trip and system Reduce Transparency. |
+| Appearance preference | Place the app-wide Liquid Glass switch in General > Appearance with the same row alignment as other controls. Keep the navigation sidebar free of preferences. | Normal form fits without scrolling; expanded recovery help remains reachable; other pages' Tab loops return to navigation. |
 | Settings controls | Native NSSwitch and glass button styles when enabled; semantic text and system accessibility. | Unknown states must remain disabled/explicitly unknown; async recovery controls must keep the active Tab chain. |
 | System menu-bar glyph | Retain the template/semantic battery glyph, not a miniature textured glass illustration. | Legibility and existing seven-state icon previews. |
 | App identity icon | Compose original vector layers in Apple's Icon Composer; use system-generated material and appearance variants. | Native export and asset compilation; primary-system-icon scope is separate from the runtime option. |
@@ -38,6 +39,9 @@ release or a claim of pixel identity with Apple's iPhone navigation examples.
 
 ## Current verification
 
+- The [appearance hierarchy review](../design/settings/appearance-hierarchy/README.md)
+  moves Liquid Glass into General and confines the custom effect container to
+  detail controls. It records current source verification and compositor images.
 - The [native glass review](../design/settings/native-glass/README.md) records
   the whole-window material revision following the user's Control Center
   reference. It also retains the grouped module rows and monochrome symbols

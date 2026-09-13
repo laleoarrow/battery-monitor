@@ -544,6 +544,10 @@ private final class DynamicSeparatorView: NSView, SettingsContrastRefreshing {
     }
 }
 
+private final class SettingsFormStackView: NSStackView {
+    override var isFlipped: Bool { true }
+}
+
 private final class GeneralSettingsSectionController: NSObject, SettingsSectionController {
     private static let controlsInstallerURL = URL(
         string: "https://github.com/laleoarrow/battery-monitor/releases/latest"
@@ -559,6 +563,8 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let batteryButton: SettingsToggleButton
     private let updateButton = NSButton()
     private let automaticUpdateButton: SettingsToggleButton
+    private let liquidGlassSwitch = NSSwitch()
+    private var appearanceObserver: NSObjectProtocol?
     private let loginDetail = NSTextField(labelWithString: "")
     private let loginError = NSTextField(labelWithString: "")
     private let batteryDetail = NSTextField(labelWithString: "")
@@ -617,6 +623,9 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     deinit {
         if let batteryObserver {
             NotificationCenter.default.removeObserver(batteryObserver)
+        }
+        if let appearanceObserver {
+            NotificationCenter.default.removeObserver(appearanceObserver)
         }
     }
 
@@ -824,7 +833,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         heading.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(heading)
-        view.addSubview(surface)
         controlsRecovery.orientation = .vertical
         controlsRecovery.alignment = .leading
         controlsRecovery.spacing = 8
@@ -833,37 +841,116 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         controlsRecovery.addArrangedSubview(controlsRecoveryDetail)
         controlsRecovery.addArrangedSubview(controlsRecoveryButton)
         controlsRecovery.isHidden = true
-        view.addSubview(controlsRecovery)
+
+        let appearance = makeAppearanceSection()
+        let document = SettingsFormStackView(views: [surface, controlsRecovery, appearance])
+        document.orientation = .vertical
+        document.alignment = .leading
+        document.spacing = 16
+        document.translatesAutoresizingMaskIntoConstraints = false
+        let scroll = NSScrollView()
+        scroll.identifier = NSUserInterfaceItemIdentifier("settings.general.scroll")
+        scroll.drawsBackground = false
+        scroll.borderType = .noBorder
+        scroll.hasVerticalScroller = true
+        scroll.autohidesScrollers = true
+        scroll.scrollerStyle = .overlay
+        scroll.automaticallyAdjustsContentInsets = false
+        scroll.documentView = document
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scroll)
 
         NSLayoutConstraint.activate([
             heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             heading.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             heading.topAnchor.constraint(equalTo: view.topAnchor, constant: -2),
 
-            surface.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            surface.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            surface.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
+            scroll.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
+            scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            document.leadingAnchor.constraint(equalTo: scroll.contentView.leadingAnchor),
+            document.topAnchor.constraint(equalTo: scroll.contentView.topAnchor),
+            document.widthAnchor.constraint(equalTo: scroll.contentView.widthAnchor),
+            surface.widthAnchor.constraint(equalTo: document.widthAnchor),
+            controlsRecovery.widthAnchor.constraint(equalTo: document.widthAnchor),
+            appearance.widthAnchor.constraint(equalTo: document.widthAnchor),
             surface.heightAnchor.constraint(equalToConstant: SettingsStyle.generalListHeight),
-            surface.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
 
             rows.leadingAnchor.constraint(equalTo: list.leadingAnchor),
             rows.trailingAnchor.constraint(equalTo: list.trailingAnchor),
             rows.topAnchor.constraint(equalTo: list.topAnchor),
             rows.bottomAnchor.constraint(equalTo: list.bottomAnchor),
 
-            controlsRecovery.leadingAnchor.constraint(equalTo: surface.leadingAnchor, constant: 2),
-            controlsRecovery.trailingAnchor.constraint(equalTo: surface.trailingAnchor, constant: -2),
-            controlsRecovery.topAnchor.constraint(equalTo: surface.bottomAnchor, constant: 12),
-            controlsRecovery.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
             controlsRecoveryDetail.widthAnchor.constraint(equalTo: controlsRecovery.widthAnchor),
         ])
+    }
+
+    private func makeAppearanceSection() -> NSView {
+        let heading = NSTextField(labelWithString: "Appearance")
+        heading.font = .systemFont(ofSize: 13, weight: .semibold)
+        heading.textColor = SettingsStyle.primaryText
+        liquidGlassSwitch.identifier = NSUserInterfaceItemIdentifier("settings.appearance.liquid-glass")
+        liquidGlassSwitch.setAccessibilityLabel("Global Liquid Glass")
+        liquidGlassSwitch.target = self
+        liquidGlassSwitch.action = #selector(toggleLiquidGlass(_:))
+        liquidGlassSwitch.state = Settings.liquidGlassEnabled ? .on : .off
+        liquidGlassSwitch.translatesAutoresizingMaskIntoConstraints = false
+        let available: Bool
+        if #available(macOS 26, *) { available = true } else { available = false }
+        liquidGlassSwitch.isEnabled = available
+        liquidGlassSwitch.setAccessibilityHelp(available
+            ? "Use system glass throughout Wattson. Off keeps the classic appearance."
+            : "Requires macOS 26 or later. Classic appearance is available on this Mac.")
+        let detail = NSTextField(labelWithString: available
+            ? "Use a glass appearance throughout Wattson."
+            : "Requires macOS 26 or later.")
+        detail.font = SettingsStyle.detailFont
+        detail.textColor = SettingsStyle.secondaryText
+        let switchSlot = NSControl()
+        switchSlot.setAccessibilityElement(false)
+        switchSlot.translatesAutoresizingMaskIntoConstraints = false
+        switchSlot.addSubview(liquidGlassSwitch)
+        let option = row(identifier: "appearance", symbolName: "circle.lefthalf.filled",
+                         visibleTitle: "Liquid Glass", button: switchSlot,
+                         detail: detail, error: nil, hasSeparator: false)
+        let box = SettingsAdaptiveBorderBox(increaseContrast: dependencies.increaseContrast)
+        box.boxType = .custom
+        box.titlePosition = .noTitle
+        box.cornerRadius = SettingsStyle.surfaceCornerRadius
+        box.fillColor = SettingsStyle.surfaceBackground
+        box.addSubview(option)
+        option.translatesAutoresizingMaskIntoConstraints = false
+        let surface = SettingsGlassSurface(controls: box)
+        let section = NSStackView(views: [heading, surface])
+        section.identifier = NSUserInterfaceItemIdentifier("settings.general.appearance")
+        section.orientation = .vertical
+        section.alignment = .leading
+        section.spacing = 8
+        NSLayoutConstraint.activate([
+            switchSlot.widthAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.width),
+            switchSlot.heightAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.height),
+            liquidGlassSwitch.centerXAnchor.constraint(equalTo: switchSlot.centerXAnchor),
+            liquidGlassSwitch.centerYAnchor.constraint(equalTo: switchSlot.centerYAnchor),
+            surface.heightAnchor.constraint(equalToConstant: SettingsStyle.generalRowHeight),
+            surface.widthAnchor.constraint(equalTo: section.widthAnchor),
+            option.leadingAnchor.constraint(equalTo: box.leadingAnchor),
+            option.trailingAnchor.constraint(equalTo: box.trailingAnchor),
+            option.topAnchor.constraint(equalTo: box.topAnchor),
+            option.bottomAnchor.constraint(equalTo: box.bottomAnchor),
+        ])
+        return section
+    }
+
+    @objc private func toggleLiquidGlass(_ sender: NSSwitch) {
+        Settings.liquidGlassEnabled = sender.state == .on
     }
 
     private func row(
         identifier: String,
         symbolName: String,
         visibleTitle: String,
-        button: NSButton,
+        button: NSControl,
         detail: NSTextField,
         error: NSTextField?,
         hasSeparator: Bool
@@ -946,6 +1033,13 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     }
 
     private func installObservers() {
+        appearanceObserver = NotificationCenter.default.addObserver(
+            forName: Settings.didChange, object: nil, queue: .main
+        ) { [weak self] notification in
+            guard notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
+                    == .liquidGlassAppearance else { return }
+            self?.liquidGlassSwitch.state = Settings.liquidGlassEnabled ? .on : .off
+        }
         batteryObserver = NotificationCenter.default.addObserver(
             forName: dependencies.systemBatteryIconDidChange,
             object: nil,
@@ -2240,7 +2334,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     private var glassContainer: NSView?
     private var classicLayout: [NSLayoutConstraint] = []
     private var glassLayout: [NSLayoutConstraint] = []
-    private let liquidGlassSwitch = NSSwitch()
     private let identityIcon = NSImageView()
     private let contentHost = NSView()
     private let divider: DynamicSeparatorView
@@ -2385,7 +2478,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         windowBackdrop.isHidden = !enabled
         configureNativeSidebar(enabled: enabled)
         sidebar.selectionHighlightStyle = enabled ? .regular : .none
-        liquidGlassSwitch.state = Settings.liquidGlassEnabled ? .on : .off
         let baselineIconPath = Bundle.main.path(forResource: "AppIconSettings", ofType: "png")
         let glassIconPath = enabled
             ? Bundle.main.path(forResource: "AppIconGlassSettings", ofType: "png") : nil
@@ -2408,10 +2500,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         } else if let focusedView, focusedView.window === window {
             window.makeFirstResponder(focusedView)
         }
-    }
-
-    @objc private func toggleLiquidGlass(_ sender: NSSwitch) {
-        Settings.liquidGlassEnabled = sender.state == .on
     }
 
     @available(*, unavailable)
@@ -2476,7 +2564,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         )
         trafficSafeArea.translatesAutoresizingMaskIntoConstraints = false
         let navigation = makeNavigationView()
-        let appearanceOption = makeAppearanceOption()
         divider.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.divider")
         divider.translatesAutoresizingMaskIntoConstraints = false
 
@@ -2489,16 +2576,12 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         sidebarContainer.addSubview(identity)
         sidebarContainer.addSubview(trafficSafeArea)
         sidebarContainer.addSubview(navigation)
-        sidebarContainer.addSubview(appearanceOption)
 
         let layoutConstraints = [
             sidebarContainer.leadingAnchor.constraint(equalTo: root.leadingAnchor),
             sidebarContainer.topAnchor.constraint(equalTo: root.topAnchor),
             sidebarContainer.bottomAnchor.constraint(equalTo: root.bottomAnchor),
             sidebarContainer.widthAnchor.constraint(equalToConstant: SettingsStyle.sidebarWidth),
-            appearanceOption.leadingAnchor.constraint(equalTo: sidebarContainer.leadingAnchor, constant: 16),
-            appearanceOption.trailingAnchor.constraint(equalTo: sidebarContainer.trailingAnchor, constant: -16),
-            appearanceOption.bottomAnchor.constraint(equalTo: sidebarContainer.bottomAnchor, constant: -20),
 
             trafficSafeArea.leadingAnchor.constraint(equalTo: sidebarContainer.leadingAnchor),
             trafficSafeArea.trailingAnchor.constraint(equalTo: sidebarContainer.trailingAnchor),
@@ -2584,7 +2667,15 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             navigation.view = sidebarContainer
             let detail = NSViewController()
             detail.view = NSView()
-            detail.view.addSubview(contentHost)
+            // The system sidebar owns its glass. Only the
+            // custom detail surfaces participate in our effect container.
+            let container = NSGlassEffectContainerView()
+            container.identifier = NSUserInterfaceItemIdentifier("settings.glass-container")
+            container.spacing = 0
+            container.contentView = contentHost
+            container.translatesAutoresizingMaskIntoConstraints = false
+            detail.view.addSubview(container)
+            glassContainer = container
             let split = NSSplitViewController()
             split.view.identifier = NSUserInterfaceItemIdentifier("settings.native-split")
             split.splitView.isVertical = true
@@ -2598,30 +2689,24 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             split.addSplitViewItem(detailItem)
             window?.contentViewController?.addChild(split)
             split.view.translatesAutoresizingMaskIntoConstraints = false
-            let container = NSGlassEffectContainerView()
-            container.identifier = NSUserInterfaceItemIdentifier("settings.glass-container")
-            container.spacing = 0
-            container.contentView = split.view
-            container.translatesAutoresizingMaskIntoConstraints = false
-            root.addSubview(container)
-            glassContainer = container
+            root.addSubview(split.view)
             glassLayout = [
-                container.leadingAnchor.constraint(equalTo: root.leadingAnchor),
-                container.trailingAnchor.constraint(equalTo: root.trailingAnchor),
-                container.topAnchor.constraint(equalTo: root.topAnchor),
-                container.bottomAnchor.constraint(equalTo: root.bottomAnchor),
-                split.view.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-                split.view.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-                split.view.topAnchor.constraint(equalTo: container.topAnchor),
-                split.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-                contentHost.leadingAnchor.constraint(equalTo: detail.view.safeAreaLayoutGuide.leadingAnchor,
-                                                     constant: SettingsStyle.contentHorizontalInset),
-                contentHost.trailingAnchor.constraint(equalTo: detail.view.trailingAnchor,
-                                                      constant: -SettingsStyle.contentHorizontalInset),
-                contentHost.topAnchor.constraint(equalTo: detail.view.topAnchor,
-                                                constant: SettingsStyle.contentTopInset),
-                contentHost.bottomAnchor.constraint(equalTo: detail.view.bottomAnchor,
-                                                   constant: -SettingsStyle.contentBottomInset),
+                split.view.leadingAnchor.constraint(equalTo: root.leadingAnchor),
+                split.view.trailingAnchor.constraint(equalTo: root.trailingAnchor),
+                split.view.topAnchor.constraint(equalTo: root.topAnchor),
+                split.view.bottomAnchor.constraint(equalTo: root.bottomAnchor),
+                container.leadingAnchor.constraint(equalTo: detail.view.safeAreaLayoutGuide.leadingAnchor,
+                                                   constant: SettingsStyle.contentHorizontalInset),
+                container.trailingAnchor.constraint(equalTo: detail.view.trailingAnchor,
+                                                    constant: -SettingsStyle.contentHorizontalInset),
+                container.topAnchor.constraint(equalTo: detail.view.topAnchor,
+                                              constant: SettingsStyle.contentTopInset),
+                container.bottomAnchor.constraint(equalTo: detail.view.bottomAnchor,
+                                                 constant: -SettingsStyle.contentBottomInset),
+                contentHost.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+                contentHost.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+                contentHost.topAnchor.constraint(equalTo: container.topAnchor),
+                contentHost.bottomAnchor.constraint(equalTo: container.bottomAnchor),
             ]
             NSLayoutConstraint.activate(glassLayout)
             splitController = split
@@ -2679,40 +2764,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         return identity
     }
 
-    private func makeAppearanceOption() -> NSView {
-        let title = NSTextField(labelWithString: "Liquid Glass")
-        title.font = SettingsStyle.sidebarFont
-        title.textColor = SettingsStyle.primaryText
-        liquidGlassSwitch.identifier = NSUserInterfaceItemIdentifier("settings.appearance.liquid-glass")
-        liquidGlassSwitch.setAccessibilityLabel("Global Liquid Glass")
-        liquidGlassSwitch.target = self
-        liquidGlassSwitch.action = #selector(toggleLiquidGlass(_:))
-        let available: Bool
-        if #available(macOS 26, *) { available = true } else { available = false }
-        liquidGlassSwitch.isEnabled = available
-        let explanation = available
-            ? "Use system glass throughout Wattson. Off keeps the classic appearance."
-            : "Requires macOS 26 or later. Classic appearance is available on this Mac."
-        liquidGlassSwitch.setAccessibilityHelp(explanation)
-        let detail = NSTextField(wrappingLabelWithString: available
-            ? "A glass finish for Wattson."
-            : "Requires macOS 26 or later.")
-        detail.font = SettingsStyle.detailFont
-        detail.textColor = SettingsStyle.secondaryText
-        detail.setContentCompressionResistancePriority(.required, for: .vertical)
-        let row = NSStackView(views: [title, liquidGlassSwitch])
-        row.distribution = .equalSpacing
-        row.alignment = .centerY
-        let option = NSStackView(views: [row, detail])
-        option.orientation = .vertical
-        option.alignment = .leading
-        option.spacing = 6
-        option.translatesAutoresizingMaskIntoConstraints = false
-        row.widthAnchor.constraint(equalTo: option.widthAnchor).isActive = true
-        detail.widthAnchor.constraint(equalTo: option.widthAnchor).isActive = true
-        return option
-    }
-
     private func makeNavigationView() -> NSView {
         let scroll = NSScrollView()
         scroll.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.navigation")
@@ -2741,27 +2792,26 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     }
 
     private func configureKeyViewLoop() {
-        sidebar.nextKeyView = firstSwitch(in: sections[selectedSectionIndex].view)
         updateVisibleSwitchKeyLoop()
     }
 
     private func updateVisibleSwitchKeyLoop() {
-        let switches: [NSView] = switchButtons(in: sections[selectedSectionIndex].view).map {
-            if Settings.usesLiquidGlass, let toggle = $0 as? SettingsToggleButton {
-                return toggle.nativeSwitch
-            }
-            return $0
-        }
-        sidebar.nextKeyView = switches.first
-        for (current, next) in zip(switches, switches.dropFirst()) {
+        let controls = keyControls(in: sections[selectedSectionIndex].view)
+        sidebar.nextKeyView = controls.first ?? sidebar
+        for (current, next) in zip(controls, controls.dropFirst()) {
             current.nextKeyView = next
         }
-        switches.last?.nextKeyView = liquidGlassSwitch.isEnabled ? liquidGlassSwitch : sidebar
-        liquidGlassSwitch.nextKeyView = sidebar
+        controls.last?.nextKeyView = sidebar
     }
 
-    private func firstSwitch(in view: NSView) -> NSButton? {
-        switchButtons(in: view).first
+    private func keyControls(in view: NSView) -> [NSView] {
+        guard !view.isHidden else { return [] }
+        if let toggle = view as? SettingsToggleButton {
+            return [Settings.usesLiquidGlass ? toggle.nativeSwitch : toggle]
+        }
+        if let control = view as? NSSwitch { return control.isEnabled ? [control] : [] }
+        if view is NSButton { return [view] }
+        return view.subviews.flatMap { keyControls(in: $0) }
     }
 
     private func switchButtons(in view: NSView) -> [NSButton] {
