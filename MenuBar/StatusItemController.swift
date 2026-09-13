@@ -298,7 +298,7 @@ final class StatusItemController: NSObject {
             switch notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change {
             case .menuBarPercentage, .menuBarIconStyle:
                 self?.refreshStatusItem()
-            case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance:
+            case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .inAppLogoStyle, .dockIconStyle:
                 break
             case nil:
                 self?.refreshPresentation()
@@ -396,7 +396,7 @@ final class StatusItemController: NSObject {
         NSApp.mainMenu = mainMenu
     }
 
-    @objc private func showSettings() {
+    @objc func showSettings() {
         // Command-Comma and the application menu can fire while the popover is
         // open. Establish the closed logical state synchronously, including
         // stopping its 1 Hz display clock, before any Settings refresh runs.

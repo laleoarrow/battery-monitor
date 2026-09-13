@@ -53,6 +53,34 @@ class SettingsIntegrationContractTests(unittest.TestCase):
         )[0]
         self.assertLess(close.index("wantsOpen = false"), close.index("stopWatchingForOutsideClicks()"))
         self.assertLess(close.index("stopWatchingForOutsideClicks()"), close.index("performClose"))
+        self.assertLess(close.index("stopWatchingForOutsideClicks()"), close.index("panel.orderOut(nil)"))
+        self.assertIn("self.presentationGeneration == generation", relay)
+        self.assertIn("!self.wantsOpen", relay)
+
+    def test_style_changes_rehost_shared_content_without_refreshing_helper_state(self):
+        refresh = self.popover.split("private func refreshLiquidGlassAppearance()", 1)[1].split(
+            "\n    ///", 1
+        )[0]
+        self.assertIn("guard wantsOpen, let button = anchorButton else { return }", refresh)
+        self.assertLess(refresh.index("close()"), refresh.index("open(relativeTo: button"))
+        self.assertIn("open(relativeTo: button, skipExternalRefreshes: true)", refresh)
+        self.assertNotIn("EnergyModeController", refresh)
+        opening = self.popover.split("private func open(relativeTo", 1)[1].split(
+            "\n    private func setContentSize", 1
+        )[0]
+        self.assertLess(opening.index("if skipExternalRefreshes {"), opening.index("LoginItemController.refresh()"))
+        self.assertIn("self?.presentationGeneration == generation", opening)
+
+    def test_quick_menu_accepts_the_a2_host_without_a_duplicate_settings_window(self):
+        # A2's real SwiftUI button anchors the same AppKit menu via its narrow
+        # NSView host; the entry must not require a synthetic NSButton.
+        self.assertIn("private func showModuleMenu(_ sender: NSView)", self.content)
+        menu = self.content.split("private func showModuleMenu", 1)[1].split(
+            "@objc private func quitApp", 1
+        )[0]
+        self.assertIn("in: sender", menu)
+        self.assertIn("#selector(showSettings)", menu)
+        self.assertNotIn("SettingsWindowController(", menu)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 import AppKit
+import ApplicationServices
 // Isolate appearance before any popover/footer is constructed; an installed
 // app's saved choice must not change which baseline this harness exercises.
 let settingsSuiteName = "Wattson.SettingsCommandInteraction.\(UUID().uuidString)"
@@ -131,6 +132,9 @@ func runApplication(until condition: @escaping () -> Bool,
 if !screenLocked {
     app.finishLaunching()
 
+    // The rapid fade/reopen and native didClose counting below intentionally
+    // exercise Classic NSPopover, not the independent Glass panel.
+    Settings.liquidGlassEnabled = false
     let p = PopoverController()
     let fullSnapshot = PowerSnapshot(
         percent: 100, plugged: true, adapterW: 52,
@@ -182,6 +186,10 @@ if !screenLocked {
     }
     spin(0.4)
     check("轻触图标弹窗打开", p.isShownForTest && p.isOpen)
+    check("Classic 保留原 NSPopover 生命周期与全局监听",
+          p.glassPanelForTest == nil && !p.hasLocalEventMonitorForTest
+              && p.lifetimeObserverCountForTest == 0
+              && p.classicLifecycleCountsForTest.shows > 0)
     check("打开后开始监听外部点击", p.isWatchingOutsideClicks)
     if let raw = ProcessInfo.processInfo.environment["WATTSON_EXPECTED_POWER_MODE"],
        let expected = ["0": EnergyMode.auto, "1": .low, "2": .high][raw] {
@@ -1144,7 +1152,7 @@ check("读取失败优先于守恒偏差",
       degradedState.text == "Read Failed · Last Reading"
           && degradedState.color?.isEqual(PopoverStyle.red) == true)
 
-// ---- 9b. 全局 Liquid Glass：原生控件、即时切换与原版恢复 ----
+// ---- 9b. Reduce Motion 的 C 玻璃按钮：即时切换与原版恢复 ----
 // Only DEBUG-local overrides and isolated defaults change. This never writes
 // the user's accessibility preferences or sends a real helper mutation.
 do {
@@ -1202,6 +1210,7 @@ do {
             check("玻璃键盘交互前测试 App 已激活且窗口真正获得 key 状态", footerKeyboardReady,
                   "active=\(app.isActive) key=\(footerWindow.isKeyWindow) canKey=\(footerWindow.canBecomeKey) keyTitle=\(app.keyWindow?.title ?? "nil")")
             _ = footerWindow.makeFirstResponder(baseline)
+            setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
             Settings.liquidGlassEnabled = true
             footer.layoutSubtreeIfNeeded()
             let glass = footerDescendants(footer).compactMap { $0 as? NativeGlassModeControl }.first!
@@ -1214,7 +1223,7 @@ do {
                 log("GLASS_FOCUS stage=\(stage) active=\(app.isActive) key=\(footerWindow.isKeyWindow) responder=\(description) title=\(title) group=\(responder === glass) child=\(view?.isDescendant(of: glass) == true) menu=\(responder === menu) classic=\(responder === baseline) enabled=\(glassButtons.map(\.isEnabled)) selected=\(String(describing: glass.selectedModeForTest))")
             }
             logGlassFocus("glass-enabled")
-            check("全局玻璃立即使用三个原生玻璃按钮并转移键盘焦点",
+            check("减少动态效果的全局玻璃使用三个 C 原生按钮并转移键盘焦点",
                   baseline.isHidden && native.isHidden && !glass.isHiddenOrHasHiddenAncestor
                       && footerWindow.firstResponder === glass.keyboardFocusView
                       && glass.convert(glass.bounds, to: footer)
@@ -1295,6 +1304,7 @@ do {
                       && glassButtons.allSatisfy { !$0.isEnabled }
                       && !glass.accessibilityPerformIncrement()
                       && !glass.accessibilityPerformDecrement())
+            setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
             Settings.liquidGlassEnabled = false
             footer.layoutSubtreeIfNeeded()
             logGlassFocus("after-glass-disabled")
@@ -1368,51 +1378,602 @@ do {
     footerWindow.close()
 }
 
-// The theme belongs to NSPopover itself, not an opaque content overlay.
-// Showing this fixture skips external refreshes; switching appearance must
-// keep the existing window/root and must not reopen the popover.
-if !screenLocked {
-    let previousAppAppearance = app.appearance
-    app.appearance = NSAppearance(named: .aqua)
-    let glassPanel = PopoverController()
-    var themeVisibilityEvents = 0
-    var themeModeRequests = 0
-    var themeBatteryRequests = 0
-    glassPanel.onVisibilityChange { _ in themeVisibilityEvents += 1 }
-    glassPanel.setModeSelectHandler { _, _ in themeModeRequests += 1 }
-    glassPanel.setSystemBatteryIconToggleHandler { _, _ in themeBatteryRequests += 1 }
-    glassPanel.update(snapshot: headerSnapshots[0], history: [40, 45.8],
-                      peak: 45.8, degraded: false)
-    glassPanel.openForSettingsCommandTest(relativeTo: button)
-    _ = runApplication(until: { glassPanel.isShownForTest }, timeout: 1)
-    let originalRoot = glassPanel.contentViewForTest
-    let originalWindow = glassPanel.contentWindowForTest
-    let originalFrame = originalRoot?.frame
-    check("主面板关闭玻璃时保留系统默认外观", glassPanel.popoverAppearanceForTest == nil)
-    for enabled in [true, false, true] {
-        Settings.liquidGlassEnabled = enabled
-        spin(0.05)
-        if #available(macOS 26, *), enabled {
-            check("主面板玻璃外壳及内容使用统一深色外观",
-                  glassPanel.popoverAppearanceForTest?.name == .darkAqua
-                      && originalRoot.map { PopoverStyle.isDark($0.effectiveAppearance) } == true)
-        } else {
-            check("关闭或不支持玻璃时恢复原有 NSPopover 外观",
-                  glassPanel.popoverAppearanceForTest == nil)
-        }
-        check("切换主面板玻璃保留真实窗口和根视图且不重复展示或写入",
-              glassPanel.isShownForTest && glassPanel.isOpen
-                  && glassPanel.contentViewForTest === originalRoot
-                  && glassPanel.contentWindowForTest === originalWindow
-                  && originalRoot?.frame == originalFrame
-                  && themeVisibilityEvents == 1
-                  && themeModeRequests == 0 && themeBatteryRequests == 0
-                  && glassPanel.cachedPercentForTest == headerSnapshots[0].percent)
+// ---- 9c. A2：真实窗口、原生 AX 和共享意图模型 ----
+// The drag checks below call the same model boundary as SwiftUI's gesture,
+// not injected pointer events. They verify request/cancellation semantics;
+// actual pointer tracking, refraction and focus outlines need separate CUA QA.
+if #available(macOS 26.0, *) {
+    let previous = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
+    let previousTransparency = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"]
+    let previousContrast = ProcessInfo.processInfo.environment["WATTSON_FORCE_INCREASE_CONTRAST"]
+    defer {
+        Settings.liquidGlassEnabled = false
+        if let previous { setenv("WATTSON_FORCE_REDUCE_MOTION", previous, 1) }
+        else { unsetenv("WATTSON_FORCE_REDUCE_MOTION") }
+        if let previousTransparency { setenv("WATTSON_FORCE_REDUCE_TRANSPARENCY", previousTransparency, 1) }
+        else { unsetenv("WATTSON_FORCE_REDUCE_TRANSPARENCY") }
+        if let previousContrast { setenv("WATTSON_FORCE_INCREASE_CONTRAST", previousContrast, 1) }
+        else { unsetenv("WATTSON_FORCE_INCREASE_CONTRAST") }
     }
+    setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+    setenv("WATTSON_FORCE_REDUCE_TRANSPARENCY", "0", 1)
+    setenv("WATTSON_FORCE_INCREASE_CONTRAST", "0", 1)
+    Settings.liquidGlassEnabled = true
+    func a2Descendants(_ view: NSView) -> [NSView] {
+        view.subviews.flatMap { [$0] + a2Descendants($0) }
+    }
+    func a2Key(_ code: UInt16, window: NSWindow) -> NSEvent {
+        NSEvent.keyEvent(with: .keyDown, location: .zero, modifierFlags: [],
+                         timestamp: 0, windowNumber: window.windowNumber, context: nil,
+                         characters: "", charactersIgnoringModifiers: "",
+                         isARepeat: false, keyCode: code)!
+    }
+    struct A2AccessibilityNode {
+        let element: AXUIElement
+        let role: String?
+        let name: String?
+        let value: String?
+        let enabled: Bool?
+    }
+    func a2SystemAccessibilityNodes() -> [A2AccessibilityNode] {
+        // Query only this test's own window using the public assistive-client
+        // API. SwiftUI virtual nodes need not declare NSAccessibilityProtocol.
+        // Same-process AX can call AppKit/SwiftUI directly on the caller's
+        // thread, so these UI reads and actions must stay on the main thread.
+        // This never enables a private accessibility mode or changes TCC.
+        precondition(Thread.isMainThread)
+        let pid = ProcessInfo.processInfo.processIdentifier
+        let application = AXUIElementCreateApplication(pid)
+        AXUIElementSetMessagingTimeout(application, 0.5)
+        var rawWindows: CFTypeRef?
+        let status = AXUIElementCopyAttributeValue(application, kAXWindowsAttribute as CFString, &rawWindows)
+        log("A2_SYSTEM_AX trusted=\(AXIsProcessTrusted()) windowsStatus=\(status.rawValue)")
+        let deadline = Date().addingTimeInterval(3)
+        var nodes: [A2AccessibilityNode] = []
+        var readComplete = status == .success
+        func attribute(_ node: AXUIElement, _ name: String, context: String = "window") -> CFTypeRef? {
+            var value: CFTypeRef?
+            let error = AXUIElementCopyAttributeValue(node, name as CFString, &value)
+            if error != .success && error != .attributeUnsupported && error != .noValue {
+                log("A2_SYSTEM_AX context=\(context) attribute=\(name) error=\(error.rawValue)")
+                readComplete = false
+            }
+            return value
+        }
+        func visit(_ node: AXUIElement, depth: Int) {
+            guard depth < 12, nodes.count < 60, Date() < deadline else {
+                readComplete = false
+                return
+            }
+            let entry = A2AccessibilityNode(element: node,
+                role: attribute(node, kAXRoleAttribute) as? String,
+                name: attribute(node, kAXDescriptionAttribute) as? String
+                    ?? attribute(node, kAXTitleAttribute) as? String,
+                value: attribute(node, kAXValueAttribute) as? String,
+                enabled: attribute(node, kAXEnabledAttribute) as? Bool)
+            nodes.append(entry)
+            if entry.role == nil { readComplete = false }
+            var names: CFArray?
+            let namesStatus = AXUIElementCopyAttributeNames(node, &names)
+            guard namesStatus == .success, let supported = names as? [String] else {
+                log("A2_SYSTEM_AX attributes role=\(entry.role ?? "nil") error=\(namesStatus.rawValue)")
+                readComplete = false
+                return
+            }
+            // Leaf elements need not advertise AXChildren. Do not mistake
+            // that for an incomplete tree, or swallow a real generic error.
+            guard supported.contains(kAXChildrenAttribute) else { return }
+            if let value = attribute(node, kAXChildrenAttribute,
+                                     context: "\(entry.role ?? "nil")/\(entry.name ?? "nil")") {
+                guard let children = value as? [AXUIElement] else {
+                    readComplete = false
+                    return
+                }
+                for child in children { visit(child, depth: depth + 1) }
+            }
+        }
+        let windows = (rawWindows as? [AXUIElement] ?? []).filter {
+            attribute($0, kAXTitleAttribute) as? String == "Wattson A2 Interaction Contract"
+        }
+        if windows.count != 1 { readComplete = false }
+        for window in windows { visit(window, depth: 0) }
+        check("A2 公开系统 AX 完整读取唯一测试窗口", readComplete)
+        return nodes
+    }
+    func pressA2Accessibility(_ node: A2AccessibilityNode) -> AXError? {
+        precondition(Thread.isMainThread)
+        var pid: pid_t = 0
+        guard AXUIElementGetPid(node.element, &pid) == .success,
+              pid == ProcessInfo.processInfo.processIdentifier else {
+            check("A2 AX 动作只能针对本测试进程", false)
+            return nil
+        }
+        AXUIElementSetMessagingTimeout(node.element, 0.5)
+        let result = AXUIElementPerformAction(node.element, kAXPressAction as CFString)
+        log("A2_SYSTEM_AX press=\(node.name ?? "nil") mainThread=true status=\(result.rawValue)")
+        return result
+    }
+    let footer = PopoverFooterView()
+    footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                          height: PopoverFooterView.preferredHeight)
+    footer.update(mode: .auto, helperInstalled: true,
+                  systemBatteryIconHidden: false, tint: .systemBlue)
+    let window = NSWindow(contentRect: footer.bounds, styleMask: [.titled, .closable],
+                          backing: .buffered, defer: false)
+    window.isReleasedWhenClosed = false
+    window.title = "Wattson A2 Interaction Contract"
+    window.contentView = footer
+    footer.layoutSubtreeIfNeeded()
+    window.makeKeyAndOrderFront(nil)
+    let a2WindowReady = runApplication(until: { window.isKeyWindow }, timeout: 2)
+    check("A2 交互契约使用可见真实窗口", a2WindowReady)
+    if let a2 = a2Descendants(footer).compactMap({ $0 as? InteractiveGlassModeControl }).first,
+       let classic = a2Descendants(footer).compactMap({ $0 as? ModeSliderView }).first,
+       let native = a2Descendants(footer).compactMap({ $0 as? NativeModeSegmentedControl }).first {
+        check("正常动态效果选择 A2 并保持原有底栏高度",
+              !a2.isHiddenOrHasHiddenAncestor && classic.isHidden && native.isHidden
+                  && footer.frame.height == 78
+                  && a2.frame.width == footer.bounds.width + 24 && a2.frame.height == 62)
+        let padding = NSPoint(x: a2.frame.midX, y: a2.frame.minY + 2)
+        let hit = footer.hitTest(footer.convert(padding, to: footer.superview))
+        check("A2 透明光学留白不抢占邻接控件点击",
+              hit !== a2 && hit?.isDescendant(of: a2) != true)
+        var requests: [EnergyMode] = []
+        var completion: ((EnergyMode?) -> Void)?
+        footer.onSelect = { mode, callback in requests.append(mode); completion = callback }
+        a2.update(selected: .auto, enabledModes: [.auto, .low])
+        spin(0.1)
+        let axButtons = a2SystemAccessibilityNodes().filter {
+            $0.role == kAXButtonRole && ["Auto", "Low Power", "High Power"].contains($0.name ?? "")
+        }
+        check("A2 原生 AX 树恰有三个固定顺序且完整命名的模式按钮",
+              axButtons.map(\.name) == ["Auto", "Low Power", "High Power"],
+              "count=\(axButtons.count); labels=\(axButtons.map(\.name))")
+        if axButtons.count == 3 {
+            check("A2 AX 选中值和禁用 High Power 与显示状态一致",
+                  axButtons[0].value == "Selected" && axButtons[1].value == "Not selected"
+                      && axButtons[0].enabled == true && axButtons[1].enabled == true
+                      && axButtons[2].enabled == false)
+            let selectedPressSucceeded = pressA2Accessibility(axButtons[0]) == .success
+            _ = pressA2Accessibility(axButtons[2])
+            check("A2 AX 重复选择和禁用选择不产生请求", selectedPressSucceeded && requests.isEmpty)
+        }
+
+        a2.beginDragForTest(startX: 10)
+        let origin = a2.dragOriginForTest(translationX: 70)
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue)
+        check("A2 共享拖动状态路径连续移动但不调用 helper 意图",
+              origin.map { abs($0 - 70) < 0.01 } == true && requests.isEmpty)
+        a2.endDragForTest(translationX: 90)
+        a2.endDragForTest(translationX: 90)
+        check("A2 松手路径仅提交一次并立即进入 owner 忙态",
+              requests == [.low] && a2.selectedModeForTest == .low && a2.enabledModesForTest.isEmpty)
+        a2.selectModeForTest(.auto)
+        a2.keyDown(with: a2Key(123, window: window))
+        a2.beginDragForTest(startX: 100)
+        a2.endDragForTest(translationX: -90)
+        check("A2 忙态拒绝点击键盘和拖动的重复请求", requests == [.low])
+        Settings.liquidGlassEnabled = false
+        Settings.liquidGlassEnabled = true
+        check("A2 待确认状态跨经典主题来回切换而不丢失",
+              a2.enabledModesForTest.isEmpty && a2.selectedModeForTest == .low && requests == [.low])
+        footer.update(mode: .high, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue)
+        completion?(nil)
+        check("A2 失败回滚到 owner 最新观测并恢复可用模式",
+              a2.selectedModeForTest == .high && a2.enabledModesForTest.contains(.auto)
+                  && a2.enabledModesForTest.contains(.low) && requests == [.low])
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue)
+        a2.beginDragForTest(startX: 10)
+        let escapeGeneration = a2.cancellationGenerationForTest
+        a2.cancelOperation(nil)
+        a2.endDragForTest(translationX: 90)
+        check("A2 Escape 取消共享拖动状态且迟到松手不提交",
+              a2.cancellationGenerationForTest > escapeGeneration && requests == [.low]
+                  && !a2.isDraggingForTest && a2.selectedModeForTest == .auto)
+        _ = window.makeFirstResponder(a2.keyboardFocusView)
+        a2.keyDown(with: a2Key(124, window: window))
+        check("A2 AppKit 键盘入口产生一个可确认的模式请求", requests == [.low, .low])
+        completion?(.low)
+        a2.keyDown(with: a2Key(36, window: window))
+        check("A2 确认后回车重复选择不会取消或重复提交",
+              a2.selectedModeForTest == .low && a2.enabledModesForTest.contains(.low)
+                  && requests == [.low, .low])
+
+        var menuRequests = 0
+        footer.onShowMenu = { anchor in
+            if anchor.window === window && anchor.isDescendant(of: a2) { menuRequests += 1 }
+        }
+        let menus = a2SystemAccessibilityNodes().filter {
+            $0.role == kAXButtonRole && $0.name == "Choose Modules"
+        }
+        check("A2 恰有一个原生可访问设置菜单按钮", menus.count == 1, "count=\(menus.count)")
+        let menuPressSucceeded = menus.first.map { pressA2Accessibility($0) == .success } ?? false
+        check("A2 菜单使用真实宿主锚点且不产生电源模式写入",
+              menuPressSucceeded && menuRequests == 1 && requests == [.low, .low],
+              "press=\(menuPressSucceeded); menus=\(menuRequests); modeRequests=\(requests)")
+
+        let slot = (a2.bounds.width - 24 - 46) / 3
+        a2.beginDragForTest(startX: slot + 10)
+        let fallbackGeneration = a2.cancellationGenerationForTest
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
+        footer.applyReduceMotionChangeForTest(true)
+        footer.layoutSubtreeIfNeeded()
+        a2.endDragForTest(translationX: -90)
+        let fallback = a2Descendants(footer).compactMap { $0 as? NativeGlassModeControl }.first
+        check("运行时减少动态效果切到 C 并取消 A2 未提交拖动",
+              a2.isHiddenOrHasHiddenAncestor && fallback?.isHiddenOrHasHiddenAncestor == false
+                  && a2.cancellationGenerationForTest > fallbackGeneration
+                  && fallback?.selectedModeForTest == .low && requests == [.low, .low])
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+        footer.applyReduceMotionChangeForTest(false)
+        footer.layoutSubtreeIfNeeded()
+        check("恢复动画复用同一 A2 宿主且隐藏 C 不增加请求",
+              !a2.isHiddenOrHasHiddenAncestor && fallback?.isHiddenOrHasHiddenAncestor == true
+                  && a2Descendants(footer).compactMap { $0 as? InteractiveGlassModeControl }.count == 1
+                  && a2.selectedModeForTest == .low && requests == [.low, .low])
+        for option in ["WATTSON_FORCE_REDUCE_TRANSPARENCY", "WATTSON_FORCE_INCREASE_CONTRAST"] {
+            a2.beginDragForTest(startX: slot + 10)
+            setenv(option, "1", 1)
+            footer.applyReduceMotionChangeForTest(false)
+            a2.endDragForTest(translationX: -90)
+            check("\(option) 优先使用可读的 C 并取消 A2 未提交状态",
+                  a2.isHiddenOrHasHiddenAncestor && fallback?.isHiddenOrHasHiddenAncestor == false
+                      && !a2.isDraggingForTest && requests == [.low, .low])
+            setenv(option, "0", 1)
+            footer.applyReduceMotionChangeForTest(false)
+            check("\(option) 关闭后恢复同一 A2 且模式保持不变",
+                  !a2.isHiddenOrHasHiddenAncestor && a2.selectedModeForTest == .low
+                      && requests == [.low, .low])
+        }
+    } else {
+        check("A2 真实窗口具备新宿主及两个经典回退", false)
+    }
+    window.close()
+
+    if !screenLocked {
+        let panel = PopoverController()
+        var requests = 0
+        panel.setModeSelectHandler { _, _ in requests += 1 }
+        panel.update(snapshot: headerSnapshots[0], history: [40, 45.8], peak: 45.8, degraded: false)
+        panel.openForSettingsCommandTest(relativeTo: button)
+        _ = runApplication(until: { panel.isShownForTest }, timeout: 1)
+        if let root = panel.contentViewForTest,
+           let owner = a2Descendants(root).compactMap({ $0 as? PopoverFooterView }).first,
+           let a2 = a2Descendants(root).compactMap({ $0 as? InteractiveGlassModeControl }).first {
+            // Configure the authoritative owner as well as its child. This
+            // isolated fixture does not install or consult a real helper.
+            owner.update(mode: .auto, helperInstalled: true,
+                         systemBatteryIconHidden: false, tint: .systemBlue)
+            a2.beginDragForTest(startX: 10)
+            let generation = a2.cancellationGenerationForTest
+            panel.closeBypassingControllerForTest()
+            _ = runApplication(until: { !panel.isShownForTest }, timeout: 1)
+            a2.endDragForTest(translationX: 90)
+            check("实际玻璃宿主自行关闭也取消 A2 拖动且拒绝迟到松手",
+                  a2.cancellationGenerationForTest > generation && !a2.isDraggingForTest && requests == 0)
+            panel.openForSettingsCommandTest(relativeTo: button)
+            _ = runApplication(until: { panel.isShownForTest }, timeout: 1)
+            check("实际玻璃宿主重开复用 A2 并没有恢复旧拖动或新增请求",
+                  panel.glassPanelForTest != nil && panel.contentViewForTest === root
+                      && !a2.isHiddenOrHasHiddenAncestor && requests == 0)
+            owner.update(mode: .auto, helperInstalled: true,
+                         systemBatteryIconHidden: false, tint: .systemBlue)
+            a2.beginDragForTest(startX: 10)
+            a2.endDragForTest(translationX: 90)
+            check("重开后的新 A2 手势状态路径可正常提交一次", requests == 1,
+                  "requests=\(requests); selected=\(a2.selectedModeForTest); enabled=\(a2.enabledModesForTest)")
+        } else {
+            check("实际玻璃面板展示生产 A2 控件", false)
+        }
+        panel.handleOutsideClick()
+        _ = runApplication(until: { !panel.isShownForTest }, timeout: 1)
+    }
+}
+
+// ---- 9d. B Regular / C Clear 的独立玻璃宿主与 Classic 生命周期 ----
+// Menu tracking notifications and local-click predicates are deterministic
+// decision-path tests, not proof of OS-global input delivery or menu tracking.
+// All opens use the no-external-refresh test entry; no helper mutation occurs.
+if #available(macOS 26.0, *), !screenLocked {
+    let previousAppAppearance = app.appearance
+    let previousStyle = Settings.liquidGlassStyle
+    let displayOverrides = ["WATTSON_FORCE_REDUCE_MOTION", "WATTSON_FORCE_REDUCE_TRANSPARENCY",
+                            "WATTSON_FORCE_INCREASE_CONTRAST"]
+    let previousOverrides = displayOverrides.map { ProcessInfo.processInfo.environment[$0] }
+    defer {
+        Settings.liquidGlassEnabled = false
+        Settings.liquidGlassStyle = previousStyle
+        app.appearance = previousAppAppearance
+        for (name, value) in zip(displayOverrides, previousOverrides) {
+            if let value { setenv(name, value, 1) } else { unsetenv(name) }
+        }
+    }
+    displayOverrides.forEach { setenv($0, "0", 1) }
+    app.appearance = NSAppearance(named: .aqua)
+    func hostDescendants(_ view: NSView) -> [NSView] {
+        view.subviews.flatMap { [$0] + hostDescendants($0) }
+    }
+    func hostA2(_ controller: PopoverController) -> InteractiveGlassModeControl? {
+        controller.contentViewForTest.flatMap {
+            hostDescendants($0).compactMap { $0 as? InteractiveGlassModeControl }.first
+        }
+    }
+    func hostMonitorsAreRemoved(_ controller: PopoverController) -> Bool {
+        !controller.isWatchingOutsideClicks && !controller.hasLocalEventMonitorForTest
+            && controller.lifetimeObserverCountForTest == 0
+    }
+    let controller = PopoverController()
+    var visibilityEvents: [Bool] = []
+    var modeRequests = 0
+    var batteryRequests = 0
+    controller.onVisibilityChange { visibilityEvents.append($0) }
+    controller.setModeSelectHandler { _, _ in modeRequests += 1 }
+    controller.setSystemBatteryIconToggleHandler { _, _ in batteryRequests += 1 }
+    controller.update(snapshot: headerSnapshots[0], history: [40, 45.8], peak: 45.8, degraded: false)
+    let originalRoot = controller.contentViewForTest
+    func checkInstalledHost(_ label: String, glass: Bool) {
+        let panel = controller.glassPanelForTest
+        let window = glass ? panel : controller.classicPopoverForTest.contentViewController?.view.window
+        let installedViews = window?.contentView.map { [$0] + hostDescendants($0) } ?? []
+        let fields = installedViews.compactMap { $0 as? NSTextField }
+        let footer = installedViews.compactMap { $0 as? PopoverFooterView }.first
+        let material = panel?.contentView?.subviews.compactMap { $0 as? NSGlassEffectView }.first
+        let rootAttached = originalRoot.map { root in
+            root.window === window && window != nil && installedViews.contains { $0 === root }
+                && root.bounds.width > 0 && root.bounds.height > 0 && !root.isHiddenOrHasHiddenAncestor
+        } ?? false
+        let correctHost = glass
+            ? panel != nil && material?.contentView === originalRoot
+                && material?.style == (Settings.liquidGlassStyle == .clear ? .clear : .regular)
+            : panel == nil && controller.classicPopoverForTest.isShown
+        check(label, controller.isOpen && controller.isShownForTest && window?.isVisible == true
+              && correctHost && rootAttached
+              && fields.contains { !$0.stringValue.isEmpty && !$0.isHiddenOrHasHiddenAncestor }
+              && footer.map { $0.window === window && $0.bounds.width > 0 && $0.bounds.height > 0 } == true,
+              "glass=\(glass) rootAttached=\(rootAttached) fields=\(fields.count) footer=\(footer != nil) correctHost=\(correctHost)")
+    }
+    let originalAnchorNotificationSetting = button.postsFrameChangedNotifications
+    let otherWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 10, height: 10),
+                               styleMask: [.borderless], backing: .buffered, defer: false)
+    let menuWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 10, height: 10),
+                              styleMask: [.borderless], backing: .buffered, defer: false)
+    menuWindow.level = .popUpMenu
+    let outside = NSPoint(x: -10_000, y: -10_000)
+    for style in Settings.LiquidGlassStyle.allCases {
+        Settings.liquidGlassStyle = style
+        Settings.liquidGlassEnabled = true
+        controller.openForSettingsCommandTest(relativeTo: button)
+        _ = runApplication(until: { controller.isShownForTest }, timeout: 1)
+        guard let panel = controller.glassPanelForTest else {
+            check("\(style.rawValue) 使用真实独立玻璃面板", false)
+            continue
+        }
+        let materialViews = panel.contentView?.subviews.compactMap { $0 as? NSGlassEffectView } ?? []
+        let material = materialViews.first
+        check("\(style.rawValue) 背景使用单一原生材质并保持同一生产内容",
+              materialViews.count == 1 && material?.style == (style == .clear ? .clear : .regular)
+                  && material?.contentView === originalRoot && controller.contentViewForTest === originalRoot
+                  && controller.contentWindowForTest === panel && panel.styleMask.contains(.nonactivatingPanel)
+                  && !panel.isOpaque && panel.backgroundColor == .clear
+                  && panel.appearance == nil && panel.canBecomeKey && !panel.canBecomeMain
+                  && panel.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .aqua
+                  && originalRoot?.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .aqua
+                  && controller.cachedPercentForTest == headerSnapshots[0].percent)
+        checkInstalledHost("\(style.rawValue) 当前可见宿主确实挂载完整内容而非空壳", glass: true)
+        let openVisibilityCount = visibilityEvents.count
+        let openObserverCount = controller.lifetimeObserverCountForTest
+        controller.openForSettingsCommandTest(relativeTo: button)
+        controller.openForSettingsCommandTest(relativeTo: button)
+        let visiblePanels = NSApp.windows.filter { $0 is GlassPopoverPanel && $0.isVisible }
+        check("\(style.rawValue) 重复打开复用当前面板且不留下空玻璃壳",
+              controller.glassPanelForTest === panel && visiblePanels.count == 1
+                  && visiblePanels.first === panel && originalRoot?.window === panel
+                  && visibilityEvents.count == openVisibilityCount
+                  && controller.lifetimeObserverCountForTest == openObserverCount)
+        if let root = originalRoot, let a2 = hostA2(controller) {
+            root.layoutSubtreeIfNeeded()
+            let fields = hostDescendants(root).compactMap { $0 as? NSTextField }
+            let fieldIDs = fields.map(ObjectIdentifier.init)
+            let fieldValues = fields.map(\.stringValue)
+            let fieldFrames = fields.map(\.frame)
+            let panelFrame = panel.frame
+            let contentFrame = root.frame
+            let controlFrame = a2.frame
+            let selectedMode = a2.selectedModeForTest
+            let enabledModes = a2.enabledModesForTest
+            for appearance: NSAppearance.Name in [.darkAqua, .aqua] {
+                app.appearance = NSAppearance(named: appearance)
+                let inherited = runApplication(until: {
+                    panel.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == appearance
+                        && root.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == appearance
+                }, timeout: 1)
+                root.layoutSubtreeIfNeeded()
+                let currentFields = hostDescendants(root).compactMap { $0 as? NSTextField }
+                check("\(style.rawValue) 跟随 \(appearance.rawValue) 且不重建玻璃宿主或生产内容",
+                      inherited && panel.appearance == nil && root.appearance == nil
+                          && controller.glassPanelForTest === panel && controller.contentViewForTest === root
+                          && material?.contentView === root && hostA2(controller) === a2
+                          && material?.style == (style == .clear ? .clear : .regular))
+                check("\(style.rawValue) 明暗切换保持全部展示文字、数值和布局且不写电源模式",
+                      !fields.isEmpty && currentFields.map(ObjectIdentifier.init) == fieldIDs
+                          && currentFields.map(\.stringValue) == fieldValues
+                          && currentFields.map(\.frame) == fieldFrames && panel.frame == panelFrame
+                          && root.frame == contentFrame && a2.frame == controlFrame
+                          && a2.selectedModeForTest == selectedMode && a2.enabledModesForTest == enabledModes
+                          && controller.cachedPercentForTest == headerSnapshots[0].percent
+                          && modeRequests == 0 && batteryRequests == 0)
+                checkInstalledHost("\(style.rawValue) 明暗切换后生产内容仍在当前窗口", glass: true)
+            }
+        } else { check("\(style.rawValue) 明暗测试具备完整生产内容与 A2", false) }
+        check("\(style.rawValue) 打开时安装局部和全局监听及生命周期观察",
+              controller.isWatchingOutsideClicks && controller.hasLocalEventMonitorForTest
+                  && controller.lifetimeObserverCountForTest > 0 && button.postsFrameChangedNotifications)
+        check("\(style.rawValue) 面板内点击不关闭，其他本 App 窗口点击需要关闭",
+              !controller.shouldDismissLocalClickForTest(window: panel, screenPoint: outside)
+                  && controller.shouldDismissLocalClickForTest(window: otherWindow, screenPoint: outside))
+        if let anchorWindow = button.window {
+            let anchorFrame = anchorWindow.convertToScreen(button.convert(button.bounds, to: nil))
+            check("\(style.rawValue) 锚点鼠标按下留给状态按钮的单次 toggle",
+                  !controller.shouldDismissLocalClickForTest(window: anchorWindow,
+                      screenPoint: NSPoint(x: anchorFrame.midX, y: anchorFrame.midY)))
+        } else { check("玻璃面板保持有效的状态项锚点", false) }
+
+        let menu = NSMenu(title: "Host routing fixture")
+        NotificationCenter.default.post(name: NSMenu.didBeginTrackingNotification, object: menu)
+        check("\(style.rawValue) 原生菜单跟踪期间保留菜单窗口与无窗口事件",
+              !controller.shouldDismissLocalClickForTest(window: menuWindow, screenPoint: outside)
+                  && !controller.shouldDismissLocalClickForTest(window: nil, screenPoint: outside)
+                  && controller.shouldDismissLocalClickForTest(window: otherWindow, screenPoint: outside))
+        panel.cancelOperation(nil)
+        check("\(style.rawValue) 菜单期间 Escape 留给菜单而不关闭面板", controller.isOpen)
+        NotificationCenter.default.post(name: NSMenu.didEndTrackingNotification, object: menu)
+        check("\(style.rawValue) 菜单结束后恢复普通外部点击分类",
+              controller.shouldDismissLocalClickForTest(window: menuWindow, screenPoint: outside)
+                  && controller.shouldDismissLocalClickForTest(window: nil, screenPoint: outside))
+
+        if let a2 = hostA2(controller) {
+            check("\(style.rawValue) 背景搭配可见的生产 A2", !a2.isHiddenOrHasHiddenAncestor)
+            a2.update(selected: .auto, enabledModes: [.auto, .low])
+            a2.beginDragForTest(startX: 10)
+            panel.cancelOperation(nil)
+            a2.endDragForTest(translationX: 90)
+            check("\(style.rawValue) 首次 Escape 仅取消拖动并保留面板",
+                  !a2.isDraggingForTest && controller.isOpen && controller.isShownForTest && modeRequests == 0)
+            panel.cancelOperation(nil)
+            check("\(style.rawValue) 第二次 Escape 关闭面板并撤除所有监听",
+                  !controller.isOpen && !controller.isShownForTest && hostMonitorsAreRemoved(controller)
+                      && button.postsFrameChangedNotifications == originalAnchorNotificationSetting)
+        } else { check("\(style.rawValue) 找到生产 A2", false) }
+        controller.handleOutsideClick()
+
+        controller.openForSettingsCommandTest(relativeTo: button)
+        controller.handleOutsideClick() // The global monitor's exact handler.
+        check("\(style.rawValue) 全局外部点击处理器关闭且清理全部生命周期资源",
+              !controller.isShownForTest && !controller.isOpen && hostMonitorsAreRemoved(controller))
+        controller.openForSettingsCommandTest(relativeTo: button)
+        controller.toggle(relativeTo: button)
+        check("\(style.rawValue) 状态按钮单次 toggle 只关闭不意外重开",
+              !controller.isShownForTest && !controller.isOpen && hostMonitorsAreRemoved(controller))
+        controller.openForSettingsCommandTest(relativeTo: button)
+        controller.closeBypassingControllerForTest()
+        check("\(style.rawValue) 宿主自行关闭仍执行完整清理",
+              !controller.isShownForTest && !controller.isOpen && hostMonitorsAreRemoved(controller))
+    }
+
+    Settings.liquidGlassStyle = .regular
+    controller.openForSettingsCommandTest(relativeTo: button)
+    if let a2 = hostA2(controller), let previousPanel = controller.glassPanelForTest {
+        a2.update(selected: .auto, enabledModes: [.auto, .low])
+        a2.beginDragForTest(startX: 10)
+        let generation = a2.cancellationGenerationForTest
+        Settings.liquidGlassStyle = .clear
+        _ = runApplication(until: { controller.isShownForTest }, timeout: 1)
+        a2.endDragForTest(translationX: 90)
+        check("拖动中由 B 切换 C 撤销旧手势、替换宿主并复用同一 A2 内容",
+              controller.glassPanelForTest !== previousPanel && !previousPanel.isVisible
+                  && controller.contentViewForTest === originalRoot && hostA2(controller) === a2
+                  && a2.cancellationGenerationForTest > generation && !a2.isDraggingForTest
+                  && modeRequests == 0 && batteryRequests == 0)
+        checkInstalledHost("B 转 C 后内容挂载在新玻璃宿主而非退休窗口", glass: true)
+    } else { check("样式切换测试具备真实玻璃面板及 A2", false) }
+    controller.handleOutsideClick()
+
+    // Preserve Classic's rapid reopen separately; retired Classic callbacks
+    // must never tear down a replacement panel or poison fresh close counts.
     Settings.liquidGlassEnabled = false
-    glassPanel.handleOutsideClick()
-    _ = runApplication(until: { !glassPanel.isShownForTest }, timeout: 1)
-    app.appearance = previousAppAppearance
+    controller.openForSettingsCommandTest(relativeTo: button)
+    _ = runApplication(until: { controller.isShownForTest }, timeout: 1)
+    check("关闭全局玻璃恢复 Classic 系统外观及原生 NSPopover",
+          controller.glassPanelForTest == nil && controller.popoverAppearanceForTest == nil
+              && controller.contentViewForTest === originalRoot && !controller.hasLocalEventMonitorForTest
+              && controller.lifetimeObserverCountForTest == 0)
+    checkInstalledHost("关闭玻璃后实际 Classic 窗口内容非空", glass: false)
+    let retiredClassic = controller.classicPopoverForTest
+    controller.toggle(relativeTo: button)
+    let classicWasFading = controller.isShownForTest
+    Settings.liquidGlassEnabled = true
+    controller.openForSettingsCommandTest(relativeTo: button)
+    let eventCount = visibilityEvents.count
+    controller.popoverDidClose(Notification(name: NSPopover.didCloseNotification, object: retiredClassic))
+    spin(0.65)
+    check("Classic 关闭中转玻璃后，退休宿主迟到回调不能关闭新面板",
+          controller.glassPanelForTest != nil && controller.isOpen && controller.isShownForTest
+              && visibilityEvents.count == eventCount && controller.contentViewForTest === originalRoot,
+          "native-fade-observed=\(classicWasFading)")
+    checkInstalledHost("退休 Classic 关闭回调后新玻璃窗口仍持有完整内容", glass: true)
+    Settings.liquidGlassEnabled = false
+    _ = runApplication(until: { controller.isShownForTest }, timeout: 1)
+    check("玻璃转回 Classic 使用新的干净原生计数且保留内容",
+          controller.glassPanelForTest == nil && controller.isOpen
+              && controller.classicPopoverForTest !== retiredClassic
+              && controller.classicLifecycleCountsForTest.shows > controller.classicLifecycleCountsForTest.closes
+              && controller.contentViewForTest === originalRoot)
+    checkInstalledHost("玻璃转回 Classic 后内容确实属于新原生窗口", glass: false)
+    controller.toggle(relativeTo: button)
+    controller.openForSettingsCommandTest(relativeTo: button)
+    spin(1.2)
+    check("跨宿主后 Classic 仍支持快速关闭重开且不会被迟到 didClose 拆除",
+          controller.isOpen && controller.isShownForTest && controller.isWatchingOutsideClicks
+              && controller.classicLifecycleCountsForTest.shows > controller.classicLifecycleCountsForTest.closes)
+    checkInstalledHost("跨宿主后 Classic 关闭重开没有丢失内容", glass: false)
+    controller.handleOutsideClick()
+    _ = runApplication(until: { !controller.isShownForTest }, timeout: 1.2)
+    check("跨宿主及重复重开最终关闭后所有监听归零且没有模式写入",
+          hostMonitorsAreRemoved(controller) && !controller.isOpen && modeRequests == 0 && batteryRequests == 0)
+
+    for finalGlass in [false, true] {
+        Settings.liquidGlassEnabled = finalGlass
+        controller.openForSettingsCommandTest(relativeTo: button)
+        _ = runApplication(until: { controller.isShownForTest }, timeout: 1)
+        // No run-loop drain between these writes: both directions must honor
+        // the latest choice, not a queued callback from the intermediate host.
+        Settings.liquidGlassEnabled = !finalGlass
+        Settings.liquidGlassEnabled = finalGlass
+        controller.openForSettingsCommandTest(relativeTo: button)
+        spin(0.65)
+        checkInstalledHost("同 run loop 来回切换最终 glass=\(finalGlass) 宿主和内容一致", glass: finalGlass)
+
+        let closingClassic = controller.classicPopoverForTest
+        controller.toggle(relativeTo: button)
+        Settings.liquidGlassEnabled = !finalGlass
+        controller.openForSettingsCommandTest(relativeTo: button)
+        Settings.liquidGlassEnabled = finalGlass
+        controller.openForSettingsCommandTest(relativeTo: button)
+        if controller.classicPopoverForTest !== closingClassic {
+            controller.popoverDidClose(Notification(name: NSPopover.didCloseNotification, object: closingClassic))
+        }
+        spin(1.2)
+        checkInstalledHost("关闭重开与来回切换交错最终 glass=\(finalGlass) 不出现空壳", glass: finalGlass)
+        controller.handleOutsideClick()
+        _ = runApplication(until: { !controller.isShownForTest }, timeout: 1.2)
+        check("快速迁移最终 glass=\(finalGlass) 关闭后监听清空且没有系统写入",
+              hostMonitorsAreRemoved(controller) && !controller.isOpen && modeRequests == 0 && batteryRequests == 0)
+    }
+
+    Settings.liquidGlassEnabled = true
+    weak var releasedController: PopoverController?
+    weak var releasedPanel: GlassPopoverPanel?
+    weak var releasedRetiredPanel: GlassPopoverPanel?
+    autoreleasepool {
+        let retiring = PopoverController()
+        releasedController = retiring
+        retiring.openForSettingsCommandTest(relativeTo: button)
+        releasedRetiredPanel = retiring.glassPanelForTest
+        Settings.liquidGlassEnabled = false
+        retiring.openForSettingsCommandTest(relativeTo: button)
+        Settings.liquidGlassEnabled = true
+        retiring.openForSettingsCommandTest(relativeTo: button)
+        releasedPanel = retiring.glassPanelForTest
+        check("释放测试先安装了真实玻璃面板监听", retiring.hasLocalEventMonitorForTest
+              && retiring.lifetimeObserverCountForTest > 0)
+    }
+    check("打开状态释放 controller 不被监视器保留且面板不继续可见",
+          releasedController == nil && releasedPanel?.isVisible != true
+              && releasedRetiredPanel?.isVisible != true
+              && button.postsFrameChangedNotifications == originalAnchorNotificationSetting)
 }
 
 // ---- 10. Settings 命令：一个窗口、同一入口、单一系统状态 ----

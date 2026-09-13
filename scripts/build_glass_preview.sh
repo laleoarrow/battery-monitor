@@ -36,20 +36,23 @@ xcrun swiftc \
     -framework AppKit -framework CoreGraphics -framework IOKit \
     -o "$BUILD_DIR/WattsonGlassPreview"
 
+if [[ -d "$APP_BUNDLE" ]]; then
+    mv "$APP_BUNDLE" "$BUILD_DIR/previous-Wattson Glass Preview.app"
+fi
 mkdir -p "$APP_BUNDLE/Contents/MacOS" "$APP_BUNDLE/Contents/Resources"
 cp "$BUILD_DIR/WattsonGlassPreview" "$APP_BUNDLE/Contents/MacOS/WattsonGlassPreview"
 cp "$ROOT_DIR/Tests/visual/glass_preview_Info.plist" "$APP_BUNDLE/Contents/Info.plist"
 cp "$ROOT_DIR/design/icon/AppIcon.icns" "$APP_BUNDLE/Contents/Resources/AppIcon.icns"
 /usr/bin/sips -s format png "$ROOT_DIR/design/icon/AppIcon.icns" \
     --out "$APP_BUNDLE/Contents/Resources/AppIconSettings.png" >/dev/null
-# This optional, already-rendered review asset belongs only to the preview.
-# The shipping build never depends on this private dist path.
-GLASS_SETTINGS_PNG="$ROOT_DIR/dist/liquid-glass-option-20260913/icon-preview/sips-AppIconGlassSettings.png"
-if [[ -f "$GLASS_SETTINGS_PNG" ]]; then
-    cp "$GLASS_SETTINGS_PNG" "$APP_BUNDLE/Contents/Resources/AppIconGlassSettings.png"
-elif [[ -e "$APP_BUNDLE/Contents/Resources/AppIconGlassSettings.png" ]]; then
-    mv "$APP_BUNDLE/Contents/Resources/AppIconGlassSettings.png" "$BUILD_DIR/previous-AppIconGlassSettings.png"
-fi
+for logo_resource in AppLogoColor.png AppLogoClearLight.png AppLogoClearDark.png; do
+    cp "$ROOT_DIR/design/icon/in-app-logo/$logo_resource" \
+        "$APP_BUNDLE/Contents/Resources/$logo_resource"
+done
+for dock_logo_resource in AppDockLogoColor.png AppDockLogoClearLight.png AppDockLogoClearDark.png; do
+    cp "$ROOT_DIR/design/icon/dock-logo/$dock_logo_resource" \
+        "$APP_BUNDLE/Contents/Resources/$dock_logo_resource"
+done
 /usr/bin/plutil -lint "$APP_BUNDLE/Contents/Info.plist"
 /usr/bin/codesign --force --sign - \
     --entitlements "$ROOT_DIR/Tests/visual/glass_preview.entitlements" "$APP_BUNDLE"

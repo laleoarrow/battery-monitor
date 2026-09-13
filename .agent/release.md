@@ -1,5 +1,11 @@
 # Wattson release and deployment
 
+## README and release notes
+
+Keep the README focused on the product, installation, usage, and development.
+Link to GitHub Releases for version-specific changes; do not append each
+release's notes or unreleased-version history to the README.
+
 ## Community release
 
 The credential-free script default intentionally matches iData's community

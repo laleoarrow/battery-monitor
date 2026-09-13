@@ -3,7 +3,7 @@ import XCTest
 @testable import Wattson
 
 final class PopoverAppearanceTests: XCTestCase {
-    func testGlassUsesDarkSystemPopoverAndRestoresClassicWithoutRebuilding() throws {
+    func testGlassPreferencePreservesSystemAppearanceWithoutRebuildingClosedContent() throws {
         _ = NSApplication.shared
         let suite = "Wattson.PopoverAppearance.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -26,11 +26,8 @@ final class PopoverAppearanceTests: XCTestCase {
         XCTAssertNil(controller.popoverAppearanceForTest)
         for enabled in [true, false, true, false] {
             Settings.liquidGlassEnabled = enabled
-            if #available(macOS 26, *), enabled {
-                XCTAssertEqual(controller.popoverAppearanceForTest?.name, .darkAqua)
-            } else {
-                XCTAssertNil(controller.popoverAppearanceForTest)
-            }
+            XCTAssertNil(controller.popoverAppearanceForTest)
+            XCTAssertNil(controller.classicPopoverForTest.appearance)
             XCTAssertTrue(controller.contentViewForTest === root)
             XCTAssertTrue(controller.contentWindowForTest === window)
             XCTAssertEqual(root.frame, frame)
@@ -64,10 +61,8 @@ final class PopoverAppearanceTests: XCTestCase {
         autoreleasepool {
             let controller = PopoverController()
             releasedController = controller
-            if #available(macOS 26, *) {
-                XCTAssertEqual(controller.popoverAppearanceForTest?.name, .darkAqua)
-            } else {
-                XCTAssertNil(controller.popoverAppearanceForTest)
+            XCTAssertNil(controller.popoverAppearanceForTest)
+            if #unavailable(macOS 26) {
                 XCTAssertFalse(Settings.usesLiquidGlass)
             }
             XCTAssertFalse(controller.isOpen)
@@ -99,6 +94,46 @@ final class PopoverAppearanceTests: XCTestCase {
         XCTAssertNil(content.view.layer?.backgroundColor)
         XCTAssertEqual(content.view.frame.width, 360)
         XCTAssertEqual(descendants(content.view).compactMap { $0 as? NSScrollView }.count, 1)
+    }
+
+    func testRealGlassContentInheritsLightDarkAndResolvesSemanticReadingColor() throws {
+        guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
+        let application = NSApplication.shared
+        let originalAppearance = application.appearance
+        defer { application.appearance = originalAppearance }
+        let snapshot = PowerSnapshot(percent: 72, plugged: true,
+            adapterW: 68, batteryW: 22.2, systemW: 45.8)
+        for style in [NSGlassEffectView.Style.regular, .clear] {
+            let content = PopoverContentViewController()
+            content.setViewportHeight(content.preferredHeight)
+            let panel = GlassPopoverPanel(content: content.view,
+                frame: NSRect(x: 0, y: 0, width: 380, height: content.preferredHeight + 20), style: style)
+            var originalReadings: [String]?
+            var originalFrames: [NSRect]?
+            for name in [NSAppearance.Name.aqua, .darkAqua, .aqua] {
+                application.appearance = try XCTUnwrap(NSAppearance(named: name))
+                content.update(snapshot: snapshot, history: [45, 68], peak: 68, degraded: false)
+                content.view.layoutSubtreeIfNeeded()
+                let fields = descendants(content.view).compactMap { $0 as? NSTextField }
+                let reading = try XCTUnwrap(fields.first { $0.font?.pointSize == 29 })
+                let color = resolved(try XCTUnwrap(reading.textColor), reading.effectiveAppearance)
+                XCTAssertEqual(reading.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]), name)
+                XCTAssertNil(content.view.appearance)
+                XCTAssertNil(panel.appearance)
+                XCTAssertEqual(reading.stringValue, "68.0")
+                if name == .aqua { XCTAssertLessThan(color.redComponent, 0.3) }
+                else { XCTAssertGreaterThan(color.redComponent, 0.8) }
+                if let originalReadings, let originalFrames {
+                    XCTAssertEqual(fields.map(\.stringValue), originalReadings)
+                    XCTAssertEqual(fields.map(\.frame), originalFrames)
+                } else {
+                    originalReadings = fields.map(\.stringValue)
+                    originalFrames = fields.map(\.frame)
+                }
+                XCTAssertFalse(panel.isVisible)
+            }
+            panel.detachContent()
+        }
     }
 
     func testPaletteResolvesToReadableLightAndDarkInstruments() throws {

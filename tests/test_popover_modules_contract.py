@@ -176,6 +176,16 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("stopDisplayClock()", self.status)
         self.assertIn("removeAllAnimations()", self.content)
 
+    def test_hiding_the_popover_cancels_uncommitted_footer_interaction(self):
+        presentation = self.content.split("func setPresentationActive(_ active: Bool)", 1)[1].split(
+            "\n    private func", 1
+        )[0]
+        self.assertIn("if !active", presentation)
+        self.assertIn("footer.cancelInteraction()", presentation)
+        for marker in ("private func close()", "func popoverDidClose"):
+            lifecycle = self.popover.split(marker, 1)[1].split("\n    func ", 1)[0]
+            self.assertIn("content.setPresentationActive(false)", lifecycle)
+
     def test_reduce_motion_stops_content_motion_and_tracks_runtime_changes(self):
         opening = self.popover.split("private func open(relativeTo", 1)[1].split(
             "private func applyLatestPresentation", 1

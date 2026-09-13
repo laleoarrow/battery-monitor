@@ -50,13 +50,11 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /macOS-style battery glyph/i);
   assert.match(html, /diagonal adapter plug/i);
   assert.match(html, /green bracketed charging battery/i);
-  assert.match(html, /approved A1 power-flow icon direction/i);
-  assert.match(html, /slightly smaller[\s\S]*and lighter/i);
-  assert.match(html, /21-point Regular symbols/i);
-  assert.match(html, /1.6-point custom outlines/i);
-  assert.match(html, /real visible extents target 19.25–21.5 points/i);
-  assert.match(html, /measure 20–21.25 points/i);
   assert.match(html, /simplified matching System chip/i);
+  assert.match(html, /Classic remains the default/i);
+  assert.match(html, /On macOS 26, optional Liquid Glass/i);
+  assert.match(html, /Standard Glass for a softly frosted popup/i);
+  assert.match(html, /Clear Glass to reveal more of the backdrop/i);
   assert.match(html, /dedicated Menu Bar Icon page/i);
   assert.match(html, /Wattson icon only/i);
   assert.match(html, /Wattson with percentage/i);
@@ -79,12 +77,21 @@ test("renders the complete English Wattson release page", async () => {
     html,
     /percentage rows show matching per-state values to the left of each glyph/i,
   );
-  assert.match(html, /General adds Check for Updates and Check for Updates on Launch/i);
+  assert.match(html, /General includes Check for Updates and Check for Updates on Launch/i);
   assert.match(html, /Manual checks read GitHub Latest Release/i);
   assert.match(html, /launch checks default on, stay quiet when current or offline/i);
   assert.match(html, /never download or install automatically/i);
   assert.match(html, /Optional update checks contact only GitHub Releases/i);
-  assert.match(html, /Settings sidebar uses the real packaged Wattson app icon/i);
+  assert.match(html, /In-App Logo in General &gt; Appearance/i);
+  assert.match(html, /Color or Clear artwork for the Settings identity, independently of Liquid Glass/i);
+  assert.match(html, /Both choices are static Icon Composer exports/i);
+  assert.match(html, /Clear uses monochrome artwork with a neutral backdrop/i);
+  assert.match(html, /Settings window’s Light\/Dark appearance/i);
+  assert.match(html, /Finder, Dock, and menu-bar icons stay unchanged/i);
+  assert.match(html, /drag the selected power-mode capsule and release to request a mode change/i);
+  assert.match(html, /Keyboard, disabled, and pending states remain supported/i);
+  assert.match(html, /accessibility preferences use simpler native controls/i);
+  assert.doesNotMatch(html, /now slightly smaller|Settings sidebar uses the real packaged Wattson app icon/i);
   assert.match(html, /720×520/i);
   const expectedVersion = await configuredReleaseVersion();
   assert.match(html, new RegExp(expectedVersion.replaceAll(".", "\\."), "i"));

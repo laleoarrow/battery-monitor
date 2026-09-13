@@ -37,8 +37,64 @@ private enum GlassPreview {
         precondition(!Settings.checksForUpdatesOnLaunch && Settings.menuBarIconStyle == .native)
         precondition(!Settings.isModuleVisible(.flow))
         precondition(independent.object(forKey: "appearance.liquidGlassEnabled") == nil)
+
+        precondition(PreviewPresentation.allCases.map(\.title) == [
+            "Classic", "Standard Glass", "Clear Glass"
+        ])
+        var synchronizedIndex = PreviewPresentation.current.rawValue
+        let observer = NotificationCenter.default.addObserver(
+            forName: Settings.didChange, object: nil, queue: nil
+        ) { _ in
+            synchronizedIndex = PreviewPresentation.current.rawValue
+        }
+        for selection in [PreviewPresentation.clearGlass, .classic, .standardGlass,
+                          .classic, .clearGlass, .standardGlass] {
+            synchronizedIndex = selection.rawValue
+            // Capture the user's choice before a Settings notification can
+            // synchronize the control to an intermediate enabled/style state.
+            let capturedSelection = PreviewPresentation(rawValue: synchronizedIndex)!
+            capturedSelection.apply()
+            precondition(PreviewPresentation.current == selection)
+            precondition(synchronizedIndex == selection.rawValue)
+            precondition(Settings.liquidGlassEnabled == (selection != .classic))
+            if selection != .classic {
+                precondition(Settings.liquidGlassStyle == (selection == .clearGlass ? .clear : .regular))
+            }
+        }
+        Settings.liquidGlassStyle = .clear
+        precondition(synchronizedIndex == PreviewPresentation.clearGlass.rawValue)
+        Settings.liquidGlassEnabled = false
+        precondition(synchronizedIndex == PreviewPresentation.classic.rawValue)
+        Settings.liquidGlassEnabled = true
+        precondition(synchronizedIndex == PreviewPresentation.clearGlass.rawValue)
+        precondition(independent.object(forKey: "appearance.liquidGlassStyle") == nil)
+        NotificationCenter.default.removeObserver(observer)
         Settings.resetTestConfiguration()
-        print("PREVIEW_DEFAULTS_SELF_TEST_PASSED: construction, memory read/write, isolation, Settings integration")
+        print("PREVIEW_DEFAULTS_SELF_TEST_PASSED: construction, memory read/write, isolation, Settings integration, three presentation mappings and notification synchronization")
+    }
+}
+
+private enum PreviewPresentation: Int, CaseIterable {
+    case classic, standardGlass, clearGlass
+
+    var title: String {
+        switch self {
+        case .classic: return "Classic"
+        case .standardGlass: return "Standard Glass"
+        case .clearGlass: return "Clear Glass"
+        }
+    }
+
+    static var current: Self {
+        guard Settings.liquidGlassEnabled else { return .classic }
+        return Settings.liquidGlassStyle == .clear ? .clearGlass : .standardGlass
+    }
+
+    func apply() {
+        if self != .classic {
+            Settings.liquidGlassStyle = self == .clearGlass ? .clear : .regular
+        }
+        Settings.liquidGlassEnabled = self != .classic
     }
 }
 
@@ -59,9 +115,11 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         styleMask: [.titled, .closable, .miniaturizable], backing: .buffered, defer: false
     )
     private let anchor = NSStatusBarButton(frame: .zero)
-    private let theme = NSSegmentedControl()
+    private let theme = NSPopUpButton()
     private let appearance = NSSegmentedControl()
     private let powerState = NSPopUpButton()
+    private let diagnosticBackdrop = NSButton(checkboxWithTitle: "Diagnostic backdrop (test only)", target: nil, action: nil)
+    private let backdrop = PreviewBackdrop()
     private let usb = NSButton(checkboxWithTitle: "USB device output", target: nil, action: nil)
     private let note = NSTextField(wrappingLabelWithString: "")
     private var popover: PopoverController!
@@ -70,10 +128,11 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
     private var hiddenBatteryIcon = false
     private var loginEnabled = true
     private var previewMode = EnergyMode.auto
+    private var modeRequestCount = 0
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         Settings.configureForTest(defaults: defaults)
-        Settings.liquidGlassEnabled = true
+        PreviewPresentation.clearGlass.apply()
         Settings.checksForUpdatesOnLaunch = false
         // The production quick menu calls this controller directly. Its
         // existing test sender prevents even that path reaching the helper.
@@ -89,8 +148,10 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         settings.windowForTest?.title = "Wattson Glass Preview — Settings"
         settings.windowForTest?.center()
         popover.setModeSelectHandler { [weak self] mode, completion in
+            self?.modeRequestCount += 1
             self?.previewMode = mode
             completion(mode)
+            self?.updateNote()
         }
         popover.setSystemBatteryIconToggleHandler { [weak self] hidden, completion in
             self?.hiddenBatteryIcon = hidden
@@ -102,7 +163,7 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         settingsObserver = NotificationCenter.default.addObserver(
             forName: Settings.didChange, object: nil, queue: .main
         ) { [weak self] _ in
-            self?.theme.selectedSegment = Settings.liquidGlassEnabled ? 1 : 0
+            self?.theme.selectItem(at: PreviewPresentation.current.rawValue)
             DispatchQueue.main.async { self?.updateFixtureFooter() }
         }
         buildControls()
@@ -110,9 +171,118 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         updateFixture()
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
+        if CommandLine.arguments.contains("--verify-presentation-cycles") {
+            DispatchQueue.main.async { self.verifyPresentationCycles() }
+        }
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
+
+    /// Opt-in GUI regression for this preview's real actions and observers.
+    /// Run only in the disposable GUI test session, never on the user's desktop.
+    private func verifyPresentationCycles() {
+        func fail(_ message: String) -> Never {
+            FileHandle.standardError.write(Data(("PREVIEW_PRESENTATION_CYCLES_FAILED: " + message + "\n").utf8))
+            exit(1)
+        }
+        guard #available(macOS 26.0, *) else { fail("requires macOS 26") }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 60) { fail("60-second GUI watchdog expired") }
+        guard let originalRoot = popover.contentViewForTest else { fail("missing production content") }
+        func descendants(_ view: NSView) -> [NSView] {
+            [view] + view.subviews.flatMap(descendants)
+        }
+        var checkCount = 0
+        func check(_ phase: String, expected: PreviewPresentation, dark: Bool,
+                   diagnostic: Bool, fixture: Int) {
+            let panel = popover.glassPanelForTest
+            let classic = popover.classicPopoverForTest
+            let activeWindow = expected == .classic ? classic.contentViewController?.view.window : panel
+            let installed = activeWindow?.contentView.map(descendants) ?? []
+            let material = panel?.contentView?.subviews.compactMap { $0 as? NSGlassEffectView }.first
+            let visibleGlassPanels = NSApp.windows.filter { $0 is GlassPopoverPanel && $0.isVisible }
+            guard visibleGlassPanels.count == (expected == .classic ? 0 : 1),
+                  visibleGlassPanels.allSatisfy({ $0 === panel }) else {
+                fail("\(phase): orphaned glass windows=\(visibleGlassPanels.count), expected=\(expected.title)")
+            }
+            let hostMatches = expected == .classic
+                ? panel == nil && classic.isShown
+                : panel != nil && material?.contentView === originalRoot
+                    && material?.style == (expected == .clearGlass ? .clear : .regular)
+            let rootAttached = activeWindow != nil && originalRoot.window === activeWindow
+                && installed.contains { $0 === originalRoot }
+                && originalRoot.bounds.width > 0 && originalRoot.bounds.height > 0
+                && !originalRoot.isHiddenOrHasHiddenAncestor
+            let fields = installed.compactMap { $0 as? NSTextField }
+            let footer = installed.compactMap { $0 as? PopoverFooterView }.first
+            let footerVisible = footer.map {
+                $0.window === activeWindow && !$0.isHiddenOrHasHiddenAncestor
+                    && $0.bounds.width > 0 && $0.bounds.height > 0
+            } == true
+            guard PreviewPresentation.current == expected,
+                  theme.indexOfSelectedItem == expected.rawValue,
+                  (NSApp.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua) == dark,
+                  backdrop.diagnostic == diagnostic,
+                  (diagnosticBackdrop.state == .on) == diagnostic,
+                  powerState.indexOfSelectedItem == fixture,
+                  popover.cachedPercentForTest == [72, 100, 67, 41, 8, 42][fixture],
+                  popover.isOpen, popover.isShownForTest, activeWindow?.isVisible == true,
+                  hostMatches, rootAttached, footerVisible,
+                  fields.contains(where: { !$0.stringValue.isEmpty && !$0.isHiddenOrHasHiddenAncestor }) else {
+                fail("\(phase): expected=\(expected.title) selected=\(theme.indexOfSelectedItem) "
+                    + "host=\(hostMatches) root=\(rootAttached) footer=\(footerVisible) "
+                    + "fields=\(fields.count) open=\(popover.isOpen) shown=\(popover.isShownForTest) "
+                    + "visible=\(activeWindow?.isVisible == true) "
+                    + "appearance=\(NSApp.effectiveAppearance.name.rawValue) dark=\(dark) "
+                    + "backdrop=\(backdrop.diagnostic)/\(diagnosticBackdrop.state.rawValue) expected=\(diagnostic) "
+                    + "fixture=\(powerState.indexOfSelectedItem) expected=\(fixture) percent=\(popover.cachedPercentForTest ?? -1)")
+            }
+            checkCount += 1
+            print("PREVIEW_CYCLE_OK: \(phase) \(expected.title) dark=\(dark) backdrop=\(diagnostic) fixture=\(fixture)")
+            fflush(stdout)
+        }
+        let selections: [PreviewPresentation] = [.clearGlass, .classic, .standardGlass,
+                                                 .classic, .clearGlass, .standardGlass]
+        func run(_ index: Int) {
+            guard index < selections.count * 4 else {
+                popover.handleOutsideClick()
+                print("PREVIEW_PRESENTATION_CYCLES_PASSED: 24 cycles, \(checkCount) checks")
+                fflush(stdout)
+                NSApp.terminate(nil)
+                return
+            }
+            let dark = index / selections.count >= 2
+            let diagnostic = (index / selections.count) % 2 == 1
+            let selection = selections[index % selections.count]
+            let fixture = index % 6
+            let previous = PreviewPresentation.current
+            let previousFixture = powerState.indexOfSelectedItem
+            let previousBackdrop = backdrop.diagnostic
+            appearance.selectedSegment = dark ? 1 : 0
+            changeHostAppearance()
+            check("\(index) host immediate", expected: previous, dark: dark,
+                  diagnostic: previousBackdrop, fixture: previousFixture)
+            diagnosticBackdrop.state = diagnostic ? .on : .off
+            changeBackdrop()
+            check("\(index) backdrop immediate", expected: previous, dark: dark,
+                  diagnostic: diagnostic, fixture: previousFixture)
+            theme.selectItem(at: selection.rawValue)
+            changePresentation()
+            check("\(index) presentation immediate", expected: selection, dark: dark,
+                  diagnostic: diagnostic, fixture: previousFixture)
+            powerState.selectItem(at: fixture)
+            usb.state = index % 2 == 0 ? .off : .on
+            changeFixture()
+            check("\(index) fixture immediate", expected: selection, dark: dark,
+                  diagnostic: diagnostic, fixture: fixture)
+            Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { _ in
+                check("\(index) after native close delay", expected: selection, dark: dark,
+                      diagnostic: diagnostic, fixture: fixture)
+                run(index + 1)
+            }
+        }
+        showPopover()
+        Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { _ in run(0) }
+    }
 
     private func mockDependencies() -> SettingsWindowDependencies {
         SettingsWindowDependencies(
@@ -154,6 +324,9 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
                                                y: screen.visibleFrame.maxY - 12))
         }
         guard let content = window.contentView else { return }
+        backdrop.frame = content.bounds
+        backdrop.autoresizingMask = [.width, .height]
+        content.addSubview(backdrop)
         let controls = NSView(frame: NSRect(x: 0, y: content.bounds.height - 360,
                                             width: 470, height: 360))
         content.addSubview(controls)
@@ -164,44 +337,51 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         anchor.action = #selector(showPopover)
         anchor.setAccessibilityLabel("Show Power Popover")
         content.addSubview(anchor)
-        for (title, y) in [("Presentation", 260.0), ("Host appearance", 216.0), ("Power fixture", 172.0)] {
+        diagnosticBackdrop.frame = NSRect(x: 20, y: 332, width: 420, height: 24)
+        diagnosticBackdrop.target = self
+        diagnosticBackdrop.action = #selector(changeBackdrop)
+        controls.addSubview(diagnosticBackdrop)
+        for (title, y) in [("Presentation", 304.0), ("Host appearance", 260.0), ("Power fixture", 216.0)] {
             let label = NSTextField(labelWithString: title)
             label.frame = NSRect(x: 20, y: y, width: 140, height: 24)
             controls.addSubview(label)
         }
-        for (control, labels, y) in [(theme, ["Classic", "Glass"], 256.0),
-                                    (appearance, ["Light", "Dark"], 212.0)] {
-            control.segmentCount = 2
-            for (index, title) in labels.enumerated() {
-                control.setLabel(title, forSegment: index)
-                control.setWidth(120, forSegment: index)
-            }
-            control.selectedSegment = 1
-            control.frame = NSRect(x: 166, y: y, width: 280, height: 30)
-            control.target = self
-            control.action = #selector(changePresentation)
-            controls.addSubview(control)
-        }
+        theme.addItems(withTitles: PreviewPresentation.allCases.map(\.title))
+        theme.selectItem(at: PreviewPresentation.current.rawValue)
+        theme.frame = NSRect(x: 166, y: 300, width: 280, height: 30)
+        theme.target = self
+        theme.action = #selector(changePresentation)
         theme.setAccessibilityLabel("Preview presentation")
+        controls.addSubview(theme)
+        appearance.segmentCount = 2
+        for (index, title) in ["Light", "Dark"].enumerated() {
+            appearance.setLabel(title, forSegment: index)
+            appearance.setWidth(120, forSegment: index)
+        }
+        appearance.selectedSegment = 1
+        appearance.frame = NSRect(x: 166, y: 256, width: 280, height: 30)
+        appearance.target = self
+        appearance.action = #selector(changeHostAppearance)
         appearance.setAccessibilityLabel("Host appearance")
+        controls.addSubview(appearance)
         powerState.addItems(withTitles: ["Charging", "Plugged In · Full", "On Battery",
                                         "Mixed Supply", "Low Battery", "Low Power"])
-        powerState.frame = NSRect(x: 166, y: 168, width: 280, height: 30)
+        powerState.frame = NSRect(x: 166, y: 212, width: 280, height: 30)
         powerState.target = self
         powerState.action = #selector(changeFixture)
         powerState.setAccessibilityLabel("Power fixture")
         controls.addSubview(powerState)
-        usb.frame = NSRect(x: 166, y: 128, width: 280, height: 24)
+        usb.frame = NSRect(x: 166, y: 172, width: 280, height: 24)
         usb.target = self
         usb.action = #selector(changeFixture)
         controls.addSubview(usb)
         for (index, title) in ["General", "Menu Bar Icon", "Modules"].enumerated() {
             let button = NSButton(title: title, target: self, action: #selector(showSettings(_:)))
             button.tag = index
-            button.frame = NSRect(x: 20 + index * 146, y: 84, width: 140, height: 32)
+            button.frame = NSRect(x: 20 + index * 146, y: 128, width: 140, height: 32)
             controls.addSubview(button)
         }
-        note.frame = NSRect(x: 20, y: 14, width: 430, height: 60)
+        note.frame = NSRect(x: 20, y: 58, width: 430, height: 60)
         note.font = .systemFont(ofSize: 12)
         note.textColor = .secondaryLabelColor
         controls.addSubview(note)
@@ -219,15 +399,24 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func changePresentation() {
-        popover.handleOutsideClick()
+        guard let selection = PreviewPresentation(rawValue: theme.indexOfSelectedItem) else { return }
+        selection.apply()
+        showPopover()
+    }
+
+    @objc private func changeHostAppearance() {
         NSApp.appearance = NSAppearance(named: appearance.selectedSegment == 0 ? .aqua : .darkAqua)
-        Settings.liquidGlassEnabled = theme.selectedSegment == 1
-        updateFixture()
+        showPopover()
     }
 
     @objc private func changeFixture() {
         previewMode = powerState.indexOfSelectedItem == 5 ? .low : .auto
-        updateFixture()
+        showPopover()
+    }
+
+    @objc private func changeBackdrop() {
+        backdrop.diagnostic = diagnosticBackdrop.state == .on
+        showPopover()
     }
 
     @objc private func showPopover() {
@@ -269,9 +458,13 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         popover.update(snapshot: sample, history: history, peak: sample.totalInputW, degraded: false)
         popover.updateSystemBatteryIconState(hiddenBatteryIcon)
         updateFixtureFooter()
+        updateNote()
+    }
+
+    private func updateNote() {
         note.stringValue = "Fixed fixture readings; system controls are simulated.\n"
-            + "Host appearance does not override production window appearance.\n"
-            + "Scroll the production popover to inspect its bottom controls."
+            + "Mode requests: \(modeRequestCount) · \(previewMode.title) (mock only).\n"
+            + "Diagnostic backdrop is not part of the shipping app."
     }
 
     private func updateFixtureFooter() {
@@ -286,5 +479,29 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
             view.subviews.forEach { update(in: $0) }
         }
         if let view = popover.contentViewForTest { update(in: view) }
+    }
+}
+
+/// Test-only contrast edges behind the production window, never inside it.
+private final class PreviewBackdrop: NSView {
+    var diagnostic = false { didSet { needsDisplay = true } }
+    override func draw(_ dirtyRect: NSRect) {
+        NSColor.windowBackgroundColor.setFill()
+        bounds.fill()
+        guard diagnostic else { return }
+        let colors: [NSColor] = [.systemBlue, .systemOrange, .systemTeal, .systemPink]
+        for (index, color) in colors.enumerated() {
+            color.withAlphaComponent(0.45).setFill()
+            NSRect(x: CGFloat(index) * bounds.width / 4, y: 0,
+                   width: bounds.width / 4, height: bounds.height).fill()
+        }
+        NSColor.white.withAlphaComponent(0.65).setStroke()
+        let lines = NSBezierPath()
+        lines.lineWidth = 1
+        for x in stride(from: -bounds.height, to: bounds.width, by: 50) {
+            lines.move(to: NSPoint(x: x, y: 0))
+            lines.line(to: NSPoint(x: x + bounds.height * 0.3, y: bounds.height))
+        }
+        lines.stroke()
     }
 }

@@ -62,5 +62,6 @@ if CommandLine.arguments.contains("--popover-preview") {
 #endif
 
 let statusItemController = StatusItemController()
+delegate.onDockReopen = { [weak statusItemController] in statusItemController?.showSettings() }
 _ = statusItemController.start()
 app.run()

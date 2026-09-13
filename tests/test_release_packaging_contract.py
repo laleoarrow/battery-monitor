@@ -1,9 +1,14 @@
+import json
 import pathlib
 import plistlib
+import re
 import stat
+import struct
 import subprocess
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
+import zlib
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -26,6 +31,8 @@ README = ROOT / "README.md"
 HANDOFF = ROOT / "HANDOFF.md"
 PROMOTE_WORKFLOW = ROOT / ".github" / "workflows" / "promote-release.yml"
 CANDIDATE_WORKFLOW = ROOT / ".github" / "workflows" / "macos-helper-install.yml"
+IN_APP_LOGOS = ("AppLogoColor.png", "AppLogoClearLight.png", "AppLogoClearDark.png")
+DOCK_LOGOS = ("AppDockLogoColor.png", "AppDockLogoClearLight.png", "AppDockLogoClearDark.png")
 
 
 class ReleasePackagingContractTests(unittest.TestCase):
@@ -58,10 +65,16 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertNotIn("support-diagnostics-v1.0.0", self.readme)
         normalized_readme = " ".join(self.readme.split())
         normalized_promote_workflow = " ".join(self.promote_workflow.split())
-        current_readme = self.readme.split(
-            "## What's new in v3.0.23", 1
-        )[1].split("## v3.0.18 measured attached-device output (historical)", 1)[0]
-        normalized_current_readme = " ".join(current_readme.split())
+        self.assertIn(
+            "[GitHub Releases](https://github.com/laleoarrow/battery-monitor/releases)",
+            self.readme,
+        )
+        self.assertIn(
+            "A newer source version does not mean an update has been published.",
+            normalized_readme,
+        )
+        self.assertNotRegex(self.readme, r"(?im)^#{1,6}\s+What's new\b")
+        self.assertNotRegex(self.readme, r"(?im)^#{1,6}\s+.*\bhistorical\b")
         current_handoff = self.handoff.split(
             "## v3.0.23 strict power observation runtime", 1
         )[1].split("## v3.0.18 measured attached-device output (historical)", 1)[0]
@@ -107,7 +120,6 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "incoherent",
         ):
             self.assertIn(candidate_topic, normalized_promote_workflow)
-            self.assertIn(candidate_topic, normalized_current_readme)
             self.assertIn(candidate_topic, normalized_current_handoff)
 
         for plugged_output_topic in (
@@ -117,7 +129,6 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "never double-counted",
             "does not claim external-meter absolute accuracy",
         ):
-            self.assertIn(plugged_output_topic, normalized_current_readme)
             self.assertIn(plugged_output_topic, normalized_current_handoff)
 
         for battery_direction_topic in (
@@ -130,7 +141,6 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "flow consistency",
             "does not claim external-meter absolute accuracy",
         ):
-            self.assertIn(battery_direction_topic, normalized_current_readme)
             self.assertIn(battery_direction_topic, normalized_current_handoff)
 
         for connector_topic in (
@@ -146,7 +156,6 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "conservation math",
             "does not accelerate firmware publication or hardware recognition",
         ):
-            self.assertIn(connector_topic, normalized_current_readme)
             self.assertIn(connector_topic, normalized_current_handoff)
 
         for technical_topic in (
@@ -186,33 +195,6 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "720×520",
         ):
             self.assertIn(current_release_topic, normalized_promote_workflow)
-
-        for user_facing_topic in (
-            "a source version alone is not a published update",
-            "dedicated Menu Bar Icon page",
-            "Wattson icon only",
-            "Wattson with percentage",
-            "macOS 26 icon only",
-            "macOS 26 with percentage",
-            "appearances vertically",
-            "one full-width option per row",
-            "seven real production-rendered states",
-            "Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC",
-            "real BatteryIcon renderer",
-            "percentage rows show matching per-state values to the left of each glyph",
-            "full-size macOS 26 Control Center battery parts from the running system",
-            "23×12 outline and 11×14 bolt",
-            "Every connected state uses the system bolt",
-            "only the battery fill is yellow",
-            "outline, cap, and bolt keep the menu-bar foreground colour",
-            "General adds Check for Updates and Check for Updates on Launch",
-            "Manual checks read GitHub Latest Release",
-            "launch checks default on, stay quiet when current or offline",
-            "never download or install automatically",
-            "packaged Wattson app icon",
-            "720×520",
-        ):
-            self.assertIn(user_facing_topic, normalized_readme)
 
         for misleading_install_claim in (
             "Every installer now converges",
@@ -378,10 +360,8 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn('--minimum-deployment-target "$MIN_MACOS_VERSION"', build)
         self.assertIn('--app-icon WattsonGlass --standalone-icon-behavior all', build)
         self.assertIn('"$ICON_BUILD_DIR/Assets.car" "$ICON_BUILD_DIR/WattsonGlass.icns"', build)
-        self.assertIn('sips -s format png "$ICON_BUILD_DIR/WattsonGlass.icns"', build)
         app_signing = build.index('--entitlements "$ROOT_DIR/BatteryPowerApp.entitlements"')
-        for resource in ("AppIconSettings.png", "AppIconGlassSettings.png"):
-            self.assertLess(build.index(resource), app_signing)
+        self.assertLess(build.index("AppIconSettings.png"), app_signing)
         self.assertLess(build.index("/usr/bin/xcrun actool"), app_signing)
         self.assertNotIn("ictool", build)
         with (ROOT / "Packaging" / "AppInfo.plist").open("rb") as handle:
@@ -389,11 +369,62 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertEqual(info["CFBundleIconFile"], "WattsonGlass")
         self.assertEqual(info["CFBundleIconName"], "WattsonGlass")
 
+    def test_native_icon_layers_match_sources_without_baked_filters(self):
+        icon = ROOT / "design" / "icon" / "WattsonGlass.icon"
+        document = json.loads((icon / "icon.json").read_text(encoding="utf-8"))
+        layers = [layer for group in document["groups"] for layer in group["layers"]]
+        names = ("03-particles.svg", "02-energy.svg", "01-track.svg")
+        self.assertEqual([layer["image-name"] for layer in layers], list(names))
+        for layer in layers:
+            self.assertFalse(layer.get("hidden", False))
+        for name in names:
+            with self.subTest(layer=name):
+                source = ROOT / "design" / "icon" / "liquid-glass" / name
+                self.assertEqual((icon / "Assets" / name).read_bytes(), source.read_bytes())
+                svg = ET.fromstring(source.read_bytes())
+                self.assertEqual([float(value) for value in svg.attrib["viewBox"].split()],
+                                 [0, 0, 1024, 1024])
+                for node in svg.iter():
+                    tag = node.tag.rsplit("}", 1)[-1]
+                    self.assertNotEqual(tag, "filter")
+                    self.assertFalse(tag.startswith("fe"), f"baked SVG effect: {tag}")
+                    self.assertNotIn("filter", node.attrib)
+                    self.assertNotIn("transform", node.attrib)
+                    self.assertNotRegex(node.get("style", ""), r"(?i)\b(?:filter|backdrop-filter)\s*:")
+
+    def test_native_icon_particles_stay_inside_the_original_energy_band(self):
+        assets = ROOT / "design" / "icon" / "WattsonGlass.icon" / "Assets"
+        namespace = {"svg": "http://www.w3.org/2000/svg"}
+        control_points = ((240, 672), (452, 672), (566, 334), (784, 334))
+        band_width = 134
+        for name in ("01-track.svg", "02-energy.svg"):
+            with self.subTest(layer=name):
+                paths = ET.parse(assets / name).findall(".//svg:path", namespace)
+                self.assertEqual(len(paths), 1)
+                path = paths[0]
+                tokens = re.findall(r"[A-Za-z]|[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?", path.attrib["d"])
+                self.assertEqual((tokens[0], tokens[3]), ("M", "C"))
+                self.assertEqual([float(value) for value in tokens[1:3] + tokens[4:]],
+                                 [value for point in control_points for value in point])
+                self.assertEqual(float(path.attrib["stroke-width"]), band_width)
+                self.assertEqual(path.attrib["stroke-linecap"], "round")
+        particles = ET.parse(assets / "03-particles.svg").findall(".//svg:circle", namespace)
+        self.assertEqual(len(particles), 4)
+        for particle, t in zip(particles, (0.17, 0.41, 0.64, 0.87)):
+            with self.subTest(t=t):
+                weights = ((1 - t) ** 3, 3 * (1 - t) ** 2 * t, 3 * (1 - t) * t ** 2, t ** 3)
+                for axis, coordinate in enumerate(("cx", "cy")):
+                    expected = sum(weight * point[axis] for weight, point in zip(weights, control_points))
+                    self.assertAlmostEqual(float(particle.attrib[coordinate]), expected, delta=1e-5)
+                radius = float(particle.attrib["r"])
+                self.assertGreater(radius, 0)
+                self.assertLess(radius, band_width / 2)
+
     def test_release_verifier_requires_classic_and_native_icon_resources(self):
         verify = self.source["verify_release.sh"]
         for resource in (
             "AppIcon.icns", "AppIconSettings.png", "Assets.car",
-            "WattsonGlass.icns", "AppIconGlassSettings.png",
+            "WattsonGlass.icns", *IN_APP_LOGOS, *DOCK_LOGOS,
         ):
             self.assertIn(resource, verify)
         self.assertIn('-f "$app_dir/Contents/Resources/$icon_resource"', verify)
@@ -402,6 +433,43 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn("for icon_key in CFBundleIconFile CFBundleIconName", verify)
         self.assertIn('Print :$icon_key', verify)
         self.assertIn('[[ "$icon_name" == "WattsonGlass" ]]', verify)
+
+    def test_in_app_logos_are_checked_in_and_copied_before_signing(self):
+        for name in IN_APP_LOGOS:
+            source = ROOT / "design" / "icon" / "in-app-logo" / name
+            with self.subTest(resource=name):
+                self.assertTrue(source.is_file())
+                self.assertFalse(source.is_symlink())
+                data = source.read_bytes()
+                self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+                self.assertEqual(struct.unpack(">II", data[16:24]), (128, 128))
+        for name in ("build_release.sh", "build_glass_preview.sh", "install.sh"):
+            build = (ROOT / "scripts" / name).read_text(encoding="utf-8")
+            with self.subTest(script=name):
+                copy_position = build.index('"$ROOT_DIR/design/icon/in-app-logo/$logo_resource"')
+                self.assertLess(copy_position, build.index("codesign "))
+                for resource in IN_APP_LOGOS:
+                    self.assertLess(build.index(resource), copy_position)
+                self.assertNotIn("ictool", build)
+
+    def test_dock_logos_are_checked_in_and_copied_before_signing(self):
+        for name in DOCK_LOGOS:
+            source = ROOT / "design" / "icon" / "dock-logo" / name
+            with self.subTest(resource=name):
+                self.assertTrue(source.is_file())
+                self.assertFalse(source.is_symlink())
+                data = source.read_bytes()
+                self.assertTrue(data)
+                self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+                self.assertEqual(struct.unpack(">II", data[16:24]), (512, 512))
+        for name in ("build_release.sh", "build_glass_preview.sh", "install.sh"):
+            build = (ROOT / "scripts" / name).read_text(encoding="utf-8")
+            with self.subTest(script=name):
+                copy_position = build.index('"$ROOT_DIR/design/icon/dock-logo/$dock_logo_resource"')
+                self.assertLess(copy_position, build.index("codesign "))
+                for resource in DOCK_LOGOS:
+                    self.assertLess(build.index(resource), copy_position)
+                self.assertNotIn("ictool", build)
 
     def test_bundle_verifier_rejects_invalid_native_icon_resources(self):
         verifier = "verify_app_bundle() {" + self.source["verify_release.sh"].split(
@@ -427,9 +495,14 @@ class ReleasePackagingContractTests(unittest.TestCase):
             info_path.write_bytes(plistlib.dumps(info))
             for name in (
                 "AppIcon.icns", "AppIconSettings.png", "Assets.car",
-                "WattsonGlass.icns", "AppIconGlassSettings.png",
+                "WattsonGlass.icns",
             ):
                 (resources / name).write_bytes(b"fixture")
+            for directory, names in (("in-app-logo", IN_APP_LOGOS), ("dock-logo", DOCK_LOGOS)):
+                for name in names:
+                    (resources / name).write_bytes(
+                        (ROOT / "design" / "icon" / directory / name).read_bytes()
+                    )
 
             def verify_bundle():
                 return subprocess.run(
@@ -438,21 +511,60 @@ class ReleasePackagingContractTests(unittest.TestCase):
                 )
 
             self.assertEqual(verify_bundle().returncode, 0)
-            for name in ("Assets.car", "WattsonGlass.icns", "AppIconGlassSettings.png"):
+            for name in ("Assets.car", "WattsonGlass.icns", *IN_APP_LOGOS, *DOCK_LOGOS):
                 resource = resources / name
+                original_data = resource.read_bytes()
                 for invalid_state in ("missing", "empty", "symlink"):
                     with self.subTest(resource=name, state=invalid_state):
                         resource.unlink()
                         if invalid_state == "empty":
                             resource.touch()
                         elif invalid_state == "symlink":
-                            resource.symlink_to("AppIcon.icns")
+                            target = pathlib.Path(temp) / "icon-symlink-target"
+                            target.write_bytes(original_data)
+                            resource.symlink_to(target)
                         result = verify_bundle()
                         self.assertNotEqual(result.returncode, 0)
                         self.assertIn(name, result.stderr)
                         if resource.exists() or resource.is_symlink():
                             resource.unlink()
-                        resource.write_bytes(b"fixture")
+                        resource.write_bytes(original_data)
+            def png_chunk(kind, data):
+                return (struct.pack(">I", len(data)) + kind + data
+                        + struct.pack(">I", zlib.crc32(kind + data)))
+
+            one_pixel_png = (
+                b"\x89PNG\r\n\x1a\n"
+                + png_chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 6, 0, 0, 0))
+                + png_chunk(b"IDAT", zlib.compress(b"\x00\x00\x00\x00\x00"))
+                + png_chunk(b"IEND", b"")
+            )
+            for name in (*IN_APP_LOGOS, *DOCK_LOGOS):
+                resource = resources / name
+                original_data = resource.read_bytes()
+                for invalid_data in (
+                    b"not an image",
+                    (ROOT / "design" / "icon" / "AppIcon.icns").read_bytes(),
+                    one_pixel_png,
+                ):
+                    with self.subTest(resource=name, invalid_image=invalid_data[:8]):
+                        resource.write_bytes(invalid_data)
+                        result = verify_bundle()
+                        self.assertNotEqual(result.returncode, 0)
+                        self.assertIn(name, result.stderr)
+                        resource.write_bytes(original_data)
+            for preview_name, dock_name in zip(IN_APP_LOGOS, DOCK_LOGOS):
+                for name, replacement in ((preview_name, dock_name), (dock_name, preview_name)):
+                    with self.subTest(resource=name, wrong_size_source=replacement):
+                        resource = resources / name
+                        original_data = resource.read_bytes()
+                        try:
+                            resource.write_bytes((resources / replacement).read_bytes())
+                            result = verify_bundle()
+                            self.assertNotEqual(result.returncode, 0)
+                            self.assertIn(name, result.stderr)
+                        finally:
+                            resource.write_bytes(original_data)
             for key in ("CFBundleIconFile", "CFBundleIconName"):
                 for invalid_value in (None, "AppIcon", "MissingIcon"):
                     with self.subTest(key=key, value=invalid_value):

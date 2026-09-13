@@ -5,10 +5,12 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "Popover" / "PopoverContentView.swift"
 SLIDER = ROOT / "Popover" / "ModeSliderView.swift"
 GLASS_MODE = ROOT / "Popover" / "NativeGlassModeControl.swift"
+INTERACTIVE_GLASS_MODE = ROOT / "Popover" / "InteractiveGlassModeControl.swift"
 STATUS = ROOT / "MenuBar" / "StatusItemController.swift"
 SYSTEM_ICON = ROOT / "Core" / "SystemBatteryIcon.swift"
 ENERGY_MODE = ROOT / "Core" / "EnergyMode.swift"
 POPOVER = ROOT / "Popover" / "PopoverController.swift"
+GLASS_PANEL = ROOT / "Popover" / "GlassPopoverPanel.swift"
 
 
 class PopoverControlsContractTests(unittest.TestCase):
@@ -17,10 +19,12 @@ class PopoverControlsContractTests(unittest.TestCase):
         cls.content = CONTENT.read_text(encoding="utf-8")
         cls.slider = SLIDER.read_text(encoding="utf-8")
         cls.glass_mode = GLASS_MODE.read_text(encoding="utf-8")
+        cls.interactive_glass_mode = INTERACTIVE_GLASS_MODE.read_text(encoding="utf-8")
         cls.status = STATUS.read_text(encoding="utf-8")
         cls.system_icon = SYSTEM_ICON.read_text(encoding="utf-8")
         cls.energy_mode = ENERGY_MODE.read_text(encoding="utf-8")
         cls.popover = POPOVER.read_text(encoding="utf-8")
+        cls.glass_panel = GLASS_PANEL.read_text(encoding="utf-8")
 
     def test_mode_picker_is_a_draggable_glass_knob(self):
         # macOS 26 batches a regular track and a clear moving optical lens in
@@ -138,12 +142,75 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("let useNativeControl = reduceMotion && !useGlassControl", refresh)
         self.assertIn("isDescendant(of: previousControl)", refresh)
         self.assertIn("glassModeControl?.keyboardFocusView", refresh)
-        for capture in ("let transferFocus =", "let restoreMenuFocus ="):
+        for capture in ("let transferFocus =", "var restoreMenuFocus ="):
             self.assertLess(refresh.index(capture),
                             refresh.index("glassControlsContent.addSubview(settingsButton)"))
         self.assertIn("if transferFocus, previousControl !== nextControl {", refresh)
         self.assertIn("window?.makeFirstResponder(focusView)", refresh)
-        self.assertIn("if restoreMenuFocus { window?.makeFirstResponder(settingsButton) }", refresh)
+        self.assertIn("if restoreMenuFocus {", refresh)
+        self.assertIn("requestMenuFocus()", refresh)
+        self.assertIn("window?.makeFirstResponder(settingsButton)", refresh)
+
+    def test_a2_uses_the_accepted_public_interactive_glass_with_one_label_copy(self):
+        source = self.interactive_glass_mode
+        self.assertIn("NSHostingView<InteractiveGlassModeView>", source)
+        self.assertIn("GlassEffectContainer(spacing: 0)", source)
+        self.assertIn(".glassEffect(.clear.interactive(), in: InteractiveModeCapsule", source)
+        self.assertIn(".glassEffect(.clear.interactive(), in: Circle())", source)
+        self.assertEqual(source.count("Text(model.modes[index].title)"), 1)
+        self.assertIn(".contentShape(.focusEffect, Capsule())", source)
+        self.assertIn(".contentShape(.focusEffect, Circle())", source)
+        for forbidden in ("LinearGradient", "CAGradientLayer", "backdropFilters", "setValue(",
+                          "cacheDisplay", "bitmapImageRepForCachingDisplay", "focusEffectDisabled"):
+            self.assertNotIn(forbidden, source)
+
+    def test_a2_transient_pointer_state_is_separate_from_owner_selection(self):
+        source = self.interactive_glass_mode
+        self.assertIn("@GestureState private var pointer: Pointer?", source)
+        self.assertIn("DragGesture(minimumDistance: 4", source)
+        self.assertIn(".updating($pointer)", source)
+        self.assertIn("model.remember(state.drag)", source)
+        self.assertRegex(source, r"\.onEnded \{ value in\s+_ = model\.finishDrag\(translationX:")
+        self.assertIn("drag.generation == generation", source)
+        self.assertIn("labelRect($0).contains(start) && enabledModes.contains(modes[$0])", source)
+        self.assertIn("allowed: pressedIndex == selectedIndex", source)
+        self.assertIn("translationX.isFinite", source)
+        self.assertIn("lastDrag = nil", source)
+        self.assertIn("modes.indices.filter { enabledModes.contains(modes[$0]) }", source)
+        self.assertNotIn("@State private var selectedIndex", source)
+        request = source.split("func request(_ index: Int)", 1)[1].split("func move(", 1)[0]
+        self.assertIn("enabledModes.contains(modes[index])", request)
+        self.assertIn("guard index != selectedIndex else { return true }", request)
+        self.assertIn("onSelect(modes[index])", request)
+        self.assertNotRegex(request, r"\bselectedIndex\s*=(?!=)")
+
+    def test_a2_lifecycle_cancels_and_keeps_native_keyboard_accessibility(self):
+        source = self.interactive_glass_mode
+        for lifecycle in ("NSApplication.didResignActiveNotification", "NSWindow.didResignKeyNotification",
+                          "override func viewDidHide()", "override func viewWillMove(toWindow",
+                          "override func cancelOperation", ".onDisappear { model.cancel() }"):
+            self.assertIn(lifecycle, source)
+        self.assertIn("NotificationCenter.default.removeObserver(self)", source)
+        self.assertIn(".disabled(!model.enabledModes.contains(model.modes[index]))", source)
+        self.assertIn('.accessibilityLabel("Power Mode")', source)
+        self.assertIn('.accessibilityLabel("Choose Modules")', source)
+        self.assertIn('.accessibilityValue(index == model.selectedIndex ? "Selected" : "Not selected")', source)
+        self.assertIn(".accessibilityAddTraits(index == model.selectedIndex ? .isSelected : [])", source)
+        self.assertIn(".onMoveCommand", source)
+        self.assertIn(".onKeyPress(.return)", source)
+        self.assertIn(".onExitCommand", source)
+        self.assertIn(".contains(convert(point, from: superview)) else { return nil }", source)
+
+    def test_a2_optical_padding_does_not_change_the_classic_footer_geometry(self):
+        footer = self.content.split("final class PopoverFooterView", 1)[1].split(
+            "\nprivate final class PopoverSurfaceView", 1
+        )[0]
+        self.assertIn("interactiveGlassControl?.frame = NSRect(x: -12, y: 24, width: bounds.width + 24, height: 62)", footer)
+        self.assertIn("static let opticalInset: CGFloat = 12", self.interactive_glass_mode)
+        self.assertIn("bounds.insetBy(dx: Self.opticalInset, dy: Self.opticalInset)", self.interactive_glass_mode)
+        self.assertIn("static let preferredHeight: CGFloat = 78", footer)
+        self.assertIn("modeControl.frame = modeFrame", footer)
+        self.assertIn("nativeModeControl.frame = modeFrame", footer)
 
     def test_footer_glass_operations_use_one_container_and_native_button_surfaces(self):
         footer = self.content.split("final class PopoverFooterView", 1)[1].split(
@@ -219,6 +286,93 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("addGlobalMonitorForEvents", self.popover)
         self.assertIn("removeMonitor", self.popover)
         self.assertIn("performClose", self.popover)
+
+    def test_glass_background_is_a_replacement_public_host_not_a_nested_popover(self):
+        self.assertIn("final class GlassPopoverPanel: NSPanel", self.glass_panel)
+        self.assertIn("[.borderless, .nonactivatingPanel]", self.glass_panel)
+        self.assertIn("isOpaque = false", self.glass_panel)
+        self.assertIn("backgroundColor = .clear", self.glass_panel)
+        self.assertIn("override var canBecomeKey: Bool { true }", self.glass_panel)
+        self.assertIn("override var canBecomeMain: Bool { false }", self.glass_panel)
+        self.assertEqual(self.glass_panel.count("NSGlassEffectView(frame:"), 1)
+        self.assertIn("glass.style = style", self.glass_panel)
+        self.assertIn("glass.contentView = content", self.glass_panel)
+        self.assertIn("contentView!.addSubview(glass)", self.glass_panel)
+        self.assertIn("style: Settings.liquidGlassStyle == .clear ? .clear : .regular", self.popover)
+        self.assertIn("popover.show(relativeTo:", self.popover)
+        self.assertIn("usingGlassPanel ? glassPanel?.isVisible == true : popover.isShown", self.popover)
+        for forbidden in ("NSVisualEffectView", "CAGradientLayer", "backdropFilters", "setValue(",
+                          "activate(ignoringOtherApps", "activate(options:"):
+            self.assertNotIn(forbidden, self.glass_panel)
+
+    def test_glass_local_click_routing_preserves_anchor_toggle_and_native_menus(self):
+        route = self.popover.split("private func shouldDismissLocalClick(window:", 1)[1].split(
+            "\n    private func handleEscape", 1
+        )[0]
+        self.assertIn("guard usingGlassPanel, wantsOpen else { return false }", route)
+        self.assertIn("window === glassPanel { return false }", route)
+        self.assertIn("frame.contains(screenPoint) { return false }", route)
+        self.assertIn("!trackingMenus.isEmpty", route)
+        self.assertIn("window == nil || window!.level >= .popUpMenu", route)
+        watcher = self.popover.split("private func startWatchingForOutsideClicks()", 1)[1].split(
+            "\n    private func shouldDismissLocalClick", 1
+        )[0]
+        self.assertIn("NSEvent.addLocalMonitorForEvents", watcher)
+        self.assertIn("shouldDismissLocalClick(window: event.window, screenPoint: point) { self.close() }", watcher)
+        self.assertIn("NSMenu.didBeginTrackingNotification", watcher)
+        self.assertIn("NSMenu.didEndTrackingNotification", watcher)
+        self.assertIn("guard usingGlassPanel else { return }", watcher)
+
+    def test_escape_first_belongs_to_menu_then_drag_then_panel(self):
+        escape = self.popover.split("private func handleEscape()", 1)[1].split("\n    ///", 1)[0]
+        self.assertIn("guard trackingMenus.isEmpty else { return false }", escape)
+        self.assertIn("if !content.cancelActiveModeDrag() { close() }", escape)
+        key_route = self.popover.split("if event.type == .keyDown {", 1)[1].split("} else {", 1)[0]
+        self.assertIn("event.keyCode == 53", key_route)
+        self.assertIn("self.glassPanel?.ownsEscapeEvent(eventWindow: event.window, keyWindow: NSApp.keyWindow) == true", key_route)
+        self.assertIn("self.handleEscape() { return nil }", key_route)
+        self.assertLess(key_route.index("ownsEscapeEvent"), key_route.index("self.handleEscape()"))
+        self.assertIn("override func cancelOperation(_ sender: Any?) { onEscape?() }", self.glass_panel)
+        self.assertIn("func cancelActiveModeDrag() -> Bool { footer.cancelActiveModeDrag() }", self.content)
+
+    def test_glass_close_and_deinit_release_all_scoped_event_observers(self):
+        cleanup = self.popover.split("private func stopWatchingForOutsideClicks()", 1)[1].split(
+            "\n}\n", 1
+        )[0]
+        for source in ("outsideClickMonitor = nil", "localEventMonitor = nil",
+                       "localObservers.forEach(NotificationCenter.default.removeObserver)",
+                       "localObservers.removeAll()", "workspaceObservers.removeAll()",
+                       "workspaceObservers.forEach(NSWorkspace.shared.notificationCenter.removeObserver)",
+                       "observedAnchor?.postsFrameChangedNotifications = anchorPostedFrameChanges",
+                       "trackingMenus.removeAll()", "$0.cancelTracking()"):
+            self.assertIn(source, cleanup)
+        close = self.popover.split("private func close()", 1)[1].split(
+            "\n    private func closeBeforePresentingSettings", 1
+        )[0]
+        self.assertLess(close.index("stopWatchingForOutsideClicks()"), close.index("panel.orderOut(nil)"))
+        self.assertIn("panel.onDismiss = nil", close)
+        self.assertIn("panel.onEscape = nil", close)
+        self.assertIn("panel.detachContent()", close)
+        deinit = self.popover.split("deinit {", 1)[1].split(
+            "\n    private func refreshLiquidGlassAppearance", 1
+        )[0]
+        self.assertIn("stopWatchingForOutsideClicks()", deinit)
+        self.assertIn("glassPanel?.orderOut(nil)", deinit)
+
+    def test_retiring_classic_host_resets_only_its_own_lifecycle_and_rejects_late_closes(self):
+        retirement = self.popover.split("private func retireClassicHost()", 1)[1].split(
+            "\n    private func resolvePlacement", 1
+        )[0]
+        self.assertLess(retirement.index("popover.delegate = nil"), retirement.index("popover.close()"))
+        self.assertIn("popover.contentViewController = nil", retirement)
+        self.assertIn("popover = NSPopover()", retirement)
+        self.assertIn("showsRequested = 0", retirement)
+        self.assertIn("closesObserved = 0", retirement)
+        did_close = self.popover.split("func popoverDidClose", 1)[1].split("\n    ///", 1)[0]
+        self.assertIn("closingPopover === popover else { return }", did_close)
+        self.assertLess(did_close.index("closingPopover === popover"), did_close.index("closesObserved += 1"))
+        self.assertIn("guard !usingGlassPanel else { return }", did_close)
+        self.assertIn("guard closesObserved >= showsRequested else { return }", did_close)
 
     def test_knob_shadow_has_an_explicit_path(self):
         # Without one, Core Animation derives the shadow from the layer's alpha

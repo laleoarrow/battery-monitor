@@ -97,7 +97,8 @@ private final class PopoverButton: NSButton {
 /// Three-position mode control and system-battery visibility choice.
 ///
 /// The tactile 2A slider remains the baseline presentation. Classic Reduce
-/// Motion uses native segments; Liquid Glass uses native glass buttons.
+/// Motion uses native segments; Liquid Glass prefers an interactive capsule,
+/// with native glass buttons when accessibility requires a still surface.
 final class PopoverFooterView: PopoverSection {
     static let preferredHeight: CGFloat = 78
 
@@ -126,6 +127,17 @@ final class PopoverFooterView: PopoverSection {
         return NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
     }
 
+    private static var systemReducesTransparency: Bool {
+#if DEBUG
+        switch ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] {
+        case "1": return true
+        case "0": return false
+        default: break
+        }
+#endif
+        return NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency
+    }
+
     private let modes: [EnergyMode] = [.auto, .low, .high]
     private lazy var modeControl = ModeSliderView(modes: modes)
     private lazy var nativeModeControl = NativeModeSegmentedControl(modes: modes)
@@ -138,6 +150,8 @@ final class PopoverFooterView: PopoverSection {
     private let settingsButton = PopoverButton()
     private var glassControls: NSView?
     private var glassModeControl: NativeGlassModeControl?
+    private var interactiveGlassControl: NSView?
+    private var usesInteractiveGlass = false
     private let glassControlsContent = NSView()
 
     private var selected: EnergyMode = .auto
@@ -154,7 +168,7 @@ final class PopoverFooterView: PopoverSection {
     private var settingsObserver: NSObjectProtocol?
     var onSelect: ((EnergyMode, @escaping (EnergyMode?) -> Void) -> Void)?
     var onSystemBatteryIconToggle: ((Bool, @escaping (Bool) -> Void) -> Void)?
-    var onShowMenu: ((NSButton) -> Void)?
+    var onShowMenu: ((NSView) -> Void)?
 
     init() {
         super.init(height: Self.preferredHeight)
@@ -237,6 +251,8 @@ final class PopoverFooterView: PopoverSection {
             glassControlsContent.frame = glassControls?.bounds ?? .zero
             glassModeControl?.frame = NSRect(x: 0, y: 0, width: modeFrame.width, height: 38)
             settingsButton.frame = NSRect(x: bounds.width - 38, y: 0, width: 38, height: 38)
+            // Optical room is transparent and does not intercept the checkbox.
+            interactiveGlassControl?.frame = NSRect(x: -12, y: 24, width: bounds.width + 24, height: 62)
         } else {
             settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
         }
@@ -347,6 +363,10 @@ final class PopoverFooterView: PopoverSection {
         nativeModeControl.update(selected: displayedMode, enabledModes: enabledModes)
         glassModeControl?.update(selected: displayedMode,
                                  enabledModes: pendingMode == nil ? enabledModes : [])
+        if #available(macOS 26.0, *) {
+            (interactiveGlassControl as? InteractiveGlassModeControl)?.update(
+                selected: displayedMode, enabledModes: pendingMode == nil ? enabledModes : [])
+        }
         synchronizedModePresentation = ModeControlPresentation(
             selected: displayedMode,
             enabledModes: enabledModes,
@@ -360,12 +380,20 @@ final class PopoverFooterView: PopoverSection {
     }
 
     private func refreshDisplayOptions(reduceMotion: Bool) {
-        let previousControl: NSView = glassControls?.isHidden == false
+        let previousControl: NSView = usesInteractiveGlass ? (interactiveGlassControl ?? modeControl)
+            : glassControls?.isHidden == false
             ? (glassModeControl ?? modeControl)
             : (usesNativeModeControl ? nativeModeControl : modeControl)
         let transferFocus = window?.firstResponder === previousControl
             || (window?.firstResponder as? NSView)?.isDescendant(of: previousControl) == true
-        let restoreMenuFocus = window?.firstResponder === settingsButton
+        var restoreMenuFocus = window?.firstResponder === settingsButton
+        if #available(macOS 26.0, *) {
+            restoreMenuFocus = restoreMenuFocus
+                || (interactiveGlassControl as? InteractiveGlassModeControl)?.hasMenuFocus == true
+        }
+        cancelInteraction()
+        let useInteractive = Settings.usesLiquidGlass && !reduceMotion
+            && !Self.systemReducesTransparency && !PopoverStyle.isHighContrast(effectiveAppearance)
         if #available(macOS 26.0, *), Settings.usesLiquidGlass {
             if glassControls == nil {
                 let container = NSGlassEffectContainerView(frame: .zero)
@@ -384,7 +412,16 @@ final class PopoverFooterView: PopoverSection {
             if settingsButton.superview !== glassControlsContent {
                 glassControlsContent.addSubview(settingsButton)
             }
-            glassControls?.isHidden = false
+            if useInteractive, interactiveGlassControl == nil {
+                let control = InteractiveGlassModeControl(modes: modes)
+                control.onSelect = { [weak self] mode in self?.requestModeSelection(mode) }
+                control.onShowMenu = { [weak self] anchor in self?.onShowMenu?(anchor) }
+                control.update(selected: pendingMode ?? selected,
+                               enabledModes: pendingMode == nil ? enabledModes : [])
+                addSubview(control)
+                interactiveGlassControl = control
+            }
+            glassControls?.isHidden = useInteractive
             settingsButton.bezelStyle = .glass
             settingsButton.borderShape = .circle
             settingsButton.isBordered = true
@@ -401,21 +438,44 @@ final class PopoverFooterView: PopoverSection {
             settingsButton.isBordered = false
             settingsButton.contentTintColor = PopoverStyle.secondaryText
         }
+        interactiveGlassControl?.isHidden = !useInteractive
+        usesInteractiveGlass = useInteractive
         needsLayout = true
 
         let useGlassControl = Settings.usesLiquidGlass
         let useNativeControl = reduceMotion && !useGlassControl
-        let nextControl: NSView = useGlassControl
+        let nextControl: NSView = useInteractive ? (interactiveGlassControl ?? modeControl)
+            : useGlassControl
             ? (glassModeControl ?? modeControl)
             : (useNativeControl ? nativeModeControl : modeControl)
         usesNativeModeControl = useNativeControl
         modeControl.isHidden = useNativeControl || useGlassControl
         nativeModeControl.isHidden = !useNativeControl
         if transferFocus, previousControl !== nextControl {
-            let focusView = useGlassControl ? (glassModeControl?.keyboardFocusView ?? nextControl) : nextControl
+            let focusView = useInteractive ? nextControl
+                : useGlassControl ? (glassModeControl?.keyboardFocusView ?? nextControl) : nextControl
             window?.makeFirstResponder(focusView)
         }
-        if restoreMenuFocus { window?.makeFirstResponder(settingsButton) }
+        if restoreMenuFocus {
+            if #available(macOS 26.0, *), useInteractive {
+                (interactiveGlassControl as? InteractiveGlassModeControl)?.requestMenuFocus()
+            } else {
+                window?.makeFirstResponder(settingsButton)
+            }
+        }
+    }
+
+    func cancelInteraction() {
+        if #available(macOS 26.0, *) {
+            (interactiveGlassControl as? InteractiveGlassModeControl)?.cancelInteraction()
+        }
+    }
+
+    func cancelActiveModeDrag() -> Bool {
+        if #available(macOS 26.0, *) {
+            return (interactiveGlassControl as? InteractiveGlassModeControl)?.cancelDragIfActive() ?? false
+        }
+        return false
     }
 
     @objc private func systemBatteryIconChanged(_ sender: NSButton) {
@@ -661,7 +721,10 @@ final class PopoverContentViewController: NSViewController {
 
     func setPresentationActive(_ active: Bool) {
         presentationActive = active
+        if !active { footer.cancelInteraction() }
     }
+
+    func cancelActiveModeDrag() -> Bool { footer.cancelActiveModeDrag() }
 
     private func removeAnimationsRecursively(from layer: CALayer) {
         layer.removeAllAnimations()
@@ -777,7 +840,7 @@ final class PopoverContentViewController: NSViewController {
         heightDidChange?(preferredHeight)
     }
 
-    private func showModuleMenu(_ sender: NSButton) {
+    private func showModuleMenu(_ sender: NSView) {
         let menu = NSMenu(title: "Modules")
         for module in PopoverModule.allCases {
             let item = NSMenuItem(title: module.title, action: #selector(toggleModule(_:)), keyEquivalent: "")

@@ -62,17 +62,33 @@ Homebrew/Pages gates.
 - macOS 26 uses native Liquid Glass; macOS 12–25 use the AppKit fallback.
 
 The 4.1.0 development source offers an opt-in **Liquid Glass** presentation in
-the Settings sidebar on macOS 26 and later. It defaults off to retain the
-4.0.0 presentation. The switch changes Settings materials/controls and the
+the Settings sidebar on macOS 26 and later. It defaults off to retain Classic
+styling. The switch changes Settings materials/controls and the
 popover's native mode chooser,
 and requests the system's Dark Aqua appearance for the whole glass popover.
 This preserves the requested near-black visual direction without placing an
 opaque black overlay over the system material. Classic popovers keep their
-existing system Light/Dark adaptation; Settings retains its dark composition
-in both modes. It does not change power computation, helper requests, or data
+existing system Light/Dark adaptation; glass Settings follows system appearance,
+while Classic Settings retains its dark composition. It does not change power computation, helper requests, or data
 instrumentation.
-Off restores the original app presentation, not an operating-system-wide
-disable of Apple's materials. Accessibility preferences remain authoritative.
+Off uses Classic styling; shared Settings content improvements apply to both
+styles. This is not an operating-system-wide disable of Apple's materials.
+Accessibility preferences remain authoritative.
+
+Settings now delegates its glass sidebar to `NSSplitViewController` and a native
+sidebar item. The native detail safe area positions the retained content;
+appearance changes reparent the existing controls and preserve keyboard focus.
+Glass mode uses a transparent NSWindow over the system behind-window material.
+Functional Settings groups use NSGlassEffectView; General's shared container
+batches its two groups inside the scroll document, not around the fixed heading
+or system sidebar. Single-group pages need no additional container. Liquid Glass
+belongs to General > Appearance, and only joins that page's keyboard loop.
+General scrolls as needed for the added logo choice or expanded recovery help;
+keyboard focus brings the logo selector into view. Modules use monochrome SF Symbols, 12-point descriptions, inset
+separators and right-aligned switches. See the
+[appearance hierarchy review](../design/settings/appearance-hierarchy/README.md)
+for actual test-VM window images and verification. This source refinement does
+not replace the canonical installed app or constitute a new release.
 
 The main popover footer now replaces the UI4 ordinary segmented
 control inside a glass surface with three mutually exclusive native `.glass`
@@ -90,7 +106,22 @@ This is not a full appearance cross-product or manual VoiceOver review. See
 [Liquid Glass review](liquid-glass.md) for outstanding acceptance work.
 
 The installed primary icon is separate from this runtime preference. The
-classic ICNS remains unchanged; `design/icon/liquid-glass/` contains the source
+4.2.0 source additionally offers an independent **In-App Logo** choice in
+General > Appearance. Color/Clear static Icon Composer renditions update the
+Settings identity only; Clear follows that window's Light/Dark appearance.
+This preference never mutates Finder/Dock icons, menu-bar symbols, or bundle
+metadata. The native source and its Mono appearance remain preserved.
+An independent **Dock Icon** choice now offers Hidden (the unchanged default),
+Color, and Clear. Saving affects only the next process launch. On that launch,
+AppDelegate selects a bundled 512px static image with the public
+`applicationIconImage` API and opts into regular activation only for a visible
+choice; Hidden retains the packaged accessory policy. Clear uses the startup
+Light/Dark appearance. The menu-bar item remains, and Dock reopen routes through
+the same guarded Settings presenter as Command-Comma. This does not modify
+Finder icons, signed bundle contents, helper privileges, or the independent
+in-app logo. It is not a native dynamic Clear-icon override or two-installer
+variant scheme.
+The classic ICNS remains unchanged; `design/icon/liquid-glass/` contains the source
 layers for the native `design/icon/WattsonGlass.icon` document. Release builds
 compile it with actool and include its layered catalog and a settings preview
 before signing. The primary-icon plist selection is separate from the runtime

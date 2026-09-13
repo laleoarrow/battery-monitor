@@ -10,6 +10,22 @@ struct PopoverPlacement {
 
     let anchorFrame: CGRect
     let contentSize: CGSize
+    let visibleFrame: CGRect
+
+    /// A glass panel has no native popover arrow. Keep its transparent optical
+    /// margin on the anchor's display, including displays left/below primary.
+    func glassPanelFrame(margin: CGFloat) -> CGRect? {
+        guard margin.isFinite, margin >= 0 else { return nil }
+        let size = CGSize(width: contentSize.width + 2 * margin,
+                          height: contentSize.height + 2 * margin)
+        let top = min(anchorFrame.minY, visibleFrame.maxY) - 4
+        guard size.width <= visibleFrame.width, size.height <= top - visibleFrame.minY else {
+            return nil
+        }
+        let x = min(max(anchorFrame.midX - size.width / 2, visibleFrame.minX),
+                    visibleFrame.maxX - size.width)
+        return CGRect(x: x, y: top - size.height, width: size.width, height: size.height)
+    }
 
     static func resolve(
         anchor: CGRect,
@@ -34,7 +50,8 @@ struct PopoverPlacement {
         return PopoverPlacement(
             anchorFrame: clippedAnchor,
             contentSize: CGSize(width: naturalSize.width,
-                                height: min(naturalSize.height, availableHeight))
+                                height: min(naturalSize.height, availableHeight)),
+            visibleFrame: visible
         )
     }
 

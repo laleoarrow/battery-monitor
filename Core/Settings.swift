@@ -10,6 +10,41 @@ enum Settings {
         case native
     }
 
+    enum LiquidGlassStyle: String, CaseIterable {
+        case regular
+        case clear
+    }
+
+    /// Branding inside Wattson only, independent of the system and menu-bar icons.
+    enum InAppLogoStyle: String, CaseIterable {
+        case color
+        case clear
+    }
+
+    /// Applied at launch only. Hidden preserves the menu-bar-only default;
+    /// visible choices use static Dock artwork, never the Finder bundle icon.
+    enum DockIconStyle: String, CaseIterable {
+        case hidden
+        case color
+        case clear
+
+        var title: String {
+            switch self {
+            case .hidden: return "Hidden"
+            case .color: return "Color"
+            case .clear: return "Clear"
+            }
+        }
+
+        func imageResourceName(isDark: Bool) -> String? {
+            switch self {
+            case .hidden: return nil
+            case .color: return "AppDockLogoColor"
+            case .clear: return isDark ? "AppDockLogoClearDark" : "AppDockLogoClearLight"
+            }
+        }
+    }
+
     enum Module: String, CaseIterable {
         case flow, ring, lanes, history
 
@@ -30,6 +65,8 @@ enum Settings {
         case menuBarIconStyle
         case checkForUpdatesOnLaunch
         case liquidGlassAppearance
+        case inAppLogoStyle
+        case dockIconStyle
         case module(Module)
     }
 
@@ -40,6 +77,9 @@ enum Settings {
     private static let iconStyleKey = "menubar.iconStyle"
     private static let checkForUpdatesOnLaunchKey = "updates.checkOnLaunch"
     private static let liquidGlassKey = "appearance.liquidGlassEnabled"
+    private static let liquidGlassStyleKey = "appearance.liquidGlassStyle"
+    private static let inAppLogoStyleKey = "appearance.inAppLogoStyle"
+    private static let dockIconStyleKey = "appearance.dockIconStyle"
 #if DEBUG
     private static var testDefaults: UserDefaults?
 #endif
@@ -99,6 +139,46 @@ enum Settings {
             guard liquidGlassEnabled != newValue else { return }
             defaults.set(newValue, forKey: liquidGlassKey)
             postChange(.liquidGlassAppearance)
+        }
+    }
+
+    /// The popup background choice survives turning glass off or using an
+    /// older macOS version. Unknown values retain the more legible default.
+    static var liquidGlassStyle: LiquidGlassStyle {
+        get {
+            guard let value = defaults.string(forKey: liquidGlassStyleKey) else {
+                return .regular
+            }
+            return LiquidGlassStyle(rawValue: value) ?? .regular
+        }
+        set {
+            guard liquidGlassStyle != newValue else { return }
+            defaults.set(newValue.rawValue, forKey: liquidGlassStyleKey)
+            postChange(.liquidGlassAppearance)
+        }
+    }
+
+    static var inAppLogoStyle: InAppLogoStyle {
+        get {
+            guard let value = defaults.string(forKey: inAppLogoStyleKey) else { return .color }
+            return InAppLogoStyle(rawValue: value) ?? .color
+        }
+        set {
+            guard inAppLogoStyle != newValue else { return }
+            defaults.set(newValue.rawValue, forKey: inAppLogoStyleKey)
+            postChange(.inAppLogoStyle)
+        }
+    }
+
+    static var dockIconStyle: DockIconStyle {
+        get {
+            guard let value = defaults.string(forKey: dockIconStyleKey) else { return .hidden }
+            return DockIconStyle(rawValue: value) ?? .hidden
+        }
+        set {
+            guard dockIconStyle != newValue else { return }
+            defaults.set(newValue.rawValue, forKey: dockIconStyleKey)
+            postChange(.dockIconStyle)
         }
     }
 

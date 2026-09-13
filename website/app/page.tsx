@@ -244,15 +244,9 @@ export default function Home() {
               <p>
                 Follow energy from adapter to battery to system load. Charging,
                 full, on-battery, and mixed-power states each get a distinct read.
-                The approved A1 power-flow icon direction is now slightly smaller
-                and lighter:
-                Adapter, System, and Battery use 21-point Regular symbols and
-                1.6-point custom outlines inside the existing 36-point wells.
-                Their real visible extents target 19.25–21.5 points and measure
-                20–21.25 points across the production states. The diagonal
-                adapter plug, simplified matching System chip, green bracketed
-                charging battery with its central lightning mark, and semantic
-                source and load colours remain unchanged.
+                The diagonal adapter plug, simplified matching System chip, and
+                green bracketed charging battery retain their distinct shapes
+                and semantic source and load colours.
               </p>
             </article>
 
@@ -265,6 +259,9 @@ export default function Home() {
               <span className="feature-number">02</span>
               <h3>Native by design</h3>
               <p>
+                Classic remains the default. On macOS 26, optional Liquid Glass
+                offers Standard Glass for a softly frosted popup or Clear Glass
+                to reveal more of the backdrop.
                 The popover follows system Light and Dark Mode, retains its
                 native material, and scrolls on short screens without shrinking
                 the instruments. Reduce Transparency, Reduce Motion, Increase
@@ -284,13 +281,16 @@ export default function Home() {
                 Control Center artwork or generic SF Symbols. Every connected
                 state uses the system bolt. In Low Power Mode, only the battery
                 fill is yellow; the outline, cap, and bolt keep the menu-bar
-                foreground colour. General adds Check for Updates and Check for
+                foreground colour. General includes Check for Updates and Check for
                 Updates on Launch. Manual checks read GitHub Latest Release and
                 open its trusted release page; launch checks default on, stay
                 quiet when current or offline, and never download or install
-                automatically. The Settings sidebar uses the real
-                packaged Wattson app icon instead of a separate ECG-style
-                drawing.
+                automatically. In-App Logo in General &gt; Appearance offers
+                Color or Clear artwork for the Settings identity, independently
+                of Liquid Glass. Both choices are static Icon Composer exports.
+                Clear uses monochrome artwork with a neutral backdrop and follows
+                the Settings window’s Light/Dark appearance. Finder, Dock, and
+                menu-bar icons stay unchanged.
               </p>
             </article>
 
@@ -306,7 +306,11 @@ export default function Home() {
               <h3>Control in one click</h3>
               <p>
                 Settings fits a compact 720×520 window, with General, Menu Bar
-                Icon, and Modules arranged for quick scanning.
+                Icon, and Modules arranged for quick scanning. In Liquid Glass
+                on macOS 26, drag the selected power-mode capsule and release to
+                request a mode change. Keyboard, disabled, and pending states
+                remain supported; accessibility preferences use simpler native
+                controls.
               </p>
             </article>
 
