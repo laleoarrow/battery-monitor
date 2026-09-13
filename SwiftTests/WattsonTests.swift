@@ -308,7 +308,12 @@ final class WattsonTests: XCTestCase {
             slider.applyReduceMotionChangeForTest(false)
             tap(slider, in: window, x: slider.detentCentreForTest(0))
             XCTAssertTrue(slider.settleIsAnimatingForTest)
-            spinMainRunLoop(0.35)
+            // Display callbacks may be coalesced on a busy hosted Mac. Wait for
+            // the resumed animation; the reduce-motion checks above stay immediate.
+            let settleDeadline = Date().addingTimeInterval(1)
+            while slider.settleIsAnimatingForTest && Date() < settleDeadline {
+                spinMainRunLoop(0.008)
+            }
             XCTAssertFalse(slider.settleIsAnimatingForTest)
             XCTAssertEqual(slider.glassViewCentreForTest,
                            slider.detentCentreForTest(0), accuracy: 0.5)
