@@ -414,7 +414,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
             require(approximately(generalList.frame.width, 503), "compact general list width")
             require(approximately(generalList.frame.height, 272), "General is exactly 4 × 68 points")
-            require((generalList as? NSBox)?.cornerRadius == 10, "compact general list radius")
+            require((generalList as? NSBox)?.cornerRadius == 14, "rounded general list radius")
             require(generalRows.allSatisfy { approximately($0.frame.height, 68) }, "four 68-point rows")
             require(
                 approximately(
@@ -1122,9 +1122,9 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(modulePreviews.count == 4, "modules has exactly four static previews")
             require(moduleCards.allSatisfy { approximately($0.frame.width, 233) }, "compact card width")
             require(moduleCards.allSatisfy { approximately($0.frame.height, 166) }, "compact card height")
-            require(moduleCards.allSatisfy { ($0 as? NSBox)?.cornerRadius == 10 }, "compact card radius")
-            require(modulePreviews.allSatisfy { approximately($0.frame.width, 64) }, "compact preview width")
-            require(modulePreviews.allSatisfy { approximately($0.frame.height, 60) }, "compact preview height")
+            require(moduleCards.allSatisfy { ($0 as? NSBox)?.cornerRadius == 14 }, "compact card radius")
+            require(modulePreviews.allSatisfy { approximately($0.frame.width, 201) }, "wide module illustration")
+            require(modulePreviews.allSatisfy { approximately($0.frame.height, 66) }, "module illustration height")
             let cardXs = Array(Set(moduleCards.map { $0.frame.minX })).sorted()
             let cardYs = Array(Set(moduleCards.map { $0.frame.minY })).sorted()
             require(cardXs.count == 2 && approximately(cardXs[1] - cardXs[0], 245), "12-point column gap")
@@ -1320,6 +1320,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(first?.appearance?.name == .darkAqua, "glass preserves the requested dark appearance")
                 require(controller.sidebarForTest.selectionHighlightStyle == .regular,
                     "glass sidebar uses system selection")
+                let nativeSplit = window.contentViewController?.children.first as? NSSplitViewController
+                require(nativeSplit?.splitViewItems.first?.behavior == .sidebar,
+                    "AppKit owns the floating glass sidebar")
+                require(nativeSplit?.splitViewItems.last?.automaticallyAdjustsSafeAreaInsets == true,
+                    "detail content respects the native sidebar safe area")
+                require(divider.isHidden, "glass navigation has no extra painted divider")
                 let switches = descendants(ofType: NSSwitch.self, in: content).filter { !$0.isHidden }
                 require(switches.count == 4, "General exposes three native switches and one global switch")
                 let nativeLogin = switches.first { $0.accessibilityLabel() == "Launch at Login" }!
@@ -1377,14 +1383,17 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "off restores exact baseline palette")
                 let root = view("settings.root", in: window)
                 for enabled in [false, true, false] {
+                    window.makeFirstResponder(glassSwitch)
                     Settings.liquidGlassEnabled = enabled
+                    require(window.firstResponder === glassSwitch,
+                        "appearance switch retains keyboard focus while moving between native and classic layouts")
                     window.appearance = NSAppearance(named: .darkAqua)
                     root.updateLayer()
                     let expected = enabled
-                        ? srgbHex(.windowBackgroundColor) : UInt32(0x151618)
+                        ? srgbHex(.clear) : UInt32(0x151618)
                     NSAppearance(named: .darkAqua)!.performAsCurrentDrawingAppearance {
                         require(srgbHex(root.layer?.backgroundColor.flatMap(NSColor.init(cgColor:)))
-                            == (enabled ? srgbHex(.windowBackgroundColor) : expected),
+                            == expected,
                             "same-appearance off/on/off resolves the correct CGColor")
                     }
                 }
@@ -1790,14 +1799,14 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("Settings.liquidGlassEnabled", source)
         self.assertIn("Settings.usesLiquidGlass", source)
         self.assertIn("let nativeSwitch = NSSwitch()", source)
-        self.assertIn("sidebarMaterial.material = .sidebar", source)
-        self.assertIn(".followsWindowActiveState", source)
+        self.assertIn("NSSplitViewItem(sidebarWithViewController: navigation)", source)
+        self.assertIn("detailItem.automaticallyAdjustsSafeAreaInsets = true", source)
         self.assertIn("enabled ? .glass : .rounded", source)
         self.assertIn('forResource: "AppIconGlassSettings"', source)
         self.assertNotIn("NSGlassEffectView", source)
         self.assertIn("static let generalListHeight: CGFloat = 272", source)
 
-    def test_glass_selected_icon_indicator_uses_contrasting_foreground_only(self):
+    def test_selected_icon_indicator_uses_semantic_accent(self):
         source = WINDOW.read_text(encoding="utf-8")
         card = source.split("private final class MenuBarIconCardButton", 1)[1].split(
             "private final class MenuBarIconSettingsSectionController", 1
@@ -1806,15 +1815,14 @@ class SettingsWindowContractTests(unittest.TestCase):
             "if window?.firstResponder === self", 1
         )[0]
         self.assertIn(
-            "let radioColor = state == .on && Settings.usesLiquidGlass\n"
-            "            ? NSColor.selectedControlTextColor : cardBorderColor",
+            "let radioColor = state == .on ? SettingsStyle.green : SettingsStyle.secondaryText",
             radio,
         )
         self.assertIn("radioColor.setStroke()", radio)
         self.assertIn("radioColor.setFill()", radio)
         self.assertIn("if state == .on {", radio)
         self.assertIn("cardBorderColor.setStroke()\n        card.lineWidth", card)
-        self.assertEqual(source.count("NSColor.selectedControlTextColor"), 1)
+        self.assertNotIn("NSColor.selectedControlTextColor", card)
 
     def test_default_sections_use_only_existing_settings(self):
         source = WINDOW.read_text(encoding="utf-8")

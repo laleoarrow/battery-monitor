@@ -108,16 +108,19 @@ private enum SettingsStyle {
     static let iconStateHeight: CGFloat = 38
     static let iconStateGap: CGFloat = 5
     static let iconStateCornerRadius: CGFloat = 7
-    static let surfaceCornerRadius: CGFloat = 10
-    static let modulePreviewSize = NSSize(width: 64, height: 60)
+    static let surfaceCornerRadius: CGFloat = 14
+    static let modulePreviewSize = NSSize(width: 201, height: 66)
 
     static let contentBackground = adaptive(0x151618, .windowBackgroundColor)
+    static let canvasBackground = adaptive(0x151618, .clear)
     static let sidebarBackground = adaptive(0x1E1F21, .clear)
-    static let surfaceBackground = adaptive(0x191A1C, .controlBackgroundColor)
-    static let tileBackground = adaptive(0x202124, .quaternaryLabelColor)
-    static let previewBackground = adaptive(0x1A1B1C, .controlBackgroundColor)
-    static let selection = adaptive(0x2B362F, .selectedContentBackgroundColor)
+    static let surfaceBackground = adaptive(0x191A1C, .quaternaryLabelColor)
+    static let tileBackground = adaptive(0x202124, .clear)
+    static let previewBackground = adaptive(0x1A1B1C, .clear)
+    static let selection = adaptive(0x2B362F, .controlAccentColor.withAlphaComponent(0.10))
     static let green = adaptive(0x68C367, .controlAccentColor)
+    static let energy = adaptive(0x68C367, .systemGreen)
+    static let surfaceBorder = adaptive(0x363838, .clear)
     static let border = adaptive(0x363838, .separatorColor)
     static let divider = adaptive(0x363838, .separatorColor)
     static let toggleOff = color(hex: 0x2E3032)
@@ -201,7 +204,7 @@ private final class SettingsAdaptiveBorderBox: NSBox, SettingsContrastRefreshing
         borderWidth = increaseContrast() ? 2 : 1
         borderColor = increaseContrast()
             ? SettingsStyle.increasedContrastBorder
-            : SettingsStyle.border
+            : SettingsStyle.surfaceBorder
         needsDisplay = true
     }
 }
@@ -485,6 +488,7 @@ private final class DynamicSeparatorView: NSView, SettingsContrastRefreshing {
     }
 }
 
+/// Small, static illustrations of each module; never start sampling or animation.
 private final class StaticModulePreviewView: NSView {
     private let module: Settings.Module
 
@@ -504,254 +508,102 @@ private final class StaticModulePreviewView: NSView {
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
-        let backdropRect = bounds.insetBy(dx: 1, dy: 1)
-        SettingsStyle.previewBackground.setFill()
-        NSBezierPath(
-            roundedRect: backdropRect,
-            xRadius: 12,
-            yRadius: 12
-        ).fill()
-
-        NSGraphicsContext.saveGraphicsState()
-        defer { NSGraphicsContext.restoreGraphicsState() }
-        let designSize = NSSize(width: 112, height: 108)
-        let transform = NSAffineTransform()
-        transform.scaleX(
-            by: bounds.width / designSize.width,
-            yBy: bounds.height / designSize.height
-        )
-        transform.concat()
-        let drawingRect = NSRect(origin: .zero, size: designSize).insetBy(dx: 14, dy: 13)
+        let rect = bounds.insetBy(dx: 8, dy: 5)
         switch module {
         case .flow:
-            drawFlow(in: drawingRect)
+            let centers = [rect.minX + 14, rect.midX, rect.maxX - 14]
+            for index in 0..<2 {
+                let path = NSBezierPath()
+                path.move(to: NSPoint(x: centers[index] + 19, y: rect.midY))
+                path.line(to: NSPoint(x: centers[index + 1] - 19, y: rect.midY))
+                stroke(path, color: SettingsStyle.energy, width: 2)
+                symbol("chevron.right", at: NSPoint(
+                    x: (centers[index] + centers[index + 1]) / 2,
+                    y: rect.midY
+                ), size: 8, color: SettingsStyle.energy)
+            }
+            for (index, name) in ["powerplug.fill", "laptopcomputer", "battery.75"].enumerated() {
+                symbol(name, at: NSPoint(x: centers[index], y: rect.midY), size: 21)
+            }
         case .ring:
-            drawRing(in: drawingRect)
+            let center = NSPoint(x: rect.midX, y: rect.midY)
+            let radius: CGFloat = 23
+            let track = NSBezierPath(ovalIn: NSRect(
+                x: center.x - radius, y: center.y - radius,
+                width: radius * 2, height: radius * 2
+            ))
+            stroke(track, color: .quaternaryLabelColor, width: 5)
+            let arc = NSBezierPath()
+            arc.appendArc(withCenter: center, radius: radius,
+                          startAngle: 90, endAngle: -175, clockwise: true)
+            stroke(arc, color: SettingsStyle.energy, width: 5)
+            symbol("bolt.fill", at: center, size: 18, color: SettingsStyle.energy)
         case .lanes:
-            drawLanes(in: drawingRect)
+            for (index, name) in ["powerplug.fill", "laptopcomputer", "battery.75"].enumerated() {
+                let y = rect.maxY - 7 - CGFloat(index) * 21
+                symbol(name, at: NSPoint(x: rect.minX + 10, y: y), size: 12)
+                let start = rect.minX + 32
+                let end = rect.maxX - 3
+                let track = NSBezierPath()
+                track.move(to: NSPoint(x: start, y: y))
+                track.line(to: NSPoint(x: end, y: y))
+                stroke(track, color: .quaternaryLabelColor, width: 3)
+                let fill = NSBezierPath()
+                fill.move(to: NSPoint(x: start, y: y))
+                fill.line(to: NSPoint(x: start + (end - start) * [0.82, 0.56, 0.31][index], y: y))
+                stroke(fill, color: SettingsStyle.energy.withAlphaComponent(
+                    [1.0, 0.75, 0.5][index]
+                ), width: 3)
+            }
         case .history:
-            drawHistory(in: drawingRect)
-        }
-    }
-
-    private func drawFlow(in rect: NSRect) {
-        let left = NSRect(x: rect.minX, y: rect.midY + 8, width: 28, height: 18)
-        let right = NSRect(x: rect.maxX - 10, y: rect.minY + 4, width: 22, height: 22)
-        NSColor.tertiaryLabelColor.setStroke()
-        let leftBox = NSBezierPath(roundedRect: left, xRadius: 2, yRadius: 2)
-        leftBox.lineWidth = 2
-        leftBox.stroke()
-        let batteryCap = NSBezierPath()
-        batteryCap.move(to: NSPoint(x: left.maxX + 1, y: left.midY - 4))
-        batteryCap.line(to: NSPoint(x: left.maxX + 1, y: left.midY + 4))
-        batteryCap.lineWidth = 2
-        batteryCap.stroke()
-        let rightCircle = NSBezierPath(ovalIn: right)
-        rightCircle.lineWidth = 2
-        rightCircle.stroke()
-
-        let returnPath = NSBezierPath()
-        returnPath.move(to: NSPoint(x: left.maxX + 4, y: left.maxY - 2))
-        returnPath.line(to: NSPoint(x: right.midX - 4, y: left.maxY - 2))
-        returnPath.curve(
-            to: NSPoint(x: right.midX, y: right.midY + 3),
-            controlPoint1: NSPoint(x: right.midX, y: left.maxY - 2),
-            controlPoint2: NSPoint(x: right.midX, y: right.midY + 8)
-        )
-        var returnDash: [CGFloat] = [4, 5]
-        returnPath.setLineDash(&returnDash, count: returnDash.count, phase: 0)
-        returnPath.lineWidth = 2
-        returnPath.stroke()
-
-        let path = NSBezierPath()
-        path.move(to: NSPoint(x: left.maxX, y: left.midY))
-        path.curve(
-            to: NSPoint(x: right.minX, y: right.midY),
-            controlPoint1: NSPoint(x: rect.midX - 2, y: left.midY),
-            controlPoint2: NSPoint(x: rect.midX - 1, y: right.midY)
-        )
-        SettingsStyle.green.setStroke()
-        path.lineWidth = 3
-        path.lineCapStyle = .round
-        path.stroke()
-    }
-
-    private func drawRing(in rect: NSRect) {
-        let side = min(rect.width, rect.height)
-        let ringRect = NSRect(
-            x: rect.midX - 10 - side / 2,
-            y: rect.midY - side / 2,
-            width: side,
-            height: side
-        ).insetBy(dx: 1, dy: 1)
-        NSColor.tertiaryLabelColor.withAlphaComponent(0.45).setStroke()
-        let base = NSBezierPath(ovalIn: ringRect)
-        base.lineWidth = 7
-        base.stroke()
-
-        let arc = NSBezierPath()
-        arc.appendArc(
-            withCenter: NSPoint(x: ringRect.midX, y: ringRect.midY),
-            radius: ringRect.width / 2,
-            startAngle: -135,
-            endAngle: 75
-        )
-        SettingsStyle.green.setStroke()
-        arc.lineWidth = 7
-        arc.lineCapStyle = .round
-        arc.stroke()
-
-        let bolt = NSBezierPath()
-        let boltCenterX = rect.midX - 10
-        bolt.move(to: NSPoint(x: boltCenterX + 2, y: rect.midY + 15))
-        bolt.line(to: NSPoint(x: boltCenterX - 8, y: rect.midY - 1))
-        bolt.line(to: NSPoint(x: boltCenterX, y: rect.midY))
-        bolt.line(to: NSPoint(x: boltCenterX - 2, y: rect.midY - 15))
-        bolt.line(to: NSPoint(x: boltCenterX + 10, y: rect.midY + 2))
-        bolt.line(to: NSPoint(x: boltCenterX + 2, y: rect.midY + 1))
-        bolt.close()
-        NSColor.secondaryLabelColor.setFill()
-        bolt.fill()
-    }
-
-    private func drawLanes(in rect: NSRect) {
-        let iconX = rect.minX - 4
-        let startX = rect.minX + 29
-        let endX = rect.maxX + 11
-        let verticalOffsets: [CGFloat] = [0, 34, 69]
-        let dotOffsets: [CGFloat] = [25, 25, 18]
-        for index in 0..<3 {
-            let y = rect.maxY - 11 - verticalOffsets[index]
-            let lane = NSBezierPath()
-            lane.move(to: NSPoint(x: startX, y: y))
-            lane.line(to: NSPoint(x: endX, y: y))
-            NSColor.tertiaryLabelColor.setStroke()
-            lane.lineWidth = 2
-            var dash: [CGFloat] = [11, 3, 3, 3]
-            lane.setLineDash(&dash, count: dash.count, phase: 0)
-            lane.stroke()
-            SettingsStyle.green.setFill()
-            NSBezierPath(
-                ovalIn: NSRect(
-                    x: rect.midX + dotOffsets[index] - 6,
-                    y: y - 6,
-                    width: 12,
-                    height: 12
-                )
-            ).fill()
-
-            NSColor.secondaryLabelColor.setStroke()
-            switch index {
-            case 0:
-                let bolt = NSBezierPath()
-                bolt.move(to: NSPoint(x: iconX + 10, y: y + 9))
-                bolt.line(to: NSPoint(x: iconX + 4, y: y))
-                bolt.line(to: NSPoint(x: iconX + 10, y: y + 1))
-                bolt.line(to: NSPoint(x: iconX + 7, y: y - 9))
-                bolt.lineWidth = 2
-                bolt.lineJoinStyle = .round
-                bolt.stroke()
-            case 1:
-                let screen = NSBezierPath(
-                    roundedRect: NSRect(x: iconX, y: y - 7, width: 18, height: 13),
-                    xRadius: 1.5,
-                    yRadius: 1.5
-                )
-                screen.lineWidth = 1.5
-                screen.stroke()
-                let stand = NSBezierPath()
-                stand.move(to: NSPoint(x: iconX + 7, y: y - 8))
-                stand.line(to: NSPoint(x: iconX + 6, y: y - 11))
-                stand.line(to: NSPoint(x: iconX + 12, y: y - 11))
-                stand.line(to: NSPoint(x: iconX + 11, y: y - 8))
-                stand.lineWidth = 1.5
-                stand.stroke()
-            default:
-                let ring = NSBezierPath(
-                    ovalIn: NSRect(x: iconX, y: y - 9, width: 18, height: 18)
-                )
-                var ringDash: [CGFloat] = [3, 3]
-                ring.setLineDash(&ringDash, count: ringDash.count, phase: 0)
-                ring.lineWidth = 2
-                ring.stroke()
+            let chart = rect.insetBy(dx: 3, dy: 6)
+            for fraction: CGFloat in [0, 0.5, 1] {
+                let guide = NSBezierPath()
+                let y = chart.minY + chart.height * fraction
+                guide.move(to: NSPoint(x: chart.minX, y: y))
+                guide.line(to: NSPoint(x: chart.maxX, y: y))
+                stroke(guide, color: .quaternaryLabelColor, width: 0.5)
+            }
+            let values: [CGFloat] = [0.2, 0.28, 0.65, 0.53, 0.58, 0.38, 0.45, 0.8, 0.7, 0.76, 0.63]
+            let points = values.enumerated().map { index, value in
+                NSPoint(x: chart.minX + chart.width * CGFloat(index) / CGFloat(values.count - 1),
+                        y: chart.minY + chart.height * value)
+            }
+            let curve = NSBezierPath()
+            curve.move(to: points[0])
+            for index in 1..<points.count {
+                let previous = points[index - 1]
+                let point = points[index]
+                let middle = (previous.x + point.x) / 2
+                curve.curve(to: point,
+                            controlPoint1: NSPoint(x: middle, y: previous.y),
+                            controlPoint2: NSPoint(x: middle, y: point.y))
+            }
+            stroke(curve, color: SettingsStyle.energy, width: 2)
+            if let last = points.last {
+                SettingsStyle.energy.setFill()
+                NSBezierPath(ovalIn: NSRect(x: last.x - 2.5, y: last.y - 2.5,
+                                            width: 5, height: 5)).fill()
             }
         }
     }
 
-    private func drawHistory(in rect: NSRect) {
-        let guideRect = rect.offsetBy(dx: -4, dy: 0)
-        NSColor.tertiaryLabelColor.withAlphaComponent(0.45).setStroke()
-        for fraction in [0, 0.5, 1] as [CGFloat] {
-            let guide = NSBezierPath()
-            guide.move(to: NSPoint(
-                x: guideRect.minX + guideRect.width * fraction,
-                y: guideRect.minY
-            ))
-            guide.line(to: NSPoint(
-                x: guideRect.minX + guideRect.width * fraction,
-                y: guideRect.maxY
-            ))
-            var dash: [CGFloat] = [3, 4]
-            guide.setLineDash(&dash, count: dash.count, phase: 0)
-            guide.stroke()
-        }
+    private func stroke(_ path: NSBezierPath, color: NSColor, width: CGFloat) {
+        color.setStroke()
+        path.lineWidth = width
+        path.lineCapStyle = .round
+        path.lineJoinStyle = .round
+        path.stroke()
+    }
 
-        let curveRect = NSRect(
-            x: rect.minX - 10,
-            y: rect.minY,
-            width: rect.width + 14,
-            height: rect.height
-        )
-        let points: [NSPoint] = [
-            NSPoint(x: curveRect.minX, y: curveRect.minY + 12),
-            NSPoint(
-                x: curveRect.minX + curveRect.width * 0.2,
-                y: curveRect.minY + curveRect.height * 0.58
-            ),
-            NSPoint(
-                x: curveRect.minX + curveRect.width * 0.4,
-                y: curveRect.minY + curveRect.height * 0.28
-            ),
-            NSPoint(
-                x: curveRect.minX + curveRect.width * 0.62,
-                y: curveRect.minY + curveRect.height * 0.52
-            ),
-            NSPoint(
-                x: curveRect.maxX,
-                y: curveRect.minY + curveRect.height * 0.44
-            ),
-        ]
-        let line = NSBezierPath()
-        line.move(to: points[0])
-        line.curve(
-            to: points[1],
-            controlPoint1: NSPoint(x: points[0].x + 5, y: points[0].y + 18),
-            controlPoint2: NSPoint(x: points[1].x - 6, y: points[1].y + 5)
-        )
-        line.curve(
-            to: points[2],
-            controlPoint1: NSPoint(x: points[1].x + 7, y: points[1].y - 2),
-            controlPoint2: NSPoint(x: points[2].x - 6, y: points[2].y - 3)
-        )
-        line.curve(
-            to: points[3],
-            controlPoint1: NSPoint(x: points[2].x + 7, y: points[2].y + 3),
-            controlPoint2: NSPoint(x: points[3].x - 7, y: points[3].y + 2)
-        )
-        line.curve(
-            to: points[4],
-            controlPoint1: NSPoint(x: points[3].x + 8, y: points[3].y - 3),
-            controlPoint2: NSPoint(x: points[4].x - 8, y: points[4].y)
-        )
-        SettingsStyle.green.setStroke()
-        line.lineWidth = 3
-        line.lineJoinStyle = .round
-        line.lineCapStyle = .round
-        line.stroke()
-        SettingsStyle.green.setFill()
-        NSBezierPath(
-            ovalIn: NSRect(x: points.last!.x - 4, y: points.last!.y - 4, width: 8, height: 8)
-        ).fill()
+    private func symbol(_ name: String, at center: NSPoint, size: CGFloat,
+                        color: NSColor = .labelColor) {
+        guard let symbol = NSImage(systemSymbolName: name, accessibilityDescription: nil)?
+            .withSymbolConfiguration(.init(pointSize: size, weight: .medium))?
+            .withSymbolConfiguration(.init(paletteColors: [color])) else { return }
+        symbol.draw(in: NSRect(x: center.x - symbol.size.width / 2,
+                               y: center.y - symbol.size.height / 2,
+                               width: symbol.size.width, height: symbol.size.height))
     }
 }
 
@@ -1086,7 +938,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         iconTile.titlePosition = .noTitle
         iconTile.cornerRadius = 8
         iconTile.borderWidth = 1
-        iconTile.borderColor = SettingsStyle.border
+        iconTile.borderColor = SettingsStyle.surfaceBorder
         iconTile.fillColor = SettingsStyle.tileBackground
         iconTile.translatesAutoresizingMaskIntoConstraints = false
 
@@ -1097,7 +949,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         )?.withSymbolConfiguration(
             NSImage.SymbolConfiguration(pointSize: 17, weight: .regular)
         )
-        icon.contentTintColor = .secondaryLabelColor
+        icon.contentTintColor = SettingsStyle.primaryText
         icon.imageScaling = .scaleProportionallyDown
         icon.translatesAutoresizingMaskIntoConstraints = false
         iconTile.addSubview(icon)
@@ -1147,8 +999,8 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             separator.translatesAutoresizingMaskIntoConstraints = false
             row.addSubview(separator)
             NSLayoutConstraint.activate([
-                separator.leadingAnchor.constraint(equalTo: row.leadingAnchor),
-                separator.trailingAnchor.constraint(equalTo: row.trailingAnchor),
+                separator.leadingAnchor.constraint(equalTo: text.leadingAnchor),
+                separator.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -14),
                 separator.bottomAnchor.constraint(equalTo: row.bottomAnchor),
             ])
         }
@@ -1783,7 +1635,7 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
             stateBox.borderWidth = increased ? 2 : 1
             stateBox.borderColor = increased
                 ? SettingsStyle.increasedContrastBorder
-                : SettingsStyle.border
+                : SettingsStyle.surfaceBorder
             stateBox.fillColor = SettingsStyle.previewBackground
             stateBox.setAccessibilityElement(false)
             stateBox.translatesAutoresizingMaskIntoConstraints = false
@@ -1950,7 +1802,7 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
         }
         return increaseContrast()
             ? SettingsStyle.increasedContrastBorder
-            : SettingsStyle.border
+            : SettingsStyle.surfaceBorder
     }
 
     var cardBorderWidth: CGFloat {
@@ -1964,7 +1816,7 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
             $0.borderWidth = increased ? 2 : 1
             $0.borderColor = increased
                 ? SettingsStyle.increasedContrastBorder
-                : SettingsStyle.border
+                : SettingsStyle.surfaceBorder
         }
         needsDisplay = true
     }
@@ -2020,8 +1872,7 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
             height: 14
         )
         let radio = NSBezierPath(ovalIn: radioRect)
-        let radioColor = state == .on && Settings.usesLiquidGlass
-            ? NSColor.selectedControlTextColor : cardBorderColor
+        let radioColor = state == .on ? SettingsStyle.green : SettingsStyle.secondaryText
         radioColor.setStroke()
         radio.lineWidth = state == .on ? 2 : 1.5
         radio.stroke()
@@ -2235,7 +2086,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
 private final class ModuleSettingsSectionController: NSObject, SettingsSectionController {
     let identifier = "modules"
     let title = "Modules"
-    let symbolName = "puzzlepiece"
+    let symbolName = "square.grid.2x2"
     let view = NSView()
 
     private let increaseContrast: () -> Bool
@@ -2340,23 +2191,25 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         preview.translatesAutoresizingMaskIntoConstraints = false
 
         let primary = NSTextField(labelWithString: module.title)
-        primary.font = SettingsStyle.primaryFont
+        primary.font = .systemFont(ofSize: 14, weight: .semibold)
         primary.textColor = SettingsStyle.primaryText
         primary.lineBreakMode = .byTruncatingTail
         primary.translatesAutoresizingMaskIntoConstraints = false
 
-        let detail = NSTextField(labelWithString: description(for: module))
-        detail.font = SettingsStyle.detailFont
+        let detailFont = NSFont.systemFont(ofSize: 12)
+        let detail = NSTextField(wrappingLabelWithString: description(for: module))
+        detail.font = detailFont
         detail.textColor = SettingsStyle.secondaryText
         detail.lineBreakMode = .byWordWrapping
         detail.maximumNumberOfLines = 2
+        detail.preferredMaxLayoutWidth = SettingsStyle.moduleCardWidth - 32
         detail.cell?.usesSingleLineMode = false
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 3
         detail.attributedStringValue = NSAttributedString(
             string: description(for: module),
             attributes: [
-                .font: SettingsStyle.detailFont,
+                .font: detailFont,
                 .foregroundColor: SettingsStyle.secondaryText,
                 .paragraphStyle: paragraphStyle,
             ]
@@ -2381,18 +2234,18 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         card.addSubview(button)
 
         NSLayoutConstraint.activate([
-            preview.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 14),
-            preview.topAnchor.constraint(equalTo: card.topAnchor, constant: 14),
+            preview.centerXAnchor.constraint(equalTo: card.centerXAnchor),
+            preview.topAnchor.constraint(equalTo: card.topAnchor, constant: 46),
             preview.widthAnchor.constraint(equalToConstant: SettingsStyle.modulePreviewSize.width),
             preview.heightAnchor.constraint(equalToConstant: SettingsStyle.modulePreviewSize.height),
 
-            primary.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 14),
+            primary.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
             primary.trailingAnchor.constraint(lessThanOrEqualTo: button.leadingAnchor, constant: -8),
-            primary.topAnchor.constraint(equalTo: card.topAnchor, constant: 88),
+            primary.topAnchor.constraint(equalTo: card.topAnchor, constant: 16),
 
             detail.leadingAnchor.constraint(equalTo: primary.leadingAnchor),
-            detail.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -14),
-            detail.topAnchor.constraint(equalTo: primary.bottomAnchor, constant: 6),
+            detail.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
+            detail.topAnchor.constraint(equalTo: preview.bottomAnchor, constant: 10),
             detail.bottomAnchor.constraint(lessThanOrEqualTo: card.bottomAnchor, constant: -12),
 
             button.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -14),
@@ -2406,10 +2259,10 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
 
     private func description(for module: Settings.Module) -> String {
         switch module {
-        case .flow: return "Visualize power\nmovement"
-        case .ring: return "Circular battery\nindicator"
-        case .lanes: return "Break down\npower usage"
-        case .history: return "Track battery\nover time"
+        case .flow: return "Adapter, Mac, and battery."
+        case .ring: return "Battery charge at a glance."
+        case .lanes: return "Compare power distribution."
+        case .history: return "Power usage over time."
         }
     }
 
@@ -2448,7 +2301,11 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     private let sections: [SettingsSectionController]
     private let increaseContrast: () -> Bool
     private let sidebar = NSTableView()
-    private let sidebarMaterial = NSVisualEffectView()
+    private let root = SettingsFillView(color: SettingsStyle.canvasBackground)
+    private let sidebarContainer = SettingsFillView(color: SettingsStyle.sidebarBackground)
+    private var splitController: NSSplitViewController?
+    private var classicLayout: [NSLayoutConstraint] = []
+    private var glassLayout: [NSLayoutConstraint] = []
     private let liquidGlassSwitch = NSSwitch()
     private let identityIcon = NSImageView()
     private let contentHost = NSView()
@@ -2587,9 +2444,10 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         // Appearance is never a reason to re-query the privileged helper.
         let focusedToggle = window.firstResponder as? SettingsToggleButton
             ?? (window.firstResponder as? NSSwitch)?.superview as? SettingsToggleButton
+        let focusedView = window.firstResponder as? NSView
         window.appearance = NSAppearance(named: .darkAqua)
         window.backgroundColor = SettingsStyle.contentBackground
-        sidebarMaterial.isHidden = !enabled
+        configureNativeSidebar(enabled: enabled)
         sidebar.selectionHighlightStyle = enabled ? .regular : .none
         liquidGlassSwitch.state = Settings.liquidGlassEnabled ? .on : .off
         let baselineIconPath = Bundle.main.path(forResource: "AppIconSettings", ofType: "png")
@@ -2611,6 +2469,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         updateVisibleSwitchKeyLoop()
         if let focusedToggle {
             window.makeFirstResponder(enabled ? focusedToggle.nativeSwitch : focusedToggle)
+        } else if let focusedView, focusedView.window === window {
+            window.makeFirstResponder(focusedView)
         }
     }
 
@@ -2659,18 +2519,12 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         let viewport = NSView(frame: NSRect(origin: .zero, size: SettingsStyle.contentSize))
         viewport.identifier = NSUserInterfaceItemIdentifier("settings.viewport")
         viewport.autoresizingMask = [.width, .height]
-        let root = SettingsFillView(color: SettingsStyle.contentBackground)
         root.frame = NSRect(origin: .zero, size: SettingsStyle.contentSize)
         root.identifier = NSUserInterfaceItemIdentifier("settings.root")
         root.autoresizingMask = []
 
-        let sidebarContainer = SettingsFillView(color: SettingsStyle.sidebarBackground)
         sidebarContainer.identifier = NSUserInterfaceItemIdentifier("settings.sidebar")
         sidebarContainer.translatesAutoresizingMaskIntoConstraints = false
-        sidebarMaterial.material = .sidebar
-        sidebarMaterial.blendingMode = .behindWindow
-        sidebarMaterial.state = .followsWindowActiveState
-        sidebarMaterial.translatesAutoresizingMaskIntoConstraints = false
 
         let identity = makeIdentityView()
         let trafficSafeArea = NSView()
@@ -2689,21 +2543,16 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         root.addSubview(sidebarContainer)
         root.addSubview(divider)
         root.addSubview(contentHost)
-        sidebarContainer.addSubview(sidebarMaterial)
         sidebarContainer.addSubview(identity)
         sidebarContainer.addSubview(trafficSafeArea)
         sidebarContainer.addSubview(navigation)
         sidebarContainer.addSubview(appearanceOption)
 
-        NSLayoutConstraint.activate([
+        let layoutConstraints = [
             sidebarContainer.leadingAnchor.constraint(equalTo: root.leadingAnchor),
             sidebarContainer.topAnchor.constraint(equalTo: root.topAnchor),
             sidebarContainer.bottomAnchor.constraint(equalTo: root.bottomAnchor),
             sidebarContainer.widthAnchor.constraint(equalToConstant: SettingsStyle.sidebarWidth),
-            sidebarMaterial.leadingAnchor.constraint(equalTo: sidebarContainer.leadingAnchor),
-            sidebarMaterial.trailingAnchor.constraint(equalTo: sidebarContainer.trailingAnchor),
-            sidebarMaterial.topAnchor.constraint(equalTo: sidebarContainer.topAnchor),
-            sidebarMaterial.bottomAnchor.constraint(equalTo: sidebarContainer.bottomAnchor),
             appearanceOption.leadingAnchor.constraint(equalTo: sidebarContainer.leadingAnchor, constant: 16),
             appearanceOption.trailingAnchor.constraint(equalTo: sidebarContainer.trailingAnchor, constant: -16),
             appearanceOption.bottomAnchor.constraint(equalTo: sidebarContainer.bottomAnchor, constant: -20),
@@ -2739,7 +2588,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             divider.leadingAnchor.constraint(equalTo: sidebarContainer.trailingAnchor),
             divider.topAnchor.constraint(equalTo: root.topAnchor),
             divider.bottomAnchor.constraint(equalTo: root.bottomAnchor),
-        divider.widthAnchor.constraint(equalToConstant: 1),
+            divider.widthAnchor.constraint(equalToConstant: 1),
 
             contentHost.leadingAnchor.constraint(
                 equalTo: divider.trailingAnchor,
@@ -2757,16 +2606,85 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
                 equalTo: root.bottomAnchor,
                 constant: -SettingsStyle.contentBottomInset
             ),
-        ])
+        ]
+        // Only the outer placement changes when AppKit takes over the sidebar.
+        // The identity, navigation, controls and section instances stay alive.
+        classicLayout = layoutConstraints.filter {
+            ($0.firstItem as? NSView) === sidebarContainer
+                || ($0.firstItem as? NSView) === divider
+                || ($0.firstItem as? NSView) === contentHost
+        }
+        NSLayoutConstraint.activate(layoutConstraints)
 
         viewport.addSubview(root)
-        window.contentView = viewport
+        let viewportController = NSViewController()
+        viewportController.view = viewport
+        window.contentViewController = viewportController
         sidebar.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
         tableViewSelectionDidChange(Notification(
             name: NSTableView.selectionDidChangeNotification,
             object: sidebar
         ))
         configureKeyViewLoop()
+        root.layoutSubtreeIfNeeded()
+    }
+
+    private func configureNativeSidebar(enabled: Bool) {
+        guard enabled != (splitController != nil) else { return }
+        if enabled {
+            guard #available(macOS 26, *) else { return }
+            NSLayoutConstraint.deactivate(classicLayout)
+            sidebarContainer.removeFromSuperview()
+            contentHost.removeFromSuperview()
+
+            let navigation = NSViewController()
+            navigation.view = sidebarContainer
+            let detail = NSViewController()
+            detail.view = NSView()
+            detail.view.addSubview(contentHost)
+            let split = NSSplitViewController()
+            split.view.identifier = NSUserInterfaceItemIdentifier("settings.native-split")
+            split.splitView.isVertical = true
+            let navigationItem = NSSplitViewItem(sidebarWithViewController: navigation)
+            navigationItem.canCollapse = false
+            navigationItem.minimumThickness = SettingsStyle.sidebarWidth
+            navigationItem.maximumThickness = SettingsStyle.sidebarWidth
+            let detailItem = NSSplitViewItem(viewController: detail)
+            detailItem.automaticallyAdjustsSafeAreaInsets = true
+            split.addSplitViewItem(navigationItem)
+            split.addSplitViewItem(detailItem)
+            window?.contentViewController?.addChild(split)
+            split.view.translatesAutoresizingMaskIntoConstraints = false
+            root.addSubview(split.view)
+            glassLayout = [
+                split.view.leadingAnchor.constraint(equalTo: root.leadingAnchor),
+                split.view.trailingAnchor.constraint(equalTo: root.trailingAnchor),
+                split.view.topAnchor.constraint(equalTo: root.topAnchor),
+                split.view.bottomAnchor.constraint(equalTo: root.bottomAnchor),
+                contentHost.leadingAnchor.constraint(equalTo: detail.view.safeAreaLayoutGuide.leadingAnchor,
+                                                     constant: SettingsStyle.contentHorizontalInset),
+                contentHost.trailingAnchor.constraint(equalTo: detail.view.trailingAnchor,
+                                                      constant: -SettingsStyle.contentHorizontalInset),
+                contentHost.topAnchor.constraint(equalTo: detail.view.topAnchor,
+                                                constant: SettingsStyle.contentTopInset),
+                contentHost.bottomAnchor.constraint(equalTo: detail.view.bottomAnchor,
+                                                   constant: -SettingsStyle.contentBottomInset),
+            ]
+            NSLayoutConstraint.activate(glassLayout)
+            splitController = split
+        } else if let split = splitController {
+            NSLayoutConstraint.deactivate(glassLayout)
+            glassLayout.removeAll()
+            sidebarContainer.removeFromSuperview()
+            contentHost.removeFromSuperview()
+            split.view.removeFromSuperview()
+            split.removeFromParent()
+            splitController = nil
+            root.addSubview(sidebarContainer)
+            root.addSubview(contentHost)
+            NSLayoutConstraint.activate(classicLayout)
+        }
+        divider.isHidden = enabled
         root.layoutSubtreeIfNeeded()
     }
 
@@ -2789,7 +2707,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         iconTile.translatesAutoresizingMaskIntoConstraints = false
 
         let name = NSTextField(labelWithString: "Wattson")
-        name.font = .systemFont(ofSize: 16, weight: .semibold)
+        name.font = .systemFont(ofSize: 15, weight: .semibold)
         name.textColor = SettingsStyle.headingText
         name.translatesAutoresizingMaskIntoConstraints = false
 
@@ -2821,7 +2739,9 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             ? "Use system glass throughout Wattson. Off keeps the classic appearance."
             : "Requires macOS 26 or later. Classic appearance is available on this Mac."
         liquidGlassSwitch.setAccessibilityHelp(explanation)
-        let detail = NSTextField(wrappingLabelWithString: explanation)
+        let detail = NSTextField(wrappingLabelWithString: available
+            ? "A glass finish for Wattson."
+            : "Requires macOS 26 or later.")
         detail.font = SettingsStyle.detailFont
         detail.textColor = SettingsStyle.secondaryText
         detail.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -2961,7 +2881,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
         )
         imageView.contentTintColor = .labelColor
-        imageView.imageScaling = .scaleNone
+        imageView.imageScaling = .scaleProportionallyDown
         let icon: NSView = imageView
         icon.setAccessibilityElement(false)
         icon.translatesAutoresizingMaskIntoConstraints = false
@@ -2974,6 +2894,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
         cell.addSubview(icon)
         cell.addSubview(title)
+        cell.imageView = imageView
+        cell.textField = title
         NSLayoutConstraint.activate([
             icon.leadingAnchor.constraint(equalTo: cell.leadingAnchor),
             icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor),

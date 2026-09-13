@@ -62,8 +62,8 @@ Homebrew/Pages gates.
 - macOS 26 uses native Liquid Glass; macOS 12–25 use the AppKit fallback.
 
 The 4.1.0 development source offers an opt-in **Liquid Glass** presentation in
-the Settings sidebar on macOS 26 and later. It defaults off to retain the
-4.0.0 presentation. The switch changes Settings materials/controls and the
+the Settings sidebar on macOS 26 and later. It defaults off to retain Classic
+styling. The switch changes Settings materials/controls and the
 popover's native mode chooser,
 and requests the system's Dark Aqua appearance for the whole glass popover.
 This preserves the requested near-black visual direction without placing an
@@ -71,8 +71,18 @@ opaque black overlay over the system material. Classic popovers keep their
 existing system Light/Dark adaptation; Settings retains its dark composition
 in both modes. It does not change power computation, helper requests, or data
 instrumentation.
-Off restores the original app presentation, not an operating-system-wide
-disable of Apple's materials. Accessibility preferences remain authoritative.
+Off uses Classic styling; shared Settings content improvements apply to both
+styles. This is not an operating-system-wide disable of Apple's materials.
+Accessibility preferences remain authoritative.
+
+Settings now delegates its glass sidebar to `NSSplitViewController` and a native
+sidebar item. The native detail safe area positions the retained content;
+appearance changes reparent the existing controls and preserve keyboard focus.
+Glass content groups use semantic fills without nested preview borders. Module
+cards use wide, static SF Symbol illustrations and 12-point descriptions.
+See [Settings visual review](../design/settings/liquid-glass-refinement/README.md)
+for actual test-VM window images and verification. This source refinement does
+not replace the canonical installed app or constitute a new release.
 
 The main popover footer now replaces the UI4 ordinary segmented
 control inside a glass surface with three mutually exclusive native `.glass`
