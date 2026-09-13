@@ -66,6 +66,11 @@ The frozen source archive SHA-256 is
 `7ffc3b782a983804c58fe8d2e5d93345c6294cdfd361e7fb0d568ff256a69137`.
 Local logs are preserved under
 `dist/release-4.2.0-20260913/continuation-20260913/`.
+The manifest records the captured production source and its original tests.
+A subsequent test-only adjustment respects macOS Keyboard Navigation when it
+skips popup controls: actual Tab/reverse-Tab destinations, the configured
+control order and complete focused-row visibility are checked separately.
+The production renderer and package inputs remain unchanged.
 
 These five Charging screenshots are samples, not the full power-state ×
 appearance visual cross-product, a hardware-accuracy measurement, or complete

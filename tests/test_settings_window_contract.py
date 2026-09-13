@@ -301,6 +301,34 @@ class SettingsWindowContractTests(unittest.TestCase):
             defer { app.appearance = originalAppAppearance }
             require(app.activationPolicy() != .regular, "fixture must not change activation policy")
 
+            func followNativeKeyLoop(
+                in window: NSWindow, from source: NSView, to target: NSView, reverse: Bool = false
+            ) {
+                require(window.makeFirstResponder(source), "key-loop source accepts focus")
+                let linked = reverse ? source.previousKeyView : source.nextKeyView
+                require(linked === target, "configured key loop retains the intended control order")
+                let eligible = reverse ? source.previousValidKeyView : source.nextValidKeyView
+                require(eligible != nil, "native key loop has an eligible destination")
+                if app.isFullKeyboardAccessEnabled {
+                    require(eligible === target, "full keyboard access includes the intended popup")
+                }
+                if reverse { window.selectPreviousKeyView(nil) }
+                else { window.selectNextKeyView(nil) }
+                require(window.firstResponder === eligible,
+                    "Tab follows AppKit's native keyboard policy: fullKeyboard=\(app.isFullKeyboardAccessEnabled)")
+                // macOS may skip popups when Keyboard Navigation is off. Still
+                // exercise their focus/scroll behavior without changing that
+                // system preference or overriding production responder policy.
+                if eligible !== target {
+                    require(!app.isFullKeyboardAccessEnabled,
+                        "only the native reduced key loop may skip the intended popup")
+                    require(window.makeFirstResponder(target), "explicit popup focus succeeds")
+                }
+                require(window.firstResponder === target, "target control owns focus before visibility checks")
+                tracePhase("key loop: fullKeyboard=\(app.isFullKeyboardAccessEnabled) "
+                    + "reverse=\(reverse) nativeReachedTarget=\(eligible === target)")
+            }
+
             let suiteName = "Wattson.SettingsWindowContract.\(UUID().uuidString)"
             let defaults = UserDefaults(suiteName: suiteName)!
             defaults.removePersistentDomain(forName: suiteName)
@@ -1539,14 +1567,13 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(classicLogoScroll.documentVisibleRect.contains(logoPopup.convert(
                 logoPopup.bounds, to: classicLogoScroll.documentView)),
                 "Classic General can scroll to the full logo control without shrinking existing rows")
-            window.makeFirstResponder(logoPopup)
-            window.selectNextKeyView(nil)
+            followNativeKeyLoop(in: window, from: logoPopup, to: dockPopup)
             require(window.firstResponder === dockPopup
                 && classicLogoScroll.documentVisibleRect.contains(dockPopup.convert(
                     dockPopup.bounds, to: classicLogoScroll.documentView))
                 && classicLogoScroll.documentVisibleRect.contains(dockHelp.convert(
                     dockHelp.bounds, to: classicLogoScroll.documentView)),
-                "Classic Tab reveals the Dock picker together with its restart explanation: "
+                "Classic focus reveals the Dock picker together with its restart explanation: "
                     + "focused=\(window.firstResponder === dockPopup) "
                     + "responder=\(String(describing: window.firstResponder)) "
                     + "visible=\(classicLogoScroll.documentVisibleRect) "
@@ -1828,10 +1855,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "normal glass Settings keeps the full logo control reachable by scrolling")
                 normalGlassScroll.contentView.scroll(to: .zero)
                 normalGlassScroll.reflectScrolledClipView(normalGlassScroll.contentView)
-                glassWindow.makeFirstResponder(glassBackground)
-                glassWindow.selectNextKeyView(nil)
+                followNativeKeyLoop(in: glassWindow, from: glassBackground, to: restoredLogo)
                 require(glassWindow.firstResponder === restoredLogo,
-                    "native Tab moves from background choice to logo choice")
+                    "logo choice receives focus after native key-loop verification")
                 require(normalGlassScroll.documentVisibleRect.contains(restoredLogo.convert(
                     restoredLogo.bounds, to: normalGlassScroll.documentView)),
                     "keyboard focus scrolls the full logo control into view")
@@ -1843,21 +1869,20 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(normalGlassScroll.contentView.convert(normalGlassScroll.contentView.bounds, to: nil)
                     .contains(visibleGlassList.convert(visibleGlassList.visibleRect, to: nil)),
                     "the scrolled first glass group's visible region stays within the clip viewport")
-                glassWindow.selectPreviousKeyView(nil)
+                followNativeKeyLoop(in: glassWindow, from: restoredLogo, to: glassBackground, reverse: true)
                 require(glassWindow.firstResponder === glassBackground,
-                    "native reverse Tab returns from logo choice to background choice")
-                glassWindow.makeFirstResponder(restoredLogo)
-                glassWindow.selectNextKeyView(nil)
+                    "background choice receives focus after native reverse key-loop verification")
+                followNativeKeyLoop(in: glassWindow, from: restoredLogo, to: restoredDock)
                 let restoredDockHelp = view("settings.appearance.dock-icon.help", in: glassWindow) as! NSTextField
                 require(glassWindow.firstResponder === restoredDock
                     && normalGlassScroll.documentVisibleRect.contains(restoredDock.convert(
                         restoredDock.bounds, to: normalGlassScroll.documentView))
                     && normalGlassScroll.documentVisibleRect.contains(restoredDockHelp.convert(
                         restoredDockHelp.bounds, to: normalGlassScroll.documentView)),
-                    "native Tab reveals the Dock picker and restart explanation together")
-                glassWindow.selectPreviousKeyView(nil)
+                    "native popup focus reveals the Dock picker and restart explanation together")
+                followNativeKeyLoop(in: glassWindow, from: restoredDock, to: restoredLogo, reverse: true)
                 require(glassWindow.firstResponder === restoredLogo,
-                    "native reverse Tab returns from Dock to the independent logo choice")
+                    "logo choice receives focus after the Dock reverse key-loop verification")
                 _ = restoredDockHelp.scrollToVisible(restoredDockHelp.bounds)
                 require(normalGlassScroll.documentVisibleRect.contains(restoredDockHelp.convert(
                     restoredDockHelp.bounds, to: normalGlassScroll.documentView)),

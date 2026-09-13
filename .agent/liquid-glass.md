@@ -33,6 +33,11 @@ apps. [Current real-window samples](../design/releases/v4.2.0/README.md)
 include the three styles, a Clear Light/Dark pair and a short recording.
 Logs and preserved failed diagnostics are in
 `dist/release-4.2.0-20260913/continuation-20260913/`.
+The first hosted CI run exposed a test assumption: with system Keyboard
+Navigation off, native Tab correctly skips popup controls. The test now
+checks AppKit's actual next/previous valid key view, retains the full enabled
+keyboard chain assertion, and independently verifies focused popup visibility.
+It does not change system preferences or production responder behavior.
 GitHub CLI authentication remains invalid. Remote release gates and canonical
 installation are pending; neither a 4.2.0 tag nor public assets have been
 created by this continuation. Installed app/helper/receipt remain 4.1.0.
