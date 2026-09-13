@@ -1,12 +1,17 @@
 # Settings visual refinement
 
+Historical review for commit `e2dc588`. The user rejected the Modules diagrams;
+the current implementation is documented in the
+[Modules list review](../modules-list/README.md). Screenshots and results below
+describe the earlier revision.
+
 The Settings window uses an AppKit `NSSplitViewController` sidebar on macOS 26
 when Liquid Glass is enabled. AppKit supplies the floating navigation surface
 and safe area. The content canvas is transparent beneath the native hierarchy;
 content groups use a restrained semantic fill, without nested glass cards.
 Classic mode retains its fixed dark layout and palette.
 
-Module illustrations now occupy the width of each card. SF Symbols share a
+This revision's module illustrations occupied the width of each card. SF Symbols share a
 consistent weight, energy diagrams keep a semantic green, and titles, switches
 and descriptions align in three rows. Descriptions use 12-point wrapping text
 with a bounded width. General settings use plain symbols and inset separators;

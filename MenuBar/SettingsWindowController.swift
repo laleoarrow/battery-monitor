@@ -99,9 +99,7 @@ private enum SettingsStyle {
     static let generalRowHeight: CGFloat = 68
     static let generalIconTileSize: CGFloat = 36
     static let generalActionSize = NSSize(width: 88, height: 28)
-    static let moduleCardHeight: CGFloat = 166
-    static let moduleCardWidth: CGFloat = 233
-    static let moduleCardGap: CGFloat = 12
+    static let moduleRowHeight: CGFloat = 80
     static let iconCardGap: CGFloat = 8
     static let iconCardHeight: CGFloat = 80
     static let iconCardGroupHeight: CGFloat = 344
@@ -109,17 +107,15 @@ private enum SettingsStyle {
     static let iconStateGap: CGFloat = 5
     static let iconStateCornerRadius: CGFloat = 7
     static let surfaceCornerRadius: CGFloat = 14
-    static let modulePreviewSize = NSSize(width: 201, height: 66)
 
     static let contentBackground = adaptive(0x151618, .windowBackgroundColor)
     static let canvasBackground = adaptive(0x151618, .clear)
     static let sidebarBackground = adaptive(0x1E1F21, .clear)
-    static let surfaceBackground = adaptive(0x191A1C, .quaternaryLabelColor)
+    static let surfaceBackground = adaptive(0x191A1C, .clear)
     static let tileBackground = adaptive(0x202124, .clear)
     static let previewBackground = adaptive(0x1A1B1C, .clear)
     static let selection = adaptive(0x2B362F, .controlAccentColor.withAlphaComponent(0.10))
     static let green = adaptive(0x68C367, .controlAccentColor)
-    static let energy = adaptive(0x68C367, .systemGreen)
     static let surfaceBorder = adaptive(0x363838, .clear)
     static let border = adaptive(0x363838, .separatorColor)
     static let divider = adaptive(0x363838, .separatorColor)
@@ -184,6 +180,66 @@ private final class SettingsFillView: NSView {
 
 private protocol SettingsContrastRefreshing: AnyObject {
     func refreshContrastAppearance()
+}
+
+/// One system glass surface for a functional group, retaining its controls.
+private final class SettingsGlassSurface: NSView, SettingsContrastRefreshing {
+    private let controls: NSView
+    private var effect: NSView?
+    private var placement: [NSLayoutConstraint] = []
+
+    init(controls: NSView) {
+        self.controls = controls
+        super.init(frame: .zero)
+        translatesAutoresizingMaskIntoConstraints = false
+        refreshContrastAppearance()
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) is unavailable")
+    }
+
+    func refreshContrastAppearance() {
+        let enabled = Settings.usesLiquidGlass
+        guard controls.superview == nil || enabled != (effect != nil) else { return }
+        NSLayoutConstraint.deactivate(placement)
+        controls.removeFromSuperview()
+        effect?.removeFromSuperview()
+        effect = nil
+
+        let host: NSView
+        if #available(macOS 26, *), enabled {
+            let glass = NSGlassEffectView()
+            glass.identifier = NSUserInterfaceItemIdentifier("settings.control-group.glass")
+            glass.style = .regular
+            glass.cornerRadius = 20
+            glass.contentView = controls
+            glass.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(glass)
+            effect = glass
+            host = glass
+        } else {
+            addSubview(controls)
+            host = self
+        }
+        controls.translatesAutoresizingMaskIntoConstraints = false
+        placement = [
+            controls.leadingAnchor.constraint(equalTo: host.leadingAnchor),
+            controls.trailingAnchor.constraint(equalTo: host.trailingAnchor),
+            controls.topAnchor.constraint(equalTo: host.topAnchor),
+            controls.bottomAnchor.constraint(equalTo: host.bottomAnchor),
+        ]
+        if let effect {
+            placement += [
+                effect.leadingAnchor.constraint(equalTo: leadingAnchor),
+                effect.trailingAnchor.constraint(equalTo: trailingAnchor),
+                effect.topAnchor.constraint(equalTo: topAnchor),
+                effect.bottomAnchor.constraint(equalTo: bottomAnchor),
+            ]
+        }
+        NSLayoutConstraint.activate(placement)
+    }
 }
 
 private final class SettingsAdaptiveBorderBox: NSBox, SettingsContrastRefreshing {
@@ -488,125 +544,6 @@ private final class DynamicSeparatorView: NSView, SettingsContrastRefreshing {
     }
 }
 
-/// Small, static illustrations of each module; never start sampling or animation.
-private final class StaticModulePreviewView: NSView {
-    private let module: Settings.Module
-
-    init(module: Settings.Module) {
-        self.module = module
-        super.init(frame: .zero)
-        identifier = NSUserInterfaceItemIdentifier(
-            "settings.modules.preview.\(module.rawValue)"
-        )
-        setAccessibilityElement(false)
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) is unavailable")
-    }
-
-    override func draw(_ dirtyRect: NSRect) {
-        super.draw(dirtyRect)
-        let rect = bounds.insetBy(dx: 8, dy: 5)
-        switch module {
-        case .flow:
-            let centers = [rect.minX + 14, rect.midX, rect.maxX - 14]
-            for index in 0..<2 {
-                let path = NSBezierPath()
-                path.move(to: NSPoint(x: centers[index] + 19, y: rect.midY))
-                path.line(to: NSPoint(x: centers[index + 1] - 19, y: rect.midY))
-                stroke(path, color: SettingsStyle.energy, width: 2)
-                symbol("chevron.right", at: NSPoint(
-                    x: (centers[index] + centers[index + 1]) / 2,
-                    y: rect.midY
-                ), size: 8, color: SettingsStyle.energy)
-            }
-            for (index, name) in ["powerplug.fill", "laptopcomputer", "battery.75"].enumerated() {
-                symbol(name, at: NSPoint(x: centers[index], y: rect.midY), size: 21)
-            }
-        case .ring:
-            let center = NSPoint(x: rect.midX, y: rect.midY)
-            let radius: CGFloat = 23
-            let track = NSBezierPath(ovalIn: NSRect(
-                x: center.x - radius, y: center.y - radius,
-                width: radius * 2, height: radius * 2
-            ))
-            stroke(track, color: .quaternaryLabelColor, width: 5)
-            let arc = NSBezierPath()
-            arc.appendArc(withCenter: center, radius: radius,
-                          startAngle: 90, endAngle: -175, clockwise: true)
-            stroke(arc, color: SettingsStyle.energy, width: 5)
-            symbol("bolt.fill", at: center, size: 18, color: SettingsStyle.energy)
-        case .lanes:
-            for (index, name) in ["powerplug.fill", "laptopcomputer", "battery.75"].enumerated() {
-                let y = rect.maxY - 7 - CGFloat(index) * 21
-                symbol(name, at: NSPoint(x: rect.minX + 10, y: y), size: 12)
-                let start = rect.minX + 32
-                let end = rect.maxX - 3
-                let track = NSBezierPath()
-                track.move(to: NSPoint(x: start, y: y))
-                track.line(to: NSPoint(x: end, y: y))
-                stroke(track, color: .quaternaryLabelColor, width: 3)
-                let fill = NSBezierPath()
-                fill.move(to: NSPoint(x: start, y: y))
-                fill.line(to: NSPoint(x: start + (end - start) * [0.82, 0.56, 0.31][index], y: y))
-                stroke(fill, color: SettingsStyle.energy.withAlphaComponent(
-                    [1.0, 0.75, 0.5][index]
-                ), width: 3)
-            }
-        case .history:
-            let chart = rect.insetBy(dx: 3, dy: 6)
-            for fraction: CGFloat in [0, 0.5, 1] {
-                let guide = NSBezierPath()
-                let y = chart.minY + chart.height * fraction
-                guide.move(to: NSPoint(x: chart.minX, y: y))
-                guide.line(to: NSPoint(x: chart.maxX, y: y))
-                stroke(guide, color: .quaternaryLabelColor, width: 0.5)
-            }
-            let values: [CGFloat] = [0.2, 0.28, 0.65, 0.53, 0.58, 0.38, 0.45, 0.8, 0.7, 0.76, 0.63]
-            let points = values.enumerated().map { index, value in
-                NSPoint(x: chart.minX + chart.width * CGFloat(index) / CGFloat(values.count - 1),
-                        y: chart.minY + chart.height * value)
-            }
-            let curve = NSBezierPath()
-            curve.move(to: points[0])
-            for index in 1..<points.count {
-                let previous = points[index - 1]
-                let point = points[index]
-                let middle = (previous.x + point.x) / 2
-                curve.curve(to: point,
-                            controlPoint1: NSPoint(x: middle, y: previous.y),
-                            controlPoint2: NSPoint(x: middle, y: point.y))
-            }
-            stroke(curve, color: SettingsStyle.energy, width: 2)
-            if let last = points.last {
-                SettingsStyle.energy.setFill()
-                NSBezierPath(ovalIn: NSRect(x: last.x - 2.5, y: last.y - 2.5,
-                                            width: 5, height: 5)).fill()
-            }
-        }
-    }
-
-    private func stroke(_ path: NSBezierPath, color: NSColor, width: CGFloat) {
-        color.setStroke()
-        path.lineWidth = width
-        path.lineCapStyle = .round
-        path.lineJoinStyle = .round
-        path.stroke()
-    }
-
-    private func symbol(_ name: String, at center: NSPoint, size: CGFloat,
-                        color: NSColor = .labelColor) {
-        guard let symbol = NSImage(systemSymbolName: name, accessibilityDescription: nil)?
-            .withSymbolConfiguration(.init(pointSize: size, weight: .medium))?
-            .withSymbolConfiguration(.init(paletteColors: [color])) else { return }
-        symbol.draw(in: NSRect(x: center.x - symbol.size.width / 2,
-                               y: center.y - symbol.size.height / 2,
-                               width: symbol.size.width, height: symbol.size.height))
-    }
-}
-
 private final class GeneralSettingsSectionController: NSObject, SettingsSectionController {
     private static let controlsInstallerURL = URL(
         string: "https://github.com/laleoarrow/battery-monitor/releases/latest"
@@ -877,6 +814,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         list.fillColor = SettingsStyle.surfaceBackground
         list.translatesAutoresizingMaskIntoConstraints = false
         list.addSubview(rows)
+        let surface = SettingsGlassSurface(controls: list)
 
         let heading = NSTextField(labelWithString: title)
         heading.identifier = NSUserInterfaceItemIdentifier("settings.general.heading")
@@ -886,7 +824,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         heading.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(heading)
-        view.addSubview(list)
+        view.addSubview(surface)
         controlsRecovery.orientation = .vertical
         controlsRecovery.alignment = .leading
         controlsRecovery.spacing = 8
@@ -902,20 +840,20 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             heading.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             heading.topAnchor.constraint(equalTo: view.topAnchor, constant: -2),
 
-            list.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            list.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            list.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
-            list.heightAnchor.constraint(equalToConstant: SettingsStyle.generalListHeight),
-            list.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
+            surface.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            surface.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            surface.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
+            surface.heightAnchor.constraint(equalToConstant: SettingsStyle.generalListHeight),
+            surface.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
 
             rows.leadingAnchor.constraint(equalTo: list.leadingAnchor),
             rows.trailingAnchor.constraint(equalTo: list.trailingAnchor),
             rows.topAnchor.constraint(equalTo: list.topAnchor),
             rows.bottomAnchor.constraint(equalTo: list.bottomAnchor),
 
-            controlsRecovery.leadingAnchor.constraint(equalTo: list.leadingAnchor, constant: 2),
-            controlsRecovery.trailingAnchor.constraint(equalTo: list.trailingAnchor, constant: -2),
-            controlsRecovery.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12),
+            controlsRecovery.leadingAnchor.constraint(equalTo: surface.leadingAnchor, constant: 2),
+            controlsRecovery.trailingAnchor.constraint(equalTo: surface.trailingAnchor, constant: -2),
+            controlsRecovery.topAnchor.constraint(equalTo: surface.bottomAnchor, constant: 12),
             controlsRecovery.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
             controlsRecoveryDetail.widthAnchor.constraint(equalTo: controlsRecovery.widthAnchor),
         ])
@@ -1986,10 +1924,11 @@ private final class MenuBarIconSettingsSectionController: NSObject,
         )
         group.setAccessibilityChildren(orderedButtons)
         group.translatesAutoresizingMaskIntoConstraints = false
+        let surface = SettingsGlassSurface(controls: group)
 
         view.addSubview(heading)
         view.addSubview(subtitle)
-        view.addSubview(group)
+        view.addSubview(surface)
         NSLayoutConstraint.activate([
             heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             heading.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -1999,10 +1938,10 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             subtitle.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             subtitle.topAnchor.constraint(equalTo: heading.bottomAnchor, constant: 8),
 
-            group.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            group.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            group.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 14),
-            group.heightAnchor.constraint(equalToConstant: SettingsStyle.iconCardGroupHeight),
+            surface.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            surface.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            surface.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 14),
+            surface.heightAnchor.constraint(equalToConstant: SettingsStyle.iconCardGroupHeight),
         ])
         orderedButtons.forEach {
             $0.widthAnchor.constraint(equalTo: group.widthAnchor).isActive = true
@@ -2124,97 +2063,80 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         heading.setAccessibilityLabel(title)
         heading.translatesAutoresizingMaskIntoConstraints = false
 
-        let subtitle = NSTextField(
-            labelWithString: "Choose what appears in the power popover."
-        )
+        let subtitle = NSTextField(labelWithString: "Choose what appears in the power popover.")
         subtitle.identifier = NSUserInterfaceItemIdentifier("settings.modules.subtitle")
         subtitle.font = SettingsStyle.detailFont
         subtitle.textColor = SettingsStyle.secondaryText
         subtitle.translatesAutoresizingMaskIntoConstraints = false
 
-        let cards = Settings.Module.allCases.enumerated().map { index, module in
-            makeCard(for: module, index: index)
-        }
-        precondition(cards.count == 4, "The approved Modules page is a 2×2 grid.")
-        let grid = NSGridView(views: [
-            [cards[0], cards[1]],
-            [cards[2], cards[3]],
-        ])
-        grid.identifier = NSUserInterfaceItemIdentifier("settings.modules.grid")
-        grid.rowSpacing = SettingsStyle.moduleCardGap
-        grid.columnSpacing = SettingsStyle.moduleCardGap
-        grid.translatesAutoresizingMaskIntoConstraints = false
-        grid.row(at: 0).height = SettingsStyle.moduleCardHeight
-        grid.row(at: 1).height = SettingsStyle.moduleCardHeight
-        grid.column(at: 0).width = SettingsStyle.moduleCardWidth
-        grid.column(at: 1).width = SettingsStyle.moduleCardWidth
+        let rows = NSStackView(views: Settings.Module.allCases.enumerated().map { index, module in
+            makeRow(for: module, index: index)
+        })
+        rows.orientation = .vertical
+        rows.alignment = .width
+        rows.distribution = .fillEqually
+        rows.spacing = 0
+        rows.translatesAutoresizingMaskIntoConstraints = false
+
+        let list = SettingsAdaptiveBorderBox(increaseContrast: increaseContrast)
+        list.identifier = NSUserInterfaceItemIdentifier("settings.modules.list")
+        list.boxType = .custom
+        list.titlePosition = .noTitle
+        list.cornerRadius = SettingsStyle.surfaceCornerRadius
+        list.fillColor = SettingsStyle.surfaceBackground
+        list.translatesAutoresizingMaskIntoConstraints = false
+        list.addSubview(rows)
+        let surface = SettingsGlassSurface(controls: list)
 
         view.addSubview(heading)
         view.addSubview(subtitle)
-        view.addSubview(grid)
-
+        view.addSubview(surface)
         NSLayoutConstraint.activate([
-            cards[0].widthAnchor.constraint(equalTo: cards[1].widthAnchor),
-            cards[0].widthAnchor.constraint(equalTo: cards[2].widthAnchor),
-            cards[0].widthAnchor.constraint(equalTo: cards[3].widthAnchor),
-            cards[0].widthAnchor.constraint(equalToConstant: SettingsStyle.moduleCardWidth),
-
             heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             heading.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             heading.topAnchor.constraint(equalTo: view.topAnchor, constant: -3),
-
             subtitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             subtitle.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            subtitle.bottomAnchor.constraint(equalTo: grid.topAnchor, constant: -10),
-
-            grid.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            grid.topAnchor.constraint(equalTo: view.topAnchor, constant: 66),
-            grid.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
-            grid.heightAnchor.constraint(
-                equalToConstant: SettingsStyle.moduleCardHeight * 2
-                    + SettingsStyle.moduleCardGap
-            ),
+            subtitle.bottomAnchor.constraint(equalTo: surface.topAnchor, constant: -10),
+            surface.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            surface.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            surface.topAnchor.constraint(equalTo: view.topAnchor, constant: 66),
+            surface.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
+            surface.heightAnchor.constraint(equalToConstant:
+                SettingsStyle.moduleRowHeight * CGFloat(Settings.Module.allCases.count)),
+            rows.leadingAnchor.constraint(equalTo: list.leadingAnchor),
+            rows.trailingAnchor.constraint(equalTo: list.trailingAnchor),
+            rows.topAnchor.constraint(equalTo: list.topAnchor),
+            rows.bottomAnchor.constraint(equalTo: list.bottomAnchor),
         ])
     }
 
-    private func makeCard(for module: Settings.Module, index: Int) -> NSView {
-        let card = SettingsAdaptiveBorderBox(increaseContrast: increaseContrast)
-        card.identifier = NSUserInterfaceItemIdentifier(
-            "settings.modules.card.\(module.rawValue)"
-        )
-        card.boxType = .custom
-        card.titlePosition = .noTitle
-        card.cornerRadius = SettingsStyle.surfaceCornerRadius
-        card.fillColor = SettingsStyle.surfaceBackground
+    private func makeRow(for module: Settings.Module, index: Int) -> NSView {
+        let row = NSView()
+        row.identifier = NSUserInterfaceItemIdentifier("settings.modules.row.\(module.rawValue)")
 
-        let preview = StaticModulePreviewView(module: module)
-        preview.translatesAutoresizingMaskIntoConstraints = false
+        let icon = NSImageView()
+        icon.identifier = NSUserInterfaceItemIdentifier("settings.modules.icon.\(module.rawValue)")
+        icon.image = NSImage(systemSymbolName: symbolName(for: module), accessibilityDescription: nil)?
+            .withSymbolConfiguration(.init(pointSize: 26, weight: .regular))
+        icon.contentTintColor = SettingsStyle.primaryText
+        icon.imageScaling = .scaleProportionallyDown
+        icon.setAccessibilityElement(false)
+        icon.translatesAutoresizingMaskIntoConstraints = false
 
         let primary = NSTextField(labelWithString: module.title)
-        primary.font = .systemFont(ofSize: 14, weight: .semibold)
+        primary.font = SettingsStyle.primaryFont
         primary.textColor = SettingsStyle.primaryText
-        primary.lineBreakMode = .byTruncatingTail
-        primary.translatesAutoresizingMaskIntoConstraints = false
 
-        let detailFont = NSFont.systemFont(ofSize: 12)
-        let detail = NSTextField(wrappingLabelWithString: description(for: module))
-        detail.font = detailFont
+        let detail = NSTextField(labelWithString: description(for: module))
+        detail.font = .systemFont(ofSize: 12)
         detail.textColor = SettingsStyle.secondaryText
-        detail.lineBreakMode = .byWordWrapping
-        detail.maximumNumberOfLines = 2
-        detail.preferredMaxLayoutWidth = SettingsStyle.moduleCardWidth - 32
-        detail.cell?.usesSingleLineMode = false
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 3
-        detail.attributedStringValue = NSAttributedString(
-            string: description(for: module),
-            attributes: [
-                .font: detailFont,
-                .foregroundColor: SettingsStyle.secondaryText,
-                .paragraphStyle: paragraphStyle,
-            ]
-        )
-        detail.translatesAutoresizingMaskIntoConstraints = false
+        detail.lineBreakMode = .byTruncatingTail
+        let text = NSStackView(views: [primary, detail])
+        text.orientation = .vertical
+        text.alignment = .leading
+        text.spacing = 5
+        text.translatesAutoresizingMaskIntoConstraints = false
 
         let button = SettingsToggleButton(
             accessibilityLabel: module.title,
@@ -2222,47 +2144,57 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             target: self,
             action: #selector(toggleModule(_:))
         )
-        button.controlSize = .regular
-        button.cell?.lineBreakMode = .byClipping
         button.tag = index
         button.setAccessibilityHelp("Show or hide the \(module.title) module in Wattson.")
         buttons[module] = button
 
-        card.addSubview(preview)
-        card.addSubview(primary)
-        card.addSubview(detail)
-        card.addSubview(button)
-
+        row.addSubview(icon)
+        row.addSubview(text)
+        row.addSubview(button)
         NSLayoutConstraint.activate([
-            preview.centerXAnchor.constraint(equalTo: card.centerXAnchor),
-            preview.topAnchor.constraint(equalTo: card.topAnchor, constant: 46),
-            preview.widthAnchor.constraint(equalToConstant: SettingsStyle.modulePreviewSize.width),
-            preview.heightAnchor.constraint(equalToConstant: SettingsStyle.modulePreviewSize.height),
-
-            primary.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
-            primary.trailingAnchor.constraint(lessThanOrEqualTo: button.leadingAnchor, constant: -8),
-            primary.topAnchor.constraint(equalTo: card.topAnchor, constant: 16),
-
-            detail.leadingAnchor.constraint(equalTo: primary.leadingAnchor),
-            detail.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
-            detail.topAnchor.constraint(equalTo: preview.bottomAnchor, constant: 10),
-            detail.bottomAnchor.constraint(lessThanOrEqualTo: card.bottomAnchor, constant: -12),
-
-            button.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -14),
-            button.centerYAnchor.constraint(equalTo: primary.centerYAnchor),
+            icon.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 20),
+            icon.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+            icon.widthAnchor.constraint(equalToConstant: 32),
+            icon.heightAnchor.constraint(equalToConstant: 32),
+            text.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 16),
+            text.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+            text.trailingAnchor.constraint(lessThanOrEqualTo: button.leadingAnchor, constant: -20),
+            button.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -20),
+            button.centerYAnchor.constraint(equalTo: row.centerYAnchor),
             button.widthAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.width),
             button.heightAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.height),
-            card.heightAnchor.constraint(equalToConstant: SettingsStyle.moduleCardHeight),
+            row.heightAnchor.constraint(equalToConstant: SettingsStyle.moduleRowHeight),
         ])
-        return card
+
+        if index < Settings.Module.allCases.count - 1 {
+            let separator = NSBox()
+            separator.boxType = .separator
+            separator.translatesAutoresizingMaskIntoConstraints = false
+            row.addSubview(separator)
+            NSLayoutConstraint.activate([
+                separator.leadingAnchor.constraint(equalTo: text.leadingAnchor),
+                separator.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -20),
+                separator.bottomAnchor.constraint(equalTo: row.bottomAnchor),
+            ])
+        }
+        return row
+    }
+
+    private func symbolName(for module: Settings.Module) -> String {
+        switch module {
+        case .flow: return "arrow.triangle.branch"
+        case .ring: return "gauge"
+        case .lanes: return "chart.bar"
+        case .history: return "chart.xyaxis.line"
+        }
     }
 
     private func description(for module: Settings.Module) -> String {
         switch module {
-        case .flow: return "Adapter, Mac, and battery."
-        case .ring: return "Battery charge at a glance."
-        case .lanes: return "Compare power distribution."
-        case .history: return "Power usage over time."
+        case .flow: return "See where power comes from and goes."
+        case .ring: return "Battery charge and power at a glance."
+        case .lanes: return "Compare system and battery power."
+        case .history: return "See recent power use over time."
         }
     }
 
@@ -2302,8 +2234,10 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     private let increaseContrast: () -> Bool
     private let sidebar = NSTableView()
     private let root = SettingsFillView(color: SettingsStyle.canvasBackground)
+    private let windowBackdrop = NSVisualEffectView()
     private let sidebarContainer = SettingsFillView(color: SettingsStyle.sidebarBackground)
     private var splitController: NSSplitViewController?
+    private var glassContainer: NSView?
     private var classicLayout: [NSLayoutConstraint] = []
     private var glassLayout: [NSLayoutConstraint] = []
     private let liquidGlassSwitch = NSSwitch()
@@ -2446,7 +2380,9 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             ?? (window.firstResponder as? NSSwitch)?.superview as? SettingsToggleButton
         let focusedView = window.firstResponder as? NSView
         window.appearance = NSAppearance(named: .darkAqua)
-        window.backgroundColor = SettingsStyle.contentBackground
+        window.isOpaque = !enabled
+        window.backgroundColor = enabled ? .clear : SettingsStyle.contentBackground
+        windowBackdrop.isHidden = !enabled
         configureNativeSidebar(enabled: enabled)
         sidebar.selectionHighlightStyle = enabled ? .regular : .none
         liquidGlassSwitch.state = Settings.liquidGlassEnabled ? .on : .off
@@ -2519,6 +2455,13 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         let viewport = NSView(frame: NSRect(origin: .zero, size: SettingsStyle.contentSize))
         viewport.identifier = NSUserInterfaceItemIdentifier("settings.viewport")
         viewport.autoresizingMask = [.width, .height]
+        windowBackdrop.identifier = NSUserInterfaceItemIdentifier("settings.window.backdrop")
+        windowBackdrop.frame = viewport.bounds
+        windowBackdrop.autoresizingMask = [.width, .height]
+        windowBackdrop.material = .underWindowBackground
+        windowBackdrop.blendingMode = .behindWindow
+        windowBackdrop.state = .followsWindowActiveState
+        viewport.addSubview(windowBackdrop)
         root.frame = NSRect(origin: .zero, size: SettingsStyle.contentSize)
         root.identifier = NSUserInterfaceItemIdentifier("settings.root")
         root.autoresizingMask = []
@@ -2655,12 +2598,22 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             split.addSplitViewItem(detailItem)
             window?.contentViewController?.addChild(split)
             split.view.translatesAutoresizingMaskIntoConstraints = false
-            root.addSubview(split.view)
+            let container = NSGlassEffectContainerView()
+            container.identifier = NSUserInterfaceItemIdentifier("settings.glass-container")
+            container.spacing = 0
+            container.contentView = split.view
+            container.translatesAutoresizingMaskIntoConstraints = false
+            root.addSubview(container)
+            glassContainer = container
             glassLayout = [
-                split.view.leadingAnchor.constraint(equalTo: root.leadingAnchor),
-                split.view.trailingAnchor.constraint(equalTo: root.trailingAnchor),
-                split.view.topAnchor.constraint(equalTo: root.topAnchor),
-                split.view.bottomAnchor.constraint(equalTo: root.bottomAnchor),
+                container.leadingAnchor.constraint(equalTo: root.leadingAnchor),
+                container.trailingAnchor.constraint(equalTo: root.trailingAnchor),
+                container.topAnchor.constraint(equalTo: root.topAnchor),
+                container.bottomAnchor.constraint(equalTo: root.bottomAnchor),
+                split.view.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+                split.view.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+                split.view.topAnchor.constraint(equalTo: container.topAnchor),
+                split.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
                 contentHost.leadingAnchor.constraint(equalTo: detail.view.safeAreaLayoutGuide.leadingAnchor,
                                                      constant: SettingsStyle.contentHorizontalInset),
                 contentHost.trailingAnchor.constraint(equalTo: detail.view.trailingAnchor,
@@ -2678,6 +2631,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             sidebarContainer.removeFromSuperview()
             contentHost.removeFromSuperview()
             split.view.removeFromSuperview()
+            glassContainer?.removeFromSuperview()
+            glassContainer = nil
             split.removeFromParent()
             splitController = nil
             root.addSubview(sidebarContainer)

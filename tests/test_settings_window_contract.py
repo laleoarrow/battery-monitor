@@ -1093,7 +1093,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let modulePage = view("settings.section.modules", in: first)
             let moduleHeading = view("settings.modules.heading", in: first)
             let moduleSubtitle = view("settings.modules.subtitle", in: first)
-            let moduleGrid = view("settings.modules.grid", in: first)
+            let moduleList = view("settings.modules.list", in: first)
             require(
                 approximately(moduleHeading.frame.height, moduleHeading.intrinsicContentSize.height),
                 "Modules heading keeps intrinsic height"
@@ -1111,24 +1111,32 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "Modules subtitle uses 11-point type"
             )
             require(
-                approximately(moduleSubtitle.frame.minY - moduleGrid.frame.maxY, 10),
-                "Modules grid starts 10 points below subtitle"
+                approximately(moduleSubtitle.frame.minY
+                    - moduleList.convert(moduleList.bounds, to: modulePage).maxY, 10),
+                "Modules list starts 10 points below subtitle"
             )
-            let moduleCards = descendants(ofType: NSView.self, in: modulePage)
-                .filter { $0.identifier?.rawValue.hasPrefix("settings.modules.card.") == true }
-            let modulePreviews = descendants(ofType: NSView.self, in: modulePage)
-                .filter { $0.identifier?.rawValue.hasPrefix("settings.modules.preview.") == true }
-            require(moduleCards.count == 4, "modules has exactly four cards")
-            require(modulePreviews.count == 4, "modules has exactly four static previews")
-            require(moduleCards.allSatisfy { approximately($0.frame.width, 233) }, "compact card width")
-            require(moduleCards.allSatisfy { approximately($0.frame.height, 166) }, "compact card height")
-            require(moduleCards.allSatisfy { ($0 as? NSBox)?.cornerRadius == 14 }, "compact card radius")
-            require(modulePreviews.allSatisfy { approximately($0.frame.width, 201) }, "wide module illustration")
-            require(modulePreviews.allSatisfy { approximately($0.frame.height, 66) }, "module illustration height")
-            let cardXs = Array(Set(moduleCards.map { $0.frame.minX })).sorted()
-            let cardYs = Array(Set(moduleCards.map { $0.frame.minY })).sorted()
-            require(cardXs.count == 2 && approximately(cardXs[1] - cardXs[0], 245), "12-point column gap")
-            require(cardYs.count == 2 && approximately(cardYs[1] - cardYs[0], 178), "12-point row gap")
+            let moduleRows = descendants(ofType: NSView.self, in: modulePage)
+                .filter { $0.identifier?.rawValue.hasPrefix("settings.modules.row.") == true }
+            let moduleIcons = descendants(ofType: NSImageView.self, in: modulePage)
+                .filter { $0.identifier?.rawValue.hasPrefix("settings.modules.icon.") == true }
+            require(moduleRows.count == 4, "one row per module")
+            require(moduleIcons.count == 4 && moduleIcons.allSatisfy { $0.image != nil },
+                "all four module symbols resolve to native images")
+            require(moduleRows.allSatisfy { approximately($0.frame.width, 503) }, "full-width module rows")
+            require(moduleRows.allSatisfy { approximately($0.frame.height, 80) }, "consistent module row height")
+            require(moduleIcons.allSatisfy {
+                let alignment = $0.alignmentRect(forFrame: $0.frame)
+                return approximately(alignment.width, 32) && approximately(alignment.height, 32)
+            }, "consistent native icon size")
+            let rowYs = moduleRows.map { $0.frame.minY }.sorted()
+            require(zip(rowYs, rowYs.dropFirst()).allSatisfy { approximately($1 - $0, 80) },
+                "module rows form one contiguous list")
+            for row in moduleRows {
+                let labels = descendants(ofType: NSTextField.self, in: row)
+                require(labels.count == 2 && labels.allSatisfy {
+                    $0.frame.width + 1 >= $0.intrinsicContentSize.width
+                }, "module names and descriptions fit without truncation")
+            }
             let modulePrimaryLabels = descendants(ofType: NSTextField.self, in: modulePage)
                 .filter { Settings.Module.allCases.map(\.title).contains($0.stringValue) }
             require(
@@ -1162,11 +1170,11 @@ class SettingsWindowContractTests(unittest.TestCase):
             // reference palette and geometry remain exact while it is off;
             // posting AppKit's accessibility display notification updates the
             // retained General and Modules pages without reopening the window.
-            let moduleBoxes = moduleCards.compactMap { $0 as? NSBox }
+            let moduleBoxes = [moduleList as! NSBox]
             require((generalList as? NSBox)?.borderWidth == 1, "normal General border is one point")
             require(srgbHex((generalList as? NSBox)?.borderColor) == 0x363838, "normal General border keeps reference sRGB")
-            require(moduleBoxes.allSatisfy { $0.borderWidth == 1 }, "normal card borders are one point")
-            require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x363838 }, "normal cards keep reference sRGB")
+            require(moduleBoxes.allSatisfy { $0.borderWidth == 1 }, "normal module list border is one point")
+            require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x363838 }, "normal module list keeps reference sRGB")
             require(
                 iconStateChips.allSatisfy {
                     $0.borderWidth == 1 && srgbHex($0.borderColor) == 0x363838
@@ -1198,8 +1206,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             first?.contentView?.layoutSubtreeIfNeeded()
             require((generalList as? NSBox)?.borderWidth == 2, "increased contrast strengthens General border")
             require(srgbHex((generalList as? NSBox)?.borderColor) == 0x8D949A, "increased contrast brightens General border")
-            require(moduleBoxes.allSatisfy { $0.borderWidth == 2 }, "increased contrast strengthens card borders")
-            require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x8D949A }, "increased contrast brightens card borders")
+            require(moduleBoxes.allSatisfy { $0.borderWidth == 2 }, "increased contrast strengthens the module list border")
+            require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x8D949A }, "increased contrast brightens the module list border")
             require(
                 iconStateChips.allSatisfy {
                     $0.borderWidth == 2 && srgbHex($0.borderColor) == 0x8D949A
@@ -1236,8 +1244,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             first?.contentView?.layoutSubtreeIfNeeded()
             require((generalList as? NSBox)?.borderWidth == 1, "General border restores exactly")
             require(srgbHex((generalList as? NSBox)?.borderColor) == 0x363838, "General border sRGB restores exactly")
-            require(moduleBoxes.allSatisfy { $0.borderWidth == 1 }, "card borders restore exactly")
-            require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x363838 }, "card border sRGB restores exactly")
+            require(moduleBoxes.allSatisfy { $0.borderWidth == 1 }, "module list border restores exactly")
+            require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x363838 }, "module list border sRGB restores exactly")
             require(
                 iconStateChips.allSatisfy {
                     $0.borderWidth == 1 && srgbHex($0.borderColor) == 0x363838
@@ -1281,7 +1289,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             for module in Settings.Module.allCases {
                 let moduleButton = button(module.title, in: window)
                 requireButtonHit(moduleButton, through: content, phase: "compact Modules")
-                let card = view("settings.modules.card.\(module.rawValue)", in: window)
+                let card = view("settings.modules.row.\(module.rawValue)", in: window)
                 let cardInHost = card.convert(card.bounds, to: contentHost)
                 require(
                     contentHost.bounds.insetBy(dx: -1, dy: -1).contains(cardInHost),
@@ -1325,6 +1333,15 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "AppKit owns the floating glass sidebar")
                 require(nativeSplit?.splitViewItems.last?.automaticallyAdjustsSafeAreaInsets == true,
                     "detail content respects the native sidebar safe area")
+                let backdrop = view("settings.window.backdrop", in: window) as! NSVisualEffectView
+                require(!window.isOpaque && window.backgroundColor.alphaComponent == 0,
+                    "glass window does not obscure the system backdrop with an opaque fill")
+                require(!backdrop.isHidden && backdrop.material == .underWindowBackground
+                    && backdrop.blendingMode == .behindWindow,
+                    "window uses the documented behind-window system material")
+                let container = view("settings.glass-container", in: window) as! NSGlassEffectContainerView
+                require(container.contentView === nativeSplit?.view && container.spacing == 0,
+                    "related glass surfaces share one native batching container without merging")
                 require(divider.isHidden, "glass navigation has no extra painted divider")
                 let switches = descendants(ofType: NSSwitch.self, in: content).filter { !$0.isHidden }
                 require(switches.count == 4, "General exposes three native switches and one global switch")
@@ -1366,8 +1383,25 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(Settings.checksForUpdatesOnLaunch != originalUpdatePreference,
                     "native switch routes the existing settings action")
                 Settings.checksForUpdatesOnLaunch = originalUpdatePreference
+                for identifier in ["general", "menu-bar-icon", "modules"] {
+                    controller.selectSectionForTest(identifier: identifier)
+                    content.layoutSubtreeIfNeeded()
+                    let surfaces = descendants(ofType: NSGlassEffectView.self, in: content)
+                        .filter { $0.identifier?.rawValue == "settings.control-group.glass" }
+                    require(surfaces.count == 1 && surfaces[0].contentView != nil
+                        && surfaces[0].style == .regular && surfaces[0].tintColor == nil,
+                        "each page uses one untinted native glass group containing its controls")
+                }
+                controller.selectSectionForTest(identifier: "general")
+                window.makeFirstResponder(descendants(ofType: NSSwitch.self, in: content)
+                    .first { $0.accessibilityLabel() == "Check for Updates on Launch" })
                 Settings.liquidGlassEnabled = false
                 require(first?.appearance?.name == .darkAqua, "off restores baseline dark window")
+                require(window.isOpaque && backdrop.isHidden,
+                    "off restores the opaque classic window and disables its backdrop")
+                require(descendants(ofType: NSGlassEffectView.self, in: content)
+                    .allSatisfy { $0.identifier?.rawValue != "settings.control-group.glass" },
+                    "off removes custom glass while retaining the controls")
                 require(update.bezelStyle == .rounded, "off restores baseline primary bezel")
                 require(controller.sidebarForTest.selectionHighlightStyle == .none,
                     "off restores baseline custom sidebar selection")
@@ -1803,7 +1837,9 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("detailItem.automaticallyAdjustsSafeAreaInsets = true", source)
         self.assertIn("enabled ? .glass : .rounded", source)
         self.assertIn('forResource: "AppIconGlassSettings"', source)
-        self.assertNotIn("NSGlassEffectView", source)
+        self.assertIn("glass.contentView = controls", source)
+        self.assertIn("container.contentView = split.view", source)
+        self.assertIn("windowBackdrop.material = .underWindowBackground", source)
         self.assertIn("static let generalListHeight: CGFloat = 272", source)
 
     def test_selected_icon_indicator_uses_semantic_accent(self):

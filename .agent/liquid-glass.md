@@ -18,6 +18,7 @@ release or a claim of pixel identity with Apple's iPhone navigation examples.
 | Mode chooser | Use three mutually exclusive NSButton `.glass` controls, with native selection emphasis and one shared NSGlassEffectContainerView. Remove the ordinary segmented well and extra enclosing glass view. Retain established classic geometry, control and reduced-motion fallback. | Real composited buttons and bounds; pointer, keyboard, disabled modes, in-flight operations and focus transfer. |
 | Settings/quick-menu trigger | Keep a separate round native `.glass` button beside the mode buttons in the same NSGlassEffectContainerView; retain the standard NSMenu. | Distinct button shapes, active/inactive readability, keyboard opening, menu anchoring and close/reopen. |
 | Settings navigation | Use NSSplitViewController with a native sidebar item and automatic detail safe area. Let AppKit own the floating glass; retain the compact classic sidebar when off. | All three pages, live switching without rebuilding pages or repeating helper requests; preserve focused controls across reparenting. |
+| Settings window and groups | Use a transparent NSWindow over NSVisualEffectView `.underWindowBackground` with `.behindWindow` blending. Each page has one regular NSGlassEffectView containing its controls; batch related effects with NSGlassEffectContainerView. Remove opaque group fills. | Actual compositor captures over different backdrops; all three pages, classic round trip and system Reduce Transparency. |
 | Settings controls | Native NSSwitch and glass button styles when enabled; semantic text and system accessibility. | Unknown states must remain disabled/explicitly unknown; async recovery controls must keep the active Tab chain. |
 | System menu-bar glyph | Retain the template/semantic battery glyph, not a miniature textured glass illustration. | Legibility and existing seven-state icon previews. |
 | App identity icon | Compose original vector layers in Apple's Icon Composer; use system-generated material and appearance variants. | Native export and asset compilation; primary-system-icon scope is separate from the runtime option. |
@@ -37,14 +38,15 @@ release or a claim of pixel identity with Apple's iPhone navigation examples.
 
 ## Current verification
 
-- The [Settings refinement review](../design/settings/liquid-glass-refinement/README.md)
-  contains four new VM compositor captures: General, Modules, Menu Bar Icon,
-  and the retained icon selection after returning to Classic. Module cards
-  now use wide static illustrations, consistent symbols and 12-point wrapping
-  descriptions. Content groups and icon samples no longer stack visible
-  borders in glass mode. Its final source passes 308 Swift tests and 470 Python
-  tests (four existing GUI opt-in skips). This is a local source review, not
-  validation or installation of a new release.
+- The [native glass review](../design/settings/native-glass/README.md) records
+  the whole-window material revision following the user's Control Center
+  reference. It also retains the grouped module rows and monochrome symbols
+  from the [intermediate list review](../design/settings/modules-list/README.md).
+  Refer to the current review for exact-source test and compositor evidence.
+- The earlier [Settings refinement review](../design/settings/liquid-glass-refinement/README.md)
+  records the native sidebar, General and Menu Bar Icon changes. Its Modules
+  card design is superseded; its screenshots and test results remain historical
+  evidence for that source revision.
 
 - UI7 full Swift suite: 308/308 pass with warnings-as-errors. Python: 470
   total, 466 pass and four existing interaction opt-in skips. Native cells
