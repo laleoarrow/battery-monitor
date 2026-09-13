@@ -172,7 +172,7 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         updateFixture()
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
-        if let index = CommandLine.arguments.firstIndex(of: "--export-gallery"),
+        if let index = CommandLine.arguments.firstIndex(where: { ["--export-gallery", "--prepare-gallery"].contains($0) }),
            index + 1 < CommandLine.arguments.count, #available(macOS 14, *) {
             Task { @MainActor in
                 do {
@@ -477,7 +477,8 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
     /// App-owned fixtures captured by WindowServer, with no capture permission prompt.
     @available(macOS 14, *)
     @MainActor private func exportGallery(to directory: URL) async throws {
-        guard CGPreflightScreenCaptureAccess() else {
+        let externalCapture = CommandLine.arguments.contains("--prepare-gallery")
+        guard externalCapture || CGPreflightScreenCaptureAccess() else {
             throw NSError(domain: "WattsonGallery", code: 1,
                           userInfo: [NSLocalizedDescriptionKey: "Existing screen capture permission required"])
         }
@@ -488,13 +489,31 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         anchor.isBordered = false
         backdrop.diagnostic = false
         usb.state = .off
+        if let screen = NSScreen.main { window.setFrame(screen.visibleFrame, display: true) }
 
         func descendants(_ view: NSView) -> [NSView] {
             [view] + view.subviews.flatMap(descendants)
         }
         func capture(_ target: NSWindow, name: String) async throws {
+            NSApp.activate(ignoringOtherApps: true)
+            target.makeKeyAndOrderFront(nil)
             target.contentView?.layoutSubtreeIfNeeded()
             try await Task.sleep(nanoseconds: 700_000_000)
+            if externalCapture {
+                let request = try JSONSerialization.data(withJSONObject: ["window": target.windowNumber, "name": name])
+                try request.write(to: directory.appendingPathComponent("frame.json"), options: .atomic)
+                let receipt = directory.appendingPathComponent(name + ".captured")
+                for _ in 0..<600 {
+                    if FileManager.default.fileExists(atPath: receipt.path) {
+                        print("GALLERY_CAPTURED: \(name)")
+                        fflush(stdout)
+                        return
+                    }
+                    try await Task.sleep(nanoseconds: 100_000_000)
+                }
+                throw NSError(domain: "WattsonGallery", code: 5,
+                              userInfo: [NSLocalizedDescriptionKey: "External capture timed out: \(name)"])
+            }
             let content = try await SCShareableContent.excludingDesktopWindows(true, onScreenWindowsOnly: true)
             guard let app = content.applications.first(where: { $0.processID == ProcessInfo.processInfo.processIdentifier }),
                   let item = content.windows.first(where: { $0.windowID == CGWindowID(target.windowNumber) }),
@@ -505,8 +524,8 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
             let bounds = item.frame.insetBy(dx: -8, dy: -8)
             let config = SCStreamConfiguration()
             config.sourceRect = bounds.offsetBy(dx: -display.frame.minX, dy: -display.frame.minY)
-            config.width = Int(bounds.width * 2)
-            config.height = Int(bounds.height * 2)
+            config.width = Int(bounds.width * CGFloat(display.width) / display.frame.width)
+            config.height = Int(bounds.height * CGFloat(display.height) / display.frame.height)
             config.showsCursor = false
             config.capturesAudio = false
             let filter = SCContentFilter(display: display, including: [app], exceptingWindows: [])
