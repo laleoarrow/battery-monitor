@@ -64,10 +64,16 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertNotIn("support-diagnostics-v1.0.0", self.readme)
         normalized_readme = " ".join(self.readme.split())
         normalized_promote_workflow = " ".join(self.promote_workflow.split())
-        current_readme = self.readme.split(
-            "## What's new in v3.0.23", 1
-        )[1].split("## v3.0.18 measured attached-device output (historical)", 1)[0]
-        normalized_current_readme = " ".join(current_readme.split())
+        self.assertIn(
+            "[GitHub Releases](https://github.com/laleoarrow/battery-monitor/releases)",
+            self.readme,
+        )
+        self.assertIn(
+            "A newer source version does not mean an update has been published.",
+            normalized_readme,
+        )
+        self.assertNotRegex(self.readme, r"(?im)^#{1,6}\s+What's new\b")
+        self.assertNotRegex(self.readme, r"(?im)^#{1,6}\s+.*\bhistorical\b")
         current_handoff = self.handoff.split(
             "## v3.0.23 strict power observation runtime", 1
         )[1].split("## v3.0.18 measured attached-device output (historical)", 1)[0]
@@ -113,7 +119,6 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "incoherent",
         ):
             self.assertIn(candidate_topic, normalized_promote_workflow)
-            self.assertIn(candidate_topic, normalized_current_readme)
             self.assertIn(candidate_topic, normalized_current_handoff)
 
         for plugged_output_topic in (
@@ -123,7 +128,6 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "never double-counted",
             "does not claim external-meter absolute accuracy",
         ):
-            self.assertIn(plugged_output_topic, normalized_current_readme)
             self.assertIn(plugged_output_topic, normalized_current_handoff)
 
         for battery_direction_topic in (
@@ -136,7 +140,6 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "flow consistency",
             "does not claim external-meter absolute accuracy",
         ):
-            self.assertIn(battery_direction_topic, normalized_current_readme)
             self.assertIn(battery_direction_topic, normalized_current_handoff)
 
         for connector_topic in (
@@ -152,7 +155,6 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "conservation math",
             "does not accelerate firmware publication or hardware recognition",
         ):
-            self.assertIn(connector_topic, normalized_current_readme)
             self.assertIn(connector_topic, normalized_current_handoff)
 
         for technical_topic in (
@@ -192,33 +194,6 @@ class ReleasePackagingContractTests(unittest.TestCase):
             "720×520",
         ):
             self.assertIn(current_release_topic, normalized_promote_workflow)
-
-        for user_facing_topic in (
-            "a source version alone is not a published update",
-            "dedicated Menu Bar Icon page",
-            "Wattson icon only",
-            "Wattson with percentage",
-            "macOS 26 icon only",
-            "macOS 26 with percentage",
-            "appearances vertically",
-            "one full-width option per row",
-            "seven real production-rendered states",
-            "Battery, Full, Charging, Low, Low + AC, Saver, and Saver + AC",
-            "real BatteryIcon renderer",
-            "percentage rows show matching per-state values to the left of each glyph",
-            "full-size macOS 26 Control Center battery parts from the running system",
-            "23×12 outline and 11×14 bolt",
-            "Every connected state uses the system bolt",
-            "only the battery fill is yellow",
-            "outline, cap, and bolt keep the menu-bar foreground colour",
-            "General adds Check for Updates and Check for Updates on Launch",
-            "Manual checks read GitHub Latest Release",
-            "launch checks default on, stay quiet when current or offline",
-            "never download or install automatically",
-            "packaged Wattson app icon",
-            "720×520",
-        ):
-            self.assertIn(user_facing_topic, normalized_readme)
 
         for misleading_install_claim in (
             "Every installer now converges",
