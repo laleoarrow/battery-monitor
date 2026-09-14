@@ -72,6 +72,18 @@ and never refresh or mutate privileged controls. The menu-bar icon continues
 to follow the system menu bar. Accessibility preferences remain authoritative.
 This preference does not change macOS appearance or modify signed bundle icons.
 
+General > Appearance also provides **Transparency** (0–100%) when Liquid Glass
+is enabled. 0% supplies a solid background; 100% retains the selected native
+material and is the unchanged default. Intermediate values adjust background
+fills in the popup and Settings content; text and controls stay fully opaque.
+The value persists across themes, material choices, and turning glass off.
+Reduce Transparency and Increase Contrast override the fill and disable the
+slider while preserving its saved value. A separate typed notification redraws
+backgrounds without rebuilding hosts, moving focus, or querying the helper.
+Settings uses its existing AppKit fill surfaces so native glass batching cannot
+lift the fill above controls. The popup retains one native material over a
+non-interactive backing view.
+
 Settings now delegates its glass sidebar to `NSSplitViewController` and a native
 sidebar item. The native detail safe area positions the retained content;
 appearance changes reparent the existing controls and preserve keyboard focus.

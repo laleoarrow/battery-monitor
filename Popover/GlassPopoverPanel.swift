@@ -31,12 +31,15 @@ final class GlassPopoverPanel: NSPanel {
         glass.style = style
         glass.cornerRadius = 26
         glass.contentView = content
+        let background = GlassBackgroundView(frame: glass.frame, cornerRadius: glass.cornerRadius)
+        background.autoresizingMask = [.width, .height]
+        contentView!.addSubview(background)
         contentView!.addSubview(glass)
     }
 
     @available(macOS 26.0, *)
     func detachContent() {
-        (contentView?.subviews.first as? NSGlassEffectView)?.contentView = nil
+        contentView?.subviews.compactMap { $0 as? NSGlassEffectView }.first?.contentView = nil
     }
 
     /// A process-wide event monitor must not steal Escape from another Wattson

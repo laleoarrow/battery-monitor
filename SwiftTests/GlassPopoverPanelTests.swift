@@ -5,7 +5,7 @@ import XCTest
 /// These tests construct hidden windows only. Real focus, menu event delivery,
 /// backdrop rendering and cross-app dismissal belong to the GUI VM harness.
 final class GlassPopoverPanelTests: XCTestCase {
-    func testPanelHasOneNativeGlassRootAndNoSecondBackdrop() throws {
+    func testPanelKeepsOneNativeMaterialAboveTheNonInteractiveBacking() throws {
         guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
         _ = NSApplication.shared
         for style in [NSGlassEffectView.Style.regular, .clear] {
@@ -13,8 +13,12 @@ final class GlassPopoverPanelTests: XCTestCase {
             let panel = GlassPopoverPanel(content: content,
                 frame: NSRect(x: -420, y: 80, width: 380, height: 420), style: style)
             let root = try XCTUnwrap(panel.contentView)
-            XCTAssertEqual(root.subviews.count, 1)
-            let glass = try XCTUnwrap(root.subviews.first as? NSGlassEffectView)
+            XCTAssertEqual(root.subviews.count, 2)
+            XCTAssertEqual(root.subviews.compactMap { $0 as? NSGlassEffectView }.count, 1)
+            let backing = try XCTUnwrap(root.subviews.first as? GlassBackgroundView)
+            XCTAssertNil(backing.hitTest(.zero))
+            XCTAssertFalse(backing.isAccessibilityElement())
+            let glass = try XCTUnwrap(root.subviews.compactMap { $0 as? NSGlassEffectView }.first)
             XCTAssertTrue(glass.contentView === content)
             XCTAssertEqual(glass.style, style)
             XCTAssertNil(glass.tintColor)
@@ -58,9 +62,10 @@ final class GlassPopoverPanelTests: XCTestCase {
             frame: NSRect(x: 0, y: 0, width: 380, height: 420), style: .clear)
         panel.setFrame(NSRect(x: -380, y: -500, width: 380, height: 560), display: false)
         let root = try XCTUnwrap(panel.contentView)
-        let glass = try XCTUnwrap(root.subviews.first as? NSGlassEffectView)
+        let glass = try XCTUnwrap(root.subviews.compactMap { $0 as? NSGlassEffectView }.first)
         XCTAssertEqual(glass.frame.size, NSSize(width: 360, height: 540))
         XCTAssertEqual(glass.frame.origin, NSPoint(x: 10, y: 10))
+        XCTAssertEqual(root.subviews.first?.frame, glass.frame)
         XCTAssertFalse(panel.isVisible)
     }
 
@@ -131,7 +136,7 @@ final class GlassPopoverPanelTests: XCTestCase {
             let content = NSView(frame: NSRect(x: 0, y: 0, width: 360, height: 400))
             let panel = GlassPopoverPanel(content: content,
                 frame: NSRect(x: 0, y: 0, width: 380, height: 420), style: style)
-            let glass = try XCTUnwrap(panel.contentView?.subviews.first as? NSGlassEffectView)
+            let glass = try XCTUnwrap(panel.contentView?.subviews.compactMap { $0 as? NSGlassEffectView }.first)
             for name in [NSAppearance.Name.aqua, .darkAqua, .aqua] {
                 application.appearance = try XCTUnwrap(NSAppearance(named: name))
                 for view in [panel.contentView!, glass, content] {

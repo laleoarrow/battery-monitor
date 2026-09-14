@@ -77,6 +77,7 @@ enum Settings {
         case menuBarIconStyle
         case checkForUpdatesOnLaunch
         case liquidGlassAppearance
+        case liquidGlassTransparency
         case colorScheme
         case inAppLogoStyle
         case dockIconStyle
@@ -91,6 +92,7 @@ enum Settings {
     private static let checkForUpdatesOnLaunchKey = "updates.checkOnLaunch"
     private static let liquidGlassKey = "appearance.liquidGlassEnabled"
     private static let liquidGlassStyleKey = "appearance.liquidGlassStyle"
+    private static let liquidGlassTransparencyKey = "appearance.liquidGlassTransparency"
     private static let colorSchemeKey = "appearance.colorScheme"
     private static let inAppLogoStyleKey = "appearance.inAppLogoStyle"
     private static let dockIconStyleKey = "appearance.dockIconStyle"
@@ -169,6 +171,23 @@ enum Settings {
             guard liquidGlassStyle != newValue else { return }
             defaults.set(newValue.rawValue, forKey: liquidGlassStyleKey)
             postChange(.liquidGlassAppearance)
+        }
+    }
+
+    /// Relative background transparency: 0 is solid, 1 retains native glass.
+    /// The default adds no fill, preserving the existing material on upgrade.
+    static var liquidGlassTransparency: Double {
+        get {
+            guard let value = defaults.object(forKey: liquidGlassTransparencyKey) as? Double,
+                  value.isFinite else { return 1 }
+            return min(max(value, 0), 1)
+        }
+        set {
+            guard newValue.isFinite else { return }
+            let value = min(max(newValue, 0), 1)
+            guard liquidGlassTransparency != value else { return }
+            defaults.set(value, forKey: liquidGlassTransparencyKey)
+            postChange(.liquidGlassTransparency)
         }
     }
 
