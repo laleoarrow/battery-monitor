@@ -2230,7 +2230,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
     SettingsSectionController
 {
     let identifier = "menu-bar-icon"
-    let title = "Icon"
+    let title = "Display"
     let symbolName = "battery.0"
     let view = NSView()
 

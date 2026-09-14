@@ -279,6 +279,7 @@ private struct InteractiveGlassModeView: View {
                 Button { model.showMenu() } label: {
                     Image(systemName: "slider.horizontal.3")
                         .frame(width: 38, height: 38)
+                        .contentShape(Circle())
                         .contentShape(.focusEffect, Circle())
                 }
                 .buttonStyle(.plain)

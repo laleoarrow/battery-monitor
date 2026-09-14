@@ -388,7 +388,7 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         usb.target = self
         usb.action = #selector(changeFixture)
         controls.addSubview(usb)
-        for (index, title) in ["General", "Menu Bar Icon", "Modules"].enumerated() {
+        for (index, title) in ["General", "Display", "Modules"].enumerated() {
             let button = NSButton(title: title, target: self, action: #selector(showSettings(_:)))
             button.tag = index
             button.frame = NSRect(x: 20 + index * 146, y: 128, width: 140, height: 32)

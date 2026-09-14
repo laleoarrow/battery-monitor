@@ -489,7 +489,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             )
             require(
                 controller.sectionIdentifiersForTest == ["general", "menu-bar-icon", "modules"],
-                "section order is General, Icon, Modules"
+                "section order is General, Display, Modules"
             )
             require(Set(controller.sectionIdentifiersForTest).count == 3, "unique section identifiers")
             require(controller.selectedSectionIdentifierForTest == "general", "general initially selected")
@@ -552,22 +552,22 @@ class SettingsWindowContractTests(unittest.TestCase):
             let navigationLabels = descendants(ofType: NSTextField.self, in: navigation)
             require(
                 navigationLabels.filter {
-                    ["General", "Icon", "Modules"].contains($0.stringValue)
+                    ["General", "Display", "Modules"].contains($0.stringValue)
                 }.count == 3
                     && navigationLabels.filter {
-                        ["General", "Icon", "Modules"].contains($0.stringValue)
+                        ["General", "Display", "Modules"].contains($0.stringValue)
                     }
                     .allSatisfy { approximately($0.font?.pointSize ?? -1, 13) },
                 "navigation labels use 13-point type"
             )
             let iconNavigationLabel = navigationLabels.first {
-                $0.stringValue == "Icon"
+                $0.stringValue == "Display"
             }
             require(
                 (iconNavigationLabel?.attributedStringValue.size().width
                     ?? .greatestFiniteMagnitude)
                     <= (iconNavigationLabel?.frame.width ?? 0) + 1,
-                "Icon navigation title is fully visible"
+                "Display navigation title is fully visible"
             )
             require(
                 descendants(ofType: NSView.self, in: view("settings.section.general", in: first))
@@ -861,7 +861,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             )
             require(
                 controller.visibleSectionIdentifierForTest == "menu-bar-icon",
-                "selection delegate shows Icon"
+                "selection delegate shows Display"
             )
             require(controller.contentHostSubviewCountForTest == 1, "icon page keeps one hosted view")
             first?.contentView?.layoutSubtreeIfNeeded()
@@ -1102,7 +1102,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             )
             require(iconGroup.isAccessibilityElement(), "icon choices expose one AX group")
             require(iconGroup.accessibilityRole() == .radioGroup, "icon choices use AX radioGroup")
-            require(iconGroup.accessibilityLabel() == "Icon", "AX group has a useful label")
+            require(iconGroup.accessibilityLabel() == "Display", "AX group has a useful label")
             require(!(iconGroup.accessibilityHelp() ?? "").isEmpty, "AX group has help")
 
             let wattsonIconOnly = button("Wattson icon only", in: first)
@@ -1456,7 +1456,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             controller.selectSectionForTest(identifier: "menu-bar-icon")
             content.layoutSubtreeIfNeeded()
             for iconButton in iconButtons {
-                requireButtonHit(iconButton, through: content, phase: "compact Icon")
+                requireButtonHit(iconButton, through: content, phase: "compact Display")
                 let cardInHost = iconButton.convert(iconButton.bounds, to: contentHost)
                 require(
                     contentHost.bounds.insetBy(dx: -1, dy: -1).contains(cardInHost),
@@ -2136,7 +2136,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             controller.sidebarForTest.keyDown(with: down)
             require(
                 controller.visibleSectionIdentifierForTest == "menu-bar-icon",
-                "Down key shows Icon"
+                "Down key shows Display"
             )
             controller.sidebarForTest.keyDown(with: down)
             require(controller.visibleSectionIdentifierForTest == "modules", "second Down key shows Modules")
@@ -2480,7 +2480,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             "Check for Updates",
             "Check for Updates on Launch",
             'let identifier = "menu-bar-icon"',
-            'let title = "Icon"',
+            'let title = "Display"',
             '"Wattson icon only"',
             '"Wattson with percentage"',
             '"macOS 26 icon only"',
