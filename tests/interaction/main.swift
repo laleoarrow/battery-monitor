@@ -1647,6 +1647,33 @@ if #available(macOS 26.0, *) {
             // isolated fixture does not install or consult a real helper.
             owner.update(mode: .auto, helperInstalled: true,
                          systemBatteryIconHidden: false, tint: .systemBlue)
+            var menuRequests = 0
+            owner.onShowMenu = { anchor in
+                if anchor.window === owner.window { menuRequests += 1 }
+            }
+            owner.scrollToVisible(owner.bounds)
+            // These points are inside the visible 38-point circle but outside
+            // the small symbol. AXPress cannot detect this missing hit area.
+            if let window = owner.window {
+                for offset in [NSPoint(x: 13, y: 7), NSPoint(x: -13, y: -7)] {
+                    let location = owner.convert(NSPoint(
+                        x: owner.bounds.maxX - 19 + offset.x, y: 55 + offset.y
+                    ), to: nil)
+                    let expected = menuRequests + 1
+                    for type in [NSEvent.EventType.leftMouseDown, .leftMouseUp] {
+                        let event = NSEvent.mouseEvent(with: type, location: location,
+                            modifierFlags: [], timestamp: ProcessInfo.processInfo.systemUptime,
+                            windowNumber: window.windowNumber, context: nil,
+                            eventNumber: 0, clickCount: 1, pressure: 0)!
+                        app.postEvent(event, atStart: false)
+                    }
+                    let opened = runApplication(until: { menuRequests == expected }, timeout: 1)
+                    check("设置圆形按钮的空白区域单击即打开菜单 \(offset)",
+                          opened && menuRequests == expected && requests == 0)
+                }
+            } else {
+                check("设置按钮点击测试具备真实玻璃窗口", false)
+            }
             a2.beginDragForTest(startX: 10)
             let generation = a2.cancellationGenerationForTest
             panel.closeBypassingControllerForTest()

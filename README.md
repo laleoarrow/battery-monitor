@@ -38,7 +38,7 @@ where it is going, and how the picture has changed over the last two minutes.
 - System Light/Dark appearance, keyboard, VoiceOver, Reduce Motion,
   Reduce Transparency, and Increase Contrast support.
 - Launch-at-login, system battery-icon, and update controls.
-- A compact native Settings window for General, Icon, and Modules.
+- A compact native Settings window for General, Display, and Modules.
 - System, Light, and Dark themes, independent of Classic or Liquid Glass styling.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
@@ -185,7 +185,7 @@ App in the same PKG. Building these artifacts does not publish a release.
 - [Product website](https://laleoarrow.github.io/battery-monitor/)
 - [Latest release](https://github.com/laleoarrow/battery-monitor/releases/latest)
 - [Liquid Glass adoption review](.agent/liquid-glass.md)
-- [4.1.0 real-window gallery](design/releases/v4.1.0/README.md)
+- [4.2.2 real-window gallery](design/releases/v4.2.2/README.md)
 - [Issues and feedback](https://github.com/laleoarrow/battery-monitor/issues)
 - [Release and deployment notes](.agent/release.md)
 
