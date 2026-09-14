@@ -84,6 +84,12 @@ Settings uses its existing AppKit fill surfaces so native glass batching cannot
 lift the fill above controls. The popup retains one native material over a
 non-interactive backing view.
 
+The popup's foreground content is a sibling above its `NSGlassEffectView`,
+not the material's `contentView`: nesting the SwiftUI footer inside native
+glass flattens its interactive material into solid fills. Keep the three
+sibling frames aligned when resizing. The footer uses Clear in Dark appearance
+and Regular in Light so its selection stays visible on white backgrounds.
+
 Settings now delegates its glass sidebar to `NSSplitViewController` and a native
 sidebar item. The native detail safe area positions the retained content;
 appearance changes reparent the existing controls and preserve keyboard focus.

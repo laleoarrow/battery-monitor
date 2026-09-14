@@ -186,7 +186,7 @@ App in the same PKG. Building these artifacts does not publish a release.
 - [Product website](https://laleoarrow.github.io/battery-monitor/)
 - [Latest release](https://github.com/laleoarrow/battery-monitor/releases/latest)
 - [Liquid Glass adoption review](.agent/liquid-glass.md)
-- [4.3.0 real-window gallery](design/releases/v4.3.0/README.md)
+- [4.3.1 real-window gallery](design/releases/v4.3.1/README.md)
 - [Issues and feedback](https://github.com/laleoarrow/battery-monitor/issues)
 - [Release and deployment notes](.agent/release.md)
 
