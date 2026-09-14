@@ -109,9 +109,9 @@ private enum SettingsStyle {
     static let surfaceCornerRadius: CGFloat = 14
 
     static let contentBackground = adaptive(0x151618, .windowBackgroundColor, light: 0xF4F4F6)
-    static let canvasBackground = adaptive(0x151618, .clear, light: 0xF4F4F6)
-    static let sidebarBackground = adaptive(0x1E1F21, .clear, light: 0xE9EAEC)
-    static let surfaceBackground = adaptive(0x191A1C, .clear, light: 0xFFFFFF)
+    static let canvasBackground = adaptive(0x151618, GlassBackgroundView.fillColor, light: 0xF4F4F6)
+    static let sidebarBackground = adaptive(0x1E1F21, GlassBackgroundView.fillColor, light: 0xE9EAEC)
+    static let surfaceBackground = adaptive(0x191A1C, GlassBackgroundView.fillColor, light: 0xFFFFFF)
     static let tileBackground = adaptive(0x202124, .clear, light: 0xE9EAED)
     static let previewBackground = adaptive(0x1A1B1C, .clear, light: 0xE5E6E8)
     static let selection = adaptive(0x2B362F, .controlAccentColor.withAlphaComponent(0.10), light: 0xDBEBDD)
@@ -583,6 +583,14 @@ private final class SettingsLogoImageView: NSImageView {
     }
 }
 
+private final class SettingsTransparencySlider: NSSlider {
+    override func becomeFirstResponder() -> Bool {
+        let accepted = super.becomeFirstResponder()
+        if accepted, let row = superview { row.scrollToVisible(row.bounds) }
+        return accepted
+    }
+}
+
 private final class SettingsAppearancePopupButton: NSPopUpButton {
     weak var focusScrollView: NSView?
 
@@ -628,6 +636,9 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let automaticUpdateButton: SettingsToggleButton
     private let liquidGlassSwitch = NSSwitch()
     private let liquidGlassStylePopup = NSPopUpButton(frame: .zero, pullsDown: false)
+    private let transparencySlider = SettingsTransparencySlider()
+    private let transparencyValue = NSTextField(labelWithString: "100%")
+    private var displayOptionsObserver: NSObjectProtocol?
     private let colorSchemePopup = SettingsAppearancePopupButton(frame: .zero, pullsDown: false)
     private let logoPopup = SettingsAppearancePopupButton(frame: .zero, pullsDown: false)
     private let dockPopup = SettingsAppearancePopupButton(frame: .zero, pullsDown: false)
@@ -693,6 +704,9 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         }
         if let appearanceObserver {
             NotificationCenter.default.removeObserver(appearanceObserver)
+        }
+        if let displayOptionsObserver {
+            NSWorkspace.shared.notificationCenter.removeObserver(displayOptionsObserver)
         }
     }
 
@@ -1039,7 +1053,6 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             liquidGlassStylePopup.addItem(withTitle: style == .regular ? "Standard Glass" : "Clear Glass")
             liquidGlassStylePopup.lastItem?.representedObject = style.rawValue
         }
-        refreshAppearanceControls()
         let styleLabel = NSTextField(labelWithString: "Popup background")
         styleLabel.font = SettingsStyle.detailFont
         styleLabel.textColor = SettingsStyle.secondaryText
@@ -1048,6 +1061,33 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         styleRow.translatesAutoresizingMaskIntoConstraints = false
         styleRow.addSubview(styleLabel)
         styleRow.addSubview(liquidGlassStylePopup)
+
+        transparencySlider.identifier = NSUserInterfaceItemIdentifier("settings.appearance.glass-transparency")
+        transparencySlider.cell?.setAccessibilityLabel("Glass transparency")
+        transparencySlider.toolTip = "Adjust popup and Settings content backgrounds. 0% is solid; 100% keeps native glass. Text and controls stay opaque. macOS accessibility settings take priority."
+        transparencySlider.cell?.setAccessibilityHelp(transparencySlider.toolTip)
+        transparencySlider.minValue = 0
+        transparencySlider.maxValue = 100
+        transparencySlider.controlSize = .small
+        transparencySlider.isContinuous = true
+        transparencySlider.target = self
+        transparencySlider.action = #selector(changeGlassTransparency(_:))
+        transparencySlider.translatesAutoresizingMaskIntoConstraints = false
+        transparencyValue.font = .monospacedDigitSystemFont(ofSize: 11, weight: .regular)
+        transparencyValue.textColor = SettingsStyle.secondaryText
+        transparencyValue.alignment = .right
+        transparencyValue.setAccessibilityElement(false)
+        transparencyValue.translatesAutoresizingMaskIntoConstraints = false
+        let transparencyLabel = NSTextField(labelWithString: "Transparency")
+        transparencyLabel.font = SettingsStyle.detailFont
+        transparencyLabel.textColor = SettingsStyle.secondaryText
+        transparencyLabel.translatesAutoresizingMaskIntoConstraints = false
+        let transparencyRow = NSView()
+        transparencyRow.translatesAutoresizingMaskIntoConstraints = false
+        transparencyRow.addSubview(transparencyLabel)
+        transparencyRow.addSubview(transparencySlider)
+        transparencyRow.addSubview(transparencyValue)
+        refreshAppearanceControls()
         logoPopup.identifier = NSUserInterfaceItemIdentifier("settings.appearance.in-app-logo")
         logoPopup.setAccessibilityLabel("In-App Logo")
         logoPopup.setAccessibilityHelp("Finder and menu bar icons stay unchanged. Previews are static artwork.")
@@ -1109,6 +1149,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         box.addSubview(themeRow)
         box.addSubview(option)
         box.addSubview(styleRow)
+        box.addSubview(transparencyRow)
         box.addSubview(logoRow)
         box.addSubview(dockRow)
         option.translatesAutoresizingMaskIntoConstraints = false
@@ -1123,7 +1164,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             switchSlot.heightAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.height),
             liquidGlassSwitch.centerXAnchor.constraint(equalTo: switchSlot.centerXAnchor),
             liquidGlassSwitch.centerYAnchor.constraint(equalTo: switchSlot.centerYAnchor),
-            surface.heightAnchor.constraint(equalToConstant: 44 + SettingsStyle.generalRowHeight + 32 + 36 + 64),
+            surface.heightAnchor.constraint(equalToConstant: 44 + SettingsStyle.generalRowHeight + 32 + 36 + 36 + 64),
             surface.widthAnchor.constraint(equalTo: section.widthAnchor),
             themeRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
             themeRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
@@ -1151,9 +1192,22 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             liquidGlassStylePopup.trailingAnchor.constraint(equalTo: styleRow.trailingAnchor, constant: -14),
             liquidGlassStylePopup.centerYAnchor.constraint(equalTo: styleLabel.centerYAnchor),
             liquidGlassStylePopup.widthAnchor.constraint(equalToConstant: 162),
+            transparencyRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
+            transparencyRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
+            transparencyRow.topAnchor.constraint(equalTo: styleRow.bottomAnchor),
+            transparencyRow.heightAnchor.constraint(equalToConstant: 36),
+            transparencyLabel.leadingAnchor.constraint(equalTo: styleLabel.leadingAnchor),
+            transparencyLabel.centerYAnchor.constraint(equalTo: transparencyRow.centerYAnchor, constant: -4),
+            transparencyLabel.trailingAnchor.constraint(lessThanOrEqualTo: transparencySlider.leadingAnchor, constant: -12),
+            transparencySlider.leadingAnchor.constraint(equalTo: liquidGlassStylePopup.leadingAnchor),
+            transparencySlider.trailingAnchor.constraint(equalTo: transparencyValue.leadingAnchor, constant: -6),
+            transparencySlider.centerYAnchor.constraint(equalTo: transparencyLabel.centerYAnchor),
+            transparencyValue.trailingAnchor.constraint(equalTo: liquidGlassStylePopup.trailingAnchor),
+            transparencyValue.widthAnchor.constraint(equalToConstant: 34),
+            transparencyValue.centerYAnchor.constraint(equalTo: transparencyLabel.centerYAnchor),
             logoRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
             logoRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
-            logoRow.topAnchor.constraint(equalTo: styleRow.bottomAnchor),
+            logoRow.topAnchor.constraint(equalTo: transparencyRow.bottomAnchor),
             logoRow.heightAnchor.constraint(equalToConstant: 36),
             logoLabel.leadingAnchor.constraint(equalTo: styleLabel.leadingAnchor),
             logoLabel.centerYAnchor.constraint(equalTo: logoRow.centerYAnchor, constant: -4),
@@ -1196,6 +1250,12 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         Settings.liquidGlassStyle = style
     }
 
+    @objc private func changeGlassTransparency(_ sender: NSSlider) {
+        guard Settings.usesLiquidGlass,
+              !GlassBackgroundView.accessibilityRequiresSolidBackground else { return }
+        Settings.liquidGlassTransparency = sender.doubleValue.rounded() / 100
+    }
+
     @objc private func selectInAppLogo(_ sender: NSPopUpButton) {
         guard let value = sender.selectedItem?.representedObject as? String,
               let style = Settings.InAppLogoStyle(rawValue: value) else { return }
@@ -1233,6 +1293,16 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             colorSchemePopup.select(item)
         }
         liquidGlassSwitch.state = Settings.liquidGlassEnabled ? .on : .off
+        let adjustable = Settings.usesLiquidGlass && !GlassBackgroundView.accessibilityRequiresSolidBackground
+        if !adjustable, transparencySlider.window?.firstResponder === transparencySlider {
+            transparencySlider.window?.makeFirstResponder(liquidGlassSwitch)
+        }
+        transparencySlider.isEnabled = adjustable
+        transparencySlider.doubleValue = Settings.liquidGlassTransparency * 100
+        transparencyValue.stringValue = "\(Int(transparencySlider.doubleValue.rounded()))%"
+        transparencySlider.cell?.setAccessibilityValueDescription(GlassBackgroundView.accessibilityRequiresSolidBackground
+            ? "Controlled by macOS accessibility settings"
+            : "\(transparencyValue.stringValue), higher is more transparent")
         if !Settings.usesLiquidGlass,
            liquidGlassStylePopup.window?.firstResponder === liquidGlassStylePopup {
             liquidGlassStylePopup.window?.makeFirstResponder(liquidGlassSwitch)
@@ -1336,10 +1406,14 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             forName: Settings.didChange, object: nil, queue: .main
         ) { [weak self] notification in
             let change = notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
-            if change == .liquidGlassAppearance || change == .colorScheme { self?.refreshAppearanceControls() }
+            if change == .liquidGlassAppearance || change == .liquidGlassTransparency || change == .colorScheme { self?.refreshAppearanceControls() }
             if change == .inAppLogoStyle { self?.refreshLogoControls() }
             if change == nil || change == .dockIconStyle { self?.refreshDockControls() }
         }
+        displayOptionsObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+            object: nil, queue: .main
+        ) { [weak self] _ in self?.refreshAppearanceControls() }
         batteryObserver = NotificationCenter.default.addObserver(
             forName: dependencies.systemBatteryIconDidChange,
             object: nil,
@@ -2360,7 +2434,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .checkForUpdatesOnLaunch, .module, .liquidGlassAppearance, .colorScheme, .inAppLogoStyle, .dockIconStyle:
+            case .checkForUpdatesOnLaunch, .module, .liquidGlassAppearance, .liquidGlassTransparency, .colorScheme, .inAppLogoStyle, .dockIconStyle:
                 break
             }
         }
@@ -2710,6 +2784,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         ) { [weak self] notification in
             let change = notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
             if change == .liquidGlassAppearance { self?.refreshLiquidGlassAppearance() }
+            if change == .liquidGlassTransparency { self?.refreshContrastAppearance() }
             if change == .colorScheme { self?.refreshColorScheme() }
             if change == .inAppLogoStyle { self?.identityIcon.refreshLogo() }
         }
@@ -2756,6 +2831,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             (rowView as? SettingsContrastRefreshing)?.refreshContrastAppearance()
         }
         divider.refreshContrastAppearance()
+        updateVisibleSwitchKeyLoop()
     }
 
     private func refreshContrastAppearance(in view: NSView) {
@@ -3094,6 +3170,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         }
         if let control = view as? NSSwitch { return control.isEnabled ? [control] : [] }
         if let popup = view as? NSPopUpButton { return popup.isEnabled ? [popup] : [] }
+        if let slider = view as? NSSlider { return slider.isEnabled ? [slider] : [] }
         if view is NSButton { return [view] }
         return view.subviews.flatMap { keyControls(in: $0) }
     }

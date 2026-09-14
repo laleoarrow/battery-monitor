@@ -487,7 +487,9 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
             .forEach { $0.isHidden = true }
         anchor.title = ""
         anchor.isBordered = false
-        backdrop.diagnostic = false
+        let transparencyGallery = CommandLine.arguments.contains("--transparency-gallery")
+        let transparencyLevels = transparencyGallery ? [0.0, 0.5, 1.0] : [1.0]
+        backdrop.diagnostic = transparencyGallery
         usb.state = .off
         if let screen = NSScreen.main { window.setFrame(screen.visibleFrame, display: true) }
 
@@ -495,6 +497,8 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
             [view] + view.subviews.flatMap(descendants)
         }
         func capture(_ target: NSWindow, name: String) async throws {
+            let name = transparencyGallery
+                ? "transparency-\(Int(Settings.liquidGlassTransparency * 100))-" + name : name
             NSApp.activate(ignoringOtherApps: true)
             target.makeKeyAndOrderFront(nil)
             target.contentView?.layoutSubtreeIfNeeded()
@@ -539,46 +543,70 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
             fflush(stdout)
         }
 
-        for scheme in [Settings.ColorScheme.light, .dark] {
-            Settings.colorScheme = scheme
-            NSApp.appearance = scheme.appearance
-            for presentation in [PreviewPresentation.clearGlass, .standardGlass, .classic] {
-                let style = ["classic", "standard", "clear"][presentation.rawValue]
-                presentation.apply()
-                let fixtures = presentation == .clearGlass ? Array(0..<6) : [0]
-                for fixture in fixtures {
-                    powerState.selectItem(at: fixture)
-                    previewMode = fixture == 5 ? .low : .auto
+        for transparency in transparencyLevels {
+            Settings.liquidGlassTransparency = transparency
+            for scheme in [Settings.ColorScheme.light, .dark] {
+                Settings.colorScheme = scheme
+                NSApp.appearance = scheme.appearance
+                for presentation in [PreviewPresentation.clearGlass, .standardGlass, .classic] {
+                    let style = ["classic", "standard", "clear"][presentation.rawValue]
+                    presentation.apply()
+                    let fixtures = presentation == .clearGlass ? Array(0..<6) : [0]
+                    for fixture in fixtures {
+                        powerState.selectItem(at: fixture)
+                        previewMode = fixture == 5 ? .low : .auto
+                        showPopover()
+                        guard let target = popover.contentWindowForTest else {
+                            throw NSError(domain: "WattsonGallery", code: 4)
+                        }
+                        let state = ["charging", "full", "battery", "mixed", "low-battery", "low-power"][fixture]
+                        try await capture(target, name: "\(style)-\(state)-\(scheme.rawValue)")
+                        popover.handleOutsideClick()
+                        try await Task.sleep(nanoseconds: 650_000_000)
+                    }
+                }
+                for glass in [true, false] {
+                    Settings.liquidGlassEnabled = glass
+                    for section in glass ? ["general", "appearance", "menu-bar-icon", "modules"] : ["appearance"] {
+                        showSettingsSection(section == "appearance" ? "general" : section)
+                        let target = settings.windowForTest!
+                        let views = descendants(target.contentView!)
+                        if let scroll = views.first(where: { $0.identifier?.rawValue == "settings.general.scroll" }) as? NSScrollView {
+                            scroll.contentView.scroll(to: .zero)
+                            target.contentView?.layoutSubtreeIfNeeded()
+                            if section == "appearance", let appearance = views.first(where: {
+                                $0.identifier?.rawValue == "settings.general.appearance"
+                            }) { appearance.scrollToVisible(appearance.bounds) }
+                        }
+                        target.makeFirstResponder(nil)
+                        try await capture(target, name: "settings-\(glass ? "glass" : "classic")-\(section)-\(scheme.rawValue)")
+                        target.orderOut(nil)
+                    }
+                }
+            }
+        }
+        let includeComparison = CommandLine.arguments.contains("--include-transparency-comparison")
+        if includeComparison {
+            backdrop.diagnostic = true
+            PreviewPresentation.clearGlass.apply()
+            powerState.selectItem(at: 1)
+            previewMode = .auto
+            for transparency in [0.0, 0.5, 1.0] {
+                Settings.liquidGlassTransparency = transparency
+                for scheme in [Settings.ColorScheme.light, .dark] {
+                    Settings.colorScheme = scheme
+                    NSApp.appearance = scheme.appearance
                     showPopover()
                     guard let target = popover.contentWindowForTest else {
                         throw NSError(domain: "WattsonGallery", code: 4)
                     }
-                    let state = ["charging", "full", "battery", "mixed", "low-battery", "low-power"][fixture]
-                    try await capture(target, name: "\(style)-\(state)-\(scheme.rawValue)")
+                    try await capture(target, name: "transparency-\(Int(transparency * 100))-full-\(scheme.rawValue)")
                     popover.handleOutsideClick()
                     try await Task.sleep(nanoseconds: 650_000_000)
                 }
             }
-            for glass in [true, false] {
-                Settings.liquidGlassEnabled = glass
-                for section in glass ? ["general", "appearance", "menu-bar-icon", "modules"] : ["appearance"] {
-                    showSettingsSection(section == "appearance" ? "general" : section)
-                    let target = settings.windowForTest!
-                    let views = descendants(target.contentView!)
-                    if let scroll = views.first(where: { $0.identifier?.rawValue == "settings.general.scroll" }) as? NSScrollView {
-                        scroll.contentView.scroll(to: .zero)
-                        target.contentView?.layoutSubtreeIfNeeded()
-                        if section == "appearance", let appearance = views.first(where: {
-                            $0.identifier?.rawValue == "settings.general.appearance"
-                        }) { appearance.scrollToVisible(appearance.bounds) }
-                    }
-                    target.makeFirstResponder(nil)
-                    try await capture(target, name: "settings-\(glass ? "glass" : "classic")-\(section)-\(scheme.rawValue)")
-                    target.orderOut(nil)
-                }
-            }
         }
-        print("GALLERY_COMPLETE: 26 real compositor captures")
+        print("GALLERY_COMPLETE: \(26 * transparencyLevels.count + (includeComparison ? 6 : 0)) real compositor captures")
     }
 
     private func updateNote() {

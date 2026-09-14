@@ -1791,6 +1791,24 @@ if #available(macOS 26.0, *), !screenLocked {
                   && originalRoot?.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .aqua
                   && controller.cachedPercentForTest == headerSnapshots[0].percent)
         checkInstalledHost("\(style.rawValue) 当前可见宿主确实挂载完整内容而非空壳", glass: true)
+        let backgrounds = panel.contentView?.subviews.compactMap { $0 as? GlassBackgroundView } ?? []
+        for transparency in [0.0, 0.5, 1.0] {
+            let previousVisibility = visibilityEvents.count
+            let previousObservers = controller.lifetimeObserverCountForTest
+            Settings.liquidGlassTransparency = transparency
+            backgrounds.forEach { $0.updateLayer() }
+            let expectedOpacity = GlassBackgroundView.accessibilityRequiresSolidBackground ? 1 : 1 - transparency
+            check("\(style.rawValue) 透明度 \(transparency) 仅改变背景并保留可见宿主和读数",
+                  backgrounds.count == 1
+                      && abs(Double(backgrounds.first?.layer?.backgroundColor?.alpha ?? 0) - expectedOpacity) < 0.001
+                      && backgrounds.first?.hitTest(.zero) == nil
+                      && material?.alphaValue == 1 && originalRoot?.alphaValue == 1
+                      && controller.glassPanelForTest === panel && panel.isVisible
+                      && material?.contentView === originalRoot
+                      && controller.cachedPercentForTest == headerSnapshots[0].percent
+                      && visibilityEvents.count == previousVisibility
+                      && controller.lifetimeObserverCountForTest == previousObservers)
+        }
         let openVisibilityCount = visibilityEvents.count
         let openObserverCount = controller.lifetimeObserverCountForTest
         controller.openForSettingsCommandTest(relativeTo: button)

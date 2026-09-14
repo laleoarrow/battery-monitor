@@ -396,6 +396,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let first = controller.windowForTest
             let glassSwitch = view("settings.appearance.liquid-glass", in: first) as! NSSwitch
             let glassStyle = view("settings.appearance.liquid-glass-style", in: first) as! NSPopUpButton
+            let transparency = view("settings.appearance.glass-transparency", in: first) as! NSSlider
             let logoPopup = view("settings.appearance.in-app-logo", in: first) as! NSPopUpButton
             let dockPopup = view("settings.appearance.dock-icon", in: first) as! NSPopUpButton
             let colorScheme = view("settings.appearance.color-scheme", in: first) as! NSPopUpButton
@@ -409,6 +410,13 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "native popup offers the two approved backgrounds with Standard selected by default")
             require(!glassStyle.isEnabled && Settings.liquidGlassStyle == .regular,
                 "background selection is disabled while Liquid Glass is off")
+            require(!transparency.isEnabled && transparency.minValue == 0 && transparency.maxValue == 100
+                && transparency.doubleValue == 100 && transparency.isContinuous,
+                "transparency starts at unchanged native glass and stays disabled in Classic")
+            transparency.doubleValue = 50
+            transparency.sendAction(transparency.action!, to: transparency.target)
+            require(Settings.liquidGlassTransparency == 1, "disabled transparency cannot change preferences")
+            transparency.doubleValue = 100
             require(glassStyle.accessibilityLabel() == "Popup glass background"
                 && glassStyle.accessibilityHelp()?.contains("more transparency") == true,
                 "background choice has an accessible label and explains its material difference")
@@ -1645,8 +1653,10 @@ class SettingsWindowContractTests(unittest.TestCase):
                 let originalUpdatePreference = Settings.checksForUpdatesOnLaunch
                 window.makeFirstResponder(automaticUpdates)
                 Settings.liquidGlassEnabled = true
+                let transparencyIsAdjustable = !GlassBackgroundView.accessibilityRequiresSolidBackground
                 require(glassStyle.isEnabled && glassSwitch.nextKeyView === glassStyle
-                    && glassStyle.nextKeyView === logoPopup
+                    && glassStyle.nextKeyView === (transparencyIsAdjustable ? transparency : logoPopup)
+                    && (!transparencyIsAdjustable || transparency.nextKeyView === logoPopup)
                     && logoPopup.nextKeyView === dockPopup
                     && dockPopup.nextKeyView === controller.sidebarForTest,
                     "glass-on includes the background popup in the General keyboard loop")
@@ -1699,6 +1709,44 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "native popup persists the selected clear glass background")
                 require(window.firstResponder === glassStyle,
                     "changing background style preserves keyboard focus")
+                require(transparency.isEnabled == transparencyIsAdjustable,
+                    "macOS accessibility preferences take priority over the transparency control")
+                if transparencyIsAdjustable {
+                    let glassViews = descendants(ofType: NSGlassEffectView.self, in: content)
+                    let identities = glassViews.map(ObjectIdentifier.init)
+                    let originalFrame = window.frame
+                    window.makeFirstResponder(transparency)
+                    for value in [0.0, 50.0, 100.0] {
+                        transparency.doubleValue = value
+                        transparency.sendAction(transparency.action!, to: transparency.target)
+                        require(Settings.liquidGlassTransparency == value / 100
+                            && window.firstResponder === transparency && window.frame == originalFrame,
+                            "slider changes persist immediately without moving the window or losing focus")
+                        require(descendants(ofType: NSGlassEffectView.self, in: content).map(ObjectIdentifier.init) == identities
+                            && glassViews.allSatisfy { $0.alphaValue == 1 && $0.contentView?.alphaValue == 1 },
+                            "transparency retains native glass hosts and fully opaque foreground controls")
+                    }
+                    transparency.doubleValue = 50
+                    transparency.sendAction(transparency.action!, to: transparency.target)
+                    transparency.keyDown(with: keyEvent(123, characters: "\u{f702}"))
+                    require(Settings.liquidGlassTransparency < 0.5,
+                        "the native slider supports keyboard adjustment")
+                    let beforeIncrement = Settings.liquidGlassTransparency
+                    require(transparency.cell?.accessibilityRole() == .slider
+                        && transparency.cell?.accessibilityLabel() == "Glass transparency",
+                        "the exposed native slider cell has a meaningful accessible label")
+                    _ = transparency.cell?.accessibilityPerformIncrement()
+                    require(Settings.liquidGlassTransparency > beforeIncrement,
+                        "the native slider supports VoiceOver adjustment")
+                    Settings.liquidGlassTransparency = 1
+                    require(transparency.doubleValue == 100,
+                        "external transparency changes synchronize the displayed control")
+                } else {
+                    transparency.doubleValue = 50
+                    transparency.sendAction(transparency.action!, to: transparency.target)
+                    require(Settings.liquidGlassTransparency == 1,
+                        "accessibility override cannot be bypassed with a control action")
+                }
                 require(fixture.loginReads.count == loginReads
                     && fixture.batteryReads.count == batteryReads
                     && fixture.loginWrites.count == loginWrites
@@ -1842,12 +1890,16 @@ class SettingsWindowContractTests(unittest.TestCase):
                         "appearance switch retains keyboard focus while moving between native and classic layouts")
                     window.appearance = NSAppearance(named: .darkAqua)
                     root.updateLayer()
-                    let expected = enabled
-                        ? srgbHex(.clear) : UInt32(0x151618)
                     NSAppearance(named: .darkAqua)!.performAsCurrentDrawingAppearance {
-                        require(srgbHex(root.layer?.backgroundColor.flatMap(NSColor.init(cgColor:)))
-                            == expected,
-                            "same-appearance off/on/off resolves the correct CGColor")
+                        if enabled {
+                            require(root.layer?.backgroundColor?.alpha
+                                == (GlassBackgroundView.accessibilityRequiresSolidBackground ? 1 : 0),
+                                "native background transparency follows the system accessibility preference")
+                        } else {
+                            require(srgbHex(root.layer?.backgroundColor.flatMap(NSColor.init(cgColor:)))
+                                == UInt32(0x151618),
+                                "same-appearance off/on/off restores the Classic CGColor")
+                        }
                     }
                 }
                 Settings.liquidGlassEnabled = true
@@ -1873,10 +1925,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                 let glassBackground = view("settings.appearance.liquid-glass-style", in: glassWindow) as! NSPopUpButton
                 let restoredLogo = view("settings.appearance.in-app-logo", in: glassWindow) as! NSPopUpButton
                 let restoredDock = view("settings.appearance.dock-icon", in: glassWindow) as! NSPopUpButton
+                let restoredTransparency = view("settings.appearance.glass-transparency", in: glassWindow) as! NSSlider
                 require(glassBackground.isEnabled
                     && glassBackground.selectedItem?.representedObject as? String == "clear"
                     && globalAppearance.nextKeyView === glassBackground
-                    && glassBackground.nextKeyView === restoredLogo
+                    && glassBackground.nextKeyView === (transparencyIsAdjustable ? restoredTransparency : restoredLogo)
+                    && (!transparencyIsAdjustable || restoredTransparency.nextKeyView === restoredLogo)
                     && restoredLogo.nextKeyView === restoredDock
                     && restoredDock.nextKeyView === glassController.sidebarForTest,
                     "new Settings windows restore the background and complete the native key loop")
@@ -1904,7 +1958,15 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "normal glass Settings keeps the full logo control reachable by scrolling")
                 normalGlassScroll.contentView.scroll(to: .zero)
                 normalGlassScroll.reflectScrolledClipView(normalGlassScroll.contentView)
-                followNativeKeyLoop(in: glassWindow, from: glassBackground, to: restoredLogo)
+                if transparencyIsAdjustable {
+                    followNativeKeyLoop(in: glassWindow, from: glassBackground, to: restoredTransparency)
+                    require(normalGlassScroll.documentVisibleRect.contains(restoredTransparency.convert(
+                        restoredTransparency.bounds, to: normalGlassScroll.documentView)),
+                        "keyboard focus scrolls the full transparency slider into view")
+                    followNativeKeyLoop(in: glassWindow, from: restoredTransparency, to: restoredLogo)
+                } else {
+                    followNativeKeyLoop(in: glassWindow, from: glassBackground, to: restoredLogo)
+                }
                 require(glassWindow.firstResponder === restoredLogo,
                     "logo choice receives focus after native key-loop verification")
                 require(normalGlassScroll.documentVisibleRect.contains(restoredLogo.convert(
@@ -1918,7 +1980,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(normalGlassScroll.contentView.convert(normalGlassScroll.contentView.bounds, to: nil)
                     .contains(visibleGlassList.convert(visibleGlassList.visibleRect, to: nil)),
                     "the scrolled first glass group's visible region stays within the clip viewport")
-                followNativeKeyLoop(in: glassWindow, from: restoredLogo, to: glassBackground, reverse: true)
+                if transparencyIsAdjustable {
+                    followNativeKeyLoop(in: glassWindow, from: restoredLogo, to: restoredTransparency, reverse: true)
+                    followNativeKeyLoop(in: glassWindow, from: restoredTransparency, to: glassBackground, reverse: true)
+                } else {
+                    followNativeKeyLoop(in: glassWindow, from: restoredLogo, to: glassBackground, reverse: true)
+                }
                 require(glassWindow.firstResponder === glassBackground,
                     "background choice receives focus after native reverse key-loop verification")
                 followNativeKeyLoop(in: glassWindow, from: restoredLogo, to: restoredDock)
@@ -2079,7 +2146,6 @@ class SettingsWindowContractTests(unittest.TestCase):
             guard ProcessInfo.processInfo.environment["WATTSON_RUN_INTERACTION"] == "1" else {
                 exit(0)
             }
-
             controller.show(activateApp: false)
             require(first?.isVisible == true, "interactive window visible")
             let minimizeTraffic = controller.trafficLightButtonsForTest[1]
@@ -2312,6 +2378,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     str(LOGIN_ITEM),
                     str(SETTINGS),
                     str(ROOT / "Core" / "SettingsAppearance.swift"),
+                    str(ROOT / "Core" / "GlassBackgroundView.swift"),
                     str(UPDATE_CHECKER),
                     str(POWER_SNAPSHOT),
                     str(ENERGY_MODE),
