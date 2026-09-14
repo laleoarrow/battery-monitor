@@ -268,9 +268,14 @@ private struct InteractiveGlassModeView: View {
         var translationX: CGFloat
     }
     @ObservedObject var model: InteractiveGlassModeModel
+    @Environment(\.colorScheme) private var colorScheme
     @GestureState private var pointer: Pointer?
     @FocusState private var focusedIndex: Int?
     @Namespace private var trackSpace
+
+    // Clear restores the dark glass highlights; Regular keeps the selected
+    // capsule visible against a white background in Light appearance.
+    private var controlGlass: Glass { colorScheme == .dark ? .clear : .regular }
 
     var body: some View {
         GlassEffectContainer(spacing: 0) {
@@ -283,7 +288,7 @@ private struct InteractiveGlassModeView: View {
                         .contentShape(.focusEffect, Circle())
                 }
                 .buttonStyle(.plain)
-                .glassEffect(.clear.interactive(), in: Circle())
+                .glassEffect(controlGlass.interactive(), in: Circle())
                 .background(InteractiveModeMenuAnchor(model: model).allowsHitTesting(false))
                 .focused($focusedIndex, equals: model.modes.count)
                 .accessibilityLabel("Choose Modules")
@@ -328,7 +333,7 @@ private struct InteractiveGlassModeView: View {
             }
         }
         .frame(width: model.trackWidth, height: 38)
-        .glassEffect(.clear.interactive(), in: InteractiveModeCapsule(origin: origin, width: model.slotWidth))
+        .glassEffect(controlGlass.interactive(), in: InteractiveModeCapsule(origin: origin, width: model.slotWidth))
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Power Mode")
         .coordinateSpace(name: trackSpace)

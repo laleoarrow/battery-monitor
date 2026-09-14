@@ -1754,7 +1754,7 @@ if #available(macOS 26.0, *), !screenLocked {
                 && root.bounds.width > 0 && root.bounds.height > 0 && !root.isHiddenOrHasHiddenAncestor
         } ?? false
         let correctHost = glass
-            ? panel != nil && material?.contentView === originalRoot
+            ? panel != nil && originalRoot?.superview === panel?.contentView
                 && material?.style == (Settings.liquidGlassStyle == .clear ? .clear : .regular)
             : panel == nil && controller.classicPopoverForTest.isShown
         check(label, controller.isOpen && controller.isShownForTest && window?.isVisible == true
@@ -1781,9 +1781,14 @@ if #available(macOS 26.0, *), !screenLocked {
         }
         let materialViews = panel.contentView?.subviews.compactMap { $0 as? NSGlassEffectView } ?? []
         let material = materialViews.first
+        check("\(style.rawValue) 交互内容位于玻璃背景上方且没有玻璃祖先",
+              material?.contentView == nil && originalRoot?.superview === panel.contentView
+                  && panel.contentView?.subviews.last === originalRoot
+                  && originalRoot?.frame == material?.frame
+                  && material.map { originalRoot?.isDescendant(of: $0) == false } == true)
         check("\(style.rawValue) 背景使用单一原生材质并保持同一生产内容",
               materialViews.count == 1 && material?.style == (style == .clear ? .clear : .regular)
-                  && material?.contentView === originalRoot && controller.contentViewForTest === originalRoot
+                  && originalRoot?.superview === panel.contentView && controller.contentViewForTest === originalRoot
                   && controller.contentWindowForTest === panel && panel.styleMask.contains(.nonactivatingPanel)
                   && !panel.isOpaque && panel.backgroundColor == .clear
                   && panel.appearance == nil && panel.canBecomeKey && !panel.canBecomeMain
@@ -1804,7 +1809,7 @@ if #available(macOS 26.0, *), !screenLocked {
                       && backgrounds.first?.hitTest(.zero) == nil
                       && material?.alphaValue == 1 && originalRoot?.alphaValue == 1
                       && controller.glassPanelForTest === panel && panel.isVisible
-                      && material?.contentView === originalRoot
+                      && originalRoot?.superview === panel.contentView
                       && controller.cachedPercentForTest == headerSnapshots[0].percent
                       && visibilityEvents.count == previousVisibility
                       && controller.lifetimeObserverCountForTest == previousObservers)
@@ -1841,7 +1846,7 @@ if #available(macOS 26.0, *), !screenLocked {
                 check("\(style.rawValue) 跟随 \(appearance.rawValue) 且不重建玻璃宿主或生产内容",
                       inherited && panel.appearance == nil && root.appearance == nil
                           && controller.glassPanelForTest === panel && controller.contentViewForTest === root
-                          && material?.contentView === root && hostA2(controller) === a2
+                          && root.superview === panel.contentView && hostA2(controller) === a2
                           && material?.style == (style == .clear ? .clear : .regular))
                 check("\(style.rawValue) 明暗切换保持全部展示文字、数值和布局且不写电源模式",
                       !fields.isEmpty && currentFields.map(ObjectIdentifier.init) == fieldIDs

@@ -6,6 +6,7 @@ final class GlassPopoverPanel: NSPanel {
     static let contentInset: CGFloat = 10
     var onDismiss: (() -> Void)?
     var onEscape: (() -> Void)?
+    private weak var hostedContent: NSView?
 
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
@@ -30,16 +31,22 @@ final class GlassPopoverPanel: NSPanel {
         glass.autoresizingMask = [.width, .height]
         glass.style = style
         glass.cornerRadius = 26
-        glass.contentView = content
         let background = GlassBackgroundView(frame: glass.frame, cornerRadius: glass.cornerRadius)
         background.autoresizingMask = [.width, .height]
         contentView!.addSubview(background)
         contentView!.addSubview(glass)
+        // An ancestor glass effect flattens the footer's SwiftUI glass into
+        // solid fills. Keep the backdrop and interactive content as siblings.
+        content.frame = glass.frame
+        content.autoresizingMask = [.width, .height]
+        contentView!.addSubview(content)
+        hostedContent = content
     }
 
     @available(macOS 26.0, *)
     func detachContent() {
-        contentView?.subviews.compactMap { $0 as? NSGlassEffectView }.first?.contentView = nil
+        hostedContent?.removeFromSuperview()
+        hostedContent = nil
     }
 
     /// A process-wide event monitor must not steal Escape from another Wattson

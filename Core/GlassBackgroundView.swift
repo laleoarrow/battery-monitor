@@ -1,7 +1,7 @@
 import AppKit
 
 /// A user-controlled backing fill beneath foreground content. Content stays in
-/// the native glass host at full opacity; no private material layers are edited.
+/// the window at full opacity; no private material layers are edited.
 final class GlassBackgroundView: NSView {
     private var settingsObserver: NSObjectProtocol?
     private var displayObserver: NSObjectProtocol?
