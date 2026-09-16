@@ -100,8 +100,10 @@ are inline only in Classic. Sidebar identity and detail content respect the
 toolbar safe area. Group fills share the glass surface's radius. See the
 [native window chrome review](../design/settings/native-window-chrome/README.md).
 The native sidebar has no custom backing fill. The behind-window detail
-material extends only under the sidebar's trailing edge, leaving the full
-pane's glass independent; the window retains its system backing color.
+material fills the entire detail view, including the area beneath the floating
+sidebar. The window backing is clear so no separate dark strip appears around
+the sidebar's rounded edges. See the
+[continuous backdrop correction](../design/settings/continuous-backdrop/README.md).
 Functional Settings groups use NSGlassEffectView; General's shared container
 batches its two groups inside the scroll document, not around the toolbar
 or system sidebar. Single-group pages need no additional container. Liquid Glass

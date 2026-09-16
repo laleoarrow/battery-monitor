@@ -2887,7 +2887,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         let focusedView = window.firstResponder as? NSView
         window.appearance = Settings.colorScheme.appearance
         window.isOpaque = !enabled
-        window.backgroundColor = enabled ? .windowBackgroundColor : SettingsStyle.contentBackground
+        window.backgroundColor = enabled ? .clear : SettingsStyle.contentBackground
         windowBackdrop.isHidden = !enabled
         configureNativeSidebar(enabled: enabled)
         sidebar.selectionHighlightStyle = enabled ? .regular : .none
@@ -3075,8 +3075,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             navigation.view = sidebarContainer
             let detail = NSViewController()
             detail.view = NSView()
-            // Leave the sidebar's material to AppKit. The detail backdrop
-            // continues under its trailing edge without filling the whole pane.
+            // Continue the background beneath AppKit's floating sidebar so
+            // its rounded edges never expose a separate window backing fill.
             windowBackdrop.removeFromSuperview()
             windowBackdrop.translatesAutoresizingMaskIntoConstraints = false
             detail.view.addSubview(windowBackdrop)
@@ -3100,8 +3100,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
                 split.view.trailingAnchor.constraint(equalTo: root.trailingAnchor),
                 split.view.topAnchor.constraint(equalTo: root.topAnchor),
                 split.view.bottomAnchor.constraint(equalTo: root.bottomAnchor),
-                windowBackdrop.leadingAnchor.constraint(equalTo: detail.view.safeAreaLayoutGuide.leadingAnchor,
-                                                        constant: -SettingsStyle.contentHorizontalInset),
+                windowBackdrop.leadingAnchor.constraint(equalTo: detail.view.leadingAnchor),
                 windowBackdrop.trailingAnchor.constraint(equalTo: detail.view.trailingAnchor),
                 windowBackdrop.topAnchor.constraint(equalTo: detail.view.topAnchor),
                 windowBackdrop.bottomAnchor.constraint(equalTo: detail.view.bottomAnchor),

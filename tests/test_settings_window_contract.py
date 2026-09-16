@@ -1693,16 +1693,15 @@ class SettingsWindowContractTests(unittest.TestCase):
                         "native window controls sit inside the sidebar with toolbar corner clearance")
                 }
                 let backdrop = view("settings.window.backdrop", in: window) as! NSVisualEffectView
-                require(!window.isOpaque && window.backgroundColor == .windowBackgroundColor,
-                    "glass uses the native window backing around its independently composited sidebar")
+                require(!window.isOpaque && window.backgroundColor.alphaComponent == 0,
+                    "glass has no opaque window backing exposed around the floating sidebar")
                 require(!backdrop.isHidden && backdrop.material == .underWindowBackground
                     && backdrop.blendingMode == .behindWindow,
                     "window uses the documented behind-window system material")
                 let backdropInWindow = backdrop.convert(backdrop.bounds, to: nil)
                 require(backdrop.superview === nativeSplit?.splitViewItems.last?.viewController.view
-                    && backdropInWindow.minX > sidebarInWindow.midX
-                    && backdropInWindow.minX < sidebarInWindow.maxX,
-                    "detail material underlaps the floating sidebar edge without a full-pane second blur")
+                    && backdropInWindow.contains(content.convert(content.bounds, to: nil)),
+                    "the continuous backdrop covers the window and the floating sidebar's rounded edges")
                 sidebar.effectiveAppearance.performAsCurrentDrawingAppearance {
                     sidebar.updateLayer()
                     require(sidebar.layer?.backgroundColor?.alpha == 0,

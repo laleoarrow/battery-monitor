@@ -1,5 +1,9 @@
 # Native Settings window chrome — 16 September 2026
 
+The exposed window backing described below was subsequently corrected in the
+[continuous backdrop refinement](../continuous-backdrop/README.md). These
+captures preserve the earlier revision for comparison.
+
 The Finder reference exposed a structural difference: Wattson used a
 titlebar-only window. Its compact traffic-light placement and smaller outer
 corners did not enclose the floating sidebar like a unified-toolbar window.
