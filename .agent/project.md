@@ -93,9 +93,17 @@ and Regular in Light so its selection stays visible on white backgrounds.
 Settings now delegates its glass sidebar to `NSSplitViewController` and a native
 sidebar item. The native detail safe area positions the retained content;
 appearance changes reparent the existing controls and preserve keyboard focus.
-Glass mode uses a transparent NSWindow over the system behind-window material.
+Glass Settings uses an `NSToolbar` with `.unified` window style. AppKit owns the
+traffic-light positions and window/sidebar corner relationship. A tracking
+separator aligns the unbordered page title with the detail pane; page titles
+are inline only in Classic. Sidebar identity and detail content respect the
+toolbar safe area. Group fills share the glass surface's radius. See the
+[native window chrome review](../design/settings/native-window-chrome/README.md).
+The native sidebar has no custom backing fill. The behind-window detail
+material extends only under the sidebar's trailing edge, leaving the full
+pane's glass independent; the window retains its system backing color.
 Functional Settings groups use NSGlassEffectView; General's shared container
-batches its two groups inside the scroll document, not around the fixed heading
+batches its two groups inside the scroll document, not around the toolbar
 or system sidebar. Single-group pages need no additional container. Liquid Glass
 belongs to General > Appearance, and only joins that page's keyboard loop.
 General scrolls as needed for the added logo choice or expanded recovery help;

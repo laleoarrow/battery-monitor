@@ -107,10 +107,11 @@ private enum SettingsStyle {
     static let iconStateGap: CGFloat = 5
     static let iconStateCornerRadius: CGFloat = 7
     static let surfaceCornerRadius: CGFloat = 14
+    static let glassGroupCornerRadius: CGFloat = 20
 
     static let contentBackground = adaptive(0x151618, .windowBackgroundColor, light: 0xF4F4F6)
     static let canvasBackground = adaptive(0x151618, GlassBackgroundView.fillColor, light: 0xF4F4F6)
-    static let sidebarBackground = adaptive(0x1E1F21, GlassBackgroundView.fillColor, light: 0xE9EAEC)
+    static let sidebarBackground = adaptive(0x1E1F21, .clear, light: 0xE9EAEC)
     static let surfaceBackground = adaptive(0x191A1C, GlassBackgroundView.fillColor, light: 0xFFFFFF)
     static let tileBackground = adaptive(0x202124, .clear, light: 0xE9EAED)
     static let previewBackground = adaptive(0x1A1B1C, .clear, light: 0xE5E6E8)
@@ -185,6 +186,23 @@ private protocol SettingsContrastRefreshing: AnyObject {
     func refreshContrastAppearance()
 }
 
+/// Glass pages use the window toolbar for their title; Classic keeps it inline.
+private final class SettingsPageHeading: NSTextField, SettingsContrastRefreshing {
+    var titleSpace: CGFloat = 40
+    var contentTopConstraint: NSLayoutConstraint? {
+        didSet {
+            classicTopInset = contentTopConstraint?.constant ?? 0
+            refreshContrastAppearance()
+        }
+    }
+    private var classicTopInset: CGFloat = 0
+
+    func refreshContrastAppearance() {
+        isHidden = Settings.usesLiquidGlass
+        contentTopConstraint?.constant = classicTopInset - (Settings.usesLiquidGlass ? titleSpace : 0)
+    }
+}
+
 /// One system glass surface for a functional group, retaining its controls.
 private final class SettingsGlassSurface: NSView, SettingsContrastRefreshing {
     private let controls: NSView
@@ -205,6 +223,8 @@ private final class SettingsGlassSurface: NSView, SettingsContrastRefreshing {
 
     func refreshContrastAppearance() {
         let enabled = Settings.usesLiquidGlass
+        (controls as? NSBox)?.cornerRadius = enabled
+            ? SettingsStyle.glassGroupCornerRadius : SettingsStyle.surfaceCornerRadius
         guard controls.superview == nil || enabled != (effect != nil) else { return }
         NSLayoutConstraint.deactivate(placement)
         controls.removeFromSuperview()
@@ -216,7 +236,7 @@ private final class SettingsGlassSurface: NSView, SettingsContrastRefreshing {
             let glass = NSGlassEffectView()
             glass.identifier = NSUserInterfaceItemIdentifier("settings.control-group.glass")
             glass.style = .regular
-            glass.cornerRadius = 20
+            glass.cornerRadius = SettingsStyle.glassGroupCornerRadius
             glass.contentView = controls
             glass.translatesAutoresizingMaskIntoConstraints = false
             addSubview(glass)
@@ -906,7 +926,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         list.addSubview(rows)
         let surface = SettingsGlassSurface(controls: list)
 
-        let heading = NSTextField(labelWithString: title)
+        let heading = SettingsPageHeading(labelWithString: title)
         heading.identifier = NSUserInterfaceItemIdentifier("settings.general.heading")
         heading.font = SettingsStyle.headingFont
         heading.textColor = SettingsStyle.headingText
@@ -960,6 +980,8 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         scroll.documentView = scrollDocument
         scroll.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scroll)
+        let contentTop = scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 40)
+        heading.contentTopConstraint = contentTop
 
         NSLayoutConstraint.activate([
             heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
@@ -968,7 +990,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
             scroll.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
+            contentTop,
             scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollDocument.leadingAnchor.constraint(equalTo: scroll.contentView.leadingAnchor),
             scrollDocument.topAnchor.constraint(equalTo: scroll.contentView.topAnchor),
@@ -2337,7 +2359,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
     private func buildView() {
         view.identifier = NSUserInterfaceItemIdentifier("settings.section.menu-bar-icon")
 
-        let heading = NSTextField(labelWithString: title)
+        let heading = SettingsPageHeading(labelWithString: title)
         heading.identifier = NSUserInterfaceItemIdentifier("settings.menu-bar-icon.heading")
         heading.font = SettingsStyle.headingFont
         heading.textColor = SettingsStyle.headingText
@@ -2393,6 +2415,9 @@ private final class MenuBarIconSettingsSectionController: NSObject,
         group.setAccessibilityChildren(orderedButtons)
         group.translatesAutoresizingMaskIntoConstraints = false
         let surface = SettingsGlassSurface(controls: group)
+        let contentTop = subtitle.topAnchor.constraint(equalTo: heading.bottomAnchor, constant: 8)
+        heading.titleSpace = heading.intrinsicContentSize.height + 5
+        heading.contentTopConstraint = contentTop
 
         view.addSubview(heading)
         view.addSubview(subtitle)
@@ -2404,7 +2429,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
 
             subtitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             subtitle.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            subtitle.topAnchor.constraint(equalTo: heading.bottomAnchor, constant: 8),
+            contentTop,
 
             surface.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             surface.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -2524,7 +2549,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
     private func buildView() {
         view.identifier = NSUserInterfaceItemIdentifier("settings.section.modules")
 
-        let heading = NSTextField(labelWithString: title)
+        let heading = SettingsPageHeading(labelWithString: title)
         heading.identifier = NSUserInterfaceItemIdentifier("settings.modules.heading")
         heading.font = SettingsStyle.headingFont
         heading.textColor = SettingsStyle.headingText
@@ -2559,6 +2584,8 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         view.addSubview(heading)
         view.addSubview(subtitle)
         view.addSubview(surface)
+        let contentTop = surface.topAnchor.constraint(equalTo: view.topAnchor, constant: 66)
+        heading.contentTopConstraint = contentTop
         NSLayoutConstraint.activate([
             heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             heading.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -2568,7 +2595,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             subtitle.bottomAnchor.constraint(equalTo: surface.topAnchor, constant: -10),
             surface.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             surface.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            surface.topAnchor.constraint(equalTo: view.topAnchor, constant: 66),
+            contentTop,
             surface.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
             surface.heightAnchor.constraint(equalToConstant:
                 SettingsStyle.moduleRowHeight * CGFloat(Settings.Module.allCases.count)),
@@ -2694,9 +2721,10 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
 }
 
 final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
-    NSTableViewDelegate
+    NSTableViewDelegate, NSToolbarDelegate
 {
     private static let frameAutosaveName = "WattsonSettingsWindow"
+    private static let sectionTitleItem = NSToolbarItem.Identifier("settings.section-title")
 
     private let sections: [SettingsSectionController]
     private let increaseContrast: () -> Bool
@@ -2704,6 +2732,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     private let root = SettingsFillView(color: SettingsStyle.canvasBackground)
     private let windowBackdrop = NSVisualEffectView()
     private let sidebarContainer = SettingsFillView(color: SettingsStyle.sidebarBackground)
+    private let trafficSafeArea = NSView()
+    private let toolbarTitle = NSTextField(labelWithString: "")
     private var splitController: NSSplitViewController?
     private var classicLayout: [NSLayoutConstraint] = []
     private var glassLayout: [NSLayoutConstraint] = []
@@ -2857,7 +2887,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         let focusedView = window.firstResponder as? NSView
         window.appearance = Settings.colorScheme.appearance
         window.isOpaque = !enabled
-        window.backgroundColor = enabled ? .clear : SettingsStyle.contentBackground
+        window.backgroundColor = enabled ? .windowBackgroundColor : SettingsStyle.contentBackground
         windowBackdrop.isHidden = !enabled
         configureNativeSidebar(enabled: enabled)
         sidebar.selectionHighlightStyle = enabled ? .regular : .none
@@ -2937,7 +2967,6 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         sidebarContainer.translatesAutoresizingMaskIntoConstraints = false
 
         let identity = makeIdentityView()
-        let trafficSafeArea = NSView()
         trafficSafeArea.identifier = NSUserInterfaceItemIdentifier(
             "settings.sidebar.traffic-safe-area"
         )
@@ -3018,6 +3047,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             ($0.firstItem as? NSView) === sidebarContainer
                 || ($0.firstItem as? NSView) === divider
                 || ($0.firstItem as? NSView) === contentHost
+                || (($0.firstItem as? NSView) === trafficSafeArea && $0.firstAttribute == .height)
         }
         NSLayoutConstraint.activate(layoutConstraints)
 
@@ -3045,6 +3075,11 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             navigation.view = sidebarContainer
             let detail = NSViewController()
             detail.view = NSView()
+            // Leave the sidebar's material to AppKit. The detail backdrop
+            // continues under its trailing edge without filling the whole pane.
+            windowBackdrop.removeFromSuperview()
+            windowBackdrop.translatesAutoresizingMaskIntoConstraints = false
+            detail.view.addSubview(windowBackdrop)
             detail.view.addSubview(contentHost)
             let split = NSSplitViewController()
             split.view.identifier = NSUserInterfaceItemIdentifier("settings.native-split")
@@ -3065,20 +3100,39 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
                 split.view.trailingAnchor.constraint(equalTo: root.trailingAnchor),
                 split.view.topAnchor.constraint(equalTo: root.topAnchor),
                 split.view.bottomAnchor.constraint(equalTo: root.bottomAnchor),
+                windowBackdrop.leadingAnchor.constraint(equalTo: detail.view.safeAreaLayoutGuide.leadingAnchor,
+                                                        constant: -SettingsStyle.contentHorizontalInset),
+                windowBackdrop.trailingAnchor.constraint(equalTo: detail.view.trailingAnchor),
+                windowBackdrop.topAnchor.constraint(equalTo: detail.view.topAnchor),
+                windowBackdrop.bottomAnchor.constraint(equalTo: detail.view.bottomAnchor),
                 contentHost.leadingAnchor.constraint(equalTo: detail.view.safeAreaLayoutGuide.leadingAnchor,
                                                    constant: SettingsStyle.contentHorizontalInset),
                 contentHost.trailingAnchor.constraint(equalTo: detail.view.trailingAnchor,
                                                     constant: -SettingsStyle.contentHorizontalInset),
-                contentHost.topAnchor.constraint(equalTo: detail.view.topAnchor,
-                                              constant: SettingsStyle.contentTopInset),
+                contentHost.topAnchor.constraint(equalTo: detail.view.safeAreaLayoutGuide.topAnchor,
+                                              constant: 16),
                 contentHost.bottomAnchor.constraint(equalTo: detail.view.bottomAnchor,
                                                  constant: -SettingsStyle.contentBottomInset),
+                trafficSafeArea.bottomAnchor.constraint(equalTo: sidebarContainer.safeAreaLayoutGuide.topAnchor),
             ]
             NSLayoutConstraint.activate(glassLayout)
             splitController = split
+            let toolbar = NSToolbar(identifier: "WattsonSettingsToolbar")
+            toolbar.delegate = self
+            toolbar.displayMode = .iconOnly
+            window?.toolbarStyle = .unified
+            window?.toolbar = toolbar
         } else if let split = splitController {
+            window?.toolbar = nil
+            window?.toolbarStyle = .automatic
             NSLayoutConstraint.deactivate(glassLayout)
             glassLayout.removeAll()
+            windowBackdrop.removeFromSuperview()
+            windowBackdrop.translatesAutoresizingMaskIntoConstraints = true
+            if let viewport = window?.contentView {
+                windowBackdrop.frame = viewport.bounds
+                viewport.addSubview(windowBackdrop, positioned: .below, relativeTo: root)
+            }
             sidebarContainer.removeFromSuperview()
             contentHost.removeFromSuperview()
             split.view.removeFromSuperview()
@@ -3090,6 +3144,32 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         }
         divider.isHidden = enabled
         root.layoutSubtreeIfNeeded()
+    }
+
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        [.sidebarTrackingSeparator, Self.sectionTitleItem, .flexibleSpace]
+    }
+
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        toolbarDefaultItemIdentifiers(toolbar)
+    }
+
+    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier identifier: NSToolbarItem.Identifier,
+                 willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+        if identifier == .sidebarTrackingSeparator, let split = splitController {
+            return NSTrackingSeparatorToolbarItem(identifier: identifier,
+                splitView: split.splitView, dividerIndex: 0)
+        }
+        guard identifier == Self.sectionTitleItem else { return nil }
+        toolbarTitle.identifier = NSUserInterfaceItemIdentifier("settings.toolbar.title")
+        toolbarTitle.stringValue = sections[selectedSectionIndex].title
+        toolbarTitle.font = .systemFont(ofSize: 18, weight: .semibold)
+        toolbarTitle.textColor = .labelColor
+        let item = NSToolbarItem(itemIdentifier: identifier)
+        item.isBordered = false
+        item.view = toolbarTitle
+        item.label = sections[selectedSectionIndex].title
+        return item
     }
 
     private func makeIdentityView() -> NSView {
@@ -3192,6 +3272,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     private func showSection(at index: Int) {
         guard sections.indices.contains(index) else { return }
         selectedSectionIndex = index
+        toolbarTitle.stringValue = sections[index].title
+        window?.toolbar?.items.first { $0.itemIdentifier == Self.sectionTitleItem }?.label = sections[index].title
         let sectionView = sections[index].view
         guard sectionView.superview !== contentHost else { return }
         contentHost.subviews.forEach { $0.removeFromSuperview() }

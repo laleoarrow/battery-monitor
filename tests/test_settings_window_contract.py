@@ -1675,12 +1675,39 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "AppKit owns the floating glass sidebar")
                 require(nativeSplit?.splitViewItems.last?.automaticallyAdjustsSafeAreaInsets == true,
                     "detail content respects the native sidebar safe area")
+                require(window.toolbar != nil && window.toolbarStyle == .unified,
+                    "glass uses a native unified toolbar for window corners and traffic-light spacing")
+                let pageTitleItem = window.toolbar!.items.first {
+                    $0.itemIdentifier.rawValue == "settings.section-title"
+                }!
+                let pageTitle = pageTitleItem.view as! NSTextField
+                require(pageTitle.stringValue == "General" && !pageTitleItem.isBordered
+                    && view("settings.general.heading", in: window).isHidden,
+                    "the current page has one visible title without a glass button backing")
+                let sidebarInWindow = sidebar.convert(sidebar.bounds, to: nil)
+                for trafficButton in controller.trafficLightButtonsForTest {
+                    let buttonFrame = trafficButton.convert(trafficButton.bounds, to: nil)
+                    require(sidebarInWindow.contains(buttonFrame)
+                        && buttonFrame.minX >= 16
+                        && content.bounds.maxY - buttonFrame.maxY >= 12,
+                        "native window controls sit inside the sidebar with toolbar corner clearance")
+                }
                 let backdrop = view("settings.window.backdrop", in: window) as! NSVisualEffectView
-                require(!window.isOpaque && window.backgroundColor.alphaComponent == 0,
-                    "glass window does not obscure the system backdrop with an opaque fill")
+                require(!window.isOpaque && window.backgroundColor == .windowBackgroundColor,
+                    "glass uses the native window backing around its independently composited sidebar")
                 require(!backdrop.isHidden && backdrop.material == .underWindowBackground
                     && backdrop.blendingMode == .behindWindow,
                     "window uses the documented behind-window system material")
+                let backdropInWindow = backdrop.convert(backdrop.bounds, to: nil)
+                require(backdrop.superview === nativeSplit?.splitViewItems.last?.viewController.view
+                    && backdropInWindow.minX > sidebarInWindow.midX
+                    && backdropInWindow.minX < sidebarInWindow.maxX,
+                    "detail material underlaps the floating sidebar edge without a full-pane second blur")
+                sidebar.effectiveAppearance.performAsCurrentDrawingAppearance {
+                    sidebar.updateLayer()
+                    require(sidebar.layer?.backgroundColor?.alpha == 0,
+                        "the native glass sidebar has no custom backing fill")
+                }
                 let container = view("settings.glass-container", in: window) as! NSGlassEffectContainerView
                 let glassScroll = view("settings.general.scroll", in: window) as! NSScrollView
                 let fixedHeading = view("settings.general.heading", in: window)
@@ -1836,12 +1863,22 @@ class SettingsWindowContractTests(unittest.TestCase):
                 for identifier in ["general", "menu-bar-icon", "modules"] {
                     controller.selectSectionForTest(identifier: identifier)
                     content.layoutSubtreeIfNeeded()
+                    let inlineTitle = view("settings.\(identifier).heading", in: window) as! NSTextField
+                    require(inlineTitle.isHidden && pageTitle.stringValue == inlineTitle.stringValue
+                        && pageTitleItem.label == inlineTitle.stringValue,
+                        "each page updates the visible and accessible native toolbar title")
                     let surfaces = descendants(ofType: NSGlassEffectView.self, in: content)
                         .filter { $0.identifier?.rawValue == "settings.control-group.glass" }
                     let expectedGroups = identifier == "general" ? 2 : 1
                     require(surfaces.count == expectedGroups && surfaces.allSatisfy {
                         $0.contentView != nil && $0.style == .regular && $0.tintColor == nil
                     }, "functional groups use untinted native glass containing their controls")
+                    for surface in surfaces {
+                        if let fill = surface.contentView as? NSBox {
+                            require(fill.cornerRadius == surface.cornerRadius,
+                                "group fill and glass share their corner shape at every transparency")
+                        }
+                    }
                 }
                 controller.selectSectionForTest(identifier: "general")
                 window.makeFirstResponder(descendants(ofType: NSSwitch.self, in: content)
@@ -1864,6 +1901,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "Classic keeps following the chosen System theme")
                 require(window.isOpaque && backdrop.isHidden,
                     "off restores the opaque classic window and disables its backdrop")
+                require(window.toolbar == nil && !fixedHeading.isHidden
+                    && (generalList as! NSBox).cornerRadius == 14,
+                    "Classic restores its inline title, compact window chrome and group corners")
                 require(descendants(ofType: NSGlassEffectView.self, in: content)
                     .allSatisfy { $0.identifier?.rawValue != "settings.control-group.glass" },
                     "off removes custom glass while retaining the controls")
@@ -1944,7 +1984,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "reopened Settings restores the independent logo in its actual Light appearance")
                 glassWindow.contentView?.layoutSubtreeIfNeeded()
                 let normalGlassScroll = view("settings.general.scroll", in: glassWindow) as! NSScrollView
-                let fixedGlassHeading = view("settings.general.heading", in: glassWindow)
+                let fixedGlassHeading = glassWindow.toolbar!.items.first {
+                    $0.itemIdentifier.rawValue == "settings.section-title"
+                }!.view!
                 let headingFrameBeforeScroll = fixedGlassHeading.convert(fixedGlassHeading.bounds, to: nil)
                 require(view("settings.general.controls-recovery", in: glassWindow).isHidden,
                     "normal glass layout fixture has no expanded recovery help")
