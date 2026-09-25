@@ -12,6 +12,27 @@ git diff --check
 The default Python suite skips real AppKit interaction. It is safe for an
 active desktop and must keep `WATTSON_RUN_INTERACTION` unset in ordinary CI.
 
+## Local app-bundle hygiene
+
+Keep disposable preview apps under `.build/preview.noindex`, using
+`scripts/build_glass_preview.sh`. Its staging directory is removed on exit;
+rebuilding replaces the previous preview only after verification. Do not retain
+`previous-*.app` backups or unpacked app bundles in ordinary `dist` directories:
+Spotlight and LaunchServices can expose them as extra applications.
+
+After local preview or release verification, unregister disposable apps with
+`lsregister -u <exact-app-path>` before removing them. Preserve required historic
+app bytes in a verified compressed archive, alongside their original-path
+manifest; retain screenshots, Icon Composer sources, logs, and signed installers.
+Package expansion and scratch builds belong in hidden or `.noindex` directories
+and must be cleaned when verification ends.
+
+Local cleanup is complete only after checking both Spotlight application search
+and LaunchServices registrations for Wattson. Confirm that the canonical
+`/Applications/Wattson.app`, helper, package receipt, and running process remain
+intact. Do not run the full uninstaller or reset the system-wide application
+database to clean up development copies.
+
 ## Real AppKit interaction
 
 Run only when the user has made the desktop available or in a disposable GUI
