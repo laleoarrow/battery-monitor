@@ -137,3 +137,7 @@ Production Settings source SHA-256:
 Full logs, frozen sources and failed isolation evidence remain under
 `.build/feedback-runtime-review.noindex/`. This is a development verification;
 it does not replace the hosted installer and publication gates.
+
+The subsequent [optional runtime module review](runtime-module/README.md)
+records moving the runtime line into the existing selectable module menu and
+Settings → Modules, while retaining the estimate source and default layout.

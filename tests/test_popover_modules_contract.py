@@ -27,8 +27,8 @@ class PopoverModulesContractTests(unittest.TestCase):
         cls.popover = POPOVER.read_text(encoding="utf-8")
         cls.status = STATUS.read_text(encoding="utf-8")
 
-    def test_content_contains_all_four_modules_in_fixed_order(self):
-        order = [self.content.index(name) for name in ("flowView", "ringView", "laneView", "historyView")]
+    def test_content_contains_runtime_above_the_existing_instruments(self):
+        order = [self.content.index(name) for name in ("runtimeView", "flowView", "ringView", "laneView", "historyView")]
         self.assertEqual(order, sorted(order))
 
     def test_one_surface_divided_by_hairlines_not_four_cards(self):
@@ -47,14 +47,21 @@ class PopoverModulesContractTests(unittest.TestCase):
         # Tabular digits keep the readout from twitching at 1 Hz.
         self.assertIn("monospacedDigitSystemFont", self.style)
 
-    def test_header_keeps_power_readings_compact_with_a_runtime_line(self):
+    def test_header_and_optional_runtime_preserve_default_height(self):
         header = self.content.split("final class PopoverHeaderView", 1)[1].split(
-            "final class PopoverFooterView", 1
+            "final class PopoverRuntimeView", 1
+        )[0]
+        runtime = self.content.split("final class PopoverRuntimeView", 1)[1].split(
+            "private final class PopoverButton", 1
         )[0]
         height = float(re.search(r"preferredHeight: CGFloat = (\d+)", header).group(1))
-        self.assertEqual(height, 72)
+        runtime_height = float(re.search(r"preferredHeight: CGFloat = (\d+)", runtime).group(1))
+        self.assertEqual(height, 48)
+        self.assertEqual(height + runtime_height, 72)
         self.assertNotIn("private let equation", header)
         self.assertNotIn("equation.frame", header)
+        self.assertNotIn("runtime", header)
+        self.assertIn("showsSeparator: false", runtime)
 
     def test_header_only_surfaces_conservation_breaks_in_the_state(self):
         header = self.content.split("final class PopoverHeaderView", 1)[1].split(

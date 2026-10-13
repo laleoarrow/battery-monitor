@@ -58,7 +58,7 @@ enum Settings {
     }
 
     enum Module: String, CaseIterable {
-        case flow, ring, lanes, history
+        case flow, ring, lanes, history, runtime
 
         var title: String {
             switch self {
@@ -66,6 +66,7 @@ enum Settings {
             case .ring: return "Ring Gauge"
             case .lanes: return "Power Lanes"
             case .history: return "Power History"
+            case .runtime: return "Est. Battery Runtime"
             }
         }
 

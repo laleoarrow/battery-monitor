@@ -102,7 +102,7 @@ private enum SettingsStyle {
     static let generalRowHeight: CGFloat = 68
     static let generalIconTileSize: CGFloat = 36
     static let generalActionSize = NSSize(width: 88, height: 28)
-    static let moduleRowHeight: CGFloat = 80
+    static let moduleRowHeight: CGFloat = 72
     static let iconCardGap: CGFloat = 8
     static let iconCardHeight: CGFloat = 80
     static let iconCardGroupHeight: CGFloat = 344
@@ -2813,6 +2813,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         case .ring: return "gauge"
         case .lanes: return "chart.bar"
         case .history: return "chart.xyaxis.line"
+        case .runtime: return "clock"
         }
     }
 
@@ -2822,6 +2823,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         case .ring: return "Battery charge and power at a glance."
         case .lanes: return "Compare system and battery power."
         case .history: return "See recent power use over time."
+        case .runtime: return "See macOS's remaining battery estimate."
         }
     }
 

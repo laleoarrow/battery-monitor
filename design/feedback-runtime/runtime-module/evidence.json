@@ -1,0 +1,767 @@
+{
+  "schema": 1,
+  "reviewDate": "2026-10-13",
+  "classicFixCommit": "9c1929f",
+  "sourceSHA256": {
+    "Core/Settings.swift": "23872ccb6dcb632dbfb0094b3efc2438d82058909fe806056ebfd4c646e30cce",
+    "Popover/PopoverContentView.swift": "d6b697158b644f0c1e65608f6dbd260b6bbf560f08a6755ec619bd68917273c5",
+    "MenuBar/SettingsWindowController.swift": "555d44a25d0fba3e79b65a8e19e60718f75cc850a30c4341bed5dbde905773b5",
+    "Popover/PopoverController.swift": "a82aa45311d0d8c6108dd6c349c101a5ac11b4c3aa85403c8552628007db9a07",
+    "tests/interaction/main.swift": "b52f6f95c2c1e5ee8b1e21c79d873811a1f931554341b4481d351a914e40cced"
+  },
+  "module": {
+    "rawValue": "runtime",
+    "title": "Est. Battery Runtime",
+    "defaultsKey": "popover.module.runtime",
+    "missingOrInvalidDefault": true,
+    "menuIndex": 4
+  },
+  "layout": {
+    "headerHeight": 48,
+    "runtimeHeight": 24,
+    "enabledHeaderTotal": 72,
+    "settingsModuleRowHeight": 72,
+    "settingsModuleRows": 5,
+    "settingsContentSize": [
+      720,
+      520
+    ]
+  },
+  "tests": {
+    "swift": {
+      "tests": 380,
+      "failures": 0,
+      "warningsAsErrors": true
+    },
+    "python": {
+      "tests": 503,
+      "failures": 0,
+      "existingOptInGUISkips": 4
+    },
+    "universalRelease": {
+      "architectures": [
+        "arm64",
+        "x86_64"
+      ],
+      "minimumMacOS": "12.0",
+      "sdk": "26.5",
+      "warningsAsErrors": true
+    }
+  },
+  "estimateAlgorithmChanged": false,
+  "environment": {
+    "os": "macOS 26.6.1",
+    "build": "25G76",
+    "architecture": "arm64",
+    "screenPoints": [
+      1024,
+      768
+    ],
+    "framebufferPixels": [
+      2048,
+      1536
+    ],
+    "fixture": "production startup/status button/menu/views; fixed 67%, 17.3W, 265min sample because VM has no physical battery; privileged writes disabled"
+  },
+  "nativeRun": {
+    "rfb": {
+      "casesPassed": 6,
+      "casesFailed": 0,
+      "assertionsPassed": 105,
+      "assertionsFailed": 0,
+      "captureErrors": 0,
+      "elapsedSeconds": 48.582,
+      "results": "runtime-module-matrix/results.json",
+      "trace": "runtime-module-final-trace.jsonl"
+    },
+    "input": "RFB physical left-click existing footer Modules button; native keyboard navigation only scrolls fifth item into the menu viewport, actual toggle remains RFB click after hover and frame re-read",
+    "nativeActions": {
+      "popupRuntime": [
+        {
+          "style": 0,
+          "ordinal": 4,
+          "count": 2
+        },
+        {
+          "style": 1,
+          "ordinal": 4,
+          "count": 2
+        },
+        {
+          "style": 2,
+          "ordinal": 4,
+          "count": 2
+        }
+      ],
+      "settingsRuntime": [
+        {
+          "style": 0,
+          "tag": 4,
+          "count": 2
+        },
+        {
+          "style": 1,
+          "tag": 4,
+          "count": 2
+        },
+        {
+          "style": 2,
+          "tag": 4,
+          "count": 2
+        }
+      ]
+    },
+    "layout": [
+      {
+        "style": "classic",
+        "heightBefore": 649,
+        "heightOff": 625,
+        "heightRestored": 649,
+        "flowBefore": 421,
+        "flowOff": 445,
+        "flowRestored": 421,
+        "runtimeMenuOrdinal": 4,
+        "reopenHidden": true
+      },
+      {
+        "style": "standard",
+        "heightBefore": 643,
+        "heightOff": 619,
+        "heightRestored": 643,
+        "flowBefore": 416,
+        "flowOff": 440,
+        "flowRestored": 416,
+        "runtimeMenuOrdinal": 4,
+        "reopenHidden": true
+      },
+      {
+        "style": "clear",
+        "heightBefore": 643,
+        "heightOff": 619,
+        "heightRestored": 643,
+        "flowBefore": 416,
+        "flowOff": 440,
+        "flowRestored": 416,
+        "runtimeMenuOrdinal": 4,
+        "reopenHidden": true
+      }
+    ],
+    "productionFileMatchCount": 180,
+    "qaSourceChecks": {
+      "before": 182,
+      "afterBuild": 182,
+      "afterRuntime": 182
+    },
+    "qaBinarySHA256": "371efa9ba8d5e5a8ba12036cb2101b91de021479c1a43a48a181315fda8f2e50",
+    "setupAttempts": [
+      {
+        "path": "runtime-module-matrix-attempt1-setup-error/results.json",
+        "reason": "Driver asked for unpublished contentFrame key; no failing product assertions."
+      },
+      {
+        "path": "runtime-module-matrix-attempt2-glass-setup/results.json",
+        "reason": "QA only looked for AppKit showMenu button; normal macOS26 Glass uses the visible SwiftUI menuAnchor."
+      },
+      {
+        "path": "runtime-module-matrix-attempt3-native-menu-scroll-setup/results.json",
+        "reason": "Native menu AX fifth-item frame described clipped row below viewport. Direct click landed outside menu. Native navigation, hover then fresh frame read corrected input."
+      }
+    ],
+    "sourceFreeze": {
+      "archiveSHA256": "0bcacc5ffb81070b2a5d48b87b3001f71819fef0314e904d228cee2deadf88a1",
+      "manifestSHA256": "7fa78ddd8edb2811eab1d42430594068163f6506acf3831b47870e4f4a081d7e",
+      "productionHashes": {
+        "Core/Settings.swift": "23872ccb6dcb632dbfb0094b3efc2438d82058909fe806056ebfd4c646e30cce",
+        "Popover/PopoverController.swift": "a82aa45311d0d8c6108dd6c349c101a5ac11b4c3aa85403c8552628007db9a07",
+        "Popover/PopoverContentView.swift": "d6b697158b644f0c1e65608f6dbd260b6bbf560f08a6755ec619bd68917273c5",
+        "MenuBar/SettingsWindowController.swift": "555d44a25d0fba3e79b65a8e19e60718f75cc850a30c4341bed5dbde905773b5",
+        "tests/interaction/main.swift": "b52f6f95c2c1e5ee8b1e21c79d873811a1f931554341b4481d351a914e40cced"
+      },
+      "productionFiles": 180,
+      "qaManifestFiles": 182,
+      "qaOverlayRevision": 2,
+      "qaOverlayChange": "Publish visible InteractiveGlassModeControl native menuAnchor center alongside existing AppKit menu button point; no interaction/product change."
+    },
+    "privilegedRequests": 0,
+    "cases": [
+      {
+        "name": "runtime-popup",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "actual-status-opens",
+            "passed": true
+          },
+          {
+            "name": "runtime-default-or-restored-enabled",
+            "passed": true
+          },
+          {
+            "name": "initial-history-default-enabled",
+            "passed": true
+          },
+          {
+            "name": "native-runtime-menu-frame-published",
+            "passed": true
+          },
+          {
+            "name": "runtime-is-native-menu-fifth-item",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-menu-check-matches-preference",
+            "passed": true
+          },
+          {
+            "name": "history-native-action-applies-preference",
+            "passed": true
+          },
+          {
+            "name": "history-toggle-keeps-popup-open",
+            "passed": true
+          },
+          {
+            "name": "history-hidden-to-remove-viewport-cap",
+            "passed": true
+          },
+          {
+            "name": "natural-height-fits-real-viewport",
+            "passed": true
+          },
+          {
+            "name": "native-runtime-menu-frame-published",
+            "passed": true
+          },
+          {
+            "name": "runtime-is-native-menu-fifth-item",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-menu-check-matches-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-action-applies-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-toggle-keeps-popup-open",
+            "passed": true
+          },
+          {
+            "name": "actual-runtime-row-hidden",
+            "passed": true
+          },
+          {
+            "name": "natural-height-shrinks-24",
+            "passed": true
+          },
+          {
+            "name": "real-window-height-shrinks-24",
+            "passed": true
+          },
+          {
+            "name": "flow-document-removes-24-with-no-gap",
+            "passed": true
+          },
+          {
+            "name": "flow-screen-moves-up-24",
+            "passed": true
+          },
+          {
+            "name": "status-closes-hidden-runtime",
+            "passed": true
+          },
+          {
+            "name": "status-reopens-hidden-runtime",
+            "passed": true
+          },
+          {
+            "name": "runtime-hidden-preference-persists-on-reopen",
+            "passed": true
+          },
+          {
+            "name": "reopened-real-window-retains-shrunken-height",
+            "passed": true
+          },
+          {
+            "name": "native-runtime-menu-frame-published",
+            "passed": true
+          },
+          {
+            "name": "runtime-is-native-menu-fifth-item",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-menu-check-matches-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-action-applies-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-toggle-keeps-popup-open",
+            "passed": true
+          },
+          {
+            "name": "runtime-row-and-label-restored",
+            "passed": true
+          },
+          {
+            "name": "real-height-restored-with-no-gap",
+            "passed": true
+          },
+          {
+            "name": "flow-document-and-screen-restored",
+            "passed": true
+          }
+        ]
+      },
+      {
+        "name": "runtime-settings",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "real-settings-runtime-control-published",
+            "passed": true
+          },
+          {
+            "name": "settings-five-module-rows-present-and-visible",
+            "passed": true
+          },
+          {
+            "name": "settings-fifth-runtime-checkbox-enabled",
+            "passed": true
+          },
+          {
+            "name": "settings-native-control-unchecks-runtime",
+            "passed": true
+          },
+          {
+            "name": "settings-native-control-restores-runtime",
+            "passed": true
+          },
+          {
+            "name": "actual-status-opens-after-settings",
+            "passed": true
+          },
+          {
+            "name": "restored-settings-preference-renders-runtime",
+            "passed": true
+          }
+        ]
+      },
+      {
+        "name": "runtime-popup",
+        "style": "standard",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "actual-status-opens",
+            "passed": true
+          },
+          {
+            "name": "runtime-default-or-restored-enabled",
+            "passed": true
+          },
+          {
+            "name": "history-hidden-to-remove-viewport-cap",
+            "passed": true
+          },
+          {
+            "name": "natural-height-fits-real-viewport",
+            "passed": true
+          },
+          {
+            "name": "native-runtime-menu-frame-published",
+            "passed": true
+          },
+          {
+            "name": "runtime-is-native-menu-fifth-item",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-menu-check-matches-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-action-applies-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-toggle-keeps-popup-open",
+            "passed": true
+          },
+          {
+            "name": "actual-runtime-row-hidden",
+            "passed": true
+          },
+          {
+            "name": "natural-height-shrinks-24",
+            "passed": true
+          },
+          {
+            "name": "real-window-height-shrinks-24",
+            "passed": true
+          },
+          {
+            "name": "flow-document-removes-24-with-no-gap",
+            "passed": true
+          },
+          {
+            "name": "flow-screen-moves-up-24",
+            "passed": true
+          },
+          {
+            "name": "status-closes-hidden-runtime",
+            "passed": true
+          },
+          {
+            "name": "status-reopens-hidden-runtime",
+            "passed": true
+          },
+          {
+            "name": "runtime-hidden-preference-persists-on-reopen",
+            "passed": true
+          },
+          {
+            "name": "reopened-real-window-retains-shrunken-height",
+            "passed": true
+          },
+          {
+            "name": "native-runtime-menu-frame-published",
+            "passed": true
+          },
+          {
+            "name": "runtime-is-native-menu-fifth-item",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-menu-check-matches-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-action-applies-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-toggle-keeps-popup-open",
+            "passed": true
+          },
+          {
+            "name": "runtime-row-and-label-restored",
+            "passed": true
+          },
+          {
+            "name": "real-height-restored-with-no-gap",
+            "passed": true
+          },
+          {
+            "name": "flow-document-and-screen-restored",
+            "passed": true
+          }
+        ]
+      },
+      {
+        "name": "runtime-settings",
+        "style": "standard",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "real-settings-runtime-control-published",
+            "passed": true
+          },
+          {
+            "name": "settings-five-module-rows-present-and-visible",
+            "passed": true
+          },
+          {
+            "name": "settings-fifth-runtime-checkbox-enabled",
+            "passed": true
+          },
+          {
+            "name": "settings-native-control-unchecks-runtime",
+            "passed": true
+          },
+          {
+            "name": "settings-native-control-restores-runtime",
+            "passed": true
+          },
+          {
+            "name": "actual-status-opens-after-settings",
+            "passed": true
+          },
+          {
+            "name": "restored-settings-preference-renders-runtime",
+            "passed": true
+          }
+        ]
+      },
+      {
+        "name": "runtime-popup",
+        "style": "clear",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "actual-status-opens",
+            "passed": true
+          },
+          {
+            "name": "runtime-default-or-restored-enabled",
+            "passed": true
+          },
+          {
+            "name": "history-hidden-to-remove-viewport-cap",
+            "passed": true
+          },
+          {
+            "name": "natural-height-fits-real-viewport",
+            "passed": true
+          },
+          {
+            "name": "native-runtime-menu-frame-published",
+            "passed": true
+          },
+          {
+            "name": "runtime-is-native-menu-fifth-item",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-menu-check-matches-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-action-applies-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-toggle-keeps-popup-open",
+            "passed": true
+          },
+          {
+            "name": "actual-runtime-row-hidden",
+            "passed": true
+          },
+          {
+            "name": "natural-height-shrinks-24",
+            "passed": true
+          },
+          {
+            "name": "real-window-height-shrinks-24",
+            "passed": true
+          },
+          {
+            "name": "flow-document-removes-24-with-no-gap",
+            "passed": true
+          },
+          {
+            "name": "flow-screen-moves-up-24",
+            "passed": true
+          },
+          {
+            "name": "status-closes-hidden-runtime",
+            "passed": true
+          },
+          {
+            "name": "status-reopens-hidden-runtime",
+            "passed": true
+          },
+          {
+            "name": "runtime-hidden-preference-persists-on-reopen",
+            "passed": true
+          },
+          {
+            "name": "reopened-real-window-retains-shrunken-height",
+            "passed": true
+          },
+          {
+            "name": "native-runtime-menu-frame-published",
+            "passed": true
+          },
+          {
+            "name": "runtime-is-native-menu-fifth-item",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-menu-check-matches-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-native-action-applies-preference",
+            "passed": true
+          },
+          {
+            "name": "runtime-toggle-keeps-popup-open",
+            "passed": true
+          },
+          {
+            "name": "runtime-row-and-label-restored",
+            "passed": true
+          },
+          {
+            "name": "real-height-restored-with-no-gap",
+            "passed": true
+          },
+          {
+            "name": "flow-document-and-screen-restored",
+            "passed": true
+          }
+        ]
+      },
+      {
+        "name": "runtime-settings",
+        "style": "clear",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "real-settings-runtime-control-published",
+            "passed": true
+          },
+          {
+            "name": "settings-five-module-rows-present-and-visible",
+            "passed": true
+          },
+          {
+            "name": "settings-fifth-runtime-checkbox-enabled",
+            "passed": true
+          },
+          {
+            "name": "settings-native-control-unchecks-runtime",
+            "passed": true
+          },
+          {
+            "name": "settings-native-control-restores-runtime",
+            "passed": true
+          },
+          {
+            "name": "actual-status-opens-after-settings",
+            "passed": true
+          },
+          {
+            "name": "restored-settings-preference-renders-runtime",
+            "passed": true
+          }
+        ]
+      }
+    ]
+  },
+  "queuedAppKitRuns": {
+    "sourceChecks": {
+      "before": 50,
+      "afterBuild": 50,
+      "afterRuntime": 50
+    },
+    "binarySHA256": "fe48029d55e171d4a10f17124cfa581fa08c8d9888ec63eef04bb8e061408dc1",
+    "normal": {
+      "passed": 300,
+      "failed": 0,
+      "skipped": 0,
+      "allChecksPassed": true,
+      "log": "interaction-runtime-normal.log"
+    },
+    "reduceMotion": {
+      "passed": 294,
+      "failed": 0,
+      "skipped": 1,
+      "allChecksPassed": true,
+      "attempts": 1,
+      "skipReason": "macOS completed closing synchronously, no observable mid-close reopen interval",
+      "log": "interaction-runtime-reduce-motion.log"
+    },
+    "sourceFreeze": {
+      "archiveSHA256": "e4e858413e5cf7ae7a1a00f599052e98fd55e3e679ebd9e5cf7c84e4b6eaf8fb",
+      "manifestSHA256": "812d47ea953ccb77342559f19ea08f92dd5e0fed6ce4568933246944d2b4b59e",
+      "productionHashes": {
+        "Core/Settings.swift": "23872ccb6dcb632dbfb0094b3efc2438d82058909fe806056ebfd4c646e30cce",
+        "Popover/PopoverController.swift": "a82aa45311d0d8c6108dd6c349c101a5ac11b4c3aa85403c8552628007db9a07",
+        "Popover/PopoverContentView.swift": "d6b697158b644f0c1e65608f6dbd260b6bbf560f08a6755ec619bd68917273c5",
+        "MenuBar/SettingsWindowController.swift": "555d44a25d0fba3e79b65a8e19e60718f75cc850a30c4341bed5dbde905773b5",
+        "tests/interaction/main.swift": "b52f6f95c2c1e5ee8b1e21c79d873811a1f931554341b4481d351a914e40cced"
+      },
+      "manifestFiles": 50
+    },
+    "geometryLines": {
+      "normal": [
+        "Classic 关闭续航后真实仪表移动 24pt 且宿主收缩 24pt  — flow=645.0→669.0; height=649.0→625.0",
+        "Classic 关闭重开后继续隐藏已取消勾选的续航",
+        "Classic 重新开启续航后仪表与真实宿主恢复原坐标",
+        "Standard 关闭续航后真实仪表移动 24pt 且宿主收缩 24pt  — flow=640.0→664.0; height=643.0→619.0",
+        "Standard 关闭重开后继续隐藏已取消勾选的续航",
+        "Standard 重新开启续航后仪表与真实宿主恢复原坐标",
+        "Clear 关闭续航后真实仪表移动 24pt 且宿主收缩 24pt  — flow=640.0→664.0; height=643.0→619.0",
+        "Clear 关闭重开后继续隐藏已取消勾选的续航",
+        "Clear 重新开启续航后仪表与真实宿主恢复原坐标"
+      ],
+      "reduceMotion": [
+        "Classic 关闭续航后真实仪表移动 24pt 且宿主收缩 24pt  — flow=645.0→669.0; height=649.0→625.0",
+        "Classic 关闭重开后继续隐藏已取消勾选的续航",
+        "Classic 重新开启续航后仪表与真实宿主恢复原坐标",
+        "Standard 关闭续航后真实仪表移动 24pt 且宿主收缩 24pt  — flow=640.0→664.0; height=643.0→619.0",
+        "Standard 关闭重开后继续隐藏已取消勾选的续航",
+        "Standard 重新开启续航后仪表与真实宿主恢复原坐标",
+        "Clear 关闭续航后真实仪表移动 24pt 且宿主收缩 24pt  — flow=640.0→664.0; height=643.0→619.0",
+        "Clear 关闭重开后继续隐藏已取消勾选的续航",
+        "Clear 重新开启续航后仪表与真实宿主恢复原坐标"
+      ]
+    }
+  },
+  "images": {
+    "default-runtime.png": "e4baae6f64335789e4eb290571c8c5c5f55d80dc130779470a7f12cd80b5024d",
+    "runtime-hidden.png": "4cb7d79fab320c5faa09b2edb57a5c5644f76a48f8cea0456dd3721154cf12bf",
+    "settings-five-modules.png": "9e443f4d869194a802a8590ca2e933b22e9c76b842e3cce6a37508ba369fe3de"
+  },
+  "finalHealth": {
+    "cleanup": {
+      "rootsRemovedOrAlreadyAbsent": 23,
+      "cachesRemoved": 20,
+      "suitePreferenceFilesRemoved": 29,
+      "ownedFilesRemain": false,
+      "ownedProcessRemaining": false,
+      "launchServicesRemainingIdentifierCounts": {
+        "com.leoarrow.wattson.classic-click-review": 0,
+        "com.leoarrow.wattson.classic-interaction-final": 0,
+        "com.leoarrow.wattson.classic-transient-control": 0,
+        "com.leoarrow.wattson.runtime-module-review": 0
+      },
+      "exactPathStaleRecordCleanupOnly": true,
+      "wholeDatabaseResetPerformed": false,
+      "evidence": [
+        "cleanup-guest-public.json",
+        "cleanup-stale-registrations-public.json"
+      ]
+    },
+    "vm": {
+      "name": "macOS-TestLab",
+      "state": "stopped",
+      "running": false,
+      "detachedRunnerExited": true,
+      "ephemeralVNCEndpointInactive": true,
+      "finalStopCalls": 1,
+      "displayPoints": [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "displayChangedInThisPhase": false,
+      "baseState": "stopped",
+      "baseMetadataUnchangedComparedWithPreStop": true,
+      "baseAccessed": "2026-08-16T05:27:32Z",
+      "baseOperationsPerformed": false
+    },
+    "canonical": {
+      "version": "4.3.1",
+      "receiptIdentifier": "com.leoarrow.wattson.pkg",
+      "receiptVersion": "4.3.1",
+      "PID": 970,
+      "helperSHA256": "5954b4b593a1293d753c7ff38645d3808b47f70a4cc6f559961e0336ac0e480a",
+      "signatureDeepStrictVerified": true,
+      "writesOrRestartsPerformed": false,
+      "matchesInitialObservedHealth": true
+    },
+    "privateCredentialsIncluded": false
+  }
+}

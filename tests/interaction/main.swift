@@ -2451,6 +2451,78 @@ if let orphanedButton = orphanedItem.button {
     check("状态项 anchor 回归具备测试 button", false)
 }
 
+// ---- 14. 独立续航模块保留默认坐标，隐藏后真实宿主不留空白 ----
+let runtimeRenderer = PopoverRuntimeView()
+runtimeRenderer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                               height: PopoverRuntimeView.preferredHeight)
+var runtimeSnapshots = headerSnapshots + [
+    PowerSnapshot(percent: 8, batteryW: -10, systemW: 10),
+    PowerSnapshot(percent: 41, batteryW: -10, systemW: 10, lowPowerMode: true),
+]
+for index in runtimeSnapshots.indices { runtimeSnapshots[index].estimatedRuntimeMinutes = 265 }
+check("独立续航行在全部供电状态和读取失败时实际布局不截断",
+      runtimeSnapshots.allSatisfy { runtimeRenderer.layoutFitsForTest(snapshot: $0) }
+          && runtimeRenderer.layoutFitsForTest(snapshot: runtimeSnapshots[2], degraded: true))
+check("默认顶栏与独立续航行保持原有 72pt 总高度",
+      PopoverHeaderView.preferredHeight + PopoverRuntimeView.preferredHeight == 72)
+if #available(macOS 26.0, *), !screenLocked, let button = item.button {
+    let previousModules = Settings.Module.allCases.map { ($0, Settings.isModuleVisible($0)) }
+    let previousGlass = Settings.liquidGlassEnabled
+    let previousStyle = Settings.liquidGlassStyle
+    defer {
+        for (module, visible) in previousModules { Settings.setModule(module, visible: visible) }
+        Settings.liquidGlassEnabled = previousGlass
+        Settings.liquidGlassStyle = previousStyle
+    }
+    // Keep natural content below this VM's viewport cap so its native window
+    // height can expose the exact 24-point change as well as stack movement.
+    Settings.setModule(.history, visible: false)
+    func runtimeDescendants(_ view: NSView) -> [NSView] {
+        view.subviews.flatMap { [$0] + runtimeDescendants($0) }
+    }
+    for (name, glass, style) in [("Classic", false, Settings.LiquidGlassStyle.regular),
+                                ("Standard", true, .regular), ("Clear", true, .clear)] {
+        Settings.liquidGlassEnabled = glass
+        Settings.liquidGlassStyle = style
+        Settings.setModule(.runtime, visible: true)
+        let controller = PopoverController()
+        controller.update(snapshot: runtimeSnapshots[2], history: [36.9], peak: 36.9, degraded: false)
+        defer { controller.handleOutsideClick(); spin(0.8) }
+        controller.openForSettingsCommandTest(relativeTo: button)
+        spin(0.8)
+        guard let root = controller.contentViewForTest, let window = root.window,
+              let runtime = runtimeDescendants(root).compactMap({ $0 as? PopoverRuntimeView }).first,
+              let flow = runtimeDescendants(root).compactMap({ $0 as? PowerFlowView }).first else {
+            check("\(name) 独立续航具有真实宿主和生产视图", false)
+            continue
+        }
+        root.layoutSubtreeIfNeeded()
+        func flowScreenY() -> CGFloat {
+            flow.window?.convertPoint(toScreen: flow.convert(.zero, to: nil)).y ?? .nan
+        }
+        let flowY = flowScreenY()
+        let height = window.frame.height
+        Settings.setModule(.runtime, visible: false)
+        spin(0.3)
+        root.layoutSubtreeIfNeeded()
+        let hiddenFlowY = flowScreenY()
+        check("\(name) 关闭续航后真实仪表移动 24pt 且宿主收缩 24pt",
+              runtime.isHidden && abs(hiddenFlowY - flowY - 24) < 0.5
+                  && abs(height - window.frame.height - 24) < 0.5,
+              "flow=\(flowY)→\(hiddenFlowY); height=\(height)→\(window.frame.height)")
+        controller.handleOutsideClick(); spin(0.8)
+        controller.openForSettingsCommandTest(relativeTo: button); spin(0.8)
+        check("\(name) 关闭重开后继续隐藏已取消勾选的续航",
+              controller.isShownForTest && runtime.isHidden && !Settings.isModuleVisible(.runtime))
+        Settings.setModule(.runtime, visible: true)
+        spin(0.3)
+        root.layoutSubtreeIfNeeded()
+        check("\(name) 重新开启续航后仪表与真实宿主恢复原坐标",
+              !runtime.isHidden && abs(flowScreenY() - flowY) < 0.5
+                  && abs((root.window?.frame.height ?? 0) - height) < 0.5)
+    }
+}
+
 NSStatusBar.system.removeStatusItem(item)
 Settings.resetTestConfiguration()
 settingsDefaults.removePersistentDomain(forName: settingsSuiteName)

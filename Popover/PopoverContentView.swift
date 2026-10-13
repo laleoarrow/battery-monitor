@@ -4,13 +4,12 @@ typealias PopoverModule = Settings.Module
 
 /// Hero number and state. No separator — it is the top of the surface.
 final class PopoverHeaderView: PopoverSection {
-    static let preferredHeight: CGFloat = 72
+    static let preferredHeight: CGFloat = 48
 
     private let total = NSTextField(labelWithString: "0.0")
     private let unit = NSTextField(labelWithString: "W")
     private let state = NSTextField(labelWithString: "--")
     private let percent = NSTextField(labelWithString: "")
-    private let runtime = NSTextField(labelWithString: "")
 
     init() {
         super.init(height: Self.preferredHeight, showsSeparator: false)
@@ -31,11 +30,6 @@ final class PopoverHeaderView: PopoverSection {
         percent.font = PopoverStyle.mono(13)
         percent.alignment = .right
         addSubview(percent)
-
-        runtime.font = .monospacedDigitSystemFont(ofSize: 11, weight: .regular)
-        runtime.textColor = PopoverStyle.secondaryText
-        runtime.setAccessibilityHelp("macOS estimates remaining battery time for current usage. It changes with workload.")
-        addSubview(runtime)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -46,7 +40,6 @@ final class PopoverHeaderView: PopoverSection {
         unit.frame = NSRect(x: totalWidth() + 5, y: 23, width: 30, height: 20)
         percent.frame = NSRect(x: bounds.width - 160, y: 7, width: 160, height: 20)
         state.frame = NSRect(x: bounds.width - 220, y: 29, width: 220, height: 16)
-        runtime.frame = NSRect(x: 0, y: 51, width: bounds.width, height: 16)
     }
 
     private func totalWidth() -> CGFloat {
@@ -67,6 +60,52 @@ final class PopoverHeaderView: PopoverSection {
         }
         percent.stringValue = "\(snapshot.percent)%"
         percent.textColor = snapshot.percent <= 20 ? PopoverStyle.red : PopoverStyle.stateColor(snapshot.state)
+        needsLayout = true
+    }
+
+#if DEBUG
+    func layoutFitsForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> Bool {
+        update(snapshot: snapshot, degraded: degraded)
+        layoutSubtreeIfNeeded()
+        let fields = [total, unit, state, percent]
+        return fields.allSatisfy { field in
+            let required = field.stringValue.size(withAttributes: [.font: field.font as Any]).width
+            return field.frame.minX >= 0
+                && field.frame.minY >= 0
+                && field.frame.maxX <= bounds.width
+                && field.frame.maxY <= bounds.height
+                && required <= field.frame.width
+        }
+    }
+
+    func statePresentationForTest(snapshot: PowerSnapshot, degraded: Bool = false) ->
+        (text: String, color: NSColor?) {
+        update(snapshot: snapshot, degraded: degraded)
+        return (state.stringValue, state.textColor)
+    }
+#endif
+}
+
+final class PopoverRuntimeView: PopoverSection {
+    static let preferredHeight: CGFloat = 24
+    private let runtime = NSTextField(labelWithString: "")
+
+    init() {
+        super.init(height: Self.preferredHeight, showsSeparator: false)
+        runtime.font = .monospacedDigitSystemFont(ofSize: 11, weight: .regular)
+        runtime.textColor = PopoverStyle.secondaryText
+        runtime.setAccessibilityHelp("macOS estimates remaining battery time for current usage. It changes with workload.")
+        addSubview(runtime)
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    override func layout() {
+        super.layout()
+        runtime.frame = NSRect(x: 0, y: 3, width: bounds.width, height: 16)
+    }
+
+    func update(snapshot: PowerSnapshot, degraded: Bool) {
         let runtimeValue: String
         if degraded {
             runtimeValue = "Unavailable"
@@ -84,34 +123,22 @@ final class PopoverHeaderView: PopoverSection {
             runtimeValue = "Estimating…"
         }
         runtime.stringValue = "Est. Battery Runtime · \(runtimeValue)"
-        needsLayout = true
     }
 
 #if DEBUG
     func layoutFitsForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> Bool {
         update(snapshot: snapshot, degraded: degraded)
         layoutSubtreeIfNeeded()
-        let fields = [total, unit, state, percent, runtime]
-        return fields.allSatisfy { field in
-            let required = field.stringValue.size(withAttributes: [.font: field.font as Any]).width
-            return field.frame.minX >= 0
-                && field.frame.minY >= 0
-                && field.frame.maxX <= bounds.width
-                && field.frame.maxY <= bounds.height
-                && required <= field.frame.width
-        }
-    }
-
-    func statePresentationForTest(snapshot: PowerSnapshot, degraded: Bool = false) ->
-        (text: String, color: NSColor?) {
-        update(snapshot: snapshot, degraded: degraded)
-        return (state.stringValue, state.textColor)
+        let required = runtime.stringValue.size(withAttributes: [.font: runtime.font as Any]).width
+        return bounds.contains(runtime.frame) && required <= runtime.frame.width
     }
 
     func runtimePresentationForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> String {
         update(snapshot: snapshot, degraded: degraded)
         return runtime.stringValue
     }
+
+    var presentationForTest: String { runtime.stringValue }
 #endif
 }
 
@@ -576,6 +603,7 @@ final class PopoverContentViewController: NSViewController {
     private let scrollView = PopoverScrollView()
     private let documentView = PopoverDocumentView()
     private let header = PopoverHeaderView()
+    private let runtimeView = PopoverRuntimeView()
     private let flowView = PowerFlowView()
     private let ringView = RingGaugeView()
     private let laneView = LaneView()
@@ -653,7 +681,7 @@ final class PopoverContentViewController: NSViewController {
             // Keep their foreground clear; Classic retains its own fallback.
             let needsOpaqueForeground = reduceTransparency && !(view.window is GlassPopoverPanel)
             view.layer?.backgroundColor = needsOpaqueForeground ? PopoverStyle.surface.cgColor : nil
-            for section in [header, flowView, ringView, laneView, historyView, footer] {
+            for section in [header, runtimeView, flowView, ringView, laneView, historyView, footer] {
                 section.refreshAppearance()
             }
             update(snapshot: latestSnapshot, history: latestHistory,
@@ -663,6 +691,7 @@ final class PopoverContentViewController: NSViewController {
 
     var preferredHeight: CGFloat {
         var total = PopoverHeaderView.preferredHeight + PopoverFooterView.preferredHeight
+        if isVisible(.runtime) { total += PopoverRuntimeView.preferredHeight }
         if isVisible(.flow) { total += PowerFlowView.preferredHeight }
         if isVisible(.ring) { total += RingGaugeView.preferredHeight }
         if isVisible(.lanes) { total += LaneView.preferredHeight }
@@ -692,6 +721,8 @@ final class PopoverContentViewController: NSViewController {
         moduleUpdateCountsForTest[module, default: 0] += 1
 #endif
         switch module {
+        case .runtime:
+            runtimeView.update(snapshot: latestSnapshot, degraded: latestDegraded)
         case .flow:
             flowView.update(snapshot: latestSnapshot, animated: animationsEnabled && !latestDegraded)
         case .ring:
@@ -787,7 +818,7 @@ final class PopoverContentViewController: NSViewController {
         documentView.addSubview(stack)
         view.addSubview(scrollView)
 
-        [header, flowView, ringView, laneView, historyView, footer].forEach(stack.addArrangedSubview)
+        [header, runtimeView, flowView, ringView, laneView, historyView, footer].forEach(stack.addArrangedSubview)
 
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -798,6 +829,7 @@ final class PopoverContentViewController: NSViewController {
             stack.centerXAnchor.constraint(equalTo: documentView.centerXAnchor),
             stack.topAnchor.constraint(equalTo: documentView.topAnchor, constant: 12),
             header.heightAnchor.constraint(equalToConstant: PopoverHeaderView.preferredHeight),
+            runtimeView.heightAnchor.constraint(equalToConstant: PopoverRuntimeView.preferredHeight),
             flowView.heightAnchor.constraint(equalToConstant: PowerFlowView.preferredHeight),
             ringView.heightAnchor.constraint(equalToConstant: RingGaugeView.preferredHeight),
             laneView.heightAnchor.constraint(equalToConstant: LaneView.preferredHeight),
@@ -857,6 +889,7 @@ final class PopoverContentViewController: NSViewController {
 
     private func applyModuleVisibility() {
         let views: [(PopoverModule, NSView)] = [
+            (.runtime, runtimeView),
             (.flow, flowView), (.ring, ringView),
             (.lanes, laneView), (.history, historyView),
         ]
@@ -995,6 +1028,7 @@ final class PopoverContentViewController: NSViewController {
 
     func moduleIsHiddenForTest(_ module: PopoverModule) -> Bool {
         switch module {
+        case .runtime: return runtimeView.isHidden
         case .flow: return flowView.isHidden
         case .ring: return ringView.isHidden
         case .lanes: return laneView.isHidden
@@ -1003,6 +1037,10 @@ final class PopoverContentViewController: NSViewController {
     }
 
     var latestHistoryForTest: [Double] { latestHistory }
+
+    var runtimePresentationForTest: String {
+        runtimeView.presentationForTest
+    }
 
     var runningAnimationCountForTest: Int {
         func count(_ layer: CALayer) -> Int {

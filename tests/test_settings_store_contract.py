@@ -38,9 +38,10 @@ class SettingsStoreContractTests(unittest.TestCase):
                 (.ring, "Ring Gauge", "popover.module.ring"),
                 (.lanes, "Power Lanes", "popover.module.lanes"),
                 (.history, "Power History", "popover.module.history"),
+                (.runtime, "Est. Battery Runtime", "popover.module.runtime"),
             ]
             expect(
-                Settings.Module.allCases.map(\.rawValue) == ["flow", "ring", "lanes", "history"],
+                Settings.Module.allCases.map(\.rawValue) == ["flow", "ring", "lanes", "history", "runtime"],
                 "module order or raw values changed"
             )
             for (module, title, key) in expectedModules {
@@ -188,6 +189,13 @@ class SettingsStoreContractTests(unittest.TestCase):
             expect(changes == [.module(.flow)],
                    "repeating a module value must not notify")
             expect(!Settings.isModuleVisible(.flow), "module write must persist")
+            expect(Settings.isModuleVisible(.runtime),
+                   "existing module choices must preserve the new runtime default")
+            Settings.setModule(.runtime, visible: false)
+            expect(changes == [.module(.flow), .module(.runtime)],
+                   "runtime uses the same typed module notification")
+            expect(defaults.object(forKey: "popover.module.runtime") as? Bool == false,
+                   "runtime visibility must persist independently")
             defaults.set("future-style", forKey: "menubar.iconStyle")
             expect(Settings.menuBarIconStyle == .wattson,
                    "unknown future values must safely fall back to Wattson")
@@ -229,7 +237,7 @@ class SettingsStoreContractTests(unittest.TestCase):
 
             Settings.configureForTest(defaults: UserDefaults(suiteName: suiteName)!)
             expect(!Settings.showsMenuBarPercentage && !Settings.checksForUpdatesOnLaunch
-                       && !Settings.isModuleVisible(.flow),
+                       && !Settings.isModuleVisible(.flow) && !Settings.isModuleVisible(.runtime),
                    "reopening the original suite must preserve its saved choices")
             expect(Settings.liquidGlassEnabled,
                    "reopening the original suite must preserve the appearance opt-in")

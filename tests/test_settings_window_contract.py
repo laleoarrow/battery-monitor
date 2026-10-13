@@ -1321,17 +1321,17 @@ class SettingsWindowContractTests(unittest.TestCase):
                 .filter { $0.identifier?.rawValue.hasPrefix("settings.modules.row.") == true }
             let moduleIcons = descendants(ofType: NSImageView.self, in: modulePage)
                 .filter { $0.identifier?.rawValue.hasPrefix("settings.modules.icon.") == true }
-            require(moduleRows.count == 4, "one row per module")
-            require(moduleIcons.count == 4 && moduleIcons.allSatisfy { $0.image != nil },
-                "all four module symbols resolve to native images")
+            require(moduleRows.count == 5, "one row per module including battery runtime")
+            require(moduleIcons.count == 5 && moduleIcons.allSatisfy { $0.image != nil },
+                "all five module symbols resolve to native images")
             require(moduleRows.allSatisfy { approximately($0.frame.width, 503) }, "full-width module rows")
-            require(moduleRows.allSatisfy { approximately($0.frame.height, 80) }, "consistent module row height")
+            require(moduleRows.allSatisfy { approximately($0.frame.height, 72) }, "five compact module rows fit the existing window")
             require(moduleIcons.allSatisfy {
                 let alignment = $0.alignmentRect(forFrame: $0.frame)
                 return approximately(alignment.width, 32) && approximately(alignment.height, 32)
             }, "consistent native icon size")
             let rowYs = moduleRows.map { $0.frame.minY }.sorted()
-            require(zip(rowYs, rowYs.dropFirst()).allSatisfy { approximately($1 - $0, 80) },
+            require(zip(rowYs, rowYs.dropFirst()).allSatisfy { approximately($1 - $0, 72) },
                 "module rows form one contiguous list")
             for row in moduleRows {
                 let labels = descendants(ofType: NSTextField.self, in: row)
@@ -1342,7 +1342,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let modulePrimaryLabels = descendants(ofType: NSTextField.self, in: modulePage)
                 .filter { Settings.Module.allCases.map(\.title).contains($0.stringValue) }
             require(
-                modulePrimaryLabels.count == 4
+                modulePrimaryLabels.count == 5
                     && modulePrimaryLabels.allSatisfy {
                         approximately($0.font?.pointSize ?? -1, 14)
                     },
@@ -1367,6 +1367,11 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(!Settings.isModuleVisible(.flow), "module writes through shared Settings store")
             Settings.setModule(.flow, visible: true)
             require(flow.state == .on, "module observes shared Settings store")
+            let runtimeModule = button(Settings.Module.runtime.title, in: first)
+            runtimeModule.performClick(nil)
+            require(!Settings.isModuleVisible(.runtime), "runtime switch writes shared module state")
+            Settings.setModule(.runtime, visible: true)
+            require(runtimeModule.state == .on, "runtime switch observes menu/shared changes")
 
             // Increase Contrast is a live, appearance-only adaptation. The
             // reference palette and geometry remain exact while it is off;
