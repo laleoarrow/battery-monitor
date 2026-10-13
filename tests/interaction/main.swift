@@ -1884,6 +1884,19 @@ if #available(macOS 26.0, *), !screenLocked {
             check("\(style.rawValue) 锚点鼠标按下留给状态按钮的单次 toggle",
                   !controller.shouldDismissLocalClickForTest(window: anchorWindow,
                       screenPoint: NSPoint(x: anchorFrame.midX, y: anchorFrame.midY)))
+            let statusFrame = anchorWindow.frame
+            let edgePoints = [
+                NSPoint(x: statusFrame.midX, y: statusFrame.maxY - 0.5),
+                NSPoint(x: statusFrame.midX, y: statusFrame.minY + 0.5),
+            ]
+            check("\(style.rawValue) 状态窗口顶部和底部命中区不先关闭再重开",
+                  edgePoints.allSatisfy {
+                      !controller.shouldDismissLocalClickForTest(window: anchorWindow, screenPoint: $0)
+                  })
+            check("\(style.rawValue) 无窗口事件按完整状态窗口区域识别锚点",
+                  edgePoints.allSatisfy {
+                      !controller.shouldDismissLocalClickForTest(window: nil, screenPoint: $0)
+                  })
         } else { check("玻璃面板保持有效的状态项锚点", false) }
 
         let menu = NSMenu(title: "Host routing fixture")

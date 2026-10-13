@@ -1,0 +1,1548 @@
+{
+  "environment": {
+    "os": "macOS 26.6.1",
+    "architecture": "arm64",
+    "displayPoints": [
+      1024,
+      768
+    ],
+    "framebufferPixels": [
+      2048,
+      1536
+    ]
+  },
+  "baselineCommit": "3a057d4",
+  "sources": {
+    "statusSHA256": "5837df1935701e0e6584a5888b2a2314f282ae770333c0df49817151e990dd93",
+    "popoverSHA256": "6cbbdbda43b3e751918edd977350b17e03c08dabe501c042d557594e6cc1837d",
+    "interactionSHA256": "4708d814ea1ad81322da5d54db8ee11546861c27eb92f0d21304ace085fda421"
+  },
+  "cases": {
+    "baseline-standard": [
+      {
+        "case": "center",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          }
+        ],
+        "failedAssertions": []
+      },
+      {
+        "case": "top-edge",
+        "passed": false,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 1,
+            "afterShown": 1
+          }
+        ],
+        "failedAssertions": [
+          "second-click-closes"
+        ]
+      },
+      {
+        "case": "content-then-center",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "focus-content",
+            "beforeOpen": 1,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          }
+        ],
+        "failedAssertions": []
+      }
+    ],
+    "baseline-clear": [
+      {
+        "case": "center",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          }
+        ],
+        "failedAssertions": []
+      },
+      {
+        "case": "top-edge",
+        "passed": false,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 1,
+            "afterShown": 1
+          }
+        ],
+        "failedAssertions": [
+          "second-click-closes"
+        ]
+      },
+      {
+        "case": "content-then-center",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "focus-content",
+            "beforeOpen": 1,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          }
+        ],
+        "failedAssertions": []
+      }
+    ],
+    "fixed-standard": [
+      {
+        "case": "center",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          },
+          {
+            "click": "third-status-button-click",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          }
+        ],
+        "failedAssertions": []
+      },
+      {
+        "case": "top-edge",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          },
+          {
+            "click": "third-status-button-click",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          }
+        ],
+        "failedAssertions": []
+      },
+      {
+        "case": "content-then-center",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "focus-content",
+            "beforeOpen": 1,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          },
+          {
+            "click": "third-status-button-click",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          }
+        ],
+        "failedAssertions": []
+      },
+      {
+        "case": "rapid-four",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "rapid-click-1",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "rapid-click-2",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          },
+          {
+            "click": "rapid-click-3",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "rapid-click-4",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          }
+        ],
+        "failedAssertions": []
+      },
+      {
+        "case": "long-press",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "one-held-down-up-pair",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          }
+        ],
+        "failedAssertions": []
+      }
+    ],
+    "fixed-clear": [
+      {
+        "case": "center",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          },
+          {
+            "click": "third-status-button-click",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          }
+        ],
+        "failedAssertions": []
+      },
+      {
+        "case": "top-edge",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          },
+          {
+            "click": "third-status-button-click",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          }
+        ],
+        "failedAssertions": []
+      },
+      {
+        "case": "content-then-center",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "open-from-closed",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "focus-content",
+            "beforeOpen": 1,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "second-status-button-click",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          },
+          {
+            "click": "third-status-button-click",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          }
+        ],
+        "failedAssertions": []
+      },
+      {
+        "case": "rapid-four",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "rapid-click-1",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "rapid-click-2",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          },
+          {
+            "click": "rapid-click-3",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          },
+          {
+            "click": "rapid-click-4",
+            "beforeOpen": 1,
+            "afterOpen": 0,
+            "afterShown": 0
+          }
+        ],
+        "failedAssertions": []
+      },
+      {
+        "case": "long-press",
+        "passed": true,
+        "clickStates": [
+          {
+            "click": "one-held-down-up-pair",
+            "beforeOpen": 0,
+            "afterOpen": 1,
+            "afterShown": 1
+          }
+        ],
+        "failedAssertions": []
+      }
+    ]
+  },
+  "edgeTrace": {
+    "baseline-standard": [
+      {
+        "stage": 110,
+        "eventNumber": 43,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 111,
+        "eventNumber": 43,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      },
+      {
+        "stage": 10,
+        "eventNumber": 43,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      },
+      {
+        "stage": 200,
+        "eventNumber": 43,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      },
+      {
+        "stage": 202,
+        "eventNumber": 43,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": 3
+      },
+      {
+        "stage": 202,
+        "eventNumber": 43,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": 1
+      },
+      {
+        "stage": 201,
+        "eventNumber": 43,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 200,
+        "eventNumber": 43,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 202,
+        "eventNumber": 43,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": 4
+      },
+      {
+        "stage": 201,
+        "eventNumber": 43,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      }
+    ],
+    "baseline-clear": [
+      {
+        "stage": 110,
+        "eventNumber": 50,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 111,
+        "eventNumber": 50,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      },
+      {
+        "stage": 10,
+        "eventNumber": 50,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      },
+      {
+        "stage": 200,
+        "eventNumber": 50,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      },
+      {
+        "stage": 202,
+        "eventNumber": 50,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": 3
+      },
+      {
+        "stage": 202,
+        "eventNumber": 50,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": 1
+      },
+      {
+        "stage": 201,
+        "eventNumber": 50,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 200,
+        "eventNumber": 50,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 202,
+        "eventNumber": 50,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": 4
+      },
+      {
+        "stage": 201,
+        "eventNumber": 50,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      }
+    ],
+    "fixed-standard": [
+      {
+        "stage": 10,
+        "eventNumber": 75,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 110,
+        "eventNumber": 75,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 111,
+        "eventNumber": 75,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 200,
+        "eventNumber": 75,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 202,
+        "eventNumber": 75,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": 3
+      },
+      {
+        "stage": 202,
+        "eventNumber": 75,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": 1
+      },
+      {
+        "stage": 201,
+        "eventNumber": 75,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      },
+      {
+        "stage": 200,
+        "eventNumber": 75,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      },
+      {
+        "stage": 202,
+        "eventNumber": 75,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": 4
+      },
+      {
+        "stage": 201,
+        "eventNumber": 75,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      }
+    ],
+    "fixed-clear": [
+      {
+        "stage": 10,
+        "eventNumber": 90,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 110,
+        "eventNumber": 90,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 111,
+        "eventNumber": 90,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          767.51171875
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 200,
+        "eventNumber": 90,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": -1
+      },
+      {
+        "stage": 202,
+        "eventNumber": 90,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": 3
+      },
+      {
+        "stage": 202,
+        "eventNumber": 90,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 1,
+        "shown": 1,
+        "intent": 1
+      },
+      {
+        "stage": 201,
+        "eventNumber": 90,
+        "eventType": 1,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      },
+      {
+        "stage": 200,
+        "eventNumber": 90,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      },
+      {
+        "stage": 202,
+        "eventNumber": 90,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": 4
+      },
+      {
+        "stage": 201,
+        "eventNumber": 90,
+        "eventType": 2,
+        "eventPoint": [
+          760.49609375,
+          764
+        ],
+        "eventIsAnchorWindow": 1,
+        "anchor": [
+          722,
+          742,
+          77,
+          22
+        ],
+        "anchorWindowFrame": [
+          722,
+          738,
+          77,
+          30
+        ],
+        "open": 0,
+        "shown": 0,
+        "intent": -1
+      }
+    ]
+  },
+  "imageSHA256": {
+    "baseline-standard-after-second.png": "e6d893ef4e146872dfa8ca3b70c9bb0051ee45aa298b9548594b0e2a1c243052",
+    "baseline-clear-after-second.png": "0ed9438faab519b4a1412d599762d06d73d87c754a70e4ba3730c01ea1ab6041",
+    "fixed-standard-after-second.png": "288cd502da777d89c2b648def4943106b99b13a46edb0f07da199a40fc2a61bc",
+    "fixed-clear-after-second.png": "ca7cf9c8eb9229d9c6e61dd0e2ae5f2fd7d08377e2e5fe54b52bf59513389238"
+  },
+  "qaProvenance": {
+    "baseline": {
+      "archiveSHA256": "97cd688db5f47b876ac6908f89bb1e087228f1cbb18796b0910d1795d38b23e4",
+      "manifestSHA256": "16192b0bfaaa3114a5e319e5709e9fcc365b85448bb25a81da28e499ea1b19a3",
+      "statusInstrumentedSHA256": "68e306cd7967776a3737fff91dc8c67f27c0dfb6746f5b6094010b06a162bd38",
+      "popoverInstrumentedSHA256": "7fa19cc05ceb0e8c690bfba22b3baecffa4aade893638d3cdfda74abe334863b",
+      "copiedStartWiringSHA256": "c29a56de53f8f2ec4f8e3a2ff2f84614db364ba3a9b288349f17ddaadacb64c5"
+    },
+    "fixed": {
+      "archiveSHA256": "0aef328c2c4a88c1f799363cfa045bab6da7bfac028450ba55ac8470df43a537",
+      "manifestSHA256": "b3142ee0daa8413bc02d276c8a25eb576e36f0b51b763b290764507571d9e5f7",
+      "statusInstrumentedSHA256": "68e306cd7967776a3737fff91dc8c67f27c0dfb6746f5b6094010b06a162bd38",
+      "popoverInstrumentedSHA256": "5124431868be243dc444dff4bf4dfd8a245836a5f2a1cb0d7344330d7734eaaa",
+      "copiedStartWiringSHA256": "c29a56de53f8f2ec4f8e3a2ff2f84614db364ba3a9b288349f17ddaadacb64c5"
+    },
+    "startup": "Copied production button/action/popup wiring with injected battery snapshot; later full-start control is recorded separately.",
+    "freshGlass": {
+      "sourceArchiveSHA256": "0aef328c2c4a88c1f799363cfa045bab6da7bfac028450ba55ac8470df43a537",
+      "sourceManifestSHA256": "b3142ee0daa8413bc02d276c8a25eb576e36f0b51b763b290764507571d9e5f7",
+      "QAStatusMainSHA256": "edb00d8bdc326cabc355efe8902fe1864816eb2db7cf3001e4957ab0e60d637d",
+      "effectiveDriverSHA256": "b7741bb59cbe00143e3846c21171967586a4f431262ff3bd155d2ec1db3fb033",
+      "RFBHelperSHA256": "0127731aef48ab52991f346838cc18be1745680a63d25f4c343c0fea9feab801",
+      "traceSHA256": {
+        "standard": "7695e3ab4ae8da4bddd5743a3b9140539851fb162e732a6efa8912cdab57eb4b",
+        "clear": "c01b76cc93cd1658aa3876b3783d02a2530c232a55e25125890334c0796d4852"
+      }
+    }
+  },
+  "verification": {
+    "swift": {
+      "command": "swift test -Xswiftc -warnings-as-errors",
+      "passed": 378,
+      "failed": 0
+    },
+    "python": {
+      "command": "python3 -m unittest discover -s tests -v",
+      "total": 503,
+      "skipped": 4,
+      "failed": 0
+    },
+    "releaseBinary": {
+      "architectures": [
+        "arm64",
+        "x86_64"
+      ],
+      "minimumOS": "12.0",
+      "warningsAsErrors": true
+    },
+    "canonicalInstallation": {
+      "version": "4.3.1",
+      "receiptVersion": "4.3.1",
+      "helperSHA256": "5954b4b593a1293d753c7ff38645d3808b47f70a4cc6f559961e0336ac0e480a",
+      "modified": false
+    },
+    "AppKit": {
+      "passed": true,
+      "assertions": {
+        "normal": 282,
+        "reduce-motion": 276
+      },
+      "sourceFilesVerifiedBeforeAndAfter": 180,
+      "hostCurrentSourceMatches": true,
+      "archiveSHA256": "cd4123fb4f53834ad702a4004cd3815fd70f4f287cac22aef9ce03ca2de997fd",
+      "commands": [
+        "env TMPDIR=/tmp/wattson-status-click-interaction.emRJvs/normal/ WATTSON_FORCE_LEGACY_KNOB=0 WATTSON_FORCE_REDUCE_MOTION=0 WATTSON_FORCE_REDUCE_TRANSPARENCY=0 WATTSON_FORCE_INCREASE_CONTRAST=0 bash scripts/verify_interaction.sh",
+        "env TMPDIR=/tmp/wattson-status-click-interaction.emRJvs/reduce-motion/ WATTSON_FORCE_LEGACY_KNOB=0 WATTSON_FORCE_REDUCE_MOTION=1 WATTSON_FORCE_REDUCE_TRANSPARENCY=0 WATTSON_FORCE_INCREASE_CONTRAST=0 bash scripts/verify_interaction.sh"
+      ],
+      "overrides": "DEBUG application rendering overrides; macOS accessibility settings were not changed",
+      "helperSocketAbsent": true
+    }
+  },
+  "additionalClassicObservation": {
+    "result": "Existing QA observation, not a regression from the local predicate correction; product cause unproven.",
+    "startup": "Actual StatusItemController.start() with a fixed initial battery sample and no-op sampling/control handlers.",
+    "controlledDifference": "Only the outside-click predicate and its comments changed.",
+    "outcomes": {
+      "classicContentThird": {
+        "baselinePredicate": {
+          "reset-is-closed": true,
+          "first-click-opens": true,
+          "content-click-keeps-open": true,
+          "open-before-second-click": true,
+          "second-click-closes": true,
+          "third-click-reopens": false
+        },
+        "fixedPredicate": {
+          "reset-is-closed": true,
+          "first-click-opens": true,
+          "content-click-keeps-open": true,
+          "open-before-second-click": true,
+          "second-click-closes": true,
+          "third-click-reopens": false
+        },
+        "sameOutcomes": true
+      },
+      "liveStandardCenterThird": {
+        "baselinePredicate": {
+          "reset-is-closed": true,
+          "first-click-opens": false
+        },
+        "fixedPredicate": {
+          "reset-is-closed": true,
+          "first-click-opens": false
+        },
+        "sameOutcomes": true
+      }
+    },
+    "inputScriptSHA256": "0b76d79ec0f3fbc9734952fc8a4817072c4e8c9e35c5f64ce8bb2a23c631641c",
+    "fixedSource": {
+      "archiveSHA256": "e0c656318ea05ed403e80fe0d47db4cb9298dcaa2dfa0c76816d65d08446a80f",
+      "manifestSHA256": "7489faaf37bdde4bda24fe06c72a48bc407f4ea338429a5d9f3a8a676065729e",
+      "statusInstrumentedSHA256": "d9eede89d29692a05680fae9c678e036eebfa5adb20924c7a05091567351660c",
+      "popoverInstrumentedSHA256": "5124431868be243dc444dff4bf4dfd8a245836a5f2a1cb0d7344330d7734eaaa"
+    },
+    "baselineSource": {
+      "archiveSHA256": "ff06d0840b96b73d2a2ba8dc107a510e184b82d62865746c8769a7a6ddbb9e94",
+      "manifestSHA256": "d2e817f280d74ecd45885f6ea4bd4934b4368cb4f099769ccdf0d401a08bfa28",
+      "statusInstrumentedSHA256": "d9eede89d29692a05680fae9c678e036eebfa5adb20924c7a05091567351660c",
+      "popoverInstrumentedSHA256": "7fa19cc05ceb0e8c690bfba22b3baecffa4aade893638d3cdfda74abe334863b",
+      "QAStatusMainSHA256": "edb00d8bdc326cabc355efe8902fe1864816eb2db7cf3001e4957ab0e60d637d"
+    }
+  }
+}

@@ -493,11 +493,10 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     private func shouldDismissLocalClick(window: NSWindow?, screenPoint: NSPoint) -> Bool {
         guard usingGlassPanel, wantsOpen else { return false }
         if let glassPanel, window === glassPanel { return false }
-        // Leave the status item's own down/up sequence intact; its action is
-        // the only toggle. Closing on mouseDown would make mouseUp reopen it.
+        // The status window owns edge clicks beyond the shorter button bounds.
+        // Leave its down/up sequence to the button's single toggle action.
         if let anchorButton, let anchorWindow = anchorButton.window {
-            let frame = anchorWindow.convertToScreen(anchorButton.convert(anchorButton.bounds, to: nil))
-            if frame.contains(screenPoint) { return false }
+            if window === anchorWindow || anchorWindow.frame.contains(screenPoint) { return false }
         }
         // Native menu tracking uses separate high-level windows (or no event
         // window). Do not swallow module selection or Escape within that menu.

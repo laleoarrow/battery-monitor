@@ -70,6 +70,12 @@ local admin test session available.
   bootstrap, and trust verified loaded/health state over a misleading return.
 - Missing menu-bar item: launch `/Applications/Wattson.app`, then reduce other
   status items if macOS has hidden it behind a notch.
+- Second status-item click closes then reopens: trace the local/global monitor
+  and the actual button action together. The native status window's hit area
+  extends beyond the shorter button bounds. Its own window and entire frame in
+  screen coordinates belong to the button's toggle; a local monitor must not
+  close first. Verify the menu bar's top/bottom edges with actual input, as well
+  as center clicks, content-then-reclick and closing-animation reuse.
 - No power mode: monitoring still works; confirm helper registration and socket
   health rather than prompting during each user action.
 - Visual regression: test charging, full, battery, mixed supply, light/dark,
