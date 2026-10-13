@@ -306,11 +306,13 @@ class PopoverControlsContractTests(unittest.TestCase):
                           "activate(ignoringOtherApps", "activate(options:"):
             self.assertNotIn(forbidden, self.glass_panel)
 
-    def test_glass_local_click_routing_preserves_anchor_toggle_and_native_menus(self):
+    def test_local_click_routing_preserves_anchor_toggle_and_native_menus(self):
         route = self.popover.split("private func shouldDismissLocalClick(window:", 1)[1].split(
             "\n    private func handleEscape", 1
         )[0]
-        self.assertIn("guard usingGlassPanel, wantsOpen else { return false }", route)
+        self.assertIn("guard wantsOpen else { return false }", route)
+        self.assertIn("window !== content.view.window", route)
+        self.assertIn("window.level < .popUpMenu else { return false }", route)
         self.assertIn("window === glassPanel { return false }", route)
         self.assertIn("frame.contains(screenPoint) { return false }", route)
         self.assertIn("!trackingMenus.isEmpty", route)

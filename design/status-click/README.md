@@ -62,6 +62,11 @@ Baseline source is commit `3a057d4`; the fixed popup source SHA-256 starts
 
 ## Additional Classic observation
 
+This observation was subsequently reproduced and resolved in the
+[Classic third-click correction](classic/README.md), which includes independent
+native-input checks and an old-behavior control. The paragraph below records
+what was known when this earlier Glass correction was verified.
+
 After clicking Classic popup content, the second status-button click closed it,
 but a later third click produced raw events in the status window without
 invoking the button action. This also occurred after substituting the fixture

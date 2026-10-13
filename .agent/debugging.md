@@ -76,6 +76,14 @@ local admin test session available.
   screen coordinates belong to the button's toggle; a local monitor must not
   close first. Verify the menu bar's top/bottom edges with actual input, as well
   as center clicks, content-then-reclick and closing-animation reuse.
+- Classic clicks stop reaching the button after content focus: trace the native
+  window, button and target/action separately. A matching hit test does not
+  prove delivery. Use semi-transient behavior and retire a closing native host
+  before reopening so a queued show cannot supersede a later close. Verify four
+  rapid clicks end closed, then reopen. Semi-transient behavior needs a local
+  mouse monitor for clicks in other Wattson windows; preserve the content,
+  status anchor and native menu windows. For remote keyboard checks, confirm the
+  actual key code/modifiers and foreground change before classifying a failure.
 - No power mode: monitoring still works; confirm helper registration and socket
   health rather than prompting during each user action.
 - Visual regression: test charging, full, battery, mixed supply, light/dark,

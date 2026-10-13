@@ -1,0 +1,2077 @@
+{
+  "schema": 1,
+  "reviewDate": "2026-10-13",
+  "scope": "Classic third status-item click and interrupted close/reopen",
+  "source": {
+    "baselineCommit": "4713bde",
+    "baselinePopoverSHA256": "6cbbdbda43b3e751918edd977350b17e03c08dabe501c042d557594e6cc1837d",
+    "finalPopoverSHA256": "a82aa45311d0d8c6108dd6c349c101a5ac11b4c3aa85403c8552628007db9a07",
+    "finalHarnessSHA256": "6bba618a04c530acb0c8898dc4c77eb46268c707c4626b628100a0f12944b9e3",
+    "nativeRunArchiveSHA256": "83c0a60ea9396d4b0cdf6016a2143075f466d94260dc9b3a1933225d0cfd72f3",
+    "nativeRunManifestSHA256": "56e1b48211550db907ee37616cf69d0e74583d2d344291097bd50ee0ff656355"
+  },
+  "environment": {
+    "os": "macOS 26.6.1",
+    "build": "25G76",
+    "architecture": "arm64",
+    "framebufferPixels": [
+      2048,
+      1536
+    ],
+    "screenPoints": [
+      1024,
+      768
+    ],
+    "input": "RFB pointer/key events through WindowServer, plus separate queued AppKit harness",
+    "fixture": "production startup/status-button/menu/popup; fixed initial battery sample; no privileged writes; QA source-only trace hooks"
+  },
+  "baseline": {
+    "reproducedThirdClickFailure": true,
+    "assertions": [
+      {
+        "name": "reset-is-closed",
+        "passed": true,
+        "state": {
+          "open": 0,
+          "shown": 0,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 0,
+          "classicCloses": 0
+        }
+      },
+      {
+        "name": "first-center-opens",
+        "passed": true,
+        "state": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0
+        }
+      },
+      {
+        "name": "safe-content-keeps-open",
+        "passed": true,
+        "state": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0
+        }
+      },
+      {
+        "name": "second-center-closes",
+        "passed": true,
+        "state": {
+          "open": 0,
+          "shown": 0,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 1
+        }
+      },
+      {
+        "name": "third-center-reopens",
+        "passed": false,
+        "state": {
+          "open": 0,
+          "shown": 0,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 1
+        }
+      },
+      {
+        "name": "center-after-mask-restore-opens",
+        "passed": false,
+        "state": {
+          "open": 0,
+          "shown": 0,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 1
+        }
+      }
+    ],
+    "nativeDownSequence": [
+      {
+        "eventNumber": 14,
+        "eventType": 1,
+        "stages": [
+          300,
+          10,
+          310,
+          320,
+          330,
+          200,
+          400,
+          201,
+          331,
+          321,
+          311,
+          301
+        ],
+        "before": {
+          "open": 0,
+          "shown": 0,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 0,
+          "classicCloses": 0
+        },
+        "after": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0
+        },
+        "hitTestIsButton": 1
+      },
+      {
+        "eventNumber": 16,
+        "eventType": 1,
+        "stages": [
+          402,
+          300,
+          10,
+          310,
+          311,
+          301
+        ],
+        "before": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0
+        },
+        "after": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0
+        },
+        "hitTestIsButton": 1
+      },
+      {
+        "eventNumber": 17,
+        "eventType": 1,
+        "stages": [
+          300,
+          10,
+          310,
+          311,
+          301
+        ],
+        "before": {
+          "open": 0,
+          "shown": 0,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 1
+        },
+        "after": {
+          "open": 0,
+          "shown": 0,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 1
+        },
+        "hitTestIsButton": 1
+      }
+    ],
+    "actionMaskRestoreDidNotRecover": true
+  },
+  "traceStages": {
+    "10": "raw local event observer",
+    "200": "production button target/action entry",
+    "201": "production button target/action exit",
+    "202": "ClickRouter intent",
+    "300": "NSApplication.sendEvent entry",
+    "301": "NSApplication.sendEvent exit",
+    "310": "native status-window sendEvent entry",
+    "311": "native status-window sendEvent exit",
+    "320": "native button mouseDown entry",
+    "321": "native button mouseDown exit",
+    "330": "NSControl sendAction entry",
+    "331": "NSControl sendAction exit",
+    "400": "native popover willShow",
+    "401": "native popover didShow",
+    "402": "native popover willClose",
+    "403": "native popover didClose",
+    "420": "workspace application activation",
+    "421": "workspace Space change",
+    "422": "workspace session resignation",
+    "110": "local outside-click classifier entry",
+    "111": "local outside-click classifier exit"
+  },
+  "controlledHarness": {
+    "fixedPopoverSHA256": "7702564d871c7b35067bc5937b0c7f9d194452675238f8af4e2958ea3976ab07",
+    "restoredTransientPopoverSHA256": "42fd5a3feccfa8c837180a68969b1c97ec45972081372ee8098a04bfd5d9cf0e",
+    "harnessSHA256": "8951e0a9ceba4c3225455b05393e5d72622ab586ef8d5c42ef0df16201403a51",
+    "onlyChange": "both popover.behavior semitransient→transient; all other final production and harness bytes unchanged",
+    "fixedNormal": {
+      "pass": 287,
+      "fail": 0
+    },
+    "restoredTransient": {
+      "pass": 282,
+      "fail": 5,
+      "failures": [
+        "Classic 保留原 NSPopover 生命周期与全局监听",
+        "内容聚焦后的第二次点击实际执行按钮关闭动作",
+        "第三次事件到达后继续调用按钮动作并重开 Classic",
+        "四次快速真实按钮动作不会留下排队的原生重开",
+        "玻璃转回 Classic 使用新的干净原生计数且保留内容"
+      ]
+    }
+  },
+  "tests": {
+    "swift": {
+      "total": 378,
+      "failures": 0,
+      "warningsAsErrors": true
+    },
+    "python": {
+      "total": 503,
+      "existingOptInSkips": 4,
+      "failures": 0
+    },
+    "universalRelease": {
+      "architectures": [
+        "arm64",
+        "x86_64"
+      ],
+      "warningsAsErrors": true,
+      "minimumMacOS": "12.0"
+    }
+  },
+  "images": {
+    "before-third-click.png": "f12f65156de4e5eb5479dd714f61ac71c229cb44962d8eed54b2ddcb3abecc3b",
+    "after-third-click.png": "9ee9cfebdd8dad769a6470caad4afe10a2da7ac84d191bd06c537ecbd67408e7"
+  },
+  "nativeRun": {
+    "caseCount": 16,
+    "assertionCount": 74,
+    "allPassed": true,
+    "skippedCases": 0,
+    "screenshotErrors": 0,
+    "cases": [
+      {
+        "name": "three-continuous-content-close-reopens",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "initial-close-settled",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 0,
+              "classicCloses": 0,
+              "logicalPrimary": 0,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "first-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 1,
+              "classicCloses": 0,
+              "logicalPrimary": 1,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-content-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 1,
+              "classicCloses": 0,
+              "logicalPrimary": 1,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-close",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 1,
+              "classicCloses": 1,
+              "logicalPrimary": 2,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-reopen",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 2,
+              "classicCloses": 1,
+              "logicalPrimary": 3,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-2-content-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 2,
+              "classicCloses": 1,
+              "logicalPrimary": 3,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-2-close",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 2,
+              "classicCloses": 2,
+              "logicalPrimary": 4,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-2-reopen",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 3,
+              "classicCloses": 2,
+              "logicalPrimary": 5,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-3-content-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 3,
+              "classicCloses": 2,
+              "logicalPrimary": 5,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-3-close",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 3,
+              "classicCloses": 3,
+              "logicalPrimary": 6,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-3-reopen",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 4,
+              "classicCloses": 3,
+              "logicalPrimary": 7,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "early-reopen-and-late-close",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "content-activation-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 4,
+              "classicCloses": 3,
+              "logicalPrimary": 7,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "reopen-gap-under-0.15-seconds",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 4,
+              "classicCloses": 3,
+              "logicalPrimary": 7,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "after-late-close",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 1,
+              "classicCloses": 0,
+              "logicalPrimary": 9,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "late-close-does-not-dismiss-reopen",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 1,
+              "classicCloses": 0,
+              "logicalPrimary": 9,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "four-rapid-center-pairs",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "four-pairs-end-closed",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 1,
+              "classicCloses": 1,
+              "logicalPrimary": 13,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "rapid-four-next-center-reopens",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 2,
+              "classicCloses": 1,
+              "logicalPrimary": 14,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "rapid-reopen-host-and-intent-agree",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 2,
+              "classicCloses": 1,
+              "logicalPrimary": 14,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "one-held-center-pair",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "held-pair-ends-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 3,
+              "classicCloses": 2,
+              "logicalPrimary": 15,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "other-window-dismiss-and-reopen",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "open-for-input",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 4,
+              "classicCloses": 3,
+              "logicalPrimary": 16,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "content-activation-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 4,
+              "classicCloses": 3,
+              "logicalPrimary": 16,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "content-activation-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 4,
+              "classicCloses": 3,
+              "logicalPrimary": 16,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "other-window-dismisses",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 4,
+              "classicCloses": 4,
+              "logicalPrimary": 16,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "other-window-next-center-reopens",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 5,
+              "classicCloses": 4,
+              "logicalPrimary": 17,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "escape-dismiss-and-reopen",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "open-for-input",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 6,
+              "classicCloses": 5,
+              "logicalPrimary": 18,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "content-activation-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 6,
+              "classicCloses": 5,
+              "logicalPrimary": 18,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "escape-dismisses",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 6,
+              "classicCloses": 6,
+              "logicalPrimary": 18,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "escape-next-center-reopens",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 7,
+              "classicCloses": 6,
+              "logicalPrimary": 19,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "command-tab-dismiss-and-reopen",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "open-for-input",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 8,
+              "classicCloses": 7,
+              "logicalPrimary": 20,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "content-activation-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 8,
+              "classicCloses": 7,
+              "logicalPrimary": 20,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "command-tab-dismisses",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 8,
+              "classicCloses": 8,
+              "logicalPrimary": 20,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "command-tab-next-center-reopens",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 9,
+              "classicCloses": 8,
+              "logicalPrimary": 21,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "native-menu-escape-cancel",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "content-activation-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 9,
+              "classicCloses": 8,
+              "logicalPrimary": 21,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "native-menu-escape-cancel-keeps-popover-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 9,
+              "classicCloses": 8,
+              "logicalPrimary": 21,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "native-menu-escape-cancel-status-center-closes",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 9,
+              "classicCloses": 9,
+              "logicalPrimary": 22,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "native-menu-escape-cancel-next-center-reopens",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 10,
+              "classicCloses": 9,
+              "logicalPrimary": 23,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "native-menu-drag-cancel",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "content-activation-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 10,
+              "classicCloses": 9,
+              "logicalPrimary": 23,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "native-menu-drag-cancel-keeps-popover-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 10,
+              "classicCloses": 9,
+              "logicalPrimary": 23,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "native-menu-drag-cancel-status-center-closes",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 10,
+              "classicCloses": 10,
+              "logicalPrimary": 24,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "native-menu-drag-cancel-next-center-reopens",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 11,
+              "classicCloses": 10,
+              "logicalPrimary": 25,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "status-right-click-escape-cancel",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "content-activation-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 11,
+              "classicCloses": 10,
+              "logicalPrimary": 25,
+              "logicalSecondary": 0,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "right-pair-secondary-once",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 11,
+              "classicCloses": 11,
+              "logicalPrimary": 25,
+              "logicalSecondary": 1,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "right-pair-primary-zero",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 11,
+              "classicCloses": 11,
+              "logicalPrimary": 25,
+              "logicalSecondary": 1,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "left-center-reopens-after-right-cancel",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 12,
+              "classicCloses": 11,
+              "logicalPrimary": 26,
+              "logicalSecondary": 1,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "true-control-click",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "content-activation-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 12,
+              "classicCloses": 11,
+              "logicalPrimary": 26,
+              "logicalSecondary": 1,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "control-pair-secondary-once",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 12,
+              "classicCloses": 12,
+              "logicalPrimary": 26,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "control-pair-primary-zero",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 12,
+              "classicCloses": 12,
+              "logicalPrimary": 26,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "control-keeps-logicalPrimary",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 12,
+              "classicCloses": 12,
+              "logicalPrimary": 26,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "control-keeps-helperRequests",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 12,
+              "classicCloses": 12,
+              "logicalPrimary": 26,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "left-center-reopens-after-control-cancel",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 13,
+              "classicCloses": 12,
+              "logicalPrimary": 27,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "live-switch-1-classic",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "initial-close-settled",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 13,
+              "classicCloses": 13,
+              "logicalPrimary": 27,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "first-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 14,
+              "classicCloses": 13,
+              "logicalPrimary": 28,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-content-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 14,
+              "classicCloses": 13,
+              "logicalPrimary": 28,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-close",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 14,
+              "classicCloses": 14,
+              "logicalPrimary": 29,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-reopen",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 15,
+              "classicCloses": 14,
+              "logicalPrimary": 30,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "live-switch-2-standard",
+        "style": "standard",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "initial-close-settled",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 15,
+              "classicCloses": 15,
+              "logicalPrimary": 30,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "first-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 0,
+              "classicCloses": 0,
+              "logicalPrimary": 31,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-content-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 0,
+              "classicCloses": 0,
+              "logicalPrimary": 31,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-close",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 0,
+              "classicCloses": 0,
+              "logicalPrimary": 32,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-reopen",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 0,
+              "classicCloses": 0,
+              "logicalPrimary": 33,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "live-switch-3-clear",
+        "style": "clear",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "initial-close-settled",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 0,
+              "classicCloses": 0,
+              "logicalPrimary": 33,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "first-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 0,
+              "classicCloses": 0,
+              "logicalPrimary": 34,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-content-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 0,
+              "classicCloses": 0,
+              "logicalPrimary": 34,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-close",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 0,
+              "classicCloses": 0,
+              "logicalPrimary": 35,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-reopen",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 0,
+              "classicCloses": 0,
+              "logicalPrimary": 36,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "live-switch-4-classic",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "initial-close-settled",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 0,
+              "classicCloses": 0,
+              "logicalPrimary": 36,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "first-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 1,
+              "classicCloses": 0,
+              "logicalPrimary": 37,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-content-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 1,
+              "classicCloses": 0,
+              "logicalPrimary": 37,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-close",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 1,
+              "classicCloses": 1,
+              "logicalPrimary": 38,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "cycle-1-reopen",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 2,
+              "classicCloses": 1,
+              "logicalPrimary": 39,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      },
+      {
+        "name": "desktop-dismiss-and-reopen",
+        "style": "classic",
+        "passed": true,
+        "assertions": [
+          {
+            "name": "open-for-input",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 3,
+              "classicCloses": 2,
+              "logicalPrimary": 40,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "content-activation-keeps-open",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 3,
+              "classicCloses": 2,
+              "logicalPrimary": 40,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "desktop-dismisses",
+            "passed": true,
+            "state": {
+              "open": 0,
+              "shown": 0,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 3,
+              "classicCloses": 3,
+              "logicalPrimary": 40,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          },
+          {
+            "name": "desktop-next-center-reopens",
+            "passed": true,
+            "state": {
+              "open": 1,
+              "shown": 1,
+              "buttonEnabled": 1,
+              "targetMatches": 1,
+              "actionMatches": 1,
+              "classicShows": 4,
+              "classicCloses": 3,
+              "logicalPrimary": 41,
+              "logicalSecondary": 2,
+              "helperRequests": 0,
+              "helperInstalled": 0
+            }
+          }
+        ]
+      }
+    ],
+    "firstCloseReopenDownEvents": [
+      {
+        "eventNumber": 280,
+        "stages": [
+          300,
+          10,
+          310,
+          320,
+          330,
+          200,
+          202,
+          400,
+          201,
+          331,
+          321,
+          311,
+          301
+        ],
+        "before": {
+          "open": 0,
+          "shown": 0,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 0,
+          "classicCloses": 0,
+          "logicalPrimary": 0,
+          "logicalSecondary": 0,
+          "helperRequests": 0
+        },
+        "after": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0,
+          "logicalPrimary": 1,
+          "logicalSecondary": 0,
+          "helperRequests": 0
+        }
+      },
+      {
+        "eventNumber": 282,
+        "stages": [
+          300,
+          10,
+          310,
+          320,
+          330,
+          200,
+          202,
+          402,
+          201,
+          331,
+          321,
+          311,
+          301
+        ],
+        "before": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0,
+          "logicalPrimary": 1,
+          "logicalSecondary": 0,
+          "helperRequests": 0
+        },
+        "after": {
+          "open": 0,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0,
+          "logicalPrimary": 2,
+          "logicalSecondary": 0,
+          "helperRequests": 0
+        }
+      },
+      {
+        "eventNumber": 283,
+        "stages": [
+          300,
+          10,
+          310,
+          320,
+          330,
+          200,
+          202,
+          400,
+          201,
+          331,
+          321,
+          311,
+          301
+        ],
+        "before": {
+          "open": 0,
+          "shown": 0,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 1,
+          "logicalPrimary": 2,
+          "logicalSecondary": 0,
+          "helperRequests": 0
+        },
+        "after": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 2,
+          "classicCloses": 1,
+          "logicalPrimary": 3,
+          "logicalSecondary": 0,
+          "helperRequests": 0
+        }
+      }
+    ],
+    "commandTab": {
+      "modifierEvent": [
+        {
+          "keyCode": 55,
+          "eventFlags": 1048840
+        },
+        {
+          "keyCode": 55,
+          "eventFlags": 256
+        }
+      ],
+      "foregroundPIDs": [
+        11830,
+        375
+      ],
+      "stages": {
+        "open-for-input": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 8,
+          "classicCloses": 7,
+          "logicalPrimary": 20,
+          "logicalSecondary": 0,
+          "helperRequests": 0,
+          "helperInstalled": 0
+        },
+        "command-tab-dismisses": {
+          "open": 0,
+          "shown": 0,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 8,
+          "classicCloses": 8,
+          "logicalPrimary": 20,
+          "logicalSecondary": 0,
+          "helperRequests": 0,
+          "helperInstalled": 0
+        },
+        "command-tab-next-center-reopens": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 9,
+          "classicCloses": 8,
+          "logicalPrimary": 21,
+          "logicalSecondary": 0,
+          "helperRequests": 0,
+          "helperInstalled": 0
+        }
+      },
+      "commandFlag": 1048576
+    },
+    "commandAndActivationTrace": [
+      {
+        "stage": 420,
+        "uptime": 4846.332619875,
+        "eventType": 8,
+        "keyCode": -1,
+        "eventFlags": 0,
+        "frontPID": 11830,
+        "ownPID": 11830,
+        "open": 1,
+        "shown": 1
+      },
+      {
+        "stage": 300,
+        "uptime": 4860.184904541667,
+        "eventType": 12,
+        "keyCode": 55,
+        "eventFlags": 1048840,
+        "frontPID": 11830,
+        "ownPID": 11830,
+        "open": 1,
+        "shown": 1
+      },
+      {
+        "stage": 300,
+        "uptime": 4860.322646833333,
+        "eventType": 12,
+        "keyCode": 55,
+        "eventFlags": 256,
+        "frontPID": 11830,
+        "ownPID": 11830,
+        "open": 1,
+        "shown": 1
+      },
+      {
+        "stage": 420,
+        "uptime": 4860.324116000001,
+        "eventType": 12,
+        "keyCode": 55,
+        "eventFlags": 256,
+        "frontPID": 375,
+        "ownPID": 11830,
+        "open": 1,
+        "shown": 1
+      },
+      {
+        "stage": 420,
+        "uptime": 4902.964234125,
+        "eventType": 13,
+        "keyCode": -1,
+        "eventFlags": 0,
+        "frontPID": 381,
+        "ownPID": 11830,
+        "open": 0,
+        "shown": 1
+      }
+    ]
+  },
+  "pureSemiControl": {
+    "source": {
+      "archiveSHA256": "2711ba24014abddef3fbb33837217fca178140af6bd5dd90083bed80742618e9",
+      "manifestSHA256": "f691a87c7738713377462fa789e1108eef5c35b335d33562a2b37c7752670098",
+      "popoverSHA256": "f84b02837878fad0e8844f10fb329b76874334230e1de3051b945bcd111dec71"
+    },
+    "commandTabPassed": false,
+    "foregroundPIDs": [
+      375,
+      381
+    ],
+    "stages": {
+      "open-for-input": {
+        "open": 1,
+        "shown": 1,
+        "buttonEnabled": 1,
+        "targetMatches": 1,
+        "actionMatches": 1,
+        "classicShows": 1,
+        "classicCloses": 0,
+        "logicalPrimary": 1,
+        "logicalSecondary": 0,
+        "helperRequests": 0,
+        "helperInstalled": 0
+      },
+      "command-tab-dismisses": {
+        "open": 1,
+        "shown": 1,
+        "buttonEnabled": 1,
+        "targetMatches": 1,
+        "actionMatches": 1,
+        "classicShows": 1,
+        "classicCloses": 0,
+        "logicalPrimary": 1,
+        "logicalSecondary": 0,
+        "helperRequests": 0,
+        "helperInstalled": 0
+      },
+      "command-tab-next-center-reopens": {
+        "open": 0,
+        "shown": 0,
+        "buttonEnabled": 1,
+        "targetMatches": 1,
+        "actionMatches": 1,
+        "classicShows": 1,
+        "classicCloses": 1,
+        "logicalPrimary": 2,
+        "logicalSecondary": 0,
+        "helperRequests": 0,
+        "helperInstalled": 0
+      }
+    }
+  },
+  "missingClassicLocalMonitorControl": {
+    "popoverSHA256": "7702564d871c7b35067bc5937b0c7f9d194452675238f8af4e2958ea3976ab07",
+    "casePassed": false,
+    "assertions": [
+      {
+        "name": "open-for-input",
+        "passed": true,
+        "state": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0,
+          "logicalPrimary": 1,
+          "logicalSecondary": 0,
+          "helperRequests": 0,
+          "helperInstalled": 0
+        }
+      },
+      {
+        "name": "content-activation-keeps-open",
+        "passed": true,
+        "state": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0,
+          "logicalPrimary": 1,
+          "logicalSecondary": 0,
+          "helperRequests": 0,
+          "helperInstalled": 0
+        }
+      },
+      {
+        "name": "content-activation-keeps-open",
+        "passed": true,
+        "state": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0,
+          "logicalPrimary": 1,
+          "logicalSecondary": 0,
+          "helperRequests": 0,
+          "helperInstalled": 0
+        }
+      },
+      {
+        "name": "other-window-dismisses",
+        "passed": false,
+        "state": {
+          "open": 1,
+          "shown": 1,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 0,
+          "logicalPrimary": 1,
+          "logicalSecondary": 0,
+          "helperRequests": 0,
+          "helperInstalled": 0
+        }
+      },
+      {
+        "name": "other-window-next-center-reopens",
+        "passed": false,
+        "state": {
+          "open": 0,
+          "shown": 0,
+          "buttonEnabled": 1,
+          "targetMatches": 1,
+          "actionMatches": 1,
+          "classicShows": 1,
+          "classicCloses": 1,
+          "logicalPrimary": 2,
+          "logicalSecondary": 0,
+          "helperRequests": 0,
+          "helperInstalled": 0
+        }
+      }
+    ]
+  },
+  "finalQueuedAppKitRuns": [
+    {
+      "mode": "normal",
+      "passedAssertions": 289,
+      "failedAssertions": 0,
+      "skippedStages": 0,
+      "result": "ALL_INTERACTION_CHECKS_PASSED",
+      "log": "interaction-a82-normal.log"
+    },
+    {
+      "mode": "reduceMotion attempt1",
+      "passedAssertions": 282,
+      "failedAssertions": 1,
+      "skippedStages": 1,
+      "result": "SOME_CHECKS_FAILED",
+      "log": "interaction-a82-reduce-motion-attempt1.log",
+      "failedCheck": "A2 native circular settings button blank-area input at(13,7) timed out; other sample(-13,-7)passed"
+    },
+    {
+      "mode": "reduceMotion attempt2 (one bounded repeat)",
+      "passedAssertions": 283,
+      "failedAssertions": 0,
+      "skippedStages": 1,
+      "skipLines": [
+        "⏭  当前系统同步完成关闭：没有可验证的关闭中途重开窗口"
+      ],
+      "result": "ALL_INTERACTION_CHECKS_PASSED",
+      "log": "interaction-a82-reduce-motion-repeat.log",
+      "sourceAndBinaryUnchangedSinceAttempt1": true
+    }
+  ]
+}

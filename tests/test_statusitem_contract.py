@@ -411,8 +411,8 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("samplingCadence.displayIsActive = false", closing)
         self.assertIn("scheduleSamplingClock()", closing)
 
-    def test_popover_is_transient_and_hangs_below_the_item(self):
-        self.assertIn(".transient", self.popover)
+    def test_popover_preserves_status_button_actions_and_hangs_below_the_item(self):
+        self.assertIn(".semitransient", self.popover)
         self.assertIn(".maxY", self.popover)
 
     def test_entrance_animation_configures_the_native_motion_on_each_open(self):

@@ -40,10 +40,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     private(set) var contentRenderCountForTest = 0
 #endif
 
-    /// `.transient` only dismisses for events this process sees. Wattson is an
-    /// accessory app that never activates, so a click on the desktop or another
-    /// app never reaches it and the popover just stayed open. A global monitor
-    /// is the only way to hear those clicks.
+    /// Clicks in other processes do not reach the popup's native anchor window.
+    /// The global monitor dismisses it for desktop and other-app clicks.
     private var outsideClickMonitor: Any?
     private var localEventMonitor: Any?
     private var localObservers: [NSObjectProtocol] = []
@@ -63,7 +61,9 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         refreshLiquidGlassAppearance()
         popover.contentViewController = content
         setContentSize(NSSize(width: PopoverStyle.width, height: content.preferredHeight))
-        popover.behavior = .transient
+        // Keep status-button actions intact after the popup receives focus.
+        // Transient dismissal can consume later clicks in its anchor window.
+        popover.behavior = .semitransient
         popover.animates = true
         popover.delegate = self
         content.heightDidChange = { [weak self] _ in
@@ -192,8 +192,13 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         guard var placement = resolvePlacement(relativeTo: button) else { return }
         guard !useGlass || placement.glassPanelFrame(margin: GlassPopoverPanel.contentInset) != nil else { return }
         let reduceMotion = Self.reducesMotion
-        popover.animates = !reduceMotion
         let reopeningDuringDismissal = !useGlass && popover.isShown
+        if reopeningDuringDismissal {
+            // A queued native re-show can outlive the user's next close.
+            // Retire the closing instance before requesting another show.
+            retireClassicHost()
+        }
+        popover.animates = !reduceMotion
         usingGlassPanel = useGlass
         setContentSize(placement.contentSize)
         // Prime every module with the newest cached telemetry before AppKit
@@ -222,7 +227,6 @@ final class PopoverController: NSObject, NSPopoverDelegate {
             popover.contentViewController = content
             let positioningRect = button.convert(
                 button.window!.convertFromScreen(placement.anchorFrame), from: nil)
-            // AppKit can reverse a Classic close without dropping the reopen.
             popover.show(relativeTo: positioningRect, of: button, preferredEdge: .maxY)
             if popover.isShown { showsRequested += 1 }
         }
@@ -232,8 +236,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         // Stop persistent module motion before installing the permitted reduced-
         // motion fade; disabling content animations also clears the root layer.
         content.setAnimationsEnabled(!reduceMotion)
-        // Replaying from a fixed low opacity while AppKit is reversing a close
-        // would flash. Let the in-flight presentation continue instead.
+        // Keep the existing content animation when reopening during dismissal;
+        // restarting it from a fixed low opacity would flash.
         if !reopeningDuringDismissal {
             playEntranceAnimation(reduceMotion: reduceMotion)
         }
@@ -264,14 +268,14 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         guard popover.contentViewController != nil else { return }
         // Do not require a retiring close animation to deliver one final
         // didClose after its shared content moves to another window. Counts
-        // belong to one native instance; same-Classic reopen keeps that instance.
+        // belong to one native instance; interrupted closes retire that instance.
         popover.delegate = nil
         popover.animates = false
         popover.close()
         popover.contentViewController = nil
         popover = NSPopover()
         popover.appearance = Settings.colorScheme.appearance
-        popover.behavior = .transient
+        popover.behavior = .semitransient
         popover.delegate = self
         showsRequested = 0
         closesObserved = 0
@@ -435,7 +439,18 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         ) { [weak self] _ in
             self?.handleOutsideClick()
         }
-        guard usingGlassPanel else { return }
+        let workspace = NSWorkspace.shared.notificationCenter
+        workspaceObservers.append(workspace.addObserver(forName: NSWorkspace.didActivateApplicationNotification,
+            object: nil, queue: .main) { [weak self] notification in
+            guard let application = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
+                  application.processIdentifier != ProcessInfo.processInfo.processIdentifier else { return }
+            self?.handleOutsideClick()
+        })
+        for name in [NSWorkspace.activeSpaceDidChangeNotification, NSWorkspace.sessionDidResignActiveNotification] {
+            workspaceObservers.append(workspace.addObserver(forName: name, object: nil, queue: .main) {
+                [weak self] _ in self?.handleOutsideClick()
+            })
+        }
         localEventMonitor = NSEvent.addLocalMonitorForEvents(
             matching: [.leftMouseDown, .rightMouseDown, .otherMouseDown, .keyDown]
         ) { [weak self] event in
@@ -452,6 +467,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
             }
             return event
         }
+        guard usingGlassPanel else { return }
         localObservers = [
             NotificationCenter.default.addObserver(forName: NSMenu.didBeginTrackingNotification,
                 object: nil, queue: .main) { [weak self] notification in
@@ -476,22 +492,16 @@ final class PopoverController: NSObject, NSPopoverDelegate {
                     object: anchorWindow, queue: .main) { [weak self] _ in self?.refreshPlacement() })
             }
         }
-        let workspace = NSWorkspace.shared.notificationCenter
-        workspaceObservers.append(workspace.addObserver(forName: NSWorkspace.didActivateApplicationNotification,
-            object: nil, queue: .main) { [weak self] notification in
-            guard let application = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
-                  application.processIdentifier != ProcessInfo.processInfo.processIdentifier else { return }
-            self?.handleOutsideClick()
-        })
-        for name in [NSWorkspace.activeSpaceDidChangeNotification, NSWorkspace.sessionDidResignActiveNotification] {
-            workspaceObservers.append(workspace.addObserver(forName: name, object: nil, queue: .main) {
-                [weak self] _ in self?.handleOutsideClick()
-            })
-        }
     }
 
     private func shouldDismissLocalClick(window: NSWindow?, screenPoint: NSPoint) -> Bool {
-        guard usingGlassPanel, wantsOpen else { return false }
+        guard wantsOpen else { return false }
+        if !usingGlassPanel {
+            // Semi-transient popovers do not dismiss for other app windows.
+            // Keep Classic content and native menu events with AppKit.
+            guard let window, window !== content.view.window,
+                  window.level < .popUpMenu else { return false }
+        }
         if let glassPanel, window === glassPanel { return false }
         // The status window owns edge clicks beyond the shorter button bounds.
         // Leave its down/up sequence to the button's single toggle action.

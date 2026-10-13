@@ -129,6 +129,36 @@ func runApplication(until condition: @escaping () -> Bool,
     return satisfied
 }
 
+final class StatusClickDispatchProbe: NSObject {
+    let controller = PopoverController()
+    private var router = ClickRouter()
+    private(set) var actionCount = 0
+    private(set) var primaryCount = 0
+
+    @objc func clicked(_ sender: NSStatusBarButton) {
+        actionCount += 1
+        let event = app.currentEvent
+        for intent in router.intents(for: event?.type,
+                                     controlHeld: event?.modifierFlags.contains(.control) ?? false) {
+            if intent == .primary {
+                primaryCount += 1
+                controller.toggle(relativeTo: sender)
+            }
+        }
+    }
+}
+
+func queueClick(in window: NSWindow, at point: NSPoint, number: Int) -> Bool {
+    for type in [NSEvent.EventType.leftMouseDown, .leftMouseUp] {
+        guard let event = NSEvent.mouseEvent(with: type, location: point,
+            modifierFlags: [], timestamp: ProcessInfo.processInfo.systemUptime,
+            windowNumber: window.windowNumber, context: nil,
+            eventNumber: number, clickCount: 1, pressure: 1) else { return false }
+        app.postEvent(event, atStart: false)
+    }
+    return true
+}
+
 if !screenLocked {
     app.finishLaunching()
 
@@ -187,8 +217,9 @@ if !screenLocked {
     spin(0.4)
     check("轻触图标弹窗打开", p.isShownForTest && p.isOpen)
     check("Classic 保留原 NSPopover 生命周期与全局监听",
-          p.glassPanelForTest == nil && !p.hasLocalEventMonitorForTest
-              && p.lifetimeObserverCountForTest == 0
+          p.glassPanelForTest == nil && p.hasLocalEventMonitorForTest
+              && p.lifetimeObserverCountForTest == 3
+              && p.classicPopoverForTest.behavior == .semitransient
               && p.classicLifecycleCountsForTest.shows > 0)
     check("打开后开始监听外部点击", p.isWatchingOutsideClicks)
     if let raw = ProcessInfo.processInfo.environment["WATTSON_EXPECTED_POWER_MODE"],
@@ -232,6 +263,86 @@ if !screenLocked {
     p.toggle(relativeTo: button); spin(0.4)
     check("自行关闭后下一次点击仍能打开", p.isShownForTest && p.isOpen)
     p.handleOutsideClick(); spin(1.2)
+
+    // Route actual queued events through the status window and target/action.
+    // Direct toggle calls cannot catch native dismissal swallowing the button.
+    if let statusWindow = button.window {
+        let probe = StatusClickDispatchProbe()
+        probe.controller.update(snapshot: fullSnapshot, history: [50, 52], peak: 52, degraded: false)
+        let oldTarget = button.target
+        let oldAction = button.action
+        let oldMask = button.sendAction(on: [.leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp])
+        button.target = probe
+        button.action = #selector(StatusClickDispatchProbe.clicked(_:))
+        var rawEvents = 0
+        var outsideEvents = 0
+        let otherWindow = NSWindow(contentRect: NSRect(x: 40, y: 300, width: 120, height: 80),
+            styleMask: [.titled], backing: .buffered, defer: false)
+        otherWindow.isReleasedWhenClosed = false
+        let monitor = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown, .leftMouseUp]) { event in
+            if event.window === statusWindow { rawEvents += 1 }
+            if event.window === otherWindow { outsideEvents += 1 }
+            return event
+        }
+        let point = button.convert(NSPoint(x: button.bounds.midX, y: button.bounds.midY), to: nil)
+        _ = queueClick(in: statusWindow, at: point, number: 2001)
+        let opened = runApplication(until: {
+            probe.primaryCount == 1 && probe.controller.isShownForTest
+        }, timeout: 2)
+        check("真实状态窗口事件通过 target/action 打开 Classic", opened && rawEvents > 0)
+        if let root = probe.controller.contentViewForTest, let window = root.window {
+            let y = root.isFlipped ? root.bounds.minY + 30 : root.bounds.maxY - 30
+            let contentPoint = root.convert(NSPoint(x: root.bounds.midX, y: y), to: nil)
+            _ = queueClick(in: window, at: contentPoint, number: 2002)
+            app.activate(ignoringOtherApps: true)
+            window.makeKey()
+            let focused = runApplication(until: { app.isActive && window.isKeyWindow }, timeout: 2)
+            check("Classic 内容取得焦点后保留弹窗", focused && probe.controller.isOpen)
+        } else { check("真实点击回归具有 Classic 内容窗口", false) }
+        _ = queueClick(in: statusWindow, at: point, number: 2003)
+        let closed = runApplication(until: {
+            !probe.controller.isOpen && !probe.controller.isShownForTest
+        }, timeout: 2)
+        check("内容聚焦后的第二次点击实际执行按钮关闭动作", closed && probe.primaryCount == 2)
+        let previousActions = probe.actionCount
+        let previousRaw = rawEvents
+        _ = queueClick(in: statusWindow, at: point, number: 2004)
+        let reopened = runApplication(until: {
+            probe.primaryCount == 3 && probe.controller.isOpen && probe.controller.isShownForTest
+        }, timeout: 2)
+        check("第三次事件到达后继续调用按钮动作并重开 Classic",
+              reopened && rawEvents > previousRaw && probe.actionCount > previousActions)
+        _ = queueClick(in: statusWindow, at: point, number: 2005)
+        _ = runApplication(until: { !probe.controller.isOpen && !probe.controller.isShownForTest }, timeout: 2)
+        for number in 2006...2009 { _ = queueClick(in: statusWindow, at: point, number: number) }
+        _ = runApplication(until: { probe.primaryCount == 8 }, timeout: 2)
+        spin(1.2)
+        check("四次快速真实按钮动作不会留下排队的原生重开",
+              probe.primaryCount == 8 && !probe.controller.isOpen && !probe.controller.isShownForTest
+                  && !probe.controller.isWatchingOutsideClicks
+                  && probe.controller.lifetimeObserverCountForTest == 0)
+        _ = queueClick(in: statusWindow, at: point, number: 2010)
+        _ = runApplication(until: { probe.controller.isOpen && probe.controller.isShownForTest }, timeout: 2)
+        otherWindow.makeKeyAndOrderFront(nil)
+        _ = queueClick(in: otherWindow, at: NSPoint(x: 60, y: 40), number: 2011)
+        let outsideClosed = runApplication(until: {
+            !probe.controller.isOpen && !probe.controller.isShownForTest
+        }, timeout: 2)
+        check("真实点击本进程其他窗口仍关闭 Classic", outsideClosed && outsideEvents > 0)
+        _ = queueClick(in: statusWindow, at: point, number: 2012)
+        let outsideReopened = runApplication(until: {
+            probe.primaryCount == 10 && probe.controller.isOpen && probe.controller.isShownForTest
+        }, timeout: 2)
+        check("本进程外部窗口关闭后图标仍能实际重开", outsideReopened)
+        otherWindow.orderOut(nil)
+        probe.controller.handleOutsideClick()
+        probe.controller.retireClassicHostForTest()
+        spin(1.2)
+        if let monitor { NSEvent.removeMonitor(monitor) }
+        button.target = oldTarget
+        button.action = oldAction
+        button.sendAction(on: NSEvent.EventTypeMask(rawValue: UInt64(oldMask)))
+    } else { check("真实点击回归具有状态窗口", false) }
 
     // ---- 3. 隐藏时必须停止动画：这是省电的全部意义 ----
     p.toggle(relativeTo: button); spin(0.8)
@@ -1966,8 +2077,8 @@ if #available(macOS 26.0, *), !screenLocked {
     _ = runApplication(until: { controller.isShownForTest }, timeout: 1)
     check("关闭全局玻璃恢复 Classic 系统外观及原生 NSPopover",
           controller.glassPanelForTest == nil && controller.popoverAppearanceForTest == nil
-              && controller.contentViewForTest === originalRoot && !controller.hasLocalEventMonitorForTest
-              && controller.lifetimeObserverCountForTest == 0)
+              && controller.contentViewForTest === originalRoot && controller.hasLocalEventMonitorForTest
+              && controller.lifetimeObserverCountForTest == 3)
     checkInstalledHost("关闭玻璃后实际 Classic 窗口内容非空", glass: false)
     let retiredClassic = controller.classicPopoverForTest
     let classicWindow = controller.contentWindowForTest
@@ -2002,6 +2113,7 @@ if #available(macOS 26.0, *), !screenLocked {
     check("玻璃转回 Classic 使用新的干净原生计数且保留内容",
           controller.glassPanelForTest == nil && controller.isOpen
               && controller.classicPopoverForTest !== retiredClassic
+              && controller.classicPopoverForTest.behavior == .semitransient
               && controller.classicLifecycleCountsForTest.shows > controller.classicLifecycleCountsForTest.closes
               && controller.contentViewForTest === originalRoot)
     checkInstalledHost("玻璃转回 Classic 后内容确实属于新原生窗口", glass: false)
