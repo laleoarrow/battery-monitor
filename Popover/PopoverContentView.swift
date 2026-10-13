@@ -4,12 +4,13 @@ typealias PopoverModule = Settings.Module
 
 /// Hero number and state. No separator — it is the top of the surface.
 final class PopoverHeaderView: PopoverSection {
-    static let preferredHeight: CGFloat = 52
+    static let preferredHeight: CGFloat = 72
 
     private let total = NSTextField(labelWithString: "0.0")
     private let unit = NSTextField(labelWithString: "W")
     private let state = NSTextField(labelWithString: "--")
     private let percent = NSTextField(labelWithString: "")
+    private let runtime = NSTextField(labelWithString: "")
 
     init() {
         super.init(height: Self.preferredHeight, showsSeparator: false)
@@ -30,6 +31,11 @@ final class PopoverHeaderView: PopoverSection {
         percent.font = PopoverStyle.mono(13)
         percent.alignment = .right
         addSubview(percent)
+
+        runtime.font = .monospacedDigitSystemFont(ofSize: 11, weight: .regular)
+        runtime.textColor = PopoverStyle.secondaryText
+        runtime.setAccessibilityHelp("macOS estimates remaining battery time for current usage. It changes with workload.")
+        addSubview(runtime)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -40,6 +46,7 @@ final class PopoverHeaderView: PopoverSection {
         unit.frame = NSRect(x: totalWidth() + 5, y: 23, width: 30, height: 20)
         percent.frame = NSRect(x: bounds.width - 160, y: 7, width: 160, height: 20)
         state.frame = NSRect(x: bounds.width - 220, y: 29, width: 220, height: 16)
+        runtime.frame = NSRect(x: 0, y: 51, width: bounds.width, height: 16)
     }
 
     private func totalWidth() -> CGFloat {
@@ -60,6 +67,23 @@ final class PopoverHeaderView: PopoverSection {
         }
         percent.stringValue = "\(snapshot.percent)%"
         percent.textColor = snapshot.percent <= 20 ? PopoverStyle.red : PopoverStyle.stateColor(snapshot.state)
+        let runtimeValue: String
+        if degraded {
+            runtimeValue = "Unavailable"
+        } else if snapshot.plugged {
+            runtimeValue = "External Power"
+        } else if let minutes = snapshot.estimatedRuntimeMinutes, minutes >= 0 {
+            if minutes == 0 {
+                runtimeValue = "<1m"
+            } else if minutes < 60 {
+                runtimeValue = "\(minutes)m"
+            } else {
+                runtimeValue = "\(minutes / 60)h \(minutes % 60)m"
+            }
+        } else {
+            runtimeValue = "Estimating…"
+        }
+        runtime.stringValue = "Est. Battery Runtime · \(runtimeValue)"
         needsLayout = true
     }
 
@@ -67,7 +91,7 @@ final class PopoverHeaderView: PopoverSection {
     func layoutFitsForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> Bool {
         update(snapshot: snapshot, degraded: degraded)
         layoutSubtreeIfNeeded()
-        let fields = [total, unit, state, percent]
+        let fields = [total, unit, state, percent, runtime]
         return fields.allSatisfy { field in
             let required = field.stringValue.size(withAttributes: [.font: field.font as Any]).width
             return field.frame.minX >= 0
@@ -82,6 +106,11 @@ final class PopoverHeaderView: PopoverSection {
         (text: String, color: NSColor?) {
         update(snapshot: snapshot, degraded: degraded)
         return (state.stringValue, state.textColor)
+    }
+
+    func runtimePresentationForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> String {
+        update(snapshot: snapshot, degraded: degraded)
+        return runtime.stringValue
     }
 #endif
 }
@@ -515,6 +544,7 @@ private final class PopoverSurfaceView: NSView {
         // Mouse opening must not focus a footer button and scroll away from
         // the heading. Tab can then enter the controls through AppKit's loop.
         window?.initialFirstResponder = initialFocusView
+        appearanceDidChange?()
     }
 
     override func viewDidChangeEffectiveAppearance() {
@@ -619,9 +649,10 @@ final class PopoverContentViewController: NSViewController {
                 reduceTransparency = value == "1"
             }
 #endif
-            // Standard popover material owns normal rendering. The explicit
-            // opaque fallback also makes the opt-in GUI test deterministic.
-            view.layer?.backgroundColor = reduceTransparency ? PopoverStyle.surface.cgColor : nil
+            // Glass hosts supply a rounded opaque backing for accessibility.
+            // Keep their foreground clear; Classic retains its own fallback.
+            let needsOpaqueForeground = reduceTransparency && !(view.window is GlassPopoverPanel)
+            view.layer?.backgroundColor = needsOpaqueForeground ? PopoverStyle.surface.cgColor : nil
             for section in [header, flowView, ringView, laneView, historyView, footer] {
                 section.refreshAppearance()
             }

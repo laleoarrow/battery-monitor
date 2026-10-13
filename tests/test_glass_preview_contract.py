@@ -98,6 +98,45 @@ class GlassPreviewContractTests(unittest.TestCase):
         self.assertNotIn("CGEvent", cycles)
         self.assertNotIn("postEvent", cycles)
 
+    def test_opt_in_all_power_states_keeps_the_default_gallery_size(self):
+        gallery = self.source.split("private func exportGallery", 1)[1].split(
+            "private func updateNote()", 1
+        )[0]
+        self.assertIn('CommandLine.arguments.contains("--all-power-states")', gallery)
+        self.assertIn("allPowerStates && presentation == .standardGlass", gallery)
+        self.assertIn("? Array(0..<6) : [0]", gallery)
+        self.assertIn("settingsOnly ? 10 : (allPowerStates ? 36 : 26)", gallery)
+
+    def test_feedback_gallery_scrolls_to_the_production_group_without_clicking(self):
+        gallery = self.source.split("private func exportGallery", 1)[1].split(
+            "private func updateNote()", 1
+        )[0]
+        self.assertIn('CommandLine.arguments.contains("--feedback-gallery")', gallery)
+        self.assertIn('feedbackGallery && section == "general"', gallery)
+        self.assertIn('"settings.general.feedback"', gallery)
+        self.assertIn("feedback.bounds.insetBy(dx: -20, dy: -20)", gallery)
+        self.assertNotIn("performClick", gallery)
+
+    def test_settings_only_focus_gallery_keeps_popups_and_comparisons_out(self):
+        gallery = self.source.split("private func exportGallery", 1)[1].split(
+            "private func updateNote()", 1
+        )[0]
+        self.assertIn('CommandLine.arguments.contains("--settings-only")', gallery)
+        self.assertIn('CommandLine.arguments.contains("--focus-feedback")', gallery)
+        self.assertIn("for presentation in settingsOnly ? []", gallery)
+        self.assertIn("let includeComparison = !settingsOnly", gallery)
+        self.assertIn('"settings.general.feedback.button"', gallery)
+        self.assertIn("target.makeFirstResponder(report)", gallery)
+
+    def test_feedback_only_limits_the_ab_gallery_to_the_two_glass_themes(self):
+        gallery = self.source.split("private func exportGallery", 1)[1].split(
+            "private func updateNote()", 1
+        )[0]
+        self.assertIn('CommandLine.arguments.contains("--feedback-only")', gallery)
+        self.assertIn("for glass in feedbackOnly ? [true]", gallery)
+        self.assertIn('for section in feedbackOnly ? ["general"]', gallery)
+        self.assertIn("let captureCount = feedbackOnly ? 2", gallery)
+
 
 if __name__ == "__main__":
     unittest.main()

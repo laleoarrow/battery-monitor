@@ -400,6 +400,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let logoPopup = view("settings.appearance.in-app-logo", in: first) as! NSPopUpButton
             let dockPopup = view("settings.appearance.dock-icon", in: first) as! NSPopUpButton
             let colorScheme = view("settings.appearance.color-scheme", in: first) as! NSPopUpButton
+            let feedbackButton = button("Send Feedback", in: first)
             let keyLoopEnd: NSView = colorScheme
             require(glassSwitch.state == .off && !Settings.liquidGlassEnabled,
                 "global Liquid Glass defaults off")
@@ -430,8 +431,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "Liquid Glass belongs to General Appearance, outside sidebar navigation")
             require(glassSwitch.nextKeyView === logoPopup
                 && logoPopup.nextKeyView === dockPopup
-                && dockPopup.nextKeyView === controller.sidebarForTest,
-                "appearance keyboard loop includes the independent in-app and Dock choices")
+                && dockPopup.nextKeyView === feedbackButton
+                && feedbackButton.nextKeyView === controller.sidebarForTest,
+                "appearance keyboard loop reaches feedback and returns to navigation")
             require(logoPopup.itemTitles == ["Color", "Clear"] && logoPopup.isEnabled
                 && logoPopup.selectedItem?.representedObject as? String == "color",
                 "native logo popup defaults to Color and remains enabled with glass off")
@@ -580,8 +582,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(
                 descendants(ofType: NSView.self, in: view("settings.section.general", in: first))
                     .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
-                    .count == 5,
-                "General includes four operational rows and a separate appearance row"
+                    .count == 6,
+                "General includes four operational rows, appearance and feedback"
             )
             let generalList = view("settings.general.list", in: first)
             let generalRows = descendants(ofType: NSView.self, in: generalList)
@@ -633,7 +635,20 @@ class SettingsWindowContractTests(unittest.TestCase):
             let update = button("Check for Updates", in: first)
             let automaticUpdates = button("Check for Updates on Launch", in: first)
             require(controller.sidebarNextKeyViewForTest === login, "Tab enters first General switch")
-            require(controller.lastVisibleSwitchNextKeyViewForTest === keyLoopEnd, "General key loop includes appearance option")
+            require(controller.lastVisibleSwitchNextKeyViewForTest === controller.sidebarForTest,
+                    "General feedback action returns to navigation")
+            require(dockPopup.nextKeyView === feedbackButton,
+                    "appearance controls reach the feedback action")
+            require(feedbackButton.isEnabled && feedbackButton.title == "Report…"
+                    && feedbackButton.accessibilityLabel() == "Send Feedback",
+                    "feedback uses an enabled native report action")
+            require(feedbackButton.becomeFirstResponder(), "feedback accepts keyboard focus")
+            let feedbackRow = view("settings.general.row.feedback", in: first)
+            require(generalScroll.documentVisibleRect.contains(
+                feedbackRow.convert(feedbackRow.bounds, to: generalDocument)),
+                "keyboard focus reveals the feedback row")
+            _ = feedbackButton.resignFirstResponder()
+            generalScroll.contentView.scroll(to: .zero)
             require(login.accessibilityLabel() == "Launch at Login", "login accessibility label")
             require(battery.accessibilityLabel() == "Hide System Battery Icon", "battery accessibility label")
             require(
@@ -1658,7 +1673,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && glassStyle.nextKeyView === (transparencyIsAdjustable ? transparency : logoPopup)
                     && (!transparencyIsAdjustable || transparency.nextKeyView === logoPopup)
                     && logoPopup.nextKeyView === dockPopup
-                    && dockPopup.nextKeyView === controller.sidebarForTest,
+                    && dockPopup.nextKeyView === feedbackButton,
                     "glass-on includes the background popup in the General keyboard loop")
                 require(dockPopup.isEnabled && Settings.dockIconStyle == .clear,
                     "glass-on retains the independent next-launch Dock preference")
@@ -1723,6 +1738,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(divider.isHidden, "glass navigation has no extra painted divider")
                 let switches = descendants(ofType: NSSwitch.self, in: content).filter { !$0.isHidden }
                 require(switches.count == 4, "General exposes three native switches and one global switch")
+                require(feedbackButton.bezelStyle == .glass,
+                    "feedback uses the same native glass style as other actions")
                 let nativeLogin = switches.first { $0.accessibilityLabel() == "Launch at Login" }!
                 let nativeUpdates = switches.first { $0.accessibilityLabel() == "Check for Updates on Launch" }!
                 require(window.firstResponder === nativeUpdates,
@@ -1868,7 +1885,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                         "each page updates the visible and accessible native toolbar title")
                     let surfaces = descendants(ofType: NSGlassEffectView.self, in: content)
                         .filter { $0.identifier?.rawValue == "settings.control-group.glass" }
-                    let expectedGroups = identifier == "general" ? 2 : 1
+                    let expectedGroups = identifier == "general" ? 3 : 1
                     require(surfaces.count == expectedGroups && surfaces.allSatisfy {
                         $0.contentView != nil && $0.style == .regular && $0.tintColor == nil
                     }, "functional groups use untinted native glass containing their controls")
@@ -1889,7 +1906,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "disabling glass retains its saved background choice")
                 require(glassSwitch.nextKeyView === logoPopup
                     && logoPopup.nextKeyView === dockPopup
-                    && dockPopup.nextKeyView === controller.sidebarForTest,
+                    && dockPopup.nextKeyView === feedbackButton,
                     "glass-off removes the disabled style popup from the keyboard loop")
                 require(dockPopup.isEnabled && Settings.dockIconStyle == .clear,
                     "Dock picker stays available in Classic with its saved next-launch choice")
@@ -1964,6 +1981,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 let glassBackground = view("settings.appearance.liquid-glass-style", in: glassWindow) as! NSPopUpButton
                 let restoredLogo = view("settings.appearance.in-app-logo", in: glassWindow) as! NSPopUpButton
                 let restoredDock = view("settings.appearance.dock-icon", in: glassWindow) as! NSPopUpButton
+                let restoredFeedback = button("Send Feedback", in: glassWindow)
                 let restoredTransparency = view("settings.appearance.glass-transparency", in: glassWindow) as! NSSlider
                 require(glassBackground.isEnabled
                     && glassBackground.selectedItem?.representedObject as? String == "clear"
@@ -1971,7 +1989,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && glassBackground.nextKeyView === (transparencyIsAdjustable ? restoredTransparency : restoredLogo)
                     && (!transparencyIsAdjustable || restoredTransparency.nextKeyView === restoredLogo)
                     && restoredLogo.nextKeyView === restoredDock
-                    && restoredDock.nextKeyView === glassController.sidebarForTest,
+                    && restoredDock.nextKeyView === restoredFeedback
+                    && restoredFeedback.nextKeyView === glassController.sidebarForTest,
                     "new Settings windows restore the background and complete the native key loop")
                 require(restoredDock.isEnabled
                     && restoredDock.selectedItem?.representedObject as? String == "clear",
@@ -2420,6 +2439,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     str(SETTINGS),
                     str(ROOT / "Core" / "SettingsAppearance.swift"),
                     str(ROOT / "Core" / "GlassBackgroundView.swift"),
+                    str(ROOT / "Core" / "FeedbackDiagnostics.swift"),
                     str(UPDATE_CHECKER),
                     str(POWER_SNAPSHOT),
                     str(ENERGY_MODE),

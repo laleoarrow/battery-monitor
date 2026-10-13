@@ -47,12 +47,12 @@ class PopoverModulesContractTests(unittest.TestCase):
         # Tabular digits keep the readout from twitching at 1 Hz.
         self.assertIn("monospacedDigitSystemFont", self.style)
 
-    def test_header_uses_a_compact_single_row_layout(self):
+    def test_header_keeps_power_readings_compact_with_a_runtime_line(self):
         header = self.content.split("final class PopoverHeaderView", 1)[1].split(
             "final class PopoverFooterView", 1
         )[0]
         height = float(re.search(r"preferredHeight: CGFloat = (\d+)", header).group(1))
-        self.assertEqual(height, 52)
+        self.assertEqual(height, 72)
         self.assertNotIn("private let equation", header)
         self.assertNotIn("equation.frame", header)
 

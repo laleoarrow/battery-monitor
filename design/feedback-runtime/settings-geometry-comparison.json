@@ -1,0 +1,192 @@
+{
+  "light": {
+    "controlsPreserved": true,
+    "controls": {
+      "settings.general.feedback": [
+        204,
+        20,
+        479,
+        68
+      ],
+      "settings.general.feedback.glass": [
+        204,
+        20,
+        479,
+        68
+      ],
+      "settings.general.feedback.glass-content": [
+        204,
+        20,
+        479,
+        68
+      ],
+      "settings.general.feedback.box": [
+        204,
+        20,
+        479,
+        68
+      ],
+      "settings.general.feedback.feedback-row": [
+        204,
+        20,
+        479,
+        68
+      ],
+      "settings.general.feedback.feedback-button": [
+        581,
+        40,
+        88,
+        28
+      ],
+      "settings.appearance.color-scheme": [
+        507,
+        344,
+        162,
+        20
+      ],
+      "settings.appearance.liquid-glass-style": [
+        507,
+        242,
+        162,
+        20
+      ],
+      "settings.general.list": [
+        204,
+        408,
+        479,
+        272
+      ],
+      "settings.general.appearance": [
+        204,
+        96,
+        479,
+        304
+      ]
+    },
+    "oldClip": [
+      194,
+      10,
+      499,
+      452
+    ],
+    "newClip": [
+      184,
+      0,
+      519,
+      472
+    ],
+    "oldScroller": [
+      693,
+      17.5,
+      17,
+      444.5
+    ],
+    "newScroller": [
+      703,
+      17.5,
+      17,
+      454.5
+    ],
+    "oldScrollerStyle": [
+      0
+    ],
+    "newScrollerStyle": [
+      0
+    ]
+  },
+  "dark": {
+    "controlsPreserved": true,
+    "controls": {
+      "settings.general.feedback": [
+        204,
+        20,
+        479,
+        68
+      ],
+      "settings.general.feedback.glass": [
+        204,
+        20,
+        479,
+        68
+      ],
+      "settings.general.feedback.glass-content": [
+        204,
+        20,
+        479,
+        68
+      ],
+      "settings.general.feedback.box": [
+        204,
+        20,
+        479,
+        68
+      ],
+      "settings.general.feedback.feedback-row": [
+        204,
+        20,
+        479,
+        68
+      ],
+      "settings.general.feedback.feedback-button": [
+        581,
+        40,
+        88,
+        28
+      ],
+      "settings.appearance.color-scheme": [
+        507,
+        344,
+        162,
+        20
+      ],
+      "settings.appearance.liquid-glass-style": [
+        507,
+        242,
+        162,
+        20
+      ],
+      "settings.general.list": [
+        204,
+        408,
+        479,
+        272
+      ],
+      "settings.general.appearance": [
+        204,
+        96,
+        479,
+        304
+      ]
+    },
+    "oldClip": [
+      194,
+      10,
+      499,
+      452
+    ],
+    "newClip": [
+      184,
+      0,
+      519,
+      472
+    ],
+    "oldScroller": [
+      693,
+      17.5,
+      17,
+      444.5
+    ],
+    "newScroller": [
+      703,
+      17.5,
+      17,
+      454.5
+    ],
+    "oldScrollerStyle": [
+      0
+    ],
+    "newScrollerStyle": [
+      0
+    ]
+  }
+}

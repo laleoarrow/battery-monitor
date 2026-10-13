@@ -41,6 +41,9 @@ where it is going, and how the picture has changed over the last two minutes.
 - A compact native Settings window for General, Display, and Modules.
 - System, Light, and Dark themes, independent of Classic or Liquid Glass styling.
 - Adjustable glass background transparency in General → Appearance, saved automatically.
+- Estimated battery runtime from macOS, shown while running on the internal battery.
+- General → Send Feedback saves a reviewable diagnostic report and opens a GitHub
+  issue draft. Attach the report yourself after reviewing it; GitHub issues are public.
 - No account, analytics, personal telemetry, or external data upload. Optional
   update checks contact only GitHub Releases.
 

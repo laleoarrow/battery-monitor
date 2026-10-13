@@ -21,10 +21,12 @@ enum BatterySampler {
     }
 
     static func sampleResult() -> SampleResult {
-        sampleResult(
+        let result = sampleResult(
             from: batteryProperties(),
             lowPowerMode: ProcessInfo.processInfo.isLowPowerModeEnabled
         )
+        guard case let .snapshot(snapshot) = result else { return result }
+        return .snapshot(BatteryRuntimeEstimate.applying(to: snapshot))
     }
 
     static func sampleResult(

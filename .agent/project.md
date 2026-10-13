@@ -90,6 +90,27 @@ glass flattens its interactive material into solid fills. Keep the three
 sibling frames aligned when resizing. The footer uses Clear in Dark appearance
 and Regular in Light so its selection stays visible on white backgrounds.
 
+The header also displays estimated battery runtime from the public IOPS
+internal-battery `Time to Empty` field, in minutes, following Stats' system-data
+approach. Both startup sampling and the normal observation reader enrich their
+visible snapshots; the pure registry parser remains deterministic. External
+power and failed readings suppress numeric runtime, and a fresh unknown estimate
+clears the previous value. No custom runtime formula or extra sampling timer is
+used. The rounded glass backing owns the solid accessibility fallback; the
+foreground stays transparent in an actual glass host and refreshes on reparenting.
+
+General includes a Send Feedback group below Appearance. Report saves a
+reviewable text attachment and opens an official GitHub Issue draft. Collection
+runs off the UI thread and includes app/system/build/model/architecture,
+preferences, accessibility, bounded helper health, displayed-reading freshness
+and allowlisted raw battery inputs. Serial numbers, account/host names, personal
+paths and logs are excluded. The user attaches and submits the report on GitHub.
+The General scroll viewport extends through the existing 20-point detail margins
+so native group shadows are not cut into an interior rectangle. Matching document
+insets retain group and control positions; feedback keyboard focus reveals the
+expanded optical bounds. The scroll background is explicitly clear. Verify
+geometry after AppKit has settled its overlay/legacy scroller layout.
+
 Settings now delegates its glass sidebar to `NSSplitViewController` and a native
 sidebar item. The native detail safe area positions the retained content;
 appearance changes reparent the existing controls and preserve keyboard focus.
@@ -105,7 +126,7 @@ sidebar. The window backing is clear so no separate dark strip appears around
 the sidebar's rounded edges. See the
 [continuous backdrop correction](../design/settings/continuous-backdrop/README.md).
 Functional Settings groups use NSGlassEffectView; General's shared container
-batches its two groups inside the scroll document, not around the toolbar
+batches its controls, Appearance and Feedback groups inside the scroll document, not around the toolbar
 or system sidebar. Single-group pages need no additional container. Liquid Glass
 belongs to General > Appearance, and only joins that page's keyboard loop.
 General scrolls as needed for the added logo choice or expanded recovery help;

@@ -458,11 +458,13 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         case 5: values = (42, false, 0, -18, 18)
         default: values = (72, true, 68, 22.2, 45.8)
         }
+        let runtimeMinutes: [Int?] = [nil, nil, 265, nil, 19, 312]
         return PowerSnapshot(percent: values.0, plugged: values.1, adapterW: values.2,
                              batteryW: values.3, systemW: values.4,
                              deviceOutputW: usb.state == .on ? (values.1 ? 7.5 : 12.2) : nil,
                              temperatureC: 34.2, cycleCount: 282,
-                             lowPowerMode: powerState.indexOfSelectedItem == 5)
+                             lowPowerMode: powerState.indexOfSelectedItem == 5,
+                             estimatedRuntimeMinutes: runtimeMinutes[powerState.indexOfSelectedItem])
     }
 
     private func updateFixture() {
@@ -488,6 +490,12 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         anchor.title = ""
         anchor.isBordered = false
         let transparencyGallery = CommandLine.arguments.contains("--transparency-gallery")
+        let allPowerStates = CommandLine.arguments.contains("--all-power-states")
+        let feedbackOnly = CommandLine.arguments.contains("--feedback-only")
+        let feedbackGallery = CommandLine.arguments.contains("--feedback-gallery") || feedbackOnly
+        let settingsOnly = CommandLine.arguments.contains("--settings-only") || feedbackOnly
+        let focusFeedback = CommandLine.arguments.contains("--focus-feedback")
+        if settingsOnly { Settings.liquidGlassStyle = .regular }
         let transparencyLevels = transparencyGallery ? [0.0, 0.5, 1.0] : [1.0]
         backdrop.diagnostic = transparencyGallery
         usb.state = .off
@@ -548,10 +556,11 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
             for scheme in [Settings.ColorScheme.light, .dark] {
                 Settings.colorScheme = scheme
                 NSApp.appearance = scheme.appearance
-                for presentation in [PreviewPresentation.clearGlass, .standardGlass, .classic] {
+                for presentation in settingsOnly ? [] : [PreviewPresentation.clearGlass, .standardGlass, .classic] {
                     let style = ["classic", "standard", "clear"][presentation.rawValue]
                     presentation.apply()
-                    let fixtures = presentation == .clearGlass ? Array(0..<6) : [0]
+                    let fixtures = presentation == .clearGlass
+                        || (allPowerStates && presentation == .standardGlass) ? Array(0..<6) : [0]
                     for fixture in fixtures {
                         powerState.selectItem(at: fixture)
                         previewMode = fixture == 5 ? .low : .auto
@@ -565,9 +574,9 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
                         try await Task.sleep(nanoseconds: 650_000_000)
                     }
                 }
-                for glass in [true, false] {
+                for glass in feedbackOnly ? [true] : [true, false] {
                     Settings.liquidGlassEnabled = glass
-                    for section in glass ? ["general", "appearance", "menu-bar-icon", "modules"] : ["appearance"] {
+                    for section in feedbackOnly ? ["general"] : (glass ? ["general", "appearance", "menu-bar-icon", "modules"] : ["appearance"]) {
                         showSettingsSection(section == "appearance" ? "general" : section)
                         let target = settings.windowForTest!
                         let views = descendants(target.contentView!)
@@ -577,15 +586,75 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
                             if section == "appearance", let appearance = views.first(where: {
                                 $0.identifier?.rawValue == "settings.general.appearance"
                             }) { appearance.scrollToVisible(appearance.bounds) }
+                            if feedbackGallery && section == "general", let feedback = views.first(where: {
+                                $0.identifier?.rawValue == "settings.general.feedback"
+                            }) {
+                                feedback.scrollToVisible(glass
+                                    ? feedback.bounds.insetBy(dx: -20, dy: -20) : feedback.bounds)
+                            }
                         }
+                        if focusFeedback && section == "general", let report = views.first(where: {
+                            $0.accessibilityIdentifier() == "settings.general.feedback.button"
+                        }) { target.makeFirstResponder(report) }
                         target.makeFirstResponder(nil)
+                        if settingsOnly {
+                            for _ in 0..<2 {
+                                target.layoutIfNeeded()
+                                target.contentView?.layoutSubtreeIfNeeded()
+                                target.displayIfNeeded()
+                                try await Task.sleep(nanoseconds: 200_000_000)
+                            }
+                            var geometry: [String: [CGFloat]] = [:]
+                            let identifiers = ["settings.general.scroll", "settings.general.list",
+                                               "settings.general.appearance", "settings.general.feedback",
+                                               "settings.modules.list", "settings.section.menu-bar-icon",
+                                               "settings.appearance.color-scheme", "settings.appearance.liquid-glass-style"]
+                            for view in views where identifiers.contains(view.identifier?.rawValue ?? "") {
+                                let frame = view.convert(view.bounds, to: target.contentView)
+                                geometry[view.identifier!.rawValue] = [frame.minX, frame.minY, frame.width, frame.height]
+                                for (suffix, child) in [
+                                    ("glass", descendants(view).first { $0.identifier?.rawValue == "settings.control-group.glass" }),
+                                    ("box", descendants(view).first { $0 is NSBox }),
+                                    ("feedback-row", descendants(view).first { $0.identifier?.rawValue == "settings.general.row.feedback" }),
+                                    ("feedback-button", descendants(view).first { $0.accessibilityIdentifier() == "settings.general.feedback.button" }),
+                                ] {
+                                    if let child {
+                                        let frame = child.convert(child.bounds, to: target.contentView)
+                                        geometry[view.identifier!.rawValue + "." + suffix] = [frame.minX, frame.minY, frame.width, frame.height]
+                                        if #available(macOS 26, *), let glass = child as? NSGlassEffectView,
+                                           let content = glass.contentView {
+                                            let frame = content.convert(content.bounds, to: target.contentView)
+                                            geometry[view.identifier!.rawValue + ".glass-content"] = [frame.minX, frame.minY, frame.width, frame.height]
+                                        }
+                                    }
+                                }
+                                if let scroll = view as? NSScrollView {
+                                    geometry["scrollerStyle"] = [CGFloat(scroll.scrollerStyle.rawValue)]
+                                    geometry["autohidesScrollers"] = [scroll.autohidesScrollers ? 1 : 0]
+                                    let clip = scroll.contentView.convert(scroll.contentView.bounds, to: target.contentView)
+                                    geometry["clip"] = [clip.minX, clip.minY, clip.width, clip.height]
+                                    let visible = scroll.documentVisibleRect
+                                    geometry["documentVisible"] = [visible.minX, visible.minY, visible.width, visible.height]
+                                    if let document = scroll.documentView {
+                                        let frame = document.convert(document.bounds, to: target.contentView)
+                                        geometry["document"] = [frame.minX, frame.minY, frame.width, frame.height]
+                                    }
+                                    if let scroller = scroll.verticalScroller {
+                                        let frame = scroller.convert(scroller.bounds, to: target.contentView)
+                                        geometry["scroller"] = [frame.minX, frame.minY, frame.width, frame.height]
+                                    }
+                                }
+                            }
+                            let data = try JSONSerialization.data(withJSONObject: geometry, options: [.sortedKeys])
+                            try data.write(to: directory.appendingPathComponent("settings-\(glass ? "glass" : "classic")-\(section)-\(scheme.rawValue)-geometry.json"))
+                        }
                         try await capture(target, name: "settings-\(glass ? "glass" : "classic")-\(section)-\(scheme.rawValue)")
                         target.orderOut(nil)
                     }
                 }
             }
         }
-        let includeComparison = CommandLine.arguments.contains("--include-transparency-comparison")
+        let includeComparison = !settingsOnly && CommandLine.arguments.contains("--include-transparency-comparison")
         if includeComparison {
             backdrop.diagnostic = true
             PreviewPresentation.clearGlass.apply()
@@ -606,7 +675,8 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
                 }
             }
         }
-        print("GALLERY_COMPLETE: \(26 * transparencyLevels.count + (includeComparison ? 6 : 0)) real compositor captures")
+        let captureCount = feedbackOnly ? 2 : (settingsOnly ? 10 : (allPowerStates ? 36 : 26))
+        print("GALLERY_COMPLETE: \(captureCount * transparencyLevels.count + (includeComparison ? 6 : 0)) real compositor captures")
     }
 
     private func updateNote() {

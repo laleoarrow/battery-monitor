@@ -1,4 +1,5 @@
 import AppKit
+import UniformTypeIdentifiers
 
 protocol SettingsSectionController: AnyObject {
     var identifier: String { get }
@@ -30,6 +31,8 @@ struct SettingsWindowDependencies {
     let openUpdateURL: (_ url: URL) -> Bool
     let increaseContrast: () -> Bool
     let announceAccessibility: (_ message: String) -> Void
+    var feedbackSnapshot: () -> PowerSnapshot? = { nil }
+    var feedbackReadingIsStale: () -> Bool = { false }
 
     static let live = SettingsWindowDependencies(
         loginItemState: { LoginItemController.state },
@@ -108,6 +111,7 @@ private enum SettingsStyle {
     static let iconStateCornerRadius: CGFloat = 7
     static let surfaceCornerRadius: CGFloat = 14
     static let glassGroupCornerRadius: CGFloat = 20
+    static let groupOpticalInset: CGFloat = contentHorizontalInset
 
     static let contentBackground = adaptive(0x151618, .windowBackgroundColor, light: 0xF4F4F6)
     static let canvasBackground = adaptive(0x151618, GlassBackgroundView.fillColor, light: 0xF4F4F6)
@@ -639,6 +643,17 @@ private final class SettingsAppearancePopupButton: NSPopUpButton {
     }
 }
 
+private final class SettingsFeedbackButton: NSButton {
+    override func becomeFirstResponder() -> Bool {
+        let accepted = super.becomeFirstResponder()
+        if accepted, let row = superview {
+            let inset = Settings.usesLiquidGlass ? SettingsStyle.groupOpticalInset : 0
+            row.scrollToVisible(row.bounds.insetBy(dx: -inset, dy: -inset))
+        }
+        return accepted
+    }
+}
+
 private final class GeneralSettingsSectionController: NSObject, SettingsSectionController {
     private static let controlsInstallerURL = URL(
         string: "https://github.com/laleoarrow/battery-monitor/releases/latest"
@@ -654,6 +669,9 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let batteryButton: SettingsToggleButton
     private let updateButton = NSButton()
     private let automaticUpdateButton: SettingsToggleButton
+    private let feedbackButton = SettingsFeedbackButton()
+    private let feedbackDetail = NSTextField(labelWithString: "Save diagnostics and review a report on GitHub")
+    private let feedbackError = NSTextField(labelWithString: "")
     private let liquidGlassSwitch = NSSwitch()
     private let liquidGlassStylePopup = NSPopUpButton(frame: .zero, pullsDown: false)
     private let transparencySlider = SettingsTransparencySlider()
@@ -684,6 +702,8 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         "Check GitHub for the latest stable Wattson release."
     private let automaticUpdateAccessibilityPurpose =
         "Check for a newer stable Wattson release whenever Wattson opens."
+    private let feedbackAccessibilityPurpose =
+        "Save a diagnostic report and open a GitHub issue draft. Review and attach the report yourself; GitHub issues are public."
 
     private var batteryObserver: NSObjectProtocol?
     private var loginGeneration = 0
@@ -789,6 +809,23 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         automaticUpdateButton.setAccessibilityHelp(
             automaticUpdateAccessibilityPurpose
         )
+
+        feedbackButton.title = "Report…"
+        feedbackButton.bezelStyle = .rounded
+        feedbackButton.controlSize = .regular
+        feedbackButton.font = .systemFont(ofSize: 12, weight: .medium)
+        feedbackButton.target = self
+        feedbackButton.action = #selector(sendFeedback(_:))
+        feedbackButton.setAccessibilityIdentifier("settings.general.feedback.button")
+        feedbackButton.setAccessibilityLabel("Send Feedback")
+        feedbackButton.setAccessibilityHelp(feedbackAccessibilityPurpose)
+        feedbackButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            feedbackButton.widthAnchor.constraint(equalToConstant: SettingsStyle.generalActionSize.width),
+            feedbackButton.heightAnchor.constraint(equalToConstant: SettingsStyle.generalActionSize.height),
+        ])
+        configureDetailLabel(feedbackDetail, identifier: "settings.general.feedback.detail")
+        configureErrorLabel(feedbackError, identifier: "settings.general.feedback.error")
 
         configureDetailLabel(
             loginDetail,
@@ -944,10 +981,15 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         controlsRecovery.isHidden = true
 
         let appearance = makeAppearanceSection()
-        let document = SettingsFormStackView(views: [surface, controlsRecovery, appearance])
+        let feedback = makeFeedbackSection()
+        let document = SettingsFormStackView(views: [surface, controlsRecovery, appearance, feedback])
         document.orientation = .vertical
         document.alignment = .leading
         document.spacing = 8
+        let opticalInset = SettingsStyle.groupOpticalInset
+        document.edgeInsets = NSEdgeInsets(
+            top: opticalInset, left: opticalInset, bottom: opticalInset, right: opticalInset
+        )
         document.translatesAutoresizingMaskIntoConstraints = false
         let scrollDocument: NSView
         if #available(macOS 26, *) {
@@ -971,6 +1013,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         }
         let scroll = NSScrollView()
         scroll.identifier = NSUserInterfaceItemIdentifier("settings.general.scroll")
+        scroll.backgroundColor = .clear
         scroll.drawsBackground = false
         scroll.borderType = .noBorder
         scroll.hasVerticalScroller = true
@@ -980,7 +1023,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         scroll.documentView = scrollDocument
         scroll.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scroll)
-        let contentTop = scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 40)
+        let contentTop = scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 40 - opticalInset)
         heading.contentTopConstraint = contentTop
 
         NSLayoutConstraint.activate([
@@ -988,16 +1031,19 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             heading.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             heading.topAnchor.constraint(equalTo: view.topAnchor, constant: -2),
 
-            scroll.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            // Native group edges extend outside their rounded content. Expand
+            // the clip and inset the document equally, retaining control frames.
+            scroll.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -opticalInset),
+            scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: opticalInset),
             contentTop,
-            scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: opticalInset),
             scrollDocument.leadingAnchor.constraint(equalTo: scroll.contentView.leadingAnchor),
             scrollDocument.topAnchor.constraint(equalTo: scroll.contentView.topAnchor),
             scrollDocument.widthAnchor.constraint(equalTo: scroll.contentView.widthAnchor),
-            surface.widthAnchor.constraint(equalTo: document.widthAnchor),
-            controlsRecovery.widthAnchor.constraint(equalTo: document.widthAnchor),
-            appearance.widthAnchor.constraint(equalTo: document.widthAnchor),
+            surface.widthAnchor.constraint(equalTo: document.widthAnchor, constant: -2 * opticalInset),
+            controlsRecovery.widthAnchor.constraint(equalTo: document.widthAnchor, constant: -2 * opticalInset),
+            appearance.widthAnchor.constraint(equalTo: document.widthAnchor, constant: -2 * opticalInset),
+            feedback.widthAnchor.constraint(equalTo: document.widthAnchor, constant: -2 * opticalInset),
             surface.heightAnchor.constraint(equalToConstant: SettingsStyle.generalListHeight),
 
             rows.leadingAnchor.constraint(equalTo: list.leadingAnchor),
@@ -1007,6 +1053,32 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
             controlsRecoveryDetail.widthAnchor.constraint(equalTo: controlsRecovery.widthAnchor),
         ])
+    }
+
+    private func makeFeedbackSection() -> NSView {
+        let feedbackRow = row(
+            identifier: "feedback", symbolName: "bubble.left.and.bubble.right",
+            visibleTitle: "Send Feedback", button: feedbackButton,
+            detail: feedbackDetail, error: feedbackError, hasSeparator: false
+        )
+        feedbackRow.translatesAutoresizingMaskIntoConstraints = false
+        let box = SettingsAdaptiveBorderBox(increaseContrast: dependencies.increaseContrast)
+        box.boxType = .custom
+        box.titlePosition = .noTitle
+        box.cornerRadius = SettingsStyle.surfaceCornerRadius
+        box.fillColor = SettingsStyle.surfaceBackground
+        box.translatesAutoresizingMaskIntoConstraints = false
+        box.addSubview(feedbackRow)
+        let surface = SettingsGlassSurface(controls: box)
+        surface.identifier = NSUserInterfaceItemIdentifier("settings.general.feedback")
+        NSLayoutConstraint.activate([
+            feedbackRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
+            feedbackRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
+            feedbackRow.topAnchor.constraint(equalTo: box.topAnchor),
+            feedbackRow.bottomAnchor.constraint(equalTo: box.bottomAnchor),
+            surface.heightAnchor.constraint(equalToConstant: SettingsStyle.generalRowHeight),
+        ])
+        return surface
     }
 
     private func makeAppearanceSection() -> NSView {
@@ -1775,6 +1847,66 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
                 "Couldn’t open GitHub. Monitoring is still available. Try again later for the full PKG with system controls and live SMC power."
             dependencies.announceAccessibility(controlsRecoveryDetail.stringValue)
             return
+        }
+    }
+
+    @objc private func sendFeedback(_ sender: NSButton) {
+        guard let window = view.window else { return }
+        let panel = NSSavePanel()
+        panel.title = "Send Feedback"
+        panel.prompt = "Save & Open Issue"
+        panel.nameFieldStringValue = FeedbackDiagnostics.filename
+        panel.allowedContentTypes = [.plainText]
+        panel.message =
+            "Save macOS, Mac model, Wattson settings, helper status and battery readings. Review the file before attaching it to a public GitHub issue."
+        panel.beginSheetModal(for: window) { [weak self] response in
+            guard let self, response == .OK, let destination = panel.url else { return }
+            let context = FeedbackDiagnostics.context(
+                currentVersion: self.dependencies.currentVersion(),
+                displayedSnapshot: self.dependencies.feedbackSnapshot(),
+                displayedReadingIsStale: self.dependencies.feedbackReadingIsStale(),
+                effectiveAppearance: self.view.effectiveAppearance.name.rawValue
+            )
+            self.clearError(self.feedbackError)
+            self.feedbackButton.isEnabled = false
+            self.feedbackDetail.stringValue = "Collecting diagnostics…"
+            self.updateAccessibilityHelp(
+                for: self.feedbackButton, purpose: self.feedbackAccessibilityPurpose,
+                status: self.feedbackDetail.stringValue
+            )
+            DispatchQueue.global(qos: .utility).async {
+                let report = FeedbackDiagnostics.collect(context)
+                let result: Result<Void, Error> = Result {
+                    try report.text.write(to: destination, atomically: true, encoding: .utf8)
+                }
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    self.feedbackButton.isEnabled = true
+                    switch result {
+                    case .success:
+                        self.feedbackDetail.stringValue = "Report saved; attach it to your GitHub issue"
+                        self.updateAccessibilityHelp(
+                            for: self.feedbackButton, purpose: self.feedbackAccessibilityPurpose,
+                            status: self.feedbackDetail.stringValue
+                        )
+                        NSWorkspace.shared.activateFileViewerSelecting([destination])
+                        if !self.dependencies.openUpdateURL(report.issueURL) {
+                            self.showError(
+                                "Couldn’t open GitHub. The report is saved.",
+                                in: self.feedbackError, for: self.feedbackButton,
+                                purpose: self.feedbackAccessibilityPurpose
+                            )
+                        }
+                    case .failure:
+                        self.feedbackDetail.stringValue = "Save diagnostics and review a report on GitHub"
+                        self.showError(
+                            "Couldn’t save the report. Choose another location.",
+                            in: self.feedbackError, for: self.feedbackButton,
+                            purpose: self.feedbackAccessibilityPurpose
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -2894,7 +3026,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         identityIcon.refreshLogo()
         for section in sections {
             for button in switchButtons(in: section.view)
-                where type(of: button) == NSButton.self {
+                where type(of: button) == NSButton.self || button is SettingsFeedbackButton {
                 if #available(macOS 26, *) {
                     button.bezelStyle = enabled ? .glass : .rounded
                 }

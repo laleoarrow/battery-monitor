@@ -27,6 +27,9 @@ struct PowerSnapshot {
     var temperatureC: Double? = nil
     var cycleCount: Int = 0
     var lowPowerMode: Bool = false
+    /// macOS's estimate for the internal battery, in minutes, while on battery.
+    /// `nil` means macOS has not published a usable estimate.
+    var estimatedRuntimeMinutes: Int? = nil
 
     /// Everything the sources are putting out right now. Drives the visual
     /// encoding curve and the popover's headline number.

@@ -214,7 +214,15 @@ final class StatusItemController: NSObject {
     // saved position/visibility; AppKit owns persistence and display recovery.
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let popover = PopoverController()
-    private lazy var settingsWindowController = SettingsWindowController()
+    private lazy var settingsWindowController: SettingsWindowController = {
+        var dependencies = SettingsWindowDependencies.live
+        dependencies.feedbackSnapshot = { [weak self] in
+            guard let self, self.hasUsableSnapshot else { return nil }
+            return self.snapshot
+        }
+        dependencies.feedbackReadingIsStale = { [weak self] in self?.isDegraded ?? true }
+        return SettingsWindowController(dependencies: dependencies)
+    }()
     private let history = PowerHistory()
     private let samplingQueue = DispatchQueue(
         label: "com.leoarrow.wattson.sampler",

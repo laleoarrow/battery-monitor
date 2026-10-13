@@ -61,6 +61,7 @@ final class AppleSmartBatteryPowerObservationReader:
     private let backend: any AppleSmartBatteryPowerRawSnapshotReading
     private let clock: () -> UInt64
     private let lowPowerMode: () -> Bool
+    private let runtimeEstimateMinutes: () -> Int?
     private let maximumTrackingGapNanoseconds: UInt64
     private let trackerLock = NSLock()
     private var previousTelemetryToken: String?
@@ -77,12 +78,14 @@ final class AppleSmartBatteryPowerObservationReader:
                 .defaultTrackingGapNanoseconds,
         lowPowerMode: @escaping () -> Bool = {
             ProcessInfo.processInfo.isLowPowerModeEnabled
-        }
+        },
+        runtimeEstimateMinutes: @escaping () -> Int? = BatteryRuntimeEstimate.systemMinutes
     ) {
         self.backend = backend
         self.clock = clock
         self.maximumTrackingGapNanoseconds = maximumTrackingGapNanoseconds
         self.lowPowerMode = lowPowerMode
+        self.runtimeEstimateMinutes = runtimeEstimateMinutes
     }
 
     func readObservation() -> AppleSmartBatteryObservation {
@@ -99,7 +102,9 @@ final class AppleSmartBatteryPowerObservationReader:
             from: raw.servicePresent ? raw.properties : nil,
             lowPowerMode: lowPowerMode()
         ) {
-            snapshot = value
+            snapshot = BatteryRuntimeEstimate.applying(
+                to: value, readMinutes: runtimeEstimateMinutes
+            )
         } else {
             snapshot = nil
         }

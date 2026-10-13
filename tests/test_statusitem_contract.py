@@ -142,7 +142,7 @@ class StatusItemContractTests(unittest.TestCase):
 
     def test_status_item_strongly_owns_one_lazy_settings_controller(self):
         self.assertEqual(
-            self.source.count("lazy var settingsWindowController = SettingsWindowController()"),
+            self.source.count("lazy var settingsWindowController: SettingsWindowController"),
             1,
         )
         self.assertIn("popover.setSettingsHandler", self.source)
