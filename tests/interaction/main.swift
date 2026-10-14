@@ -2468,12 +2468,13 @@ check("独立续航行在全部供电状态和读取失败时实际布局不截�
       runtimeSnapshots.allSatisfy { runtimeRenderer.layoutFitsForTest(snapshot: $0) }
           && runtimeRenderer.layoutFitsForTest(snapshot: runtimeSnapshots[2], degraded: true))
 let runtimeSectionLayout = runtimeRenderer.sectionLayoutForTest
-check("续航以独立分隔线和上下留白与功率顶栏分区，标题数值不重叠",
-      runtimeSectionHeight == 44 && runtimeSectionLayout.hasTopSeparator
-          && runtimeSectionLayout.valueFrame.minX - runtimeSectionLayout.titleFrame.maxX >= 12
-          && [runtimeSectionLayout.titleFrame, runtimeSectionLayout.valueFrame].allSatisfy {
-              $0.minY >= 12 && runtimeRenderer.bounds.maxY - $0.maxY >= 12
-          })
+check("续航以独立分隔线分区，居中时间仪表位于弱化标题上方",
+      runtimeSectionHeight == 64 && runtimeSectionLayout.hasTopSeparator
+          && runtimeSectionLayout.valueFrame.minX - runtimeSectionLayout.iconFrame.maxX >= 8
+          && abs(runtimeSectionLayout.iconFrame.union(runtimeSectionLayout.valueFrame).midX
+                 - runtimeRenderer.bounds.midX) < 0.01
+          && runtimeSectionLayout.titleFrame.minY > runtimeSectionLayout.valueFrame.maxY
+          && runtimeSectionLayout.valueFontSize > runtimeSectionLayout.titleFontSize)
 if #available(macOS 26.0, *), !screenLocked, let button = item.button {
     let previousModules = Settings.Module.allCases.map { ($0, Settings.isModuleVisible($0)) }
     let previousGlass = Settings.liquidGlassEnabled

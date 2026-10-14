@@ -97,8 +97,9 @@ approach. Both startup sampling and the normal observation reader enrich their
 visible snapshots; the pure registry parser remains deterministic. External
 power and failed readings suppress numeric runtime, and a fresh unknown estimate
 clears the previous value. No custom runtime formula or extra sampling timer is
-used. The 44-point row has its own top separator, a left-aligned title and a
-right-aligned estimate; disabling it removes its entire height. The rounded
+used. The 64-point runtime section has its own top separator, a centered clock
+and prominent time reading with a smaller caption below. Non-numeric states use
+smaller secondary text. Disabling it removes its entire height. The rounded
 glass backing owns the solid accessibility fallback; the
 foreground stays transparent in an actual glass host and refreshes on reparenting.
 

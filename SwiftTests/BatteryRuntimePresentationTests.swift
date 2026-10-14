@@ -21,11 +21,11 @@ final class BatteryRuntimePresentationTests: XCTestCase {
         }
     }
 
-    func testRuntimeHasItsOwnSeparatorAndPaddedTitleValueRow() {
+    func testRuntimeHasItsOwnSeparatorAndCenteredTimeAboveItsCaption() {
         let runtime = PopoverRuntimeView()
         runtime.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
                                height: PopoverRuntimeView.preferredHeight)
-        XCTAssertEqual(PopoverRuntimeView.preferredHeight, 44)
+        XCTAssertEqual(PopoverRuntimeView.preferredHeight, 64)
         let snapshots = [
             PowerSnapshot(percent: 41, batteryW: -12, systemW: 12, estimatedRuntimeMinutes: 265),
             PowerSnapshot(percent: 41, batteryW: -12, systemW: 12),
@@ -43,12 +43,18 @@ final class BatteryRuntimePresentationTests: XCTestCase {
                 XCTAssertTrue(runtime.layoutFitsForTest(snapshot: snapshot, degraded: degraded))
                 let layout = runtime.sectionLayoutForTest
                 XCTAssertTrue(layout.hasTopSeparator)
-                XCTAssertGreaterThanOrEqual(layout.valueFrame.minX - layout.titleFrame.maxX, 12)
-                XCTAssertEqual(layout.titleFrame.midY, layout.valueFrame.midY)
-                for frame in [layout.titleFrame, layout.valueFrame] {
+                XCTAssertGreaterThanOrEqual(layout.valueFrame.minX - layout.iconFrame.maxX, 8)
+                XCTAssertEqual(layout.iconFrame.union(layout.valueFrame).midX,
+                               runtime.bounds.midX, accuracy: 0.01)
+                XCTAssertEqual(layout.iconFrame.midY, layout.valueFrame.midY)
+                XCTAssertGreaterThan(layout.titleFrame.minY, layout.valueFrame.maxY)
+                XCTAssertEqual(layout.titleFrame.midX, runtime.bounds.midX, accuracy: 0.01)
+                XCTAssertGreaterThan(layout.valueFontSize, layout.titleFontSize)
+                let hasEstimate = !degraded && !snapshot.plugged
+                    && (snapshot.estimatedRuntimeMinutes ?? -1) >= 0
+                XCTAssertEqual(layout.valueFontSize, hasEstimate ? 24 : 16)
+                for frame in [layout.titleFrame, layout.valueFrame, layout.iconFrame] {
                     XCTAssertTrue(runtime.bounds.contains(frame))
-                    XCTAssertGreaterThanOrEqual(frame.minY, 12)
-                    XCTAssertGreaterThanOrEqual(runtime.bounds.maxY - frame.maxY, 12)
                 }
             }
         }

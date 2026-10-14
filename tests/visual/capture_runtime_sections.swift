@@ -108,9 +108,14 @@ private enum CaptureRuntimeSections {
                     "headerFits": header.layoutFitsForTest(snapshot: snapshot),
                     "runtimeFits": runtime.layoutFitsForTest(snapshot: snapshot),
                     "runtimeHasTopSeparator": layout.hasTopSeparator,
-                    "runtimeHasIndependent44PointHeight": runtime.bounds.height == 44,
-                    "rowLabelsHaveTwelvePointGap": layout.valueFrame.minX - layout.titleFrame.maxX >= 12,
-                    "rowHasVerticalPadding": layout.titleFrame.minY >= 12 && runtime.bounds.maxY - layout.titleFrame.maxY >= 12,
+                    "runtimeHasIndependent64PointHeight": runtime.bounds.height == 64,
+                    "clockHasEightPointGapFromValue": layout.valueFrame.minX - layout.iconFrame.maxX >= 8,
+                    "timeInstrumentCentered": abs(layout.iconFrame.union(layout.valueFrame).midX - runtime.bounds.midX) < 0.01,
+                    "captionBelowTimeInstrument": layout.titleFrame.minY > layout.valueFrame.maxY,
+                    "captionCentered": abs(layout.titleFrame.midX - runtime.bounds.midX) < 0.01,
+                    "valueMoreProminentThanCaption": layout.valueFontSize > layout.titleFontSize,
+                    "numericTimeLargerThanStatusText": layout.valueFontSize == (snapshot.plugged ? 16 : 24),
+                    "instrumentContained": [layout.titleFrame, layout.valueFrame, layout.iconFrame].allSatisfy { runtime.bounds.contains($0) },
                     "headerThenRuntimeThenFlowWithoutGaps": adjacent(header, runtime) && adjacent(runtime, flow),
                     "footerContained": controller.view.bounds.contains(frame(footer)),
                     "correctStateText": controller.runtimePresentationForTest == "Est. Battery Runtime · \(snapshot.plugged ? "External Power" : name == "low-battery" ? "18m" : "4h 25m")",
@@ -125,13 +130,13 @@ private enum CaptureRuntimeSections {
 
                 Settings.setModule(.runtime, visible: false)
                 settle()
-                checks["hidingRuntimeRemoves44Points"] = fullHeight - controller.preferredHeight == 44
-                checks["hidingRuntimeClosesGap"] = fullFlowY - frame(flow).minY == 44 && adjacent(header, flow)
+                checks["hidingRuntimeRemovesItsFullHeight"] = fullHeight - controller.preferredHeight == PopoverRuntimeView.preferredHeight
+                checks["hidingRuntimeClosesGap"] = fullFlowY - frame(flow).minY == PopoverRuntimeView.preferredHeight && adjacent(header, flow)
                 Settings.setModule(.runtime, visible: true)
                 for module in Settings.Module.allCases where module != .runtime { Settings.setModule(module, visible: false) }
                 settle()
                 checks["runtimeAloneStillSeparatedAndContiguous"] = runtime.sectionLayoutForTest.hasTopSeparator && adjacent(header, runtime) && adjacent(runtime, footer)
-                checks["runtimeAloneHasExpectedHeight"] = controller.preferredHeight == PopoverHeaderView.preferredHeight + 44 + PopoverFooterView.preferredHeight + 24
+                checks["runtimeAloneHasExpectedHeight"] = controller.preferredHeight == PopoverHeaderView.preferredHeight + PopoverRuntimeView.preferredHeight + PopoverFooterView.preferredHeight + 24
                 Settings.setModule(.runtime, visible: false)
                 settle()
                 checks["allModulesHiddenNoResidualGap"] = adjacent(header, footer) && controller.preferredHeight == PopoverHeaderView.preferredHeight + PopoverFooterView.preferredHeight + 24
@@ -143,6 +148,8 @@ private enum CaptureRuntimeSections {
                     "runtimeText": "Est. Battery Runtime · \(snapshot.plugged ? "External Power" : name == "low-battery" ? "18m" : "4h 25m")",
                     "runtimeFrame": NSStringFromRect(rowFrame), "titleFrame": NSStringFromRect(layout.titleFrame),
                     "valueFrame": NSStringFromRect(layout.valueFrame), "fullContentHeight": fullHeight,
+                    "iconFrame": NSStringFromRect(layout.iconFrame),
+                    "valueFontSize": layout.valueFontSize, "titleFontSize": layout.titleFontSize,
                     "fixtureRuntimeMinutes": snapshot.estimatedRuntimeMinutes as Any? ?? NSNull(),
                     "image": imageName, "imageSHA256": hash(png),
                     "imageDimensions": [bitmap.pixelsWide, bitmap.pixelsHigh],

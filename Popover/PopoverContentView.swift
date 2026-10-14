@@ -87,19 +87,27 @@ final class PopoverHeaderView: PopoverSection {
 }
 
 final class PopoverRuntimeView: PopoverSection {
-    static let preferredHeight: CGFloat = 44
+    static let preferredHeight: CGFloat = 64
+    private let clock = NSImageView()
     private let title = NSTextField(labelWithString: "Est. Battery Runtime")
     private let runtime = NSTextField(labelWithString: "")
 
     init() {
         super.init(height: Self.preferredHeight)
-        title.font = .systemFont(ofSize: 11, weight: .regular)
+        clock.image = NSImage(systemSymbolName: "clock", accessibilityDescription: nil)?
+            .withSymbolConfiguration(.init(pointSize: 18, weight: .regular))
+        clock.contentTintColor = PopoverStyle.secondaryText
+        clock.setAccessibilityElement(false)
+        addSubview(clock)
+
+        title.font = .systemFont(ofSize: 10.5, weight: .regular)
         title.textColor = PopoverStyle.secondaryText
+        title.alignment = .center
         addSubview(title)
 
-        runtime.font = PopoverStyle.mono(14, .medium)
+        runtime.font = PopoverStyle.mono(24, .medium)
         runtime.textColor = PopoverStyle.primaryText
-        runtime.alignment = .right
+        runtime.alignment = .center
         runtime.setAccessibilityLabel("Estimated battery runtime")
         runtime.setAccessibilityHelp("macOS estimates remaining battery time for current usage. It changes with workload.")
         addSubview(runtime)
@@ -109,11 +117,13 @@ final class PopoverRuntimeView: PopoverSection {
 
     override func layout() {
         super.layout()
-        let valueWidth: CGFloat = 150
-        title.frame = NSRect(x: 0, y: PopoverStyle.sectionPadding,
-                             width: bounds.width - valueWidth - 12, height: 18)
-        runtime.frame = NSRect(x: bounds.width - valueWidth, y: PopoverStyle.sectionPadding,
-                               width: valueWidth, height: 18)
+        let valueWidth = ceil(runtime.stringValue.size(withAttributes: [.font: runtime.font as Any]).width) + 4
+        let valueHeight = runtime.intrinsicContentSize.height
+        let startX = (bounds.width - valueWidth - 26) / 2
+        clock.frame = NSRect(x: startX, y: 14, width: 18, height: 18)
+        runtime.frame = NSRect(x: startX + 26, y: 23 - valueHeight / 2,
+                               width: valueWidth, height: valueHeight)
+        title.frame = NSRect(x: 0, y: 39, width: bounds.width, height: 14)
     }
 
     func update(snapshot: PowerSnapshot, degraded: Bool) {
@@ -134,16 +144,22 @@ final class PopoverRuntimeView: PopoverSection {
             runtimeValue = "Estimating…"
         }
         runtime.stringValue = runtimeValue
+        let hasEstimate = !degraded && !snapshot.plugged && (snapshot.estimatedRuntimeMinutes ?? -1) >= 0
+        runtime.font = hasEstimate ? PopoverStyle.mono(24, .medium) : .systemFont(ofSize: 16, weight: .regular)
+        runtime.textColor = hasEstimate ? PopoverStyle.primaryText : PopoverStyle.secondaryText
+        needsLayout = true
     }
 
 #if DEBUG
     func layoutFitsForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> Bool {
         update(snapshot: snapshot, degraded: degraded)
         layoutSubtreeIfNeeded()
-        return title.frame.maxX < runtime.frame.minX && [title, runtime].allSatisfy { field in
-            let required = field.stringValue.size(withAttributes: [.font: field.font as Any]).width
-            return bounds.contains(field.frame) && required <= field.frame.width
-        }
+        return runtime.frame.maxY <= title.frame.minY
+            && bounds.contains(clock.frame) && clock.frame.maxX < runtime.frame.minX
+            && [title, runtime].allSatisfy { field in
+                let required = field.stringValue.size(withAttributes: [.font: field.font as Any]).width
+                return bounds.contains(field.frame) && required <= field.frame.width
+            }
     }
 
     func runtimePresentationForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> String {
@@ -153,12 +169,13 @@ final class PopoverRuntimeView: PopoverSection {
 
     var presentationForTest: String { "\(title.stringValue) · \(runtime.stringValue)" }
 
-    var sectionLayoutForTest: (titleFrame: NSRect, valueFrame: NSRect, hasTopSeparator: Bool) {
+    var sectionLayoutForTest: (titleFrame: NSRect, valueFrame: NSRect, iconFrame: NSRect,
+                               valueFontSize: CGFloat, titleFontSize: CGFloat, hasTopSeparator: Bool) {
         layoutSubtreeIfNeeded()
         let hasTopSeparator = layer?.sublayers?.contains {
             $0.frame == CGRect(x: 0, y: 0, width: bounds.width, height: 0.5)
         } ?? false
-        return (title.frame, runtime.frame, hasTopSeparator)
+        return (title.frame, runtime.frame, clock.frame, runtime.font!.pointSize, title.font!.pointSize, hasTopSeparator)
     }
 #endif
 }

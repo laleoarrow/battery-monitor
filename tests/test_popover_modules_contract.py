@@ -47,7 +47,7 @@ class PopoverModulesContractTests(unittest.TestCase):
         # Tabular digits keep the readout from twitching at 1 Hz.
         self.assertIn("monospacedDigitSystemFont", self.style)
 
-    def test_runtime_is_a_separate_padded_section_below_the_header(self):
+    def test_runtime_is_a_separate_instrument_below_the_header(self):
         header = self.content.split("final class PopoverHeaderView", 1)[1].split(
             "final class PopoverRuntimeView", 1
         )[0]
@@ -57,13 +57,14 @@ class PopoverModulesContractTests(unittest.TestCase):
         height = float(re.search(r"preferredHeight: CGFloat = (\d+)", header).group(1))
         runtime_height = float(re.search(r"preferredHeight: CGFloat = (\d+)", runtime).group(1))
         self.assertEqual(height, 48)
-        self.assertEqual(runtime_height, 44)
+        self.assertEqual(runtime_height, 64)
         self.assertNotIn("private let equation", header)
         self.assertNotIn("equation.frame", header)
         self.assertNotIn("runtime", header)
         self.assertNotIn("showsSeparator: false", runtime)
         self.assertIn('private let title = NSTextField(labelWithString: "Est. Battery Runtime")', runtime)
         self.assertIn('private let runtime = NSTextField(labelWithString: "")', runtime)
+        self.assertIn("NSImageView", runtime)
         self.assertIn("title.frame", runtime)
         self.assertIn("runtime.frame", runtime)
 
