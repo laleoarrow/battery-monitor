@@ -107,11 +107,13 @@ final class PopoverRuntimeView: PopoverSection {
 
         title.font = .systemFont(ofSize: 11.5, weight: .regular)
         title.textColor = PopoverStyle.secondaryText
+        title.alignment = .right
         title.setAccessibilityElement(false)
         addSubview(title)
 
         runtime.font = PopoverStyle.mono(24, .semibold)
         runtime.textColor = PopoverStyle.primaryText
+        runtime.alignment = .right
         runtime.setAccessibilityLabel("Estimated battery runtime")
         runtime.setAccessibilityHelp("macOS estimates remaining battery time for current usage. It changes with workload.")
         addSubview(runtime)

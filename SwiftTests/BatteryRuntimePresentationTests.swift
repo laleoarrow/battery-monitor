@@ -53,6 +53,7 @@ final class BatteryRuntimePresentationTests: XCTestCase {
                 XCTAssertEqual(layout.iconFrame.midX, layout.iconWellFrame.midX)
                 XCTAssertEqual(layout.iconFrame.midY, layout.iconWellFrame.midY)
                 XCTAssertEqual(layout.titleFrame.minX, layout.valueFrame.minX)
+                XCTAssertTrue(runtime.subviews.compactMap { $0 as? NSTextField }.allSatisfy { $0.alignment == .right })
                 XCTAssertEqual(layout.titleFrame.minX - layout.iconWellFrame.maxX, 12)
                 XCTAssertLessThan(layout.titleFrame.maxY, layout.valueFrame.minY)
                 XCTAssertEqual(layout.titleFontSize, 11.5)

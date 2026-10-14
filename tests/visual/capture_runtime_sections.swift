@@ -117,7 +117,7 @@ private enum CaptureRuntimeSections {
                     "iconWellHasTwelvePointTextGap": layout.titleFrame.minX - layout.iconWellFrame.maxX == 12,
                     "clockCenteredInsideWell": layout.iconFrame.midX == layout.iconWellFrame.midX && layout.iconFrame.midY == layout.iconWellFrame.midY,
                     "captionAboveTime": layout.titleFrame.maxY < layout.valueFrame.minY,
-                    "captionAndTimeLeftAligned": layout.titleFrame.minX == layout.valueFrame.minX,
+                    "captionAndTimeRightAligned": layout.titleFrame.maxX == layout.valueFrame.maxX && runtime.subviews.compactMap { $0 as? NSTextField }.allSatisfy { $0.alignment == .right },
                     "sectionHasNoShadow": runtime.layer?.shadowOpacity == 0 && (runtime.layer?.sublayers?.allSatisfy { $0.shadowOpacity == 0 } ?? false),
                     "valueMoreProminentThanCaption": layout.valueFontSize > layout.titleFontSize,
                     "numericTimeLargerThanStatusText": layout.valueFontSize == (snapshot.plugged ? 16 : 24),

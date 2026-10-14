@@ -6,7 +6,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -40,7 +40,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "9d330a30ba7158c499498fd846de5e1cad0d52f70024b76f3a2377e9f7546608",
+      "imageSHA256" : "a8af256a673ab48daf34f7035496bf8c190fca186bd3cf8d0c8720034548cf46",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · External Power",
       "titleFontSize" : 11.5,
@@ -53,7 +53,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -87,7 +87,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "95e9a0948305c4c959a88c889d23e0d74dace179d47923e848d14cd48779c610",
+      "imageSHA256" : "01cbea45100f1314a7209478bae4a9d8ea4c911e26502500a372061282147f8e",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · External Power",
       "titleFontSize" : 11.5,
@@ -100,7 +100,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -134,7 +134,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "a7bfbe69cc060fe3daef0481621b4a45f8bcdbebad4fa03d79d55707bf9db88e",
+      "imageSHA256" : "946ae91730ff4d4de3bc44b257cf552f4fe08ac8b1ce08cbe58b0017f6f99438",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · 4h 25m",
       "titleFontSize" : 11.5,
@@ -147,7 +147,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -181,7 +181,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "af65c49e7356aa1b5197ff8e0fe222e69b3f5e9b176697c9ce17838e51da4f96",
+      "imageSHA256" : "ea9f8ce0a95d1a5596e549daf1ecee9efe77301224ad3ce2ebac517b5706d461",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · External Power",
       "titleFontSize" : 11.5,
@@ -194,7 +194,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -228,7 +228,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "8f1ea5f3590932d3cf90beca04842f8b3be9a95737b8b33d53d17f6a281a83cf",
+      "imageSHA256" : "2fb40bd02b3f3a79f939bd4277f67e10ceac388e2152ba0d20666d857e06f6e9",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · 18m",
       "titleFontSize" : 11.5,
@@ -241,7 +241,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -275,7 +275,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "c7df65f24a705d006840eff1f18a36f82fb923e504cf4aa1f06a4af56a0a5870",
+      "imageSHA256" : "69ee958e53753846d531e28c238cbb4f5ccaf827a993f87f23cea4eefb18879f",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · 4h 25m",
       "titleFontSize" : 11.5,
@@ -288,7 +288,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -322,7 +322,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "ab4c91465305458322bf5b6ed2d6a7226cbee9aa7265377d5aefd31aa2deb95e",
+      "imageSHA256" : "fda9a724ff9b97c22da09642a256b97e99f42d900a87485f1ff0e3091d4eabb1",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · External Power",
       "titleFontSize" : 11.5,
@@ -335,7 +335,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -369,7 +369,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "bf8bc167b7c41ebb4496c157300f58c0f17254e42a9737e0c078a7617b7a4e4e",
+      "imageSHA256" : "ed58b24f0ace26f0659008882a475b6925c1f5d4bda84bc7f47d1258c4881ef5",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · External Power",
       "titleFontSize" : 11.5,
@@ -382,7 +382,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -416,7 +416,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "c7f2d313bbd1af54be7533dc5132b9e275add178b535a5c8b5f7469106dfd230",
+      "imageSHA256" : "a5c9e5efd3971d69bb4b79a61868759472652930eff1b58e49e478fdf4b23b11",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · 4h 25m",
       "titleFontSize" : 11.5,
@@ -429,7 +429,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -463,7 +463,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "16bd367c23fd50017aca9f91cb0ff9473d0e548ce8611560dd54441518c7ed81",
+      "imageSHA256" : "ddbb10077a4a5756c0c2c37ba66e667af57249577850b3ee39781479a725b96b",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · External Power",
       "titleFontSize" : 11.5,
@@ -476,7 +476,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -510,7 +510,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "4dead08ddcd4567cf319087d2a692bfa2003de8730970f12ae166b4ebc0a8082",
+      "imageSHA256" : "d2856f4c630503954b83fda3dc2126421dd1ca7d9c34f8395b02e63cbcb13e67",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · 18m",
       "titleFontSize" : 11.5,
@@ -523,7 +523,7 @@
       "checks" : {
         "allModulesHiddenNoResidualGap" : true,
         "captionAboveTime" : true,
-        "captionAndTimeLeftAligned" : true,
+        "captionAndTimeRightAligned" : true,
         "clockCenteredInsideWell" : true,
         "correctStateText" : true,
         "footerContained" : true,
@@ -557,7 +557,7 @@
         720,
         1598
       ],
-      "imageSHA256" : "45a150df03a066ec3fe088886fb6623cdabc9fd752882dbe9127d9f8e9a6b08b",
+      "imageSHA256" : "5144f4c7ea872dbcdbc6827927ed30a3ccd8d7c170c08d04cfaa7e529008f9bf",
       "runtimeFrame" : "{{16, 621}, {328, 88}}",
       "runtimeText" : "Estimated Battery Runtime · 4h 25m",
       "titleFontSize" : 11.5,
@@ -566,7 +566,7 @@
       "valueFrame" : "{{68, 39}, {248, 28}}"
     }
   ],
-  "executableSHA256" : "7185e5cec19f40cc35cd16cfbfd208cc258504bde4091d60322ef59af1413f96",
+  "executableSHA256" : "225a0f875e568ed4ff351c9f061a6b961222287dd41ddf8e4110273c02a9631e",
   "failures" : 0,
   "finalChecks" : {
     "canonicalAppHelperAndPreferencesUnchanged" : true,

@@ -11,7 +11,8 @@ and above the footer controls, following the user's final ordering request.
 Its background is transparent and its top hairline matches the
 existing instruments. The next visible section supplies the bottom separator.
 The clock well is the only filled element; it uses the existing adaptive well,
-border and neutral icon colors. A quiet title sits above a 24-point time reading.
+border and neutral icon colors. A quiet title sits above a 24-point time reading;
+both text fields are right-aligned, following the user's final alignment request.
 No full-width card background, outline, shadow or blue accent is added.
 
 Hiding the module removes its entire height. The estimate source and saved module
@@ -50,6 +51,8 @@ The subsequent order-only change places runtime below History. Its current
 captures verify the full stack order and the footer moving up by exactly 88
 points when runtime is hidden. The 27 module source contracts were rerun and
 passed. The earlier full Swift suite was not repeated for this order-only change.
+The final right-alignment refinement passed the eight focused runtime tests and
+all 315 capture assertions again; the preview images show that final alignment.
 
 [Layout evidence](layout-evidence.json) records geometry, image hashes and
 unchanged installed-app/helper/preferences hashes. No hidden capture window
@@ -61,7 +64,7 @@ the ignored capture directory.
 
 The reusable capture command is documented in
 [`runtime-section/README.md`](../runtime-section/README.md); use
-`.build/runtime-section-preview.noindex/below-history-captures` as the output directory.
+`.build/runtime-section-preview.noindex/right-aligned-captures` as the output directory.
 All twelve captures remain there; the two on-battery examples are retained here.
 
 Real WindowServer Glass capture is unavailable in the disposable macOS-TestLab
