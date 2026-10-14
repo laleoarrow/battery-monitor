@@ -27,6 +27,10 @@ tooltip and accessibility help. No new navigation, preferences or timer is added
 
 These are production `PopoverContentViewController` AppKit bitmap renders in
 hidden windows, with Classic, Reduce Transparency and Reduce Motion enabled.
+The ordinary gray footer segments are the existing Classic/Reduce Motion
+fallback, not a replacement for the installed Glass capsule selector. The
+complete footer implementation and its four selector implementations are
+byte-identical to `v4.3.1`; normal Glass still selects the interactive capsule.
 Readings and history are fixtures; `4h 25m` is not a measurement of this Mac.
 External-power states display `External Power`, unknown estimates display
 `Estimating…`, and degraded readings display `Unavailable`.
@@ -76,4 +80,5 @@ TestLab and Base are stopped. Attempt logs are in
 `.build/runtime-card-review.noindex/`. This final revision has no new composited
 Standard/Clear Glass evidence; the images above verify Classic content layout.
 
-The canonical installed Wattson and its package receipt remain unchanged.
+The canonical installation was unchanged during these captures. The later
+[4.3.2 local trial](../local-4.3.2/README.md) records packaging and installation.
