@@ -1,5 +1,10 @@
 # Independent battery-runtime section
 
+This historical centered layout is superseded by the
+[selected clock-left runtime layout](../runtime-layout/README.md), which follows
+the user's theme and separator corrections. The evidence below belongs to the
+earlier revision.
+
 The runtime module occupies its own 64-point instrument below the power header.
 A centered clock symbol and 24-point time reading sit above a quiet 10.5-point
 caption. Non-numeric states use 16-point secondary text. The existing top

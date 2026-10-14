@@ -90,18 +90,23 @@ glass flattens its interactive material into solid fills. Keep the three
 sibling frames aligned when resizing. The footer uses Clear in Dark appearance
 and Regular in Light so its selection stays visible on white backgrounds.
 
-An independently selectable row below the header displays estimated battery
+An independently selectable section displays estimated battery
 runtime from the public IOPS internal-battery `Time to Empty` field, in minutes,
 following Stats' system-data
 approach. Both startup sampling and the normal observation reader enrich their
 visible snapshots; the pure registry parser remains deterministic. External
 power and failed readings suppress numeric runtime, and a fresh unknown estimate
 clears the previous value. No custom runtime formula or extra sampling timer is
-used. The 64-point runtime section has its own top separator, a centered clock
-and prominent time reading with a smaller caption below. Non-numeric states use
-smaller secondary text. Disabling it removes its entire height. The rounded
+used. The runtime section is an independent 88-point module between the ring
+gauge and power lanes. It shares the transparent content surface and inset
+hairline separators of the existing instruments. A neutral clock well sits on
+the left, with a quiet title and prominent time on the right. Well, border and
+icon colors resolve against the view's current appearance, including high contrast. Non-numeric
+states use smaller secondary text. Disabling it removes its entire height. The rounded
 glass backing owns the solid accessibility fallback; the
 foreground stays transparent in an actual glass host and refreshes on reparenting.
+See the [selected runtime layout review](../design/feedback-runtime/runtime-layout/README.md)
+for theme and layout evidence and the current composited-capture limitation.
 
 General includes a Send Feedback group below Appearance. Report saves a
 reviewable text attachment and opens an official GitHub Issue draft. Collection

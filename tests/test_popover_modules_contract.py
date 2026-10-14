@@ -27,9 +27,11 @@ class PopoverModulesContractTests(unittest.TestCase):
         cls.popover = POPOVER.read_text(encoding="utf-8")
         cls.status = STATUS.read_text(encoding="utf-8")
 
-    def test_content_contains_runtime_above_the_existing_instruments(self):
-        order = [self.content.index(name) for name in ("runtimeView", "flowView", "ringView", "laneView", "historyView")]
-        self.assertEqual(order, sorted(order))
+    def test_content_contains_runtime_between_ring_and_lanes(self):
+        self.assertIn(
+            "[header, flowView, ringView, runtimeView, laneView, historyView, footer].forEach(stack.addArrangedSubview)",
+            self.content,
+        )
 
     def test_one_surface_divided_by_hairlines_not_four_cards(self):
         # Four bordered cards stack four sets of edges and paddings.
@@ -47,7 +49,7 @@ class PopoverModulesContractTests(unittest.TestCase):
         # Tabular digits keep the readout from twitching at 1 Hz.
         self.assertIn("monospacedDigitSystemFont", self.style)
 
-    def test_runtime_is_a_separate_instrument_below_the_header(self):
+    def test_runtime_is_a_separate_section_outside_the_header(self):
         header = self.content.split("final class PopoverHeaderView", 1)[1].split(
             "final class PopoverRuntimeView", 1
         )[0]
@@ -57,12 +59,12 @@ class PopoverModulesContractTests(unittest.TestCase):
         height = float(re.search(r"preferredHeight: CGFloat = (\d+)", header).group(1))
         runtime_height = float(re.search(r"preferredHeight: CGFloat = (\d+)", runtime).group(1))
         self.assertEqual(height, 48)
-        self.assertEqual(runtime_height, 64)
+        self.assertEqual(runtime_height, 88)
         self.assertNotIn("private let equation", header)
         self.assertNotIn("equation.frame", header)
         self.assertNotIn("runtime", header)
         self.assertNotIn("showsSeparator: false", runtime)
-        self.assertIn('private let title = NSTextField(labelWithString: "Est. Battery Runtime")', runtime)
+        self.assertIn('private let title = NSTextField(labelWithString: "Estimated Battery Runtime")', runtime)
         self.assertIn('private let runtime = NSTextField(labelWithString: "")', runtime)
         self.assertIn("NSImageView", runtime)
         self.assertIn("title.frame", runtime)

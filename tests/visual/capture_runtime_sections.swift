@@ -89,6 +89,8 @@ private enum CaptureRuntimeSections {
                 let header = views.compactMap { $0 as? PopoverHeaderView }.first!
                 let runtime = views.compactMap { $0 as? PopoverRuntimeView }.first!
                 let flow = views.compactMap { $0 as? PowerFlowView }.first!
+                let ring = views.compactMap { $0 as? RingGaugeView }.first!
+                let lanes = views.compactMap { $0 as? LaneView }.first!
                 let footer = views.compactMap { $0 as? PopoverFooterView }.first!
                 func frame(_ view: NSView) -> NSRect {
                     let rect = view.convert(view.bounds, to: controller.view)
@@ -100,7 +102,7 @@ private enum CaptureRuntimeSections {
                 }
                 let layout = runtime.sectionLayoutForTest
                 let fullHeight = controller.preferredHeight
-                let fullFlowY = frame(flow).minY
+                let fullLanesY = frame(lanes).minY
                 let rowFrame = frame(runtime)
                 var checks = [
                     "windowNeverShown": !window.isVisible && !window.isKeyWindow,
@@ -108,17 +110,20 @@ private enum CaptureRuntimeSections {
                     "headerFits": header.layoutFitsForTest(snapshot: snapshot),
                     "runtimeFits": runtime.layoutFitsForTest(snapshot: snapshot),
                     "runtimeHasTopSeparator": layout.hasTopSeparator,
-                    "runtimeHasIndependent64PointHeight": runtime.bounds.height == 64,
-                    "clockHasEightPointGapFromValue": layout.valueFrame.minX - layout.iconFrame.maxX >= 8,
-                    "timeInstrumentCentered": abs(layout.iconFrame.union(layout.valueFrame).midX - runtime.bounds.midX) < 0.01,
-                    "captionBelowTimeInstrument": layout.titleFrame.minY > layout.valueFrame.maxY,
-                    "captionCentered": abs(layout.titleFrame.midX - runtime.bounds.midX) < 0.01,
+                    "runtimeHasIndependent88PointHeight": runtime.bounds.height == 88,
+                    "runtimeSectionBackgroundIsTransparent": (runtime.layer?.backgroundColor?.alpha ?? 0) == 0,
+                    "onlyIconWellHasFill": runtime.layer?.sublayers?.filter { ($0.backgroundColor?.alpha ?? 0) > 0 && $0.frame.height > 1 }.map(\.frame) == [layout.iconWellFrame],
+                    "iconWellHasTwelvePointTextGap": layout.titleFrame.minX - layout.iconWellFrame.maxX == 12,
+                    "clockCenteredInsideWell": layout.iconFrame.midX == layout.iconWellFrame.midX && layout.iconFrame.midY == layout.iconWellFrame.midY,
+                    "captionAboveTime": layout.titleFrame.maxY < layout.valueFrame.minY,
+                    "captionAndTimeLeftAligned": layout.titleFrame.minX == layout.valueFrame.minX,
+                    "sectionHasNoShadow": runtime.layer?.shadowOpacity == 0 && (runtime.layer?.sublayers?.allSatisfy { $0.shadowOpacity == 0 } ?? false),
                     "valueMoreProminentThanCaption": layout.valueFontSize > layout.titleFontSize,
                     "numericTimeLargerThanStatusText": layout.valueFontSize == (snapshot.plugged ? 16 : 24),
-                    "instrumentContained": [layout.titleFrame, layout.valueFrame, layout.iconFrame].allSatisfy { runtime.bounds.contains($0) },
-                    "headerThenRuntimeThenFlowWithoutGaps": adjacent(header, runtime) && adjacent(runtime, flow),
+                    "instrumentContained": [layout.titleFrame, layout.valueFrame, layout.iconFrame, layout.iconWellFrame].allSatisfy { runtime.bounds.contains($0) },
+                    "headerFlowRingRuntimeLanesContiguous": adjacent(header, flow) && adjacent(flow, ring) && adjacent(ring, runtime) && adjacent(runtime, lanes),
                     "footerContained": controller.view.bounds.contains(frame(footer)),
-                    "correctStateText": controller.runtimePresentationForTest == "Est. Battery Runtime · \(snapshot.plugged ? "External Power" : name == "low-battery" ? "18m" : "4h 25m")",
+                    "correctStateText": controller.runtimePresentationForTest == "Estimated Battery Runtime · \(snapshot.plugged ? "External Power" : name == "low-battery" ? "18m" : "4h 25m")",
                     "noRunningAnimations": controller.runningAnimationCountForTest == 0,
                 ]
                 let bounds = controller.view.bounds
@@ -131,11 +136,11 @@ private enum CaptureRuntimeSections {
                 Settings.setModule(.runtime, visible: false)
                 settle()
                 checks["hidingRuntimeRemovesItsFullHeight"] = fullHeight - controller.preferredHeight == PopoverRuntimeView.preferredHeight
-                checks["hidingRuntimeClosesGap"] = fullFlowY - frame(flow).minY == PopoverRuntimeView.preferredHeight && adjacent(header, flow)
+                checks["hidingRuntimeClosesGap"] = fullLanesY - frame(lanes).minY == PopoverRuntimeView.preferredHeight && adjacent(ring, lanes)
                 Settings.setModule(.runtime, visible: true)
                 for module in Settings.Module.allCases where module != .runtime { Settings.setModule(module, visible: false) }
                 settle()
-                checks["runtimeAloneStillSeparatedAndContiguous"] = runtime.sectionLayoutForTest.hasTopSeparator && adjacent(header, runtime) && adjacent(runtime, footer)
+                checks["runtimeAloneKeepsSeparatorAndContiguousSections"] = runtime.sectionLayoutForTest.hasTopSeparator && adjacent(header, runtime) && adjacent(runtime, footer)
                 checks["runtimeAloneHasExpectedHeight"] = controller.preferredHeight == PopoverHeaderView.preferredHeight + PopoverRuntimeView.preferredHeight + PopoverFooterView.preferredHeight + 24
                 Settings.setModule(.runtime, visible: false)
                 settle()
@@ -145,10 +150,11 @@ private enum CaptureRuntimeSections {
                 failures += checks.values.filter { !$0 }.count
                 records.append([
                     "case": "\(appearance)-\(name)", "checks": checks,
-                    "runtimeText": "Est. Battery Runtime · \(snapshot.plugged ? "External Power" : name == "low-battery" ? "18m" : "4h 25m")",
+                    "runtimeText": "Estimated Battery Runtime · \(snapshot.plugged ? "External Power" : name == "low-battery" ? "18m" : "4h 25m")",
                     "runtimeFrame": NSStringFromRect(rowFrame), "titleFrame": NSStringFromRect(layout.titleFrame),
                     "valueFrame": NSStringFromRect(layout.valueFrame), "fullContentHeight": fullHeight,
                     "iconFrame": NSStringFromRect(layout.iconFrame),
+                    "iconWellFrame": NSStringFromRect(layout.iconWellFrame),
                     "valueFontSize": layout.valueFontSize, "titleFontSize": layout.titleFontSize,
                     "fixtureRuntimeMinutes": snapshot.estimatedRuntimeMinutes as Any? ?? NSNull(),
                     "image": imageName, "imageSHA256": hash(png),

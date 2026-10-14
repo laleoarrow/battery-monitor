@@ -87,43 +87,62 @@ final class PopoverHeaderView: PopoverSection {
 }
 
 final class PopoverRuntimeView: PopoverSection {
-    static let preferredHeight: CGFloat = 64
+    static let preferredHeight: CGFloat = 88
+    private let iconWell = CALayer()
     private let clock = NSImageView()
-    private let title = NSTextField(labelWithString: "Est. Battery Runtime")
+    private let title = NSTextField(labelWithString: "Estimated Battery Runtime")
     private let runtime = NSTextField(labelWithString: "")
 
     init() {
         super.init(height: Self.preferredHeight)
+        iconWell.cornerRadius = 11
+        iconWell.cornerCurve = .continuous
+        layer?.addSublayer(iconWell)
+
         clock.image = NSImage(systemSymbolName: "clock", accessibilityDescription: nil)?
-            .withSymbolConfiguration(.init(pointSize: 18, weight: .regular))
-        clock.contentTintColor = PopoverStyle.secondaryText
+            .withSymbolConfiguration(.init(pointSize: 24, weight: .regular))
+        clock.contentTintColor = PopoverStyle.neutral
         clock.setAccessibilityElement(false)
         addSubview(clock)
 
-        title.font = .systemFont(ofSize: 10.5, weight: .regular)
+        title.font = .systemFont(ofSize: 11.5, weight: .regular)
         title.textColor = PopoverStyle.secondaryText
-        title.alignment = .center
+        title.setAccessibilityElement(false)
         addSubview(title)
 
-        runtime.font = PopoverStyle.mono(24, .medium)
+        runtime.font = PopoverStyle.mono(24, .semibold)
         runtime.textColor = PopoverStyle.primaryText
-        runtime.alignment = .center
         runtime.setAccessibilityLabel("Estimated battery runtime")
         runtime.setAccessibilityHelp("macOS estimates remaining battery time for current usage. It changes with workload.")
         addSubview(runtime)
+        toolTip = "macOS estimates remaining battery time for current usage. It changes with workload."
+        refreshAppearance()
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     override func layout() {
         super.layout()
-        let valueWidth = ceil(runtime.stringValue.size(withAttributes: [.font: runtime.font as Any]).width) + 4
-        let valueHeight = runtime.intrinsicContentSize.height
-        let startX = (bounds.width - valueWidth - 26) / 2
-        clock.frame = NSRect(x: startX, y: 14, width: 18, height: 18)
-        runtime.frame = NSRect(x: startX + 26, y: 23 - valueHeight / 2,
-                               width: valueWidth, height: valueHeight)
-        title.frame = NSRect(x: 0, y: 39, width: bounds.width, height: 14)
+        PopoverStyle.setWithoutAnimation {
+            self.iconWell.frame = CGRect(x: 12, y: 22, width: 44, height: 44)
+        }
+        clock.frame = NSRect(x: 22, y: 32, width: 24, height: 24)
+        title.frame = NSRect(x: 68, y: 20, width: bounds.width - 80, height: 16)
+        runtime.frame = NSRect(x: 68, y: 39, width: bounds.width - 80,
+                               height: runtime.intrinsicContentSize.height)
+    }
+
+    override func refreshAppearance() {
+        super.refreshAppearance()
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            let contrast = PopoverStyle.isHighContrast(effectiveAppearance)
+            PopoverStyle.setWithoutAnimation {
+                self.iconWell.backgroundColor = PopoverStyle.well.cgColor
+                self.iconWell.borderColor = PopoverStyle.wellBorder.cgColor
+                self.iconWell.borderWidth = contrast ? 1 : 0.5
+            }
+            clock.contentTintColor = PopoverStyle.neutral
+        }
     }
 
     func update(snapshot: PowerSnapshot, degraded: Bool) {
@@ -145,7 +164,7 @@ final class PopoverRuntimeView: PopoverSection {
         }
         runtime.stringValue = runtimeValue
         let hasEstimate = !degraded && !snapshot.plugged && (snapshot.estimatedRuntimeMinutes ?? -1) >= 0
-        runtime.font = hasEstimate ? PopoverStyle.mono(24, .medium) : .systemFont(ofSize: 16, weight: .regular)
+        runtime.font = hasEstimate ? PopoverStyle.mono(24, .semibold) : .systemFont(ofSize: 16, weight: .regular)
         runtime.textColor = hasEstimate ? PopoverStyle.primaryText : PopoverStyle.secondaryText
         needsLayout = true
     }
@@ -154,8 +173,9 @@ final class PopoverRuntimeView: PopoverSection {
     func layoutFitsForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> Bool {
         update(snapshot: snapshot, degraded: degraded)
         layoutSubtreeIfNeeded()
-        return runtime.frame.maxY <= title.frame.minY
-            && bounds.contains(clock.frame) && clock.frame.maxX < runtime.frame.minX
+        return title.frame.maxY <= runtime.frame.minY
+            && bounds.contains(iconWell.frame)
+            && iconWell.frame.contains(clock.frame) && iconWell.frame.maxX < runtime.frame.minX
             && [title, runtime].allSatisfy { field in
                 let required = field.stringValue.size(withAttributes: [.font: field.font as Any]).width
                 return bounds.contains(field.frame) && required <= field.frame.width
@@ -170,12 +190,18 @@ final class PopoverRuntimeView: PopoverSection {
     var presentationForTest: String { "\(title.stringValue) · \(runtime.stringValue)" }
 
     var sectionLayoutForTest: (titleFrame: NSRect, valueFrame: NSRect, iconFrame: NSRect,
-                               valueFontSize: CGFloat, titleFontSize: CGFloat, hasTopSeparator: Bool) {
+                               valueFontSize: CGFloat, titleFontSize: CGFloat, hasTopSeparator: Bool,
+                               iconWellFrame: NSRect) {
         layoutSubtreeIfNeeded()
         let hasTopSeparator = layer?.sublayers?.contains {
             $0.frame == CGRect(x: 0, y: 0, width: bounds.width, height: 0.5)
         } ?? false
-        return (title.frame, runtime.frame, clock.frame, runtime.font!.pointSize, title.font!.pointSize, hasTopSeparator)
+        return (title.frame, runtime.frame, clock.frame, runtime.font!.pointSize, title.font!.pointSize,
+                hasTopSeparator, iconWell.frame)
+    }
+
+    var wellColorsForTest: (fill: CGColor?, border: CGColor?, iconTint: NSColor?, borderWidth: CGFloat) {
+        (iconWell.backgroundColor, iconWell.borderColor, clock.contentTintColor, iconWell.borderWidth)
     }
 #endif
 }
@@ -856,7 +882,7 @@ final class PopoverContentViewController: NSViewController {
         documentView.addSubview(stack)
         view.addSubview(scrollView)
 
-        [header, runtimeView, flowView, ringView, laneView, historyView, footer].forEach(stack.addArrangedSubview)
+        [header, flowView, ringView, runtimeView, laneView, historyView, footer].forEach(stack.addArrangedSubview)
 
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),

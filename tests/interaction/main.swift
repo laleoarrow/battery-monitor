@@ -2468,12 +2468,13 @@ check("独立续航行在全部供电状态和读取失败时实际布局不截�
       runtimeSnapshots.allSatisfy { runtimeRenderer.layoutFitsForTest(snapshot: $0) }
           && runtimeRenderer.layoutFitsForTest(snapshot: runtimeSnapshots[2], degraded: true))
 let runtimeSectionLayout = runtimeRenderer.sectionLayoutForTest
-check("续航以独立分隔线分区，居中时间仪表位于弱化标题上方",
-      runtimeSectionHeight == 64 && runtimeSectionLayout.hasTopSeparator
-          && runtimeSectionLayout.valueFrame.minX - runtimeSectionLayout.iconFrame.maxX >= 8
-          && abs(runtimeSectionLayout.iconFrame.union(runtimeSectionLayout.valueFrame).midX
-                 - runtimeRenderer.bounds.midX) < 0.01
-          && runtimeSectionLayout.titleFrame.minY > runtimeSectionLayout.valueFrame.maxY
+check("续航独立分区有细分割线，左侧时钟与右侧标题时间对齐",
+      runtimeSectionHeight == 88 && runtimeSectionLayout.hasTopSeparator
+          && runtimeRenderer.bounds.contains(runtimeSectionLayout.iconWellFrame)
+          && runtimeSectionLayout.iconWellFrame.contains(runtimeSectionLayout.iconFrame)
+          && runtimeSectionLayout.valueFrame.minX - runtimeSectionLayout.iconWellFrame.maxX >= 12
+          && runtimeSectionLayout.titleFrame.minX == runtimeSectionLayout.valueFrame.minX
+          && runtimeSectionLayout.titleFrame.maxY < runtimeSectionLayout.valueFrame.minY
           && runtimeSectionLayout.valueFontSize > runtimeSectionLayout.titleFontSize)
 if #available(macOS 26.0, *), !screenLocked, let button = item.button {
     let previousModules = Settings.Module.allCases.map { ($0, Settings.isModuleVisible($0)) }
@@ -2502,24 +2503,24 @@ if #available(macOS 26.0, *), !screenLocked, let button = item.button {
         spin(0.8)
         guard let root = controller.contentViewForTest, let window = root.window,
               let runtime = runtimeDescendants(root).compactMap({ $0 as? PopoverRuntimeView }).first,
-              let flow = runtimeDescendants(root).compactMap({ $0 as? PowerFlowView }).first else {
+              let lanes = runtimeDescendants(root).compactMap({ $0 as? LaneView }).first else {
             check("\(name) 独立续航具有真实宿主和生产视图", false)
             continue
         }
         root.layoutSubtreeIfNeeded()
-        func flowScreenY() -> CGFloat {
-            flow.window?.convertPoint(toScreen: flow.convert(.zero, to: nil)).y ?? .nan
+        func lanesScreenY() -> CGFloat {
+            lanes.window?.convertPoint(toScreen: lanes.convert(.zero, to: nil)).y ?? .nan
         }
-        let flowY = flowScreenY()
+        let lanesY = lanesScreenY()
         let height = window.frame.height
         Settings.setModule(.runtime, visible: false)
         spin(0.3)
         root.layoutSubtreeIfNeeded()
-        let hiddenFlowY = flowScreenY()
+        let hiddenLanesY = lanesScreenY()
         check("\(name) 关闭续航后真实仪表与宿主移除完整续航栏目高度",
-              runtime.isHidden && abs(hiddenFlowY - flowY - runtimeSectionHeight) < 0.5
+              runtime.isHidden && abs(hiddenLanesY - lanesY - runtimeSectionHeight) < 0.5
                   && abs(height - window.frame.height - runtimeSectionHeight) < 0.5,
-              "flow=\(flowY)→\(hiddenFlowY); height=\(height)→\(window.frame.height)")
+              "lanes=\(lanesY)→\(hiddenLanesY); height=\(height)→\(window.frame.height)")
         controller.handleOutsideClick(); spin(0.8)
         controller.openForSettingsCommandTest(relativeTo: button); spin(0.8)
         check("\(name) 关闭重开后继续隐藏已取消勾选的续航",
@@ -2528,7 +2529,7 @@ if #available(macOS 26.0, *), !screenLocked, let button = item.button {
         spin(0.3)
         root.layoutSubtreeIfNeeded()
         check("\(name) 重新开启续航后仪表与真实宿主恢复原坐标",
-              !runtime.isHidden && abs(flowScreenY() - flowY) < 0.5
+              !runtime.isHidden && abs(lanesScreenY() - lanesY) < 0.5
                   && abs((root.window?.frame.height ?? 0) - height) < 0.5)
     }
 }
