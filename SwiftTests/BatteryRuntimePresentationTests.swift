@@ -3,6 +3,39 @@ import XCTest
 @testable import Wattson
 
 final class BatteryRuntimePresentationTests: XCTestCase {
+    func testFallbackRuntimeShowsApproximationAndExplainsItsSource() throws {
+        let runtime = PopoverRuntimeView()
+        runtime.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                               height: PopoverRuntimeView.preferredHeight)
+        var snapshot = PowerSnapshot(batteryW: -24, systemW: 24,
+                                     batteryTimeEstimate: .remaining(180),
+                                     batteryTimeEstimateSource: .observedDischarge)
+        for appearanceName in [NSAppearance.Name.aqua, .darkAqua] {
+            runtime.appearance = NSAppearance(named: appearanceName)
+            XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot),
+                           "Estimated Battery Runtime · ≈3h 0m")
+            XCTAssertTrue(runtime.layoutFitsForTest(snapshot: snapshot))
+            XCTAssertTrue(runtime.toolTip?.contains("average discharge current") == true)
+            let reading = try XCTUnwrap(runtime.subviews.compactMap { $0 as? NSTextField }
+                .first { $0.stringValue == "≈3h 0m" })
+            XCTAssertEqual(reading.accessibilityHelp(), runtime.toolTip)
+            XCTAssertEqual(reading.alignment, .right)
+        }
+        snapshot.batteryTimeEstimateSource = .batteryGauge
+        XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot),
+                       "Estimated Battery Runtime · 3h 0m")
+        XCTAssertTrue(runtime.toolTip?.contains("battery controller") == true)
+        snapshot.plugged = true
+        snapshot.batteryW = 20
+        snapshot.batteryTimeEstimate = .charging(19)
+        XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot),
+                       "Estimated Time to Full · 19m")
+        XCTAssertTrue(runtime.toolTip?.contains("until full") == true)
+        snapshot.batteryTimeEstimateSource = .observedDischarge
+        XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot, degraded: true),
+                       "Estimated Time to Full · Unavailable")
+    }
+
     func testRuntimeUsesHoursAndMinutesWithoutLosingOtherHeaderReadings() {
         let header = PopoverHeaderView()
         let runtime = PopoverRuntimeView()

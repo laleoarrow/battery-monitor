@@ -160,6 +160,7 @@ enum FeedbackDiagnostics {
                 "cycleCount": String(snapshot.cycleCount),
                 "lowPowerMode": String(snapshot.lowPowerMode),
                 "batteryTimeKind": timeKind,
+                "batteryTimeEstimateSource": snapshot.batteryTimeEstimateSource?.rawValue ?? "unavailable",
                 "estimatedRuntimeMinutes": runtimeMinutes.map { String($0) } ?? "unavailable",
                 "estimatedTimeToFullMinutes": timeToFullMinutes.map { String($0) } ?? "unavailable",
             ]))

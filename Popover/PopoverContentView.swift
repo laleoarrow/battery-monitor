@@ -149,9 +149,19 @@ final class PopoverRuntimeView: PopoverSection {
 
     func update(snapshot: PowerSnapshot, degraded: Bool) {
         title.stringValue = snapshot.plugged ? "Estimated Time to Full" : "Estimated Battery Runtime"
-        let help = snapshot.plugged
-            ? "macOS estimates time until the battery is full while charging. It changes with charging conditions and workload."
-            : "macOS estimates remaining battery time for current usage. It changes with workload."
+        let help: String
+        switch snapshot.batteryTimeEstimateSource {
+        case .batteryGauge:
+            help = snapshot.plugged
+                ? "The battery controller estimates time until full. It changes with charging conditions and workload."
+                : "The battery controller estimates remaining battery time. It changes with workload."
+        case .observedDischarge:
+            help = "Approximate runtime from remaining battery charge and recent average discharge current. It changes with workload."
+        default:
+            help = snapshot.plugged
+                ? "macOS estimates time until the battery is full while charging. It changes with charging conditions and workload."
+                : "macOS estimates remaining battery time for current usage. It changes with workload."
+        }
         runtime.setAccessibilityLabel(snapshot.plugged ? "Estimated time to full charge" : "Estimated battery runtime")
         runtime.setAccessibilityHelp(help)
         toolTip = help
@@ -190,8 +200,10 @@ final class PopoverRuntimeView: PopoverSection {
         } else {
             runtimeValue = stateText
         }
-        runtime.stringValue = runtimeValue
         let hasEstimate = (minutes ?? -1) >= 0
+        runtime.stringValue = hasEstimate && !snapshot.plugged
+            && snapshot.batteryTimeEstimateSource == .observedDischarge
+            ? "≈\(runtimeValue)" : runtimeValue
         runtime.font = hasEstimate ? PopoverStyle.mono(24, .semibold) : .systemFont(ofSize: 16, weight: .regular)
         runtime.textColor = hasEstimate ? PopoverStyle.primaryText : PopoverStyle.secondaryText
         needsLayout = true

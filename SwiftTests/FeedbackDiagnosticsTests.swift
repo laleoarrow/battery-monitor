@@ -89,6 +89,20 @@ final class FeedbackDiagnosticsTests: XCTestCase {
         }
     }
 
+    func testBatteryTimeDiagnosticsIncludeEstimateProvenance() {
+        for source: BatteryTimeEstimateSource? in [.system, .batteryGauge, .observedDischarge, nil] {
+            let report = FeedbackDiagnostics.makeReport(
+                context: FeedbackDiagnostics.Context(
+                    version: "4.3.2", build: "4.3.2", settings: [:], accessibility: [:],
+                    displayedSnapshot: PowerSnapshot(batteryTimeEstimate: .remaining(180),
+                                                     batteryTimeEstimateSource: source)
+                ),
+                system: [:], helper: [:], batteryProperties: nil
+            )
+            XCTAssertTrue(report.text.contains("batteryTimeEstimateSource: \(source?.rawValue ?? "unavailable")\n"))
+        }
+    }
+
     func testStaleDisplayedReadingIsClearlyMarked() {
         let report = FeedbackDiagnostics.makeReport(
             context: FeedbackDiagnostics.Context(

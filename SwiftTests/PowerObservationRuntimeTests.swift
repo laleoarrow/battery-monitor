@@ -118,8 +118,10 @@ final class PowerObservationRuntimeTests: XCTestCase {
 
         XCTAssertEqual(runtime.sample(event: .normal).sequence, 1)
         XCTAssertEqual(runtime.sample(event: .powerSourceTransition).sequence, 2)
+        XCTAssertEqual(reader.batteryTimeResetCount, 0)
         XCTAssertEqual(runtime.sample(event: .sleepWake).sequence, 3)
         XCTAssertEqual(reader.resetCount, 2)
+        XCTAssertEqual(reader.batteryTimeResetCount, 1)
     }
 
     func testRuntimeCarriesSignedBatteryVoltageTimesCurrentInShadowOnly() throws {
@@ -320,7 +322,7 @@ final class PowerObservationRuntimeTests: XCTestCase {
             XCTAssertFalse(result.resolution.userVisibleEligible)
         }
         let keys = try XCTUnwrap(backend.requestedKeys.first)
-        XCTAssertEqual(keys.count, 12)
+        XCTAssertEqual(keys.count, 17)
         XCTAssertEqual(Set(keys).count, keys.count)
     }
 
@@ -576,6 +578,7 @@ private final class RuntimeBatteryReader:
     let observation: AppleSmartBatteryObservation
     let snapshot: PowerSnapshot?
     private(set) var resetCount = 0
+    private(set) var batteryTimeResetCount = 0
 
     init(observation: AppleSmartBatteryObservation, snapshot: PowerSnapshot?) {
         self.observation = observation
@@ -590,6 +593,10 @@ private final class RuntimeBatteryReader:
 
     func resetFreshness() {
         resetCount += 1
+    }
+
+    func resetBatteryTimeHistory() {
+        batteryTimeResetCount += 1
     }
 }
 

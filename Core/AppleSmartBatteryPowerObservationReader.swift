@@ -25,6 +25,11 @@ struct AppleSmartBatteryPowerSample {
 protocol AppleSmartBatteryPowerObservationReading: AnyObject {
     func readRuntimeSample() -> AppleSmartBatteryPowerSample
     func resetFreshness()
+    func resetBatteryTimeHistory()
+}
+
+extension AppleSmartBatteryPowerObservationReading {
+    func resetBatteryTimeHistory() {}
 }
 
 final class AppleSmartBatteryPowerObservationReader:
@@ -42,6 +47,8 @@ final class AppleSmartBatteryPowerObservationReader:
     static let runtimePropertyAllowlist = propertyAllowlist + [
         "CurrentCapacity", "MaxCapacity", "CycleCount",
         "Temperature", "VirtualTemperature",
+        "AppleRawCurrentCapacity", "AppleRawMaxCapacity",
+        "AvgTimeToEmpty", "AvgTimeToFull", "FullyCharged",
     ]
 
     private static let telemetryAllowlist = [
@@ -67,6 +74,7 @@ final class AppleSmartBatteryPowerObservationReader:
     private var previousTelemetryToken: String?
     private var previousEvaluationNanoseconds: UInt64?
     private var unchangedSinceNanoseconds: UInt64?
+    private var batteryTimeFallback = BatteryTimeFallback()
 
     init(
         backend: any AppleSmartBatteryPowerRawSnapshotReading =
@@ -102,10 +110,16 @@ final class AppleSmartBatteryPowerObservationReader:
             from: raw.servicePresent ? raw.properties : nil,
             lowPowerMode: lowPowerMode()
         ) {
-            snapshot = BatteryRuntimeEstimate.applying(
-                to: value, readEstimate: batteryTimeEstimate
+            let systemEstimate = batteryTimeEstimate()
+            trackerLock.lock()
+            snapshot = batteryTimeFallback.applying(
+                to: value, properties: raw.properties,
+                systemEstimate: systemEstimate,
+                atNanoseconds: capture.endedContinuousNanoseconds
             )
+            trackerLock.unlock()
         } else {
+            resetBatteryTimeHistory()
             snapshot = nil
         }
         return AppleSmartBatteryPowerSample(
@@ -133,6 +147,7 @@ final class AppleSmartBatteryPowerObservationReader:
     ) -> AppleSmartBatteryObservation {
         guard raw.servicePresent else {
             resetFreshness()
+            resetBatteryTimeHistory()
             return .canonicalFixtureMissing(capture: capture)
         }
 
@@ -220,6 +235,12 @@ final class AppleSmartBatteryPowerObservationReader:
         previousTelemetryToken = nil
         previousEvaluationNanoseconds = nil
         unchangedSinceNanoseconds = nil
+        trackerLock.unlock()
+    }
+
+    func resetBatteryTimeHistory() {
+        trackerLock.lock()
+        batteryTimeFallback.reset()
         trackerLock.unlock()
     }
 

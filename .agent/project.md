@@ -90,7 +90,7 @@ glass flattens its interactive material into solid fills. Keep the three
 sibling frames aligned when resizing. The footer uses Clear in Dark appearance
 and Regular in Light so its selection stays visible on white backgrounds.
 
-An independently selectable section displays macOS battery time estimates,
+An independently selectable section prioritizes macOS battery time estimates,
 following Stats' system-data approach. On battery it uses the public IOPS
 internal-battery `Time to Empty` field; while charging it uses `Time to Full
 Charge`. Both are minutes. One IOPS description supplies the estimate and its
@@ -98,7 +98,20 @@ charging state; `Is Charged` distinguishes completion from external power withou
 charging. Mixed supply suppresses a charge countdown. Both startup sampling and
 the normal observation reader enrich their visible snapshots; the pure registry
 parser remains deterministic. Direction mismatches and failed readings clear the
-previous estimate. No custom runtime formula or extra sampling timer is used.
+previous estimate. When IOPS has no number, a reader-owned fallback first uses
+the matching battery-controller `AvgTimeToEmpty` or `AvgTimeToFull` in minutes,
+rejecting the SBS unknown sentinel 65535. Fallback waits for 60 seconds of
+continuous, direction-consistent sampling after startup, a direction change,
+wake or a sampling gap. This is Wattson's stabilization policy, not an Apple
+promise about when IOPS will return a number. If the controller also has no time,
+discharge runtime can use remaining raw mAh divided by a time-smoothed discharge
+current; its display carries an approximation sign. Percentage capacities are
+never used as mAh. Charging has no invented linear/taper formula. If inputs are
+still insufficient after the settling period, the section shows Unavailable and
+continues checking for recovery. Diagnostics record the estimate's source. No
+extra timer is used, and unrelated telemetry resets do not clear this history.
+See [battery time estimation](../docs/battery-time-estimate.md) for the formula,
+stabilization policy and pinned source references.
 The runtime section is an independent 88-point module below Power History
 and above the footer controls. It shares the transparent content surface and inset
 hairline separators of the existing instruments. A neutral clock well sits on

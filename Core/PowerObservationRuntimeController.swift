@@ -112,6 +112,9 @@ final class PowerObservationRuntimeController {
             bandTracker.reset()
             batteryReader.resetFreshness()
         }
+        if event == .sleepWake {
+            batteryReader.resetBatteryTimeHistory()
+        }
 
         let values = acquire(sequence: sampleSequence)
         let finalizedAt = clock()

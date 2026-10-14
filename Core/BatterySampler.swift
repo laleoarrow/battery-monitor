@@ -21,12 +21,18 @@ enum BatterySampler {
     }
 
     static func sampleResult() -> SampleResult {
+        let properties = batteryProperties()
         let result = sampleResult(
-            from: batteryProperties(),
+            from: properties,
             lowPowerMode: ProcessInfo.processInfo.isLowPowerModeEnabled
         )
         guard case let .snapshot(snapshot) = result else { return result }
-        return .snapshot(BatteryRuntimeEstimate.applying(to: snapshot))
+        var fallback = BatteryTimeFallback()
+        return .snapshot(fallback.applying(
+            to: snapshot, properties: properties ?? [:],
+            systemEstimate: BatteryRuntimeEstimate.systemEstimate(),
+            atNanoseconds: DispatchTime.now().uptimeNanoseconds
+        ))
     }
 
     static func sampleResult(
@@ -457,6 +463,8 @@ enum BatterySampler {
             "CurrentCapacity", "MaxCapacity", "ExternalConnected", "IsCharging", "CycleCount",
             "Temperature", "VirtualTemperature", "Voltage", "InstantAmperage",
             "Amperage", "PowerTelemetryData", "PowerOutDetails",
+            "AppleRawCurrentCapacity", "AppleRawMaxCapacity",
+            "AvgTimeToEmpty", "AvgTimeToFull", "FullyCharged",
         ]
         var props: [String: Any] = [:]
         for key in keys {

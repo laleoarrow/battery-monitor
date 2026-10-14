@@ -202,7 +202,8 @@ final class BatteryRuntimeEstimateTests: XCTestCase {
             backend.properties["IsCharging"] = charging
             backend.properties["InstantAmperage"] = current
             freshEstimate = estimate
-            XCTAssertEqual(reader.readRuntimeSample().visibleSnapshot?.batteryTimeEstimate, estimate)
+            XCTAssertEqual(reader.readRuntimeSample().visibleSnapshot?.batteryTimeEstimate,
+                           estimate ?? .remaining(nil))
         }
         XCTAssertEqual(reads, 7)
         XCTAssertEqual(backend.reads, 7)
@@ -252,5 +253,274 @@ private final class RuntimeEstimateBatteryBackend: AppleSmartBatteryPowerRawSnap
             servicePresent: servicePresent,
             properties: properties.filter { keys.contains($0.key) }
         )
+    }
+}
+
+final class BatteryTimeFallbackTests: XCTestCase {
+    private let second: UInt64 = 1_000_000_000
+
+    private func properties(charging: Bool = false) -> [String: Any] {
+        ["ExternalConnected": charging, "IsCharging": charging, "FullyCharged": false,
+         "CurrentCapacity": 80, "MaxCapacity": 100,
+         "AppleRawCurrentCapacity": 6_000, "AppleRawMaxCapacity": 8_000,
+         "Amperage": charging ? 2_000 : -2_000,
+         "InstantAmperage": charging ? 2_000 : -2_000, "Voltage": 12_000]
+    }
+
+    private func sample(
+        _ tracker: inout BatteryTimeFallback, _ props: [String: Any],
+        at seconds: UInt64, system: BatteryTimeEstimate? = nil,
+        snapshot: PowerSnapshot? = nil
+    ) -> PowerSnapshot {
+        let plugged = BatterySampler.optionalBoolValue(props["ExternalConnected"]) ?? false
+        return tracker.applying(
+            to: snapshot ?? PowerSnapshot(plugged: plugged, batteryW: plugged ? 24 : -24),
+            properties: props, systemEstimate: system, atNanoseconds: seconds * second
+        )
+    }
+
+    private func settled(
+        _ tracker: inout BatteryTimeFallback, _ props: [String: Any],
+        system: BatteryTimeEstimate? = nil, through end: UInt64 = 60
+    ) -> PowerSnapshot {
+        var result = PowerSnapshot()
+        for time in 0...end { result = sample(&tracker, props, at: time, system: system) }
+        return result
+    }
+
+    func testSystemIsImmediateAndWinsOverBothFallbacks() {
+        var tracker = BatteryTimeFallback()
+        var props = properties()
+        props["AvgTimeToEmpty"] = 19
+        let result = sample(&tracker, props, at: 0, system: .remaining(125))
+        XCTAssertEqual(result.batteryTimeEstimate, .remaining(125))
+        XCTAssertEqual(result.batteryTimeEstimateSource, .system)
+        XCTAssertEqual(settled(&tracker, props, system: .remaining(125)).batteryTimeEstimate, .remaining(125))
+        let fallback = sample(&tracker, props, at: 61, system: .remaining(nil))
+        XCTAssertEqual(fallback.batteryTimeEstimate, .remaining(19))
+        XCTAssertEqual(fallback.batteryTimeEstimateSource, .batteryGauge)
+    }
+
+    func testGaugeRequiresSixtySecondsAndKeepsDirectionAndZero() {
+        for charging in [false, true] {
+            for minutes in [0, 19, 65_534] {
+                var tracker = BatteryTimeFallback()
+                var props = properties(charging: charging)
+                props[charging ? "AvgTimeToFull" : "AvgTimeToEmpty"] = minutes
+                let pending = settled(&tracker, props, through: 59)
+                XCTAssertEqual(pending.batteryTimeEstimate, charging ? .charging(nil) : .remaining(nil))
+                let result = sample(&tracker, props, at: 60)
+                XCTAssertEqual(result.batteryTimeEstimate, charging ? .charging(minutes) : .remaining(minutes))
+                XCTAssertEqual(result.batteryTimeEstimateSource, .batteryGauge)
+            }
+        }
+    }
+
+    func testMalformedOrSentinelGaugeTimesEndWaitingWithoutInventingChargeFormula() {
+        for value: Any in [-1, 65_535, 65_536, true, 19.0, "19", NSNumber(value: UInt64.max)] {
+            var tracker = BatteryTimeFallback()
+            var props = properties(charging: true)
+            props["AvgTimeToFull"] = value
+            XCTAssertNil(settled(&tracker, props, system: .charging(nil)).batteryTimeEstimate)
+        }
+    }
+
+    func testGaugeRejectsExplicitOppositeOrMalformedCurrentButAcceptsMissingCurrent() {
+        for charging in [false, true] {
+            for bad: Any in [charging ? -100 : 100, "0", true, 0.0, -1, 100_001] {
+                var tracker = BatteryTimeFallback()
+                var props = properties(charging: charging)
+                props[charging ? "AvgTimeToFull" : "AvgTimeToEmpty"] = 19
+                props["Amperage"] = bad
+                XCTAssertNil(settled(&tracker, props).batteryTimeEstimate)
+            }
+            var tracker = BatteryTimeFallback()
+            var props = properties(charging: charging)
+            props["Amperage"] = nil
+            props["InstantAmperage"] = nil
+            props[charging ? "AvgTimeToFull" : "AvgTimeToEmpty"] = 19
+            XCTAssertEqual(settled(&tracker, props).batteryTimeEstimate, charging ? .charging(19) : .remaining(19))
+        }
+    }
+
+    func testObservedDischargeUsesRawMahAndSmoothedNegativeMa() {
+        for (capacity, current, minutes) in [(6_000, -2_000, 180), (6_000, -4_000, 90), (3_000, -2_000, 90)] {
+            var tracker = BatteryTimeFallback()
+            var props = properties()
+            props["AppleRawCurrentCapacity"] = capacity
+            props["Amperage"] = current
+            props["InstantAmperage"] = current
+            let result = settled(&tracker, props)
+            XCTAssertEqual(result.batteryTimeEstimate, .remaining(minutes))
+            XCTAssertEqual(result.batteryTimeEstimateSource, .observedDischarge)
+        }
+    }
+
+    func testSingleCurrentSpikeDoesNotHalveRemainingTime() {
+        var tracker = BatteryTimeFallback()
+        var props = properties()
+        XCTAssertEqual(settled(&tracker, props).batteryTimeEstimate, .remaining(180))
+        props["Amperage"] = -4_000
+        props["InstantAmperage"] = -4_000
+        XCTAssertEqual(sample(&tracker, props, at: 61).batteryTimeEstimate, .remaining(175))
+        var result = PowerSnapshot()
+        for time: UInt64 in 62...361 { result = sample(&tracker, props, at: time) }
+        XCTAssertEqual(result.batteryTimeEstimate, .remaining(90))
+    }
+
+    func testLowPowerDoesNotMultiplyTheEstimateAndShortValuesUseMinuteResolution() {
+        var tracker = BatteryTimeFallback()
+        var props = properties()
+        props["AppleRawCurrentCapacity"] = 100
+        _ = settled(&tracker, props)
+        let snapshot = PowerSnapshot(percent: 2, batteryW: -24, lowPowerMode: true)
+        XCTAssertEqual(sample(&tracker, props, at: 61, snapshot: snapshot).batteryTimeEstimate, .remaining(3))
+        props["AppleRawCurrentCapacity"] = 1
+        XCTAssertEqual(sample(&tracker, props, at: 62, snapshot: snapshot).batteryTimeEstimate, .remaining(1))
+    }
+
+    func testPercentageCapacityAndInvalidRawPairsCannotEnterFormula() {
+        for invalid: [String: Any] in [
+            ["AppleRawCurrentCapacity": NSNull()], ["AppleRawMaxCapacity": NSNull()],
+            ["AppleRawCurrentCapacity": 8_001], ["AppleRawMaxCapacity": 100_001],
+            ["AppleRawCurrentCapacity": -1], ["AppleRawCurrentCapacity": true],
+            ["AppleRawMaxCapacity": 0], ["AppleRawCurrentCapacity": 6_000.0],
+        ] {
+            var tracker = BatteryTimeFallback()
+            var props = properties()
+            props.merge(invalid) { _, new in new }
+            XCTAssertNil(settled(&tracker, props).batteryTimeEstimate)
+        }
+    }
+
+    func testInvalidOrContradictoryCurrentCannotEnterFormulaAndWaitIsBounded() {
+        for value: Any in [0, -1, -10, 2_000, -100_001, true, -2_000.0, "-2000"] {
+            var tracker = BatteryTimeFallback()
+            var props = properties()
+            props["Amperage"] = value
+            XCTAssertNil(settled(&tracker, props).batteryTimeEstimate)
+            XCTAssertNil(sample(&tracker, props, at: 61).batteryTimeEstimate)
+        }
+        var tracker = BatteryTimeFallback()
+        var props = properties()
+        props["InstantAmperage"] = 2000
+        XCTAssertNil(settled(&tracker, props).batteryTimeEstimate)
+    }
+
+    func testUnsignedTwosComplementAndMissingAverageCurrentAreSupported() {
+        for average: Any? in [NSNumber(value: UInt32(bitPattern: -2_000)), NSNumber(value: UInt64(bitPattern: -2_000)), nil] {
+            var tracker = BatteryTimeFallback()
+            var props = properties()
+            props["Amperage"] = average
+            XCTAssertEqual(settled(&tracker, props).batteryTimeEstimate, .remaining(180))
+        }
+    }
+
+    func testMissingDataCanRecoverWithoutRestartingDirectionWait() {
+        var tracker = BatteryTimeFallback()
+        var props = properties(charging: true)
+        XCTAssertNil(settled(&tracker, props, system: .charging(nil)).batteryTimeEstimate)
+        props["AvgTimeToFull"] = 19
+        XCTAssertEqual(sample(&tracker, props, at: 61, system: .charging(nil)).batteryTimeEstimate, .charging(19))
+        props["AvgTimeToFull"] = nil
+        XCTAssertNil(sample(&tracker, props, at: 62, system: .charging(nil)).batteryTimeEstimate)
+    }
+
+    func testInvalidCurrentDiscardsFormulaHistoryButNotBoundedWaiting() {
+        var tracker = BatteryTimeFallback()
+        var props = properties()
+        _ = settled(&tracker, props)
+        props["Amperage"] = 0
+        XCTAssertNil(sample(&tracker, props, at: 61).batteryTimeEstimate)
+        props["Amperage"] = -2_000
+        for time: UInt64 in 62...121 { XCTAssertNil(sample(&tracker, props, at: time).batteryTimeEstimate) }
+        XCTAssertEqual(sample(&tracker, props, at: 122).batteryTimeEstimate, .remaining(180))
+    }
+
+    func testDirectionChangeClockRollbackGapAndResetRequireNewSettlingWindow() {
+        for restart: UInt64 in [40, 71] {
+            var tracker = BatteryTimeFallback()
+            let props = properties()
+            _ = settled(&tracker, props)
+            XCTAssertEqual(sample(&tracker, props, at: restart).batteryTimeEstimate, .remaining(nil))
+        }
+        var tracker = BatteryTimeFallback()
+        _ = settled(&tracker, properties())
+        tracker.reset()
+        XCTAssertEqual(sample(&tracker, properties(), at: 61).batteryTimeEstimate, .remaining(nil))
+        var charging = properties(charging: true)
+        charging["AvgTimeToFull"] = 19
+        XCTAssertEqual(sample(&tracker, charging, at: 62).batteryTimeEstimate, .charging(nil))
+    }
+
+    func testOppositeIOPSDirectionCannotBeCombinedWithRawFallback() {
+        for system: BatteryTimeEstimate in [.charging(nil), .charging(19), .full, .notCharging] {
+            var tracker = BatteryTimeFallback()
+            XCTAssertNil(settled(&tracker, properties(), system: system).batteryTimeEstimate)
+        }
+    }
+
+    func testRegistryStateCanRecoverFullOrPausedButDoesNotUseRoundedPercent() {
+        var tracker = BatteryTimeFallback()
+        var props = properties(charging: true)
+        props["AppleRawCurrentCapacity"] = 7_680
+        props["AvgTimeToFull"] = 19
+        let snapshot = PowerSnapshot(percent: 100, plugged: true, batteryW: 0.1)
+        for time: UInt64 in 0...60 { _ = sample(&tracker, props, at: time, snapshot: snapshot) }
+        XCTAssertEqual(sample(&tracker, props, at: 61, snapshot: snapshot).batteryTimeEstimate, .charging(19))
+        props["IsCharging"] = false
+        let paused = sample(&tracker, props, at: 62, snapshot: snapshot)
+        XCTAssertEqual(paused.batteryTimeEstimate, .notCharging)
+        XCTAssertEqual(paused.batteryTimeEstimateSource, .batteryGauge)
+        props["FullyCharged"] = true
+        XCTAssertEqual(sample(&tracker, props, at: 63, snapshot: snapshot).batteryTimeEstimate, .full)
+        let mixed = PowerSnapshot(percent: 100, plugged: true, batteryW: -12)
+        XCTAssertEqual(sample(&tracker, props, at: 64, snapshot: mixed).batteryTimeEstimate, .notCharging)
+    }
+
+    func testUnknownOrInconsistentRegistryStateIsImmediatelyUnavailable() {
+        for patch: [String: Any] in [
+            ["ExternalConnected": NSNull()], ["IsCharging": NSNull()],
+            ["IsCharging": true], ["FullyCharged": true],
+        ] {
+            var tracker = BatteryTimeFallback()
+            var props = properties()
+            props.merge(patch) { _, new in new }
+            XCTAssertNil(sample(&tracker, props, at: 0).batteryTimeEstimate)
+        }
+    }
+
+    func testReaderRetainsHistoryWithoutTelemetryAndNormalFreshnessResetButClearsOnFailureOrWake() {
+        let backend = RuntimeEstimateBatteryBackend(properties: properties())
+        var now: UInt64 = 0
+        let reader = AppleSmartBatteryPowerObservationReader(
+            backend: backend, clock: { now * self.second }, lowPowerMode: { false }, batteryTimeEstimate: { nil }
+        )
+        for time: UInt64 in 0...60 {
+            now = time
+            if time == 30 { reader.resetFreshness() }
+            _ = reader.readRuntimeSample()
+        }
+        now = 61
+        XCTAssertEqual(reader.readRuntimeSample().visibleSnapshot?.batteryTimeEstimate, .remaining(180))
+        reader.resetBatteryTimeHistory()
+        now = 62
+        XCTAssertEqual(reader.readRuntimeSample().visibleSnapshot?.batteryTimeEstimate, .remaining(nil))
+        for time: UInt64 in 63...122 { now = time; _ = reader.readRuntimeSample() }
+        backend.servicePresent = false
+        now = 123
+        XCTAssertNil(reader.readRuntimeSample().visibleSnapshot)
+        backend.servicePresent = true
+        now = 124
+        XCTAssertEqual(reader.readRuntimeSample().visibleSnapshot?.batteryTimeEstimate, .remaining(nil))
+        for time: UInt64 in 125...184 { now = time; _ = reader.readRuntimeSample() }
+        backend.properties["MaxCapacity"] = nil
+        now = 185
+        XCTAssertNil(reader.readRuntimeSample().visibleSnapshot)
+        backend.properties["MaxCapacity"] = 100
+        now = 186
+        XCTAssertEqual(reader.readRuntimeSample().visibleSnapshot?.batteryTimeEstimate, .remaining(nil))
+        XCTAssertTrue(AppleSmartBatteryPowerObservationReader.runtimePropertyAllowlist.contains("AppleRawMaxCapacity"))
+        XCTAssertTrue(AppleSmartBatteryPowerObservationReader.runtimePropertyAllowlist.contains("AvgTimeToFull"))
     }
 }
