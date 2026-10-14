@@ -294,7 +294,7 @@ final class PopoverFooterView: PopoverSection {
         target: self,
         action: #selector(systemBatteryIconChanged)
     )
-    private let hint = NSTextField(labelWithString: "Right-click to switch modes")
+    private let statusMessage = NSTextField(labelWithString: "")
     private let settingsButton = PopoverButton()
     private var glassControls: NSView?
     private var glassModeControl: NativeGlassModeControl?
@@ -341,10 +341,11 @@ final class PopoverFooterView: PopoverSection {
         systemBatteryIconButton.setAccessibilityHelp("Hide the built-in macOS battery icon in the menu bar")
         addSubview(systemBatteryIconButton)
 
-        hint.font = .systemFont(ofSize: 11, weight: .regular)
-        hint.textColor = PopoverStyle.secondaryText
-        hint.alignment = .right
-        addSubview(hint)
+        statusMessage.font = .systemFont(ofSize: 11, weight: .regular)
+        statusMessage.textColor = PopoverStyle.secondaryText
+        statusMessage.alignment = .right
+        statusMessage.isHidden = true
+        addSubview(statusMessage)
 
         settingsButton.image = NSImage(systemSymbolName: "slider.horizontal.3", accessibilityDescription: "Choose Modules")
         settingsButton.isBordered = false
@@ -387,7 +388,8 @@ final class PopoverFooterView: PopoverSection {
     override func layout() {
         super.layout()
         systemBatteryIconButton.frame = NSRect(x: 0, y: 10, width: 168, height: 20)
-        hint.frame = NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)
+        statusMessage.frame = statusMessage.isHidden ? .zero
+            : NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)
         let modeFrame = NSRect(x: 0, y: 36, width: bounds.width - 46,
                                height: ModeSliderView.preferredHeight)
         modeControl.frame = modeFrame
@@ -417,9 +419,14 @@ final class PopoverFooterView: PopoverSection {
             systemBatteryIconButton.state = .mixed
             systemBatteryIconButton.isEnabled = false
         }
-        hint.stringValue = helperInstalled
-            ? (systemBatteryIconHidden == nil ? "Can’t Read System Settings" : "Right-click to switch modes")
+        statusMessage.stringValue = helperInstalled
+            ? (systemBatteryIconHidden == nil ? "Can’t Read System Settings" : "")
             : "Helper Not Installed"
+        let hideStatus = statusMessage.stringValue.isEmpty
+        if statusMessage.isHidden != hideStatus {
+            statusMessage.isHidden = hideStatus
+            needsLayout = true
+        }
         // High power is only a real detent on hardware that has it, and none
         // of them are reachable without the helper.
         enabledModes = helperInstalled ? [.auto, .low] : []

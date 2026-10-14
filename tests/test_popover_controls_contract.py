@@ -247,7 +247,8 @@ class PopoverControlsContractTests(unittest.TestCase):
         layout = footer.split("override func layout()", 1)[1].split("\n    func update(", 1)[0]
         self.assertIn("static let preferredHeight: CGFloat = 78", footer)
         self.assertIn("systemBatteryIconButton.frame = NSRect(x: 0, y: 10, width: 168, height: 20)", layout)
-        self.assertIn("hint.frame = NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)", layout)
+        self.assertIn("statusMessage.frame = statusMessage.isHidden ? .zero", layout)
+        self.assertIn("NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)", layout)
         self.assertIn("x: 0, y: 36, width: bounds.width - 46", layout)
         self.assertIn("height: ModeSliderView.preferredHeight", layout)
         self.assertIn("modeControl.frame = modeFrame", layout)

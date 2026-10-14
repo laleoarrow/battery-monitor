@@ -308,6 +308,38 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         XCTAssertEqual(requests, [.auto])
     }
 
+    func testFooterOnlyShowsActionableStatusAndClearsItOnRecovery() throws {
+        let footer = PopoverFooterView()
+        footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                              height: PopoverFooterView.preferredHeight)
+        footer.layoutSubtreeIfNeeded()
+        let controlFrame = modeSlider(in: footer).frame
+        let menuFrame = menuButton(in: footer).frame
+        let checkbox = try XCTUnwrap(descendants(of: footer).compactMap { $0 as? NSButton }.first {
+            $0.action == NSSelectorFromString("systemBatteryIconChanged:")
+        })
+        let checkboxFrame = checkbox.frame
+        let states: [(Bool, Bool?, String?)] = [
+            (true, false, nil),
+            (true, nil, "Can’t Read System Settings"),
+            (true, true, nil),
+            (false, false, "Helper Not Installed"),
+            (true, false, nil),
+        ]
+        for (helperInstalled, iconHidden, expectedStatus) in states {
+            footer.update(mode: .auto, helperInstalled: helperInstalled,
+                          systemBatteryIconHidden: iconHidden, tint: .systemBlue)
+            footer.layoutSubtreeIfNeeded()
+            let messages = footer.subviews.compactMap { $0 as? NSTextField }
+            XCTAssertEqual(messages.filter { !$0.isHidden }.map(\.stringValue), expectedStatus.map { [$0] } ?? [])
+            XCTAssertTrue(messages.filter(\.isHidden).allSatisfy { $0.frame == .zero && $0.stringValue.isEmpty })
+            XCTAssertEqual(checkbox.isEnabled, helperInstalled && iconHidden != nil)
+            XCTAssertEqual(checkbox.frame, checkboxFrame)
+            XCTAssertEqual(modeSlider(in: footer).frame, controlFrame)
+            XCTAssertEqual(menuButton(in: footer).frame, menuFrame)
+        }
+    }
+
     func testUnrelatedSettingsDoNotReselectOrRestyleModeControls() {
         let footer = PopoverFooterView()
         footer.update(mode: .low, helperInstalled: true,
