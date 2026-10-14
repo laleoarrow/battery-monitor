@@ -64,3 +64,23 @@ documented in the linked layout review.
 Detailed build/test logs, payload hashes, before/after installation records and
 VM results are retained in `.build/local-4.3.2-review.noindex/`. Preference
 snapshots remain local in that ignored directory and are not committed.
+
+## Pre-publication checks
+
+The runtime visibility fixture now also hides flow, keeping its natural content
+within a 1024×768 screen. Production layout and the strict 88-point assertions
+are unchanged. On that actual VM resolution, Classic changed 489→401 points
+and Standard/Clear changed 483→395; every footer moved 88 points. The normal
+rerun passed 300/300 and Reduce Motion passed 294/294 with its existing one
+inapplicable animation phase. The first normal run had one pre-existing A2
+blank-area menu-click timing failure; its 299/300 result is retained alongside
+the bounded rerun, not discarded. VM cleanup and shutdown completed. Evidence:
+`.build/local-4.3.2-review.noindex/vm-interaction-1024/evidence.json`.
+
+The installed Settings update check returned an error during this session.
+A read-only probe reproduced HTTP 403 with the default URLSession proxy route:
+GitHub's anonymous rate limit was exhausted. Production evaluation of a valid
+response returned the expected up-to-date result. `UpdateChecker.swift` is
+unchanged from 4.3.1. No product or system network configuration was changed,
+and this does not count as a successful installed-UI update check. Sanitized
+findings remain in `.build/public-4.3.2-review.noindex/`.

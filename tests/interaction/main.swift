@@ -2485,8 +2485,10 @@ if #available(macOS 26.0, *), !screenLocked, let button = item.button {
         Settings.liquidGlassEnabled = previousGlass
         Settings.liquidGlassStyle = previousStyle
     }
-    // Keep natural content below this VM's viewport cap so its native window
-    // height can expose the runtime section's full height as well as stack movement.
+    // Keep natural content below the 1024×768 VM's viewport cap so its native
+    // window exposes the full runtime height, not only the uncapped remainder.
+    // previousModules restores both fixture changes when this scope exits.
+    Settings.setModule(.flow, visible: false)
     Settings.setModule(.history, visible: false)
     func runtimeDescendants(_ view: NSView) -> [NSView] {
         view.subviews.flatMap { [$0] + runtimeDescendants($0) }
