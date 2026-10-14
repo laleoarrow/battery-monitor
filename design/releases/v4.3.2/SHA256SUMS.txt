@@ -1,4 +1,4 @@
-7556c7ab2b184820e107618d7c49c9734036c8c92632599bd56ff53091599939  installed-standard-dark-screen.png
+ff77fb0e028cbdf6edfae519b580f82e10299a3bd0ad7fb571d145d548411ef4  installed-standard-dark-screen.png
 a5c9e5efd3971d69bb4b79a61868759472652930eff1b58e49e478fdf4b23b11  runtime-section-dark-battery.png
 6b15d5dfc3ab822736acb9f39077ea4e2e06605e1ea507d241c20e96a8052676  runtime-section-dark-charging.png
 afd88bbd744fb3aa6d05f837aeee6e150af25928b6f94c40bb13be64d6d72947  runtime-section-dark-full.png

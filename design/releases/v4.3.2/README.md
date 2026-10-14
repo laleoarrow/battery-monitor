@@ -2,11 +2,11 @@
 
 Battery Time Estimate is an independently selectable section below Power History, with the same separators and neutral colors as the other instruments. Its right-aligned title switches between **Estimated Battery Runtime** on battery power and **Estimated Time to Full** on external power. Charging shows macOS's time-to-full estimate; a full battery shows **Fully Charged**, and mixed supply shows **Not Charging**. This release also fixes repeated menu-bar clicks and glass clipping, and adds diagnostic feedback through a reviewable GitHub issue draft.
 
-## Earlier installed trial: replacement capture pending
+## Installed app: Standard Glass
 
-The image below is a composited screen-region capture of the earlier installed local 4.3.2 trial, taken on 2026-10-14 from [`ff2274a`](https://github.com/laleoarrow/battery-monitor/commit/ff2274a7becef9c4600d415396db1d46c51a444c). It preserves the native Standard Glass controls, but its **External Power** runtime status predates the dynamic battery-time behavior shown in the new fixtures below. This older trial image is pending replacement before publication and is not evidence of the current charging/full labels.
+The image below is a composited screen-region capture of the installed local 4.3.2 build, taken on 2026-10-15 from [`eca5869`](https://github.com/laleoarrow/battery-monitor/commit/eca5869). It preserves the native Standard Glass backdrop and power-mode controls. The Mac was connected to external power with its battery full, so the new section shows **Estimated Time to Full / Fully Charged**. This is an actual running-app capture, not a generated mockup; the displayed power readings are live.
 
-<a href="installed-standard-dark-screen.png"><img src="installed-standard-dark-screen.png" alt="Earlier local Wattson 4.3.2 trial in Standard Glass, Dark appearance; old External Power status pending replacement" width="360"></a>
+<a href="installed-standard-dark-screen.png"><img src="installed-standard-dark-screen.png" alt="Installed Wattson 4.3.2 in Standard Glass, Dark appearance: Estimated Time to Full / Fully Charged and native glass power-mode controls" width="360"></a>
 
 ## Power-state layout previews: Classic
 
