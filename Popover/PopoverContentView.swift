@@ -87,13 +87,20 @@ final class PopoverHeaderView: PopoverSection {
 }
 
 final class PopoverRuntimeView: PopoverSection {
-    static let preferredHeight: CGFloat = 24
+    static let preferredHeight: CGFloat = 44
+    private let title = NSTextField(labelWithString: "Est. Battery Runtime")
     private let runtime = NSTextField(labelWithString: "")
 
     init() {
-        super.init(height: Self.preferredHeight, showsSeparator: false)
-        runtime.font = .monospacedDigitSystemFont(ofSize: 11, weight: .regular)
-        runtime.textColor = PopoverStyle.secondaryText
+        super.init(height: Self.preferredHeight)
+        title.font = .systemFont(ofSize: 11, weight: .regular)
+        title.textColor = PopoverStyle.secondaryText
+        addSubview(title)
+
+        runtime.font = PopoverStyle.mono(14, .medium)
+        runtime.textColor = PopoverStyle.primaryText
+        runtime.alignment = .right
+        runtime.setAccessibilityLabel("Estimated battery runtime")
         runtime.setAccessibilityHelp("macOS estimates remaining battery time for current usage. It changes with workload.")
         addSubview(runtime)
     }
@@ -102,7 +109,11 @@ final class PopoverRuntimeView: PopoverSection {
 
     override func layout() {
         super.layout()
-        runtime.frame = NSRect(x: 0, y: 3, width: bounds.width, height: 16)
+        let valueWidth: CGFloat = 150
+        title.frame = NSRect(x: 0, y: PopoverStyle.sectionPadding,
+                             width: bounds.width - valueWidth - 12, height: 18)
+        runtime.frame = NSRect(x: bounds.width - valueWidth, y: PopoverStyle.sectionPadding,
+                               width: valueWidth, height: 18)
     }
 
     func update(snapshot: PowerSnapshot, degraded: Bool) {
@@ -122,23 +133,33 @@ final class PopoverRuntimeView: PopoverSection {
         } else {
             runtimeValue = "Estimating…"
         }
-        runtime.stringValue = "Est. Battery Runtime · \(runtimeValue)"
+        runtime.stringValue = runtimeValue
     }
 
 #if DEBUG
     func layoutFitsForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> Bool {
         update(snapshot: snapshot, degraded: degraded)
         layoutSubtreeIfNeeded()
-        let required = runtime.stringValue.size(withAttributes: [.font: runtime.font as Any]).width
-        return bounds.contains(runtime.frame) && required <= runtime.frame.width
+        return title.frame.maxX < runtime.frame.minX && [title, runtime].allSatisfy { field in
+            let required = field.stringValue.size(withAttributes: [.font: field.font as Any]).width
+            return bounds.contains(field.frame) && required <= field.frame.width
+        }
     }
 
     func runtimePresentationForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> String {
         update(snapshot: snapshot, degraded: degraded)
-        return runtime.stringValue
+        return presentationForTest
     }
 
-    var presentationForTest: String { runtime.stringValue }
+    var presentationForTest: String { "\(title.stringValue) · \(runtime.stringValue)" }
+
+    var sectionLayoutForTest: (titleFrame: NSRect, valueFrame: NSRect, hasTopSeparator: Bool) {
+        layoutSubtreeIfNeeded()
+        let hasTopSeparator = layer?.sublayers?.contains {
+            $0.frame == CGRect(x: 0, y: 0, width: bounds.width, height: 0.5)
+        } ?? false
+        return (title.frame, runtime.frame, hasTopSeparator)
+    }
 #endif
 }
 

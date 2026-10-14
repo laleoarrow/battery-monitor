@@ -5,6 +5,10 @@ battery runtime a selectable item alongside Energy Flow, Ring Gauge, Power
 Lanes and Power History. The source version remains 4.3.1; this does not describe
 a published installer or an update to the installed application.
 
+The 14 October [independent runtime section](../runtime-section/README.md)
+supersedes the 24-point visual layout below. This page retains the earlier
+module-selection and real-window interaction evidence.
+
 `Est. Battery Runtime` is the fifth item in the existing module menu and in
 Settings → Modules. Both use the same saved `popover.module.runtime` preference.
 Missing or invalid preferences default to enabled, preserving the existing

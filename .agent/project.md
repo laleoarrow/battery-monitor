@@ -90,13 +90,16 @@ glass flattens its interactive material into solid fills. Keep the three
 sibling frames aligned when resizing. The footer uses Clear in Dark appearance
 and Regular in Light so its selection stays visible on white backgrounds.
 
-The header also displays estimated battery runtime from the public IOPS
-internal-battery `Time to Empty` field, in minutes, following Stats' system-data
+An independently selectable row below the header displays estimated battery
+runtime from the public IOPS internal-battery `Time to Empty` field, in minutes,
+following Stats' system-data
 approach. Both startup sampling and the normal observation reader enrich their
 visible snapshots; the pure registry parser remains deterministic. External
 power and failed readings suppress numeric runtime, and a fresh unknown estimate
 clears the previous value. No custom runtime formula or extra sampling timer is
-used. The rounded glass backing owns the solid accessibility fallback; the
+used. The 44-point row has its own top separator, a left-aligned title and a
+right-aligned estimate; disabling it removes its entire height. The rounded
+glass backing owns the solid accessibility fallback; the
 foreground stays transparent in an actual glass host and refreshes on reparenting.
 
 General includes a Send Feedback group below Appearance. Report saves a

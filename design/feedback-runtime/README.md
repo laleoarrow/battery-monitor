@@ -10,6 +10,10 @@ Wattson's solid-background/selector fallback. They do not change macOS settings
 or demonstrate the system compositor's own increased-contrast treatment.
 The Settings GUI suite separately checks contrast borders with injected policy.
 
+The runtime layout in this initial gallery is superseded by the 14 October
+[independent runtime section](runtime-section/README.md). The estimate source
+and feedback behavior below remain unchanged.
+
 ## Runtime method
 
 The implementation follows established system-data approaches:
