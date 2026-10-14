@@ -6,8 +6,9 @@ an independent module must use the existing section separators, rather than a
 filled card. See the [selected layout](selected-reference.png) and
 [separator feedback](separator-feedback.png).
 
-The production AppKit view is an independent 88-point module between Ring Gauge
-and Power Lanes. Its background is transparent and its top hairline matches the
+The production AppKit view is an independent 88-point module below Power History
+and above the footer controls, following the user's final ordering request.
+Its background is transparent and its top hairline matches the
 existing instruments. The next visible section supplies the bottom separator.
 The clock well is the only filled element; it uses the existing adaptive well,
 border and neutral icon colors. A quiet title sits above a 24-point time reading.
@@ -38,11 +39,17 @@ Power in Light/Dark. It checks text containment, section separators, transparent
 background, module order, exact height removal, no residual gap, and no shadows.
 
 - Eight focused runtime Swift tests passed with warnings treated as errors.
-- The complete compiled Swift suite passed: **383 tests, zero failures**.
+- At the separator/theme revision, the complete compiled Swift suite passed:
+  **383 tests, zero failures**.
 - Module/settings Python contracts passed: **28 tests**.
 - Twelve production-render cases passed **315 assertions, zero failures**.
 - The updated real-window interaction harness compiles with warnings treated as
   errors; it was not executed in this layout-only iteration.
+
+The subsequent order-only change places runtime below History. Its current
+captures verify the full stack order and the footer moving up by exactly 88
+points when runtime is hidden. The 27 module source contracts were rerun and
+passed. The earlier full Swift suite was not repeated for this order-only change.
 
 [Layout evidence](layout-evidence.json) records geometry, image hashes and
 unchanged installed-app/helper/preferences hashes. No hidden capture window
@@ -54,7 +61,7 @@ the ignored capture directory.
 
 The reusable capture command is documented in
 [`runtime-section/README.md`](../runtime-section/README.md); use
-`.build/runtime-section-preview.noindex/separator-captures` as the output directory.
+`.build/runtime-section-preview.noindex/below-history-captures` as the output directory.
 All twelve captures remain there; the two on-battery examples are retained here.
 
 Real WindowServer Glass capture is unavailable in the disposable macOS-TestLab

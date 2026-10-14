@@ -97,8 +97,8 @@ approach. Both startup sampling and the normal observation reader enrich their
 visible snapshots; the pure registry parser remains deterministic. External
 power and failed readings suppress numeric runtime, and a fresh unknown estimate
 clears the previous value. No custom runtime formula or extra sampling timer is
-used. The runtime section is an independent 88-point module between the ring
-gauge and power lanes. It shares the transparent content surface and inset
+used. The runtime section is an independent 88-point module below Power History
+and above the footer controls. It shares the transparent content surface and inset
 hairline separators of the existing instruments. A neutral clock well sits on
 the left, with a quiet title and prominent time on the right. Well, border and
 icon colors resolve against the view's current appearance, including high contrast. Non-numeric

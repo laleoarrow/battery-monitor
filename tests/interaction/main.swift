@@ -2503,24 +2503,24 @@ if #available(macOS 26.0, *), !screenLocked, let button = item.button {
         spin(0.8)
         guard let root = controller.contentViewForTest, let window = root.window,
               let runtime = runtimeDescendants(root).compactMap({ $0 as? PopoverRuntimeView }).first,
-              let lanes = runtimeDescendants(root).compactMap({ $0 as? LaneView }).first else {
+              let footer = runtimeDescendants(root).compactMap({ $0 as? PopoverFooterView }).first else {
             check("\(name) 独立续航具有真实宿主和生产视图", false)
             continue
         }
         root.layoutSubtreeIfNeeded()
-        func lanesScreenY() -> CGFloat {
-            lanes.window?.convertPoint(toScreen: lanes.convert(.zero, to: nil)).y ?? .nan
+        func footerScreenY() -> CGFloat {
+            footer.window?.convertPoint(toScreen: footer.convert(.zero, to: nil)).y ?? .nan
         }
-        let lanesY = lanesScreenY()
+        let footerY = footerScreenY()
         let height = window.frame.height
         Settings.setModule(.runtime, visible: false)
         spin(0.3)
         root.layoutSubtreeIfNeeded()
-        let hiddenLanesY = lanesScreenY()
+        let hiddenFooterY = footerScreenY()
         check("\(name) 关闭续航后真实仪表与宿主移除完整续航栏目高度",
-              runtime.isHidden && abs(hiddenLanesY - lanesY - runtimeSectionHeight) < 0.5
+              runtime.isHidden && abs(hiddenFooterY - footerY - runtimeSectionHeight) < 0.5
                   && abs(height - window.frame.height - runtimeSectionHeight) < 0.5,
-              "lanes=\(lanesY)→\(hiddenLanesY); height=\(height)→\(window.frame.height)")
+              "footer=\(footerY)→\(hiddenFooterY); height=\(height)→\(window.frame.height)")
         controller.handleOutsideClick(); spin(0.8)
         controller.openForSettingsCommandTest(relativeTo: button); spin(0.8)
         check("\(name) 关闭重开后继续隐藏已取消勾选的续航",
@@ -2529,7 +2529,7 @@ if #available(macOS 26.0, *), !screenLocked, let button = item.button {
         spin(0.3)
         root.layoutSubtreeIfNeeded()
         check("\(name) 重新开启续航后仪表与真实宿主恢复原坐标",
-              !runtime.isHidden && abs(lanesScreenY() - lanesY) < 0.5
+              !runtime.isHidden && abs(footerScreenY() - footerY) < 0.5
                   && abs((root.window?.frame.height ?? 0) - height) < 0.5)
     }
 }

@@ -882,7 +882,7 @@ final class PopoverContentViewController: NSViewController {
         documentView.addSubview(stack)
         view.addSubview(scrollView)
 
-        [header, flowView, ringView, runtimeView, laneView, historyView, footer].forEach(stack.addArrangedSubview)
+        [header, flowView, ringView, laneView, historyView, runtimeView, footer].forEach(stack.addArrangedSubview)
 
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),

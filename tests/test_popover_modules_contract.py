@@ -27,9 +27,9 @@ class PopoverModulesContractTests(unittest.TestCase):
         cls.popover = POPOVER.read_text(encoding="utf-8")
         cls.status = STATUS.read_text(encoding="utf-8")
 
-    def test_content_contains_runtime_between_ring_and_lanes(self):
+    def test_content_contains_runtime_below_history(self):
         self.assertIn(
-            "[header, flowView, ringView, runtimeView, laneView, historyView, footer].forEach(stack.addArrangedSubview)",
+            "[header, flowView, ringView, laneView, historyView, runtimeView, footer].forEach(stack.addArrangedSubview)",
             self.content,
         )
 

@@ -91,6 +91,7 @@ private enum CaptureRuntimeSections {
                 let flow = views.compactMap { $0 as? PowerFlowView }.first!
                 let ring = views.compactMap { $0 as? RingGaugeView }.first!
                 let lanes = views.compactMap { $0 as? LaneView }.first!
+                let historyView = views.compactMap { $0 as? HistoryView }.first!
                 let footer = views.compactMap { $0 as? PopoverFooterView }.first!
                 func frame(_ view: NSView) -> NSRect {
                     let rect = view.convert(view.bounds, to: controller.view)
@@ -102,7 +103,7 @@ private enum CaptureRuntimeSections {
                 }
                 let layout = runtime.sectionLayoutForTest
                 let fullHeight = controller.preferredHeight
-                let fullLanesY = frame(lanes).minY
+                let fullFooterY = frame(footer).minY
                 let rowFrame = frame(runtime)
                 var checks = [
                     "windowNeverShown": !window.isVisible && !window.isKeyWindow,
@@ -121,7 +122,7 @@ private enum CaptureRuntimeSections {
                     "valueMoreProminentThanCaption": layout.valueFontSize > layout.titleFontSize,
                     "numericTimeLargerThanStatusText": layout.valueFontSize == (snapshot.plugged ? 16 : 24),
                     "instrumentContained": [layout.titleFrame, layout.valueFrame, layout.iconFrame, layout.iconWellFrame].allSatisfy { runtime.bounds.contains($0) },
-                    "headerFlowRingRuntimeLanesContiguous": adjacent(header, flow) && adjacent(flow, ring) && adjacent(ring, runtime) && adjacent(runtime, lanes),
+                    "headerFlowRingLanesHistoryRuntimeFooterContiguous": adjacent(header, flow) && adjacent(flow, ring) && adjacent(ring, lanes) && adjacent(lanes, historyView) && adjacent(historyView, runtime) && adjacent(runtime, footer),
                     "footerContained": controller.view.bounds.contains(frame(footer)),
                     "correctStateText": controller.runtimePresentationForTest == "Estimated Battery Runtime · \(snapshot.plugged ? "External Power" : name == "low-battery" ? "18m" : "4h 25m")",
                     "noRunningAnimations": controller.runningAnimationCountForTest == 0,
@@ -136,7 +137,7 @@ private enum CaptureRuntimeSections {
                 Settings.setModule(.runtime, visible: false)
                 settle()
                 checks["hidingRuntimeRemovesItsFullHeight"] = fullHeight - controller.preferredHeight == PopoverRuntimeView.preferredHeight
-                checks["hidingRuntimeClosesGap"] = fullLanesY - frame(lanes).minY == PopoverRuntimeView.preferredHeight && adjacent(ring, lanes)
+                checks["hidingRuntimeClosesGap"] = fullFooterY - frame(footer).minY == PopoverRuntimeView.preferredHeight && adjacent(historyView, footer)
                 Settings.setModule(.runtime, visible: true)
                 for module in Settings.Module.allCases where module != .runtime { Settings.setModule(module, visible: false) }
                 settle()
