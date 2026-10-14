@@ -33,6 +33,11 @@ and LaunchServices registrations for Wattson. Confirm that the canonical
 intact. Do not run the full uninstaller or reset the system-wide application
 database to clean up development copies.
 
+Settings capture bundles must include the three `design/icon/in-app-logo`
+PNGs in `Contents/Resources`, as the release build does. Verify the displayed
+Color and Clear artwork in light and dark appearances before accepting a
+capture; missing artwork can silently fall back to the system app placeholder.
+
 ## Real AppKit interaction
 
 Run only when the user has made the desktop available or in a disposable GUI

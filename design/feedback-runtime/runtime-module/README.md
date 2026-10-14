@@ -45,7 +45,14 @@ the actual pointer click. Early QA setup attempts remain recorded separately.
 | --- | --- |
 | Default runtime displayed | [Enabled](default-runtime.png) |
 | Cancelled choice remains hidden after reopening | [Hidden](runtime-hidden.png) |
-| Fifth option in Settings | [Five modules](settings-five-modules.png) |
+| Fifth option in Settings, corrected artwork | [AppKit render](logo-verification/settings-classic-light-color.png) |
+
+The original Settings VM screenshot contained a system placeholder because its
+QA bundle omitted the logo resources. The 14 October [logo verification](logo-verification/README.md)
+reproduced that omission, checked the corrected bundle against the real PNGs,
+and provides four verified Classic AppKit renders. The original screenshot is
+retained as before evidence. The replacement is an offscreen production-view
+render; it is not a new WindowServer glass capture.
 
 The VM has no physical battery, so the fixture supplies the sample shown in
 these captures and disables privileged changes. To measure window height below

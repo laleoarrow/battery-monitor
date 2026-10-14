@@ -1,0 +1,1190 @@
+{
+  "schema": 1,
+  "dateLocal": "2026-10-14",
+  "timeZone": "Asia/Shanghai",
+  "sourceFilesSHA256": {
+    "Core/AppleSmartBatteryPowerObservationReader.swift": "e9e0953a96ca727645b24868dc9355b63284feb7c8c08c6013b970cf3583e53c",
+    "Core/BatteryRuntimeEstimate.swift": "559decda1c9f00493a882f1ee46515c856b0e300f5a08948ad4563200a74dd80",
+    "Core/BatterySampler.swift": "505d58edca950c7c9c36e3339b8e192ac34495617858c6f58b5a18f86117b3d0",
+    "Core/EnergyMode.swift": "609fe7864c25605b10550301758f4d01836a0ad63740e335c1ab6f5b8172a8b3",
+    "Core/FeedbackDiagnostics.swift": "45f3023d4b3c97e25d5e2dd80dbbe23905b511419199be05f5a2549a8afaaf76",
+    "Core/GlassBackgroundView.swift": "f9046a11011aefa1e1577c15d851002ffe2949dd3935abb991a539ea7a33da84",
+    "Core/HelperClient.swift": "2620a616fecb42cf85a708e03d20a6f5e464b33e034e33e988fd9a1b8d01b5de",
+    "Core/HelperClientPowerObservationV5.swift": "9fd766fa6d54aef1a7077983b4e70097a0cc43c7109102b129371672f15832fe",
+    "Core/LoginItemController.swift": "0d9ef7aad7666f2c373f4349e8ee4b538c2d07374af44153addce14649b43169",
+    "Core/PopoverPlacement.swift": "beac97918b60d328b022be3ca663b9a8f8efbeaee6f07387f1c3e42194f751d0",
+    "Core/PowerHistory.swift": "b42dc199e766585b59e30668f9e2235faa440f6ca5019c5a6bbfccb69f499f50",
+    "Core/PowerObservationFusion.swift": "7e877a9d5353d979f8f66ed20b27072b27a21e4cd7d46c8284290ab18a861d2b",
+    "Core/PowerObservationFusionReplay.swift": "d346e7b8a5697efad0f5d98f12f541f4ed1be28bb781e0b3fe4fa3893a5f4c30",
+    "Core/PowerObservationRuntimeController.swift": "e1efc808c915a81e3b4eafa25e7459c332bb46bf663e15e5877c3fb55d0e6b82",
+    "Core/PowerObservationShadow.swift": "3974ee357d7125fcc54509ad975d8881f30783fb131db9e8e16a050cffa22522",
+    "Core/PowerObservationTrace.swift": "8f9d926a4acf76de2afe2eae31bfcff97420f0090878faeb8cb32317a984ba5a",
+    "Core/PowerObservationWireV5.swift": "74cc385246cb918fe7942a17700fe98d2d52034ea880d8d2c6923a5d815649ec",
+    "Core/PowerSnapshot.swift": "04b17cea3847e3c3b65ad29179a9760e1696a0b520f262aedd0ce64c99027170",
+    "Core/RawPowerObservation.swift": "ab961b7bbc0201fb22e2a72c2d66a4d16f1d5c0563ca4aee30ef287bc29ea2bc",
+    "Core/Settings.swift": "23872ccb6dcb632dbfb0094b3efc2438d82058909fe806056ebfd4c646e30cce",
+    "Core/SettingsAppearance.swift": "9e318deeafb66b1cb472033195577a45b9412817b695ffbeca6546219aaf581c",
+    "Core/SystemBatteryIcon.swift": "42322574a1d9f892da3a37599f51f6cc6bdf41c0410f02bae399ce96169036a0",
+    "Core/UpdateChecker.swift": "1e725a7dca032579c7f4b2e4601374829169be1ea55b76b65f0a4d1e06f2feb6",
+    "Core/VisualEncoding.swift": "723fd740660035795a5550ad2ad90d05306f246e21aa5acbb556797bc77f41da",
+    "MenuBar/AppDelegate.swift": "2d16b056ba6493479b918331748d09c1350e9f882d2ad442203f38baf99ba099",
+    "MenuBar/BatteryIcon.swift": "f53a5e8b6805d3a8d074fa96ef59d90e3bdb93333d2d0f83bab89c6ac13c70a9",
+    "MenuBar/ClickRouter.swift": "a06623103f819926b9739d6f62fe87683f9e1edd041b1e6baa8bf662d07eedb7",
+    "MenuBar/SettingsWindowController.swift": "555d44a25d0fba3e79b65a8e19e60718f75cc850a30c4341bed5dbde905773b5",
+    "MenuBar/StatusItemController.swift": "5837df1935701e0e6584a5888b2a2314f282ae770333c0df49817151e990dd93",
+    "Popover/GlassPopoverPanel.swift": "620c3847cdb8730bb8eecdc8a0ac71d15d5edf96d483c6051b5790964a422aed",
+    "Popover/HistoryLayer.swift": "38b78dd1398da2f5580794f9710e5f2899aa9cb3e471c840df42cab683e7bd62",
+    "Popover/InteractiveGlassModeControl.swift": "a65dc2d2563ed99030a59bd63d14f2eac2965bec9f9686ec60a1a2dcb419894a",
+    "Popover/LaneLayer.swift": "4d02b1379bd1afab1adbea9b3cdaaa73deb26d28d297cd4d967813829ed2bb28",
+    "Popover/ModeSliderView.swift": "35d1d69fee67ac2bf69b630be5452389e87b6f072771099c7fc025f3090b3b6b",
+    "Popover/NativeGlassModeControl.swift": "55423cc7b07962aeaed27aa181e4800f500f13351b207031de392a166efbba09",
+    "Popover/NativeModeSegmentedControl.swift": "d89a9be2e3afe021194e7489cabd0ac79cce233b37349912df099f4a736756a5",
+    "Popover/PopoverContentView.swift": "d6b697158b644f0c1e65608f6dbd260b6bbf560f08a6755ec619bd68917273c5",
+    "Popover/PopoverController.swift": "a82aa45311d0d8c6108dd6c349c101a5ac11b4c3aa85403c8552628007db9a07",
+    "Popover/PopoverPreview.swift": "eccabbb55fd7c7ddde4e961b3ec5e617047e49dfdaffae5a32f5fc77333f56f8",
+    "Popover/PopoverStyle.swift": "e97d386c30599d974a343289f51b9f59cce662119c3943942c9f392357beade6",
+    "Popover/PowerFlowLayer.swift": "ff71eaab3eb864b7e2eed08a76703b9aabef131d9c5ea24240383e3b6b5abcbc",
+    "Popover/RingGaugeLayer.swift": "52b7e639170db8d2371498647d561ebeddea0cd7a6577c40323533bc26b3fcc8"
+  },
+  "productionSourcesMatchCurrentWorkingTree": true,
+  "productionSourcesModified": false,
+  "harnessSHA256": "22a0ee60ec97fc348d5d6f0752abd15b789aa7c679cf2c86c0a11a195f054b65",
+  "rawExecutableSHA256": "9b2e5ae853328009e102131a5dbc8356d7cf19368ff95288b7a9007206790315",
+  "packagedResources": {
+    "AppIcon.icns": {
+      "packagedSHA256": "c222188619927c9a40a6aeac136918a3c51fd41adffe9e66b18b07df1f54f2df"
+    },
+    "AppIconSettings.png": {
+      "packagedSHA256": "2b2182618b2b198cc8972f212c4c7fb9e9daaa4179322aec46d6ee7ddd2b5838"
+    },
+    "AppLogoClearDark.png": {
+      "packagedSHA256": "4fa6f526276c87bb7b4f9d8c8ea2fdc4f9ddaf2e7609c06c5526dae2328b57a0",
+      "sourceSHA256": "4fa6f526276c87bb7b4f9d8c8ea2fdc4f9ddaf2e7609c06c5526dae2328b57a0",
+      "matchesSource": true
+    },
+    "AppLogoClearLight.png": {
+      "packagedSHA256": "e9882dfaab15ce5eff5ebaaa28821b2d6f12600f03c1986b469281127db02b2a",
+      "sourceSHA256": "e9882dfaab15ce5eff5ebaaa28821b2d6f12600f03c1986b469281127db02b2a",
+      "matchesSource": true
+    },
+    "AppLogoColor.png": {
+      "packagedSHA256": "b5d4134fe0c4254279de1953a17214ed69d0473bb1e49093a597ea82e10219f8",
+      "sourceSHA256": "b5d4134fe0c4254279de1953a17214ed69d0473bb1e49093a597ea82e10219f8",
+      "matchesSource": true
+    }
+  },
+  "buildCommand": "xcrun swiftc -D DEBUG -parse-as-library -swift-version 5 -warnings-as-errors Core/*.swift MenuBar/*.swift Popover/*.swift VerifySettingsLogo.swift -framework AppKit -framework CoreGraphics -framework IOKit",
+  "launchMethod": "open -g -j -n -W unique LSUIElement bundle; NSApplication activation policy prohibited; Settings window never ordered front",
+  "renderingMethod": "Actual production AppKit NSView cacheDisplay bitmap, not WindowServer screenshot. Classic captures accepted; Glass bitmap captures explicitly excluded as unsupported.",
+  "negativeControl": {
+    "allWindowsNeverKey": true,
+    "allWindowsNeverVisible": true,
+    "assertions": 72,
+    "bundleIdentifier": "com.leoarrow.wattson.logo-offscreen-negative",
+    "capturedImages": [
+      "settings-classic-light-color.png",
+      "settings-classic-light-clear.png",
+      "settings-classic-dark-color.png",
+      "settings-classic-dark-clear.png",
+      "settings-glass-light-color.png",
+      "settings-glass-light-clear.png",
+      "settings-glass-dark-color.png",
+      "settings-glass-dark-clear.png"
+    ],
+    "cases": [
+      {
+        "actualDarkAppearance": false,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "",
+        "fallbackTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "id": "classic-light-color",
+        "identityFrameInContent": "{{16, 416}, {40, 40}}",
+        "image": "settings-classic-light-color.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "19d53fc9b3b1719996030a6d852e5e7a854aac04b3a5a4c00b60e450389d3216",
+        "moduleRows": [
+          {
+            "frameInContent": "{{197, 326}, {503, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{197, 254}, {503, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{197, 182}, {503, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{197, 110}, {503, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{197, 38}, {503, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoColor",
+        "resourcePNGSHA256": "",
+        "selectedMatchesResource": false,
+        "selectedMatchesWorkspaceFallback": true,
+        "selectedTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "accepted negative control: system placeholder and all five rows visibly rendered",
+        "usableVisualEvidence": true
+      },
+      {
+        "actualDarkAppearance": false,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "",
+        "fallbackTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "id": "classic-light-clear",
+        "identityFrameInContent": "{{16, 416}, {40, 40}}",
+        "image": "settings-classic-light-clear.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "19d53fc9b3b1719996030a6d852e5e7a854aac04b3a5a4c00b60e450389d3216",
+        "moduleRows": [
+          {
+            "frameInContent": "{{197, 326}, {503, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{197, 254}, {503, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{197, 182}, {503, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{197, 110}, {503, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{197, 38}, {503, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoClearLight",
+        "resourcePNGSHA256": "",
+        "selectedMatchesResource": false,
+        "selectedMatchesWorkspaceFallback": true,
+        "selectedTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "accepted negative control: system placeholder and all five rows visibly rendered",
+        "usableVisualEvidence": true
+      },
+      {
+        "actualDarkAppearance": true,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "",
+        "fallbackTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "id": "classic-dark-color",
+        "identityFrameInContent": "{{16, 416}, {40, 40}}",
+        "image": "settings-classic-dark-color.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "3ae2133f9d6fb0b59739b9ebb1615d40681aa060abb28a56088417282be973d1",
+        "moduleRows": [
+          {
+            "frameInContent": "{{197, 326}, {503, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{197, 254}, {503, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{197, 182}, {503, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{197, 110}, {503, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{197, 38}, {503, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoColor",
+        "resourcePNGSHA256": "",
+        "selectedMatchesResource": false,
+        "selectedMatchesWorkspaceFallback": true,
+        "selectedTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "accepted negative control: system placeholder and all five rows visibly rendered",
+        "usableVisualEvidence": true
+      },
+      {
+        "actualDarkAppearance": true,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "",
+        "fallbackTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "id": "classic-dark-clear",
+        "identityFrameInContent": "{{16, 416}, {40, 40}}",
+        "image": "settings-classic-dark-clear.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "3ae2133f9d6fb0b59739b9ebb1615d40681aa060abb28a56088417282be973d1",
+        "moduleRows": [
+          {
+            "frameInContent": "{{197, 326}, {503, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{197, 254}, {503, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{197, 182}, {503, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{197, 110}, {503, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{197, 38}, {503, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoClearDark",
+        "resourcePNGSHA256": "",
+        "selectedMatchesResource": false,
+        "selectedMatchesWorkspaceFallback": true,
+        "selectedTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "accepted negative control: system placeholder and all five rows visibly rendered",
+        "usableVisualEvidence": true
+      },
+      {
+        "actualDarkAppearance": false,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "",
+        "fallbackTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "id": "glass-light-color",
+        "identityFrameInContent": "{{24, 416}, {40, 40}}",
+        "image": "settings-glass-light-color.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "04cbaed4a33dd312d03299d8d996702eb2c9e21547aa6a48ea31a9c1d83eb2a5",
+        "moduleRows": [
+          {
+            "frameInContent": "{{204, 354}, {496, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{204, 282}, {496, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{204, 210}, {496, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{204, 138}, {496, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{204, 66}, {496, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoColor",
+        "resourcePNGSHA256": "",
+        "selectedMatchesResource": false,
+        "selectedMatchesWorkspaceFallback": true,
+        "selectedTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "not accepted as visual evidence: offscreen cache lacks WindowServer-hosted glass content",
+        "usableVisualEvidence": false
+      },
+      {
+        "actualDarkAppearance": false,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "",
+        "fallbackTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "id": "glass-light-clear",
+        "identityFrameInContent": "{{24, 416}, {40, 40}}",
+        "image": "settings-glass-light-clear.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "04cbaed4a33dd312d03299d8d996702eb2c9e21547aa6a48ea31a9c1d83eb2a5",
+        "moduleRows": [
+          {
+            "frameInContent": "{{204, 354}, {496, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{204, 282}, {496, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{204, 210}, {496, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{204, 138}, {496, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{204, 66}, {496, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoClearLight",
+        "resourcePNGSHA256": "",
+        "selectedMatchesResource": false,
+        "selectedMatchesWorkspaceFallback": true,
+        "selectedTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "not accepted as visual evidence: offscreen cache lacks WindowServer-hosted glass content",
+        "usableVisualEvidence": false
+      },
+      {
+        "actualDarkAppearance": true,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "",
+        "fallbackTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "id": "glass-dark-color",
+        "identityFrameInContent": "{{24, 416}, {40, 40}}",
+        "image": "settings-glass-dark-color.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "0a71412ab6fb9c078f5344e89bbdac5d6e849d93b7a5439cd6d6bf95b80fd8f8",
+        "moduleRows": [
+          {
+            "frameInContent": "{{204, 354}, {496, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{204, 282}, {496, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{204, 210}, {496, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{204, 138}, {496, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{204, 66}, {496, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoColor",
+        "resourcePNGSHA256": "",
+        "selectedMatchesResource": false,
+        "selectedMatchesWorkspaceFallback": true,
+        "selectedTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "not accepted as visual evidence: offscreen cache lacks WindowServer-hosted glass content",
+        "usableVisualEvidence": false
+      },
+      {
+        "actualDarkAppearance": true,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "",
+        "fallbackTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "id": "glass-dark-clear",
+        "identityFrameInContent": "{{24, 416}, {40, 40}}",
+        "image": "settings-glass-dark-clear.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "0a71412ab6fb9c078f5344e89bbdac5d6e849d93b7a5439cd6d6bf95b80fd8f8",
+        "moduleRows": [
+          {
+            "frameInContent": "{{204, 354}, {496, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{204, 282}, {496, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{204, 210}, {496, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{204, 138}, {496, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{204, 66}, {496, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoClearDark",
+        "resourcePNGSHA256": "",
+        "selectedMatchesResource": false,
+        "selectedMatchesWorkspaceFallback": true,
+        "selectedTIFFSHA256": "139e5547edb128eb983c7bbe4f5ea725093a59b357ff11e309aca64ea6741cf9",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "not accepted as visual evidence: offscreen cache lacks WindowServer-hosted glass content",
+        "usableVisualEvidence": false
+      }
+    ],
+    "dependencyHelperAvailableReadCount": 24,
+    "executableSHA256": "1b366ec94ab0301905e7ceee263b57c021ace59b8ad559b84d8f5bc92ccc7675",
+    "failures": 0,
+    "frontmostSameAtEnd": true,
+    "initialNamedImageAvailability": {
+      "AppIconSettings": false,
+      "AppLogoClearDark": false,
+      "AppLogoClearLight": false,
+      "AppLogoColor": false
+    },
+    "isolatedSettingsSuiteRemoved": true,
+    "liveHelperCalls": 0,
+    "mainBundle": "Logo Offscreen Negative.app",
+    "mode": "negative-control-resources-omitted",
+    "neverForegroundApp": true,
+    "productionSourceModified": false,
+    "renderingMethod": "Actual production SettingsWindowController AppKit frame cacheDisplay bitmap; retained native window never ordered front. Not a WindowServer screenshot and not composited Liquid Glass evidence.",
+    "schema": 1,
+    "visualEvidenceNote": "Classic four appearance/logo cases visually verified. Glass image-selection/layout checks passed, but glass PNGs excluded because offscreen cacheDisplay omits WindowServer-hosted content."
+  },
+  "resourcesRestored": {
+    "allWindowsNeverKey": true,
+    "allWindowsNeverVisible": true,
+    "assertions": 72,
+    "bundleIdentifier": "com.leoarrow.wattson.logo-offscreen-positive",
+    "capturedImages": [
+      "settings-classic-light-color.png",
+      "settings-classic-light-clear.png",
+      "settings-classic-dark-color.png",
+      "settings-classic-dark-clear.png",
+      "settings-glass-light-color.png",
+      "settings-glass-light-clear.png",
+      "settings-glass-dark-color.png",
+      "settings-glass-dark-clear.png"
+    ],
+    "cases": [
+      {
+        "actualDarkAppearance": false,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "53a7628bf4fc2f0eb22075515b664fb70eab0129bb41327a00c279bad413dc21",
+        "fallbackTIFFSHA256": "a7dd942686d1f7090e01726789591f88888eb3f7e548636d5909c1964aa7b140",
+        "id": "classic-light-color",
+        "identityFrameInContent": "{{16, 416}, {40, 40}}",
+        "image": "settings-classic-light-color.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "11562a37032bf00b84a6222480c911a49d96d2b8e4021d9606021df4e7a4e7cb",
+        "moduleRows": [
+          {
+            "frameInContent": "{{197, 326}, {503, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{197, 254}, {503, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{197, 182}, {503, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{197, 110}, {503, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{197, 38}, {503, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoColor",
+        "resourcePNGSHA256": "b5d4134fe0c4254279de1953a17214ed69d0473bb1e49093a597ea82e10219f8",
+        "selectedMatchesResource": true,
+        "selectedMatchesWorkspaceFallback": false,
+        "selectedTIFFSHA256": "53a7628bf4fc2f0eb22075515b664fb70eab0129bb41327a00c279bad413dc21",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "accepted: logo and all five rows visibly rendered",
+        "usableVisualEvidence": true
+      },
+      {
+        "actualDarkAppearance": false,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "8cd3daa1b96f152e5b12176035c401e12ab82d6323d221c6d673cbde2e69fbfb",
+        "fallbackTIFFSHA256": "a7dd942686d1f7090e01726789591f88888eb3f7e548636d5909c1964aa7b140",
+        "id": "classic-light-clear",
+        "identityFrameInContent": "{{16, 416}, {40, 40}}",
+        "image": "settings-classic-light-clear.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "ad32489dd72c894a29c3f9f6ab571a6bc9e2036fd0d89e52c794b1bd92cff4e9",
+        "moduleRows": [
+          {
+            "frameInContent": "{{197, 326}, {503, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{197, 254}, {503, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{197, 182}, {503, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{197, 110}, {503, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{197, 38}, {503, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoClearLight",
+        "resourcePNGSHA256": "e9882dfaab15ce5eff5ebaaa28821b2d6f12600f03c1986b469281127db02b2a",
+        "selectedMatchesResource": true,
+        "selectedMatchesWorkspaceFallback": false,
+        "selectedTIFFSHA256": "8cd3daa1b96f152e5b12176035c401e12ab82d6323d221c6d673cbde2e69fbfb",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "accepted: logo and all five rows visibly rendered",
+        "usableVisualEvidence": true
+      },
+      {
+        "actualDarkAppearance": true,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "53a7628bf4fc2f0eb22075515b664fb70eab0129bb41327a00c279bad413dc21",
+        "fallbackTIFFSHA256": "a7dd942686d1f7090e01726789591f88888eb3f7e548636d5909c1964aa7b140",
+        "id": "classic-dark-color",
+        "identityFrameInContent": "{{16, 416}, {40, 40}}",
+        "image": "settings-classic-dark-color.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "e875ca442723d18466a7a094c2183626c679a171e35885d595bed8e2dcab9423",
+        "moduleRows": [
+          {
+            "frameInContent": "{{197, 326}, {503, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{197, 254}, {503, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{197, 182}, {503, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{197, 110}, {503, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{197, 38}, {503, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoColor",
+        "resourcePNGSHA256": "b5d4134fe0c4254279de1953a17214ed69d0473bb1e49093a597ea82e10219f8",
+        "selectedMatchesResource": true,
+        "selectedMatchesWorkspaceFallback": false,
+        "selectedTIFFSHA256": "53a7628bf4fc2f0eb22075515b664fb70eab0129bb41327a00c279bad413dc21",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "accepted: logo and all five rows visibly rendered",
+        "usableVisualEvidence": true
+      },
+      {
+        "actualDarkAppearance": true,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "1b55598569a8a0d975455b2eee9af778728878a7037d8ef23f33e2894f544718",
+        "fallbackTIFFSHA256": "a7dd942686d1f7090e01726789591f88888eb3f7e548636d5909c1964aa7b140",
+        "id": "classic-dark-clear",
+        "identityFrameInContent": "{{16, 416}, {40, 40}}",
+        "image": "settings-classic-dark-clear.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "55c2996591ea065c71675d114be462c338d66de48445b49f89b3b765f7784ee1",
+        "moduleRows": [
+          {
+            "frameInContent": "{{197, 326}, {503, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{197, 254}, {503, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{197, 182}, {503, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{197, 110}, {503, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{197, 38}, {503, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoClearDark",
+        "resourcePNGSHA256": "4fa6f526276c87bb7b4f9d8c8ea2fdc4f9ddaf2e7609c06c5526dae2328b57a0",
+        "selectedMatchesResource": true,
+        "selectedMatchesWorkspaceFallback": false,
+        "selectedTIFFSHA256": "1b55598569a8a0d975455b2eee9af778728878a7037d8ef23f33e2894f544718",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "accepted: logo and all five rows visibly rendered",
+        "usableVisualEvidence": true
+      },
+      {
+        "actualDarkAppearance": false,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "53a7628bf4fc2f0eb22075515b664fb70eab0129bb41327a00c279bad413dc21",
+        "fallbackTIFFSHA256": "a7dd942686d1f7090e01726789591f88888eb3f7e548636d5909c1964aa7b140",
+        "id": "glass-light-color",
+        "identityFrameInContent": "{{24, 416}, {40, 40}}",
+        "image": "settings-glass-light-color.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "04cbaed4a33dd312d03299d8d996702eb2c9e21547aa6a48ea31a9c1d83eb2a5",
+        "moduleRows": [
+          {
+            "frameInContent": "{{204, 354}, {496, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{204, 282}, {496, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{204, 210}, {496, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{204, 138}, {496, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{204, 66}, {496, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoColor",
+        "resourcePNGSHA256": "b5d4134fe0c4254279de1953a17214ed69d0473bb1e49093a597ea82e10219f8",
+        "selectedMatchesResource": true,
+        "selectedMatchesWorkspaceFallback": false,
+        "selectedTIFFSHA256": "53a7628bf4fc2f0eb22075515b664fb70eab0129bb41327a00c279bad413dc21",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "not accepted as visual evidence: offscreen cache lacks WindowServer-hosted glass content",
+        "usableVisualEvidence": false
+      },
+      {
+        "actualDarkAppearance": false,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "8cd3daa1b96f152e5b12176035c401e12ab82d6323d221c6d673cbde2e69fbfb",
+        "fallbackTIFFSHA256": "a7dd942686d1f7090e01726789591f88888eb3f7e548636d5909c1964aa7b140",
+        "id": "glass-light-clear",
+        "identityFrameInContent": "{{24, 416}, {40, 40}}",
+        "image": "settings-glass-light-clear.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "04cbaed4a33dd312d03299d8d996702eb2c9e21547aa6a48ea31a9c1d83eb2a5",
+        "moduleRows": [
+          {
+            "frameInContent": "{{204, 354}, {496, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{204, 282}, {496, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{204, 210}, {496, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{204, 138}, {496, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{204, 66}, {496, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoClearLight",
+        "resourcePNGSHA256": "e9882dfaab15ce5eff5ebaaa28821b2d6f12600f03c1986b469281127db02b2a",
+        "selectedMatchesResource": true,
+        "selectedMatchesWorkspaceFallback": false,
+        "selectedTIFFSHA256": "8cd3daa1b96f152e5b12176035c401e12ab82d6323d221c6d673cbde2e69fbfb",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "not accepted as visual evidence: offscreen cache lacks WindowServer-hosted glass content",
+        "usableVisualEvidence": false
+      },
+      {
+        "actualDarkAppearance": true,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "53a7628bf4fc2f0eb22075515b664fb70eab0129bb41327a00c279bad413dc21",
+        "fallbackTIFFSHA256": "a7dd942686d1f7090e01726789591f88888eb3f7e548636d5909c1964aa7b140",
+        "id": "glass-dark-color",
+        "identityFrameInContent": "{{24, 416}, {40, 40}}",
+        "image": "settings-glass-dark-color.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "0a71412ab6fb9c078f5344e89bbdac5d6e849d93b7a5439cd6d6bf95b80fd8f8",
+        "moduleRows": [
+          {
+            "frameInContent": "{{204, 354}, {496, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{204, 282}, {496, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{204, 210}, {496, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{204, 138}, {496, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{204, 66}, {496, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoColor",
+        "resourcePNGSHA256": "b5d4134fe0c4254279de1953a17214ed69d0473bb1e49093a597ea82e10219f8",
+        "selectedMatchesResource": true,
+        "selectedMatchesWorkspaceFallback": false,
+        "selectedTIFFSHA256": "53a7628bf4fc2f0eb22075515b664fb70eab0129bb41327a00c279bad413dc21",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "not accepted as visual evidence: offscreen cache lacks WindowServer-hosted glass content",
+        "usableVisualEvidence": false
+      },
+      {
+        "actualDarkAppearance": true,
+        "checks": {
+          "expectedAppearance": true,
+          "fiveModuleRowsContained": true,
+          "fiveModuleRowsExist": true,
+          "imageMatchesExpectedPath": true,
+          "namedResourceAvailabilityMatchesExpectation": true,
+          "noForegroundTakeover": true,
+          "PNGRendered": true,
+          "sidebarHasDecodedImage": true,
+          "windowNeverOrderedFront": true
+        },
+        "contentSize": "{720, 520}",
+        "expectedTIFFSHA256": "1b55598569a8a0d975455b2eee9af778728878a7037d8ef23f33e2894f544718",
+        "fallbackTIFFSHA256": "a7dd942686d1f7090e01726789591f88888eb3f7e548636d5909c1964aa7b140",
+        "id": "glass-dark-clear",
+        "identityFrameInContent": "{{24, 416}, {40, 40}}",
+        "image": "settings-glass-dark-clear.png",
+        "imageDimensions": [
+          1440,
+          1040
+        ],
+        "imageSHA256": "0a71412ab6fb9c078f5344e89bbdac5d6e849d93b7a5439cd6d6bf95b80fd8f8",
+        "moduleRows": [
+          {
+            "frameInContent": "{{204, 354}, {496, 72}}",
+            "identifier": "settings.modules.row.flow"
+          },
+          {
+            "frameInContent": "{{204, 282}, {496, 72}}",
+            "identifier": "settings.modules.row.ring"
+          },
+          {
+            "frameInContent": "{{204, 210}, {496, 72}}",
+            "identifier": "settings.modules.row.lanes"
+          },
+          {
+            "frameInContent": "{{204, 138}, {496, 72}}",
+            "identifier": "settings.modules.row.history"
+          },
+          {
+            "frameInContent": "{{204, 66}, {496, 72}}",
+            "identifier": "settings.modules.row.runtime"
+          }
+        ],
+        "moduleRowsContained": 5,
+        "moduleRowsCount": 5,
+        "resource": "AppLogoClearDark",
+        "resourcePNGSHA256": "4fa6f526276c87bb7b4f9d8c8ea2fdc4f9ddaf2e7609c06c5526dae2328b57a0",
+        "selectedMatchesResource": true,
+        "selectedMatchesWorkspaceFallback": false,
+        "selectedTIFFSHA256": "1b55598569a8a0d975455b2eee9af778728878a7037d8ef23f33e2894f544718",
+        "windowKey": false,
+        "windowVisible": false,
+        "visualReview": "not accepted as visual evidence: offscreen cache lacks WindowServer-hosted glass content",
+        "usableVisualEvidence": false
+      }
+    ],
+    "dependencyHelperAvailableReadCount": 24,
+    "executableSHA256": "1cfaaadbfdf7acabe249a9a3216c699f49cac65f4467b622a1e4cd1c1e91fdaf",
+    "failures": 0,
+    "frontmostSameAtEnd": true,
+    "initialNamedImageAvailability": {
+      "AppIconSettings": true,
+      "AppLogoClearDark": true,
+      "AppLogoClearLight": true,
+      "AppLogoColor": true
+    },
+    "isolatedSettingsSuiteRemoved": true,
+    "liveHelperCalls": 0,
+    "mainBundle": "Logo Offscreen Positive.app",
+    "mode": "resources-restored",
+    "neverForegroundApp": true,
+    "productionSourceModified": false,
+    "renderingMethod": "Actual production SettingsWindowController AppKit frame cacheDisplay bitmap; retained native window never ordered front. Not a WindowServer screenshot and not composited Liquid Glass evidence.",
+    "schema": 1,
+    "visualEvidenceNote": "Classic four appearance/logo cases visually verified. Glass image-selection/layout checks passed, but glass PNGs excluded because offscreen cacheDisplay omits WindowServer-hosted content."
+  },
+  "cleanup": {
+    "negative": {
+      "unregisterExit": 0,
+      "appRemoved": true,
+      "verifiedArchive": "logo-offscreen-negative-verified-app.tar.gz",
+      "verifiedArchiveSHA256": "ea0461c8c92fd9a997b09631c59a4676ee762accd0e2a6a3435ef1f2a8be8967",
+      "cacheDirectoriesRemoved": [],
+      "isolatedSuiteRemoved": true,
+      "launchServicesIdentifierMatchesAfterCleanup": 0,
+      "spotlightMatchesAfterCleanup": 0,
+      "remainingAppProcesses": 0
+    },
+    "positive": {
+      "unregisterExit": 0,
+      "appRemoved": true,
+      "verifiedArchive": "logo-offscreen-positive-verified-app.tar.gz",
+      "verifiedArchiveSHA256": "536f8d3d4373bea550381676379c72686a33a851c35db1507f2dfe0d3c426d13",
+      "cacheDirectoriesRemoved": [],
+      "isolatedSuiteRemoved": true,
+      "launchServicesIdentifierMatchesAfterCleanup": 0,
+      "spotlightMatchesAfterCleanup": 0,
+      "remainingAppProcesses": 0
+    }
+  },
+  "environment": {
+    "macOSVersion": "26.5.2",
+    "macOSBuild": "25F84",
+    "architecture": "arm64",
+    "swiftVersion": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0",
+    "SDKVersion": "26.5"
+  },
+  "packagingCorrection": {
+    "schema": 1,
+    "originalBuilder": "run-runtime-module-v2.sh",
+    "originalBuilderSHA256": "be744f1055b400834df349f697c344d6e807b1fa6a3fb07e6c8a0386f7e26944",
+    "originalBuilderCreatesResources": false,
+    "originalBuilderCopiesResources": false,
+    "correctedBuilder": "run-logo-resource-v1.sh",
+    "correctedBuilderSHA256": "2512e5398652aad1fded8c65027c54590f9559cedc712ad5e05260039208306e",
+    "archiveSHA256": "a91ce8345d93cff1b0b0fed4f49c9989ebf6d607e7dcce36791a09264577b3a6",
+    "manifestSHA256": "a5e7e0cd35b351a686b4c7c594bb434ac4cfdb24d887b6f9807744d43995d0d8",
+    "resources": {
+      "AppLogoClearLight.png": "e9882dfaab15ce5eff5ebaaa28821b2d6f12600f03c1986b469281127db02b2a",
+      "AppLogoColor.png": "b5d4134fe0c4254279de1953a17214ed69d0473bb1e49093a597ea82e10219f8",
+      "AppLogoClearDark.png": "4fa6f526276c87bb7b4f9d8c8ea2fdc4f9ddaf2e7609c06c5526dae2328b57a0"
+    },
+    "qaOverlaySourceHashesUnchanged": {
+      "Core/Settings.swift": "23872ccb6dcb632dbfb0094b3efc2438d82058909fe806056ebfd4c646e30cce",
+      "Popover/PopoverController.swift": "b7fd4faa08c481cf285d161f17f29cbb5d486c954a4b5e8a09e8e4a39f512852",
+      "Popover/PopoverContentView.swift": "0390c344391afd838b52f0e6a2662dadfa7e16439cc800ee71aa2b0dcaea12ab",
+      "MenuBar/SettingsWindowController.swift": "97cec76bf9d6fb9f40195134a9fcd68272372fb893b1cff8f1d91faa04c64548"
+    },
+    "originalProductionSourceHashes": {
+      "Core/Settings.swift": "23872ccb6dcb632dbfb0094b3efc2438d82058909fe806056ebfd4c646e30cce",
+      "Popover/PopoverController.swift": "a82aa45311d0d8c6108dd6c349c101a5ac11b4c3aa85403c8552628007db9a07",
+      "Popover/PopoverContentView.swift": "d6b697158b644f0c1e65608f6dbd260b6bbf560f08a6755ec619bd68917273c5",
+      "MenuBar/SettingsWindowController.swift": "555d44a25d0fba3e79b65a8e19e60718f75cc850a30c4341bed5dbde905773b5",
+      "tests/interaction/main.swift": "b52f6f95c2c1e5ee8b1e21c79d873811a1f931554341b4481d351a914e40cced"
+    }
+  },
+  "canonicalInstallation": {
+    "version": "4.3.1",
+    "bundleIdentifier": "com.leoarrow.wattson",
+    "resources": {
+      "AppLogoColor.png": {
+        "exists": true,
+        "matchesSource": true,
+        "sha256": "b5d4134fe0c4254279de1953a17214ed69d0473bb1e49093a597ea82e10219f8"
+      },
+      "AppLogoClearLight.png": {
+        "exists": true,
+        "matchesSource": true,
+        "sha256": "e9882dfaab15ce5eff5ebaaa28821b2d6f12600f03c1986b469281127db02b2a"
+      },
+      "AppLogoClearDark.png": {
+        "exists": true,
+        "matchesSource": true,
+        "sha256": "4fa6f526276c87bb7b4f9d8c8ea2fdc4f9ddaf2e7609c06c5526dae2328b57a0"
+      }
+    },
+    "signatureVerified": true,
+    "canonicalWritesOrRestartsPerformed": false,
+    "receiptVersion": "4.3.1"
+  },
+  "focusedTests": {
+    "batteryRuntime": {
+      "tests": 15,
+      "failures": 0,
+      "warningsAsErrors": true
+    },
+    "releasePackaging": {
+      "tests": 22,
+      "failures": 0
+    }
+  },
+  "publishedImages": {
+    "missing-resources.png": "19d53fc9b3b1719996030a6d852e5e7a854aac04b3a5a4c00b60e450389d3216",
+    "settings-classic-dark-clear.png": "55c2996591ea065c71675d114be462c338d66de48445b49f89b3b765f7784ee1",
+    "settings-classic-dark-color.png": "e875ca442723d18466a7a094c2183626c679a171e35885d595bed8e2dcab9423",
+    "settings-classic-light-clear.png": "ad32489dd72c894a29c3f9f6ab571a6bc9e2036fd0d89e52c794b1bd92cff4e9",
+    "settings-classic-light-color.png": "11562a37032bf00b84a6222480c911a49d96d2b8e4021d9606021df4e7a4e7cb"
+  },
+  "originalWindowServerCapture": {
+    "path": "../settings-five-modules.png",
+    "sha256": "9e443f4d869194a802a8590ca2e933b22e9c76b842e3cce6a37508ba369fe3de",
+    "limitation": "QA bundle lacked artwork; retained as before evidence only"
+  },
+  "scratchEvidencePath": ".build/classic-click-review.noindex/logo-offscreen-v1",
+  "note": "Classic bitmap renders verify actual AppKit logo and module layout. Glass image selection is verified by TIFF equality; its unsupported offscreen PNGs are excluded from visual evidence. No WindowServer glass recapture was performed."
+}

@@ -33,6 +33,13 @@ minute; [Apple's source](https://github.com/apple-oss-distributions/PowerManagem
 marks negative values, rather than zero, as unknown. No custom runtime formula,
 smoothing fallback or additional sampling timer has been added.
 
+The existing sampler reads the latest system estimate about once per second
+with the popup visible and once every two seconds while hidden, with immediate
+refreshes on power-source notifications and wake. Reading that field more
+often does not make macOS recalculate it more often. The number is an estimate
+of remaining time, not a guarantee under a future workload. The fixed
+265-minute (`4h 25m`) VM fixture verifies formatting and visibility only.
+
 ## Power-state gallery
 
 The full popup includes the new runtime line, flow, ring, lanes, history and
