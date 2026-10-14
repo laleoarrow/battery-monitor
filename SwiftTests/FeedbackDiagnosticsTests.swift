@@ -39,7 +39,7 @@ final class FeedbackDiagnosticsTests: XCTestCase {
         snapshot.plugged = false
         snapshot.batteryW = -12.5
         snapshot.systemW = 12.5
-        snapshot.estimatedRuntimeMinutes = 132
+        snapshot.batteryTimeEstimate = .remaining(132)
         let report = FeedbackDiagnostics.makeReport(
             context: FeedbackDiagnostics.Context(
                 version: "4.2.0", build: "4.2.0",
@@ -60,9 +60,33 @@ final class FeedbackDiagnosticsTests: XCTestCase {
         XCTAssertTrue(report.text.contains("[Displayed reading (current)]"))
         XCTAssertTrue(report.text.contains("batteryPercent: 47"))
         XCTAssertTrue(report.text.contains("estimatedRuntimeMinutes: 132"))
+        XCTAssertTrue(report.text.contains("batteryTimeKind: remaining"))
+        XCTAssertTrue(report.text.contains("estimatedTimeToFullMinutes: unavailable"))
         XCTAssertTrue(report.text.contains("[Battery inputs read for this report (raw firmware units)]"))
         XCTAssertTrue(report.text.contains("CurrentCapacity: 48"))
         XCTAssertTrue(report.text.contains("Excludes serial numbers"))
+    }
+
+    func testBatteryTimeDiagnosticsDistinguishDirectionAndUnknownValues() {
+        for (estimate, kind, runtime, charging): (BatteryTimeEstimate?, String, String, String) in [
+            (.remaining(nil), "remaining", "unavailable", "unavailable"),
+            (.charging(42), "charging", "unavailable", "42"),
+            (.charging(nil), "charging", "unavailable", "unavailable"),
+            (.full, "full", "unavailable", "unavailable"),
+            (.notCharging, "notCharging", "unavailable", "unavailable"),
+            (nil, "unavailable", "unavailable", "unavailable"),
+        ] {
+            let report = FeedbackDiagnostics.makeReport(
+                context: FeedbackDiagnostics.Context(
+                    version: "4.3.2", build: "4.3.2", settings: [:], accessibility: [:],
+                    displayedSnapshot: PowerSnapshot(batteryTimeEstimate: estimate)
+                ),
+                system: [:], helper: [:], batteryProperties: nil
+            )
+            XCTAssertTrue(report.text.contains("batteryTimeKind: \(kind)\n"))
+            XCTAssertTrue(report.text.contains("estimatedRuntimeMinutes: \(runtime)\n"))
+            XCTAssertTrue(report.text.contains("estimatedTimeToFullMinutes: \(charging)\n"))
+        }
     }
 
     func testStaleDisplayedReadingIsClearlyMarked() {

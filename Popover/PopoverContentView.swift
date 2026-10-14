@@ -148,12 +148,38 @@ final class PopoverRuntimeView: PopoverSection {
     }
 
     func update(snapshot: PowerSnapshot, degraded: Bool) {
+        title.stringValue = snapshot.plugged ? "Estimated Time to Full" : "Estimated Battery Runtime"
+        let help = snapshot.plugged
+            ? "macOS estimates time until the battery is full while charging. It changes with charging conditions and workload."
+            : "macOS estimates remaining battery time for current usage. It changes with workload."
+        runtime.setAccessibilityLabel(snapshot.plugged ? "Estimated time to full charge" : "Estimated battery runtime")
+        runtime.setAccessibilityHelp(help)
+        toolTip = help
+
+        var minutes: Int?
+        var stateText = "Unavailable"
+        if !degraded {
+            switch snapshot.batteryTimeEstimate {
+            case .remaining(let value) where !snapshot.plugged:
+                minutes = value
+                stateText = "Estimating…"
+            case .charging(let value) where snapshot.plugged:
+                minutes = value
+                stateText = "Estimating…"
+            case .full where snapshot.plugged:
+                stateText = "Fully Charged"
+            case .notCharging where snapshot.plugged:
+                stateText = "Not Charging"
+            default:
+                break
+            }
+            if snapshot.state == .mixedSupply {
+                minutes = nil
+                stateText = "Not Charging"
+            }
+        }
         let runtimeValue: String
-        if degraded {
-            runtimeValue = "Unavailable"
-        } else if snapshot.plugged {
-            runtimeValue = "External Power"
-        } else if let minutes = snapshot.estimatedRuntimeMinutes, minutes >= 0 {
+        if let minutes, minutes >= 0 {
             if minutes == 0 {
                 runtimeValue = "<1m"
             } else if minutes < 60 {
@@ -162,10 +188,10 @@ final class PopoverRuntimeView: PopoverSection {
                 runtimeValue = "\(minutes / 60)h \(minutes % 60)m"
             }
         } else {
-            runtimeValue = "Estimating…"
+            runtimeValue = stateText
         }
         runtime.stringValue = runtimeValue
-        let hasEstimate = !degraded && !snapshot.plugged && (snapshot.estimatedRuntimeMinutes ?? -1) >= 0
+        let hasEstimate = (minutes ?? -1) >= 0
         runtime.font = hasEstimate ? PopoverStyle.mono(24, .semibold) : .systemFont(ofSize: 16, weight: .regular)
         runtime.textColor = hasEstimate ? PopoverStyle.primaryText : PopoverStyle.secondaryText
         needsLayout = true

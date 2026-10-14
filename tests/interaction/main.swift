@@ -2460,9 +2460,20 @@ var runtimeSnapshots = headerSnapshots + [
     PowerSnapshot(percent: 8, batteryW: -10, systemW: 10),
     PowerSnapshot(percent: 41, batteryW: -10, systemW: 10, lowPowerMode: true),
 ]
-for index in runtimeSnapshots.indices { runtimeSnapshots[index].estimatedRuntimeMinutes = 265 }
+for index in runtimeSnapshots.indices {
+    switch runtimeSnapshots[index].state {
+    case .charging: runtimeSnapshots[index].batteryTimeEstimate = .charging(42)
+    case .pluggedIdle: runtimeSnapshots[index].batteryTimeEstimate = .full
+    case .mixedSupply: runtimeSnapshots[index].batteryTimeEstimate = .notCharging
+    case .onBattery:
+        runtimeSnapshots[index].batteryTimeEstimate = .remaining(runtimeSnapshots[index].lowPowerMode ? 310 : runtimeSnapshots[index].percent < 20 ? 18 : 265)
+    }
+}
 runtimeSnapshots.append(PowerSnapshot(percent: 41, batteryW: -10, systemW: 10,
-                                      estimatedRuntimeMinutes: Int(Int32.max)))
+                                      batteryTimeEstimate: .remaining(Int(Int32.max))))
+runtimeSnapshots.append(PowerSnapshot(percent: 41, batteryW: -10, systemW: 10, batteryTimeEstimate: .remaining(nil)))
+runtimeSnapshots.append(PowerSnapshot(percent: 41, plugged: true, adapterW: 40, batteryW: 20,
+                                      systemW: 20, batteryTimeEstimate: .charging(nil)))
 runtimeSnapshots.append(PowerSnapshot(percent: 41, batteryW: -10, systemW: 10))
 check("独立续航行在全部供电状态和读取失败时实际布局不截断",
       runtimeSnapshots.allSatisfy { runtimeRenderer.layoutFitsForTest(snapshot: $0) }

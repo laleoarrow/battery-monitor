@@ -61,7 +61,7 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
         snapshot.percent = 47
         snapshot.batteryW = -12.5
         snapshot.systemW = 12.5
-        snapshot.estimatedRuntimeMinutes = 132
+        snapshot.batteryTimeEstimate = .remaining(132)
         var dependencies = SettingsWindowDependencies(
             loginItemState: { .enabled }, refreshLoginItem: { $0(.enabled) },
             setLoginItemEnabled: { _, _ in fail("Unexpected privileged login mutation") },
@@ -143,7 +143,8 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
             for field in ["version: Sandbox-Probe", "macOSBuild:", "macModel:", "cpuModel:",
                           "processArchitecture: arm64", "theme: dark", "liquidGlassStyle: regular",
                           "[Accessibility]", "[Helper and installation]", "batteryPercent: 47",
-                          "estimatedRuntimeMinutes: 132", "Excludes serial numbers"] {
+                          "batteryTimeKind: remaining", "estimatedRuntimeMinutes: 132",
+                          "estimatedTimeToFullMinutes: unavailable", "Excludes serial numbers"] {
                 guard report.contains(field) else { fail("Report missing expected field: \(field)") }
             }
             guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),

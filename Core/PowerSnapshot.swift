@@ -7,6 +7,13 @@ enum PowerState {
     case mixedSupply
 }
 
+enum BatteryTimeEstimate: Equatable {
+    case remaining(Int?)
+    case charging(Int?)
+    case full
+    case notCharging
+}
+
 struct PowerSnapshot {
     static let epsilon: Double = 0.3
 
@@ -27,9 +34,9 @@ struct PowerSnapshot {
     var temperatureC: Double? = nil
     var cycleCount: Int = 0
     var lowPowerMode: Bool = false
-    /// macOS's estimate for the internal battery, in minutes, while on battery.
-    /// `nil` means macOS has not published a usable estimate.
-    var estimatedRuntimeMinutes: Int? = nil
+    /// macOS's internal-battery charge state and matching time estimate.
+    /// `nil` means the state could not be read or disagreed with this sample.
+    var batteryTimeEstimate: BatteryTimeEstimate? = nil
 
     /// Everything the sources are putting out right now. Drives the visual
     /// encoding curve and the popover's headline number.

@@ -48,13 +48,13 @@ private enum CaptureRuntimeSections {
         Settings.configureForTest(defaults: defaults)
         Settings.liquidGlassEnabled = false
 
-        let fixtures: [(String, PowerSnapshot)] = [
-            ("charging", PowerSnapshot(percent: 72, plugged: true, adapterW: 68, batteryW: 22.2, systemW: 45.8, temperatureC: 34.2, cycleCount: 116)),
-            ("full", PowerSnapshot(percent: 100, plugged: true, adapterW: 52, batteryW: 0, systemW: 52, temperatureC: 31.8, cycleCount: 116)),
-            ("battery", PowerSnapshot(percent: 67, batteryW: -39.7, systemW: 39.7, deviceOutputW: 12.2, temperatureC: 33.1, cycleCount: 116, estimatedRuntimeMinutes: 265)),
-            ("mixed", PowerSnapshot(percent: 18, plugged: true, adapterW: 28, batteryW: -31.7, systemW: 59.7, temperatureC: 38.6, cycleCount: 116)),
-            ("low-battery", PowerSnapshot(percent: 14, batteryW: -12, systemW: 12, temperatureC: 32.4, cycleCount: 116, estimatedRuntimeMinutes: 18)),
-            ("low-power", PowerSnapshot(percent: 67, batteryW: -12, systemW: 12, temperatureC: 32.4, cycleCount: 116, lowPowerMode: true, estimatedRuntimeMinutes: 265)),
+        let fixtures: [(String, PowerSnapshot, String, CGFloat)] = [
+            ("charging", PowerSnapshot(percent: 72, plugged: true, adapterW: 68, batteryW: 22.2, systemW: 45.8, temperatureC: 34.2, cycleCount: 116, batteryTimeEstimate: .charging(42)), "Estimated Time to Full · 42m", 24),
+            ("full", PowerSnapshot(percent: 100, plugged: true, adapterW: 52, batteryW: 0, systemW: 52, temperatureC: 31.8, cycleCount: 116, batteryTimeEstimate: .full), "Estimated Time to Full · Fully Charged", 16),
+            ("battery", PowerSnapshot(percent: 67, batteryW: -39.7, systemW: 39.7, deviceOutputW: 12.2, temperatureC: 33.1, cycleCount: 116, batteryTimeEstimate: .remaining(265)), "Estimated Battery Runtime · 4h 25m", 24),
+            ("mixed", PowerSnapshot(percent: 18, plugged: true, adapterW: 28, batteryW: -31.7, systemW: 59.7, temperatureC: 38.6, cycleCount: 116, batteryTimeEstimate: .notCharging), "Estimated Time to Full · Not Charging", 16),
+            ("low-battery", PowerSnapshot(percent: 14, batteryW: -12, systemW: 12, temperatureC: 32.4, cycleCount: 116, batteryTimeEstimate: .remaining(18)), "Estimated Battery Runtime · 18m", 24),
+            ("low-power", PowerSnapshot(percent: 67, batteryW: -12, systemW: 12, temperatureC: 32.4, cycleCount: 116, lowPowerMode: true, batteryTimeEstimate: .remaining(310)), "Estimated Battery Runtime · 5h 10m", 24),
         ]
         var records: [[String: Any]] = []
         var assertions = 0
@@ -62,7 +62,7 @@ private enum CaptureRuntimeSections {
         for appearance in ["light", "dark"] {
             app.appearance = NSAppearance(named: appearance == "dark" ? .darkAqua : .aqua)
             Settings.colorScheme = appearance == "dark" ? .dark : .light
-            for (name, snapshot) in fixtures {
+            for (name, snapshot, expectedPresentation, expectedValueFontSize) in fixtures {
                 for module in Settings.Module.allCases { Settings.setModule(module, visible: true) }
                 let controller = PopoverContentViewController()
                 controller.setAnimationsEnabled(false)
@@ -120,11 +120,11 @@ private enum CaptureRuntimeSections {
                     "captionAndTimeRightAligned": layout.titleFrame.maxX == layout.valueFrame.maxX && runtime.subviews.compactMap { $0 as? NSTextField }.allSatisfy { $0.alignment == .right },
                     "sectionHasNoShadow": runtime.layer?.shadowOpacity == 0 && (runtime.layer?.sublayers?.allSatisfy { $0.shadowOpacity == 0 } ?? false),
                     "valueMoreProminentThanCaption": layout.valueFontSize > layout.titleFontSize,
-                    "numericTimeLargerThanStatusText": layout.valueFontSize == (snapshot.plugged ? 16 : 24),
+                    "numericTimeLargerThanStatusText": layout.valueFontSize == expectedValueFontSize,
                     "instrumentContained": [layout.titleFrame, layout.valueFrame, layout.iconFrame, layout.iconWellFrame].allSatisfy { runtime.bounds.contains($0) },
                     "headerFlowRingLanesHistoryRuntimeFooterContiguous": adjacent(header, flow) && adjacent(flow, ring) && adjacent(ring, lanes) && adjacent(lanes, historyView) && adjacent(historyView, runtime) && adjacent(runtime, footer),
                     "footerContained": controller.view.bounds.contains(frame(footer)),
-                    "correctStateText": controller.runtimePresentationForTest == "Estimated Battery Runtime · \(snapshot.plugged ? "External Power" : name == "low-battery" ? "18m" : "4h 25m")",
+                    "correctStateText": controller.runtimePresentationForTest == expectedPresentation,
                     "noRunningAnimations": controller.runningAnimationCountForTest == 0,
                 ]
                 let bounds = controller.view.bounds
@@ -149,15 +149,28 @@ private enum CaptureRuntimeSections {
                 checks["windowStayedHidden"] = !window.isVisible && !window.isKeyWindow
                 assertions += checks.count
                 failures += checks.values.filter { !$0 }.count
+                let estimateFixture: [String: Any]
+                switch snapshot.batteryTimeEstimate {
+                case .remaining(let minutes):
+                    estimateFixture = ["kind": "remaining", "minutes": minutes as Any? ?? NSNull()]
+                case .charging(let minutes):
+                    estimateFixture = ["kind": "charging", "minutes": minutes as Any? ?? NSNull()]
+                case .full:
+                    estimateFixture = ["kind": "full", "minutes": NSNull()]
+                case .notCharging:
+                    estimateFixture = ["kind": "notCharging", "minutes": NSNull()]
+                case nil:
+                    estimateFixture = ["kind": "unavailable", "minutes": NSNull()]
+                }
                 records.append([
                     "case": "\(appearance)-\(name)", "checks": checks,
-                    "runtimeText": "Estimated Battery Runtime · \(snapshot.plugged ? "External Power" : name == "low-battery" ? "18m" : "4h 25m")",
+                    "runtimeText": expectedPresentation,
                     "runtimeFrame": NSStringFromRect(rowFrame), "titleFrame": NSStringFromRect(layout.titleFrame),
                     "valueFrame": NSStringFromRect(layout.valueFrame), "fullContentHeight": fullHeight,
                     "iconFrame": NSStringFromRect(layout.iconFrame),
                     "iconWellFrame": NSStringFromRect(layout.iconWellFrame),
                     "valueFontSize": layout.valueFontSize, "titleFontSize": layout.titleFontSize,
-                    "fixtureRuntimeMinutes": snapshot.estimatedRuntimeMinutes as Any? ?? NSNull(),
+                    "fixtureBatteryTimeEstimate": estimateFixture,
                     "image": imageName, "imageSHA256": hash(png),
                     "imageDimensions": [bitmap.pixelsWide, bitmap.pixelsHigh],
                 ])
@@ -175,7 +188,7 @@ private enum CaptureRuntimeSections {
         failures += finalChecks.values.filter { !$0 }.count
         let evidence: [String: Any] = [
             "schema": 1, "method": "Hidden NSWindow; production PopoverContentViewController cacheDisplay bitmap; Classic with forced Reduce Transparency and Reduce Motion; no live battery sampling or helper IPC.",
-            "limitations": "Layout evidence only. Not a WindowServer screenshot, native popup shadow or composited Liquid Glass verification. Runtime values and power history are fixtures. Footer mode uses the process's cached/default mode and is not a simulated hardware-mode change.",
+            "limitations": "Layout evidence only. Not a WindowServer screenshot, native popup shadow or composited Liquid Glass verification. Remaining-runtime and time-to-full values and power history are fixtures. Footer mode uses the process's cached/default mode and is not a simulated hardware-mode change.",
             "cases": records, "assertions": assertions, "failures": failures,
             "finalChecks": finalChecks, "protectedFileHashes": initialFiles,
             "executableSHA256": hash(try? Data(contentsOf: URL(fileURLWithPath: CommandLine.arguments[0]))),

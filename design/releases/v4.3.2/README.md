@@ -1,18 +1,16 @@
 # Wattson 4.3.2
 
-Estimated Battery Runtime is an independently selectable section below Power History, with the same separators and neutral colors as the other instruments. Its title and time are right-aligned. This release also fixes repeated menu-bar clicks and glass clipping, and adds diagnostic feedback through a reviewable GitHub issue draft.
+Battery Time Estimate is an independently selectable section below Power History, with the same separators and neutral colors as the other instruments. Its right-aligned title switches between **Estimated Battery Runtime** on battery power and **Estimated Time to Full** on external power. Charging shows macOS's time-to-full estimate; a full battery shows **Fully Charged**, and mixed supply shows **Not Charging**. This release also fixes repeated menu-bar clicks and glass clipping, and adds diagnostic feedback through a reviewable GitHub issue draft.
 
-## Installed app: Standard Glass, Dark
+## Earlier installed trial: replacement capture pending
 
-This is a composited screen-region capture of the installed local 4.3.2 trial build, taken on 2026-10-14. The computer is connected to external power with a full battery, so the runtime section correctly shows **External Power**. The native glass power-mode controls remain visible at the bottom.
+The image below is a composited screen-region capture of the earlier installed local 4.3.2 trial, taken on 2026-10-14 from [`ff2274a`](https://github.com/laleoarrow/battery-monitor/commit/ff2274a7becef9c4600d415396db1d46c51a444c). It preserves the native Standard Glass controls, but its **External Power** runtime status predates the dynamic battery-time behavior shown in the new fixtures below. This older trial image is pending replacement before publication and is not evidence of the current charging/full labels.
 
-<a href="installed-standard-dark-screen.png"><img src="installed-standard-dark-screen.png" alt="Installed Wattson 4.3.2 in Standard Glass, Dark appearance, plugged in with a full battery and External Power runtime status" width="360"></a>
-
-The installed trial was built from [`ff2274a`](https://github.com/laleoarrow/battery-monitor/commit/ff2274a7becef9c4600d415396db1d46c51a444c). Subsequent release-preparation changes affect documentation and tests only. The public candidate rebuilds the same production code; this screenshot is from the local trial, not a later hosted candidate artifact.
+<a href="installed-standard-dark-screen.png"><img src="installed-standard-dark-screen.png" alt="Earlier local Wattson 4.3.2 trial in Standard Glass, Dark appearance; old External Power status pending replacement" width="360"></a>
 
 ## Power-state layout previews: Classic
 
-The following twelve images use the production AppKit renderer in hidden windows, with **Classic**, **Reduce Transparency**, and **Reduce Motion** enabled. They are deterministic layout fixtures, not composited Liquid Glass captures or live readings. The `4h 25m` and `18m` times are demonstration values; power readings, battery details, and history are fixed samples.
+The following twelve images were captured on 2026-10-15 with the production AppKit renderer in hidden windows, using **Classic**, **Reduce Transparency**, and **Reduce Motion**. They are deterministic layout fixtures, not composited Liquid Glass captures or live readings. The charging estimate `42m`, remaining-runtime estimates `4h 25m`, `18m`, and `5h 10m`, power readings, battery details, and history are fixed samples.
 
 The footer uses the capture process's cached/default power mode. The Low Power fixture changes the displayed snapshot only and does not simulate a hardware power-mode switch. Click any image to view it at full resolution.
 
@@ -32,6 +30,6 @@ The footer uses the capture process's cached/default power mode. The Low Power f
 <tr><td><a href="runtime-section-light-low-power.png"><img src="runtime-section-light-low-power.png" alt="Classic fixed-sample layout: Low Power, light" width="360"></a></td><td><a href="runtime-section-dark-low-power.png"><img src="runtime-section-dark-low-power.png" alt="Classic fixed-sample layout: Low Power, dark" width="360"></a></td></tr>
 </table>
 
-The [capture harness](../../../tests/visual/capture_runtime_sections.swift) passed 315 assertions across these twelve cases, including runtime placement, text fitting, separators, visibility changes, and absence of a residual gap. The installed app, helper, preferences, and foreground application were unchanged during these fixture captures. This is local layout validation; hosted release and installation gates are verified separately.
+The [capture harness](../../../tests/visual/capture_runtime_sections.swift) passed 315 assertions across these twelve cases, including battery-time direction and state text, numeric/status typography, placement, text fitting, separators, visibility changes, and absence of a residual gap. The installed app, helper, preferences, and foreground application were unchanged during these fixture captures. This is local layout validation; hosted release and installation gates are verified separately.
 
 [Checksums for all 13 images](SHA256SUMS.txt).

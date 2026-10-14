@@ -133,6 +133,20 @@ enum FeedbackDiagnostics {
             let readingTitle = context.displayedReadingIsStale
                 ? "Displayed reading (last known; current telemetry unavailable)"
                 : "Displayed reading (current)"
+            let timeKind: String
+            var runtimeMinutes: Int?
+            var timeToFullMinutes: Int?
+            switch snapshot.batteryTimeEstimate {
+            case let .remaining(minutes):
+                timeKind = "remaining"
+                runtimeMinutes = minutes
+            case let .charging(minutes):
+                timeKind = "charging"
+                timeToFullMinutes = minutes
+            case .full: timeKind = "full"
+            case .notCharging: timeKind = "notCharging"
+            case nil: timeKind = "unavailable"
+            }
             sections.append(section(readingTitle, [
                 "batteryPercent": String(snapshot.percent),
                 "powerState": String(describing: snapshot.state),
@@ -145,7 +159,9 @@ enum FeedbackDiagnostics {
                 "temperatureC": snapshot.temperatureC.map { String($0) } ?? "unavailable",
                 "cycleCount": String(snapshot.cycleCount),
                 "lowPowerMode": String(snapshot.lowPowerMode),
-                "estimatedRuntimeMinutes": snapshot.estimatedRuntimeMinutes.map { String($0) } ?? "unavailable",
+                "batteryTimeKind": timeKind,
+                "estimatedRuntimeMinutes": runtimeMinutes.map { String($0) } ?? "unavailable",
+                "estimatedTimeToFullMinutes": timeToFullMinutes.map { String($0) } ?? "unavailable",
             ]))
         } else {
             sections.append("[Displayed reading]\nunavailable")

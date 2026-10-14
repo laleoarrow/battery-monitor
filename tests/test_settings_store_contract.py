@@ -38,7 +38,7 @@ class SettingsStoreContractTests(unittest.TestCase):
                 (.ring, "Ring Gauge", "popover.module.ring"),
                 (.lanes, "Power Lanes", "popover.module.lanes"),
                 (.history, "Power History", "popover.module.history"),
-                (.runtime, "Est. Battery Runtime", "popover.module.runtime"),
+                (.runtime, "Battery Time Estimate", "popover.module.runtime"),
             ]
             expect(
                 Settings.Module.allCases.map(\.rawValue) == ["flow", "ring", "lanes", "history", "runtime"],

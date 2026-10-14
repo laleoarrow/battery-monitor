@@ -90,14 +90,16 @@ glass flattens its interactive material into solid fills. Keep the three
 sibling frames aligned when resizing. The footer uses Clear in Dark appearance
 and Regular in Light so its selection stays visible on white backgrounds.
 
-An independently selectable section displays estimated battery
-runtime from the public IOPS internal-battery `Time to Empty` field, in minutes,
-following Stats' system-data
-approach. Both startup sampling and the normal observation reader enrich their
-visible snapshots; the pure registry parser remains deterministic. External
-power and failed readings suppress numeric runtime, and a fresh unknown estimate
-clears the previous value. No custom runtime formula or extra sampling timer is
-used. The runtime section is an independent 88-point module below Power History
+An independently selectable section displays macOS battery time estimates,
+following Stats' system-data approach. On battery it uses the public IOPS
+internal-battery `Time to Empty` field; while charging it uses `Time to Full
+Charge`. Both are minutes. One IOPS description supplies the estimate and its
+charging state; `Is Charged` distinguishes completion from external power without
+charging. Mixed supply suppresses a charge countdown. Both startup sampling and
+the normal observation reader enrich their visible snapshots; the pure registry
+parser remains deterministic. Direction mismatches and failed readings clear the
+previous estimate. No custom runtime formula or extra sampling timer is used.
+The runtime section is an independent 88-point module below Power History
 and above the footer controls. It shares the transparent content surface and inset
 hairline separators of the existing instruments. A neutral clock well sits on
 the left, with a quiet title and prominent time both right-aligned. Well, border and

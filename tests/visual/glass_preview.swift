@@ -458,13 +458,13 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         case 5: values = (42, false, 0, -18, 18)
         default: values = (72, true, 68, 22.2, 45.8)
         }
-        let runtimeMinutes: [Int?] = [nil, nil, 265, nil, 19, 312]
+        let timeEstimates: [BatteryTimeEstimate] = [.charging(42), .full, .remaining(265), .notCharging, .remaining(18), .remaining(310)]
         return PowerSnapshot(percent: values.0, plugged: values.1, adapterW: values.2,
                              batteryW: values.3, systemW: values.4,
                              deviceOutputW: usb.state == .on ? (values.1 ? 7.5 : 12.2) : nil,
                              temperatureC: 34.2, cycleCount: 282,
                              lowPowerMode: powerState.indexOfSelectedItem == 5,
-                             estimatedRuntimeMinutes: runtimeMinutes[powerState.indexOfSelectedItem])
+                             batteryTimeEstimate: timeEstimates[powerState.indexOfSelectedItem])
     }
 
     private func updateFixture() {

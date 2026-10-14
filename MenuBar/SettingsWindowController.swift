@@ -2823,7 +2823,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         case .ring: return "Battery charge and power at a glance."
         case .lanes: return "Compare system and battery power."
         case .history: return "See recent power use over time."
-        case .runtime: return "See macOS's remaining battery estimate."
+        case .runtime: return "See time to full charge or remaining battery time."
         }
     }
 

@@ -66,7 +66,7 @@ enum Settings {
             case .ring: return "Ring Gauge"
             case .lanes: return "Power Lanes"
             case .history: return "Power History"
-            case .runtime: return "Est. Battery Runtime"
+            case .runtime: return "Battery Time Estimate"
             }
         }
 

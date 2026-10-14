@@ -12,7 +12,7 @@ final class BatteryRuntimePresentationTests: XCTestCase {
         for (minutes, text) in [(0, "<1m"), (35, "35m"), (60, "1h 0m"),
                                 (265, "4h 25m"), (Int(Int32.max), "35791394h 7m")] {
             let snapshot = PowerSnapshot(percent: 41, batteryW: -12, systemW: 12,
-                                         estimatedRuntimeMinutes: minutes)
+                                         batteryTimeEstimate: .remaining(minutes))
             XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot),
                            "Estimated Battery Runtime · \(text)")
             XCTAssertEqual(header.statePresentationForTest(snapshot: snapshot).text, "On Battery")
@@ -26,19 +26,27 @@ final class BatteryRuntimePresentationTests: XCTestCase {
         runtime.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
                                height: PopoverRuntimeView.preferredHeight)
         XCTAssertEqual(PopoverRuntimeView.preferredHeight, 88)
-        let snapshots = [
-            PowerSnapshot(percent: 41, batteryW: -12, systemW: 12, estimatedRuntimeMinutes: 265),
-            PowerSnapshot(percent: 41, batteryW: -12, systemW: 12),
-            PowerSnapshot(percent: 41, batteryW: -12, systemW: 12,
-                          estimatedRuntimeMinutes: Int(Int32.max)),
-            PowerSnapshot(percent: 41, plugged: true, adapterW: 40, batteryW: 20, systemW: 20),
-            PowerSnapshot(percent: 100, plugged: true, adapterW: 20, batteryW: 0, systemW: 20),
-            PowerSnapshot(percent: 41, plugged: true, adapterW: 20, batteryW: -12, systemW: 32),
-            PowerSnapshot(percent: 8, batteryW: -10, systemW: 10, estimatedRuntimeMinutes: 18),
-            PowerSnapshot(percent: 41, batteryW: -10, systemW: 10,
-                          lowPowerMode: true, estimatedRuntimeMinutes: 265),
+        let snapshots: [(PowerSnapshot, CGFloat)] = [
+            (PowerSnapshot(percent: 41, batteryW: -12, systemW: 12, batteryTimeEstimate: .remaining(265)), 24),
+            (PowerSnapshot(percent: 41, batteryW: -12, systemW: 12, batteryTimeEstimate: .remaining(nil)), 16),
+            (PowerSnapshot(percent: 41, batteryW: -12, systemW: 12), 16),
+            (PowerSnapshot(percent: 41, batteryW: -12, systemW: 12,
+                           batteryTimeEstimate: .remaining(Int(Int32.max))), 24),
+            (PowerSnapshot(percent: 41, plugged: true, adapterW: 40, batteryW: 20, systemW: 20,
+                           batteryTimeEstimate: .charging(42)), 24),
+            (PowerSnapshot(percent: 41, plugged: true, adapterW: 40, batteryW: 20, systemW: 20,
+                           batteryTimeEstimate: .charging(nil)), 16),
+            (PowerSnapshot(percent: 100, plugged: true, adapterW: 20, batteryW: 0, systemW: 20,
+                           batteryTimeEstimate: .full), 16),
+            (PowerSnapshot(percent: 80, plugged: true, adapterW: 20, batteryW: 0, systemW: 20,
+                           batteryTimeEstimate: .notCharging), 16),
+            (PowerSnapshot(percent: 41, plugged: true, adapterW: 20, batteryW: -12, systemW: 32,
+                           batteryTimeEstimate: .notCharging), 16),
+            (PowerSnapshot(percent: 8, batteryW: -10, systemW: 10, batteryTimeEstimate: .remaining(18)), 24),
+            (PowerSnapshot(percent: 41, batteryW: -10, systemW: 10,
+                           lowPowerMode: true, batteryTimeEstimate: .remaining(310)), 24),
         ]
-        for snapshot in snapshots {
+        for (snapshot, valueFontSize) in snapshots {
             for degraded in [false, true] {
                 XCTAssertTrue(runtime.layoutFitsForTest(snapshot: snapshot, degraded: degraded))
                 let layout = runtime.sectionLayoutForTest
@@ -60,9 +68,7 @@ final class BatteryRuntimePresentationTests: XCTestCase {
                 XCTAssertGreaterThan(layout.valueFontSize, layout.titleFontSize)
                 XCTAssertEqual(runtime.layer?.shadowOpacity, 0)
                 XCTAssertTrue(runtime.layer?.sublayers?.allSatisfy { $0.shadowOpacity == 0 } ?? false)
-                let hasEstimate = !degraded && !snapshot.plugged
-                    && (snapshot.estimatedRuntimeMinutes ?? -1) >= 0
-                XCTAssertEqual(layout.valueFontSize, hasEstimate ? 24 : 16)
+                XCTAssertEqual(layout.valueFontSize, degraded ? 16 : valueFontSize)
                 for frame in [layout.titleFrame, layout.valueFrame, layout.iconFrame, layout.iconWellFrame] {
                     XCTAssertTrue(runtime.bounds.contains(frame))
                 }
@@ -73,7 +79,7 @@ final class BatteryRuntimePresentationTests: XCTestCase {
     func testRuntimeSectionFollowsLightDarkChangesWithoutChangingItsReadingOrGeometry() throws {
         try withDisplayFlags(contrast: false, reduceTransparency: false) {
             let runtime = PopoverRuntimeView()
-            runtime.update(snapshot: PowerSnapshot(estimatedRuntimeMinutes: 265), degraded: false)
+            runtime.update(snapshot: PowerSnapshot(batteryTimeEstimate: .remaining(265)), degraded: false)
             runtime.layoutSubtreeIfNeeded()
             let originalFrames = runtime.subviews.map(\.frame)
             var fills: [NSColor] = []
@@ -144,24 +150,79 @@ final class BatteryRuntimePresentationTests: XCTestCase {
         }
     }
 
-    func testRuntimeHidesOldOrUnknownEstimatesAndNeverShowsACAsBatteryRuntime() {
+    func testBatteryTimeSwitchesDirectionAndAccessibleLabelWithoutRebuildingTheView() throws {
         let runtime = PopoverRuntimeView()
-        let known = PowerSnapshot(percent: 41, batteryW: -12, systemW: 12,
-                                  estimatedRuntimeMinutes: 265)
-        XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: known, degraded: true),
-                       "Estimated Battery Runtime · Unavailable")
-        for minutes in [nil, -1] as [Int?] {
-            var unknown = known
-            unknown.estimatedRuntimeMinutes = minutes
-            XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: unknown),
-                           "Estimated Battery Runtime · Estimating…")
+        let sequence: [(PowerSnapshot, String, String, CGFloat)] = [
+            (PowerSnapshot(batteryW: -12, systemW: 12, batteryTimeEstimate: .remaining(265)),
+             "Estimated Battery Runtime", "4h 25m", 24),
+            (PowerSnapshot(percent: 72, plugged: true, adapterW: 40, batteryW: 20, systemW: 20,
+                           batteryTimeEstimate: .charging(42)),
+             "Estimated Time to Full", "42m", 24),
+            (PowerSnapshot(percent: 100, plugged: true, adapterW: 20, systemW: 20,
+                           batteryTimeEstimate: .full),
+             "Estimated Time to Full", "Fully Charged", 16),
+            (PowerSnapshot(percent: 80, plugged: true, adapterW: 20, systemW: 20,
+                           batteryTimeEstimate: .notCharging),
+             "Estimated Time to Full", "Not Charging", 16),
+            (PowerSnapshot(batteryW: -12, systemW: 12, batteryTimeEstimate: .remaining(nil)),
+             "Estimated Battery Runtime", "Estimating…", 16),
+            (PowerSnapshot(batteryW: -12, systemW: 12, batteryTimeEstimate: .remaining(35)),
+             "Estimated Battery Runtime", "35m", 24),
+        ]
+        let originalSubviews = runtime.subviews
+        for (snapshot, title, value, fontSize) in sequence {
+            XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot), "\(title) · \(value)")
+            XCTAssertTrue(runtime.layoutFitsForTest(snapshot: snapshot))
+            XCTAssertEqual(runtime.sectionLayoutForTest.valueFontSize, fontSize)
+            let reading = try XCTUnwrap(runtime.subviews.compactMap { $0 as? NSTextField }.first { $0.stringValue == value })
+            XCTAssertEqual(reading.accessibilityLabel(), snapshot.plugged
+                ? "Estimated time to full charge" : "Estimated battery runtime")
+            XCTAssertTrue(reading.accessibilityHelp()?.contains(snapshot.plugged
+                ? "while charging" : "remaining battery time") ?? false)
+            XCTAssertTrue(zip(runtime.subviews, originalSubviews).allSatisfy { $0 === $1 })
         }
-        for batteryW in [20.0, 0, -12] {
-            let snapshot = PowerSnapshot(percent: 100, plugged: true, adapterW: 40,
-                                         batteryW: batteryW, systemW: 40 - batteryW,
-                                         estimatedRuntimeMinutes: 265)
+    }
+
+    func testMissingDataUnknownEstimatesAndDegradationNeverReuseOldNumbers() {
+        let runtime = PopoverRuntimeView()
+        for plugged in [false, true] {
+            let title = plugged ? "Estimated Time to Full" : "Estimated Battery Runtime"
+            let known = PowerSnapshot(plugged: plugged, batteryW: plugged ? 12 : -12,
+                                      batteryTimeEstimate: plugged ? .charging(42) : .remaining(265))
+            _ = runtime.runtimePresentationForTest(snapshot: known)
+            var snapshot = known
+            snapshot.batteryTimeEstimate = plugged ? .charging(nil) : .remaining(nil)
+            XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot), "\(title) · Estimating…")
+            snapshot.batteryTimeEstimate = nil
+            XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot), "\(title) · Unavailable")
+            XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: known, degraded: true), "\(title) · Unavailable")
+        }
+    }
+
+    func testBatteryTimeRejectsEstimatesFromTheOppositePowerSource() {
+        let runtime = PopoverRuntimeView()
+        for estimate: BatteryTimeEstimate in [.charging(42), .charging(nil), .full, .notCharging] {
+            let snapshot = PowerSnapshot(batteryW: -12, systemW: 12, batteryTimeEstimate: estimate)
             XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot),
-                           "Estimated Battery Runtime · External Power")
+                           "Estimated Battery Runtime · Unavailable")
+        }
+        for estimate: BatteryTimeEstimate in [.remaining(265), .remaining(nil)] {
+            let snapshot = PowerSnapshot(percent: 72, plugged: true, adapterW: 40,
+                                         batteryW: 20, systemW: 20, batteryTimeEstimate: estimate)
+            XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot),
+                           "Estimated Time to Full · Unavailable")
+        }
+    }
+
+    func testMixedSupplyNeverShowsATimeToFull() {
+        let runtime = PopoverRuntimeView()
+        for estimate: BatteryTimeEstimate in [.charging(42), .charging(nil), .full, .notCharging] {
+            let snapshot = PowerSnapshot(percent: 72, plugged: true, adapterW: 20,
+                                         batteryW: -12, systemW: 32, batteryTimeEstimate: estimate)
+            XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot),
+                           "Estimated Time to Full · Not Charging")
+            XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot, degraded: true),
+                           "Estimated Time to Full · Unavailable")
         }
     }
 
@@ -169,7 +230,7 @@ final class BatteryRuntimePresentationTests: XCTestCase {
         let runtime = PopoverRuntimeView()
         for lowPower in [false, true] {
             let snapshot = PowerSnapshot(percent: 8, batteryW: -10, systemW: 10,
-                                         lowPowerMode: lowPower, estimatedRuntimeMinutes: 18)
+                                         lowPowerMode: lowPower, batteryTimeEstimate: .remaining(18))
             XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot),
                            "Estimated Battery Runtime · 18m")
         }
@@ -202,29 +263,38 @@ final class BatteryRuntimePresentationTests: XCTestCase {
         }
     }
 
-    func testHiddenRuntimeSkipsRenderingAndShowsNewestCachedState() {
+    func testHiddenRuntimeSkipsRenderingAndShowsNewestCachedDirectionAndState() {
         withIsolatedSettings { _ in
             let content = PopoverContentViewController()
             _ = content.view
             content.setPresentationActive(true)
-            content.update(snapshot: PowerSnapshot(estimatedRuntimeMinutes: 265),
+            content.update(snapshot: PowerSnapshot(batteryTimeEstimate: .remaining(265)),
                            history: [], peak: 0, degraded: false)
             XCTAssertEqual(content.runtimePresentationForTest, "Estimated Battery Runtime · 4h 25m")
             Settings.setModule(.runtime, visible: false)
             let before = content.moduleUpdateCountsForTest[.runtime, default: 0]
 
-            content.update(snapshot: PowerSnapshot(estimatedRuntimeMinutes: 35),
-                           history: [], peak: 0, degraded: true)
+            content.update(snapshot: PowerSnapshot(plugged: true, batteryW: 12,
+                                                   batteryTimeEstimate: .charging(42)),
+                           history: [], peak: 0, degraded: false)
             XCTAssertEqual(content.moduleUpdateCountsForTest[.runtime, default: 0], before)
             XCTAssertEqual(content.runtimePresentationForTest, "Estimated Battery Runtime · 4h 25m")
 
             Settings.setModule(.runtime, visible: true)
             XCTAssertEqual(content.moduleUpdateCountsForTest[.runtime, default: 0], before + 1)
-            XCTAssertEqual(content.runtimePresentationForTest, "Estimated Battery Runtime · Unavailable")
+            XCTAssertEqual(content.runtimePresentationForTest, "Estimated Time to Full · 42m")
             Settings.setModule(.runtime, visible: false)
-            content.update(snapshot: PowerSnapshot(estimatedRuntimeMinutes: 35),
+            content.update(snapshot: PowerSnapshot(percent: 100, plugged: true, batteryTimeEstimate: .full),
                            history: [], peak: 0, degraded: false)
             Settings.setModule(.runtime, visible: true)
+            XCTAssertEqual(content.runtimePresentationForTest, "Estimated Time to Full · Fully Charged")
+            Settings.setModule(.runtime, visible: false)
+            content.update(snapshot: PowerSnapshot(batteryTimeEstimate: .remaining(35)),
+                           history: [], peak: 0, degraded: true)
+            Settings.setModule(.runtime, visible: true)
+            XCTAssertEqual(content.runtimePresentationForTest, "Estimated Battery Runtime · Unavailable")
+            content.update(snapshot: PowerSnapshot(batteryTimeEstimate: .remaining(35)),
+                           history: [], peak: 0, degraded: false)
             XCTAssertEqual(content.runtimePresentationForTest, "Estimated Battery Runtime · 35m")
         }
     }
