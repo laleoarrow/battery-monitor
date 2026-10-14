@@ -4,7 +4,7 @@ Battery Time Estimate is an independently selectable section below Power History
 
 ## Installed app: Standard Glass
 
-The image below is a composited screen-region capture of the installed local 4.3.2 build, taken on 2026-10-15 from [`eca5869`](https://github.com/laleoarrow/battery-monitor/commit/eca5869). It preserves the native Standard Glass backdrop and power-mode controls. The Mac was connected to external power with its battery full, so the new section shows **Estimated Time to Full / Fully Charged**. This is an actual running-app capture, not a generated mockup; the displayed power readings are live.
+The image below is a composited screen-region capture of the installed local 4.3.2 build, taken on 2026-10-15 from [`175a38a`](https://github.com/laleoarrow/battery-monitor/commit/175a38a1bf0e906f8f0b1910f8cd7a1ceafe17ac). It preserves the native Standard Glass backdrop and power-mode controls. The Mac was connected to external power with its battery full, so the new section shows **Estimated Time to Full / Fully Charged**. The persistent right-click instruction has been removed from the footer, while right-click switching remains available. This is an actual running-app capture, not a generated mockup; the displayed power readings are live.
 
 <a href="installed-standard-dark-screen.png"><img src="installed-standard-dark-screen.png" alt="Installed Wattson 4.3.2 in Standard Glass, Dark appearance: Estimated Time to Full / Fully Charged and native glass power-mode controls" width="360"></a>
 
