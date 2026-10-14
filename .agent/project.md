@@ -106,7 +106,8 @@ states use smaller secondary text. Disabling it removes its entire height. The r
 glass backing owns the solid accessibility fallback; the
 foreground stays transparent in an actual glass host and refreshes on reparenting.
 See the [selected runtime layout review](../design/feedback-runtime/runtime-layout/README.md)
-for theme and layout evidence and the current composited-capture limitation.
+for theme and layout evidence, and the [4.3.2 release gallery](../design/releases/v4.3.2/README.md)
+for the installed Standard Glass composited capture.
 
 General includes a Send Feedback group below Appearance. Report saves a
 reviewable text attachment and opens an official GitHub Issue draft. Collection

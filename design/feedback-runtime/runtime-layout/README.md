@@ -82,3 +82,9 @@ Standard/Clear Glass evidence; the images above verify Classic content layout.
 
 The canonical installation was unchanged during these captures. The later
 [4.3.2 local trial](../local-4.3.2/README.md) records packaging and installation.
+
+The subsequent [4.3.2 release gallery](../../releases/v4.3.2/README.md) includes
+a real composited screen-region capture of the installed Standard Glass popup,
+confirming the final runtime layout and retained native footer capsules. This
+resolves the static Glass evidence gap above; the fixture images remain labeled
+separately and are not presented as live battery measurements.
