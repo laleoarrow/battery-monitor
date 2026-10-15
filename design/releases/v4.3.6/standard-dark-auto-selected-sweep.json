@@ -1,0 +1,873 @@
+{
+  "schema": 1,
+  "file": "standard-dark-auto-selected-sweep.png",
+  "SHA256": "a4bbdd2741d8497418f94af1f3b1773120e019314218a593c2757ad780031e56",
+  "case": "standard-dark",
+  "target": "auto-selected",
+  "frameCount": 37,
+  "pixelDimensions": [
+    344,
+    94
+  ],
+  "loopCount": 0,
+  "sourceManifestSHA256": "7ae0c8a80f02d856f059b22a92236382fda8e65629562c5a527778a309233130",
+  "endTimestampSeconds": 5354.350162583334,
+  "cursorDrawnInPixels": false,
+  "encoding": "Original PNG IDAT streams in APNG; recorded frame intervals; no pixel processing",
+  "encodingScriptSHA256": "63511506ac9046c2a684e95fa8bfade503bc6992eaa6dfc66e573c2afa245d7b",
+  "decoder": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers",
+  "decodedFramesRGBAIdentical": true,
+  "frames": [
+    {
+      "file": "frame-0000.png",
+      "sourcePNG_SHA256": "8c4b3ec8d2282489f5e37d87436b7656a58e87729a18f7255a71392f1579f465",
+      "timestampSeconds": 5352.745397208335,
+      "durationSeconds": 0.0483305,
+      "APNGDelayFraction": [
+        3099,
+        64121
+      ],
+      "timingErrorSeconds": 1.481573899346548e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1505.4000244140625,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "fe8ab2f2f67c7c45290f1b8d1543d4392bc23da66f400b95a9e82244b726b478"
+    },
+    {
+      "file": "frame-0001.png",
+      "sourcePNG_SHA256": "1b6ea83baff3dd2fce7128c3552b0ab93ceaa6d3624f5bbf35f750f78f91cca4",
+      "timestampSeconds": 5352.793727708335,
+      "durationSeconds": 0.047841291666,
+      "APNGDelayFraction": [
+        3106,
+        64923
+      ],
+      "timingErrorSeconds": -2.7545202470619043e-09,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1507.4888916015625,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "c9731c36b692c9fac6d49d2232cf058262d20439bf6b015ad448104742117f95"
+    },
+    {
+      "file": "frame-0002.png",
+      "sourcePNG_SHA256": "745d28206343cd6ca0930390e7a2c2af688926254fdf5749323285d6545ab262",
+      "timestampSeconds": 5352.841569000001,
+      "durationSeconds": 0.039668083334,
+      "APNGDelayFraction": [
+        196,
+        4941
+      ],
+      "timingErrorSeconds": 4.993037846589759e-11,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1509.5777587890625,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "2749c1ae96be73e2b9befecc27bf5e5311d2f9581724fa2b60c5cff71649c1ae"
+    },
+    {
+      "file": "frame-0003.png",
+      "sourcePNG_SHA256": "4ac1388abcf097005f39b3e313548e3d72eb82445389da854fe1460b3983a0ef",
+      "timestampSeconds": 5352.881237083335,
+      "durationSeconds": 0.043924541666,
+      "APNGDelayFraction": [
+        475,
+        10814
+      ],
+      "timingErrorSeconds": 5.940332901793971e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1511.6666259765625,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "afa8b3bd9295e95b9a09889c3a10d0a0811ce015254f73e943edeaf717f1e1d0"
+    },
+    {
+      "file": "frame-0004.png",
+      "sourcePNG_SHA256": "55ea2c93d2924db2e87a59d70ed74dfb2714874d40b9fc1d050ce3e4b9b35b7c",
+      "timestampSeconds": 5352.925161625001,
+      "durationSeconds": 0.059128333334,
+      "APNGDelayFraction": [
+        2887,
+        48826
+      ],
+      "timingErrorSeconds": -6.89363044279687e-11,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1513.755615234375,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "a4b8d23164aed6f31c2c37a5b29073feed8e4e89097644b32eb6eb3c411afd73"
+    },
+    {
+      "file": "frame-0005.png",
+      "sourcePNG_SHA256": "98a35e226736a719de2dbc7b4ce3fd21374bf223192e571d09a5c20e2f082628",
+      "timestampSeconds": 5352.984289958335,
+      "durationSeconds": 0.045722083333,
+      "APNGDelayFraction": [
+        2781,
+        60824
+      ],
+      "timingErrorSeconds": 5.513626200184138e-11,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1515.844482421875,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "f8d3a92839bc485cc15a3116255d1dd398d8f1882292d70dab21571ce83f0562"
+    },
+    {
+      "file": "frame-0006.png",
+      "sourcePNG_SHA256": "95a10511b1084e726809d1d684e7704e4328c92beaabff7421eb957e0b0fe2ef",
+      "timestampSeconds": 5353.030012041668,
+      "durationSeconds": 0.0440735,
+      "APNGDelayFraction": [
+        1336,
+        30313
+      ],
+      "timingErrorSeconds": -1.8144030613928018e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1517.933349609375,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "f329308cd8f4f47110735a86d08ff1b89a869f8f6863d19d3fa2064893a777f1"
+    },
+    {
+      "file": "frame-0007.png",
+      "sourcePNG_SHA256": "09d692472c1bcc029729363e933ea572fb229d447ccaeb494aeb29b30a216c56",
+      "timestampSeconds": 5353.074085541668,
+      "durationSeconds": 0.049770041666,
+      "APNGDelayFraction": [
+        3214,
+        64577
+      ],
+      "timingErrorSeconds": 2.9940563977886864e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1520.022216796875,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "cc53d7ae610f452974c895a23781bbddcfc6516d51b551b7e266be0480cbce40"
+    },
+    {
+      "file": "frame-0008.png",
+      "sourcePNG_SHA256": "d5ef02632f72dc30f31a5904a922543ed50e788259f3c1f48799f81f0e6bc911",
+      "timestampSeconds": 5353.123855583334,
+      "durationSeconds": 0.049629666667,
+      "APNGDelayFraction": [
+        985,
+        19847
+      ],
+      "timingErrorSeconds": 2.8518420920038294e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1522.111083984375,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "5c8aee3b5783de84918a8b2776a34422cb8944ec6cfea300b63568c8535b629a"
+    },
+    {
+      "file": "frame-0009.png",
+      "sourcePNG_SHA256": "d6b96c3f4dacfa0ca322fe5707983779557f6c576b6664654ab96dd43e75b661",
+      "timestampSeconds": 5353.173485250001,
+      "durationSeconds": 0.040158958334,
+      "APNGDelayFraction": [
+        2011,
+        50076
+      ],
+      "timingErrorSeconds": 4.9257448678009426e-11,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1524.199951171875,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "5807dd66f512aa56e76d065c0c38ac4eceb24389d61698fdd883352938555ba8"
+    },
+    {
+      "file": "frame-0010.png",
+      "sourcePNG_SHA256": "4cc8ea16715f10b7e37473e1d77d24ec21287c6b1ff81c86230739e846e43dcf",
+      "timestampSeconds": 5353.213644208335,
+      "durationSeconds": 0.043578958333,
+      "APNGDelayFraction": [
+        2559,
+        58721
+      ],
+      "timingErrorSeconds": -2.0898985030908875e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1526.2889404296875,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "d44b39af59b7d8c48d988ab16c3359b172e4e65d661867c05fe45af1d244b27a"
+    },
+    {
+      "file": "frame-0011.png",
+      "sourcePNG_SHA256": "875585af98a475950682ce9d08104d6f010bff219c07dbbf4bd13d7a26e551eb",
+      "timestampSeconds": 5353.257223166668,
+      "durationSeconds": 0.041247791666,
+      "APNGDelayFraction": [
+        677,
+        16413
+      ],
+      "timingErrorSeconds": -2.8112215926399807e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1528.3778076171875,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "61523c01933f2d843dd73b7680a525b8118dfb0e7faa199fa5f7f43713a7625e"
+    },
+    {
+      "file": "frame-0012.png",
+      "sourcePNG_SHA256": "ea73c62008164c54ed19ea2711cc5c924858486a917d2aa89cd73c533cf1d69a",
+      "timestampSeconds": 5353.298470958334,
+      "durationSeconds": 0.044394875,
+      "APNGDelayFraction": [
+        1632,
+        36761
+      ],
+      "timingErrorSeconds": 3.4003427545496586e-12,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1530.4666748046875,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "25948f399a0afaf88b7aaf4bc4b38056613fd90e661e1e2ce81db8e00b4ec9be"
+    },
+    {
+      "file": "frame-0013.png",
+      "sourcePNG_SHA256": "52b4cf2f2bb74a127afdd0c0b2c6e5907ef832a82524fc758aeb1a230bf8dd2d",
+      "timestampSeconds": 5353.342865833334,
+      "durationSeconds": 0.037650416667,
+      "APNGDelayFraction": [
+        2137,
+        56759
+      ],
+      "timingErrorSeconds": 7.007646364453215e-12,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1532.5555419921875,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "987c587a976d41b54fabf1064c0ae35c8c8889cc75f944e6751af7e33c7b759d"
+    },
+    {
+      "file": "frame-0014.png",
+      "sourcePNG_SHA256": "b8b733a3493b0d51324467201a2b2920e181a5926a242b73558d531eb9125848",
+      "timestampSeconds": 5353.380516250001,
+      "durationSeconds": 0.043837916666,
+      "APNGDelayFraction": [
+        2141,
+        48839
+      ],
+      "timingErrorSeconds": -2.4674489649665227e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1534.6444091796875,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "fddb40cc1b96c02b7eb89f1ab75c6a35053d6b455e73eb92096155c2305fd3fc"
+    },
+    {
+      "file": "frame-0015.png",
+      "sourcePNG_SHA256": "e86583f37d30184782aa0b8b20514bcfeef8091a291a1644956c4fa00c489366",
+      "timestampSeconds": 5353.424354166667,
+      "durationSeconds": 0.039608833334,
+      "APNGDelayFraction": [
+        1851,
+        46732
+      ],
+      "timingErrorSeconds": 1.3599075579902422e-11,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1536.7332763671875,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "5e787108a662549dbbd7ed8fd1a0970b560cc2b800857c904c81ac24db0e1cb3"
+    },
+    {
+      "file": "frame-0016.png",
+      "sourcePNG_SHA256": "5eb5e228d565331b6d78fd4acb4d198264d3806997b348eaa6291e670f0ba698",
+      "timestampSeconds": 5353.463963000001,
+      "durationSeconds": 0.051999375,
+      "APNGDelayFraction": [
+        2329,
+        44789
+      ],
+      "timingErrorSeconds": -1.5349751054946528e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1538.822265625,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "11db0fc519708718bd767b7799319d9ebd45a95105c4371187bde200af9f21af"
+    },
+    {
+      "file": "frame-0017.png",
+      "sourcePNG_SHA256": "4d273d82a9c8d181643f969efcd4f6afc449c43afc5ac52775b1286faaba2145",
+      "timestampSeconds": 5353.515962375001,
+      "durationSeconds": 0.0611414166665,
+      "APNGDelayFraction": [
+        2959,
+        48396
+      ],
+      "timingErrorSeconds": -2.049619803289528e-11,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1540.9111328125,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "36232c1d6cf15c7721aa658e631cd74bf9767f5f2f26ec861d99a47a87b16e3f"
+    },
+    {
+      "file": "frame-0018.png",
+      "sourcePNG_SHA256": "90c701119b942b30354ebfdced6734282c86a1b159a06fc601813590b023af77",
+      "timestampSeconds": 5353.5771037916675,
+      "durationSeconds": 0.0493475833335,
+      "APNGDelayFraction": [
+        2341,
+        47439
+      ],
+      "timingErrorSeconds": -1.2137495520563249e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1543,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "ac689f9e5bd9d2aa4d21b5725ed86c575677c59e57a64bf42f0abb05b610173a"
+    },
+    {
+      "file": "frame-0019.png",
+      "sourcePNG_SHA256": "ccc0147e539ced65b8b574b265c83d48c78b88cb4cf36be921acc3007f7c0326",
+      "timestampSeconds": 5353.626451375001,
+      "durationSeconds": 0.038031458334,
+      "APNGDelayFraction": [
+        2459,
+        64657
+      ],
+      "timingErrorSeconds": -2.322158466987333e-11,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1545.0888671875,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "b77d1c386caddd8cea2dc5afffa4ce48b411a13d3000491385f0249a156a5729"
+    },
+    {
+      "file": "frame-0020.png",
+      "sourcePNG_SHA256": "2c5fde62d67bc53b16ce7f4c4987b79aee3b214a72ccd61de6040fe652ed6b5d",
+      "timestampSeconds": 5353.664482833335,
+      "durationSeconds": 0.044994541666,
+      "APNGDelayFraction": [
+        1525,
+        33893
+      ],
+      "timingErrorSeconds": -2.0232437376449414e-11,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1547.177734375,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "16f8dbc3ded13db74690bad679d956c761618f90d202eaefa666884186503a9e"
+    },
+    {
+      "file": "frame-0021.png",
+      "sourcePNG_SHA256": "9383ca307730682dae0376461a32098b107f81505b562f277c27d2f2612208a8",
+      "timestampSeconds": 5353.709477375001,
+      "durationSeconds": 0.037239208333,
+      "APNGDelayFraction": [
+        1112,
+        29861
+      ],
+      "timingErrorSeconds": -1.0620206958909615e-12,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1549.2667236328125,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "8f10bd598992c1e7639592cb72ce8c9fc252077c925f05591d295389ffa69870"
+    },
+    {
+      "file": "frame-0022.png",
+      "sourcePNG_SHA256": "55e0708adfe9ada8e10a63eefe379311c1e99f46b07666c8baad0ec2d9e9a2e8",
+      "timestampSeconds": 5353.746716583334,
+      "durationSeconds": 0.045729750001,
+      "APNGDelayFraction": [
+        2636,
+        57643
+      ],
+      "timingErrorSeconds": 3.5897432472286315e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1551.3555908203125,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "cb43f9ba87df45a223bd6025deb6ebcf8ca282ab064ab78af1c8d5db3ceb8b19"
+    },
+    {
+      "file": "frame-0023.png",
+      "sourcePNG_SHA256": "875bc0842f51368e1e028c76ae4981eb98e332dc101e4b185c9f42fb109a574d",
+      "timestampSeconds": 5353.792446333335,
+      "durationSeconds": 0.037562833333,
+      "APNGDelayFraction": [
+        1233,
+        32825
+      ],
+      "timingErrorSeconds": -1.2660243716679362e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1553.4444580078125,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "8c561ced2fc7ccdd15ccbb36821f1ae5637bb32d0bf4ee0d326fc5e0a9f66fe6"
+    },
+    {
+      "file": "frame-0024.png",
+      "sourcePNG_SHA256": "4fe11e6ce48d69edd357c9caffa5c3f487b65d233f4c059657e9dfd4cda5fc56",
+      "timestampSeconds": 5353.830009166668,
+      "durationSeconds": 0.045254875,
+      "APNGDelayFraction": [
+        1432,
+        31643
+      ],
+      "timingErrorSeconds": -3.0417469898555763e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1555.5333251953125,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "ccb16a66d1a9196bed601d01ad8baea88a76046109fc4e3f34512dae653a5a17"
+    },
+    {
+      "file": "frame-0025.png",
+      "sourcePNG_SHA256": "7e910c3768f800caa53b68bd6f4de6c7b346208dee46566f42ee7a55b2d8b543",
+      "timestampSeconds": 5353.875264041668,
+      "durationSeconds": 0.038779333333,
+      "APNGDelayFraction": [
+        2525,
+        65112
+      ],
+      "timingErrorSeconds": 7.375246344759799e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1557.6221923828125,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "275b7e28008d0f4206ecbd62a984fc7d6bb95e7e09b85545f28b5b640f9ffc9f"
+    },
+    {
+      "file": "frame-0026.png",
+      "sourcePNG_SHA256": "d4098fab2b60529bbb660ba16d00a90ef4bd4020ab556fb0275be8415818cdb1",
+      "timestampSeconds": 5353.914043375001,
+      "durationSeconds": 0.043138375,
+      "APNGDelayFraction": [
+        2417,
+        56029
+      ],
+      "timingErrorSeconds": -2.297917150047297e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1559.7110595703125,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "df71e93861053d2f17a810043aaf1f59cf0fab07ee2d0240cbbb564d0a97c4ea"
+    },
+    {
+      "file": "frame-0027.png",
+      "sourcePNG_SHA256": "187e4a63bc1dbc30b5e1cbbc6e1fc25252719e537bc506797aa52e059d0e78ce",
+      "timestampSeconds": 5353.957181750001,
+      "durationSeconds": 0.0392245,
+      "APNGDelayFraction": [
+        2007,
+        51167
+      ],
+      "timingErrorSeconds": 1.6612269626907968e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1561.800048828125,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "f7e2ac5476653ca9e2cbf9ff96cf74459f9e786ab8c174f82368935658a59d66"
+    },
+    {
+      "file": "frame-0028.png",
+      "sourcePNG_SHA256": "ccb2f7819ea29af90a490780751960ace79ba405b62ca1d0e1f4facfa83850cd",
+      "timestampSeconds": 5353.996406250001,
+      "durationSeconds": 0.051053291667,
+      "APNGDelayFraction": [
+        3216,
+        62993
+      ],
+      "timingErrorSeconds": -3.142144365246932e-11,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1563.888916015625,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "c6524140897c1af9ce4fff860e1da3bbfe0b6fff9c35a65eb8377fe8ccb94fe9"
+    },
+    {
+      "file": "frame-0029.png",
+      "sourcePNG_SHA256": "1dce91b32bb2cd62c1e5d5625e413c9a72864f37e5909fa0b2d56f6130079616",
+      "timestampSeconds": 5354.047459541668,
+      "durationSeconds": 0.046072666666,
+      "APNGDelayFraction": [
+        1528,
+        33165
+      ],
+      "timingErrorSeconds": 3.0218935624905776e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1565.977783203125,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "631c7a5e8cf4baadfecf09c017400971cae39afa50ba74ee6fb25bef2cbecef0"
+    },
+    {
+      "file": "frame-0030.png",
+      "sourcePNG_SHA256": "b9ffc3319a380f3cc9cad46c2d50c310823668591de8aa4510adb657cef3e1da",
+      "timestampSeconds": 5354.093532208334,
+      "durationSeconds": 0.038220666667,
+      "APNGDelayFraction": [
+        415,
+        10858
+      ],
+      "timingErrorSeconds": 1.2246398968502487e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1568.066650390625,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "a9ad04182e570b78283c1e8b260afa9abfa577a3506a16984d635e05ed9cd3b4"
+    },
+    {
+      "file": "frame-0031.png",
+      "sourcePNG_SHA256": "0ca87773572cf97baf48789b783cb6ecd9c9673dcd3a9e709d3774b77469df7f",
+      "timestampSeconds": 5354.131752875001,
+      "durationSeconds": 0.044085416667,
+      "APNGDelayFraction": [
+        2273,
+        51559
+      ],
+      "timingErrorSeconds": 4.0073449834170564e-11,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1570.155517578125,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "68bc76f4d8679d86adcf83a70e0fe0344c65add5c90342539f4968f82e399401"
+    },
+    {
+      "file": "frame-0032.png",
+      "sourcePNG_SHA256": "d859d5eee0e717f046f74b69661f4115b20b4cb0b4fd76070ed1a057d3d73a6a",
+      "timestampSeconds": 5354.175838291668,
+      "durationSeconds": 0.037311916667,
+      "APNGDelayFraction": [
+        2388,
+        64001
+      ],
+      "timingErrorSeconds": 3.3429685473664474e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1572.244384765625,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "47340145ddd25b4b93e9aa16c73fb50185bd6e186ec862c8697dfa1f590a2284"
+    },
+    {
+      "file": "frame-0033.png",
+      "sourcePNG_SHA256": "c4b81860e5fc491017a7a3e29f7ca6a00e64702e407b16c86b5991fbf04be98e",
+      "timestampSeconds": 5354.213150208335,
+      "durationSeconds": 0.046204749999,
+      "APNGDelayFraction": [
+        2360,
+        51077
+      ],
+      "timingErrorSeconds": -3.0735796934040764e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1574.3333740234375,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "c05a89278e44eee4eaa63f20192fd0e1369caf364f949d29385795d23e3f8bb8"
+    },
+    {
+      "file": "frame-0034.png",
+      "sourcePNG_SHA256": "cc159328b84aaca5b213ae4f96ccd593206d84ade42d4b79ad9630ac03a3d5fe",
+      "timestampSeconds": 5354.259354958334,
+      "durationSeconds": 0.038058750001,
+      "APNGDelayFraction": [
+        149,
+        3915
+      ],
+      "timingErrorSeconds": -1.5974240102171137e-09,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1576.4222412109375,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "19b7f55939dd25ab595d5cce86909d0f3b8fdccd7c4b3f5d6601bb4902c7e7fd"
+    },
+    {
+      "file": "frame-0035.png",
+      "sourcePNG_SHA256": "627053f1857169fa782826b289aff5eb3ec63f0a1a384131cc63f1d199b9f11e",
+      "timestampSeconds": 5354.297413708335,
+      "durationSeconds": 0.043673208333,
+      "APNGDelayFraction": [
+        750,
+        17173
+      ],
+      "timingErrorSeconds": -3.902992488208234e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1578.5111083984375,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "454b8e24569032c14e20b889c78684cd4fe86fae2f5b3f3785a43c846a415f35"
+    },
+    {
+      "file": "frame-0036.png",
+      "sourcePNG_SHA256": "c30272feccf9f6e1fbbec831f9ad2238cee3552f6a7354e0182a7f98b5789d63",
+      "timestampSeconds": 5354.341086916668,
+      "durationSeconds": 0.009075666666,
+      "APNGDelayFraction": [
+        590,
+        65009
+      ],
+      "timingErrorSeconds": -2.1981562552877293e-10,
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "actualCGPointer": [
+        1580.5999755859375,
+        810
+      ],
+      "pointerOverrideNil": true,
+      "decodedRGBA_SHA256": "0a8b6c08f562b660d3036f1404fdfc2fadf516818fa76f2a1c86540ce7daa364"
+    }
+  ]
+}
