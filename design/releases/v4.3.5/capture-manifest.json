@@ -103,28 +103,25 @@
     "Popover/PowerFlowLayer.swift": "ff71eaab3eb864b7e2eed08a76703b9aabef131d9c5ea24240383e3b6b5abcbc",
     "Popover/RingGaugeLayer.swift": "52b7e639170db8d2371498647d561ebeddea0cd7a6577c40323533bc26b3fcc8"
   },
-  "GUIHarnessSourceSHA256": {
-    "tests/interaction/main.swift": "ea6fcd971f3d3000ff0195d1a1a982b4edb90e58e8cf1bc735825c6d2e74bfec",
-    "tests/animation_stress/main.swift": "c2cc99548bce6a79d198952a3b944ece33acee9c318e6cb28e8fa6c4087316f6",
-    "tests/visual/capture_production_glass.swift": "868e080c79acdffcb3d4e3532d54825c5f30cd78db86349f905bc429df26a225",
-    "tests/visual/capture_glass_shadow.c": "1e89c8217ba63613ee4f44d9a55b419467a22fcf37813e38b0dc2e9f84575f04"
-  },
   "additionalDependencySHA256": {
     "main.swift": "e5bcccffa94e5cd777fc24a391548ebc123c232041c24391a07cbae852baad30",
-    "tests/visual/capture_glass_shadow.h": "0bc428429cf551d666249280f7d77fcbb0c7853187f01d67fb98aaf4a48f1f4c",
     "scripts/verify_interaction.sh": "60d08138a4aaa1dcd02331cf7a8dbacd8c2d013da18ef478e661b7b45953d1b4",
     "scripts/verify_animation_stress.sh": "21a421ae44f77df552ed27b53c6ca15843aac8160007886d478f34fd44bf2de0",
     "scripts/lib/local_cleanup.sh": "372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e",
     "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872"
   },
   "sourceComparison": {
+    "comparedWorkingTreeCommit": "65574a4693ba8a1e8e6881cbcd3a5c54c1572f2a",
     "allRecordedProductionSourceHashesMatch": true,
     "filesChecked": 50,
-    "allRecordedGUIHarnessHashesMatch": true,
-    "GUIHarnessFilesChecked": 4,
+    "allRecordedCaptureHarnessHashesMatch": true,
+    "captureHarnessFilesChecked": 3,
+    "animationStressHarnessHashMatches": true,
     "allRecordedDependencyHashesMatch": true,
-    "additionalDependenciesChecked": 6,
-    "comparedWorkingTreeCommit": "53ff31b2d7116d521b9acd9cfa825c69f6e88986"
+    "additionalDependenciesChecked": 5,
+    "interactionHarnessChangedSinceCapture": true,
+    "currentInteractionHarnessSHA256": "9586c265fb266323b1b81225d3c4e976e727d9a24dc25cc0ad8596175614bf61",
+    "uniqueUnchangedEvidenceFiles": 59
   },
   "environment": {
     "architecture": "arm64",
@@ -16589,7 +16586,7 @@
   "developmentCalibration": {
     "inputRegression": "Independent native-material/custom-shape comparison caught transparent blank-area input pass-through. Final production backing retains a 1/255 minimum opacity inside the shared outline; outer optical margin remains transparent.",
     "captureBoundary": "A visibleFrame-only fixture backdrop left the menu-bar strip empty and produced false Standard/Light edge bands. A full-screen owned backdrop removes that capture artifact without altering production geometry.",
-    "settledMenuFixture": "The first settings-circle padding click now waits for entrance animation completion, key-window readiness and full circle visibility. Original click assertions are retained; animation remains independently tested.",
+    "settledMenuFixture": "The padding-click fixture now requires a non-nil presentation layer whose transform and opacity equal the model layer, a key window and a fully visible settings circle within the existing one-second timeout, after layout/scroll/transaction flush. Original click assertions remain; entrance animation is independently tested.",
     "shortScreenForegroundFix": "A short-screen lower-scroll capture exposed foreground content outside the body. The final production panel uses a transparent rounded clipping wrapper; glass/backing remain its siblings and detaching the shared content does not change Classic's root clipping.",
     "earlier82e2b89VisualAcceptance": false,
     "earlier82e2b89CaptureFailure": {
@@ -16605,10 +16602,16 @@
       "imagesFromThatSourceUsedInFinalGallery": false
     },
     "earlierAttemptsCountedAsFinalPasses": false,
-    "earlierFailureRecordsRetainedPrivately": true
+    "earlierFailureRecordsRetainedPrivately": true,
+    "earlierCandidateReadiness": {
+      "run": 38737133171,
+      "artifactsProduced": false,
+      "failure": "Earlier readiness required zero attached entrance-animation metadata; both original padding-click assertions passed. The revised fixture checks displayed presentation geometry instead.",
+      "oldFailureCountedAsPass": false
+    }
   },
   "limitations": [
-    "VM macOS 26.6.1 does not establish macOS 27.0.1 behavior; Issue #20 remains open for Cody's confirmation.",
+    "VM macOS26.6.1 does not establish macOS27.0.1 behavior; Issues20 and23 await Cody confirmation.",
     "Static fixed render fixtures do not measure hardware power controls or battery-time accuracy.",
     "WindowServer hit queries use mouse-down rules but no real OS mouse events were injected. AppKit action-path tests are separate."
   ],
@@ -21465,8 +21468,29 @@
     }
   ],
   "separateVerification": {
-    "sourceCommit": "12a6614402f58aba052daf0738ad5db83615be1b",
-    "vmAppKit": {
+    "vmAnimationStress": {
+      "iterations": 20000,
+      "passed": true,
+      "logSHA256": "13a2b8b15c9249dbb69d8ec24be6d2525727a932b71b6de8b76eebd13becab5a",
+      "sourceCommit": "12a6614402f58aba052daf0738ad5db83615be1b",
+      "harnessByteIdenticalToCurrentCommit": true
+    },
+    "vmHeadless": "Not run: VM Command Line Tools lacks XCTest. Exact-final-source hosted CI provides headless coverage.",
+    "sourceEquivalence": {
+      "captureSourceCommit": "12a6614402f58aba052daf0738ad5db83615be1b",
+      "comparedCurrentCommit": "65574a4693ba8a1e8e6881cbcd3a5c54c1572f2a",
+      "productionFilesCompared": 50,
+      "captureHarnessFilesCompared": 3,
+      "animationStressHarnessFilesCompared": 1,
+      "additionalDependenciesCompared": 5,
+      "allListedSourceBytesIdentical": true,
+      "interactionHarnessByteIdenticalToCaptureSource": false,
+      "note": "Only actual capture program/bridge, production sources, stress harness and listed dependencies are asserted equivalent. Revised interaction fixture receives its own VM and hosted validation.",
+      "uniqueUnchangedEvidenceFiles": 59
+    },
+    "captureSourceCommit": "12a6614402f58aba052daf0738ad5db83615be1b",
+    "earlierVMAppKitAtCapture": {
+      "sourceCommit": "12a6614402f58aba052daf0738ad5db83615be1b",
       "configurations": [
         {
           "configuration": "native",
@@ -21505,15 +21529,84 @@
         }
       ],
       "assertionsPassed": 1686,
-      "allConfigurationsPassed": true
+      "allConfigurationsPassed": true,
+      "usedAsFinalInteractionProof": false
     },
-    "vmAnimationStress": {
-      "iterations": 20000,
-      "passed": true,
-      "logSHA256": "13a2b8b15c9249dbb69d8ec24be6d2525727a932b71b6de8b76eebd13becab5a"
+    "vmAppKit": {
+      "sourceCommit": "65574a4693ba8a1e8e6881cbcd3a5c54c1572f2a",
+      "sourceArchiveSHA256": "bffec0e6532f5444cbfe22d481bd6c55bfdab102e466733971c72a1e76ce7e8e",
+      "interactionHarnessSHA256": "9586c265fb266323b1b81225d3c4e976e727d9a24dc25cc0ad8596175614bf61",
+      "status": "passed",
+      "configurations": [
+        {
+          "configuration": "native",
+          "assertionsPassed": 339,
+          "exitCode": 0,
+          "displayedGeometryReadinessPassed": true,
+          "originalPaddingClickAssertionsPassed": 2,
+          "logSHA256": "5ecb6a351b006a7fa08949f93b46496aed3d07a30a9114f6ff8069e41b80b3a9"
+        },
+        {
+          "configuration": "legacy",
+          "assertionsPassed": 337,
+          "exitCode": 0,
+          "displayedGeometryReadinessPassed": true,
+          "originalPaddingClickAssertionsPassed": 2,
+          "logSHA256": "de99ee48d3f54188cb234a9ad29efe5762cc8d84518c08bcf0966367f90e34d0"
+        },
+        {
+          "configuration": "reduced-motion",
+          "assertionsPassed": 333,
+          "exitCode": 0,
+          "displayedGeometryReadinessPassed": true,
+          "originalPaddingClickAssertionsPassed": 2,
+          "logSHA256": "cb05ac5fcf6b923902290a58566348c8a6547d55170a8a0fd468c41b62756453"
+        },
+        {
+          "configuration": "reduced-transparency",
+          "assertionsPassed": 338,
+          "exitCode": 0,
+          "displayedGeometryReadinessPassed": true,
+          "originalPaddingClickAssertionsPassed": 2,
+          "logSHA256": "e94720e07a8d5b642c5daac233e233295d6af0d0c10dea7d7377c099929b7bf4"
+        },
+        {
+          "configuration": "increased-contrast",
+          "assertionsPassed": 339,
+          "exitCode": 0,
+          "displayedGeometryReadinessPassed": true,
+          "originalPaddingClickAssertionsPassed": 2,
+          "logSHA256": "9fcd66c1cb0d76d86f5ab6a957102513bea940cda589055180dcd7df5af2b29e"
+        }
+      ],
+      "assertionsPassed": 1686,
+      "allConfigurationsPassed": true,
+      "readiness": {
+        "presentationLayerMustExist": true,
+        "presentationOpacityAndTransformMustEqualModel": true,
+        "keyWindowAndFullSettingsCircleRequired": true,
+        "timeoutSeconds": 1,
+        "usesAttachedAnimationCountAsReadiness": false,
+        "originalPaddingClickAssertionsPassed": 10
+      },
+      "cleanupAudit": {
+        "checks": {
+          "ownedRunDirectoriesRemoved": true,
+          "ownedAppsRemoved": true,
+          "ownedTestContainersRemoved": true,
+          "ownedSettingsSuitesRemoved": true,
+          "ownedProcessesStopped": true,
+          "ownedAppRegistrationsRemoved": true,
+          "ownedMountsDetached": true
+        },
+        "residualsAbsent": true,
+        "delayedAuditSecondsAfterLastInteractionStage": 143,
+        "requiredQuietSeconds": 90,
+        "auditExitCode": 0,
+        "scope": "Revised655 interaction-fixture phases; capture and stress evidence remain from12a."
+      }
     },
-    "vmHeadless": "Not run: VM Command Line Tools lacks XCTest. Exact-final-source hosted CI provides headless coverage.",
-    "hostedHeadless": {
+    "earlierHostedHeadless": {
       "sourceCommit": "53ff31b2d7116d521b9acd9cfa825c69f6e88986",
       "pushRun": 38734411169,
       "pullRequestRun": 38734417195,
@@ -21524,18 +21617,18 @@
       "pushURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/38734411169",
       "pullRequestURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/38734417195"
     },
-    "sourceEquivalence": {
-      "captureSourceCommit": "12a6614402f58aba052daf0738ad5db83615be1b",
-      "headlessTestCommit": "53ff31b2d7116d521b9acd9cfa825c69f6e88986",
-      "productionFilesCompared": 50,
-      "GUIHarnessFilesCompared": 4,
-      "additionalDependenciesCompared": 6,
-      "allByteIdentical": true,
-      "onlyChangedPaths": [
-        "SwiftTests/GlassPopoverBackgroundTests.swift",
-        "SwiftTests/GlassPopoverPanelTests.swift"
-      ]
-    }
+    "hostedHeadless": {
+      "sourceCommit": "65574a4693ba8a1e8e6881cbcd3a5c54c1572f2a",
+      "pushRun": 38740051530,
+      "pullRequestRun": 38740131175,
+      "conclusion": "success",
+      "swiftTestsPassed": 437,
+      "pythonTestsRun": 560,
+      "pythonExpectedSkips": 4,
+      "pushURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/38740051530",
+      "pullRequestURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/38740131175"
+    },
+    "finalInteractionFailureOrRetryCount": 0
   },
   "cleanup": {
     "checks": {
@@ -21554,6 +21647,26 @@
     "auditExitCode": 0,
     "postFoundationFinalizer": "Exact owned UUID preference files synchronized and removed after capture child exit; delayed full audit found no residuals.",
     "ownedLatePreferenceFilesRemoved": 1,
-    "note": "The smoke finalizer removed one 42-byte late preference file; the remaining-stage finalizer found no late file. Neither the canonical host app nor production preferences were cleaned. The disposable clone is retained for exact-candidate package verification."
+    "note": "The smoke finalizer removed one 42-byte late preference file; the remaining-stage finalizer found no late file. Neither the canonical host app nor production preferences were cleaned. The disposable clone is retained for exact-candidate package verification.",
+    "scope": "The completed12a capture phase. Later interaction-fixture validation receives its own cleanup audit."
+  },
+  "captureHarnessSourceSHA256": {
+    "tests/visual/capture_production_glass.swift": "868e080c79acdffcb3d4e3532d54825c5f30cd78db86349f905bc429df26a225",
+    "tests/visual/capture_glass_shadow.c": "1e89c8217ba63613ee4f44d9a55b419467a22fcf37813e38b0dc2e9f84575f04",
+    "tests/visual/capture_glass_shadow.h": "0bc428429cf551d666249280f7d77fcbb0c7853187f01d67fb98aaf4a48f1f4c"
+  },
+  "animationStressHarnessSHA256": {
+    "tests/animation_stress/main.swift": "c2cc99548bce6a79d198952a3b944ece33acee9c318e6cb28e8fa6c4087316f6"
+  },
+  "historicalInteractionHarnessAtCapture": {
+    "sourceCommit": "12a6614402f58aba052daf0738ad5db83615be1b",
+    "SHA256": "ea6fcd971f3d3000ff0195d1a1a982b4edb90e58e8cf1bc735825c6d2e74bfec",
+    "usedAsFinalInteractionProof": false
+  },
+  "placement": {
+    "arrowTipYFormulaAppKitPoints": "min(anchorButtonFrame.minY, screen.visibleFrame.maxY) - 4",
+    "normalApproximateGapBelowMenuBarEdgePoints": 4,
+    "recordedCapturesMatchingFormula": 34,
+    "reference": "Status button screen frame and screen visible-frame limit, in logical AppKit points. No fixed image-pixel gap to the icon artwork is asserted."
   }
 }
