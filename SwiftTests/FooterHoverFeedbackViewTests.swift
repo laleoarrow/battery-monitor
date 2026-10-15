@@ -64,6 +64,12 @@ final class FooterHoverFeedbackViewTests: XCTestCase {
         feedback.mouseEntered(with: try event())
     }
 
+    private func assertNoReflectionAnimations(file: StaticString = #filePath, line: UInt = #line) {
+        for item in [feedback.glowForTest, feedback.reflectionForTest, feedback.rimReflectionForTest] {
+            XCTAssertNil(item.animationKeys(), file: file, line: line)
+        }
+    }
+
     func testOverlayLeavesClickKeyboardAndAccessibilityWithOriginalControl() throws {
         let button = NSButton(title: "Auto", target: nil, action: nil)
         button.frame = NSRect(x: 0, y: 20, width: 90, height: 38)
@@ -121,6 +127,90 @@ final class FooterHoverFeedbackViewTests: XCTestCase {
         XCTAssertNil(feedback.hoveredIndexForTest)
         XCTAssertEqual(feedback.glowForTest.opacity, 0)
         XCTAssertTrue(feedback.trackingAreas[0] === area)
+    }
+
+    func testReflectionFollowsPointerWithinSameButtonWithoutChangingItsControl() throws {
+        let selectedButton = NSButton(title: "Auto", target: nil, action: #selector(NSResponder.cancelOperation(_:)))
+        selectedButton.setButtonType(.pushOnPushOff)
+        selectedButton.state = .on
+        selectedButton.frame = regions[0].rect
+        content.addSubview(selectedButton, positioned: .below, relativeTo: feedback)
+        let responder = window.firstResponder
+        let area = feedback.trackingAreas[0]
+        try hover(NSPoint(x: 20, y: 39))
+        let first = feedback.reflectionForTest.startPoint
+        let initialMask = feedback.reflectionForTest.mask?.bounds
+        XCTAssertFalse(feedback.reflectionForTest.isHidden)
+        try hover(NSPoint(x: 70, y: 39))
+        XCTAssertEqual(feedback.hoveredIndexForTest, 0)
+        XCTAssertGreaterThan(feedback.reflectionForTest.startPoint.x, first.x)
+        XCTAssertEqual(feedback.reflectionForTest.startPoint.x, 70 / 90, accuracy: 0.001)
+        XCTAssertEqual(feedback.rimReflectionForTest.startPoint, feedback.reflectionForTest.startPoint)
+        XCTAssertEqual((feedback.reflectionForTest.animation(forKey: "startPoint") as? CABasicAnimation)?.duration, 0.08)
+        XCTAssertEqual(feedback.reflectionForTest.mask?.bounds, initialMask)
+        XCTAssertEqual(feedback.regionsForTest, regions)
+        XCTAssertTrue(feedback.trackingAreas[0] === area)
+        XCTAssertEqual(selectedButton.state, .on)
+        XCTAssertEqual(selectedButton.action, #selector(NSResponder.cancelOperation(_:)))
+        XCTAssertTrue(content.hitTest(NSPoint(x: 70, y: 39)) === selectedButton)
+        XCTAssertTrue(window.firstResponder === responder)
+    }
+
+    func testReflectionCenterStaysInsideTheButtonAndDoesNotSweepAcrossButtons() throws {
+        try hover(NSPoint(x: 1, y: 39))
+        XCTAssertEqual(feedback.reflectionForTest.startPoint.x, 0.08, accuracy: 0.001)
+        try hover(NSPoint(x: 89, y: 39))
+        XCTAssertEqual(feedback.reflectionForTest.startPoint.x, 0.92, accuracy: 0.001)
+        try hover(NSPoint(x: 141, y: 21))
+        XCTAssertEqual(feedback.hoveredIndexForTest, 1)
+        XCTAssertEqual(feedback.reflectionForTest.startPoint.y, 0.08, accuracy: 0.001)
+        XCTAssertNil(feedback.reflectionForTest.animationKeys(), "A new button must not inherit the old reflection's travel")
+        try hover(NSPoint(x: 141, y: 57))
+        XCTAssertEqual(feedback.reflectionForTest.startPoint.y, 0.92, accuracy: 0.001)
+        XCTAssertEqual(feedback.reflectionForTest.frame, regions[1].rect)
+    }
+
+    func testAccessibilityUsesStaticFeedbackAtEveryPointerPosition() throws {
+        for key in environmentKeys {
+            for resetKey in environmentKeys { setenv(resetKey, "0", 1) }
+            setenv(key, "1", 1)
+            NSWorkspace.shared.notificationCenter.post(name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+                                                       object: nil)
+            try hover(NSPoint(x: 20, y: 39))
+            let center = feedback.reflectionForTest.startPoint
+            try hover(NSPoint(x: 70, y: 39))
+            XCTAssertEqual(feedback.hoveredIndexForTest, 0)
+            XCTAssertEqual(feedback.glowForTest.opacity, 1)
+            XCTAssertEqual(feedback.glowForTest.shadowOpacity, 0)
+            XCTAssertTrue(feedback.reflectionForTest.isHidden)
+            XCTAssertTrue(feedback.rimReflectionForTest.isHidden)
+            XCTAssertEqual(feedback.reflectionForTest.startPoint, center)
+            assertNoReflectionAnimations()
+        }
+    }
+
+    func testCancellationRemovesReflectionInterpolationAsWellAsHoverFade() throws {
+        try hover(NSPoint(x: 20, y: 39))
+        try hover(NSPoint(x: 70, y: 39))
+        XCTAssertNotNil(feedback.reflectionForTest.animation(forKey: "startPoint"))
+        feedback.setPresentationActive(false)
+        assertNoReflectionAnimations()
+        XCTAssertEqual(feedback.glowForTest.opacity, 0)
+        feedback.setPresentationActive(true)
+        try hover(NSPoint(x: 20, y: 39))
+        try hover(NSPoint(x: 70, y: 39))
+        NotificationCenter.default.post(name: NSWindow.didResignKeyNotification, object: window)
+        assertNoReflectionAnimations()
+        try hover(NSPoint(x: 20, y: 39))
+        try hover(NSPoint(x: 70, y: 39))
+        feedback.isHidden = true
+        assertNoReflectionAnimations()
+        feedback.isHidden = false
+        try hover(NSPoint(x: 20, y: 39))
+        try hover(NSPoint(x: 70, y: 39))
+        let nextAppearance: NSAppearance.Name = PopoverStyle.isDark(feedback.effectiveAppearance) ? .aqua : .darkAqua
+        feedback.appearance = NSAppearance(named: nextAppearance)
+        assertNoReflectionAnimations()
     }
 
     func testHiddenDetachedInactiveAndThemeChangesClearImmediately() throws {

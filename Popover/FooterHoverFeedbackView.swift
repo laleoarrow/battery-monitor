@@ -12,6 +12,10 @@ final class FooterHoverFeedbackView: NSView {
     private var hoveredIndex: Int?
     private var presentationActive = true
     private let glow = CAShapeLayer()
+    private let reflection = CAGradientLayer()
+    private let rimReflection = CAGradientLayer()
+    private let reflectionMask = CAShapeLayer()
+    private let rimMask = CAShapeLayer()
 
     override var isFlipped: Bool { true }
     override var acceptsFirstResponder: Bool { false }
@@ -24,6 +28,17 @@ final class FooterHoverFeedbackView: NSView {
         setAccessibilityChildren([])
         glow.opacity = 0
         layer?.addSublayer(glow)
+        for gradient in [reflection, rimReflection] {
+            gradient.type = .radial
+            gradient.locations = [0, 0.4, 1]
+            glow.addSublayer(gradient)
+        }
+        reflectionMask.fillColor = NSColor.black.cgColor
+        reflection.mask = reflectionMask
+        rimMask.fillColor = NSColor.clear.cgColor
+        rimMask.strokeColor = NSColor.black.cgColor
+        rimMask.lineWidth = 1
+        rimReflection.mask = rimMask
         addTrackingArea(NSTrackingArea(rect: .zero,
             options: [.mouseEnteredAndExited, .mouseMoved, .activeAlways, .inVisibleRect],
             owner: self, userInfo: nil))
@@ -75,13 +90,51 @@ final class FooterHoverFeedbackView: NSView {
         let index = regions.indices.first { index in
             regions[index].enabled && !regions[index].rect.isEmpty && path(for: regions[index]).contains(point)
         }
-        guard index != hoveredIndex else { return }
+        let changedRegion = index != hoveredIndex
         hoveredIndex = index
-        guard let index else { setVisible(false); return }
-        PopoverStyle.setWithoutAnimation {
-            self.glow.path = self.path(for: self.regions[index])
+        guard let index else {
+            if changedRegion { setVisible(false) }
+            return
         }
-        setVisible(true)
+        if changedRegion {
+            PopoverStyle.setWithoutAnimation {
+                self.glow.path = self.path(for: self.regions[index])
+                for (gradient, mask) in [(self.reflection, self.reflectionMask), (self.rimReflection, self.rimMask)] {
+                    gradient.frame = self.regions[index].rect
+                    mask.frame = gradient.bounds
+                    mask.path = self.path(for: Region(rect: gradient.bounds, enabled: true))
+                }
+            }
+        }
+        updateReflection(at: point, in: regions[index].rect, animated: !changedRegion)
+        if changedRegion { setVisible(true) }
+    }
+
+    private var usesStaticFeedback: Bool {
+        reducesMotion || reducesTransparency || PopoverStyle.isHighContrast(effectiveAppearance)
+    }
+
+    private func updateReflection(at point: NSPoint, in rect: NSRect, animated: Bool) {
+        let center = CGPoint(x: min(0.92, max(0.08, (point.x - rect.minX) / rect.width)),
+                             y: min(0.92, max(0.08, (point.y - rect.minY) / rect.height)))
+        for gradient in [reflection, rimReflection] {
+            gradient.isHidden = usesStaticFeedback
+            if usesStaticFeedback { gradient.removeAllAnimations(); continue }
+            let end = CGPoint(x: center.x + 0.65, y: center.y + 0.9)
+            for (key, target) in [("startPoint", center), ("endPoint", end)] {
+                let start = (gradient.presentation() ?? gradient).value(forKey: key) as? NSValue
+                gradient.removeAnimation(forKey: key)
+                PopoverStyle.setWithoutAnimation { gradient.setValue(NSValue(point: target), forKey: key) }
+                if animated, start?.pointValue != target {
+                    let animation = CABasicAnimation(keyPath: key)
+                    animation.fromValue = start
+                    animation.toValue = NSValue(point: target)
+                    animation.duration = 0.08
+                    animation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                    gradient.add(animation, forKey: key)
+                }
+            }
+        }
     }
 
     private func path(for region: Region) -> CGPath {
@@ -92,7 +145,7 @@ final class FooterHoverFeedbackView: NSView {
 
     @objc func cancelHover() {
         hoveredIndex = nil
-        glow.removeAllAnimations()
+        for item in [glow, reflection, rimReflection, reflectionMask, rimMask] { item.removeAllAnimations() }
         PopoverStyle.setWithoutAnimation { self.glow.opacity = 0 }
     }
 
@@ -101,7 +154,7 @@ final class FooterHoverFeedbackView: NSView {
         let start = glow.presentation()?.opacity ?? glow.opacity
         glow.removeAnimation(forKey: "hover")
         PopoverStyle.setWithoutAnimation { self.glow.opacity = target }
-        guard !reducesMotion, !reducesTransparency, start != target else { return }
+        guard !usesStaticFeedback, start != target else { return }
         let animation = CABasicAnimation(keyPath: "opacity")
         animation.fromValue = start
         animation.toValue = target
@@ -133,9 +186,21 @@ final class FooterHoverFeedbackView: NSView {
             self.glow.strokeColor = neutral.withAlphaComponent(contrast ? 0.6 : (dark ? 0.12 : 0.10)).cgColor
             self.glow.lineWidth = contrast ? 1 : 0.6
             self.glow.shadowColor = neutral.cgColor
-            self.glow.shadowOpacity = contrast || self.reducesTransparency ? 0 : (dark ? 0.18 : 0.12)
+            self.glow.shadowOpacity = self.usesStaticFeedback ? 0 : (dark ? 0.18 : 0.12)
             self.glow.shadowRadius = 3
             self.glow.shadowOffset = .zero
+            self.reflection.colors = [
+                NSColor.white.withAlphaComponent(dark ? 0.065 : 0.045).cgColor,
+                NSColor.white.withAlphaComponent(dark ? 0.018 : 0.012).cgColor,
+                NSColor.white.withAlphaComponent(0).cgColor,
+            ]
+            self.rimReflection.colors = [
+                NSColor.white.withAlphaComponent(dark ? 0.24 : 0.16).cgColor,
+                NSColor.white.withAlphaComponent(dark ? 0.07 : 0.04).cgColor,
+                NSColor.white.withAlphaComponent(0).cgColor,
+            ]
+            self.reflection.isHidden = self.usesStaticFeedback
+            self.rimReflection.isHidden = self.usesStaticFeedback
         }
     }
 
@@ -184,5 +249,8 @@ final class FooterHoverFeedbackView: NSView {
     var regionsForTest: [Region] { regions }
     var hoveredIndexForTest: Int? { hoveredIndex }
     var glowForTest: CAShapeLayer { glow }
+    var reflectionForTest: CAGradientLayer { reflection }
+    var rimReflectionForTest: CAGradientLayer { rimReflection }
+    var presentationReflectionCenterForTest: CGPoint { reflection.presentation()?.startPoint ?? reflection.startPoint }
 #endif
 }

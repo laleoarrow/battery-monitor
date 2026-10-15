@@ -105,9 +105,12 @@ overlay follows the SwiftUI glass, native glass and Classic control geometry;
 it does not change their materials, actions, focus or accessibility nodes.
 Disabled modes, gaps and rounded outside corners do not glow. Hover follows
 the existing presentation lifecycle, including Classic's non-key first open.
-Fades respect Reduce Motion; dismissal, hiding, losing key status, changing
-appearance or detaching clears feedback immediately. The settings-window
-buttons and system-battery checkbox retain their existing presentation.
+Soft surface and rim reflections follow the current pointer within each
+capsule, including the selected glass control. Reduce Motion, Reduce
+Transparency and Increase Contrast use static feedback. Dismissal, hiding,
+losing key status, changing appearance or detaching clears feedback and its
+animations immediately. The settings-window buttons and system-battery
+checkbox retain their existing presentation.
 
 Global mouse-down delivery can repeat a press already routed to the Classic
 popup. Dismissal ignores the current content window's identity, or its positive
