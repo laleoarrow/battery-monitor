@@ -88,7 +88,10 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
         try await Task.sleep(nanoseconds: 600_000_000)
         guard let anchorWindow = anchor.window, anchorWindow.isVisible,
               let screen = anchorWindow.screen else { throw failure("Native status-item window unavailable") }
-        let background = NSWindow(contentRect: screen.visibleFrame, styleMask: .borderless,
+        // Own-window compositing needs an underlay behind the top optical
+        // margin too. A visibleFrame-only backdrop leaves the menu-bar strip
+        // empty and introduces false Regular-glass refraction bands.
+        let background = NSWindow(contentRect: screen.frame, styleMask: .borderless,
                                   backing: .buffered, defer: false)
         background.isReleasedWhenClosed = false
         background.isRestorable = false

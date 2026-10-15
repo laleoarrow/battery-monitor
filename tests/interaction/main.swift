@@ -1823,7 +1823,19 @@ if #available(macOS 26.0, *) {
             owner.onShowMenu = { anchor in
                 if anchor.window === owner.window { menuRequests += 1 }
             }
+            // This fixture targets the circle's settled padding in model
+            // coordinates; entrance motion is verified independently above.
+            let menuGeometryReady = runApplication(until: {
+                panel.entranceAnimationCountForTest == 0 && owner.window?.isKeyWindow == true
+            }, timeout: 1)
+            root.layoutSubtreeIfNeeded()
             owner.scrollToVisible(owner.bounds)
+            let menuCircle = NSRect(x: owner.bounds.maxX - 38, y: 36, width: 38, height: 38)
+            check("设置菜单空白区域点击前入场已结束且圆形区域完整可见",
+                  menuGeometryReady && panel.entranceAnimationCountForTest == 0
+                      && owner.window?.isKeyWindow == true && owner.visibleRect.contains(menuCircle),
+                  "entrance=\(panel.entranceAnimationCountForTest) key=\(owner.window?.isKeyWindow == true) "
+                      + "circle=\(menuCircle) visible=\(owner.visibleRect)")
             // These points are inside the visible 38-point circle but outside
             // the small symbol. AXPress cannot detect this missing hit area.
             if let window = owner.window {
