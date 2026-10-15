@@ -313,6 +313,7 @@ final class PopoverFooterView: PopoverSection {
     private var interactiveGlassControl: NSView?
     private var usesInteractiveGlass = false
     private let glassControlsContent = NSView()
+    private let hoverFeedback = FooterHoverFeedbackView()
 
     private var selected: EnergyMode = .auto
     private var pendingMode: EnergyMode?
@@ -384,6 +385,7 @@ final class PopoverFooterView: PopoverSection {
                   case .liquidGlassAppearance = change else { return }
             self?.refreshDisplayOptions()
         }
+        addSubview(hoverFeedback)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -418,6 +420,47 @@ final class PopoverFooterView: PopoverSection {
         } else {
             settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
         }
+        hoverFeedback.frame = bounds
+        if subviews.last !== hoverFeedback {
+            addSubview(hoverFeedback, positioned: .above, relativeTo: nil)
+        }
+        updateHoverRegions()
+    }
+
+    private func updateHoverRegions() {
+        var regions: [FooterHoverFeedbackView.Region] = []
+        let available = pendingMode == nil ? enabledModes : []
+        if usesInteractiveGlass, let control = interactiveGlassControl {
+            let row = control.bounds.insetBy(dx: 12, dy: 12)
+            let width = (row.width - 46) / CGFloat(modes.count)
+            regions = modes.enumerated().map { index, mode in
+                .init(rect: control.convert(NSRect(x: row.minX + CGFloat(index) * width,
+                                                  y: row.minY, width: width, height: row.height),
+                                            to: hoverFeedback), enabled: available.contains(mode))
+            }
+            regions.append(.init(rect: control.convert(NSRect(x: row.maxX - 38, y: row.minY,
+                                                               width: 38, height: 38),
+                                                         to: hoverFeedback), enabled: true))
+        } else {
+            if let control = glassModeControl, glassControls?.isHidden == false {
+                control.layoutSubtreeIfNeeded()
+                regions = control.subviews.compactMap { $0 as? NSButton }.map { button in
+                    .init(rect: button.convert(button.bounds, to: hoverFeedback),
+                          enabled: button.isEnabled)
+                }
+            } else {
+                let control: NSView = usesNativeModeControl ? nativeModeControl : modeControl
+                let width = control.bounds.width / CGFloat(modes.count)
+                regions = modes.enumerated().map { index, mode in
+                    .init(rect: control.convert(NSRect(x: CGFloat(index) * width, y: 0,
+                                                       width: width, height: control.bounds.height),
+                                                 to: hoverFeedback), enabled: enabledModes.contains(mode))
+                }
+            }
+            regions.append(.init(rect: settingsButton.convert(settingsButton.bounds, to: hoverFeedback),
+                                 enabled: settingsButton.isEnabled))
+        }
+        hoverFeedback.update(regions: regions)
     }
 
     func update(mode: EnergyMode, helperInstalled: Bool, systemBatteryIconHidden: Bool?,
@@ -540,6 +583,7 @@ final class PopoverFooterView: PopoverSection {
             tint: currentTint,
             busy: pendingMode != nil
         )
+        updateHoverRegions()
     }
 
     private func refreshDisplayOptions() {
@@ -633,6 +677,7 @@ final class PopoverFooterView: PopoverSection {
     }
 
     func cancelInteraction() {
+        hoverFeedback.cancelHover()
         if #available(macOS 26.0, *) {
             (interactiveGlassControl as? InteractiveGlassModeControl)?.cancelInteraction()
         }
