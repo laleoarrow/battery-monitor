@@ -426,6 +426,14 @@ final class StatusItemController: NSObject {
     @objc private func handleClick() {
         guard let button = statusItem.button else { return }
         let event = NSApp.currentEvent
+        let wasOpen = popover.isOpen
+        let anchorHit = button.window.map {
+            event?.window === $0 || $0.frame.contains(NSEvent.mouseLocation)
+        } ?? false
+        defer {
+            PopupEventLog.record(source: "status-action", event: event,
+                openBefore: wasOpen, openAfter: popover.isOpen, anchorHit: anchorHit)
+        }
         for intent in clickRouter.intents(for: event?.type,
                                           controlHeld: event?.modifierFlags.contains(.control) ?? false) {
             switch intent {

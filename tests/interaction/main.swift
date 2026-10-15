@@ -2046,6 +2046,22 @@ if #available(macOS 26.0, *), !screenLocked {
         controller.toggle(relativeTo: button)
         check("\(style.rawValue) 状态按钮单次 toggle 只关闭不意外重开",
               !controller.isShownForTest && !controller.isOpen && hostMonitorsAreRemoved(controller))
+        if let anchorFrame = button.window?.frame {
+            for y in [anchorFrame.midY, anchorFrame.minY + 0.5, anchorFrame.maxY - 0.5, anchorFrame.maxY] {
+                controller.openForSettingsCommandTest(relativeTo: button)
+                controller.handleGlobalMouseDown(screenPoint: NSPoint(x: anchorFrame.midX, y: y))
+                check("\(style.rawValue) 全局监听先收到锚点按下仍保留单次按钮动作",
+                      controller.isShownForTest && controller.isOpen)
+                controller.toggle(relativeTo: button)
+                check("\(style.rawValue) 同一次全局按下随后按钮动作只关闭一次",
+                      !controller.isShownForTest && !controller.isOpen && hostMonitorsAreRemoved(controller))
+            }
+            controller.openForSettingsCommandTest(relativeTo: button)
+            controller.handleGlobalMouseDown(screenPoint: NSPoint(x: anchorFrame.minX - 100,
+                                                                  y: anchorFrame.minY - 100))
+            check("\(style.rawValue) 全局非锚点按下仍关闭且清理监听",
+                  !controller.isShownForTest && !controller.isOpen && hostMonitorsAreRemoved(controller))
+        }
         controller.openForSettingsCommandTest(relativeTo: button)
         controller.closeBypassingControllerForTest()
         check("\(style.rawValue) 宿主自行关闭仍执行完整清理",

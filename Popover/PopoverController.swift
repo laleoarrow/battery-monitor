@@ -291,7 +291,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         return PopoverPlacement.resolve(
             anchor: anchor,
             displays: displays,
-            naturalSize: NSSize(width: PopoverStyle.width, height: content.preferredHeight)
+            naturalSize: NSSize(width: PopoverStyle.width, height: content.preferredHeight),
+            glassMargin: Settings.usesLiquidGlass ? GlassPopoverPanel.contentInset : nil
         )
     }
 
@@ -436,19 +437,21 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         guard outsideClickMonitor == nil else { return }
         outsideClickMonitor = NSEvent.addGlobalMonitorForEvents(
             matching: [.leftMouseDown, .rightMouseDown, .otherMouseDown]
-        ) { [weak self] _ in
-            self?.handleOutsideClick()
+        ) { [weak self] event in
+            // A menu-bar host can relay the same press to the status button
+            // after this monitor. Its full anchor frame belongs to that action.
+            self?.handleGlobalMouseDown(screenPoint: NSEvent.mouseLocation, event: event)
         }
         let workspace = NSWorkspace.shared.notificationCenter
         workspaceObservers.append(workspace.addObserver(forName: NSWorkspace.didActivateApplicationNotification,
             object: nil, queue: .main) { [weak self] notification in
             guard let application = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
                   application.processIdentifier != ProcessInfo.processInfo.processIdentifier else { return }
-            self?.handleOutsideClick()
+            self?.handleOutsideClick(source: "workspace-activation")
         })
         for name in [NSWorkspace.activeSpaceDidChangeNotification, NSWorkspace.sessionDidResignActiveNotification] {
             workspaceObservers.append(workspace.addObserver(forName: name, object: nil, queue: .main) {
-                [weak self] _ in self?.handleOutsideClick()
+                [weak self] _ in self?.handleOutsideClick(source: "workspace-space-or-session")
             })
         }
         localEventMonitor = NSEvent.addLocalMonitorForEvents(
@@ -463,7 +466,13 @@ final class PopoverController: NSObject, NSPopoverDelegate {
                    self.handleEscape() { return nil }
             } else {
                 let point = event.window?.convertPoint(toScreen: event.locationInWindow) ?? NSEvent.mouseLocation
+                let wasOpen = self.wantsOpen
+                let anchorHit = self.anchorButton?.window.map {
+                    event.window === $0 || $0.frame.contains(point)
+                } ?? false
                 if self.shouldDismissLocalClick(window: event.window, screenPoint: point) { self.close() }
+                PopupEventLog.record(source: "local-mouse", event: event,
+                    openBefore: wasOpen, openAfter: self.wantsOpen, anchorHit: anchorHit)
             }
             return event
         }
@@ -520,10 +529,31 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         return true
     }
 
-    /// What the global monitor calls. Separated so a test can invoke it.
-    func handleOutsideClick() {
+    /// Use the live screen point, as the global event's window belongs to a
+    /// different process. Do not close before a relayed status-button action.
+    func handleGlobalMouseDown(screenPoint: NSPoint, event: NSEvent? = nil) {
+        guard wantsOpen else { return }
+        let wasOpen = wantsOpen
+        let shouldDismiss = Self.shouldDismissGlobalClick(screenPoint: screenPoint,
+                                                         anchorFrame: anchorButton?.window?.frame)
+        if shouldDismiss { close() }
+        PopupEventLog.record(source: "global-mouse", event: event,
+            openBefore: wasOpen, openAfter: wantsOpen, anchorHit: !shouldDismiss)
+    }
+
+    static func shouldDismissGlobalClick(screenPoint: NSPoint, anchorFrame: NSRect?) -> Bool {
+        guard let frame = anchorFrame else { return true }
+        // At the display's upper edge the pointer can equal maxY. Keep X
+        // half-open so a neighbouring status item still counts as outside.
+        return screenPoint.x < frame.minX || screenPoint.x >= frame.maxX
+            || screenPoint.y < frame.minY || screenPoint.y > frame.maxY
+    }
+
+    func handleOutsideClick(source: String = "outside-click") {
         guard wantsOpen else { return }
         close()
+        PopupEventLog.record(source: source, event: nil,
+            openBefore: true, openAfter: wantsOpen, anchorHit: false)
     }
 
     private func stopWatchingForOutsideClicks() {
