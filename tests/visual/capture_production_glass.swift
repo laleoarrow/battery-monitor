@@ -168,6 +168,10 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                     let requestedArrowX = anchorFrame.midX - panel.frame.minX - expectedMaterial.minX
                     let expectedArrowX = GlassPopoverShape.clampedArrowX(requestedArrowX, width: expectedMaterial.width)
                     let materialAndBackingFramesMatch = glass.frame == expectedMaterial && backing.frame == expectedMaterial
+                    let foreground = content.superview
+                    let contentMatchesBody = foreground?.frame == expectedBody && content.frame == foreground?.bounds
+                    let foregroundClipsToBody = foreground?.layer?.masksToBounds == true
+                        && foreground?.layer?.cornerRadius == GlassPopoverShape.cornerRadius
                     let mask = backing.layer?.mask as? CAShapeLayer
                     let maskHasArrow = mask?.frame == backing.bounds
                         && mask?.path?.boundingBoxOfPath == backing.bounds
@@ -176,8 +180,9 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                     guard abs(content.frame.width - 360) < 0.01,
                           root.subviews.count == 3,
                           materialAndBackingFramesMatch,
-                          content.frame == expectedBody,
-                          root.subviews.last === content,
+                          contentMatchesBody,
+                          root.subviews.last === foreground,
+                          foregroundClipsToBody,
                           maskHasArrow,
                           panel.frame.minX >= screen.visibleFrame.minX - 0.5,
                           panel.frame.maxX <= screen.visibleFrame.maxX + 0.5,
@@ -264,7 +269,8 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                         "bodyGridHitCount": bodyGridHits, "bodyGridHitRatio": Double(bodyGridHits) / Double(bodyGridPicks.count),
                         "minimumInputOpacity": minimumInputOpacity, "expectedBackingOpacity": expectedOpacity,
                         "materialAndBackingFramesMatch": materialAndBackingFramesMatch,
-                        "contentMatchesBodyFrame": content.frame == expectedBody, "backingMaskHasArrow": maskHasArrow,
+                        "contentMatchesBodyFrame": contentMatchesBody, "backingMaskHasArrow": maskHasArrow,
+                        "foregroundClipsToBody": foregroundClipsToBody,
                         "transparency": Settings.liquidGlassTransparency,
                         "solidAccessibilityBackground": GlassBackgroundView.accessibilityRequiresSolidBackground,
                         "backingOpacity": backing.layer?.backgroundColor?.alpha ?? 0,

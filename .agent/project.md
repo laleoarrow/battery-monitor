@@ -84,8 +84,10 @@ Settings uses its existing AppKit fill surfaces so native glass batching cannot
 lift the fill above controls. The popup retains one native material over a
 non-interactive backing view.
 
-The popup's foreground content is a sibling above its hosted SwiftUI
-`glassEffect`, whose continuous shape includes the menu-bar arrow.
+The popup's foreground viewport is a sibling above its hosted SwiftUI
+`glassEffect`, whose continuous shape includes the menu-bar arrow. A transparent
+rounded container clips scrolling and animated content to the body, without
+changing the shared content root when it returns to Classic.
 `NSGlassEffectView` only supplies a rounded rectangle, so the small hosting
 bridge owns the background shape while AppKit keeps the content and lifetime.
 The transparency backing uses the same outline and retains one 8-bit alpha

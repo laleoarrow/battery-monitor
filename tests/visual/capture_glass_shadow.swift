@@ -120,6 +120,7 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                 guard let panel = popover.glassPanelForTest,
                       let root = panel.contentView,
                       let content = popover.contentViewForTest,
+                      let foreground = content.superview,
                       let glass = panel.materialView,
                       let backing = root.subviews.first as? GlassBackgroundView,
                       root.subviews.count == 3 else { throw failure("Production glass host unavailable") }
@@ -142,14 +143,16 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                         panel.setFrame(requestedFrame, display: false)
                         glass.frame = expectedMaterial
                         backing.frame = expectedMaterial
-                        content.frame = expectedBody
+                        foreground.frame = expectedBody
+                        content.frame = foreground.bounds
                         panel.point(to: fixedContent.midX)
                         panel.makeKeyAndOrderFront(nil)
                         root.layoutSubtreeIfNeeded()
                         panel.displayIfNeeded()
                         try await Task.sleep(nanoseconds: 800_000_000)
                         if panel.frame == requestedFrame && glass.frame == expectedMaterial
-                            && backing.frame == expectedMaterial && content.frame == expectedBody {
+                            && backing.frame == expectedMaterial && foreground.frame == expectedBody
+                            && content.frame == foreground.bounds {
                             stable = true
                             break
                         }
@@ -167,7 +170,7 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                         "contentSize": [content.frame.width, content.frame.height],
                         "materialAndBackingFramesMatch": backing.frame == glass.frame,
                         "backdropSRGB": [level, level, level], "hasWindowShadow": panel.hasShadow,
-                        "contentFrameMatchesBody": content.frame == expectedBody,
+                        "contentFrameMatchesBody": foreground.frame == expectedBody && content.frame == foreground.bounds,
                         "bodyFrameAppKit": rect(panel.convertToScreen(panel.bodyFrame)),
                         "arrowTipAppKit": [panel.frame.minX + panel.arrowTip.x, panel.frame.minY + panel.arrowTip.y],
                         "arrowHeight": PopoverPlacement.glassArrowHeight,

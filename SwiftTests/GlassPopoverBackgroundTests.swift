@@ -55,7 +55,7 @@ final class GlassPopoverBackgroundTests: XCTestCase {
             XCTAssertEqual(backing.layer?.backgroundColor?.alpha, 1)
             XCTAssertEqual(backing.layer?.cornerRadius, 0)
             XCTAssertEqual(backing.frame, glass.frame)
-            XCTAssertEqual(content.view.frame, panel.bodyFrame)
+            XCTAssertEqual(content.view.convert(content.view.bounds, to: root), panel.bodyFrame)
             XCTAssertEqual(backing.frame.height - content.view.frame.height, PopoverPlacement.glassArrowHeight)
             let mask = try XCTUnwrap(backing.layer?.mask as? CAShapeLayer)
             let path = try XCTUnwrap(mask.path)
@@ -113,7 +113,7 @@ final class GlassPopoverBackgroundTests: XCTestCase {
                     XCTAssertEqual(content.alphaValue, 1)
                     XCTAssertEqual(panel.materialView?.alphaValue, 1)
                     XCTAssertNil(content.layer?.backgroundColor)
-                    XCTAssertTrue(content.superview === panel.contentView)
+                    XCTAssertTrue(content.superview?.superview === panel.contentView)
                     XCTAssertFalse(panel.isVisible)
                 }
                 panel.detachContent()

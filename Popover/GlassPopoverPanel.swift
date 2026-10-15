@@ -13,6 +13,7 @@ final class GlassPopoverPanel: NSPanel {
     var onDismiss: (() -> Void)?
     var onEscape: (() -> Void)?
     private weak var hostedContent: NSView?
+    private var foreground: NSView?
     private var background: GlassBackgroundView?
     private var material: NSView?
     private var anchorX: CGFloat?
@@ -20,7 +21,7 @@ final class GlassPopoverPanel: NSPanel {
     @available(macOS 26.0, *)
     var materialView: GlassPopoverMaterialView? { material as? GlassPopoverMaterialView }
 
-    var bodyFrame: NSRect { hostedContent?.frame ?? .zero }
+    var bodyFrame: NSRect { foreground?.frame ?? .zero }
 
     @available(macOS 26.0, *)
     var arrowTip: NSPoint {
@@ -58,11 +59,22 @@ final class GlassPopoverPanel: NSPanel {
         contentView!.addSubview(glass)
         // An ancestor glass effect flattens the footer's SwiftUI glass into
         // solid fills. Keep the backdrop and interactive content as siblings.
-        content.frame = glass.frame
-        content.frame.size.height -= PopoverPlacement.glassArrowHeight
+        var bodyFrame = glass.frame
+        bodyFrame.size.height -= PopoverPlacement.glassArrowHeight
+        let foreground = NSView(frame: bodyFrame)
+        foreground.setAccessibilityElement(false)
+        foreground.autoresizingMask = [.width, .height]
+        foreground.wantsLayer = true
+        foreground.layer?.cornerRadius = GlassPopoverShape.cornerRadius
+        foreground.layer?.masksToBounds = true
+        // Scroll layers and the animated content stay inside the body, while
+        // the sibling material keeps its arrow and external optical margin.
+        content.frame = foreground.bounds
         content.autoresizingMask = [.width, .height]
-        contentView!.addSubview(content)
+        foreground.addSubview(content)
+        contentView!.addSubview(foreground)
         hostedContent = content
+        self.foreground = foreground
         self.background = background
         material = glass
         updateOutline()
@@ -94,6 +106,8 @@ final class GlassPopoverPanel: NSPanel {
     func detachContent() {
         hostedContent?.removeFromSuperview()
         hostedContent = nil
+        foreground?.removeFromSuperview()
+        foreground = nil
     }
 
     /// A process-wide event monitor must not steal Escape from another Wattson
