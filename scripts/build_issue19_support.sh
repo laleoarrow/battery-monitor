@@ -16,12 +16,12 @@ done
 /bin/bash -n "$STAGING/Collect-Wattson-Issue19.command" "$STAGING/lifecycle.sh"
 DIST_DIR="$ROOT_DIR/dist/support"
 /bin/mkdir -p "$DIST_DIR"
-ARCHIVE_NAME=Wattson-Issue19-Support-v1.zip
+ARCHIVE_NAME=Wattson-Issue19-Support-v2.zip
 /usr/bin/ditto -c -k --norsrc --noextattr --noqtn --noacl --keepParent "$STAGING" "$SUPPORT_SCRATCH/$ARCHIVE_NAME"
 /usr/bin/unzip -t "$SUPPORT_SCRATCH/$ARCHIVE_NAME" >/dev/null
 /bin/mv "$SUPPORT_SCRATCH/$ARCHIVE_NAME" "$DIST_DIR/$ARCHIVE_NAME"
 (
     cd "$DIST_DIR"
-    /usr/bin/shasum -a 256 "$ARCHIVE_NAME" > Wattson-Issue19-Support-v1.sha256
+    /usr/bin/shasum -a 256 "$ARCHIVE_NAME" > Wattson-Issue19-Support-v2.sha256
 )
 echo "Built: $DIST_DIR/$ARCHIVE_NAME"

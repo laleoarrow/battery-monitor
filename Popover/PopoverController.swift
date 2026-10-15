@@ -370,6 +370,21 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         visibilityHandler = handler
     }
 
+    func popoverShouldClose(_ popover: NSPopover) -> Bool {
+        shouldCloseClassicPopover(popover, primaryAnchorPress: isCurrentPrimaryAnchorPress())
+    }
+
+    private func shouldCloseClassicPopover(_ closingPopover: NSPopover,
+                                           primaryAnchorPress: Bool) -> Bool {
+        let suppressed = closingPopover === popover && wantsOpen && primaryAnchorPress
+        PopupEventLog.record(source: suppressed ? "native-anchor-suppressed" : "native-should-close",
+            event: NSApp.currentEvent, openBefore: wantsOpen, openAfter: wantsOpen,
+            anchorHit: primaryAnchorPress)
+        // Explicit close() clears wantsOpen before asking AppKit, so the
+        // button's own close still proceeds while that same press is held.
+        return !suppressed
+    }
+
     func popoverDidClose(_ notification: Notification) {
         guard let closingPopover = notification.object as? NSPopover, closingPopover === popover else { return }
         closesObserved += 1
@@ -382,6 +397,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         // popover on its own (Escape, a click elsewhere in the app) without
         // going through `close()`. Leaving it set would make the next click
         // read as "close" and be swallowed.
+        let wasOpen = wantsOpen
+        let anchorHit = isCurrentPrimaryAnchorPress()
         if wantsOpen { presentationGeneration &+= 1 }
         wantsOpen = false
         anchorButton = nil
@@ -390,6 +407,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         content.setAnimationsEnabled(false)
         stopEntranceAnimation()
         visibilityHandler?(false)
+        PopupEventLog.record(source: "native-classic-close", event: NSApp.currentEvent,
+            openBefore: wasOpen, openAfter: wantsOpen, anchorHit: anchorHit)
     }
 
     /// Adds a small compositor-only accent to AppKit's native popover reveal.
@@ -447,7 +466,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
             object: nil, queue: .main) { [weak self] notification in
             guard let application = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
                   application.processIdentifier != ProcessInfo.processInfo.processIdentifier else { return }
-            self?.handleOutsideClick(source: "workspace-activation")
+            guard let self else { return }
+            self.handleWorkspaceActivation(primaryAnchorPress: self.isCurrentPrimaryAnchorPress())
         })
         for name in [NSWorkspace.activeSpaceDidChangeNotification, NSWorkspace.sessionDidResignActiveNotification] {
             workspaceObservers.append(workspace.addObserver(forName: name, object: nil, queue: .main) {
@@ -549,6 +569,30 @@ final class PopoverController: NSObject, NSPopoverDelegate {
             || screenPoint.y < frame.minY || screenPoint.y > frame.maxY
     }
 
+    static func shouldPreservePrimaryAnchorPress(screenPoint: NSPoint, anchorFrame: NSRect?,
+                                                pressedMouseButtons: Int, controlHeld: Bool) -> Bool {
+        // currentEvent is the last dequeued event, which can be an older mouse
+        // release or key event. Only live device state owns this dismissal.
+        pressedMouseButtons == 1 && !controlHeld
+            && !shouldDismissGlobalClick(screenPoint: screenPoint, anchorFrame: anchorFrame)
+    }
+
+    private func isCurrentPrimaryAnchorPress() -> Bool {
+        Self.shouldPreservePrimaryAnchorPress(screenPoint: NSEvent.mouseLocation,
+            anchorFrame: anchorButton?.window?.frame, pressedMouseButtons: NSEvent.pressedMouseButtons,
+            controlHeld: NSEvent.modifierFlags.contains(.control))
+    }
+
+    private func handleWorkspaceActivation(primaryAnchorPress: Bool) {
+        guard wantsOpen else { return }
+        if primaryAnchorPress {
+            PopupEventLog.record(source: "workspace-anchor-suppressed", event: NSApp.currentEvent,
+                openBefore: true, openAfter: true, anchorHit: true)
+            return
+        }
+        handleOutsideClick(source: "workspace-activation")
+    }
+
     func handleOutsideClick(source: String = "outside-click") {
         guard wantsOpen else { return }
         close()
@@ -628,6 +672,20 @@ extension PopoverController {
 
     func shouldDismissLocalClickForTest(window: NSWindow?, screenPoint: NSPoint) -> Bool {
         shouldDismissLocalClick(window: window, screenPoint: screenPoint)
+    }
+
+    func classicShouldCloseForTest(screenPoint: NSPoint, pressedMouseButtons: Int,
+                                  controlHeld: Bool = false) -> Bool {
+        shouldCloseClassicPopover(popover, primaryAnchorPress: Self.shouldPreservePrimaryAnchorPress(
+            screenPoint: screenPoint, anchorFrame: anchorButton?.window?.frame,
+            pressedMouseButtons: pressedMouseButtons, controlHeld: controlHeld))
+    }
+
+    func handleWorkspaceActivationForTest(screenPoint: NSPoint, pressedMouseButtons: Int,
+                                         controlHeld: Bool = false) {
+        handleWorkspaceActivation(primaryAnchorPress: Self.shouldPreservePrimaryAnchorPress(
+            screenPoint: screenPoint, anchorFrame: anchorButton?.window?.frame,
+            pressedMouseButtons: pressedMouseButtons, controlHeld: controlHeld))
     }
 
     var runningAnimationCountForTest: Int {

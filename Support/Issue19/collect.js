@@ -160,7 +160,7 @@ function events(scratch, mode) {
         try { entry = JSON.parse(line); } catch (_) { return; }
         if (entry.subsystem !== 'com.leoarrow.wattson' || entry.category !== 'popup-events') return;
         if (typeof entry.processID !== 'number' || knownPIDs.indexOf(entry.processID) < 0) return;
-        var match = /^source=(status-action|global-mouse|local-mouse|workspace-activation|workspace-space-or-session|outside-click) eventType=(-?[0-9]{1,10}) eventNumber=(-?[0-9]{1,10}) windowNumber=(-?[0-9]{1,10}) openBefore=(true|false|0|1) openAfter=(true|false|0|1) anchorHit=(true|false|0|1)$/.exec(entry.eventMessage || '');
+        var match = /^source=(status-action|global-mouse|local-mouse|workspace-activation|workspace-space-or-session|outside-click|native-should-close|native-anchor-suppressed|native-classic-close|workspace-anchor-suppressed) eventType=(-?[0-9]{1,10}) eventNumber=(-?[0-9]{1,10}) windowNumber=(-?[0-9]{1,10}) openBefore=(true|false|0|1) openAfter=(true|false|0|1) anchorHit=(true|false|0|1)$/.exec(entry.eventMessage || '');
         if (!match || accepted.length >= 200) return;
         var eventType = Number(match[2]), eventNumber = Number(match[3]), windowNumber = Number(match[4]);
         if ([-1, 1, 2, 3, 4, 25, 26].indexOf(eventType) < 0

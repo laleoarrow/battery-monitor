@@ -76,6 +76,34 @@ class PopupEventSanitizerTests(unittest.TestCase):
         self.assertEqual(self.sanitize([], "skipped-collect-only")["traceStatus"],
                          "not-recorded-collect-only")
 
+    def test_v2_native_and_workspace_sources_keep_the_strict_event_grammar(self):
+        sources = ["native-should-close", "native-anchor-suppressed",
+                   "native-classic-close", "workspace-anchor-suppressed"]
+        valid = [self.event(
+            f"source={source} eventType=-1 eventNumber=-1 windowNumber=-1 "
+            "openBefore=true openAfter=false anchorHit=0"
+        ) for source in sources]
+        report = self.sanitize(valid)
+        self.assertEqual([item["source"] for item in report["acceptedEvents"]], sources)
+        for item in report["acceptedEvents"]:
+            self.assertEqual(set(item), {"processID", "source", "eventType", "eventNumber",
+                                         "windowNumber", "openBefore", "openAfter", "anchorHit"})
+            self.assertEqual(item["processID"], 123)
+            self.assertTrue(item["openBefore"])
+            self.assertFalse(item["openAfter"])
+            self.assertFalse(item["anchorHit"])
+        malformed = []
+        for entry, source in zip(valid, sources):
+            message = entry["eventMessage"]
+            malformed.extend([
+                self.event(message.replace(f"source={source} ", f"source={source}-extra ")),
+                self.event(message + " windowTitle=private-window"),
+                self.event(message.replace("openAfter=false", "openAfter=unknown")),
+            ])
+        rejected = self.sanitize(malformed)
+        self.assertEqual(rejected["acceptedEvents"], [])
+        self.assertNotIn("private-window", json.dumps(rejected))
+
     def test_no_known_wattson_pid_cannot_accept_subsystem_fixture_logs(self):
         (self.work / "snapshot.raw").write_text(
             json.dumps({"installation": {"version": "unavailable", "runningInstances": []}})
@@ -284,7 +312,7 @@ esac
         result = subprocess.run(["/bin/bash", str(script)], capture_output=True,
                                 text=True, timeout=10)
         self.assertEqual(result.returncode, 0, result.stderr)
-        archive_path = self.work / "dist" / "support" / "Wattson-Issue19-Support-v1.zip"
+        archive_path = self.work / "dist" / "support" / "Wattson-Issue19-Support-v2.zip"
         with zipfile.ZipFile(archive_path) as archive:
             item = archive.getinfo("Wattson-Issue19-Support/Collect-Wattson-Issue19.command")
             self.assertTrue((item.external_attr >> 16) & 0o100)

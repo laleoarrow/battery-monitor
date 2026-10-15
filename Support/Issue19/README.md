@@ -1,5 +1,12 @@
 # Wattson issue #19 support collector
 
+Support bundle v2 recognizes native popover close decisions, suppressed anchor
+closes, completed Classic closes and suppressed workspace dismissals. The field
+and privacy allowlists remain unchanged; existing v1 reports remain valid.
+
+v2 新增识别原生弹窗关闭判断、图标点击导致的关闭抑制、Classic 关闭完成及工作区
+关闭抑制事件；字段及隐私范围不变，已提交的 v1 环境报告仍然有效。
+
 Unzip the official support download and double-click
 **Collect-Wattson-Issue19.command**. Leave Wattson running. **Wattson 4.3.3 has
 no popup event trace, so its environment report is packaged immediately without

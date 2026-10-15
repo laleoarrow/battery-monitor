@@ -56,4 +56,37 @@ final class StatusClickDismissalTests: XCTestCase {
         XCTAssertEqual(intents.filter { $0 == .secondary }.count, 1)
         XCTAssertFalse(intents.contains(.primary))
     }
+
+    func testEarlyDismissalThenButtonActionClosesInsteadOfReopening() {
+        func stateAfterButtonAction(suppressEarlyClose: Bool) -> Bool {
+            var open = true
+            if !suppressEarlyClose { open = false }
+            var router = ClickRouter()
+            for type in [NSEvent.EventType.leftMouseDown, .leftMouseUp] {
+                for intent in router.intents(for: type) where intent == .primary { open.toggle() }
+            }
+            return open
+        }
+        XCTAssertTrue(stateAfterButtonAction(suppressEarlyClose: false),
+                      "The previous strategy reproduces close-then-reopen")
+        let suppress = PopoverController.shouldPreservePrimaryAnchorPress(
+            screenPoint: NSPoint(x: anchor.midX, y: anchor.maxY), anchorFrame: anchor,
+            pressedMouseButtons: 1, controlHeld: false)
+        XCTAssertFalse(stateAfterButtonAction(suppressEarlyClose: suppress),
+                       "The same primary press must leave the popup closed")
+    }
+
+    func testEarlyDismissalSuppressionRequiresLiveUnmodifiedPrimaryPress() {
+        let point = NSPoint(x: anchor.midX, y: anchor.midY)
+        func suppress(buttons: Int = 1, control: Bool = false, at location: NSPoint? = nil) -> Bool {
+            PopoverController.shouldPreservePrimaryAnchorPress(screenPoint: location ?? point,
+                anchorFrame: anchor, pressedMouseButtons: buttons, controlHeld: control)
+        }
+        XCTAssertTrue(suppress())
+        for buttons in [0, 2, 3, 4] { XCTAssertFalse(suppress(buttons: buttons)) }
+        XCTAssertFalse(suppress(control: true))
+        XCTAssertFalse(suppress(at: NSPoint(x: anchor.maxX, y: anchor.midY)))
+        XCTAssertFalse(PopoverController.shouldPreservePrimaryAnchorPress(screenPoint: point,
+            anchorFrame: nil, pressedMouseButtons: 1, controlHeld: false))
+    }
 }
