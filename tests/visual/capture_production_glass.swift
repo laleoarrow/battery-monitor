@@ -12,7 +12,12 @@ private enum CaptureProductionGlass {
         let defaults = MemoryDefaults()
         Settings.configureForTest(defaults: defaults)
         Settings.liquidGlassEnabled = true
-        Settings.liquidGlassTransparency = 1
+        let opacityInput = ProcessInfo.processInfo.environment["WATTSON_CAPTURE_GLASS_TRANSPARENCY"] ?? "1"
+        guard let transparency = Double(opacityInput), transparency.isFinite, (0...1).contains(transparency) else {
+            fputs("WATTSON_CAPTURE_GLASS_TRANSPARENCY must be between 0 and 1\n", stderr)
+            exit(2)
+        }
+        Settings.liquidGlassTransparency = transparency
         Settings.checksForUpdatesOnLaunch = false
         Settings.Module.allCases.forEach { Settings.setModule($0, visible: true) }
         setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
@@ -107,12 +112,23 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                 controller = popover
                 popover.update(snapshot: sample, history: history, peak: sample.totalInputW, degraded: false)
                 popover.updateSystemBatteryIconState(false)
+                let statusPoints: [(String, NSPoint)] = [
+                    ("center", NSPoint(x: anchorWindow.frame.midX, y: anchorWindow.frame.midY)),
+                    ("top", NSPoint(x: anchorWindow.frame.midX, y: anchorWindow.frame.maxY - 1)),
+                    ("bottom", NSPoint(x: anchorWindow.frame.midX, y: anchorWindow.frame.minY + 1)),
+                    ("left", NSPoint(x: anchorWindow.frame.minX + 1, y: anchorWindow.frame.midY)),
+                    ("right", NSPoint(x: anchorWindow.frame.maxX - 1, y: anchorWindow.frame.midY)),
+                ]
+                let closedStatusPicks = statusPoints.map {
+                    NSWindow.windowNumber(at: $0.1, belowWindowWithWindowNumber: 0)
+                }
                 popover.openForSettingsCommandTest(relativeTo: anchor)
                 try await Task.sleep(nanoseconds: 1_200_000_000)
                 guard let panel = popover.glassPanelForTest,
                       let root = panel.contentView,
                       let content = popover.contentViewForTest,
-                      let glass = root.subviews.compactMap({ $0 as? NSGlassEffectView }).first,
+                      let glass = panel.materialView,
+                      let backing = root.subviews.first as? GlassBackgroundView,
                       let scroll = descendants(content).compactMap({ $0 as? NSScrollView }).first,
                       let document = scroll.documentView,
                       let footer = descendants(content).compactMap({ $0 as? PopoverFooterView }).first,
@@ -138,19 +154,59 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                         else { throw failure("Footer or runtime unreachable in short-screen viewport") }
                     }
                     let margin = GlassPopoverPanel.contentInset(for: style)
-                    let expectedSibling = root.bounds.insetBy(dx: margin, dy: margin)
+                    let expectedMaterial = root.bounds.insetBy(dx: margin, dy: margin)
+                    let expectedBody = NSRect(x: expectedMaterial.minX, y: expectedMaterial.minY,
+                        width: expectedMaterial.width,
+                        height: expectedMaterial.height - PopoverPlacement.glassArrowHeight)
                     let anchorFrame = anchorWindow.convertToScreen(anchor.convert(anchor.bounds, to: nil))
                     let glassFrame = panel.convertToScreen(glass.convert(glass.bounds, to: nil))
+                    let bodyFrame = panel.convertToScreen(panel.bodyFrame)
+                    let arrowTip = panel.convertToScreen(NSRect(origin: panel.arrowTip, size: .zero)).origin
+                    let requestedArrowX = anchorFrame.midX - panel.frame.minX - expectedMaterial.minX
+                    let expectedArrowX = GlassPopoverShape.clampedArrowX(requestedArrowX, width: expectedMaterial.width)
+                    let materialAndBackingFramesMatch = glass.frame == expectedMaterial && backing.frame == expectedMaterial
+                    let mask = backing.layer?.mask as? CAShapeLayer
+                    let maskHasArrow = mask?.frame == backing.bounds
+                        && mask?.path?.boundingBoxOfPath == backing.bounds
+                        && mask?.path?.contains(NSPoint(x: expectedArrowX, y: backing.bounds.maxY - 0.5)) == true
+                        && mask?.path?.contains(NSPoint(x: 1, y: backing.bounds.maxY - 0.5)) == false
                     guard abs(content.frame.width - 360) < 0.01,
                           root.subviews.count == 3,
-                          root.subviews.allSatisfy({ $0.frame == expectedSibling }),
-                          screen.visibleFrame.insetBy(dx: -0.5, dy: -0.5).contains(panel.frame),
-                          abs(panel.frame.maxY - (min(anchorFrame.minY, screen.visibleFrame.maxY) - 4)) <= 0.5,
+                          materialAndBackingFramesMatch,
+                          content.frame == expectedBody,
+                          root.subviews.last === content,
+                          maskHasArrow,
+                          panel.frame.minX >= screen.visibleFrame.minX - 0.5,
+                          panel.frame.maxX <= screen.visibleFrame.maxX + 0.5,
+                          panel.frame.minY >= screen.visibleFrame.minY - 0.5,
+                          abs(arrowTip.x - (panel.frame.minX + expectedMaterial.minX + expectedArrowX)) <= 0.5,
+                          abs(arrowTip.y - (min(anchorFrame.minY, screen.visibleFrame.maxY) - 4)) <= 0.5,
+                          abs(arrowTip.y - bodyFrame.maxY - PopoverPlacement.glassArrowHeight) <= 0.5,
                           abs(glassFrame.maxY - (panel.frame.maxY - margin)) <= 0.5
                     else {
                         throw failure("Production geometry failed: panel=\(panel.frame) glass=\(glassFrame) "
                             + "anchor=\(anchorFrame) screen=\(screen.visibleFrame) content=\(content.frame) "
-                            + "margin=\(margin) siblings=\(root.subviews.map(\.frame))")
+                            + "margin=\(margin) arrowTip=\(arrowTip) siblings=\(root.subviews.map(\.frame))")
+                    }
+                    // WindowServer's mouse-down hit test must retain the closed
+                    // baseline through the optical margin. Some status items expose
+                    // a proxy window number and baseline 0; don't equate that proxy
+                    // with a WindowServer ID. A body hit calibrates our own panel ID.
+                    let statusWindowPicks: [[String: Any]] = zip(statusPoints, closedStatusPicks).map { entry, baseline in
+                        let (label, point) = entry
+                        let picked = NSWindow.windowNumber(at: point, belowWindowWithWindowNumber: 0)
+                        return ["point": label, "screenPointAppKit": [point.x, point.y],
+                                "pickedWindow": picked, "closedBaselineWindow": baseline,
+                                "statusReportedWindow": anchorWindow.windowNumber,
+                                "matchesClosedBaseline": picked == baseline,
+                                "avoidsPopupWindow": picked != panel.windowNumber]
+                    }
+                    let bodyPick = NSWindow.windowNumber(at: NSPoint(x: bodyFrame.midX, y: bodyFrame.midY),
+                                                         belowWindowWithWindowNumber: 0)
+                    guard bodyPick == panel.windowNumber,
+                          statusWindowPicks.allSatisfy({ $0["matchesClosedBaseline"] as? Bool == true
+                              && $0["avoidsPopupWindow"] as? Bool == true }) else {
+                        throw failure("Optical margin hit testing failed: body=\(bodyPick) panel=\(panel.windowNumber) \(statusWindowPicks)")
                     }
                     let name = "\(style.rawValue)-\(scheme.rawValue)-\(position)"
                     let cgFrame = NSRect(x: panel.frame.minX, y: screen.frame.maxY - panel.frame.maxY,
@@ -174,12 +230,25 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                         "scrollDocumentSize": [document.bounds.width, document.bounds.height],
                         "scrollDocumentVisibleRect": rect(scroll.documentVisibleRect),
                         "scrolling": scrolling, "hasVerticalScroller": scroll.hasVerticalScroller,
-                        "allSiblingFramesMatch": root.subviews.allSatisfy { $0.frame == expectedSibling },
+                        "bodyFrameAppKit": rect(bodyFrame), "materialBounds": rect(glass.bounds),
+                        "arrowTipLocal": [panel.arrowTip.x, panel.arrowTip.y],
+                        "arrowTipAppKit": [arrowTip.x, arrowTip.y],
+                        "requestedArrowX": requestedArrowX, "clampedArrowX": expectedArrowX,
+                        "arrowClamped": abs(requestedArrowX - expectedArrowX) > 0.01,
+                        "arrowHeight": PopoverPlacement.glassArrowHeight,
+                        "statusWindowPicks": statusWindowPicks,
+                        "bodyPickedWindow": bodyPick, "bodyHitCalibratesPanel": bodyPick == panel.windowNumber,
+                        "materialAndBackingFramesMatch": materialAndBackingFramesMatch,
+                        "contentMatchesBodyFrame": content.frame == expectedBody, "backingMaskHasArrow": maskHasArrow,
+                        "transparency": Settings.liquidGlassTransparency,
+                        "solidAccessibilityBackground": GlassBackgroundView.accessibilityRequiresSolidBackground,
+                        "backingOpacity": backing.layer?.backgroundColor?.alpha ?? 0,
+                        "foregroundOpacity": content.alphaValue, "materialOpacity": glass.alphaValue,
                         "footerFrameInDocument": rect(footer.convert(footer.bounds, to: document)),
                         "runtimeFrameInDocument": rect(runtime.convert(runtime.bounds, to: document)),
                         "hasWindowShadow": panel.hasShadow, "reduceMotionOverride": false,
                         "captureRectCG": rect(region), "pixels": [bitmap.pixelsWide, bitmap.pixelsHigh],
-                        "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only."
+                        "limitations": "Fixed charging and simulated footer state; production status item, placement and continuous arrow/body material, no manually adjusted panel/body geometry; transparent top optical margin may overlap menu bar. Captures own panel plus backdrop only."
                     ]
                     try write(marker, name: name + "-geometry.json")
                     print("PRODUCTION_GLASS_CAPTURED: \(name)")

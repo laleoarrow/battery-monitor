@@ -84,10 +84,14 @@ Settings uses its existing AppKit fill surfaces so native glass batching cannot
 lift the fill above controls. The popup retains one native material over a
 non-interactive backing view.
 
-The popup's foreground content is a sibling above its `NSGlassEffectView`,
-not the material's `contentView`: nesting the SwiftUI footer inside native
-glass flattens its interactive material into solid fills. Keep the three
-sibling frames aligned when resizing. The footer uses Clear in Dark appearance
+The popup's foreground content is a sibling above its hosted SwiftUI
+`glassEffect`, whose continuous shape includes the menu-bar arrow.
+`NSGlassEffectView` only supplies a rounded rectangle, so the small hosting
+bridge owns the background shape while AppKit keeps the content and lifetime.
+The transparency backing uses the same outline. Keep the backdrop and backing
+frames aligned when resizing; the foreground excludes the 12-point arrow.
+Nesting the footer inside the backdrop flattens its interactive material into
+solid fills. The footer uses Clear in Dark appearance
 and Regular in Light so its selection stays visible on white backgrounds.
 
 An independently selectable section prioritizes macOS battery time estimates,

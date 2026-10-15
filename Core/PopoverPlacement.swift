@@ -3,6 +3,8 @@ import CoreGraphics
 /// Resolve against the anchor's actual display, not the primary screen or a
 /// cached NSScreen. Global screen coordinates may legitimately be negative.
 struct PopoverPlacement {
+    static let glassArrowHeight: CGFloat = 12
+
     struct Display {
         let frame: CGRect
         let visibleFrame: CGRect
@@ -12,13 +14,14 @@ struct PopoverPlacement {
     let contentSize: CGSize
     let visibleFrame: CGRect
 
-    /// A glass panel has no native popover arrow. Keep its transparent optical
-    /// margin on the anchor's display, including displays left/below primary.
+    /// Align the glass arrow's tip to the status item. The transparent top
+    /// optical margin may overlap the menu bar; side and bottom margins stay
+    /// on the anchor's display, including displays left/below primary.
     func glassPanelFrame(margin: CGFloat) -> CGRect? {
         guard margin.isFinite, margin >= 0 else { return nil }
         let size = CGSize(width: contentSize.width + 2 * margin,
-                          height: contentSize.height + 2 * margin)
-        let top = min(anchorFrame.minY, visibleFrame.maxY) - 4
+                          height: contentSize.height + 2 * margin + Self.glassArrowHeight)
+        let top = min(anchorFrame.minY, visibleFrame.maxY) - 4 + margin
         guard size.width <= visibleFrame.width, size.height <= top - visibleFrame.minY else {
             return nil
         }
@@ -45,9 +48,9 @@ struct PopoverPlacement {
         let clippedAnchor = anchor.intersection(display.frame)
         let visible = display.visibleFrame.intersection(display.frame)
         guard usable(visible), naturalSize.width + 2 * (glassMargin ?? 0) <= visible.width else { return nil }
-        // Classic keeps its arrow/chrome allowance. Glass reserves both optical
-        // margins and the 4pt anchor gap before shrinking only the viewport.
-        let hostAllowance = glassMargin.map { 2 * $0 + 4 } ?? 24
+        // Classic keeps its arrow/chrome allowance. Glass reserves the bottom
+        // optical margin, arrow and 4pt anchor gap before shrinking the viewport.
+        let hostAllowance = glassMargin.map { $0 + glassArrowHeight + 4 } ?? 24
         let availableHeight = min(clippedAnchor.minY, visible.maxY) - visible.minY - hostAllowance
         guard availableHeight > 0 else { return nil }
         return PopoverPlacement(

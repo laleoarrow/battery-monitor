@@ -1920,7 +1920,7 @@ if #available(macOS 26.0, *), !screenLocked {
         let installedViews = window?.contentView.map { [$0] + hostDescendants($0) } ?? []
         let fields = installedViews.compactMap { $0 as? NSTextField }
         let footer = installedViews.compactMap { $0 as? PopoverFooterView }.first
-        let material = panel?.contentView?.subviews.compactMap { $0 as? NSGlassEffectView }.first
+        let material = panel?.materialView
         let rootAttached = originalRoot.map { root in
             root.window === window && window != nil && installedViews.contains { $0 === root }
                 && root.bounds.width > 0 && root.bounds.height > 0 && !root.isHiddenOrHasHiddenAncestor
@@ -1945,18 +1945,29 @@ if #available(macOS 26.0, *), !screenLocked {
     for style in Settings.LiquidGlassStyle.allCases {
         Settings.liquidGlassStyle = style
         Settings.liquidGlassEnabled = true
+        let statusPickPoints: [NSPoint] = button.window.map { window in [
+            NSPoint(x: window.frame.midX, y: window.frame.midY),
+            NSPoint(x: window.frame.midX, y: window.frame.maxY - 1),
+            NSPoint(x: window.frame.midX, y: window.frame.minY + 1),
+            NSPoint(x: window.frame.minX + 1, y: window.frame.midY),
+            NSPoint(x: window.frame.maxX - 1, y: window.frame.midY),
+        ] } ?? []
+        let closedStatusPicks = statusPickPoints.map {
+            NSWindow.windowNumber(at: $0, belowWindowWithWindowNumber: 0)
+        }
         controller.openForSettingsCommandTest(relativeTo: button)
         _ = runApplication(until: { controller.isShownForTest }, timeout: 1)
         guard let panel = controller.glassPanelForTest else {
             check("\(style.rawValue) 使用真实独立玻璃面板", false)
             continue
         }
-        let materialViews = panel.contentView?.subviews.compactMap { $0 as? NSGlassEffectView } ?? []
+        let materialViews = panel.contentView?.subviews.compactMap { $0 as? GlassPopoverMaterialView } ?? []
         let material = materialViews.first
         check("\(style.rawValue) 交互内容位于玻璃背景上方且没有玻璃祖先",
-              material?.contentView == nil && originalRoot?.superview === panel.contentView
+              material?.hitTest(.zero) == nil && originalRoot?.superview === panel.contentView
                   && panel.contentView?.subviews.last === originalRoot
-                  && originalRoot?.frame == material?.frame
+                  && originalRoot?.frame == panel.bodyFrame
+                  && material?.frame.height == panel.bodyFrame.height + PopoverPlacement.glassArrowHeight
                   && material.map { originalRoot?.isDescendant(of: $0) == false } == true)
         check("\(style.rawValue) 背景使用单一原生材质并保持同一生产内容",
               materialViews.count == 1 && material?.style == (style == .clear ? .clear : .regular)
@@ -2053,15 +2064,43 @@ if #available(macOS 26.0, *), !screenLocked {
                   && controller.shouldDismissLocalClickForTest(window: otherWindow, screenPoint: outside))
         if let anchorWindow = button.window {
             let anchorFrame = anchorWindow.convertToScreen(button.convert(button.bounds, to: nil))
+            if let material, let screen = anchorWindow.screen {
+                let tip = panel.convertToScreen(NSRect(origin: panel.arrowTip, size: .zero)).origin
+                let expectedX = GlassPopoverShape.clampedArrowX(
+                    anchorFrame.midX - panel.frame.minX - material.frame.minX, width: material.bounds.width)
+                let bodyTop = panel.convertToScreen(panel.bodyFrame).maxY
+                check("[I20-ARROW] \(style.rawValue) 箭头对齐真实状态项且位于正文上方",
+                      abs(tip.x - (panel.frame.minX + material.frame.minX + expectedX)) < 0.5
+                          && abs(tip.y - (min(anchorFrame.minY, screen.visibleFrame.maxY) - 4)) < 0.5
+                          && abs(tip.y - bodyTop - PopoverPlacement.glassArrowHeight) < 0.5,
+                      "tip=\(tip) anchor=\(anchorFrame) bodyTop=\(bodyTop)")
+            } else { check("[I20-ARROW] 玻璃箭头具备真实材质与屏幕", false) }
             check("\(style.rawValue) 锚点鼠标按下留给状态按钮的单次 toggle",
                   !controller.shouldDismissLocalClickForTest(window: anchorWindow,
                       screenPoint: NSPoint(x: anchorFrame.midX, y: anchorFrame.midY)))
+            // Native status items may report a remote proxy ID, which the
+            // WindowServer API returns as 0. Preserve each closed baseline and
+            // calibrate the API with a hit inside this actual panel's body.
+            spin(0.35)
+            let statusPicks = statusPickPoints.map {
+                NSWindow.windowNumber(at: $0, belowWindowWithWindowNumber: 0)
+            }
+            let bodyFrame = panel.convertToScreen(panel.bodyFrame)
+            let bodyPick = NSWindow.windowNumber(at: NSPoint(x: bodyFrame.midX, y: bodyFrame.midY),
+                                                 belowWindowWithWindowNumber: 0)
+            check("[I20-WINDOW-PICKS] \(style.rawValue) 透明光学边距保持状态窗口中央及四边的原始命中",
+                  statusPicks.count == 5 && statusPicks == closedStatusPicks
+                      && statusPicks.allSatisfy { $0 != panel.windowNumber }
+                      && bodyPick == panel.windowNumber,
+                  "statusProxy=\(anchorWindow.windowNumber) closed=\(closedStatusPicks) open=\(statusPicks) body=\(bodyPick) panel=\(panel.windowNumber)")
             let statusFrame = anchorWindow.frame
             let edgePoints = [
                 NSPoint(x: statusFrame.midX, y: statusFrame.maxY - 0.5),
                 NSPoint(x: statusFrame.midX, y: statusFrame.minY + 0.5),
+                NSPoint(x: statusFrame.minX + 1, y: statusFrame.midY),
+                NSPoint(x: statusFrame.maxX - 1, y: statusFrame.midY),
             ]
-            check("\(style.rawValue) 状态窗口顶部和底部命中区不先关闭再重开",
+            check("\(style.rawValue) 状态窗口四边命中区不先关闭再重开",
                   edgePoints.allSatisfy {
                       !controller.shouldDismissLocalClickForTest(window: anchorWindow, screenPoint: $0)
                   })

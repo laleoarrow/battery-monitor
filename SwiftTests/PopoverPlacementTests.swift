@@ -109,10 +109,15 @@ final class PopoverPlacementTests: XCTestCase {
                 anchor: CGRect(x: x, y: 876, width: 24, height: 24),
                 displays: [main], naturalSize: fullSize))
             let frame = try XCTUnwrap(placement.glassPanelFrame(margin: 10))
-            XCTAssertTrue(main.visibleFrame.contains(frame))
-            XCTAssertEqual(frame.size, CGSize(width: 380, height: 735))
-            XCTAssertEqual(frame.maxY, 872)
-            XCTAssertEqual(frame.insetBy(dx: 10, dy: 10).size, fullSize)
+            XCTAssertEqual(frame.size, CGSize(width: 380, height: 747))
+            XCTAssertEqual(frame.maxY - 10, 872) // Arrow tip, 4pt below the anchor.
+            let body = CGRect(x: frame.minX + 10, y: frame.minY + 10,
+                              width: fullSize.width, height: fullSize.height)
+            XCTAssertEqual(body.maxY, 860) // Body ends 12pt below the tip.
+            XCTAssertEqual(body.size, fullSize)
+            XCTAssertGreaterThanOrEqual(frame.minX, main.visibleFrame.minX)
+            XCTAssertLessThanOrEqual(frame.maxX, main.visibleFrame.maxX)
+            XCTAssertGreaterThanOrEqual(frame.minY, main.visibleFrame.minY)
         }
     }
 
@@ -123,12 +128,15 @@ final class PopoverPlacementTests: XCTestCase {
                 visibleFrame: CGRect(x: origin.x, y: origin.y + 40, width: 1024, height: 536))
             let placement = try XCTUnwrap(PopoverPlacement.resolve(
                 anchor: CGRect(x: origin.x + 980, y: origin.y + 576, width: 24, height: 24),
-                displays: [main, display], naturalSize: fullSize))
+                displays: [main, display], naturalSize: fullSize, glassMargin: 10))
             let frame = try XCTUnwrap(placement.glassPanelFrame(margin: 10))
-            XCTAssertTrue(display.visibleFrame.contains(frame))
-            XCTAssertEqual(frame.height, 532)
+            XCTAssertEqual(placement.contentSize, CGSize(width: 360, height: 510))
+            XCTAssertEqual(frame.height, 542)
             XCTAssertEqual(frame.minY, display.visibleFrame.minY)
             XCTAssertEqual(frame.maxX, display.visibleFrame.maxX)
+            XCTAssertEqual(frame.maxY - 10, origin.y + 572)
+            XCTAssertEqual(frame.minY + 10 + placement.contentSize.height, origin.y + 560)
+            XCTAssertGreaterThanOrEqual(frame.minX, display.visibleFrame.minX)
         }
     }
 
@@ -155,12 +163,13 @@ final class PopoverPlacementTests: XCTestCase {
                 let placement = try XCTUnwrap(PopoverPlacement.resolve(
                     anchor: anchor, displays: [display], naturalSize: fullSize, glassMargin: margin))
                 let frame = try XCTUnwrap(placement.glassPanelFrame(margin: margin))
-                XCTAssertEqual(placement.contentSize, CGSize(width: 360, height: 532 - 2 * margin))
-                XCTAssertTrue(display.visibleFrame.contains(frame))
-                XCTAssertEqual(frame.height, 532)
+                XCTAssertEqual(placement.contentSize, CGSize(width: 360, height: 520 - margin))
+                XCTAssertEqual(frame.height, 532 + margin)
                 XCTAssertEqual(frame.minY, display.visibleFrame.minY)
-                XCTAssertEqual(frame.maxY, anchor.minY - 4)
-                XCTAssertEqual(anchor.minY - frame.insetBy(dx: margin, dy: margin).maxY, margin + 4)
+                XCTAssertEqual(frame.maxY - margin, anchor.minY - 4)
+                XCTAssertEqual(frame.minY + margin + placement.contentSize.height, anchor.minY - 16)
+                XCTAssertGreaterThanOrEqual(frame.minX, display.visibleFrame.minX)
+                XCTAssertLessThanOrEqual(frame.maxX, display.visibleFrame.maxX)
             }
         }
     }
@@ -173,10 +182,62 @@ final class PopoverPlacementTests: XCTestCase {
                     displays: [main], naturalSize: fullSize, glassMargin: margin))
                 let frame = try XCTUnwrap(placement.glassPanelFrame(margin: margin))
                 XCTAssertEqual(placement.contentSize, fullSize)
-                XCTAssertEqual(frame.insetBy(dx: margin, dy: margin).size, fullSize)
-                XCTAssertTrue(main.visibleFrame.contains(frame))
-                XCTAssertEqual(frame.maxY, 872)
+                XCTAssertEqual(frame.width - 2 * margin, fullSize.width)
+                XCTAssertEqual(frame.height - 2 * margin - 12, fullSize.height)
+                XCTAssertGreaterThanOrEqual(frame.minX, main.visibleFrame.minX)
+                XCTAssertLessThanOrEqual(frame.maxX, main.visibleFrame.maxX)
+                XCTAssertGreaterThanOrEqual(frame.minY, main.visibleFrame.minY)
+                XCTAssertEqual(frame.maxY - margin, 872)
+                XCTAssertEqual(frame.minY + margin + fullSize.height, 860)
             }
+        }
+    }
+
+    func testGlassArrowTipUsesVisibleTopWhenAnchorExtendsIntoMenuBar() throws {
+        let placement = try XCTUnwrap(PopoverPlacement.resolve(
+            anchor: CGRect(x: 1200, y: 884, width: 24, height: 16),
+            displays: [main], naturalSize: fullSize, glassMargin: 32))
+        let frame = try XCTUnwrap(placement.glassPanelFrame(margin: 32))
+        XCTAssertEqual(PopoverPlacement.glassArrowHeight, 12)
+        XCTAssertEqual(frame.maxY - 32, 872)
+        XCTAssertEqual(frame.minY + 32 + placement.contentSize.height, 860)
+        XCTAssertGreaterThanOrEqual(frame.minY, main.visibleFrame.minY)
+    }
+
+    func testGlassDynamicHeightsKeepArrowAnchoredWithoutChangingContentWidth() throws {
+        for margin: CGFloat in [10, 32] {
+            for naturalHeight: CGFloat in [154, 715, 900] {
+                let placement = try XCTUnwrap(PopoverPlacement.resolve(
+                    anchor: CGRect(x: 1416, y: 876, width: 24, height: 24),
+                    displays: [main], naturalSize: CGSize(width: 360, height: naturalHeight),
+                    glassMargin: margin))
+                let frame = try XCTUnwrap(placement.glassPanelFrame(margin: margin))
+                XCTAssertEqual(placement.contentSize.width, 360)
+                XCTAssertEqual(placement.contentSize.height, min(naturalHeight, 812 - margin))
+                XCTAssertEqual(frame.maxY - margin, 872)
+                XCTAssertEqual(frame.minY + margin + placement.contentSize.height, 860)
+                XCTAssertEqual(frame.maxX, main.visibleFrame.maxX)
+                XCTAssertGreaterThanOrEqual(frame.minY, main.visibleFrame.minY)
+            }
+        }
+    }
+
+    func testGlassRequiresSpaceForArrowAndBottomMarginBeforeShowingContent() throws {
+        for margin: CGFloat in [10, 32] {
+            let visibleHeight = margin + 16
+            let display = PopoverPlacement.Display(
+                frame: CGRect(x: 0, y: 0, width: 1024, height: 40 + visibleHeight + 24),
+                visibleFrame: CGRect(x: 0, y: 40, width: 1024, height: visibleHeight))
+            let anchor = CGRect(x: 900, y: display.visibleFrame.maxY, width: 24, height: 24)
+            XCTAssertNotNil(PopoverPlacement.resolve(
+                anchor: anchor, displays: [display], naturalSize: fullSize))
+            XCTAssertNil(PopoverPlacement.resolve(
+                anchor: anchor, displays: [display], naturalSize: fullSize, glassMargin: margin))
+            let placement = try XCTUnwrap(PopoverPlacement.resolve(
+                anchor: anchor, displays: [display], naturalSize: fullSize, glassMargin: margin - 1))
+            let frame = try XCTUnwrap(placement.glassPanelFrame(margin: margin - 1))
+            XCTAssertEqual(placement.contentSize.height, 1)
+            XCTAssertEqual(frame.minY, display.visibleFrame.minY)
         }
     }
 

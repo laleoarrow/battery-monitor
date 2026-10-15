@@ -120,7 +120,8 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                 guard let panel = popover.glassPanelForTest,
                       let root = panel.contentView,
                       let content = popover.contentViewForTest,
-                      let glass = root.subviews.compactMap({ $0 as? NSGlassEffectView }).first,
+                      let glass = panel.materialView,
+                      let backing = root.subviews.first as? GlassBackgroundView,
                       root.subviews.count == 3 else { throw failure("Production glass host unavailable") }
                 popover.stopEntranceAnimationForTest()
                 content.layer?.removeAllAnimations()
@@ -130,19 +131,25 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                 let fixedContent = NSRect(x: floor(screen.visibleFrame.midX - size.width / 2),
                     y: floor(screen.visibleFrame.midY - size.height / 2), width: size.width, height: size.height)
                 for margin: CGFloat in quick ? [10, 32] : [10, 20, 32, 48] {
-                    let requestedFrame = fixedContent.insetBy(dx: -margin, dy: -margin)
+                    let fixedMaterial = NSRect(x: fixedContent.minX, y: fixedContent.minY,
+                        width: fixedContent.width, height: fixedContent.height + PopoverPlacement.glassArrowHeight)
+                    let requestedFrame = fixedMaterial.insetBy(dx: -margin, dy: -margin)
+                    let expectedBody = NSRect(x: margin, y: margin, width: size.width, height: size.height)
+                    let expectedMaterial = NSRect(x: margin, y: margin, width: size.width,
+                        height: size.height + PopoverPlacement.glassArrowHeight)
                     var stable = false
                     for _ in 0..<3 {
                         panel.setFrame(requestedFrame, display: false)
-                        for sibling in root.subviews {
-                            sibling.frame = root.bounds.insetBy(dx: margin, dy: margin)
-                        }
+                        glass.frame = expectedMaterial
+                        backing.frame = expectedMaterial
+                        content.frame = expectedBody
+                        panel.point(to: fixedContent.midX)
                         panel.makeKeyAndOrderFront(nil)
                         root.layoutSubtreeIfNeeded()
                         panel.displayIfNeeded()
                         try await Task.sleep(nanoseconds: 800_000_000)
-                        let expected = NSRect(x: margin, y: margin, width: size.width, height: size.height)
-                        if panel.frame == requestedFrame && root.subviews.allSatisfy({ $0.frame == expected }) {
+                        if panel.frame == requestedFrame && glass.frame == expectedMaterial
+                            && backing.frame == expectedMaterial && content.frame == expectedBody {
                             stable = true
                             break
                         }
@@ -158,9 +165,12 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                         "panelFrameCG": rect(cgFrame), "captureRectCG": rect(cgFrame.insetBy(dx: -8, dy: -8)),
                         "glassFrameAppKit": rect(panel.convertToScreen(glass.convert(glass.bounds, to: nil))),
                         "contentSize": [content.frame.width, content.frame.height],
-                        "siblingFramesMatch": root.subviews.allSatisfy { $0.frame == glass.frame },
+                        "materialAndBackingFramesMatch": backing.frame == glass.frame,
                         "backdropSRGB": [level, level, level], "hasWindowShadow": panel.hasShadow,
-                        "contentFrameMatchesGlass": content.frame == glass.frame,
+                        "contentFrameMatchesBody": content.frame == expectedBody,
+                        "bodyFrameAppKit": rect(panel.convertToScreen(panel.bodyFrame)),
+                        "arrowTipAppKit": [panel.frame.minX + panel.arrowTip.x, panel.frame.minY + panel.arrowTip.y],
+                        "arrowHeight": PopoverPlacement.glassArrowHeight,
                         "limitations": "Fixed charging fixture; geometry-only optical margin experiment using production views. External capture must include the backdrop and 8pt outside the panel, not alpha-only window extraction."
                     ]
                     try write(marker, named: name + "-geometry.json")

@@ -37,7 +37,7 @@ final class GlassPopoverBackgroundTests: XCTestCase {
         super.tearDown()
     }
 
-    func testReducedTransparencyUsesOnlyRoundedBackingInBothNativeStyles() throws {
+    func testReducedTransparencyUsesOneContinuousArrowAndBodyBackingInBothStyles() throws {
         guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
         _ = NSApplication.shared
         for style in [NSGlassEffectView.Style.regular, .clear] {
@@ -45,19 +45,25 @@ final class GlassPopoverBackgroundTests: XCTestCase {
             let content = PopoverContentViewController()
             content.setViewportHeight(content.preferredHeight)
             let panel = GlassPopoverPanel(content: content.view,
-                frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset, height: content.preferredHeight + 2 * inset), style: style)
+                frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset, height: content.preferredHeight + 2 * inset + PopoverPlacement.glassArrowHeight), style: style)
             let root = try XCTUnwrap(panel.contentView)
             let backing = try XCTUnwrap(root.subviews.first as? GlassBackgroundView)
-            let glass = try XCTUnwrap(root.subviews.compactMap { $0 as? NSGlassEffectView }.first)
+            let glass = try XCTUnwrap(root.subviews.compactMap { $0 as? GlassPopoverMaterialView }.first)
             backing.updateLayer()
             XCTAssertNil(content.view.layer?.backgroundColor)
             XCTAssertEqual(backing.layer?.backgroundColor?.alpha, 1)
-            XCTAssertEqual(backing.layer?.cornerRadius, glass.cornerRadius)
-            XCTAssertEqual(backing.frame, content.view.frame)
-            XCTAssertEqual(content.view.frame, glass.frame)
+            XCTAssertEqual(backing.layer?.cornerRadius, 0)
+            XCTAssertEqual(backing.frame, glass.frame)
+            XCTAssertEqual(content.view.frame, panel.bodyFrame)
+            XCTAssertEqual(backing.frame.height - content.view.frame.height, PopoverPlacement.glassArrowHeight)
+            let mask = try XCTUnwrap(backing.layer?.mask as? CAShapeLayer)
+            let path = try XCTUnwrap(mask.path)
+            XCTAssertEqual(path.boundingBoxOfPath, backing.bounds)
+            XCTAssertTrue(path.contains(NSPoint(x: glass.arrowX, y: backing.bounds.maxY - 0.5)))
+            XCTAssertFalse(path.contains(NSPoint(x: 1, y: backing.bounds.maxY - 0.5)))
             XCTAssertFalse(try XCTUnwrap(content.view.layer).masksToBounds)
             XCTAssertTrue(content.view.superview === root)
-            XCTAssertNil(glass.contentView)
+            XCTAssertNil(glass.hitTest(.zero))
             XCTAssertFalse(panel.isVisible)
             panel.detachContent()
         }
@@ -78,7 +84,7 @@ final class GlassPopoverBackgroundTests: XCTestCase {
             let inset = GlassPopoverPanel.contentInset(for: style == .clear ? .clear : .regular)
             classic.contentView = nil
             let panel = GlassPopoverPanel(content: content.view,
-                frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset, height: content.preferredHeight + 2 * inset), style: style)
+                frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset, height: content.preferredHeight + 2 * inset + PopoverPlacement.glassArrowHeight), style: style)
             XCTAssertTrue(content.view.window === panel)
             XCTAssertNil(content.view.layer?.backgroundColor)
             panel.detachContent()
