@@ -1,0 +1,85 @@
+--- a/tests/visual/capture_production_glass.swift
++++ b/tests/visual/capture_production_glass.swift
+@@ -99,17 +99,50 @@
+         background.isOpaque = true
+         backdrop = background
+         background.orderFrontRegardless()
+-        let sample = PowerSnapshot(percent: 72, plugged: true, adapterW: 68,
+-            batteryW: 22.2, systemW: 45.8, temperatureC: 34.2, cycleCount: 282,
+-            lowPowerMode: false, batteryTimeEstimate: .charging(42))
++        let fixtureScenario = ProcessInfo.processInfo.environment["WATTSON_CAPTURE_SCENARIO"] ?? "gallery"
++        let fixtureSelection = ProcessInfo.processInfo.environment["WATTSON_CAPTURE_SELECTION"] ?? "all"
++        guard ["all", "short-smoke", "short-remaining"].contains(fixtureSelection) else {
++            throw failure("Unknown capture selection")
++        }
++        let sample: PowerSnapshot
++        switch fixtureScenario {
++        case "gallery", "charging":
++            sample = PowerSnapshot(percent: 72, plugged: true, adapterW: 68,
++                batteryW: 22.2, systemW: 45.8, temperatureC: 34.2, cycleCount: 282,
++                lowPowerMode: false, batteryTimeEstimate: .charging(42))
++        case "full":
++            sample = PowerSnapshot(percent: 100, plugged: true, adapterW: 35.5,
++                batteryW: 0, systemW: 35.5, temperatureC: 30.2, cycleCount: 282,
++                lowPowerMode: false, batteryTimeEstimate: .full)
++        case "on-battery":
++            sample = PowerSnapshot(percent: 67, plugged: false, adapterW: 0,
++                batteryW: -22.4, systemW: 22.4, temperatureC: 33.1, cycleCount: 282,
++                lowPowerMode: false, batteryTimeEstimate: .remaining(265))
++        case "mixed-supply":
++            sample = PowerSnapshot(percent: 72, plugged: true, adapterW: 30,
++                batteryW: -10, systemW: 40, temperatureC: 35.2, cycleCount: 282,
++                lowPowerMode: false, batteryTimeEstimate: .notCharging)
++        case "low-battery":
++            sample = PowerSnapshot(percent: 8, plugged: false, adapterW: 0,
++                batteryW: -18, systemW: 18, temperatureC: 31.2, cycleCount: 282,
++                lowPowerMode: false, batteryTimeEstimate: .remaining(22))
++        case "low-power":
++            sample = PowerSnapshot(percent: 41, plugged: false, adapterW: 0,
++                batteryW: -8, systemW: 8, temperatureC: 29.8, cycleCount: 282,
++                lowPowerMode: true, batteryTimeEstimate: .remaining(210))
++        default: throw failure("Unknown capture scenario")
++        }
+         let history = (0..<32).map { sample.totalInputW * (0.88 + 0.08 * sin(Double($0) * 0.4)) }
+         var captures = 0
+-        for scheme in [Settings.ColorScheme.light, .dark] {
++        for scheme in fixtureScenario == "gallery" ? [Settings.ColorScheme.light, .dark] : [.dark] {
++            if fixtureSelection == "short-smoke" && scheme != .light { continue }
+             Settings.colorScheme = scheme
+             NSApp.appearance = scheme.appearance
+             let level: CGFloat = scheme == .light ? 0.85 : 0.15
+             background.backgroundColor = NSColor(srgbRed: level, green: level, blue: level, alpha: 1)
+-            for style in [Settings.LiquidGlassStyle.regular, .clear] {
++            for style in fixtureScenario == "gallery" ? [Settings.LiquidGlassStyle.regular, .clear] : [.regular] {
++                if fixtureSelection == "short-smoke" && style != .regular { continue }
++                if fixtureSelection == "short-remaining" && scheme == .light && style == .regular { continue }
+                 Settings.liquidGlassStyle = style
+                 let popover = PopoverController()
+                 controller = popover
+@@ -139,7 +172,7 @@
+                 else { throw failure("Production hierarchy unavailable") }
+                 // Reuse the existing preview's footer-fixture API. No helper
+                 // calls, pmset changes, or geometry modifications are made.
+-                footer.update(mode: .auto, helperInstalled: true, systemBatteryIconHidden: false,
++                footer.update(mode: sample.lowPowerMode ? .low : .auto, helperInstalled: true, systemBatteryIconHidden: false,
+                               tint: PopoverStyle.stateColor(sample.state))
+                 content.layoutSubtreeIfNeeded()
+                 try await Task.sleep(nanoseconds: 400_000_000)
+@@ -249,7 +282,7 @@
+                     else { throw failure("WindowServer returned an empty capture") }
+                     try png.write(to: directory.appendingPathComponent(name + ".png"), options: .atomic)
+                     let marker: [String: Any] = [
+-                        "name": name, "margin": margin, "window": panel.windowNumber,
++                        "name": name, "fixtureScenario": fixtureScenario, "fixtureValues": true, "fixtureSelection": fixtureSelection, "margin": margin, "window": panel.windowNumber,
+                         "panelFrameAppKit": rect(panel.frame), "glassFrameAppKit": rect(glassFrame),
+                         "anchorButtonFrameAppKit": rect(anchorFrame), "anchorWindowFrameAppKit": rect(anchorWindow.frame),
+                         "screenFrameAppKit": rect(screen.frame), "visibleFrameAppKit": rect(screen.visibleFrame),
+@@ -279,7 +312,7 @@
+                         "runtimeFrameInDocument": rect(runtime.convert(runtime.bounds, to: document)),
+                         "hasWindowShadow": panel.hasShadow, "reduceMotionOverride": false,
+                         "captureRectCG": rect(region), "pixels": [bitmap.pixelsWide, bitmap.pixelsHigh],
+-                        "limitations": "Fixed charging and simulated footer state; production status item, placement and continuous arrow/body material, no manually adjusted panel/body geometry; transparent top optical margin may overlap menu bar. Captures own panel plus backdrop only."
++                        "limitations": "Fixed power scenario and simulated footer state; production status item, placement and continuous arrow/body material, no manually adjusted panel/body geometry; transparent top optical margin may overlap menu bar. Captures own panel plus backdrop only. WindowServer baseline/body hit-test only, no posted OS mouse events; macOS26 VM fixture, not installed package UI or live power."
+                     ]
+                     try write(marker, name: name + "-geometry.json")
+                     print("PRODUCTION_GLASS_CAPTURED: \(name)")

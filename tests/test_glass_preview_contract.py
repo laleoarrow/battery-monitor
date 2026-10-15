@@ -86,7 +86,7 @@ class GlassPreviewContractTests(unittest.TestCase):
                        "changePresentation()", "changeFixture()"):
             self.assertIn(action, cycles)
         for proof in ("originalRoot.window === activeWindow", "installed.contains",
-                      "originalRoot.superview === panel?.contentView", "material?.style",
+                      "originalRoot.superview?.superview === panel?.contentView", "material?.style",
                       "footerVisible", "fields.contains", "popover.cachedPercentForTest",
                       "visibleGlassPanels.count", "visibleGlassPanels.allSatisfy",
                       "after native close delay", "withTimeInterval: 0.75",

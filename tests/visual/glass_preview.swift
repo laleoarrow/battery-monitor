@@ -219,7 +219,7 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
             }
             let hostMatches = expected == .classic
                 ? panel == nil && classic.isShown
-                : panel != nil && originalRoot.superview === panel?.contentView
+                : panel != nil && originalRoot.superview?.superview === panel?.contentView
                     && material?.style == (expected == .clearGlass ? .clear : .regular)
             let rootAttached = activeWindow != nil && originalRoot.window === activeWindow
                 && installed.contains { $0 === originalRoot }

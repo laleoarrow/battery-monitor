@@ -217,6 +217,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
             retireClassicHost()
             let panel = GlassPopoverPanel(content: content.view, frame: frame,
                 style: Settings.liquidGlassStyle == .clear ? .clear : .regular)
+            panel.point(to: placement.anchorFrame.midX)
             panel.appearance = Settings.colorScheme.appearance
             panel.onDismiss = { [weak self] in self?.close() }
             panel.onEscape = { [weak self] in _ = self?.handleEscape() }
@@ -311,6 +312,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
                 return
             }
             if glassPanel?.frame != frame { glassPanel?.setFrame(frame, display: true) }
+            if #available(macOS 26.0, *) { glassPanel?.point(to: placement.anchorFrame.midX) }
         }
         setContentSize(placement.contentSize)
     }

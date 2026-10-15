@@ -13,6 +13,21 @@ final class GlassPopoverPanel: NSPanel {
     var onDismiss: (() -> Void)?
     var onEscape: (() -> Void)?
     private weak var hostedContent: NSView?
+    private var foreground: NSView?
+    private var background: GlassBackgroundView?
+    private var material: NSView?
+    private var anchorX: CGFloat?
+
+    @available(macOS 26.0, *)
+    var materialView: GlassPopoverMaterialView? { material as? GlassPopoverMaterialView }
+
+    var bodyFrame: NSRect { foreground?.frame ?? .zero }
+
+    @available(macOS 26.0, *)
+    var arrowTip: NSPoint {
+        guard let glass = materialView else { return .zero }
+        return NSPoint(x: glass.frame.minX + glass.arrowX, y: glass.frame.maxY)
+    }
 
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
@@ -33,26 +48,66 @@ final class GlassPopoverPanel: NSPanel {
         level = .popUpMenu
         collectionBehavior = [.transient, .moveToActiveSpace, .fullScreenAuxiliary]
         let inset = Self.contentInset(for: style == .clear ? .clear : .regular)
-        let glass = NSGlassEffectView(frame: contentView!.bounds.insetBy(dx: inset, dy: inset))
+        let glass = GlassPopoverMaterialView(frame: contentView!.bounds.insetBy(dx: inset, dy: inset), style: style)
         glass.autoresizingMask = [.width, .height]
-        glass.style = style
-        glass.cornerRadius = 26
-        let background = GlassBackgroundView(frame: glass.frame, cornerRadius: glass.cornerRadius)
+        // SwiftUI glass alone leaves zero-alpha pixels that WindowServer clicks
+        // through. One 8-bit alpha step keeps the shaped surface interactive;
+        // the optical margin remains fully transparent.
+        let background = GlassBackgroundView(frame: glass.frame, cornerRadius: 0, minimumOpacity: 1.0 / 255)
         background.autoresizingMask = [.width, .height]
         contentView!.addSubview(background)
         contentView!.addSubview(glass)
         // An ancestor glass effect flattens the footer's SwiftUI glass into
         // solid fills. Keep the backdrop and interactive content as siblings.
-        content.frame = glass.frame
+        var bodyFrame = glass.frame
+        bodyFrame.size.height -= PopoverPlacement.glassArrowHeight
+        let foreground = NSView(frame: bodyFrame)
+        foreground.setAccessibilityElement(false)
+        foreground.autoresizingMask = [.width, .height]
+        foreground.wantsLayer = true
+        foreground.layer?.cornerRadius = GlassPopoverShape.cornerRadius
+        foreground.layer?.masksToBounds = true
+        // Scroll layers and the animated content stay inside the body, while
+        // the sibling material keeps its arrow and external optical margin.
+        content.frame = foreground.bounds
         content.autoresizingMask = [.width, .height]
-        contentView!.addSubview(content)
+        foreground.addSubview(content)
+        contentView!.addSubview(foreground)
         hostedContent = content
+        self.foreground = foreground
+        self.background = background
+        material = glass
+        updateOutline()
+    }
+
+    /// Keep the arrow tied to its actual menu-bar anchor after screen clamping.
+    @available(macOS 26.0, *)
+    func point(to screenX: CGFloat) {
+        anchorX = screenX
+        updateOutline()
+    }
+
+    override func setFrame(_ frameRect: NSRect, display flag: Bool) {
+        super.setFrame(frameRect, display: flag)
+        if #available(macOS 26.0, *) { updateOutline() }
+    }
+
+    @available(macOS 26.0, *)
+    private func updateOutline() {
+        guard let glass = materialView, let background else { return }
+        glass.point(to: (anchorX ?? frame.midX) - frame.minX - glass.frame.minX)
+        let mask = (background.layer?.mask as? CAShapeLayer) ?? CAShapeLayer()
+        mask.frame = background.bounds
+        mask.path = GlassPopoverShape(arrowX: glass.arrowX).appKitPath(in: background.bounds)
+        background.layer?.mask = mask
     }
 
     @available(macOS 26.0, *)
     func detachContent() {
         hostedContent?.removeFromSuperview()
         hostedContent = nil
+        foreground?.removeFromSuperview()
+        foreground = nil
     }
 
     /// A process-wide event monitor must not steal Escape from another Wattson

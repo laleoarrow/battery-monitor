@@ -11,6 +11,7 @@ SYSTEM_ICON = ROOT / "Core" / "SystemBatteryIcon.swift"
 ENERGY_MODE = ROOT / "Core" / "EnergyMode.swift"
 POPOVER = ROOT / "Popover" / "PopoverController.swift"
 GLASS_PANEL = ROOT / "Popover" / "GlassPopoverPanel.swift"
+GLASS_MATERIAL = ROOT / "Popover" / "GlassPopoverMaterialView.swift"
 
 
 class PopoverControlsContractTests(unittest.TestCase):
@@ -25,6 +26,7 @@ class PopoverControlsContractTests(unittest.TestCase):
         cls.energy_mode = ENERGY_MODE.read_text(encoding="utf-8")
         cls.popover = POPOVER.read_text(encoding="utf-8")
         cls.glass_panel = GLASS_PANEL.read_text(encoding="utf-8")
+        cls.glass_material = GLASS_MATERIAL.read_text(encoding="utf-8")
 
     def test_mode_picker_is_a_draggable_glass_knob(self):
         # macOS 26 batches a regular track and a clear moving optical lens in
@@ -295,10 +297,19 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("backgroundColor = .clear", self.glass_panel)
         self.assertIn("override var canBecomeKey: Bool { true }", self.glass_panel)
         self.assertIn("override var canBecomeMain: Bool { false }", self.glass_panel)
-        self.assertEqual(self.glass_panel.count("NSGlassEffectView(frame:"), 1)
-        self.assertIn("glass.style = style", self.glass_panel)
+        self.assertEqual(self.glass_panel.count("GlassPopoverMaterialView(frame:"), 1)
+        self.assertIn("NSHostingView<AnyView>", self.glass_material)
+        self.assertIn(".glassEffect(style == .clear ? .clear : .regular, in: GlassPopoverShape", self.glass_material)
+        self.assertNotIn("NSGlassEffectView(frame:", self.glass_panel)
+        # The material owns one outline; only the opacity backing receives a mask.
+        self.assertIn("background.layer?.mask = mask", self.glass_panel)
+        self.assertIn("GlassPopoverShape(arrowX: glass.arrowX).appKitPath", self.glass_panel)
+        self.assertNotIn("glass.layer?.mask", self.glass_panel)
+        self.assertIn("bodyFrame.size.height -= PopoverPlacement.glassArrowHeight", self.glass_panel)
+        self.assertIn("panel.point(to: placement.anchorFrame.midX)", self.popover)
         self.assertNotIn("glass.contentView = content", self.glass_panel)
-        self.assertIn("contentView!.addSubview(content)", self.glass_panel)
+        self.assertIn("foreground.addSubview(content)", self.glass_panel)
+        self.assertIn("contentView!.addSubview(foreground)", self.glass_panel)
         self.assertIn("contentView!.addSubview(glass)", self.glass_panel)
         self.assertIn("style: Settings.liquidGlassStyle == .clear ? .clear : .regular", self.popover)
         self.assertIn("popover.show(relativeTo:", self.popover)
