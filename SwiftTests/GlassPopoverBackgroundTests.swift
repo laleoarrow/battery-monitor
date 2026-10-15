@@ -63,7 +63,7 @@ final class GlassPopoverBackgroundTests: XCTestCase {
             XCTAssertTrue(path.contains(NSPoint(x: glass.arrowX, y: backing.bounds.maxY - 0.5)))
             XCTAssertFalse(path.contains(NSPoint(x: 1, y: backing.bounds.maxY - 0.5)))
             XCTAssertFalse(try XCTUnwrap(content.view.layer).masksToBounds)
-            XCTAssertTrue(content.view.superview === root)
+            XCTAssertTrue(content.view.superview?.superview === root)
             XCTAssertNil(glass.hitTest(.zero))
             XCTAssertFalse(panel.isVisible)
             panel.detachContent()

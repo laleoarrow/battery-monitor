@@ -153,10 +153,6 @@ final class GlassPopoverPanelTests: XCTestCase {
             content.wantsLayer = true
             content.layer?.cornerRadius = 7
             content.layer?.masksToBounds = false
-            let oversized = NSView(frame: NSRect(x: -80, y: -80, width: 520, height: 560))
-            oversized.wantsLayer = true
-            oversized.layer?.backgroundColor = NSColor.systemRed.cgColor
-            content.addSubview(oversized)
             let panel = GlassPopoverPanel(content: content,
                 frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset,
                               height: 400 + 2 * inset + PopoverPlacement.glassArrowHeight), style: style)
@@ -165,6 +161,13 @@ final class GlassPopoverPanelTests: XCTestCase {
             root.layoutSubtreeIfNeeded()
             let foreground = try XCTUnwrap(root.subviews.last)
             let layer = try XCTUnwrap(foreground.layer)
+            // Hidden NSView children do not populate their backing sublayers.
+            // A direct layer exercises the actual viewport's clipping here.
+            let oversized = CALayer()
+            oversized.frame = CGRect(x: -80, y: -80, width: 520, height: 560)
+            oversized.backgroundColor = NSColor.systemRed.cgColor
+            layer.addSublayer(oversized)
+            defer { oversized.removeFromSuperlayer() }
             let body = NSRect(x: CGFloat(padding), y: CGFloat(padding), width: 360, height: 400)
             let outside = [
                 NSPoint(x: body.minX - 4, y: body.midY), NSPoint(x: body.maxX + 4, y: body.midY),
