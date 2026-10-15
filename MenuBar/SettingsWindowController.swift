@@ -1246,7 +1246,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         dockLabel.textColor = SettingsStyle.primaryText
         dockLabel.translatesAutoresizingMaskIntoConstraints = false
         let dockHelp = NSTextField(wrappingLabelWithString:
-            "Restart Wattson to apply. Finder icon stays unchanged.\nHidden keeps Wattson menu-bar-only."
+            "Restart Wattson to apply."
         )
         dockHelp.identifier = NSUserInterfaceItemIdentifier("settings.appearance.dock-icon.help")
         dockHelp.font = SettingsStyle.detailFont
@@ -1293,7 +1293,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             switchSlot.heightAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.height),
             liquidGlassSwitch.centerXAnchor.constraint(equalTo: switchSlot.centerXAnchor),
             liquidGlassSwitch.centerYAnchor.constraint(equalTo: switchSlot.centerYAnchor),
-            surface.heightAnchor.constraint(equalToConstant: 44 + SettingsStyle.generalRowHeight + 32 + 36 + 44 + 76),
+            surface.heightAnchor.constraint(equalToConstant: 44 + SettingsStyle.generalRowHeight + 32 + 36 + 44 + 60),
             themeRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
             themeRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
             themeRow.topAnchor.constraint(equalTo: box.topAnchor),

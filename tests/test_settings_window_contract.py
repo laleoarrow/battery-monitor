@@ -454,9 +454,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(dockPopup.accessibilityLabel() == "Dock Icon"
                 && dockPopup.accessibilityHelp()?.contains("Restart Wattson to apply. Finder icon stays unchanged.") == true
                 && dockPopup.accessibilityHelp()?.contains("Hidden keeps Wattson menu-bar-only.") == true
-                && dockHelp.stringValue.contains("Restart Wattson to apply. Finder icon stays unchanged.")
-                && dockHelp.stringValue.contains("Hidden keeps Wattson menu-bar-only.") && !dockHelp.isHidden,
-                "Dock choice visibly and accessibly explains restart, Finder scope and Hidden behavior")
+                && dockHelp.stringValue == "Restart Wattson to apply." && !dockHelp.isHidden,
+                "Dock choice shows concise restart help and accessibly explains Finder scope and Hidden behavior")
             if #available(macOS 26, *) {
                 require(glassSwitch.isEnabled, "native Liquid Glass is selectable on macOS 26")
             } else {
