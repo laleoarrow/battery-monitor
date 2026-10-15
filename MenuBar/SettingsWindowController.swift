@@ -84,18 +84,18 @@ private enum SettingsStyle {
     static let contentBottomInset: CGFloat = 20
 
     static let trafficLightSafeHeight: CGFloat = 52
-    static let identityHeight: CGFloat = 64
-    static let identityTileSize: CGFloat = 40
+    static let identityHeight: CGFloat = 56
+    static let identityTileSize: CGFloat = 32
     static let navigationInset: CGFloat = 12
     static let navigationTopGap: CGFloat = 12
-    static let navigationRowHeight: CGFloat = 40
+    static let navigationRowHeight: CGFloat = 32
     static let navigationRowGap: CGFloat = 4
-    static let navigationHeight: CGFloat = 144
+    static let navigationHeight: CGFloat = 124
 
-    static let headingFont = NSFont.systemFont(ofSize: 22, weight: .semibold)
-    static let primaryFont = NSFont.systemFont(ofSize: 14, weight: .regular)
+    static let headingFont = NSFont.systemFont(ofSize: 18, weight: .semibold)
+    static let primaryFont = NSFont.systemFont(ofSize: 13, weight: .regular)
     static let detailFont = NSFont.systemFont(ofSize: 11, weight: .regular)
-    static let sidebarFont = NSFont.systemFont(ofSize: 13, weight: .medium)
+    static let sidebarFont = NSFont.systemFont(ofSize: 13, weight: .regular)
 
     static let toggleSize = NSSize(width: 38, height: 22)
     static let generalListHeight: CGFloat = 136
@@ -133,19 +133,6 @@ private enum SettingsStyle {
     static let headingText = adaptive(0xF4F4F4, .labelColor, light: 0x1C1C1E)
     static let primaryText = adaptive(0xE9E9E9, .labelColor, light: 0x242426)
     static let secondaryText = adaptive(0xA0A0A2, .secondaryLabelColor, light: 0x63636A)
-
-    static func navigationIconColor(for identifier: String) -> NSColor {
-        let palette: (light: UInt32, dark: UInt32)
-        switch identifier {
-        case "general": palette = (0x65717D, 0x778490)
-        case "menu-bar-icon": palette = (0x527A9F, 0x638FB5)
-        default: palette = (0x387F79, 0x4A9189)
-        }
-        return NSColor(name: nil) { appearance in
-            color(hex: appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
-                ? palette.dark : palette.light)
-        }
-    }
 
     private static func adaptive(_ baseline: UInt32, _ system: NSColor, light: UInt32) -> NSColor {
         NSColor(name: nil) { appearance in
@@ -462,32 +449,6 @@ private final class SettingsToggleButton: NSButton, SettingsContrastRefreshing {
     }
 }
 
-private final class SettingsSidebarIconBox: NSBox, SettingsContrastRefreshing {
-    private let increaseContrast: () -> Bool
-
-    init(color: NSColor, increaseContrast: @escaping () -> Bool) {
-        self.increaseContrast = increaseContrast
-        super.init(frame: .zero)
-        boxType = .custom
-        titlePosition = .noTitle
-        cornerRadius = 6
-        fillColor = color
-        setAccessibilityElement(false)
-        refreshContrastAppearance()
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) is unavailable")
-    }
-
-    func refreshContrastAppearance() {
-        borderWidth = increaseContrast() ? 1 : 0
-        borderColor = .labelColor
-        needsDisplay = true
-    }
-}
-
 private final class SettingsSidebarRowView: NSTableRowView, SettingsContrastRefreshing {
     private let increaseContrast: () -> Bool
 
@@ -502,11 +463,11 @@ private final class SettingsSidebarRowView: NSTableRowView, SettingsContrastRefr
     }
 
     var selectionFillColor: NSColor {
-        .controlAccentColor.withAlphaComponent(increaseContrast() ? 0.28 : 0.14)
+        .labelColor.withAlphaComponent(increaseContrast() ? 0.14 : 0.07)
     }
 
     var selectionStrokeColor: NSColor? {
-        increaseContrast() ? .controlAccentColor : nil
+        increaseContrast() ? .labelColor : nil
     }
 
     var selectionStrokeWidth: CGFloat { increaseContrast() ? 2 : 0 }
@@ -615,7 +576,7 @@ private final class SettingsFormStackView: NSStackView {
 private func settingsGroup(title: String, identifier: String, content: NSView) -> NSStackView {
     let heading = NSTextField(labelWithString: title)
     heading.identifier = NSUserInterfaceItemIdentifier("\(identifier).heading")
-    heading.font = .systemFont(ofSize: 13, weight: .semibold)
+    heading.font = .systemFont(ofSize: 12, weight: .semibold)
     heading.textColor = SettingsStyle.primaryText
     let group = NSStackView(views: [heading, content])
     group.identifier = NSUserInterfaceItemIdentifier(identifier)
@@ -715,7 +676,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
     let identifier = "general"
     let title = "General"
-    let symbolName = "gearshape.fill"
+    let symbolName = "slider.horizontal.3"
     let view = NSView()
 
     private let dependencies: SettingsWindowDependencies
@@ -2339,7 +2300,7 @@ private final class MenuBarIconCardButton: NSButton, SettingsContrastRefreshing 
         primary.identifier = NSUserInterfaceItemIdentifier(
             "settings.menu-bar-icon.title.\(identifierSuffix)"
         )
-        primary.font = .systemFont(ofSize: 13, weight: .semibold)
+        primary.font = .systemFont(ofSize: 12, weight: .medium)
         primary.textColor = SettingsStyle.primaryText
         primary.alignment = .left
         primary.lineBreakMode = .byClipping
@@ -2522,7 +2483,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
 {
     let identifier = "menu-bar-icon"
     let title = "Display"
-    let symbolName = "menubar.rectangle"
+    let symbolName = "rectangle"
     let view = NSView()
 
     private let increaseContrast: () -> Bool
@@ -2819,7 +2780,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         primary.textColor = SettingsStyle.primaryText
 
         let detail = NSTextField(labelWithString: description(for: module))
-        detail.font = .systemFont(ofSize: 12)
+        detail.font = SettingsStyle.detailFont
         detail.textColor = SettingsStyle.secondaryText
         detail.lineBreakMode = .byTruncatingTail
         let text = NSStackView(views: [primary, detail])
@@ -3359,7 +3320,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         guard identifier == Self.sectionTitleItem else { return nil }
         toolbarTitle.identifier = NSUserInterfaceItemIdentifier("settings.toolbar.title")
         toolbarTitle.stringValue = sections[selectedSectionIndex].title
-        toolbarTitle.font = .systemFont(ofSize: 18, weight: .semibold)
+        toolbarTitle.font = .systemFont(ofSize: 15, weight: .medium)
         toolbarTitle.textColor = .labelColor
         let item = NSToolbarItem(itemIdentifier: identifier)
         item.isBordered = false
@@ -3382,7 +3343,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         iconTile.translatesAutoresizingMaskIntoConstraints = false
 
         let name = NSTextField(labelWithString: "Wattson")
-        name.font = .systemFont(ofSize: 15, weight: .semibold)
+        name.font = .systemFont(ofSize: 14, weight: .medium)
         name.textColor = SettingsStyle.headingText
         name.translatesAutoresizingMaskIntoConstraints = false
 
@@ -3517,25 +3478,18 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         let section = sections[row]
         let cell = NSTableCellView()
 
-        let icon = SettingsSidebarIconBox(
-            color: SettingsStyle.navigationIconColor(for: section.identifier),
-            increaseContrast: increaseContrast
-        )
+        let icon = NSImageView()
         icon.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.icon.\(section.identifier)")
         icon.translatesAutoresizingMaskIntoConstraints = false
-        let imageView = NSImageView()
-        imageView.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.symbol.\(section.identifier)")
-        imageView.image = NSImage(
+        icon.image = NSImage(
             systemSymbolName: section.symbolName,
             accessibilityDescription: nil
         )?.withSymbolConfiguration(
-            NSImage.SymbolConfiguration(pointSize: 16, weight: .medium)
+            NSImage.SymbolConfiguration(pointSize: 18, weight: .regular)
         )
-        imageView.contentTintColor = .white
-        imageView.imageScaling = .scaleProportionallyDown
-        imageView.setAccessibilityElement(false)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        icon.addSubview(imageView)
+        icon.contentTintColor = SettingsStyle.primaryText
+        icon.imageScaling = .scaleProportionallyDown
+        icon.setAccessibilityElement(false)
 
         let title = NSTextField(labelWithString: section.title)
         title.font = SettingsStyle.sidebarFont
@@ -3545,17 +3499,13 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
         cell.addSubview(icon)
         cell.addSubview(title)
-        cell.imageView = imageView
+        cell.imageView = icon
         cell.textField = title
         NSLayoutConstraint.activate([
             icon.leadingAnchor.constraint(equalTo: cell.leadingAnchor),
             icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
             icon.widthAnchor.constraint(equalToConstant: 24),
             icon.heightAnchor.constraint(equalToConstant: 24),
-            imageView.centerXAnchor.constraint(equalTo: icon.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: 16),
-            imageView.heightAnchor.constraint(equalToConstant: 16),
             title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 9),
             title.trailingAnchor.constraint(equalTo: cell.trailingAnchor),
             title.centerYAnchor.constraint(equalTo: cell.centerYAnchor),

@@ -136,7 +136,11 @@ final class SettingsGlassOpticalMarginTests: XCTestCase {
         let hostFrame = controller.contentHostFrameForTest
         let listFrame = list.convert(list.bounds, to: nil)
         XCTAssertEqual(listFrame.minX, hostFrame.minX, accuracy: 0.5)
-        XCTAssertEqual(listFrame.maxY, hostFrame.maxY - 64, accuracy: 0.5)
+        let groupHeading: NSTextField = try find("settings.general.startup.heading", in: content)
+        let headingFrame = try XCTUnwrap(groupHeading.superview).convert(
+            groupHeading.alignmentRect(forFrame: groupHeading.frame), to: nil
+        )
+        XCTAssertEqual(headingFrame.minY - listFrame.maxY, 8, accuracy: 0.5)
         XCTAssertFalse(window.isVisible)
     }
 
@@ -154,7 +158,7 @@ final class SettingsGlassOpticalMarginTests: XCTestCase {
         ] {
             let heading: NSTextField = try find("settings.general.\(identifier).heading", in: content)
             XCTAssertEqual(heading.stringValue, title)
-            XCTAssertEqual(heading.font, .systemFont(ofSize: 13, weight: .semibold))
+            XCTAssertEqual(heading.font, .systemFont(ofSize: 12, weight: .semibold))
             var parent = heading.superview
             while let ancestor = parent {
                 XCTAssertFalse(ancestor is NSBox, "Group headings belong outside their surface")
