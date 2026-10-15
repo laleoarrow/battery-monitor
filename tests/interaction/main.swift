@@ -1825,16 +1825,25 @@ if #available(macOS 26.0, *) {
             }
             // This fixture targets the circle's settled padding in model
             // coordinates; entrance motion is verified independently above.
-            let menuGeometryReady = runApplication(until: {
-                panel.entranceAnimationCountForTest == 0 && owner.window?.isKeyWindow == true
-            }, timeout: 1)
             root.layoutSubtreeIfNeeded()
             owner.scrollToVisible(owner.bounds)
+            CATransaction.flush()
             let menuCircle = NSRect(x: owner.bounds.maxX - 38, y: 36, width: 38, height: 38)
-            check("设置菜单空白区域点击前入场已结束且圆形区域完整可见",
-                  menuGeometryReady && panel.entranceAnimationCountForTest == 0
+            func entranceGeometrySettled() -> Bool {
+                guard let layer = root.layer, let presentation = layer.presentation() else { return false }
+                return presentation.opacity == layer.opacity
+                    && CATransform3DEqualToTransform(presentation.transform, layer.transform)
+            }
+            let menuGeometryReady = runApplication(until: {
+                entranceGeometrySettled() && owner.window?.isKeyWindow == true
+                    && owner.visibleRect.contains(menuCircle)
+            }, timeout: 1)
+            check("设置菜单空白区域点击前画面已稳定且圆形区域完整可见",
+                  menuGeometryReady && entranceGeometrySettled()
                       && owner.window?.isKeyWindow == true && owner.visibleRect.contains(menuCircle),
                   "entrance=\(panel.entranceAnimationCountForTest) key=\(owner.window?.isKeyWindow == true) "
+                      + "presentationOpacity=\(String(describing: root.layer?.presentation()?.opacity)) "
+                      + "presentationTransform=\(String(describing: root.layer?.presentation()?.transform)) "
                       + "circle=\(menuCircle) visible=\(owner.visibleRect)")
             // These points are inside the visible 38-point circle but outside
             // the small symbol. AXPress cannot detect this missing hit area.
