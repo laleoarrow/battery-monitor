@@ -551,19 +551,32 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         return true
     }
 
-    /// Use the live screen point, as the global event's window belongs to a
-    /// different process. Do not close before a relayed status-button action.
+    /// A native host may relay its own content press to the global monitor.
+    /// Leave it with that window, just as with a relayed status-button action.
     func handleGlobalMouseDown(screenPoint: NSPoint, event: NSEvent? = nil) {
         guard wantsOpen else { return }
         let wasOpen = wantsOpen
+        let anchorFrame = anchorButton?.window?.frame
         let shouldDismiss = Self.shouldDismissGlobalClick(screenPoint: screenPoint,
-                                                         anchorFrame: anchorButton?.window?.frame)
+            anchorFrame: anchorFrame, eventWindow: event?.window,
+            eventWindowNumber: event?.windowNumber ?? 0, contentWindow: content.view.window)
         if shouldDismiss { close() }
         PopupEventLog.record(source: "global-mouse", event: event,
-            openBefore: wasOpen, openAfter: wantsOpen, anchorHit: !shouldDismiss)
+            openBefore: wasOpen, openAfter: wantsOpen,
+            anchorHit: !Self.shouldDismissGlobalClick(screenPoint: screenPoint, anchorFrame: anchorFrame))
     }
 
-    static func shouldDismissGlobalClick(screenPoint: NSPoint, anchorFrame: NSRect?) -> Bool {
+    static func shouldDismissGlobalClick(screenPoint: NSPoint, anchorFrame: NSRect?,
+                                        eventWindow: NSWindow? = nil, eventWindowNumber: Int = 0,
+                                        contentWindow: NSWindow? = nil) -> Bool {
+        if let contentWindow {
+            if eventWindow === contentWindow { return false }
+            // Global delivery can omit the local window object. Only a known
+            // positive target number can substitute for its identity; screen
+            // overlap must not shelter a different process's window.
+            if eventWindow == nil, eventWindowNumber > 0,
+               eventWindowNumber == contentWindow.windowNumber { return false }
+        }
         guard let frame = anchorFrame else { return true }
         // At the display's upper edge the pointer can equal maxY. Keep X
         // half-open so a neighbouring status item still counts as outside.

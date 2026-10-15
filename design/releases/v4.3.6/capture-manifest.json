@@ -1,0 +1,2904 @@
+{
+  "schema": 1,
+  "releaseVersion": "4.3.6",
+  "captureSourceCommit": "7e376e4a525998212a378e149c5d0393f6a3b918",
+  "captureSourceArchiveSHA256": "5369c36b5c7f5f3aa4c12b0b4ac9400ad345164792cedde16e89f9cbbbbdb972",
+  "captureToolsArchiveSHA256": "247a302eebe79b6b62fc00e91a74d878eb2f429af941c11a2afb75f3731ae5e2",
+  "compiledProductionSourceSHA256": {
+    "VERSION": "a0a7fc2e610bda58d69aa07f1d0eb6e12b5835f003ffdc6bdcf52537d721eab9",
+    "Core/AppleSmartBatteryPowerObservationReader.swift": "b5a86dbdafca4acfb80d7bd91071e5a04100c38c78591a7d7cbb3fc96c0fc9c5",
+    "Core/BatteryRuntimeEstimate.swift": "181a13a53e73984b2eb26325c36875da6a93c32d141fb329d219a0b1acc598c2",
+    "Core/BatterySampler.swift": "e13d3140628ed001206ec9e560ea74597da4a8d599a063a42151b393c8441675",
+    "Core/EnergyMode.swift": "609fe7864c25605b10550301758f4d01836a0ad63740e335c1ab6f5b8172a8b3",
+    "Core/FeedbackDiagnostics.swift": "db1567193a4ccc5eef8c6b89e4e9a0cfd7341efad1b83debd7d600dd0978560d",
+    "Core/GlassBackgroundView.swift": "a6e5876b87a08c021985c5e10574e6eda67615fe314d097881dbf280cc8aa9bf",
+    "Core/HelperClient.swift": "2620a616fecb42cf85a708e03d20a6f5e464b33e034e33e988fd9a1b8d01b5de",
+    "Core/HelperClientPowerObservationV5.swift": "9fd766fa6d54aef1a7077983b4e70097a0cc43c7109102b129371672f15832fe",
+    "Core/LoginItemController.swift": "0d9ef7aad7666f2c373f4349e8ee4b538c2d07374af44153addce14649b43169",
+    "Core/PopoverPlacement.swift": "63874cd26d11967f12bb64414053c9cc90098397a11b162c0bb1cbdb5abeee91",
+    "Core/PopupEventLog.swift": "28efd1747083b0d72b2278c55ef57d51c1f02176f5ee0d5cf56d633c4541a70d",
+    "Core/PowerHistory.swift": "b42dc199e766585b59e30668f9e2235faa440f6ca5019c5a6bbfccb69f499f50",
+    "Core/PowerObservationFusion.swift": "7e877a9d5353d979f8f66ed20b27072b27a21e4cd7d46c8284290ab18a861d2b",
+    "Core/PowerObservationFusionReplay.swift": "d346e7b8a5697efad0f5d98f12f541f4ed1be28bb781e0b3fe4fa3893a5f4c30",
+    "Core/PowerObservationRuntimeController.swift": "28f39e08e70af2dde354b328da16afc6793815e1bf5eca609e7857a98c2054de",
+    "Core/PowerObservationShadow.swift": "3974ee357d7125fcc54509ad975d8881f30783fb131db9e8e16a050cffa22522",
+    "Core/PowerObservationTrace.swift": "8f9d926a4acf76de2afe2eae31bfcff97420f0090878faeb8cb32317a984ba5a",
+    "Core/PowerObservationWireV5.swift": "74cc385246cb918fe7942a17700fe98d2d52034ea880d8d2c6923a5d815649ec",
+    "Core/PowerSnapshot.swift": "48ae64641190df24487c1af7589ad62c7b98bbcafd212dc5d97f75079bfefa96",
+    "Core/RawPowerObservation.swift": "ab961b7bbc0201fb22e2a72c2d66a4d16f1d5c0563ca4aee30ef287bc29ea2bc",
+    "Core/Settings.swift": "865896e6d8b027be2839c2b24bfba11257420b6ab0d68e3dd25c9290981f9090",
+    "Core/SettingsAppearance.swift": "9e318deeafb66b1cb472033195577a45b9412817b695ffbeca6546219aaf581c",
+    "Core/SystemBatteryIcon.swift": "42322574a1d9f892da3a37599f51f6cc6bdf41c0410f02bae399ce96169036a0",
+    "Core/UpdateChecker.swift": "1e725a7dca032579c7f4b2e4601374829169be1ea55b76b65f0a4d1e06f2feb6",
+    "Core/VisualEncoding.swift": "723fd740660035795a5550ad2ad90d05306f246e21aa5acbb556797bc77f41da",
+    "MenuBar/AppDelegate.swift": "2d16b056ba6493479b918331748d09c1350e9f882d2ad442203f38baf99ba099",
+    "MenuBar/BatteryIcon.swift": "f53a5e8b6805d3a8d074fa96ef59d90e3bdb93333d2d0f83bab89c6ac13c70a9",
+    "MenuBar/ClickRouter.swift": "a06623103f819926b9739d6f62fe87683f9e1edd041b1e6baa8bf662d07eedb7",
+    "MenuBar/SettingsWindowController.swift": "511d566f0e8ff7ebb33dd27b3eb81a0235e5c22197868da4aebbfb6aaa22497e",
+    "MenuBar/StatusItemController.swift": "4792b521564b3cc85e94859bdf7fce75aad8499e96474aec16980f3d7b47de24",
+    "Popover/FooterHoverFeedbackView.swift": "268b829f17f8163f8f8e72567d18fba0f5fcebe5c2adc9c549754ed73ce318e5",
+    "Popover/GlassPopoverMaterialView.swift": "30bc604ce59aeb4568ed3f21a383b582b32c8fd581f35bd58239d57120ed478f",
+    "Popover/GlassPopoverPanel.swift": "efe6963b5e77418b24a813682149edd5527effe6b339c344042fe21750d089a9",
+    "Popover/HistoryLayer.swift": "38b78dd1398da2f5580794f9710e5f2899aa9cb3e471c840df42cab683e7bd62",
+    "Popover/InteractiveGlassModeControl.swift": "a65dc2d2563ed99030a59bd63d14f2eac2965bec9f9686ec60a1a2dcb419894a",
+    "Popover/LaneLayer.swift": "4d02b1379bd1afab1adbea9b3cdaaa73deb26d28d297cd4d967813829ed2bb28",
+    "Popover/ModeSliderView.swift": "35d1d69fee67ac2bf69b630be5452389e87b6f072771099c7fc025f3090b3b6b",
+    "Popover/NativeGlassModeControl.swift": "55423cc7b07962aeaed27aa181e4800f500f13351b207031de392a166efbba09",
+    "Popover/NativeModeSegmentedControl.swift": "d89a9be2e3afe021194e7489cabd0ac79cce233b37349912df099f4a736756a5",
+    "Popover/PopoverContentView.swift": "434fd34f241b609dc6d4f5ea67fc3bd21b5daa1dd2c285de2cde97b833f37001",
+    "Popover/PopoverController.swift": "150683441670264cb19c564a0dca726c11b675957cdbecdb149a2af2fc49f986",
+    "Popover/PopoverPreview.swift": "eccabbb55fd7c7ddde4e961b3ec5e617047e49dfdaffae5a32f5fc77333f56f8",
+    "Popover/PopoverStyle.swift": "e97d386c30599d974a343289f51b9f59cce662119c3943942c9f392357beade6",
+    "Popover/PowerFlowLayer.swift": "ff71eaab3eb864b7e2eed08a76703b9aabef131d9c5ea24240383e3b6b5abcbc",
+    "Popover/RingGaugeLayer.swift": "52b7e639170db8d2371498647d561ebeddea0cd7a6577c40323533bc26b3fcc8"
+  },
+  "captureToolSHA256": {
+    "capture_glass_shadow.c": "1e89c8217ba63613ee4f44d9a55b419467a22fcf37813e38b0dc2e9f84575f04",
+    "capture_glass_shadow.h": "0bc428429cf551d666249280f7d77fcbb0c7853187f01d67fb98aaf4a48f1f4c",
+    "hover-probe.swift": "8c5967f6e11e95388144e4f22a2b442336dd6ae457792421d8c69ce1d541f359",
+    "run-hover-probe.sh": "678ec0c0fa34d1c85ffeec1b8dec5b22c05fecbe71ae7885193da7d0cdba6707",
+    "synchronize-owned-hover-preferences.js": "db08f5a5b0ea41b76e3288b22e83bc1b9af5a277bd4b902c7b17c4b7fdca17d7",
+    "finalize-owned-hover-preferences.py": "316345c8dc71cbbda3b4be21af32b6def94fb6d67dc5fe70a8bb9aeae40af41b"
+  },
+  "encodingScript": "encode-native-sweep.py",
+  "encodingScriptSHA256": "63511506ac9046c2a684e95fa8bfade503bc6992eaa6dfc66e573c2afa245d7b",
+  "environment": {
+    "macOS": "26.6.1",
+    "build": "25G76",
+    "architecture": "arm64",
+    "machine": "exclusive disposable GUI VM",
+    "screenLogicalPoints": [
+      1920,
+      1200
+    ],
+    "internalBatteryPresent": false,
+    "hostDesktopTested": false
+  },
+  "captureMethod": {
+    "renderer": "Production PopoverController and footer controls; fixed owned backdrop",
+    "powerData": "Fixed power/time/history/helper display fixtures, not live hardware readings",
+    "installedReleasePKGScreenshots": false,
+    "inputRoute": "OS CGEvent.post through WindowServer and native tracking",
+    "DEBUGPointerOverridesUsed": false,
+    "globalAcceptsMouseMovedEventsEnabled": false,
+    "PNGPostprocessing": false,
+    "cursorDrawnInPixels": false,
+    "footerROI": "Requested directly from native WindowServer capture API, not cropped later",
+    "backdrop": "Fresh owned full-screen backdrop after popup presentation, with separate native RGBA calibration",
+    "animation": "Original native PNG IDAT streams packaged into APNG with actual inter-frame intervals; no pixel processing, generated frames or drawn pointer"
+  },
+  "captureCounts": {
+    "completedCases": 16,
+    "fullPopupPNGsProduced": 80,
+    "footerROIPNGsProduced": 80,
+    "rawSweepFramesProduced": 555,
+    "sweepsProduced": 15,
+    "fullPopupPNGsIncluded": 16,
+    "footerROIPNGsIncluded": 4,
+    "APNGsIncluded": 6,
+    "rawFramesInIncludedAPNGs": 222
+  },
+  "validation": {
+    "nativeCaptureMatrix": "passed",
+    "probeExitCode": 0,
+    "wrapperExitCode": 0,
+    "outerRunnerExitCode": 0,
+    "localHeadless": {
+      "swiftTestsPassed": 462,
+      "pythonTestsPassed": 560,
+      "pythonExpectedSkips": 4,
+      "sourceCommit": "7e376e4a525998212a378e149c5d0393f6a3b918"
+    },
+    "hostedCI": {
+      "sourceCommit": "7e376e4a525998212a378e149c5d0393f6a3b918",
+      "branchPushRun": {
+        "id": 38765161151,
+        "URL": "https://github.com/laleoarrow/battery-monitor/actions/runs/38765161151",
+        "test": "success",
+        "website": "success"
+      },
+      "pullRequestRun": {
+        "id": 38765169530,
+        "URL": "https://github.com/laleoarrow/battery-monitor/actions/runs/38765169530",
+        "test": "success",
+        "website": "success"
+      },
+      "releaseScope": "Release-main and installer-candidate gates are separate; this gallery does not establish their completion."
+    },
+    "VMInteractionRegression": {
+      "status": "passed",
+      "sourceCommit": "7e376e4a525998212a378e149c5d0393f6a3b918",
+      "configurationCount": 5,
+      "assertionsPassed": 1686,
+      "configurations": [
+        {
+          "name": "native",
+          "assertionsPassed": 339,
+          "exitCode": 0
+        },
+        {
+          "name": "legacyKnob",
+          "assertionsPassed": 337,
+          "exitCode": 0
+        },
+        {
+          "name": "reduceMotion",
+          "assertionsPassed": 333,
+          "exitCode": 0
+        },
+        {
+          "name": "reduceTransparency",
+          "assertionsPassed": 338,
+          "exitCode": 0
+        },
+        {
+          "name": "increasedContrast",
+          "assertionsPassed": 339,
+          "exitCode": 0
+        }
+      ],
+      "wrapperExitCode": 0,
+      "outerRunnerExitCode": 0
+    },
+    "VMAnimationStress": {
+      "status": "passed",
+      "sourceCommit": "7e376e4a525998212a378e149c5d0393f6a3b918",
+      "iterationsPassed": 20000,
+      "exitCode": 0,
+      "outerRunnerExitCode": 0
+    },
+    "VMDelayedCleanupAudit": {
+      "status": "passed",
+      "immediateAudit": {
+        "checksPassed": 8,
+        "checksTotal": 8,
+        "runtimeResidualListsEmpty": true
+      },
+      "delayedIndependentAudit": {
+        "checksPassed": 8,
+        "checksTotal": 8,
+        "runtimeResidualListsEmpty": true
+      },
+      "quietSeconds": 126.7607489170041,
+      "scope": "Owned QA applications, child processes, app registrations, test containers, preferences, mounts and exact owned TCC rows were cleared. The disposable VM remains idle for subsequent installer-candidate validation.",
+      "VMCloneDeleted": false
+    },
+    "reporterConfirmation": {
+      "issue20": "pending Cody confirmation",
+      "issue23": "pending Cody confirmation"
+    },
+    "scope": "This gallery validates the recorded fixtures and input paths on the listed VM OS; it does not establish the reporter macOS 27.0.1 result or a release PKG hardware-battery test. Earlier diagnostic failures and raw frames remain private QA evidence."
+  },
+  "images": [
+    {
+      "file": "standard-charging-dark.png",
+      "sourceCaptureName": "standard-dark-before",
+      "kind": "native full popup",
+      "SHA256": "689eaafd7df9445650ced57a400701a80c07f5a16d8cd931734a0933e58cab5c",
+      "byteCount": 84934,
+      "pixelDimensions": [
+        440,
+        885
+      ],
+      "captureCG": [
+        1440,
+        0,
+        440,
+        885
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "standard-charging-light.png",
+      "sourceCaptureName": "standard-light-before",
+      "kind": "native full popup",
+      "SHA256": "e179f31c1fba3c0fec7abab2eabf79dfb544ce247aeff9fb0438296bcf267e86",
+      "byteCount": 89415,
+      "pixelDimensions": [
+        440,
+        885
+      ],
+      "captureCG": [
+        1440,
+        0,
+        440,
+        885
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "clear-charging-dark.png",
+      "sourceCaptureName": "clear-dark-before",
+      "kind": "native full popup",
+      "SHA256": "e15b4bd4ec72d8b3e9ff82217cc4437a1d76f37cdca266f2a9f66ec95519a27f",
+      "byteCount": 80543,
+      "pixelDimensions": [
+        396,
+        847
+      ],
+      "captureCG": [
+        1462,
+        16,
+        396,
+        847
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "clear-charging-light.png",
+      "sourceCaptureName": "clear-light-before",
+      "kind": "native full popup",
+      "SHA256": "603798535be4592eb255a8aac6a93e5a0b78aff4b87b2ceed100a17e26b02ee9",
+      "byteCount": 87612,
+      "pixelDimensions": [
+        396,
+        847
+      ],
+      "captureCG": [
+        1462,
+        16,
+        396,
+        847
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "classic-charging-dark.png",
+      "sourceCaptureName": "classic-dark-before",
+      "kind": "native full popup",
+      "SHA256": "7bab488a29eab69909998c040f17155bea36ae5edbb7314a66e19bc231fce576",
+      "byteCount": 86293,
+      "pixelDimensions": [
+        402,
+        841
+      ],
+      "captureCG": [
+        1459,
+        18,
+        402,
+        841
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": null,
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": 0
+    },
+    {
+      "file": "classic-charging-light.png",
+      "sourceCaptureName": "classic-light-before",
+      "kind": "native full popup",
+      "SHA256": "c0f686ba90e9eccdf715665bc06baaf43a89189da48ad9d504f26edccb4ac34e",
+      "byteCount": 110003,
+      "pixelDimensions": [
+        402,
+        841
+      ],
+      "captureCG": [
+        1459,
+        18,
+        402,
+        841
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": null,
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": 0
+    },
+    {
+      "file": "standard-full-dark.png",
+      "sourceCaptureName": "state-full-before",
+      "kind": "native full popup",
+      "SHA256": "183d7ffb721e5d25f26f70070fb4b83e24709f12b813433c7d5aa063ef6f9774",
+      "byteCount": 76376,
+      "pixelDimensions": [
+        440,
+        885
+      ],
+      "captureCG": [
+        1440,
+        0,
+        440,
+        885
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "standard-battery-dark.png",
+      "sourceCaptureName": "state-battery-before",
+      "kind": "native full popup",
+      "SHA256": "1a4895573526f2efaa4dd05f47dbae0297f86f7a13f3850d31acfbf6e4f011e6",
+      "byteCount": 78818,
+      "pixelDimensions": [
+        440,
+        885
+      ],
+      "captureCG": [
+        1440,
+        0,
+        440,
+        885
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "standard-mixed-dark.png",
+      "sourceCaptureName": "state-mixed-before",
+      "kind": "native full popup",
+      "SHA256": "6dfdba871780cf9df6a805436282cbe2cc0d7b4d48858e8d81815eba889e130f",
+      "byteCount": 85128,
+      "pixelDimensions": [
+        440,
+        885
+      ],
+      "captureCG": [
+        1440,
+        0,
+        440,
+        885
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "standard-low-battery-dark.png",
+      "sourceCaptureName": "state-low-battery-before",
+      "kind": "native full popup",
+      "SHA256": "70bb29a76948906d4a56c5aaa12dd1eed8ed6397aceeeadf4ed5abdb0ab1d1ae",
+      "byteCount": 78413,
+      "pixelDimensions": [
+        440,
+        885
+      ],
+      "captureCG": [
+        1440,
+        0,
+        440,
+        885
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "standard-low-power-dark.png",
+      "sourceCaptureName": "state-low-power-before",
+      "kind": "native full popup",
+      "SHA256": "995bab4670f3b672731cf847fc2cb10284d0fa2fb68f6b194e7db2ba7ba38c69",
+      "byteCount": 80565,
+      "pixelDimensions": [
+        440,
+        885
+      ],
+      "captureCG": [
+        1440,
+        0,
+        440,
+        885
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "low",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "glass-reduce-motion-dark.png",
+      "sourceCaptureName": "reduce-motion-before",
+      "kind": "native full popup",
+      "SHA256": "c8cacd70a3a226be84930f4f1d8c0300dabc79b443930e293be014dbfe63ebd3",
+      "byteCount": 83659,
+      "pixelDimensions": [
+        440,
+        885
+      ],
+      "captureCG": [
+        1440,
+        0,
+        440,
+        885
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "glass-reduce-transparency-light.png",
+      "sourceCaptureName": "reduce-transparency-light-before",
+      "kind": "native full popup",
+      "SHA256": "8f4a3eb11897fa3d4b21aed1d4e75314b4d543ec537b12b0b4c07e96d3b52ba4",
+      "byteCount": 97560,
+      "pixelDimensions": [
+        440,
+        885
+      ],
+      "captureCG": [
+        1440,
+        0,
+        440,
+        885
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "glass-increase-contrast-dark.png",
+      "sourceCaptureName": "high-contrast-dark-before",
+      "kind": "native full popup",
+      "SHA256": "6d170ac5d03b41fa8fd63cb6701f3450958bbc2431cd62786726fc244c016b89",
+      "byteCount": 89126,
+      "pixelDimensions": [
+        440,
+        885
+      ],
+      "captureCG": [
+        1440,
+        0,
+        440,
+        885
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "classic-reduce-motion-dark.png",
+      "sourceCaptureName": "classic-reduce-motion-before",
+      "kind": "native full popup",
+      "SHA256": "004bbc974b3ac2b4250b868f9032a3d5f5febdb6c90efe9faf1994f133491c9a",
+      "byteCount": 82828,
+      "pixelDimensions": [
+        402,
+        841
+      ],
+      "captureCG": [
+        1459,
+        18,
+        402,
+        841
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "classic-legacy-dark.png",
+      "sourceCaptureName": "classic-legacy-dark-before",
+      "kind": "native full popup",
+      "SHA256": "1a5f8460ed76f972b296666da397540538b6301173a099b4806c3203660ec466",
+      "byteCount": 89667,
+      "pixelDimensions": [
+        402,
+        841
+      ],
+      "captureCG": [
+        1459,
+        18,
+        402,
+        841
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": null,
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": 0
+    },
+    {
+      "file": "standard-dark-before-footer.png",
+      "sourceCaptureName": "standard-dark-before",
+      "kind": "native footer ROI",
+      "SHA256": "cfaf6bf13ef9a5011331dc096ac9ac2b50c3c5c52c92a7144bb6f294868d22ab",
+      "byteCount": 9951,
+      "pixelDimensions": [
+        344,
+        94
+      ],
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "standard-dark-low-footer.png",
+      "sourceCaptureName": "standard-dark-low",
+      "kind": "native footer ROI",
+      "SHA256": "259d4d8c1856ce05b7b96ea0b5a90c5e3d28d023dc2839a9705838da56828e35",
+      "byteCount": 12451,
+      "pixelDimensions": [
+        344,
+        94
+      ],
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "expectedHoverIndex": 1,
+      "actualHoverIndex": 1,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "standard-dark-menu-footer.png",
+      "sourceCaptureName": "standard-dark-menu",
+      "kind": "native footer ROI",
+      "SHA256": "48f156a7a74ec0e1aac59b4cb61e06c1ef0c2c8366ca9ea0d997fff67ef98c0b",
+      "byteCount": 10948,
+      "pixelDimensions": [
+        344,
+        94
+      ],
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "expectedHoverIndex": 3,
+      "actualHoverIndex": 3,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    },
+    {
+      "file": "standard-dark-out-footer.png",
+      "sourceCaptureName": "standard-dark-out",
+      "kind": "native footer ROI",
+      "SHA256": "cfaf6bf13ef9a5011331dc096ac9ac2b50c3c5c52c92a7144bb6f294868d22ab",
+      "byteCount": 9951,
+      "pixelDimensions": [
+        344,
+        94
+      ],
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "expectedHoverIndex": null,
+      "actualHoverIndex": null,
+      "selectedMode": "auto",
+      "pointerOverrideNil": true,
+      "OSMouseInputRoute": "OS CGEvent.post/native tracking",
+      "selectedIndex": null
+    }
+  ],
+  "animations": [
+    {
+      "file": "standard-dark-auto-selected-sweep.png",
+      "verification": "standard-dark-auto-selected-sweep.json",
+      "SHA256": "a4bbdd2741d8497418f94af1f3b1773120e019314218a593c2757ad780031e56",
+      "case": "standard-dark",
+      "target": "auto-selected",
+      "frameCount": 37,
+      "pixelDimensions": [
+        344,
+        94
+      ],
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "durationSeconds": 1.6047653749992605,
+      "maximumTimingErrorSeconds": 2.7545202470619043e-09,
+      "decodedFramesRGBAIdentical": true,
+      "cursorDrawnInPixels": false,
+      "sourceManifestSHA256": "7ae0c8a80f02d856f059b22a92236382fda8e65629562c5a527778a309233130",
+      "verificationSHA256": "ac0313d7ec89c6eb29ba79eae5f3d12989a4c5e7b49e418568e8d44f0584628f"
+    },
+    {
+      "file": "standard-dark-low-unselected-sweep.png",
+      "verification": "standard-dark-low-unselected-sweep.json",
+      "SHA256": "ec5ab809937207e0668f31fd47b4cf72674eec403441c5725d47be117f7bbbce",
+      "case": "standard-dark",
+      "target": "low-unselected",
+      "frameCount": 37,
+      "pixelDimensions": [
+        344,
+        94
+      ],
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "durationSeconds": 1.6378344583336002,
+      "maximumTimingErrorSeconds": 1.9816193106461328e-09,
+      "decodedFramesRGBAIdentical": true,
+      "cursorDrawnInPixels": false,
+      "sourceManifestSHA256": "8b8c9f373effe1d259cc29ccd2f09de2f4a78ff5b34ca7964eb0c96931d1943e",
+      "verificationSHA256": "45bf08f6cc366af923ce4e6b70b489cb056460d25578202a68c7f6ade14d5093"
+    },
+    {
+      "file": "standard-dark-settings-circle-sweep.png",
+      "verification": "standard-dark-settings-circle-sweep.json",
+      "SHA256": "915787f9ea82cd3dd17d8c40e893cdda4b908d4c87c567e558796cdbaa9fe49c",
+      "case": "standard-dark",
+      "target": "settings-circle",
+      "frameCount": 37,
+      "pixelDimensions": [
+        344,
+        94
+      ],
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "durationSeconds": 1.9548459166671819,
+      "maximumTimingErrorSeconds": 4.310678160919541e-09,
+      "decodedFramesRGBAIdentical": true,
+      "cursorDrawnInPixels": false,
+      "sourceManifestSHA256": "c04c152894897dcc9cf21f0dab442d270ce0589351492f783e5bf7a66abf9656",
+      "verificationSHA256": "09717a1b634bfafcd9cf51630f455abe2ca127c405b97ee5605a5a6076850d82"
+    },
+    {
+      "file": "standard-light-auto-selected-sweep.png",
+      "verification": "standard-light-auto-selected-sweep.json",
+      "SHA256": "87a8b98b50cf87d8f0581e71f14d0bc7a8edfa5bb19c2aa7db3d194fde799893",
+      "case": "standard-light",
+      "target": "auto-selected",
+      "frameCount": 37,
+      "pixelDimensions": [
+        344,
+        94
+      ],
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "durationSeconds": 1.6425010416669465,
+      "maximumTimingErrorSeconds": 3.7017532990521033e-09,
+      "decodedFramesRGBAIdentical": true,
+      "cursorDrawnInPixels": false,
+      "sourceManifestSHA256": "edb9abd76f93fa38869288a8fcd4ad0476865dda654f98c876e292c3dea75794",
+      "verificationSHA256": "720a1d97351775df0c90e3be5b5ce9137ccc178ac5fc9e790fdb76f5db74bb85"
+    },
+    {
+      "file": "standard-light-low-unselected-sweep.png",
+      "verification": "standard-light-low-unselected-sweep.json",
+      "SHA256": "a51917d5bec1ef28309e4750ac2f148e5e23255a6cf2f9953f3170f376847fd6",
+      "case": "standard-light",
+      "target": "low-unselected",
+      "frameCount": 37,
+      "pixelDimensions": [
+        344,
+        94
+      ],
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "durationSeconds": 1.6695085416668007,
+      "maximumTimingErrorSeconds": 1.551605240977703e-09,
+      "decodedFramesRGBAIdentical": true,
+      "cursorDrawnInPixels": false,
+      "sourceManifestSHA256": "5351c0f3229501836ce0498950f1e8ead5faaafaa8555f4f321ed09d1c87808f",
+      "verificationSHA256": "3640d7dd6d52307bae8d5592a25a35b877d964c4a71195cd80ead4a2bd45d127"
+    },
+    {
+      "file": "standard-light-settings-circle-sweep.png",
+      "verification": "standard-light-settings-circle-sweep.json",
+      "SHA256": "b8c6bff4e7ef5d28f99ad5a2b4e600d67c4be373751032269ed02cd5df62ec41",
+      "case": "standard-light",
+      "target": "settings-circle",
+      "frameCount": 37,
+      "pixelDimensions": [
+        344,
+        94
+      ],
+      "captureCG": [
+        1488,
+        747,
+        344,
+        94
+      ],
+      "durationSeconds": 1.735214124999402,
+      "maximumTimingErrorSeconds": 7.283799395062933e-10,
+      "decodedFramesRGBAIdentical": true,
+      "cursorDrawnInPixels": false,
+      "sourceManifestSHA256": "5450db001d5eb23e4d5a122494b392dd90394cf25487ab40615ac94e2d3cbcac",
+      "verificationSHA256": "90f89ad78d0526a5b2e11a7a6f7a4ba1974e6e0e1550ea68dd8e8dc29e2ec49d"
+    }
+  ],
+  "cases": [
+    {
+      "case": "standard-dark",
+      "batteryFixture": {
+        "adapterW": 68,
+        "batteryW": 22.2,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "InteractiveGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "standard-light",
+      "batteryFixture": {
+        "adapterW": 68,
+        "batteryW": 22.2,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "InteractiveGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.85,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "clear-dark",
+      "batteryFixture": {
+        "adapterW": 68,
+        "batteryW": 22.2,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "InteractiveGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "clear-light",
+      "batteryFixture": {
+        "adapterW": 68,
+        "batteryW": 22.2,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "InteractiveGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.85,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "classic-dark",
+      "batteryFixture": {
+        "adapterW": 68,
+        "batteryW": 22.2,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": false,
+      "initialWindowKey": false,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "ModeSliderView"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            306,
+            42,
+            22,
+            20
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": true,
+        "busyCleared": false,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": true,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "ModeSliderView",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": false
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "classic-light",
+      "batteryFixture": {
+        "adapterW": 68,
+        "batteryW": 22.2,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": false,
+      "initialWindowKey": false,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "ModeSliderView"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            306,
+            42,
+            22,
+            20
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": true,
+        "busyCleared": false,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": true,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "ModeSliderView",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": false
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.85,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "reduce-motion",
+      "batteryFixture": {
+        "adapterW": 68,
+        "batteryW": 22.2,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "NativeGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            90,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            96,
+            36,
+            90,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            192,
+            36,
+            90,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 1,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "reduce-transparency-light",
+      "batteryFixture": {
+        "adapterW": 68,
+        "batteryW": 22.2,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "NativeGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            90,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            96,
+            36,
+            90,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            192,
+            36,
+            90,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 1,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.85,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.8797428011894226,
+              0.8797428011894226,
+              0.8797428011894226,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "high-contrast-dark",
+      "batteryFixture": {
+        "adapterW": 68,
+        "batteryW": 22.2,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "NativeGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            90,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            96,
+            36,
+            90,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            192,
+            36,
+            90,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 1,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "classic-reduce-motion",
+      "batteryFixture": {
+        "adapterW": 68,
+        "batteryW": 22.2,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": false,
+      "initialWindowKey": false,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "NativeModeSegmentedControl",
+        "_NSCoreHostingView<AppKitSegmentedControl>"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            306,
+            42,
+            22,
+            20
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": true,
+        "busyCleared": false,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": true,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "_NSPopoverWindow",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": false
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "classic-legacy-dark",
+      "batteryFixture": {
+        "adapterW": 68,
+        "batteryW": 22.2,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": false,
+      "initialWindowKey": false,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "ModeSliderView"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            30
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            306,
+            42,
+            22,
+            20
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": true,
+        "busyCleared": false,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": true,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "ModeSliderView",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": false
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "state-full",
+      "batteryFixture": {
+        "adapterW": 36.4,
+        "batteryW": 0,
+        "lowPowerMode": false,
+        "percent": 100,
+        "plugged": true,
+        "systemW": 36.4
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "InteractiveGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "state-battery",
+      "batteryFixture": {
+        "adapterW": 0,
+        "batteryW": -39.7,
+        "lowPowerMode": false,
+        "percent": 67,
+        "plugged": false,
+        "systemW": 39.7
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "InteractiveGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "state-mixed",
+      "batteryFixture": {
+        "adapterW": 45,
+        "batteryW": -0.8,
+        "lowPowerMode": false,
+        "percent": 72,
+        "plugged": true,
+        "systemW": 45.8
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "InteractiveGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "state-low-battery",
+      "batteryFixture": {
+        "adapterW": 0,
+        "batteryW": -18,
+        "lowPowerMode": false,
+        "percent": 12,
+        "plugged": false,
+        "systemW": 18
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "InteractiveGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "auto",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "low",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "low",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "state-low-power",
+      "batteryFixture": {
+        "adapterW": 0,
+        "batteryW": -11.2,
+        "lowPowerMode": true,
+        "percent": 48,
+        "plugged": false,
+        "systemW": 11.2
+      },
+      "initialAppActive": true,
+      "initialWindowKey": true,
+      "appActiveImmediatelyBeforeOpen": false,
+      "acceptsMouseMovedEventsDefault": false,
+      "controlClasses": [
+        "InteractiveGlassModeControl"
+      ],
+      "controlRegions": [
+        {
+          "enabled": true,
+          "rect": [
+            0,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            94,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": false,
+          "rect": [
+            188,
+            36,
+            94,
+            38
+          ]
+        },
+        {
+          "enabled": true,
+          "rect": [
+            290,
+            36,
+            38,
+            38
+          ]
+        }
+      ],
+      "interaction": {
+        "appActive": false,
+        "busyCleared": true,
+        "busyRestored": true,
+        "classicBusyAllowsFeedback": false,
+        "disabledHighUnlit": true,
+        "firstResponderAfterClicks": "GlassPopoverPanel",
+        "gapUnlit": true,
+        "hideCleared": true,
+        "initialSelectedMode": "low",
+        "keyLossCleared": true,
+        "keyLossTransitionExercised": true,
+        "leftButtonReleased": true,
+        "localMonitorModeEventCount": 2,
+        "modeClickIntentCount": 1,
+        "modeClickTarget": "auto",
+        "pointerOverrideNil": true,
+        "postedModeDownCount": 1,
+        "postedModeUpCount": 1,
+        "roundedOutsideUnlit": true,
+        "selectionAfterCompletion": "auto",
+        "settingsClickIntentCount": 1,
+        "windowKeyAfterResign": false
+      },
+      "reopen": {
+        "appActive": true,
+        "hiddenCleared": true,
+        "reopenedWithoutStaleHover": true,
+        "windowKey": true
+      },
+      "fixedBackdropCalibration": {
+        "contentLayerExplicitOpaqueBacking": true,
+        "declaredGray": 0.15,
+        "samples": [
+          {
+            "pixel": [
+              10,
+              10
+            ],
+            "point": "top",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              960,
+              600
+            ],
+            "point": "center",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          },
+          {
+            "pixel": [
+              10,
+              1189
+            ],
+            "point": "bottom",
+            "rgba": [
+              0.19803759455680847,
+              0.19803759455680847,
+              0.19803759455680847,
+              1
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "reproduction": {
+    "encodingCommandTemplate": "python3 encode-native-sweep.py PRIVATE_FINAL_SWEEP/frames.json OUTPUT_BASENAME.png --ffmpeg ffmpeg",
+    "originalFrameSHA256AndTimestamps": "Each animation verification JSON lists original native PNG SHA256, decoded RGBA SHA256, capture rectangle, actual OS pointer positions, original timestamps and APNG delay fractions. Original PNGs remain in the explicit private QA evidence.",
+    "encodingValidation": "ffmpeg 8.0.1 decoded each original sequence and APNG to RGBA framehash; all 37 ordered frame hashes match for every included animation. Timing error must be less than one microsecond."
+  }
+}
