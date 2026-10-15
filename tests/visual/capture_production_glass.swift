@@ -208,6 +208,25 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                               && $0["avoidsPopupWindow"] as? Bool == true }) else {
                         throw failure("Optical margin hit testing failed: body=\(bodyPick) panel=\(panel.windowNumber) \(statusWindowPicks)")
                     }
+                    let gridBounds = bodyFrame.insetBy(dx: 27, dy: 27)
+                    let bodyGridPicks: [[String: Any]] = (0..<7).flatMap { row in (0..<5).map { column in
+                        let point = NSPoint(x: gridBounds.minX + gridBounds.width * CGFloat(column) / 4,
+                                            y: gridBounds.minY + gridBounds.height * CGFloat(row) / 6)
+                        let picked = NSWindow.windowNumber(at: point, belowWindowWithWindowNumber: 0)
+                        return ["screenPointAppKit": [point.x, point.y], "pickedWindow": picked,
+                                "hitsPanel": picked == panel.windowNumber]
+                    } }
+                    let bodyGridHits = bodyGridPicks.filter { $0["hitsPanel"] as? Bool == true }.count
+                    let minimumInputOpacity = 1.0 / 255.0
+                    let expectedOpacity = GlassBackgroundView.accessibilityRequiresSolidBackground
+                        ? 1 : max(1 - Settings.liquidGlassTransparency, minimumInputOpacity)
+                    guard gridBounds.width > 0, gridBounds.height > 0,
+                          bodyGridPicks.count == 35, bodyGridHits == bodyGridPicks.count,
+                          abs(Double(backing.layer?.backgroundColor?.alpha ?? 0) - expectedOpacity) < 0.0001,
+                          content.alphaValue == 1, glass.alphaValue == 1 else {
+                        throw failure("Body input grid or opacity failed: hits=\(bodyGridHits)/\(bodyGridPicks.count) "
+                            + "floor=\(minimumInputOpacity) alpha=\(backing.layer?.backgroundColor?.alpha ?? 0)")
+                    }
                     let name = "\(style.rawValue)-\(scheme.rawValue)-\(position)"
                     let cgFrame = NSRect(x: panel.frame.minX, y: screen.frame.maxY - panel.frame.maxY,
                                          width: panel.frame.width, height: panel.frame.height)
@@ -238,6 +257,9 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                         "arrowHeight": PopoverPlacement.glassArrowHeight,
                         "statusWindowPicks": statusWindowPicks,
                         "bodyPickedWindow": bodyPick, "bodyHitCalibratesPanel": bodyPick == panel.windowNumber,
+                        "bodyGridPicks": bodyGridPicks, "bodyGridPointCount": bodyGridPicks.count,
+                        "bodyGridHitCount": bodyGridHits, "bodyGridHitRatio": Double(bodyGridHits) / Double(bodyGridPicks.count),
+                        "minimumInputOpacity": minimumInputOpacity, "expectedBackingOpacity": expectedOpacity,
                         "materialAndBackingFramesMatch": materialAndBackingFramesMatch,
                         "contentMatchesBodyFrame": content.frame == expectedBody, "backingMaskHasArrow": maskHasArrow,
                         "transparency": Settings.liquidGlassTransparency,

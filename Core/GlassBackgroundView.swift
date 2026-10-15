@@ -5,6 +5,7 @@ import AppKit
 final class GlassBackgroundView: NSView {
     private var settingsObserver: NSObjectProtocol?
     private var displayObserver: NSObjectProtocol?
+    private let minimumOpacity: CGFloat
 
     static var accessibilityRequiresSolidBackground: Bool {
         var reduce = NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency
@@ -25,7 +26,8 @@ final class GlassBackgroundView: NSView {
         return opacity == 0 ? .clear : NSColor.windowBackgroundColor.withAlphaComponent(opacity)
     }
 
-    init(frame: NSRect = .zero, cornerRadius: CGFloat) {
+    init(frame: NSRect = .zero, cornerRadius: CGFloat, minimumOpacity: CGFloat = 0) {
+        self.minimumOpacity = minimumOpacity
         super.init(frame: frame)
         wantsLayer = true
         layer?.cornerRadius = cornerRadius
@@ -55,7 +57,9 @@ final class GlassBackgroundView: NSView {
 
     override func updateLayer() {
         effectiveAppearance.performAsCurrentDrawingAppearance {
-            layer?.backgroundColor = Self.fillColor.cgColor
+            let color = Self.fillColor.cgColor
+            layer?.backgroundColor = color.alpha < minimumOpacity
+                ? NSColor.windowBackgroundColor.withAlphaComponent(minimumOpacity).cgColor : color
         }
     }
 

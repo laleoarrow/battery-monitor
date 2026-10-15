@@ -49,7 +49,10 @@ final class GlassPopoverPanel: NSPanel {
         let inset = Self.contentInset(for: style == .clear ? .clear : .regular)
         let glass = GlassPopoverMaterialView(frame: contentView!.bounds.insetBy(dx: inset, dy: inset), style: style)
         glass.autoresizingMask = [.width, .height]
-        let background = GlassBackgroundView(frame: glass.frame, cornerRadius: 0)
+        // SwiftUI glass alone leaves zero-alpha pixels that WindowServer clicks
+        // through. One 8-bit alpha step keeps the shaped surface interactive;
+        // the optical margin remains fully transparent.
+        let background = GlassBackgroundView(frame: glass.frame, cornerRadius: 0, minimumOpacity: 1.0 / 255)
         background.autoresizingMask = [.width, .height]
         contentView!.addSubview(background)
         contentView!.addSubview(glass)

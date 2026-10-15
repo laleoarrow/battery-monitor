@@ -1985,7 +1985,7 @@ if #available(macOS 26.0, *), !screenLocked {
             let previousObservers = controller.lifetimeObserverCountForTest
             Settings.liquidGlassTransparency = transparency
             backgrounds.forEach { $0.updateLayer() }
-            let expectedOpacity = GlassBackgroundView.accessibilityRequiresSolidBackground ? 1 : 1 - transparency
+            let expectedOpacity = GlassBackgroundView.accessibilityRequiresSolidBackground ? 1 : max(1 - transparency, 1.0 / 255.0)
             check("\(style.rawValue) 透明度 \(transparency) 仅改变背景并保留可见宿主和读数",
                   backgrounds.count == 1
                       && abs(Double(backgrounds.first?.layer?.backgroundColor?.alpha ?? 0) - expectedOpacity) < 0.001
@@ -2093,6 +2093,16 @@ if #available(macOS 26.0, *), !screenLocked {
                       && statusPicks.allSatisfy { $0 != panel.windowNumber }
                       && bodyPick == panel.windowNumber,
                   "statusProxy=\(anchorWindow.windowNumber) closed=\(closedStatusPicks) open=\(statusPicks) body=\(bodyPick) panel=\(panel.windowNumber)")
+            let gridBounds = bodyFrame.insetBy(dx: 27, dy: 27)
+            let bodyGridPicks = (0..<7).flatMap { row in (0..<5).map { column in
+                let point = NSPoint(x: gridBounds.minX + gridBounds.width * CGFloat(column) / 4,
+                                    y: gridBounds.minY + gridBounds.height * CGFloat(row) / 6)
+                return NSWindow.windowNumber(at: point, belowWindowWithWindowNumber: 0)
+            } }
+            check("[I20-BODY-GRID] \(style.rawValue) 透明正文包括空白的5×7网格全部保持面板命中",
+                  gridBounds.width > 0 && gridBounds.height > 0 && bodyGridPicks.count == 35
+                      && bodyGridPicks.allSatisfy { $0 == panel.windowNumber },
+                  "hits=\(bodyGridPicks.filter { $0 == panel.windowNumber }.count)/\(bodyGridPicks.count) floor=1/255 panel=\(panel.windowNumber)")
             let statusFrame = anchorWindow.frame
             let edgePoints = [
                 NSPoint(x: statusFrame.midX, y: statusFrame.maxY - 0.5),
