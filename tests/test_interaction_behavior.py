@@ -1,8 +1,9 @@
 import os
 import pathlib
 import shutil
-import subprocess
 import unittest
+
+from local_runtime import run
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 RUNNER = ROOT / "scripts" / "verify_interaction.sh"
@@ -37,7 +38,7 @@ class InteractionBehaviorTests(unittest.TestCase):
         if shutil.which("xcrun") is None:
             self.skipTest("no Xcode command line tools")
         # A status item cannot host a popover without a window server.
-        probe = subprocess.run(
+        probe = run(
             ["launchctl", "managername"], capture_output=True, text=True, check=False
         )
         if "Aqua" not in probe.stdout:
@@ -54,9 +55,9 @@ class InteractionBehaviorTests(unittest.TestCase):
             environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] = (
                 "1" if force_reduce_transparency else "0"
             )
-        result = subprocess.run(
+        result = run(
             ["/bin/bash", str(RUNNER)], capture_output=True, text=True, check=False,
-            timeout=300, env=environment
+            timeout=300, env=environment, cleanup_grace=65
         )
         output = result.stdout + result.stderr
         # A locked screen starts CoreAnimation but never completes it, so the

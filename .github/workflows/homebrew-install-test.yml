@@ -402,26 +402,53 @@ jobs:
             echo "::endgroup::"
           }
 
+          unregister_test_app() {
+            [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]] || return 0
+            [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]] || return 1
+            [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]] || return 1
+            /usr/bin/python3 - "$APP_DIR" <<'PY'
+          import subprocess
+          import sys
+
+          registrar = "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
+          try:
+              # An already unregistered app may return nonzero.
+              subprocess.run([registrar, "-u", sys.argv[1]], timeout=10,
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+          except subprocess.TimeoutExpired:
+              sys.exit("Timed out unregistering the test app")
+          PY
+          }
+
           cleanup() {
             local status="$?"
+            local cleanup_failed=0
             trap - EXIT
+            trap '' HUP INT TERM
             set +e
             if [[ "$status" != "0" ]]; then
               collect_diagnostics
             fi
             if [[ "$CLEANUP_REQUIRED" == "1" ]]; then
+              unregister_test_app || cleanup_failed=1
               brew uninstall --cask --force laleoarrow/tap/wattson >/dev/null 2>&1 || true
               /bin/launchctl bootout "$LOGIN_TARGET" >/dev/null 2>&1 || true
-              /bin/rm -f -- "$LOGIN_PLIST"
+              /bin/rm -f -- "$LOGIN_PLIST" || cleanup_failed=1
               /usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true
               /usr/bin/sudo -n /bin/launchctl enable "$HELPER_TARGET" >/dev/null 2>&1 || true
-              /usr/bin/sudo -n /bin/rm -f -- "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN"
-              /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR"
+              /usr/bin/sudo -n /bin/rm -f -- "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN" || cleanup_failed=1
+              /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1
               /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true
+            fi
+            if [[ "$status" == "0" && "$cleanup_failed" != "0" ]]; then
+              status=1
             fi
             exit "$status"
           }
           trap cleanup EXIT
+          trap 'exit 129' HUP
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
 
           [[ "${GITHUB_ACTIONS:-}" == "true" ]] || fail "GitHub Actions is required"
           [[ "${RUNNER_OS:-}" == "macOS" ]] || fail "a macOS runner is required"
@@ -464,6 +491,7 @@ jobs:
           [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]]
           [[ "$(brew list --cask --versions wattson)" == "wattson $WATTSON_VERSION" ]]
 
+          unregister_test_app
           brew uninstall --cask laleoarrow/tap/wattson
 
           for removed_path in \

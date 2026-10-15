@@ -33,17 +33,12 @@ private enum CaptureRealSettings {
         }
         app.appearance = NSAppearance(named: appearance == "light" ? .aqua : .darkAqua)
 
-        let suiteName = "Wattson.SettingsCapture.\(UUID().uuidString)"
-        guard let defaults = UserDefaults(suiteName: suiteName) else {
-            fputs("could not create isolated settings defaults\n", stderr)
-            exit(2)
-        }
-        defaults.removePersistentDomain(forName: suiteName)
+        let defaults = CaptureDefaults()
         Settings.configureForTest(defaults: defaults)
         Settings.liquidGlassEnabled = theme == "glass"
         defer {
             Settings.resetTestConfiguration()
-            defaults.removePersistentDomain(forName: suiteName)
+            defaults.clear()
         }
 
         let fixtureNotification = Notification.Name("Wattson.SettingsCapture.Battery")
@@ -128,4 +123,16 @@ private enum CaptureRealSettings {
         case missingWindowSurface
         case couldNotEncodePNG
     }
+}
+
+/// Capture fixtures never write a preferences domain, including early exits.
+private final class CaptureDefaults: UserDefaults {
+    private var values: [String: Any] = [:]
+    override func object(forKey key: String) -> Any? { values[key] }
+    override func string(forKey key: String) -> String? { values[key] as? String }
+    override func set(_ value: Any?, forKey key: String) { values[key] = value }
+    override func set(_ value: Bool, forKey key: String) { values[key] = value }
+    override func removeObject(forKey key: String) { values.removeValue(forKey: key) }
+    func clear() { values.removeAll() }
+    var isEmpty: Bool { values.isEmpty }
 }

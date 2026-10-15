@@ -1,6 +1,5 @@
 import pathlib
-import subprocess
-import tempfile
+from local_runtime import TemporaryDirectory, run
 import textwrap
 import unittest
 
@@ -22,7 +21,7 @@ class SettingsStoreContractTests(unittest.TestCase):
                 }
             }
 
-            let suiteName = "com.leoarrow.wattson.tests.settings.\(UUID().uuidString)"
+            let suiteName = ProcessInfo.processInfo.environment["WATTSON_TEST_DEFAULTS_SUITE"]!
             guard let defaults = UserDefaults(suiteName: suiteName) else {
                 fatalError("could not create isolated defaults suite")
             }
@@ -244,12 +243,12 @@ class SettingsStoreContractTests(unittest.TestCase):
             '''
         )
 
-        with tempfile.TemporaryDirectory(prefix="wattson-settings-contract-") as temp:
+        with TemporaryDirectory(prefix="wattson-settings-contract-") as temp:
             temp_path = pathlib.Path(temp)
             main = temp_path / "main.swift"
             binary = temp_path / "settings-contract"
             main.write_text(harness, encoding="utf-8")
-            compile_result = subprocess.run(
+            compile_result = run(
                 [
                     "xcrun",
                     "swiftc",
@@ -272,7 +271,7 @@ class SettingsStoreContractTests(unittest.TestCase):
                 0,
                 f"settings contract did not compile:\n{compile_result.stderr}",
             )
-            run_result = subprocess.run(
+            run_result = run(
                 [str(binary)],
                 cwd=ROOT,
                 capture_output=True,

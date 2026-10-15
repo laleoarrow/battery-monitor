@@ -27,3 +27,10 @@ with Swift.
   Use the disposable ARM GUI test VM when visible interaction would interfere
   with the user's desktop.
 - Keep git repository status clean and update tags/commits appropriately.
+- Every build/test entrypoint must own and automatically clean its temporary
+  files, app registrations, test preferences, newly created test containers,
+  child processes, and mounts on success, failure, timeout, and catchable
+  interruption. Use the shared lifecycle helpers; never rely on the next run
+  to delete the previous run's outputs. Preserve final distribution artifacts
+  and explicit caller-owned inputs. Keep scratch under project-local `.noindex`
+  directories. Never clean the canonical installation or production user data.

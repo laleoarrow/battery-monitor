@@ -2,6 +2,11 @@
 # Verify a helper-free DMG against the app from the same release build or PKG.
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/lib/local_cleanup.sh"
+wattson_cleanup_init
+
 if [[ "$#" -lt 1 || "$#" -gt 2 ]]; then
     echo "usage: $0 /path/to/Wattson.dmg [/path/to/expected/Wattson.app]" >&2
     exit 2
@@ -20,23 +25,18 @@ if [[ -n "$EXPECTED_APP" ]]; then
     }
 fi
 
-MOUNT_DIR="$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/wattson-dmg-verify.XXXXXX")"
-ATTACHED=0
+SCRATCH_PARENT="${WATTSON_RELEASE_BUILD_ROOT:-$ROOT_DIR/.build/local.noindex}"
+/bin/mkdir -p "$SCRATCH_PARENT"
+MOUNT_DIR="$(/usr/bin/mktemp -d "$SCRATCH_PARENT/dmg-verify.XXXXXX")"
+wattson_cleanup_add_dir "$MOUNT_DIR"
+wattson_cleanup_add_mount "$MOUNT_DIR"
+wattson_cleanup_add_app "$MOUNT_DIR/Wattson.app"
 
-cleanup() {
-    if [[ "$ATTACHED" == "1" ]]; then
-        /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null 2>&1 || true
-    fi
-    /bin/rm -rf -- "$MOUNT_DIR"
-}
-trap cleanup EXIT
-
-/usr/bin/hdiutil attach \
+wattson_run /usr/bin/hdiutil attach \
     -nobrowse \
     -readonly \
     -mountpoint "$MOUNT_DIR" \
     "$DMG_PATH" >/dev/null
-ATTACHED=1
 
 ROOT_MODE="$(/usr/bin/stat -f '%OLp' "$MOUNT_DIR")"
 [[ "$ROOT_MODE" == "755" ]] || {

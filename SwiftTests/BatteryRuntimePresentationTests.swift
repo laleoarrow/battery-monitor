@@ -366,13 +366,13 @@ final class BatteryRuntimePresentationTests: XCTestCase {
     }
 
     private func withIsolatedSettings(_ body: (UserDefaults) throws -> Void) rethrows {
-        let suiteName = "Wattson.RuntimeModule.Tests.\(UUID().uuidString)"
+        let suiteName = "Wattson.SwiftTests.RuntimeModule.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)
         defer {
             Settings.resetTestConfiguration()
-            defaults.removePersistentDomain(forName: suiteName)
+            defaults.removePersistentTestDomain(forName: suiteName)
         }
         try body(defaults)
     }

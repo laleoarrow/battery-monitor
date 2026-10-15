@@ -5,12 +5,12 @@ import XCTest
 final class PopoverAppearanceTests: XCTestCase {
     func testGlassPreferencePreservesSystemAppearanceWithoutRebuildingClosedContent() throws {
         _ = NSApplication.shared
-        let suite = "Wattson.PopoverAppearance.\(UUID().uuidString)"
+        let suite = "Wattson.SwiftTests.PopoverAppearance.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         Settings.configureForTest(defaults: defaults)
         defer {
             Settings.resetTestConfiguration()
-            defaults.removePersistentDomain(forName: suite)
+            defaults.removePersistentTestDomain(forName: suite)
         }
         let controller = PopoverController()
         let root = try XCTUnwrap(controller.contentViewForTest)
@@ -49,12 +49,12 @@ final class PopoverAppearanceTests: XCTestCase {
 
     func testGlassPopoverInitialAppearanceAndObserverLifetime() throws {
         _ = NSApplication.shared
-        let suite = "Wattson.PopoverAppearanceLifetime.\(UUID().uuidString)"
+        let suite = "Wattson.SwiftTests.PopoverAppearanceLifetime.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         Settings.configureForTest(defaults: defaults)
         defer {
             Settings.resetTestConfiguration()
-            defaults.removePersistentDomain(forName: suite)
+            defaults.removePersistentTestDomain(forName: suite)
         }
         Settings.liquidGlassEnabled = true
         weak var releasedController: PopoverController?

@@ -1,6 +1,10 @@
 import pathlib
+import os
+import re
+import textwrap
 import unittest
 
+from local_runtime import TemporaryDirectory, run
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PROMOTE = (ROOT / ".github/workflows/promote-release.yml").read_text(encoding="utf-8")
@@ -545,6 +549,120 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("assert_helper_absent", HOMEBREW_INSTALL)
         self.assertIn("assert_login_agent_absent", HOMEBREW_INSTALL)
         self.assertIn("CLEANUP_REQUIRED=1", HOMEBREW_INSTALL)
+
+
+class WorkflowCleanupLifecycleTests(unittest.TestCase):
+    def setUp(self):
+        directory = TemporaryDirectory(prefix="workflow-cleanup-")
+        self.addCleanup(directory.cleanup)
+        self.root = pathlib.Path(directory.name) / "owned"
+        self.root.mkdir()
+        self.app = self.root / "Wattson.app"
+        self.app.mkdir()
+        self.mount = self.root / "mount"
+        self.mount.mkdir()
+        self.marker = self.mount / "mounted-payload"
+        self.marker.write_text("must survive failed detach", encoding="utf-8")
+        self.log = self.root.parent / "events.log"
+
+    def step(self, name):
+        return CANDIDATE.split(f"- name: {name}\n", 1)[1].split("      - name:", 1)[0]
+
+    def run_cleanup(self, name, *, action="exit 0", **overrides):
+        # Execute the actual workflow cleanup body against disposable paths.
+        # Mock only process/LaunchServices/mount operations, never run installers.
+        step = self.step(name)
+        cleanup = re.search(r"(?ms)^          cleanup\(\) \{\n.*?^          \}\n", step).group()
+        stubs = r'''
+set -eu
+wattson_stop_executable() { echo "stop:$1" >> "$EVENTS"; return "${STOP_STATUS:-0}"; }
+wattson_unregister_app() { echo "unregister:$1" >> "$EVENTS"; return "${UNREGISTER_STATUS:-0}"; }
+wattson_detach() { echo "detach:$1" >> "$EVENTS"; return "${DETACH_STATUS:-0}"; }
+'''
+        env = dict(
+            os.environ, EVENTS=str(self.log), READONLY_ROOT=str(self.root),
+            APP_DIR=str(self.app), APP_BIN=str(self.app / "Contents/MacOS/Wattson"),
+            MOUNT_DIR=str(self.mount), MOUNTED="1", APP_PID="",
+            CANDIDATE_EXPAND="", V2_STAGE="", APP_ONLY_STAGE="",
+            CLEANUP_REQUIRED="0", **overrides,
+        )
+        script = stubs + textwrap.dedent(cleanup) + "\ntrap cleanup EXIT\n"
+        script += "trap 'exit 130' INT\ntrap 'exit 143' TERM\n" + action + "\n"
+        return run(
+            ["/bin/bash", "-c", script], env=env, capture_output=True, text=True, timeout=5,
+            cleanup_grace=65,
+        )
+
+    def test_copy_cleanup_unregisters_before_removal(self):
+        result = self.run_cleanup("Test helper-free DMG copy launch and removal without elevation")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.root.exists())
+        events = self.log.read_text(encoding="utf-8").splitlines()
+        self.assertEqual(events[:2], [f"stop:{self.app}/Contents/MacOS/Wattson", f"unregister:{self.app}"])
+
+    def test_detach_failure_preserves_mount_but_cleans_copied_app(self):
+        result = self.run_cleanup(
+            "Test helper-free DMG copy launch and removal without elevation", DETACH_STATUS="1"
+        )
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertTrue(self.marker.exists())
+        self.assertFalse(self.app.exists())
+
+    def test_live_app_is_preserved_when_bounded_stop_fails(self):
+        result = self.run_cleanup(
+            "Test helper-free DMG copy launch and removal without elevation", STOP_STATUS="1"
+        )
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertTrue(self.app.exists())
+        self.assertNotIn("unregister:", self.log.read_text(encoding="utf-8"))
+
+    def test_copy_cleanup_preserves_failure_and_signal_status(self):
+        for action, status in (("exit 7", 7), ("kill -INT $$", 130), ("kill -TERM $$", 143)):
+            with self.subTest(action=action):
+                self.root.mkdir(exist_ok=True)
+                self.app.mkdir(exist_ok=True)
+                self.mount.mkdir(exist_ok=True)
+                result = self.run_cleanup(
+                    "Test helper-free DMG copy launch and removal without elevation", action=action
+                )
+                self.assertEqual(result.returncode, status, result.stderr)
+                self.assertFalse(self.root.exists())
+
+    def test_v2_partial_allocation_cleans_only_allocated_directory(self):
+        result = self.run_cleanup("Test upgrade from the published v2.1.5 release", action="exit 7")
+        self.assertEqual(result.returncode, 7, result.stderr)
+        self.assertFalse(self.mount.exists())
+        self.assertTrue(self.app.exists())
+        self.assertNotIn("stop:", self.log.read_text(encoding="utf-8"))
+
+    def test_v2_detach_failure_never_deletes_mounted_payload(self):
+        result = self.run_cleanup("Test upgrade from the published v2.1.5 release", DETACH_STATUS="1")
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertTrue(self.marker.exists())
+
+    def test_install_precondition_failure_does_not_remove_existing_app(self):
+        result = self.run_cleanup("Test first install and disabled-service reinstall", action="exit 9")
+        self.assertEqual(result.returncode, 9, result.stderr)
+        self.assertTrue(self.app.exists())
+        self.assertFalse(self.log.exists())
+
+    def test_cleanup_is_armed_before_allocations_and_preserves_release_steps(self):
+        for name, allocation in (
+            ("Verify checksums, universal payloads, and DMG identity", 'EXPAND_BASE="$(/usr/bin/mktemp'),
+            ("Test helper-free DMG copy launch and removal without elevation", 'READONLY_ROOT="$(/usr/bin/mktemp'),
+            ("Test first install and disabled-service reinstall", 'APP_ONLY_STAGE="$(/usr/bin/mktemp'),
+            ("Test upgrade from the published v2.1.5 release", 'MOUNT_DIR="$(/usr/bin/mktemp'),
+        ):
+            with self.subTest(step=name):
+                step = self.step(name)
+                self.assertLess(step.index("trap cleanup EXIT"), step.index(allocation))
+                self.assertIn("trap 'exit 130' INT", step)
+                self.assertIn("trap 'exit 143' TERM", step)
+        homebrew = HOMEBREW_INSTALL.split("- name: Test public cask install and uninstall", 1)[1]
+        uninstall = homebrew.index("          brew uninstall --cask laleoarrow/tap/wattson\n")
+        self.assertEqual(homebrew[:uninstall].splitlines()[-1].strip(), "unregister_test_app")
+        self.assertIn("timeout=10", homebrew)
+        self.assertIn("trap 'exit 143' TERM", homebrew)
 
 
 if __name__ == "__main__":

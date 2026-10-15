@@ -8,14 +8,16 @@ export LC_ALL=C
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/lib/local_cleanup.sh"
+wattson_cleanup_init
 VERSION_FILE="$ROOT_DIR/VERSION"
 APP_NAME="Wattson"
 HELPER_LABEL="com.leoarrow.wattson.helper"
-BUILD_ROOT="$ROOT_DIR/.build/release"
+BUILD_ROOT="${WATTSON_RELEASE_BUILD_ROOT:-$ROOT_DIR/.build/release}"
 APP_DIR="$BUILD_ROOT/${APP_NAME}.app"
 HELPER_EXECUTABLE="$BUILD_ROOT/$HELPER_LABEL"
 BUILD_METADATA="$BUILD_ROOT/BUILD-METADATA.txt"
-DIST_DIR="$ROOT_DIR/dist"
+DIST_DIR="${WATTSON_RELEASE_DIST_DIR:-$ROOT_DIR/dist}"
 COMPONENT_ID="com.leoarrow.wattson.pkg"
 PRODUCT_ID="com.leoarrow.wattson.installer"
 PACKAGE_SCRIPTS="$ROOT_DIR/Packaging/pkg"
@@ -33,7 +35,7 @@ REQUESTED_VERSION="${1:-$APP_VERSION}"
     || fail "requested version $REQUESTED_VERSION does not match VERSION ($APP_VERSION)"
 [[ "$APP_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "invalid VERSION"
 
-FINAL_PKG="$DIST_DIR/${APP_NAME}-v${APP_VERSION}-macos-universal.pkg"
+OUTPUT_PKG="$DIST_DIR/${APP_NAME}-v${APP_VERSION}-macos-universal.pkg"
 [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]] \
     || fail "missing release app; run scripts/build_release.sh first"
 [[ -f "$HELPER_EXECUTABLE" && ! -L "$HELPER_EXECUTABLE" ]] \
@@ -50,23 +52,20 @@ FINAL_PKG="$DIST_DIR/${APP_NAME}-v${APP_VERSION}-macos-universal.pkg"
 /usr/bin/codesign --verify --deep --strict "$APP_DIR"
 /usr/bin/codesign --verify --strict "$HELPER_EXECUTABLE"
 
-SYSTEM_TEMP_ROOT="$(/usr/bin/getconf DARWIN_USER_TEMP_DIR)"
-SYSTEM_TEMP_ROOT="$(cd -P -- "$SYSTEM_TEMP_ROOT" && pwd)"
-PKG_WORK_DIR="$(/usr/bin/mktemp -d "$SYSTEM_TEMP_ROOT/wattson-pkg.XXXXXX")"
+SCRATCH_PARENT="${WATTSON_RELEASE_BUILD_ROOT:-$ROOT_DIR/.build/local.noindex}"
+/bin/mkdir -p "$SCRATCH_PARENT"
+PKG_WORK_DIR="$(/usr/bin/mktemp -d "$SCRATCH_PARENT/pkg.XXXXXX")"
+wattson_cleanup_add_dir "$PKG_WORK_DIR"
 PKG_ROOT="$PKG_WORK_DIR/root"
 COMPONENT_PKG="$PKG_WORK_DIR/Wattson-component.pkg"
-
-cleanup() {
-    /bin/rm -rf -- "$PKG_WORK_DIR"
-}
-trap cleanup EXIT
+FINAL_PKG="$PKG_WORK_DIR/${APP_NAME}-v${APP_VERSION}-macos-universal.pkg"
 
 /bin/mkdir -p \
     "$PKG_ROOT/Applications" \
     "$PKG_ROOT/Library/PrivilegedHelperTools" \
     "$PKG_ROOT/Library/LaunchDaemons" \
     "$DIST_DIR"
-/usr/bin/ditto --noextattr --noqtn "$APP_DIR" "$PKG_ROOT/Applications/Wattson.app"
+wattson_run /usr/bin/ditto --noextattr --noqtn "$APP_DIR" "$PKG_ROOT/Applications/Wattson.app"
 /usr/bin/install -m 755 \
     "$HELPER_EXECUTABLE" \
     "$PKG_ROOT/Library/PrivilegedHelperTools/$HELPER_LABEL"
@@ -83,7 +82,7 @@ for installer_script in preinstall postinstall; do
 done
 /usr/bin/plutil -lint "$COMPONENT_PLIST" >/dev/null
 
-/usr/bin/pkgbuild \
+wattson_run /usr/bin/pkgbuild \
     --root "$PKG_ROOT" \
     --scripts "$PACKAGE_SCRIPTS" \
     --component-plist "$COMPONENT_PLIST" \
@@ -106,8 +105,7 @@ else
     PACKAGE_SIGNING_MODE="unsigned"
 fi
 
-/bin/rm -f -- "$FINAL_PKG"
-/usr/bin/productbuild "${PRODUCTBUILD_ARGUMENTS[@]}" "$FINAL_PKG"
+wattson_run /usr/bin/productbuild "${PRODUCTBUILD_ARGUMENTS[@]}" "$FINAL_PKG"
 [[ -f "$FINAL_PKG" ]] || fail "productbuild did not create $FINAL_PKG"
 
 PAYLOAD_FILES="$(
@@ -123,9 +121,11 @@ PAYLOAD_FILES="$(
 
 if [[ "$PACKAGE_SIGNING_MODE" == "developer-id" ]]; then
     /usr/sbin/pkgutil --check-signature "$FINAL_PKG"
-    echo "Created Developer ID-signed PKG: $FINAL_PKG"
+    /bin/mv -f -- "$FINAL_PKG" "$OUTPUT_PKG"
+    echo "Created Developer ID-signed PKG: $OUTPUT_PKG"
     echo "Notarization status: no (use scripts/release.sh with WATTSON_NOTARIZE=1)"
 else
-    echo "Created unsigned community PKG: $FINAL_PKG"
+    /bin/mv -f -- "$FINAL_PKG" "$OUTPUT_PKG"
+    echo "Created unsigned community PKG: $OUTPUT_PKG"
     echo "Notarization status: no (Developer ID Installer identity is not configured)"
 fi

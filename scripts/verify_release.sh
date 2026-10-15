@@ -5,8 +5,10 @@ export LC_ALL=C
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/lib/local_cleanup.sh"
+wattson_cleanup_init
 VERSION_FILE="$ROOT_DIR/VERSION"
-BUILD_ROOT="$ROOT_DIR/.build/release"
+BUILD_ROOT="${WATTSON_RELEASE_BUILD_ROOT:-$ROOT_DIR/.build/release}"
 APP_DIR="$BUILD_ROOT/Wattson.app"
 APP_EXECUTABLE="$APP_DIR/Contents/MacOS/Wattson"
 HELPER_LABEL="com.leoarrow.wattson.helper"
@@ -270,26 +272,30 @@ if [[ "$EXPECT_INSTALLER_SIGNED" == "1" || "$EXPECT_DMG_SIGNED" == "1" ]]; then
 fi
 SIGNED_RELEASE_TEAM_ID=""
 
-verify_app_bundle "$APP_DIR"
-
-verify_binary "$APP_EXECUTABLE"
-verify_binary "$HELPER_EXECUTABLE"
-verify_v5_protocol_surface "$APP_EXECUTABLE" "$HELPER_EXECUTABLE"
-/usr/bin/codesign --verify --deep --strict "$APP_DIR"
-/usr/bin/codesign --verify --strict "$HELPER_EXECUTABLE"
-[[ -f "$BUILD_METADATA" ]]
-/usr/bin/grep -Fxq "version=$APP_VERSION" "$BUILD_METADATA"
-/usr/bin/grep -Fxq "architectures=arm64,x86_64" "$BUILD_METADATA"
-/usr/bin/grep -Fxq "minimum_macos=$MIN_MACOS_VERSION" "$BUILD_METADATA"
-
 if [[ "${1:-}" == "--build-only" ]]; then
     [[ "$#" == "1" ]] || fail "--build-only does not accept artifact paths"
-    echo "Verified universal release build for Wattson $APP_VERSION"
-    exit 0
-fi
-if [[ "$#" != "2" ]]; then
+elif [[ "$#" != "2" ]]; then
     echo "usage: $0 --build-only | /path/to/Wattson.pkg /path/to/Wattson.dmg" >&2
     exit 2
+fi
+
+# Published installers remain independently verifiable after their build's
+# disposable workspace has been removed.
+if [[ "${1:-}" == "--build-only" || -n "${WATTSON_RELEASE_BUILD_ROOT:-}" ]]; then
+    verify_app_bundle "$APP_DIR"
+    verify_binary "$APP_EXECUTABLE"
+    verify_binary "$HELPER_EXECUTABLE"
+    verify_v5_protocol_surface "$APP_EXECUTABLE" "$HELPER_EXECUTABLE"
+    /usr/bin/codesign --verify --deep --strict "$APP_DIR"
+    /usr/bin/codesign --verify --strict "$HELPER_EXECUTABLE"
+    [[ -f "$BUILD_METADATA" ]]
+    /usr/bin/grep -Fxq "version=$APP_VERSION" "$BUILD_METADATA"
+    /usr/bin/grep -Fxq "architectures=arm64,x86_64" "$BUILD_METADATA"
+    /usr/bin/grep -Fxq "minimum_macos=$MIN_MACOS_VERSION" "$BUILD_METADATA"
+fi
+if [[ "${1:-}" == "--build-only" ]]; then
+    echo "Verified universal release build for Wattson $APP_VERSION"
+    exit 0
 fi
 
 PKG_PATH="$1"
@@ -313,13 +319,12 @@ for payload_path in \
         || fail "PKG is missing $payload_path"
 done
 
-EXPAND_BASE="$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/wattson-pkg-expand.XXXXXX")"
+SCRATCH_PARENT="${WATTSON_RELEASE_BUILD_ROOT:-$ROOT_DIR/.build/local.noindex}"
+/bin/mkdir -p "$SCRATCH_PARENT"
+EXPAND_BASE="$(/usr/bin/mktemp -d "$SCRATCH_PARENT/pkg-expand.XXXXXX")"
+wattson_cleanup_add_dir "$EXPAND_BASE"
 EXPAND_DIR="$EXPAND_BASE/expanded"
-cleanup() {
-    /bin/rm -rf -- "$EXPAND_BASE"
-}
-trap cleanup EXIT
-/usr/sbin/pkgutil --expand-full "$PKG_PATH" "$EXPAND_DIR"
+wattson_run /usr/sbin/pkgutil --expand-full "$PKG_PATH" "$EXPAND_DIR"
 [[ -n "$(/usr/bin/find "$EXPAND_DIR" -type f -name preinstall -print -quit)" ]] \
     || fail "PKG is missing preinstall"
 [[ -n "$(/usr/bin/find "$EXPAND_DIR" -type f -name postinstall -print -quit)" ]] \
@@ -351,6 +356,12 @@ verify_binary "$PACKAGED_HELPER_EXECUTABLE"
 verify_v5_protocol_surface "$PACKAGED_APP_EXECUTABLE" "$PACKAGED_HELPER_EXECUTABLE"
 /usr/bin/codesign --verify --deep --strict "$PACKAGED_APP_DIR"
 /usr/bin/codesign --verify --strict "$PACKAGED_HELPER_EXECUTABLE"
+if [[ -n "${WATTSON_RELEASE_BUILD_ROOT:-}" ]]; then
+    /usr/bin/diff -qr "$APP_DIR" "$PACKAGED_APP_DIR" \
+        || fail "packaged app differs from the release build"
+    /usr/bin/cmp -s "$HELPER_EXECUTABLE" "$PACKAGED_HELPER_EXECUTABLE" \
+        || fail "packaged helper differs from the release build"
+fi
 
 if [[ "$SIGNED_RELEASE_REQUIRED" == "1" ]]; then
     verify_developer_id_application_signature \
@@ -376,5 +387,5 @@ if [[ "$EXPECT_NOTARIZED" == "1" ]]; then
     /usr/bin/xcrun stapler validate -v "$DMG_PATH"
 fi
 
-/bin/bash "$SCRIPT_DIR/verify_dmg.sh" "$DMG_PATH" "$PACKAGED_APP_DIR"
+wattson_run_script "$SCRIPT_DIR/verify_dmg.sh" "$DMG_PATH" "$PACKAGED_APP_DIR"
 echo "Verified Wattson $APP_VERSION: full PKG and DMG contain byte-identical apps"

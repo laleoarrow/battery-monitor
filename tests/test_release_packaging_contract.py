@@ -5,10 +5,11 @@ import re
 import stat
 import struct
 import subprocess
-import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 import zlib
+
+from local_runtime import TemporaryDirectory, run
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -480,7 +481,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
             'fail() { echo "$*" >&2; exit 1; }\n' + verifier
             + '\nverify_app_bundle "$1"\n'
         )
-        with tempfile.TemporaryDirectory(prefix="wattson-icon-verifier-") as temp:
+        with TemporaryDirectory(prefix="wattson-icon-verifier-") as temp:
             app = pathlib.Path(temp) / "Wattson.app"
             resources = app / "Contents" / "Resources"
             resources.mkdir(parents=True)
@@ -505,7 +506,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
                     )
 
             def verify_bundle():
-                return subprocess.run(
+                return run(
                     ["/bin/bash", "-c", shell, "icon-verifier", str(app)],
                     capture_output=True, text=True, check=False,
                 )
@@ -704,10 +705,11 @@ class ReleasePackagingContractTests(unittest.TestCase):
             notarize.index("stapler staple"),
         )
         self.assertIn('/usr/bin/mktemp -d', notarize)
-        self.assertIn("trap cleanup EXIT", notarize)
-        self.assertIn('/bin/rm -f -- "$NOTARY_LOG"', notarize)
-        self.assertIn('/bin/rm -f -- "$SUBMISSION_RESULT"', notarize)
-        self.assertIn('/bin/rmdir "$TEMP_DIR"', notarize)
+        self.assertIn("wattson_cleanup_init", notarize)
+        self.assertIn('wattson_cleanup_add_dir "$TEMP_DIR"', notarize)
+        self.assertIn(".build/local.noindex", notarize)
+        self.assertIn('$SCRATCH_PARENT/notary.XXXXXX', notarize)
+        self.assertIn("wattson_run /usr/bin/xcrun notarytool", notarize)
         self.assertLess(
             release.index('notarize.sh" "$DMG_PATH"'),
             release.index('NOTARIZED="yes"'),

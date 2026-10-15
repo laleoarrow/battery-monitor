@@ -11,14 +11,14 @@ final class SettingsGlassOpticalMarginTests: XCTestCase {
     override func setUp() {
         super.setUp()
         _ = NSApplication.shared
-        suite = "Wattson.SettingsGlassOpticalMargin.\(UUID().uuidString)"
+        suite = "Wattson.SwiftTests.SettingsGlassOpticalMargin.\(UUID().uuidString)"
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }
 
     override func tearDown() {
         Settings.resetTestConfiguration()
-        defaults.removePersistentDomain(forName: suite)
+        defaults.removePersistentTestDomain(forName: suite)
         defaults = nil
         super.tearDown()
     }

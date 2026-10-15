@@ -6,7 +6,7 @@ import Foundation
 /// battery telemetry. This is Classic layout evidence, not composited glass.
 /// Build all Core/MenuBar/Popover sources with -D DEBUG, then pass an output
 /// directory with WATTSON_FORCE_REDUCE_TRANSPARENCY=1 and
-/// WATTSON_FORCE_REDUCE_MOTION=1. Preferences use a disposable isolated suite.
+/// WATTSON_FORCE_REDUCE_MOTION=1. Preferences exist only in memory.
 @main
 private enum CaptureRuntimeSections {
     private static func hash(_ data: Data?) -> String {
@@ -43,9 +43,9 @@ private enum CaptureRuntimeSections {
         let app = NSApplication.shared
         app.setActivationPolicy(.prohibited)
         app.finishLaunching()
-        let suite = "Wattson.RuntimeSectionCapture.\(UUID().uuidString)"
-        let defaults = UserDefaults(suiteName: suite)!
+        let defaults = CaptureDefaults()
         Settings.configureForTest(defaults: defaults)
+        defer { Settings.resetTestConfiguration(); defaults.clear() }
         Settings.liquidGlassEnabled = false
 
         let fixtures: [(String, PowerSnapshot, String, CGFloat)] = [
@@ -178,11 +178,11 @@ private enum CaptureRuntimeSections {
             }
         }
         Settings.resetTestConfiguration()
-        defaults.removePersistentDomain(forName: suite)
+        defaults.clear()
         let finalChecks = [
             "canonicalAppHelperAndPreferencesUnchanged": initialFiles == protectedFiles(),
             "foregroundApplicationUnchanged": initialFrontmost == NSWorkspace.shared.frontmostApplication?.processIdentifier,
-            "isolatedSuiteRemoved": defaults.persistentDomain(forName: suite)?.isEmpty ?? true,
+            "memoryDefaultsCleared": defaults.isEmpty,
         ]
         assertions += finalChecks.count
         failures += finalChecks.values.filter { !$0 }.count
@@ -198,4 +198,16 @@ private enum CaptureRuntimeSections {
         print("Runtime section: \(records.count) cases, \(assertions) assertions, \(failures) failures")
         exit(failures == 0 ? 0 : 1)
     }
+}
+
+/// Capture fixtures never write a preferences domain, including early exits.
+private final class CaptureDefaults: UserDefaults {
+    private var values: [String: Any] = [:]
+    override func object(forKey key: String) -> Any? { values[key] }
+    override func string(forKey key: String) -> String? { values[key] as? String }
+    override func set(_ value: Any?, forKey key: String) { values[key] = value }
+    override func set(_ value: Bool, forKey key: String) { values[key] = value }
+    override func removeObject(forKey key: String) { values.removeValue(forKey: key) }
+    func clear() { values.removeAll() }
+    var isEmpty: Bool { values.isEmpty }
 }

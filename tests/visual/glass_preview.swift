@@ -19,7 +19,7 @@ private enum GlassPreview {
 
     /// Runs before NSApplication or the delegate can construct any windows.
     private static func verifyDefaults() {
-        precondition(Bundle.main.bundleIdentifier == "com.leoarrow.wattson.glass-preview")
+        precondition(Bundle.main.bundleIdentifier?.hasPrefix("com.leoarrow.wattson.glass-preview.") == true)
         let defaults = PreviewDefaults()
         let independent = PreviewDefaults()
         defaults.set("memory-only", forKey: "preview.probe")

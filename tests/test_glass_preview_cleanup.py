@@ -1,7 +1,8 @@
 import os
 import pathlib
-import subprocess
-import tempfile
+import shutil
+
+from local_runtime import TemporaryDirectory, run
 import unittest
 
 
@@ -13,9 +14,7 @@ class GlassPreviewCleanupTests(unittest.TestCase):
     def setUp(self):
         # Run the actual shell lifecycle in a disposable project. Replace only
         # compiler/macOS commands so tests never register or launch a real app.
-        fixture_root = ROOT / ".build" / "preview-tests.noindex"
-        fixture_root.mkdir(parents=True, exist_ok=True)
-        directory = tempfile.TemporaryDirectory(dir=fixture_root)
+        directory = TemporaryDirectory(prefix="preview-")
         self.addCleanup(directory.cleanup)
         self.root = pathlib.Path(directory.name)
         self.script = self.root / "scripts" / "build_glass_preview.sh"
@@ -66,6 +65,19 @@ EXECUTABLE
     chmod +x "$2"
 }
 '''
+        library = self.script.parent / "lib"
+        shutil.copytree(ROOT / "scripts" / "lib", library)
+        bin_dir = self.root / "bin"
+        bin_dir.mkdir()
+        for name, function in (("xcrun", "xcrun"), ("lsregister", "stub_lsregister")):
+            stub = bin_dir / name
+            stub.write_text("#!/bin/bash\n" + stubs + f'\n{function} "$@"\n', encoding="utf-8")
+            stub.chmod(0o755)
+        helper = library / "local_cleanup.sh"
+        helper.write_text(helper.read_text().replace(
+            "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister",
+            str(bin_dir / "lsregister"),
+        ))
         self.script.write_text(stubs + source, encoding="utf-8")
         (self.root / "VERSION").write_text("4.3.1\n", encoding="utf-8")
         files = ["Tests/visual/glass_preview_Info.plist", "design/icon/AppIcon.icns"]
@@ -84,9 +96,10 @@ EXECUTABLE
 
     def run_build(self, *arguments, **overrides):
         env = dict(os.environ, STUB_LOG=str(self.log), **overrides)
-        return subprocess.run(
+        env["PATH"] = str(self.root / "bin") + os.pathsep + env["PATH"]
+        return run(
             ["/bin/bash", str(self.script), *arguments],
-            env=env, capture_output=True, text=True, timeout=5,
+            env=env, capture_output=True, text=True, timeout=5, cleanup_grace=65,
         )
 
     def seed_existing_app(self):
@@ -102,7 +115,7 @@ EXECUTABLE
     def test_repeated_success_keeps_one_app_and_unregisters_before_replacement(self):
         for attempt in range(3):
             with self.subTest(attempt=attempt):
-                result = self.run_build()
+                result = self.run_build("--keep-app")
                 self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                 self.assertIn(str(self.app), result.stdout)
                 self.assert_only_final_app_remains()
@@ -118,7 +131,7 @@ EXECUTABLE
         for failure in ("STUB_COMPILE_STATUS", "STUB_SIGN_STATUS", "STUB_SELF_TEST_STATUS"):
             with self.subTest(failure=failure):
                 self.log.write_text("", encoding="utf-8")
-                result = self.run_build(**{failure: "7"})
+                result = self.run_build("--keep-app", **{failure: "7"})
                 self.assertEqual(result.returncode, 7, result.stdout + result.stderr)
                 self.assertEqual(marker.read_text(encoding="utf-8"), "old build")
                 self.assert_only_final_app_remains()
@@ -126,6 +139,16 @@ EXECUTABLE
                     f"unregister-existing:{self.app}\n",
                     self.log.read_text(encoding="utf-8"),
                 )
+
+    def test_default_build_cleans_current_and_staged_bundles(self):
+        marker = self.seed_existing_app()
+        for attempt in range(3):
+            with self.subTest(attempt=attempt):
+                result = self.run_build()
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertFalse(marker.exists())
+                self.assertEqual(list(self.preview_root.iterdir()), [])
+                self.assertEqual(list(self.root.rglob("*.app")), [])
 
     def test_failed_first_build_leaves_no_bundle(self):
         result = self.run_build(STUB_SELF_TEST_STATUS="8")
@@ -137,7 +160,7 @@ EXECUTABLE
         marker = self.seed_existing_app()
         for signal, status in (("INT", 130), ("TERM", 143)):
             with self.subTest(signal=signal):
-                result = self.run_build(STUB_SIGN_SIGNAL=signal)
+                result = self.run_build("--keep-app", STUB_SIGN_SIGNAL=signal)
                 self.assertEqual(result.returncode, status, result.stdout + result.stderr)
                 self.assertTrue(marker.exists())
                 self.assert_only_final_app_remains()

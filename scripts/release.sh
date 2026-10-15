@@ -8,8 +8,10 @@ export LC_ALL=C
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/lib/local_cleanup.sh"
+wattson_cleanup_init
 VERSION_FILE="$ROOT_DIR/VERSION"
-DIST_DIR="$ROOT_DIR/dist"
+FINAL_DIST_DIR="$ROOT_DIR/dist"
 
 fail() {
     echo "release.sh: $*" >&2
@@ -67,6 +69,13 @@ if [[ "$NOTARIZE_RELEASE" == "1" ]]; then
     fi
 fi
 
+/bin/mkdir -p "$ROOT_DIR/.build/local.noindex"
+WATTSON_RELEASE_BUILD_ROOT="$(/usr/bin/mktemp -d "$ROOT_DIR/.build/local.noindex/release.XXXXXX")"
+wattson_cleanup_add_dir "$WATTSON_RELEASE_BUILD_ROOT"
+WATTSON_RELEASE_DIST_DIR="$WATTSON_RELEASE_BUILD_ROOT/artifacts"
+export WATTSON_RELEASE_BUILD_ROOT WATTSON_RELEASE_DIST_DIR
+DIST_DIR="$WATTSON_RELEASE_DIST_DIR"
+
 PKG_NAME="Wattson-v${APP_VERSION}-macos-universal.pkg"
 DMG_NAME="Wattson-v${APP_VERSION}-macos-universal.dmg"
 PKG_PATH="$DIST_DIR/$PKG_NAME"
@@ -75,27 +84,24 @@ RELEASE_INFO_NAME="Wattson-v${APP_VERSION}-release-info.txt"
 RELEASE_INFO_PATH="$DIST_DIR/$RELEASE_INFO_NAME"
 CHECKSUM_PATH="$DIST_DIR/SHA256SUMS.txt"
 
-/bin/mkdir -p "$DIST_DIR"
-/bin/rm -f -- "$PKG_PATH" "$DMG_PATH" "$RELEASE_INFO_PATH" "$CHECKSUM_PATH"
-
 echo "Release mode: $DISTRIBUTION_MODE"
 if [[ "$NOTARIZE_RELEASE" == "0" ]]; then
     echo "Notarization requested: no"
 fi
 
-/bin/bash "$SCRIPT_DIR/build_release.sh"
-/bin/bash "$SCRIPT_DIR/verify_release.sh" --build-only
-/bin/bash "$SCRIPT_DIR/package_pkg.sh" "$APP_VERSION"
+wattson_run_script "$SCRIPT_DIR/build_release.sh"
+wattson_run_script "$SCRIPT_DIR/verify_release.sh" --build-only
+wattson_run_script "$SCRIPT_DIR/package_pkg.sh" "$APP_VERSION"
 
 if [[ "$NOTARIZE_RELEASE" == "1" ]]; then
-    /bin/bash "$SCRIPT_DIR/notarize.sh" "$PKG_PATH"
+    wattson_run_script "$SCRIPT_DIR/notarize.sh" "$PKG_PATH"
 fi
 
 WATTSON_RELEASE_ORCHESTRATED=1 \
-    /bin/bash "$SCRIPT_DIR/package_dmg.sh" "$APP_VERSION"
+    wattson_run_script "$SCRIPT_DIR/package_dmg.sh" "$APP_VERSION"
 
 if [[ "$NOTARIZE_RELEASE" == "1" ]]; then
-    /bin/bash "$SCRIPT_DIR/notarize.sh" "$DMG_PATH"
+    wattson_run_script "$SCRIPT_DIR/notarize.sh" "$DMG_PATH"
     NOTARIZED="yes"
     STAPLED="yes"
 else
@@ -106,10 +112,10 @@ fi
 WATTSON_EXPECT_INSTALLER_SIGNED="$EXPECT_SIGNED" \
 WATTSON_EXPECT_DMG_SIGNED="$EXPECT_SIGNED" \
 WATTSON_EXPECT_NOTARIZED="$NOTARIZE_RELEASE" \
-    /bin/bash "$SCRIPT_DIR/verify_release.sh" "$PKG_PATH" "$DMG_PATH"
+    wattson_run_script "$SCRIPT_DIR/verify_release.sh" "$PKG_PATH" "$DMG_PATH"
 
 BUILD_NUMBER="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' \
-    "$ROOT_DIR/.build/release/Wattson.app/Contents/Info.plist")"
+    "$WATTSON_RELEASE_BUILD_ROOT/Wattson.app/Contents/Info.plist")"
 {
     printf 'version=%s\n' "$APP_VERSION"
     printf 'build_number=%s\n' "$BUILD_NUMBER"
@@ -139,6 +145,10 @@ BUILD_NUMBER="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' \
     /usr/bin/shasum -a 256 -c "$(/usr/bin/basename "$CHECKSUM_PATH")"
 )
 
-echo "Created release artifacts in $DIST_DIR"
+/bin/mkdir -p "$FINAL_DIST_DIR"
+for artifact in "$PKG_NAME" "$DMG_NAME" "$RELEASE_INFO_NAME" "SHA256SUMS.txt"; do
+    /bin/mv -f -- "$DIST_DIR/$artifact" "$FINAL_DIST_DIR/$artifact"
+done
+echo "Created release artifacts in $FINAL_DIST_DIR"
 echo "Notarized: $NOTARIZED"
-echo "Checksums: $CHECKSUM_PATH"
+echo "Checksums: $FINAL_DIST_DIR/SHA256SUMS.txt"
