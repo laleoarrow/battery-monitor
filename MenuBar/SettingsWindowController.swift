@@ -87,10 +87,10 @@ private enum SettingsStyle {
     static let identityHeight: CGFloat = 64
     static let identityTileSize: CGFloat = 40
     static let navigationInset: CGFloat = 12
-    static let navigationTopGap: CGFloat = 4
-    static let navigationRowHeight: CGFloat = 38
+    static let navigationTopGap: CGFloat = 12
+    static let navigationRowHeight: CGFloat = 40
     static let navigationRowGap: CGFloat = 4
-    static let navigationHeight: CGFloat = 136
+    static let navigationHeight: CGFloat = 144
 
     static let headingFont = NSFont.systemFont(ofSize: 22, weight: .semibold)
     static let primaryFont = NSFont.systemFont(ofSize: 14, weight: .regular)
@@ -133,6 +133,19 @@ private enum SettingsStyle {
     static let headingText = adaptive(0xF4F4F4, .labelColor, light: 0x1C1C1E)
     static let primaryText = adaptive(0xE9E9E9, .labelColor, light: 0x242426)
     static let secondaryText = adaptive(0xA0A0A2, .secondaryLabelColor, light: 0x63636A)
+
+    static func navigationIconColor(for identifier: String) -> NSColor {
+        let palette: (light: UInt32, dark: UInt32)
+        switch identifier {
+        case "general": palette = (0x65717D, 0x778490)
+        case "menu-bar-icon": palette = (0x527A9F, 0x638FB5)
+        default: palette = (0x387F79, 0x4A9189)
+        }
+        return NSColor(name: nil) { appearance in
+            color(hex: appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+                ? palette.dark : palette.light)
+        }
+    }
 
     private static func adaptive(_ baseline: UInt32, _ system: NSColor, light: UInt32) -> NSColor {
         NSColor(name: nil) { appearance in
@@ -449,6 +462,32 @@ private final class SettingsToggleButton: NSButton, SettingsContrastRefreshing {
     }
 }
 
+private final class SettingsSidebarIconBox: NSBox, SettingsContrastRefreshing {
+    private let increaseContrast: () -> Bool
+
+    init(color: NSColor, increaseContrast: @escaping () -> Bool) {
+        self.increaseContrast = increaseContrast
+        super.init(frame: .zero)
+        boxType = .custom
+        titlePosition = .noTitle
+        cornerRadius = 6
+        fillColor = color
+        setAccessibilityElement(false)
+        refreshContrastAppearance()
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) is unavailable")
+    }
+
+    func refreshContrastAppearance() {
+        borderWidth = increaseContrast() ? 1 : 0
+        borderColor = .labelColor
+        needsDisplay = true
+    }
+}
+
 private final class SettingsSidebarRowView: NSTableRowView, SettingsContrastRefreshing {
     private let increaseContrast: () -> Bool
 
@@ -463,13 +502,11 @@ private final class SettingsSidebarRowView: NSTableRowView, SettingsContrastRefr
     }
 
     var selectionFillColor: NSColor {
-        increaseContrast()
-            ? SettingsStyle.increasedContrastSelection
-            : SettingsStyle.selection
+        .controlAccentColor.withAlphaComponent(increaseContrast() ? 0.28 : 0.14)
     }
 
     var selectionStrokeColor: NSColor? {
-        increaseContrast() ? SettingsStyle.increasedContrastSelectionBorder : nil
+        increaseContrast() ? .controlAccentColor : nil
     }
 
     var selectionStrokeWidth: CGFloat { increaseContrast() ? 2 : 0 }
@@ -678,7 +715,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
     let identifier = "general"
     let title = "General"
-    let symbolName = "gearshape"
+    let symbolName = "gearshape.fill"
     let view = NSView()
 
     private let dependencies: SettingsWindowDependencies
@@ -1171,7 +1208,8 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             liquidGlassStylePopup.lastItem?.representedObject = style.rawValue
         }
         let styleLabel = NSTextField(labelWithString: "Popup background")
-        styleLabel.font = SettingsStyle.detailFont
+        styleLabel.identifier = NSUserInterfaceItemIdentifier("settings.appearance.background.label")
+        styleLabel.font = .systemFont(ofSize: 12)
         styleLabel.textColor = SettingsStyle.secondaryText
         styleLabel.translatesAutoresizingMaskIntoConstraints = false
         let styleRow = NSView()
@@ -1190,13 +1228,14 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         transparencySlider.target = self
         transparencySlider.action = #selector(changeGlassTransparency(_:))
         transparencySlider.translatesAutoresizingMaskIntoConstraints = false
-        transparencyValue.font = .monospacedDigitSystemFont(ofSize: 11, weight: .regular)
+        transparencyValue.font = .monospacedDigitSystemFont(ofSize: 12, weight: .regular)
         transparencyValue.textColor = SettingsStyle.secondaryText
         transparencyValue.alignment = .right
         transparencyValue.setAccessibilityElement(false)
         transparencyValue.translatesAutoresizingMaskIntoConstraints = false
         let transparencyLabel = NSTextField(labelWithString: "Transparency")
-        transparencyLabel.font = SettingsStyle.detailFont
+        transparencyLabel.identifier = NSUserInterfaceItemIdentifier("settings.appearance.transparency.label")
+        transparencyLabel.font = .systemFont(ofSize: 12)
         transparencyLabel.textColor = SettingsStyle.secondaryText
         transparencyLabel.translatesAutoresizingMaskIntoConstraints = false
         let transparencyRow = NSView()
@@ -2674,7 +2713,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
 private final class ModuleSettingsSectionController: NSObject, SettingsSectionController {
     let identifier = "modules"
     let title = "Modules"
-    let symbolName = "square.grid.2x2"
+    let symbolName = "square.grid.2x2.fill"
     let view = NSView()
 
     private let increaseContrast: () -> Bool
@@ -3016,7 +3055,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
         sections.forEach { refreshContrastAppearance(in: $0.view) }
         sidebar.enumerateAvailableRowViews { rowView, _ in
-            (rowView as? SettingsContrastRefreshing)?.refreshContrastAppearance()
+            self.refreshContrastAppearance(in: rowView)
         }
         divider.refreshContrastAppearance()
         updateVisibleSwitchKeyLoop()
@@ -3478,18 +3517,25 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         let section = sections[row]
         let cell = NSTableCellView()
 
+        let icon = SettingsSidebarIconBox(
+            color: SettingsStyle.navigationIconColor(for: section.identifier),
+            increaseContrast: increaseContrast
+        )
+        icon.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.icon.\(section.identifier)")
+        icon.translatesAutoresizingMaskIntoConstraints = false
         let imageView = NSImageView()
+        imageView.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.symbol.\(section.identifier)")
         imageView.image = NSImage(
             systemSymbolName: section.symbolName,
             accessibilityDescription: nil
         )?.withSymbolConfiguration(
-            NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
+            NSImage.SymbolConfiguration(pointSize: 16, weight: .medium)
         )
-        imageView.contentTintColor = .labelColor
+        imageView.contentTintColor = .white
         imageView.imageScaling = .scaleProportionallyDown
-        let icon: NSView = imageView
-        icon.setAccessibilityElement(false)
-        icon.translatesAutoresizingMaskIntoConstraints = false
+        imageView.setAccessibilityElement(false)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        icon.addSubview(imageView)
 
         let title = NSTextField(labelWithString: section.title)
         title.font = SettingsStyle.sidebarFont
@@ -3504,9 +3550,13 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         NSLayoutConstraint.activate([
             icon.leadingAnchor.constraint(equalTo: cell.leadingAnchor),
             icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
-            icon.widthAnchor.constraint(equalToConstant: 18),
-            icon.heightAnchor.constraint(equalToConstant: 20),
-            title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 6),
+            icon.widthAnchor.constraint(equalToConstant: 24),
+            icon.heightAnchor.constraint(equalToConstant: 24),
+            imageView.centerXAnchor.constraint(equalTo: icon.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 16),
+            imageView.heightAnchor.constraint(equalToConstant: 16),
+            title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 9),
             title.trailingAnchor.constraint(equalTo: cell.trailingAnchor),
             title.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
         ])

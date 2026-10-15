@@ -169,6 +169,13 @@ Recovery follows the startup controls in both the visual and keyboard order.
 See the [native settings hierarchy review](../design/settings/native-hierarchy/README.md)
 for Apple references, Pro review, production-renderer captures and validation.
 
+Settings navigation uses three small category badges with theme-aware
+graphite, blue-gray and teal fills and white SF Symbols. Glass retains native
+source-list selection; Classic follows the system accent with a subtle fill.
+Increase Contrast outlines both the selected Classic row and category badges.
+The 144-point navigation viewport accommodates all three 40-point rows and
+AppKit's source-list spacing. See the [sidebar refinement](../design/settings/sidebar-refinement/README.md).
+
 The main popover footer now replaces the UI4 ordinary segmented
 control inside a glass surface with three mutually exclusive native `.glass`
 NSButtons and a separate round settings button, sharing one

@@ -130,6 +130,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                     | UInt32((converted.blueComponent * 255).rounded())
             }
 
+            func isAccent(_ color: NSColor?, alpha: CGFloat) -> Bool {
+                guard let converted = color?.usingColorSpace(.sRGB) else { return false }
+                return srgbHex(converted) == srgbHex(.controlAccentColor)
+                    && abs(converted.alphaComponent - alpha) < 0.001
+            }
+
             func logoArtwork(_ resource: String) -> NSImage {
                 guard let url = Bundle.main.url(forResource: resource, withExtension: "png"),
                       let image = NSImage(contentsOf: url) else {
@@ -549,7 +555,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(approximately(controller.contentHostFrameForTest.width, 503), "compact content width")
             require(controller.sidebarStyleForTest == .sourceList, "source-list sidebar")
             require(controller.sidebarAllowsEmptySelectionForTest == false, "sidebar disallows empty selection")
-            require(approximately(controller.sidebarRowHeightForTest, 38), "compact navigation row height")
+            require(approximately(controller.sidebarRowHeightForTest, 40), "compact navigation row height")
             require(approximately(controller.sidebarRowGapForTest, 4), "navigation row gap")
             require(
                 controller.sidebarRectForRowForTest(2).maxY
@@ -578,6 +584,32 @@ class SettingsWindowContractTests(unittest.TestCase):
                     <= (iconNavigationLabel?.frame.width ?? 0) + 1,
                 "Display navigation title is fully visible"
             )
+            let navigationBadges = ["general", "menu-bar-icon", "modules"].map {
+                view("settings.sidebar.icon.\($0)", in: first) as! NSBox
+            }
+            for (index, badge) in navigationBadges.enumerated() {
+                let cell = controller.sidebarForTest.view(
+                    atColumn: 0, row: index, makeIfNecessary: true
+                ) as! NSTableCellView
+                let title = cell.textField!
+                let badgeAlignment = badge.superview!.convert(
+                    badge.alignmentRect(forFrame: badge.frame), to: cell
+                )
+                let titleAlignment = title.superview!.convert(
+                    title.alignmentRect(forFrame: title.frame), to: cell
+                )
+                require(approximately(badgeAlignment.width, 24)
+                    && approximately(badgeAlignment.height, 24)
+                    && approximately(badge.cornerRadius, 6),
+                    "sidebar badges share a compact 24-point rounded alignment frame")
+                require(cell.imageView?.image != nil
+                    && cell.imageView?.isDescendant(of: badge) == true,
+                    "every sidebar badge contains a resolved native symbol")
+                require(approximately(titleAlignment.minX - badgeAlignment.maxX, 9),
+                    "sidebar titles have a consistent nine-point badge gap")
+                require(title.attributedStringValue.size().width <= title.frame.width + 1,
+                    "every sidebar title remains fully visible")
+            }
             require(
                 descendants(ofType: NSView.self, in: view("settings.section.general", in: first))
                     .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
@@ -630,6 +662,16 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(approximately(alignment.minX, inset),
                     "appearance peers align and only glass dependencies are indented: \(title)")
             }
+            for identifier in ["settings.appearance.background.label",
+                               "settings.appearance.transparency.label"] {
+                let detail = view(identifier, in: first) as! NSTextField
+                require(approximately(detail.font?.pointSize ?? -1, 12),
+                    "glass dependency labels use readable 12-point type")
+            }
+            let transparencyValue = descendants(ofType: NSTextField.self, in: transparency.superview!)
+                .first { $0.stringValue.hasSuffix("%") }!
+            require(approximately(transparencyValue.font?.pointSize ?? -1, 12),
+                "glass transparency value matches its readable dependency label")
             let generalScroll = view("settings.general.scroll", in: first) as! NSScrollView
             let generalDocument = generalScroll.documentView!
             require(generalDocument.isFlipped && approximately(generalScroll.documentVisibleRect.minY, 0),
@@ -1439,7 +1481,10 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "selected icon card has a distinct normal fill"
             )
             require(controller.selectedRowStrokeWidthForTest == 0, "normal selected row has no extra outline")
-            require(srgbHex(controller.selectedRowFillColorForTest) == 0x2B362F, "normal selection keeps reference sRGB")
+            require(isAccent(controller.selectedRowFillColorForTest, alpha: 0.14),
+                "normal sidebar selection follows the system accent with a restrained fill")
+            require(navigationBadges.allSatisfy { $0.borderWidth == 0 },
+                "normal sidebar badges have no decorative outline")
             require(controller.toggleTrackStrokeWidthForTest("Hide System Battery Icon") == 1, "normal off toggle outline is one point")
             require(srgbHex(controller.toggleTrackColorForTest("Hide System Battery Icon")) == 0x2E3032, "normal off toggle keeps reference track sRGB")
             require(srgbHex(controller.toggleTrackStrokeColorForTest("Hide System Battery Icon")) == 0x363838, "normal off toggle keeps reference outline sRGB")
@@ -1476,8 +1521,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "increased contrast strengthens the selected icon-card fill"
             )
             require(controller.selectedRowStrokeWidthForTest == 2, "increased contrast outlines selected row")
-            require(srgbHex(controller.selectedRowFillColorForTest) == 0x3B5944, "increased contrast strengthens selection fill")
-            require(srgbHex(controller.selectedRowStrokeColorForTest) == 0x8AD88E, "increased contrast gives selection a clear outline")
+            require(isAccent(controller.selectedRowFillColorForTest, alpha: 0.28),
+                "increased contrast strengthens the system-accent sidebar fill")
+            require(isAccent(controller.selectedRowStrokeColorForTest, alpha: 1),
+                "increased contrast outlines sidebar selection in the system accent")
+            require(navigationBadges.allSatisfy { $0.borderWidth == 1 },
+                "increased contrast gives every retained sidebar badge a clear outline")
             require(controller.toggleTrackStrokeWidthForTest("Hide System Battery Icon") == 2, "increased contrast strengthens off toggle outline")
             require(srgbHex(controller.toggleTrackColorForTest("Hide System Battery Icon")) == 0x575B5F, "increased contrast brightens off toggle track")
             require(srgbHex(controller.toggleTrackStrokeColorForTest("Hide System Battery Icon")) == 0xB9C0C6, "increased contrast brightens off toggle outline")
@@ -1507,7 +1556,10 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "selected icon-card contrast styling restores exactly"
             )
             require(controller.selectedRowStrokeWidthForTest == 0, "selected row outline is removed on restore")
-            require(srgbHex(controller.selectedRowFillColorForTest) == 0x2B362F, "selection sRGB restores exactly")
+            require(isAccent(controller.selectedRowFillColorForTest, alpha: 0.14),
+                "sidebar selection restores its restrained system-accent fill")
+            require(navigationBadges.allSatisfy { $0.borderWidth == 0 },
+                "sidebar badge outlines disappear when increased contrast is restored")
             require(controller.toggleTrackStrokeWidthForTest("Hide System Battery Icon") == 1, "off toggle outline restores exactly")
             require(srgbHex(controller.toggleTrackColorForTest("Hide System Battery Icon")) == 0x2E3032, "off toggle track sRGB restores exactly")
             require(controller.dividerVisualStrokeWidthForTest == 1, "divider stroke restores exactly")
