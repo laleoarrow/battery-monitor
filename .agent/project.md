@@ -109,6 +109,11 @@ Fades respect Reduce Motion; dismissal, hiding, losing key status, changing
 appearance or detaching clears feedback immediately. The settings-window
 buttons and system-battery checkbox retain their existing presentation.
 
+Global mouse-down delivery can repeat a press already routed to the Classic
+popup. Dismissal ignores the current content window's identity, or its positive
+window number when the event omits the object. A different window at the same
+screen coordinates still dismisses the popup; its rectangle is not an exemption.
+
 An independently selectable section prioritizes macOS battery time estimates,
 following Stats' system-data approach. On battery it uses the public IOPS
 internal-battery `Time to Empty` field; while charging it uses `Time to Full
