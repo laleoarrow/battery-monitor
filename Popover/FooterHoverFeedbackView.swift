@@ -80,7 +80,6 @@ final class FooterHoverFeedbackView: NSView {
         guard let index else { setVisible(false); return }
         PopoverStyle.setWithoutAnimation {
             self.glow.path = self.path(for: self.regions[index])
-            self.glow.shadowPath = self.glow.path
         }
         setVisible(true)
     }
@@ -130,12 +129,12 @@ final class FooterHoverFeedbackView: NSView {
         let contrast = PopoverStyle.isHighContrast(effectiveAppearance)
         let neutral = dark ? NSColor.white : NSColor.black
         PopoverStyle.setWithoutAnimation {
-            self.glow.fillColor = neutral.withAlphaComponent(contrast ? 0.08 : 0.055).cgColor
-            self.glow.strokeColor = neutral.withAlphaComponent(contrast ? 0.6 : 0.16).cgColor
+            self.glow.fillColor = neutral.withAlphaComponent(contrast ? 0.08 : (dark ? 0.025 : 0.018)).cgColor
+            self.glow.strokeColor = neutral.withAlphaComponent(contrast ? 0.6 : (dark ? 0.12 : 0.10)).cgColor
             self.glow.lineWidth = contrast ? 1 : 0.6
             self.glow.shadowColor = neutral.cgColor
-            self.glow.shadowOpacity = contrast || self.reducesTransparency ? 0 : 0.28
-            self.glow.shadowRadius = 4
+            self.glow.shadowOpacity = contrast || self.reducesTransparency ? 0 : (dark ? 0.18 : 0.12)
+            self.glow.shadowRadius = 3
             self.glow.shadowOffset = .zero
         }
     }

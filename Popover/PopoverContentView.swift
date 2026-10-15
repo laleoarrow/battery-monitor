@@ -676,9 +676,8 @@ final class PopoverFooterView: PopoverSection {
         }
     }
 
-    func setPresentationActive(_ active: Bool) {
+    func setHoverPresentationActive(_ active: Bool) {
         hoverFeedback.setPresentationActive(active)
-        if !active { cancelInteraction() }
     }
 
     func cancelInteraction() {
@@ -944,7 +943,8 @@ final class PopoverContentViewController: NSViewController {
 
     func setPresentationActive(_ active: Bool) {
         presentationActive = active
-        footer.setPresentationActive(active)
+        footer.setHoverPresentationActive(active)
+        if !active { footer.cancelInteraction() }
     }
 
     func cancelActiveModeDrag() -> Bool { footer.cancelActiveModeDrag() }
