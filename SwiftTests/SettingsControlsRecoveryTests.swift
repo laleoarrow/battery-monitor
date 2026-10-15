@@ -67,9 +67,8 @@ final class SettingsControlsRecoveryTests: XCTestCase {
         let section = try generalSection(fixture)
         let login = try rowButton("login", in: section.view)
         let battery = try rowButton("battery", in: section.view)
-        let automaticUpdates = try rowButton("automatic-updates", in: section.view)
         let nextControl = NSButton()
-        automaticUpdates.nextKeyView = nextControl
+        battery.nextKeyView = nextControl
         section.refresh()
         fixture.settle(login: .unavailable, battery: nil)
         let recovery: NSStackView = try XCTUnwrap(find("settings.general.controls-recovery", in: section.view))
@@ -86,8 +85,15 @@ final class SettingsControlsRecoveryTests: XCTestCase {
         XCTAssertEqual(fixture.writes, 0)
         XCTAssertFalse(login.isEnabled)
         XCTAssertFalse(battery.isEnabled)
-        XCTAssertTrue(automaticUpdates.nextKeyView === button)
+        XCTAssertTrue(battery.nextKeyView === button)
         XCTAssertTrue(button.nextKeyView === nextControl)
+
+        section.refresh()
+        fixture.settle(login: .unavailable, battery: nil)
+        XCTAssertTrue(battery.nextKeyView === button,
+            "Refreshing visible recovery retains its position after the affected controls")
+        XCTAssertTrue(button.nextKeyView === nextControl,
+            "Refreshing recovery must not create a keyboard self-loop")
 
         button.performClick(nil)
         XCTAssertEqual(fixture.openedURLs.map(\.absoluteString), [
@@ -102,7 +108,7 @@ final class SettingsControlsRecoveryTests: XCTestCase {
         XCTAssertTrue(recovery.isHidden, "Existing asynchronous refresh detects successful recovery")
         XCTAssertTrue(login.isEnabled)
         XCTAssertTrue(battery.isEnabled)
-        XCTAssertTrue(automaticUpdates.nextKeyView === nextControl)
+        XCTAssertTrue(battery.nextKeyView === nextControl)
         XCTAssertEqual(fixture.writes, 0)
         XCTAssertEqual(fixture.openedURLs.count, 1)
     }

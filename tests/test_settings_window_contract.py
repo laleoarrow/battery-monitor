@@ -586,12 +586,51 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "General includes four operational rows, appearance and feedback"
             )
             let generalList = view("settings.general.list", in: first)
-            let generalRows = descendants(ofType: NSView.self, in: generalList)
-                .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
-            require(approximately(generalList.frame.width, 503), "compact general list width")
-            require(approximately(generalList.frame.height, 272), "General is exactly 4 × 68 points")
-            require((generalList as? NSBox)?.cornerRadius == 14, "rounded general list radius")
-            require(generalRows.allSatisfy { approximately($0.frame.height, 68) }, "four 68-point rows")
+            let updatesList = view("settings.general.updates.list", in: first)
+            for (list, expectedIdentifiers) in [
+                (generalList, ["login", "battery"]),
+                (updatesList, ["update", "automatic-updates"]),
+            ] {
+                require(approximately(list.frame.width, 503), "full-width General group")
+                require(approximately(list.frame.height, 136), "each operational group is 2 × 68 points")
+                require((list as? NSBox)?.cornerRadius == 14, "consistent rounded General groups")
+                let rows = descendants(ofType: NSView.self, in: list)
+                    .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
+                    .sorted { $0.frame.minY > $1.frame.minY }
+                require(rows.map { $0.identifier!.rawValue }
+                    == expectedIdentifiers.map { "settings.general.row.\($0)" },
+                    "startup and update controls belong to separate named groups")
+                require(rows.allSatisfy { approximately($0.frame.height, 68) }, "operational rows retain readable height")
+                for (index, row) in rows.enumerated() {
+                    require(approximately(row.frame.minY, 68 - CGFloat(index) * 68),
+                        "each group keeps its top-down row order")
+                }
+            }
+            for (identifier, title) in [
+                ("startup", "Startup & Menu Bar"), ("updates", "Updates"),
+                ("appearance", "Appearance"), ("support", "Support"),
+            ] {
+                let groupHeading = view("settings.general.\(identifier).heading", in: first) as! NSTextField
+                require(groupHeading.stringValue == title
+                    && groupHeading.font == .systemFont(ofSize: 13, weight: .semibold)
+                    && (groupHeading.superview as? NSStackView)?.arrangedSubviews.first === groupHeading,
+                    "every General group has the same external heading treatment")
+            }
+            let appearanceSection = view("settings.general.appearance", in: first)
+            for (title, inset) in [
+                ("Theme", CGFloat(16)), ("Liquid Glass", 16),
+                ("In-App Logo", 16), ("Dock Icon", 16),
+                ("Popup background", 32), ("Transparency", 32),
+            ] {
+                let appearanceLabel = descendants(ofType: NSTextField.self, in: appearanceSection)
+                    .first { $0.stringValue == title }!
+                let row = title == "Liquid Glass"
+                    ? view("settings.general.row.appearance", in: first) : appearanceLabel.superview!
+                let alignment = appearanceLabel.superview!
+                    .convert(appearanceLabel.alignmentRect(forFrame: appearanceLabel.frame), to: row)
+                require(approximately(alignment.minX, inset),
+                    "appearance peers align and only glass dependencies are indented: \(title)")
+            }
             let generalScroll = view("settings.general.scroll", in: first) as! NSScrollView
             let generalDocument = generalScroll.documentView!
             require(generalDocument.isFlipped && approximately(generalScroll.documentVisibleRect.minY, 0),
@@ -611,21 +650,20 @@ class SettingsWindowContractTests(unittest.TestCase):
                 ),
                 "General heading uses 22-point type"
             )
-            let generalRowsByIdentifier = Dictionary(
-                uniqueKeysWithValues: generalRows.compactMap { row in
-                    row.identifier.map { ($0.rawValue, row) }
-                }
-            )
-            for (identifier, expectedMinY) in [
-                ("settings.general.row.login", CGFloat(204)),
-                ("settings.general.row.battery", CGFloat(136)),
-                ("settings.general.row.update", CGFloat(68)),
-                ("settings.general.row.automatic-updates", CGFloat(0)),
-            ] {
-                require(
-                    approximately(generalRowsByIdentifier[identifier]?.frame.minY ?? -1, expectedMinY),
-                    "\(identifier) retains its 68-point top-down slot"
-                )
+            for identifier in ["login", "battery", "update", "automatic-updates", "feedback"] {
+                let row = view("settings.general.row.\(identifier)", in: first)
+                let symbols = descendants(ofType: NSImageView.self, in: row)
+                require(symbols.count == 1 && symbols[0].superview === row
+                    && symbols[0].image != nil
+                    && approximately(symbols[0].alignmentRect(forFrame: symbols[0].frame).width, 28)
+                    && approximately(symbols[0].alignmentRect(forFrame: symbols[0].frame).height, 28),
+                    "General uses consistent native symbols without decorative tile enclosures")
+                let primary = descendants(ofType: NSTextField.self, in: row)
+                    .first { $0.font?.pointSize == 14 }!
+                let alignment = primary.superview!
+                    .convert(primary.alignmentRect(forFrame: primary.frame), to: row)
+                require(approximately(alignment.minX, 56),
+                    "General labels share a compact aligned text column")
             }
 
             controller.refreshSectionsForTest()
@@ -1328,7 +1366,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(moduleRows.allSatisfy { approximately($0.frame.height, 72) }, "five compact module rows fit the existing window")
             require(moduleIcons.allSatisfy {
                 let alignment = $0.alignmentRect(forFrame: $0.frame)
-                return approximately(alignment.width, 32) && approximately(alignment.height, 32)
+                return approximately(alignment.width, 28) && approximately(alignment.height, 28)
             }, "consistent native icon size")
             let rowYs = moduleRows.map { $0.frame.minY }.sorted()
             require(zip(rowYs, rowYs.dropFirst()).allSatisfy { approximately($1 - $0, 72) },
@@ -1338,6 +1376,11 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(labels.count == 2 && labels.allSatisfy {
                     $0.frame.width + 1 >= $0.intrinsicContentSize.width
                 }, "module names and descriptions fit without truncation")
+                let primary = labels.first { $0.font?.pointSize == 14 }!
+                let alignment = primary.superview!
+                    .convert(primary.alignmentRect(forFrame: primary.frame), to: row)
+                require(approximately(alignment.minX, 56),
+                    "Modules uses the same native symbol and label alignment as General")
             }
             let modulePrimaryLabels = descendants(ofType: NSTextField.self, in: modulePage)
                 .filter { Settings.Module.allCases.map(\.title).contains($0.stringValue) }
@@ -1890,7 +1933,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                         "each page updates the visible and accessible native toolbar title")
                     let surfaces = descendants(ofType: NSGlassEffectView.self, in: content)
                         .filter { $0.identifier?.rawValue == "settings.control-group.glass" }
-                    let expectedGroups = identifier == "general" ? 3 : 1
+                    let expectedGroups = identifier == "general" ? 4 : 1
                     require(surfaces.count == expectedGroups && surfaces.allSatisfy {
                         $0.contentView != nil && $0.style == .regular && $0.tintColor == nil
                     }, "functional groups use untinted native glass containing their controls")
@@ -2070,10 +2113,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "normal Glass page can reveal the complete Dock restart explanation")
                 let recoveryButton = descendants(ofType: NSButton.self, in: glassWindow.contentView!)
                     .first { $0.accessibilityIdentifier() == "settings.general.controls-recovery.button" }!
-                require(nativeAutomaticUpdates.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow),
-                    "native key loop initially bypasses hidden recovery")
                 let nativeBattery = glassControls
                     .first { $0.accessibilityLabel() == "Hide System Battery Icon" }!
+                let restoredUpdate = button("Check for Updates", in: glassWindow)
+                require(nativeBattery.nextKeyView === restoredUpdate
+                    && nativeAutomaticUpdates.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow),
+                    "native key loop initially bypasses hidden recovery")
                 glassController.refreshSectionsForTest()
                 for nativeUnknown in [initialNativeLogin, nativeBattery] {
                     require(nativeUnknown.state == .off && !nativeUnknown.isEnabled,
@@ -2094,8 +2139,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                         && nativeUnknown.accessibilityHelp()?.contains("Status unavailable") == true,
                         "failed helper read remains explicit in accessibility")
                 }
-                require(nativeAutomaticUpdates.nextKeyView === recoveryButton
-                    && recoveryButton.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow),
+                require(nativeBattery.nextKeyView === recoveryButton
+                    && recoveryButton.nextKeyView === restoredUpdate,
                     "async helper failure adds Repair Controls to the active native key loop")
                 glassFixture.helperAvailable = false
                 glassController.refreshSectionsForTest()
@@ -2105,8 +2150,14 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && initialNativeLogin.accessibilityHelp()?.contains("Full installer required") == true,
                     "unavailable helper does not masquerade as enabled settings")
                 require(recoveryButton.title == "Enable Controls…"
-                    && nativeAutomaticUpdates.nextKeyView === recoveryButton,
+                    && nativeBattery.nextKeyView === recoveryButton
+                    && recoveryButton.nextKeyView === restoredUpdate,
                     "missing helper retains the reachable Enable Controls action")
+                glassController.selectSectionForTest(identifier: "modules")
+                glassController.selectSectionForTest(identifier: "general")
+                require(nativeBattery.nextKeyView === recoveryButton
+                    && recoveryButton.nextKeyView === restoredUpdate,
+                    "rebuilding the visible recovery key loop follows visual order without a self-loop")
                 glassWindow.contentView?.layoutSubtreeIfNeeded()
                 let recoveryScroll = view("settings.general.scroll", in: glassWindow) as! NSScrollView
                 _ = globalAppearance.scrollToVisible(globalAppearance.bounds)
@@ -2138,7 +2189,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "authoritative recovery restores true binary native state")
                 require(initialNativeLogin.accessibilityValueDescription() != "Unknown",
                     "authoritative recovery clears the unknown accessibility description")
-                require(nativeAutomaticUpdates.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow)
+                require(nativeBattery.nextKeyView === restoredUpdate
+                    && nativeAutomaticUpdates.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow)
                     && recoveryButton.nextKeyView == nil,
                     "async helper recovery removes the hidden action without breaking the native key loop")
                 glassWindow.makeFirstResponder(glassBackground)
@@ -2531,7 +2583,6 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("scroll.documentView = scrollDocument", source)
         self.assertNotIn("container.contentView = contentHost", source)
         self.assertIn("windowBackdrop.material = .underWindowBackground", source)
-        self.assertIn("static let generalListHeight: CGFloat = 272", source)
 
     def test_selected_icon_indicator_uses_semantic_accent(self):
         source = WINDOW.read_text(encoding="utf-8")
@@ -2597,7 +2648,6 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("private let dockPopup = SettingsAppearancePopupButton(", source)
         self.assertIn("dockPopup.focusScrollView = dockRow", source)
         self.assertIn("target.scrollToVisible(target.bounds)", source)
-        self.assertIn("static let generalListHeight: CGFloat = 272", source)
 
     def test_default_sections_use_only_existing_settings(self):
         source = WINDOW.read_text(encoding="utf-8")
