@@ -144,4 +144,55 @@ final class PopoverPlacementTests: XCTestCase {
             XCTAssertNil(placement.glassPanelFrame(margin: margin))
         }
     }
+
+    func testGlassMarginClampsShortViewportsBeforePlacingThePanel() throws {
+        for origin in [CGPoint.zero, CGPoint(x: -1024, y: 0), CGPoint(x: 0, y: -600)] {
+            let display = PopoverPlacement.Display(
+                frame: CGRect(origin: origin, size: CGSize(width: 1024, height: 600)),
+                visibleFrame: CGRect(x: origin.x, y: origin.y + 40, width: 1024, height: 536))
+            let anchor = CGRect(x: origin.x + 980, y: origin.y + 576, width: 24, height: 24)
+            for margin: CGFloat in [10, 32] {
+                let placement = try XCTUnwrap(PopoverPlacement.resolve(
+                    anchor: anchor, displays: [display], naturalSize: fullSize, glassMargin: margin))
+                let frame = try XCTUnwrap(placement.glassPanelFrame(margin: margin))
+                XCTAssertEqual(placement.contentSize, CGSize(width: 360, height: 532 - 2 * margin))
+                XCTAssertTrue(display.visibleFrame.contains(frame))
+                XCTAssertEqual(frame.height, 532)
+                XCTAssertEqual(frame.minY, display.visibleFrame.minY)
+                XCTAssertEqual(frame.maxY, anchor.minY - 4)
+                XCTAssertEqual(anchor.minY - frame.insetBy(dx: margin, dy: margin).maxY, margin + 4)
+            }
+        }
+    }
+
+    func testGlassMarginsPreserveNaturalContentAndScreenEdgePlacement() throws {
+        for x: CGFloat in [0, 1200, 1416] {
+            for margin: CGFloat in [10, 32] {
+                let placement = try XCTUnwrap(PopoverPlacement.resolve(
+                    anchor: CGRect(x: x, y: 876, width: 24, height: 24),
+                    displays: [main], naturalSize: fullSize, glassMargin: margin))
+                let frame = try XCTUnwrap(placement.glassPanelFrame(margin: margin))
+                XCTAssertEqual(placement.contentSize, fullSize)
+                XCTAssertEqual(frame.insetBy(dx: margin, dy: margin).size, fullSize)
+                XCTAssertTrue(main.visibleFrame.contains(frame))
+                XCTAssertEqual(frame.maxY, 872)
+            }
+        }
+    }
+
+    func testResolveRejectsInvalidOrUnusableGlassMarginsWithoutChangingClassic() throws {
+        let anchor = CGRect(x: 300, y: 876, width: 24, height: 24)
+        for margin: CGFloat in [-1, .infinity, .nan, .greatestFiniteMagnitude] {
+            XCTAssertNil(PopoverPlacement.resolve(
+                anchor: anchor, displays: [main], naturalSize: fullSize, glassMargin: margin))
+        }
+        let narrow = PopoverPlacement.Display(
+            frame: CGRect(x: 0, y: 0, width: 400, height: 900),
+            visibleFrame: CGRect(x: 0, y: 40, width: 400, height: 836))
+        XCTAssertNotNil(PopoverPlacement.resolve(anchor: anchor, displays: [narrow], naturalSize: fullSize))
+        XCTAssertNotNil(PopoverPlacement.resolve(
+            anchor: anchor, displays: [narrow], naturalSize: fullSize, glassMargin: 10))
+        XCTAssertNil(PopoverPlacement.resolve(
+            anchor: anchor, displays: [narrow], naturalSize: fullSize, glassMargin: 32))
+    }
 }

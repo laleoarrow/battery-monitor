@@ -9,14 +9,14 @@ final class GlassTransparencySettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suite = "Wattson.GlassTransparency.Tests.\(UUID().uuidString)"
+        suite = "Wattson.SwiftTests.GlassTransparency.\(UUID().uuidString)"
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }
 
     override func tearDown() {
         Settings.resetTestConfiguration()
-        defaults.removePersistentDomain(forName: suite)
+        defaults.removePersistentTestDomain(forName: suite)
         defaults = nil
         super.tearDown()
     }

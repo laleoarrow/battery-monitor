@@ -30,10 +30,12 @@ struct PopoverPlacement {
     static func resolve(
         anchor: CGRect,
         displays: [Display],
-        naturalSize: CGSize
+        naturalSize: CGSize,
+        glassMargin: CGFloat? = nil
     ) -> PopoverPlacement? {
         guard usable(anchor), naturalSize.width.isFinite, naturalSize.height.isFinite,
               naturalSize.width > 0, naturalSize.height > 0 else { return nil }
+        if let glassMargin, !glassMargin.isFinite || glassMargin < 0 { return nil }
 
         let candidates = displays.filter { usable($0.frame) && usable($0.visibleFrame) }
         guard let display = candidates.max(by: {
@@ -42,10 +44,11 @@ struct PopoverPlacement {
 
         let clippedAnchor = anchor.intersection(display.frame)
         let visible = display.visibleFrame.intersection(display.frame)
-        guard usable(visible), naturalSize.width <= visible.width else { return nil }
-        // Leave room for NSPopover's arrow/chrome and a small bottom margin.
-        // Shrink only the scrolling viewport; never scale the instruments.
-        let availableHeight = min(clippedAnchor.minY, visible.maxY) - visible.minY - 24
+        guard usable(visible), naturalSize.width + 2 * (glassMargin ?? 0) <= visible.width else { return nil }
+        // Classic keeps its arrow/chrome allowance. Glass reserves both optical
+        // margins and the 4pt anchor gap before shrinking only the viewport.
+        let hostAllowance = glassMargin.map { 2 * $0 + 4 } ?? 24
+        let availableHeight = min(clippedAnchor.minY, visible.maxY) - visible.minY - hostAllowance
         guard availableHeight > 0 else { return nil }
         return PopoverPlacement(
             anchorFrame: clippedAnchor,

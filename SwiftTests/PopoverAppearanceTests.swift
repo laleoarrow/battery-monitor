@@ -5,12 +5,12 @@ import XCTest
 final class PopoverAppearanceTests: XCTestCase {
     func testGlassPreferencePreservesSystemAppearanceWithoutRebuildingClosedContent() throws {
         _ = NSApplication.shared
-        let suite = "Wattson.PopoverAppearance.\(UUID().uuidString)"
+        let suite = "Wattson.SwiftTests.PopoverAppearance.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         Settings.configureForTest(defaults: defaults)
         defer {
             Settings.resetTestConfiguration()
-            defaults.removePersistentDomain(forName: suite)
+            defaults.removePersistentTestDomain(forName: suite)
         }
         let controller = PopoverController()
         let root = try XCTUnwrap(controller.contentViewForTest)
@@ -49,12 +49,12 @@ final class PopoverAppearanceTests: XCTestCase {
 
     func testGlassPopoverInitialAppearanceAndObserverLifetime() throws {
         _ = NSApplication.shared
-        let suite = "Wattson.PopoverAppearanceLifetime.\(UUID().uuidString)"
+        let suite = "Wattson.SwiftTests.PopoverAppearanceLifetime.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         Settings.configureForTest(defaults: defaults)
         defer {
             Settings.resetTestConfiguration()
-            defaults.removePersistentDomain(forName: suite)
+            defaults.removePersistentTestDomain(forName: suite)
         }
         Settings.liquidGlassEnabled = true
         weak var releasedController: PopoverController?
@@ -104,10 +104,11 @@ final class PopoverAppearanceTests: XCTestCase {
         let snapshot = PowerSnapshot(percent: 72, plugged: true,
             adapterW: 68, batteryW: 22.2, systemW: 45.8)
         for style in [NSGlassEffectView.Style.regular, .clear] {
+            let inset = GlassPopoverPanel.contentInset(for: style == .clear ? .clear : .regular)
             let content = PopoverContentViewController()
             content.setViewportHeight(content.preferredHeight)
             let panel = GlassPopoverPanel(content: content.view,
-                frame: NSRect(x: 0, y: 0, width: 380, height: content.preferredHeight + 20), style: style)
+                frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset, height: content.preferredHeight + 2 * inset), style: style)
             var originalReadings: [String]?
             var originalFrames: [NSRect]?
             for name in [NSAppearance.Name.aqua, .darkAqua, .aqua] {

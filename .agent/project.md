@@ -151,7 +151,7 @@ sidebar. The window backing is clear so no separate dark strip appears around
 the sidebar's rounded edges. See the
 [continuous backdrop correction](../design/settings/continuous-backdrop/README.md).
 Functional Settings groups use NSGlassEffectView; General's shared container
-batches its controls, Appearance and Feedback groups inside the scroll document, not around the toolbar
+batches its Startup & Menu Bar, Updates, Appearance and Support groups inside the scroll document, not around the toolbar
 or system sidebar. Single-group pages need no additional container. Liquid Glass
 belongs to General > Appearance, and only joins that page's keyboard loop.
 General scrolls as needed for the added logo choice or expanded recovery help;
@@ -160,6 +160,23 @@ separators and right-aligned switches. See the
 [appearance hierarchy review](../design/settings/appearance-hierarchy/README.md)
 for actual test-VM window images and verification. This source refinement does
 not replace the canonical installed app or constitute a new release.
+
+General's functional groups share external 13-point headings. General and
+Modules use 20-point regular SF Symbols in 28-point alignment frames without
+decorative icon tiles. Appearance aligns Theme, Liquid Glass, In-App Logo and
+Dock Icon as peers; only glass background and transparency are indented.
+Recovery follows the startup controls in both the visual and keyboard order.
+See the [native settings hierarchy review](../design/settings/native-hierarchy/README.md)
+for Apple references, Pro review, production-renderer captures and validation.
+
+Settings navigation now uses unframed monochrome SF Symbols and regular
+13-point labels. Glass retains native source-list selection; Classic uses a
+subtle neutral fill with a semantic outline for Increase Contrast. The
+124-point navigation viewport accommodates three 32-point rows and AppKit's
+source-list spacing. The identity artwork is 32 points. Settings uses 13-point
+primary labels, 12-point group titles, 11-point descriptions, an 18-point
+Classic page heading and a 15-point native toolbar title. See the
+[quiet navigation and typography review](../design/settings/quiet-navigation/README.md).
 
 The main popover footer now replaces the UI4 ordinary segmented
 control inside a glass surface with three mutually exclusive native `.glass`

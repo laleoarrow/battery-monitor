@@ -1,17 +1,20 @@
 #!/bin/bash
-# Build and stage the isolated visible QA app, then run its defaults-only CLI
-# check. This never opens UI, kills an app, changes the canonical installation,
-# or requests capture permissions.
+# Build the isolated QA app and run its defaults-only CLI check. By default
+# all app bundles are removed afterward; --keep-app explicitly hands off the
+# verified bundle for a later visual review. This never opens UI.
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PREVIEW_ROOT="$ROOT_DIR/.build/preview.noindex"
 APP_BUNDLE="$PREVIEW_ROOT/Wattson Glass Preview.app"
 PREVIEW_ID="com.leoarrow.wattson.glass-preview"
-LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
+source "$ROOT_DIR/scripts/lib/local_cleanup.sh"
+KEEP_APP=0
 
-if [[ $# -ne 0 ]]; then
-    echo "usage: $0 (build only; launch the resulting .app separately)" >&2
+if [[ $# -eq 1 && "$1" == --keep-app ]]; then
+    KEEP_APP=1
+elif [[ $# -ne 0 ]]; then
+    echo "usage: $0 [--keep-app] (headless verification; cleans up by default)" >&2
     exit 2
 fi
 if /usr/bin/pgrep -x WattsonGlassPreview >/dev/null; then
@@ -24,26 +27,26 @@ if [[ -L "$APP_BUNDLE" ]]; then
 fi
 if [[ -e "$APP_BUNDLE" ]]; then
     EXISTING_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_BUNDLE/Contents/Info.plist")"
-    [[ "$EXISTING_ID" == "$PREVIEW_ID" ]] || {
+    [[ "$EXISTING_ID" == "$PREVIEW_ID" || "$EXISTING_ID" == "$PREVIEW_ID".* ]] || {
         echo "Refusing to replace an unrelated app bundle." >&2
         exit 2
     }
 fi
 
 mkdir -p "$PREVIEW_ROOT"
+wattson_cleanup_init
+if [[ "$KEEP_APP" == 0 ]]; then
+    wattson_cleanup_add_app "$APP_BUNDLE"
+    wattson_cleanup_add_dir "$APP_BUNDLE"
+fi
 BUILD_DIR="$(mktemp -d "$PREVIEW_ROOT/build.XXXXXX")"
+wattson_cleanup_add_dir "$BUILD_DIR"
+RUN_PREVIEW_ID="$PREVIEW_ID.$(/usr/bin/basename "$BUILD_DIR")"
+wattson_cleanup_add_container "$RUN_PREVIEW_ID"
 STAGED_APP="$BUILD_DIR/Wattson Glass Preview.app"
-cleanup() {
-    if [[ -d "$STAGED_APP" ]]; then
-        "$LSREGISTER" -u "$STAGED_APP" >/dev/null 2>&1 || true
-    fi
-    rm -rf -- "$BUILD_DIR"
-}
-trap cleanup EXIT
-trap 'exit 130' INT
-trap 'exit 143' TERM
+wattson_cleanup_add_app "$STAGED_APP"
 
-xcrun swiftc \
+wattson_run xcrun swiftc \
     "$ROOT_DIR"/Core/*.swift \
     "$ROOT_DIR"/MenuBar/*.swift \
     "$ROOT_DIR"/Popover/*.swift \
@@ -55,6 +58,7 @@ xcrun swiftc \
 mkdir -p "$STAGED_APP/Contents/MacOS" "$STAGED_APP/Contents/Resources"
 cp "$BUILD_DIR/WattsonGlassPreview" "$STAGED_APP/Contents/MacOS/WattsonGlassPreview"
 cp "$ROOT_DIR/Tests/visual/glass_preview_Info.plist" "$STAGED_APP/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $RUN_PREVIEW_ID" "$STAGED_APP/Contents/Info.plist"
 PREVIEW_VERSION="$(tr -d '\r\n' < "$ROOT_DIR/VERSION")"
 /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $PREVIEW_VERSION" "$STAGED_APP/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $PREVIEW_VERSION" "$STAGED_APP/Contents/Info.plist"
@@ -73,13 +77,19 @@ done
 /usr/bin/codesign --force --sign - \
     --entitlements "$ROOT_DIR/Tests/visual/glass_preview.entitlements" "$STAGED_APP"
 /usr/bin/codesign --verify --deep --strict "$STAGED_APP"
-"$STAGED_APP/Contents/MacOS/WattsonGlassPreview" --verify-defaults
+mkdir -p "$BUILD_DIR/preferences"
+wattson_run_timeout 30 /usr/bin/env CFFIXED_USER_HOME="$BUILD_DIR/preferences" \
+    "$STAGED_APP/Contents/MacOS/WattsonGlassPreview" --verify-defaults
 
-# Publish only a verified build, without retaining indexable backup bundles.
-"$LSREGISTER" -u "$STAGED_APP" >/dev/null 2>&1 || true
-if [[ -d "$APP_BUNDLE" ]]; then
-    "$LSREGISTER" -u "$APP_BUNDLE" >/dev/null 2>&1 || true
-    rm -rf -- "$APP_BUNDLE"
+if [[ "$KEEP_APP" == 1 ]]; then
+    # Explicit handoff retains only one verified app, never backup bundles.
+    wattson_unregister_app "$STAGED_APP"
+    if [[ -d "$APP_BUNDLE" ]]; then
+        wattson_unregister_app "$APP_BUNDLE"
+        rm -rf -- "$APP_BUNDLE"
+    fi
+    mv "$STAGED_APP" "$APP_BUNDLE"
+    echo "Verified app retained for visual review: $APP_BUNDLE"
+else
+    echo "Preview defaults self-test passed; temporary app bundles cleaned on exit."
 fi
-mv "$STAGED_APP" "$APP_BUNDLE"
-echo "Built and defaults self-test passed without opening UI: $APP_BUNDLE"

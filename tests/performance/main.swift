@@ -1,5 +1,39 @@
 import AppKit
+import Darwin
 import Foundation
+
+private func cleanupPerformanceDefaults(_ defaults: UserDefaults, suite: String) -> Bool {
+    guard suite.hasPrefix("Wattson.Performance."),
+          UUID(uuidString: String(suite.dropFirst("Wattson.Performance.".count))) != nil else { return false }
+    defaults.removePersistentDomain(forName: suite)
+    guard defaults.synchronize() else { return false }
+    // Synchronization alone can leave cfprefsd able to recreate an empty plist.
+    let deletion = Process()
+    let completed = DispatchSemaphore(value: 0)
+    let errors = Pipe()
+    deletion.executableURL = URL(fileURLWithPath: "/usr/bin/defaults")
+    deletion.arguments = ["delete", suite]
+    deletion.standardOutput = FileHandle.nullDevice
+    deletion.standardError = errors
+    deletion.terminationHandler = { _ in completed.signal() }
+    do { try deletion.run() } catch { return false }
+    guard completed.wait(timeout: .now() + 3) == .success else {
+        deletion.terminate()
+        if completed.wait(timeout: .now() + 0.5) != .success {
+            _ = Darwin.kill(deletion.processIdentifier, SIGKILL)
+            _ = completed.wait(timeout: .now() + 1)
+        }
+        return false
+    }
+    let errorText = String(decoding: errors.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+    guard deletion.terminationStatus == 0 || errorText.contains("Domain (\(suite)) not found.") else { return false }
+    let preference = FileManager.default.homeDirectoryForCurrentUser
+        .appendingPathComponent("Library/Preferences/\(suite).plist")
+    do { try FileManager.default.removeItem(at: preference) }
+    catch CocoaError.fileNoSuchFile { }
+    catch { return false }
+    return true
+}
 
 // Controlled production-renderer microbenchmark. Run the same optimized build
 // flags, fixtures and iteration count on both revisions in an isolated GUI VM.
@@ -14,7 +48,10 @@ let defaults = UserDefaults(suiteName: suite)!
 Settings.configureForTest(defaults: defaults)
 defer {
     Settings.resetTestConfiguration()
-    defaults.removePersistentDomain(forName: suite)
+    if !cleanupPerformanceDefaults(defaults, suite: suite) {
+        FileHandle.standardError.write(Data("Failed to clean performance test preferences: \(suite)\n".utf8))
+        exit(EXIT_FAILURE)
+    }
 }
 
 func measure(_ name: String, _ action: (Int) -> Void) {

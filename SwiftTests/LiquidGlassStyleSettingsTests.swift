@@ -8,14 +8,14 @@ final class LiquidGlassStyleSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suiteName = "Wattson.LiquidGlassStyle.Tests.\(UUID().uuidString)"
+        suiteName = "Wattson.SwiftTests.LiquidGlassStyle.\(UUID().uuidString)"
         defaults = UserDefaults(suiteName: suiteName)!
         Settings.configureForTest(defaults: defaults)
     }
 
     override func tearDown() {
         Settings.resetTestConfiguration()
-        defaults.removePersistentDomain(forName: suiteName)
+        defaults.removePersistentTestDomain(forName: suiteName)
         defaults = nil
         super.tearDown()
     }

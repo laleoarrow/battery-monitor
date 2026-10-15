@@ -1,0 +1,1002 @@
+{
+  "description": "Owned-window production placement capture, fixed charging fixture; not reporter telemetry.",
+  "sourceCommit": "650289d9694f7642538e4680d26b599f4505aea4",
+  "captures": {
+    "1600x1200/clear-dark-full-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        1306,
+        1174,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        1306,
+        1170,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        1142,
+        26,
+        396,
+        835
+      ],
+      "contentSize": [
+        360,
+        799
+      ],
+      "footerFrameInDocument": [
+        16,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        1160,
+        357,
+        360,
+        799
+      ],
+      "hasVerticalScroller": false,
+      "hasWindowShadow": true,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 10,
+      "name": "clear-dark-full",
+      "panelFrameAppKit": [
+        1150,
+        347,
+        380,
+        819
+      ],
+      "pixels": [
+        396,
+        835
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        16,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        1600,
+        1200
+      ],
+      "scrollDocumentSize": [
+        360,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        0,
+        360,
+        799
+      ],
+      "scrolling": false,
+      "visibleFrameAppKit": [
+        0,
+        60,
+        1600,
+        1110
+      ],
+      "window": 506
+    },
+    "1600x1200/clear-light-full-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        1306,
+        1174,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        1306,
+        1170,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        1142,
+        26,
+        396,
+        835
+      ],
+      "contentSize": [
+        360,
+        799
+      ],
+      "footerFrameInDocument": [
+        16,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        1160,
+        357,
+        360,
+        799
+      ],
+      "hasVerticalScroller": false,
+      "hasWindowShadow": true,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 10,
+      "name": "clear-light-full",
+      "panelFrameAppKit": [
+        1150,
+        347,
+        380,
+        819
+      ],
+      "pixels": [
+        396,
+        835
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        16,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        1600,
+        1200
+      ],
+      "scrollDocumentSize": [
+        360,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        0,
+        360,
+        799
+      ],
+      "scrolling": false,
+      "visibleFrameAppKit": [
+        0,
+        60,
+        1600,
+        1110
+      ],
+      "window": 504
+    },
+    "1600x1200/regular-dark-full-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        1306,
+        1174,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        1306,
+        1170,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        1120,
+        26,
+        440,
+        879
+      ],
+      "contentSize": [
+        360,
+        799
+      ],
+      "footerFrameInDocument": [
+        16,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        1160,
+        335,
+        360,
+        799
+      ],
+      "hasVerticalScroller": false,
+      "hasWindowShadow": false,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 32,
+      "name": "regular-dark-full",
+      "panelFrameAppKit": [
+        1128,
+        303,
+        424,
+        863
+      ],
+      "pixels": [
+        440,
+        879
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        16,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        1600,
+        1200
+      ],
+      "scrollDocumentSize": [
+        360,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        0,
+        360,
+        799
+      ],
+      "scrolling": false,
+      "visibleFrameAppKit": [
+        0,
+        60,
+        1600,
+        1110
+      ],
+      "window": 505
+    },
+    "1600x1200/regular-light-full-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        1306,
+        1174,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        1306,
+        1170,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        1120,
+        26,
+        440,
+        879
+      ],
+      "contentSize": [
+        360,
+        799
+      ],
+      "footerFrameInDocument": [
+        16,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        1160,
+        335,
+        360,
+        799
+      ],
+      "hasVerticalScroller": false,
+      "hasWindowShadow": false,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 32,
+      "name": "regular-light-full",
+      "panelFrameAppKit": [
+        1128,
+        303,
+        424,
+        863
+      ],
+      "pixels": [
+        440,
+        879
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        16,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        1600,
+        1200
+      ],
+      "scrollDocumentSize": [
+        360,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        0,
+        360,
+        799
+      ],
+      "scrolling": false,
+      "visibleFrameAppKit": [
+        0,
+        60,
+        1600,
+        1110
+      ],
+      "window": 503
+    },
+    "800x600/clear-dark-bottom-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        506,
+        574,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        506,
+        570,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        342,
+        26,
+        396,
+        531
+      ],
+      "contentSize": [
+        360,
+        495
+      ],
+      "footerFrameInDocument": [
+        8,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        360,
+        61,
+        360,
+        495
+      ],
+      "hasVerticalScroller": true,
+      "hasWindowShadow": true,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 10,
+      "name": "clear-dark-bottom",
+      "panelFrameAppKit": [
+        350,
+        51,
+        380,
+        515
+      ],
+      "pixels": [
+        396,
+        531
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        8,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        800,
+        600
+      ],
+      "scrollDocumentSize": [
+        343,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        304,
+        343,
+        495
+      ],
+      "scrolling": true,
+      "visibleFrameAppKit": [
+        0,
+        51,
+        800,
+        519
+      ],
+      "window": 514
+    },
+    "800x600/clear-dark-top-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        506,
+        574,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        506,
+        570,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        342,
+        26,
+        396,
+        531
+      ],
+      "contentSize": [
+        360,
+        495
+      ],
+      "footerFrameInDocument": [
+        8,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        360,
+        61,
+        360,
+        495
+      ],
+      "hasVerticalScroller": true,
+      "hasWindowShadow": true,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 10,
+      "name": "clear-dark-top",
+      "panelFrameAppKit": [
+        350,
+        51,
+        380,
+        515
+      ],
+      "pixels": [
+        396,
+        531
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        8,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        800,
+        600
+      ],
+      "scrollDocumentSize": [
+        343,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        0,
+        343,
+        495
+      ],
+      "scrolling": true,
+      "visibleFrameAppKit": [
+        0,
+        51,
+        800,
+        519
+      ],
+      "window": 514
+    },
+    "800x600/clear-light-bottom-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        506,
+        574,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        506,
+        570,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        342,
+        26,
+        396,
+        531
+      ],
+      "contentSize": [
+        360,
+        495
+      ],
+      "footerFrameInDocument": [
+        8,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        360,
+        61,
+        360,
+        495
+      ],
+      "hasVerticalScroller": true,
+      "hasWindowShadow": true,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 10,
+      "name": "clear-light-bottom",
+      "panelFrameAppKit": [
+        350,
+        51,
+        380,
+        515
+      ],
+      "pixels": [
+        396,
+        531
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        8,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        800,
+        600
+      ],
+      "scrollDocumentSize": [
+        343,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        304,
+        343,
+        495
+      ],
+      "scrolling": true,
+      "visibleFrameAppKit": [
+        0,
+        51,
+        800,
+        519
+      ],
+      "window": 512
+    },
+    "800x600/clear-light-top-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        506,
+        574,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        506,
+        570,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        342,
+        26,
+        396,
+        531
+      ],
+      "contentSize": [
+        360,
+        495
+      ],
+      "footerFrameInDocument": [
+        8,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        360,
+        61,
+        360,
+        495
+      ],
+      "hasVerticalScroller": true,
+      "hasWindowShadow": true,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 10,
+      "name": "clear-light-top",
+      "panelFrameAppKit": [
+        350,
+        51,
+        380,
+        515
+      ],
+      "pixels": [
+        396,
+        531
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        8,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        800,
+        600
+      ],
+      "scrollDocumentSize": [
+        343,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        0,
+        343,
+        495
+      ],
+      "scrolling": true,
+      "visibleFrameAppKit": [
+        0,
+        51,
+        800,
+        519
+      ],
+      "window": 512
+    },
+    "800x600/regular-dark-bottom-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        506,
+        574,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        506,
+        570,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        320,
+        26,
+        440,
+        531
+      ],
+      "contentSize": [
+        360,
+        451
+      ],
+      "footerFrameInDocument": [
+        8,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        360,
+        83,
+        360,
+        451
+      ],
+      "hasVerticalScroller": true,
+      "hasWindowShadow": false,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 32,
+      "name": "regular-dark-bottom",
+      "panelFrameAppKit": [
+        328,
+        51,
+        424,
+        515
+      ],
+      "pixels": [
+        440,
+        531
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        8,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        800,
+        600
+      ],
+      "scrollDocumentSize": [
+        343,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        348,
+        343,
+        451
+      ],
+      "scrolling": true,
+      "visibleFrameAppKit": [
+        0,
+        51,
+        800,
+        519
+      ],
+      "window": 513
+    },
+    "800x600/regular-dark-top-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        506,
+        574,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        506,
+        570,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        320,
+        26,
+        440,
+        531
+      ],
+      "contentSize": [
+        360,
+        451
+      ],
+      "footerFrameInDocument": [
+        8,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        360,
+        83,
+        360,
+        451
+      ],
+      "hasVerticalScroller": true,
+      "hasWindowShadow": false,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 32,
+      "name": "regular-dark-top",
+      "panelFrameAppKit": [
+        328,
+        51,
+        424,
+        515
+      ],
+      "pixels": [
+        440,
+        531
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        8,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        800,
+        600
+      ],
+      "scrollDocumentSize": [
+        343,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        0,
+        343,
+        451
+      ],
+      "scrolling": true,
+      "visibleFrameAppKit": [
+        0,
+        51,
+        800,
+        519
+      ],
+      "window": 513
+    },
+    "800x600/regular-light-bottom-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        506,
+        574,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        506,
+        570,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        320,
+        26,
+        440,
+        531
+      ],
+      "contentSize": [
+        360,
+        451
+      ],
+      "footerFrameInDocument": [
+        8,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        360,
+        83,
+        360,
+        451
+      ],
+      "hasVerticalScroller": true,
+      "hasWindowShadow": false,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 32,
+      "name": "regular-light-bottom",
+      "panelFrameAppKit": [
+        328,
+        51,
+        424,
+        515
+      ],
+      "pixels": [
+        440,
+        531
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        8,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        800,
+        600
+      ],
+      "scrollDocumentSize": [
+        343,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        348,
+        343,
+        451
+      ],
+      "scrolling": true,
+      "visibleFrameAppKit": [
+        0,
+        51,
+        800,
+        519
+      ],
+      "window": 511
+    },
+    "800x600/regular-light-top-geometry.json": {
+      "allSiblingFramesMatch": true,
+      "anchorButtonFrameAppKit": [
+        506,
+        574,
+        68,
+        22
+      ],
+      "anchorWindowFrameAppKit": [
+        506,
+        570,
+        68,
+        30
+      ],
+      "captureRectCG": [
+        320,
+        26,
+        440,
+        531
+      ],
+      "contentSize": [
+        360,
+        451
+      ],
+      "footerFrameInDocument": [
+        8,
+        709,
+        328,
+        78
+      ],
+      "glassFrameAppKit": [
+        360,
+        83,
+        360,
+        451
+      ],
+      "hasVerticalScroller": true,
+      "hasWindowShadow": false,
+      "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only.",
+      "margin": 32,
+      "name": "regular-light-top",
+      "panelFrameAppKit": [
+        328,
+        51,
+        424,
+        515
+      ],
+      "pixels": [
+        440,
+        531
+      ],
+      "reduceMotionOverride": false,
+      "runtimeFrameInDocument": [
+        8,
+        621,
+        328,
+        88
+      ],
+      "screenFrameAppKit": [
+        0,
+        0,
+        800,
+        600
+      ],
+      "scrollDocumentSize": [
+        343,
+        799
+      ],
+      "scrollDocumentVisibleRect": [
+        0,
+        0,
+        343,
+        451
+      ],
+      "scrolling": true,
+      "visibleFrameAppKit": [
+        0,
+        51,
+        800,
+        519
+      ],
+      "window": 511
+    }
+  }
+}

@@ -9,9 +9,10 @@ final class GlassPopoverPanelTests: XCTestCase {
         guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
         _ = NSApplication.shared
         for style in [NSGlassEffectView.Style.regular, .clear] {
+            let inset = GlassPopoverPanel.contentInset(for: style == .clear ? .clear : .regular)
             let content = NSView(frame: NSRect(x: 0, y: 0, width: 360, height: 400))
             let panel = GlassPopoverPanel(content: content,
-                frame: NSRect(x: -420, y: 80, width: 380, height: 420), style: style)
+                frame: NSRect(x: -440, y: 80, width: 360 + 2 * inset, height: 400 + 2 * inset), style: style)
             let root = try XCTUnwrap(panel.contentView)
             XCTAssertEqual(root.subviews.count, 3)
             XCTAssertEqual(root.subviews.compactMap { $0 as? NSGlassEffectView }.count, 1)
@@ -27,7 +28,9 @@ final class GlassPopoverPanelTests: XCTestCase {
             XCTAssertEqual(glass.style, style)
             XCTAssertNil(glass.tintColor)
             XCTAssertEqual(glass.cornerRadius, 26)
-            XCTAssertEqual(glass.frame, root.bounds.insetBy(dx: 10, dy: 10))
+            XCTAssertEqual(glass.frame, root.bounds.insetBy(dx: inset, dy: inset))
+            XCTAssertEqual(glass.frame.size, NSSize(width: 360, height: 400))
+            XCTAssertEqual(inset, style == .clear ? 10 : 32)
             XCTAssertFalse(root.isOpaque)
             XCTAssertNil(root.layer?.backgroundColor)
             XCTAssertFalse(panel.isOpaque)
@@ -63,16 +66,19 @@ final class GlassPopoverPanelTests: XCTestCase {
     func testPanelResizeMaintainsOpticalMarginAndContentSize() throws {
         guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
         _ = NSApplication.shared
-        let panel = GlassPopoverPanel(content: NSView(),
-            frame: NSRect(x: 0, y: 0, width: 380, height: 420), style: .clear)
-        panel.setFrame(NSRect(x: -380, y: -500, width: 380, height: 560), display: false)
-        let root = try XCTUnwrap(panel.contentView)
-        let glass = try XCTUnwrap(root.subviews.compactMap { $0 as? NSGlassEffectView }.first)
-        XCTAssertEqual(glass.frame.size, NSSize(width: 360, height: 540))
-        XCTAssertEqual(glass.frame.origin, NSPoint(x: 10, y: 10))
-        XCTAssertEqual(root.subviews.first?.frame, glass.frame)
-        XCTAssertEqual(root.subviews.last?.frame, glass.frame)
-        XCTAssertFalse(panel.isVisible)
+        for style in [NSGlassEffectView.Style.regular, .clear] {
+            let inset = GlassPopoverPanel.contentInset(for: style == .clear ? .clear : .regular)
+            let panel = GlassPopoverPanel(content: NSView(),
+                frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset, height: 400 + 2 * inset), style: style)
+            panel.setFrame(NSRect(x: -440, y: -500, width: 360 + 2 * inset, height: 540 + 2 * inset), display: false)
+            let root = try XCTUnwrap(panel.contentView)
+            let glass = try XCTUnwrap(root.subviews.compactMap { $0 as? NSGlassEffectView }.first)
+            XCTAssertEqual(glass.frame.size, NSSize(width: 360, height: 540))
+            XCTAssertEqual(glass.frame.origin, NSPoint(x: inset, y: inset))
+            XCTAssertEqual(root.subviews.first?.frame, glass.frame)
+            XCTAssertEqual(root.subviews.last?.frame, glass.frame)
+            XCTAssertFalse(panel.isVisible)
+        }
     }
 
     func testEscapeAndDirectCloseRelayDismissalWithoutRetainingOwner() throws {

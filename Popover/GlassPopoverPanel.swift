@@ -3,7 +3,13 @@ import AppKit
 /// The glass host replaces NSPopover; it is never a second backdrop inside it.
 /// The empty optical margin prevents the native glass edge being window-clipped.
 final class GlassPopoverPanel: NSPanel {
-    static let contentInset: CGFloat = 10
+    static func contentInset(for style: Settings.LiquidGlassStyle) -> CGFloat {
+        // Regular's native optical shadow extends past 20pt on macOS 26.6.1.
+        // Keep Clear's existing window-shadow geometry independent.
+        style == .regular ? 32 : 10
+    }
+
+    static var contentInset: CGFloat { contentInset(for: Settings.liquidGlassStyle) }
     var onDismiss: (() -> Void)?
     var onEscape: (() -> Void)?
     private weak var hostedContent: NSView?
@@ -26,8 +32,8 @@ final class GlassPopoverPanel: NSPanel {
         hidesOnDeactivate = false
         level = .popUpMenu
         collectionBehavior = [.transient, .moveToActiveSpace, .fullScreenAuxiliary]
-        let glass = NSGlassEffectView(frame: contentView!.bounds.insetBy(
-            dx: Self.contentInset, dy: Self.contentInset))
+        let inset = Self.contentInset(for: style == .clear ? .clear : .regular)
+        let glass = NSGlassEffectView(frame: contentView!.bounds.insetBy(dx: inset, dy: inset))
         glass.autoresizingMask = [.width, .height]
         glass.style = style
         glass.cornerRadius = 26

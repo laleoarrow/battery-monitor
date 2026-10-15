@@ -1,7 +1,6 @@
 import pathlib
 import plistlib
-import subprocess
-import tempfile
+from local_runtime import TemporaryDirectory, run
 import textwrap
 import unittest
 
@@ -214,19 +213,19 @@ class HelperContractTests(unittest.TestCase):
             print("high power capability self-test passed")
             '''
         )
-        with tempfile.TemporaryDirectory() as directory:
+        with TemporaryDirectory() as directory:
             directory_path = pathlib.Path(directory)
             harness_path = directory_path / "main.swift"
             executable_path = directory_path / "high-power-capability-self-test"
             harness_path.write_text(harness_source, encoding="utf-8")
-            compile_result = subprocess.run(
+            compile_result = run(
                 ["/usr/bin/xcrun", "swiftc", str(harness_path), "-o", str(executable_path)],
                 check=False,
                 text=True,
                 capture_output=True,
             )
             self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
-            run_result = subprocess.run(
+            run_result = run(
                 [str(executable_path)],
                 check=False,
                 text=True,
@@ -331,19 +330,19 @@ class HelperContractTests(unittest.TestCase):
             print("high power capability cache self-test passed")
             '''
         )
-        with tempfile.TemporaryDirectory() as directory:
+        with TemporaryDirectory() as directory:
             directory_path = pathlib.Path(directory)
             harness_path = directory_path / "main.swift"
             executable_path = directory_path / "high-power-capability-cache-self-test"
             harness_path.write_text(harness_source, encoding="utf-8")
-            compile_result = subprocess.run(
+            compile_result = run(
                 ["/usr/bin/xcrun", "swiftc", str(harness_path), "-o", str(executable_path)],
                 check=False,
                 text=True,
                 capture_output=True,
             )
             self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
-            run_result = subprocess.run(
+            run_result = run(
                 [str(executable_path)],
                 check=False,
                 text=True,
@@ -427,19 +426,19 @@ class HelperContractTests(unittest.TestCase):
             print("helper output self-test passed")
             '''
         )
-        with tempfile.TemporaryDirectory() as directory:
+        with TemporaryDirectory() as directory:
             directory_path = pathlib.Path(directory)
             harness_path = directory_path / "main.swift"
             executable_path = directory_path / "helper-output-self-test"
             harness_path.write_text(harness_source, encoding="utf-8")
-            compile_result = subprocess.run(
+            compile_result = run(
                 ["/usr/bin/xcrun", "swiftc", str(harness_path), "-o", str(executable_path)],
                 check=False,
                 text=True,
                 capture_output=True,
             )
             self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
-            run_result = subprocess.run(
+            run_result = run(
                 [str(executable_path)],
                 check=False,
                 text=True,
@@ -631,19 +630,19 @@ class HelperContractTests(unittest.TestCase):
             print("SMC decoder self-test passed")
             '''
         )
-        with tempfile.TemporaryDirectory() as directory:
+        with TemporaryDirectory() as directory:
             directory_path = pathlib.Path(directory)
             harness_path = directory_path / "main.swift"
             executable_path = directory_path / "smc-decoder-self-test"
             harness_path.write_text(harness_source, encoding="utf-8")
-            compile_result = subprocess.run(
+            compile_result = run(
                 ["/usr/bin/xcrun", "swiftc", str(harness_path), "-o", str(executable_path)],
                 check=False,
                 text=True,
                 capture_output=True,
             )
             self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
-            run_result = subprocess.run(
+            run_result = run(
                 [str(executable_path)],
                 check=False,
                 text=True,
@@ -654,19 +653,19 @@ class HelperContractTests(unittest.TestCase):
             self.assertIn("SMC decoder self-test passed", run_result.stdout)
 
     def test_helper_cross_compiles_for_x86_64_macos12(self):
-        sdk_result = subprocess.run(
+        sdk_result = run(
             ["/usr/bin/xcrun", "--sdk", "macosx", "--show-sdk-path"],
             check=False,
             text=True,
             capture_output=True,
         )
         self.assertEqual(sdk_result.returncode, 0, sdk_result.stderr)
-        with tempfile.TemporaryDirectory() as directory:
+        with TemporaryDirectory() as directory:
             build_directory = pathlib.Path(directory)
             executable_path = build_directory / "wattson-helper-x86_64"
             support_object = build_directory / "WattsonHelperV5Support.o"
             support_module = build_directory / "WattsonHelperV5Support.swiftmodule"
-            support_result = subprocess.run(
+            support_result = run(
                 [
                     "/usr/bin/xcrun",
                     "swiftc",
@@ -691,7 +690,7 @@ class HelperContractTests(unittest.TestCase):
                 timeout=120,
             )
             self.assertEqual(support_result.returncode, 0, support_result.stderr)
-            compile_result = subprocess.run(
+            compile_result = run(
                 [
                     "/usr/bin/xcrun",
                     "swiftc",
@@ -715,7 +714,7 @@ class HelperContractTests(unittest.TestCase):
                 timeout=120,
             )
             self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
-            arch_result = subprocess.run(
+            arch_result = run(
                 ["/usr/bin/lipo", "-archs", str(executable_path)],
                 check=False,
                 text=True,
@@ -723,7 +722,7 @@ class HelperContractTests(unittest.TestCase):
             )
             self.assertEqual(arch_result.returncode, 0, arch_result.stderr)
             self.assertEqual(arch_result.stdout.strip(), "x86_64")
-            build_version_result = subprocess.run(
+            build_version_result = run(
                 ["/usr/bin/xcrun", "vtool", "-show-build", str(executable_path)],
                 check=False,
                 text=True,
@@ -763,7 +762,7 @@ class HelperContractTests(unittest.TestCase):
         )[0]
         self.assertIn('.linkedFramework("IOKit")', helper_target)
         helper_compile = self.install_script.split(
-            'echo "  🔑 Installing the privileged helper', 1
+            'HELPER_SCRATCH_PATH="$BUILD_DIR/swiftpm-helper"', 1
         )[1].split("codesign", 1)[0]
         self.assertIn("/usr/bin/swift build", helper_compile)
         self.assertIn("--product wattson-helper", helper_compile)
@@ -906,19 +905,19 @@ class HelperContractTests(unittest.TestCase):
             print("poll deadline self-test passed")
             '''
         )
-        with tempfile.TemporaryDirectory() as directory:
+        with TemporaryDirectory() as directory:
             directory_path = pathlib.Path(directory)
             harness_path = directory_path / "main.swift"
             executable_path = directory_path / "poll-deadline-self-test"
             harness_path.write_text(harness_source, encoding="utf-8")
-            compile_result = subprocess.run(
+            compile_result = run(
                 ["/usr/bin/xcrun", "swiftc", str(harness_path), "-o", str(executable_path)],
                 check=False,
                 text=True,
                 capture_output=True,
             )
             self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
-            run_result = subprocess.run(
+            run_result = run(
                 [str(executable_path)],
                 check=False,
                 text=True,
@@ -1098,12 +1097,12 @@ class HelperContractTests(unittest.TestCase):
             print("socket io self-test passed")
             '''
         )
-        with tempfile.TemporaryDirectory() as directory:
+        with TemporaryDirectory() as directory:
             directory_path = pathlib.Path(directory)
             harness_path = directory_path / "main.swift"
             executable_path = directory_path / "socket-io-self-test"
             harness_path.write_text(harness_source, encoding="utf-8")
-            compile_result = subprocess.run(
+            compile_result = run(
                 [
                     "/usr/bin/xcrun",
                     "swiftc",
@@ -1117,7 +1116,7 @@ class HelperContractTests(unittest.TestCase):
                 capture_output=True,
             )
             self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
-            run_result = subprocess.run(
+            run_result = run(
                 [str(executable_path)],
                 check=False,
                 text=True,
@@ -1770,19 +1769,19 @@ class HelperContractTests(unittest.TestCase):
             )
             '''
         )
-        with tempfile.TemporaryDirectory() as directory:
+        with TemporaryDirectory() as directory:
             directory_path = pathlib.Path(directory)
             harness_path = directory_path / "main.swift"
             executable_path = directory_path / "poll-inbox-self-test"
             harness_path.write_text(harness_source, encoding="utf-8")
-            compile_result = subprocess.run(
+            compile_result = run(
                 ["/usr/bin/xcrun", "swiftc", str(harness_path), "-o", str(executable_path)],
                 check=False,
                 text=True,
                 capture_output=True,
             )
             self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
-            run_result = subprocess.run(
+            run_result = run(
                 [str(executable_path)],
                 check=False,
                 text=True,

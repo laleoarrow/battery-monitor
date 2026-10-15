@@ -1,0 +1,2069 @@
+{
+  "schema": 1,
+  "releaseVersion": "4.3.4",
+  "captureDateUTC": "2026-10-15",
+  "captureSourceCommit": "615c65ec25f9bb54047e62b5d6fe174e90b75457",
+  "captureSourceArchiveSHA256": "329aeddb52625eb6ad23923398e7dfa7f3be4c2bafbb3be12859ba0b066a5b17",
+  "sourceComparison": {
+    "comparedWorkingTreeCommit": "2fcd091a15b044e5e5b4f8ec6b8fa07020822f26",
+    "allRecordedProductionSourceHashesMatch": true,
+    "filesChecked": 49,
+    "note": "Later test/cleanup fixture changes do not alter these captured production renderers."
+  },
+  "productionSourceSHA256": {
+    "Core/AppleSmartBatteryPowerObservationReader.swift": "b5a86dbdafca4acfb80d7bd91071e5a04100c38c78591a7d7cbb3fc96c0fc9c5",
+    "Core/BatteryRuntimeEstimate.swift": "181a13a53e73984b2eb26325c36875da6a93c32d141fb329d219a0b1acc598c2",
+    "Core/BatterySampler.swift": "e13d3140628ed001206ec9e560ea74597da4a8d599a063a42151b393c8441675",
+    "Core/Diagnostics/AppleSmartBatteryObservationReader.swift": "bdf9b7b1fc17c0ad724c9f4387061c023559a67f185556ba86d71fd90765c514",
+    "Core/Diagnostics/DirectSMCObservationReader.swift": "5f4522dcdad0e4bfac1ecb68f903e599e65787c95e60c62e31684346cb78a63e",
+    "Core/Diagnostics/PowerObservationCaptureCommand.swift": "de737073f1c5764182ee7d659540a74a405d72661a9898bc5ea544da0d3f8d98",
+    "Core/Diagnostics/PowerObservationCollector.swift": "9ef6be31a0ba71402477742e8a5fc723f2bd99a217f994877179460825eab607",
+    "Core/Diagnostics/PowerObservationJSONLWriter.swift": "9f6a164fb9857902fec171845c7f2066fa7cdb9ed35312c59f86bc3416bc2831",
+    "Core/EnergyMode.swift": "609fe7864c25605b10550301758f4d01836a0ad63740e335c1ab6f5b8172a8b3",
+    "Core/FeedbackDiagnostics.swift": "db1567193a4ccc5eef8c6b89e4e9a0cfd7341efad1b83debd7d600dd0978560d",
+    "Core/GlassBackgroundView.swift": "f9046a11011aefa1e1577c15d851002ffe2949dd3935abb991a539ea7a33da84",
+    "Core/HelperClient.swift": "2620a616fecb42cf85a708e03d20a6f5e464b33e034e33e988fd9a1b8d01b5de",
+    "Core/HelperClientPowerObservationV5.swift": "9fd766fa6d54aef1a7077983b4e70097a0cc43c7109102b129371672f15832fe",
+    "Core/LoginItemController.swift": "0d9ef7aad7666f2c373f4349e8ee4b538c2d07374af44153addce14649b43169",
+    "Core/PopoverPlacement.swift": "415315aa8957770691aca27952f1ba25e7dd59681f216e95254965f0eb964cf4",
+    "Core/PopupEventLog.swift": "28efd1747083b0d72b2278c55ef57d51c1f02176f5ee0d5cf56d633c4541a70d",
+    "Core/PowerHistory.swift": "b42dc199e766585b59e30668f9e2235faa440f6ca5019c5a6bbfccb69f499f50",
+    "Core/PowerObservationFusion.swift": "7e877a9d5353d979f8f66ed20b27072b27a21e4cd7d46c8284290ab18a861d2b",
+    "Core/PowerObservationFusionReplay.swift": "d346e7b8a5697efad0f5d98f12f541f4ed1be28bb781e0b3fe4fa3893a5f4c30",
+    "Core/PowerObservationRuntimeController.swift": "28f39e08e70af2dde354b328da16afc6793815e1bf5eca609e7857a98c2054de",
+    "Core/PowerObservationShadow.swift": "3974ee357d7125fcc54509ad975d8881f30783fb131db9e8e16a050cffa22522",
+    "Core/PowerObservationTrace.swift": "8f9d926a4acf76de2afe2eae31bfcff97420f0090878faeb8cb32317a984ba5a",
+    "Core/PowerObservationWireV5.swift": "74cc385246cb918fe7942a17700fe98d2d52034ea880d8d2c6923a5d815649ec",
+    "Core/PowerSnapshot.swift": "48ae64641190df24487c1af7589ad62c7b98bbcafd212dc5d97f75079bfefa96",
+    "Core/RawPowerObservation.swift": "ab961b7bbc0201fb22e2a72c2d66a4d16f1d5c0563ca4aee30ef287bc29ea2bc",
+    "Core/Settings.swift": "865896e6d8b027be2839c2b24bfba11257420b6ab0d68e3dd25c9290981f9090",
+    "Core/SettingsAppearance.swift": "9e318deeafb66b1cb472033195577a45b9412817b695ffbeca6546219aaf581c",
+    "Core/SystemBatteryIcon.swift": "42322574a1d9f892da3a37599f51f6cc6bdf41c0410f02bae399ce96169036a0",
+    "Core/UpdateChecker.swift": "1e725a7dca032579c7f4b2e4601374829169be1ea55b76b65f0a4d1e06f2feb6",
+    "Core/VisualEncoding.swift": "723fd740660035795a5550ad2ad90d05306f246e21aa5acbb556797bc77f41da",
+    "MenuBar/AppDelegate.swift": "2d16b056ba6493479b918331748d09c1350e9f882d2ad442203f38baf99ba099",
+    "MenuBar/BatteryIcon.swift": "f53a5e8b6805d3a8d074fa96ef59d90e3bdb93333d2d0f83bab89c6ac13c70a9",
+    "MenuBar/ClickRouter.swift": "a06623103f819926b9739d6f62fe87683f9e1edd041b1e6baa8bf662d07eedb7",
+    "MenuBar/SettingsWindowController.swift": "511d566f0e8ff7ebb33dd27b3eb81a0235e5c22197868da4aebbfb6aaa22497e",
+    "MenuBar/StatusItemController.swift": "4792b521564b3cc85e94859bdf7fce75aad8499e96474aec16980f3d7b47de24",
+    "Popover/GlassPopoverPanel.swift": "c0987d6fbfafcd6cdde2782e589eb1613a409c0fff68c9c813d42832b95bb7b8",
+    "Popover/HistoryLayer.swift": "38b78dd1398da2f5580794f9710e5f2899aa9cb3e471c840df42cab683e7bd62",
+    "Popover/InteractiveGlassModeControl.swift": "a65dc2d2563ed99030a59bd63d14f2eac2965bec9f9686ec60a1a2dcb419894a",
+    "Popover/LaneLayer.swift": "4d02b1379bd1afab1adbea9b3cdaaa73deb26d28d297cd4d967813829ed2bb28",
+    "Popover/ModeSliderView.swift": "35d1d69fee67ac2bf69b630be5452389e87b6f072771099c7fc025f3090b3b6b",
+    "Popover/NativeGlassModeControl.swift": "55423cc7b07962aeaed27aa181e4800f500f13351b207031de392a166efbba09",
+    "Popover/NativeModeSegmentedControl.swift": "d89a9be2e3afe021194e7489cabd0ac79cce233b37349912df099f4a736756a5",
+    "Popover/PopoverContentView.swift": "8eeb7d2fad36fb1c05bdee7197761fda484756127cd4963d7573c22bd8655903",
+    "Popover/PopoverController.swift": "5d5e962977f60a334a18bc103742eaf1efd3bee0ecfce1c044a9f7cddc3d5654",
+    "Popover/PopoverPreview.swift": "eccabbb55fd7c7ddde4e961b3ec5e617047e49dfdaffae5a32f5fc77333f56f8",
+    "Popover/PopoverStyle.swift": "e97d386c30599d974a343289f51b9f59cce662119c3943942c9f392357beade6",
+    "Popover/PowerFlowLayer.swift": "ff71eaab3eb864b7e2eed08a76703b9aabef131d9c5ea24240383e3b6b5abcbc",
+    "Popover/RingGaugeLayer.swift": "52b7e639170db8d2371498647d561ebeddea0cd7a6577c40323533bc26b3fcc8",
+    "VERSION": "a3f297f7775881001e525bd8316d6c61f9d6310d7fe0ce191830e96cd72d4a1a"
+  },
+  "environment": {
+    "architecture": "arm64",
+    "macOS": "26.6.1",
+    "build": "25G76",
+    "machine": "exclusive disposable GUI VM",
+    "hostDesktopTested": false,
+    "internalBatteryPresent": false,
+    "captureScreenLogicalPoints": [
+      1600,
+      1200
+    ]
+  },
+  "captureMethod": {
+    "popup": "Production PopoverController, native status-item anchor and WindowServer own-window capture; production geometry unchanged. Fixed snapshots/history/footer display inputs; no helper operations or hardware mode switches.",
+    "settings": "Production SettingsWindowController from same combined source, VERSION 4.3.4; in-memory preferences and mock system/helper/update operations; WindowServer own-window capture.",
+    "installedReleasePKGScreenshots": false,
+    "powerData": "All readings, time estimates, histories, state/helper/mode inputs are fixed fixtures."
+  },
+  "fixtures": {
+    "popup": {
+      "source": "../../../tests/visual/capture_production_glass.swift",
+      "sourceSHA256": "3ecbf50c8100cd6b1a052affda0138e232ee29cc1d5ca5be260a20264e1beb67",
+      "patch": "capture-fixtures.patch",
+      "patchSHA256": "9ce23c7eea483632dd730bf4f0b6211487f9627b2b55293790645bde4d923b62",
+      "patchedHarnessSHA256": "dd6f2360a3c9ef04ba26b067e5be81a34a4d3e7d7cc5445659107b0e92768eaa"
+    },
+    "settings": {
+      "source": "../../../tests/visual/glass_preview.swift",
+      "patch": "../../settings/quiet-navigation/capture-fixture.patch",
+      "patchSHA256": "5741e431becbc7d8c44f98c144795922241bdc963e03dd92cb39db05ba9bfcc6",
+      "patchedHarnessSHA256": "f5c5c938d996306153d39fadb7543e4862d2fc8c8ddb8a9559c3e5e0635c1775",
+      "settingsSourceSHA256": "511d566f0e8ff7ebb33dd27b3eb81a0235e5c22197868da4aebbfb6aaa22497e"
+    }
+  },
+  "captureCounts": {
+    "popupProduced": 10,
+    "popupIncluded": 9,
+    "settingsProduced": 6,
+    "settingsIncluded": 6,
+    "totalIncluded": 15,
+    "omittedPopup": "Separate Standard/Dark charging state capture repeats the charging fixture already included in the Light/Dark matrix; its alternate animation frame is not stored again."
+  },
+  "captureChecks": {
+    "popupCompletionMarkers": 7,
+    "popupGeometryAssertionsPassed": true,
+    "settingsAllThreeNativeRowsVisible": 6,
+    "settingsMonochromeTemplateIconsWithoutBadgeBackgroundOrBorder": 6
+  },
+  "visualInspection": {
+    "imagesInspected": 15,
+    "detail": "Original PNG pixel size, no image editing or compositing.",
+    "findings": "Standard Glass native edges have space around rounded corners; Clear retains its window shadow. Time section is below History with separators and right-aligned text, with visible glass footer controls. Six state labels fit. Fresh General Light/Dark display version 4.3.4; smaller Settings typography, monochrome sidebar symbols, Appearance/Support and all five Modules controls remain readable."
+  },
+  "cleanup": {
+    "captureWrappersExitedSuccessfully": true,
+    "postRunAuditStatus": "passed after owned-domain synchronization",
+    "ownedTemporarySettingsPreferenceFilesRemoved": true,
+    "delayedAuditSecondsAfterSynchronization": 88.4,
+    "checks": {
+      "ownedRunDirectoriesRemoved": true,
+      "ownedAppsRemoved": true,
+      "ownedTestContainersRemoved": true,
+      "ownedSettingsSuitesRemoved": true,
+      "ownedProcessesStopped": true,
+      "ownedAppRegistrationsRemoved": true
+    },
+    "note": "An initial post-run audit detected a late-written empty preference file for one unique VM-only capture domain. Its exact domain was synchronized and removed, the private wrapper cleanup was verified, and the delayed audit found no owned residuals. Initial failure records were retained; no shared daemon, canonical app domain or host installation was changed."
+  },
+  "rejectedSetupAttempts": [
+    {
+      "scope": "settings fixture wrapper",
+      "result": "No screenshots accepted or included.",
+      "cause": "Background runner consumed redirected patch input; corrected by explicit patch -i with before/after harness hash checks.",
+      "changesToProductionSource": false,
+      "privacyPermissionsChanged": false
+    }
+  ],
+  "limitations": [
+    "Fixed render fixtures do not measure battery-time accuracy or prove real hardware power controls.",
+    "VM macOS 26.6.1 does not reproduce the reporter macOS 27.0.1 environment; Cody must confirm Issue #19 before closure.",
+    "Static gallery does not itself verify repeated click routing."
+  ],
+  "publicationRef": "v4.3.4",
+  "images": [
+    {
+      "image": "clear-charging-dark.png",
+      "kind": "production-popup-compositor",
+      "origin": "clear-dark-full.png",
+      "scenario": "charging",
+      "theme": "dark",
+      "material": "clear",
+      "sha256": "dee69a5df1adf54f1b036f143bf2a967339f0c6d97e2ad10943c2ec2393656f0",
+      "width": 396,
+      "height": 835,
+      "fixedFixture": true,
+      "geometry": {
+        "allSiblingFramesMatch": true,
+        "contentSize": [
+          360,
+          799
+        ],
+        "footerFrameInDocument": [
+          16,
+          709,
+          328,
+          78
+        ],
+        "glassFrameAppKit": [
+          1160,
+          357,
+          360,
+          799
+        ],
+        "hasVerticalScroller": false,
+        "hasWindowShadow": true,
+        "margin": 10,
+        "panelFrameAppKit": [
+          1150,
+          347,
+          380,
+          819
+        ],
+        "pixels": [
+          396,
+          835
+        ],
+        "reduceMotionOverride": false,
+        "runtimeFrameInDocument": [
+          16,
+          621,
+          328,
+          88
+        ],
+        "screenFrameAppKit": [
+          0,
+          0,
+          1600,
+          1200
+        ],
+        "scrollDocumentSize": [
+          360,
+          799
+        ],
+        "scrollDocumentVisibleRect": [
+          0,
+          0,
+          360,
+          799
+        ],
+        "scrolling": false,
+        "visibleFrameAppKit": [
+          0,
+          78,
+          1600,
+          1092
+        ]
+      }
+    },
+    {
+      "image": "clear-charging-light.png",
+      "kind": "production-popup-compositor",
+      "origin": "clear-light-full.png",
+      "scenario": "charging",
+      "theme": "light",
+      "material": "clear",
+      "sha256": "24c86f6942d7e9102b0081e5b1dafafbc46b54bd6e5dd81c02d6e4870f17609e",
+      "width": 396,
+      "height": 835,
+      "fixedFixture": true,
+      "geometry": {
+        "allSiblingFramesMatch": true,
+        "contentSize": [
+          360,
+          799
+        ],
+        "footerFrameInDocument": [
+          16,
+          709,
+          328,
+          78
+        ],
+        "glassFrameAppKit": [
+          1160,
+          357,
+          360,
+          799
+        ],
+        "hasVerticalScroller": false,
+        "hasWindowShadow": true,
+        "margin": 10,
+        "panelFrameAppKit": [
+          1150,
+          347,
+          380,
+          819
+        ],
+        "pixels": [
+          396,
+          835
+        ],
+        "reduceMotionOverride": false,
+        "runtimeFrameInDocument": [
+          16,
+          621,
+          328,
+          88
+        ],
+        "screenFrameAppKit": [
+          0,
+          0,
+          1600,
+          1200
+        ],
+        "scrollDocumentSize": [
+          360,
+          799
+        ],
+        "scrollDocumentVisibleRect": [
+          0,
+          0,
+          360,
+          799
+        ],
+        "scrolling": false,
+        "visibleFrameAppKit": [
+          0,
+          78,
+          1600,
+          1092
+        ]
+      }
+    },
+    {
+      "image": "settings-glass-appearance-dark.png",
+      "kind": "production-settings-compositor",
+      "origin": "captures/settings-glass-appearance-dark.png",
+      "page": "appearance",
+      "theme": "dark",
+      "material": "glass",
+      "sha256": "73831dd2a57dc86e365ac4038681bc8ee47d3cb1347c493f2a5c6f165591a47e",
+      "width": 832,
+      "height": 632,
+      "fixedFixture": true,
+      "metrics": {
+        "allNativeRowsVisible": true,
+        "noBadgeBackgroundOrBorder": true,
+        "rowGap": 4,
+        "rowHeight": 32,
+        "sidebarIconCount": 3
+      },
+      "fontRoles": [
+        {
+          "identifier": "settings.general.heading",
+          "text": "General",
+          "fontName": ".AppleSystemUIFontDemi",
+          "fontPoints": 18
+        },
+        {
+          "identifier": "",
+          "text": "Launch at Login",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.general.appearance.heading",
+          "text": "Appearance",
+          "fontName": ".AppleSystemUIFontDemi",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Theme",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.color-scheme",
+          "text": "Dark",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "settings.appearance.liquid-glass-style",
+          "text": "Standard Glass",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "settings.appearance.transparency.label",
+          "text": "Transparency",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "In-App Logo",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.in-app-logo",
+          "text": "Color",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Dock Icon",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.dock-icon",
+          "text": "Hidden",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Wattson",
+          "fontName": ".AppleSystemUIFontMedium",
+          "fontPoints": 14
+        },
+        {
+          "identifier": "",
+          "text": "General",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Display",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Modules",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        }
+      ],
+      "geometry": {
+        "autohidesScrollers": [
+          1
+        ],
+        "clip": [
+          184,
+          0,
+          519,
+          472
+        ],
+        "document": [
+          184,
+          0,
+          519,
+          804
+        ],
+        "documentVisible": [
+          0,
+          332,
+          519,
+          472
+        ],
+        "scroller": [
+          703,
+          17.5,
+          17,
+          454.5
+        ],
+        "scrollerStyle": [
+          0
+        ],
+        "settings.appearance.color-scheme": [
+          505,
+          379,
+          162,
+          20
+        ],
+        "settings.appearance.liquid-glass-style": [
+          505,
+          277,
+          162,
+          20
+        ],
+        "settings.general.appearance": [
+          204,
+          127,
+          479,
+          307
+        ],
+        "settings.general.appearance.box": [
+          204,
+          127,
+          479,
+          284
+        ],
+        "settings.general.appearance.glass": [
+          204,
+          127,
+          479,
+          284
+        ],
+        "settings.general.appearance.glass-content": [
+          204,
+          127,
+          479,
+          284
+        ],
+        "settings.general.feedback": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.feedback.box": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.feedback.feedback-button": [
+          579,
+          40,
+          88,
+          28
+        ],
+        "settings.general.feedback.feedback-row": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.feedback.glass": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.feedback.glass-content": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.list": [
+          204,
+          625,
+          479,
+          136
+        ],
+        "settings.general.list.box": [
+          204,
+          625,
+          479,
+          136
+        ],
+        "settings.general.scroll": [
+          184,
+          0,
+          536,
+          472
+        ],
+        "settings.general.scroll.box": [
+          204,
+          625,
+          479,
+          136
+        ],
+        "settings.general.scroll.feedback-button": [
+          579,
+          40,
+          88,
+          28
+        ],
+        "settings.general.scroll.feedback-row": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.scroll.glass": [
+          204,
+          625,
+          479,
+          136
+        ],
+        "settings.general.scroll.glass-content": [
+          204,
+          625,
+          479,
+          136
+        ]
+      }
+    },
+    {
+      "image": "settings-glass-appearance-light.png",
+      "kind": "production-settings-compositor",
+      "origin": "captures/settings-glass-appearance-light.png",
+      "page": "appearance",
+      "theme": "light",
+      "material": "glass",
+      "sha256": "9020352c38ac02da2f2f119098150081033ce190e09455cd230917aea6fc3144",
+      "width": 832,
+      "height": 632,
+      "fixedFixture": true,
+      "metrics": {
+        "allNativeRowsVisible": true,
+        "noBadgeBackgroundOrBorder": true,
+        "rowGap": 4,
+        "rowHeight": 32,
+        "sidebarIconCount": 3
+      },
+      "fontRoles": [
+        {
+          "identifier": "settings.general.heading",
+          "text": "General",
+          "fontName": ".AppleSystemUIFontDemi",
+          "fontPoints": 18
+        },
+        {
+          "identifier": "",
+          "text": "Launch at Login",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.general.appearance.heading",
+          "text": "Appearance",
+          "fontName": ".AppleSystemUIFontDemi",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Theme",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.color-scheme",
+          "text": "Light",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "settings.appearance.liquid-glass-style",
+          "text": "Standard Glass",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "settings.appearance.transparency.label",
+          "text": "Transparency",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "In-App Logo",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.in-app-logo",
+          "text": "Color",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Dock Icon",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.dock-icon",
+          "text": "Hidden",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Wattson",
+          "fontName": ".AppleSystemUIFontMedium",
+          "fontPoints": 14
+        },
+        {
+          "identifier": "",
+          "text": "General",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Display",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Modules",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        }
+      ],
+      "geometry": {
+        "autohidesScrollers": [
+          1
+        ],
+        "clip": [
+          184,
+          0,
+          519,
+          472
+        ],
+        "document": [
+          184,
+          0,
+          519,
+          804
+        ],
+        "documentVisible": [
+          0,
+          332,
+          519,
+          472
+        ],
+        "scroller": [
+          703,
+          17.5,
+          17,
+          454.5
+        ],
+        "scrollerStyle": [
+          0
+        ],
+        "settings.appearance.color-scheme": [
+          505,
+          379,
+          162,
+          20
+        ],
+        "settings.appearance.liquid-glass-style": [
+          505,
+          277,
+          162,
+          20
+        ],
+        "settings.general.appearance": [
+          204,
+          127,
+          479,
+          307
+        ],
+        "settings.general.appearance.box": [
+          204,
+          127,
+          479,
+          284
+        ],
+        "settings.general.appearance.glass": [
+          204,
+          127,
+          479,
+          284
+        ],
+        "settings.general.appearance.glass-content": [
+          204,
+          127,
+          479,
+          284
+        ],
+        "settings.general.feedback": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.feedback.box": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.feedback.feedback-button": [
+          579,
+          40,
+          88,
+          28
+        ],
+        "settings.general.feedback.feedback-row": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.feedback.glass": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.feedback.glass-content": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.list": [
+          204,
+          625,
+          479,
+          136
+        ],
+        "settings.general.list.box": [
+          204,
+          625,
+          479,
+          136
+        ],
+        "settings.general.scroll": [
+          184,
+          0,
+          536,
+          472
+        ],
+        "settings.general.scroll.box": [
+          204,
+          625,
+          479,
+          136
+        ],
+        "settings.general.scroll.feedback-button": [
+          579,
+          40,
+          88,
+          28
+        ],
+        "settings.general.scroll.feedback-row": [
+          204,
+          20,
+          479,
+          68
+        ],
+        "settings.general.scroll.glass": [
+          204,
+          625,
+          479,
+          136
+        ],
+        "settings.general.scroll.glass-content": [
+          204,
+          625,
+          479,
+          136
+        ]
+      }
+    },
+    {
+      "image": "settings-glass-general-dark.png",
+      "kind": "production-settings-compositor",
+      "origin": "captures/settings-glass-general-dark.png",
+      "page": "general",
+      "theme": "dark",
+      "material": "glass",
+      "sha256": "ee85ae07416eb1490a3f8e983589987afdad8f4ba9ba03792738289fe8af214f",
+      "width": 832,
+      "height": 632,
+      "fixedFixture": true,
+      "metrics": {
+        "allNativeRowsVisible": true,
+        "noBadgeBackgroundOrBorder": true,
+        "rowGap": 4,
+        "rowHeight": 32,
+        "sidebarIconCount": 3
+      },
+      "fontRoles": [
+        {
+          "identifier": "settings.general.heading",
+          "text": "General",
+          "fontName": ".AppleSystemUIFontDemi",
+          "fontPoints": 18
+        },
+        {
+          "identifier": "",
+          "text": "Launch at Login",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.general.appearance.heading",
+          "text": "Appearance",
+          "fontName": ".AppleSystemUIFontDemi",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Theme",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.color-scheme",
+          "text": "Dark",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "settings.appearance.liquid-glass-style",
+          "text": "Standard Glass",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "settings.appearance.transparency.label",
+          "text": "Transparency",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "In-App Logo",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.in-app-logo",
+          "text": "Color",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Dock Icon",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.dock-icon",
+          "text": "Hidden",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Wattson",
+          "fontName": ".AppleSystemUIFontMedium",
+          "fontPoints": 14
+        },
+        {
+          "identifier": "",
+          "text": "General",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Display",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Modules",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        }
+      ],
+      "geometry": {
+        "autohidesScrollers": [
+          1
+        ],
+        "clip": [
+          184,
+          0,
+          519,
+          472
+        ],
+        "document": [
+          184,
+          -332,
+          519,
+          804
+        ],
+        "documentVisible": [
+          0,
+          0,
+          519,
+          472
+        ],
+        "scroller": [
+          703,
+          17.5,
+          17,
+          454.5
+        ],
+        "scrollerStyle": [
+          0
+        ],
+        "settings.appearance.color-scheme": [
+          505,
+          47,
+          162,
+          20
+        ],
+        "settings.appearance.liquid-glass-style": [
+          505,
+          -55,
+          162,
+          20
+        ],
+        "settings.general.appearance": [
+          204,
+          -205,
+          479,
+          307
+        ],
+        "settings.general.appearance.box": [
+          204,
+          -205,
+          479,
+          284
+        ],
+        "settings.general.appearance.glass": [
+          204,
+          -205,
+          479,
+          284
+        ],
+        "settings.general.appearance.glass-content": [
+          204,
+          -205,
+          479,
+          284
+        ],
+        "settings.general.feedback": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.feedback.box": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.feedback.feedback-button": [
+          579,
+          -292,
+          88,
+          28
+        ],
+        "settings.general.feedback.feedback-row": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.feedback.glass": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.feedback.glass-content": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.list": [
+          204,
+          293,
+          479,
+          136
+        ],
+        "settings.general.list.box": [
+          204,
+          293,
+          479,
+          136
+        ],
+        "settings.general.scroll": [
+          184,
+          0,
+          536,
+          472
+        ],
+        "settings.general.scroll.box": [
+          204,
+          293,
+          479,
+          136
+        ],
+        "settings.general.scroll.feedback-button": [
+          579,
+          -292,
+          88,
+          28
+        ],
+        "settings.general.scroll.feedback-row": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.scroll.glass": [
+          204,
+          293,
+          479,
+          136
+        ],
+        "settings.general.scroll.glass-content": [
+          204,
+          293,
+          479,
+          136
+        ]
+      }
+    },
+    {
+      "image": "settings-glass-general-light.png",
+      "kind": "production-settings-compositor",
+      "origin": "captures/settings-glass-general-light.png",
+      "page": "general",
+      "theme": "light",
+      "material": "glass",
+      "sha256": "3306da490f7edcb93add497f3d988e1137598e17f5900a0928c7c5d79b5d1b6a",
+      "width": 832,
+      "height": 632,
+      "fixedFixture": true,
+      "metrics": {
+        "allNativeRowsVisible": true,
+        "noBadgeBackgroundOrBorder": true,
+        "rowGap": 4,
+        "rowHeight": 32,
+        "sidebarIconCount": 3
+      },
+      "fontRoles": [
+        {
+          "identifier": "settings.general.heading",
+          "text": "General",
+          "fontName": ".AppleSystemUIFontDemi",
+          "fontPoints": 18
+        },
+        {
+          "identifier": "",
+          "text": "Launch at Login",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.general.appearance.heading",
+          "text": "Appearance",
+          "fontName": ".AppleSystemUIFontDemi",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Theme",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.color-scheme",
+          "text": "Light",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "settings.appearance.liquid-glass-style",
+          "text": "Standard Glass",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "settings.appearance.transparency.label",
+          "text": "Transparency",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "In-App Logo",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.in-app-logo",
+          "text": "Color",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Dock Icon",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "settings.appearance.dock-icon",
+          "text": "Hidden",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 12
+        },
+        {
+          "identifier": "",
+          "text": "Wattson",
+          "fontName": ".AppleSystemUIFontMedium",
+          "fontPoints": 14
+        },
+        {
+          "identifier": "",
+          "text": "General",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Display",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Modules",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        }
+      ],
+      "geometry": {
+        "autohidesScrollers": [
+          1
+        ],
+        "clip": [
+          184,
+          0,
+          519,
+          472
+        ],
+        "document": [
+          184,
+          -332,
+          519,
+          804
+        ],
+        "documentVisible": [
+          0,
+          0,
+          519,
+          472
+        ],
+        "scroller": [
+          703,
+          17.5,
+          17,
+          454.5
+        ],
+        "scrollerStyle": [
+          0
+        ],
+        "settings.appearance.color-scheme": [
+          505,
+          47,
+          162,
+          20
+        ],
+        "settings.appearance.liquid-glass-style": [
+          505,
+          -55,
+          162,
+          20
+        ],
+        "settings.general.appearance": [
+          204,
+          -205,
+          479,
+          307
+        ],
+        "settings.general.appearance.box": [
+          204,
+          -205,
+          479,
+          284
+        ],
+        "settings.general.appearance.glass": [
+          204,
+          -205,
+          479,
+          284
+        ],
+        "settings.general.appearance.glass-content": [
+          204,
+          -205,
+          479,
+          284
+        ],
+        "settings.general.feedback": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.feedback.box": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.feedback.feedback-button": [
+          579,
+          -292,
+          88,
+          28
+        ],
+        "settings.general.feedback.feedback-row": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.feedback.glass": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.feedback.glass-content": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.list": [
+          204,
+          293,
+          479,
+          136
+        ],
+        "settings.general.list.box": [
+          204,
+          293,
+          479,
+          136
+        ],
+        "settings.general.scroll": [
+          184,
+          0,
+          536,
+          472
+        ],
+        "settings.general.scroll.box": [
+          204,
+          293,
+          479,
+          136
+        ],
+        "settings.general.scroll.feedback-button": [
+          579,
+          -292,
+          88,
+          28
+        ],
+        "settings.general.scroll.feedback-row": [
+          204,
+          -312,
+          479,
+          68
+        ],
+        "settings.general.scroll.glass": [
+          204,
+          293,
+          479,
+          136
+        ],
+        "settings.general.scroll.glass-content": [
+          204,
+          293,
+          479,
+          136
+        ]
+      }
+    },
+    {
+      "image": "settings-glass-modules-dark.png",
+      "kind": "production-settings-compositor",
+      "origin": "captures/settings-glass-modules-dark.png",
+      "page": "modules",
+      "theme": "dark",
+      "material": "glass",
+      "sha256": "58c58423a4dee4fa5dcee7dc0edae7656e61fd4f1ccf9c741ebd6186d464cffc",
+      "width": 832,
+      "height": 632,
+      "fixedFixture": true,
+      "metrics": {
+        "allNativeRowsVisible": true,
+        "noBadgeBackgroundOrBorder": true,
+        "rowGap": 4,
+        "rowHeight": 32,
+        "sidebarIconCount": 3
+      },
+      "fontRoles": [
+        {
+          "identifier": "settings.modules.heading",
+          "text": "Modules",
+          "fontName": ".AppleSystemUIFontDemi",
+          "fontPoints": 18
+        },
+        {
+          "identifier": "",
+          "text": "Energy Flow",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "See where power comes from and goes.",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 11
+        },
+        {
+          "identifier": "",
+          "text": "Ring Gauge",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Power Lanes",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Power History",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Battery Time Estimate",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Wattson",
+          "fontName": ".AppleSystemUIFontMedium",
+          "fontPoints": 14
+        },
+        {
+          "identifier": "",
+          "text": "General",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Display",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Modules",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        }
+      ],
+      "geometry": {
+        "settings.modules.list": [
+          204,
+          66,
+          496,
+          360
+        ],
+        "settings.modules.list.box": [
+          204,
+          66,
+          496,
+          360
+        ]
+      }
+    },
+    {
+      "image": "settings-glass-modules-light.png",
+      "kind": "production-settings-compositor",
+      "origin": "captures/settings-glass-modules-light.png",
+      "page": "modules",
+      "theme": "light",
+      "material": "glass",
+      "sha256": "7518de2dc159e951e0a230674945dcfd5183442fbf892733b7c7f12bfc432d8b",
+      "width": 832,
+      "height": 632,
+      "fixedFixture": true,
+      "metrics": {
+        "allNativeRowsVisible": true,
+        "noBadgeBackgroundOrBorder": true,
+        "rowGap": 4,
+        "rowHeight": 32,
+        "sidebarIconCount": 3
+      },
+      "fontRoles": [
+        {
+          "identifier": "settings.modules.heading",
+          "text": "Modules",
+          "fontName": ".AppleSystemUIFontDemi",
+          "fontPoints": 18
+        },
+        {
+          "identifier": "",
+          "text": "Energy Flow",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "See where power comes from and goes.",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 11
+        },
+        {
+          "identifier": "",
+          "text": "Ring Gauge",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Power Lanes",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Power History",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Battery Time Estimate",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Wattson",
+          "fontName": ".AppleSystemUIFontMedium",
+          "fontPoints": 14
+        },
+        {
+          "identifier": "",
+          "text": "General",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Display",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        },
+        {
+          "identifier": "",
+          "text": "Modules",
+          "fontName": ".AppleSystemUIFont",
+          "fontPoints": 13
+        }
+      ],
+      "geometry": {
+        "settings.modules.list": [
+          204,
+          66,
+          496,
+          360
+        ],
+        "settings.modules.list.box": [
+          204,
+          66,
+          496,
+          360
+        ]
+      }
+    },
+    {
+      "image": "standard-battery-dark.png",
+      "kind": "production-popup-compositor",
+      "origin": "states/on-battery/regular-dark-full.png",
+      "scenario": "on-battery",
+      "theme": "dark",
+      "material": "regular",
+      "sha256": "a1feee708dd3528f8a691fc568f9d91a521582639edace37dd9d8ee405dcad00",
+      "width": 440,
+      "height": 879,
+      "fixedFixture": true,
+      "geometry": {
+        "allSiblingFramesMatch": true,
+        "contentSize": [
+          360,
+          799
+        ],
+        "footerFrameInDocument": [
+          16,
+          709,
+          328,
+          78
+        ],
+        "glassFrameAppKit": [
+          1160,
+          335,
+          360,
+          799
+        ],
+        "hasVerticalScroller": false,
+        "hasWindowShadow": false,
+        "margin": 32,
+        "panelFrameAppKit": [
+          1128,
+          303,
+          424,
+          863
+        ],
+        "pixels": [
+          440,
+          879
+        ],
+        "reduceMotionOverride": false,
+        "runtimeFrameInDocument": [
+          16,
+          621,
+          328,
+          88
+        ],
+        "screenFrameAppKit": [
+          0,
+          0,
+          1600,
+          1200
+        ],
+        "scrollDocumentSize": [
+          360,
+          799
+        ],
+        "scrollDocumentVisibleRect": [
+          0,
+          0,
+          360,
+          799
+        ],
+        "scrolling": false,
+        "visibleFrameAppKit": [
+          0,
+          78,
+          1600,
+          1092
+        ]
+      }
+    },
+    {
+      "image": "standard-charging-dark.png",
+      "kind": "production-popup-compositor",
+      "origin": "regular-dark-full.png",
+      "scenario": "charging",
+      "theme": "dark",
+      "material": "regular",
+      "sha256": "91c1ce38aaddf786058edb064671f5cffaedc00b80f512cea0785d4a78befa83",
+      "width": 440,
+      "height": 879,
+      "fixedFixture": true,
+      "geometry": {
+        "allSiblingFramesMatch": true,
+        "contentSize": [
+          360,
+          799
+        ],
+        "footerFrameInDocument": [
+          16,
+          709,
+          328,
+          78
+        ],
+        "glassFrameAppKit": [
+          1160,
+          335,
+          360,
+          799
+        ],
+        "hasVerticalScroller": false,
+        "hasWindowShadow": false,
+        "margin": 32,
+        "panelFrameAppKit": [
+          1128,
+          303,
+          424,
+          863
+        ],
+        "pixels": [
+          440,
+          879
+        ],
+        "reduceMotionOverride": false,
+        "runtimeFrameInDocument": [
+          16,
+          621,
+          328,
+          88
+        ],
+        "screenFrameAppKit": [
+          0,
+          0,
+          1600,
+          1200
+        ],
+        "scrollDocumentSize": [
+          360,
+          799
+        ],
+        "scrollDocumentVisibleRect": [
+          0,
+          0,
+          360,
+          799
+        ],
+        "scrolling": false,
+        "visibleFrameAppKit": [
+          0,
+          78,
+          1600,
+          1092
+        ]
+      }
+    },
+    {
+      "image": "standard-charging-light.png",
+      "kind": "production-popup-compositor",
+      "origin": "regular-light-full.png",
+      "scenario": "charging",
+      "theme": "light",
+      "material": "regular",
+      "sha256": "398f0374fd5062a443e36dafb6cb3c3c38459d698d19fe9badf5f84ca174673e",
+      "width": 440,
+      "height": 879,
+      "fixedFixture": true,
+      "geometry": {
+        "allSiblingFramesMatch": true,
+        "contentSize": [
+          360,
+          799
+        ],
+        "footerFrameInDocument": [
+          16,
+          709,
+          328,
+          78
+        ],
+        "glassFrameAppKit": [
+          1160,
+          335,
+          360,
+          799
+        ],
+        "hasVerticalScroller": false,
+        "hasWindowShadow": false,
+        "margin": 32,
+        "panelFrameAppKit": [
+          1128,
+          303,
+          424,
+          863
+        ],
+        "pixels": [
+          440,
+          879
+        ],
+        "reduceMotionOverride": false,
+        "runtimeFrameInDocument": [
+          16,
+          621,
+          328,
+          88
+        ],
+        "screenFrameAppKit": [
+          0,
+          0,
+          1600,
+          1200
+        ],
+        "scrollDocumentSize": [
+          360,
+          799
+        ],
+        "scrollDocumentVisibleRect": [
+          0,
+          0,
+          360,
+          799
+        ],
+        "scrolling": false,
+        "visibleFrameAppKit": [
+          0,
+          78,
+          1600,
+          1092
+        ]
+      }
+    },
+    {
+      "image": "standard-full-dark.png",
+      "kind": "production-popup-compositor",
+      "origin": "states/full/regular-dark-full.png",
+      "scenario": "full",
+      "theme": "dark",
+      "material": "regular",
+      "sha256": "623e6de3bdf16483ac2a25d22b0e38eecd7d961bbda3ea055f77a1821bb08e31",
+      "width": 440,
+      "height": 879,
+      "fixedFixture": true,
+      "geometry": {
+        "allSiblingFramesMatch": true,
+        "contentSize": [
+          360,
+          799
+        ],
+        "footerFrameInDocument": [
+          16,
+          709,
+          328,
+          78
+        ],
+        "glassFrameAppKit": [
+          1160,
+          335,
+          360,
+          799
+        ],
+        "hasVerticalScroller": false,
+        "hasWindowShadow": false,
+        "margin": 32,
+        "panelFrameAppKit": [
+          1128,
+          303,
+          424,
+          863
+        ],
+        "pixels": [
+          440,
+          879
+        ],
+        "reduceMotionOverride": false,
+        "runtimeFrameInDocument": [
+          16,
+          621,
+          328,
+          88
+        ],
+        "screenFrameAppKit": [
+          0,
+          0,
+          1600,
+          1200
+        ],
+        "scrollDocumentSize": [
+          360,
+          799
+        ],
+        "scrollDocumentVisibleRect": [
+          0,
+          0,
+          360,
+          799
+        ],
+        "scrolling": false,
+        "visibleFrameAppKit": [
+          0,
+          78,
+          1600,
+          1092
+        ]
+      }
+    },
+    {
+      "image": "standard-low-battery-dark.png",
+      "kind": "production-popup-compositor",
+      "origin": "states/low-battery/regular-dark-full.png",
+      "scenario": "low-battery",
+      "theme": "dark",
+      "material": "regular",
+      "sha256": "f74e1148b19cd4b8a03f6c5824b582907b3c70650e0a4fdd5843cdf2b2171b86",
+      "width": 440,
+      "height": 879,
+      "fixedFixture": true,
+      "geometry": {
+        "allSiblingFramesMatch": true,
+        "contentSize": [
+          360,
+          799
+        ],
+        "footerFrameInDocument": [
+          16,
+          709,
+          328,
+          78
+        ],
+        "glassFrameAppKit": [
+          1160,
+          335,
+          360,
+          799
+        ],
+        "hasVerticalScroller": false,
+        "hasWindowShadow": false,
+        "margin": 32,
+        "panelFrameAppKit": [
+          1128,
+          303,
+          424,
+          863
+        ],
+        "pixels": [
+          440,
+          879
+        ],
+        "reduceMotionOverride": false,
+        "runtimeFrameInDocument": [
+          16,
+          621,
+          328,
+          88
+        ],
+        "screenFrameAppKit": [
+          0,
+          0,
+          1600,
+          1200
+        ],
+        "scrollDocumentSize": [
+          360,
+          799
+        ],
+        "scrollDocumentVisibleRect": [
+          0,
+          0,
+          360,
+          799
+        ],
+        "scrolling": false,
+        "visibleFrameAppKit": [
+          0,
+          78,
+          1600,
+          1092
+        ]
+      }
+    },
+    {
+      "image": "standard-low-power-dark.png",
+      "kind": "production-popup-compositor",
+      "origin": "states/low-power/regular-dark-full.png",
+      "scenario": "low-power",
+      "theme": "dark",
+      "material": "regular",
+      "sha256": "553fe687d54210690da53a36db089b34ada7109099dcf0f45b192ce7e986ffe3",
+      "width": 440,
+      "height": 879,
+      "fixedFixture": true,
+      "geometry": {
+        "allSiblingFramesMatch": true,
+        "contentSize": [
+          360,
+          799
+        ],
+        "footerFrameInDocument": [
+          16,
+          709,
+          328,
+          78
+        ],
+        "glassFrameAppKit": [
+          1160,
+          335,
+          360,
+          799
+        ],
+        "hasVerticalScroller": false,
+        "hasWindowShadow": false,
+        "margin": 32,
+        "panelFrameAppKit": [
+          1128,
+          303,
+          424,
+          863
+        ],
+        "pixels": [
+          440,
+          879
+        ],
+        "reduceMotionOverride": false,
+        "runtimeFrameInDocument": [
+          16,
+          621,
+          328,
+          88
+        ],
+        "screenFrameAppKit": [
+          0,
+          0,
+          1600,
+          1200
+        ],
+        "scrollDocumentSize": [
+          360,
+          799
+        ],
+        "scrollDocumentVisibleRect": [
+          0,
+          0,
+          360,
+          799
+        ],
+        "scrolling": false,
+        "visibleFrameAppKit": [
+          0,
+          78,
+          1600,
+          1092
+        ]
+      }
+    },
+    {
+      "image": "standard-mixed-dark.png",
+      "kind": "production-popup-compositor",
+      "origin": "states/mixed-supply/regular-dark-full.png",
+      "scenario": "mixed-supply",
+      "theme": "dark",
+      "material": "regular",
+      "sha256": "32fc5885d121cd9f78adbc27cfdd1965c7b6e62515667617324032d3bf9b0849",
+      "width": 440,
+      "height": 879,
+      "fixedFixture": true,
+      "geometry": {
+        "allSiblingFramesMatch": true,
+        "contentSize": [
+          360,
+          799
+        ],
+        "footerFrameInDocument": [
+          16,
+          709,
+          328,
+          78
+        ],
+        "glassFrameAppKit": [
+          1160,
+          335,
+          360,
+          799
+        ],
+        "hasVerticalScroller": false,
+        "hasWindowShadow": false,
+        "margin": 32,
+        "panelFrameAppKit": [
+          1128,
+          303,
+          424,
+          863
+        ],
+        "pixels": [
+          440,
+          879
+        ],
+        "reduceMotionOverride": false,
+        "runtimeFrameInDocument": [
+          16,
+          621,
+          328,
+          88
+        ],
+        "screenFrameAppKit": [
+          0,
+          0,
+          1600,
+          1200
+        ],
+        "scrollDocumentSize": [
+          360,
+          799
+        ],
+        "scrollDocumentVisibleRect": [
+          0,
+          0,
+          360,
+          799
+        ],
+        "scrolling": false,
+        "visibleFrameAppKit": [
+          0,
+          78,
+          1600,
+          1092
+        ]
+      }
+    }
+  ]
+}

@@ -422,16 +422,24 @@ jobs:
           esac
           readonly SIGNED_RELEASE
 
-          EXPAND_BASE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-pkg.XXXXXX")"
-          EXPAND_DIR="$EXPAND_BASE/expanded"
-          assert_runner_temp_path "$EXPAND_BASE"
+          EXPAND_BASE=""
           cleanup() {
             local status="$?"
             trap - EXIT
-            /bin/rm -rf -- "$EXPAND_BASE" || status=1
+            trap '' HUP INT TERM
+            if [[ -n "$EXPAND_BASE" ]]; then
+              /bin/rm -rf -- "$EXPAND_BASE" || status=1
+            fi
             exit "$status"
           }
           trap cleanup EXIT
+          trap 'exit 129' HUP
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+
+          EXPAND_BASE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-pkg.XXXXXX")"
+          EXPAND_DIR="$EXPAND_BASE/expanded"
+          assert_runner_temp_path "$EXPAND_BASE"
 
           /usr/sbin/pkgutil --expand-full "$PKG_PATH" "$EXPAND_DIR"
           PACKAGED_APP_BIN="$(
@@ -517,32 +525,50 @@ jobs:
           [[ "${RUNNER_OS:-}" == "macOS" ]]
           [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]]
           [[ "$(/usr/bin/id -u)" != "0" ]]
+          source scripts/lib/local_cleanup.sh
 
           readonly DMG_PATH="$RUNNER_TEMP/wattson-release/Wattson-v${WATTSON_VERSION}-macos-universal.dmg"
-          READONLY_ROOT="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-readonly.XXXXXX")"
-          case "$READONLY_ROOT" in "$RUNNER_TEMP"/wattson-readonly.*) ;; *) exit 1 ;; esac
-          readonly READONLY_ROOT
-          readonly MOUNT_DIR="$READONLY_ROOT/mount"
-          readonly APP_DIR="$READONLY_ROOT/Wattson.app"
-          readonly APP_BIN="$APP_DIR/Contents/MacOS/Wattson"
+          READONLY_ROOT=""
+          MOUNT_DIR=""
+          APP_DIR=""
+          APP_BIN=""
           readonly HELPER_LABEL="com.leoarrow.wattson.helper"
           APP_PID=""
-          MOUNTED=0
 
           cleanup() {
             local status="$?"
+            local app_removed=1
+            local mount_removed=1
             trap - EXIT
-            if [[ -n "$APP_PID" ]]; then
-              /bin/kill "$APP_PID" >/dev/null 2>&1 || true
-              wait "$APP_PID" >/dev/null 2>&1 || true
+            trap '' HUP INT TERM
+            set +e
+            if [[ -n "$APP_DIR" ]]; then
+              if wattson_stop_executable "$APP_BIN" && wattson_unregister_app "$APP_DIR"; then
+                /bin/rm -rf -- "$APP_DIR" || app_removed=0
+              else
+                app_removed=0
+              fi
             fi
-            if [[ "$MOUNTED" == "1" ]]; then
-              /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null 2>&1 || exit 1
+            if [[ -n "$MOUNT_DIR" ]] && ! wattson_detach "$MOUNT_DIR"; then
+              mount_removed=0
+              status=1
             fi
-            /bin/rm -rf -- "$READONLY_ROOT" || status=1
+            if [[ "$mount_removed" == "1" && "$app_removed" == "1" && -n "$READONLY_ROOT" ]]; then
+              /bin/rm -rf -- "$READONLY_ROOT" || status=1
+            fi
+            [[ "$app_removed" == "1" ]] || status=1
             exit "$status"
           }
           trap cleanup EXIT
+          trap 'exit 129' HUP
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+
+          READONLY_ROOT="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-readonly.XXXXXX")"
+          case "$READONLY_ROOT" in "$RUNNER_TEMP"/wattson-readonly.*) ;; *) exit 1 ;; esac
+          MOUNT_DIR="$READONLY_ROOT/mount"
+          APP_DIR="$READONLY_ROOT/Wattson.app"
+          APP_BIN="$APP_DIR/Contents/MacOS/Wattson"
 
           assert_no_privileged_install() {
             local path
@@ -566,7 +592,6 @@ jobs:
           assert_no_privileged_install
           /bin/mkdir "$MOUNT_DIR"
           /usr/bin/hdiutil attach -nobrowse -readonly -mountpoint "$MOUNT_DIR" "$DMG_PATH" >/dev/null
-          MOUNTED=1
           # A user-writable destination exercises copying without granting the
           # runner any privileged install operation. Repeat to cover replacement.
           for copy_attempt in 1 2; do
@@ -583,8 +608,7 @@ jobs:
             APP_PID="$!"
             /bin/sleep 2
             if /bin/kill -0 "$APP_PID" >/dev/null 2>&1; then
-              /bin/kill "$APP_PID"
-              wait "$APP_PID" >/dev/null 2>&1 || true
+              wattson_stop_executable "$APP_BIN"
             else
               app_status=0
               wait "$APP_PID" || app_status="$?"
@@ -595,6 +619,7 @@ jobs:
             APP_PID=""
             assert_no_privileged_install
           done
+          wattson_unregister_app "$APP_DIR"
           /bin/rm -rf -- "$APP_DIR"
           [[ ! -e "$APP_DIR" && ! -L "$APP_DIR" ]]
           assert_no_privileged_install
@@ -604,6 +629,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          [[ "${GITHUB_ACTIONS:-}" == "true" ]]
+          [[ "${RUNNER_OS:-}" == "macOS" ]]
+          [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]]
+          source scripts/lib/local_cleanup.sh
 
           readonly PKG_PATH="$RUNNER_TEMP/wattson-release/Wattson-v${WATTSON_VERSION}-macos-universal.pkg"
           readonly APP_DIR="/Applications/Wattson.app"
@@ -623,10 +652,9 @@ jobs:
           readonly USER_CONTAINER="$HOME/Library/Containers/com.leoarrow.wattson"
           readonly USER_PREFERENCES="$HOME/Library/Preferences/com.leoarrow.wattson.plist"
           readonly SANDBOX_PREFERENCES="$USER_CONTAINER/Data/Library/Preferences/com.leoarrow.wattson.plist"
-          APP_ONLY_STAGE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-app-only-upgrade.XXXXXX")"
-          case "$APP_ONLY_STAGE" in "$RUNNER_TEMP"/wattson-app-only-upgrade.*) ;; *) exit 1 ;; esac
-          readonly APP_ONLY_STAGE
+          APP_ONLY_STAGE=""
           APP_PID=""
+          CLEANUP_REQUIRED=0
 
           cleanup() {
             local status="$?"
@@ -634,12 +662,15 @@ jobs:
             local disabled_state
             local residual
             trap - EXIT
+            trap '' HUP INT TERM
             set +e
 
-            if [[ -n "$APP_PID" ]]; then
-              /bin/kill "$APP_PID" >/dev/null 2>&1 || true
-              wait "$APP_PID" >/dev/null 2>&1 || true
-              APP_PID=""
+            if [[ -n "$APP_ONLY_STAGE" ]]; then
+              /bin/rm -rf -- "$APP_ONLY_STAGE" || cleanup_failed=1
+            fi
+            if [[ "$CLEANUP_REQUIRED" == "0" ]]; then
+              [[ "$cleanup_failed" == "0" ]] || status=1
+              exit "$status"
             fi
             /bin/launchctl bootout "$LOGIN_TARGET" >/dev/null 2>&1 || true
             /bin/rm -f -- "$LOGIN_PLIST" "$USER_PREFERENCES" || cleanup_failed=1
@@ -648,10 +679,18 @@ jobs:
               || cleanup_failed=1
             /usr/bin/sudo -n /bin/rm -f -- \
               "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN" || cleanup_failed=1
-            /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1
-            /bin/rm -rf -- "$LEGACY_APP" "$USER_SUPPORT" "$USER_CONTAINER" \
+            if wattson_stop_executable "$APP_BIN" && wattson_unregister_app "$APP_DIR"; then
+              /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1
+            else
+              cleanup_failed=1
+            fi
+            if wattson_stop_executable "$LEGACY_APP/Contents/MacOS/Wattson" && wattson_unregister_app "$LEGACY_APP"; then
+              /bin/rm -rf -- "$LEGACY_APP" || cleanup_failed=1
+            else
+              cleanup_failed=1
+            fi
+            /bin/rm -rf -- "$USER_SUPPORT" "$USER_CONTAINER" \
               || cleanup_failed=1
-            /bin/rm -rf -- "$APP_ONLY_STAGE" || cleanup_failed=1
             /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true
 
             if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
@@ -678,6 +717,12 @@ jobs:
             exit "$status"
           }
           trap cleanup EXIT
+          trap 'exit 129' HUP
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+
+          APP_ONLY_STAGE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-app-only-upgrade.XXXXXX")"
+          case "$APP_ONLY_STAGE" in "$RUNNER_TEMP"/wattson-app-only-upgrade.*) ;; *) exit 1 ;; esac
 
           verify_install() {
             local expected_version="${1:-$WATTSON_VERSION}"
@@ -743,12 +788,14 @@ jobs:
               fi
               /bin/sleep 0.1
             done
-            /bin/kill "$APP_PID"
-            wait "$APP_PID" >/dev/null 2>&1 || true
+            wattson_stop_executable "$APP_BIN"
             APP_PID=""
           }
 
           uninstall_and_verify() {
+            wattson_stop_executable "$APP_BIN"
+            wattson_unregister_app "$APP_DIR"
+            wattson_unregister_app "$LEGACY_APP"
             /bin/bash scripts/uninstall.sh \
               2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-uninstall.log"
             for removed_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do
@@ -776,6 +823,7 @@ jobs:
             echo "fresh runner unexpectedly has a Wattson package receipt" >&2
             exit 1
           fi
+          CLEANUP_REQUIRED=1
 
           echo "Installing the candidate on a fresh runner..."
           /usr/bin/sudo -n /usr/sbin/installer \
@@ -874,6 +922,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          [[ "${GITHUB_ACTIONS:-}" == "true" ]]
+          [[ "${RUNNER_OS:-}" == "macOS" ]]
+          [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]]
+          source scripts/lib/local_cleanup.sh
 
           readonly V2_VERSION="2.1.5"
           readonly V2_SHA256="1a5054dfbc3f3a4ff9518620d3a9b49c282ff42973f9952a076470c05cf4caf6"
@@ -893,19 +945,27 @@ jobs:
           LOGIN_TARGET="gui/$(/usr/bin/id -u)/$LOGIN_LABEL"
           readonly LOGIN_TARGET
           readonly LOGIN_PLIST="$HOME/Library/LaunchAgents/$LOGIN_LABEL.plist"
-          MOUNT_DIR="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-v2-dmg.XXXXXX")"
-          CANDIDATE_EXPAND="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-v5-candidate.XXXXXX")"
+          MOUNT_DIR=""
+          CANDIDATE_EXPAND=""
           V2_STAGE=""
-          MOUNTED=0
+          CLEANUP_REQUIRED=0
 
           cleanup() {
             local status="$?"
             local cleanup_failed=0
             local residual
             trap - EXIT
+            trap '' HUP INT TERM
             set +e
-            if [[ "$MOUNTED" == "1" ]]; then
-              /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null 2>&1 || cleanup_failed=1
+            if [[ -n "$MOUNT_DIR" ]]; then
+              if wattson_detach "$MOUNT_DIR"; then
+                /bin/rm -rf -- "$MOUNT_DIR" || cleanup_failed=1
+              else
+                cleanup_failed=1
+              fi
+            fi
+            if [[ -n "$CANDIDATE_EXPAND" ]]; then
+              /bin/rm -rf -- "$CANDIDATE_EXPAND" || cleanup_failed=1
             fi
             if [[ -n "$V2_STAGE" ]]; then
               case "$V2_STAGE" in
@@ -915,6 +975,10 @@ jobs:
                 *) echo "v2 root stage escaped its fixed prefix" >&2; cleanup_failed=1 ;;
               esac
             fi
+            if [[ "$CLEANUP_REQUIRED" == "0" ]]; then
+              [[ "$cleanup_failed" == "0" ]] || status=1
+              exit "$status"
+            fi
             /bin/launchctl bootout "$LOGIN_TARGET" >/dev/null 2>&1 || true
             /bin/rm -f -- "$LOGIN_PLIST" || cleanup_failed=1
             /usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true
@@ -922,9 +986,16 @@ jobs:
               || cleanup_failed=1
             /usr/bin/sudo -n /bin/rm -f -- \
               "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN" || cleanup_failed=1
-            /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1
-            /bin/rm -rf -- "$LEGACY_APP" "$MOUNT_DIR" "$CANDIDATE_EXPAND" \
-              || cleanup_failed=1
+            if wattson_stop_executable "$APP_BIN" && wattson_unregister_app "$APP_DIR"; then
+              /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1
+            else
+              cleanup_failed=1
+            fi
+            if wattson_stop_executable "$LEGACY_APP/Contents/MacOS/Wattson" && wattson_unregister_app "$LEGACY_APP"; then
+              /bin/rm -rf -- "$LEGACY_APP" || cleanup_failed=1
+            else
+              cleanup_failed=1
+            fi
             /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true
             if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then
               echo "helper service remains registered after v2 upgrade cleanup" >&2
@@ -942,9 +1013,22 @@ jobs:
             exit "$status"
           }
           trap cleanup EXIT
+          trap 'exit 129' HUP
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
 
           [[ "$(/usr/bin/uname -m)" == "arm64" ]]
           [[ -f "$PKG_PATH" && ! -L "$PKG_PATH" ]]
+          for initial_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP" "$LOGIN_PLIST"; do
+            [[ ! -e "$initial_path" && ! -L "$initial_path" ]]
+          done
+          if /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then
+            echo "v2 fixture requires an absent Wattson package receipt" >&2
+            exit 1
+          fi
+          CLEANUP_REQUIRED=1
+          MOUNT_DIR="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-v2-dmg.XXXXXX")"
+          CANDIDATE_EXPAND="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-v5-candidate.XXXXXX")"
           /usr/sbin/pkgutil --expand-full "$PKG_PATH" "$CANDIDATE_EXPAND/expanded"
           CANDIDATE_APP_BIN="$(
             /usr/bin/find "$CANDIDATE_EXPAND/expanded" \
@@ -971,7 +1055,6 @@ jobs:
             -readonly \
             -mountpoint "$MOUNT_DIR" \
             "$V2_DMG" >/dev/null
-          MOUNTED=1
           readonly V2_INSTALLER="$MOUNT_DIR/Install Wattson.app"
           readonly V2_RESOURCES="$V2_INSTALLER/Contents/Resources"
           [[ -d "$V2_INSTALLER" && ! -L "$V2_INSTALLER" ]]
@@ -1038,12 +1121,13 @@ jobs:
             *) echo "candidate v5 probe returned unexpected legacy result" >&2; exit 1 ;;
           esac
 
-          /usr/bin/hdiutil detach "$MOUNT_DIR" >/dev/null
-          MOUNTED=0
+          wattson_detach "$MOUNT_DIR"
           /usr/bin/sudo -n /bin/rm -rf -- "$V2_STAGE"
           V2_STAGE=""
 
           echo "Upgrading the exact v2.1.5 app and helper state to v${WATTSON_VERSION}..."
+          wattson_stop_executable "$LEGACY_APP/Contents/MacOS/Wattson"
+          wattson_unregister_app "$LEGACY_APP"
           /usr/bin/sudo -n /usr/sbin/installer \
             -verboseR \
             -pkg "$PKG_PATH" \

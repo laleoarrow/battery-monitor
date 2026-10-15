@@ -1,6 +1,6 @@
 import importlib.util
 import pathlib
-import tempfile
+from local_runtime import TemporaryDirectory
 import unittest
 
 
@@ -106,7 +106,7 @@ class ConfigTests(unittest.TestCase):
         cls.module = load_module()
 
     def test_load_config_migrates_old_position_file(self):
-        with tempfile.TemporaryDirectory() as tmp:
+        with TemporaryDirectory() as tmp:
             path = pathlib.Path(tmp) / "cfg"
             path.write_text("222,333", encoding="utf-8")
             config = self.module.load_config(path)
@@ -116,7 +116,7 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(config["config_version"], self.module.CONFIG_VERSION)
 
     def test_old_json_config_ignores_removed_desktop_mode(self):
-        with tempfile.TemporaryDirectory() as tmp:
+        with TemporaryDirectory() as tmp:
             path = pathlib.Path(tmp) / "cfg"
             path.write_text(
                 '{"x": 444, "y": 555, "pinned": true, "desktop_mode": false}',
@@ -138,7 +138,7 @@ class ConfigTests(unittest.TestCase):
         self.assertNotIn("objc_msgSend", source)
 
     def test_save_and_load_config_round_trip(self):
-        with tempfile.TemporaryDirectory() as tmp:
+        with TemporaryDirectory() as tmp:
             path = pathlib.Path(tmp) / "cfg"
             self.module.save_config(
                 {

@@ -9,11 +9,33 @@ export ZERO_AR_DATE=1
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/lib/local_cleanup.sh"
+wattson_cleanup_init
 VERSION_FILE="$ROOT_DIR/VERSION"
 MIN_MACOS_VERSION="12.0"
 APP_NAME="Wattson"
 HELPER_LABEL="com.leoarrow.wattson.helper"
-BUILD_ROOT="$ROOT_DIR/.build/release"
+KEEP_BUILD=0
+if [[ "$#" == 1 && "$1" == --keep-build ]]; then
+    KEEP_BUILD=1
+elif [[ "$#" != 0 ]]; then
+    echo "usage: $0 [--keep-build]" >&2
+    exit 2
+fi
+if [[ -n "${WATTSON_RELEASE_BUILD_ROOT:-}" ]]; then
+    [[ "$KEEP_BUILD" == 0 ]] || { echo "--keep-build cannot use a caller-owned build root" >&2; exit 2; }
+    BUILD_ROOT="$WATTSON_RELEASE_BUILD_ROOT"
+    [[ -d "$BUILD_ROOT" && ! -L "$BUILD_ROOT" ]] || { echo "caller-owned build root is missing" >&2; exit 2; }
+    BUILD_ROOT="$(cd "$BUILD_ROOT" && pwd -P)"
+    case "$BUILD_ROOT/" in
+        "$ROOT_DIR/.build/"*) ;;
+        *) echo "caller-owned build root must be under the project .build directory" >&2; exit 2 ;;
+    esac
+else
+    /bin/mkdir -p "$ROOT_DIR/.build/local.noindex"
+    BUILD_ROOT="$(/usr/bin/mktemp -d "$ROOT_DIR/.build/local.noindex/release.XXXXXX")"
+    wattson_cleanup_add_dir "$BUILD_ROOT"
+fi
 SWIFTPM_BUILD_DIR="$BUILD_ROOT/swiftpm"
 ICON_BUILD_DIR="$BUILD_ROOT/icon-assets"
 APP_DIR="$BUILD_ROOT/${APP_NAME}.app"
@@ -39,26 +61,26 @@ BUILD_NUMBER="${WATTSON_BUILD_NUMBER:-$APP_VERSION}"
 [[ -f "$ROOT_DIR/design/icon/WattsonGlass.icon/icon.json" ]] \
     || fail "missing native WattsonGlass.icon source"
 
-/bin/rm -rf -- "$BUILD_ROOT"
-/bin/mkdir -p "$BUILD_ROOT"
+# Caller-owned roots are shared by later packaging stages; never delete them.
+[[ -z "$(/bin/ls -A "$BUILD_ROOT")" ]] || fail "build root must be empty"
 
 echo "Building Wattson $APP_VERSION ($BUILD_NUMBER) for arm64 and x86_64..."
-/usr/bin/swift build \
+wattson_run /usr/bin/swift build \
     --package-path "$ROOT_DIR" \
     --scratch-path "$SWIFTPM_BUILD_DIR" \
     --configuration release \
     --arch arm64 \
     --arch x86_64
 
-BIN_DIR="$(
-    /usr/bin/swift build \
-        --package-path "$ROOT_DIR" \
-        --scratch-path "$SWIFTPM_BUILD_DIR" \
-        --configuration release \
-        --arch arm64 \
-        --arch x86_64 \
-        --show-bin-path
-)"
+BIN_PATH_FILE="$BUILD_ROOT/bin-path.txt"
+wattson_run /usr/bin/swift build \
+    --package-path "$ROOT_DIR" \
+    --scratch-path "$SWIFTPM_BUILD_DIR" \
+    --configuration release \
+    --arch arm64 \
+    --arch x86_64 \
+    --show-bin-path > "$BIN_PATH_FILE"
+BIN_DIR="$(/bin/cat "$BIN_PATH_FILE")"
 BUILT_APP_EXECUTABLE="$BIN_DIR/Wattson"
 BUILT_HELPER_EXECUTABLE="$BIN_DIR/wattson-helper"
 [[ -x "$BUILT_APP_EXECUTABLE" ]] || fail "SwiftPM did not produce $BUILT_APP_EXECUTABLE"
@@ -100,7 +122,7 @@ for dock_logo_resource in AppDockLogoColor.png AppDockLogoClearLight.png AppDock
 done
 
 /bin/mkdir -p "$ICON_BUILD_DIR"
-/usr/bin/xcrun actool "$ROOT_DIR/design/icon/WattsonGlass.icon" \
+wattson_run /usr/bin/xcrun actool "$ROOT_DIR/design/icon/WattsonGlass.icon" \
     --compile "$ICON_BUILD_DIR" \
     --platform macosx --target-device mac \
     --minimum-deployment-target "$MIN_MACOS_VERSION" \
@@ -153,6 +175,20 @@ fi
     printf 'helper_signature=%s\n' "$SIGNING_MODE"
 } > "$BUILD_METADATA"
 
+if [[ -z "${WATTSON_RELEASE_BUILD_ROOT:-}" ]]; then
+    WATTSON_RELEASE_BUILD_ROOT="$BUILD_ROOT" \
+        wattson_run_script "$SCRIPT_DIR/verify_release.sh" --build-only
+fi
+if [[ "$KEEP_BUILD" == 1 ]]; then
+    RETAINED_ROOT="$ROOT_DIR/.build/release"
+    wattson_unregister_app "$RETAINED_ROOT/$APP_NAME.app"
+    /bin/rm -rf -- "$RETAINED_ROOT"
+    /bin/mv "$BUILD_ROOT" "$RETAINED_ROOT"
+    BUILD_ROOT="$RETAINED_ROOT"
+    APP_DIR="$BUILD_ROOT/$APP_NAME.app"
+    HELPER_EXECUTABLE="$BUILD_ROOT/$HELPER_LABEL"
+fi
+
 echo "Built universal app: $APP_DIR"
 echo "Built universal helper: $HELPER_EXECUTABLE"
 if [[ "$SIGNING_MODE" == "ad-hoc" ]]; then
@@ -160,4 +196,7 @@ if [[ "$SIGNING_MODE" == "ad-hoc" ]]; then
 else
     echo "Signing: Developer ID application identity configured"
     echo "Notarization status: no (build_release.sh does not submit artifacts)"
+fi
+if [[ -z "${WATTSON_RELEASE_BUILD_ROOT:-}" && "$KEEP_BUILD" == 0 ]]; then
+    echo "Build verified; disposable app and build files are removed on exit."
 fi

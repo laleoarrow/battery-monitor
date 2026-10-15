@@ -11,14 +11,14 @@ final class SettingsGlassOpticalMarginTests: XCTestCase {
     override func setUp() {
         super.setUp()
         _ = NSApplication.shared
-        suite = "Wattson.SettingsGlassOpticalMargin.\(UUID().uuidString)"
+        suite = "Wattson.SwiftTests.SettingsGlassOpticalMargin.\(UUID().uuidString)"
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }
 
     override func tearDown() {
         Settings.resetTestConfiguration()
-        defaults.removePersistentDomain(forName: suite)
+        defaults.removePersistentTestDomain(forName: suite)
         defaults = nil
         super.tearDown()
     }
@@ -76,7 +76,7 @@ final class SettingsGlassOpticalMarginTests: XCTestCase {
         let button: NSButton = try find("settings.general.feedback.button", in: content)
         let glasses = descendants(document).compactMap { $0 as? NSGlassEffectView }
             .filter { $0.identifier?.rawValue == "settings.control-group.glass" }
-        XCTAssertEqual(glasses.count, 3)
+        XCTAssertEqual(glasses.count, 4)
         for glass in glasses {
             let optical = glass.convert(glass.bounds, to: document).insetBy(dx: -20, dy: -20)
             XCTAssertGreaterThanOrEqual(optical.minX, document.bounds.minX - 0.5)
@@ -102,33 +102,96 @@ final class SettingsGlassOpticalMarginTests: XCTestCase {
         XCTAssertFalse(window.isVisible)
     }
 
-    func testClassicGeneralRetainsGroupGeometryAndOperationalRowHeights() throws {
+    func testClassicGeneralSeparatesStartupAndUpdatesWithoutShrinkingOperationalRows() throws {
         Settings.liquidGlassEnabled = false
         let controller = SettingsWindowController(dependencies: dependencies, frameAutosaveName: nil)
         let window = try XCTUnwrap(controller.windowForTest)
         let content = try XCTUnwrap(window.contentView)
         content.layoutSubtreeIfNeeded()
+        for (identifier, expectedRows) in [
+            ("settings.general.list", ["login", "battery"]),
+            ("settings.general.updates.list", ["update", "automatic-updates"]),
+        ] {
+            let list: NSBox = try find(identifier, in: content)
+            let rows = descendants(list).filter {
+                $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true
+            }
+            XCTAssertEqual(list.frame.width, 503, accuracy: 0.5)
+            XCTAssertEqual(list.frame.height, 136, accuracy: 0.5)
+            XCTAssertEqual(rows.count, 2)
+            let orderedRows = rows.sorted {
+                $0.convert($0.bounds, to: list).minY > $1.convert($1.bounds, to: list).minY
+            }
+            XCTAssertEqual(orderedRows.map { $0.identifier?.rawValue },
+                expectedRows.map { "settings.general.row.\($0)" })
+            for (index, row) in orderedRows.enumerated() {
+                let frame = row.convert(row.bounds, to: list)
+                XCTAssertEqual(frame.minX, 0, accuracy: 0.5)
+                XCTAssertEqual(frame.width, list.bounds.width, accuracy: 0.5)
+                XCTAssertEqual(frame.height, 68, accuracy: 0.5)
+                XCTAssertEqual(frame.maxY, 136 - CGFloat(index) * 68, accuracy: 0.5)
+            }
+        }
         let list: NSBox = try find("settings.general.list", in: content)
-        let rows = descendants(list).filter {
-            $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true
-        }
-        XCTAssertEqual(list.frame.width, 503, accuracy: 0.5)
-        XCTAssertEqual(list.frame.height, 272, accuracy: 0.5)
-        XCTAssertEqual(rows.count, 4)
-        let orderedRows = rows.sorted {
-            $0.convert($0.bounds, to: list).minY > $1.convert($1.bounds, to: list).minY
-        }
-        for (index, row) in orderedRows.enumerated() {
-            let frame = row.convert(row.bounds, to: list)
-            XCTAssertEqual(frame.minX, 0, accuracy: 0.5)
-            XCTAssertEqual(frame.width, list.bounds.width, accuracy: 0.5)
-            XCTAssertEqual(frame.height, 68, accuracy: 0.5)
-            XCTAssertEqual(frame.maxY, 272 - CGFloat(index) * 68, accuracy: 0.5)
-        }
         let hostFrame = controller.contentHostFrameForTest
         let listFrame = list.convert(list.bounds, to: nil)
         XCTAssertEqual(listFrame.minX, hostFrame.minX, accuracy: 0.5)
-        XCTAssertEqual(listFrame.maxY, hostFrame.maxY - 40, accuracy: 0.5)
+        let groupHeading: NSTextField = try find("settings.general.startup.heading", in: content)
+        let headingFrame = try XCTUnwrap(groupHeading.superview).convert(
+            groupHeading.alignmentRect(forFrame: groupHeading.frame), to: nil
+        )
+        XCTAssertEqual(headingFrame.minY - listFrame.maxY, 8, accuracy: 0.5)
+        XCTAssertFalse(window.isVisible)
+    }
+
+    func testGeneralUsesConsistentGroupHeadingsAndAppearanceHierarchy() throws {
+        Settings.liquidGlassEnabled = false
+        let controller = SettingsWindowController(dependencies: dependencies, frameAutosaveName: nil)
+        let window = try XCTUnwrap(controller.windowForTest)
+        let content = try XCTUnwrap(window.contentView)
+        content.layoutSubtreeIfNeeded()
+        for (identifier, title) in [
+            ("startup", "Startup & Menu Bar"),
+            ("updates", "Updates"),
+            ("appearance", "Appearance"),
+            ("support", "Support"),
+        ] {
+            let heading: NSTextField = try find("settings.general.\(identifier).heading", in: content)
+            XCTAssertEqual(heading.stringValue, title)
+            XCTAssertEqual(heading.font, .systemFont(ofSize: 12, weight: .semibold))
+            var parent = heading.superview
+            while let ancestor = parent {
+                XCTAssertFalse(ancestor is NSBox, "Group headings belong outside their surface")
+                parent = ancestor.superview
+            }
+        }
+        let appearance: NSView = try find("settings.general.appearance", in: content)
+        for (title, inset) in [
+            ("Theme", CGFloat(16)), ("Liquid Glass", 16),
+            ("In-App Logo", 16), ("Dock Icon", 16),
+            ("Popup background", 32), ("Transparency", 32),
+        ] {
+            let label = try XCTUnwrap(descendants(appearance).compactMap { $0 as? NSTextField }
+                .first { $0.stringValue == title })
+            let row: NSView
+            if title == "Liquid Glass" {
+                row = try find("settings.general.row.appearance", in: content)
+            } else {
+                row = try XCTUnwrap(label.superview)
+            }
+            let alignment = try XCTUnwrap(label.superview)
+                .convert(label.alignmentRect(forFrame: label.frame), to: row)
+            XCTAssertEqual(alignment.minX, inset, accuracy: 0.5,
+                "Only Liquid Glass dependencies use an inset label column")
+        }
+        for identifier in ["login", "battery", "update", "automatic-updates", "feedback"] {
+            let row: NSView = try find("settings.general.row.\(identifier)", in: content)
+            let icon = try XCTUnwrap(descendants(row).compactMap { $0 as? NSImageView }.first)
+            XCTAssertTrue(icon.superview === row, "Symbols have no decorative tile enclosure")
+            let alignment = icon.alignmentRect(forFrame: icon.frame)
+            XCTAssertEqual(alignment.width, 28, accuracy: 0.5)
+            XCTAssertEqual(alignment.height, 28, accuracy: 0.5)
+        }
         XCTAssertFalse(window.isVisible)
     }
 }

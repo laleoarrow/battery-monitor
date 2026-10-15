@@ -1,6 +1,5 @@
 import pathlib
-import subprocess
-import tempfile
+from local_runtime import TemporaryDirectory, run
 import textwrap
 import unittest
 
@@ -182,12 +181,12 @@ class UpdateCheckerContractTests(unittest.TestCase):
             '''
         )
 
-        with tempfile.TemporaryDirectory(prefix="wattson-update-checker-") as temp:
+        with TemporaryDirectory(prefix="wattson-update-checker-") as temp:
             temp_path = pathlib.Path(temp)
             main = temp_path / "main.swift"
             binary = temp_path / "update-checker-contract"
             main.write_text(harness, encoding="utf-8")
-            compile_result = subprocess.run(
+            compile_result = run(
                 [
                     "xcrun",
                     "swiftc",
@@ -208,7 +207,7 @@ class UpdateCheckerContractTests(unittest.TestCase):
                 0,
                 f"update checker contract did not compile:\n{compile_result.stderr}",
             )
-            run_result = subprocess.run(
+            run_result = run(
                 [str(binary)],
                 cwd=ROOT,
                 capture_output=True,

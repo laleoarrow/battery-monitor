@@ -8,16 +8,21 @@ export LC_ALL=C
 
 SCRIPT_DIR="$(cd "$(/usr/bin/dirname "$0")" && /bin/pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/lib/local_cleanup.sh"
+wattson_cleanup_init
 SOURCE_PATH="$ROOT_DIR/Support/WattsonDiagnostics/main.swift"
 HELPER_CLIENT_SOURCE="$ROOT_DIR/Core/HelperClient.swift"
 DIAGNOSTICS_VERSION="1.1.0"
 MIN_MACOS_VERSION="12.0"
 APP_NAME="Wattson Diagnostics"
 BUNDLE_ID="com.leoarrow.wattson.diagnostics"
-BUILD_ROOT="$ROOT_DIR/.build/diagnostics"
+/bin/mkdir -p "$ROOT_DIR/.build/local.noindex"
+BUILD_ROOT="$(/usr/bin/mktemp -d "$ROOT_DIR/.build/local.noindex/diagnostics.XXXXXX")"
+wattson_cleanup_add_dir "$BUILD_ROOT"
 APP_DIR="$BUILD_ROOT/${APP_NAME}.app"
 EXECUTABLE_PATH="$APP_DIR/Contents/MacOS/$APP_NAME"
-DIST_DIR="$ROOT_DIR/dist/support"
+FINAL_DIST_DIR="$ROOT_DIR/dist/support"
+DIST_DIR="$BUILD_ROOT/artifacts"
 ZIP_NAME="Wattson-Diagnostics-v${DIAGNOSTICS_VERSION}-macos-universal.zip"
 ZIP_PATH="$DIST_DIR/$ZIP_NAME"
 INFO_NAME="Wattson-Diagnostics-v${DIAGNOSTICS_VERSION}-release-info.txt"
@@ -34,12 +39,10 @@ fail() {
 [[ -f "$HELPER_CLIENT_SOURCE" ]] || fail "missing helper client source"
 [[ -f "$ROOT_DIR/design/icon/AppIcon.icns" ]] || fail "missing AppIcon.icns"
 
-/bin/rm -rf -- "$BUILD_ROOT"
 /bin/mkdir -p "$BUILD_ROOT/arm64" "$BUILD_ROOT/x86_64" "$DIST_DIR"
-/bin/rm -f -- "$ZIP_PATH" "$INFO_PATH" "$CHECKSUM_PATH"
 
 for architecture in arm64 x86_64; do
-    /usr/bin/xcrun swiftc \
+    wattson_run /usr/bin/xcrun swiftc \
         "$SOURCE_PATH" \
         "$HELPER_CLIENT_SOURCE" \
         -target "${architecture}-apple-macos${MIN_MACOS_VERSION}" \
@@ -98,7 +101,7 @@ EOF
 /usr/bin/codesign --verify --deep --strict "$APP_DIR"
 /usr/bin/xcrun lipo "$EXECUTABLE_PATH" -verify_arch arm64 x86_64 \
     || fail "diagnostics executable is not universal"
-"$EXECUTABLE_PATH" --host-redaction-self-test \
+wattson_run "$EXECUTABLE_PATH" --host-redaction-self-test \
     || fail "diagnostics hostname redaction self-test failed"
 for architecture in arm64 x86_64; do
     build_info="$(/usr/bin/xcrun vtool -arch "$architecture" -show-build "$EXECUTABLE_PATH")"
@@ -106,15 +109,12 @@ for architecture in arm64 x86_64; do
         || fail "$architecture slice does not target macOS $MIN_MACOS_VERSION"
 done
 
-(
-    cd "$BUILD_ROOT"
-    /usr/bin/ditto -c -k \
-        --norsrc --noextattr --noqtn --noacl --keepParent \
-        "${APP_NAME}.app" "$ZIP_PATH"
-)
-/usr/bin/unzip -t "$ZIP_PATH" >/dev/null
+wattson_run /usr/bin/ditto -c -k \
+    --norsrc --noextattr --noqtn --noacl --keepParent \
+    "$APP_DIR" "$ZIP_PATH"
+wattson_run /usr/bin/unzip -t "$ZIP_PATH" >/dev/null
 /bin/mkdir -p "$ARCHIVE_VERIFY_ROOT"
-/usr/bin/unzip -q "$ZIP_PATH" -d "$ARCHIVE_VERIFY_ROOT"
+wattson_run /usr/bin/unzip -q "$ZIP_PATH" -d "$ARCHIVE_VERIFY_ROOT"
 EXTRACTED_APP="$ARCHIVE_VERIFY_ROOT/${APP_NAME}.app"
 [[ -d "$EXTRACTED_APP" ]] || fail "archive does not contain the diagnostics app"
 if /usr/bin/find "$EXTRACTED_APP" -name '._*' -print -quit | /usr/bin/grep -q .; then
@@ -142,6 +142,10 @@ fi
     /usr/bin/shasum -a 256 -c "$(/usr/bin/basename "$CHECKSUM_PATH")"
 )
 
-echo "Built: $APP_DIR"
-echo "Archive: $ZIP_PATH"
-echo "Checksums: $CHECKSUM_PATH"
+/bin/mkdir -p "$FINAL_DIST_DIR"
+for artifact in "$ZIP_NAME" "$INFO_NAME" "SHA256SUMS.txt"; do
+    /bin/mv -f -- "$DIST_DIR/$artifact" "$FINAL_DIST_DIR/$artifact"
+done
+echo "Diagnostics app built and verified; disposable bundles are removed on exit."
+echo "Archive: $FINAL_DIST_DIR/$ZIP_NAME"
+echo "Checksums: $FINAL_DIST_DIR/SHA256SUMS.txt"

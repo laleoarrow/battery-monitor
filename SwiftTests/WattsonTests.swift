@@ -2317,13 +2317,13 @@ final class WattsonTests: XCTestCase {
     }
 
     func testHiddenModulesSkipUpdatesAndRefreshOnceWhenShown() {
-        let suiteName = "Wattson.HiddenModules.Tests.\(UUID().uuidString)"
+        let suiteName = "Wattson.SwiftTests.HiddenModules.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)
         defer {
             Settings.resetTestConfiguration()
-            defaults.removePersistentDomain(forName: suiteName)
+            defaults.removePersistentTestDomain(forName: suiteName)
         }
 
         let content = PopoverContentViewController()
@@ -2353,13 +2353,13 @@ final class WattsonTests: XCTestCase {
     }
 
     func testSettingsModuleChangeUpdatesLivePopover() {
-        let suiteName = "Wattson.LivePopoverSettings.Tests.\(UUID().uuidString)"
+        let suiteName = "Wattson.SwiftTests.LivePopoverSettings.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)
         defer {
             Settings.resetTestConfiguration()
-            defaults.removePersistentDomain(forName: suiteName)
+            defaults.removePersistentTestDomain(forName: suiteName)
         }
 
         let content = PopoverContentViewController()
@@ -2379,13 +2379,13 @@ final class WattsonTests: XCTestCase {
     }
 
     func testShowingModuleWhilePopoverIsClosedDoesNotRenderIt() {
-        let suiteName = "Wattson.ClosedPopoverSettings.Tests.\(UUID().uuidString)"
+        let suiteName = "Wattson.SwiftTests.ClosedPopoverSettings.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)
         defer {
             Settings.resetTestConfiguration()
-            defaults.removePersistentDomain(forName: suiteName)
+            defaults.removePersistentTestDomain(forName: suiteName)
         }
 
         let content = PopoverContentViewController()
@@ -2405,13 +2405,13 @@ final class WattsonTests: XCTestCase {
     }
 
     func testQuickMenuModuleActionWritesSharedSettings() {
-        let suiteName = "Wattson.QuickMenuSettings.Tests.\(UUID().uuidString)"
+        let suiteName = "Wattson.SwiftTests.QuickMenuSettings.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)
         defer {
             Settings.resetTestConfiguration()
-            defaults.removePersistentDomain(forName: suiteName)
+            defaults.removePersistentTestDomain(forName: suiteName)
         }
 
         let content = PopoverContentViewController()

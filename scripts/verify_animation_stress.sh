@@ -12,11 +12,15 @@ if (( $# > 1 )) || [[ ! "$ITERATIONS" =~ ^[1-9][0-9]*$ ]]; then
     exit 64
 fi
 
-BUILD_DIR="$(mktemp -d "${TMPDIR:-/tmp}/wattson-animation-stress.XXXXXX")"
-trap 'rm -rf -- "$BUILD_DIR"' EXIT
+source "$ROOT_DIR/scripts/lib/local_cleanup.sh"
+wattson_cleanup_init
+mkdir -p "$ROOT_DIR/.build/animation-stress.noindex"
+BUILD_DIR="$(mktemp -d "$ROOT_DIR/.build/animation-stress.noindex/run.XXXXXX")"
+wattson_cleanup_add_dir "$BUILD_DIR"
 BINARY="$BUILD_DIR/AnimationStress"
+mkdir -p "$BUILD_DIR/isolated-home"
 
-/usr/sbin/taskpolicy -b /usr/bin/nice -n 15 /usr/bin/xcrun swiftc \
+wattson_run /usr/sbin/taskpolicy -b /usr/bin/nice -n 15 /usr/bin/xcrun swiftc \
     "$ROOT_DIR"/Core/*.swift \
     "$ROOT_DIR"/Popover/*.swift \
     "$ROOT_DIR/tests/animation_stress/main.swift" \
@@ -26,4 +30,5 @@ BINARY="$BUILD_DIR/AnimationStress"
     -framework IOKit \
     -o "$BINARY"
 
-/usr/sbin/taskpolicy -b /usr/bin/nice -n 15 "$BINARY" "$ITERATIONS"
+wattson_run_timeout 120 /usr/bin/env CFFIXED_USER_HOME="$BUILD_DIR/isolated-home" \
+    /usr/sbin/taskpolicy -b /usr/bin/nice -n 15 "$BINARY" "$ITERATIONS"

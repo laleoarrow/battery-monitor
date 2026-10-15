@@ -14,11 +14,33 @@ active desktop and must keep `WATTSON_RUN_INTERACTION` unset in ordinary CI.
 
 ## Local app-bundle hygiene
 
-Keep disposable preview apps under `.build/preview.noindex`, using
-`scripts/build_glass_preview.sh`. Its staging directory is removed on exit;
-rebuilding replaces the previous preview only after verification. Do not retain
-`previous-*.app` backups or unpacked app bundles in ordinary `dist` directories:
-Spotlight and LaunchServices can expose them as extra applications.
+`scripts/build_glass_preview.sh` verifies the preview without opening UI and
+removes its bundles on exit. Use `--keep-app` only for an explicit handoff to
+later visual review; it retains one verified app under `.build/preview.noindex`.
+The reviewer then owns its cleanup. `script/build_and_run.sh` owns its preview
+session until the app closes; `--verify` stops and cleans its preview after the
+readiness check. Never retain `previous-*.app` backups or unpacked app bundles
+in ordinary `dist` directories.
+
+Shell entrypoints use `scripts/lib/local_cleanup.sh` and its owned-process
+runner. Register only resources created by that invocation before using them.
+Cleanup stops and waits for owned processes, unregisters apps while their paths
+still exist, clears exact test preference domains, newly created containers and
+their matching Application Scripts directories,
+detaches owned disk images, and removes scratch directories. A failed detach
+must return failure and preserve the mounted directory for recovery. Never
+recursively delete a mounted filesystem or stop a process by a global app name.
+
+Python runtime fixtures use `tests/local_runtime.py` for unique project-local
+workspaces, bounded process groups, and signal handling. Wrapping a lifecycle
+shell script requires `run(..., cleanup_grace=65)` so the outer test waits for
+the inner script's bounded unmount and unregister cleanup; ordinary commands
+retain the three-second termination grace. `CFFIXED_USER_HOME`
+alone does not isolate macOS UserDefaults: inject a unique parent-owned suite
+and clear that exact domain at exit. Sandboxed test apps need unique bundle IDs
+and cleanup of only their newly created containers and Application Scripts
+directories. Keep the production app's
+preferences, sandbox, support directory and login agent intact.
 
 After local preview or release verification, unregister disposable apps with
 `lsregister -u <exact-app-path>` before removing them. Preserve required historic
@@ -26,6 +48,13 @@ app bytes in a verified compressed archive, alongside their original-path
 manifest; retain screenshots, Icon Composer sources, logs, and signed installers.
 Package expansion and scratch builds belong in hidden or `.noindex` directories
 and must be cleaned when verification ends.
+
+Regression tests must exercise repeated success, failure, timeout, and external
+HUP/INT/TERM, including children that outlive their parent. SIGKILL and power
+loss cannot run an exit handler; inspect the identifiable scratch directories
+after such interruptions before declaring cleanup complete. Keep compiler
+caches, source snapshots, review evidence and packaged releases distinct from
+disposable runnable apps.
 
 Local cleanup is complete only after checking both Spotlight application search
 and LaunchServices registrations for Wattson. Confirm that the canonical

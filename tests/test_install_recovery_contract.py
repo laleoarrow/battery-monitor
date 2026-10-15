@@ -1,8 +1,7 @@
 import os
 import pathlib
 import shlex
-import subprocess
-import tempfile
+from local_runtime import TemporaryDirectory, run
 import unittest
 
 
@@ -35,7 +34,7 @@ class InstallRecoveryContractTests(unittest.TestCase):
                 raise AssertionError("Recovery fixture left a real command unmocked")
 
     def run_failure(self, *, terminal='exit 42', overrides=None, invalid_app=None):
-        with tempfile.TemporaryDirectory(prefix="wattson-install-recovery-") as directory:
+        with TemporaryDirectory(prefix="wattson-install-recovery-") as directory:
             root = pathlib.Path(directory)
             app = root / "Wattson.app"
             executable = app / "Contents" / "MacOS" / "Wattson"
@@ -122,7 +121,7 @@ stub_open() {
                 STUB_OPEN_STATUS="0",
             )
             env.update(overrides or {})
-            return subprocess.run(
+            return run(
                 ["/bin/bash", "-c", script],
                 env=env, capture_output=True, text=True, timeout=5,
             )

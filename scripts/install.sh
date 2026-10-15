@@ -15,7 +15,7 @@ for arg in "$@"; do
 done
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-ROOT_DIR="$SCRIPT_DIR/.."
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_NAME="Wattson"
 APP_VERSION="${WATTSON_APP_VERSION:-$(/usr/bin/tr -d '\r\n' < "$ROOT_DIR/VERSION")}"
 SWIFT_TARGET="arm64-apple-macos12.0"
@@ -63,14 +63,18 @@ if [[ "$PACKAGE_BUILD" != "1" && ( -e "$CANONICAL_APP_DIR" || -L "$CANONICAL_APP
 fi
 
 APP_ENTITLEMENTS="$ROOT_DIR/BatteryPowerApp.entitlements"
-BUILD_DIR="$(mktemp -d "$SYSTEM_TEMP_ROOT/wattson-build.XXXXXX")"
+source "$ROOT_DIR/scripts/lib/local_cleanup.sh"
+wattson_cleanup_init
+mkdir -p "$ROOT_DIR/.build/install.noindex"
+BUILD_DIR="$(mktemp -d "$ROOT_DIR/.build/install.noindex/run.XXXXXX")"
+wattson_cleanup_add_dir "$BUILD_DIR"
+FINAL_APP_DIR="$APP_DIR"
+APP_DIR="$BUILD_DIR/Wattson.app"
+CANDIDATE_APP_DIR="$APP_DIR"
+wattson_cleanup_add_app "$CANDIDATE_APP_DIR"
 if [[ "$PACKAGE_BUILD" == "1" ]]; then
     SUPPORT_DIR="$BUILD_DIR/Application Support/Wattson"
 fi
-cleanup() {
-    rm -rf "$BUILD_DIR"
-}
-trap cleanup EXIT
 
 if [[ "$PACKAGE_BUILD" == "1" ]]; then
     echo "📦 Building ${APP_NAME} for packaging..."
@@ -78,35 +82,12 @@ else
     echo "📦 Installing ${APP_NAME}..."
 fi
 
-# 1. Remove the old install completely. Unregister before deleting, otherwise
-# LaunchServices keeps a stale record pointing at a missing bundle.
-if [[ "$PACKAGE_BUILD" != "1" ]]; then
-    launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT" >/dev/null 2>&1 || true
-    launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT_OLD" >/dev/null 2>&1 || true
-    rm -f "$LEGACY_AGENT" "$LEGACY_AGENT_OLD"
-    pkill -f "$LEGACY_APP/Contents/MacOS/applet" 2>/dev/null || true
-    if [ -d "$LEGACY_APP" ]; then
-        xcrun pluginkit -r "$LEGACY_APP/Contents/PlugIns/BatteryPowerWidgetExtension.appex" >/dev/null 2>&1 || true
-        "$LSREGISTER" -u "$LEGACY_APP" >/dev/null 2>&1 || true
-    fi
-    rm -rf "$LEGACY_APP" "$LEGACY_SUPPORT"
-    rm -f "$LEGACY_CONFIG" "$LEGACY_SCRIPT"
-    echo "  ✅ Removed the legacy Battery Power app"
-fi
-
-# 2. Recreate the app bundle.
-if [[ "$PACKAGE_BUILD" != "1" ]]; then
-    pkill -f "$APP_DIR/Contents/MacOS/Wattson" 2>/dev/null || true
-    if [ -d "$APP_DIR" ]; then
-        "$LSREGISTER" -u "$APP_DIR" >/dev/null 2>&1 || true
-    fi
-fi
-rm -rf "$APP_DIR"
-mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources" "$SUPPORT_DIR"
+# Build and verify the candidate before stopping or replacing an installation.
+mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources"
 
 # 3. Build. Top-level statements live in main.swift; every other source is a
 # plain module file.
-xcrun swiftc \
+wattson_run xcrun swiftc \
     "$ROOT_DIR"/Core/*.swift \
     "$ROOT_DIR"/MenuBar/*.swift \
     "$ROOT_DIR"/Popover/*.swift \
@@ -178,11 +159,77 @@ for dock_logo_resource in AppDockLogoColor.png AppDockLogoClearLight.png AppDock
         "$APP_DIR/Contents/Resources/$dock_logo_resource"
 done
 
-# 6. Sign and register the app.
-codesign --force --sign - --entitlements "$APP_ENTITLEMENTS" "$APP_DIR" >/dev/null
+# 6. Sign and verify the candidate.
+wattson_run codesign --force --sign - --entitlements "$APP_ENTITLEMENTS" "$APP_DIR" >/dev/null
 echo "  ✅ Ad-hoc code signature"
-# Bumping the bundle's mtime before re-registering is what makes Finder and
-# Spotlight pick up a changed icon; without it they keep serving the cached one.
+wattson_run codesign --verify --deep --strict "$APP_DIR"
+if [[ "$APP_ONLY" != "1" ]]; then
+    HELPER_SCRATCH_PATH="$BUILD_DIR/swiftpm-helper"
+    wattson_run /usr/bin/swift build \
+        --package-path "$ROOT_DIR" \
+        --scratch-path "$HELPER_SCRATCH_PATH" \
+        --configuration release \
+        --triple "$SWIFT_TARGET" \
+        --product wattson-helper
+    wattson_run /usr/bin/swift build \
+        --package-path "$ROOT_DIR" \
+        --scratch-path "$HELPER_SCRATCH_PATH" \
+        --configuration release \
+        --triple "$SWIFT_TARGET" \
+        --product wattson-helper \
+        --show-bin-path > "$BUILD_DIR/helper-bin-path"
+    HELPER_BUILD="$(cat "$BUILD_DIR/helper-bin-path")/wattson-helper"
+    [[ -f "$HELPER_BUILD" && ! -L "$HELPER_BUILD" ]] \
+        || { echo "SwiftPM did not produce wattson-helper" >&2; exit 1; }
+    wattson_run codesign --force --sign - --identifier "$HELPER_LABEL" "$HELPER_BUILD" >/dev/null
+    wattson_run codesign --verify --strict "$HELPER_BUILD"
+fi
+
+# Recheck immediately before publication; a concurrent PKG install wins.
+if [[ "$PACKAGE_BUILD" != "1" && ( -e "$CANONICAL_APP_DIR" || -L "$CANONICAL_APP_DIR" ) ]]; then
+    echo "Refusing to replace a developer app while $CANONICAL_APP_DIR exists." >&2
+    exit 1
+fi
+APP_DIR="$FINAL_APP_DIR"
+if [[ -L "$APP_DIR" ]]; then
+    echo "Refusing to replace a symlinked app destination." >&2
+    exit 1
+fi
+if [[ -e "$APP_DIR" ]]; then
+    existing_id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")"
+    [[ "$existing_id" == "$APP_BUNDLE_ID" ]] || {
+        echo "Refusing to replace an unrelated app bundle." >&2
+        exit 1
+    }
+fi
+
+# Remove retired installations only after the candidate passed verification.
+# Unregister before deleting so LaunchServices does not keep a stale record.
+if [[ "$PACKAGE_BUILD" != "1" ]]; then
+    launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT" >/dev/null 2>&1 || true
+    launchctl bootout "$LAUNCH_DOMAIN" "$LEGACY_AGENT_OLD" >/dev/null 2>&1 || true
+    rm -f "$LEGACY_AGENT" "$LEGACY_AGENT_OLD"
+    pkill -f "$LEGACY_APP/Contents/MacOS/applet" 2>/dev/null || true
+    if [ -d "$LEGACY_APP" ]; then
+        xcrun pluginkit -r "$LEGACY_APP/Contents/PlugIns/BatteryPowerWidgetExtension.appex" >/dev/null 2>&1 || true
+        "$LSREGISTER" -u "$LEGACY_APP" >/dev/null 2>&1 || true
+    fi
+    rm -rf "$LEGACY_APP" "$LEGACY_SUPPORT"
+    rm -f "$LEGACY_CONFIG" "$LEGACY_SCRIPT"
+    echo "  ✅ Removed the legacy Battery Power app"
+fi
+
+# Publish the verified app.
+if [[ "$PACKAGE_BUILD" != "1" ]]; then
+    wattson_stop_executable "$APP_DIR/Contents/MacOS/Wattson"
+    if [ -d "$APP_DIR" ]; then
+        "$LSREGISTER" -u "$APP_DIR" >/dev/null 2>&1 || true
+    fi
+fi
+rm -rf "$APP_DIR"
+mkdir -p "$(dirname "$APP_DIR")" "$SUPPORT_DIR"
+mv "$CANDIDATE_APP_DIR" "$APP_DIR"
+
 touch "$APP_DIR"
 if [[ "$PACKAGE_BUILD" != "1" ]]; then
     "$LSREGISTER" -f "$APP_DIR" >/dev/null
@@ -207,25 +254,6 @@ if [ "$APP_ONLY" = "1" ]; then
     exit 0
 fi
 echo "  🔑 Installing the privileged helper (needs sudo once)"
-HELPER_SCRATCH_PATH="$BUILD_DIR/swiftpm-helper"
-/usr/bin/swift build \
-    --package-path "$ROOT_DIR" \
-    --scratch-path "$HELPER_SCRATCH_PATH" \
-    --configuration release \
-    --triple "$SWIFT_TARGET" \
-    --product wattson-helper
-HELPER_BUILD="$(
-    /usr/bin/swift build \
-        --package-path "$ROOT_DIR" \
-        --scratch-path "$HELPER_SCRATCH_PATH" \
-        --configuration release \
-        --triple "$SWIFT_TARGET" \
-        --product wattson-helper \
-        --show-bin-path
-)/wattson-helper"
-[[ -f "$HELPER_BUILD" && ! -L "$HELPER_BUILD" ]] \
-    || { echo "SwiftPM did not produce wattson-helper" >&2; exit 1; }
-codesign --force --sign - --identifier "$HELPER_LABEL" "$HELPER_BUILD" >/dev/null
 helper_was_disabled=0
 if ! disabled_services="$(sudo launchctl print-disabled system)"; then
     echo "helper launchd state could not be inspected" >&2

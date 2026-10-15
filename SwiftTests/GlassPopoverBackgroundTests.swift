@@ -19,7 +19,7 @@ final class GlassPopoverBackgroundTests: XCTestCase {
             previousEnvironment[key] = ProcessInfo.processInfo.environment[key]
             setenv(key, value, 1)
         }
-        suite = "Wattson.GlassPopoverBackground.\(UUID().uuidString)"
+        suite = "Wattson.SwiftTests.GlassPopoverBackground.\(UUID().uuidString)"
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
         Settings.liquidGlassEnabled = true
@@ -27,7 +27,7 @@ final class GlassPopoverBackgroundTests: XCTestCase {
 
     override func tearDown() {
         Settings.resetTestConfiguration()
-        defaults.removePersistentDomain(forName: suite)
+        defaults.removePersistentTestDomain(forName: suite)
         for key in overrides.keys {
             if let previous = previousEnvironment[key] { setenv(key, previous, 1) }
             else { unsetenv(key) }
@@ -41,10 +41,11 @@ final class GlassPopoverBackgroundTests: XCTestCase {
         guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
         _ = NSApplication.shared
         for style in [NSGlassEffectView.Style.regular, .clear] {
+            let inset = GlassPopoverPanel.contentInset(for: style == .clear ? .clear : .regular)
             let content = PopoverContentViewController()
             content.setViewportHeight(content.preferredHeight)
             let panel = GlassPopoverPanel(content: content.view,
-                frame: NSRect(x: 0, y: 0, width: 380, height: content.preferredHeight + 20), style: style)
+                frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset, height: content.preferredHeight + 2 * inset), style: style)
             let root = try XCTUnwrap(panel.contentView)
             let backing = try XCTUnwrap(root.subviews.first as? GlassBackgroundView)
             let glass = try XCTUnwrap(root.subviews.compactMap { $0 as? NSGlassEffectView }.first)
@@ -74,9 +75,10 @@ final class GlassPopoverBackgroundTests: XCTestCase {
         classic.contentView = content.view
         XCTAssertEqual(content.view.layer?.backgroundColor?.alpha, 1)
         for style in [NSGlassEffectView.Style.regular, .clear] {
+            let inset = GlassPopoverPanel.contentInset(for: style == .clear ? .clear : .regular)
             classic.contentView = nil
             let panel = GlassPopoverPanel(content: content.view,
-                frame: NSRect(x: 0, y: 0, width: 380, height: content.preferredHeight + 20), style: style)
+                frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset, height: content.preferredHeight + 2 * inset), style: style)
             XCTAssertTrue(content.view.window === panel)
             XCTAssertNil(content.view.layer?.backgroundColor)
             panel.detachContent()

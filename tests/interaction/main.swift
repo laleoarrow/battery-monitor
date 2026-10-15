@@ -2,7 +2,7 @@ import AppKit
 import ApplicationServices
 // Isolate appearance before any popover/footer is constructed; an installed
 // app's saved choice must not change which baseline this harness exercises.
-let settingsSuiteName = "Wattson.SettingsCommandInteraction.\(UUID().uuidString)"
+let settingsSuiteName = ProcessInfo.processInfo.environment["WATTSON_TEST_DEFAULTS_SUITE"]!
 let settingsDefaults = UserDefaults(suiteName: settingsSuiteName)!
 settingsDefaults.removePersistentDomain(forName: settingsSuiteName)
 Settings.configureForTest(defaults: settingsDefaults)
@@ -263,6 +263,67 @@ if !screenLocked {
     p.toggle(relativeTo: button); spin(0.4)
     check("自行关闭后下一次点击仍能打开", p.isShownForTest && p.isOpen)
     p.handleOutsideClick(); spin(1.2)
+
+    if let anchorFrame = button.window?.frame {
+        let anchorPoint = NSPoint(x: anchorFrame.midX, y: anchorFrame.maxY)
+        p.openForSettingsCommandTest(relativeTo: button)
+        let nativeAllowsClose = p.classicShouldCloseForTest(screenPoint: anchorPoint,
+            pressedMouseButtons: 1)
+        if nativeAllowsClose { p.closeBypassingControllerForTest(); spin(1.2) }
+        check("[I19-NATIVE] Classic 自动关闭委托保留同一次锚点按下", !nativeAllowsClose && p.isOpen)
+        p.toggle(relativeTo: button); spin(1.2)
+        check("[I19-NATIVE] 原生自动关闭先于按钮动作仍只关闭一次", !p.isOpen && !p.isShownForTest)
+        p.toggle(relativeTo: button); spin(0.4)
+        check("[I19-NATIVE] 被保护的关闭之后下一次图标点击仍能重开", p.isOpen && p.isShownForTest)
+        p.handleOutsideClick(); spin(1.2)
+
+        p.openForSettingsCommandTest(relativeTo: button)
+        p.handleWorkspaceActivationForTest(screenPoint: anchorPoint, pressedMouseButtons: 1)
+        p.toggle(relativeTo: button); spin(1.2)
+        check("[I19-WORKSPACE] Classic 激活通知先于同一次按钮动作仍只关闭一次",
+              !p.isOpen && !p.isShownForTest)
+        p.toggle(relativeTo: button); spin(0.4)
+        check("[I19-WORKSPACE] 激活通知保护之后下一次图标点击仍能重开", p.isOpen && p.isShownForTest)
+        p.handleOutsideClick(); spin(1.2)
+
+        p.openForSettingsCommandTest(relativeTo: button)
+        check("[I19-IDLE] 鼠标仅停在锚点时 Classic 原生关闭仍被允许",
+              p.classicShouldCloseForTest(screenPoint: anchorPoint, pressedMouseButtons: 0))
+        p.closeBypassingControllerForTest(); spin(1.2)
+        check("[I19-IDLE] 无按下时 Classic 自行关闭清理完整", !p.isOpen && !p.isWatchingOutsideClicks)
+        p.openForSettingsCommandTest(relativeTo: button)
+        p.handleWorkspaceActivationForTest(screenPoint: anchorPoint, pressedMouseButtons: 0)
+        spin(1.2)
+        check("[I19-IDLE] 鼠标停在锚点不阻止真正切换应用关闭 Classic",
+              !p.isOpen && !p.isShownForTest && !p.isWatchingOutsideClicks)
+
+        // Dequeue without dispatch: AppKit's cached last event is independent
+        // of the live button state injected at this private policy boundary.
+        for type in [NSEvent.EventType.leftMouseUp, .keyDown] {
+            p.openForSettingsCommandTest(relativeTo: button)
+            let cached: NSEvent
+            let mask: NSEvent.EventTypeMask
+            if type == .leftMouseUp {
+                cached = NSEvent.mouseEvent(with: type, location: .zero, modifierFlags: [],
+                    timestamp: ProcessInfo.processInfo.systemUptime, windowNumber: 0, context: nil,
+                    eventNumber: 1900, clickCount: 1, pressure: 0)!
+                mask = .leftMouseUp
+            } else {
+                cached = NSEvent.keyEvent(with: type, location: .zero, modifierFlags: [],
+                    timestamp: ProcessInfo.processInfo.systemUptime, windowNumber: 0, context: nil,
+                    characters: "", charactersIgnoringModifiers: "", isARepeat: false, keyCode: 0)!
+                mask = .keyDown
+            }
+            app.postEvent(cached, atStart: true)
+            _ = app.nextEvent(matching: mask, until: Date(), inMode: .default, dequeue: true)
+            let staleType = app.currentEvent?.type
+            let allowed = p.classicShouldCloseForTest(screenPoint: anchorPoint, pressedMouseButtons: 1)
+            p.handleWorkspaceActivationForTest(screenPoint: anchorPoint, pressedMouseButtons: 1)
+            check("[I19-CACHED] 缓存 \(type) 不覆盖实时主键按下",
+                  staleType == type && !allowed && p.isOpen)
+            p.handleOutsideClick(); spin(1.2)
+        }
+    }
 
     // Route actual queued events through the status window and target/action.
     // Direct toggle calls cannot catch native dismissal swallowing the button.
@@ -2046,6 +2107,32 @@ if #available(macOS 26.0, *), !screenLocked {
         controller.toggle(relativeTo: button)
         check("\(style.rawValue) 状态按钮单次 toggle 只关闭不意外重开",
               !controller.isShownForTest && !controller.isOpen && hostMonitorsAreRemoved(controller))
+        if let anchorFrame = button.window?.frame {
+            for y in [anchorFrame.midY, anchorFrame.minY + 0.5, anchorFrame.maxY - 0.5, anchorFrame.maxY] {
+                controller.openForSettingsCommandTest(relativeTo: button)
+                controller.handleGlobalMouseDown(screenPoint: NSPoint(x: anchorFrame.midX, y: y))
+                check("\(style.rawValue) 全局监听先收到锚点按下仍保留单次按钮动作",
+                      controller.isShownForTest && controller.isOpen)
+                controller.toggle(relativeTo: button)
+                check("\(style.rawValue) 同一次全局按下随后按钮动作只关闭一次",
+                      !controller.isShownForTest && !controller.isOpen && hostMonitorsAreRemoved(controller))
+            }
+            controller.openForSettingsCommandTest(relativeTo: button)
+            controller.handleGlobalMouseDown(screenPoint: NSPoint(x: anchorFrame.minX - 100,
+                                                                  y: anchorFrame.minY - 100))
+            check("\(style.rawValue) 全局非锚点按下仍关闭且清理监听",
+                  !controller.isShownForTest && !controller.isOpen && hostMonitorsAreRemoved(controller))
+            controller.openForSettingsCommandTest(relativeTo: button)
+            let point = NSPoint(x: anchorFrame.midX, y: anchorFrame.maxY)
+            controller.handleWorkspaceActivationForTest(screenPoint: point, pressedMouseButtons: 1)
+            controller.toggle(relativeTo: button)
+            check("[I19-WORKSPACE] \(style.rawValue) 激活通知先于同一次按钮动作只关闭一次",
+                  !controller.isOpen && !controller.isShownForTest && hostMonitorsAreRemoved(controller))
+            controller.openForSettingsCommandTest(relativeTo: button)
+            controller.handleWorkspaceActivationForTest(screenPoint: point, pressedMouseButtons: 0)
+            check("[I19-IDLE] \(style.rawValue) 指针停锚点不阻止真正切换应用关闭",
+                  !controller.isOpen && !controller.isShownForTest && hostMonitorsAreRemoved(controller))
+        }
         controller.openForSettingsCommandTest(relativeTo: button)
         controller.closeBypassingControllerForTest()
         check("\(style.rawValue) 宿主自行关闭仍执行完整清理",

@@ -1,0 +1,158 @@
+--- a/tests/visual/glass_preview.swift
++++ b/tests/visual/glass_preview.swift
+@@ -320,7 +320,7 @@
+             currentVersion: { Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Preview" },
+             checkForUpdates: { $0(.success(.upToDate(currentVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Preview"))) },
+             openUpdateURL: { _ in false },
+-            increaseContrast: { NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast },
++            increaseContrast: { ProcessInfo.processInfo.environment["WATTSON_FORCE_INCREASE_CONTRAST"] == "1" || NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast },
+             announceAccessibility: { _ in }
+         )
+     }
+@@ -480,20 +480,18 @@
+     @available(macOS 14, *)
+     @MainActor private func exportGallery(to directory: URL) async throws {
+         let externalCapture = CommandLine.arguments.contains("--prepare-gallery")
+-        guard externalCapture || CGPreflightScreenCaptureAccess() else {
+-            throw NSError(domain: "WattsonGallery", code: 1,
+-                          userInfo: [NSLocalizedDescriptionKey: "Existing screen capture permission required"])
+-        }
++        // Captures only this process's own NSWindow; no whole-screen capture or permission request.
+         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+         window.contentView?.subviews.filter { $0 !== backdrop && $0 !== anchor }
+             .forEach { $0.isHidden = true }
+         anchor.title = ""
+         anchor.isBordered = false
+         let transparencyGallery = CommandLine.arguments.contains("--transparency-gallery")
+-        let allPowerStates = CommandLine.arguments.contains("--all-power-states")
++
+         let feedbackOnly = CommandLine.arguments.contains("--feedback-only")
+-        let feedbackGallery = CommandLine.arguments.contains("--feedback-gallery") || feedbackOnly
++
+         let settingsOnly = CommandLine.arguments.contains("--settings-only") || feedbackOnly
++        let sidebarContrastOnly = CommandLine.arguments.contains("--sidebar-contrast-only")
+         let focusFeedback = CommandLine.arguments.contains("--focus-feedback")
+         if settingsOnly { Settings.liquidGlassStyle = .regular }
+         let transparencyLevels = transparencyGallery ? [0.0, 0.5, 1.0] : [1.0]
+@@ -526,28 +524,26 @@
+                 throw NSError(domain: "WattsonGallery", code: 5,
+                               userInfo: [NSLocalizedDescriptionKey: "External capture timed out: \(name)"])
+             }
+-            let content = try await SCShareableContent.excludingDesktopWindows(true, onScreenWindowsOnly: true)
+-            guard let app = content.applications.first(where: { $0.processID == ProcessInfo.processInfo.processIdentifier }),
+-                  let item = content.windows.first(where: { $0.windowID == CGWindowID(target.windowNumber) }),
+-                  let display = content.displays.first(where: { $0.frame.contains(item.frame.insetBy(dx: -8, dy: -8)) }) else {
+-                throw NSError(domain: "WattsonGallery", code: 2,
+-                              userInfo: [NSLocalizedDescriptionKey: "Complete window unavailable: \(name)"])
+-            }
+-            let bounds = item.frame.insetBy(dx: -8, dy: -8)
+-            let config = SCStreamConfiguration()
+-            config.sourceRect = bounds.offsetBy(dx: -display.frame.minX, dy: -display.frame.minY)
+-            config.width = Int(bounds.width * CGFloat(display.width) / display.frame.width)
+-            config.height = Int(bounds.height * CGFloat(display.height) / display.frame.height)
+-            config.showsCursor = false
+-            config.capturesAudio = false
+-            let filter = SCContentFilter(display: display, including: [app], exceptingWindows: [])
+-            let image = try await SCScreenshotManager.captureImage(contentFilter: filter, configuration: config)
+-            let bitmap = NSBitmapImageRep(cgImage: image)
++            guard target.windowNumber > 0, NSApp.windows.contains(where: { $0 === target }) else {
++                throw NSError(domain: "WattsonOwnedWindowCapture", code: 1)
++            }
++            typealias WindowImageFunction = @convention(c) (CGRect, UInt32, UInt32, UInt32) -> Unmanaged<CGImage>?
++            guard let symbol = dlsym(UnsafeMutableRawPointer(bitPattern: -2), "CGWindowListCreateImage") else {
++                throw NSError(domain: "WattsonOwnedWindowCapture", code: 2)
++            }
++            let windowImage = unsafeBitCast(symbol, to: WindowImageFunction.self)
++            guard let retainedImage = windowImage(.null, CGWindowListOption.optionIncludingWindow.rawValue,
++                                                  UInt32(target.windowNumber), CGWindowImageOption.bestResolution.rawValue) else {
++                throw NSError(domain: "WattsonOwnedWindowCapture", code: 3,
++                              userInfo: [NSLocalizedDescriptionKey: "Owned-window compositor image unavailable"])
++            }
++            let ownedImage = retainedImage.takeRetainedValue()
++            let bitmap = NSBitmapImageRep(cgImage: ownedImage)
+             guard let png = bitmap.representation(using: .png, properties: [:]) else {
+-                throw NSError(domain: "WattsonGallery", code: 3)
++                throw NSError(domain: "WattsonOwnedWindowCapture", code: 4)
+             }
+             try png.write(to: directory.appendingPathComponent(name + ".png"), options: .atomic)
+-            print("GALLERY_CAPTURED: \(name) \(config.width)x\(config.height)")
++            print("OWN_WINDOW_CAPTURED: \(name) \(ownedImage.width)x\(ownedImage.height) window=\(target.windowNumber)")
+             fflush(stdout)
+         }
+ 
+@@ -559,8 +555,7 @@
+                 for presentation in settingsOnly ? [] : [PreviewPresentation.clearGlass, .standardGlass, .classic] {
+                     let style = ["classic", "standard", "clear"][presentation.rawValue]
+                     presentation.apply()
+-                    let fixtures = presentation == .clearGlass
+-                        || (allPowerStates && presentation == .standardGlass) ? Array(0..<6) : [0]
++                    let fixtures = Array(0..<6)
+                     for fixture in fixtures {
+                         powerState.selectItem(at: fixture)
+                         previewMode = fixture == 5 ? .low : .auto
+@@ -574,10 +569,10 @@
+                         try await Task.sleep(nanoseconds: 650_000_000)
+                     }
+                 }
+-                for glass in feedbackOnly ? [true] : [true, false] {
++                for glass in sidebarContrastOnly ? [true] : [true, false] {
+                     Settings.liquidGlassEnabled = glass
+-                    for section in feedbackOnly ? ["general"] : (glass ? ["general", "appearance", "menu-bar-icon", "modules"] : ["appearance"]) {
+-                        showSettingsSection(section == "appearance" ? "general" : section)
++                    for section in sidebarContrastOnly ? ["general"] : ["general", "appearance", "menu-bar-icon", "modules"] {
++                        showSettingsSection(["appearance", "feedback"].contains(section) ? "general" : section)
+                         let target = settings.windowForTest!
+                         let views = descendants(target.contentView!)
+                         if let scroll = views.first(where: { $0.identifier?.rawValue == "settings.general.scroll" }) as? NSScrollView {
+@@ -585,8 +580,14 @@
+                             target.contentView?.layoutSubtreeIfNeeded()
+                             if section == "appearance", let appearance = views.first(where: {
+                                 $0.identifier?.rawValue == "settings.general.appearance"
+-                            }) { appearance.scrollToVisible(appearance.bounds) }
+-                            if feedbackGallery && section == "general", let feedback = views.first(where: {
++                            }), let document = scroll.documentView {
++                                let sectionFrame = appearance.convert(appearance.bounds, to: document)
++                                let maxY = max(0, document.bounds.height - scroll.contentView.bounds.height)
++                                let topY = max(0, min(sectionFrame.minY - 20, maxY))
++                                scroll.contentView.scroll(to: NSPoint(x: 0, y: topY))
++                                scroll.reflectScrolledClipView(scroll.contentView)
++                            }
++                            if section == "feedback", let feedback = views.first(where: {
+                                 $0.identifier?.rawValue == "settings.general.feedback"
+                             }) {
+                                 feedback.scrollToVisible(glass
+@@ -648,6 +649,25 @@
+                             let data = try JSONSerialization.data(withJSONObject: geometry, options: [.sortedKeys])
+                             try data.write(to: directory.appendingPathComponent("settings-\(glass ? "glass" : "classic")-\(section)-\(scheme.rawValue)-geometry.json"))
+                         }
++                        if let scroll = views.first(where: {
++                            $0.identifier?.rawValue == "settings.general.scroll"
++                        }) as? NSScrollView {
++                            scroll.reflectScrolledClipView(scroll.contentView)
++                        }
++                        let expectedSection = section == "appearance" ? "general" : section
++                        let expectedRow = ["general", "menu-bar-icon", "modules"].firstIndex(of: expectedSection)!
++                        let sidebar = settings.sidebarForTest
++                        guard settings.selectedSectionIdentifierForTest == expectedSection,
++                              sidebar.selectedRow == expectedRow,
++                              sidebar.window === target,
++                              !sidebar.allowsEmptySelection,
++                              (0..<3).allSatisfy({ sidebar.visibleRect.insetBy(dx: -0.5, dy: -0.5).contains(sidebar.rect(ofRow: $0)) }),
++                              let selectedRow = sidebar.rowView(atRow: expectedRow, makeIfNecessary: false),
++                              selectedRow.isSelected, selectedRow.bounds.width > 0 else {
++                            throw NSError(domain: "SidebarRefinementCapture", code: 1,
++                                          userInfo: [NSLocalizedDescriptionKey: "Native sidebar selection contract failed"])
++                        }
++                        print("SIDEBAR_SELECTION_PASSED: \(glass ? "glass" : "classic") \(scheme.rawValue) page=\(expectedSection) row=\(expectedRow)")
+                         try await capture(target, name: "settings-\(glass ? "glass" : "classic")-\(section)-\(scheme.rawValue)")
+                         target.orderOut(nil)
+                     }
+@@ -675,7 +695,7 @@
+                 }
+             }
+         }
+-        let captureCount = feedbackOnly ? 2 : (settingsOnly ? 10 : (allPowerStates ? 36 : 26))
++        let captureCount = sidebarContrastOnly ? 2 : 16
+         print("GALLERY_COMPLETE: \(captureCount * transparencyLevels.count + (includeComparison ? 6 : 0)) real compositor captures")
+     }
+ 
