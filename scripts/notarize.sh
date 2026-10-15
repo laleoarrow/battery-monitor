@@ -2,6 +2,11 @@
 # Submit one signed PKG or DMG and staple only after an Accepted response.
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/lib/local_cleanup.sh"
+wattson_cleanup_init
+
 TARGET_PATH="${1:-}"
 [[ -n "$TARGET_PATH" ]] || {
     echo "usage: $0 /path/to/signed.pkg-or.dmg" >&2
@@ -43,30 +48,16 @@ else
 fi
 
 NOTARY_TIMEOUT="${WATTSON_NOTARY_TIMEOUT:-1h}"
-TEMP_DIR=""
-SUBMISSION_RESULT=""
-NOTARY_LOG=""
-cleanup() {
-    local exit_status=$?
-    trap - EXIT
-    set +e
-    [[ -z "$NOTARY_LOG" ]] || /bin/rm -f -- "$NOTARY_LOG"
-    [[ -z "$SUBMISSION_RESULT" ]] || /bin/rm -f -- "$SUBMISSION_RESULT"
-    [[ -z "$TEMP_DIR" ]] || /bin/rmdir "$TEMP_DIR"
-    exit "$exit_status"
-}
-trap cleanup EXIT
-trap 'exit 129' HUP
-trap 'exit 130' INT
-trap 'exit 143' TERM
-
 umask 077
-TEMP_DIR="$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/wattson-notary.XXXXXX")"
+SCRATCH_PARENT="${WATTSON_RELEASE_BUILD_ROOT:-$ROOT_DIR/.build/local.noindex}"
+/bin/mkdir -p "$SCRATCH_PARENT"
+TEMP_DIR="$(/usr/bin/mktemp -d "$SCRATCH_PARENT/notary.XXXXXX")"
+wattson_cleanup_add_dir "$TEMP_DIR"
 SUBMISSION_RESULT="$TEMP_DIR/submission.json"
 NOTARY_LOG="$TEMP_DIR/log.json"
 
 echo "Submitting $(/usr/bin/basename "$TARGET_PATH") for Apple notarization..."
-if ! /usr/bin/xcrun notarytool submit \
+if ! wattson_run /usr/bin/xcrun notarytool submit \
         "$TARGET_PATH" \
         "${NOTARY_ARGUMENTS[@]}" \
         --wait \
@@ -90,7 +81,7 @@ if ! SUBMISSION_ID="$(/usr/bin/plutil -extract id raw "$SUBMISSION_RESULT" 2>/de
 fi
 
 echo "Fetching Apple notarization log for submission $SUBMISSION_ID..."
-if ! /usr/bin/xcrun notarytool log \
+if ! wattson_run /usr/bin/xcrun notarytool log \
         "$SUBMISSION_ID" \
         "$NOTARY_LOG" \
         "${NOTARY_ARGUMENTS[@]}" \
@@ -134,6 +125,6 @@ if [[ "$NOTARY_ISSUE_COUNT" != "0" ]]; then
     exit 1
 fi
 
-/usr/bin/xcrun stapler staple -v "$TARGET_PATH"
-/usr/bin/xcrun stapler validate -v "$TARGET_PATH"
+wattson_run /usr/bin/xcrun stapler staple -v "$TARGET_PATH"
+wattson_run /usr/bin/xcrun stapler validate -v "$TARGET_PATH"
 echo "Notarization accepted and ticket stapled: $TARGET_PATH"

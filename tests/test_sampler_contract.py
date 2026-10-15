@@ -1,6 +1,5 @@
 import pathlib
-import subprocess
-import tempfile
+from local_runtime import TemporaryDirectory, run
 import textwrap
 import unittest
 
@@ -409,12 +408,12 @@ class SamplerContractTests(unittest.TestCase):
                     "direct resolver also rejects extreme telemetry")
             """
         )
-        with tempfile.TemporaryDirectory() as temp:
+        with TemporaryDirectory() as temp:
             temp_path = pathlib.Path(temp)
             main = temp_path / "main.swift"
             binary = temp_path / "sampler-property-validation"
             main.write_text(harness, encoding="utf-8")
-            subprocess.run(
+            run(
                 [
                     "xcrun",
                     "swiftc",
@@ -431,7 +430,7 @@ class SamplerContractTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            subprocess.run([str(binary)], check=True, capture_output=True, text=True)
+            run([str(binary)], check=True, capture_output=True, text=True)
 
     def test_temperature_units_and_fallback_are_explicit(self):
         self.assertIn("Double(raw) / 10.0 - 273.15", self.source)
@@ -843,12 +842,12 @@ class SamplerContractTests(unittest.TestCase):
             require(BatterySampler.normalizedSystemLoad(-30_000) == 30, "negative load")
             """
         )
-        with tempfile.TemporaryDirectory() as temp:
+        with TemporaryDirectory() as temp:
             temp_path = pathlib.Path(temp)
             main = temp_path / "main.swift"
             binary = temp_path / "sampler-normalization"
             main.write_text(harness, encoding="utf-8")
-            subprocess.run(
+            run(
                 [
                     "xcrun",
                     "swiftc",
@@ -865,7 +864,7 @@ class SamplerContractTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            subprocess.run([str(binary)], check=True, capture_output=True, text=True)
+            run([str(binary)], check=True, capture_output=True, text=True)
 
     def test_returns_snapshot_type_from_core(self):
         self.assertIn("-> PowerSnapshot?", self.source)

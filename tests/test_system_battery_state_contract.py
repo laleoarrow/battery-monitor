@@ -1,6 +1,5 @@
 import pathlib
-import subprocess
-import tempfile
+from local_runtime import TemporaryDirectory, run
 import textwrap
 import unittest
 
@@ -388,12 +387,12 @@ class SystemBatteryStateContractTests(unittest.TestCase):
             print("system battery shared-state contract passed")
             """
         )
-        with tempfile.TemporaryDirectory() as directory:
+        with TemporaryDirectory() as directory:
             directory_path = pathlib.Path(directory)
             main = directory_path / "main.swift"
             binary = directory_path / "system-battery-state-contract"
             main.write_text(harness, encoding="utf-8")
-            compile_result = subprocess.run(
+            compile_result = run(
                 [
                     "/usr/bin/xcrun",
                     "swiftc",
@@ -412,7 +411,7 @@ class SystemBatteryStateContractTests(unittest.TestCase):
                 capture_output=True,
             )
             self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
-            run_result = subprocess.run(
+            run_result = run(
                 [str(binary)],
                 check=False,
                 text=True,

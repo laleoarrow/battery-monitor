@@ -22,6 +22,16 @@ The command builds and verifies:
 - `Wattson-v<version>-release-info.txt`
 - `SHA256SUMS.txt`
 
+The release command owns a unique `.build/local.noindex` workspace and removes
+its app/helper build tree, staging copies, expanded payloads and mounts at exit,
+including failed or interrupted runs. The four distribution files remain in
+`dist`. `scripts/build_release.sh` by itself is a build verification and cleans
+up by default; `--keep-build` explicitly hands off the current `.build/release`
+output to manual packaging steps. Clean that handed-off directory when those
+steps finish. Prefer `scripts/release.sh` for an automatically managed lifecycle.
+`scripts/build_diagnostics.sh` likewise retains its ZIP, metadata and checksums,
+and removes its original and extracted verification apps.
+
 The DMG contains `Wattson.app` and an `Applications` shortcut. Its app must match
 the app inside the same candidate PKG byte for byte. The DMG installs no helper,
 LaunchDaemon, socket, or package receipt: it is the drag-and-drop, read-only

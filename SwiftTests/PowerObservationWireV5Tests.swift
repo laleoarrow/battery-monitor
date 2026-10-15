@@ -31,15 +31,22 @@ final class PowerObservationWireV5Tests: XCTestCase {
         private let socketPath: String
         private let listener: Int32
         private let responses: [Data]
+        private let timeoutMilliseconds: Int32
         private let completion = DispatchSemaphore(value: 0)
         private let lock = NSLock()
         private var recordedRequests: [Data] = []
 
-        init(responses: [Data]) throws {
+        init(responses: [Data], timeoutMilliseconds: Int32 = 750) throws {
             self.responses = responses
+            self.timeoutMilliseconds = timeoutMilliseconds
             socketPath = "/tmp/wattson-wire-v5-\(UUID().uuidString).sock"
             listener = Darwin.socket(AF_UNIX, SOCK_STREAM, 0)
             guard listener >= 0 else { throw POSIXError(.ENFILE) }
+            guard fcntl(listener, F_SETFL, O_NONBLOCK) == 0 else {
+                let failure = POSIXErrorCode(rawValue: errno) ?? .EIO
+                Darwin.close(listener)
+                throw POSIXError(failure)
+            }
 
             var address = sockaddr_un()
             address.sun_family = sa_family_t(AF_UNIX)
@@ -81,18 +88,12 @@ final class PowerObservationWireV5Tests: XCTestCase {
                     completion.signal()
                 }
 
-                for (index, response) in responses.enumerated() {
-                    if index > 0 {
-                        var descriptor = pollfd(
-                            fd: listener,
-                            events: Int16(POLLIN),
-                            revents: 0
-                        )
-                        guard Darwin.poll(&descriptor, 1, 750) > 0 else { return }
-                    }
-                    guard let fd = acceptConnection() else { return }
-                    record(readLine(from: fd))
-                    _ = writeAll(response, to: fd)
+                for response in responses {
+                    let deadline = DispatchTime.now().uptimeNanoseconds
+                        + UInt64(timeoutMilliseconds) * 1_000_000
+                    guard let fd = acceptConnection(deadline: deadline) else { return }
+                    record(readLine(from: fd, deadline: deadline))
+                    _ = writeAll(response, to: fd, deadline: deadline)
                     Darwin.close(fd)
                 }
             }
@@ -102,10 +103,28 @@ final class PowerObservationWireV5Tests: XCTestCase {
             completion.wait(timeout: .now() + 4) == .success
         }
 
-        private func acceptConnection() -> Int32? {
+        private func waitUntilReady(_ fd: Int32, events: Int16, deadline: UInt64) -> Bool {
             while true {
+                let now = DispatchTime.now().uptimeNanoseconds
+                guard now < deadline else { return false }
+                let remainingMilliseconds = Int32((deadline - now + 999_999) / 1_000_000)
+                var descriptor = pollfd(fd: fd, events: events, revents: 0)
+                let result = Darwin.poll(&descriptor, 1, remainingMilliseconds)
+                if result > 0 {
+                    return descriptor.revents & (events | Int16(POLLHUP)) != 0
+                }
+                if result == 0 || errno != EINTR { return false }
+            }
+        }
+
+        private func acceptConnection(deadline: UInt64) -> Int32? {
+            while waitUntilReady(listener, events: Int16(POLLIN), deadline: deadline) {
                 let fd = Darwin.accept(listener, nil, nil)
                 if fd >= 0 {
+                    guard fcntl(fd, F_SETFL, O_NONBLOCK) == 0 else {
+                        Darwin.close(fd)
+                        return nil
+                    }
                     var noSigPipe: Int32 = 1
                     _ = setsockopt(
                         fd,
@@ -116,19 +135,21 @@ final class PowerObservationWireV5Tests: XCTestCase {
                     )
                     return fd
                 }
-                if errno != EINTR { return nil }
+                if errno != EINTR && errno != EAGAIN { return nil }
             }
+            return nil
         }
 
-        private func readLine(from fd: Int32) -> Data {
+        private func readLine(from fd: Int32, deadline: UInt64) -> Data {
             var data = Data()
             var byte: UInt8 = 0
             while data.count < 8_192 {
+                guard waitUntilReady(fd, events: Int16(POLLIN), deadline: deadline) else { break }
                 let count = Darwin.recv(fd, &byte, 1, 0)
                 if count == 1 {
                     data.append(byte)
                     if byte == UInt8(ascii: "\n") { break }
-                } else if count < 0, errno == EINTR {
+                } else if count < 0, errno == EINTR || errno == EAGAIN {
                     continue
                 } else {
                     break
@@ -143,11 +164,12 @@ final class PowerObservationWireV5Tests: XCTestCase {
             lock.unlock()
         }
 
-        private func writeAll(_ data: Data, to fd: Int32) -> Bool {
+        private func writeAll(_ data: Data, to fd: Int32, deadline: UInt64) -> Bool {
             data.withUnsafeBytes { raw in
                 guard let base = raw.baseAddress else { return data.isEmpty }
                 var offset = 0
                 while offset < raw.count {
+                    guard waitUntilReady(fd, events: Int16(POLLOUT), deadline: deadline) else { return false }
                     let count = Darwin.write(
                         fd,
                         base.advanced(by: offset),
@@ -155,7 +177,7 @@ final class PowerObservationWireV5Tests: XCTestCase {
                     )
                     if count > 0 {
                         offset += count
-                    } else if count < 0, errno == EINTR {
+                    } else if count < 0, errno == EINTR || errno == EAGAIN {
                         continue
                     } else {
                         return false
@@ -164,6 +186,40 @@ final class PowerObservationWireV5Tests: XCTestCase {
                 return true
             }
         }
+    }
+
+    func testRealServerCleansUpWhenNoClientConnects() throws {
+        let server = try RealUnixSocketServer(responses: [Data()], timeoutMilliseconds: 100)
+        server.start()
+
+        XCTAssertTrue(server.waitForCompletion())
+        XCTAssertFalse(FileManager.default.fileExists(atPath: server.path))
+        XCTAssertTrue(server.requests.isEmpty)
+    }
+
+    func testRealServerCleansUpWhenClientSendsNoData() throws {
+        let client = Darwin.socket(AF_UNIX, SOCK_STREAM, 0)
+        XCTAssertGreaterThanOrEqual(client, 0)
+        guard client >= 0 else { return }
+        defer { Darwin.close(client) }
+        let server = try RealUnixSocketServer(responses: [Data()], timeoutMilliseconds: 100)
+
+        var address = sockaddr_un()
+        address.sun_family = sa_family_t(AF_UNIX)
+        withUnsafeMutableBytes(of: &address.sun_path) {
+            $0.copyBytes(from: Array(server.path.utf8))
+        }
+        let connected = withUnsafePointer(to: &address) { pointer in
+            pointer.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                Darwin.connect(client, $0, socklen_t(MemoryLayout<sockaddr_un>.size))
+            }
+        }
+        server.start()
+        XCTAssertEqual(connected, 0)
+        XCTAssertTrue(server.waitForCompletion())
+        XCTAssertFalse(FileManager.default.fileExists(atPath: server.path))
+        var byte: UInt8 = 0
+        XCTAssertEqual(Darwin.recv(client, &byte, 1, MSG_DONTWAIT), 0)
     }
 
     func testV5RequestCarriesFixedProtocolOperationAndSequence() throws {

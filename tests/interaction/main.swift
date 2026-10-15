@@ -2,7 +2,7 @@ import AppKit
 import ApplicationServices
 // Isolate appearance before any popover/footer is constructed; an installed
 // app's saved choice must not change which baseline this harness exercises.
-let settingsSuiteName = "Wattson.SettingsCommandInteraction.\(UUID().uuidString)"
+let settingsSuiteName = ProcessInfo.processInfo.environment["WATTSON_TEST_DEFAULTS_SUITE"]!
 let settingsDefaults = UserDefaults(suiteName: settingsSuiteName)!
 settingsDefaults.removePersistentDomain(forName: settingsSuiteName)
 Settings.configureForTest(defaults: settingsDefaults)

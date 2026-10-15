@@ -8,14 +8,14 @@ final class DockIconSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suiteName = "Wattson.DockIcon.Tests.\(UUID().uuidString)"
+        suiteName = "Wattson.SwiftTests.DockIcon.\(UUID().uuidString)"
         defaults = UserDefaults(suiteName: suiteName)!
         Settings.configureForTest(defaults: defaults)
     }
 
     override func tearDown() {
         Settings.resetTestConfiguration()
-        defaults.removePersistentDomain(forName: suiteName)
+        defaults.removePersistentTestDomain(forName: suiteName)
         defaults = nil
         super.tearDown()
     }

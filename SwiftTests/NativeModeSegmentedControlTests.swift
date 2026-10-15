@@ -8,7 +8,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suiteName = "Wattson.NativeModeTests.\(UUID().uuidString)"
+        suiteName = "Wattson.SwiftTests.NativeModeTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)
@@ -18,7 +18,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
 
     override func tearDown() {
         Settings.resetTestConfiguration()
-        UserDefaults(suiteName: suiteName)?.removePersistentDomain(forName: suiteName)
+        UserDefaults(suiteName: suiteName)?.removePersistentTestDomain(forName: suiteName)
         if let previousReduceMotion {
             setenv("WATTSON_FORCE_REDUCE_MOTION", previousReduceMotion, 1)
         } else {

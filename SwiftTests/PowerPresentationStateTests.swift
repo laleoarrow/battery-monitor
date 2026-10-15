@@ -55,12 +55,12 @@ final class PowerPresentationStateTests: XCTestCase {
     }
 
     func testFailedReadingFreezesMotionUntilFreshReadingReturns() {
-        let suiteName = "Wattson.PowerPresentation.Tests.\(UUID().uuidString)"
+        let suiteName = "Wattson.SwiftTests.PowerPresentation.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         Settings.configureForTest(defaults: defaults)
         defer {
             Settings.resetTestConfiguration()
-            defaults.removePersistentDomain(forName: suiteName)
+            defaults.removePersistentTestDomain(forName: suiteName)
         }
         let content = PopoverContentViewController()
         _ = content.view

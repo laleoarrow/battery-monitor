@@ -665,6 +665,10 @@ final class PowerObservationCaptureTests: XCTestCase {
             .appendingPathComponent(
                 "wattson-power-v1-undeletable-oldest.jsonl"
             )
+        defer {
+            _ = chflags(undeletableOldest.path, 0)
+            remove(deletionFailureDirectory)
+        }
         let newerEvidence = deletionFailureDirectory
             .appendingPathComponent(
                 "wattson-power-v1-preserve-newer.jsonl"
@@ -685,11 +689,6 @@ final class PowerObservationCaptureTests: XCTestCase {
             chflags(undeletableOldest.path, UInt32(UF_IMMUTABLE)),
             0
         )
-        defer {
-            _ = chflags(undeletableOldest.path, 0)
-            remove(deletionFailureDirectory)
-        }
-
         XCTAssertThrowsError(try makeWriter(
             directory: deletionFailureDirectory,
             maximumFileBytes: 2_000,
@@ -1256,7 +1255,7 @@ private final class LockedResult<Value>: @unchecked Sendable {
 
 private func temporaryDirectory() -> URL {
     let directory = FileManager.default.temporaryDirectory
-        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        .appendingPathComponent("WattsonCaptureTests-\(UUID().uuidString)", isDirectory: true)
     try! FileManager.default.createDirectory(
         at: directory,
         withIntermediateDirectories: false,
@@ -1504,13 +1503,15 @@ private final class CommandHarness {
     }
 
     func runValidCommand() -> Int32 {
-        PowerObservationCaptureCommand.run(
+        let directory = temporaryDirectory()
+        defer { remove(directory) }
+        return PowerObservationCaptureCommand.run(
             arguments: [
                 "--power-observation-capture",
                 "--scenario", "command-test",
                 "--duration", "1",
                 "--interval-ms", "250",
-                "--output-dir", temporaryDirectory().path,
+                "--output-dir", directory.path,
             ],
             dependencies: dependencies
         )

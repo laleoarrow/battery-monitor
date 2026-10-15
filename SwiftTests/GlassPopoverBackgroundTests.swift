@@ -19,7 +19,7 @@ final class GlassPopoverBackgroundTests: XCTestCase {
             previousEnvironment[key] = ProcessInfo.processInfo.environment[key]
             setenv(key, value, 1)
         }
-        suite = "Wattson.GlassPopoverBackground.\(UUID().uuidString)"
+        suite = "Wattson.SwiftTests.GlassPopoverBackground.\(UUID().uuidString)"
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
         Settings.liquidGlassEnabled = true
@@ -27,7 +27,7 @@ final class GlassPopoverBackgroundTests: XCTestCase {
 
     override func tearDown() {
         Settings.resetTestConfiguration()
-        defaults.removePersistentDomain(forName: suite)
+        defaults.removePersistentTestDomain(forName: suite)
         for key in overrides.keys {
             if let previous = previousEnvironment[key] { setenv(key, previous, 1) }
             else { unsetenv(key) }

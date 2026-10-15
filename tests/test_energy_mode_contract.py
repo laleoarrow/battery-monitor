@@ -1,6 +1,5 @@
 import pathlib
-import subprocess
-import tempfile
+from local_runtime import TemporaryDirectory, run
 import textwrap
 import unittest
 
@@ -126,12 +125,12 @@ class EnergyModeContractTests(unittest.TestCase):
             require(!unexpectedLiveRead, "successful helper skips fallback")
             """
         )
-        with tempfile.TemporaryDirectory() as temp:
+        with TemporaryDirectory() as temp:
             temp_path = pathlib.Path(temp)
             main = temp_path / "main.swift"
             binary = temp_path / "energy-mode-notification"
             main.write_text(harness, encoding="utf-8")
-            subprocess.run(
+            run(
                 [
                     "xcrun",
                     "swiftc",
@@ -146,7 +145,7 @@ class EnergyModeContractTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            subprocess.run([str(binary)], check=True, capture_output=True, text=True)
+            run([str(binary)], check=True, capture_output=True, text=True)
 
     def test_power_state_observer_uses_refresh_without_writing(self):
         observer = self.mode.split("static func observe", 1)[1]
@@ -290,14 +289,14 @@ class EnergyModeContractTests(unittest.TestCase):
             }
             """
         )
-        with tempfile.TemporaryDirectory() as temp:
+        with TemporaryDirectory() as temp:
             temp_path = pathlib.Path(temp)
             testable_source = temp_path / "EnergyMode.swift"
             main = temp_path / "main.swift"
             binary = temp_path / "energy-mode-fd-stress"
             testable_source.write_text(testable_mode, encoding="utf-8")
             main.write_text(harness, encoding="utf-8")
-            subprocess.run(
+            run(
                 [
                     "xcrun",
                     "swiftc",
@@ -312,7 +311,7 @@ class EnergyModeContractTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            run_result = subprocess.run(
+            run_result = run(
                 [str(binary)], check=False, capture_output=True, text=True
             )
             self.assertEqual(run_result.returncode, 0, run_result.stderr)
@@ -359,12 +358,12 @@ class EnergyModeContractTests(unittest.TestCase):
             )
             """
         )
-        with tempfile.TemporaryDirectory() as temp:
+        with TemporaryDirectory() as temp:
             temp_path = pathlib.Path(temp)
             main = temp_path / "main.swift"
             binary = temp_path / "energy-mode-parser"
             main.write_text(harness, encoding="utf-8")
-            subprocess.run(
+            run(
                 [
                     "xcrun",
                     "swiftc",
@@ -379,7 +378,7 @@ class EnergyModeContractTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            subprocess.run([str(binary)], check=True, capture_output=True, text=True)
+            run([str(binary)], check=True, capture_output=True, text=True)
 
     def test_old_helper_readback_is_rechecked_before_the_slider_accepts_it(self):
         # Helpers installed before this fix report high as auto. Only a reply
@@ -535,12 +534,12 @@ class EnergyModeContractTests(unittest.TestCase):
             )
             """
         )
-        with tempfile.TemporaryDirectory() as temp:
+        with TemporaryDirectory() as temp:
             temp_path = pathlib.Path(temp)
             main = temp_path / "main.swift"
             binary = temp_path / "energy-mode-fallback"
             main.write_text(harness, encoding="utf-8")
-            subprocess.run(
+            run(
                 [
                     "xcrun",
                     "swiftc",
@@ -555,7 +554,7 @@ class EnergyModeContractTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            subprocess.run([str(binary)], check=True, capture_output=True, text=True)
+            run([str(binary)], check=True, capture_output=True, text=True)
 
     def test_superseded_mode_writes_skip_work_and_keep_executed_fallback_adjacent(self):
         harness = textwrap.dedent(
@@ -607,12 +606,12 @@ class EnergyModeContractTests(unittest.TestCase):
             require(gate.executionGeneration == 2, "skips do not consume execution generations")
             """
         )
-        with tempfile.TemporaryDirectory() as temp:
+        with TemporaryDirectory() as temp:
             temp_path = pathlib.Path(temp)
             main = temp_path / "main.swift"
             binary = temp_path / "energy-mode-latest-write"
             main.write_text(harness, encoding="utf-8")
-            subprocess.run(
+            run(
                 [
                     "xcrun",
                     "swiftc",
@@ -627,7 +626,7 @@ class EnergyModeContractTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            subprocess.run([str(binary)], check=True, capture_output=True, text=True)
+            run([str(binary)], check=True, capture_output=True, text=True)
 
 
 if __name__ == "__main__":

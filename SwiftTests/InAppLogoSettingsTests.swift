@@ -8,14 +8,14 @@ final class InAppLogoSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suiteName = "Wattson.InAppLogo.Tests.\(UUID().uuidString)"
+        suiteName = "Wattson.SwiftTests.InAppLogo.\(UUID().uuidString)"
         defaults = UserDefaults(suiteName: suiteName)!
         Settings.configureForTest(defaults: defaults)
     }
 
     override func tearDown() {
         Settings.resetTestConfiguration()
-        defaults.removePersistentDomain(forName: suiteName)
+        defaults.removePersistentTestDomain(forName: suiteName)
         defaults = nil
         super.tearDown()
     }

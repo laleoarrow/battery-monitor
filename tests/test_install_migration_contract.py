@@ -1,7 +1,6 @@
 import os
 import pathlib
-import subprocess
-import tempfile
+from local_runtime import TemporaryDirectory, run
 import unittest
 
 
@@ -73,9 +72,10 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertIn("<key>CFBundleIconFile</key>", self.run_script)
         self.assertIn("<string>AppIcon</string>", self.run_script)
         self.assertIn('touch "$APP_BUNDLE"', self.run_script)
-        unregister = self.run_script.index('"$LSREGISTER" -u "$APP_BUNDLE"')
-        delete = self.run_script.index('rm -rf "$APP_BUNDLE"')
-        self.assertLess(unregister, delete)
+        self.assertIn('wattson_cleanup_add_app "$APP_BUNDLE"', self.run_script)
+        self.assertIn('wattson_cleanup_add_executable "$APP_BINARY"', self.run_script)
+        self.assertIn('wattson_run /usr/bin/open -n -W "$APP_BUNDLE"', self.run_script)
+        self.assertNotIn('pkill -x', self.run_script)
 
     def test_sandbox_allows_the_new_support_directory(self):
         self.assertIn("/Library/Application Support/Wattson/", self.entitlements)
@@ -88,7 +88,7 @@ class InstallMigrationContractTests(unittest.TestCase):
 
     def test_developer_install_builds_the_complete_swiftpm_helper_product(self):
         helper_build = self.install.split(
-            'echo "  🔑 Installing the privileged helper (needs sudo once)"', 1
+            'HELPER_SCRATCH_PATH="$BUILD_DIR/swiftpm-helper"', 1
         )[1].split(
             'codesign --force --sign - --identifier "$HELPER_LABEL"', 1
         )[0]
@@ -152,7 +152,7 @@ class InstallMigrationContractTests(unittest.TestCase):
     def test_release_dmg_contains_the_same_app_without_installing_a_helper(self):
         self.assertIn('/usr/bin/ditto --noextattr --noqtn "$APP_DIR" "$STAGING_DIR/$APP_NAME.app"', self.package)
         self.assertIn('/usr/bin/diff -qr "$APP_DIR" "$STAGING_DIR/$APP_NAME.app"', self.package)
-        self.assertIn("getconf DARWIN_USER_TEMP_DIR", self.package)
+        self.assertIn(".build/local.noindex", self.package)
         self.assertIn('macos-universal.dmg', self.package)
         self.assertNotIn('install.sh" --app-only', self.package)
         self.assertNotIn('Wattson.zip', self.package)
@@ -163,10 +163,22 @@ class InstallMigrationContractTests(unittest.TestCase):
         self.assertNotIn("PrivilegedHelperTools", self.package)
 
     def test_packaging_destination_rejects_a_spoofed_tmpdir(self):
-        # Keep the spoof outside DARWIN_USER_TEMP_DIR even when a release gate
-        # runs this repository from an isolated snapshot under that directory.
-        with tempfile.TemporaryDirectory(dir=pathlib.Path.home()) as directory:
+        # Model a distinct trusted temp root even when CI checks out this
+        # repository below the real DARWIN_USER_TEMP_DIR.
+        with TemporaryDirectory(prefix="spoofed-temp-") as directory:
             fake_temp = pathlib.Path(directory)
+            trusted_temp = fake_temp / "trusted-temp"
+            trusted_temp.mkdir()
+            getconf = fake_temp / "getconf"
+            getconf.write_text(
+                "#!/bin/sh\nprintf '%s\\n' \"$WATTSON_TRUSTED_TEMP\"\n", encoding="utf-8"
+            )
+            getconf.chmod(0o755)
+            install = fake_temp / "install.sh"
+            install.write_text(
+                INSTALL.read_text(encoding="utf-8").replace("/usr/bin/getconf", str(getconf)),
+                encoding="utf-8",
+            )
             target = fake_temp / "Wattson.app"
             target.mkdir()
             sentinel = target / "must-not-be-deleted"
@@ -174,9 +186,11 @@ class InstallMigrationContractTests(unittest.TestCase):
             environment = os.environ.copy()
             environment["TMPDIR"] = str(fake_temp)
             environment["WATTSON_PACKAGE_APP_DIR"] = str(target)
+            environment["WATTSON_TRUSTED_TEMP"] = str(trusted_temp)
+            environment["WATTSON_APP_VERSION"] = "0.0.0"
 
-            result = subprocess.run(
-                ["/bin/bash", str(INSTALL), "--app-only"],
+            result = run(
+                ["/bin/bash", str(install), "--app-only"],
                 check=False,
                 env=environment,
                 text=True,
@@ -333,7 +347,7 @@ class InstallMigrationContractTests(unittest.TestCase):
     def test_preview_build_does_not_create_a_searchable_dist_app(self):
         self.assertNotIn('APP_BUNDLE="$DIST_DIR/$APP_NAME.app"', self.run_script)
         self.assertIn('LEGACY_APP_BUNDLE="$ROOT_DIR/dist/Wattson.app"', self.run_script)
-        unregister = self.run_script.index('"$LSREGISTER" -u "$LEGACY_APP_BUNDLE"')
+        unregister = self.run_script.index('wattson_unregister_app "$LEGACY_APP_BUNDLE"')
         delete = self.run_script.index('rm -rf "$LEGACY_APP_BUNDLE"')
         self.assertLess(unregister, delete)
 

@@ -3,7 +3,7 @@ import pathlib
 import plistlib
 import shutil
 import subprocess
-import tempfile
+from local_runtime import TemporaryDirectory, bundle_identifier, run
 import textwrap
 import unittest
 
@@ -330,7 +330,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     + "reverse=\(reverse) nativeReachedTarget=\(eligible === target)")
             }
 
-            let suiteName = "Wattson.SettingsWindowContract.\(UUID().uuidString)"
+            let suiteName = ProcessInfo.processInfo.environment["WATTSON_TEST_DEFAULTS_SUITE"]!
             let defaults = UserDefaults(suiteName: suiteName)!
             defaults.removePersistentDomain(forName: suiteName)
             Settings.configureForTest(defaults: defaults)
@@ -2410,7 +2410,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             """
         )
 
-        with tempfile.TemporaryDirectory(prefix="wattson-settings-window-") as temp:
+        with TemporaryDirectory(prefix="wattson-settings-window-") as temp:
             temp_path = pathlib.Path(temp)
             main = temp_path / "main.swift"
             bundle = temp_path / "SettingsContract.app" / "Contents"
@@ -2420,16 +2420,14 @@ class SettingsWindowContractTests(unittest.TestCase):
             executable.parent.mkdir()
             (bundle / "Info.plist").write_bytes(plistlib.dumps({
                 "CFBundleExecutable": executable.name,
-                "CFBundleIdentifier": "com.leoarrow.wattson.settings-contract",
+                "CFBundleIdentifier": bundle_identifier(),
                 "CFBundlePackageType": "APPL",
                 "LSUIElement": True,
             }))
             for resource in ("AppLogoColor", "AppLogoClearLight", "AppLogoClearDark"):
                 shutil.copy2(ROOT / "design" / "icon" / "in-app-logo" / f"{resource}.png", resources)
-            isolated_home = temp_path / "isolated-home"
-            isolated_home.mkdir()
             main.write_text(harness, encoding="utf-8")
-            compile_result = subprocess.run(
+            compile_result = run(
                 [
                     "xcrun",
                     "swiftc",
@@ -2465,16 +2463,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                 f"settings window contract did not compile:\n{compile_result.stderr}",
             )
             try:
-                run_result = subprocess.run(
+                run_result = run(
                     [str(executable)],
                     capture_output=True,
                     text=True,
                     check=False,
                     timeout=runtime_timeout,
-                    env={
-                        **os.environ,
-                        "CFFIXED_USER_HOME": str(isolated_home),
-                    },
                 )
             except subprocess.TimeoutExpired as error:
                 # Preserve the original timeout failure while exposing the last
