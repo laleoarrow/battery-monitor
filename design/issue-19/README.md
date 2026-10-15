@@ -163,6 +163,8 @@ initial display restoration also failed because virtual mode IDs changed;
 the original logical resolution was restored by dimensions. These runner
 failures are retained separately and do not count as successful checks.
 
-These checks do not reproduce the reporter's exact macOS 27 installation or
-prove which callback ran there. Issue 19 stays open pending that environment's
-confirmation. This branch does not publish or install a new Wattson version.
+These investigation checks do not reproduce the reporter's exact macOS 27
+installation or prove which callback ran there. Issue 19 stays open pending
+that environment's confirmation. The 4.3.4 release follows separate package,
+installation and publication gates; these source-level checks alone do not
+establish that a new installer has been published.
