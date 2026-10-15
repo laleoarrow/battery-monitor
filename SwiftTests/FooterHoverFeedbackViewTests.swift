@@ -77,7 +77,8 @@ final class FooterHoverFeedbackViewTests: XCTestCase {
         XCTAssertFalse(feedback.isAccessibilityElement())
         XCTAssertEqual(feedback.accessibilityChildren()?.count ?? 0, 0)
         XCTAssertEqual(feedback.trackingAreas.count, 1)
-        XCTAssertTrue(feedback.trackingAreas[0].options.contains(.activeInKeyWindow))
+        XCTAssertTrue(feedback.trackingAreas[0].options.contains(.activeAlways))
+        XCTAssertFalse(feedback.trackingAreas[0].options.contains(.activeInKeyWindow))
         XCTAssertFalse(feedback.trackingAreas[0].options.contains(.activeInActiveApp))
     }
 
@@ -172,16 +173,24 @@ final class FooterHoverFeedbackViewTests: XCTestCase {
         }
     }
 
-    func testLateTrackingCallbacksCannotRelightAnInactiveOrOrderedOutWindow() throws {
+    func testNonKeyClassicPresentationCanHoverWithoutAcquiringFocus() throws {
+        window.simulatedKey = false
+        let responder = window.firstResponder
         try hover(NSPoint(x: 45, y: 39))
         XCTAssertEqual(feedback.hoveredIndexForTest, 0)
-        window.simulatedKey = false
-        NotificationCenter.default.post(name: NSWindow.didResignKeyNotification, object: window)
+        XCTAssertFalse(window.isKeyWindow)
+        XCTAssertTrue(window.firstResponder === responder)
+    }
+
+    func testInactivePresentationOrOrderedOutWindowRejectsLateTrackingCallbacks() throws {
+        try hover(NSPoint(x: 45, y: 39))
+        XCTAssertEqual(feedback.hoveredIndexForTest, 0)
+        feedback.setPresentationActive(false)
         feedback.mouseEntered(with: try event())
         feedback.mouseMoved(with: try event())
         XCTAssertNil(feedback.hoveredIndexForTest)
         XCTAssertEqual(feedback.glowForTest.opacity, 0)
-        window.simulatedKey = true
+        feedback.setPresentationActive(true)
         try hover(NSPoint(x: 45, y: 39))
         XCTAssertEqual(feedback.hoveredIndexForTest, 0)
         window.simulatedVisible = false

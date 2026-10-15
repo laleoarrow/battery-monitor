@@ -103,10 +103,11 @@ and Regular in Light so its selection stays visible on white backgrounds.
 visible mode controls and settings button. Its transparent, non-hit-testing
 overlay follows the SwiftUI glass, native glass and Classic control geometry;
 it does not change their materials, actions, focus or accessibility nodes.
-Disabled modes, gaps and rounded outside corners do not glow. Hover fades
-respect Reduce Motion, while hiding, losing key status, changing appearance
-or detaching clears feedback immediately. The settings-window buttons and
-system-battery checkbox retain their existing presentation.
+Disabled modes, gaps and rounded outside corners do not glow. Hover follows
+the existing presentation lifecycle, including Classic's non-key first open.
+Fades respect Reduce Motion; dismissal, hiding, losing key status, changing
+appearance or detaching clears feedback immediately. The settings-window
+buttons and system-battery checkbox retain their existing presentation.
 
 An independently selectable section prioritizes macOS battery time estimates,
 following Stats' system-data approach. On battery it uses the public IOPS

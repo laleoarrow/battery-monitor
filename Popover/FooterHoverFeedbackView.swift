@@ -10,6 +10,7 @@ final class FooterHoverFeedbackView: NSView {
 
     private var regions: [Region] = []
     private var hoveredIndex: Int?
+    private var presentationActive = true
     private let glow = CAShapeLayer()
 
     override var isFlipped: Bool { true }
@@ -24,7 +25,7 @@ final class FooterHoverFeedbackView: NSView {
         glow.opacity = 0
         layer?.addSublayer(glow)
         addTrackingArea(NSTrackingArea(rect: .zero,
-            options: [.mouseEnteredAndExited, .mouseMoved, .activeInKeyWindow, .inVisibleRect],
+            options: [.mouseEnteredAndExited, .mouseMoved, .activeAlways, .inVisibleRect],
             owner: self, userInfo: nil))
         refreshAppearance()
         NotificationCenter.default.addObserver(self, selector: #selector(cancelHover),
@@ -46,12 +47,17 @@ final class FooterHoverFeedbackView: NSView {
         self.regions = regions
     }
 
+    func setPresentationActive(_ active: Bool) {
+        presentationActive = active
+        if !active { cancelHover() }
+    }
+
     override func mouseEntered(with event: NSEvent) { updateHover() }
     override func mouseExited(with event: NSEvent) { updateHover() }
     override func mouseMoved(with event: NSEvent) { updateHover() }
 
     private func updateHover() {
-        guard !isHiddenOrHasHiddenAncestor, let window, window.isKeyWindow, window.isVisible else {
+        guard presentationActive, !isHiddenOrHasHiddenAncestor, let window, window.isVisible else {
             cancelHover()
             return
         }
