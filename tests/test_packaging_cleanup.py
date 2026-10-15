@@ -15,7 +15,8 @@ LIB = ROOT / "scripts/lib"
 
 class PackagingCleanupTests(unittest.TestCase):
     def setUp(self):
-        self.workspace = runtime.TemporaryDirectory(prefix="packaging-")
+        # Filesystem names may contain characters that are invalid in domains.
+        self.workspace = runtime.TemporaryDirectory(prefix="packaging_fixture-")
         self.addCleanup(self.workspace.cleanup)
         self.root = pathlib.Path(self.workspace.name)
         self.addCleanup(self.stop_all_fixture_processes)
@@ -180,7 +181,7 @@ mkdir -p "$FIXTURE_HOME/Library/Application Scripts/com.example.unregistered"
         preferences.mkdir(parents=True)
         canonical = preferences / "com.leoarrow.wattson.plist"
         canonical.write_text("user settings", encoding="utf-8")
-        suite = f"com.leoarrow.wattson.tests.{self.root.name}"
+        suite = self.workspace.defaults_suite
         owned = preferences / f"{suite}.plist"
         owned.touch()
         result = self.run_shell('wattson_cleanup_add_defaults "$SUITE"\n', SUITE=suite)
@@ -188,8 +189,11 @@ mkdir -p "$FIXTURE_HOME/Library/Application Scripts/com.example.unregistered"
         self.assertEqual(self.events(), [f"defaults:{suite}"])
         self.assertFalse(owned.exists())
         self.assertEqual(canonical.read_text(), "user settings")
-        result = self.run_shell('wattson_cleanup_add_defaults ../outside\n')
-        self.assertEqual(result.returncode, 2)
+        for invalid in ("../outside", suite + "_invalid"):
+            result = self.run_shell('wattson_cleanup_add_defaults "$SUITE"\n', SUITE=invalid)
+            self.assertEqual(result.returncode, 2)
+        self.assertEqual(self.events(), [f"defaults:{suite}"])
+        self.assertEqual(canonical.read_text(), "user settings")
 
     def create_owned_tree(self):
         script = self.root / "owned_tree.py"
