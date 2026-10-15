@@ -1,0 +1,42 @@
+test_appkit_window_layout_state_and_release_contract (test_settings_window_contract.SettingsWindowContractTests) ... settings-contract config: interactive=True runtime-watchdog=180s compile-watchdog=120s optimization=Onone
+ok
+test_default_sections_use_only_existing_settings (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_dock_icon_is_a_separate_restart_only_preference (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_icon_page_lists_every_complete_menu_bar_appearance (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_in_app_logo_uses_static_resources_without_changing_system_icons (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_liquid_glass_is_an_appearance_only_native_opt_in (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_selected_icon_indicator_uses_semantic_accent (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_source_has_no_timer_and_uses_the_narrow_section_boundary (test_settings_window_contract.SettingsWindowContractTests) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 140.341s
+
+OK
+settings-contract 0.000s start
+settings-contract 10.615s key loop: fullKeyboard=true reverse=false nativeReachedTarget=true
+settings-contract 11.876s key loop: fullKeyboard=true reverse=false nativeReachedTarget=true
+settings-contract 11.876s key loop: fullKeyboard=true reverse=false nativeReachedTarget=true
+settings-contract 11.877s key loop: fullKeyboard=true reverse=true nativeReachedTarget=true
+settings-contract 11.877s key loop: fullKeyboard=true reverse=true nativeReachedTarget=true
+settings-contract 11.877s key loop: fullKeyboard=true reverse=false nativeReachedTarget=true
+settings-contract 11.877s key loop: fullKeyboard=true reverse=true nativeReachedTarget=true
+settings-contract 13.509s state, layout, appearance and action assertions complete
+settings-contract 22.493s headless 50-controller release assertions complete
+settings-contract 23.920s visible window, keyboard and reopen assertions complete
+settings-contract 24.817s reuse 500-cycle assertions complete
+settings-contract 32.807s warmup 50 created: construction=5.604s presentation=0.446s
+settings-contract 40.795s warmup 50 created: construction=4.758s presentation=0.347s
+settings-contract 48.967s warmup 50 created: construction=4.893s presentation=0.361s
+settings-contract 49.990s warmup 150-controller release assertions complete
+settings-contract 57.061s stress 50 50 created: construction=4.765s presentation=0.358s
+settings-contract 65.450s stress 100 50 created: construction=4.952s presentation=0.371s
+settings-contract 73.690s stress 150 50 created: construction=4.837s presentation=0.352s
+settings-contract 82.158s stress 200 50 created: construction=5.013s presentation=0.357s
+settings-contract 90.547s stress 250 50 created: construction=4.921s presentation=0.365s
+settings-contract 98.671s stress 300 50 created: construction=4.816s presentation=0.355s
+settings-contract 107.544s stress 350 50 created: construction=5.413s presentation=0.365s
+settings-contract 115.908s stress 400 50 created: construction=4.957s presentation=0.349s
+settings-contract 124.156s stress 450 50 created: construction=4.825s presentation=0.359s
+settings-contract 132.798s stress 500 50 created: construction=5.074s presentation=0.361s
+reuse0 rss=864747520; reuse500 rss=865468416; warm150 rss=892813312 fd=4; created50 rss=893304832 fd=4 windows=13; created100 rss=893222912 fd=4 windows=13; created150 rss=893370368 fd=4 windows=13; created200 rss=891256832 fd=4 windows=13; created250 rss=891469824 fd=4 windows=13; created300 rss=893599744 fd=4 windows=13; created350 rss=891748352 fd=4 windows=13; created400 rss=893616128 fd=4 windows=13; created450 rss=894042112 fd=4 windows=13; created500 rss=893960192 fd=4 windows=13; final rss=893960192 fd=4 plateauSpread=2785280
+settings-contract 133.914s all assertions complete

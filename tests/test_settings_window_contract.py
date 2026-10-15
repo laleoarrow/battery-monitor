@@ -130,6 +130,13 @@ class SettingsWindowContractTests(unittest.TestCase):
                     | UInt32((converted.blueComponent * 255).rounded())
             }
 
+            func isLabelColor(_ color: NSColor?, alpha: CGFloat? = nil) -> Bool {
+                guard let converted = color?.usingColorSpace(.sRGB),
+                      let label = NSColor.labelColor.usingColorSpace(.sRGB) else { return false }
+                return srgbHex(converted) == srgbHex(label)
+                    && abs(converted.alphaComponent - (alpha ?? label.alphaComponent)) < 0.001
+            }
+
             func logoArtwork(_ resource: String) -> NSImage {
                 guard let url = Bundle.main.url(forResource: resource, withExtension: "png"),
                       let image = NSImage(contentsOf: url) else {
@@ -454,9 +461,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(dockPopup.accessibilityLabel() == "Dock Icon"
                 && dockPopup.accessibilityHelp()?.contains("Restart Wattson to apply. Finder icon stays unchanged.") == true
                 && dockPopup.accessibilityHelp()?.contains("Hidden keeps Wattson menu-bar-only.") == true
-                && dockHelp.stringValue.contains("Restart Wattson to apply. Finder icon stays unchanged.")
-                && dockHelp.stringValue.contains("Hidden keeps Wattson menu-bar-only.") && !dockHelp.isHidden,
-                "Dock choice visibly and accessibly explains restart, Finder scope and Hidden behavior")
+                && dockHelp.stringValue == "Restart Wattson to apply." && !dockHelp.isHidden,
+                "Dock choice shows concise restart help and accessibly explains Finder scope and Hidden behavior")
             if #available(macOS 26, *) {
                 require(glassSwitch.isEnabled, "native Liquid Glass is selectable on macOS 26")
             } else {
@@ -517,12 +523,16 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(approximately(sidebar.frame.height, 520), "sidebar spans full content height")
             require(approximately(divider.frame.height, 520), "divider spans full content height")
             require(approximately(trafficSafeArea.frame.height, 52), "native traffic-light safe area")
-            require(approximately(identity.frame.height, 64), "compact identity row height")
+            require(approximately(identity.frame.height, 56), "compact identity row height")
             require(
-                approximately(identityTile.frame.width, 40)
-                    && approximately(identityTile.frame.height, 40),
-                "compact identity tile is 40 points"
+                approximately(identityTile.frame.width, 32)
+                    && approximately(identityTile.frame.height, 32),
+                "compact identity tile is 32 points"
             )
+            let identityName = descendants(ofType: NSTextField.self, in: identity)
+                .first { $0.stringValue == "Wattson" }!
+            require(identityName.font == .systemFont(ofSize: 14, weight: .medium),
+                "sidebar identity has a restrained 14-point name")
             require(
                 identityTile is NSImageView,
                 "sidebar identity uses the real packaged application icon"
@@ -550,7 +560,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(approximately(controller.contentHostFrameForTest.width, 503), "compact content width")
             require(controller.sidebarStyleForTest == .sourceList, "source-list sidebar")
             require(controller.sidebarAllowsEmptySelectionForTest == false, "sidebar disallows empty selection")
-            require(approximately(controller.sidebarRowHeightForTest, 38), "compact navigation row height")
+            require(approximately(controller.sidebarRowHeightForTest, 32), "compact navigation row height")
             require(approximately(controller.sidebarRowGapForTest, 4), "navigation row gap")
             require(
                 controller.sidebarRectForRowForTest(2).maxY
@@ -567,8 +577,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && navigationLabels.filter {
                         ["General", "Display", "Modules"].contains($0.stringValue)
                     }
-                    .allSatisfy { approximately($0.font?.pointSize ?? -1, 13) },
-                "navigation labels use 13-point type"
+                    .allSatisfy { $0.font == .systemFont(ofSize: 13, weight: .regular) },
+                "navigation labels use restrained 13-point regular type"
             )
             let iconNavigationLabel = navigationLabels.first {
                 $0.stringValue == "Display"
@@ -579,6 +589,40 @@ class SettingsWindowContractTests(unittest.TestCase):
                     <= (iconNavigationLabel?.frame.width ?? 0) + 1,
                 "Display navigation title is fully visible"
             )
+            let navigationIcons = ["general", "menu-bar-icon", "modules"].map {
+                view("settings.sidebar.icon.\($0)", in: first) as! NSImageView
+            }
+            let navigationSymbols = ["slider.horizontal.3", "rectangle", "square.grid.2x2.fill"]
+            for (index, icon) in navigationIcons.enumerated() {
+                let cell = controller.sidebarForTest.view(
+                    atColumn: 0, row: index, makeIfNecessary: true
+                ) as! NSTableCellView
+                let title = cell.textField!
+                let iconAlignment = icon.superview!.convert(
+                    icon.alignmentRect(forFrame: icon.frame), to: cell
+                )
+                let titleAlignment = title.superview!.convert(
+                    title.alignmentRect(forFrame: title.frame), to: cell
+                )
+                require(approximately(iconAlignment.width, 24)
+                    && approximately(iconAlignment.height, 24)
+                    && icon.superview === cell && cell.imageView === icon,
+                    "sidebar native symbols use an aligned frame without tile enclosures")
+                let expectedImage = NSImage(systemSymbolName: navigationSymbols[index],
+                    accessibilityDescription: nil)?.withSymbolConfiguration(
+                        NSImage.SymbolConfiguration(pointSize: 18, weight: .regular))
+                require(icon.image != nil && expectedImage != nil
+                    && icon.image?.tiffRepresentation == expectedImage?.tiffRepresentation,
+                    "every sidebar image resolves its restrained 18-point native symbol")
+                require(approximately(titleAlignment.minX - iconAlignment.maxX, 9),
+                    "sidebar titles have a consistent nine-point symbol gap")
+                require(approximately(iconAlignment.midY, cell.bounds.midY)
+                    && iconAlignment.minY >= 3
+                    && cell.bounds.maxY - iconAlignment.maxY >= 3,
+                    "sidebar symbols keep clear vertical whitespace inside each row")
+                require(title.attributedStringValue.size().width <= title.frame.width + 1,
+                    "every sidebar title remains fully visible")
+            }
             require(
                 descendants(ofType: NSView.self, in: view("settings.section.general", in: first))
                     .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
@@ -586,12 +630,61 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "General includes four operational rows, appearance and feedback"
             )
             let generalList = view("settings.general.list", in: first)
-            let generalRows = descendants(ofType: NSView.self, in: generalList)
-                .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
-            require(approximately(generalList.frame.width, 503), "compact general list width")
-            require(approximately(generalList.frame.height, 272), "General is exactly 4 × 68 points")
-            require((generalList as? NSBox)?.cornerRadius == 14, "rounded general list radius")
-            require(generalRows.allSatisfy { approximately($0.frame.height, 68) }, "four 68-point rows")
+            let updatesList = view("settings.general.updates.list", in: first)
+            for (list, expectedIdentifiers) in [
+                (generalList, ["login", "battery"]),
+                (updatesList, ["update", "automatic-updates"]),
+            ] {
+                require(approximately(list.frame.width, 503), "full-width General group")
+                require(approximately(list.frame.height, 136), "each operational group is 2 × 68 points")
+                require((list as? NSBox)?.cornerRadius == 14, "consistent rounded General groups")
+                let rows = descendants(ofType: NSView.self, in: list)
+                    .filter { $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true }
+                    .sorted { $0.frame.minY > $1.frame.minY }
+                require(rows.map { $0.identifier!.rawValue }
+                    == expectedIdentifiers.map { "settings.general.row.\($0)" },
+                    "startup and update controls belong to separate named groups")
+                require(rows.allSatisfy { approximately($0.frame.height, 68) }, "operational rows retain readable height")
+                for (index, row) in rows.enumerated() {
+                    require(approximately(row.frame.minY, 68 - CGFloat(index) * 68),
+                        "each group keeps its top-down row order")
+                }
+            }
+            for (identifier, title) in [
+                ("startup", "Startup & Menu Bar"), ("updates", "Updates"),
+                ("appearance", "Appearance"), ("support", "Support"),
+            ] {
+                let groupHeading = view("settings.general.\(identifier).heading", in: first) as! NSTextField
+                require(groupHeading.stringValue == title
+                    && groupHeading.font == .systemFont(ofSize: 12, weight: .semibold)
+                    && (groupHeading.superview as? NSStackView)?.arrangedSubviews.first === groupHeading,
+                    "every General group has the same external heading treatment")
+            }
+            let appearanceSection = view("settings.general.appearance", in: first)
+            for (title, inset) in [
+                ("Theme", CGFloat(16)), ("Liquid Glass", 16),
+                ("In-App Logo", 16), ("Dock Icon", 16),
+                ("Popup background", 32), ("Transparency", 32),
+            ] {
+                let appearanceLabel = descendants(ofType: NSTextField.self, in: appearanceSection)
+                    .first { $0.stringValue == title }!
+                let row = title == "Liquid Glass"
+                    ? view("settings.general.row.appearance", in: first) : appearanceLabel.superview!
+                let alignment = appearanceLabel.superview!
+                    .convert(appearanceLabel.alignmentRect(forFrame: appearanceLabel.frame), to: row)
+                require(approximately(alignment.minX, inset),
+                    "appearance peers align and only glass dependencies are indented: \(title)")
+            }
+            for identifier in ["settings.appearance.background.label",
+                               "settings.appearance.transparency.label"] {
+                let detail = view(identifier, in: first) as! NSTextField
+                require(approximately(detail.font?.pointSize ?? -1, 12),
+                    "glass dependency labels use readable 12-point type")
+            }
+            let transparencyValue = descendants(ofType: NSTextField.self, in: transparency.superview!)
+                .first { $0.stringValue.hasSuffix("%") }!
+            require(approximately(transparencyValue.font?.pointSize ?? -1, 12),
+                "glass transparency value matches its readable dependency label")
             let generalScroll = view("settings.general.scroll", in: first) as! NSScrollView
             let generalDocument = generalScroll.documentView!
             require(generalDocument.isFlipped && approximately(generalScroll.documentVisibleRect.minY, 0),
@@ -607,25 +700,24 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(
                 approximately(
                     (view("settings.general.heading", in: first) as? NSTextField)?.font?.pointSize ?? -1,
-                    22
+                    18
                 ),
-                "General heading uses 22-point type"
+                "General heading uses 18-point type"
             )
-            let generalRowsByIdentifier = Dictionary(
-                uniqueKeysWithValues: generalRows.compactMap { row in
-                    row.identifier.map { ($0.rawValue, row) }
-                }
-            )
-            for (identifier, expectedMinY) in [
-                ("settings.general.row.login", CGFloat(204)),
-                ("settings.general.row.battery", CGFloat(136)),
-                ("settings.general.row.update", CGFloat(68)),
-                ("settings.general.row.automatic-updates", CGFloat(0)),
-            ] {
-                require(
-                    approximately(generalRowsByIdentifier[identifier]?.frame.minY ?? -1, expectedMinY),
-                    "\(identifier) retains its 68-point top-down slot"
-                )
+            for identifier in ["login", "battery", "update", "automatic-updates", "feedback"] {
+                let row = view("settings.general.row.\(identifier)", in: first)
+                let symbols = descendants(ofType: NSImageView.self, in: row)
+                require(symbols.count == 1 && symbols[0].superview === row
+                    && symbols[0].image != nil
+                    && approximately(symbols[0].alignmentRect(forFrame: symbols[0].frame).width, 28)
+                    && approximately(symbols[0].alignmentRect(forFrame: symbols[0].frame).height, 28),
+                    "General uses consistent native symbols without decorative tile enclosures")
+                let primary = descendants(ofType: NSTextField.self, in: row)
+                    .first { $0.font?.pointSize == 13 }!
+                let alignment = primary.superview!
+                    .convert(primary.alignmentRect(forFrame: primary.frame), to: row)
+                require(approximately(alignment.minX, 56),
+                    "General labels share a compact aligned text column")
             }
 
             controller.refreshSectionsForTest()
@@ -683,9 +775,9 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(
                 generalPrimaryLabels.count == 4
                     && generalPrimaryLabels.allSatisfy {
-                        approximately($0.font?.pointSize ?? -1, 14)
+                        approximately($0.font?.pointSize ?? -1, 13)
                     },
-                "General primary labels use 14-point type"
+                "General primary labels use 13-point type"
             )
             require(generalVisibleTitles.contains("Launch at Login"), "login primary title remains visible")
             require(
@@ -910,8 +1002,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                     ) == true
                 }
             require(
-                approximately((iconHeading as? NSTextField)?.font?.pointSize ?? -1, 22),
-                "Icon heading uses 22-point type"
+                approximately((iconHeading as? NSTextField)?.font?.pointSize ?? -1, 18),
+                "Icon heading uses 18-point type"
             )
             require(
                 approximately((iconSubtitle as? NSTextField)?.font?.pointSize ?? -1, 11),
@@ -999,6 +1091,10 @@ class SettingsWindowContractTests(unittest.TestCase):
                 )
             }
             for iconCard in iconCards {
+                let presetTitle = descendants(ofType: NSTextField.self, in: iconCard)
+                    .first { $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.title.") == true }!
+                require(presetTitle.font == .systemFont(ofSize: 12, weight: .medium),
+                    "Display preset titles keep a compact 12-point hierarchy")
                 let rowChips = descendants(ofType: NSBox.self, in: iconCard)
                     .filter {
                         $0.identifier?.rawValue.hasPrefix(
@@ -1301,8 +1397,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "Modules heading keeps intrinsic height"
             )
             require(
-                approximately((moduleHeading as? NSTextField)?.font?.pointSize ?? -1, 22),
-                "Modules heading uses 22-point type"
+                approximately((moduleHeading as? NSTextField)?.font?.pointSize ?? -1, 18),
+                "Modules heading uses 18-point type"
             )
             require(
                 approximately(moduleSubtitle.frame.height, moduleSubtitle.intrinsicContentSize.height),
@@ -1328,7 +1424,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(moduleRows.allSatisfy { approximately($0.frame.height, 72) }, "five compact module rows fit the existing window")
             require(moduleIcons.allSatisfy {
                 let alignment = $0.alignmentRect(forFrame: $0.frame)
-                return approximately(alignment.width, 32) && approximately(alignment.height, 32)
+                return approximately(alignment.width, 28) && approximately(alignment.height, 28)
             }, "consistent native icon size")
             let rowYs = moduleRows.map { $0.frame.minY }.sorted()
             require(zip(rowYs, rowYs.dropFirst()).allSatisfy { approximately($1 - $0, 72) },
@@ -1338,15 +1434,23 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(labels.count == 2 && labels.allSatisfy {
                     $0.frame.width + 1 >= $0.intrinsicContentSize.width
                 }, "module names and descriptions fit without truncation")
+                let primary = labels.first { $0.font?.pointSize == 13 }!
+                let detail = labels.first { $0 !== primary }!
+                require(approximately(detail.font?.pointSize ?? -1, 11),
+                    "module descriptions retain a quiet 11-point secondary role")
+                let alignment = primary.superview!
+                    .convert(primary.alignmentRect(forFrame: primary.frame), to: row)
+                require(approximately(alignment.minX, 56),
+                    "Modules uses the same native symbol and label alignment as General")
             }
             let modulePrimaryLabels = descendants(ofType: NSTextField.self, in: modulePage)
                 .filter { Settings.Module.allCases.map(\.title).contains($0.stringValue) }
             require(
                 modulePrimaryLabels.count == 5
                     && modulePrimaryLabels.allSatisfy {
-                        approximately($0.font?.pointSize ?? -1, 14)
+                        approximately($0.font?.pointSize ?? -1, 13)
                     },
-                "module primary labels use 14-point type"
+                "module primary labels use 13-point type"
             )
 
             for module in Settings.Module.allCases {
@@ -1397,7 +1501,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "selected icon card has a distinct normal fill"
             )
             require(controller.selectedRowStrokeWidthForTest == 0, "normal selected row has no extra outline")
-            require(srgbHex(controller.selectedRowFillColorForTest) == 0x2B362F, "normal selection keeps reference sRGB")
+            require(isLabelColor(controller.selectedRowFillColorForTest, alpha: 0.07),
+                "normal sidebar selection has a restrained neutral fill")
             require(controller.toggleTrackStrokeWidthForTest("Hide System Battery Icon") == 1, "normal off toggle outline is one point")
             require(srgbHex(controller.toggleTrackColorForTest("Hide System Battery Icon")) == 0x2E3032, "normal off toggle keeps reference track sRGB")
             require(srgbHex(controller.toggleTrackStrokeColorForTest("Hide System Battery Icon")) == 0x363838, "normal off toggle keeps reference outline sRGB")
@@ -1434,8 +1539,10 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "increased contrast strengthens the selected icon-card fill"
             )
             require(controller.selectedRowStrokeWidthForTest == 2, "increased contrast outlines selected row")
-            require(srgbHex(controller.selectedRowFillColorForTest) == 0x3B5944, "increased contrast strengthens selection fill")
-            require(srgbHex(controller.selectedRowStrokeColorForTest) == 0x8AD88E, "increased contrast gives selection a clear outline")
+            require(isLabelColor(controller.selectedRowFillColorForTest, alpha: 0.14),
+                "increased contrast strengthens the neutral sidebar fill")
+            require(isLabelColor(controller.selectedRowStrokeColorForTest),
+                "increased contrast outlines sidebar selection in the semantic label color")
             require(controller.toggleTrackStrokeWidthForTest("Hide System Battery Icon") == 2, "increased contrast strengthens off toggle outline")
             require(srgbHex(controller.toggleTrackColorForTest("Hide System Battery Icon")) == 0x575B5F, "increased contrast brightens off toggle track")
             require(srgbHex(controller.toggleTrackStrokeColorForTest("Hide System Battery Icon")) == 0xB9C0C6, "increased contrast brightens off toggle outline")
@@ -1465,7 +1572,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "selected icon-card contrast styling restores exactly"
             )
             require(controller.selectedRowStrokeWidthForTest == 0, "selected row outline is removed on restore")
-            require(srgbHex(controller.selectedRowFillColorForTest) == 0x2B362F, "selection sRGB restores exactly")
+            require(isLabelColor(controller.selectedRowFillColorForTest, alpha: 0.07),
+                "sidebar selection restores its restrained neutral fill")
             require(controller.toggleTrackStrokeWidthForTest("Hide System Battery Icon") == 1, "off toggle outline restores exactly")
             require(srgbHex(controller.toggleTrackColorForTest("Hide System Battery Icon")) == 0x2E3032, "off toggle track sRGB restores exactly")
             require(controller.dividerVisualStrokeWidthForTest == 1, "divider stroke restores exactly")
@@ -1704,6 +1812,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(pageTitle.stringValue == "General" && !pageTitleItem.isBordered
                     && view("settings.general.heading", in: window).isHidden,
                     "the current page has one visible title without a glass button backing")
+                require(pageTitle.font == .systemFont(ofSize: 15, weight: .medium),
+                    "native toolbar page titles keep a restrained 15-point hierarchy")
                 let sidebarInWindow = sidebar.convert(sidebar.bounds, to: nil)
                 for trafficButton in controller.trafficLightButtonsForTest {
                     let buttonFrame = trafficButton.convert(trafficButton.bounds, to: nil)
@@ -1817,7 +1927,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "native switch keeps current help and recovery details")
                 require(update.bezelStyle == .glass, "primary action uses the native glass bezel")
                 let heading = descendants(ofType: NSTextField.self, in: content)
-                    .first { $0.stringValue == "General" && $0.font?.pointSize == 22 }!
+                    .first { $0.stringValue == "General" && $0.font?.pointSize == 18 }!
                 let detail = label("settings.general.login.detail", in: window)
                 let surfacesBeforeAppearance = descendants(ofType: NSGlassEffectView.self, in: content)
                     .map(ObjectIdentifier.init)
@@ -1890,7 +2000,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                         "each page updates the visible and accessible native toolbar title")
                     let surfaces = descendants(ofType: NSGlassEffectView.self, in: content)
                         .filter { $0.identifier?.rawValue == "settings.control-group.glass" }
-                    let expectedGroups = identifier == "general" ? 3 : 1
+                    let expectedGroups = identifier == "general" ? 4 : 1
                     require(surfaces.count == expectedGroups && surfaces.allSatisfy {
                         $0.contentView != nil && $0.style == .regular && $0.tintColor == nil
                     }, "functional groups use untinted native glass containing their controls")
@@ -2070,10 +2180,12 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "normal Glass page can reveal the complete Dock restart explanation")
                 let recoveryButton = descendants(ofType: NSButton.self, in: glassWindow.contentView!)
                     .first { $0.accessibilityIdentifier() == "settings.general.controls-recovery.button" }!
-                require(nativeAutomaticUpdates.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow),
-                    "native key loop initially bypasses hidden recovery")
                 let nativeBattery = glassControls
                     .first { $0.accessibilityLabel() == "Hide System Battery Icon" }!
+                let restoredUpdate = button("Check for Updates", in: glassWindow)
+                require(nativeBattery.nextKeyView === restoredUpdate
+                    && nativeAutomaticUpdates.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow),
+                    "native key loop initially bypasses hidden recovery")
                 glassController.refreshSectionsForTest()
                 for nativeUnknown in [initialNativeLogin, nativeBattery] {
                     require(nativeUnknown.state == .off && !nativeUnknown.isEnabled,
@@ -2094,8 +2206,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                         && nativeUnknown.accessibilityHelp()?.contains("Status unavailable") == true,
                         "failed helper read remains explicit in accessibility")
                 }
-                require(nativeAutomaticUpdates.nextKeyView === recoveryButton
-                    && recoveryButton.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow),
+                require(nativeBattery.nextKeyView === recoveryButton
+                    && recoveryButton.nextKeyView === restoredUpdate,
                     "async helper failure adds Repair Controls to the active native key loop")
                 glassFixture.helperAvailable = false
                 glassController.refreshSectionsForTest()
@@ -2105,8 +2217,14 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && initialNativeLogin.accessibilityHelp()?.contains("Full installer required") == true,
                     "unavailable helper does not masquerade as enabled settings")
                 require(recoveryButton.title == "Enable Controls…"
-                    && nativeAutomaticUpdates.nextKeyView === recoveryButton,
+                    && nativeBattery.nextKeyView === recoveryButton
+                    && recoveryButton.nextKeyView === restoredUpdate,
                     "missing helper retains the reachable Enable Controls action")
+                glassController.selectSectionForTest(identifier: "modules")
+                glassController.selectSectionForTest(identifier: "general")
+                require(nativeBattery.nextKeyView === recoveryButton
+                    && recoveryButton.nextKeyView === restoredUpdate,
+                    "rebuilding the visible recovery key loop follows visual order without a self-loop")
                 glassWindow.contentView?.layoutSubtreeIfNeeded()
                 let recoveryScroll = view("settings.general.scroll", in: glassWindow) as! NSScrollView
                 _ = globalAppearance.scrollToVisible(globalAppearance.bounds)
@@ -2138,7 +2256,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "authoritative recovery restores true binary native state")
                 require(initialNativeLogin.accessibilityValueDescription() != "Unknown",
                     "authoritative recovery clears the unknown accessibility description")
-                require(nativeAutomaticUpdates.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow)
+                require(nativeBattery.nextKeyView === restoredUpdate
+                    && nativeAutomaticUpdates.nextKeyView === view("settings.appearance.color-scheme", in: glassWindow)
                     && recoveryButton.nextKeyView == nil,
                     "async helper recovery removes the hidden action without breaking the native key loop")
                 glassWindow.makeFirstResponder(glassBackground)
@@ -2531,7 +2650,6 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("scroll.documentView = scrollDocument", source)
         self.assertNotIn("container.contentView = contentHost", source)
         self.assertIn("windowBackdrop.material = .underWindowBackground", source)
-        self.assertIn("static let generalListHeight: CGFloat = 272", source)
 
     def test_selected_icon_indicator_uses_semantic_accent(self):
         source = WINDOW.read_text(encoding="utf-8")
@@ -2597,7 +2715,6 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("private let dockPopup = SettingsAppearancePopupButton(", source)
         self.assertIn("dockPopup.focusScrollView = dockRow", source)
         self.assertIn("target.scrollToVisible(target.bounds)", source)
-        self.assertIn("static let generalListHeight: CGFloat = 272", source)
 
     def test_default_sections_use_only_existing_settings(self):
         source = WINDOW.read_text(encoding="utf-8")

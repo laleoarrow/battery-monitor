@@ -1,0 +1,860 @@
+{
+  "schema": 1,
+  "baseCommit": "cefa6134da7d37d825b7b622a9e5fa09be025144",
+  "sourceState": "working tree Settings redesign; exact production source hashes below",
+  "settingsSourceSHA256": "01bbc8e74feddd2360468d11179b2f99349aa68db00998a0f7721adce326aa46",
+  "capturedAtUTC": "2026-10-15T05:16:23.471028+00:00",
+  "environment": {
+    "machine": "disposable ARM GUI macOS-TestLab",
+    "macOS": "26.6.1",
+    "build": "25G76",
+    "architecture": "arm64",
+    "hostDesktopUsed": false,
+    "systemAccessibilityPreferencesChanged": false,
+    "screenRecordingPermissionChanged": false
+  },
+  "method": "WindowServer own-window compositing via deprecated public CGWindowListCreateImage symbol compatibility bridge. Harness guards the target belongs to NSApp and requests only its exact own CGWindowID. No whole-screen capture, permission request or VNC authentication. Original production AppKit renderers, native window chrome and glass hosts.",
+  "limitations": "Fixed power readings, time estimates and history; helper/system/update operations mocked; Settings in-memory. Static captures do not establish motion quality or manual VoiceOver behavior. Accessibility modes use existing DEBUG force flags and injected contrast dependency, not changed macOS preferences. Legacy public capture API is isolated to test fixture and not product code.",
+  "counts": {
+    "normalSettings": 20,
+    "popupPowerFixtures": 36,
+    "accessibilitySettings": 60,
+    "total": 116
+  },
+  "matrix": {
+    "settings": [
+      "General top",
+      "Appearance",
+      "Support bottom",
+      "Display",
+      "Modules"
+    ],
+    "settingsThemes": [
+      "Light",
+      "Dark"
+    ],
+    "settingsPresentations": [
+      "Classic",
+      "Glass"
+    ],
+    "popupStates": [
+      "charging",
+      "full",
+      "on-battery",
+      "mixed-supply",
+      "low-battery",
+      "Low Power"
+    ],
+    "popupThemes": [
+      "Light",
+      "Dark"
+    ],
+    "popupPresentations": [
+      "Classic",
+      "Standard Glass",
+      "Clear Glass"
+    ],
+    "accessibility": [
+      "Reduce Transparency",
+      "Increase Contrast",
+      "Reduce Motion"
+    ]
+  },
+  "productionSourcesModifiedForCapture": false,
+  "sourceSHA256": {
+    "Core/AppleSmartBatteryPowerObservationReader.swift": "b5a86dbdafca4acfb80d7bd91071e5a04100c38c78591a7d7cbb3fc96c0fc9c5",
+    "Core/BatteryRuntimeEstimate.swift": "181a13a53e73984b2eb26325c36875da6a93c32d141fb329d219a0b1acc598c2",
+    "Core/BatterySampler.swift": "e13d3140628ed001206ec9e560ea74597da4a8d599a063a42151b393c8441675",
+    "Core/Diagnostics/AppleSmartBatteryObservationReader.swift": "bdf9b7b1fc17c0ad724c9f4387061c023559a67f185556ba86d71fd90765c514",
+    "Core/Diagnostics/DirectSMCObservationReader.swift": "5f4522dcdad0e4bfac1ecb68f903e599e65787c95e60c62e31684346cb78a63e",
+    "Core/Diagnostics/PowerObservationCaptureCommand.swift": "de737073f1c5764182ee7d659540a74a405d72661a9898bc5ea544da0d3f8d98",
+    "Core/Diagnostics/PowerObservationCollector.swift": "9ef6be31a0ba71402477742e8a5fc723f2bd99a217f994877179460825eab607",
+    "Core/Diagnostics/PowerObservationJSONLWriter.swift": "9f6a164fb9857902fec171845c7f2066fa7cdb9ed35312c59f86bc3416bc2831",
+    "Core/EnergyMode.swift": "609fe7864c25605b10550301758f4d01836a0ad63740e335c1ab6f5b8172a8b3",
+    "Core/FeedbackDiagnostics.swift": "db1567193a4ccc5eef8c6b89e4e9a0cfd7341efad1b83debd7d600dd0978560d",
+    "Core/GlassBackgroundView.swift": "f9046a11011aefa1e1577c15d851002ffe2949dd3935abb991a539ea7a33da84",
+    "Core/HelperClient.swift": "2620a616fecb42cf85a708e03d20a6f5e464b33e034e33e988fd9a1b8d01b5de",
+    "Core/HelperClientPowerObservationV5.swift": "9fd766fa6d54aef1a7077983b4e70097a0cc43c7109102b129371672f15832fe",
+    "Core/LoginItemController.swift": "0d9ef7aad7666f2c373f4349e8ee4b538c2d07374af44153addce14649b43169",
+    "Core/PopoverPlacement.swift": "beac97918b60d328b022be3ca663b9a8f8efbeaee6f07387f1c3e42194f751d0",
+    "Core/PowerHistory.swift": "b42dc199e766585b59e30668f9e2235faa440f6ca5019c5a6bbfccb69f499f50",
+    "Core/PowerObservationFusion.swift": "7e877a9d5353d979f8f66ed20b27072b27a21e4cd7d46c8284290ab18a861d2b",
+    "Core/PowerObservationFusionReplay.swift": "d346e7b8a5697efad0f5d98f12f541f4ed1be28bb781e0b3fe4fa3893a5f4c30",
+    "Core/PowerObservationRuntimeController.swift": "28f39e08e70af2dde354b328da16afc6793815e1bf5eca609e7857a98c2054de",
+    "Core/PowerObservationShadow.swift": "3974ee357d7125fcc54509ad975d8881f30783fb131db9e8e16a050cffa22522",
+    "Core/PowerObservationTrace.swift": "8f9d926a4acf76de2afe2eae31bfcff97420f0090878faeb8cb32317a984ba5a",
+    "Core/PowerObservationWireV5.swift": "74cc385246cb918fe7942a17700fe98d2d52034ea880d8d2c6923a5d815649ec",
+    "Core/PowerSnapshot.swift": "48ae64641190df24487c1af7589ad62c7b98bbcafd212dc5d97f75079bfefa96",
+    "Core/RawPowerObservation.swift": "ab961b7bbc0201fb22e2a72c2d66a4d16f1d5c0563ca4aee30ef287bc29ea2bc",
+    "Core/Settings.swift": "865896e6d8b027be2839c2b24bfba11257420b6ab0d68e3dd25c9290981f9090",
+    "Core/SettingsAppearance.swift": "9e318deeafb66b1cb472033195577a45b9412817b695ffbeca6546219aaf581c",
+    "Core/SystemBatteryIcon.swift": "42322574a1d9f892da3a37599f51f6cc6bdf41c0410f02bae399ce96169036a0",
+    "Core/UpdateChecker.swift": "1e725a7dca032579c7f4b2e4601374829169be1ea55b76b65f0a4d1e06f2feb6",
+    "Core/VisualEncoding.swift": "723fd740660035795a5550ad2ad90d05306f246e21aa5acbb556797bc77f41da",
+    "MenuBar/AppDelegate.swift": "2d16b056ba6493479b918331748d09c1350e9f882d2ad442203f38baf99ba099",
+    "MenuBar/BatteryIcon.swift": "f53a5e8b6805d3a8d074fa96ef59d90e3bdb93333d2d0f83bab89c6ac13c70a9",
+    "MenuBar/ClickRouter.swift": "a06623103f819926b9739d6f62fe87683f9e1edd041b1e6baa8bf662d07eedb7",
+    "MenuBar/SettingsWindowController.swift": "01bbc8e74feddd2360468d11179b2f99349aa68db00998a0f7721adce326aa46",
+    "MenuBar/StatusItemController.swift": "5837df1935701e0e6584a5888b2a2314f282ae770333c0df49817151e990dd93",
+    "Popover/GlassPopoverPanel.swift": "620c3847cdb8730bb8eecdc8a0ac71d15d5edf96d483c6051b5790964a422aed",
+    "Popover/HistoryLayer.swift": "38b78dd1398da2f5580794f9710e5f2899aa9cb3e471c840df42cab683e7bd62",
+    "Popover/InteractiveGlassModeControl.swift": "a65dc2d2563ed99030a59bd63d14f2eac2965bec9f9686ec60a1a2dcb419894a",
+    "Popover/LaneLayer.swift": "4d02b1379bd1afab1adbea9b3cdaaa73deb26d28d297cd4d967813829ed2bb28",
+    "Popover/ModeSliderView.swift": "35d1d69fee67ac2bf69b630be5452389e87b6f072771099c7fc025f3090b3b6b",
+    "Popover/NativeGlassModeControl.swift": "55423cc7b07962aeaed27aa181e4800f500f13351b207031de392a166efbba09",
+    "Popover/NativeModeSegmentedControl.swift": "d89a9be2e3afe021194e7489cabd0ac79cce233b37349912df099f4a736756a5",
+    "Popover/PopoverContentView.swift": "8eeb7d2fad36fb1c05bdee7197761fda484756127cd4963d7573c22bd8655903",
+    "Popover/PopoverController.swift": "a82aa45311d0d8c6108dd6c349c101a5ac11b4c3aa85403c8552628007db9a07",
+    "Popover/PopoverPreview.swift": "eccabbb55fd7c7ddde4e961b3ec5e617047e49dfdaffae5a32f5fc77333f56f8",
+    "Popover/PopoverStyle.swift": "e97d386c30599d974a343289f51b9f59cce662119c3943942c9f392357beade6",
+    "Popover/PowerFlowLayer.swift": "ff71eaab3eb864b7e2eed08a76703b9aabef131d9c5ea24240383e3b6b5abcbc",
+    "Popover/RingGaugeLayer.swift": "52b7e639170db8d2371498647d561ebeddea0cd7a6577c40323533bc26b3fcc8",
+    "scripts/lib/local_cleanup.sh": "372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e",
+    "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+    "design/icon/in-app-logo/AppLogoClearDark.png": "4fa6f526276c87bb7b4f9d8c8ea2fdc4f9ddaf2e7609c06c5526dae2328b57a0",
+    "design/icon/in-app-logo/AppLogoClearLight.png": "e9882dfaab15ce5eff5ebaaa28821b2d6f12600f03c1986b469281127db02b2a",
+    "design/icon/in-app-logo/AppLogoColor.png": "b5d4134fe0c4254279de1953a17214ed69d0473bb1e49093a597ea82e10219f8",
+    "design/icon/in-app-logo/README.md": "5b730ae14118278054caded51b44999be706ba385638c3fd4c3afc693fadc983",
+    "design/icon/dock-logo/AppDockLogoClearDark.png": "301dccfc3f19b7c9eaf9ebd43aee8a7d2e6ef468f25b9762e5f79db91004d2e5",
+    "design/icon/dock-logo/AppDockLogoClearLight.png": "71c819e14b7ad5b4e394638f5010deed8edcd7985fb6113bf619a072c3695f36",
+    "design/icon/dock-logo/AppDockLogoColor.png": "12212d08127905b6d5e0ad457b893ac27c75d194112cb0b2e3f961bc136528fe",
+    "design/icon/dock-logo/README.md": "3c432511a300f0e138937b8f9d056c396a55150aed3c4f271eb71efd2990569e",
+    "scripts/build_glass_preview.sh": "8d7960e14d2475f7cf23962a341e5f3a46500a9001f4cdb52c51617e6c0187d4",
+    "tests/visual/glass_preview.swift": "5773b21c0365a083bcdd8d92dc9467040606fea4f512c55f72dd401dc7f369eb",
+    "tests/visual/glass_preview_Info.plist": "85da5366f5fc361a6b800f146f94fcba584b5e0b2ea6b4efbca9a8de947f0ddd",
+    "tests/visual/glass_preview.entitlements": "0288117aedfa6e05d9af78792ee7fcd89087e94a238d3b57e48f151d4c57ae3a",
+    "design/icon/AppIcon.icns": "c222188619927c9a40a6aeac136918a3c51fd41adffe9e66b18b07df1f54f2df",
+    "VERSION": "eb1923116d52bdacca4263cb576fba310bc2328f2dea5ab3f1a367f8ff2ec23c",
+    "tests/test_settings_window_contract.py": "ed63f0788b34ba931dfdda84db191d9e96b5b16710fc6bbc1b9822f17bb32077",
+    "tests/local_runtime.py": "4d4256dc20f6c6af76648c1d863a7f3d080ab923226e24d42348f8f6d06fb5df"
+  },
+  "sourceVerification": {
+    "filesChecked": 64,
+    "allMatched": true,
+    "settingsSourceAfterMatches": true
+  },
+  "captureFixturePatch": "../capture-owned-windows.patch",
+  "captureFixtureSHA256": "82e29f00c34d2b6781b095223fd2257f8a9fba4e5294812d216f34e32e9f551f",
+  "orchestration": "../capture-evidence.sh",
+  "images": [
+    {
+      "image": "accessibility/increased-contrast/settings-classic-appearance-dark.png",
+      "sha256": "05c029b2a48a226cc5d796aec3e798eab2763811febd0d4a9c19e31669083123",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-classic-appearance-light.png",
+      "sha256": "044bdf66333d524cc0fc6dd1e4ff4fd8a4a643d2d6d940d028492e7211acf5a1",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-classic-feedback-dark.png",
+      "sha256": "2a114cacae8233ed8d007871e4dca9f3504948d43a3b699c5e957e84eede73e6",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-classic-feedback-light.png",
+      "sha256": "172ac703b2c01496a73251cd8e686d7c90e2689df31addb530a3840e3370ae4f",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-classic-general-dark.png",
+      "sha256": "a166bcd068f051a2e0c9cb3b8cdac24f6ca13fd95a46b8321e6c0a1e908c2aa2",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-classic-general-light.png",
+      "sha256": "58c3350ebdc07c30362fc6c1a99060b0ba7028c8c41e6739d0636869f02b4368",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-classic-menu-bar-icon-dark.png",
+      "sha256": "8d0d25d15905ad75869eb81e2ba971af545a1e1ba4ddf2a42e6e1841e6396b85",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-classic-menu-bar-icon-light.png",
+      "sha256": "532991004b8775dc77d27ed5a124f5c7ca6466e77885944bbaf72a74bacdfe7e",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-classic-modules-dark.png",
+      "sha256": "a5f4ae368ab8c39b9da3fad4812fe8b1772575c07b8f8eafeb32b2eb8eb9d340",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-classic-modules-light.png",
+      "sha256": "fce667c41a7597f4a4e2daae0ad9283e7390d878c065f176891014abb144fe2a",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-glass-appearance-dark.png",
+      "sha256": "f492f62264e250d85fb71aab6291d724207971eadf00ef86ad13000307e59ecb",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-glass-appearance-light.png",
+      "sha256": "120f28a84edf86c042d312f6733c6ea3c789a94ce738c873a349251dccc056ba",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-glass-feedback-dark.png",
+      "sha256": "6aa6454945476504dbc0d2995ed5eae9acba1c237b6361fed4c0f5f7be3aec2e",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-glass-feedback-light.png",
+      "sha256": "79540ae7645d6267d93df5a6e800cbab4df4e8eb963aa60c65d158fcca790193",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-glass-general-dark.png",
+      "sha256": "3a284b5a1539a2e0d0ee9df7499dc6d26212066b9c439abec157063c3aa55fe5",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-glass-general-light.png",
+      "sha256": "5e98bf42cd66d4758cc1b960d5bc5b63dcb3ad7a10519b9d527b57de24ac9914",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-glass-menu-bar-icon-dark.png",
+      "sha256": "abce3dd3aca90f69c8633b5fbae3faa76797f8586dfc8bdf8fdf2afb88782812",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-glass-menu-bar-icon-light.png",
+      "sha256": "afe79302f0c4202a1c392211028bd3083360173dd95a01de576dd35258fe5e1a",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-glass-modules-dark.png",
+      "sha256": "2018b664875c7dbd15f143a714ab8fde0a3c0f654c78cd83fa979c358a7ad086",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/increased-contrast/settings-glass-modules-light.png",
+      "sha256": "fa5267d6b6db698c655f6fe8b7bf8e5b417bb2b236e9a18d5d106f4ebe410b6d",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-classic-appearance-dark.png",
+      "sha256": "8c9ce5db903241d4a0af5fc2943af08aac0c93819fb61fcba26ff2aed799ce3e",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-classic-appearance-light.png",
+      "sha256": "42f8f2fa7af0dac2dcebbc195d249a105dd25b26ec89f7974a33dd9b63fcafb3",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-classic-feedback-dark.png",
+      "sha256": "c7048817f9fa7c2d8a67e821d527bccc37ff48a1f21bbffc852503d0a9f58227",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-classic-feedback-light.png",
+      "sha256": "970cab0f9c17a11ddde314a807ea9762da855a54b5f59e99b07ced8b8919f680",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-classic-general-dark.png",
+      "sha256": "07f261a6386a75af500829205a76e1cf0cc72401029e518ab28c314770b0f2eb",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-classic-general-light.png",
+      "sha256": "ff87d188a00cfe292f529a2da396d4bb589adb81f7c8486b64e5c5e3a895ccc4",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-classic-menu-bar-icon-dark.png",
+      "sha256": "08e5e0c2e2ff3fa5afc5c796c7ce88af3e6a1757d86ea59cc0b1b8dde3caa678",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-classic-menu-bar-icon-light.png",
+      "sha256": "40cf951423663beb272538e6415083d1d59bada2857534ff4a6c52ef312637bb",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-classic-modules-dark.png",
+      "sha256": "1b316c6a4ed142f9f91a71e5f225f2d861c1603cd8bb7c70393ef98946153572",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-classic-modules-light.png",
+      "sha256": "d8bf7677aab6ec3b0ee2022bcb36ac3c23191fa5f3f367fe9e580792a9dc3850",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-glass-appearance-dark.png",
+      "sha256": "ce129c99e541c0962b8d568a187e202c55434e9410558dadde41376fc1f51334",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-glass-appearance-light.png",
+      "sha256": "5e8a7a49fa11f8e365540dcfb83890e68e3f6a49d7361c067038760059a23874",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-glass-feedback-dark.png",
+      "sha256": "182bf383303458dbb199c4b197e982c1d97c4bc7448bc9b8114cc4ae34d6b040",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-glass-feedback-light.png",
+      "sha256": "c092c757e4fc85749726ddd56aa5fafd0fae3b6452099d2b31f79d488ffba2dd",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-glass-general-dark.png",
+      "sha256": "ab2294fee04f0d9d58b4a5642cefba65bf43b46d04d0e73d8f6a131016c4e1ee",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-glass-general-light.png",
+      "sha256": "5d9019b522ac9868a3e7f8495e67bc6cf310a36ca702fbfe130341704d5f9313",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-glass-menu-bar-icon-dark.png",
+      "sha256": "0ae8e8eefb833171f4d3cf1417938dd96c9b3d3acdd55ab46fb6817121f8433b",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-glass-menu-bar-icon-light.png",
+      "sha256": "b715f46e79430b9c04f9424fee9f169a5e23634ee1cdf589bf86799035d063a5",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-glass-modules-dark.png",
+      "sha256": "1c8e8107f591be8c13e123258479315a9c76708a23c2b75bd05d35887feb023b",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-motion/settings-glass-modules-light.png",
+      "sha256": "05497eff71e71657100e2db2b5c75a5304a54d46f99834c91a678187d0f7f3ac",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-classic-appearance-dark.png",
+      "sha256": "8c9ce5db903241d4a0af5fc2943af08aac0c93819fb61fcba26ff2aed799ce3e",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-classic-appearance-light.png",
+      "sha256": "42f8f2fa7af0dac2dcebbc195d249a105dd25b26ec89f7974a33dd9b63fcafb3",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-classic-feedback-dark.png",
+      "sha256": "c7048817f9fa7c2d8a67e821d527bccc37ff48a1f21bbffc852503d0a9f58227",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-classic-feedback-light.png",
+      "sha256": "970cab0f9c17a11ddde314a807ea9762da855a54b5f59e99b07ced8b8919f680",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-classic-general-dark.png",
+      "sha256": "07f261a6386a75af500829205a76e1cf0cc72401029e518ab28c314770b0f2eb",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-classic-general-light.png",
+      "sha256": "ff87d188a00cfe292f529a2da396d4bb589adb81f7c8486b64e5c5e3a895ccc4",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-classic-menu-bar-icon-dark.png",
+      "sha256": "08e5e0c2e2ff3fa5afc5c796c7ce88af3e6a1757d86ea59cc0b1b8dde3caa678",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-classic-menu-bar-icon-light.png",
+      "sha256": "40cf951423663beb272538e6415083d1d59bada2857534ff4a6c52ef312637bb",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-classic-modules-dark.png",
+      "sha256": "1b316c6a4ed142f9f91a71e5f225f2d861c1603cd8bb7c70393ef98946153572",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-classic-modules-light.png",
+      "sha256": "d8bf7677aab6ec3b0ee2022bcb36ac3c23191fa5f3f367fe9e580792a9dc3850",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-glass-appearance-dark.png",
+      "sha256": "6848f9352cd8367459cd87f95bc9b7e30e7e7880842a01b2254b168a3fff2f34",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-glass-appearance-light.png",
+      "sha256": "f17d90cfba34407293735e10146fe6c5cb461e9e9e476f471eb016f7754ebc9f",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-glass-feedback-dark.png",
+      "sha256": "34cccc8ec0ca9dc77d6163dc7258077d39e11b5c03c81e082950e000c29b5b6b",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-glass-feedback-light.png",
+      "sha256": "64c4b4f1b174118a5f65677e3b19762a00013f96ffb333790b931a62b845605b",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-glass-general-dark.png",
+      "sha256": "3cce2dbac0fcf4705081ddef1f64f22c5e2e8becbf99d2ca041a784df22bed05",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-glass-general-light.png",
+      "sha256": "adeea29328046b449d79b33e469f303460958022f4cfb59396e2fb78108bee2e",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-glass-menu-bar-icon-dark.png",
+      "sha256": "e0715e4e24a41d40a464ef323fc973226fc56ddb22e717052fea2da10f4ea737",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-glass-menu-bar-icon-light.png",
+      "sha256": "a385021f852018c26356302cec47045649b801d57d2913a3c192e8b5c0207109",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-glass-modules-dark.png",
+      "sha256": "e3443c4a37bbaa66dd60d67a6405da894a8396500d0c3014351b0823a143ca70",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "accessibility/reduced-transparency/settings-glass-modules-light.png",
+      "sha256": "9acc0d13e89c09b8ddd93c1bf8dd3c2c92336733f2f012d374788b444e3d282a",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "power-fixtures/classic-battery-dark.png",
+      "sha256": "92915de585b0fb6509b1cb2c2f75cdd17d1e02eaea4aa79e68baff5182aba6ef",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/classic-battery-light.png",
+      "sha256": "3b5627d5b5a561bffa5f4a1afc7cc50f311514d44480e3e059dde2f649349e9a",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/classic-charging-dark.png",
+      "sha256": "645cb517aaa6edf6a3e6a331121ce48be036da434f3661b74f6b361741c8f806",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/classic-charging-light.png",
+      "sha256": "4ebc29e3ef11343f6f4396cc72c76fbb866c2dfe4fb03dc5f70f98993b6cf658",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/classic-full-dark.png",
+      "sha256": "e953e88455f563d42a8f76310941d494b9a7262a1bf59735a3f3d6919d5c75e7",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/classic-full-light.png",
+      "sha256": "acf727a8e2fa92422ac1e5b9ac7a8b2c85683faafbb35e6299e75eda33225300",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/classic-low-battery-dark.png",
+      "sha256": "66990d93ccf49a18beb965341908da1286a49159d3f664389b619d280dc566a6",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/classic-low-battery-light.png",
+      "sha256": "896303e4dc321a8541b660002d4e6d90aa72430325e4b9189cab2fb0cdc81d56",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/classic-low-power-dark.png",
+      "sha256": "c8484a213f68ca8dc0c0eb8d8a7d4efe09e9917cb2f4b831aee77d9d044a7bfb",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/classic-low-power-light.png",
+      "sha256": "a201bb6bfc3d1f92bac4fe641ade2fd6fe77d6fddc7983642143852759925d0d",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/classic-mixed-dark.png",
+      "sha256": "46804035245cdfc78439693fc3ad53456a43290a4d4a0036e1e8981bea7d4416",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/classic-mixed-light.png",
+      "sha256": "27c53a901ea047d371cbd46d6d08a960db6158094621a29293477c1c62a8243e",
+      "width": 432,
+      "height": 871
+    },
+    {
+      "image": "power-fixtures/clear-battery-dark.png",
+      "sha256": "2d995f690402d8c64fe3042bcfe05c973f42ce266baad38696be7d16bccb3a83",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/clear-battery-light.png",
+      "sha256": "2929fc701009aafde03345356b4b187cd98044fac1f3c376bc88f2b502909f58",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/clear-charging-dark.png",
+      "sha256": "3ea678b728041e3185ed19a251ad4f88656e1dc1d31fde28c215a33e4ba862be",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/clear-charging-light.png",
+      "sha256": "c816159ef88c4e132299719cc4d28a640b9be53e129c19f85a7fe2e6d554a572",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/clear-full-dark.png",
+      "sha256": "423bd74dacba06d32b8d9a55e56723a7dd38107cd7b78ca93d906c31146b9571",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/clear-full-light.png",
+      "sha256": "96eba2bf6a0d7d41a3d666ffed4857b5684cfad64a47f1bb2179dc89f2791900",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/clear-low-battery-dark.png",
+      "sha256": "877afea7be2d2b8a0feadf6a70be66810c6a6f2b0d2a2d8239a3a3b1657fa51d",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/clear-low-battery-light.png",
+      "sha256": "9db821cc300d5ce4aa2c1823f79c5aac2e59c471248590505520ea33fdd919d3",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/clear-low-power-dark.png",
+      "sha256": "746da987e296089b295b35b15bb5f5de372173c9bdbf04c6bd71b761c7935370",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/clear-low-power-light.png",
+      "sha256": "22cbb2d1861f7a04fbb790af863bbf33ba50ca69539440cfa4f42354f4ffecd3",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/clear-mixed-dark.png",
+      "sha256": "ec8073bb1259d5c040d2c77a1a3f4d3b29df943b02aa2cb6733bfbe5879f6ed0",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/clear-mixed-light.png",
+      "sha256": "e3fb89f9c324d2819b47907d881ec8165d03ade6e60b6ebc50e9c15420173df6",
+      "width": 426,
+      "height": 865
+    },
+    {
+      "image": "power-fixtures/standard-battery-dark.png",
+      "sha256": "dc5918aae52b88fae86e05efb6a11c92053292497d28ee70cfce4fb1d16717e2",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "power-fixtures/standard-battery-light.png",
+      "sha256": "cd275d757e9ac6217cf452dd6178573f0c1bfdcfdca4425dc28c28e92c3da82a",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "power-fixtures/standard-charging-dark.png",
+      "sha256": "2054ecc46590d9575a334ed52bd36d62c1a30c585a6dda99f764d0d61c3a2185",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "power-fixtures/standard-charging-light.png",
+      "sha256": "41d978bc8a43f99e1e07af8b8d4431f090ede14b71dc745828a0e75312edbb1b",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "power-fixtures/standard-full-dark.png",
+      "sha256": "626b8b5b633dd9bb9ad70fc017435bef3edc651f4338f63d41a1718aa514254c",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "power-fixtures/standard-full-light.png",
+      "sha256": "348b77d63bebed2546c6b43d30daec86428d1437b38e47c946b4489b51633809",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "power-fixtures/standard-low-battery-dark.png",
+      "sha256": "ec55066791c635b6c7a77c93dcb2046b97d7753b7889012a9e42eabd2310d36d",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "power-fixtures/standard-low-battery-light.png",
+      "sha256": "604adce0299c8380d71f85fdd731f40a29565cf150c4211824db10f08cc5b2bd",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "power-fixtures/standard-low-power-dark.png",
+      "sha256": "9447d99059aaec61f857909114f694e215066cb8c52d8713132fbbe8c2a112c6",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "power-fixtures/standard-low-power-light.png",
+      "sha256": "b7e629ee68140ab3c65b1db6429a9e76b282905ffc9e2dec5105e8e0a8d2e2f6",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "power-fixtures/standard-mixed-dark.png",
+      "sha256": "5252102b716f48cbc41e93725bf9e416b6b051bc024dec1ed31cb17708baebc2",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "power-fixtures/standard-mixed-light.png",
+      "sha256": "f35221de8a72cc69dc6afd89c827da202778514d2606ee3e8645b93c33df9caf",
+      "width": 380,
+      "height": 819
+    },
+    {
+      "image": "settings-classic-appearance-dark.png",
+      "sha256": "8c9ce5db903241d4a0af5fc2943af08aac0c93819fb61fcba26ff2aed799ce3e",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-classic-appearance-light.png",
+      "sha256": "42f8f2fa7af0dac2dcebbc195d249a105dd25b26ec89f7974a33dd9b63fcafb3",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-classic-feedback-dark.png",
+      "sha256": "c7048817f9fa7c2d8a67e821d527bccc37ff48a1f21bbffc852503d0a9f58227",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-classic-feedback-light.png",
+      "sha256": "970cab0f9c17a11ddde314a807ea9762da855a54b5f59e99b07ced8b8919f680",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-classic-general-dark.png",
+      "sha256": "07f261a6386a75af500829205a76e1cf0cc72401029e518ab28c314770b0f2eb",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-classic-general-light.png",
+      "sha256": "ff87d188a00cfe292f529a2da396d4bb589adb81f7c8486b64e5c5e3a895ccc4",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-classic-menu-bar-icon-dark.png",
+      "sha256": "08e5e0c2e2ff3fa5afc5c796c7ce88af3e6a1757d86ea59cc0b1b8dde3caa678",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-classic-menu-bar-icon-light.png",
+      "sha256": "40cf951423663beb272538e6415083d1d59bada2857534ff4a6c52ef312637bb",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-classic-modules-dark.png",
+      "sha256": "1b316c6a4ed142f9f91a71e5f225f2d861c1603cd8bb7c70393ef98946153572",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-classic-modules-light.png",
+      "sha256": "d8bf7677aab6ec3b0ee2022bcb36ac3c23191fa5f3f367fe9e580792a9dc3850",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-glass-appearance-dark.png",
+      "sha256": "ce129c99e541c0962b8d568a187e202c55434e9410558dadde41376fc1f51334",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-glass-appearance-light.png",
+      "sha256": "5e8a7a49fa11f8e365540dcfb83890e68e3f6a49d7361c067038760059a23874",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-glass-feedback-dark.png",
+      "sha256": "182bf383303458dbb199c4b197e982c1d97c4bc7448bc9b8114cc4ae34d6b040",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-glass-feedback-light.png",
+      "sha256": "c092c757e4fc85749726ddd56aa5fafd0fae3b6452099d2b31f79d488ffba2dd",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-glass-general-dark.png",
+      "sha256": "ab2294fee04f0d9d58b4a5642cefba65bf43b46d04d0e73d8f6a131016c4e1ee",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-glass-general-light.png",
+      "sha256": "5d9019b522ac9868a3e7f8495e67bc6cf310a36ca702fbfe130341704d5f9313",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-glass-menu-bar-icon-dark.png",
+      "sha256": "0ae8e8eefb833171f4d3cf1417938dd96c9b3d3acdd55ab46fb6817121f8433b",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-glass-menu-bar-icon-light.png",
+      "sha256": "b715f46e79430b9c04f9424fee9f169a5e23634ee1cdf589bf86799035d063a5",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-glass-modules-dark.png",
+      "sha256": "1c8e8107f591be8c13e123258479315a9c76708a23c2b75bd05d35887feb023b",
+      "width": 832,
+      "height": 632
+    },
+    {
+      "image": "settings-glass-modules-light.png",
+      "sha256": "05497eff71e71657100e2db2b5c75a5304a54d46f99834c91a678187d0f7f3ac",
+      "width": 832,
+      "height": 632
+    }
+  ],
+  "guiSettingsContract": {
+    "testsPassed": 8,
+    "failures": 0,
+    "durationSeconds": 140.341,
+    "nativeHarnessDurationSeconds": 133.914,
+    "reuseCycles": 500,
+    "createdWindowCycles": 500,
+    "fileDescriptorsAfterWarmup": 4,
+    "fileDescriptorsFinal": 4,
+    "postWarmupRSSPlateauSpreadBytes": 2785280,
+    "log": "settings-interaction.log"
+  },
+  "cleanup": {
+    "ownedGuestScratchRemoved": true,
+    "ownedGuestContainersAndApplicationScriptsRemoved": true,
+    "ownedGuestAppProcessesStopped": true,
+    "ownedGuestAppRegistrationsRemoved": true,
+    "hostScratchRemoved": true,
+    "vmState": "left running because session was caller-owned and already running"
+  },
+  "popupFixtureDifference": "Popup captures precede only the added reflectScrolledClipView call for programmatic General scrolling; production sources are identical, and the difference is outside popup capture paths.",
+  "patchedCaptureHarnessSHA256": "1716b4091dea392f0ce1120facbb1a486ed07f7c8f2b1a120e11e38f271b1d9b",
+  "popupPatchedHarnessSHA256": "c369d78efdc482d3187b1042adc525c4fcaf9e2f914893f5394de822a7c22831"
+}
