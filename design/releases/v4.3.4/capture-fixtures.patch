@@ -1,0 +1,78 @@
+--- a/tests/visual/capture_production_glass.swift
++++ b/tests/visual/capture_production_glass.swift
+@@ -91,17 +91,43 @@
+         background.isOpaque = true
+         backdrop = background
+         background.orderFrontRegardless()
+-        let sample = PowerSnapshot(percent: 72, plugged: true, adapterW: 68,
+-            batteryW: 22.2, systemW: 45.8, temperatureC: 34.2, cycleCount: 282,
+-            lowPowerMode: false, batteryTimeEstimate: .charging(42))
++        let fixtureScenario = ProcessInfo.processInfo.environment["WATTSON_CAPTURE_SCENARIO"] ?? "gallery"
++        let sample: PowerSnapshot
++        switch fixtureScenario {
++        case "gallery", "charging":
++            sample = PowerSnapshot(percent: 72, plugged: true, adapterW: 68,
++                batteryW: 22.2, systemW: 45.8, temperatureC: 34.2, cycleCount: 282,
++                lowPowerMode: false, batteryTimeEstimate: .charging(42))
++        case "full":
++            sample = PowerSnapshot(percent: 100, plugged: true, adapterW: 35.5,
++                batteryW: 0, systemW: 35.5, temperatureC: 30.2, cycleCount: 282,
++                lowPowerMode: false, batteryTimeEstimate: .full)
++        case "on-battery":
++            sample = PowerSnapshot(percent: 67, plugged: false, adapterW: 0,
++                batteryW: -22.4, systemW: 22.4, temperatureC: 33.1, cycleCount: 282,
++                lowPowerMode: false, batteryTimeEstimate: .remaining(265))
++        case "mixed-supply":
++            sample = PowerSnapshot(percent: 72, plugged: true, adapterW: 30,
++                batteryW: -10, systemW: 40, temperatureC: 35.2, cycleCount: 282,
++                lowPowerMode: false, batteryTimeEstimate: .notCharging)
++        case "low-battery":
++            sample = PowerSnapshot(percent: 8, plugged: false, adapterW: 0,
++                batteryW: -18, systemW: 18, temperatureC: 31.2, cycleCount: 282,
++                lowPowerMode: false, batteryTimeEstimate: .remaining(22))
++        case "low-power":
++            sample = PowerSnapshot(percent: 41, plugged: false, adapterW: 0,
++                batteryW: -8, systemW: 8, temperatureC: 29.8, cycleCount: 282,
++                lowPowerMode: true, batteryTimeEstimate: .remaining(210))
++        default: throw failure("Unknown capture scenario")
++        }
+         let history = (0..<32).map { sample.totalInputW * (0.88 + 0.08 * sin(Double($0) * 0.4)) }
+         var captures = 0
+-        for scheme in [Settings.ColorScheme.light, .dark] {
++        for scheme in fixtureScenario == "gallery" ? [Settings.ColorScheme.light, .dark] : [.dark] {
+             Settings.colorScheme = scheme
+             NSApp.appearance = scheme.appearance
+             let level: CGFloat = scheme == .light ? 0.85 : 0.15
+             background.backgroundColor = NSColor(srgbRed: level, green: level, blue: level, alpha: 1)
+-            for style in [Settings.LiquidGlassStyle.regular, .clear] {
++            for style in fixtureScenario == "gallery" ? [Settings.LiquidGlassStyle.regular, .clear] : [.regular] {
+                 Settings.liquidGlassStyle = style
+                 let popover = PopoverController()
+                 controller = popover
+@@ -120,7 +146,7 @@
+                 else { throw failure("Production hierarchy unavailable") }
+                 // Reuse the existing preview's footer-fixture API. No helper
+                 // calls, pmset changes, or geometry modifications are made.
+-                footer.update(mode: .auto, helperInstalled: true, systemBatteryIconHidden: false,
++                footer.update(mode: sample.lowPowerMode ? .low : .auto, helperInstalled: true, systemBatteryIconHidden: false,
+                               tint: PopoverStyle.stateColor(sample.state))
+                 content.layoutSubtreeIfNeeded()
+                 try await Task.sleep(nanoseconds: 400_000_000)
+@@ -166,7 +192,7 @@
+                     else { throw failure("WindowServer returned an empty capture") }
+                     try png.write(to: directory.appendingPathComponent(name + ".png"), options: .atomic)
+                     let marker: [String: Any] = [
+-                        "name": name, "margin": margin, "window": panel.windowNumber,
++                        "name": name, "fixtureScenario": fixtureScenario, "fixtureValues": true, "margin": margin, "window": panel.windowNumber,
+                         "panelFrameAppKit": rect(panel.frame), "glassFrameAppKit": rect(glassFrame),
+                         "anchorButtonFrameAppKit": rect(anchorFrame), "anchorWindowFrameAppKit": rect(anchorWindow.frame),
+                         "screenFrameAppKit": rect(screen.frame), "visibleFrameAppKit": rect(screen.visibleFrame),
+@@ -179,7 +205,7 @@
+                         "runtimeFrameInDocument": rect(runtime.convert(runtime.bounds, to: document)),
+                         "hasWindowShadow": panel.hasShadow, "reduceMotionOverride": false,
+                         "captureRectCG": rect(region), "pixels": [bitmap.pixelsWide, bitmap.pixelsHigh],
+-                        "limitations": "Fixed charging and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only."
++                        "limitations": "Fixed power scenario and simulated footer state; production status item, placement and views, no manually adjusted panel/sibling geometry. Captures own panel plus backdrop only."
+                     ]
+                     try write(marker, name: name + "-geometry.json")
+                     print("PRODUCTION_GLASS_CAPTURED: \(name)")
