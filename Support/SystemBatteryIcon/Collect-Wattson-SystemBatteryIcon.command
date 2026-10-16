@@ -1,0 +1,83 @@
+#!/bin/bash
+# Read-only, source-visible support collection; no Wattson CLI dependency.
+set -euo pipefail
+umask 077
+export LC_ALL=C
+export COPYFILE_DISABLE=1
+
+SUPPORT_DIR="$(cd "$(/usr/bin/dirname "$0")" && /bin/pwd)"
+# shellcheck source=lifecycle.sh
+source "$SUPPORT_DIR/lifecycle.sh"
+OUTPUT_DIR="$HOME/Desktop"
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --output)
+            [[ $# -ge 2 && -n "$2" ]] || { echo 'Missing --output directory.' >&2; exit 2; }
+            OUTPUT_DIR=$2; shift 2 ;;
+        *) echo 'Usage: Collect-Wattson-SystemBatteryIcon.command [--output DIRECTORY]' >&2; exit 2 ;;
+    esac
+done
+
+/bin/mkdir -p -- "$OUTPUT_DIR"
+OUTPUT_DIR="$(cd "$OUTPUT_DIR" && /bin/pwd)"
+support_begin "${TMPDIR:-/tmp}/Wattson-SystemBatteryIcon.noindex"
+REPORT_DIR="$SUPPORT_SCRATCH/Wattson-SystemBatteryIcon"
+support_run /bin/mkdir "$REPORT_DIR"
+
+echo 'Wattson 系统电池图标：只读诊断收集 / Read-only support collection'
+echo '不需要密码或额外软件，不修改设置或权限，不截图，不自动上传。'
+echo '通常十几秒内完成；完成后请检查桌面上的 ZIP，再手动附到 Issue。'
+
+run_probe() {
+    local key=$1 timeout_ticks=$2 tick=0 pid
+    shift 2
+    "$@" > "$SUPPORT_SCRATCH/$key.raw" 2>/dev/null &
+    pid=$!
+    support_track "$pid"
+    while kill -0 "$pid" 2>/dev/null && [[ "$tick" -lt "$timeout_ticks" ]]; do
+        /bin/sleep 0.1 &
+        local sleeper=$!
+        support_track "$sleeper"
+        wait "$sleeper" || true
+        support_forget "$sleeper"
+        tick=$((tick + 1))
+    done
+    if kill -0 "$pid" 2>/dev/null; then
+        support_stop "$pid"
+        echo unavailable > "$SUPPORT_SCRATCH/$key.raw"
+    elif wait "$pid"; then
+        support_forget "$pid"
+        [[ "$key" != signature ]] || echo verified > "$SUPPORT_SCRATCH/$key.raw"
+    else
+        support_forget "$pid"
+        echo unavailable > "$SUPPORT_SCRATCH/$key.raw"
+    fi
+}
+
+run_probe productVersion 30 /usr/bin/env SYSTEM_VERSION_COMPAT=0 /usr/bin/sw_vers -productVersion
+run_probe buildVersion 30 /usr/bin/env SYSTEM_VERSION_COMPAT=0 /usr/bin/sw_vers -buildVersion
+run_probe architecture 30 /usr/bin/uname -m
+run_probe signature 50 /usr/bin/codesign --verify --deep --strict /Applications/Wattson.app
+# The Perl request itself has a four-second deadline; allow startup/output headroom.
+run_probe health 60 /usr/bin/perl "$SUPPORT_DIR/socket_probe.pl" health
+run_probe batteryIcon 60 /usr/bin/perl "$SUPPORT_DIR/socket_probe.pl" getSystemBatteryIconHidden
+run_probe snapshot 100 /usr/bin/osascript -l JavaScript "$SUPPORT_DIR/collect.js" snapshot "$SUPPORT_SCRATCH"
+if [[ ! -s "$SUPPORT_SCRATCH/snapshot.raw" ]] || [[ "$(/bin/cat "$SUPPORT_SCRATCH/snapshot.raw")" == unavailable ]]; then
+    echo '无法生成经过字段筛选的报告，未创建 ZIP。请把这条错误消息回复到 Issue。' >&2
+    exit 1
+fi
+support_run /bin/cp "$SUPPORT_SCRATCH/snapshot.raw" "$REPORT_DIR/environment.json"
+support_run /bin/cp "$SUPPORT_DIR/REPORT-README.txt" "$REPORT_DIR/README.txt"
+REPORT_NAME="Wattson-SystemBatteryIcon-$(/bin/date -u +%Y%m%dT%H%M%SZ)-$$.zip"
+ARCHIVE="$SUPPORT_SCRATCH/$REPORT_NAME"
+support_run /usr/bin/ditto -c -k --norsrc --noextattr --noqtn --noacl --keepParent "$REPORT_DIR" "$ARCHIVE"
+support_run /usr/bin/unzip -t "$ARCHIVE" >/dev/null
+SUPPORT_OUTPUT_PARTIAL="$OUTPUT_DIR/.$REPORT_NAME.partial.noindex"
+support_run /bin/cp "$ARCHIVE" "$SUPPORT_OUTPUT_PARTIAL"
+support_run /usr/bin/cmp -s "$ARCHIVE" "$SUPPORT_OUTPUT_PARTIAL"
+support_run /bin/mv "$SUPPORT_OUTPUT_PARTIAL" "$OUTPUT_DIR/$REPORT_NAME"
+SUPPORT_OUTPUT_PARTIAL=""
+echo ''
+echo "已保存 / Saved: $OUTPUT_DIR/$REPORT_NAME"
+echo '请先解压检查 environment.json，再把 ZIP 拖到 GitHub Issue 回复框提交。'
+echo '请同时说明：系统电池图标实际是否可见，以及刚才点击隐藏选项时的现象。'
