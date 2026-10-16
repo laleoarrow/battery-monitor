@@ -1582,7 +1582,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             }
             let flow = button(Settings.Module.flow.title, in: first)
             require(controller.sidebarNextKeyViewForTest === flow, "Tab enters first Modules switch")
-            require(controller.lastVisibleSwitchNextKeyViewForTest === controller.sidebarForTest, "Modules key loop returns to navigation")
+            let lastModuleHandle = view("settings.modules.reorder.runtime", in: first)
+            require(lastModuleHandle.nextKeyView === controller.sidebarForTest, "Modules key loop returns from the final reorder handle to navigation")
             flow.performClick(nil)
             require(!Settings.isModuleVisible(.flow), "module writes through shared Settings store")
             Settings.setModule(.flow, visible: true)
@@ -1592,6 +1593,98 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(!Settings.isModuleVisible(.runtime), "runtime switch writes shared module state")
             Settings.setModule(.runtime, visible: true)
             require(runtimeModule.state == .on, "runtime switch observes menu/shared changes")
+
+            // Reordering changes presentation, never the identity or visibility
+            // of a module. Exercise the real controls and their keyboard/AX path.
+            tracePhase("module-order")
+            let originalModuleRows = Dictionary(uniqueKeysWithValues: moduleRows.map {
+                ($0.identifier!.rawValue, ObjectIdentifier($0))
+            })
+            let originalModuleButtons = Dictionary(uniqueKeysWithValues: Settings.Module.allCases.map {
+                ($0, ObjectIdentifier(button($0.title, in: first)))
+            })
+            func displayedModuleOrder() -> [Settings.Module] {
+                moduleRows.sorted {
+                    $0.convert($0.bounds, to: modulePage).midY
+                        > $1.convert($1.bounds, to: modulePage).midY
+                }.compactMap {
+                    Settings.Module(rawValue: $0.identifier!.rawValue
+                        .replacingOccurrences(of: "settings.modules.row.", with: ""))
+                }
+            }
+            func settleModuleOrder() {
+                first?.contentView?.layoutSubtreeIfNeeded()
+                RunLoop.current.run(until: Date().addingTimeInterval(0.25))
+                first?.contentView?.layoutSubtreeIfNeeded()
+            }
+            for module in Settings.Module.allCases {
+                let handle = view("settings.modules.reorder.\(module.rawValue)", in: first)
+                let toggle = button(module.title, in: first)
+                require(handle.acceptsFirstResponder, "reorder handle supports keyboard focus")
+                require(handle.accessibilityLabel() == "Reorder \(module.title)",
+                    "reorder handle has a distinct accessible label")
+                let handleRect = handle.convert(handle.bounds, to: modulePage)
+                let toggleRect = toggle.convert(toggle.bounds, to: modulePage)
+                require(handleRect.minX >= toggleRect.maxX && handleRect.width >= 24
+                    && handleRect.height >= 24, "drag target is separate from the switch and easy to hit")
+            }
+            Settings.setModule(.history, visible: false)
+            Settings.moduleOrder = Array(Settings.Module.allCases.reversed())
+            settleModuleOrder()
+            require(displayedModuleOrder() == Settings.moduleOrder,
+                "Settings shows the externally saved order including the disabled module")
+            require(!Settings.isModuleVisible(.history), "moving a hidden module keeps it disabled")
+            require(moduleRows.allSatisfy {
+                originalModuleRows[$0.identifier!.rawValue] == ObjectIdentifier($0)
+            }, "reordering retains all five row instances")
+            require(Settings.Module.allCases.allSatisfy {
+                originalModuleButtons[$0] == ObjectIdentifier(button($0.title, in: first))
+            }, "reordering retains switches and their stable identities")
+            button(Settings.Module.flow.title, in: first).performClick(nil)
+            require(!Settings.isModuleVisible(.flow) && !Settings.isModuleVisible(.history),
+                "a moved switch still changes its own module")
+            Settings.setModule(.flow, visible: true)
+            Settings.setModule(.history, visible: true)
+            Settings.moduleOrder = Settings.Module.allCases
+            settleModuleOrder()
+            let flowHandle = view("settings.modules.reorder.flow", in: first)
+            first?.makeFirstResponder(flowHandle)
+            var orderNotifications = 0
+            let orderObserver = NotificationCenter.default.addObserver(
+                forName: Settings.didChange, object: nil, queue: .main
+            ) { note in
+                if note.userInfo?[Settings.changeUserInfoKey] as? Settings.Change == .moduleOrder {
+                    orderNotifications += 1
+                }
+            }
+            flowHandle.keyDown(with: keyEvent(126))
+            require(Settings.moduleOrder == Settings.Module.allCases && orderNotifications == 0,
+                "moving above the first row is a no-op")
+            flowHandle.keyDown(with: keyEvent(125))
+            settleModuleOrder()
+            require(Settings.moduleOrder == [.ring, .flow, .lanes, .history, .runtime]
+                && displayedModuleOrder() == Settings.moduleOrder && orderNotifications == 1,
+                "Down Arrow moves the focused module once and saves once")
+            require(first?.firstResponder === flowHandle,
+                "keyboard reordering preserves focus on the same handle")
+            let moveUp = flowHandle.accessibilityCustomActions()?.first { $0.name == "Move Up" }
+            require(moveUp?.handler?() == true, "VoiceOver Move Up invokes the same reorder path")
+            settleModuleOrder()
+            require(Settings.moduleOrder == Settings.Module.allCases && orderNotifications == 2,
+                "accessibility move restores the initial order without changing visibility")
+            require(flowHandle.accessibilityCustomActions()?.contains { $0.name == "Move Up" } == false,
+                "first row does not advertise an unavailable Move Up action")
+            require(Settings.Module.allCases.allSatisfy { Settings.isModuleVisible($0) },
+                "keyboard and accessibility order changes preserve all module switches")
+            let finalHandle = view("settings.modules.reorder.runtime", in: first)
+            require(finalHandle.accessibilityCustomActions()?.contains { $0.name == "Move Down" } == false,
+                "last row does not advertise an unavailable Move Down action")
+            require(controller.sidebarNextKeyViewForTest === button(Settings.Module.flow.title, in: first)
+                && button(Settings.Module.flow.title, in: first).nextKeyView === flowHandle
+                && flowHandle.nextKeyView === button(Settings.Module.ring.title, in: first)
+                && finalHandle.nextKeyView === controller.sidebarForTest,
+                "key loop follows visible order with switch then handle in each row")
+            NotificationCenter.default.removeObserver(orderObserver)
 
             // Increase Contrast is a live, appearance-only adaptation. The
             // reference palette and geometry remain exact while it is off;

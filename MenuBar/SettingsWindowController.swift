@@ -2679,7 +2679,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .checkForUpdatesOnLaunch, .module, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
+            case .checkForUpdatesOnLaunch, .module, .moduleOrder, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
                 break
             }
         }
@@ -2735,6 +2735,336 @@ private final class MenuBarIconSettingsSectionController: NSObject,
     }
 }
 
+private final class ModuleReorderHandle: NSButton, SettingsContrastRefreshing {
+    let module: Settings.Module
+    weak var reorderList: ModuleReorderList?
+    private let increaseContrast: () -> Bool
+    private var pressLocation: NSPoint?
+
+    init(module: Settings.Module, increaseContrast: @escaping () -> Bool) {
+        self.module = module
+        self.increaseContrast = increaseContrast
+        super.init(frame: .zero)
+        identifier = NSUserInterfaceItemIdentifier("settings.modules.reorder.\(module.rawValue)")
+        title = ""
+        isBordered = false
+        focusRingType = .none
+        imagePosition = .imageOnly
+        image = NSImage(systemSymbolName: "line.3.horizontal", accessibilityDescription: nil)?
+            .withSymbolConfiguration(.init(pointSize: 12, weight: .regular))
+        target = self
+        action = #selector(showMoveMenu(_:))
+        translatesAutoresizingMaskIntoConstraints = false
+        setAccessibilityLabel("Reorder \(module.title)")
+        setAccessibilityHelp("Drag to change the module order, or use the Up and Down arrow keys.")
+        toolTip = "Drag to reorder"
+        refreshContrastAppearance()
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError("init(coder:) is unavailable") }
+
+    override var acceptsFirstResponder: Bool { true }
+    override var mouseDownCanMoveWindow: Bool { false }
+
+    override func mouseDown(with event: NSEvent) {
+        guard isEnabled else { return }
+        window?.makeFirstResponder(self)
+        pressLocation = event.locationInWindow
+    }
+
+    override func mouseDragged(with event: NSEvent) {
+        guard let start = pressLocation,
+              hypot(event.locationInWindow.x - start.x, event.locationInWindow.y - start.y) >= 4 else { return }
+        pressLocation = nil
+        reorderList?.beginReordering(module, event: event)
+    }
+
+    override func mouseUp(with event: NSEvent) {
+        let wasPressed = pressLocation != nil
+        pressLocation = nil
+        if wasPressed && window?.isVisible == true && bounds.contains(convert(event.locationInWindow, from: nil)) {
+            performClick(nil)
+        }
+    }
+
+    override func viewWillMove(toWindow newWindow: NSWindow?) {
+        pressLocation = nil
+        super.viewWillMove(toWindow: newWindow)
+    }
+
+    override func keyDown(with event: NSEvent) {
+        switch event.keyCode {
+        case 126: _ = reorderList?.move(module, by: -1)
+        case 125: _ = reorderList?.move(module, by: 1)
+        default: super.keyDown(with: event)
+        }
+    }
+
+    func refreshPosition(_ index: Int, count: Int) {
+        setAccessibilityValueDescription("\(index + 1) of \(count)")
+        var actions: [NSAccessibilityCustomAction] = []
+        if index > 0 {
+            actions.append(NSAccessibilityCustomAction(name: "Move Up") { [weak self] in
+                guard let self else { return false }
+                return self.reorderList?.move(self.module, by: -1) ?? false
+            })
+        }
+        if index + 1 < count {
+            actions.append(NSAccessibilityCustomAction(name: "Move Down") { [weak self] in
+                guard let self else { return false }
+                return self.reorderList?.move(self.module, by: 1) ?? false
+            })
+        }
+        setAccessibilityCustomActions(actions)
+    }
+
+    @objc private func showMoveMenu(_ sender: NSButton) {
+        guard let index = Settings.moduleOrder.firstIndex(of: module) else { return }
+        let menu = NSMenu(title: "Reorder \(module.title)")
+        menu.autoenablesItems = false
+        for (title, delta) in [("Move Up", -1), ("Move Down", 1)] {
+            let item = NSMenuItem(title: title, action: #selector(moveFromMenu(_:)), keyEquivalent: "")
+            item.target = self
+            item.tag = delta
+            item.isEnabled = Settings.moduleOrder.indices.contains(index + delta)
+            menu.addItem(item)
+        }
+        menu.popUp(positioning: nil, at: NSPoint(x: bounds.maxX, y: bounds.minY), in: self)
+    }
+
+    @objc private func moveFromMenu(_ sender: NSMenuItem) { _ = reorderList?.move(module, by: sender.tag) }
+
+    func refreshContrastAppearance() {
+        contentTintColor = increaseContrast() ? SettingsStyle.primaryText : SettingsStyle.secondaryText.withAlphaComponent(0.65)
+        needsDisplay = true
+    }
+
+    override func becomeFirstResponder() -> Bool {
+        let accepted = super.becomeFirstResponder()
+        needsDisplay = true
+        return accepted
+    }
+
+    override func resignFirstResponder() -> Bool {
+        let accepted = super.resignFirstResponder()
+        needsDisplay = true
+        return accepted
+    }
+
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
+        if window?.firstResponder === self {
+            NSColor.keyboardFocusIndicatorColor.setStroke()
+            let outline = NSBezierPath(roundedRect: bounds.insetBy(dx: 1, dy: 1), xRadius: 5, yRadius: 5)
+            outline.lineWidth = 2
+            outline.stroke()
+        }
+    }
+}
+
+/// The system owns drag tracking and cancellation. Only a successful local drop
+/// changes Settings; the retained rows may move temporarily to preview the gap.
+private final class ModuleReorderList: NSStackView, NSDraggingSource, SettingsContrastRefreshing {
+    private static let dragType = NSPasteboard.PasteboardType("com.leoarrow.wattson.module-order")
+    var rows: [Settings.Module: NSView] = [:]
+    var orderDidChange: (() -> Void)?
+    private var draggedModule: Settings.Module?
+    private var originalOrder: [Settings.Module] = []
+    private weak var dragSession: NSDraggingSession?
+    private let insertionLine = NSBox()
+    private var windowObservers: [NSObjectProtocol] = []
+
+    init() {
+        super.init(frame: .zero)
+        orientation = .vertical
+        alignment = .width
+        distribution = .fillEqually
+        spacing = 0
+        wantsLayer = true
+        translatesAutoresizingMaskIntoConstraints = false
+        registerForDraggedTypes([Self.dragType])
+        insertionLine.boxType = .custom
+        insertionLine.borderWidth = 0
+        insertionLine.fillColor = .separatorColor
+        insertionLine.isHidden = true
+        insertionLine.setAccessibilityElement(false)
+        addSubview(insertionLine)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError("init(coder:) is unavailable") }
+
+    deinit { windowObservers.forEach(NotificationCenter.default.removeObserver) }
+
+    var displayedOrder: [Settings.Module] {
+        arrangedSubviews.compactMap { row in rows.first { $0.value === row }?.key }
+    }
+
+    private var reducesMotion: Bool {
+#if DEBUG
+        if let value = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"] { return value == "1" }
+#endif
+        return NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+    }
+
+    func applySavedOrder() {
+        cancelReordering()
+        arrange(Settings.moduleOrder, animated: false)
+    }
+
+    private func arrange(_ order: [Settings.Module], animated: Bool) {
+        guard order != displayedOrder else { return }
+        layoutSubtreeIfNeeded()
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = animated && !reducesMotion ? 0.14 : 0
+            context.allowsImplicitAnimation = animated && !reducesMotion
+            for (index, module) in order.enumerated() {
+                if let row = rows[module] { insertArrangedSubview(row, at: index) }
+            }
+            layoutSubtreeIfNeeded()
+        }
+        addSubview(insertionLine, positioned: .above, relativeTo: nil)
+        setAccessibilityChildrenInNavigationOrder(arrangedSubviews)
+        orderDidChange?()
+    }
+
+    func beginReordering(_ module: Settings.Module, event: NSEvent) {
+        guard draggedModule == nil, window?.isVisible == true, let row = rows[module],
+              let bitmap = row.bitmapImageRepForCachingDisplay(in: row.bounds) else { return }
+        row.cacheDisplay(in: row.bounds, to: bitmap)
+        let image = NSImage(size: row.bounds.size)
+        image.addRepresentation(bitmap)
+        let pasteboardItem = NSPasteboardItem()
+        pasteboardItem.setString(module.rawValue, forType: Self.dragType)
+        let item = NSDraggingItem(pasteboardWriter: pasteboardItem)
+        item.setDraggingFrame(row.frame.offsetBy(dx: 0, dy: reducesMotion ? 0 : 2), contents: image)
+        originalOrder = Settings.moduleOrder
+        draggedModule = module
+        row.alphaValue = 0.25
+        let session = beginDraggingSession(with: [item], event: event, source: self)
+        session.animatesToStartingPositionsOnCancelOrFail = !reducesMotion
+        dragSession = session
+    }
+
+    func draggingSession(_ session: NSDraggingSession, sourceOperationMaskFor context: NSDraggingContext) -> NSDragOperation {
+        context == .withinApplication && draggedModule != nil ? .move : []
+    }
+
+    func ignoreModifierKeys(for session: NSDraggingSession) -> Bool { true }
+
+    func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
+        cancelReordering()
+    }
+
+    private func accepts(_ sender: NSDraggingInfo) -> Bool {
+        guard (sender.draggingSource as AnyObject?) === self, let module = draggedModule,
+              sender.draggingPasteboard.pasteboardItems?.count == 1,
+              sender.draggingPasteboard.string(forType: Self.dragType) == module.rawValue,
+              originalOrder == Settings.moduleOrder, window?.isVisible == true,
+              window?.isMiniaturized == false else { return false }
+        return bounds.contains(convert(sender.draggingLocation, from: nil))
+    }
+
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation { draggingUpdated(sender) }
+
+    override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
+        guard accepts(sender), let module = draggedModule else { return [] }
+        let point = convert(sender.draggingLocation, from: nil)
+        var proposed = displayedOrder.filter { $0 != module }
+        let index = proposed.filter { other in
+            guard let row = rows[other] else { return false }
+            return isFlipped ? point.y > row.frame.midY : point.y < row.frame.midY
+        }.count
+        proposed.insert(module, at: index)
+        arrange(proposed, animated: true)
+        insertionLine.isHidden = false
+        updateInsertionLine()
+        return .move
+    }
+
+    override func wantsPeriodicDraggingUpdates() -> Bool { false }
+
+    override func draggingExited(_ sender: NSDraggingInfo?) {
+        guard draggedModule != nil else { return }
+        insertionLine.isHidden = true
+        arrange(originalOrder, animated: !reducesMotion)
+    }
+
+    override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool { accepts(sender) }
+
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        guard accepts(sender), draggingUpdated(sender) == .move else { return false }
+        let order = displayedOrder
+        clearDragFeedback()
+        if order != Settings.moduleOrder {
+            Settings.moduleOrder = order
+            NSAccessibility.post(element: self, notification: .layoutChanged)
+        }
+        return true
+    }
+
+    private func clearDragFeedback() {
+        draggedModule = nil
+        originalOrder = []
+        dragSession = nil
+        insertionLine.isHidden = true
+        rows.values.forEach { $0.alphaValue = 1; $0.layer?.removeAllAnimations() }
+    }
+
+    func cancelReordering() {
+        let wasDragging = draggedModule != nil
+        dragSession?.animatesToStartingPositionsOnCancelOrFail = !reducesMotion
+        clearDragFeedback()
+        if wasDragging { arrange(Settings.moduleOrder, animated: false) }
+    }
+
+    override func layout() { super.layout(); updateInsertionLine() }
+
+    private func updateInsertionLine() {
+        guard !insertionLine.isHidden, let module = draggedModule, let row = rows[module] else { return }
+        let y = isFlipped ? row.frame.minY : row.frame.maxY - 1
+        insertionLine.frame = NSRect(x: 56, y: y, width: max(0, bounds.width - 72), height: 1)
+    }
+
+    override func viewWillMove(toWindow newWindow: NSWindow?) {
+        if newWindow !== window { cancelReordering() }
+        super.viewWillMove(toWindow: newWindow)
+    }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        windowObservers.forEach(NotificationCenter.default.removeObserver)
+        windowObservers.removeAll()
+        guard let window else { return }
+        for name in [NSWindow.willCloseNotification, NSWindow.didMiniaturizeNotification, NSWindow.didResignKeyNotification] {
+            windowObservers.append(NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self, weak window] notification in
+                guard let window, notification.object as? NSWindow === window else { return }
+                self?.cancelReordering()
+            })
+        }
+    }
+
+    override func viewDidHide() { super.viewDidHide(); cancelReordering() }
+
+    func refreshContrastAppearance() {
+        if reducesMotion { rows.values.forEach { $0.layer?.removeAllAnimations() } }
+        dragSession?.animatesToStartingPositionsOnCancelOrFail = !reducesMotion
+        insertionLine.fillColor = NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast ? .labelColor : .separatorColor
+    }
+
+    @discardableResult func move(_ module: Settings.Module, by delta: Int) -> Bool {
+        guard draggedModule == nil, window != nil, let index = Settings.moduleOrder.firstIndex(of: module),
+              Settings.moduleOrder.indices.contains(index + delta) else { return false }
+        var order = Settings.moduleOrder
+        order.remove(at: index)
+        order.insert(module, at: index + delta)
+        Settings.moduleOrder = order
+        NSAccessibility.post(element: self, notification: .layoutChanged)
+        return true
+    }
+}
+
 private final class ModuleSettingsSectionController: NSObject, SettingsSectionController {
     let identifier = "modules"
     let title = "Modules"
@@ -2743,6 +3073,10 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
 
     private let increaseContrast: () -> Bool
     private var buttons: [Settings.Module: NSButton] = [:]
+    private var handles: [Settings.Module: ModuleReorderHandle] = [:]
+    private var separators: [Settings.Module: NSBox] = [:]
+    private let rows = ModuleReorderList()
+    var orderDidChange: (() -> Void)?
     private var settingsObserver: NSObjectProtocol?
 
     init(increaseContrast: @escaping () -> Bool) {
@@ -2764,6 +3098,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             return
         }
         for module in Settings.Module.allCases { refresh(module) }
+        rows.applySavedOrder()
     }
 
     private func buildView() {
@@ -2782,14 +3117,14 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         subtitle.textColor = SettingsStyle.secondaryText
         subtitle.translatesAutoresizingMaskIntoConstraints = false
 
-        let rows = NSStackView(views: Settings.Module.allCases.enumerated().map { index, module in
-            makeRow(for: module, index: index)
-        })
-        rows.orientation = .vertical
-        rows.alignment = .width
-        rows.distribution = .fillEqually
-        rows.spacing = 0
-        rows.translatesAutoresizingMaskIntoConstraints = false
+        for (index, module) in Settings.Module.allCases.enumerated() {
+            rows.rows[module] = makeRow(for: module, index: index)
+        }
+        rows.orderDidChange = { [weak self] in
+            self?.refreshRowOrder()
+            self?.orderDidChange?()
+        }
+        rows.applySavedOrder()
 
         let list = SettingsAdaptiveBorderBox(increaseContrast: increaseContrast)
         list.identifier = NSUserInterfaceItemIdentifier("settings.modules.list")
@@ -2828,6 +3163,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
 
     private func makeRow(for module: Settings.Module, index: Int) -> NSView {
         let row = NSView()
+        row.wantsLayer = true
         row.identifier = NSUserInterfaceItemIdentifier("settings.modules.row.\(module.rawValue)")
 
         let icon = NSImageView()
@@ -2862,10 +3198,14 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         button.tag = index
         button.setAccessibilityHelp("Show or hide the \(module.title) module in Wattson.")
         buttons[module] = button
+        let handle = ModuleReorderHandle(module: module, increaseContrast: increaseContrast)
+        handle.reorderList = rows
+        handles[module] = handle
 
         row.addSubview(icon)
         row.addSubview(text)
         row.addSubview(button)
+        row.addSubview(handle)
         NSLayoutConstraint.activate([
             icon.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 16),
             icon.centerYAnchor.constraint(equalTo: row.centerYAnchor),
@@ -2873,25 +3213,28 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             icon.heightAnchor.constraint(equalToConstant: SettingsStyle.rowIconSize),
             text.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 12),
             text.centerYAnchor.constraint(equalTo: row.centerYAnchor),
-            text.trailingAnchor.constraint(lessThanOrEqualTo: button.leadingAnchor, constant: -20),
-            button.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -16),
+            text.trailingAnchor.constraint(lessThanOrEqualTo: button.leadingAnchor, constant: -8),
+            button.trailingAnchor.constraint(equalTo: handle.leadingAnchor, constant: -6),
             button.centerYAnchor.constraint(equalTo: row.centerYAnchor),
             button.widthAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.width),
             button.heightAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.height),
+            handle.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -8),
+            handle.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+            handle.widthAnchor.constraint(equalToConstant: 24),
+            handle.heightAnchor.constraint(equalToConstant: 28),
             row.heightAnchor.constraint(equalToConstant: SettingsStyle.moduleRowHeight),
         ])
 
-        if index < Settings.Module.allCases.count - 1 {
-            let separator = NSBox()
-            separator.boxType = .separator
-            separator.translatesAutoresizingMaskIntoConstraints = false
-            row.addSubview(separator)
-            NSLayoutConstraint.activate([
-                separator.leadingAnchor.constraint(equalTo: text.leadingAnchor),
-                separator.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -16),
-                separator.bottomAnchor.constraint(equalTo: row.bottomAnchor),
-            ])
-        }
+        let separator = NSBox()
+        separators[module] = separator
+        separator.boxType = .separator
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(separator)
+        NSLayoutConstraint.activate([
+            separator.leadingAnchor.constraint(equalTo: text.leadingAnchor),
+            separator.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -16),
+            separator.bottomAnchor.constraint(equalTo: row.bottomAnchor),
+        ])
         return row
     }
 
@@ -2928,6 +3271,15 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
                 return
             }
             if case let .module(module) = change { self.refresh(module) }
+            if change == .moduleOrder { self.rows.applySavedOrder() }
+        }
+    }
+
+    private func refreshRowOrder() {
+        let order = rows.displayedOrder
+        for (index, module) in order.enumerated() {
+            separators[module]?.isHidden = index == order.count - 1
+            handles[module]?.refreshPosition(index, count: order.count)
         }
     }
 
@@ -3028,6 +3380,10 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             UserDefaults.standard.string(forKey: "NSWindow Frame \($0)")
         } != nil
         super.init(window: window)
+
+        for case let moduleSection as ModuleSettingsSectionController in resolvedSections {
+            moduleSection.orderDidChange = { [weak self] in self?.updateVisibleSwitchKeyLoop() }
+        }
 
         configureContent()
         installAccessibilityDisplayObserver()
@@ -3473,6 +3829,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         if let popup = view as? NSPopUpButton { return popup.isEnabled ? [popup] : [] }
         if let slider = view as? NSSlider { return slider.isEnabled ? [slider] : [] }
         if view is NSButton { return [view] }
+        if let rows = view as? ModuleReorderList { return rows.arrangedSubviews.flatMap { keyControls(in: $0) } }
         return view.subviews.flatMap { keyControls(in: $0) }
     }
 
@@ -3482,7 +3839,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         if let button = view as? NSButton, !(button is NSPopUpButton) {
             buttons.append(button)
         }
-        for subview in view.subviews { buttons.append(contentsOf: switchButtons(in: subview)) }
+        let children = (view as? ModuleReorderList)?.arrangedSubviews ?? view.subviews
+        for subview in children { buttons.append(contentsOf: switchButtons(in: subview)) }
         return buttons
     }
 

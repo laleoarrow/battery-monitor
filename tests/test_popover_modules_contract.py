@@ -27,11 +27,15 @@ class PopoverModulesContractTests(unittest.TestCase):
         cls.popover = POPOVER.read_text(encoding="utf-8")
         cls.status = STATUS.read_text(encoding="utf-8")
 
-    def test_content_contains_runtime_below_history(self):
-        self.assertIn(
-            "[header, flowView, ringView, laneView, historyView, runtimeView, footer].forEach(stack.addArrangedSubview)",
-            self.content,
-        )
+    def test_content_uses_saved_module_order_between_fixed_header_and_footer(self):
+        build = self.content.split("private func buildContent()", 1)[1].split(
+            "private func updateFooter()", 1
+        )[0]
+        self.assertLess(build.index("stack.addArrangedSubview(header)"),
+                        build.index("for module in Settings.moduleOrder"))
+        self.assertLess(build.index("for module in Settings.moduleOrder"),
+                        build.index("stack.addArrangedSubview(footer)"))
+        self.assertIn("stack.addArrangedSubview(moduleView(for: module))", build)
 
     def test_one_surface_divided_by_hairlines_not_four_cards(self):
         # Four bordered cards stack four sets of edges and paddings.

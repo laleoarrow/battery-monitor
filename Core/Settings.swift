@@ -84,6 +84,7 @@ enum Settings {
         case inAppLogoStyle
         case dockIconStyle
         case module(Module)
+        case moduleOrder
     }
 
     static let didChange = Notification.Name("WattsonSettingsDidChange")
@@ -99,6 +100,7 @@ enum Settings {
     private static let colorSchemeKey = "appearance.colorScheme"
     private static let inAppLogoStyleKey = "appearance.inAppLogoStyle"
     private static let dockIconStyleKey = "appearance.dockIconStyle"
+    private static let moduleOrderKey = "popover.moduleOrder"
 #if DEBUG
     private static var testDefaults: UserDefaults?
 #endif
@@ -265,6 +267,29 @@ enum Settings {
         defaults.set(showsPercentage, forKey: percentageKey)
         if iconStyleChanged { postChange(.menuBarIconStyle) }
         if percentageChanged { postChange(.menuBarPercentage) }
+    }
+
+    /// Keep hidden modules in the saved order so showing one restores its position.
+    /// Reading older or malformed preferences never rewrites them.
+    static var moduleOrder: [Module] {
+        get {
+            let saved = (defaults.array(forKey: moduleOrderKey) ?? []).compactMap { value -> Module? in
+                guard let rawValue = value as? String else { return nil }
+                return Module(rawValue: rawValue)
+            }
+            return normalizedModuleOrder(saved)
+        }
+        set {
+            let order = normalizedModuleOrder(newValue)
+            guard order != moduleOrder else { return }
+            defaults.set(order.map(\.rawValue), forKey: moduleOrderKey)
+            postChange(.moduleOrder)
+        }
+    }
+
+    private static func normalizedModuleOrder(_ order: [Module]) -> [Module] {
+        var seen = Set<Module>()
+        return (order + Module.allCases).filter { seen.insert($0).inserted }
     }
 
     static func isModuleVisible(_ module: Module) -> Bool {

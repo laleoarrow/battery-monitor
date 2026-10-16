@@ -1010,7 +1010,11 @@ final class PopoverContentViewController: NSViewController {
         documentView.addSubview(stack)
         view.addSubview(scrollView)
 
-        [header, flowView, ringView, laneView, historyView, runtimeView, footer].forEach(stack.addArrangedSubview)
+        stack.addArrangedSubview(header)
+        for module in Settings.moduleOrder {
+            stack.addArrangedSubview(moduleView(for: module))
+        }
+        stack.addArrangedSubview(footer)
 
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -1067,11 +1071,42 @@ final class PopoverContentViewController: NSViewController {
             queue: .main
         ) { [weak self] notification in
             guard let change = notification.userInfo?[Settings.changeUserInfoKey]
-                    as? Settings.Change,
-                  case .module = change else { return }
-            self?.reloadModuleVisibility()
-            self?.applyModuleVisibility()
+                    as? Settings.Change else { return }
+            switch change {
+            case .module:
+                self?.reloadModuleVisibility()
+                self?.applyModuleVisibility()
+            case .moduleOrder:
+                self?.applyModuleOrder()
+            default:
+                break
+            }
         }
+    }
+
+    private func moduleView(for module: PopoverModule) -> NSView {
+        switch module {
+        case .runtime: return runtimeView
+        case .flow: return flowView
+        case .ring: return ringView
+        case .lanes: return laneView
+        case .history: return historyView
+        }
+    }
+
+    private func applyModuleOrder() {
+        let offset = scrollView.contentView.bounds.origin
+        for (index, module) in Settings.moduleOrder.enumerated() {
+            let section = moduleView(for: module)
+            if stack.arrangedSubviews[index + 1] !== section {
+                // AppKit moves an existing arranged view without removing it
+                // from the hierarchy. History retains its window and motion.
+                stack.insertArrangedSubview(section, at: index + 1)
+            }
+        }
+        view.layoutSubtreeIfNeeded()
+        scrollView.contentView.scroll(to: offset)
+        scrollView.reflectScrolledClipView(scrollView.contentView)
     }
 
     private func reloadModuleVisibility() {
@@ -1097,15 +1132,19 @@ final class PopoverContentViewController: NSViewController {
         heightDidChange?(preferredHeight)
     }
 
-    private func showModuleMenu(_ sender: NSView) {
-        let menu = NSMenu(title: "Modules")
-        for module in PopoverModule.allCases {
+    private func makeModuleMenuItems() -> [NSMenuItem] {
+        Settings.moduleOrder.map { module in
             let item = NSMenuItem(title: module.title, action: #selector(toggleModule(_:)), keyEquivalent: "")
             item.target = self
             item.representedObject = module.rawValue
             item.state = isVisible(module) ? .on : .off
-            menu.addItem(item)
+            return item
         }
+    }
+
+    private func showModuleMenu(_ sender: NSView) {
+        let menu = NSMenu(title: "Modules")
+        makeModuleMenuItems().forEach(menu.addItem)
 
         menu.addItem(.separator())
         let percentage = NSMenuItem(title: "Show Battery Percentage in Menu Bar",
@@ -1220,14 +1259,18 @@ final class PopoverContentViewController: NSViewController {
     }
 
     func moduleIsHiddenForTest(_ module: PopoverModule) -> Bool {
-        switch module {
-        case .runtime: return runtimeView.isHidden
-        case .flow: return flowView.isHidden
-        case .ring: return ringView.isHidden
-        case .lanes: return laneView.isHidden
-        case .history: return historyView.isHidden
+        moduleView(for: module).isHidden
+    }
+
+    func moduleViewForTest(_ module: PopoverModule) -> NSView { moduleView(for: module) }
+
+    var moduleOrderForTest: [PopoverModule] {
+        stack.arrangedSubviews.compactMap { section in
+            PopoverModule.allCases.first { moduleView(for: $0) === section }
         }
     }
+
+    var moduleMenuItemsForTest: [NSMenuItem] { makeModuleMenuItems() }
 
     var latestHistoryForTest: [Double] { latestHistory }
 
