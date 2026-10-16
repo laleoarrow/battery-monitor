@@ -38,6 +38,7 @@ final class HistoryView: PopoverSection {
             || movingPlot.animation(forKey: "history.viewport") != nil
             || line.animation(forKey: "history.curve") != nil
             || gradientMask.animation(forKey: "history.fill") != nil
+            || areaGradient.animation(forKey: "history.gradient") != nil
             || reveal.animation(forKey: "history.reveal") != nil
             || head.animation(forKey: "history.head") != nil
     }
@@ -85,7 +86,9 @@ final class HistoryView: PopoverSection {
 
     private var gradientRect: CGRect {
         let left = CGFloat(min(lastGeometry?.points.first?.x ?? 0, 0)) * chartRect.width
-        return CGRect(x: left, y: 0, width: chartRect.width - left, height: chartRect.height)
+        let peak = lastGeometry?.points.map(\.y).max() ?? 0
+        let top = CGFloat(min(1 - peak, 0)) * chartRect.height
+        return CGRect(x: left, y: top, width: chartRect.width - left, height: chartRect.height - top)
     }
 
     override func layout() {
@@ -132,6 +135,7 @@ final class HistoryView: PopoverSection {
         reveal.removeAllAnimations()
         line.removeAllAnimations()
         gradientMask.removeAllAnimations()
+        areaGradient.removeAllAnimations()
         head.removeAllAnimations()
     }
 
@@ -152,6 +156,11 @@ final class HistoryView: PopoverSection {
         let presentedTransform = movingPlot.presentation()?.transform ?? movingPlot.transform
         let presentedHead = head.presentation()?.position ?? head.position
         let presentedPath = line.presentation()?.path ?? line.path
+        let presentedGradient = areaGradient.presentation() ?? areaGradient
+        let presentedBandY = HistoryChartViewport.gradientScreenStartY(
+            startPointY: Double(presentedGradient.startPoint.y),
+            frameMinY: Double(presentedGradient.frame.minY), frameHeight: Double(presentedGradient.frame.height),
+            scaleY: Double(presentedTransform.m22), plotHeight: Double(Self.chartHeight))
         let oldGeometry = lastGeometry
         lastSamples = samples
         lastTiming = timing
@@ -209,8 +218,9 @@ final class HistoryView: PopoverSection {
             self.gradientMask.path = geometry.points.isEmpty ? nil : self.fillPath(targetPaths.filled)
             self.areaGradient.colors = [resolvedColor.withAlphaComponent(0.38).cgColor,
                                         resolvedColor.withAlphaComponent(0.03).cgColor]
-            self.areaGradient.startPoint = CGPoint(x: 0.5, y: 0)
-            self.areaGradient.endPoint = CGPoint(x: 0.5, y: 1)
+            let gradient = self.gradientRect
+            self.areaGradient.startPoint = CGPoint(x: 0.5, y: -gradient.minY / gradient.height)
+            self.areaGradient.endPoint = CGPoint(x: 0.5, y: (plot.height - gradient.minY) / gradient.height)
             self.reveal.bounds = CGRect(x: 0, y: 0,
                 width: CGFloat(geometry.points.last?.x ?? 1) * plot.width, height: plot.height)
             self.headClip.frame = self.bounds
@@ -239,7 +249,8 @@ final class HistoryView: PopoverSection {
                 presentedTranslationX: Double(presentedTransform.m41),
                 presentedScaleY: Double(presentedTransform.m22)),
               abs(viewport.translationX) > 1e-8 || abs(viewport.scaleY - 1) > 1e-8 else { return }
-        animateViewport(viewport, geometry: geometry, startGeometry: startGeometry, presentedHead: presentedHead)
+        animateViewport(viewport, geometry: geometry, startGeometry: startGeometry,
+                        presentedHead: presentedHead, presentedBandY: presentedBandY)
     }
 
     private func point(_ p: HistoryChartGeometry.Point) -> CGPoint {
@@ -269,7 +280,8 @@ final class HistoryView: PopoverSection {
 
     private func fillPath(_ path: CGPath) -> CGPath {
         let translated = CGMutablePath()
-        translated.addPath(path, transform: CGAffineTransform(translationX: -gradientRect.minX, y: 0))
+        translated.addPath(path, transform: CGAffineTransform(translationX: -gradientRect.minX,
+                                                             y: -gradientRect.minY))
         return translated
     }
 
@@ -302,7 +314,7 @@ final class HistoryView: PopoverSection {
 
     private func animateViewport(_ viewport: HistoryChartViewport, geometry: HistoryChartGeometry,
                                  startGeometry: HistoryChartGeometry,
-                                 presentedHead: CGPoint) {
+                                 presentedHead: CGPoint, presentedBandY: Double) {
         guard let last = geometry.points.last else { return }
         let plot = chartRect
         let scaling = abs(viewport.scaleY - 1) > 1e-8
@@ -340,6 +352,19 @@ final class HistoryView: PopoverSection {
         dot.duration = duration
         dot.calculationMode = .linear
         dot.timingFunction = timing
+        if scaling || abs(presentedBandY) > 1e-8 {
+            let gradient = gradientRect
+            let band = CAKeyframeAnimation(keyPath: "startPoint")
+            band.values = (0...256).map { frame in
+                NSValue(point: CGPoint(x: 0.5, y: viewport.gradientStartY(at: Double(frame) / 256,
+                    fromScreenY: presentedBandY, frameMinY: Double(gradient.minY),
+                    frameHeight: Double(gradient.height), plotHeight: Double(plot.height))))
+            }
+            band.duration = duration
+            band.calculationMode = .linear
+            band.timingFunction = timing
+            areaGradient.add(band, forKey: "history.gradient")
+        }
         let changesShape = zip(startGeometry.segments, geometry.segments).contains {
             abs($0.control1.y - $1.control1.y) > 1e-12 || abs($0.control2.y - $1.control2.y) > 1e-12
         }

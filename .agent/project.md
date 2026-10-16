@@ -47,7 +47,10 @@ seconds before a reduction of at least 25%. Contiguous changes use a 180 ms
 horizontal translation or a 350 ms eased, baseline-anchored axis transition.
 Interrupted transitions continue from the presentation layers. Curve controls
 may blend only after matching their exact sampling intervals and raw anchors;
-fill and endpoint follow the same geometry and viewport progress. History joins
+fill and endpoint follow the same geometry and viewport progress. Bounded
+departure context keeps consecutive left-edge intervals intact, including fill
+above a reduced scale. Finite gradient keyframes preserve the displayed color
+band when the axis changes or a transition is interrupted. History joins
 the existing presentation and accessibility animation policy; closing, hiding,
 detaching, degraded readings and Reduce Motion stop its animations. No chart
 timer or arbitrary shape-path interpolation is used.

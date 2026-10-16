@@ -273,6 +273,68 @@ final class HistoryChartTests: XCTestCase {
         }
     }
 
+    func testGradientBandStaysAtTheVisibleChartTopDuringScaleChanges() throws {
+        for (old, new) in [(350.0, 50.0), (350.0, 15.0), (55.0, 250.0)] {
+            let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: old, newCeiling: new,
+                fraction: 2.0 / 120, width: 328))
+            for q in [0.0, 0.25, 0.5, 0.9, 1] {
+                let sy = 1 + (viewport.scaleY - 1) * (1 - q)
+                let normalized = viewport.gradientStartY(at: q, fromScreenY: 0,
+                    frameMinY: -96, frameHeight: 160, plotHeight: 64)
+                let screen = HistoryChartViewport.gradientScreenStartY(startPointY: normalized,
+                    frameMinY: -96, frameHeight: 160, scaleY: sy, plotHeight: 64)
+                XCTAssertEqual(screen, 0, accuracy: 1e-10)
+            }
+        }
+    }
+
+    func testGradientAlphaBeginsAtTheOldViewportAndFinishesAtTheNewViewport() throws {
+        let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: 350, newCeiling: 50,
+            fraction: 2.0 / 120, width: 328))
+        func alpha(at progress: Double) -> Double {
+            let start = viewport.gradientStartY(at: progress, fromScreenY: 0,
+                frameMinY: 0, frameHeight: 64, plotHeight: 64) * 64
+            let sampleY = 64 * (1 - 43.0 / 50)
+            return 0.38 + (0.03 - 0.38) * (sampleY - start) / (64 - start)
+        }
+        XCTAssertEqual(alpha(at: 0), 0.073, accuracy: 1e-12)
+        XCTAssertEqual(alpha(at: 1), 0.331, accuracy: 1e-12)
+        XCTAssertLessThan(alpha(at: 0.25), alpha(at: 0.5))
+        XCTAssertLessThan(alpha(at: 0.5), alpha(at: 0.9))
+    }
+
+    func testGradientRetargetUsesTheActualPresentedBandAndFrame() throws {
+        let shownY = HistoryChartViewport.gradientScreenStartY(startPointY: 0.3,
+            frameMinY: -96, frameHeight: 160, scaleY: 0.7, plotHeight: 64)
+        XCTAssertEqual(shownY, -14.4, accuracy: 1e-12)
+        let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: 100, newCeiling: 40,
+            fraction: 2.0 / 120, width: 328, presentedScaleY: 0.7))
+        for q in [0.0, 0.25, 0.5, 0.9, 1] {
+            let sy = 1 + (viewport.scaleY - 1) * (1 - q)
+            let normalized = viewport.gradientStartY(at: q, fromScreenY: shownY,
+                frameMinY: -320, frameHeight: 384, plotHeight: 64)
+            let actual = HistoryChartViewport.gradientScreenStartY(startPointY: normalized,
+                frameMinY: -320, frameHeight: 384, scaleY: sy, plotHeight: 64)
+            XCTAssertEqual(actual, shownY * (1 - q), accuracy: 1e-10)
+        }
+    }
+
+    func testBoundedGradientKeyframesKeepTheInterpolatedScreenBandWithinQuarterPoint() throws {
+        let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: 350, newCeiling: 15,
+            fraction: 2.0 / 120, width: 328))
+        for frame in 0..<256 {
+            let q0 = Double(frame) / 256, q1 = Double(frame + 1) / 256, q = (q0 + q1) / 2
+            let a = viewport.gradientStartY(at: q0, fromScreenY: 0,
+                frameMinY: 0, frameHeight: 64, plotHeight: 64)
+            let b = viewport.gradientStartY(at: q1, fromScreenY: 0,
+                frameMinY: 0, frameHeight: 64, plotHeight: 64)
+            let sy = 1 + (viewport.scaleY - 1) * (1 - q)
+            let actual = HistoryChartViewport.gradientScreenStartY(startPointY: (a + b) / 2,
+                frameMinY: 0, frameHeight: 64, scaleY: sy, plotHeight: 64)
+            XCTAssertLessThan(abs(actual), 0.25)
+        }
+    }
+
     func testAlignedControlsPreserveTheActuallyDisplayedFormerTerminalCubic() throws {
         let old = HistoryChartGeometry(samples: [0, 0, 100],
             timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 200)

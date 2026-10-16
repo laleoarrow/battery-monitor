@@ -154,4 +154,28 @@ final class HistoryViewTests: XCTestCase {
             XCTAssertLessThanOrEqual(anchors, 64)
         }
     }
+
+    func testContractingScaleKeepsFillForATallInteriorContextPoint() throws {
+        let view = view()
+        for start in 0...5 {
+            let times = (start..<(start + 60)).map { Double($0) * 2 }
+            let values = times.map { $0 == 0 ? 300.0 : ($0 == 6 ? 100.0 : 10.0) }
+            view.update(samples: values, peak: values.max()!, color: .systemBlue,
+                        timing: .init(sampledAt: times, referenceTime: times.last!))
+        }
+        XCTAssertEqual(view.chartCeilingForTest, 15)
+        let path = try XCTUnwrap(view.chartPathForTest)
+        let clip = try XCTUnwrap(view.layer?.sublayers?.first(where: { $0.masksToBounds }))
+        let gradient = try XCTUnwrap(clip.sublayers?.first?.sublayers?.compactMap { $0 as? CAGradientLayer }.first)
+        let mask = try XCTUnwrap(gradient.mask as? CAShapeLayer)
+        let fill = try XCTUnwrap(mask.path)
+        let top = HistoryView.chartHeight * CGFloat(1 - 100.0 / 15)
+        XCTAssertEqual(gradient.frame.minY, top, accuracy: 1e-8)
+        XCTAssertEqual(gradient.frame.maxY, HistoryView.chartHeight, accuracy: 1e-8)
+        XCTAssertEqual(path.boundingBoxOfPath.minY, top, accuracy: 1e-8)
+        XCTAssertEqual(fill.boundingBoxOfPath.minY + gradient.frame.minY, top, accuracy: 1e-8)
+        XCTAssertEqual(gradient.frame.minY + gradient.startPoint.y * gradient.frame.height, 0, accuracy: 1e-8)
+        XCTAssertEqual(gradient.frame.minY + gradient.endPoint.y * gradient.frame.height,
+                       HistoryView.chartHeight, accuracy: 1e-8)
+    }
 }

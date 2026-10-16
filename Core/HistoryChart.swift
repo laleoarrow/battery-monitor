@@ -65,6 +65,23 @@ struct HistoryChartViewport {
         translationX = tx
         scaleY = sy
     }
+
+    static func gradientScreenStartY(startPointY: Double, frameMinY: Double, frameHeight: Double,
+                                     scaleY: Double, plotHeight: Double) -> Double {
+        let localY = frameMinY + startPointY * frameHeight
+        return plotHeight + (localY - plotHeight) * scaleY
+    }
+
+    /// Keep the visible color band continuous while the plot changes scale.
+    /// The reciprocal compensates for scaling around the zero-watt baseline.
+    func gradientStartY(at progress: Double, fromScreenY: Double,
+                        frameMinY: Double, frameHeight: Double, plotHeight: Double) -> Double {
+        let q = min(max(progress, 0), 1)
+        let sy = 1 + (scaleY - 1) * (1 - q)
+        let desiredY = fromScreenY * (1 - q)
+        let localY = plotHeight + (desiredY - plotHeight) / sy
+        return (localY - frameMinY) / frameHeight
+    }
 }
 
 /// Quantized headroom plus eight seconds of hysteresis when reducing the scale.
