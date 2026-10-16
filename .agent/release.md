@@ -222,6 +222,21 @@ that version first to avoid duplicates. Send download links, not executable
 attachments. Do not advertise unreleased commits as a downloadable version or
 claim unmeasured accuracy, performance or energy improvements.
 
+Use a modern card-style HTML email for this and future Cody release updates,
+with a matching plain-text alternative. Keep the visual hierarchy simple: a
+version header, short 🔥 update points, an actual-screenshot card with captions
+and a full-gallery link, clear PKG/DMG download buttons, and brief installation
+guidance. Include a separate one-click diagnostics card only when relevant.
+Use generous spacing, restrained colors, readable text and subtle borders;
+avoid decorative gradients, dense technical reports and large caution blocks.
+Build the layout with presentation tables and inline CSS so it remains usable
+in common email clients, with legible light/dark colors, descriptive image
+alt text and ordinary links when images or advanced styles are unavailable.
+Send HTML and text together as `multipart/alternative`; do not rely on scripts,
+external stylesheets, remote fonts or tracking pixels. Populate the cards only
+with verified version, validation and download details after the release gates
+pass, and retain the recipient privacy and duplicate-send rules above.
+
 ## Visual release overview for Cody and GitHub
 
 For the next UI release, turn the visual review into an easy-to-browse,
