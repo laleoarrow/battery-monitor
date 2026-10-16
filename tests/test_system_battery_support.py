@@ -100,6 +100,14 @@ print(json.dumps(result))
         self.assertTrue(self.read_report()["fixture"])
         self.assert_clean()
 
+    def test_collector_also_runs_from_its_directory_without_a_path_prefix(self):
+        result = run(["/bin/bash", COMMAND, "--output", str(self.output)],
+                     cwd=self.bundle, capture_output=True, text=True, timeout=15,
+                     cleanup_grace=65, env=self.environment)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue(self.read_report()["fixture"])
+        self.assert_clean()
+
     def test_existing_scratch_root_and_output_files_are_preserved(self):
         scratch_root = self.native_tmp / (REPORT_ROOT + ".noindex")
         scratch_root.mkdir()
@@ -142,8 +150,8 @@ fi
 printf '{{"operation":"%s","status":"ok","durationMs":1,"response":{{}}}}\\n' "$2"
 ''')
         source = self.script.read_text()
-        self.assertIn("run_probe health 60", source)
-        self.script.write_text(source.replace("run_probe health 60", "run_probe health 10"))
+        self.assertIn("run_probe health 6", source)
+        self.script.write_text(source.replace("run_probe health 6", "run_probe health 1"))
         result = self.run_command()
         self.assertEqual(result.returncode, 0, result.stderr)
         report = self.read_report()
@@ -161,8 +169,8 @@ printf '{{"operation":"%s","status":"ok","durationMs":1,"response":{{}}}}\\n' "$
         marker = self.work / "snapshot.pid"
         self.make_mock("osascript", f"echo $$ > {shlex.quote(str(marker))}\nexec /bin/sleep 30\n")
         source = self.script.read_text()
-        self.assertIn("run_probe snapshot 100", source)
-        self.script.write_text(source.replace("run_probe snapshot 100", "run_probe snapshot 10"))
+        self.assertIn("run_probe snapshot 10", source)
+        self.script.write_text(source.replace("run_probe snapshot 10", "run_probe snapshot 1"))
         result = self.run_command()
         self.assertNotEqual(result.returncode, 0)
         self.assert_child_stopped(marker)
@@ -228,6 +236,33 @@ esac
         self.assertEqual(sentinel.read_text(), "preserve")
         self.assertFalse(list(self.output.glob("*.zip")))
         self.assert_clean()
+
+    def test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned(self):
+        original = self.script.read_text()
+        lifecycle = self.bundle / "lifecycle.sh"
+        lifecycle.write_text(lifecycle.read_text().replace("SUPPORT_STAGE_SECONDS=10", "SUPPORT_STAGE_SECONDS=0.5"))
+        for command in ("/usr/bin/ditto", "/usr/bin/unzip", "/bin/cp", "/usr/bin/cmp", "/bin/mv", "/bin/mkdir"):
+            with self.subTest(command=command):
+                marker = self.work / "blocked-stage.pid"
+                marker.unlink(missing_ok=True)
+                blocker = self.make_mock("blocked-stage", f"echo $$ > {shlex.quote(str(marker))}\nexec /bin/sleep 30\n")
+                if command == "/bin/cp":
+                    blocker = self.make_mock("blocked-stage", f'''case "${{!#}}" in
+*.partial.noindex)
+    printf partial > "${{!#}}"
+    echo $$ > {shlex.quote(str(marker))}
+    exec /bin/sleep 30 ;;
+*) exec /bin/cp "$@" ;;
+esac
+''')
+                self.script.write_text(original.replace(command, str(blocker)))
+                started = time.monotonic()
+                result = self.run_command()
+                self.assertEqual(result.returncode, 124, result.stderr)
+                self.assertLess(time.monotonic() - started, 4)
+                self.assert_child_stopped(marker)
+                self.assertFalse(list(self.output.glob("*.zip")))
+                self.assert_clean()
 
     def prepare_build(self):
         scripts = self.work / "scripts"
