@@ -263,6 +263,20 @@ primary labels, 12-point group titles, 11-point descriptions, an 18-point
 Classic page heading and a 15-point native toolbar title. See the
 [quiet navigation and typography review](../design/settings/quiet-navigation/README.md).
 
+Modules retains its five rows and switches, with a separate trailing drag handle.
+Only a successful local drop saves `popover.moduleOrder`; canceled previews leave
+preferences untouched. Up/Down keys and accessibility move actions use the same
+order. Hidden modules retain their positions. The Settings list, popover sections
+and quick menu share that order, while the header and footer stay at the ends.
+Reordering moves existing arranged views without detaching History, changing its
+samples, or refreshing telemetry. Reduce Motion removes row movement and drag
+return animation. Ring Gauge uses the approved vector circle, six upper ticks and
+blue northeast needle; its non-template image regenerates on appearance and
+contrast changes. The other four module symbols and all row dimensions remain.
+Native Settings captures and verification notes are in
+`design/settings/modules-reordering/README.md`. Actual pointer-driven drop
+verification remains pending; queued-event tests did not verify a system drop.
+
 The main popover footer now replaces the UI4 ordinary segmented
 control inside a glass surface with three mutually exclusive native `.glass`
 NSButtons and a separate round settings button, sharing one

@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "productionSourceCommit": "54c58a0afb4e51caa74ab7366eb10bc4e9d60cec",
+  "environment": {
+    "os": "macOS 26.6.1",
+    "arch": "arm64",
+    "kind": "disposable VM"
+  },
+  "capture": "Unmodified production AppKit Settings renderers, injected test preferences and read-only system dependencies; not a mockup or a host installation screenshot.",
+  "images": [
+    {
+      "file": "classic-light.png",
+      "sha256": "2940b2227ccfcc8af619927a735decf8dad04df03e53620639513d4c27c08a75"
+    },
+    {
+      "file": "classic-dark.png",
+      "sha256": "2481e01d56ab26e06dbc30bf1d9ca138b33be7a8824489ee8487b83f11352699"
+    },
+    {
+      "file": "standard-light.png",
+      "sha256": "0a1fe94da74d92f03997c6d3450c4b980c6678610046f63a23e0c60bf8586564"
+    },
+    {
+      "file": "standard-dark.png",
+      "sha256": "ecbd9de3eb9aa6b8deb693a1fa50104541133664516155b3b76ac32dd1c28640"
+    },
+    {
+      "file": "clear-light.png",
+      "sha256": "e112d32dc0492d7443d0fce4506d6b34052c51be4893ee3958980422bc568873"
+    },
+    {
+      "file": "clear-dark.png",
+      "sha256": "ecbd9de3eb9aa6b8deb693a1fa50104541133664516155b3b76ac32dd1c28640"
+    }
+  ]
+}
