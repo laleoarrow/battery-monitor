@@ -74,7 +74,9 @@ final class HistoryViewTests: XCTestCase {
         XCTAssertEqual(path.currentPoint.y,
             HistoryView.chartHeight * CGFloat(1 - 100 / view.chartCeilingForTest), accuracy: 1e-8)
         let clip = try XCTUnwrap(view.layer?.sublayers?.first(where: { $0.masksToBounds }))
-        let plot = try XCTUnwrap(clip.sublayers?.first)
+        let plot = try XCTUnwrap(clip.sublayers?.first(where: {
+            $0.sublayers?.contains(where: { $0 is CAGradientLayer }) == true
+        }))
         XCTAssertEqual(plot.anchorPoint, CGPoint(x: 0, y: 1))
         XCTAssertEqual(plot.position, CGPoint(x: 0, y: HistoryView.chartHeight))
         XCTAssertTrue(CATransform3DIsIdentity(plot.transform))
@@ -127,7 +129,8 @@ final class HistoryViewTests: XCTestCase {
         }
         XCTAssertLessThan(after[0].x, 0)
         let clip = try XCTUnwrap(view.layer?.sublayers?.first(where: { $0.masksToBounds }))
-        let gradient = try XCTUnwrap(clip.sublayers?.first?.sublayers?.compactMap { $0 as? CAGradientLayer }.first)
+        let gradient = try XCTUnwrap(clip.sublayers?.flatMap { $0.sublayers ?? [] }
+            .compactMap { $0 as? CAGradientLayer }.first)
         let mask = try XCTUnwrap(gradient.mask as? CAShapeLayer)
         XCTAssertEqual(gradient.frame.minX, after[0].x, accuracy: 1e-8)
         XCTAssertEqual(gradient.frame.maxX, PopoverStyle.contentWidth, accuracy: 1e-8)
@@ -166,7 +169,8 @@ final class HistoryViewTests: XCTestCase {
         XCTAssertEqual(view.chartCeilingForTest, 15)
         let path = try XCTUnwrap(view.chartPathForTest)
         let clip = try XCTUnwrap(view.layer?.sublayers?.first(where: { $0.masksToBounds }))
-        let gradient = try XCTUnwrap(clip.sublayers?.first?.sublayers?.compactMap { $0 as? CAGradientLayer }.first)
+        let gradient = try XCTUnwrap(clip.sublayers?.flatMap { $0.sublayers ?? [] }
+            .compactMap { $0 as? CAGradientLayer }.first)
         let mask = try XCTUnwrap(gradient.mask as? CAShapeLayer)
         let fill = try XCTUnwrap(mask.path)
         let top = HistoryView.chartHeight * CGFloat(1 - 100.0 / 15)
@@ -177,5 +181,24 @@ final class HistoryViewTests: XCTestCase {
         XCTAssertEqual(gradient.frame.minY + gradient.startPoint.y * gradient.frame.height, 0, accuracy: 1e-8)
         XCTAssertEqual(gradient.frame.minY + gradient.endPoint.y * gradient.frame.height,
                        HistoryView.chartHeight, accuracy: 1e-8)
+    }
+
+    func testStrokeLivesOutsideTheScaledFillAndKeepsItsPhysicalWidth() throws {
+        let view = view()
+        for (times, values) in [([0.0, 2], [40.0, 45]), ([0, 2, 4], [40, 45, 300])] {
+            view.update(samples: values, peak: values.max()!, color: .systemBlue,
+                        timing: .init(sampledAt: times, referenceTime: times.last!))
+        }
+        let clip = try XCTUnwrap(view.layer?.sublayers?.first(where: { $0.masksToBounds }))
+        let line = try XCTUnwrap(clip.sublayers?.compactMap { $0 as? CAShapeLayer }.first)
+        let viewport = try XCTUnwrap(clip.sublayers?.first(where: {
+            $0.sublayers?.contains(where: { $0 is CAGradientLayer }) == true
+        }))
+        XCTAssertTrue(line.superlayer === clip)
+        XCTAssertFalse(line.superlayer === viewport)
+        XCTAssertEqual(line.lineWidth, 1.6)
+        XCTAssertTrue(CATransform3DIsIdentity(line.transform))
+        XCTAssertTrue(CATransform3DIsIdentity(clip.transform))
+        XCTAssertEqual(line.path, view.chartPathForTest)
     }
 }

@@ -415,6 +415,31 @@ final class HistoryChartTests: XCTestCase {
         }
     }
 
+    func testPresentationAnchorRoundingCannotDiscardMatchingRawSegmentControls() throws {
+        let old = HistoryChartGeometry(samples: [0, 0, 100],
+            timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 200)
+        let target = HistoryChartGeometry(samples: [0, 0, 100, 150],
+            timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 200)
+        let rounded = old.segments.map {
+            HistoryChartGeometry.Cubic(start: .init(x: $0.start.x + 1e-7, y: $0.start.y + 1e-7),
+                control1: $0.control1, control2: $0.control2,
+                end: .init(x: $0.end.x - 1e-7, y: $0.end.y - 1e-7))
+        }
+        let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: rounded,
+            fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 200))
+        XCTAssertEqual(try XCTUnwrap(start.value(at: 1 - 3.0 / 120)), 31.25 / 200, accuracy: 1e-10)
+        XCTAssertEqual(start.segments[1].start, target.segments[1].start)
+        XCTAssertEqual(start.segments[1].end, target.segments[1].end)
+        for q in [0.0, 0.25, 0.5, 0.9, 1] {
+            let blended = target.interpolated(from: start, at: q)
+            XCTAssertEqual(blended.segments[1].value(at: 0.5),
+                           start.segments[1].value(at: 0.5) * (1 - q) + target.segments[1].value(at: 0.5) * q,
+                           accuracy: 1e-12)
+            XCTAssertEqual(blended.segments[1].start, target.segments[1].start)
+            XCTAssertEqual(blended.segments[1].end, target.segments[1].end)
+        }
+    }
+
     func testMatchedControlBlendsRemainInsideEachRawSamplePair() throws {
         var state: UInt64 = 8719
         for _ in 0..<40 {

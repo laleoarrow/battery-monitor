@@ -2878,6 +2878,36 @@ if !screenLocked {
             return abs(p.x - q.x) < 0.000_001 && abs(p.y - q.y) < 0.000_001
         }
     }
+    func historyStrokePaths(_ animation: CAAnimation) -> [CGPath]? {
+        guard let animation = animation as? CAKeyframeAnimation, animation.keyPath == "path",
+              let values = animation.values, values.count == 33 else { return nil }
+        var paths: [CGPath] = []
+        for value in values {
+            guard CFGetTypeID(value as CFTypeRef) == CGPath.typeID else { return nil }
+            paths.append(value as! CGPath)
+        }
+        return paths
+    }
+    func validHistoryStroke(_ animation: CAAnimation, viewport: CATransform3D) -> Bool {
+        guard let paths = historyStrokePaths(animation), let targetPath = paths.last else { return false }
+        let target = historyPathElements(targetPath)
+        guard !target.isEmpty else { return false }
+        for (index, path) in paths.enumerated() {
+            let elements = historyPathElements(path)
+            guard elements.map({ $0.0 }) == target.map({ $0.0 }) else { return false }
+            let progress = CGFloat(index) / CGFloat(paths.count - 1)
+            let sx = viewport.m41 * (1 - progress)
+            let sy = 1 + (viewport.m22 - 1) * (1 - progress)
+            for (actual, final) in zip(elements, target) {
+                guard actual.1.count == final.1.count,
+                      actual.1.allSatisfy({ $0.x.isFinite && $0.y.isFinite }) else { return false }
+                guard let a = actual.1.last, let b = final.1.last else { continue }
+                let expectedY = HistoryView.chartHeight + (b.y - HistoryView.chartHeight) * sy
+                guard abs(a.x - b.x - sx) < 0.01, abs(a.y - expectedY) < 0.01 else { return false }
+            }
+        }
+        return true
+    }
     func historyCubicMidpoint(_ path: CGPath, index: Int) -> CGPoint? {
         var current = CGPoint.zero
         var midpoints: [CGPoint] = []
@@ -2929,24 +2959,27 @@ if !screenLocked {
         updateFixture()
         let animations = historyAnimations(fixture.layer)
         let animationKeys = Set(animations.map { $0.0 })
-        let curveKeys = animationKeys.intersection(["history.curve", "history.fill"])
-        check("History 连续真实采样启动坐标与末端动画并配对曲线过渡",
-              Set(["history.scroll", "history.head"]).isSubset(of: animationKeys)
-                  && animationKeys.isSubset(of: ["history.scroll", "history.head", "history.curve",
+        check("History 连续真实采样启动描边、坐标与末端动画",
+              Set(["history.scroll", "history.head", "history.stroke"]).isSubset(of: animationKeys)
+                  && animationKeys.isSubset(of: ["history.scroll", "history.head", "history.stroke",
                                                  "history.fill", "history.reveal"])
-                  && (curveKeys.isEmpty || curveKeys == Set(["history.curve", "history.fill"]))
                   && animations.count == animationKeys.count && fixture.hasChartAnimationForTest)
         check("History 动画限于 180 ms 且没有重复、自动反向或常驻填充",
-              animations.count >= 2 && animations.allSatisfy {
+              animations.count >= 3 && animations.allSatisfy {
                   abs($0.1.duration - 0.18) < 0.000_001
                       && $0.1.repeatCount == 0 && $0.1.repeatDuration == 0
                       && !$0.1.autoreverses && $0.1.isRemovedOnCompletion
               })
-        check("History 平移坐标并沿位置路径衔接末端",
+        var ordinaryViewport = CATransform3DIdentity
+        ordinaryViewport.m41 = CGFloat((animations.first { $0.0 == "history.scroll" }?.1 as? CABasicAnimation)?
+            .fromValue as? Double ?? 0)
+        let ordinaryStroke = animations.first { $0.0 == "history.stroke" }?.1
+        check("History 平移描边保持路径拓扑及真实采样位置",
               (animations.first { $0.0 == "history.scroll" }?.1 as? CABasicAnimation)?.keyPath
                   == "transform.translation.x"
                   && (animations.first { $0.0 == "history.head" }?.1 as? CAKeyframeAnimation)?.keyPath
-                  == "position")
+                  == "position"
+                  && ordinaryStroke.map { validHistoryStroke($0, viewport: ordinaryViewport) } == true)
         spin(0.3)
         check("History 短过渡完成后原生图层自行静止", !fixture.hasChartAnimationForTest)
 
@@ -3028,17 +3061,24 @@ if !screenLocked {
         let expansionPaths = historyAnimations(fixture.layer).filter {
             ($0.1 as? CAPropertyAnimation)?.keyPath == "path"
         }
-        check("History 扩轴仅过渡同一样本区间的曲线控制点",
-              (expansionPaths.isEmpty
-                  || (Set(expansionPaths.map { $0.0 }) == Set(["history.curve", "history.fill"])
-                      && expansionPaths.count == 2))
-                  && expansionPaths.allSatisfy { alignedHistoryPathAnimation($0.1) })
+        let expansionStroke = expansionPaths.first { $0.0 == "history.stroke" }?.1
+        check("History 扩轴描边保持路径拓扑及真实采样位置",
+              expansionStroke.flatMap { stroke in
+                  expansionStart.map { validHistoryStroke(stroke, viewport: $0) }
+              } == true
+                  && expansionPaths.allSatisfy {
+                      $0.0 == "history.stroke" || ($0.0 == "history.fill" && alignedHistoryPathAnimation($0.1))
+                  })
+        let strokeLayer = historyLayers(fixture.layer).compactMap { $0 as? CAShapeLayer }.first {
+            $0.animation(forKey: "history.stroke") != nil
+        }
         let headLayer = historyLayers(fixture.layer).first {
             abs($0.bounds.width - 5.2) < 0.000_001
                 && abs($0.bounds.height - 5.2) < 0.000_001 && $0.cornerRadius == 2.6
         }
         spin(0.1)
         let beforeRetarget = expansion?.0.presentation()?.transform
+        let beforeStrokePath = strokeLayer?.presentation()?.path
         check("History 扩轴中间帧位于起始范围与目标范围之间",
               (beforeRetarget?.m22 ?? 0) > 1
                   && (beforeRetarget?.m22 ?? .infinity) < (expansionStart?.m22 ?? 0))
@@ -3046,12 +3086,33 @@ if !screenLocked {
               headLayer?.presentation()?.bounds.size == CGSize(width: 5.2, height: 5.2)
                   && headLayer?.presentation()?.transform.m11 == 1
                   && headLayer?.presentation()?.transform.m22 == 1)
+        var constantStrokeWidth = false
+        if let presented = strokeLayer?.presentation() {
+            let origin = presented.convert(CGPoint.zero, to: nil)
+            let unitX = presented.convert(CGPoint(x: 1, y: 0), to: nil)
+            let unitY = presented.convert(CGPoint(x: 0, y: 1), to: nil)
+            let sx = hypot(Double(unitX.x - origin.x), Double(unitX.y - origin.y))
+            let sy = hypot(Double(unitY.x - origin.x), Double(unitY.y - origin.y))
+            constantStrokeWidth = abs(presented.lineWidth - 1.6) < 0.000_001
+                && abs(sx - 1) < 0.000_001 && abs(sy - 1) < 0.000_001
+        }
+        check("History 变轴时描边宽度保持 1.6 点", constantStrokeWidth)
         let retainedTimestamp = axisTimes.first!
         let oldReference = axisTimes.last!
         let oldCeiling = fixture.chartCeilingForTest
         updateAxis(appending: 300)
         let retarget = viewportAnimation()
         let retargetStart = retarget.flatMap { animationStart($0.1) }
+        let retargetStroke = historyAnimations(fixture.layer).first { $0.0 == "history.stroke" }?.1
+        if let beforeStrokePath,
+           let oldAnchor = historyPathElements(beforeStrokePath).first?.1.first,
+           let firstStroke = retargetStroke.flatMap({ historyStrokePaths($0) })?.first,
+           let newAnchor = historyPathElements(firstStroke).first?.1.first {
+            check("History 中断变轴直接接续实际描边中的保留采样点",
+                  abs(oldAnchor.x - newAnchor.x) < 0.5 && abs(oldAnchor.y - newAnchor.y) < 0.5)
+        } else {
+            check("History 中断变轴直接接续实际描边中的保留采样点", false)
+        }
         if let beforeRetarget, let retargetStart {
             let before = projectedSample(axisValues[0], sampledAt: retainedTimestamp,
                                          reference: oldReference, ceiling: oldCeiling,
@@ -3100,8 +3161,7 @@ if !screenLocked {
         check("History 缩轴中间帧连续接近最终范围",
               (contractionScale ?? 0) > (contractionStart?.m22 ?? 1)
                   && (contractionScale ?? .infinity) < 1)
-        spin(0.35)
-        check("History 缩轴结束后原生图层自行静止", !fixture.hasChartAnimationForTest)
+        check("History 缩轴结束后原生图层自行静止", settleHistoryFixture("contracted-axis"))
 
         var cancellationPeak = 300.0
         for (name, cancel, restore) in cancellations {
@@ -3139,7 +3199,7 @@ if !screenLocked {
             CATransaction.flush()
             spin(0.03)
             let tailLine = historyLayers(fixture.layer).compactMap { $0 as? CAShapeLayer }.first {
-                $0.animation(forKey: "history.curve") != nil
+                $0.animation(forKey: "history.stroke") != nil
             }
             let targetTailPath = fixture.chartPathForTest
             let targetTailCeiling = fixture.chartCeilingForTest
@@ -3147,11 +3207,7 @@ if !screenLocked {
                let oldMidpoint = historyCubicMidpoint(oldTailPath, index: 1),
                let targetMidpoint = historyCubicMidpoint(targetTailPath, index: 1),
                let visiblePath = tailLine?.presentation()?.path,
-               let visibleMidpoint = historyCubicMidpoint(visiblePath, index: 1),
-               let visibleTransform = viewportAnimation()?.0.presentation()?.transform {
-                let visiblePoint = CGPoint(x: visibleMidpoint.x + visibleTransform.m41,
-                                           y: HistoryView.chartHeight
-                                               + (visibleMidpoint.y - HistoryView.chartHeight) * visibleTransform.m22)
+               let visiblePoint = historyCubicMidpoint(visiblePath, index: 1) {
                 check("History 新增采样首帧保留原区间的实际呈现中点",
                       abs(visiblePoint.x - oldMidpoint.x) < 0.01
                           && abs(visiblePoint.y - oldMidpoint.y) < 0.01)

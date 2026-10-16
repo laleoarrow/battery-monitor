@@ -36,7 +36,7 @@ final class HistoryView: PopoverSection {
     var hasChartAnimationForTest: Bool {
         movingPlot.animation(forKey: "history.scroll") != nil
             || movingPlot.animation(forKey: "history.viewport") != nil
-            || line.animation(forKey: "history.curve") != nil
+            || line.animation(forKey: "history.stroke") != nil
             || gradientMask.animation(forKey: "history.fill") != nil
             || areaGradient.animation(forKey: "history.gradient") != nil
             || reveal.animation(forKey: "history.reveal") != nil
@@ -61,7 +61,7 @@ final class HistoryView: PopoverSection {
         line.lineWidth = 1.6
         line.lineJoin = .round
         line.lineCap = .round
-        movingPlot.addSublayer(line)
+        clip.addSublayer(line)
         head.cornerRadius = 2.6
         head.opacity = 0
         headClip.mask = headClipMask
@@ -241,7 +241,7 @@ final class HistoryView: PopoverSection {
               !visibleRect.isEmpty, !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion,
               sameColor, let viewportFraction,
               let oldGeometry, let presentedPath,
-              let presentedSegments = segments(in: presentedPath),
+              let presentedSegments = segments(in: presentedPath, undoing: presentedTransform),
               let startGeometry = geometry.alignedStart(from: oldGeometry, presentedSegments: presentedSegments,
                 fraction: viewportFraction, oldCeiling: oldCeiling, newCeiling: ceiling),
               let viewport = HistoryChartViewport(oldCeiling: oldCeiling, newCeiling: ceiling,
@@ -287,12 +287,13 @@ final class HistoryView: PopoverSection {
 
     /// Decode the actual presentation controls, retaining the cached model's
     /// raw timestamp identities. Never interpolate unrelated path commands.
-    private func segments(in path: CGPath) -> [HistoryChartGeometry.Cubic]? {
+    private func segments(in path: CGPath, undoing viewport: CATransform3D) -> [HistoryChartGeometry.Cubic]? {
         var segments: [HistoryChartGeometry.Cubic] = []
         var previous: HistoryChartGeometry.Point?
         var valid = true
         func normalized(_ p: CGPoint) -> HistoryChartGeometry.Point {
-            .init(x: Double(p.x / chartRect.width), y: Double(1 - p.y / chartRect.height))
+            .init(x: Double((p.x - viewport.m41) / chartRect.width),
+                  y: Double((chartRect.height - p.y) / (chartRect.height * viewport.m22)))
         }
         path.applyWithBlock { pointer in
             let element = pointer.pointee
@@ -324,6 +325,7 @@ final class HistoryView: PopoverSection {
         // follow the same affine transform and cubic as the line and area.
         let startX = Double((presentedHead.x - plot.minX) / plot.width)
         var positions: [NSValue] = []
+        var strokeFrames: [CGPath] = []
         for frame in 0...32 {
             let progress = Double(frame) / 32
             let shift = viewport.translationX / Double(plot.width) * (1 - progress)
@@ -333,6 +335,12 @@ final class HistoryView: PopoverSection {
                                          blendingFrom: startGeometry, progress: progress) else { return }
             positions.append(NSValue(point: CGPoint(x: plot.minX + CGFloat(visibleX) * plot.width,
                 y: plot.minY + plot.height - CGFloat(y * sy) * plot.height)))
+            let blended = geometry.interpolated(from: startGeometry, at: progress)
+            let transformed = CGMutablePath()
+            transformed.addPath(paths(for: blended).stroke,
+                transform: CGAffineTransform(a: 1, b: 0, c: 0, d: CGFloat(sy),
+                    tx: CGFloat(shift) * plot.width, ty: plot.height * CGFloat(1 - sy)))
+            strokeFrames.append(transformed)
         }
         let motion = CABasicAnimation(keyPath: scaling ? "transform" : "transform.translation.x")
         if scaling {
@@ -352,6 +360,12 @@ final class HistoryView: PopoverSection {
         dot.duration = duration
         dot.calculationMode = .linear
         dot.timingFunction = timing
+        let stroke = CAKeyframeAnimation(keyPath: "path")
+        stroke.values = strokeFrames
+        stroke.duration = duration
+        stroke.calculationMode = .linear
+        stroke.timingFunction = timing
+        line.add(stroke, forKey: "history.stroke")
         if scaling || abs(presentedBandY) > 1e-8 {
             let gradient = gradientRect
             let band = CAKeyframeAnimation(keyPath: "startPoint")
@@ -370,15 +384,12 @@ final class HistoryView: PopoverSection {
         }
         if changesShape {
             let startPaths = paths(for: startGeometry), targetPaths = paths(for: geometry)
-            for (shape, from, to, key) in [(line, startPaths.stroke, targetPaths.stroke, "history.curve"),
-                (gradientMask, fillPath(startPaths.filled), fillPath(targetPaths.filled), "history.fill")] {
-                let curve = CABasicAnimation(keyPath: "path")
-                curve.fromValue = from
-                curve.toValue = to
-                curve.duration = duration
-                curve.timingFunction = timing
-                shape.add(curve, forKey: key)
-            }
+            let curve = CABasicAnimation(keyPath: "path")
+            curve.fromValue = fillPath(startPaths.filled)
+            curve.toValue = fillPath(targetPaths.filled)
+            curve.duration = duration
+            curve.timingFunction = timing
+            gradientMask.add(curve, forKey: "history.fill")
         }
         let startWidth = CGFloat(startX) * plot.width, endWidth = CGFloat(last.x) * plot.width
         if abs(startWidth - endWidth) > 1e-8 {

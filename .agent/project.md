@@ -45,6 +45,8 @@ viewport ages the cached readings with the current monotonic time. Peak uses
 the original values; the chart scale adds quantized headroom and waits eight
 seconds before a reduction of at least 25%. Contiguous changes use a 180 ms
 horizontal translation or a 350 ms eased, baseline-anchored axis transition.
+The stroke is rendered in viewport coordinates so its 1.6-point width stays
+constant while the fill moves through the changing axis range.
 Interrupted transitions continue from the presentation layers. Curve controls
 may blend only after matching their exact sampling intervals and raw anchors;
 fill and endpoint follow the same geometry and viewport progress. Bounded

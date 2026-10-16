@@ -208,13 +208,26 @@ struct HistoryChartGeometry {
         let aligned = segments.enumerated().map { index, target -> Cubic in
             guard let priorIndex = previous.segmentIDs.firstIndex(of: segmentIDs[index]) else { return target }
             let prior = presentedSegments[priorIndex]
-            guard same(rebase(prior.start), target.start), same(rebase(prior.end), target.end) else { return target }
+            let raw = previous.segments[priorIndex]
+            guard same(rebase(raw.start), target.start), same(rebase(raw.end), target.end) else { return target }
             let c1 = rebase(prior.control1), c2 = rebase(prior.control2)
             return Cubic(start: target.start,
                 control1: Point(x: target.control1.x, y: c1.y),
                 control2: Point(x: target.control2.x, y: c2.y), end: target.end)
         }
         return Self(runs: runs, segments: aligned, points: points, segmentIDs: segmentIDs)
+    }
+
+    func interpolated(from start: Self, at progress: Double) -> Self {
+        let q = min(max(progress, 0), 1)
+        func blend(_ a: Point, _ b: Point) -> Point {
+            Point(x: a.x + (b.x - a.x) * q, y: a.y + (b.y - a.y) * q)
+        }
+        let blended = segments.enumerated().map { index, target in
+            Cubic(start: target.start, control1: blend(start.segments[index].control1, target.control1),
+                  control2: blend(start.segments[index].control2, target.control2), end: target.end)
+        }
+        return Self(runs: runs, segments: blended, points: points, segmentIDs: segmentIDs)
     }
 
     func value(at x: Double, blendingFrom start: Self, progress: Double) -> Double? {
