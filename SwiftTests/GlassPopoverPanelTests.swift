@@ -5,6 +5,24 @@ import XCTest
 /// These tests construct hidden windows only. Real focus, menu event delivery,
 /// backdrop rendering and cross-app dismissal belong to the GUI VM harness.
 final class GlassPopoverPanelTests: XCTestCase {
+    func testHalfPointAnchorDoesNotExpandInitialContentOrChangeWidthOnRefresh() throws {
+        guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
+        _ = NSApplication.shared
+        for style in [NSGlassEffectView.Style.regular, .clear] {
+            let inset = GlassPopoverPanel.contentInset(for: style == .clear ? .clear : .regular)
+            let frame = NSRect(x: 574.5, y: 60, width: 360 + 2 * inset, height: 400 + 2 * inset + 12)
+            let content = NSView()
+            let panel = GlassPopoverPanel(content: content, frame: frame, style: style)
+            defer { panel.detachContent() }
+            let initialFrame = panel.frame
+            XCTAssertEqual(panel.frame.width, frame.width)
+            XCTAssertEqual(content.frame.width, 360)
+            panel.setFrame(frame, display: false)
+            XCTAssertEqual(panel.frame, initialFrame)
+            XCTAssertEqual(content.frame.width, 360)
+        }
+    }
+
     func testOptionalArrowUpdatesBackingAndBodyWithoutReplacingContent() throws {
         guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
         _ = NSApplication.shared

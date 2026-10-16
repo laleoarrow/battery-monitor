@@ -264,7 +264,7 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("Settings.changeUserInfoKey", observer)
         self.assertIn("case .menuBarPercentage, .menuBarIconStyle:", observer)
         self.assertIn(
-            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .colorScheme, .inAppLogoStyle, .dockIconStyle:\n                break",
+            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:\n                break",
             observer,
         )
         status_scope = observer.split("case .menuBarPercentage, .menuBarIconStyle:", 1)[1].split("case", 1)[0]

@@ -2304,10 +2304,11 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "the scrolled first glass group's visible region stays within the clip viewport")
                 if transparencyIsAdjustable {
                     followNativeKeyLoop(in: glassWindow, from: restoredLogo, to: restoredTransparency, reverse: true)
-                    followNativeKeyLoop(in: glassWindow, from: restoredTransparency, to: glassBackground, reverse: true)
+                    followNativeKeyLoop(in: glassWindow, from: restoredTransparency, to: restoredArrow, reverse: true)
                 } else {
-                    followNativeKeyLoop(in: glassWindow, from: restoredLogo, to: glassBackground, reverse: true)
+                    followNativeKeyLoop(in: glassWindow, from: restoredLogo, to: restoredArrow, reverse: true)
                 }
+                followNativeKeyLoop(in: glassWindow, from: restoredArrow, to: glassBackground, reverse: true)
                 require(glassWindow.firstResponder === glassBackground,
                     "background choice receives focus after native reverse key-loop verification")
                 followNativeKeyLoop(in: glassWindow, from: restoredLogo, to: restoredDock)

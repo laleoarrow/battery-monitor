@@ -38,6 +38,9 @@ final class GlassPopoverPanel: NSPanel {
         self.showsArrow = showsArrow
         super.init(contentRect: frame, styleMask: [.borderless, .nonactivatingPanel],
                    backing: .buffered, defer: false)
+        // AppKit expands a half-point origin during initialization. Use the
+        // same sizing path as later placement before laying out the content.
+        setFrame(frame, display: false)
         title = "Wattson Power Monitor"
         isOpaque = false
         backgroundColor = .clear
