@@ -108,6 +108,72 @@ print(json.dumps(result))
         self.assertTrue(self.read_report()["fixture"])
         self.assert_clean()
 
+    def test_line_break_paths_fail_before_touching_unrelated_prefix(self):
+        for location in ("temporary", "output", "working-directory", "support-directory"):
+            for separator in ("\n", "\r"):
+                with self.subTest(location=location, separator=repr(separator)):
+                    case = self.work / (location + ("-lf" if separator == "\n" else "-cr"))
+                    case.mkdir()
+                    unrelated = case / "unrelated"
+                    unrelated.mkdir()
+                    sentinel = unrelated / "caller-owned.txt"
+                    sentinel.write_text("must remain byte-for-byte")
+                    unusual = case / ("unrelated" + separator + "suffix")
+                    unusual.mkdir()
+                    script = self.script
+                    output = case / "output"
+                    environment = dict(self.environment)
+                    cwd = None
+                    if location == "temporary":
+                        environment["TMPDIR"] = str(unusual)
+                    elif location == "output":
+                        output = unusual
+                    elif location == "working-directory":
+                        cwd, output = unusual, pathlib.Path(".")
+                    else:
+                        shutil.copytree(self.bundle, unusual / "bundle")
+                        script = unusual / "bundle" / COMMAND
+                    result = run(["/bin/bash", str(script), "--output", str(output)],
+                                 cwd=cwd, env=environment, capture_output=True, text=True,
+                                 timeout=15, cleanup_grace=65)
+                    self.assertTrue(sentinel.is_file(), "Truncated path cleanup deleted unrelated caller data")
+                    self.assertEqual(sentinel.read_text(), "must remain byte-for-byte")
+                    self.assertNotEqual(result.returncode, 0, "Unsupported line-break path must fail closed")
+                    self.assertEqual(sorted(p.name for p in unrelated.iterdir()), ["caller-owned.txt"])
+                    self.assertEqual(list(unusual.iterdir()), [] if location != "support-directory" else [unusual / "bundle"])
+                    self.assertFalse(list((cwd or output).glob("*.zip")))
+                    self.assertFalse(list(self.native_tmp.glob("Wattson-SystemBatteryIcon.noindex")))
+
+    def test_line_break_temporary_path_preserves_prefix_on_early_failure_and_signal(self):
+        for scenario in ("output-mkdir-failure", "TERM"):
+            with self.subTest(scenario=scenario):
+                case = self.work / scenario
+                case.mkdir()
+                unrelated = case / "unrelated"
+                unrelated.mkdir()
+                sentinel = unrelated / "caller-owned.txt"
+                sentinel.write_text("preserve")
+                unusual = case / "unrelated\nsuffix"
+                unusual.mkdir()
+                if scenario == "TERM":
+                    result = run(["/bin/bash", "-c",
+                        'set -eu; source "$1"; support_begin "$2"; kill -TERM $$',
+                        "newline-signal", str(self.bundle / "lifecycle.sh"),
+                        str(unusual / (REPORT_ROOT + ".noindex"))],
+                        capture_output=True, text=True, timeout=5, cleanup_grace=65)
+                else:
+                    output_parent = case / "not-a-directory"
+                    output_parent.write_text("caller-owned file")
+                    result = run(["/bin/bash", str(self.script), "--output", str(output_parent / "output")],
+                        env=dict(self.environment, TMPDIR=str(unusual)), capture_output=True,
+                        text=True, timeout=5, cleanup_grace=65)
+                    self.assertEqual(output_parent.read_text(), "caller-owned file")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertTrue(sentinel.is_file(), "Early failure/TERM removed unrelated prefix")
+                self.assertEqual(sentinel.read_text(), "preserve")
+                self.assertEqual(list(unrelated.iterdir()), [sentinel])
+                self.assertEqual(list(unusual.iterdir()), [])
+
     def test_existing_scratch_root_and_output_files_are_preserved(self):
         scratch_root = self.native_tmp / (REPORT_ROOT + ".noindex")
         scratch_root.mkdir()
@@ -256,11 +322,28 @@ esac
 esac
 ''')
                 self.script.write_text(original.replace(command, str(blocker)))
-                started = time.monotonic()
-                result = self.run_command()
-                self.assertEqual(result.returncode, 124, result.stderr)
-                self.assertLess(time.monotonic() - started, 4)
-                self.assert_child_stopped(marker)
+                # Start the bounded observation at the injected blocked stage,
+                # not before all unrelated collector probes and VM tool startup.
+                with (self.work / "stage-errors").open("w+") as errors:
+                    process = subprocess.Popen(["/bin/bash", str(self.script), "--output", str(self.output)],
+                        stdout=subprocess.DEVNULL, stderr=errors, env=self.environment, start_new_session=True)
+                    process.cleanup_grace = 65
+                    self.directory.processes.append(process)
+                    try:
+                        ready_deadline = time.monotonic() + 15
+                        while not marker.exists() and process.poll() is None and time.monotonic() < ready_deadline:
+                            time.sleep(0.02)
+                        self.assertTrue(marker.exists(), "Blocked stage was never reached")
+                        # 0.5s stage + independent 5s file cleanup + termination
+                        # grace; this does not extend any production deadline.
+                        process.wait(timeout=7)
+                        errors.seek(0)
+                        self.assertEqual(process.returncode, 124, errors.read())
+                        self.assert_child_stopped(marker)
+                    finally:
+                        from local_runtime import _stop
+                        _stop(process)
+                        self.directory.processes.remove(process)
                 self.assertFalse(list(self.output.glob("*.zip")))
                 self.assert_clean()
 

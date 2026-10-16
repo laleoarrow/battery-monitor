@@ -13,6 +13,24 @@ SUPPORT_PENDING_SIGNAL=0
 # A sentinel keeps macOS's Bash 3.2 compatible with `set -u` on empty arrays.
 SUPPORT_CHILDREN=("")
 
+support_validate_path() {
+    case "$1" in
+        *$'\n'*|*$'\r'*) echo 'Paths containing line breaks are not supported.' >&2; return 2 ;;
+    esac
+}
+
+# Validate the whole reply before publishing a path to an owner or caller.
+support_read_path() {
+    local candidate remainder
+    {
+        IFS= read -r candidate || return 1
+        if IFS= read -r remainder || [[ -n "$remainder" ]]; then return 2; fi
+    } < "$1"
+    support_validate_path "$candidate" || return $?
+    [[ -n "$candidate" ]] || return 1
+    printf '%s' "$candidate"
+}
+
 support_signal() {
     if [[ "$SUPPORT_DEFER_SIGNALS" -gt 0 ]]; then
         [[ "$SUPPORT_PENDING_SIGNAL" != 0 ]] || SUPPORT_PENDING_SIGNAL=$1
@@ -67,6 +85,7 @@ support_cleanup() {
 }
 
 support_begin() {
+    support_validate_path "$1" || return $?
     SUPPORT_SCRATCH_ROOT=$1
     trap support_cleanup EXIT
     trap 'support_signal 129' HUP
@@ -81,9 +100,15 @@ support_begin() {
     # Retain ownership across allocation and reading its returned path.
     SUPPORT_ALLOCATION="$SUPPORT_SCRATCH_ROOT/.allocation.$$.$RANDOM"
     SUPPORT_DEFER_SIGNALS=$((SUPPORT_DEFER_SIGNALS + 1))
-    local allocation_status=0
+    local allocation_status=0 allocated=""
     support_run /usr/bin/mktemp -d "$SUPPORT_SCRATCH_ROOT/run.XXXXXX" > "$SUPPORT_ALLOCATION" || allocation_status=$?
-    IFS= read -r SUPPORT_SCRATCH < "$SUPPORT_ALLOCATION" || true
+    allocated=$(support_read_path "$SUPPORT_ALLOCATION") || {
+        [[ "$allocation_status" != 0 ]] || allocation_status=1
+    }
+    case "$allocated" in
+        "$SUPPORT_SCRATCH_ROOT"/run.??????) SUPPORT_SCRATCH=$allocated ;;
+        *) [[ "$allocation_status" != 0 ]] || allocation_status=1 ;;
+    esac
     support_resume_signals
     [[ "$allocation_status" == 0 ]] || return "$allocation_status"
     [[ -n "$SUPPORT_SCRATCH" ]] || return 1

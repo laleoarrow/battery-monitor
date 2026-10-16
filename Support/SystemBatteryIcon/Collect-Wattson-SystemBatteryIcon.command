@@ -5,9 +5,17 @@ umask 077
 export LC_ALL=C
 export COPYFILE_DISABLE=1
 
+case "${BASH_SOURCE[0]}:$PWD" in
+    *$'\n'*|*$'\r'*) echo 'Paths containing line breaks are not supported.' >&2; exit 2 ;;
+esac
 SUPPORT_DIR="${BASH_SOURCE[0]%/*}"
 [[ "$SUPPORT_DIR" != "${BASH_SOURCE[0]}" ]] || SUPPORT_DIR=.
-SUPPORT_DIR="$(cd "$SUPPORT_DIR" && pwd)"
+# A suffix prevents command substitution from trimming a directory's final LF.
+SUPPORT_DIR="$(cd "$SUPPORT_DIR" && printf '%s/' "$PWD")"
+SUPPORT_DIR="${SUPPORT_DIR%/}"
+case "$SUPPORT_DIR" in
+    *$'\n'*|*$'\r'*) echo 'Paths containing line breaks are not supported.' >&2; exit 2 ;;
+esac
 # shellcheck source=lifecycle.sh
 source "$SUPPORT_DIR/lifecycle.sh"
 OUTPUT_DIR="$HOME/Desktop"
@@ -20,10 +28,11 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+support_validate_path "$OUTPUT_DIR"
 support_begin "${TMPDIR:-/tmp}/Wattson-SystemBatteryIcon.noindex"
 support_run /bin/mkdir -p -- "$OUTPUT_DIR"
 support_run /bin/bash -c 'cd "$1" && pwd' -- "$OUTPUT_DIR" > "$SUPPORT_SCRATCH/output-directory"
-IFS= read -r OUTPUT_DIR < "$SUPPORT_SCRATCH/output-directory"
+OUTPUT_DIR=$(support_read_path "$SUPPORT_SCRATCH/output-directory")
 REPORT_DIR="$SUPPORT_SCRATCH/Wattson-SystemBatteryIcon"
 support_run /bin/mkdir "$REPORT_DIR"
 

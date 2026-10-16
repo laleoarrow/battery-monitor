@@ -218,19 +218,34 @@ support_run /bin/bash {shlex.quote(str(child))}
     def test_total_deadline_limits_accumulated_successful_stages(self):
         scratch = self.work / "scratch.noindex"
         completed = self.work / "completed"
-        started = time.monotonic()
-        result = self.shell(f'''SUPPORT_STAGE_SECONDS=0.5
-SUPPORT_TOTAL_SECONDS=0.65
-support_begin {shlex.quote(str(scratch))}
+        markers = [self.work / f"stage-{stage}" for stage in range(1, 6)]
+        # Only this copied supervisor's monotonic clock is controlled. Every
+        # stage advances one tick: each stage is below its 2-tick
+        # limit, but the third must exhaust the shared 2.5-tick budget. This
+        # isolates cumulative-budget logic from VM startup/scheduler speed;
+        # the separate blocked-stage test exercises the real monotonic clock.
+        original = self.lifecycle.read_text()
+        prefix, runner = original.split("/usr/bin/perl -e '\n", 1)
+        clock = "sub fixture_clock {\n" + "".join(
+            f"    return {100 + index} if -e q{{{markers[index - 1]}}};\n"
+            for index in range(5, 0, -1)) + "    return 100;\n}\n"
+        runner = runner.replace("my ($overall, $limit, @command) = @ARGV;",
+                                clock + "my ($overall, $limit, @command) = @ARGV;")
+        runner = runner.replace("clock_gettime(CLOCK_MONOTONIC)", "fixture_clock()")
+        self.lifecycle = self.work / "controlled-clock-lifecycle.sh"
+        self.lifecycle.write_text(prefix + "/usr/bin/perl -e '\n" + runner)
+        result = self.shell(f'''support_begin {shlex.quote(str(scratch))}
+SUPPORT_STAGE_SECONDS=2
+SUPPORT_DEADLINE=102.5
 for stage in 1 2 3 4 5; do
-    support_run /bin/sleep 0.2
+    support_run /bin/bash -c ': > "$1"; [[ "$2" != 3 ]] || exec /bin/sleep 30' -- {shlex.quote(str(self.work))}/stage-$stage "$stage"
+    [[ "$SUPPORT_DEADLINE" == 102.5 ]]
     echo "$stage" >> {shlex.quote(str(completed))}
 done
-''')
+''', timeout=10)
         self.assertEqual(result.returncode, 124, result.stderr)
-        self.assertLess(time.monotonic() - started, 2)
-        self.assertGreaterEqual(len(completed.read_text().splitlines()), 1)
-        self.assertLess(len(completed.read_text().splitlines()), 5)
+        self.assertEqual(completed.read_text().splitlines(), ["1", "2"])
+        self.assertEqual([marker.exists() for marker in markers], [True, True, True, False, False])
         self.assertFalse(scratch.exists())
 
 
