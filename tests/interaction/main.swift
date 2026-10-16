@@ -2879,8 +2879,17 @@ if !screenLocked {
         }
     }
     func historyStrokePaths(_ animation: CAAnimation) -> [CGPath]? {
-        guard let animation = animation as? CAKeyframeAnimation, animation.keyPath == "path",
-              let values = animation.values, values.count == 33 else { return nil }
+        guard let property = animation as? CAPropertyAnimation, property.keyPath == "path" else { return nil }
+        let values: [Any]
+        if let animation = animation as? CABasicAnimation,
+           let from = animation.fromValue, let to = animation.toValue {
+            values = [from, to]
+        } else if let animation = animation as? CAKeyframeAnimation,
+                  let frames = animation.values, frames.count == 33 {
+            values = frames
+        } else {
+            return nil
+        }
         var paths: [CGPath] = []
         for value in values {
             guard CFGetTypeID(value as CFTypeRef) == CGPath.typeID else { return nil }
@@ -2890,6 +2899,7 @@ if !screenLocked {
     }
     func validHistoryStroke(_ animation: CAAnimation, viewport: CATransform3D) -> Bool {
         guard let paths = historyStrokePaths(animation), let targetPath = paths.last else { return false }
+        guard paths.count == 33 || (paths.count == 2 && viewport.m22 == 1) else { return false }
         let target = historyPathElements(targetPath)
         guard !target.isEmpty else { return false }
         for (index, path) in paths.enumerated() {
@@ -2979,6 +2989,7 @@ if !screenLocked {
                   == "transform.translation.x"
                   && (animations.first { $0.0 == "history.head" }?.1 as? CAKeyframeAnimation)?.keyPath
                   == "position"
+                  && ordinaryStroke is CABasicAnimation
                   && ordinaryStroke.map { validHistoryStroke($0, viewport: ordinaryViewport) } == true)
         spin(0.3)
         check("History 短过渡完成后原生图层自行静止", !fixture.hasChartAnimationForTest)
@@ -3063,7 +3074,7 @@ if !screenLocked {
         }
         let expansionStroke = expansionPaths.first { $0.0 == "history.stroke" }?.1
         check("History 扩轴描边保持路径拓扑及真实采样位置",
-              expansionStroke.flatMap { stroke in
+              expansionStroke is CAKeyframeAnimation && expansionStroke.flatMap { stroke in
                   expansionStart.map { validHistoryStroke(stroke, viewport: $0) }
               } == true
                   && expansionPaths.allSatisfy {

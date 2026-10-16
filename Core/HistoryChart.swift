@@ -218,18 +218,6 @@ struct HistoryChartGeometry {
         return Self(runs: runs, segments: aligned, points: points, segmentIDs: segmentIDs)
     }
 
-    func interpolated(from start: Self, at progress: Double) -> Self {
-        let q = min(max(progress, 0), 1)
-        func blend(_ a: Point, _ b: Point) -> Point {
-            Point(x: a.x + (b.x - a.x) * q, y: a.y + (b.y - a.y) * q)
-        }
-        let blended = segments.enumerated().map { index, target in
-            Cubic(start: target.start, control1: blend(start.segments[index].control1, target.control1),
-                  control2: blend(start.segments[index].control2, target.control2), end: target.end)
-        }
-        return Self(runs: runs, segments: blended, points: points, segmentIDs: segmentIDs)
-    }
-
     func value(at x: Double, blendingFrom start: Self, progress: Double) -> Double? {
         guard let targetY = value(at: x), let startY = start.value(at: x) else { return nil }
         return startY + (targetY - startY) * min(max(progress, 0), 1)
