@@ -710,7 +710,12 @@ final class PopoverFooterView: PopoverSection {
     }
 
     @objc private func systemBatteryIconChanged(_ sender: NSButton) {
-        let requested = sender.state == .on
+        guard let currentHidden = systemBatteryIconHidden else {
+            sender.state = .mixed
+            return
+        }
+        // Mixed state is display-only; invert the authoritative value, as Settings does.
+        let requested = !currentHidden
         guard let onSystemBatteryIconToggle else {
             sender.state = systemBatteryIconHidden == true ? .on : .off
             NSSound.beep()

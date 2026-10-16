@@ -100,6 +100,80 @@ print(json.dumps(result))
         self.assertTrue(self.read_report()["fixture"])
         self.assert_clean()
 
+    def test_collector_also_runs_from_its_directory_without_a_path_prefix(self):
+        result = run(["/bin/bash", COMMAND, "--output", str(self.output)],
+                     cwd=self.bundle, capture_output=True, text=True, timeout=15,
+                     cleanup_grace=65, env=self.environment)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue(self.read_report()["fixture"])
+        self.assert_clean()
+
+    def test_line_break_paths_fail_before_touching_unrelated_prefix(self):
+        for location in ("temporary", "output", "working-directory", "support-directory"):
+            for separator in ("\n", "\r"):
+                with self.subTest(location=location, separator=repr(separator)):
+                    case = self.work / (location + ("-lf" if separator == "\n" else "-cr"))
+                    case.mkdir()
+                    unrelated = case / "unrelated"
+                    unrelated.mkdir()
+                    sentinel = unrelated / "caller-owned.txt"
+                    sentinel.write_text("must remain byte-for-byte")
+                    unusual = case / ("unrelated" + separator + "suffix")
+                    unusual.mkdir()
+                    script = self.script
+                    output = case / "output"
+                    environment = dict(self.environment)
+                    cwd = None
+                    if location == "temporary":
+                        environment["TMPDIR"] = str(unusual)
+                    elif location == "output":
+                        output = unusual
+                    elif location == "working-directory":
+                        cwd, output = unusual, pathlib.Path(".")
+                    else:
+                        shutil.copytree(self.bundle, unusual / "bundle")
+                        script = unusual / "bundle" / COMMAND
+                    result = run(["/bin/bash", str(script), "--output", str(output)],
+                                 cwd=cwd, env=environment, capture_output=True, text=True,
+                                 timeout=15, cleanup_grace=65)
+                    self.assertTrue(sentinel.is_file(), "Truncated path cleanup deleted unrelated caller data")
+                    self.assertEqual(sentinel.read_text(), "must remain byte-for-byte")
+                    self.assertNotEqual(result.returncode, 0, "Unsupported line-break path must fail closed")
+                    self.assertEqual(sorted(p.name for p in unrelated.iterdir()), ["caller-owned.txt"])
+                    self.assertEqual(list(unusual.iterdir()), [] if location != "support-directory" else [unusual / "bundle"])
+                    self.assertFalse(list((cwd or output).glob("*.zip")))
+                    self.assertFalse(list(self.native_tmp.glob("Wattson-SystemBatteryIcon.noindex")))
+
+    def test_line_break_temporary_path_preserves_prefix_on_early_failure_and_signal(self):
+        for scenario in ("output-mkdir-failure", "TERM"):
+            with self.subTest(scenario=scenario):
+                case = self.work / scenario
+                case.mkdir()
+                unrelated = case / "unrelated"
+                unrelated.mkdir()
+                sentinel = unrelated / "caller-owned.txt"
+                sentinel.write_text("preserve")
+                unusual = case / "unrelated\nsuffix"
+                unusual.mkdir()
+                if scenario == "TERM":
+                    result = run(["/bin/bash", "-c",
+                        'set -eu; source "$1"; support_begin "$2"; kill -TERM $$',
+                        "newline-signal", str(self.bundle / "lifecycle.sh"),
+                        str(unusual / (REPORT_ROOT + ".noindex"))],
+                        capture_output=True, text=True, timeout=5, cleanup_grace=65)
+                else:
+                    output_parent = case / "not-a-directory"
+                    output_parent.write_text("caller-owned file")
+                    result = run(["/bin/bash", str(self.script), "--output", str(output_parent / "output")],
+                        env=dict(self.environment, TMPDIR=str(unusual)), capture_output=True,
+                        text=True, timeout=5, cleanup_grace=65)
+                    self.assertEqual(output_parent.read_text(), "caller-owned file")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertTrue(sentinel.is_file(), "Early failure/TERM removed unrelated prefix")
+                self.assertEqual(sentinel.read_text(), "preserve")
+                self.assertEqual(list(unrelated.iterdir()), [sentinel])
+                self.assertEqual(list(unusual.iterdir()), [])
+
     def test_existing_scratch_root_and_output_files_are_preserved(self):
         scratch_root = self.native_tmp / (REPORT_ROOT + ".noindex")
         scratch_root.mkdir()
@@ -142,8 +216,8 @@ fi
 printf '{{"operation":"%s","status":"ok","durationMs":1,"response":{{}}}}\\n' "$2"
 ''')
         source = self.script.read_text()
-        self.assertIn("run_probe health 60", source)
-        self.script.write_text(source.replace("run_probe health 60", "run_probe health 10"))
+        self.assertIn("run_probe health 6", source)
+        self.script.write_text(source.replace("run_probe health 6", "run_probe health 1"))
         result = self.run_command()
         self.assertEqual(result.returncode, 0, result.stderr)
         report = self.read_report()
@@ -161,8 +235,8 @@ printf '{{"operation":"%s","status":"ok","durationMs":1,"response":{{}}}}\\n' "$
         marker = self.work / "snapshot.pid"
         self.make_mock("osascript", f"echo $$ > {shlex.quote(str(marker))}\nexec /bin/sleep 30\n")
         source = self.script.read_text()
-        self.assertIn("run_probe snapshot 100", source)
-        self.script.write_text(source.replace("run_probe snapshot 100", "run_probe snapshot 10"))
+        self.assertIn("run_probe snapshot 10", source)
+        self.script.write_text(source.replace("run_probe snapshot 10", "run_probe snapshot 1"))
         result = self.run_command()
         self.assertNotEqual(result.returncode, 0)
         self.assert_child_stopped(marker)
@@ -228,6 +302,50 @@ esac
         self.assertEqual(sentinel.read_text(), "preserve")
         self.assertFalse(list(self.output.glob("*.zip")))
         self.assert_clean()
+
+    def test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned(self):
+        original = self.script.read_text()
+        lifecycle = self.bundle / "lifecycle.sh"
+        lifecycle.write_text(lifecycle.read_text().replace("SUPPORT_STAGE_SECONDS=10", "SUPPORT_STAGE_SECONDS=0.5"))
+        for command in ("/usr/bin/ditto", "/usr/bin/unzip", "/bin/cp", "/usr/bin/cmp", "/bin/mv", "/bin/mkdir"):
+            with self.subTest(command=command):
+                marker = self.work / "blocked-stage.pid"
+                marker.unlink(missing_ok=True)
+                blocker = self.make_mock("blocked-stage", f"echo $$ > {shlex.quote(str(marker))}\nexec /bin/sleep 30\n")
+                if command == "/bin/cp":
+                    blocker = self.make_mock("blocked-stage", f'''case "${{!#}}" in
+*.partial.noindex)
+    printf partial > "${{!#}}"
+    echo $$ > {shlex.quote(str(marker))}
+    exec /bin/sleep 30 ;;
+*) exec /bin/cp "$@" ;;
+esac
+''')
+                self.script.write_text(original.replace(command, str(blocker)))
+                # Start the bounded observation at the injected blocked stage,
+                # not before all unrelated collector probes and VM tool startup.
+                with (self.work / "stage-errors").open("w+") as errors:
+                    process = subprocess.Popen(["/bin/bash", str(self.script), "--output", str(self.output)],
+                        stdout=subprocess.DEVNULL, stderr=errors, env=self.environment, start_new_session=True)
+                    process.cleanup_grace = 65
+                    self.directory.processes.append(process)
+                    try:
+                        ready_deadline = time.monotonic() + 15
+                        while not marker.exists() and process.poll() is None and time.monotonic() < ready_deadline:
+                            time.sleep(0.02)
+                        self.assertTrue(marker.exists(), "Blocked stage was never reached")
+                        # 0.5s stage + independent 5s file cleanup + termination
+                        # grace; this does not extend any production deadline.
+                        process.wait(timeout=7)
+                        errors.seek(0)
+                        self.assertEqual(process.returncode, 124, errors.read())
+                        self.assert_child_stopped(marker)
+                    finally:
+                        from local_runtime import _stop
+                        _stop(process)
+                        self.directory.processes.remove(process)
+                self.assertFalse(list(self.output.glob("*.zip")))
+                self.assert_clean()
 
     def prepare_build(self):
         scripts = self.work / "scripts"
