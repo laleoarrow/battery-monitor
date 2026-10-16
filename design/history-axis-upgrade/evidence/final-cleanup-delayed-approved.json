@@ -1,0 +1,48 @@
+{
+  "TCCDatabaseRead": false,
+  "TCCDatabaseWritten": false,
+  "allPassed": true,
+  "auditedAtEpoch": 1792165371.057185,
+  "checkCount": 8,
+  "checks": {
+    "applicationScriptsRemoved": true,
+    "appsRemoved": true,
+    "containersRemoved": true,
+    "mountsRemoved": true,
+    "nativeRunsRemoved": true,
+    "preferencesRemoved": true,
+    "processesRemoved": true,
+    "registrationsRemoved": true
+  },
+  "deletedAnything": false,
+  "exactDomainsAudited": [
+    "Wattson.SettingsCommandInteraction.498CCB51-4D48-4543-B814-82B1F2DFE200",
+    "Wattson.SettingsCommandInteraction.E8F45070-4ACB-4D7A-B0D2-16A2DF1AB76E",
+    "com.leoarrow.wattson.historyaxisqa.02056c68-eb1c-4ce9-babe-a223e51fdb3b",
+    "com.leoarrow.wattson.historyaxisqa.38cfe342-80ed-463d-bb29-91ac5e0ef8de",
+    "com.leoarrow.wattson.historyaxisqa.785d32c7-d344-4791-9653-ad865f8acf06",
+    "com.leoarrow.wattson.historyaxisqa.7daff9db-5f76-4ce5-ad4f-0d63cebd10c1",
+    "com.leoarrow.wattson.historyaxisqa.d2089ee5-666b-4664-8dfe-623089e57517",
+    "com.leoarrow.wattson.historyaxisqa.dc7ffea5-6b06-4823-8a89-517cc587624a",
+    "com.leoarrow.wattson.historyaxisqa.f8d32864-645d-4a1f-b4b5-f352c9914669",
+    "com.leoarrow.wattson.historyaxisqa.ffd88bd0-cd42-43dc-8098-59b4365cb36c",
+    "com.leoarrow.wattson.interactiontests.e273f97a-ead5-49f2-a6d9-8d6034aad57f",
+    "com.leoarrow.wattson.interactiontests.f8ab8180-35af-4121-abcd-2f1530e75911"
+  ],
+  "ignoredReadOnlyAuditCommands": [],
+  "ownedVMRetained": true,
+  "ownershipManifest": "owned-domains-final.json",
+  "ownershipManifestSHA256": "76ea371c6dfc2994ac429397d43a0787f8ff24111a9d24f4e48b4f2715f1ba3f",
+  "residuals": {
+    "applicationScripts": [],
+    "apps": [],
+    "containers": [],
+    "mounts": [],
+    "nativeRuns": [],
+    "preferences": [],
+    "processes": [],
+    "registrations": []
+  },
+  "schema": 1,
+  "scope": "Read-only exact-domain and explicitly owned native-project residual audit. Canonical installation audit and >=90-second quiet-window timing are separate caller evidence."
+}

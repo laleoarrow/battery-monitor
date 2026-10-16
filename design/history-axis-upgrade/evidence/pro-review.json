@@ -1,0 +1,8 @@
+{
+  "conversation": "https://chatgpt.com/c/6ad23678-eaf8-83ee-b2f8-2d98419b6742",
+  "modelSelectionObserved": "Pro",
+  "scope": "History viewport continuity; requested by user",
+  "result": "Baseline affine formula is correct. PCHIP recomputes existing terminal intervals on append, so affine-only animation leaves visible discontinuities. Match actual presentation controls by exact timestamp interval and preserve departure context.",
+  "adopted": "Baseline viewport transform and matched local control interpolation, bounded Core Animation, presentation retarget, paired fill and head, fixed viewport clipping.",
+  "boundary": "Reviewer proposed an alternative using per-frame viewport-space controls. This implementation retains the minimum hybrid affine/control approach and is verified separately on macOS; a Pro opinion alone is not runtime evidence."
+}

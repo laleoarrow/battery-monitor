@@ -1,0 +1,303 @@
+Release mode: community-ad-hoc
+Notarization requested: no
+Building Wattson 4.3.10 (4.3.10) for arm64 and x86_64...
+0%: Compute target dependency graph
+Building targets in dependency order
+Target dependency graph (5 targets)
+0%: Gather provisioning inputs
+0%: Create build description
+0%: Discovering version info for swiftc
+0%: Discovering version info for clang
+0%: Discovering version info for ld
+Build description signature: 7620a059bd3b538f3aef854f30a3402d
+
+Build description path: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/swiftpm/apple/Intermediates.noindex/XCBuildData/7620a059bd3b538f3aef854f30a3402d.xcbuilddata
+
+0%: Create build directory $(TARGET_BUILD_DIR)
+0%: Create build directory $(OBJROOT)
+0%: Build stat cache for /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk
+0%: Create build directory $(TARGET_BUILD_DIR)/Release
+0%: Create build directory $(OBJROOT)/ExplicitPrecompiledModules
+0%: Create build directory $(OBJROOT)/SwiftExplicitPrecompiledModules
+0%: Create build directory $(OBJROOT)/EagerLinkingTBDs/Release
+0%: Create build directory $(TARGET_BUILD_DIR)/Release/PackageFrameworks
+0%: Write wattson-helper.DependencyMetadataFileList
+0%: Write wattson-helper.DependencyStaticMetadataFileList
+0%: Write empty-Wattson_WattsonTests.plist
+0%: Write wattson-helper_const_extract_protocols.json (x86_64)
+0%: Write wattson-helper.LinkFileList (x86_64)
+0%: Write wattson-helper-OutputFileMap.json (x86_64)
+0%: Write wattson-helper.SwiftFileList (x86_64)
+0%: Write wattson-helper.LinkFileList (arm64)
+0%: Write wattson-helper-OutputFileMap.json (arm64)
+0%: Write wattson-helper.SwiftFileList (arm64)
+0%: Write Wattson_WattsonTests.DependencyStaticMetadataFileList
+0%: Write wattson-helper_const_extract_protocols.json (arm64)
+0%: Write Wattson_WattsonTests.DependencyMetadataFileList
+0%: Write Wattson.DependencyMetadataFileList
+0%: Write Wattson.DependencyStaticMetadataFileList
+0%: Write WattsonHelperV5Support_Module.DependencyStaticMetadataFileList
+0%: Write Wattson_const_extract_protocols.json (x86_64)
+0%: Write WattsonHelperV5Support_Module.DependencyMetadataFileList
+0%: Write Wattson.LinkFileList (x86_64)
+0%: Write Wattson_const_extract_protocols.json (arm64)
+0%: Write Wattson.SwiftFileList (arm64)
+0%: Write Wattson.LinkFileList (arm64)
+0%: Write Wattson-OutputFileMap.json (arm64)
+0%: Write Wattson.SwiftFileList (x86_64)
+0%: Write Wattson-OutputFileMap.json (x86_64)
+0%: Write WattsonHelperV5Support.modulemap
+0%: Write WattsonHelperV5Support_Module_const_extract_protocols.json (x86_64)
+0%: Write WattsonHelperV5Support_Module.SwiftFileList (x86_64)
+0%: Write WattsonHelperV5Support_Module.SwiftConstValuesFileList
+0%: Write WattsonHelperV5Support_Module.LinkFileList (x86_64)
+0%: Write WattsonHelperV5Support_Module-OutputFileMap.json (x86_64)
+0%: Write WattsonHelperV5Support_Module.SwiftConstValuesFileList
+0%: Write WattsonHelperV5Support_Module.SwiftFileList (arm64)
+0%: Create directory Wattson_WattsonTests.bundle
+0%: Write WattsonHelperV5Support_Module_const_extract_protocols.json (arm64)
+0%: Write WattsonHelperV5Support_Module-OutputFileMap.json (arm64)
+0%: Write WattsonHelperV5Support_Module.LinkFileList (arm64)
+0%: Create directory Contents
+0%: Create directory Resources
+0%: Copy WattsonHelperV5Support.modulemap
+0%: Process empty-Wattson_WattsonTests.plist
+0%: Copy Fixtures
+0%: Register execution policy exception for Wattson_WattsonTests.bundle
+0%: Touch Wattson_WattsonTests.bundle
+50%: Planning Swift module Wattson (x86_64)
+50%: Planning Swift module WattsonHelperV5Support (arm64)
+50%: Planning Swift module Wattson (arm64)
+50%: Planning Swift module WattsonHelperV5Support (x86_64)
+51%: Compile WattsonHelperV5Support_Module (x86_64)
+51%: Compiling Clang module _Builtin_stddef
+51%: Compiling Clang module _AvailabilityInternal
+51%: Compiling Clang module SwiftShims
+51%: Compiling Clang module _Builtin_float
+51%: Compiling Clang module _Builtin_stdarg
+51%: Compiling Clang module ptrcheck
+51%: Compiling Clang module _Builtin_stdbool
+51%: Compiling Clang module ptrauth
+51%: Compiling Clang module _SwiftConcurrencyShims
+51%: Compile WattsonHelperV5Support_Module (arm64)
+51%: Compiling Clang module _Builtin_stdarg
+51%: Compiling Clang module ptrauth
+51%: Compiling Clang module _SwiftConcurrencyShims
+51%: Compiling Clang module _AvailabilityInternal
+51%: Compiling Clang module SwiftShims
+51%: Compiling Clang module ptrcheck
+51%: Compiling Clang module _Builtin_stdbool
+51%: Compiling Clang module _Builtin_float
+51%: Compiling Clang module _Builtin_stddef
+51%: Compiling Clang module _DarwinFoundation1
+42%: Compiling Clang module _DarwinFoundation1
+42%: Compiling Clang module _Builtin_limits
+42%: Compiling Clang module _DarwinFoundation2
+42%: Compiling Clang module _Builtin_limits
+42%: Compiling Clang module _DarwinFoundation2
+42%: Compiling Clang module sys_types
+42%: Compiling Clang module _Builtin_stdint
+42%: Compile Wattson (x86_64)
+42%: Compiling Clang module DeveloperToolsSupport
+42%: Compiling Clang module _Builtin_tgmath
+42%: Compile Wattson (arm64)
+41%: Compiling Clang module DeveloperToolsSupport
+41%: Compiling Clang module _Builtin_stdint
+41%: Compiling Clang module sys_types
+41%: Compiling Clang module _Builtin_tgmath
+41%: Compiling Clang module OpenGL
+41%: Compiling Clang module libDER
+41%: Compiling Clang module _Builtin_stdatomic
+41%: Compiling Clang module _DarwinFoundation3
+41%: Compiling Clang module libDER
+41%: Compiling Clang module OpenGL
+41%: Compiling Clang module _Builtin_stdatomic
+41%: Compiling Clang module _Builtin_intrinsics
+41%: Compiling Clang module _DarwinFoundation3
+41%: Compiling Clang module _Builtin_inttypes
+41%: Compiling Clang module _Builtin_intrinsics
+43%: Compiling Clang module Darwin
+43%: Compiling Clang module _Builtin_inttypes
+43%: Compiling Clang module Darwin
+43%: Compiling Clang module simd
+45%: Compiling Clang module simd
+45%: Compiling Clang module CUPS
+45%: Compiling Clang module MachO
+45%: Compiling Clang module libkern
+45%: Compiling Clang module launch
+45%: Compiling Clang module CUPS
+45%: Compiling Clang module launch
+45%: Compiling Clang module libkern
+45%: Compiling Clang module MachO
+48%: Compiling Clang module ObjectiveC
+48%: Compiling Clang module Spatial
+48%: Compiling Clang module os_object
+48%: Compiling Clang module ObjectiveC
+48%: Compiling Clang module os_workgroup
+51%: Compiling Clang module os_object
+51%: Compiling Clang module Dispatch
+51%: Compiling Clang module Spatial
+51%: Compiling Clang module os_workgroup
+51%: Compiling Clang module XPC
+51%: Compiling Clang module CoreFoundation
+51%: Compiling Clang module Dispatch
+53%: Compiling Clang module os
+53%: Compiling Clang module XPC
+53%: Compiling Clang module CoreFoundation
+53%: Compiling Clang module IOKit
+53%: Compiling Clang module CFNetwork
+53%: Compiling Clang module Security
+53%: Compiling Clang module ColorSync
+53%: Compiling Clang module os
+53%: Compiling Clang module IOKit
+53%: Compiling Clang module ColorSync
+53%: Compiling Clang module CFNetwork
+53%: Compiling Clang module Security
+58%: Compiling Clang module CoreGraphics
+58%: Compiling Clang module DiskArbitration
+59%: Compiling Clang module CoreServices
+59%: Compiling Clang module CoreGraphics
+59%: Compiling Clang module DiskArbitration
+59%: Compiling Clang module ImageIO
+59%: Compiling Clang module CoreText
+59%: Compiling Clang module CoreServices
+62%: Compiling Clang module CoreText
+62%: Compiling Clang module ImageIO
+62%: Compiling Clang module Foundation
+63%: Compiling Clang module Foundation
+64%: Compiling Clang module Symbols
+64%: Compiling Clang module CoreData
+64%: Compiling Clang module DataDetection
+64%: Compiling Clang module UniformTypeIdentifiers
+64%: Compiling PowerObservationV5Support.swift
+64%: Compiling Clang module OSLog
+64%: Compiling Clang module ApplicationServices
+64%: Compiling Clang module IOSurface
+64%: Compiling Clang module CoreTransferable
+64%: Compiling Clang module Accessibility
+64%: Compile PowerObservationV5Support.swift (x86_64)
+64%: Compiling Clang module Metal
+64%: Compiling Clang module CoreTransferable
+64%: Compiling Clang module IOSurface
+64%: Compiling Clang module ApplicationServices
+64%: Compiling PowerObservationV5Support.swift
+64%: Compiling Clang module Accessibility
+64%: Compiling Clang module UniformTypeIdentifiers
+64%: Compiling Clang module DataDetection
+64%: Compiling Clang module Symbols
+64%: Compiling Clang module CoreData
+64%: Compiling Clang module OSLog
+64%: Compile PowerObservationV5Support.swift (arm64)
+72%: Compiling Clang module Metal
+72%: Compiling Clang module CoreVideo
+73%: Compiling Clang module QuartzCore
+73%: Compiling Clang module CoreImage
+73%: Compiling Clang module CoreVideo
+73%: Compiling Clang module SwiftUICore
+73%: Compiling Clang module QuartzCore
+73%: Compiling Clang module CoreImage
+73%: Compiling Clang module AppKit
+76%: Compiling Clang module SwiftUICore
+76%: Compiling Clang module AppKit
+77%: Compiling Clang module SwiftUI
+77%: Compiling AppleSmartBatteryPowerObservationReader.swift, BatteryRuntimeEstimate.swift, BatterySampler.swift, AppleSmartBatteryObservationReader.swift, DirectSMCObservationReader.swift, PowerObservationCaptureCommand.swift, PowerObservationCollector.swift, PowerObservationJSONLWriter.swift, EnergyMode.swift, FeedbackDiagnostics.swift, GlassBackgroundView.swift, HelperClient.swift, HelperClientPowerObservationV5.swift, HistoryChart.swift, LoginItemController.swift, PopoverPlacement.swift, PopupEventLog.swift, PowerHistory.swift, PowerObservationFusion.swift, PowerObservationFusionReplay.swift, PowerObservationRuntimeController.swift, PowerObservationShadow.swift, PowerObservationTrace.swift, PowerObservationWireV5.swift, PowerSnapshot.swift, RawPowerObservation.swift, Settings.swift, SettingsAppearance.swift, SystemBatteryIcon.swift, UpdateChecker.swift, VisualEncoding.swift, AppDelegate.swift, BatteryIcon.swift, ClickRouter.swift, SettingsWindowController.swift, StatusItemController.swift, FooterHoverFeedbackView.swift, GlassPopoverMaterialView.swift, GlassPopoverPanel.swift, HistoryLayer.swift, InteractiveGlassModeControl.swift, LaneLayer.swift, ModeSliderView.swift, NativeGlassModeControl.swift, NativeModeSegmentedControl.swift, PopoverContentView.swift, PopoverController.swift, PopoverPreview.swift, PopoverStyle.swift, PowerFlowLayer.swift, RingGaugeLayer.swift, main.swift
+77%: Compile 52 Swift source files (x86_64)
+78%: Compiling Clang module SwiftUI
+78%: Compiling AppleSmartBatteryPowerObservationReader.swift, BatteryRuntimeEstimate.swift, BatterySampler.swift, AppleSmartBatteryObservationReader.swift, DirectSMCObservationReader.swift, PowerObservationCaptureCommand.swift, PowerObservationCollector.swift, PowerObservationJSONLWriter.swift, EnergyMode.swift, FeedbackDiagnostics.swift, GlassBackgroundView.swift, HelperClient.swift, HelperClientPowerObservationV5.swift, HistoryChart.swift, LoginItemController.swift, PopoverPlacement.swift, PopupEventLog.swift, PowerHistory.swift, PowerObservationFusion.swift, PowerObservationFusionReplay.swift, PowerObservationRuntimeController.swift, PowerObservationShadow.swift, PowerObservationTrace.swift, PowerObservationWireV5.swift, PowerSnapshot.swift, RawPowerObservation.swift, Settings.swift, SettingsAppearance.swift, SystemBatteryIcon.swift, UpdateChecker.swift, VisualEncoding.swift, AppDelegate.swift, BatteryIcon.swift, ClickRouter.swift, SettingsWindowController.swift, StatusItemController.swift, FooterHoverFeedbackView.swift, GlassPopoverMaterialView.swift, GlassPopoverPanel.swift, HistoryLayer.swift, InteractiveGlassModeControl.swift, LaneLayer.swift, ModeSliderView.swift, NativeGlassModeControl.swift, NativeModeSegmentedControl.swift, PopoverContentView.swift, PopoverController.swift, PopoverPreview.swift, PopoverStyle.swift, PowerFlowLayer.swift, RingGaugeLayer.swift, main.swift
+78%: Compile 52 Swift source files (arm64)
+79%: Discovering Swift tasks after 'Compiling PowerObservationV5Support.swift'
+79%: Unblock downstream dependents of WattsonHelperV5Support_Module (x86_64)
+79%: Copy WattsonHelperV5Support.swiftmodule (x86_64)
+79%: Copy WattsonHelperV5Support.swiftdoc (x86_64)
+79%: Copy WattsonHelperV5Support.abi.json (x86_64)
+79%: Copy WattsonHelperV5Support.swiftsourceinfo (x86_64)
+79%: Discovering Swift tasks after 'Compiling PowerObservationV5Support.swift'
+79%: Unblock downstream dependents of WattsonHelperV5Support_Module (arm64)
+79%: Merge Objective-C generated interface headers
+79%: Copy WattsonHelperV5Support.swiftdoc (arm64)
+79%: Copy WattsonHelperV5Support.swiftmodule (arm64)
+79%: Copy WattsonHelperV5Support.abi.json (arm64)
+79%: Copy WattsonHelperV5Support.swiftsourceinfo (arm64)
+79%: Link WattsonHelperV5Support_Module.o (x86_64)
+84%: Link WattsonHelperV5Support_Module.o (arm64)
+84%: Planning Swift module WattsonHelper (x86_64)
+84%: Planning Swift module WattsonHelper (arm64)
+84%: Create universal binary WattsonHelperV5Support_Module.o
+84%: Extract app intents metadata
+2026-10-16 23:19:21.774 appintentsmetadataprocessor[94151:6752688] Starting appintentsmetadataprocessor export
+2026-10-16 23:19:21.792 appintentsmetadataprocessor[94151:6752688] Extracted no relevant App Intents symbols, skipping writing output
+
+84%: Register execution policy exception for WattsonHelperV5Support_Module.o
+86%: Compiling wattson-helper.swift
+86%: Compile wattson-helper (x86_64)
+86%: Compiling wattson-helper.swift
+86%: Compile wattson-helper (arm64)
+86%: Compile wattson-helper.swift (x86_64)
+86%: Compile wattson-helper.swift (arm64)
+87%: Discovering Swift tasks after 'Compiling wattson-helper.swift'
+87%: Unblock downstream dependents of wattson-helper (x86_64)
+87%: Link wattson-helper (x86_64)
+87%: Copy WattsonHelper.swiftdoc (x86_64)
+87%: Copy WattsonHelper.abi.json (x86_64)
+87%: Copy WattsonHelper.swiftmodule (x86_64)
+87%: Copy WattsonHelper.swiftsourceinfo (x86_64)
+87%: Discovering Swift tasks after 'Compiling wattson-helper.swift'
+87%: Unblock downstream dependents of wattson-helper (arm64)
+87%: Copy WattsonHelper.abi.json (arm64)
+87%: Copy WattsonHelper.swiftsourceinfo (arm64)
+87%: Copy WattsonHelper.swiftdoc (arm64)
+87%: Copy WattsonHelper.swiftmodule (arm64)
+87%: Link wattson-helper (arm64)
+92%: Create universal binary wattson-helper
+92%: Generate wattson-helper.dSYM for wattson-helper
+92%: Register execution policy exception for wattson-helper
+93%: Discovering Swift tasks after 'Compiling AppleSmartBatteryPowerObservationReader.swift, BatteryRuntimeEstimate.swift, BatterySampler.swift, AppleSmartBatteryObservationReader.swift, DirectSMCObservationReader.swift, PowerObservationCaptureCommand.swift, PowerObservationCollector.swift, PowerObservationJSONLWriter.swift, EnergyMode.swift, FeedbackDiagnostics.swift, GlassBackgroundView.swift, HelperClient.swift, HelperClientPowerObservationV5.swift, HistoryChart.swift, LoginItemController.swift, PopoverPlacement.swift, PopupEventLog.swift, PowerHistory.swift, PowerObservationFusion.swift, PowerObservationFusionReplay.swift, PowerObservationRuntimeController.swift, PowerObservationShadow.swift, PowerObservationTrace.swift, PowerObservationWireV5.swift, PowerSnapshot.swift, RawPowerObservation.swift, Settings.swift, SettingsAppearance.swift, SystemBatteryIcon.swift, UpdateChecker.swift, VisualEncoding.swift, AppDelegate.swift, BatteryIcon.swift, ClickRouter.swift, SettingsWindowController.swift, StatusItemController.swift, FooterHoverFeedbackView.swift, GlassPopoverMaterialView.swift, GlassPopoverPanel.swift, HistoryLayer.swift, InteractiveGlassModeControl.swift, LaneLayer.swift, ModeSliderView.swift, NativeGlassModeControl.swift, NativeModeSegmentedControl.swift, PopoverContentView.swift, PopoverController.swift, PopoverPreview.swift, PopoverStyle.swift, PowerFlowLayer.swift, RingGaugeLayer.swift, main.swift'
+93%: Unblock downstream dependents of Wattson (x86_64)
+93%: Link Wattson (x86_64)
+93%: Copy Wattson.abi.json (x86_64)
+93%: Copy Wattson.swiftmodule (x86_64)
+93%: Copy Wattson.swiftdoc (x86_64)
+93%: Copy Wattson.swiftsourceinfo (x86_64)
+93%: Discovering Swift tasks after 'Compiling AppleSmartBatteryPowerObservationReader.swift, BatteryRuntimeEstimate.swift, BatterySampler.swift, AppleSmartBatteryObservationReader.swift, DirectSMCObservationReader.swift, PowerObservationCaptureCommand.swift, PowerObservationCollector.swift, PowerObservationJSONLWriter.swift, EnergyMode.swift, FeedbackDiagnostics.swift, GlassBackgroundView.swift, HelperClient.swift, HelperClientPowerObservationV5.swift, HistoryChart.swift, LoginItemController.swift, PopoverPlacement.swift, PopupEventLog.swift, PowerHistory.swift, PowerObservationFusion.swift, PowerObservationFusionReplay.swift, PowerObservationRuntimeController.swift, PowerObservationShadow.swift, PowerObservationTrace.swift, PowerObservationWireV5.swift, PowerSnapshot.swift, RawPowerObservation.swift, Settings.swift, SettingsAppearance.swift, SystemBatteryIcon.swift, UpdateChecker.swift, VisualEncoding.swift, AppDelegate.swift, BatteryIcon.swift, ClickRouter.swift, SettingsWindowController.swift, StatusItemController.swift, FooterHoverFeedbackView.swift, GlassPopoverMaterialView.swift, GlassPopoverPanel.swift, HistoryLayer.swift, InteractiveGlassModeControl.swift, LaneLayer.swift, ModeSliderView.swift, NativeGlassModeControl.swift, NativeModeSegmentedControl.swift, PopoverContentView.swift, PopoverController.swift, PopoverPreview.swift, PopoverStyle.swift, PowerFlowLayer.swift, RingGaugeLayer.swift, main.swift'
+93%: Unblock downstream dependents of Wattson (arm64)
+93%: Copy Wattson.abi.json (arm64)
+93%: Copy Wattson.swiftdoc (arm64)
+93%: Copy Wattson.swiftmodule (arm64)
+93%: Copy Wattson.swiftsourceinfo (arm64)
+93%: Link Wattson (arm64)
+98%: Create universal binary Wattson
+98%: Generate Wattson.dSYM for Wattson
+99%: Register execution policy exception for Wattson
+100%: Build succeeded
+Build complete!
+/* com.apple.actool.compilation-results */
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/icon-assets/Assets.car
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/icon-assets/WattsonGlass.icns
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/icon-assets/icon-info.plist
+
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/com.leoarrow.wattson.helper: replacing existing signature
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/Wattson.app: replacing existing signature
+Built universal app: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/Wattson.app
+Built universal helper: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/com.leoarrow.wattson.helper
+Signing: ad-hoc community build (not notarized)
+Verified universal release build for Wattson 4.3.10
+pkgbuild: Reading components from /Users/leoarrow/Project/mypackage/agents/电池功率/Packaging/pkg/component.plist
+pkgbuild: Adding component at Applications/Wattson.app
+pkgbuild: Adding top-level preinstall script
+pkgbuild: Adding top-level postinstall script
+pkgbuild: Wrote package to /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/pkg.Cm3NEw/Wattson-component.pkg
+productbuild: Wrote product to /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/pkg.Cm3NEw/Wattson-v4.3.10-macos-universal.pkg
+Created unsigned community PKG: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/artifacts/Wattson-v4.3.10-macos-universal.pkg
+Notarization status: no (Developer ID Installer identity is not configured)
+hdiutil: verify: checksum of "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/dmg.ZSYVcE/Wattson-v4.3.10-macos-universal.dmg" is VALID
+Mounted DMG verified: helper-free app and Applications link
+Created unsigned DMG: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.ONygoz/artifacts/Wattson-v4.3.10-macos-universal.dmg
+Notarization/checksums: pending release orchestration
+Mounted DMG verified: helper-free app and Applications link
+Verified Wattson 4.3.10: full PKG and DMG contain byte-identical apps
+Wattson-v4.3.10-macos-universal.pkg: OK
+Wattson-v4.3.10-macos-universal.dmg: OK
+Wattson-v4.3.10-release-info.txt: OK
+Created release artifacts in /Users/leoarrow/Project/mypackage/agents/电池功率/dist
+Notarized: no
+Checksums: /Users/leoarrow/Project/mypackage/agents/电池功率/dist/SHA256SUMS.txt

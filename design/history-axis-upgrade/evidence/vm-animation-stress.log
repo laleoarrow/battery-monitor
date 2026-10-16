@@ -1,0 +1,152 @@
++ set -euo pipefail
++++ dirname scripts/verify_animation_stress.sh
+++ cd scripts/..
+++ pwd
++ ROOT_DIR=/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source
++ ITERATIONS=20000
++ ((  1 > 1  ))
++ [[ ! 20000 =~ ^[1-9][0-9]*$ ]]
++ source /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/scripts/lib/local_cleanup.sh
+++++ dirname /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/scripts/lib/local_cleanup.sh
++++ cd /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/scripts/lib
++++ pwd
+++ _WATTSON_CLEANUP_LIB=/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/scripts/lib
++ wattson_cleanup_init
++ _WATTSON_CLEANUP_DIRS=()
++ _WATTSON_CLEANUP_APPS=()
++ _WATTSON_CLEANUP_MOUNTS=()
++ _WATTSON_CLEANUP_EXECUTABLES=()
++ _WATTSON_CLEANUP_DEFAULTS=()
++ _WATTSON_RUNNER_PID=
++ trap _wattson_cleanup EXIT
++ trap 'exit 129' HUP
++ trap 'exit 130' INT
++ trap 'exit 143' TERM
++ mkdir -p /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex
+++ mktemp -d /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.XXXXXX
++ BUILD_DIR=/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ
++ wattson_cleanup_add_dir /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ
++ _WATTSON_CLEANUP_DIRS+=("$1")
++ BINARY=/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ/AnimationStress
++ mkdir -p /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ/isolated-home
++ wattson_run /usr/sbin/taskpolicy -b /usr/bin/nice -n 15 /usr/bin/xcrun swiftc /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/AppleSmartBatteryPowerObservationReader.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/BatteryRuntimeEstimate.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/BatterySampler.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/EnergyMode.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/FeedbackDiagnostics.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/GlassBackgroundView.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/HelperClient.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/HelperClientPowerObservationV5.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/HistoryChart.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/LoginItemController.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PopoverPlacement.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PopupEventLog.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerHistory.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationFusion.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationFusionReplay.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationRuntimeController.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationShadow.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationTrace.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationWireV5.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerSnapshot.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/RawPowerObservation.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/Settings.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/SettingsAppearance.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/SystemBatteryIcon.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/UpdateChecker.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/VisualEncoding.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/FooterHoverFeedbackView.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/GlassPopoverMaterialView.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/GlassPopoverPanel.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/HistoryLayer.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/InteractiveGlassModeControl.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/LaneLayer.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/ModeSliderView.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/NativeGlassModeControl.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/NativeModeSegmentedControl.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/PopoverContentView.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/PopoverController.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/PopoverPreview.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/PopoverStyle.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/PowerFlowLayer.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/RingGaugeLayer.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/tests/animation_stress/main.swift -D DEBUG -framework AppKit -framework CoreGraphics -framework IOKit -o /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ/AnimationStress
++ _WATTSON_RUNNER_PID=2447
++ local status=0
++ wait 2447
++ /usr/bin/python3 /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/scripts/lib/run_owned.py -- /usr/sbin/taskpolicy -b /usr/bin/nice -n 15 /usr/bin/xcrun swiftc /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/AppleSmartBatteryPowerObservationReader.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/BatteryRuntimeEstimate.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/BatterySampler.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/EnergyMode.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/FeedbackDiagnostics.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/GlassBackgroundView.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/HelperClient.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/HelperClientPowerObservationV5.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/HistoryChart.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/LoginItemController.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PopoverPlacement.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PopupEventLog.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerHistory.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationFusion.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationFusionReplay.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationRuntimeController.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationShadow.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationTrace.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerObservationWireV5.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/PowerSnapshot.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/RawPowerObservation.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/Settings.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/SettingsAppearance.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/SystemBatteryIcon.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/UpdateChecker.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Core/VisualEncoding.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/FooterHoverFeedbackView.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/GlassPopoverMaterialView.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/GlassPopoverPanel.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/HistoryLayer.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/InteractiveGlassModeControl.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/LaneLayer.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/ModeSliderView.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/NativeGlassModeControl.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/NativeModeSegmentedControl.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/PopoverContentView.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/PopoverController.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/PopoverPreview.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/PopoverStyle.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/PowerFlowLayer.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/Popover/RingGaugeLayer.swift /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/tests/animation_stress/main.swift -D DEBUG -framework AppKit -framework CoreGraphics -framework IOKit -o /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ/AnimationStress
++ _WATTSON_RUNNER_PID=
++ return 0
++ wattson_run_timeout 120 /usr/bin/env CFFIXED_USER_HOME=/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ/isolated-home /usr/sbin/taskpolicy -b /usr/bin/nice -n 15 /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ/AnimationStress 20000
++ local seconds=120
++ shift
++ _WATTSON_RUNNER_PID=2495
++ local status=0
++ wait 2495
++ /usr/bin/python3 /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/scripts/lib/run_owned.py --timeout 120 -- /usr/bin/env CFFIXED_USER_HOME=/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ/isolated-home /usr/sbin/taskpolicy -b /usr/bin/nice -n 15 /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ/AnimationStress 20000
+ANIMATION_STRESS_PASSED iterations=20000 elapsed=0.102s
++ _WATTSON_RUNNER_PID=
++ return 0
++ _wattson_cleanup
++ local status=0
++ trap - EXIT
++ trap '' HUP INT TERM
++ set +e
++ [[ -n '' ]]
++ local app mountpoint directory failed_mount skip executable defaults_suite registered_app
++ failed_mounts=()
++ local failed_mounts
++ for directory in '"${_WATTSON_CLEANUP_DIRS[@]+"${_WATTSON_CLEANUP_DIRS[@]}"}"'
++ [[ -d /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ ]]
++ [[ ! -L /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ ]]
++ IFS=
++ read -r -d '' app
+++ /usr/bin/find /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ -type d -name '*.app' -prune -print0
++ for directory in '"${_WATTSON_CLEANUP_DIRS[@]+"${_WATTSON_CLEANUP_DIRS[@]}"}"'
++ skip=0
++ [[ 0 == 0 ]]
++ _wattson_directory_has_mount /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ
++ local mounts line mounted_path
+++ /sbin/mount
++ mounts='/dev/disk3s1s1 on / (apfs, sealed, local, read-only, journaled)
+devfs on /dev (devfs, local, nobrowse)
+/dev/disk3s6 on /System/Volumes/VM (apfs, local, noexec, journaled, noatime, nobrowse)
+/dev/disk3s2 on /System/Volumes/Preboot (apfs, local, journaled, nobrowse)
+/dev/disk3s4 on /System/Volumes/Update (apfs, local, journaled, nobrowse)
+/dev/disk2s2 on /System/Volumes/xarts (apfs, local, noexec, journaled, noatime, nobrowse)
+/dev/disk2s1 on /System/Volumes/iSCPreboot (apfs, local, journaled, nobrowse)
+/dev/disk2s3 on /System/Volumes/Hardware (apfs, local, journaled, nobrowse)
+/dev/disk3s5 on /System/Volumes/Data (apfs, local, journaled, nobrowse, root data)
+/dev/disk0 on /Volumes/My Shared Files (AppleVirtIOFS, local, nodev, nosuid, automounted)
+/dev/disk5s1 on /System/Library/AssetsV2/com_apple_MobileAsset_UAF_Siri_Understanding/purpose_auto/c10eb90af2d4996616c3cd0f6bac0833eb4925fa.asset/.AssetData (apfs, sealed, local, read-only, journaled, nobrowse)
+/dev/disk7s1 on /System/Library/AssetsV2/com_apple_MobileAsset_PKITrustStore/purpose_auto/6dd55b0d06633a00de6f57ccb910a66a5ba2409a.asset/.AssetData (apfs, sealed, local, read-only, journaled, nobrowse)
+map auto_home on /System/Volumes/Data/home (autofs, automounted, nobrowse)'
++ IFS=
++ read -r line
++ mounted_path='/ (apfs, sealed, local, read-only, journaled)'
++ mounted_path=/
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/dev (devfs, local, nobrowse)'
++ mounted_path=/dev
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/System/Volumes/VM (apfs, local, noexec, journaled, noatime, nobrowse)'
++ mounted_path=/System/Volumes/VM
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/System/Volumes/Preboot (apfs, local, journaled, nobrowse)'
++ mounted_path=/System/Volumes/Preboot
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/System/Volumes/Update (apfs, local, journaled, nobrowse)'
++ mounted_path=/System/Volumes/Update
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/System/Volumes/xarts (apfs, local, noexec, journaled, noatime, nobrowse)'
++ mounted_path=/System/Volumes/xarts
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/System/Volumes/iSCPreboot (apfs, local, journaled, nobrowse)'
++ mounted_path=/System/Volumes/iSCPreboot
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/System/Volumes/Hardware (apfs, local, journaled, nobrowse)'
++ mounted_path=/System/Volumes/Hardware
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/System/Volumes/Data (apfs, local, journaled, nobrowse, root data)'
++ mounted_path=/System/Volumes/Data
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/Volumes/My Shared Files (AppleVirtIOFS, local, nodev, nosuid, automounted)'
++ mounted_path='/Volumes/My Shared Files'
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/System/Library/AssetsV2/com_apple_MobileAsset_UAF_Siri_Understanding/purpose_auto/c10eb90af2d4996616c3cd0f6bac0833eb4925fa.asset/.AssetData (apfs, sealed, local, read-only, journaled, nobrowse)'
++ mounted_path=/System/Library/AssetsV2/com_apple_MobileAsset_UAF_Siri_Understanding/purpose_auto/c10eb90af2d4996616c3cd0f6bac0833eb4925fa.asset/.AssetData
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/System/Library/AssetsV2/com_apple_MobileAsset_PKITrustStore/purpose_auto/6dd55b0d06633a00de6f57ccb910a66a5ba2409a.asset/.AssetData (apfs, sealed, local, read-only, journaled, nobrowse)'
++ mounted_path=/System/Library/AssetsV2/com_apple_MobileAsset_PKITrustStore/purpose_auto/6dd55b0d06633a00de6f57ccb910a66a5ba2409a.asset/.AssetData
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ mounted_path='/System/Volumes/Data/home (autofs, automounted, nobrowse)'
++ mounted_path=/System/Volumes/Data/home
++ case "$mounted_path/" in
++ IFS=
++ read -r line
++ return 1
++ /bin/rm -rf -- /Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/animation-stress.noindex/run.JsQgAJ
++ exit 0

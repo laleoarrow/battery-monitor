@@ -1,0 +1,14 @@
+{
+  "currentReleaseMounts": [],
+  "canonicalVersion": "4.3.10",
+  "registeredWattsonApps": [
+    {
+      "path": "/Applications/Wattson.app",
+      "version": "4.3.10",
+      "pid": 96042
+    }
+  ],
+  "spotlightWattsonApps": [
+    "/Applications/Wattson.app"
+  ]
+}

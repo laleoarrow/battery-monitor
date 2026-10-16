@@ -1,0 +1,24 @@
+{
+  "sourceCommit": "4c31f01b3cae07a2ae59e32fc8d7a1534b9bd161",
+  "reviewer": "history_review gallery owner",
+  "method": "Opened all twelve final gallery PNGs with view_image, plus the exact selected-native-frames contact sheet.",
+  "staticImageCount": 12,
+  "states": [
+    "charging",
+    "full",
+    "on-battery",
+    "mixed-supply",
+    "low-battery",
+    "low-power"
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "historyCaptionAndPeakComplete": true,
+  "historyStrokeFillAndHeadAligned": true,
+  "historyClippingOrTextOverlapObserved": false,
+  "lowPowerFooterSelectedCorrectly": true,
+  "viewportBoundary": "Bottom scroll position intentionally clips the upper instrument; History itself is complete.",
+  "contactSheetBoundary": "First two selections use the same nearest recorded frame; native recordings are sparse and do not establish product display FPS."
+}

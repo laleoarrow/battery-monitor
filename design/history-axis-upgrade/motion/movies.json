@@ -1,0 +1,90 @@
+[
+  {
+    "phase": "ordinary-scroll",
+    "frameCount": 9,
+    "measuredDuration": 0.9152012499998818,
+    "largestFrameInterval": 0.18099962499991307,
+    "movie": "ordinary-scroll.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "scale-expansion",
+    "frameCount": 7,
+    "measuredDuration": 0.7964331666667022,
+    "largestFrameInterval": 0.18079145833326038,
+    "movie": "scale-expansion.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "scale-contraction",
+    "frameCount": 7,
+    "measuredDuration": 0.7649012500000936,
+    "largestFrameInterval": 0.18417283333337764,
+    "movie": "scale-contraction.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "interrupted-scale-25",
+    "frameCount": 7,
+    "measuredDuration": 0.8637886666670056,
+    "largestFrameInterval": 0.18191041666705132,
+    "movie": "interrupted-scale-25.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "cancel-presentation",
+    "frameCount": 8,
+    "measuredDuration": 0.9051049583335953,
+    "largestFrameInterval": 0.1769972916667939,
+    "movie": "cancel-presentation.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "cancel-motion",
+    "frameCount": 7,
+    "measuredDuration": 0.8542261249999683,
+    "largestFrameInterval": 0.1835200000000441,
+    "movie": "cancel-motion.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "repeated-scroll",
+    "frameCount": 8,
+    "measuredDuration": 0.950722833333657,
+    "largestFrameInterval": 0.1779546666666647,
+    "movie": "repeated-scroll.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "interrupted-scale-50",
+    "frameCount": 7,
+    "measuredDuration": 0.8586229583333989,
+    "largestFrameInterval": 0.17848549999962415,
+    "movie": "interrupted-scale-50.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "interrupted-scale-90",
+    "frameCount": 8,
+    "measuredDuration": 0.8685381250002138,
+    "largestFrameInterval": 0.18291687499959153,
+    "movie": "interrupted-scale-90.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "departing-outlier-contraction",
+    "frameCount": 8,
+    "measuredDuration": 0.8252514583332413,
+    "largestFrameInterval": 0.18383212500020818,
+    "movie": "departing-outlier-contraction.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "gradient-alpha-contraction",
+    "frameCount": 7,
+    "measuredDuration": 0.8345872083336872,
+    "largestFrameInterval": 0.17783866666695758,
+    "movie": "gradient-alpha-contraction.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  }
+]

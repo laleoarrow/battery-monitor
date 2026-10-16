@@ -1,0 +1,82 @@
+{
+  "system": {
+    "command": [
+      "/usr/bin/sw_vers"
+    ],
+    "exitCode": 0,
+    "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.1\nBuildVersion:\t\t25G76",
+    "stderr": ""
+  },
+  "architecture": {
+    "command": [
+      "/usr/bin/uname",
+      "-m"
+    ],
+    "exitCode": 0,
+    "stdout": "arm64",
+    "stderr": ""
+  },
+  "model": {
+    "command": [
+      "/usr/sbin/sysctl",
+      "-n",
+      "hw.model"
+    ],
+    "exitCode": 0,
+    "stdout": "VirtualMac2,1",
+    "stderr": ""
+  },
+  "hostname": {
+    "command": [
+      "/bin/hostname"
+    ],
+    "exitCode": 0,
+    "stdout": "Manageds-Virtual-Machine.local",
+    "stderr": ""
+  },
+  "developerDirectory": {
+    "command": [
+      "/usr/bin/xcode-select",
+      "-p"
+    ],
+    "exitCode": 0,
+    "stdout": "/Library/Developer/CommandLineTools",
+    "stderr": ""
+  },
+  "swift": {
+    "command": [
+      "/usr/bin/xcrun",
+      "swift",
+      "--version"
+    ],
+    "exitCode": 0,
+    "stdout": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0",
+    "stderr": "swift-driver version: 1.148.6"
+  },
+  "sdk": {
+    "command": [
+      "/usr/bin/xcrun",
+      "--sdk",
+      "macosx",
+      "--show-sdk-version"
+    ],
+    "exitCode": 0,
+    "stdout": "26.5",
+    "stderr": ""
+  },
+  "xcode": {
+    "command": [
+      "/usr/bin/xcodebuild",
+      "-version"
+    ],
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": "xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance"
+  },
+  "nativeProject": "/Users/admin/Project/Wattson-HistoryAxis-QA",
+  "repoReadOnlyShare": "/Volumes/My Shared Files/repo",
+  "ownedEvidenceShare": "/Volumes/My Shared Files/history",
+  "fullXcodeAvailable": false,
+  "GUIOrAppTestsStarted": false,
+  "canonicalHostAppNotTouched": true
+}

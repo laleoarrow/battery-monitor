@@ -1,0 +1,9 @@
+{
+  "archive": "package-results-final-1a455c8ad423594c2e8c177bb46636e2b837e7bd05815c7822eade24acc226d7.tar.gz",
+  "guestSHA256": "1a455c8ad423594c2e8c177bb46636e2b837e7bd05815c7822eade24acc226d7",
+  "bytes": 12438,
+  "fileCount": 53,
+  "hostSHA256": "1a455c8ad423594c2e8c177bb46636e2b837e7bd05815c7822eade24acc226d7",
+  "guestHostBytesMatch": true,
+  "allArchivedFileHashesVerified": true
+}

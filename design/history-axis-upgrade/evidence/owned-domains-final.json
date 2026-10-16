@@ -1,0 +1,157 @@
+{
+  "TCCDatabaseAccessRequired": false,
+  "createdEpoch": 1792164326.819777,
+  "deletionAuthorizedByThisManifest": false,
+  "domains": [
+    {
+      "domain": "Wattson.SettingsCommandInteraction.498CCB51-4D48-4543-B814-82B1F2DFE200",
+      "sourceEvidence": [
+        "sourceqa-8ea75ccdaef8/interaction/owned-domains.txt"
+      ]
+    },
+    {
+      "domain": "Wattson.SettingsCommandInteraction.E8F45070-4ACB-4D7A-B0D2-16A2DF1AB76E",
+      "sourceEvidence": [
+        "sourceqa-4c31f01b3cae/interaction/owned-domains.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyaxisqa.02056c68-eb1c-4ce9-babe-a223e51fdb3b",
+      "sourceEvidence": [
+        "sourceqa-5f9c770dea15/provenance/motion/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyaxisqa.38cfe342-80ed-463d-bb29-91ac5e0ef8de",
+      "sourceEvidence": [
+        "sourceqa-ee833ed1f494/provenance/motion/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyaxisqa.785d32c7-d344-4791-9653-ad865f8acf06",
+      "sourceEvidence": [
+        "sourceqa-4c31f01b3cae/provenance/gallery/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyaxisqa.7daff9db-5f76-4ce5-ad4f-0d63cebd10c1",
+      "sourceEvidence": [
+        "sourceqa-8a542a89b830/provenance/motion/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyaxisqa.d2089ee5-666b-4664-8dfe-623089e57517",
+      "sourceEvidence": [
+        "sourceqa-4c31f01b3cae/provenance/motion/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyaxisqa.dc7ffea5-6b06-4823-8a89-517cc587624a",
+      "sourceEvidence": [
+        "motionqa-8ea75ccdaef8/provenance/motion/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyaxisqa.f8d32864-645d-4a1f-b4b5-f352c9914669",
+      "sourceEvidence": [
+        "sourceqa-5f9c770dea15/provenance/gallery/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyaxisqa.ffd88bd0-cd42-43dc-8098-59b4365cb36c",
+      "sourceEvidence": [
+        "sourceqa-ee833ed1f494/provenance/gallery/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.interactiontests.e273f97a-ead5-49f2-a6d9-8d6034aad57f",
+      "sourceEvidence": [
+        "sourceqa-8ea75ccdaef8/interaction/owned-domains.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.interactiontests.f8ab8180-35af-4121-abcd-2f1530e75911",
+      "sourceEvidence": [
+        "sourceqa-4c31f01b3cae/interaction/owned-domains.txt"
+      ]
+    }
+  ],
+  "evidenceShare": "/Volumes/My Shared Files/history",
+  "expectedHostname": "Manageds-Virtual-Machine.local",
+  "explicitOwnedApps": [
+    "/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/history-axis-captures.noindex/run.83qTrS/gallery.app",
+    "/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.1tJXq6/source/.build/history-axis-captures.noindex/run.83qTrS/motion.app",
+    "/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.H4Jcnb/source/.build/history-axis-captures.noindex/run.TilKRR/gallery.app",
+    "/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.H4Jcnb/source/.build/history-axis-captures.noindex/run.TilKRR/motion.app",
+    "/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.meTjRw/source/.build/history-axis-captures.noindex/run.iYDtL0/motion.app",
+    "/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.sXbr0K/source/.build/history-axis-captures.noindex/run.hEAo5s/gallery.app",
+    "/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.sXbr0K/source/.build/history-axis-captures.noindex/run.hEAo5s/motion.app",
+    "/Users/admin/Project/Wattson-HistoryAxis-QA/.build/staged-qa.noindex/run.t98HCk/source/.build/history-axis-captures.noindex/run.h8udp9/motion.app"
+  ],
+  "explicitOwnedSettingsWorkspaces": [],
+  "freezerSHA256": "9c01ebaf98951e0a1679c22bf63f02b5d3478d874c90d6f37d61b4b41b851e17",
+  "guestEnvironmentEvidence": {
+    "path": "guest-environment.json",
+    "sha256": "b064ce38a7a17714971d97dc5039cf0454022bf54b064bcd360e99dfb7074551"
+  },
+  "isOwnershipSnapshotOnly": true,
+  "nativeProjectContentsOwnedByThisTask": true,
+  "nativeScratchBasenamePrefix": "run.",
+  "newRunsRequireNewManifest": true,
+  "ownedNativeProject": "/Users/admin/Project/Wattson-HistoryAxis-QA",
+  "ownedVM": "Wattson-HistoryAxis-20261016",
+  "schema": 1,
+  "scope": "Only exact domains recorded by this task's capture provenance, regression owner lists and private Settings owner hook. Native workspace/app searches are restricted to this task's explicitly owned project. Canonical installation cleanup is audited separately.",
+  "sourceEvidence": [
+    {
+      "bytes": 292,
+      "path": "motionqa-8ea75ccdaef8/provenance/motion/capture-provenance.txt",
+      "sha256": "39804277cf524c96460c2fd940b61cfc5ba0b67e8e87f0d62e9944f8ebcb6381"
+    },
+    {
+      "bytes": 147,
+      "path": "sourceqa-4c31f01b3cae/interaction/owned-domains.txt",
+      "sha256": "c31fd6a8a8f03f5dd95f1f4efcecf375dd6cf30cbadc558cc8d3768a25bdc15e"
+    },
+    {
+      "bytes": 293,
+      "path": "sourceqa-4c31f01b3cae/provenance/gallery/capture-provenance.txt",
+      "sha256": "8649c526026d212b8b0d0ad430774dede23a6c35b5490ce9066b2deaf4b430a8"
+    },
+    {
+      "bytes": 292,
+      "path": "sourceqa-4c31f01b3cae/provenance/motion/capture-provenance.txt",
+      "sha256": "a7c0b4455a3025cfe38d704b1071937f83aed32af49eebc8c906c8c126401e76"
+    },
+    {
+      "bytes": 293,
+      "path": "sourceqa-5f9c770dea15/provenance/gallery/capture-provenance.txt",
+      "sha256": "acfd4d24f22c98b4f3eb4c70492bfa0cda20fdb932f18d92abf3fb383be2a8ae"
+    },
+    {
+      "bytes": 292,
+      "path": "sourceqa-5f9c770dea15/provenance/motion/capture-provenance.txt",
+      "sha256": "a07a05f12d4f1b358006887ff15d4aeac4a13b2198b425a07d9ce850520430b6"
+    },
+    {
+      "bytes": 292,
+      "path": "sourceqa-8a542a89b830/provenance/motion/capture-provenance.txt",
+      "sha256": "d2d8eb7c453b3e11b12a718831164eae6198ad6a6be174a7ec418c0de3070c2f"
+    },
+    {
+      "bytes": 147,
+      "path": "sourceqa-8ea75ccdaef8/interaction/owned-domains.txt",
+      "sha256": "4f0fe38cf1e8b32987a4cab6fe95daadec0e05b077c720e549d3a9dabfde06d2"
+    },
+    {
+      "bytes": 293,
+      "path": "sourceqa-ee833ed1f494/provenance/gallery/capture-provenance.txt",
+      "sha256": "bb4c0d13f11584421b0b1549be3d31795e584d180f3bdc53f766e41ce4ae53bb"
+    },
+    {
+      "bytes": 292,
+      "path": "sourceqa-ee833ed1f494/provenance/motion/capture-provenance.txt",
+      "sha256": "35a9d92ccf566c4b79f44145bf96c06c06faf26f36040ffb67542356764df81d"
+    }
+  ]
+}

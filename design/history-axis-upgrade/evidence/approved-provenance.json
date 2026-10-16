@@ -1,0 +1,21 @@
+{
+  "sourceCommit": "4c31f01b3cae07a2ae59e32fc8d7a1534b9bd161",
+  "version": "4.3.10",
+  "sourceHashes": {
+    "Core/HistoryChart.swift": "26a013a1c91683384e96d1ee28644634e27683de4cc9d0e6f30cef949d648f18",
+    "Popover/HistoryLayer.swift": "1706ff17c98789ef33525a2d74b3dac19f705aeedef50dd2ba4e9ef825d022d0"
+  },
+  "artifacts": {
+    "Wattson-v4.3.10-macos-universal.pkg": "396d713f61e027d4a1ef552a3af2eb267114fe1d29ce4b497495b4f3e92fbe06",
+    "Wattson-v4.3.10-macos-universal.dmg": "f476c3a092ff101e7908949f23b7a030a843b3ac655a372f284c289e4797bca5",
+    "Wattson-v4.3.10-release-info.txt": "ac0ae68419c0d199cf1d7ee640688c80e63df67c684cdd7b7588ec03807e7ece"
+  },
+  "swiftTests": 521,
+  "pythonSuite": {
+    "ran": 599,
+    "skipped": 4,
+    "startCommit": "5f9c770dea156b2e07caf6eda5ae64a88f921191"
+  },
+  "finalAffectedPythonContractTests": 27,
+  "publicRelease": false
+}

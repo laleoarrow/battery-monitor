@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "checks": {
+    "ownedInstallationPathsRemoved": true,
+    "ownedReceiptRemoved": true,
+    "ownedHelperJobRemoved": true,
+    "ownedAppHelperProcessesRemoved": true,
+    "canonicalRegistrationRemoved": true
+  },
+  "allPassed": true,
+  "residualPaths": [],
+  "residualProcesses": [],
+  "residualRegistrations": [],
+  "auditedMonotonic": 4040.963494,
+  "deletedAnything": false,
+  "TCCAccessed": false
+}

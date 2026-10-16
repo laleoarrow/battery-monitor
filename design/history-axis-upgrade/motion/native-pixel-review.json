@@ -1,0 +1,451 @@
+{
+  "schema": 1,
+  "sourceCommit": "4c31f01b3cae07a2ae59e32fc8d7a1534b9bd161",
+  "leftFillPixels": [
+    {
+      "phase": "repeated-scroll",
+      "file": "frame-0049.png",
+      "phaseElapsed": 0.040025874999628286,
+      "row": 184,
+      "leftX4": [
+        28,
+        31,
+        36
+      ],
+      "referenceX20": [
+        26,
+        39,
+        51
+      ],
+      "leftVsX20MaxChannelDifference": 15,
+      "nearbyRowHasVisibleFill": true,
+      "expectedFillComparison": false,
+      "passedWhenComparable": null
+    },
+    {
+      "phase": "repeated-scroll",
+      "file": "frame-0050.png",
+      "phaseElapsed": 0.1552032083332051,
+      "row": 184,
+      "leftX4": [
+        26,
+        39,
+        51
+      ],
+      "referenceX20": [
+        26,
+        39,
+        51
+      ],
+      "leftVsX20MaxChannelDifference": 0,
+      "nearbyRowHasVisibleFill": true,
+      "expectedFillComparison": false,
+      "passedWhenComparable": null
+    },
+    {
+      "phase": "repeated-scroll",
+      "file": "frame-0051.png",
+      "phaseElapsed": 0.32102216666635286,
+      "row": 184,
+      "leftX4": [
+        26,
+        39,
+        51
+      ],
+      "referenceX20": [
+        26,
+        39,
+        51
+      ],
+      "leftVsX20MaxChannelDifference": 0,
+      "nearbyRowHasVisibleFill": true,
+      "expectedFillComparison": false,
+      "passedWhenComparable": null
+    },
+    {
+      "phase": "repeated-scroll",
+      "file": "frame-0052.png",
+      "phaseElapsed": 0.488384958332972,
+      "row": 184,
+      "leftX4": [
+        26,
+        39,
+        51
+      ],
+      "referenceX20": [
+        26,
+        39,
+        51
+      ],
+      "leftVsX20MaxChannelDifference": 0,
+      "nearbyRowHasVisibleFill": true,
+      "expectedFillComparison": false,
+      "passedWhenComparable": null
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0074.png",
+      "phaseElapsed": 0.04520958333341696,
+      "row": 184,
+      "leftX4": [
+        26,
+        39,
+        51
+      ],
+      "referenceX20": [
+        28,
+        31,
+        36
+      ],
+      "leftVsX20MaxChannelDifference": 15,
+      "nearbyRowHasVisibleFill": false,
+      "expectedFillComparison": false,
+      "passedWhenComparable": null
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0075.png",
+      "phaseElapsed": 0.12007137499995224,
+      "row": 184,
+      "leftX4": [
+        26,
+        39,
+        51
+      ],
+      "referenceX20": [
+        26,
+        39,
+        51
+      ],
+      "leftVsX20MaxChannelDifference": 0,
+      "nearbyRowHasVisibleFill": true,
+      "expectedFillComparison": true,
+      "passedWhenComparable": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0076.png",
+      "phaseElapsed": 0.3039035000001604,
+      "row": 184,
+      "leftX4": [
+        26,
+        39,
+        51
+      ],
+      "referenceX20": [
+        26,
+        39,
+        51
+      ],
+      "leftVsX20MaxChannelDifference": 0,
+      "nearbyRowHasVisibleFill": true,
+      "expectedFillComparison": true,
+      "passedWhenComparable": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0077.png",
+      "phaseElapsed": 0.4205594166669471,
+      "row": 184,
+      "leftX4": [
+        26,
+        39,
+        51
+      ],
+      "referenceX20": [
+        26,
+        39,
+        51
+      ],
+      "leftVsX20MaxChannelDifference": 0,
+      "nearbyRowHasVisibleFill": true,
+      "expectedFillComparison": true,
+      "passedWhenComparable": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "file": "frame-0083.png",
+      "phaseElapsed": 0.0339117499997883,
+      "row": 184,
+      "leftX4": [
+        26,
+        39,
+        51
+      ],
+      "referenceX20": [
+        26,
+        39,
+        51
+      ],
+      "leftVsX20MaxChannelDifference": 0,
+      "nearbyRowHasVisibleFill": true,
+      "expectedFillComparison": true,
+      "passedWhenComparable": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "file": "frame-0084.png",
+      "phaseElapsed": 0.17097766666665848,
+      "row": 184,
+      "leftX4": [
+        26,
+        39,
+        51
+      ],
+      "referenceX20": [
+        26,
+        39,
+        51
+      ],
+      "leftVsX20MaxChannelDifference": 0,
+      "nearbyRowHasVisibleFill": true,
+      "expectedFillComparison": true,
+      "passedWhenComparable": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "file": "frame-0085.png",
+      "phaseElapsed": 0.3438275833332227,
+      "row": 184,
+      "leftX4": [
+        26,
+        39,
+        51
+      ],
+      "referenceX20": [
+        26,
+        39,
+        51
+      ],
+      "leftVsX20MaxChannelDifference": 0,
+      "nearbyRowHasVisibleFill": true,
+      "expectedFillComparison": true,
+      "passedWhenComparable": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "file": "frame-0086.png",
+      "phaseElapsed": 0.47146979166655,
+      "row": 184,
+      "leftX4": [
+        26,
+        39,
+        51
+      ],
+      "referenceX20": [
+        26,
+        39,
+        51
+      ],
+      "leftVsX20MaxChannelDifference": 0,
+      "nearbyRowHasVisibleFill": true,
+      "expectedFillComparison": true,
+      "passedWhenComparable": true
+    }
+  ],
+  "flatStrokeThickness": [
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0074.png",
+      "phaseElapsed": 0.04520958333341696,
+      "x": 328,
+      "strokeRows": [
+        189,
+        190,
+        191
+      ],
+      "thresholdedVerticalPixels": 3,
+      "passed": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0075.png",
+      "phaseElapsed": 0.12007137499995224,
+      "x": 328,
+      "strokeRows": [
+        173,
+        174,
+        175
+      ],
+      "thresholdedVerticalPixels": 3,
+      "passed": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0076.png",
+      "phaseElapsed": 0.3039035000001604,
+      "x": 328,
+      "strokeRows": [
+        114,
+        115,
+        116
+      ],
+      "thresholdedVerticalPixels": 3,
+      "passed": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0077.png",
+      "phaseElapsed": 0.4205594166669471,
+      "x": 328,
+      "strokeRows": [
+        111,
+        112,
+        113
+      ],
+      "thresholdedVerticalPixels": 3,
+      "passed": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0078.png",
+      "phaseElapsed": 0.5358690833336368,
+      "x": 328,
+      "strokeRows": [
+        111,
+        112,
+        113
+      ],
+      "thresholdedVerticalPixels": 3,
+      "passed": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0079.png",
+      "phaseElapsed": 0.6539866666666967,
+      "x": 328,
+      "strokeRows": [
+        111,
+        112,
+        113
+      ],
+      "thresholdedVerticalPixels": 3,
+      "passed": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0080.png",
+      "phaseElapsed": 0.6931538750000072,
+      "x": 328,
+      "strokeRows": [
+        111,
+        112,
+        113
+      ],
+      "thresholdedVerticalPixels": 3,
+      "passed": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "file": "frame-0081.png",
+      "phaseElapsed": 0.8704610416666583,
+      "x": 328,
+      "strokeRows": [
+        111,
+        112,
+        113
+      ],
+      "thresholdedVerticalPixels": 3,
+      "passed": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "file": "frame-0083.png",
+      "phaseElapsed": 0.0339117499997883,
+      "x": 328,
+      "strokeRows": [
+        178,
+        179,
+        180
+      ],
+      "thresholdedVerticalPixels": 3,
+      "passed": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "file": "frame-0084.png",
+      "phaseElapsed": 0.17097766666665848,
+      "x": 328,
+      "strokeRows": [
+        134,
+        135,
+        136
+      ],
+      "thresholdedVerticalPixels": 3,
+      "passed": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "file": "frame-0085.png",
+      "phaseElapsed": 0.3438275833332227,
+      "x": 328,
+      "strokeRows": [
+        86,
+        87,
+        88,
+        89
+      ],
+      "thresholdedVerticalPixels": 4,
+      "passed": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "file": "frame-0086.png",
+      "phaseElapsed": 0.47146979166655,
+      "x": 328,
+      "strokeRows": [
+        86,
+        87,
+        88,
+        89
+      ],
+      "thresholdedVerticalPixels": 4,
+      "passed": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "file": "frame-0087.png",
+      "phaseElapsed": 0.564455416666533,
+      "x": 328,
+      "strokeRows": [
+        86,
+        87,
+        88,
+        89
+      ],
+      "thresholdedVerticalPixels": 4,
+      "passed": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "file": "frame-0088.png",
+      "phaseElapsed": 0.7422940833334906,
+      "x": 328,
+      "strokeRows": [
+        86,
+        87,
+        88,
+        89
+      ],
+      "thresholdedVerticalPixels": 4,
+      "passed": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "file": "frame-0089.png",
+      "phaseElapsed": 0.8684989583334755,
+      "x": 328,
+      "strokeRows": [
+        86,
+        87,
+        88,
+        89
+      ],
+      "thresholdedVerticalPixels": 4,
+      "passed": true
+    }
+  ],
+  "allThicknessChecksPassed": true,
+  "scope": "Actual 2x WindowServer native pixels. Flat central stroke threshold B>140, B-R>100,G>70 distinguishes stroke from fill. Antialiased 1.6-point stroke allows 2\u20134 thresholded pixels. Left fill compares same-row pixels x4/x20 when under visible curve; startup left history can legitimately be blank. Not a frame-rate benchmark. A 350\u219215 early frame has the sampled row above the central 10W curve; comparing it with the higher departing left curve would be invalid and is marked not comparable.",
+  "allComparableOutlierFillChecksPassed": true
+}

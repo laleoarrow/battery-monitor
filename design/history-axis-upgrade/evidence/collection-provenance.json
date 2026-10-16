@@ -1,0 +1,744 @@
+{
+  "sourceCommit": "4c31f01b3cae07a2ae59e32fc8d7a1534b9bd161",
+  "version": "4.3.10",
+  "staticCaptureCount": 12,
+  "movieCount": 5,
+  "selectedContactSheetEntries": 15,
+  "uniqueOriginalFramesCopied": 25,
+  "files": [
+    {
+      "path": "captures/charging-light.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/charging/regular-light-bottom.png",
+      "sha256": "66578012606e1683db63f57f655695e0a798e0f0f765cacb692efb92c519a59a",
+      "bytes": 199575,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/charging-light-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/charging/regular-light-bottom-geometry.json",
+      "sha256": "c95258a7e945606daff97ea23244b360dcaf8d13b7480017de0e4c55326983df",
+      "bytes": 8277,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/charging-dark.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/charging/regular-dark-bottom.png",
+      "sha256": "9be7386b0bf5991e412e3af7f1e86c84610a044da735e67bb92124dccb19cc4e",
+      "bytes": 188351,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/charging-dark-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/charging/regular-dark-bottom-geometry.json",
+      "sha256": "79a809574a4d2374fd7578ec3d0e8f7b893f2d17dc91117c6a9f52829d1abe42",
+      "bytes": 8276,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/full-light.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/full/regular-light-bottom.png",
+      "sha256": "61552978802d21d22769f8ff10c31d13b03d94be03ccc395d9e7c69bc6734d62",
+      "bytes": 169706,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/full-light-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/full/regular-light-bottom-geometry.json",
+      "sha256": "4d851d37c5c6286accaa52b6d10e51255653f01a6ce12b47b372e70cb4e11443",
+      "bytes": 8273,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/full-dark.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/full/regular-dark-bottom.png",
+      "sha256": "84448cce3c4125c3f0849af5d2a617afc18513237921126b9dd850f81f556edc",
+      "bytes": 161199,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/full-dark-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/full/regular-dark-bottom-geometry.json",
+      "sha256": "40329e1d4f5d6f45f3ba3d6712f8017fb3b31dbafa2e096ff7b023c3e09c2d0b",
+      "bytes": 8272,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/on-battery-light.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/on-battery/regular-light-bottom.png",
+      "sha256": "81290b231271ec0cbf3f421a3cb892778579f6587ecbe9ad6da9f740d6f1dc50",
+      "bytes": 218309,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/on-battery-light-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/on-battery/regular-light-bottom-geometry.json",
+      "sha256": "fc3873872ddd3a2d0828e407cd9cce4b44c1e1569cae7cae13f3dbcc7b9dc2cb",
+      "bytes": 8279,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/on-battery-dark.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/on-battery/regular-dark-bottom.png",
+      "sha256": "4abd89e33fdbf260d010253413e792a2ca2afa94776c7d14cbf421d5f29a3912",
+      "bytes": 201035,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/on-battery-dark-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/on-battery/regular-dark-bottom-geometry.json",
+      "sha256": "c002f16be3c66644d767765f99551538a8cee43a6ba1696cb519d0786e426b36",
+      "bytes": 8278,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/mixed-supply-light.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/mixed-supply/regular-light-bottom.png",
+      "sha256": "f8dcd36cb16722cf7466e2a6d71ae3bea147dbf659cf82417471dc3503ba42ad",
+      "bytes": 177302,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/mixed-supply-light-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/mixed-supply/regular-light-bottom-geometry.json",
+      "sha256": "a809766663114450acc1c1c4d980d4b5b24e970289561ae9cb4902f16162c108",
+      "bytes": 8281,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/mixed-supply-dark.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/mixed-supply/regular-dark-bottom.png",
+      "sha256": "c95aa73549bf3189004a19501c522124924366e092eabc5743b39962c43cd439",
+      "bytes": 167947,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/mixed-supply-dark-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/mixed-supply/regular-dark-bottom-geometry.json",
+      "sha256": "aaa769273c758c54a849030ba71df8a96d0a6aa9e94e514c500bd664cdc5af1f",
+      "bytes": 8280,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/low-battery-light.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/low-battery/regular-light-bottom.png",
+      "sha256": "7936e2f09e2b25a1c5d0a591d685e6049a9cbf06e5f20af3bfde693204a712cc",
+      "bytes": 212046,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/low-battery-light-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/low-battery/regular-light-bottom-geometry.json",
+      "sha256": "7f5c06999bab7ec913328abc1fe3bc52a0d8104ce5e7a25a268119d946050c21",
+      "bytes": 8280,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/low-battery-dark.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/low-battery/regular-dark-bottom.png",
+      "sha256": "a2aa51ec0019e6be3f1980e71e91fb0f5cb3e4fa9fd29c0e4b450c9369b28bcd",
+      "bytes": 195484,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/low-battery-dark-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/low-battery/regular-dark-bottom-geometry.json",
+      "sha256": "0a5f3da4d99769987d77a2e6016873554e13b5f43d26e1747a681548dff260b1",
+      "bytes": 8279,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/low-power-light.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/low-power/regular-light-bottom.png",
+      "sha256": "98340138849de379fb02da7ba5d3f1884857b6b8cecb1666c72e2d7a4105be3c",
+      "bytes": 177740,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/low-power-light-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/low-power/regular-light-bottom-geometry.json",
+      "sha256": "8c0b6cc19132823ee611f563be4979da74f865b7c23316f56a65d07f12b1ed4a",
+      "bytes": 8278,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/low-power-dark.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/low-power/regular-dark-bottom.png",
+      "sha256": "7a19c6313ec6dcdc8aa2e34eddeb8add4027e54445352d04c974cb68f254e77e",
+      "bytes": 165602,
+      "copy": "exact"
+    },
+    {
+      "path": "captures/low-power-dark-geometry.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/captures/low-power/regular-dark-bottom-geometry.json",
+      "sha256": "1db2552b3402dd7114a029049d145b323e96d37773b938d2c3ccf22e3431b4d2",
+      "bytes": 8277,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/selected-native-frames.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/selected-native-frames.png",
+      "sha256": "fd340f4cca0f5d7e20793e738ab4e81fdc87724ea49bff795dc082bd52066d1b",
+      "bytes": 132808,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/selected-native-frames.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/selected-native-frames.json",
+      "sha256": "f0fd7e63716ea2772cc098d936a5935370783d12d229a9d0c4b4bd37d044555e",
+      "bytes": 3253,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/movies.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/movies.json",
+      "sha256": "d00e01fb87ff0ca19ed22eec43e155d404d5393b75d69bd532dc60ca56a2927c",
+      "bytes": 3629,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/native-pixel-review.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/native-pixel-review.json",
+      "sha256": "d5dae4dec7bf2a13d64a63e2e80f2b03872e93fd4a2f9d8ccce253bdf65aae92",
+      "bytes": 10132,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0010.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0010.png",
+      "sha256": "405f938ce875f57dff3b6ac13c7916e004610c16d87fdc8433fa0046d76a713d",
+      "bytes": 28235,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0014.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0014.png",
+      "sha256": "90a517d68259b887698d1a1b714abb6720ff14bf0cf2750c1b448237a84247db",
+      "bytes": 21539,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0018.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0018.png",
+      "sha256": "5442d5ac3234c61879b02f9971e2df97b2bb8425b81158b4db76442c90947550",
+      "bytes": 22436,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0019.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0019.png",
+      "sha256": "bd5a3d20f49da4a9bea8fca3d39fdd426c61c61e139e29c29d469c0dd6b12bf0",
+      "bytes": 26287,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0023.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0023.png",
+      "sha256": "e4bc69b3a4578fb82dc4f1634658c6dcad64f0c1e4b66175cefdde5fd2c31c57",
+      "bytes": 33396,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0049.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0049.png",
+      "sha256": "260b19fb3f6ddcd45d11e20b6b9b82f1719ec95e5c711c59f39ed3e782a1ef04",
+      "bytes": 33000,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0050.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0050.png",
+      "sha256": "438801b577a7830ac0373c02d3e74d9e5216a6cabc5e2ce223099f4a25c09801",
+      "bytes": 33545,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0054.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0054.png",
+      "sha256": "1a2cc0f0d7a90aa7845ef1e441a69c4152c18a0225dedd3f26a48649a504f215",
+      "bytes": 33387,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0074.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0074.png",
+      "sha256": "e13fac927f39bac9519894d573cab401b1d8d79931b06f3e3d1bb5e7a04727f1",
+      "bytes": 14893,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0075.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0075.png",
+      "sha256": "2f848a95438740ed49580590f8e56cfd40d5fa7f1e881b12cdc93c9bc3df7497",
+      "bytes": 17757,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0080.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0080.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200",
+      "bytes": 24515,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0083.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0083.png",
+      "sha256": "e15445b6afde7c7241e204bf6b103dc32192f1f9795815b13fb5fe9297846cfa",
+      "bytes": 16328,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0084.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0084.png",
+      "sha256": "dd1d855f4f265ef4282aa145077a6585620573c921b8de80dfc4208bf5180103",
+      "bytes": 22439,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0088.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0088.png",
+      "sha256": "a18656f854f880cb5f9b89e9b97c5014bccb6c3630c5033d24d107abe77eac94",
+      "bytes": 27533,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/scale-expansion.mp4",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/scale-expansion.mp4",
+      "sha256": "a0358af7023736d2622efc2fd2faae2a44b5ba5519e8e3ed5bcb345534573a88",
+      "bytes": 12033,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/scale-contraction.mp4",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/scale-contraction.mp4",
+      "sha256": "84d671a58bf1dabcc3055624cd187b38a9a5675b94f4d74a75bc0d5b22042e6f",
+      "bytes": 14239,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/interrupted-scale-50.mp4",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/interrupted-scale-50.mp4",
+      "sha256": "c1771a6e06c6502f51c81ba884f70ca5759aa6de8a839c431aff2f9d9b04dd54",
+      "bytes": 14382,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/departing-outlier-contraction.mp4",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/departing-outlier-contraction.mp4",
+      "sha256": "4d9b8671103d578cb568f81f946a2ad4d7cec374539ecd9be2c080821c30fa15",
+      "bytes": 8600,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/gradient-alpha-contraction.mp4",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/gradient-alpha-contraction.mp4",
+      "sha256": "4988494cab41b1aa4a34249fb261f6dde56a1c182663783eab649d344825be4b",
+      "bytes": 8202,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/scalar-analysis.json",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/scalar/analysis.json",
+      "sha256": "286c9cf35675d76a70d9eefc1b3cf6341c0a36a3b36f2f608dc9ce8fe9d342b7",
+      "bytes": 45961,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/scalar-run.log",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/scalar/run.log",
+      "sha256": "31ce02a0a5d9bf55610723e0379e3329e7b6311d4bfc55be0fee59eceea05c55",
+      "bytes": 49,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/raw-scalar-measurements.json.gz",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/scalar/axis-motion.json",
+      "sha256": "8c0e72652c9b3881eed6c6cb4f4b2c93a20a0e6d20ce28b053b215d0d778b8a9",
+      "sourceSHA256": "89136e8afd114794f1c7d2afcd59409bec76f4671033afebae5bcac95829df87",
+      "bytes": 100735,
+      "copy": "lossless gzip, original JSON verified after decompression"
+    },
+    {
+      "path": "evidence/raw-frames-measurements.json.gz",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/axis-motion.json",
+      "sha256": "99d0c68a7a4c9a4fae2ac0f9ad00fac392fe200bb11ab4ea33cea37a696032f2",
+      "sourceSHA256": "5f27fbdd69a1ec0ffb01a4a4607881b3432cdfea50f3494d0ecdf47a577f2215",
+      "bytes": 113145,
+      "copy": "lossless gzip, original JSON verified after decompression"
+    },
+    {
+      "path": "evidence/guest-environment.json",
+      "source": ".build/history-axis-review.noindex/guest-environment.json",
+      "sha256": "b064ce38a7a17714971d97dc5039cf0454022bf54b064bcd360e99dfb7074551",
+      "bytes": 1883,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/source-freeze.json",
+      "source": ".build/history-axis-review.noindex/source-freeze-4c31f01b3cae.json",
+      "sha256": "c7de56b5bc7859d3bac3d671d92b9a0fb2a568a324d355cb37f60c7f10f5bab1",
+      "bytes": 826,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/tools-freeze.json",
+      "source": ".build/history-axis-review.noindex/tools-freeze-v5.json",
+      "sha256": "0cfdee8d8c2e1d054733dffe2ce0e9830968f35a8e6b1980d50c1bd36afb67db",
+      "bytes": 932,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/native-inputs.sha256",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/native-inputs.sha256",
+      "sha256": "c7bf129f82812e57bc6c8769d17ce1b03e511e436731e637b4e436a4253a582a",
+      "bytes": 319,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/capture-inputs.sha256",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/capture-inputs.sha256",
+      "sha256": "c21f95a22c522de6939a674c50e14ca8e20aab96210e3b19b9d6c2acbb7d2dca",
+      "bytes": 795,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/vm-qa-exit-code.txt",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/qa-exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/vm-runner-exit-code.txt",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/runner-exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/vm-interaction.log",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/interaction/run.log",
+      "sha256": "d15170dd4e1b843f491e22576993eab6adf457be3ea02ce03c3e7ce94ca69c8f",
+      "bytes": 75548,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/vm-animation-stress.log",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/animation/run.log",
+      "sha256": "0ab8b3bf8f067402edde5214c28ae0b33a0bbe0124fe2d635238e838a2168a27",
+      "bytes": 18947,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/approved-provenance.json",
+      "source": ".build/history-axis-upgrade.noindex/approved-provenance.json",
+      "sha256": "8cba8ad65d4b98a4953cbb6959e2909bc1ecb3043ac52880c8f4530221da0913",
+      "bytes": 873,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/local-install-verified.json",
+      "source": ".build/history-axis-upgrade.noindex/local-install-verified.json",
+      "sha256": "fe8c4f6e52a3df65e31ba9f1cd7701023cedd300be46c4d4b37c37caace6585f",
+      "bytes": 400,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/local-install-verify.log",
+      "source": ".build/history-axis-upgrade.noindex/local-install-verify.log",
+      "sha256": "d62285786d9458fdaefd684bd73884bf908cc8544b514ee680ea2c609363446c",
+      "bytes": 416,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/pro-review.json",
+      "source": ".build/history-axis-upgrade.noindex/pro-review.json",
+      "sha256": "0f0d0582b7d3565cfd95b281335d520cafa877aca1e2cc229b47273df64ac8ea",
+      "bytes": 861,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/host-swift.log",
+      "source": ".build/history-axis-implementation.noindex/stroke-final-swift.log",
+      "sha256": "b550d760b6875afeeae5878082109c67479807dcfc21f69b9896fba34a904996",
+      "bytes": 143020,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/host-python-full.log",
+      "source": ".build/history-axis-upgrade.noindex/python-tests-frozen.log",
+      "sha256": "1084751215d0cbfc924f3e3428824c961ebe83633ef6402d645c94c2dca78bd9",
+      "bytes": 106611,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/host-final-contract.log",
+      "source": ".build/history-axis-upgrade.noindex/python-history-contract-stroke.log",
+      "sha256": "1456bb3a4600fe46c1b25c8be9d827e1eff95fe8850f4af71604f5657b3b7572",
+      "bytes": 4828,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/release-build.log",
+      "source": ".build/history-axis-upgrade.noindex/release-build-stroke.log",
+      "sha256": "037e167329b35499ff7f6314967e46fe854748a4e3cc5dbcf2bf893f6f145a7a",
+      "bytes": 20677,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/actions/motion-harness.swift",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion-harness.swift",
+      "sha256": "959eef8468732122581582bdfca68897b6a1540bace39026bb13c673be338e23",
+      "bytes": 24287,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/actions/gallery-harness.swift",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/gallery-harness.swift",
+      "sha256": "b02f438fb0deb7c7e903a260e03d74cd9e130dc9bff6d6bb379bf16223447b21",
+      "bytes": 23753,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/actions/analyze-motion.py",
+      "source": ".build/history-axis-review.noindex/analyze-motion.py",
+      "sha256": "231b9302f0eca6bd0903af0800e59f7f89519c455a97c973a73014e12381f9b8",
+      "bytes": 8137,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/actions/encode-motion.py",
+      "source": ".build/history-axis-review.noindex/encode-motion.py",
+      "sha256": "559336df5b4a3c04c0aab92a3e558ad0d6dbe31957a1556d55d9d8241373bf8a",
+      "bytes": 1844,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/actions/review-native-frames.py",
+      "source": ".build/history-axis-review.noindex/review-native-frames.py",
+      "sha256": "5670212af3de9eed0a99253d39138b593fb64af9b7f20e30104a73720f85afdf",
+      "bytes": 3316,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/actions/run-axis-qa.sh",
+      "source": ".build/history-axis-review.noindex/run-axis-qa.sh",
+      "sha256": "986aa437faf469f74a37417961c42713152677c52669808790a5c0e90ed692d0",
+      "bytes": 5199,
+      "copy": "exact"
+    },
+    {
+      "path": "evidence/host-residual-audit.json",
+      "source": ".build/history-axis-upgrade.noindex/host-residual-audit.json",
+      "sha256": "214db78fef22c4bd56cb32c8bd1cd725b61a355d414e3f36deb5f1e38b4b6bb2",
+      "bytes": 265,
+      "copy": "exact"
+    },
+    {
+      "path": "motion/frames/frame-0051.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0051.png",
+      "sha256": "7270ae4d1ed0f0a5a6bce36ca0bcc76aae634c8ec2118d0c9c15ff60b44e6b6b",
+      "bytes": 33453,
+      "copy": "exact; frame referenced by quantitative pixel audit"
+    },
+    {
+      "path": "motion/frames/frame-0052.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0052.png",
+      "sha256": "1a2cc0f0d7a90aa7845ef1e441a69c4152c18a0225dedd3f26a48649a504f215",
+      "bytes": 33387,
+      "copy": "exact; frame referenced by quantitative pixel audit"
+    },
+    {
+      "path": "motion/frames/frame-0076.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0076.png",
+      "sha256": "b540821d47120846e2eed5d564db90f59b45d355d5d62d18527ee73f37815a9d",
+      "bytes": 24267,
+      "copy": "exact; frame referenced by quantitative pixel audit"
+    },
+    {
+      "path": "motion/frames/frame-0077.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0077.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200",
+      "bytes": 24515,
+      "copy": "exact; frame referenced by quantitative pixel audit"
+    },
+    {
+      "path": "motion/frames/frame-0078.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0078.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200",
+      "bytes": 24515,
+      "copy": "exact; frame referenced by quantitative pixel audit"
+    },
+    {
+      "path": "motion/frames/frame-0079.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0079.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200",
+      "bytes": 24515,
+      "copy": "exact; frame referenced by quantitative pixel audit"
+    },
+    {
+      "path": "motion/frames/frame-0081.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0081.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200",
+      "bytes": 24515,
+      "copy": "exact; frame referenced by quantitative pixel audit"
+    },
+    {
+      "path": "motion/frames/frame-0085.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0085.png",
+      "sha256": "083671223edfc57be5e81f13e521a636778f6088feee10e5c4056bbb97d2d7aa",
+      "bytes": 27524,
+      "copy": "exact; frame referenced by quantitative pixel audit"
+    },
+    {
+      "path": "motion/frames/frame-0086.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0086.png",
+      "sha256": "a18656f854f880cb5f9b89e9b97c5014bccb6c3630c5033d24d107abe77eac94",
+      "bytes": 27533,
+      "copy": "exact; frame referenced by quantitative pixel audit"
+    },
+    {
+      "path": "motion/frames/frame-0087.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0087.png",
+      "sha256": "a18656f854f880cb5f9b89e9b97c5014bccb6c3630c5033d24d107abe77eac94",
+      "bytes": 27533,
+      "copy": "exact; frame referenced by quantitative pixel audit"
+    },
+    {
+      "path": "motion/frames/frame-0089.png",
+      "source": ".build/history-axis-review.noindex/sourceqa-4c31f01b3cae/motion/frames/recording-frames/frame-0089.png",
+      "sha256": "a18656f854f880cb5f9b89e9b97c5014bccb6c3630c5033d24d107abe77eac94",
+      "bytes": 27533,
+      "copy": "exact; frame referenced by quantitative pixel audit"
+    },
+    {
+      "path": "evidence/final-qa-report.json",
+      "source": ".build/history-axis-review.noindex/final-qa-report.json",
+      "sha256": "7ae6a77f4f432bf6550d2300ec81bf571765393969834237aacf9ccd7418303c",
+      "bytes": 19666,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/package-results-final-verified.json",
+      "source": ".build/history-axis-review.noindex/package-results-final-verified.json",
+      "sha256": "1ce69082bc60aba38d17cc95fe7642dbeb156c2e7d32a1b835531ab5748fbe28",
+      "bytes": 391,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/batteryless-boundary-final.json",
+      "source": ".build/history-axis-review.noindex/batteryless-boundary-final.json",
+      "sha256": "0ada16f00badde0429857fa07d6e3d03600faf31527844ddd95d49ce05a7eb4f",
+      "bytes": 2533,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/final-cleanup-immediate-approved.json",
+      "source": ".build/history-axis-review.noindex/final-cleanup-immediate-approved.json",
+      "sha256": "cb0d8aacf111fb7aae634e1898e48575bf7e3bd43474eb18e1707a9599139f05",
+      "bytes": 2032,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/package-cleanup-immediate-approved.json",
+      "source": ".build/history-axis-review.noindex/package-cleanup-immediate-approved.json",
+      "sha256": "7a32de25fc0fcda419f7679ee067492803b7392bd84d97543f6e2456b4c3c564",
+      "bytes": 422,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/final-cleanup-delayed-approved.json",
+      "source": ".build/history-axis-review.noindex/final-cleanup-delayed-approved.json",
+      "sha256": "7f77c678987c79f763e017ad8dc3ae39fdfab86a0b9504e34c3f3056e30ce998",
+      "bytes": 2031,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/package-cleanup-delayed-approved.json",
+      "source": ".build/history-axis-review.noindex/package-cleanup-delayed-approved.json",
+      "sha256": "f1e387eaee7c0218a7cc548b1179a3798d7530848226266d1a957dd2ae330e62",
+      "bytes": 422,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/guest-canonical-before-v3.json",
+      "source": ".build/history-axis-review.noindex/guest-canonical-before-v3.json",
+      "sha256": "3b2891c966f52097ba9c28412bcb0ecd959729402129bab60c2ca54aeca1274b",
+      "bytes": 1246,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/guest-canonical-immediate-v3.json",
+      "source": ".build/history-axis-review.noindex/guest-canonical-immediate-v3.json",
+      "sha256": "28af910680412047a83d21b41e90d7c1dd6deccc885bce6c5884472008face08",
+      "bytes": 1279,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/guest-canonical-delayed-v3.json",
+      "source": ".build/history-axis-review.noindex/guest-canonical-delayed-v3.json",
+      "sha256": "1f43b8c155bada1b34914556deda85d2b99c23a68927096a43e6b65b3da23f93",
+      "bytes": 1314,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/vm-cleanup-summary.json",
+      "source": ".build/history-axis-review.noindex/vm-cleanup-summary.json",
+      "sha256": "0f765b42f8f3b6add9f1bb9827b1676f8f2fec5d22720494b24fc0904867a166",
+      "bytes": 189,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/vms-before.json",
+      "source": ".build/history-axis-review.noindex/vms-before.json",
+      "sha256": "be22a7ff8c1095fd0dbd95cebece5e3b5c5cf95adcab66728f0513b4453b071b",
+      "bytes": 377,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/vms-after-cleanup.json",
+      "source": ".build/history-axis-review.noindex/vms-after-cleanup.json",
+      "sha256": "4bce682742b9043834943dc8a78cb0c14723f3fc75591ccea688be4fb10d0f65",
+      "bytes": 377,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/vm-session-exit-code.txt",
+      "source": ".build/history-axis-review.noindex/vm-session-exit-code.txt",
+      "sha256": "9d9b18720961e9b4689fd763b85e7b6f36160ccd3a8a1c9ddc5103bb0f66c396",
+      "bytes": 4,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/final-evidence.sha256.json",
+      "source": ".build/history-axis-review.noindex/final-evidence.sha256.json",
+      "sha256": "61bb729dee8bb8227a96124b1ca04c6630e7c0cb5154485ef9cb5a928b4e0f95",
+      "bytes": 1451,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/owned-domains-final.json",
+      "source": ".build/history-axis-review.noindex/owned-domains-final.json",
+      "sha256": "76ea371c6dfc2994ac429397d43a0787f8ff24111a9d24f4e48b4f2715f1ba3f",
+      "bytes": 6822,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/package-results-final-1a455c8ad423594c2e8c177bb46636e2b837e7bd05815c7822eade24acc226d7.tar.gz",
+      "source": ".build/history-axis-review.noindex/package-results-final-1a455c8ad423594c2e8c177bb46636e2b837e7bd05815c7822eade24acc226d7.tar.gz",
+      "sha256": "1a455c8ad423594c2e8c177bb46636e2b837e7bd05815c7822eade24acc226d7",
+      "bytes": 12438,
+      "copy": "exact final approved evidence"
+    },
+    {
+      "path": "evidence/package-tools-adc5608085f5d94987e33fb0d772afa0eb998c5b98574e9bf03029932a0cfa35.tar.gz",
+      "source": ".build/history-axis-review.noindex/package-tools-adc5608085f5d94987e33fb0d772afa0eb998c5b98574e9bf03029932a0cfa35.tar.gz",
+      "sha256": "adc5608085f5d94987e33fb0d772afa0eb998c5b98574e9bf03029932a0cfa35",
+      "bytes": 5638,
+      "copy": "exact final approved evidence"
+    }
+  ],
+  "pixelCheckedOriginalFrames": 19,
+  "packageArchiveInnerFilesVerified": 52,
+  "finalVMReportSHA256": "7ae6a77f4f432bf6550d2300ec81bf571765393969834237aacf9ccd7418303c",
+  "finalPackageMatrixScope": "Payload, signatures, receipts and helper health; batteryless VM stay-running readiness inapplicable. Host physical readiness separately verified."
+}

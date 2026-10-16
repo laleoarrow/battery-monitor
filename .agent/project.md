@@ -56,8 +56,10 @@ band when the axis changes or a transition is interrupted. History joins
 the existing presentation and accessibility animation policy; closing, hiding,
 detaching, degraded readings and Reduce Motion stop its animations. No chart
 timer or arbitrary shape-path interpolation is used.
-See the [4.3.9 History review](../design/history-upgrade/README.md) for native
-rendering, motion evidence and verification boundaries.
+See the [4.3.10 axis transition review](../design/history-axis-upgrade/README.md)
+for current native motion, fixed-width stroke and installation evidence. The
+[4.3.9 History review](../design/history-upgrade/README.md) preserves the initial
+curve upgrade and its verification boundaries.
 
 The system battery-icon control keeps read progress separate from its optional
 last-known value. Opening a popup or Settings starts a coalesced helper read;

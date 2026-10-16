@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "4c31f01b3cae07a2ae59e32fc8d7a1534b9bd161",
+  "sourceArchive": "source-4c31f01b3cae.tar.gz",
+  "sourceArchiveSHA256": "510e474c2650ef8dcab37a778625c03b9af57fc6410828f808005f6fc7717f89",
+  "version": "4.3.10",
+  "ownedVM": "Wattson-HistoryAxis-20261016",
+  "nativeProject": "/Users/admin/Project/Wattson-HistoryAxis-QA",
+  "repoShare": "/Volumes/My Shared Files/repo",
+  "evidenceShare": "/Volumes/My Shared Files/history",
+  "bundleIDPrefix": "com.leoarrow.wattson.historyaxisqa.",
+  "testsStarted": false,
+  "requirements": [
+    "content-hash tools tar copied and verified on native storage",
+    "sequential own-window GUI captures using production renderers",
+    "exact UUID preferences finalizer after Foundation process exit",
+    "independent >=90s quiet cleanup audit before clone deletion"
+  ]
+}

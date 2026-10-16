@@ -1,0 +1,16 @@
+{
+  "final-qa-report.json": "7ae6a77f4f432bf6550d2300ec81bf571765393969834237aacf9ccd7418303c",
+  "package-results-final-verified.json": "1ce69082bc60aba38d17cc95fe7642dbeb156c2e7d32a1b835531ab5748fbe28",
+  "batteryless-boundary-final.json": "0ada16f00badde0429857fa07d6e3d03600faf31527844ddd95d49ce05a7eb4f",
+  "final-cleanup-immediate-approved.json": "cb0d8aacf111fb7aae634e1898e48575bf7e3bd43474eb18e1707a9599139f05",
+  "package-cleanup-immediate-approved.json": "7a32de25fc0fcda419f7679ee067492803b7392bd84d97543f6e2456b4c3c564",
+  "final-cleanup-delayed-approved.json": "7f77c678987c79f763e017ad8dc3ae39fdfab86a0b9504e34c3f3056e30ce998",
+  "package-cleanup-delayed-approved.json": "f1e387eaee7c0218a7cc548b1179a3798d7530848226266d1a957dd2ae330e62",
+  "guest-canonical-before-v3.json": "3b2891c966f52097ba9c28412bcb0ecd959729402129bab60c2ca54aeca1274b",
+  "guest-canonical-immediate-v3.json": "28af910680412047a83d21b41e90d7c1dd6deccc885bce6c5884472008face08",
+  "guest-canonical-delayed-v3.json": "1f43b8c155bada1b34914556deda85d2b99c23a68927096a43e6b65b3da23f93",
+  "vm-cleanup-summary.json": "0f765b42f8f3b6add9f1bb9827b1676f8f2fec5d22720494b24fc0904867a166",
+  "vms-before.json": "be22a7ff8c1095fd0dbd95cebece5e3b5c5cf95adcab66728f0513b4453b071b",
+  "vms-after-cleanup.json": "4bce682742b9043834943dc8a78cb0c14723f3fc75591ccea688be4fb10d0f65",
+  "vm-session-exit-code.txt": "9d9b18720961e9b4689fd763b85e7b6f36160ccd3a8a1c9ddc5103bb0f66c396"
+}

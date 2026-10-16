@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "sourceCommit": "4c31f01b3cae07a2ae59e32fc8d7a1534b9bd161",
+  "packageSHA256": "396d713f61e027d4a1ef552a3af2eb267114fe1d29ce4b497495b4f3e92fbe06",
+  "recordedAtUTC": "2026-10-16T15:40:55.775185+00:00",
+  "ioreg": {
+    "command": [
+      "/usr/sbin/ioreg",
+      "-r",
+      "-c",
+      "AppleSmartBattery"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "batterylessFaultLogs": {
+    "command": [
+      "/usr/bin/log",
+      "show",
+      "--last",
+      "45m",
+      "--style",
+      "compact",
+      "--predicate",
+      "process == \"Wattson\" AND eventMessage CONTAINS \"no AppleSmartBattery\""
+    ],
+    "exitCode": 0,
+    "stdout": "Timestamp               Ty Process[PID:TID]\n2026-10-16 15:25:00.821 F  Wattson[2656:72ee] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:25:04.633 F  Wattson[2734:741a] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:25:07.629 F  Wattson[2813:7513] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:28:33.018 F  Wattson[2991:7b3d] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:28:37.002 F  Wattson[3067:7c55] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:28:40.047 F  Wattson[3147:7d4d] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:31:22.601 F  Wattson[3323:82b5] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:35:26.067 F  Wattson[3499:8a08] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:37:51.413 F  Wattson[3648:8f69] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n",
+    "stderr": ""
+  },
+  "installedExecutablePresent": false,
+  "directExitStatus": null,
+  "directExitStatusBoundary": "Already uninstalled by owned package runner; no new installation or launch performed to obtain exit status.",
+  "wattsonCrashReportsFound": [],
+  "noWattsonCrashReportsFound": true,
+  "noAppleSmartBattery": true,
+  "faultObserved": true,
+  "conclusion": "Normal application readiness cannot be tested by staying-running criteria on this batteryless VirtualMac. Exact-package installed helper health and payload checks passed in all three package modes. Host physical-battery readiness is separate root evidence."
+}

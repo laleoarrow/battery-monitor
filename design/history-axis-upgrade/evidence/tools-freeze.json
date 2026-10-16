@@ -1,0 +1,14 @@
+{
+  "archive": "axis-tools-v5.tar.gz",
+  "sha256": "7a5c55ca1db9a40adb4a2f2788d8f8caee385569817fa56f281c73257ee263c2",
+  "files": {
+    "run-axis-capture-only.sh": "6b94f50a1ba7e5b6b182989e939e381c7a14ed9ed7bff453e76dbcda965af853",
+    "run-axis-qa.sh": "986aa437faf469f74a37417961c42713152677c52669808790a5c0e90ed692d0",
+    "prepare-gallery.py": "c295068f96174d8bb4b9c13e35be9a14c8e49dc4941f16fe26688f73f69758a2",
+    "prepare-sixstate-harness.py": "607c139e0dcf011bc5de304d252c671abac21b1c4c614ed34ce0bc104f289690",
+    "synchronize-owned-defaults.js": "6813df8ef108d28bc4a89916abaa9a1fca1eda082ddf7b269ecf8017ee10171a",
+    "finalize-owned-defaults.py": "fe9b1f649d0696a0e64301cb040d80f0c1826fd4211b074c24ac7c2f1c2e5103",
+    "capture-axis-motion.swift": "959eef8468732122581582bdfca68897b6a1540bace39026bb13c673be338e23",
+    "extract-owned-domains.py": "a861a7fba51d72a70b0aaa03e2b26cc8eac75342d2a787788fe9920893e7f390"
+  }
+}

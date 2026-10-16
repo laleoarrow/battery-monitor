@@ -1,0 +1,420 @@
+{
+  "schema": 1,
+  "sourceCommit": "4c31f01b3cae07a2ae59e32fc8d7a1534b9bd161",
+  "version": "4.3.10",
+  "sourceFreeze": {
+    "sourceCommit": "4c31f01b3cae07a2ae59e32fc8d7a1534b9bd161",
+    "sourceArchive": "source-4c31f01b3cae.tar.gz",
+    "sourceArchiveSHA256": "510e474c2650ef8dcab37a778625c03b9af57fc6410828f808005f6fc7717f89",
+    "version": "4.3.10",
+    "ownedVM": "Wattson-HistoryAxis-20261016",
+    "nativeProject": "/Users/admin/Project/Wattson-HistoryAxis-QA",
+    "repoShare": "/Volumes/My Shared Files/repo",
+    "evidenceShare": "/Volumes/My Shared Files/history",
+    "bundleIDPrefix": "com.leoarrow.wattson.historyaxisqa.",
+    "testsStarted": false,
+    "requirements": [
+      "content-hash tools tar copied and verified on native storage",
+      "sequential own-window GUI captures using production renderers",
+      "exact UUID preferences finalizer after Foundation process exit",
+      "independent >=90s quiet cleanup audit before clone deletion"
+    ]
+  },
+  "toolsFreeze": {
+    "archive": "axis-tools-v5.tar.gz",
+    "sha256": "7a5c55ca1db9a40adb4a2f2788d8f8caee385569817fa56f281c73257ee263c2",
+    "files": {
+      "run-axis-capture-only.sh": "6b94f50a1ba7e5b6b182989e939e381c7a14ed9ed7bff453e76dbcda965af853",
+      "run-axis-qa.sh": "986aa437faf469f74a37417961c42713152677c52669808790a5c0e90ed692d0",
+      "prepare-gallery.py": "c295068f96174d8bb4b9c13e35be9a14c8e49dc4941f16fe26688f73f69758a2",
+      "prepare-sixstate-harness.py": "607c139e0dcf011bc5de304d252c671abac21b1c4c614ed34ce0bc104f289690",
+      "synchronize-owned-defaults.js": "6813df8ef108d28bc4a89916abaa9a1fca1eda082ddf7b269ecf8017ee10171a",
+      "finalize-owned-defaults.py": "fe9b1f649d0696a0e64301cb040d80f0c1826fd4211b074c24ac7c2f1c2e5103",
+      "capture-axis-motion.swift": "959eef8468732122581582bdfca68897b6a1540bace39026bb13c673be338e23",
+      "extract-owned-domains.py": "a861a7fba51d72a70b0aaa03e2b26cc8eac75342d2a787788fe9920893e7f390"
+    }
+  },
+  "system": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.1\nBuildVersion:\t\t25G76",
+  "architecture": "arm64",
+  "swift": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0",
+  "sdk": "26.5",
+  "nativeInteractionAssertionsPassed": 434,
+  "nativeInteractionComplete": true,
+  "stressIterations": 20000,
+  "scalarScenarios": 11,
+  "scalarChecksPassed": 236,
+  "maximumHeadStrokeDeviationPoints": 0.03319861218713527,
+  "maximumGradientBandStartYDriftPoints": 0.004424462235654403,
+  "strokeWidthPoints": 1.6,
+  "nativeFlatStrokePixelSamples": 15,
+  "nativeFlatStrokeThresholdedPixelRange": [
+    3,
+    4
+  ],
+  "comparableOutlierFillPixelSamples": 7,
+  "comparableOutlierFillAllPassed": true,
+  "gallery": {
+    "charging": [
+      "sourceqa-4c31f01b3cae/captures/charging/regular-dark-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/charging/regular-dark-top.png",
+      "sourceqa-4c31f01b3cae/captures/charging/regular-light-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/charging/regular-light-top.png"
+    ],
+    "full": [
+      "sourceqa-4c31f01b3cae/captures/full/regular-dark-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/full/regular-dark-top.png",
+      "sourceqa-4c31f01b3cae/captures/full/regular-light-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/full/regular-light-top.png"
+    ],
+    "on-battery": [
+      "sourceqa-4c31f01b3cae/captures/on-battery/regular-dark-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/on-battery/regular-dark-top.png",
+      "sourceqa-4c31f01b3cae/captures/on-battery/regular-light-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/on-battery/regular-light-top.png"
+    ],
+    "mixed-supply": [
+      "sourceqa-4c31f01b3cae/captures/mixed-supply/regular-dark-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/mixed-supply/regular-dark-top.png",
+      "sourceqa-4c31f01b3cae/captures/mixed-supply/regular-light-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/mixed-supply/regular-light-top.png"
+    ],
+    "low-battery": [
+      "sourceqa-4c31f01b3cae/captures/low-battery/regular-dark-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/low-battery/regular-dark-top.png",
+      "sourceqa-4c31f01b3cae/captures/low-battery/regular-light-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/low-battery/regular-light-top.png"
+    ],
+    "low-power": [
+      "sourceqa-4c31f01b3cae/captures/low-power/regular-dark-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/low-power/regular-dark-top.png",
+      "sourceqa-4c31f01b3cae/captures/low-power/regular-light-bottom.png",
+      "sourceqa-4c31f01b3cae/captures/low-power/regular-light-top.png"
+    ]
+  },
+  "moviesMetadata": "sourceqa-4c31f01b3cae/motion/frames/movies.json",
+  "packageSHA256": "396d713f61e027d4a1ef552a3af2eb267114fe1d29ce4b497495b4f3e92fbe06",
+  "packageModes": [
+    "fresh",
+    "reinstall",
+    "disabled-service-reinstall"
+  ],
+  "packageMatrixPassed": true,
+  "packageEvidenceDirectory": "packageqa-4c31f01b3cae",
+  "packageReadinessApplicableInVM": false,
+  "installedAppReadinessAllPassed": null,
+  "readinessBoundary": {
+    "schema": 1,
+    "sourceCommit": "4c31f01b3cae07a2ae59e32fc8d7a1534b9bd161",
+    "packageSHA256": "396d713f61e027d4a1ef552a3af2eb267114fe1d29ce4b497495b4f3e92fbe06",
+    "recordedAtUTC": "2026-10-16T15:40:55.775185+00:00",
+    "ioreg": {
+      "command": [
+        "/usr/sbin/ioreg",
+        "-r",
+        "-c",
+        "AppleSmartBattery"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "batterylessFaultLogs": {
+      "command": [
+        "/usr/bin/log",
+        "show",
+        "--last",
+        "45m",
+        "--style",
+        "compact",
+        "--predicate",
+        "process == \"Wattson\" AND eventMessage CONTAINS \"no AppleSmartBattery\""
+      ],
+      "exitCode": 0,
+      "stdout": "Timestamp               Ty Process[PID:TID]\n2026-10-16 15:25:00.821 F  Wattson[2656:72ee] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:25:04.633 F  Wattson[2734:741a] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:25:07.629 F  Wattson[2813:7513] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:28:33.018 F  Wattson[2991:7b3d] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:28:37.002 F  Wattson[3067:7c55] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:28:40.047 F  Wattson[3147:7d4d] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:31:22.601 F  Wattson[3323:82b5] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:35:26.067 F  Wattson[3499:8a08] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n2026-10-16 15:37:51.413 F  Wattson[3648:8f69] [com.leoarrow.wattson:menubar] no AppleSmartBattery \u2014 this Mac has no battery\n",
+      "stderr": ""
+    },
+    "installedExecutablePresent": false,
+    "directExitStatus": null,
+    "directExitStatusBoundary": "Already uninstalled by owned package runner; no new installation or launch performed to obtain exit status.",
+    "wattsonCrashReportsFound": [],
+    "noWattsonCrashReportsFound": true,
+    "noAppleSmartBattery": true,
+    "faultObserved": true,
+    "conclusion": "Normal application readiness cannot be tested by staying-running criteria on this batteryless VirtualMac. Exact-package installed helper health and payload checks passed in all three package modes. Host physical-battery readiness is separate root evidence."
+  },
+  "physicalHostReadinessEvidence": "../history-axis-upgrade.noindex/local-install-verified.json (root-owned physical-battery evidence)",
+  "immutableDiagnosticToolProvenance": {
+    "archive": "package-tools-adc5608085f5d94987e33fb0d772afa0eb998c5b98574e9bf03029932a0cfa35.tar.gz",
+    "archiveSHA256": "adc5608085f5d94987e33fb0d772afa0eb998c5b98574e9bf03029932a0cfa35",
+    "extractedGuestLocalSHA256": {
+      "run-package-qa.sh": "96f4d1538b25ef98b55efc6a1fc9849701b6f0d552762e57647df673ed1b0eb7",
+      "app-readiness.py": "13f01242024112a5a4f89dfe559cb5d540201224feacdd1a6210e2ab73cde891",
+      "lib/local_cleanup.sh": "372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e",
+      "lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872"
+    },
+    "guestLocalRoot": "/Users/admin/Project/Wattson-HistoryAxis-QA/.build/package-staged.noindex/run.b2vcw0o7",
+    "allHashesVerifiedBeforeExecution": true,
+    "packageSHA256": "396d713f61e027d4a1ef552a3af2eb267114fe1d29ce4b497495b4f3e92fbe06"
+  },
+  "immutableToolScope": "Verified immutable guest-local runner applied to final fresh diagnostic only. Earlier full three-mode health/payload/signature matrix used shared runner and did not validly execute the original stdin readiness assertion. No VM stays-running claim is made.",
+  "packageResultArchive": {
+    "archive": "package-results-final-1a455c8ad423594c2e8c177bb46636e2b837e7bd05815c7822eade24acc226d7.tar.gz",
+    "guestSHA256": "1a455c8ad423594c2e8c177bb46636e2b837e7bd05815c7822eade24acc226d7",
+    "bytes": 12438,
+    "fileCount": 53,
+    "hostSHA256": "1a455c8ad423594c2e8c177bb46636e2b837e7bd05815c7822eade24acc226d7",
+    "guestHostBytesMatch": true,
+    "allArchivedFileHashesVerified": true
+  },
+  "ownedPackageRemovedAtExit": true,
+  "limitations": [
+    "macOS ARM disposable GUI VM, not Intel runtime validation or a hardware battery accuracy test.",
+    "Scalar timer requests60Hz but actual rate varies; no fixed rate asserted; timestamps are in raw traces. Separate movie requests30Hz but actual6-9frames per phase; VFR encoding uses actual timestamps. Neither is a product FPS benchmark.",
+    "Gradient alpha estimate derives from actual presentation band and fixed production endpoint alphas; it is not a full composited-pixel continuity claim.",
+    "Fixture-only production renderer captures use Regular Liquid Glass in six power states and Light/Dark; full native interaction also exercises Classic and Clear paths."
+  ],
+  "cleanupStatus": "Final immediate and >=90-second delayed 8+5 residual audits pass; canonical state unchanged; owned clone deleted and caller VM states preserved.",
+  "cleanupEvidence": {
+    "final-cleanup-immediate-approved.json": {
+      "TCCDatabaseRead": false,
+      "TCCDatabaseWritten": false,
+      "allPassed": true,
+      "auditedAtEpoch": 1792165259.6806731,
+      "checkCount": 8,
+      "checks": {
+        "applicationScriptsRemoved": true,
+        "appsRemoved": true,
+        "containersRemoved": true,
+        "mountsRemoved": true,
+        "nativeRunsRemoved": true,
+        "preferencesRemoved": true,
+        "processesRemoved": true,
+        "registrationsRemoved": true
+      },
+      "deletedAnything": false,
+      "exactDomainsAudited": [
+        "Wattson.SettingsCommandInteraction.498CCB51-4D48-4543-B814-82B1F2DFE200",
+        "Wattson.SettingsCommandInteraction.E8F45070-4ACB-4D7A-B0D2-16A2DF1AB76E",
+        "com.leoarrow.wattson.historyaxisqa.02056c68-eb1c-4ce9-babe-a223e51fdb3b",
+        "com.leoarrow.wattson.historyaxisqa.38cfe342-80ed-463d-bb29-91ac5e0ef8de",
+        "com.leoarrow.wattson.historyaxisqa.785d32c7-d344-4791-9653-ad865f8acf06",
+        "com.leoarrow.wattson.historyaxisqa.7daff9db-5f76-4ce5-ad4f-0d63cebd10c1",
+        "com.leoarrow.wattson.historyaxisqa.d2089ee5-666b-4664-8dfe-623089e57517",
+        "com.leoarrow.wattson.historyaxisqa.dc7ffea5-6b06-4823-8a89-517cc587624a",
+        "com.leoarrow.wattson.historyaxisqa.f8d32864-645d-4a1f-b4b5-f352c9914669",
+        "com.leoarrow.wattson.historyaxisqa.ffd88bd0-cd42-43dc-8098-59b4365cb36c",
+        "com.leoarrow.wattson.interactiontests.e273f97a-ead5-49f2-a6d9-8d6034aad57f",
+        "com.leoarrow.wattson.interactiontests.f8ab8180-35af-4121-abcd-2f1530e75911"
+      ],
+      "ignoredReadOnlyAuditCommands": [],
+      "ownedVMRetained": true,
+      "ownershipManifest": "owned-domains-final.json",
+      "ownershipManifestSHA256": "76ea371c6dfc2994ac429397d43a0787f8ff24111a9d24f4e48b4f2715f1ba3f",
+      "residuals": {
+        "applicationScripts": [],
+        "apps": [],
+        "containers": [],
+        "mounts": [],
+        "nativeRuns": [],
+        "preferences": [],
+        "processes": [],
+        "registrations": []
+      },
+      "schema": 1,
+      "scope": "Read-only exact-domain and explicitly owned native-project residual audit. Canonical installation audit and >=90-second quiet-window timing are separate caller evidence."
+    },
+    "package-cleanup-immediate-approved.json": {
+      "schema": 1,
+      "checks": {
+        "ownedInstallationPathsRemoved": true,
+        "ownedReceiptRemoved": true,
+        "ownedHelperJobRemoved": true,
+        "ownedAppHelperProcessesRemoved": true,
+        "canonicalRegistrationRemoved": true
+      },
+      "allPassed": true,
+      "residualPaths": [],
+      "residualProcesses": [],
+      "residualRegistrations": [],
+      "auditedMonotonic": 3929.584524,
+      "deletedAnything": false,
+      "TCCAccessed": false
+    },
+    "final-cleanup-delayed-approved.json": {
+      "TCCDatabaseRead": false,
+      "TCCDatabaseWritten": false,
+      "allPassed": true,
+      "auditedAtEpoch": 1792165371.057185,
+      "checkCount": 8,
+      "checks": {
+        "applicationScriptsRemoved": true,
+        "appsRemoved": true,
+        "containersRemoved": true,
+        "mountsRemoved": true,
+        "nativeRunsRemoved": true,
+        "preferencesRemoved": true,
+        "processesRemoved": true,
+        "registrationsRemoved": true
+      },
+      "deletedAnything": false,
+      "exactDomainsAudited": [
+        "Wattson.SettingsCommandInteraction.498CCB51-4D48-4543-B814-82B1F2DFE200",
+        "Wattson.SettingsCommandInteraction.E8F45070-4ACB-4D7A-B0D2-16A2DF1AB76E",
+        "com.leoarrow.wattson.historyaxisqa.02056c68-eb1c-4ce9-babe-a223e51fdb3b",
+        "com.leoarrow.wattson.historyaxisqa.38cfe342-80ed-463d-bb29-91ac5e0ef8de",
+        "com.leoarrow.wattson.historyaxisqa.785d32c7-d344-4791-9653-ad865f8acf06",
+        "com.leoarrow.wattson.historyaxisqa.7daff9db-5f76-4ce5-ad4f-0d63cebd10c1",
+        "com.leoarrow.wattson.historyaxisqa.d2089ee5-666b-4664-8dfe-623089e57517",
+        "com.leoarrow.wattson.historyaxisqa.dc7ffea5-6b06-4823-8a89-517cc587624a",
+        "com.leoarrow.wattson.historyaxisqa.f8d32864-645d-4a1f-b4b5-f352c9914669",
+        "com.leoarrow.wattson.historyaxisqa.ffd88bd0-cd42-43dc-8098-59b4365cb36c",
+        "com.leoarrow.wattson.interactiontests.e273f97a-ead5-49f2-a6d9-8d6034aad57f",
+        "com.leoarrow.wattson.interactiontests.f8ab8180-35af-4121-abcd-2f1530e75911"
+      ],
+      "ignoredReadOnlyAuditCommands": [],
+      "ownedVMRetained": true,
+      "ownershipManifest": "owned-domains-final.json",
+      "ownershipManifestSHA256": "76ea371c6dfc2994ac429397d43a0787f8ff24111a9d24f4e48b4f2715f1ba3f",
+      "residuals": {
+        "applicationScripts": [],
+        "apps": [],
+        "containers": [],
+        "mounts": [],
+        "nativeRuns": [],
+        "preferences": [],
+        "processes": [],
+        "registrations": []
+      },
+      "schema": 1,
+      "scope": "Read-only exact-domain and explicitly owned native-project residual audit. Canonical installation audit and >=90-second quiet-window timing are separate caller evidence."
+    },
+    "package-cleanup-delayed-approved.json": {
+      "schema": 1,
+      "checks": {
+        "ownedInstallationPathsRemoved": true,
+        "ownedReceiptRemoved": true,
+        "ownedHelperJobRemoved": true,
+        "ownedAppHelperProcessesRemoved": true,
+        "canonicalRegistrationRemoved": true
+      },
+      "allPassed": true,
+      "residualPaths": [],
+      "residualProcesses": [],
+      "residualRegistrations": [],
+      "auditedMonotonic": 4040.963494,
+      "deletedAnything": false,
+      "TCCAccessed": false
+    },
+    "guest-canonical-immediate-v3.json": {
+      "schema": 1,
+      "mode": "immediate-v3",
+      "epoch": 1792165263.725495,
+      "systemMonotonic": 3930.506922,
+      "state": {
+        "/Applications/Wattson.app": [
+          {
+            "path": "/Applications/Wattson.app",
+            "missing": true
+          }
+        ],
+        "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper": [
+          {
+            "path": "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper",
+            "missing": true
+          }
+        ],
+        "/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist": [
+          {
+            "path": "/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist",
+            "missing": true
+          }
+        ],
+        "/Users/admin/Library/Preferences/com.leoarrow.Wattson.plist": [
+          {
+            "path": "/Users/admin/Library/Preferences/com.leoarrow.Wattson.plist",
+            "missing": true
+          }
+        ],
+        "/Users/admin/Library/Preferences/com.leoarrow.wattson.plist": [
+          {
+            "path": "/Users/admin/Library/Preferences/com.leoarrow.wattson.plist",
+            "missing": true
+          }
+        ],
+        "receipt": {
+          "code": 1,
+          "stdout": "",
+          "stderr": "No receipt for 'com.leoarrow.wattson.pkg' found at '/'.\n"
+        }
+      },
+      "TCCAccessed": false,
+      "networkSettingsModified": false,
+      "canonicalMutated": false,
+      "canonicalUnchanged": true
+    },
+    "guest-canonical-delayed-v3.json": {
+      "schema": 1,
+      "mode": "delayed-v3",
+      "epoch": 1792165375.09141,
+      "systemMonotonic": 4041.872838,
+      "state": {
+        "/Applications/Wattson.app": [
+          {
+            "path": "/Applications/Wattson.app",
+            "missing": true
+          }
+        ],
+        "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper": [
+          {
+            "path": "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper",
+            "missing": true
+          }
+        ],
+        "/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist": [
+          {
+            "path": "/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist",
+            "missing": true
+          }
+        ],
+        "/Users/admin/Library/Preferences/com.leoarrow.Wattson.plist": [
+          {
+            "path": "/Users/admin/Library/Preferences/com.leoarrow.Wattson.plist",
+            "missing": true
+          }
+        ],
+        "/Users/admin/Library/Preferences/com.leoarrow.wattson.plist": [
+          {
+            "path": "/Users/admin/Library/Preferences/com.leoarrow.wattson.plist",
+            "missing": true
+          }
+        ],
+        "receipt": {
+          "code": 1,
+          "stdout": "",
+          "stderr": "No receipt for 'com.leoarrow.wattson.pkg' found at '/'.\n"
+        }
+      },
+      "TCCAccessed": false,
+      "networkSettingsModified": false,
+      "canonicalMutated": false,
+      "canonicalUnchanged": true,
+      "quietSeconds": 111.36591599999974
+    },
+    "vm-cleanup-summary.json": {
+      "additionalUnrelatedVMsPreserved": [],
+      "otherVMStatesPreserved": {
+        "macOS-TestLab": true,
+        "macOS-TestLab-Base": true
+      },
+      "ownedCloneRemoved": true,
+      "ownedVM": "Wattson-HistoryAxis-20261016"
+    }
+  },
+  "vmOwnerTermination": {
+    "exitCode": 143,
+    "intentional": "Exact owned wrapper PID 66153 received TERM after final audit. Its EXIT trap stopped and deleted the owned clone; no failure is inferred from expected signal exit143.",
+    "cleanupProof": "vm-cleanup-summary.json",
+    "beforeInventory": "vms-before.json",
+    "afterInventory": "vms-after-cleanup.json"
+  }
+}
