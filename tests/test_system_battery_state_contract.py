@@ -239,25 +239,40 @@ class SystemBatteryStateContractTests(unittest.TestCase):
                 "same landed state must not notify twice"
             )
 
-            let failureCases: [(String, [[String: Any]?])] = [
+            let failureCases: [(String, Bool, [[String: Any]?], Bool?, SystemBatteryIconReadStatus)] = [
                 (
-                    "missing readback value",
-                    [["ok": true], ["ok": true]]
+                    "missing readback value", true,
+                    [["ok": true], ["ok": true]], nil, .failed(.invalidReply)
                 ),
                 (
-                    "mismatched authoritative readback",
-                    [["ok": true, "hidden": false], ["ok": true, "hidden": true]]
+                    "mismatched authoritative readback", false,
+                    [["ok": true], ["ok": true, "hidden": true]], true, .ready
                 ),
                 (
-                    "reported setter failure",
-                    [["ok": false, "hidden": false]]
+                    "reported setter failure", true,
+                    [["ok": false, "hidden": false]], true, .ready
                 ),
                 (
-                    "readback transport failure",
-                    [["ok": true], nil]
+                    "readback transport failure", true,
+                    [["ok": true], nil], nil, .failed(.requestFailed)
+                ),
+                (
+                    "readback preference failure", true,
+                    [["ok": true], ["ok": false, "reason": "preferenceMissing"]],
+                    nil, .failed(.preferenceMissing)
+                ),
+                (
+                    "setter transport failure", true,
+                    [nil], true, .ready
                 ),
             ]
-            for (name, responses) in failureCases {
+            for (name, previous, responses, expected, status) in failureCases {
+                SystemBatteryIconController.configureForTest(initialHidden: previous) { request, timeout in
+                    sender.send(request, timeout)
+                }
+                notifications.removeAll()
+                readNotifications.removeAll()
+                lastNotifiedValue = stateName(previous)
                 for response in responses { sender.append(response) }
                 mutationCompleted = false
                 mutationSucceeded = true
@@ -267,30 +282,15 @@ class SystemBatteryStateContractTests(unittest.TestCase):
                 }
                 require(waitUntil { mutationCompleted }, "\(name) completion")
                 require(!mutationSucceeded, "\(name) must fail")
-                require(
-                    SystemBatteryIconController.cachedHidden == true,
-                    "\(name) restores the prior authoritative state"
-                )
-                require(
-                    notifications == ["shown", "unknown", "hidden"],
-                    "\(name) must not emit a false change notification"
-                )
+                require(SystemBatteryIconController.cachedHidden == expected,
+                        "\(name) must preserve only the authoritative readback or unchanged setter state")
+                require(SystemBatteryIconController.readStatus == status,
+                        "\(name) must publish the readback's availability")
+                require(notifications == (expected == previous ? [] : [stateName(expected)]),
+                        "\(name) must notify the actual value transition")
+                require(readNotifications == (expected == previous ? [] : [status]),
+                        "\(name) must notify the actual read phase")
             }
-
-            sender.append(nil)
-            mutationCompleted = false
-            mutationSucceeded = true
-            SystemBatteryIconController.setHidden(false) { succeeded in
-                mutationSucceeded = succeeded
-                mutationCompleted = true
-            }
-            require(waitUntil { mutationCompleted }, "transport failure completion")
-            require(!mutationSucceeded, "transport failure must fail")
-            require(SystemBatteryIconController.cachedHidden == true, "failure preserves cache")
-            require(
-                notifications == ["shown", "unknown", "hidden"],
-                "transport failure must not notify"
-            )
 
             // Hold the shared worker so two refreshes remain replaceable. The
             // following mutation must cancel the pending helper read without
@@ -439,6 +439,41 @@ class SystemBatteryStateContractTests(unittest.TestCase):
             require(SystemBatteryIconController.readStatus == .ready,
                     "stale older mutation cannot overwrite the newer read phase")
 
+            // Delayed mutation completions must not undo a newer readback's
+            // failure, recovery or mismatched-but-authoritative value.
+            let orderedReadbacks: [(String, [String: Any], Bool, [String: Any], Bool,
+                                    Bool?, SystemBatteryIconReadStatus)] = [
+                ("old unknown, new known", ["ok": false, "reason": "preferenceMissing"], false,
+                 ["ok": true, "hidden": false], true, false, .ready),
+                ("old known, new unknown", ["ok": true, "hidden": true], true,
+                 ["ok": false, "reason": "preferenceSyncFailed"], false, nil, .failed(.preferenceSyncFailed)),
+                ("old mismatch, new mismatch", ["ok": true, "hidden": false], false,
+                 ["ok": true, "hidden": true], false, true, .ready),
+            ]
+            for (name, oldReadback, oldSucceeded, newReadback, newSucceeded, expected, status) in orderedReadbacks {
+                SystemBatteryIconController.configureForTest(initialHidden: false) { request, timeout in
+                    sender.send(request, timeout)
+                }
+                sender.append(["ok": true])
+                sender.append(oldReadback)
+                sender.append(["ok": true])
+                sender.append(newReadback)
+                var olderCompleted = false
+                SystemBatteryIconController.setHidden(true) { succeeded in
+                    require(succeeded == oldSucceeded, "\(name): old caller gets its own result")
+                    olderCompleted = true
+                }
+                require(SystemBatteryIconController.setHidden(false) == newSucceeded,
+                        "\(name): new caller gets its own result")
+                require(SystemBatteryIconController.cachedHidden == expected
+                        && SystemBatteryIconController.readStatus == status,
+                        "\(name): newest readback owns shared state")
+                require(waitUntil { olderCompleted }, "\(name): delayed completion arrives")
+                require(SystemBatteryIconController.cachedHidden == expected
+                        && SystemBatteryIconController.readStatus == status,
+                        "\(name): delayed mutation cannot overwrite newer readback")
+            }
+
             SystemBatteryIconController.configureForTest { request, timeout in
                 sender.send(request, timeout)
             }
@@ -456,36 +491,83 @@ class SystemBatteryStateContractTests(unittest.TestCase):
             // Canceling a not-yet-selected read must finish checking even if
             // its replacement setter fails, with and without a prior value.
             for previous in [Optional<Bool>.none, .some(false)] {
-                SystemBatteryIconController.configureForTest(initialHidden: previous) { request, timeout in
-                    sender.send(request, timeout)
+                for readbackFails in [false, true] {
+                    SystemBatteryIconController.configureForTest(initialHidden: previous) { request, timeout in
+                        sender.send(request, timeout)
+                    }
+                    let blocked = DispatchSemaphore(value: 0)
+                    let started = DispatchSemaphore(value: 0)
+                    HelperSettingsOperationWorker.shared.async {
+                        started.signal()
+                        blocked.wait()
+                    }
+                    require(started.wait(timeout: .now() + 1) == .success, "canceled-read worker started")
+                    var readCompleted = false
+                    var writeCompleted = false
+                    let expected = readbackFails ? nil : previous
+                    let before = sender.requestCount
+                    SystemBatteryIconController.refreshHidden { value in
+                        require(value == expected, "canceled read receives the actual settled value")
+                        readCompleted = true
+                    }
+                    if readbackFails { sender.append(["ok": true]) }
+                    sender.append(["ok": false, "reason": "preferenceWorkerFailed"])
+                    SystemBatteryIconController.setHidden(true) { succeeded in
+                        require(!succeeded, "replacement mutation must fail")
+                        writeCompleted = true
+                    }
+                    blocked.signal()
+                    require(waitUntil { readCompleted && writeCompleted }, "canceled-read failure settles both callers")
+                    require(sender.requestCount == before + (readbackFails ? 2 : 1), "canceled read never reaches helper")
+                    require(SystemBatteryIconController.cachedHidden == expected, "mutation publishes only authoritative cache")
+                    require(SystemBatteryIconController.readStatus == (expected == nil
+                        ? .failed(.preferenceWorkerFailed) : .ready),
+                        "failed replacement cannot leave a canceled read checking or hide failed readback")
                 }
-                let blocked = DispatchSemaphore(value: 0)
-                let started = DispatchSemaphore(value: 0)
-                HelperSettingsOperationWorker.shared.async {
-                    started.signal()
-                    blocked.wait()
-                }
-                require(started.wait(timeout: .now() + 1) == .success, "canceled-read worker started")
-                var readCompleted = false
-                var writeCompleted = false
-                let before = sender.requestCount
-                SystemBatteryIconController.refreshHidden { value in
-                    require(value == previous, "canceled read receives restored cache")
-                    readCompleted = true
-                }
-                sender.append(["ok": false, "reason": "preferenceWorkerFailed"])
-                SystemBatteryIconController.setHidden(true) { succeeded in
-                    require(!succeeded, "replacement setter must fail")
-                    writeCompleted = true
-                }
-                blocked.signal()
-                require(waitUntil { readCompleted && writeCompleted }, "canceled-read failure settles both callers")
-                require(sender.requestCount == before + 1, "canceled read never reaches helper")
-                require(SystemBatteryIconController.cachedHidden == previous, "failed setter preserves prior cache")
-                require(SystemBatteryIconController.readStatus == (previous == nil
-                    ? .failed(.preferenceWorkerFailed) : .ready),
-                    "failed replacement cannot leave a canceled read checking")
             }
+
+            // A failed mutation readback invalidates the old value, but a
+            // later requested refresh must retain ownership of checking and
+            // its own waiter until that refresh has actually finished.
+            let mutationReadStarted = DispatchSemaphore(value: 0)
+            let mutationReadGate = DispatchSemaphore(value: 0)
+            let newerReadStarted = DispatchSemaphore(value: 0)
+            let newerReadGate = DispatchSemaphore(value: 0)
+            var mutationReadCount = 0
+            SystemBatteryIconController.configureForTest(initialHidden: false) { request, _ in
+                if request["op"] as? String == "setSystemBatteryIconHidden" { return ["ok": true] }
+                mutationReadCount += 1
+                if mutationReadCount == 1 {
+                    mutationReadStarted.signal()
+                    mutationReadGate.wait()
+                    return ["ok": false, "reason": "preferenceMissing"]
+                }
+                newerReadStarted.signal()
+                newerReadGate.wait()
+                return ["ok": true, "hidden": true]
+            }
+            var failedMutationCompleted = false
+            var newerRefreshCompleted = false
+            SystemBatteryIconController.setHidden(true) { succeeded in
+                require(!succeeded, "mutation with failed readback reports failure")
+                failedMutationCompleted = true
+            }
+            require(mutationReadStarted.wait(timeout: .now() + 1) == .success, "mutation readback selected")
+            SystemBatteryIconController.refreshHidden { value in
+                require(value == true, "later refresh receives its own recovered value")
+                newerRefreshCompleted = true
+            }
+            mutationReadGate.signal()
+            require(waitUntil { failedMutationCompleted }, "mutation failure completes before newer refresh")
+            require(newerReadStarted.wait(timeout: .now() + 1) == .success, "newer refresh selected")
+            require(!newerRefreshCompleted && SystemBatteryIconController.cachedHidden == nil
+                    && SystemBatteryIconController.readStatus == .checking,
+                    "mutation failure cannot finish a newer refresh or retain a stale value")
+            newerReadGate.signal()
+            require(waitUntil { newerRefreshCompleted }, "later refresh settles after mutation failure")
+            require(SystemBatteryIconController.cachedHidden == true
+                    && SystemBatteryIconController.readStatus == .ready,
+                    "later refresh recovers authoritative state after failed mutation readback")
 
             // A selected older read may finish while a newer read is blocked.
             // Its value is usable, but the newer read still owns checking.

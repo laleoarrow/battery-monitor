@@ -204,7 +204,7 @@ enum SystemBatteryIconController {
 
     private struct MutationResult {
         let succeeded: Bool
-        let landedHidden: Bool?
+        let readback: SystemBatteryIconReadResult?
         let failure: SystemBatteryIconReadFailure?
     }
 
@@ -366,28 +366,31 @@ enum SystemBatteryIconController {
             timeoutSeconds: 6
         )
         guard HelperClient.strictJSONBool(reply?["ok"]) == true else {
-            return MutationResult(succeeded: false, landedHidden: nil, failure: failure(from: reply))
+            return MutationResult(succeeded: false, readback: nil, failure: failure(from: reply))
         }
 
         // The setter's success means its fixed preference write and Control
         // Center restart completed. A separate fixed getter is still the
         // authority for the value that actually landed.
         let readback = probe()
-        guard let landedHidden = readback.hidden else {
-            return MutationResult(succeeded: false, landedHidden: nil, failure: readback.failure)
-        }
         return MutationResult(
-            succeeded: landedHidden == hidden,
-            landedHidden: landedHidden,
-            failure: landedHidden == hidden ? nil : .requestFailed
+            succeeded: readback.hidden == hidden,
+            readback: readback,
+            failure: readback.failure
         )
     }
 
     private static func settleMutation(_ result: MutationResult, sequence: Int) {
         guard claimPublication(for: sequence) else { return }
-        // Failed writes retain the last authoritative value. They must still
-        // settle a refresh canceled before it reached the worker.
-        let hidden = result.succeeded ? result.landedHidden : cachedHidden
+        // Only an unconfirmed setter may retain the prior value. Once the
+        // write succeeded, its readback is authoritative even when different
+        // from the request or unknown. Also settle any canceled refresh.
+        let hidden: Bool?
+        if let readback = result.readback {
+            hidden = readback.hidden
+        } else {
+            hidden = cachedHidden
+        }
         let status: SystemBatteryIconReadStatus = hidden != nil
             ? .ready : .failed(result.failure ?? .requestFailed)
         publish(hidden, status: sequence == requestSequence ? status : readStatus)

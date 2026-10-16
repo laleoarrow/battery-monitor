@@ -354,6 +354,76 @@ class SettingsWindowContractTests(unittest.TestCase):
                 fixture,
                 batteryNotification: batteryNotification
             )
+            // Exercise completion state before constructing any window. The
+            // focused headless mode exits after these production-view fixtures.
+            var batteryCompletionFailures: [String] = []
+            let batteryCompletionCases: [(String, Bool?, SystemBatteryIconReadStatus, Bool, Bool?)] = [
+                ("failed-write-newer-ready", true, .ready, false, true),
+                ("failed-write-newer-failed", nil, .failed(.requestFailed), false, nil),
+                ("successful-write-readback-failed", nil, .failed(.requestFailed), true, nil),
+                ("failed-status-rejects-old-value", false, .failed(.requestFailed), true, nil),
+            ]
+            require(app.windows.isEmpty, "battery completion fixture starts without windows")
+            for (name, observedHidden, status, succeeded, expectedHidden) in batteryCompletionCases {
+                autoreleasepool {
+                    let completionFixture = FixtureState()
+                    let notification = Notification.Name("BatteryCompletion-" + UUID().uuidString)
+                    let completionDependencies = SettingsWindowDependencies.fixture(
+                        completionFixture, batteryNotification: notification
+                    )
+                    guard let section = SettingsWindowController.defaultSections(
+                        dependencies: completionDependencies
+                    ).first(where: { $0.identifier == "general" }),
+                          let checkbox = descendants(ofType: NSButton.self, in: section.view)
+                            .first(where: { $0.accessibilityLabel() == "Hide System Battery Icon" }),
+                          let detail = descendants(ofType: NSTextField.self, in: section.view)
+                            .first(where: { $0.accessibilityIdentifier() == "settings.general.battery.detail" }) else {
+                        require(false, "battery completion production controls exist")
+                        return
+                    }
+                    section.refresh()
+                    completionFixture.loginReads.removeFirst()(.enabled)
+                    completionFixture.batteryReads.removeFirst()(false)
+                    require(checkbox.state == .off && checkbox.isEnabled,
+                            "battery completion fixture begins with known visible icon")
+                    checkbox.performClick(nil)
+                    require(completionFixture.batteryWrites.count == 1
+                            && completionFixture.batteryWrites[0].0,
+                            "battery completion fixture submits one native hide request")
+                    completionFixture.batteryHidden = observedHidden
+                    completionFixture.batteryReadStatus = status
+                    NotificationCenter.default.post(name: notification, object: nil)
+                    require(!checkbox.isEnabled, "new observation cannot finish a pending mutation")
+                    completionFixture.batteryWrites.removeFirst().1(succeeded)
+                    let stateMatches = checkbox.state == (expectedHidden.map { $0 ? .on : .off } ?? .mixed)
+                    let enabledMatches = checkbox.isEnabled == (expectedHidden != nil)
+                    let detailMatches = expectedHidden != nil || detail.stringValue == "Status unavailable"
+                    if !stateMatches || !enabledMatches || !detailMatches {
+                        batteryCompletionFailures.append(
+                            "\(name): state=\(checkbox.state.rawValue) enabled=\(checkbox.isEnabled) "
+                                + "detail=\(detail.stringValue)"
+                        )
+                    }
+                    if let expectedHidden, stateMatches, enabledMatches {
+                        checkbox.performClick(nil)
+                        require(completionFixture.batteryWrites.count == 1
+                                && completionFixture.batteryWrites[0].0 == !expectedHidden,
+                                "next click inverts the latest observed authority")
+                    } else if !checkbox.isEnabled {
+                        checkbox.performClick(nil)
+                        require(completionFixture.batteryWrites.isEmpty,
+                                "failed readback cannot submit another mutation")
+                    }
+                    tracePhase("battery completion \(name): "
+                        + "\(stateMatches && enabledMatches && detailMatches ? "passed" : "failed")")
+                }
+            }
+            require(app.windows.isEmpty, "battery completion fixtures do not create windows")
+            require(batteryCompletionFailures.isEmpty, batteryCompletionFailures.joined(separator: "\n"))
+            tracePhase("battery completion no-window fixtures passed")
+            if ProcessInfo.processInfo.environment["WATTSON_SETTINGS_BATTERY_COMPLETION_ONLY"] == "1" {
+                exit(0)
+            }
             autoreleasepool {
                 let initialSection = SelectionFixtureSection("initial")
                 let otherSection = SelectionFixtureSection("other")
@@ -2631,7 +2701,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                         if isinstance(error.stderr, bytes) else error.stderr
                     print(output, end="", flush=True)
                 raise
-            if interactive:
+            if interactive or os.environ.get("WATTSON_SETTINGS_BATTERY_COMPLETION_ONLY") == "1":
                 print(run_result.stderr, end="")
             self.assertEqual(
                 run_result.returncode,

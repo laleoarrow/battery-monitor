@@ -346,6 +346,89 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         }
     }
 
+    func testBatteryNativeClickTogglesBothAuthoritativeStates() throws {
+        _ = NSApplication.shared
+        let footer = PopoverFooterView()
+        let checkbox = try XCTUnwrap(descendants(of: footer).compactMap { $0 as? NSButton }.first {
+            $0.action == NSSelectorFromString("systemBatteryIconChanged:")
+        })
+        var requests: [Bool] = []
+        var finish: ((Bool) -> Void)?
+        footer.onSystemBatteryIconToggle = { requested, completion in
+            requests.append(requested)
+            finish = completion
+        }
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue, readStatus: .ready)
+
+        for hidden in [true, false] {
+            let previousCount = requests.count
+            checkbox.performClick(nil)
+            XCTAssertEqual(requests.count, previousCount + 1)
+            XCTAssertEqual(requests.last, hidden)
+            XCTAssertFalse(checkbox.isEnabled)
+            footer.update(mode: .auto, helperInstalled: true,
+                          systemBatteryIconHidden: hidden, tint: .systemBlue, readStatus: .ready)
+            XCTAssertFalse(checkbox.isEnabled, "An observation must not finish the pending write")
+            let completion = try XCTUnwrap(finish)
+            finish = nil
+            completion(true)
+            XCTAssertEqual(checkbox.state, hidden ? .on : .off)
+            XCTAssertTrue(checkbox.isEnabled)
+        }
+        XCTAssertEqual(requests, [true, false])
+    }
+
+    func testBatteryNativeClickPreservesDisabledStatesAndFailureRollback() throws {
+        _ = NSApplication.shared
+        let footer = PopoverFooterView()
+        let checkbox = try XCTUnwrap(descendants(of: footer).compactMap { $0 as? NSButton }.first {
+            $0.action == NSSelectorFromString("systemBatteryIconChanged:")
+        })
+        var requests: [Bool] = []
+        var finish: ((Bool) -> Void)?
+        footer.onSystemBatteryIconToggle = { requested, completion in
+            requests.append(requested)
+            finish = completion
+        }
+        let disabledStates: [(Bool, Bool?, SystemBatteryIconReadStatus)] = [
+            (true, nil, .notRequested),
+            (true, nil, .checking),
+            (true, nil, .failed(.requestFailed)),
+            (true, false, .checking),
+            (false, false, .ready),
+        ]
+        for (helperInstalled, hidden, status) in disabledStates {
+            footer.update(mode: .auto, helperInstalled: helperInstalled,
+                          systemBatteryIconHidden: hidden, tint: .systemBlue, readStatus: status)
+            XCTAssertFalse(checkbox.isEnabled)
+            checkbox.performClick(nil)
+            XCTAssertTrue(requests.isEmpty)
+            XCTAssertNil(finish)
+        }
+
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue, readStatus: .ready)
+        checkbox.performClick(nil)
+        XCTAssertEqual(requests, [true])
+        XCTAssertFalse(checkbox.isEnabled)
+        checkbox.performClick(nil)
+        XCTAssertEqual(requests, [true], "A pending write cannot submit another request")
+        let completion = try XCTUnwrap(finish)
+        finish = nil
+        completion(false)
+        XCTAssertEqual(checkbox.state, .off, "A failed write restores the authoritative value")
+        XCTAssertTrue(checkbox.isEnabled)
+        checkbox.performClick(nil)
+        XCTAssertEqual(requests, [true, true], "A retry still inverts the authoritative value")
+        let retryCompletion = try XCTUnwrap(finish)
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: true, tint: .systemBlue, readStatus: .ready)
+        retryCompletion(true)
+        XCTAssertEqual(checkbox.state, .on)
+        XCTAssertTrue(checkbox.isEnabled)
+    }
+
     func testBatteryCompletionDoesNotOverwriteNewerAuthorityOrPendingRead() throws {
         let footer = PopoverFooterView()
         let checkbox = try XCTUnwrap(descendants(of: footer).compactMap { $0 as? NSButton }.first {
@@ -356,8 +439,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         for status: SystemBatteryIconReadStatus in [.ready, .checking] {
             footer.update(mode: .auto, helperInstalled: true,
                           systemBatteryIconHidden: false, tint: .systemBlue, readStatus: .ready)
-            checkbox.state = .on
-            _ = checkbox.target?.perform(checkbox.action!, with: checkbox)
+            checkbox.performClick(nil)
             XCTAssertNotNil(finish)
             // A newer shared observation is delivered before this older write's callback.
             footer.update(mode: .auto, helperInstalled: true,
