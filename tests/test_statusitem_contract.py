@@ -271,7 +271,7 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("refreshStatusItem()", status_scope)
         self.assertNotIn("refreshPresentation()", status_scope)
         ignored_scope = observer.split(
-            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .colorScheme, .inAppLogoStyle, .dockIconStyle:", 1
+            "case .module, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:", 1
         )[1].split("case", 1)[0]
         self.assertNotIn("refresh", ignored_scope)
         self.assertIn("case nil:", observer)
