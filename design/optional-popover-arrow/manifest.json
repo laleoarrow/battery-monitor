@@ -1,0 +1,187 @@
+{
+  "schema": 1,
+  "purpose": "Development preview of optional Liquid Glass popover arrow; not public or locally installed 4.3.8 payload",
+  "testedSourceCommit": "36fa16fe9fc6cae3263cfb7c20cd8df74b8469dc",
+  "runtimeEquivalentLaterHead": "d1372e02d23e39890de2fcc9340502a2e0bcc54e",
+  "laterHeadActuallyExecutedInVM": false,
+  "sourceVersionString": "4.3.8",
+  "runtimeAndGUIInputBlobCount": 136,
+  "laterHeadChangedPaths": [
+    "tests/test_statusitem_contract.py"
+  ],
+  "runtimeInputEquivalenceEvidence": {
+    "path": ".build/popover-arrow-review.noindex/runtime-input-equivalence-36fa-to-d137.json",
+    "sha256": "8a0282a0e78e1ddbaaed7b1a054a956793aa003c25f7af29f0b372961a6d9d23"
+  },
+  "finalGUIEvidence": {
+    "path": ".build/popover-arrow-review.noindex/final-gui-evidence.json",
+    "sha256": "b1e034082b1d35f80261442dd2c6e94a7d9cab927edae1c6e5c051d553164e2c"
+  },
+  "behavior": {
+    "setting": "General > Appearance > Show Popover Arrow",
+    "defaultEnabled": true,
+    "appliesTo": [
+      "Standard Glass",
+      "Clear Glass"
+    ],
+    "disabledArrowReclaimedPoints": 12,
+    "classicNativePopoverUnchanged": true
+  },
+  "environment": {
+    "macOS": "26.6.1 (25G76)",
+    "architecture": "arm64",
+    "displayLogicalPoints": [
+      1024,
+      768
+    ],
+    "backingScaleFactor": 2,
+    "displayChanged": false
+  },
+  "captureMethod": "Unmodified WindowServer screenshots of production renderers with fixed power fixtures and owned neutral backdrop. Top and bottom are separate native scroll positions; no stitching or resizing.",
+  "validation": {
+    "interactionPassedAssertions": 365,
+    "interactionFailedAssertions": 0,
+    "animationIterations": 20000,
+    "settingsNativeContractPassed": true,
+    "popupCaptures": 96,
+    "settingsCaptures": 4,
+    "arrowGeometryPairs": 48,
+    "bodyHitTestPoints": 3360,
+    "statusAnchorChecks": 480
+  },
+  "cleanup": {
+    "quietSeconds": 111.8528429999999,
+    "exactOwnedDomainsAudited": 10,
+    "immediateCleanupChecks": 8,
+    "delayedCleanupChecks": 8,
+    "ownedVMDeleted": true,
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "canonicalGuestUnchanged": true,
+    "hostGUIOrTestsRun": false,
+    "systemPrivacyOrNetworkSettingsChanged": false,
+    "installedPackages": false
+  },
+  "priorFailedRunsPreserved": [
+    "failed-f223bbe-result.json",
+    "failed-54f57cd-result.json"
+  ],
+  "failureResolution": "Actual NSPanel initializer half-point outward rounding caused 1pt first-open width jump. Fixed production initialization before constructing geometry; exact original restoration equality now passes.",
+  "limitations": [
+    "Development source preview, not the installed/public4.3.8 payload",
+    "macOS26.6.1 ARM VM with fixed telemetry; not Cody macOS27 real hardware confirmation",
+    "Default short display uses separate native top/bottom scroll captures; no stitching or resolution change",
+    "Later d1372e0 was not itself executed;136 runtime/GUI input git blobs match actual tested36fa16 exactly"
+  ],
+  "images": [
+    {
+      "file": "charging-regular-dark-arrow-on-top.png",
+      "label": "Charging · Standard Glass · Dark · Arrow on · Top",
+      "originalPath": ".build/popover-arrow-review.noindex/sourceqa-36fa16fe9fc6/captures/charging/arrow-1/regular-dark-top.png",
+      "sha256": "4899a6d56cf9aef01081671e7226497e36aa27bf544962732ecd465d3a93e30e",
+      "bytes": 180434,
+      "pixels": [
+        880,
+        1444
+      ],
+      "unmodifiedCopy": true
+    },
+    {
+      "file": "charging-regular-dark-arrow-off-top.png",
+      "label": "Charging · Standard Glass · Dark · Arrow off · Top",
+      "originalPath": ".build/popover-arrow-review.noindex/sourceqa-36fa16fe9fc6/captures/charging/arrow-0/regular-dark-top.png",
+      "sha256": "7e7da99542e86b547ec44f3e6f937eabb1bea99a5ec5206a70462000e499317d",
+      "bytes": 180281,
+      "pixels": [
+        880,
+        1444
+      ],
+      "unmodifiedCopy": true
+    },
+    {
+      "file": "charging-clear-light-arrow-on-top.png",
+      "label": "Charging · Clear Glass · Light · Arrow on · Top",
+      "originalPath": ".build/popover-arrow-review.noindex/sourceqa-36fa16fe9fc6/captures/charging/arrow-1/clear-light-top.png",
+      "sha256": "e37f4b03eccb42498229de51943787cc8f46149b8e9e4a16dfb2d76ec72788f9",
+      "bytes": 188925,
+      "pixels": [
+        792,
+        1400
+      ],
+      "unmodifiedCopy": true
+    },
+    {
+      "file": "charging-clear-light-arrow-off-top.png",
+      "label": "Charging · Clear Glass · Light · Arrow off · Top",
+      "originalPath": ".build/popover-arrow-review.noindex/sourceqa-36fa16fe9fc6/captures/charging/arrow-0/clear-light-top.png",
+      "sha256": "e1cc06aa53a8b635d0525223387f7bc3972d3a0a58fd9f132e1b7122349aaba0",
+      "bytes": 189211,
+      "pixels": [
+        792,
+        1400
+      ],
+      "unmodifiedCopy": true
+    },
+    {
+      "file": "on-battery-regular-dark-arrow-off-bottom.png",
+      "label": "On Battery · Standard Glass · Dark · Arrow off · Bottom",
+      "originalPath": ".build/popover-arrow-review.noindex/sourceqa-36fa16fe9fc6/captures/on-battery/arrow-0/regular-dark-bottom.png",
+      "sha256": "4c7aa8fcc72a55238430d778449179d6a3e69d0f92af6f009b4b2df5b2662055",
+      "bytes": 195793,
+      "pixels": [
+        880,
+        1444
+      ],
+      "unmodifiedCopy": true
+    },
+    {
+      "file": "on-battery-clear-light-arrow-off-bottom.png",
+      "label": "On Battery · Clear Glass · Light · Arrow off · Bottom",
+      "originalPath": ".build/popover-arrow-review.noindex/sourceqa-36fa16fe9fc6/captures/on-battery/arrow-0/clear-light-bottom.png",
+      "sha256": "6d7b41aa53c0cfc213a29e0b5e7102ed8eddb91ee379ff2a1442a450a73a0dbb",
+      "bytes": 216705,
+      "pixels": [
+        792,
+        1400
+      ],
+      "unmodifiedCopy": true
+    },
+    {
+      "file": "settings-light-arrow-off.png",
+      "label": "Settings · Light · Arrow off",
+      "originalPath": ".build/popover-arrow-review.noindex/sourceqa-36fa16fe9fc6/settings-captures/settings-light-arrow-off.png",
+      "sha256": "667e252dc13e3ebb9a6a5e7a9f9af088a6c5f6142c6d9b6297beb97d05a83ef7",
+      "bytes": 309152,
+      "pixels": [
+        1472,
+        1072
+      ],
+      "unmodifiedCopy": true
+    },
+    {
+      "file": "settings-dark-arrow-off.png",
+      "label": "Settings · Dark · Arrow off",
+      "originalPath": ".build/popover-arrow-review.noindex/sourceqa-36fa16fe9fc6/settings-captures/settings-dark-arrow-off.png",
+      "sha256": "85df7177f96f5689b13293bbeb95d1749a5c0e39f0cb2170d07ac5e3cd0a67d1",
+      "bytes": 240287,
+      "pixels": [
+        1472,
+        1072
+      ],
+      "unmodifiedCopy": true
+    }
+  ],
+  "finalHeadlessEvidence": {
+    "path": ".build/popover-arrow-headless-review.noindex/attempt-d1372e02d23e.noindex/result.json",
+    "sha256": "620367eb7bb6571d5cb657a03d155732f9159af5f5cd751a556879e2c5497539",
+    "pythonTests": 599,
+    "pythonSkipped": 4,
+    "swiftTests": 474,
+    "swiftMatchingInputs": 124,
+    "delayedCleanupSeconds": 170.78164800000377,
+    "canonical438Unchanged": true,
+    "knownIntermittentTest": "Earlier support blocked-stage marker failures retained; two isolated checks and final full suite passed without changing the unrelated test."
+  }
+}
