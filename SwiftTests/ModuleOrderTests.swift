@@ -132,6 +132,18 @@ final class ModuleOrderViewTests: XCTestCase {
         [view] + view.subviews.flatMap(descendants)
     }
 
+    private func assertVerticallyAdjacent(_ upper: NSView, _ lower: NSView,
+                                         file: StaticString = #filePath, line: UInt = #line) {
+        guard let parent = upper.superview, lower.superview === parent else {
+            XCTFail("Module frames must share the same coordinate system", file: file, line: line)
+            return
+        }
+        // The document is flipped, but arranged frames use their stack's coordinates.
+        let upperBottom = parent.isFlipped ? upper.frame.maxY : upper.frame.minY
+        let lowerTop = parent.isFlipped ? lower.frame.minY : lower.frame.maxY
+        XCTAssertEqual(upperBottom, lowerTop, accuracy: 0.5, file: file, line: line)
+    }
+
     func testSavedOrderControlsActualFramesAndQuickMenu() {
         let order: [Settings.Module] = [.runtime, .history, .lanes, .ring, .flow]
         Settings.moduleOrder = order
@@ -144,7 +156,7 @@ final class ModuleOrderViewTests: XCTestCase {
         XCTAssertEqual(content.moduleMenuItemsForTest.map(\.title), order.map(\.title))
         let sections = order.map { content.moduleViewForTest($0) }
         for (first, second) in zip(sections, sections.dropFirst()) {
-            XCTAssertEqual(first.frame.maxY, second.frame.minY, accuracy: 0.5)
+            assertVerticallyAdjacent(first, second)
         }
         XCTAssertEqual(content.preferredHeight, 799)
     }
@@ -231,8 +243,7 @@ final class ModuleOrderViewTests: XCTestCase {
         content.setViewportHeight(content.preferredHeight)
         XCTAssertEqual(content.moduleOrderForTest, order)
         XCTAssertEqual(content.preferredHeight, fullHeight)
-        XCTAssertEqual(content.moduleViewForTest(.runtime).frame.maxY,
-                       content.moduleViewForTest(.history).frame.minY, accuracy: 0.5)
+        assertVerticallyAdjacent(content.moduleViewForTest(.runtime), content.moduleViewForTest(.history))
     }
 
     func testAllHiddenModulesCanReorderWithoutAddingHeight() {
