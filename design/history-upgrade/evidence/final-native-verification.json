@@ -1,0 +1,143 @@
+{
+  "schema": 1,
+  "sourceCommit": "5cefb014b845284ae2dd66be039a6fd9abd3d32e",
+  "version": "4.3.9",
+  "sourceArchiveSHA256": "082e3c5842bad749008aeae26d32f7f18efffa69d75b6b1add52252985cd4d93",
+  "guest": {
+    "os": "macOS26.6.1(25G76)",
+    "arch": "arm64",
+    "model": "VirtualMac2,1",
+    "swift": "6.3.3",
+    "sdk": "26.5"
+  },
+  "verification": {
+    "nativeInteractionAssertionsPassed": 399,
+    "nativeHistoryAssertionsPassed": 34,
+    "nativeInteractionFailures": 0,
+    "animationStressIterationsPassed": 20000,
+    "staticProductionCaptureCount": 24,
+    "staticHistoryBottomImagesVisuallyReviewed": 12,
+    "verifiedPKGFreshInstall": true,
+    "verifiedPKGReinstall": true,
+    "verifiedPKGDisabledServiceReinstall": true,
+    "verifiedPKGSHA256": "50c341b2fb684a19a6e406bb6d98b1d393ca4adc8fd30fa7ab8867f63b9fb599"
+  },
+  "limits": {
+    "guestFullSwiftSuite": "Unavailable: Command Line Tools SDK has no XCTest; original failed run preserved; host full499 result is separate root evidence",
+    "motionRecording": "Actual measured WindowServer own-window frames under capture load; firsttwo updates start, third interrupts prior active key and deliberately presents static; not180ms wall-time or frame-rate acceptance",
+    "threeUnconditionalMotionStartsHarnessPassed": false,
+    "motionFinalStopped": true,
+    "captureValues": "Fixed fixtures, no internal-battery hardware measurements"
+  },
+  "images": [
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/charging/regular-light-top.png",
+      "sha256": "f131567317ca4f16c187c5b347a26d1f9ce9d1d2c1a5ea5ec901f25738a45a8e"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/charging/regular-light-bottom.png",
+      "sha256": "1c1ab38dd880c0298e0984478abe965b78cbe17da2536584e12b2f9d68aaa3ad"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/charging/regular-dark-top.png",
+      "sha256": "9cf5053bd623e5722c42af2736f3fdfaddafd341cd5e43afe692b42696da5bd4"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/charging/regular-dark-bottom.png",
+      "sha256": "8ca5d5dad034e4285c951a1632ac1c637d51ac1923256daecf78ea6daa86cab2"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/full/regular-light-top.png",
+      "sha256": "fbcd8fc3bfdfcce8d9d6d72111c3f73f7ec6f19abe04ce5b2ded01e4899dc411"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/full/regular-light-bottom.png",
+      "sha256": "ccb3124d363912e23bc20d73eaef1cfee4690282016e7298aea77c722f2e8f67"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/full/regular-dark-top.png",
+      "sha256": "05a7a9fc158fbae28b070c1c10f4391ec9bbdbe6e3bd297a2354c2fb73fae326"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/full/regular-dark-bottom.png",
+      "sha256": "1651bb72e6d661a478d111392494c8ec559f55841079a3d12b0eb297303c8f53"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/on-battery/regular-light-top.png",
+      "sha256": "b49ffb58681fb80835c5dbd13a9b5c574cbde75b8f9661afb9c9764a7a35aa01"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/on-battery/regular-light-bottom.png",
+      "sha256": "df71687f35fa07c993316eafe4bb2e2ebeb6a34bf37afd39d90d280c3d11a619"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/on-battery/regular-dark-top.png",
+      "sha256": "9ca688c9fb7b0dac11ba45127b7c14dcb326438049a57a7c6f90f57b66b0e395"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/on-battery/regular-dark-bottom.png",
+      "sha256": "d156ed4c46237eed2fa3dfe7f9d1c47d5d6117215df25aa9954de21e43a63430"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-light-top.png",
+      "sha256": "bdf524e3bc8e08a493e41991f7e8807470ffe17dd4cef90657530b072728d0a6"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-light-bottom.png",
+      "sha256": "9f7c266b967eb529cede15c8653154c6fa6dda3b9bc195c048170dc286dd9f39"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-dark-top.png",
+      "sha256": "2cf63a9a85331388eb4e8bb55d41a8413bfd5876b7c0a301a81a0f77881b5818"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-dark-bottom.png",
+      "sha256": "fca80f8f0b34c2054e4af311379682ad04acf5dda8cfb85fa9b5632baa367340"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/low-battery/regular-light-top.png",
+      "sha256": "2094a122ba2b77ebe635cf8b9f3d9a2919f5e8947fb90a308d8f1a9dbc87e734"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/low-battery/regular-light-bottom.png",
+      "sha256": "a7fb4ad25cbd72602711ee87f4ef307b9d0d8cb1e1d406bc31af1597dcaaf1a4"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/low-battery/regular-dark-top.png",
+      "sha256": "9172eb113b4cd5f3ea9d34f85f526f293a6bbe6bd689b8a7ddacfae7a566c1d0"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/low-battery/regular-dark-bottom.png",
+      "sha256": "0b7418ccd9ff2dbda91c1ef1df538d073219acff48a266c6a5a9898c5705dd3c"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/low-power/regular-light-top.png",
+      "sha256": "53e25f5da3f48a4de87952ca8cd2466955fba81d1ec79677ab984e66a748c167"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/low-power/regular-light-bottom.png",
+      "sha256": "6d6e39c90ac35b921ede3489aa29cca4236652ab5d928e7207bae854bd36024b"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/low-power/regular-dark-top.png",
+      "sha256": "3849fc3006496e872bdf8d02aa8948f89049508e0ade9541721924d031be7574"
+    },
+    {
+      "path": "sourceqa-5cefb014b845-v6/captures/low-power/regular-dark-bottom.png",
+      "sha256": "f46d2a37c8c5960df7eec199fb2cb205822c8c8a7fa6aefa05d6f13a921b05f0"
+    }
+  ],
+  "cleanup": {
+    "exactOwnedDomainsAudited": 7,
+    "immediateChecksPassed": 8,
+    "delayedChecksPassed": 8,
+    "quietSeconds": 97.70816400000012,
+    "ownedCloneRemoved": true,
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "packageResidualChecksPassed": 5
+  },
+  "completedEpoch": 1792161017.563354
+}

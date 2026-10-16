@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "sourceCommit": "5cefb014b845284ae2dd66be039a6fd9abd3d32e",
+  "captureRun": "sourceqa-5cefb014b845-v6",
+  "reviewer": "verification_release agent",
+  "method": "Opened all twelve final bottom captures using view_image.",
+  "states": [
+    "charging",
+    "full",
+    "on-battery",
+    "mixed-supply",
+    "low-battery",
+    "low-power"
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "reviewedImages": 12,
+  "historyCaptionAndPeakVisible": true,
+  "curveFillAndEndpointAligned": true,
+  "historyTextOverlapOrClippingObserved": false,
+  "shortViewport": "Bottom scroll position intentionally clips the upper power-flow instrument. Paired top captures preserve the upper layout.",
+  "performanceAcceptance": false
+}

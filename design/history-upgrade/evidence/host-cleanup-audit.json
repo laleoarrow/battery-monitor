@@ -1,0 +1,10 @@
+{
+  "spotlightWattsonPaths": [
+    "/Applications/Wattson.app"
+  ],
+  "launchServicesCanonicalAppObserved": true,
+  "ownedIntegrationScratch": [],
+  "ownedReleaseScratchExists": false,
+  "ownedInstallVerificationScratch": [],
+  "canonicalInstallationCleanedByTests": false
+}

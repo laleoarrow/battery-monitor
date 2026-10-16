@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "mode": "delayed",
+  "epoch": 1792161000.63092,
+  "systemMonotonic": 1382.770661,
+  "state": {
+    "/Applications/Wattson.app": [
+      {
+        "path": "/Applications/Wattson.app",
+        "missing": true
+      }
+    ],
+    "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper": [
+      {
+        "path": "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper",
+        "missing": true
+      }
+    ],
+    "/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist": [
+      {
+        "path": "/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist",
+        "missing": true
+      }
+    ],
+    "/Users/admin/Library/Preferences/com.leoarrow.Wattson.plist": [
+      {
+        "path": "/Users/admin/Library/Preferences/com.leoarrow.Wattson.plist",
+        "missing": true
+      }
+    ],
+    "/Users/admin/Library/Preferences/com.leoarrow.wattson.plist": [
+      {
+        "path": "/Users/admin/Library/Preferences/com.leoarrow.wattson.plist",
+        "missing": true
+      }
+    ],
+    "receipt": {
+      "code": 1,
+      "stdout": "",
+      "stderr": "No receipt for 'com.leoarrow.wattson' found at '/'.\n"
+    }
+  },
+  "TCCAccessed": false,
+  "networkSettingsModified": false,
+  "canonicalMutated": false,
+  "canonicalUnchanged": true,
+  "quietSeconds": 97.70816400000012
+}

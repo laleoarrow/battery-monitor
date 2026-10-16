@@ -1,0 +1,1330 @@
+{
+  "schema": 1,
+  "createdAtUTC": "2026-10-16T14:31:22.325388+00:00",
+  "sourceCommit": "5cefb014b845284ae2dd66be039a6fd9abd3d32e",
+  "version": "4.3.9",
+  "proZipSHA256": "ab0fe2cb5dc59c6a0a49ebb8e1a2097f77e07d85436be51a1ac2125ac691d7cb",
+  "packageSHA256": "50c341b2fb684a19a6e406bb6d98b1d393ca4adc8fd30fa7ab8867f63b9fb599",
+  "staticCaptureRun": "sourceqa-5cefb014b845-v6",
+  "motionCaptureRun": "sourceqa-5cefb014b845-v5",
+  "staticImages": 24,
+  "rawMotionFrames": 113,
+  "copiedFilesVerifiedAgainstOriginals": 216,
+  "excludesSelf": true,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 6489,
+      "sha256": "c2420dc892eb4d1a86214b26d332aec3a746017445f719ce6ea0dcf19a73d4c6",
+      "origin": "Gallery documentation or audit summary"
+    },
+    {
+      "path": "captures/charging/complete.json",
+      "bytes": 64,
+      "sha256": "41ad08a2f960ff39d884e825ec4e3a0ed1d778a0aaee0e46eb0e8f406bf18fd8",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/charging/complete.json"
+    },
+    {
+      "path": "captures/charging/regular-dark-bottom-geometry.json",
+      "bytes": 8276,
+      "sha256": "60f8bb1ada02a7618801670b8ddc6cb5dffcefffee758acad77c011e08cc298b",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/charging/regular-dark-bottom-geometry.json"
+    },
+    {
+      "path": "captures/charging/regular-dark-bottom.png",
+      "bytes": 189215,
+      "sha256": "8ca5d5dad034e4285c951a1632ac1c637d51ac1923256daecf78ea6daa86cab2",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/charging/regular-dark-bottom.png"
+    },
+    {
+      "path": "captures/charging/regular-dark-top-geometry.json",
+      "bytes": 8271,
+      "sha256": "e506701c4370688ec3de91250954fe260ca2d4ea1b6e51c1b0679541bef9017e",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/charging/regular-dark-top-geometry.json"
+    },
+    {
+      "path": "captures/charging/regular-dark-top.png",
+      "bytes": 186794,
+      "sha256": "9cf5053bd623e5722c42af2736f3fdfaddafd341cd5e43afe692b42696da5bd4",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/charging/regular-dark-top.png"
+    },
+    {
+      "path": "captures/charging/regular-light-bottom-geometry.json",
+      "bytes": 8277,
+      "sha256": "82ad0c22de3c4f580f0f4a6f7edf4e89ac99f84ee1b0ab66631f489b29e320a1",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/charging/regular-light-bottom-geometry.json"
+    },
+    {
+      "path": "captures/charging/regular-light-bottom.png",
+      "bytes": 203494,
+      "sha256": "1c1ab38dd880c0298e0984478abe965b78cbe17da2536584e12b2f9d68aaa3ad",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/charging/regular-light-bottom.png"
+    },
+    {
+      "path": "captures/charging/regular-light-top-geometry.json",
+      "bytes": 8272,
+      "sha256": "7ab37ed3a5dd8f9036b4a70aa1fcab9aab285b585d3fa04dfa26389a5efd0010",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/charging/regular-light-top-geometry.json"
+    },
+    {
+      "path": "captures/charging/regular-light-top.png",
+      "bytes": 184396,
+      "sha256": "f131567317ca4f16c187c5b347a26d1f9ce9d1d2c1a5ea5ec901f25738a45a8e",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/charging/regular-light-top.png"
+    },
+    {
+      "path": "captures/full/complete.json",
+      "bytes": 64,
+      "sha256": "41ad08a2f960ff39d884e825ec4e3a0ed1d778a0aaee0e46eb0e8f406bf18fd8",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/full/complete.json"
+    },
+    {
+      "path": "captures/full/regular-dark-bottom-geometry.json",
+      "bytes": 8272,
+      "sha256": "dd0782bc7e25739ae1755b24b0e7e3d310a179bdd8a13b2f1d496d488d458790",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/full/regular-dark-bottom-geometry.json"
+    },
+    {
+      "path": "captures/full/regular-dark-bottom.png",
+      "bytes": 161305,
+      "sha256": "1651bb72e6d661a478d111392494c8ec559f55841079a3d12b0eb297303c8f53",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/full/regular-dark-bottom.png"
+    },
+    {
+      "path": "captures/full/regular-dark-top-geometry.json",
+      "bytes": 8267,
+      "sha256": "dae69bbde5378bb991fe09b936315cb3745eda372768d8d6bb423dffc88c7497",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/full/regular-dark-top-geometry.json"
+    },
+    {
+      "path": "captures/full/regular-dark-top.png",
+      "bytes": 184454,
+      "sha256": "05a7a9fc158fbae28b070c1c10f4391ec9bbdbe6e3bd297a2354c2fb73fae326",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/full/regular-dark-top.png"
+    },
+    {
+      "path": "captures/full/regular-light-bottom-geometry.json",
+      "bytes": 8273,
+      "sha256": "c0f3abc198b56f57e1515bf8b44723c0c84ffc49d3177ab99c9f4294265eb0b5",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/full/regular-light-bottom-geometry.json"
+    },
+    {
+      "path": "captures/full/regular-light-bottom.png",
+      "bytes": 168579,
+      "sha256": "ccb3124d363912e23bc20d73eaef1cfee4690282016e7298aea77c722f2e8f67",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/full/regular-light-bottom.png"
+    },
+    {
+      "path": "captures/full/regular-light-top-geometry.json",
+      "bytes": 8268,
+      "sha256": "89669a4b5c04414b28ff524d8384363557611efb7d131fa9ff2d2b5ab0909b82",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/full/regular-light-top-geometry.json"
+    },
+    {
+      "path": "captures/full/regular-light-top.png",
+      "bytes": 191759,
+      "sha256": "fbcd8fc3bfdfcce8d9d6d72111c3f73f7ec6f19abe04ce5b2ded01e4899dc411",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/full/regular-light-top.png"
+    },
+    {
+      "path": "captures/low-battery/complete.json",
+      "bytes": 64,
+      "sha256": "41ad08a2f960ff39d884e825ec4e3a0ed1d778a0aaee0e46eb0e8f406bf18fd8",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-battery/complete.json"
+    },
+    {
+      "path": "captures/low-battery/regular-dark-bottom-geometry.json",
+      "bytes": 8279,
+      "sha256": "696bbc093bbc595d47669e9a4b9ef03c3ec24d71567e85f549b967cba997a4ca",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-battery/regular-dark-bottom-geometry.json"
+    },
+    {
+      "path": "captures/low-battery/regular-dark-bottom.png",
+      "bytes": 195408,
+      "sha256": "0b7418ccd9ff2dbda91c1ef1df538d073219acff48a266c6a5a9898c5705dd3c",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-battery/regular-dark-bottom.png"
+    },
+    {
+      "path": "captures/low-battery/regular-dark-top-geometry.json",
+      "bytes": 8274,
+      "sha256": "6bc8fd48761cbc4c82ba6eb4e53e58581e9f6bd87b37de4627112a36385d1d01",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-battery/regular-dark-top-geometry.json"
+    },
+    {
+      "path": "captures/low-battery/regular-dark-top.png",
+      "bytes": 169776,
+      "sha256": "9172eb113b4cd5f3ea9d34f85f526f293a6bbe6bd689b8a7ddacfae7a566c1d0",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-battery/regular-dark-top.png"
+    },
+    {
+      "path": "captures/low-battery/regular-light-bottom-geometry.json",
+      "bytes": 8280,
+      "sha256": "744e3f8de389aa7ee15f7eb3632317202fcce9c3a9696b7f73fc6d01d0644d2d",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-battery/regular-light-bottom-geometry.json"
+    },
+    {
+      "path": "captures/low-battery/regular-light-bottom.png",
+      "bytes": 213193,
+      "sha256": "a7fb4ad25cbd72602711ee87f4ef307b9d0d8cb1e1d406bc31af1597dcaaf1a4",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-battery/regular-light-bottom.png"
+    },
+    {
+      "path": "captures/low-battery/regular-light-top-geometry.json",
+      "bytes": 8275,
+      "sha256": "408f5673d9604b9976aab4efeb520b7d51bfe70790adf12195bf53623cc80d3c",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-battery/regular-light-top-geometry.json"
+    },
+    {
+      "path": "captures/low-battery/regular-light-top.png",
+      "bytes": 179307,
+      "sha256": "2094a122ba2b77ebe635cf8b9f3d9a2919f5e8947fb90a308d8f1a9dbc87e734",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-battery/regular-light-top.png"
+    },
+    {
+      "path": "captures/low-power/complete.json",
+      "bytes": 64,
+      "sha256": "41ad08a2f960ff39d884e825ec4e3a0ed1d778a0aaee0e46eb0e8f406bf18fd8",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-power/complete.json"
+    },
+    {
+      "path": "captures/low-power/regular-dark-bottom-geometry.json",
+      "bytes": 8277,
+      "sha256": "8dca28f3a2ecee57f517ab43e4eaa21b1e6f8ce89c196f22f2bd00dfec18965d",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-power/regular-dark-bottom-geometry.json"
+    },
+    {
+      "path": "captures/low-power/regular-dark-bottom.png",
+      "bytes": 164411,
+      "sha256": "f46d2a37c8c5960df7eec199fb2cb205822c8c8a7fa6aefa05d6f13a921b05f0",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-power/regular-dark-bottom.png"
+    },
+    {
+      "path": "captures/low-power/regular-dark-top-geometry.json",
+      "bytes": 8272,
+      "sha256": "2a710b963d9a1c38335c4b893cb1fefac4dcd2d34736bba7027976601945a926",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-power/regular-dark-top-geometry.json"
+    },
+    {
+      "path": "captures/low-power/regular-dark-top.png",
+      "bytes": 151939,
+      "sha256": "3849fc3006496e872bdf8d02aa8948f89049508e0ade9541721924d031be7574",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-power/regular-dark-top.png"
+    },
+    {
+      "path": "captures/low-power/regular-light-bottom-geometry.json",
+      "bytes": 8278,
+      "sha256": "d1e7b157ef9e094a56c9b3f90fcd8b1faec2ef21acf96ab6a46bf24b9c81ca59",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-power/regular-light-bottom-geometry.json"
+    },
+    {
+      "path": "captures/low-power/regular-light-bottom.png",
+      "bytes": 177349,
+      "sha256": "6d6e39c90ac35b921ede3489aa29cca4236652ab5d928e7207bae854bd36024b",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-power/regular-light-bottom.png"
+    },
+    {
+      "path": "captures/low-power/regular-light-top-geometry.json",
+      "bytes": 8273,
+      "sha256": "22dd8bd116e9b07067e1c605b4dbaf0ab0df889f2c770b5c20923a1d22ce58e6",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-power/regular-light-top-geometry.json"
+    },
+    {
+      "path": "captures/low-power/regular-light-top.png",
+      "bytes": 155103,
+      "sha256": "53e25f5da3f48a4de87952ca8cd2466955fba81d1ec79677ab984e66a748c167",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/low-power/regular-light-top.png"
+    },
+    {
+      "path": "captures/mixed-supply/complete.json",
+      "bytes": 64,
+      "sha256": "41ad08a2f960ff39d884e825ec4e3a0ed1d778a0aaee0e46eb0e8f406bf18fd8",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/mixed-supply/complete.json"
+    },
+    {
+      "path": "captures/mixed-supply/regular-dark-bottom-geometry.json",
+      "bytes": 8280,
+      "sha256": "f9996fc33782382555f28022f589c87ea62fde12d26d1e40e9db6d6dbd017590",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-dark-bottom-geometry.json"
+    },
+    {
+      "path": "captures/mixed-supply/regular-dark-bottom.png",
+      "bytes": 167957,
+      "sha256": "fca80f8f0b34c2054e4af311379682ad04acf5dda8cfb85fa9b5632baa367340",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-dark-bottom.png"
+    },
+    {
+      "path": "captures/mixed-supply/regular-dark-top-geometry.json",
+      "bytes": 8275,
+      "sha256": "8a93c986bf07906cef61a82313af7e27b5813c53fecc669ae4f1a23d5d6740f7",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-dark-top-geometry.json"
+    },
+    {
+      "path": "captures/mixed-supply/regular-dark-top.png",
+      "bytes": 198496,
+      "sha256": "2cf63a9a85331388eb4e8bb55d41a8413bfd5876b7c0a301a81a0f77881b5818",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-dark-top.png"
+    },
+    {
+      "path": "captures/mixed-supply/regular-light-bottom-geometry.json",
+      "bytes": 8281,
+      "sha256": "db5a18f9936957d0e071dabb880b08b35c25b6a5caa877a69995b28b40f13274",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-light-bottom-geometry.json"
+    },
+    {
+      "path": "captures/mixed-supply/regular-light-bottom.png",
+      "bytes": 175116,
+      "sha256": "9f7c266b967eb529cede15c8653154c6fa6dda3b9bc195c048170dc286dd9f39",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-light-bottom.png"
+    },
+    {
+      "path": "captures/mixed-supply/regular-light-top-geometry.json",
+      "bytes": 8276,
+      "sha256": "8b45ecca085df01c1a3ac0b144cd39b71c0cc4b77dc304608bf66fa7e27e4f57",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-light-top-geometry.json"
+    },
+    {
+      "path": "captures/mixed-supply/regular-light-top.png",
+      "bytes": 203607,
+      "sha256": "bdf524e3bc8e08a493e41991f7e8807470ffe17dd4cef90657530b072728d0a6",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/mixed-supply/regular-light-top.png"
+    },
+    {
+      "path": "captures/on-battery/complete.json",
+      "bytes": 64,
+      "sha256": "41ad08a2f960ff39d884e825ec4e3a0ed1d778a0aaee0e46eb0e8f406bf18fd8",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/on-battery/complete.json"
+    },
+    {
+      "path": "captures/on-battery/regular-dark-bottom-geometry.json",
+      "bytes": 8278,
+      "sha256": "2bfff3ba2e6b978ca31324bdc07f75e22c3ab76dc40a2b669b68025890924d0f",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/on-battery/regular-dark-bottom-geometry.json"
+    },
+    {
+      "path": "captures/on-battery/regular-dark-bottom.png",
+      "bytes": 200371,
+      "sha256": "d156ed4c46237eed2fa3dfe7f9d1c47d5d6117215df25aa9954de21e43a63430",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/on-battery/regular-dark-bottom.png"
+    },
+    {
+      "path": "captures/on-battery/regular-dark-top-geometry.json",
+      "bytes": 8273,
+      "sha256": "eb5c339fb5820bcf915c3e6b0b644040f8e32b80cefc2a5d4df1c9362603b306",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/on-battery/regular-dark-top-geometry.json"
+    },
+    {
+      "path": "captures/on-battery/regular-dark-top.png",
+      "bytes": 179965,
+      "sha256": "9ca688c9fb7b0dac11ba45127b7c14dcb326438049a57a7c6f90f57b66b0e395",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/on-battery/regular-dark-top.png"
+    },
+    {
+      "path": "captures/on-battery/regular-light-bottom-geometry.json",
+      "bytes": 8279,
+      "sha256": "723e1af0620cbb46cf43574cf247c5d28ad32701471b29b9fd36fe1cbc08d2e0",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/on-battery/regular-light-bottom-geometry.json"
+    },
+    {
+      "path": "captures/on-battery/regular-light-bottom.png",
+      "bytes": 217640,
+      "sha256": "df71687f35fa07c993316eafe4bb2e2ebeb6a34bf37afd39d90d280c3d11a619",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/on-battery/regular-light-bottom.png"
+    },
+    {
+      "path": "captures/on-battery/regular-light-top-geometry.json",
+      "bytes": 8274,
+      "sha256": "f05670d21b9e561b3fe1d1d7a3edc8f59d73c0bc214bc7187c4d83ae9429b368",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/on-battery/regular-light-top-geometry.json"
+    },
+    {
+      "path": "captures/on-battery/regular-light-top.png",
+      "bytes": 189989,
+      "sha256": "b49ffb58681fb80835c5dbd13a9b5c574cbde75b8f9661afb9c9764a7a35aa01",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/on-battery/regular-light-top.png"
+    },
+    {
+      "path": "evidence/final-cleanup-delayed.json",
+      "bytes": 1607,
+      "sha256": "49c1aa83db1905532767968af85180de98edd93eb648a80368aa644854a24c06",
+      "copiedFrom": ".build/history-review.noindex/final-cleanup-delayed.json"
+    },
+    {
+      "path": "evidence/final-cleanup-immediate.json",
+      "bytes": 1609,
+      "sha256": "a45f5f55eb3a7daf0d5b2e4cc1da62ab803e4915d26c573823562953f55635a2",
+      "copiedFrom": ".build/history-review.noindex/final-cleanup-immediate.json"
+    },
+    {
+      "path": "evidence/final-native-verification.json",
+      "bytes": 6114,
+      "sha256": "5b84556a533be57c193f4e2e4cc1485446daecb79e86a5d51b7a4860eeb7a220",
+      "copiedFrom": ".build/history-review.noindex/final-native-verification.json"
+    },
+    {
+      "path": "evidence/final-ownership.json",
+      "bytes": 4451,
+      "sha256": "b216dc9c4d820135bc87a6e3e260bb8a1be0d5eda57de674d90e5d5f8f800c80",
+      "copiedFrom": ".build/history-review.noindex/final-ownership.json"
+    },
+    {
+      "path": "evidence/guest-canonical-before.json",
+      "bytes": 1237,
+      "sha256": "04e0aab0b136010b70c34d2248f704940d1f6b07f6feed66897b3b8cf98bdbf1",
+      "copiedFrom": ".build/history-review.noindex/guest-canonical-before.json"
+    },
+    {
+      "path": "evidence/guest-canonical-delayed.json",
+      "bytes": 1306,
+      "sha256": "7b4df9f6ac99d66bcefc0afebfd4823b92ac7ad5466f38b244ab628d64a9f4da",
+      "copiedFrom": ".build/history-review.noindex/guest-canonical-delayed.json"
+    },
+    {
+      "path": "evidence/guest-canonical-immediate.json",
+      "bytes": 1272,
+      "sha256": "cf7c42c1cd6219c1181ff344a86786e4f13585a46bdb360b597aec5bd5644e30",
+      "copiedFrom": ".build/history-review.noindex/guest-canonical-immediate.json"
+    },
+    {
+      "path": "evidence/host-cleanup-audit.json",
+      "bytes": 275,
+      "sha256": "6820902604756072098c44017d11e9b5148c859897cd4a554dacfd2a3c7923ed",
+      "copiedFrom": ".build/history-upgrade.noindex/host-cleanup-audit.json"
+    },
+    {
+      "path": "evidence/local-install-verified.json",
+      "bytes": 398,
+      "sha256": "b95e1829e2722a2cd0e0ff2e3d34691c31e67e70830eae7bc0fb828369735257",
+      "copiedFrom": ".build/history-upgrade.noindex/local-install-verified.json"
+    },
+    {
+      "path": "evidence/motion-encoding-source.txt",
+      "bytes": 1282,
+      "sha256": "379e0ea6254c9b1b9db33ee9dc432d2f04363a4629a2aad2b3f9b65674615232",
+      "copiedFrom": ".build/history-review.noindex/encode-motion.py"
+    },
+    {
+      "path": "evidence/motion-encoding.json",
+      "bytes": 1417,
+      "sha256": "25464fae47c49772a141e86c9d9d74e1219a4208eaffbd7e6e9668b815920851",
+      "origin": "Gallery documentation or audit summary"
+    },
+    {
+      "path": "evidence/package-cleanup-immediate.json",
+      "bytes": 422,
+      "sha256": "58f673b9a2ffc9155083ba8e4054a3613fcd00d46133532c97fe886dec850b07",
+      "copiedFrom": ".build/history-review.noindex/package-cleanup-immediate.json"
+    },
+    {
+      "path": "evidence/python-tests-final.log",
+      "bytes": 106611,
+      "sha256": "04a04e9a3ebf10e01e15559513187099c4b06587cc1ba35effe050cfe4045489",
+      "copiedFrom": ".build/history-upgrade.noindex/python-tests-final.log"
+    },
+    {
+      "path": "evidence/source-and-package.json",
+      "bytes": 1937,
+      "sha256": "75500a723b79ff8c44899349c51a4e6642f38a77883d979c05d042e30ab4616f",
+      "copiedFrom": ".build/history-upgrade.noindex/source-and-package.json"
+    },
+    {
+      "path": "evidence/swift-final.log",
+      "bytes": 144034,
+      "sha256": "604d4c3f06dea88ffc6d63ae32123fd28c89f5d7500a840d7ab7ef6bd8108aad",
+      "copiedFrom": ".build/history-upgrade.noindex/swift-final.log"
+    },
+    {
+      "path": "evidence/vm-animation-stress.log",
+      "bytes": 56,
+      "sha256": "3c4cc8eb78e2d9333699aa88e0ad7a4852ec2e62ebd4b53afb7f093a0497874a",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v2/animation/run.log"
+    },
+    {
+      "path": "evidence/vm-cleanup-summary.json",
+      "bytes": 185,
+      "sha256": "0372a667415fe5b012e5f891cc2142d45412ff5edf8c06d0f049b44138ffa8ea",
+      "copiedFrom": ".build/history-review.noindex/vm-cleanup-summary.json"
+    },
+    {
+      "path": "evidence/vm-interaction.log",
+      "bytes": 72965,
+      "sha256": "316af4b5f97ee1e4e70f042bc393d691c6d5153a388c0a4b7f4e6d7b8924bec0",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v2/interaction/run.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/disabled-service-reinstall-health.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/disabled-service-reinstall-health.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/disabled-service-reinstall-installer.log",
+      "bytes": 103,
+      "sha256": "beb38972e273684fd81b1d24437dffa8a604cb0d8c164fb8497019625735c3c7",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/disabled-service-reinstall-installer.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/disabled-service-reinstall-launchd.log",
+      "bytes": 1613,
+      "sha256": "6eff45fe7abb3e7d3d8f1952705084ba69ae7d0c63cd43b2e5d693773c13493b",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/disabled-service-reinstall-launchd.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/disabled-service-reinstall-payload-app.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/disabled-service-reinstall-payload-app.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/disabled-service-reinstall-receipt.log",
+      "bytes": 98,
+      "sha256": "adcf0d0a841ab53faf9bceb679e0658586e578f186772980141706520ed44b48",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/disabled-service-reinstall-receipt.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/disabled-service-reinstall-signature.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/disabled-service-reinstall-signature.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/disabled-service-reinstall-v5.log",
+      "bytes": 12,
+      "sha256": "d595a90855bbf03b18eb299da11beb8f8b68b2004e3f9925efe0b5c91f060411",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/disabled-service-reinstall-v5.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/exit-code.txt"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/fresh-health.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/fresh-health.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/fresh-installer.log",
+      "bytes": 104,
+      "sha256": "559ff907787cd9fd9d30108ab5db1485576409834f498a8ce8af63c25eb2f62b",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/fresh-installer.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/fresh-launchd.log",
+      "bytes": 1613,
+      "sha256": "e76e4b2b4870848043bfd2ab4c638949fad0eaa83b2ad804be97f77c9bdf9176",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/fresh-launchd.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/fresh-payload-app.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/fresh-payload-app.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/fresh-receipt.log",
+      "bytes": 98,
+      "sha256": "039d18bd2ce75dc5c1a1e5ba58fa224aa4faa73ab183ff48fe0ddf9c30cb9b3e",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/fresh-receipt.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/fresh-signature.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/fresh-signature.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/fresh-v5.log",
+      "bytes": 12,
+      "sha256": "d595a90855bbf03b18eb299da11beb8f8b68b2004e3f9925efe0b5c91f060411",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/fresh-v5.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/helper-bootout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/helper-bootout.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/installed.sha256",
+      "bytes": 518,
+      "sha256": "b28c0ebfac56462ecc5719c6eb20e4bb57a4f02f4fba92463c7c6bb802aa7378",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/installed.sha256"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/receipt-forget.log",
+      "bytes": 50,
+      "sha256": "5bb7a6ef10547f12ba66a00c77e05f23b5955ec1efedcd0606677e1bfa0cce58",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/receipt-forget.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/reinstall-health.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/reinstall-health.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/reinstall-installer.log",
+      "bytes": 103,
+      "sha256": "beb38972e273684fd81b1d24437dffa8a604cb0d8c164fb8497019625735c3c7",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/reinstall-installer.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/reinstall-launchd.log",
+      "bytes": 1613,
+      "sha256": "1bec4aeae1316ac1a0b6f4b69d7a8c8d354a0dcdf7139be4d3f07eb6c6d87eeb",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/reinstall-launchd.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/reinstall-payload-app.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/reinstall-payload-app.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/reinstall-receipt.log",
+      "bytes": 98,
+      "sha256": "e1146f81f930b8bb397c015df12265c503f67d9a26c6f605f6f0d53bb7560038",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/reinstall-receipt.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/reinstall-signature.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/reinstall-signature.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/reinstall-v5.log",
+      "bytes": 12,
+      "sha256": "d595a90855bbf03b18eb299da11beb8f8b68b2004e3f9925efe0b5c91f060411",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/reinstall-v5.log"
+    },
+    {
+      "path": "evidence/vm-package-lifecycle/scratch-cleanup.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copiedFrom": ".build/history-review.noindex/packageqa-5cefb014b845/scratch-cleanup.log"
+    },
+    {
+      "path": "evidence/vm-source-freeze.json",
+      "bytes": 813,
+      "sha256": "cdb8a6566a30fcd8b7d00452fecdc22b6e435d55e2286f1c29939b1d8ceb2a37",
+      "copiedFrom": ".build/history-review.noindex/source-freeze-5cefb014b845.json"
+    },
+    {
+      "path": "evidence/vm-static-capture-provenance.txt",
+      "bytes": 285,
+      "sha256": "d1444e8edee4a21149d80ecf74c366f70f6842bdb18e23fc90bcd6de05d6b838",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/captures/capture-provenance.txt"
+    },
+    {
+      "path": "evidence/vm-static-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/qa-exit-code.txt"
+    },
+    {
+      "path": "evidence/vm-static-runner-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v6/runner-exit-code.txt"
+    },
+    {
+      "path": "evidence/vm-static-visual-review.json",
+      "bytes": 735,
+      "sha256": "290349e3dea51c1ce59363d65859a892975463143a9c26d51f54ab2c69d32117",
+      "origin": "Gallery documentation or audit summary"
+    },
+    {
+      "path": "motion/history-motion.json",
+      "bytes": 15969,
+      "sha256": "f5cf76b347d83101d42f39368c84445af13f2063ac679908878d566d2c2e59c9",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/history-motion.json"
+    },
+    {
+      "path": "motion/history-motion.mp4",
+      "bytes": 22633,
+      "sha256": "53fb18f578caf5d76ed52398d1896d164f2758cca29790350b06931d7d581eea",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/history-motion.mp4"
+    },
+    {
+      "path": "motion/motion-frames/frame-0000.png",
+      "bytes": 32160,
+      "sha256": "bc2babe6422af2d42fda255019d143439ecff97eef90b22910968c8a702d4e56",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0000.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0001.png",
+      "bytes": 32160,
+      "sha256": "bc2babe6422af2d42fda255019d143439ecff97eef90b22910968c8a702d4e56",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0001.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0002.png",
+      "bytes": 32160,
+      "sha256": "bc2babe6422af2d42fda255019d143439ecff97eef90b22910968c8a702d4e56",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0002.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0003.png",
+      "bytes": 32160,
+      "sha256": "bc2babe6422af2d42fda255019d143439ecff97eef90b22910968c8a702d4e56",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0003.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0004.png",
+      "bytes": 32160,
+      "sha256": "bc2babe6422af2d42fda255019d143439ecff97eef90b22910968c8a702d4e56",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0004.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0005.png",
+      "bytes": 32160,
+      "sha256": "bc2babe6422af2d42fda255019d143439ecff97eef90b22910968c8a702d4e56",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0005.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0006.png",
+      "bytes": 32160,
+      "sha256": "bc2babe6422af2d42fda255019d143439ecff97eef90b22910968c8a702d4e56",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0006.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0007.png",
+      "bytes": 32160,
+      "sha256": "bc2babe6422af2d42fda255019d143439ecff97eef90b22910968c8a702d4e56",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0007.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0008.png",
+      "bytes": 32160,
+      "sha256": "bc2babe6422af2d42fda255019d143439ecff97eef90b22910968c8a702d4e56",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0008.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0009.png",
+      "bytes": 32160,
+      "sha256": "bc2babe6422af2d42fda255019d143439ecff97eef90b22910968c8a702d4e56",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0009.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0010.png",
+      "bytes": 32807,
+      "sha256": "7d3140e53199c7e899516ccdddabcc58f81f4eaa837ef6fb03318fc95d808764",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0010.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0011.png",
+      "bytes": 32654,
+      "sha256": "71837bfb3108aacf4109fc1de53096a48365e4e1e510376209e481d5bdddc315",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0011.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0012.png",
+      "bytes": 32937,
+      "sha256": "4185562ce1bd02e6ad9fad8ef92db44d1aa625c9faaa886ab71c4646af4ff9e5",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0012.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0013.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0013.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0014.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0014.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0015.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0015.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0016.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0016.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0017.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0017.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0018.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0018.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0019.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0019.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0020.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0020.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0021.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0021.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0022.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0022.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0023.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0023.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0024.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0024.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0025.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0025.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0026.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0026.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0027.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0027.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0028.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0028.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0029.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0029.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0030.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0030.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0031.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0031.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0032.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0032.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0033.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0033.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0034.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0034.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0035.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0035.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0036.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0036.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0037.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0037.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0038.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0038.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0039.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0039.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0040.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0040.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0041.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0041.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0042.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0042.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0043.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0043.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0044.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0044.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0045.png",
+      "bytes": 32478,
+      "sha256": "3e0263322373cdab2dd93b688be215d0d4383a051498c06361d908f7e4a1fe74",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0045.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0046.png",
+      "bytes": 32158,
+      "sha256": "ecc64d2e01db8969347a169322d835946b4521a394fceedf0a014ac471545aa2",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0046.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0047.png",
+      "bytes": 32625,
+      "sha256": "c688a5761983ee9df9d7e8b316698795048d8910fd87b6dfa423dcc1f309eadf",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0047.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0048.png",
+      "bytes": 32460,
+      "sha256": "29032a0fb64055fff46c4c6e74469265067daf3a9bf8dd5403aea3ebe5f5b78a",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0048.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0049.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0049.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0050.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0050.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0051.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0051.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0052.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0052.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0053.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0053.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0054.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0054.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0055.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0055.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0056.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0056.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0057.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0057.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0058.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0058.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0059.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0059.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0060.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0060.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0061.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0061.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0062.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0062.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0063.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0063.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0064.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0064.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0065.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0065.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0066.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0066.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0067.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0067.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0068.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0068.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0069.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0069.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0070.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0070.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0071.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0071.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0072.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0072.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0073.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0073.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0074.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0074.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0075.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0075.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0076.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0076.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0077.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0077.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0078.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0078.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0079.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0079.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0080.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0080.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0081.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0081.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0082.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0082.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0083.png",
+      "bytes": 32593,
+      "sha256": "1572ad53af5bfd9afd9fe8d93ab0ad9f7d916e626283f407a2e96ec573e70979",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0083.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0084.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0084.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0085.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0085.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0086.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0086.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0087.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0087.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0088.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0088.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0089.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0089.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0090.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0090.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0091.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0091.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0092.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0092.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0093.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0093.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0094.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0094.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0095.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0095.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0096.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0096.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0097.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0097.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0098.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0098.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0099.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0099.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0100.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0100.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0101.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0101.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0102.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0102.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0103.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0103.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0104.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0104.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0105.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0105.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0106.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0106.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0107.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0107.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0108.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0108.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0109.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0109.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0110.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0110.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0111.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0111.png"
+    },
+    {
+      "path": "motion/motion-frames/frame-0112.png",
+      "bytes": 32456,
+      "sha256": "fb9d5652e4198ea505d2d35215f0ad7d3afb35b9af4ab24cda7777b04f1b7a65",
+      "copiedFrom": ".build/history-review.noindex/sourceqa-5cefb014b845-v5/captures/charging/motion-frames/frame-0112.png"
+    }
+  ]
+}

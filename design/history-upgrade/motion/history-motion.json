@@ -1,0 +1,613 @@
+{
+  "durationSeconds" : 6.5252394999999979,
+  "explicitCaptureTransactionFlush" : true,
+  "finalAnimationStopped" : true,
+  "fixtureScenario" : "charging",
+  "fixtureValues" : true,
+  "frameCaptureRectCG" : [
+    599.5,
+    386,
+    328,
+    112
+  ],
+  "frames" : [
+    {
+      "elapsedSeconds" : 0.019069624999929147,
+      "file" : "frame-0000.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 0.084770291666700359,
+      "file" : "frame-0001.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 0.15103204166666728,
+      "file" : "frame-0002.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 0.20002541666667639,
+      "file" : "frame-0003.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 0.2504074999999375,
+      "file" : "frame-0004.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 0.30060741666670765,
+      "file" : "frame-0005.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 0.34877466666671353,
+      "file" : "frame-0006.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 0.40002837499991983,
+      "file" : "frame-0007.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 0.45035791666668956,
+      "file" : "frame-0008.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 0.50055395833328475,
+      "file" : "frame-0009.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 0.55256549999990057,
+      "file" : "frame-0010.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 0.6207564999999704,
+      "file" : "frame-0011.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 0.688434958333346,
+      "file" : "frame-0012.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 0.75504916666659483,
+      "file" : "frame-0013.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 0.83864612499996838,
+      "file" : "frame-0014.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 0.90456670833327735,
+      "file" : "frame-0015.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 0.95335545833336255,
+      "file" : "frame-0016.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 1.0212376249999124,
+      "file" : "frame-0017.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 1.0874604166665449,
+      "file" : "frame-0018.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 1.153897541666538,
+      "file" : "frame-0019.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 1.2217500833332906,
+      "file" : "frame-0020.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.2661261666667087,
+      "file" : "frame-0021.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.3209577499999341,
+      "file" : "frame-0022.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.3867172083332662,
+      "file" : "frame-0023.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.4329974166666943,
+      "file" : "frame-0024.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.4815942916666245,
+      "file" : "frame-0025.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.5319019999999455,
+      "file" : "frame-0026.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.582586666666657,
+      "file" : "frame-0027.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.6197202083333195,
+      "file" : "frame-0028.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.6660100833332763,
+      "file" : "frame-0029.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.6999164999999721,
+      "file" : "frame-0030.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.7503309166665986,
+      "file" : "frame-0031.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.7998266249999233,
+      "file" : "frame-0032.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.8514388333333045,
+      "file" : "frame-0033.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.9067243333333863,
+      "file" : "frame-0034.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 1.9573439166665594,
+      "file" : "frame-0035.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 2.001176791666694,
+      "file" : "frame-0036.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 2.0496780833332195,
+      "file" : "frame-0037.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 2.1005969166665182,
+      "file" : "frame-0038.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 2.1501242916665433,
+      "file" : "frame-0039.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 2.2002274583333019,
+      "file" : "frame-0040.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 2.2512846666666064,
+      "file" : "frame-0041.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 2.3190489166665884,
+      "file" : "frame-0042.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 2.3871209999999792,
+      "file" : "frame-0043.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 2.4534525833332737,
+      "file" : "frame-0044.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 2.5026985416666321,
+      "file" : "frame-0045.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 2.5539344583332877,
+      "file" : "frame-0046.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 2.6174513333332925,
+      "file" : "frame-0047.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 2.6666214583333385,
+      "file" : "frame-0048.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 2.7161059583331735,
+      "file" : "frame-0049.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 2.7655496666666295,
+      "file" : "frame-0050.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 2.8153552916667195,
+      "file" : "frame-0051.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 2.8670677499999329,
+      "file" : "frame-0052.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 2.9164984999999888,
+      "file" : "frame-0053.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 2.9684462916666234,
+      "file" : "frame-0054.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.0367976666666436,
+      "file" : "frame-0055.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.1040439166665692,
+      "file" : "frame-0056.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.1441421249999166,
+      "file" : "frame-0057.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.1880095833332689,
+      "file" : "frame-0058.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.2519080416666384,
+      "file" : "frame-0059.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.2999607916665354,
+      "file" : "frame-0060.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.3443191249998563,
+      "file" : "frame-0061.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.3827231249999841,
+      "file" : "frame-0062.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.4465491666665002,
+      "file" : "frame-0063.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.4856246249999003,
+      "file" : "frame-0064.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.5423829583332918,
+      "file" : "frame-0065.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.5861107083333081,
+      "file" : "frame-0066.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.6563130833333162,
+      "file" : "frame-0067.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.717819208333367,
+      "file" : "frame-0068.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.7671471666665184,
+      "file" : "frame-0069.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.8174774583333146,
+      "file" : "frame-0070.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.8672729166667068,
+      "file" : "frame-0071.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.9182959583333741,
+      "file" : "frame-0072.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 3.9678842499999973,
+      "file" : "frame-0073.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 4.0180726666665123,
+      "file" : "frame-0074.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 4.0676417916665741,
+      "file" : "frame-0075.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 4.1182733333332635,
+      "file" : "frame-0076.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 4.1695147499999621,
+      "file" : "frame-0077.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 4.2382530833333476,
+      "file" : "frame-0078.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 4.2898925833333124,
+      "file" : "frame-0079.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 4.3563971250000577,
+      "file" : "frame-0080.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 4.4256407083332761,
+      "file" : "frame-0081.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 4.4680505833332518,
+      "file" : "frame-0082.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 4.516342375000022,
+      "file" : "frame-0083.png",
+      "historyAnimationActive" : true
+    },
+    {
+      "elapsedSeconds" : 4.5670163749998665,
+      "file" : "frame-0084.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 4.6180508749998808,
+      "file" : "frame-0085.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 4.667049541666529,
+      "file" : "frame-0086.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 4.7170798333331732,
+      "file" : "frame-0087.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 4.7680574999999408,
+      "file" : "frame-0088.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 4.8195797083333218,
+      "file" : "frame-0089.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 4.8712977916666205,
+      "file" : "frame-0090.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 4.9395848333333561,
+      "file" : "frame-0091.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 5.0229940833332876,
+      "file" : "frame-0092.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 5.1047218333333149,
+      "file" : "frame-0093.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 5.1719412083332372,
+      "file" : "frame-0094.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 5.2398215416665153,
+      "file" : "frame-0095.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 5.3065522916665486,
+      "file" : "frame-0096.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 5.3727137500000026,
+      "file" : "frame-0097.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 5.4261142916666358,
+      "file" : "frame-0098.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 5.4684037916665602,
+      "file" : "frame-0099.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 5.5186268749998817,
+      "file" : "frame-0100.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 5.567391041666724,
+      "file" : "frame-0101.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 5.9904222499999378,
+      "file" : "frame-0102.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 6.0575024166666935,
+      "file" : "frame-0103.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 6.1013576666666722,
+      "file" : "frame-0104.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 6.150869000000057,
+      "file" : "frame-0105.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 6.2003482499999336,
+      "file" : "frame-0106.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 6.2513402499998847,
+      "file" : "frame-0107.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 6.3021958750000522,
+      "file" : "frame-0108.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 6.3520823750000091,
+      "file" : "frame-0109.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 6.4015321666665841,
+      "file" : "frame-0110.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 6.4526621666666415,
+      "file" : "frame-0111.png",
+      "historyAnimationActive" : false
+    },
+    {
+      "elapsedSeconds" : 6.5012404583333137,
+      "file" : "frame-0112.png",
+      "historyAnimationActive" : false
+    }
+  ],
+  "historyFrameAppKit" : [
+    599.5,
+    270,
+    328,
+    112
+  ],
+  "motionChecksPassed" : false,
+  "sampling" : "Test samples update at two-second recording intervals; each history step represents two seconds; frame capture uses measured timestamps",
+  "schema" : 1,
+  "source" : "Actual production HistoryView inside the production popup, captured from WindowServer own-window composition",
+  "updates" : [
+    {
+      "animationActiveAfterUpdate" : true,
+      "animationActiveBeforeUpdate" : false,
+      "ceiling" : 75,
+      "elapsedSeconds" : 0.51794704166650263,
+      "rawLastSample" : 49.640000000000001
+    },
+    {
+      "animationActiveAfterUpdate" : true,
+      "animationActiveBeforeUpdate" : false,
+      "ceiling" : 75,
+      "elapsedSeconds" : 2.5195579999999609,
+      "rawLastSample" : 57.799999999999997
+    },
+    {
+      "animationActiveAfterUpdate" : false,
+      "animationActiveBeforeUpdate" : true,
+      "ceiling" : 75,
+      "elapsedSeconds" : 4.5415171249999275,
+      "rawLastSample" : 52.359999999999999
+    }
+  ]
+}

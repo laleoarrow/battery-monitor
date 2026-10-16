@@ -1,0 +1,1265 @@
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+Building for debugging...
+[0/19] /Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-integration.noindex/run.Y20nAf/build/arm64-apple-macosx/debug/WattsonPackageTests.derived/runner.swift
+[1/19] Write sources
+[1/19] Write wattson-helper-entitlement.plist
+[2/19] Write sources
+[6/19] Write Wattson-entitlement.plist
+[8/19] Write sources
+[9/19] Copying Fixtures
+[10/19] Write swift-version--58304C5D6DBC2206.txt
+[12/71] Emitting module WattsonHelperV5Support
+[13/71] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[14/75] Compiling Wattson AppDelegate.swift
+[15/75] Compiling Wattson BatteryIcon.swift
+[16/75] Compiling Wattson ClickRouter.swift
+[17/78] Compiling Wattson PopupEventLog.swift
+[18/78] Compiling Wattson PowerHistory.swift
+[19/78] Compiling Wattson PowerObservationFusion.swift
+[20/78] Compiling Wattson PopoverController.swift
+[21/78] Compiling Wattson PopoverPreview.swift
+[22/78] Compiling Wattson PopoverStyle.swift
+[23/78] Compiling Wattson PowerObservationTrace.swift
+[24/78] Compiling Wattson PowerObservationWireV5.swift
+[25/78] Compiling Wattson PowerSnapshot.swift
+[26/78] Emitting module WattsonHelper
+[27/78] Compiling WattsonHelper wattson-helper.swift
+[27/78] Write Objects.LinkFileList
+[29/78] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[30/78] Compiling Wattson BatteryRuntimeEstimate.swift
+[31/78] Compiling Wattson BatterySampler.swift
+[32/78] Compiling Wattson AppleSmartBatteryObservationReader.swift
+[33/78] Compiling Wattson SystemBatteryIcon.swift
+[34/78] Compiling Wattson UpdateChecker.swift
+[35/78] Compiling Wattson VisualEncoding.swift
+[36/78] Compiling Wattson PowerObservationFusionReplay.swift
+[37/78] Compiling Wattson PowerObservationRuntimeController.swift
+[38/78] Compiling Wattson PowerObservationShadow.swift
+[39/78] Compiling Wattson EnergyMode.swift
+[40/78] Compiling Wattson FeedbackDiagnostics.swift
+[41/78] Compiling Wattson GlassBackgroundView.swift
+[42/78] Compiling Wattson HelperClient.swift
+[43/78] Compiling Wattson RawPowerObservation.swift
+[44/78] Compiling Wattson Settings.swift
+[45/78] Compiling Wattson SettingsAppearance.swift
+[46/78] Compiling Wattson HelperClientPowerObservationV5.swift
+[47/78] Compiling Wattson HistoryChart.swift
+[48/78] Compiling Wattson LoginItemController.swift
+[49/78] Compiling Wattson PopoverPlacement.swift
+[50/78] Emitting module Wattson
+[51/78] Compiling Wattson DirectSMCObservationReader.swift
+[52/78] Compiling Wattson PowerObservationCaptureCommand.swift
+[53/78] Compiling Wattson PowerObservationCollector.swift
+[54/78] Compiling Wattson PowerObservationJSONLWriter.swift
+[55/78] Compiling Wattson GlassPopoverMaterialView.swift
+[56/78] Compiling Wattson GlassPopoverPanel.swift
+[57/78] Compiling Wattson HistoryLayer.swift
+[58/78] Compiling Wattson NativeGlassModeControl.swift
+[59/78] Compiling Wattson NativeModeSegmentedControl.swift
+[60/78] Compiling Wattson PopoverContentView.swift
+[61/78] Compiling Wattson InteractiveGlassModeControl.swift
+[62/78] Compiling Wattson LaneLayer.swift
+[63/78] Compiling Wattson ModeSliderView.swift
+[63/78] Linking wattson-helper
+[64/78] Applying wattson-helper
+[66/78] Compiling Wattson PowerFlowLayer.swift
+[67/78] Compiling Wattson RingGaugeLayer.swift
+[68/78] Compiling Wattson main.swift
+[69/78] Compiling Wattson SettingsWindowController.swift
+[70/78] Compiling Wattson StatusItemController.swift
+[71/78] Compiling Wattson FooterHoverFeedbackView.swift
+[71/78] Write Objects.LinkFileList
+[72/78] Linking Wattson
+[73/78] Applying Wattson
+[75/120] Emitting module WattsonTests
+[76/122] Compiling WattsonTests InAppLogoSettingsTests.swift
+[77/122] Compiling WattsonTests InteractiveGlassModeControlTests.swift
+[78/122] Compiling WattsonTests LiquidGlassStyleSettingsTests.swift
+[79/122] Compiling WattsonTests GlobalPopoverClickTests.swift
+[80/122] Compiling WattsonTests HistoryChartTests.swift
+[81/122] Compiling WattsonTests HistoryViewTests.swift
+[82/122] Compiling WattsonTests PowerObservationPhase2FixtureTests.swift
+[83/122] Compiling WattsonTests PowerObservationRuntimeTests.swift
+[84/122] Compiling WattsonTests PowerObservationShadowTests.swift
+[85/122] Compiling WattsonTests PowerFlowEfficiencyTests.swift
+[86/122] Compiling WattsonTests PowerHistoryFreshnessTests.swift
+[87/122] Compiling WattsonTests PowerInputFallbackTests.swift
+[88/122] Compiling WattsonTests PopoverAppearanceTests.swift
+[89/122] Compiling WattsonTests PopoverArrowSettingsTests.swift
+[90/122] Compiling WattsonTests PopoverPlacementTests.swift
+[91/122] Compiling WattsonTests GlassPopoverPanelTests.swift
+[92/122] Compiling WattsonTests GlassPopoverShapeTests.swift
+[93/122] Compiling WattsonTests GlassTransparencySettingsTests.swift
+[94/122] Compiling WattsonTests SettingsControlsRecoveryTests.swift
+[95/122] Compiling WattsonTests SettingsGlassOpticalMarginTests.swift
+[96/122] Compiling WattsonTests BatteryRuntimeEstimateTests.swift
+[97/122] Compiling WattsonTests BatteryRuntimePresentationTests.swift
+[98/122] Compiling WattsonTests ColorSchemeSettingsTests.swift
+[99/122] Compiling WattsonTests PowerObservationWireV5Tests.swift
+[100/122] Compiling WattsonTests PowerPresentationStateTests.swift
+[101/122] Compiling WattsonHelperV5SupportTests PowerObservationV5SupportTests.swift
+[102/122] Emitting module WattsonHelperV5SupportTests
+[103/122] Compiling WattsonTests StatusClickDismissalTests.swift
+[104/122] Compiling WattsonTests TestDefaultsCleanup.swift
+[105/122] Compiling WattsonTests FooterHoverFeedbackViewTests.swift
+[106/122] Compiling WattsonTests FooterHoverIntegrationTests.swift
+[107/122] Compiling WattsonTests GlassPopoverBackgroundTests.swift
+[108/122] Compiling WattsonTests RawPowerObservationTests.swift
+[109/122] Compiling WattsonTests SamplingEfficiencyTests.swift
+[110/122] Compiling WattsonTests DockIconSettingsTests.swift
+[111/122] Compiling WattsonTests FeedbackDiagnosticsTests.swift
+[112/122] Compiling WattsonTests FlowNodeIconTests.swift
+[113/122] Compiling WattsonTests ModeSliderAppearanceTests.swift
+[114/122] Compiling WattsonTests NativeGlassModeControlTests.swift
+[115/122] Compiling WattsonTests NativeModeSegmentedControlTests.swift
+[116/122] Compiling WattsonTests PowerObservationCaptureTests.swift
+[117/122] Compiling WattsonTests PowerObservationFusionFoundationTests.swift
+[118/122] Compiling WattsonTests PowerObservationFusionReplayTests.swift
+[119/122] Compiling WattsonTests WattsonTests.swift
+[120/122] Compiling WattsonTests resource_bundle_accessor.swift
+[121/124] Emitting module WattsonPackageTests
+[122/124] Compiling WattsonPackageTests runner.swift
+[122/124] Write Objects.LinkFileList
+[123/124] Linking WattsonPackageTests
+Build complete! (19.82s)
+Test Suite 'All tests' started at 2026-10-16 22:13:56.928.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-16 22:13:56.929.
+Test Suite 'BatteryRuntimeEstimateTests' started at 2026-10-16 22:13:56.929.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testApplyingReadsOnceAndReplacesEachPreviousDirection]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testApplyingReadsOnceAndReplacesEachPreviousDirection]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testExternalPowerUsesChargedFlagInsteadOfPercentOrStaleMinutes]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testExternalPowerUsesChargedFlagInsteadOfPercentOrStaleMinutes]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testInvalidInjectedMinutesClearNumberWithoutLosingKnownDirection]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testInvalidInjectedMinutesClearNumberWithoutLosingKnownDirection]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testLowBatteryAndLowPowerDoNotInventAnEstimateMultiplier]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testLowBatteryAndLowPowerDoNotInventAnEstimateMultiplier]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testMixedSupplyNeverShowsAChargeETAOrFullState]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testMixedSupplyNeverShowsAChargeETAOrFullState]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testNearFullChargingBelowPowerEpsilonRetainsIOPSEstimate]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testNearFullChargingBelowPowerEpsilonRetainsIOPSEstimate]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testPurePropertiesSamplingDoesNotPopulateAnExternalEstimate]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testPurePropertiesSamplingDoesNotPopulateAnExternalEstimate]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testRejectsContradictoryChargingStates]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testRejectsContradictoryChargingStates]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testRequiresPresentInternalBatteryAndKnownPowerDirection]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testRequiresPresentInternalBatteryAndKnownPowerDirection]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testReverseDirectionRaceClearsPreviousEstimate]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testReverseDirectionRaceClearsPreviousEstimate]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testRuntimeReaderReadsOncePerValidSampleIncludingExternalPower]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testRuntimeReaderReadsOncePerValidSampleIncludingExternalPower]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testRuntimeReaderSkipsEstimateWhenBatterySnapshotIsUnavailable]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testRuntimeReaderSkipsEstimateWhenBatterySnapshotIsUnavailable]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testSelectsInternalBatteryInsteadOfUPS]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testSelectsInternalBatteryInsteadOfUPS]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testUnknownFreshStateClearsAnyPreviousEstimate]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testUnknownFreshStateClearsAnyPreviousEstimate]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testUnknownNegativeMissingAndMalformedMinutesPreserveKnownDirection]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testUnknownNegativeMissingAndMalformedMinutesPreserveKnownDirection]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testUsesOnlyTheEstimateForTheCurrentDirection]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testUsesOnlyTheEstimateForTheCurrentDirection]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testZeroAndLargestSupportedMinutesAreValidInEitherDirection]' started.
+Test Case '-[WattsonTests.BatteryRuntimeEstimateTests testZeroAndLargestSupportedMinutesAreValidInEitherDirection]' passed (0.000 seconds).
+Test Suite 'BatteryRuntimeEstimateTests' passed at 2026-10-16 22:13:56.933.
+	 Executed 17 tests, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'BatteryRuntimePresentationTests' started at 2026-10-16 22:13:56.933.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testBatteryTimeRejectsEstimatesFromTheOppositePowerSource]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testBatteryTimeRejectsEstimatesFromTheOppositePowerSource]' passed (0.088 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testBatteryTimeSwitchesDirectionAndAccessibleLabelWithoutRebuildingTheView]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testBatteryTimeSwitchesDirectionAndAccessibleLabelWithoutRebuildingTheView]' passed (0.002 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testFallbackRuntimeShowsApproximationAndExplainsItsSource]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testFallbackRuntimeShowsApproximationAndExplainsItsSource]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testHiddenRuntimeSkipsRenderingAndShowsNewestCachedDirectionAndState]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testHiddenRuntimeSkipsRenderingAndShowsNewestCachedDirectionAndState]' passed (0.053 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testLowBatteryAndLowPowerKeepTheMacOSEstimate]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testLowBatteryAndLowPowerKeepTheMacOSEstimate]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testMissingDataUnknownEstimatesAndDegradationNeverReuseOldNumbers]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testMissingDataUnknownEstimatesAndDegradationNeverReuseOldNumbers]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testMixedSupplyNeverShowsATimeToFull]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testMixedSupplyNeverShowsATimeToFull]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeMenuChoiceRemovesExactlyItsOwnHeightAndPersists]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeMenuChoiceRemovesExactlyItsOwnHeightAndPersists]' passed (0.031 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionAccessibilityChangesRefreshNeutralWellAndSeparatorInTheExistingContent]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionAccessibilityChangesRefreshNeutralWellAndSeparatorInTheExistingContent]' passed (0.101 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionFollowsLightDarkChangesWithoutChangingItsReadingOrGeometry]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionFollowsLightDarkChangesWithoutChangingItsReadingOrGeometry]' passed (0.002 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionKeepsTheClockBesideItsCaptionAndProminentTime]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionKeepsTheClockBesideItsCaptionAndProminentTime]' passed (0.002 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeUsesHoursAndMinutesWithoutLosingOtherHeaderReadings]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeUsesHoursAndMinutesWithoutLosingOtherHeaderReadings]' passed (0.002 seconds).
+Test Suite 'BatteryRuntimePresentationTests' passed at 2026-10-16 22:13:57.217.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.284 (0.285) seconds
+Test Suite 'BatteryTimeFallbackTests' started at 2026-10-16 22:13:57.217.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testDirectionChangeClockRollbackGapAndResetRequireNewSettlingWindow]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testDirectionChangeClockRollbackGapAndResetRequireNewSettlingWindow]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testGaugeRejectsExplicitOppositeOrMalformedCurrentButAcceptsMissingCurrent]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testGaugeRejectsExplicitOppositeOrMalformedCurrentButAcceptsMissingCurrent]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testGaugeRequiresSixtySecondsAndKeepsDirectionAndZero]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testGaugeRequiresSixtySecondsAndKeepsDirectionAndZero]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testInvalidCurrentDiscardsFormulaHistoryButNotBoundedWaiting]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testInvalidCurrentDiscardsFormulaHistoryButNotBoundedWaiting]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testInvalidOrContradictoryCurrentCannotEnterFormulaAndWaitIsBounded]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testInvalidOrContradictoryCurrentCannotEnterFormulaAndWaitIsBounded]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testLowPowerDoesNotMultiplyTheEstimateAndShortValuesUseMinuteResolution]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testLowPowerDoesNotMultiplyTheEstimateAndShortValuesUseMinuteResolution]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testMalformedOrSentinelGaugeTimesEndWaitingWithoutInventingChargeFormula]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testMalformedOrSentinelGaugeTimesEndWaitingWithoutInventingChargeFormula]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testMissingDataCanRecoverWithoutRestartingDirectionWait]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testMissingDataCanRecoverWithoutRestartingDirectionWait]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testObservedDischargeUsesRawMahAndSmoothedNegativeMa]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testObservedDischargeUsesRawMahAndSmoothedNegativeMa]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testOppositeIOPSDirectionCannotBeCombinedWithRawFallback]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testOppositeIOPSDirectionCannotBeCombinedWithRawFallback]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testPercentageCapacityAndInvalidRawPairsCannotEnterFormula]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testPercentageCapacityAndInvalidRawPairsCannotEnterFormula]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testReaderRetainsHistoryWithoutTelemetryAndNormalFreshnessResetButClearsOnFailureOrWake]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testReaderRetainsHistoryWithoutTelemetryAndNormalFreshnessResetButClearsOnFailureOrWake]' passed (0.003 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testRegistryStateCanRecoverFullOrPausedButDoesNotUseRoundedPercent]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testRegistryStateCanRecoverFullOrPausedButDoesNotUseRoundedPercent]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testSingleCurrentSpikeDoesNotHalveRemainingTime]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testSingleCurrentSpikeDoesNotHalveRemainingTime]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testSystemIsImmediateAndWinsOverBothFallbacks]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testSystemIsImmediateAndWinsOverBothFallbacks]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testUnknownOrInconsistentRegistryStateIsImmediatelyUnavailable]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testUnknownOrInconsistentRegistryStateIsImmediatelyUnavailable]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testUnsignedTwosComplementAndMissingAverageCurrentAreSupported]' started.
+Test Case '-[WattsonTests.BatteryTimeFallbackTests testUnsignedTwosComplementAndMissingAverageCurrentAreSupported]' passed (0.000 seconds).
+Test Suite 'BatteryTimeFallbackTests' passed at 2026-10-16 22:13:57.228.
+	 Executed 17 tests, with 0 failures (0 unexpected) in 0.010 (0.010) seconds
+Test Suite 'ColorSchemeSettingsTests' started at 2026-10-16 22:13:57.228.
+Test Case '-[WattsonTests.ColorSchemeSettingsTests testClosedPopoverRestoresAndChangesThemeWithoutOpeningOrRendering]' started.
+Test Case '-[WattsonTests.ColorSchemeSettingsTests testClosedPopoverRestoresAndChangesThemeWithoutOpeningOrRendering]' passed (0.041 seconds).
+Test Case '-[WattsonTests.ColorSchemeSettingsTests testMissingAndUnknownChoicesFollowSystemWithoutWritingDefaults]' started.
+Test Case '-[WattsonTests.ColorSchemeSettingsTests testMissingAndUnknownChoicesFollowSystemWithoutWritingDefaults]' passed (0.011 seconds).
+Test Case '-[WattsonTests.ColorSchemeSettingsTests testPersistsBeforeNotifyingAndRemainsIndependentOfGlassAndIcons]' started.
+Test Case '-[WattsonTests.ColorSchemeSettingsTests testPersistsBeforeNotifyingAndRemainsIndependentOfGlassAndIcons]' passed (0.015 seconds).
+Test Suite 'ColorSchemeSettingsTests' passed at 2026-10-16 22:13:57.295.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.067 (0.067) seconds
+Test Suite 'DockIconSettingsTests' started at 2026-10-16 22:13:57.295.
+Test Case '-[WattsonTests.DockIconSettingsTests testExistingLogoAndMenuBarPreferencesDoNotEnableDock]' started.
+Test Case '-[WattsonTests.DockIconSettingsTests testExistingLogoAndMenuBarPreferencesDoNotEnableDock]' passed (0.028 seconds).
+Test Case '-[WattsonTests.DockIconSettingsTests testHiddenDefaultAndInvalidValuesDoNotWritePreferences]' started.
+Test Case '-[WattsonTests.DockIconSettingsTests testHiddenDefaultAndInvalidValuesDoNotWritePreferences]' passed (0.011 seconds).
+Test Case '-[WattsonTests.DockIconSettingsTests testOneTypedNotificationAfterSaveAndNoneForSameChoice]' started.
+Test Case '-[WattsonTests.DockIconSettingsTests testOneTypedNotificationAfterSaveAndNoneForSameChoice]' passed (0.010 seconds).
+Test Case '-[WattsonTests.DockIconSettingsTests testOnlyVisibleChoicesSelectBundledStaticArtwork]' started.
+Test Case '-[WattsonTests.DockIconSettingsTests testOnlyVisibleChoicesSelectBundledStaticArtwork]' passed (0.008 seconds).
+Test Case '-[WattsonTests.DockIconSettingsTests testSavedStyleSurvivesNewDefaultsInstanceIncludingReturnToHidden]' started.
+Test Case '-[WattsonTests.DockIconSettingsTests testSavedStyleSurvivesNewDefaultsInstanceIncludingReturnToHidden]' passed (0.011 seconds).
+Test Suite 'DockIconSettingsTests' passed at 2026-10-16 22:13:57.362.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.067 (0.067) seconds
+Test Suite 'FeedbackDiagnosticsTests' started at 2026-10-16 22:13:57.362.
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testBatteryAllowlistExcludesIdentityAndRejectsNonNumericValues]' started.
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testBatteryAllowlistExcludesIdentityAndRejectsNonNumericValues]' passed (0.000 seconds).
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testBatteryIconDiagnosticsDistinguishDisplayedPendingAndProbeFailure]' started.
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testBatteryIconDiagnosticsDistinguishDisplayedPendingAndProbeFailure]' passed (0.000 seconds).
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testBatteryTimeDiagnosticsDistinguishDirectionAndUnknownValues]' started.
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testBatteryTimeDiagnosticsDistinguishDirectionAndUnknownValues]' passed (0.001 seconds).
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testBatteryTimeDiagnosticsIncludeEstimateProvenance]' started.
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testBatteryTimeDiagnosticsIncludeEstimateProvenance]' passed (0.000 seconds).
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testIssueDraftEncodesEnvironmentAndAsksForReviewedAttachment]' started.
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testIssueDraftEncodesEnvironmentAndAsksForReviewedAttachment]' passed (0.000 seconds).
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testReportKeepsDisplayedReadingSeparateFromFreshBatteryInputs]' started.
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testReportKeepsDisplayedReadingSeparateFromFreshBatteryInputs]' passed (0.000 seconds).
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testStaleDisplayedReadingIsClearlyMarked]' started.
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testStaleDisplayedReadingIsClearlyMarked]' passed (0.000 seconds).
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testUnavailableBatteryDoesNotInventZeroReadings]' started.
+Test Case '-[WattsonTests.FeedbackDiagnosticsTests testUnavailableBatteryDoesNotInventZeroReadings]' passed (0.000 seconds).
+Test Suite 'FeedbackDiagnosticsTests' passed at 2026-10-16 22:13:57.365.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'FlowNodeIconTests' started at 2026-10-16 22:13:57.365.
+Test Case '-[WattsonTests.FlowNodeIconTests testAllPowerNodeGlyphsShareOneOpticalScale]' started.
+Test Case '-[WattsonTests.FlowNodeIconTests testAllPowerNodeGlyphsShareOneOpticalScale]' passed (0.054 seconds).
+Test Suite 'FlowNodeIconTests' passed at 2026-10-16 22:13:57.419.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.054 (0.054) seconds
+Test Suite 'FooterHoverFeedbackViewTests' started at 2026-10-16 22:13:57.419.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testAccessibilitySettingsRemoveAnimationAndBlurWithoutAddingColor]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testAccessibilitySettingsRemoveAnimationAndBlurWithoutAddingColor]' passed (0.030 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testAccessibilityUsesStaticFeedbackAtEveryPointerPosition]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testAccessibilityUsesStaticFeedbackAtEveryPointerPosition]' passed (0.015 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testCancellationRemovesReflectionInterpolationAsWellAsHoverFade]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testCancellationRemovesReflectionInterpolationAsWellAsHoverFade]' passed (0.013 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testCurrentPointerWinsOverOutOfOrderEnterAndExitEvents]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testCurrentPointerWinsOverOutOfOrderEnterAndExitEvents]' passed (0.003 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testHiddenDetachedInactiveAndThemeChangesClearImmediately]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testHiddenDetachedInactiveAndThemeChangesClearImmediately]' passed (0.003 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testInactivePresentationOrOrderedOutWindowRejectsLateTrackingCallbacks]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testInactivePresentationOrOrderedOutWindowRejectsLateTrackingCallbacks]' passed (0.002 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testNonKeyClassicPresentationCanHoverWithoutAcquiringFocus]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testNonKeyClassicPresentationCanHoverWithoutAcquiringFocus]' passed (0.010 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testObserverLifecycleDoesNotRetainDetachedOverlay]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testObserverLifecycleDoesNotRetainDetachedOverlay]' passed (0.003 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOnlyEnabledRoundedRegionsReceiveFeedback]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOnlyEnabledRoundedRegionsReceiveFeedback]' passed (0.002 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOrdinaryRefreshKeepsTrackingAndHoverButGeometryChangesClearIt]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOrdinaryRefreshKeepsTrackingAndHoverButGeometryChangesClearIt]' passed (0.010 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOverlayLeavesClickKeyboardAndAccessibilityWithOriginalControl]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOverlayLeavesClickKeyboardAndAccessibilityWithOriginalControl]' passed (0.004 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testReflectionCenterStaysInsideTheButtonAndDoesNotSweepAcrossButtons]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testReflectionCenterStaysInsideTheButtonAndDoesNotSweepAcrossButtons]' passed (0.003 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testReflectionFollowsPointerWithinSameButtonWithoutChangingItsControl]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testReflectionFollowsPointerWithinSameButtonWithoutChangingItsControl]' passed (0.013 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testTrackingDoesNotLightClippedAwayButtons]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testTrackingDoesNotLightClippedAwayButtons]' passed (0.002 seconds).
+Test Suite 'FooterHoverFeedbackViewTests' passed at 2026-10-16 22:13:57.533.
+	 Executed 14 tests, with 0 failures (0 unexpected) in 0.113 (0.114) seconds
+Test Suite 'FooterHoverIntegrationTests' started at 2026-10-16 22:13:57.533.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testAllPresentationsTrackOnlyTheirVisibleModeButtonsAndMenu]' started.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testAllPresentationsTrackOnlyTheirVisibleModeButtonsAndMenu]' passed (0.074 seconds).
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testClassicPendingRequestKeepsFeedbackForModesThatCanSupersedeIt]' started.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testClassicPendingRequestKeepsFeedbackForModesThatCanSupersedeIt]' passed (0.018 seconds).
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testMissingHelperLeavesOnlyMenuHoverAvailable]' started.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testMissingHelperLeavesOnlyMenuHoverAvailable]' passed (0.019 seconds).
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testPendingModeRequestRemovesFeedbackUntilOwnerConfirms]' started.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testPendingModeRequestRemovesFeedbackUntilOwnerConfirms]' passed (0.023 seconds).
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testResizingAndSwitchingPresentationRebuildsMatchingRegions]' started.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testResizingAndSwitchingPresentationRebuildsMatchingRegions]' passed (0.032 seconds).
+Test Suite 'FooterHoverIntegrationTests' passed at 2026-10-16 22:13:57.699.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.166 (0.166) seconds
+Test Suite 'GlassPopoverBackgroundTests' started at 2026-10-16 22:13:57.699.
+Test Case '-[WattsonTests.GlassPopoverBackgroundTests testPopupInputFloorPreservesOpacityThemesAndForegroundWithoutChangingDefaultBacking]' started.
+Test Case '-[WattsonTests.GlassPopoverBackgroundTests testPopupInputFloorPreservesOpacityThemesAndForegroundWithoutChangingDefaultBacking]' passed (0.042 seconds).
+Test Case '-[WattsonTests.GlassPopoverBackgroundTests testReducedTransparencyUsesOneContinuousArrowAndBodyBackingInBothStyles]' started.
+Test Case '-[WattsonTests.GlassPopoverBackgroundTests testReducedTransparencyUsesOneContinuousArrowAndBodyBackingInBothStyles]' passed (0.089 seconds).
+Test Case '-[WattsonTests.GlassPopoverBackgroundTests testReparentingRefreshesFallbackWithUnchangedAppearanceAndGlassPreference]' started.
+Test Case '-[WattsonTests.GlassPopoverBackgroundTests testReparentingRefreshesFallbackWithUnchangedAppearanceAndGlassPreference]' passed (0.109 seconds).
+Test Suite 'GlassPopoverBackgroundTests' passed at 2026-10-16 22:13:57.939.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.239 (0.240) seconds
+Test Suite 'GlassPopoverPanelTests' started at 2026-10-16 22:13:57.939.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testArrowRetainsItsScreenAnchorAcrossResizeAndClampsAtBothCorners]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testArrowRetainsItsScreenAnchorAcrossResizeAndClampsAtBothCorners]' passed (0.012 seconds).
+Test Case '-[WattsonTests.GlassPopoverPanelTests testBothGlassMaterialsInheritAppLightDarkAppearance]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testBothGlassMaterialsInheritAppLightDarkAppearance]' passed (0.013 seconds).
+Test Case '-[WattsonTests.GlassPopoverPanelTests testDetachingForegroundPreservesSharedContentLayerAndRemovesWrapper]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testDetachingForegroundPreservesSharedContentLayerAndRemovesWrapper]' passed (0.001 seconds).
+Test Case '-[WattsonTests.GlassPopoverPanelTests testEscapeAndDirectCloseRelayDismissalWithoutRetainingOwner]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testEscapeAndDirectCloseRelayDismissalWithoutRetainingOwner]' passed (0.001 seconds).
+Test Case '-[WattsonTests.GlassPopoverPanelTests testEscapeRoutingLeavesUnrelatedOwnAppWindowUntouched]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testEscapeRoutingLeavesUnrelatedOwnAppWindowUntouched]' passed (0.014 seconds).
+Test Case '-[WattsonTests.GlassPopoverPanelTests testForegroundRasterClipsOversizedChildrenAtBodyEdgesAndRoundedCorners]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testForegroundRasterClipsOversizedChildrenAtBodyEdgesAndRoundedCorners]' passed (0.016 seconds).
+Test Case '-[WattsonTests.GlassPopoverPanelTests testHalfPointAnchorDoesNotExpandInitialContentOrChangeWidthOnRefresh]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testHalfPointAnchorDoesNotExpandInitialContentOrChangeWidthOnRefresh]' passed (0.003 seconds).
+Test Case '-[WattsonTests.GlassPopoverPanelTests testOptionalArrowUpdatesBackingAndBodyWithoutReplacingContent]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testOptionalArrowUpdatesBackingAndBodyWithoutReplacingContent]' passed (0.014 seconds).
+Test Case '-[WattsonTests.GlassPopoverPanelTests testPanelCanReceiveKeyboardWithoutActivatingOrBecomingMain]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testPanelCanReceiveKeyboardWithoutActivatingOrBecomingMain]' passed (0.002 seconds).
+Test Case '-[WattsonTests.GlassPopoverPanelTests testPanelKeepsOneContinuousMaterialAboveTheNonInteractiveBacking]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testPanelKeepsOneContinuousMaterialAboveTheNonInteractiveBacking]' passed (0.011 seconds).
+Test Case '-[WattsonTests.GlassPopoverPanelTests testPanelResizeMaintainsOpticalMarginAndContentSize]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testPanelResizeMaintainsOpticalMarginAndContentSize]' passed (0.007 seconds).
+Test Case '-[WattsonTests.GlassPopoverPanelTests testRetiredClassicCallbackCannotAffectReplacementHost]' started.
+Test Case '-[WattsonTests.GlassPopoverPanelTests testRetiredClassicCallbackCannotAffectReplacementHost]' passed (0.018 seconds).
+Test Suite 'GlassPopoverPanelTests' passed at 2026-10-16 22:13:58.053.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.114 (0.114) seconds
+Test Suite 'GlassPopoverShapeTests' started at 2026-10-16 22:13:58.053.
+Test Case '-[WattsonTests.GlassPopoverShapeTests testAppKitPathFlipsTheSameOutlineIncludingNonzeroBoundsOrigin]' started.
+Test Case '-[WattsonTests.GlassPopoverShapeTests testAppKitPathFlipsTheSameOutlineIncludingNonzeroBoundsOrigin]' passed (0.000 seconds).
+Test Case '-[WattsonTests.GlassPopoverShapeTests testArrowClampsBeforeRoundedCornersAndKeepsAContinuousFilledJoin]' started.
+Test Case '-[WattsonTests.GlassPopoverShapeTests testArrowClampsBeforeRoundedCornersAndKeepsAContinuousFilledJoin]' passed (0.000 seconds).
+Test Case '-[WattsonTests.GlassPopoverShapeTests testOutlineContainsTheArrowAndBodyWithoutFillingItsTopCorners]' started.
+Test Case '-[WattsonTests.GlassPopoverShapeTests testOutlineContainsTheArrowAndBodyWithoutFillingItsTopCorners]' passed (0.000 seconds).
+Test Suite 'GlassPopoverShapeTests' passed at 2026-10-16 22:13:58.054.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'GlassTransparencySettingsTests' started at 2026-10-16 22:13:58.054.
+Test Case '-[WattsonTests.GlassTransparencySettingsTests testChangeNotifiesAfterPersistenceWithoutRequestingHostReplacement]' started.
+Test Case '-[WattsonTests.GlassTransparencySettingsTests testChangeNotifiesAfterPersistenceWithoutRequestingHostReplacement]' passed (0.015 seconds).
+Test Case '-[WattsonTests.GlassTransparencySettingsTests testChoicePersistsIndependentlyOfThemeMaterialAndGlassToggle]' started.
+Test Case '-[WattsonTests.GlassTransparencySettingsTests testChoicePersistsIndependentlyOfThemeMaterialAndGlassToggle]' passed (0.011 seconds).
+Test Case '-[WattsonTests.GlassTransparencySettingsTests testDefaultPreservesNativeGlassAndInvalidValuesCannotEscapeRange]' started.
+Test Case '-[WattsonTests.GlassTransparencySettingsTests testDefaultPreservesNativeGlassAndInvalidValuesCannotEscapeRange]' passed (0.012 seconds).
+Test Suite 'GlassTransparencySettingsTests' passed at 2026-10-16 22:13:58.092.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.038 (0.038) seconds
+Test Suite 'GlobalPopoverClickTests' started at 2026-10-16 22:13:58.092.
+Test Case '-[WattsonTests.GlobalPopoverClickTests testAnchorAndRightClickRoutingRetainExistingToggleOwnership]' started.
+Test Case '-[WattsonTests.GlobalPopoverClickTests testAnchorAndRightClickRoutingRetainExistingToggleOwnership]' passed (0.004 seconds).
+Test Case '-[WattsonTests.GlobalPopoverClickTests testClosedOrReplacedContentDoesNotRetainPreviousWindowExemption]' started.
+Test Case '-[WattsonTests.GlobalPopoverClickTests testClosedOrReplacedContentDoesNotRetainPreviousWindowExemption]' passed (0.002 seconds).
+Test Case '-[WattsonTests.GlobalPopoverClickTests testContentWindowIdentityDoesNotRequireAnEventWindowNumber]' started.
+Test Case '-[WattsonTests.GlobalPopoverClickTests testContentWindowIdentityDoesNotRequireAnEventWindowNumber]' passed (0.001 seconds).
+Test Case '-[WattsonTests.GlobalPopoverClickTests testForeignWindowAtSameCoordinatesAndUnknownWindowStillDismiss]' started.
+Test Case '-[WattsonTests.GlobalPopoverClickTests testForeignWindowAtSameCoordinatesAndUnknownWindowStillDismiss]' passed (0.001 seconds).
+Test Case '-[WattsonTests.GlobalPopoverClickTests testGlobalEventWithoutWindowObjectUsesPositiveContentWindowNumber]' started.
+Test Case '-[WattsonTests.GlobalPopoverClickTests testGlobalEventWithoutWindowObjectUsesPositiveContentWindowNumber]' passed (0.001 seconds).
+Test Case '-[WattsonTests.GlobalPopoverClickTests testRelayedPopupMouseDownStaysWithItsNativeContentWindow]' started.
+Test Case '-[WattsonTests.GlobalPopoverClickTests testRelayedPopupMouseDownStaysWithItsNativeContentWindow]' passed (0.009 seconds).
+Test Suite 'GlobalPopoverClickTests' passed at 2026-10-16 22:13:58.110.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.018 (0.019) seconds
+Test Suite 'HistoryChartTests' started at 2026-10-16 22:13:58.110.
+Test Case '-[WattsonTests.HistoryChartTests testCurvePassesThroughEverySample]' started.
+Test Case '-[WattsonTests.HistoryChartTests testCurvePassesThroughEverySample]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testDepartingPointCanBeClippedDrawingContextOnly]' started.
+Test Case '-[WattsonTests.HistoryChartTests testDepartingPointCanBeClippedDrawingContextOnly]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testGapDoesNotBecomeASmoothInventedReading]' started.
+Test Case '-[WattsonTests.HistoryChartTests testGapDoesNotBecomeASmoothInventedReading]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testHistoryKeepsCadenceReferenceUntilSamplingGap]' started.
+Test Case '-[WattsonTests.HistoryChartTests testHistoryKeepsCadenceReferenceUntilSamplingGap]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testHistoryTimingCacheRingAndExpiry]' started.
+Test Case '-[WattsonTests.HistoryChartTests testHistoryTimingCacheRingAndExpiry]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testInternalTangentsMatchForUnequalTimeSteps]' started.
+Test Case '-[WattsonTests.HistoryChartTests testInternalTangentsMatchForUnequalTimeSteps]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testInvalidTimingFailsClosed]' started.
+Test Case '-[WattsonTests.HistoryChartTests testInvalidTimingFailsClosed]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testIrregularSamplingPreservesTimeSpacing]' started.
+Test Case '-[WattsonTests.HistoryChartTests testIrregularSamplingPreservesTimeSpacing]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testNonFiniteSampleBreaksTheLine]' started.
+Test Case '-[WattsonTests.HistoryChartTests testNonFiniteSampleBreaksTheLine]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testNoOvershootAcrossDeterministicStressSequences]' started.
+Test Case '-[WattsonTests.HistoryChartTests testNoOvershootAcrossDeterministicStressSequences]' passed (0.112 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testPausedSamplingMovesCachedHistoryToItsActualAge]' started.
+Test Case '-[WattsonTests.HistoryChartTests testPausedSamplingMovesCachedHistoryToItsActualAge]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testPeakAndTroughHaveHorizontalTangents]' started.
+Test Case '-[WattsonTests.HistoryChartTests testPeakAndTroughHaveHorizontalTangents]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testPlateauStaysFlat]' started.
+Test Case '-[WattsonTests.HistoryChartTests testPlateauStaysFlat]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testScaleExpansionAndReset]' started.
+Test Case '-[WattsonTests.HistoryChartTests testScaleExpansionAndReset]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testScaleHoldsSmallChangesAndOnlyShrinksAfterDelay]' started.
+Test Case '-[WattsonTests.HistoryChartTests testScaleHoldsSmallChangesAndOnlyShrinksAfterDelay]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testScaleRecoveryCancelsPendingShrink]' started.
+Test Case '-[WattsonTests.HistoryChartTests testScaleRecoveryCancelsPendingShrink]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testScrollRejectsMoreDeparturesThanRendererCanPreserve]' started.
+Test Case '-[WattsonTests.HistoryChartTests testScrollRejectsMoreDeparturesThanRendererCanPreserve]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testScrollRequiresMatchingRetainedSamples]' started.
+Test Case '-[WattsonTests.HistoryChartTests testScrollRequiresMatchingRetainedSamples]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testScrollRequiresPreviousEndpointAtTheRightEdge]' started.
+Test Case '-[WattsonTests.HistoryChartTests testScrollRequiresPreviousEndpointAtTheRightEdge]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testShortHistoryUsesItsRealDuration]' started.
+Test Case '-[WattsonTests.HistoryChartTests testShortHistoryUsesItsRealDuration]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryChartTests testSingleSampleDoesNotInventAHistory]' started.
+Test Case '-[WattsonTests.HistoryChartTests testSingleSampleDoesNotInventAHistory]' passed (0.000 seconds).
+Test Suite 'HistoryChartTests' passed at 2026-10-16 22:13:58.226.
+	 Executed 21 tests, with 0 failures (0 unexpected) in 0.114 (0.115) seconds
+Test Suite 'HistoryViewTests' started at 2026-10-16 22:13:58.226.
+Test Case '-[WattsonTests.HistoryViewTests testDetachedOrInactiveViewNeverStartsMotion]' started.
+Test Case '-[WattsonTests.HistoryViewTests testDetachedOrInactiveViewNeverStartsMotion]' passed (0.001 seconds).
+Test Case '-[WattsonTests.HistoryViewTests testEmptyAndMalformedDataClearTheCurve]' started.
+Test Case '-[WattsonTests.HistoryViewTests testEmptyAndMalformedDataClearTheCurve]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryViewTests testNativePathUsesCurvesAndPreservesEndpoints]' started.
+Test Case '-[WattsonTests.HistoryViewTests testNativePathUsesCurvesAndPreservesEndpoints]' passed (0.000 seconds).
+Test Case '-[WattsonTests.HistoryViewTests testUnchangedPresentationDoesNotRenderAgain]' started.
+Test Case '-[WattsonTests.HistoryViewTests testUnchangedPresentationDoesNotRenderAgain]' passed (0.001 seconds).
+Test Suite 'HistoryViewTests' passed at 2026-10-16 22:13:58.228.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'InAppLogoSettingsTests' started at 2026-10-16 22:13:58.228.
+Test Case '-[WattsonTests.InAppLogoSettingsTests testColorDefaultAndInvalidValuesDoNotWritePreferences]' started.
+Test Case '-[WattsonTests.InAppLogoSettingsTests testColorDefaultAndInvalidValuesDoNotWritePreferences]' passed (0.012 seconds).
+Test Case '-[WattsonTests.InAppLogoSettingsTests testExternalPreferenceReadDoesNotChangeOtherSettings]' started.
+Test Case '-[WattsonTests.InAppLogoSettingsTests testExternalPreferenceReadDoesNotChangeOtherSettings]' passed (0.011 seconds).
+Test Case '-[WattsonTests.InAppLogoSettingsTests testLogoPersistsIndependentlyOfMaterialsAndMenuBarChoice]' started.
+Test Case '-[WattsonTests.InAppLogoSettingsTests testLogoPersistsIndependentlyOfMaterialsAndMenuBarChoice]' passed (0.012 seconds).
+Test Case '-[WattsonTests.InAppLogoSettingsTests testOneTypedNotificationAfterPersistenceAndNoOpForSameChoice]' started.
+Test Case '-[WattsonTests.InAppLogoSettingsTests testOneTypedNotificationAfterPersistenceAndNoOpForSameChoice]' passed (0.010 seconds).
+Test Suite 'InAppLogoSettingsTests' passed at 2026-10-16 22:13:58.273.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.044 (0.045) seconds
+Test Suite 'InteractiveGlassModeControlTests' started at 2026-10-16 22:13:58.273.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testBusyCancelsGestureAndRejectsEveryIntentUntilOwnerRestoresAvailability]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testBusyCancelsGestureAndRejectsEveryIntentUntilOwnerRestoresAvailability]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testCancelledGestureCannotBeResurrectedByLateUpdatesOrMouseUp]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testCancelledGestureCannotBeResurrectedByLateUpdatesOrMouseUp]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testCancelledOrDisabledJitterCannotActivateOnRelease]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testCancelledOrDisabledJitterCannotActivateOnRelease]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testChangedAvailabilityAndGeometryCancelExistingGrab]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testChangedAvailabilityAndGeometryCancelExistingGrab]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testDisabledDestinationIsSkippedAtReleaseAndForKeyboard]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testDisabledDestinationIsSkippedAtReleaseAndForKeyboard]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testDraggingDoesNotCommitAndReleaseCommitsOnlyOnce]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testDraggingDoesNotCommitAndReleaseCommitsOnlyOnce]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testGrabOffsetAndContinuousGeometryArePreserved]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testGrabOffsetAndContinuousGeometryArePreserved]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testInvalidPointerValuesFailClosed]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testInvalidPointerValuesFailClosed]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testJitterOwnerAcceptanceOrBusyStateRejectsARepeatedChildAction]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testJitterOwnerAcceptanceOrBusyStateRejectsARepeatedChildAction]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testJitterRejectsReleaseOutsideOriginalLabelInEitherAxis]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testJitterRejectsReleaseOutsideOriginalLabelInEitherAxis]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testNonThumbEscapeCancellationRejectsLateUpdatesAndRelease]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testNonThumbEscapeCancellationRejectsLateUpdatesAndRelease]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testOwnerRefreshDoesNotTakeGeometryButCancelUsesLatestOwnerValue]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testOwnerRefreshDoesNotTakeGeometryButCancelUsesLatestOwnerValue]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testPointerDoesNotCreateKeyboardFocusOrReclaimMenuFocus]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testPointerDoesNotCreateKeyboardFocusOrReclaimMenuFocus]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testPressOutsideSelectedThumbCannotJumpIntoADrag]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testPressOutsideSelectedThumbCannotJumpIntoADrag]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testRepeatedSelectedClickDoesNotToggleOffOrRequest]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testRepeatedSelectedClickDoesNotToggleOffOrRequest]' passed (0.000 seconds).
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testUnselectedLabelJitterActivatesOnceWithoutMovingTheThumb]' started.
+Test Case '-[WattsonTests.InteractiveGlassModeControlTests testUnselectedLabelJitterActivatesOnceWithoutMovingTheThumb]' passed (0.000 seconds).
+Test Suite 'InteractiveGlassModeControlTests' passed at 2026-10-16 22:13:58.275.
+	 Executed 16 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'LiquidGlassStyleSettingsTests' started at 2026-10-16 22:13:58.275.
+Test Case '-[WattsonTests.LiquidGlassStyleSettingsTests testChoicePersistsThroughOffOnAndReopeningDefaults]' started.
+Test Case '-[WattsonTests.LiquidGlassStyleSettingsTests testChoicePersistsThroughOffOnAndReopeningDefaults]' passed (0.010 seconds).
+Test Case '-[WattsonTests.LiquidGlassStyleSettingsTests testDefaultAndInvalidValuesAreRegularWithoutWriting]' started.
+Test Case '-[WattsonTests.LiquidGlassStyleSettingsTests testDefaultAndInvalidValuesAreRegularWithoutWriting]' passed (0.012 seconds).
+Test Case '-[WattsonTests.LiquidGlassStyleSettingsTests testExternalChangesAreReadWithoutChangingGlassOptIn]' started.
+Test Case '-[WattsonTests.LiquidGlassStyleSettingsTests testExternalChangesAreReadWithoutChangingGlassOptIn]' passed (0.010 seconds).
+Test Case '-[WattsonTests.LiquidGlassStyleSettingsTests testStyleUsesExistingAppearanceNotificationExactlyOnceAfterPersistence]' started.
+Test Case '-[WattsonTests.LiquidGlassStyleSettingsTests testStyleUsesExistingAppearanceNotificationExactlyOnceAfterPersistence]' passed (0.010 seconds).
+Test Suite 'LiquidGlassStyleSettingsTests' passed at 2026-10-16 22:13:58.318.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.042 (0.043) seconds
+Test Suite 'ModeSliderAppearanceTests' started at 2026-10-16 22:13:58.318.
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testAppearanceChangeDropsPreviouslySampledPixelsBeforeRecapture]' started.
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testAppearanceChangeDropsPreviouslySampledPixelsBeforeRecapture]' passed (0.002 seconds).
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testFallbackLayersAndBlendedLabelsUseTheViewsAppearanceNotGlobalDrawingAppearance]' started.
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testFallbackLayersAndBlendedLabelsUseTheViewsAppearanceNotGlobalDrawingAppearance]' passed (0.002 seconds).
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testHighContrastKeepsTheSelectionEdgeVisibleInBothAppearances]' started.
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testHighContrastKeepsTheSelectionEdgeVisibleInBothAppearances]' passed (0.030 seconds).
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testKeyboardFocusScrollsTheWholeSliderIntoAShortViewport]' started.
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testKeyboardFocusScrollsTheWholeSliderIntoAShortViewport]' passed (0.015 seconds).
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testKeyboardFocusUsesOnlyALocalMarkerAndClearsOnResign]' started.
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testKeyboardFocusUsesOnlyALocalMarkerAndClearsOnResign]' passed (0.001 seconds).
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testOpaqueSelectorsFollowLightAndDarkWithoutReintroducingNativeChrome]' started.
+Test Case '-[WattsonTests.ModeSliderAppearanceTests testOpaqueSelectorsFollowLightAndDarkWithoutReintroducingNativeChrome]' passed (0.004 seconds).
+Test Suite 'ModeSliderAppearanceTests' passed at 2026-10-16 22:13:58.374.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.055 (0.055) seconds
+Test Suite 'NativeGlassModeControlTests' started at 2026-10-16 22:13:58.374.
+Test Case '-[WattsonTests.NativeGlassModeControlTests testArrowsSkipDisabledModesAndReturnActsOnFocusedButton]' started.
+Test Case '-[WattsonTests.NativeGlassModeControlTests testArrowsSkipDisabledModesAndReturnActsOnFocusedButton]' passed (0.012 seconds).
+Test Case '-[WattsonTests.NativeGlassModeControlTests testBusyParksModeFocusThenRestoresSelectionWithoutStealingMenuFocus]' started.
+Test Case '-[WattsonTests.NativeGlassModeControlTests testBusyParksModeFocusThenRestoresSelectionWithoutStealingMenuFocus]' passed (0.058 seconds).
+Test Case '-[WattsonTests.NativeGlassModeControlTests testDisabledModeAndBusyGroupRejectMouseKeyboardAndAccessibilityActions]' started.
+Test Case '-[WattsonTests.NativeGlassModeControlTests testDisabledModeAndBusyGroupRejectMouseKeyboardAndAccessibilityActions]' passed (0.016 seconds).
+Test Case '-[WattsonTests.NativeGlassModeControlTests testFooterBusyDisablesAllButtonsThenSameModeConfirmationReenablesThem]' started.
+Test Case '-[WattsonTests.NativeGlassModeControlTests testFooterBusyDisablesAllButtonsThenSameModeConfirmationReenablesThem]' passed (0.025 seconds).
+Test Case '-[WattsonTests.NativeGlassModeControlTests testFooterFailureRollsBackToLatestObservationAndBackgroundCompletionUsesMain]' started.
+Test Case '-[WattsonTests.NativeGlassModeControlTests testFooterFailureRollsBackToLatestObservationAndBackgroundCompletionUsesMain]' passed (0.044 seconds).
+Test Case '-[WattsonTests.NativeGlassModeControlTests testPendingRequestSurvivesGlassOffOnAndFailureRestoresAvailability]' started.
+Test Case '-[WattsonTests.NativeGlassModeControlTests testPendingRequestSurvivesGlassOffOnAndFailureRestoresAvailability]' passed (0.025 seconds).
+Test Case '-[WattsonTests.NativeGlassModeControlTests testRealButtonsHaveUnnestedGlassFullLabelsAndEqualGeometry]' started.
+Test Case '-[WattsonTests.NativeGlassModeControlTests testRealButtonsHaveUnnestedGlassFullLabelsAndEqualGeometry]' passed (0.014 seconds).
+Test Case '-[WattsonTests.NativeGlassModeControlTests testRepeatedNativeToggleClickCannotClearSelectionOrRepeatIntent]' started.
+Test Case '-[WattsonTests.NativeGlassModeControlTests testRepeatedNativeToggleClickCannotClearSelectionOrRepeatIntent]' passed (0.012 seconds).
+Test Case '-[WattsonTests.NativeGlassModeControlTests testRuntimeToggleTransfersFocusFromGroupAndEveryChildAndReusesButtons]' started.
+Test Case '-[WattsonTests.NativeGlassModeControlTests testRuntimeToggleTransfersFocusFromGroupAndEveryChildAndReusesButtons]' passed (0.039 seconds).
+Test Suite 'NativeGlassModeControlTests' passed at 2026-10-16 22:13:58.619.
+	 Executed 9 tests, with 0 failures (0 unexpected) in 0.245 (0.246) seconds
+Test Suite 'NativeModeSegmentedControlTests' started at 2026-10-16 22:13:58.619.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testAppearanceObserversDoNotRetainFooter]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testAppearanceObserversDoNotRetainFooter]' passed (0.015 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testBatteryCompletionDoesNotOverwriteNewerAuthorityOrPendingRead]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testBatteryCompletionDoesNotOverwriteNewerAuthorityOrPendingRead]' passed (0.014 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testBatteryNativeClickPreservesDisabledStatesAndFailureRollback]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testBatteryNativeClickPreservesDisabledStatesAndFailureRollback]' passed (0.016 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testBatteryNativeClickTogglesBothAuthoritativeStates]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testBatteryNativeClickTogglesBothAuthoritativeStates]' passed (0.014 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testDisablingGlassStillHonorsReduceMotionAndKeepsMenuFocus]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testDisablingGlassStillHonorsReduceMotionAndKeepsMenuFocus]' passed (0.069 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFailedIntentRollsBackToLatestAuthoritativeRefresh]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFailedIntentRollsBackToLatestAuthoritativeRefresh]' passed (0.015 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterIgnoresStaleCompletionAcrossNativeIntents]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterIgnoresStaleCompletionAcrossNativeIntents]' passed (0.016 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterKeepsAsyncRollbackAndConfirmationAcrossControlSwitches]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterKeepsAsyncRollbackAndConfirmationAcrossControlSwitches]' passed (0.015 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterObservesForcedReduceMotionChangesWithoutASetting]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterObservesForcedReduceMotionChangesWithoutASetting]' passed (0.018 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterOnlyShowsActionableStatusAndClearsItOnRecovery]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterOnlyShowsActionableStatusAndClearsItOnRecovery]' passed (0.025 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterReturnsBackgroundHandlerCompletionToMainAndRollsBackNativeIntent]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterReturnsBackgroundHandlerCompletionToMainAndRollsBackNativeIntent]' passed (0.023 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterSwitchesControlsAtRuntimeAndTransfersFocusAndState]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testFooterSwitchesControlsAtRuntimeAndTransfersFocusAndState]' passed (0.038 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testGlassButtonsKeepNativeSelectionAccessibilityAndDisabledActions]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testGlassButtonsKeepNativeSelectionAccessibilityAndDisabledActions]' passed (0.019 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testGlassChoiceAtConstructionUsesNativeControlsOnlyOnSupportedSystems]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testGlassChoiceAtConstructionUsesNativeControlsOnlyOnSupportedSystems]' passed (0.022 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testGlassOperationLayerUsesOneReusableContainerWithoutAnExtraModeSurface]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testGlassOperationLayerUsesOneReusableContainerWithoutAnExtraModeSurface]' passed (0.028 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testGlassRuntimeTogglePreservesFocusSelectionAndExactBaselineGeometry]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testGlassRuntimeTogglePreservesFocusSelectionAndExactBaselineGeometry]' passed (0.048 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testGlassToggleDoesNotDuplicatePendingModeRequestsOrLoseRollback]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testGlassToggleDoesNotDuplicatePendingModeRequestsOrLoseRollback]' passed (0.022 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testKeyboardAndAccessibilityStepAcrossEnabledSegmentsOnly]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testKeyboardAndAccessibilityStepAcrossEnabledSegmentsOnly]' passed (0.009 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testNativeControlEmitsIntentAndAlwaysAcceptsFooterSelection]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testNativeControlEmitsIntentAndAlwaysAcceptsFooterSelection]' passed (0.009 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testNativeControlUsesProductOrderAndEqualNativeSegments]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testNativeControlUsesProductOrderAndEqualNativeSegments]' passed (0.014 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testNewestIntentReplacesAStaleSliderRequestAcrossControlSwitches]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testNewestIntentReplacesAStaleSliderRequestAcrossControlSwitches]' passed (0.015 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testNormalSliderAsyncSelectionSurvivesSwitchToReducedMotion]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testNormalSliderAsyncSelectionSurvivesSwitchToReducedMotion]' passed (0.014 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testUnchangedTelemetryDoesNotRepeatModeControlLayerWork]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testUnchangedTelemetryDoesNotRepeatModeControlLayerWork]' passed (0.015 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testUnrelatedSettingsDoNotReselectOrRestyleModeControls]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testUnrelatedSettingsDoNotReselectOrRestyleModeControls]' passed (0.016 seconds).
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testUpdatePreservesSelectionAndSegmentAvailabilityForAccessibility]' started.
+Test Case '-[WattsonTests.NativeModeSegmentedControlTests testUpdatePreservesSelectionAndSegmentAvailabilityForAccessibility]' passed (0.010 seconds).
+Test Suite 'NativeModeSegmentedControlTests' passed at 2026-10-16 22:13:59.138.
+	 Executed 25 tests, with 0 failures (0 unexpected) in 0.517 (0.519) seconds
+Test Suite 'PopoverAppearanceTests' started at 2026-10-16 22:13:59.138.
+Test Case '-[WattsonTests.PopoverAppearanceTests testAttachingWindowStartsFocusInViewportWithoutResettingScroll]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testAttachingWindowStartsFocusInViewportWithoutResettingScroll]' passed (0.037 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testBothScrollerStylesKeepInstrumentsInsideTheViewport]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testBothScrollerStylesKeepInstrumentsInsideTheViewport]' passed (0.026 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testFooterButtonsRevealKeyboardFocusWithoutInvokingActions]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testFooterButtonsRevealKeyboardFocusWithoutInvokingActions]' passed (0.023 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testGlassPopoverInitialAppearanceAndObserverLifetime]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testGlassPopoverInitialAppearanceAndObserverLifetime]' passed (0.039 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testGlassPreferencePreservesSystemAppearanceWithoutRebuildingClosedContent]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testGlassPreferencePreservesSystemAppearanceWithoutRebuildingClosedContent]' passed (0.034 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testHistoryCacheIncludesResolvedAppearanceButNotRepeatedSamples]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testHistoryCacheIncludesResolvedAppearanceButNotRepeatedSamples]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testLightDarkSwitchPreservesPowerReadingsAndGeometryAcrossStates]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testLightDarkSwitchPreservesPowerReadingsAndGeometryAcrossStates]' passed (0.113 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testPaletteResolvesToReadableLightAndDarkInstruments]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testPaletteResolvesToReadableLightAndDarkInstruments]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testPanelInheritsAppearanceAndKeepsNativePopoverSurfaceUncovered]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testPanelInheritsAppearanceAndKeepsNativePopoverSurfaceUncovered]' passed (0.018 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testRealGlassContentInheritsLightDarkAndResolvesSemanticReadingColor]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testRealGlassContentInheritsLightDarkAndResolvesSemanticReadingColor]' passed (0.171 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testReducedMotionChooserRevealsKeyboardFocusWithoutSelectingMode]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testReducedMotionChooserRevealsKeyboardFocusWithoutSelectingMode]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testViewportResizeKeepsNaturalDocumentAndClampsOldScrollOffset]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testViewportResizeKeepsNaturalDocumentAndClampsOldScrollOffset]' passed (0.026 seconds).
+Test Suite 'PopoverAppearanceTests' passed at 2026-10-16 22:13:59.629.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.490 (0.490) seconds
+Test Suite 'PopoverArrowSettingsTests' started at 2026-10-16 22:13:59.629.
+Test Case '-[WattsonTests.PopoverArrowSettingsTests testChangeNotifiesOnceAfterPersistenceWithoutAppearanceReplacement]' started.
+Test Case '-[WattsonTests.PopoverArrowSettingsTests testChangeNotifiesOnceAfterPersistenceWithoutAppearanceReplacement]' passed (0.010 seconds).
+Test Case '-[WattsonTests.PopoverArrowSettingsTests testChoicePersistsIndependentlyOfGlassStyleThemeAndClassic]' started.
+Test Case '-[WattsonTests.PopoverArrowSettingsTests testChoicePersistsIndependentlyOfGlassStyleThemeAndClassic]' passed (0.011 seconds).
+Test Case '-[WattsonTests.PopoverArrowSettingsTests testDefaultRetainsArrowWithoutPersistingAndInvalidValuesUseDefault]' started.
+Test Case '-[WattsonTests.PopoverArrowSettingsTests testDefaultRetainsArrowWithoutPersistingAndInvalidValuesUseDefault]' passed (0.010 seconds).
+Test Case '-[WattsonTests.PopoverArrowSettingsTests testExternalWritesAndRemovalAreReadWithoutChangingClassicPreference]' started.
+Test Case '-[WattsonTests.PopoverArrowSettingsTests testExternalWritesAndRemovalAreReadWithoutChangingClassicPreference]' passed (0.009 seconds).
+Test Suite 'PopoverArrowSettingsTests' passed at 2026-10-16 22:13:59.669.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.040 (0.040) seconds
+Test Suite 'PopoverPlacementTests' started at 2026-10-16 22:13:59.669.
+Test Case '-[WattsonTests.PopoverPlacementTests testAnchorChoosesLeftDisplayWithNegativeCoordinates]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testAnchorChoosesLeftDisplayWithNegativeCoordinates]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testCrossDisplayAnchorUsesLargestIntersectionAndClipsPositioningRect]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testCrossDisplayAnchorUsesLargestIntersectionAndClipsPositioningRect]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testDisplayBelowPrimaryAllowsNegativeY]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testDisplayBelowPrimaryAllowsNegativeY]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassArrowTipUsesVisibleTopWhenAnchorExtendsIntoMenuBar]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassArrowTipUsesVisibleTopWhenAnchorExtendsIntoMenuBar]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassDynamicHeightsKeepArrowAnchoredWithoutChangingContentWidth]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassDynamicHeightsKeepArrowAnchoredWithoutChangingContentWidth]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassMarginClampsShortViewportsBeforePlacingThePanel]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassMarginClampsShortViewportsBeforePlacingThePanel]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassMarginsPreserveNaturalContentAndScreenEdgePlacement]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassMarginsPreserveNaturalContentAndScreenEdgePlacement]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassPanelPreservesContentAndOpticalMarginAtBothScreenEdges]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassPanelPreservesContentAndOpticalMarginAtBothScreenEdges]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassPanelRejectsInsufficientMarginAndInvalidMargin]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassPanelRejectsInsufficientMarginAndInvalidMargin]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassPanelUsesNegativeDisplayCoordinatesAndClampedShortViewport]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassPanelUsesNegativeDisplayCoordinatesAndClampedShortViewport]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassRequiresSpaceForArrowAndBottomMarginBeforeShowingContent]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testGlassRequiresSpaceForArrowAndBottomMarginBeforeShowingContent]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testHidingArrowMovesNaturalBodyUpWithoutChangingItsContentSize]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testHidingArrowMovesNaturalBodyUpWithoutChangingItsContentSize]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testHidingArrowReturnsHeightToShortViewportOnNegativeDisplays]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testHidingArrowReturnsHeightToShortViewportOnNegativeDisplays]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testNoUsableSpaceOrInvalidContentSizeFailsClosed]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testNoUsableSpaceOrInvalidContentSizeFailsClosed]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testOffscreenMissingAndInvalidAnchorsFailClosed]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testOffscreenMissingAndInvalidAnchorsFailClosed]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testResolveRejectsInvalidOrUnusableGlassMarginsWithoutChangingClassic]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testResolveRejectsInvalidOrUnusableGlassMarginsWithoutChangingClassic]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testShortScreenClampsViewportWithoutScalingInstruments]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testShortScreenClampsViewportWithoutScalingInstruments]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverPlacementTests testTallScreenPreservesNaturalSize]' started.
+Test Case '-[WattsonTests.PopoverPlacementTests testTallScreenPreservesNaturalSize]' passed (0.000 seconds).
+Test Suite 'PopoverPlacementTests' passed at 2026-10-16 22:13:59.672.
+	 Executed 18 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'PowerFlowEfficiencyTests' started at 2026-10-16 22:13:59.672.
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testActualUSBandChargingSplitDriftRetargetsWithoutResettingPhase]' started.
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testActualUSBandChargingSplitDriftRetargetsWithoutResettingPhase]' passed (0.007 seconds).
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testDriftingBatteryWattsKeepFixedCurveRidesWhileUpdatingSpeed]' started.
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testDriftingBatteryWattsKeepFixedCurveRidesWhileUpdatingSpeed]' passed (0.004 seconds).
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testEmptyPoolAndPopoverReopeningDoNotReuseMissingAnimations]' started.
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testEmptyPoolAndPopoverReopeningDoNotReuseMissingAnimations]' passed (0.004 seconds).
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testEmptyPoolAndSingleParticleHysteresis]' started.
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testEmptyPoolAndSingleParticleHysteresis]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testIdenticalCurveDoesNotReinstallRidesAndStillRetimesSpeed]' started.
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testIdenticalCurveDoesNotReinstallRidesAndStillRetimesSpeed]' passed (0.003 seconds).
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testPoolAndTopologyChangesStillInstallRidesForEveryNewParticle]' started.
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testPoolAndTopologyChangesStillInstallRidesForEveryNewParticle]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testStaticParticlesFollowNewGeometryAndResumeAfterMotionChanges]' started.
+Test Case '-[WattsonTests.PowerFlowEfficiencyTests testStaticParticlesFollowNewGeometryAndResumeAfterMotionChanges]' passed (0.000 seconds).
+Test Suite 'PowerFlowEfficiencyTests' passed at 2026-10-16 22:13:59.692.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.020 (0.020) seconds
+Test Suite 'PowerHistoryFreshnessTests' started at 2026-10-16 22:13:59.692.
+Test Case '-[WattsonTests.PowerHistoryFreshnessTests testPartiallyExpiredRingCanRefillAndContinueWrapping]' started.
+Test Case '-[WattsonTests.PowerHistoryFreshnessTests testPartiallyExpiredRingCanRefillAndContinueWrapping]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerHistoryFreshnessTests testSamplingFailureExpiresCachedValuesAndPeakWithoutNewAppend]' started.
+Test Case '-[WattsonTests.PowerHistoryFreshnessTests testSamplingFailureExpiresCachedValuesAndPeakWithoutNewAppend]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerHistoryFreshnessTests testSlowSamplingDoesNotKeepReadingsOlderThanTwoMinutes]' started.
+Test Case '-[WattsonTests.PowerHistoryFreshnessTests testSlowSamplingDoesNotKeepReadingsOlderThanTwoMinutes]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerHistoryFreshnessTests testWrappedBufferRetainsOrderAcrossExpirationAndRecovery]' started.
+Test Case '-[WattsonTests.PowerHistoryFreshnessTests testWrappedBufferRetainsOrderAcrossExpirationAndRecovery]' passed (0.000 seconds).
+Test Suite 'PowerHistoryFreshnessTests' passed at 2026-10-16 22:13:59.693.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'PowerInputFallbackTests' started at 2026-10-16 22:13:59.693.
+Test Case '-[WattsonTests.PowerInputFallbackTests testBatteryOnlyAverageFallbackDoesNotTurnChargeIntoDischarge]' started.
+Test Case '-[WattsonTests.PowerInputFallbackTests testBatteryOnlyAverageFallbackDoesNotTurnChargeIntoDischarge]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerInputFallbackTests testBatteryOnlyInstantFallbackPreservesTelemetryPriority]' started.
+Test Case '-[WattsonTests.PowerInputFallbackTests testBatteryOnlyInstantFallbackPreservesTelemetryPriority]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerInputFallbackTests testBatteryOnlyInstantFallbackUsesNonpositiveFiniteBoundedValues]' started.
+Test Case '-[WattsonTests.PowerInputFallbackTests testBatteryOnlyInstantFallbackUsesNonpositiveFiniteBoundedValues]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerInputFallbackTests testBatteryOnlyUsesInstantDischargeWhenTotalsAndAverageAreMissing]' started.
+Test Case '-[WattsonTests.PowerInputFallbackTests testBatteryOnlyUsesInstantDischargeWhenTotalsAndAverageAreMissing]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerInputFallbackTests testCompleteDeviceOutputRemainsAvailableForAnExactBreakdown]' started.
+Test Case '-[WattsonTests.PowerInputFallbackTests testCompleteDeviceOutputRemainsAvailableForAnExactBreakdown]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerInputFallbackTests testDeviceOutputDoesNotInventIdentityForAnUnnumberedPort]' started.
+Test Case '-[WattsonTests.PowerInputFallbackTests testDeviceOutputDoesNotInventIdentityForAnUnnumberedPort]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerInputFallbackTests testDeviceOutputStillRejectsExplicitDuplicateAndInvalidPortNumbers]' started.
+Test Case '-[WattsonTests.PowerInputFallbackTests testDeviceOutputStillRejectsExplicitDuplicateAndInvalidPortNumbers]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerInputFallbackTests testLivePowerMergeDoesNotPromotePartialDeviceOutputToComplete]' started.
+Test Case '-[WattsonTests.PowerInputFallbackTests testLivePowerMergeDoesNotPromotePartialDeviceOutputToComplete]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerInputFallbackTests testMissingOrInvalidDeviceOutputDoesNotBecomeACompleteZero]' started.
+Test Case '-[WattsonTests.PowerInputFallbackTests testMissingOrInvalidDeviceOutputDoesNotBecomeACompleteZero]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerInputFallbackTests testPartialDeviceOutputPreservesMeasuredSumWithoutAnExactBreakdown]' started.
+Test Case '-[WattsonTests.PowerInputFallbackTests testPartialDeviceOutputPreservesMeasuredSumWithoutAnExactBreakdown]' passed (0.000 seconds).
+Test Suite 'PowerInputFallbackTests' passed at 2026-10-16 22:13:59.694.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'PowerObservationCaptureTests' started at 2026-10-16 22:13:59.694.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandLeavesPartialWhenFooterWriteFails]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandLeavesPartialWhenFooterWriteFails]' passed (0.002 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandMapsSIGINTToInterruptedFooterAndExit130]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandMapsSIGINTToInterruptedFooterAndExit130]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandMapsSIGTERMToInterruptedFooterAndExit143]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandMapsSIGTERMToInterruptedFooterAndExit143]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandRejectsDurationAboveSixHundredSeconds]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandRejectsDurationAboveSixHundredSeconds]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandRejectsIntervalBelowOneHundredMilliseconds]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandRejectsIntervalBelowOneHundredMilliseconds]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandRejectsMissingScenario]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandRejectsMissingScenario]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandRejectsUnsafeScenarioLabel]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandRejectsUnsafeScenarioLabel]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandWritesFatalErrorFooterAndExit70]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCaptureCommandWritesFatalErrorFooterAndExit70]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCollectorDoesNotConstructOrMutatePowerSnapshot]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCollectorDoesNotConstructOrMutatePowerSnapshot]' passed (0.002 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCollectorRecordsBatteryAndSMCCaptureSkew]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCollectorRecordsBatteryAndSMCCaptureSkew]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCollectorStartsBatteryAndSMCReadsIndependently]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCollectorStartsBatteryAndSMCReadsIndependently]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCollectorUsesSyntheticReadersWithoutRealHardware]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testCollectorUsesSyntheticReadersWithoutRealHardware]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testDefaultOutputDirectoryIsCreatedWith0700Permissions]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testDefaultOutputDirectoryIsCreatedWith0700Permissions]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testDirectSMCReaderAttemptsPDTRPSTRPPBRInOrderOnOneConnection]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testDirectSMCReaderAttemptsPDTRPSTRPPBRInOrderOnOneConnection]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testDirectSMCReaderContinuesAfterSingleKeyFailure]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testDirectSMCReaderContinuesAfterSingleKeyFailure]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testDirectSMCReaderPreservesRawBytesDataTypeAndDecodedValue]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testDirectSMCReaderPreservesRawBytesDataTypeAndDecodedValue]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testPartialRecoveryDoesNotInventFooter]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testPartialRecoveryDoesNotInventFooter]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testPartialRecoveryKeepsOnlyNewlineTerminatedRecords]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testPartialRecoveryKeepsOnlyNewlineTerminatedRecords]' passed (0.003 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testTelemetryFreezeTrackerDoesNotAutoDeclareStale]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testTelemetryFreezeTrackerDoesNotAutoDeclareStale]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testTelemetryFreezeTrackerReportsChangedThenUnchangedDuration]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testTelemetryFreezeTrackerReportsChangedThenUnchangedDuration]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterCleansOnlyEligibleCompleteFilesToDirectoryTarget]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterCleansOnlyEligibleCompleteFilesToDirectoryTarget]' passed (0.003 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterCreatesPartialFileWith0600Permissions]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterCreatesPartialFileWith0600Permissions]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterNeverDeletesPartialOrForeignFiles]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterNeverDeletesPartialOrForeignFiles]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterNeverOverwritesExistingFinalFile]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterNeverOverwritesExistingFinalFile]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterProducesMutuallyExclusiveHeaderSampleFooterRecords]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterProducesMutuallyExclusiveHeaderSampleFooterRecords]' passed (0.002 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterRejectsSymlinkOutputDirectory]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterRejectsSymlinkOutputDirectory]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterStopsAtSixteenMiBAndWritesSizeLimitFooter]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterStopsAtSixteenMiBAndWritesSizeLimitFooter]' passed (0.002 seconds).
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterUsesNoReplaceAtomicFinalization]' started.
+Test Case '-[WattsonTests.PowerObservationCaptureTests testWriterUsesNoReplaceAtomicFinalization]' passed (0.001 seconds).
+Test Suite 'PowerObservationCaptureTests' passed at 2026-10-16 22:13:59.723.
+	 Executed 28 tests, with 0 failures (0 unexpected) in 0.027 (0.028) seconds
+Test Suite 'PowerObservationFusionFoundationTests' started at 2026-10-16 22:13:59.723.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testAutomaticPSTRAnchorsUseSystemLoadButNotSystemPowerIn]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testAutomaticPSTRAnchorsUseSystemLoadButNotSystemPowerIn]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerRejectsAnchorOutsideConfiguredSkew]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerRejectsAnchorOutsideConfiguredSkew]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerRejectsStaleAnchors]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerRejectsStaleAnchors]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerReportsAmbiguityWhenRunnerUpMarginIsTooSmall]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerReportsAmbiguityWhenRunnerUpMarginIsTooSmall]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerRequiresConfiguredPersistenceBeforeSelection]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerRequiresConfiguredPersistenceBeforeSelection]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerResetsAfterConfiguredSampleGap]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerResetsAfterConfiguredSampleGap]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerResetsPersistenceOnSleepWakeAndSourceTransition]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerResetsPersistenceOnSleepWakeAndSourceTransition]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerTreatsUnknownAndUnconfiguredUnchangedAnchorsAsIneligible]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerTreatsUnknownAndUnconfiguredUnchangedAnchorsAsIneligible]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerUsesUnchangedAnchorOnlyWithinExplicitPolicyWindow]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testBandTrackerUsesUnchangedAnchorOnlyWithinExplicitPolicyWindow]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testDeviceOutputRemainsAuxiliaryAndIsNotAddedToSystem]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testDeviceOutputRemainsAuxiliaryAndIsNotAddedToSystem]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFoundationResolutionCanNeverSwitchUserVisibleValues]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFoundationResolutionCanNeverSwitchUserVisibleValues]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionDoesNotUseUnresolvedBatteryPowerAsSignedFlow]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionDoesNotUseUnresolvedBatteryPowerAsSignedFlow]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionNeverSelectsNegativeDirectSourceOrLoadAsResolvedPower]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionNeverSelectsNegativeDirectSourceOrLoadAsResolvedPower]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionPrefersDirectPDTRForAdapterWithoutChangingIt]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionPrefersDirectPDTRForAdapterWithoutChangingIt]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionPreservesNonzeroResidualInsteadOfForcingConservation]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionPreservesNonzeroResidualInsteadOfForcingConservation]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionUsesDirectIOKitSystemLoadWhilePSTRBandIsUnresolved]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionUsesDirectIOKitSystemLoadWhilePSTRBandIsUnresolved]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionUsesSelectedPSTRCandidateOnlyWhenTrackerSelectedIt]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionUsesSelectedPSTRCandidateOnlyWhenTrackerSelectedIt]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionUsesSignedBatteryVIAndNeverLetsPPBRChooseDirection]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testFusionUsesSignedBatteryVIAndNeverLetsPPBRChooseDirection]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testLegacyV4FallbackIsExplicitlyDegradedAndHasNoRawTiming]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testLegacyV4FallbackIsExplicitlyDegradedAndHasNoRawTiming]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testResolutionSourceAndReasonEncodeAsOpenStrings]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testResolutionSourceAndReasonEncodeAsOpenStrings]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testStaleTelemetryIsExplicitlyDegraded]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testStaleTelemetryIsExplicitlyDegraded]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testUnchangedFreshnessIsNotSilentlyPromotedToStale]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testUnchangedFreshnessIsNotSilentlyPromotedToStale]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testUnconfiguredBandPolicyNeverSelectsCandidate]' started.
+Test Case '-[WattsonTests.PowerObservationFusionFoundationTests testUnconfiguredBandPolicyNeverSelectsCandidate]' passed (0.000 seconds).
+Test Suite 'PowerObservationFusionFoundationTests' passed at 2026-10-16 22:13:59.727.
+	 Executed 23 tests, with 0 failures (0 unexpected) in 0.004 (0.005) seconds
+Test Suite 'PowerObservationFusionReplayTests' started at 2026-10-16 22:13:59.727.
+Test Case '-[WattsonTests.PowerObservationFusionReplayTests testReplayCarriesLegacyComparisonWithoutChangingVisibleValues]' started.
+Test Case '-[WattsonTests.PowerObservationFusionReplayTests testReplayCarriesLegacyComparisonWithoutChangingVisibleValues]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionReplayTests testReplayGeneratesCandidatesWithoutSelectingWhenPolicyIsNil]' started.
+Test Case '-[WattsonTests.PowerObservationFusionReplayTests testReplayGeneratesCandidatesWithoutSelectingWhenPolicyIsNil]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationFusionReplayTests testReplayResetClearsBandPersistence]' started.
+Test Case '-[WattsonTests.PowerObservationFusionReplayTests testReplayResetClearsBandPersistence]' passed (0.000 seconds).
+Test Suite 'PowerObservationFusionReplayTests' passed at 2026-10-16 22:13:59.728.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'PowerObservationPhase2FixtureTests' started at 2026-10-16 22:13:59.728.
+Test Case '-[WattsonTests.PowerObservationPhase2FixtureTests testCompleteV5FixtureDecodesWithThreePresentKeys]' started.
+Test Case '-[WattsonTests.PowerObservationPhase2FixtureTests testCompleteV5FixtureDecodesWithThreePresentKeys]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationPhase2FixtureTests testConnectionFailureFixtureIsValidV5AndDoesNotImplyFallback]' started.
+Test Case '-[WattsonTests.PowerObservationPhase2FixtureTests testConnectionFailureFixtureIsValidV5AndDoesNotImplyFallback]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationPhase2FixtureTests testPartialV5FixtureRemainsAuthoritativeAndPreservesRawPSTR]' started.
+Test Case '-[WattsonTests.PowerObservationPhase2FixtureTests testPartialV5FixtureRemainsAuthoritativeAndPreservesRawPSTR]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationPhase2FixtureTests testTruncatedV5FixtureIsMalformedAndNotLegacy]' started.
+Test Case '-[WattsonTests.PowerObservationPhase2FixtureTests testTruncatedV5FixtureIsMalformedAndNotLegacy]' passed (0.000 seconds).
+Test Suite 'PowerObservationPhase2FixtureTests' passed at 2026-10-16 22:13:59.731.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'PowerObservationRuntimeTests' started at 2026-10-16 22:13:59.731.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testEventMergingRetainsStrongestFreshFollowUp]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testEventMergingRetainsStrongestFreshFollowUp]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testFailedHelperFetchPreservesBatterySnapshot]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testFailedHelperFetchPreservesBatterySnapshot]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testLegacyV4FallbackStillUsesLegacyResolvedLivePowerFormula]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testLegacyV4FallbackStillUsesLegacyResolvedLivePowerFormula]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testNilPolicyNeverMakesRuntimeResolutionVisible]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testNilPolicyNeverMakesRuntimeResolutionVisible]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testPartialV5PreservesLegacyPSTRFirstFallbackSemantics]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testPartialV5PreservesLegacyPSTRFirstFallbackSemantics]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testReaderRejectsMalformedAndOversizedDeviceOutputWithoutInventingZero]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testReaderRejectsMalformedAndOversizedDeviceOutputWithoutInventingZero]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testReaderResetMakesAnUnchangedTokenFreshAgain]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testReaderResetMakesAnUnchangedTokenFreshAgain]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testReaderUsesFixedAllowlistAndResetsFreshnessAfterGap]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testReaderUsesFixedAllowlistAndResetsFreshnessAfterGap]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testRuntimeCarriesSignedBatteryVoltageTimesCurrentInShadowOnly]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testRuntimeCarriesSignedBatteryVoltageTimesCurrentInShadowOnly]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testRuntimeReadsBatteryFieldsOnceForVisibleAndShadowAcrossPowerStates]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testRuntimeReadsBatteryFieldsOnceForVisibleAndShadowAcrossPowerStates]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testSequenceIsMonotonicAndEventsResetReaderFreshness]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testSequenceIsMonotonicAndEventsResetReaderFreshness]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testSharedBatteryAcquisitionStillRunsConcurrentlyWithHelper]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testSharedBatteryAcquisitionStillRunsConcurrentlyWithHelper]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testSharedSampleDoesNotReuseBatteryOrUSBValuesAfterRemoval]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testSharedSampleDoesNotReuseBatteryOrUSBValuesAfterRemoval]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testV5DirectValuesOnlyEnterLegacyResolvedLivePowerFormula]' started.
+Test Case '-[WattsonTests.PowerObservationRuntimeTests testV5DirectValuesOnlyEnterLegacyResolvedLivePowerFormula]' passed (0.000 seconds).
+Test Suite 'PowerObservationRuntimeTests' passed at 2026-10-16 22:13:59.736.
+	 Executed 14 tests, with 0 failures (0 unexpected) in 0.005 (0.005) seconds
+Test Suite 'PowerObservationShadowTests' started at 2026-10-16 22:13:59.736.
+Test Case '-[WattsonTests.PowerObservationShadowTests testShadowComparisonCarriesSourcesAndReasons]' started.
+Test Case '-[WattsonTests.PowerObservationShadowTests testShadowComparisonCarriesSourcesAndReasons]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationShadowTests testShadowComparisonKeepsMissingShadowBranchExplicit]' started.
+Test Case '-[WattsonTests.PowerObservationShadowTests testShadowComparisonKeepsMissingShadowBranchExplicit]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationShadowTests testShadowComparisonReportsDeltasWithoutChangingVisibleValues]' started.
+Test Case '-[WattsonTests.PowerObservationShadowTests testShadowComparisonReportsDeltasWithoutChangingVisibleValues]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationShadowTests testShadowEvaluatorHasNoPowerSnapshotOrUIStateDependency]' started.
+Test Case '-[WattsonTests.PowerObservationShadowTests testShadowEvaluatorHasNoPowerSnapshotOrUIStateDependency]' passed (0.000 seconds).
+Test Suite 'PowerObservationShadowTests' passed at 2026-10-16 22:13:59.737.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'PowerObservationV5SupportTests' started at 2026-10-16 22:13:59.737.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testConnectionFailureReturnsThreeExplicitUnavailableKeys]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testConnectionFailureReturnsThreeExplicitUnavailableKeys]' passed (0.000 seconds).
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testEncodedLineContainsRequiredNullableKeysAsNull]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testEncodedLineContainsRequiredNullableKeysAsNull]' passed (0.001 seconds).
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testFixedKeyEnumExposesNoCallerSelectedSMCKey]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testFixedKeyEnumExposesNoCallerSelectedSMCKey]' passed (0.000 seconds).
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testKeyUnavailableCanPreserveKnownTypeWithoutRawBytes]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testKeyUnavailableCanPreserveKnownTypeWithoutRawBytes]' passed (0.000 seconds).
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testReaderEchoesClientSequenceAndMonotonicClockName]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testReaderEchoesClientSequenceAndMonotonicClockName]' passed (0.000 seconds).
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testReaderPreservesFinitePDTRAndPSTRWithoutRangeClampButRejectsNegativePPBR]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testReaderPreservesFinitePDTRAndPSTRWithoutRangeClampButRejectsNegativePPBR]' passed (0.000 seconds).
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testReaderUsesOneConnectionAndFixedPDTRPSTRPPBROrder]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testReaderUsesOneConnectionAndFixedPDTRPSTRPPBROrder]' passed (0.000 seconds).
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testRequestServiceEchoesSequenceAndReturnsNewlineFramedResponse]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testRequestServiceEchoesSequenceAndReturnsNewlineFramedResponse]' passed (0.000 seconds).
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testResponseNeverSelectsPSTRBandOrComputesFusion]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testResponseNeverSelectsPSTRBandOrComputesFusion]' passed (0.000 seconds).
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testSingleKeyFailureDoesNotPreventLaterKeys]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testSingleKeyFailureDoesNotPreventLaterKeys]' passed (0.000 seconds).
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testStrictRequestDecoderAcceptsOnlyExactV5OperationAndUInt64Sequence]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testStrictRequestDecoderAcceptsOnlyExactV5OperationAndUInt64Sequence]' passed (0.000 seconds).
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testUnsupportedTypePreservesRawBytesAndDoesNotPublishWatts]' started.
+Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testUnsupportedTypePreservesRawBytesAndDoesNotPublishWatts]' passed (0.000 seconds).
+Test Suite 'PowerObservationV5SupportTests' passed at 2026-10-16 22:13:59.740.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'PowerObservationWireV5Tests' started at 2026-10-16 22:13:59.740.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testExplicitV5ConnectionFailureDoesNotFallBack]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testExplicitV5ConnectionFailureDoesNotFallBack]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testInvalidProtocolFieldIsMalformedAndNeverFallsBack]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testInvalidProtocolFieldIsMalformedAndNeverFallsBack]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testMalformedClaimedV5NeverFallsBack]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testMalformedClaimedV5NeverFallsBack]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testNoV5ResponsePerformsExactlyOneV4Fallback]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testNoV5ResponsePerformsExactlyOneV4Fallback]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testRealCompleteMalformedClaimedV5EOFNeverFallsBack]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testRealCompleteMalformedClaimedV5EOFNeverFallsBack]' passed (0.751 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testRealOldHelperUnversionedEOFPerformsExactlyOneV4Fallback]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testRealOldHelperUnversionedEOFPerformsExactlyOneV4Fallback]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testRealServerCleansUpWhenClientSendsNoData]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testRealServerCleansUpWhenClientSendsNoData]' passed (0.102 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testRealServerCleansUpWhenNoClientConnects]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testRealServerCleansUpWhenNoClientConnects]' passed (0.102 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testRealTruncatedClaimedV5EOFNeverFallsBack]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testRealTruncatedClaimedV5EOFNeverFallsBack]' passed (0.752 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderAllowsKeyUnavailableToPreserveKnownTypeMetadata]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderAllowsKeyUnavailableToPreserveKnownTypeMetadata]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderPreservesFinitePDTRAndPSTRWithoutUncontractedRangeClamp]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderPreservesFinitePDTRAndPSTRWithoutUncontractedRangeClamp]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderPreservesThreeRawKeysAndTiming]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderPreservesThreeRawKeysAndTiming]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderPreservesUnsupportedTypeRawBytesWithoutWatts]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderPreservesUnsupportedTypeRawBytesWithoutWatts]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsConnectionAndKeyStatusContradictions]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsConnectionAndKeyStatusContradictions]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsInvalidRawHex]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsInvalidRawHex]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsMissingRequiredNullableKey]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsMissingRequiredNullableKey]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsNegativePPBRMagnitude]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsNegativePPBRMagnitude]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsPartialBitThatDisagreesWithKeyStatuses]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsPartialBitThatDisagreesWithKeyStatuses]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsReorderedOrMissingFixedKeys]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsReorderedOrMissingFixedKeys]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsUnknownTopLevelField]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsUnknownTopLevelField]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsWrongSequence]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testStrictDecoderRejectsWrongSequence]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testTruncatedClaimedV5NeverFallsBack]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testTruncatedClaimedV5NeverFallsBack]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testUnversionedOldHelperRejectionPerformsOneV4Fallback]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testUnversionedOldHelperRejectionPerformsOneV4Fallback]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testV5RequestCarriesFixedProtocolOperationAndSequence]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testV5RequestCarriesFixedProtocolOperationAndSequence]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testV5ResponseMapsToPhase1SMCObservationWithoutChangingRawValues]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testV5ResponseMapsToPhase1SMCObservationWithoutChangingRawValues]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testValidPartialV5IsAuthoritativeAndNeverFallsBack]' started.
+Test Case '-[WattsonTests.PowerObservationWireV5Tests testValidPartialV5IsAuthoritativeAndNeverFallsBack]' passed (0.000 seconds).
+Test Suite 'PowerObservationWireV5Tests' passed at 2026-10-16 22:14:01.451.
+	 Executed 26 tests, with 0 failures (0 unexpected) in 1.711 (1.712) seconds
+Test Suite 'PowerPresentationStateTests' started at 2026-10-16 22:14:01.451.
+Test Case '-[WattsonTests.PowerPresentationStateTests testFailedReadingFreezesMotionUntilFreshReadingReturns]' started.
+Test Case '-[WattsonTests.PowerPresentationStateTests testFailedReadingFreezesMotionUntilFreshReadingReturns]' passed (0.037 seconds).
+Test Case '-[WattsonTests.PowerPresentationStateTests testIdleBatteryLabelsDoNotClaimFullBelowOneHundredPercent]' started.
+Test Case '-[WattsonTests.PowerPresentationStateTests testIdleBatteryLabelsDoNotClaimFullBelowOneHundredPercent]' passed (0.005 seconds).
+Test Case '-[WattsonTests.PowerPresentationStateTests testUnpluggedLowAndZeroPowerNeverUsesAdapterAsSource]' started.
+Test Case '-[WattsonTests.PowerPresentationStateTests testUnpluggedLowAndZeroPowerNeverUsesAdapterAsSource]' passed (0.004 seconds).
+Test Case '-[WattsonTests.PowerPresentationStateTests testZeroWattBranchesNeverKeepAnActivePowerFlow]' started.
+Test Case '-[WattsonTests.PowerPresentationStateTests testZeroWattBranchesNeverKeepAnActivePowerFlow]' passed (0.003 seconds).
+Test Suite 'PowerPresentationStateTests' passed at 2026-10-16 22:14:01.500.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.049 (0.049) seconds
+Test Suite 'RawPowerObservationTests' started at 2026-10-16 22:14:01.500.
+Test Case '-[WattsonTests.RawPowerObservationTests testAdapterRatedWattsRemainCapabilityRatherThanMeasuredInput]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testAdapterRatedWattsRemainCapabilityRatherThanMeasuredInput]' passed (0.004 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testAsynchronousIntervalsPreserveSignedAndAbsoluteSkewAndNonzeroResidual]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testAsynchronousIntervalsPreserveSignedAndAbsoluteSkewAndNonzeroResidual]' passed (0.027 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testBalanceEvidenceNeverMutatesDirectReadings]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testBalanceEvidenceNeverMutatesDirectReadings]' passed (0.001 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testCompleteIOKitTupleAndRawPSTRAreBothPreserved]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testCompleteIOKitTupleAndRawPSTRAreBothPreserved]' passed (0.004 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testExplicitEmptyPowerOutDetailsIsMeasuredZero]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testExplicitEmptyPowerOutDetailsIsMeasuredZero]' passed (0.010 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testExplicitZeroWattsIsMeasuredZero]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testExplicitZeroWattsIsMeasuredZero]' passed (0.010 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testInvalidPowerOutDetailsIsUnknownRatherThanZero]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testInvalidPowerOutDetailsIsUnknownRatherThanZero]' passed (0.010 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testMalformedMiddleRecordDoesNotDiscardPriorOrLaterRecords]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testMalformedMiddleRecordDoesNotDiscardPriorOrLaterRecords]' passed (0.004 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testMissingPowerOutDetailsIsUnknownRatherThanZero]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testMissingPowerOutDetailsIsUnknownRatherThanZero]' passed (0.010 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testMixedPowerOutEntriesProducePartialMeasuredTotal]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testMixedPowerOutEntriesProducePartialMeasuredTotal]' passed (0.011 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testMonotonicIntervalDerivedValuesAreNotEncoded]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testMonotonicIntervalDerivedValuesAreNotEncoded]' passed (0.000 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testMonotonicIntervalRejectsEndBeforeStart]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testMonotonicIntervalRejectsEndBeforeStart]' passed (0.000 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testOnlyPDPowerRemainsRawAndIsNotMeasuredFallback]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testOnlyPDPowerRemainsRawAndIsNotMeasuredFallback]' passed (0.009 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testPresentMissingInvalidAndPresentZeroRoundTripDistinctly]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testPresentMissingInvalidAndPresentZeroRoundTripDistinctly]' passed (0.020 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testPSTRModuloEvidenceGeneratesFourCandidatesWithoutSelectingOne]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testPSTRModuloEvidenceGeneratesFourCandidatesWithoutSelectingOne]' passed (0.004 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testReplayPreservesStaleAnnotationAndReportsPresenceTransitions]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testReplayPreservesStaleAnnotationAndReportsPresenceTransitions]' passed (0.016 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testReplayRejectsNonMonotonicSequence]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testReplayRejectsNonMonotonicSequence]' passed (0.000 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testTraceDecoderIgnoresOnlyUnterminatedFinalFragment]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testTraceDecoderIgnoresOnlyUnterminatedFinalFragment]' passed (0.004 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testTraceDecoderIgnoresUnknownJSONFields]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testTraceDecoderIgnoresUnknownJSONFields]' passed (0.002 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testTraceDecoderReportsUnsupportedFutureSchema]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testTraceDecoderReportsUnsupportedFutureSchema]' passed (0.002 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testTraceDecoderSkipsUnknownRecordTypeAndContinues]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testTraceDecoderSkipsUnknownRecordTypeAndContinues]' passed (0.004 seconds).
+Test Case '-[WattsonTests.RawPowerObservationTests testUnknownObservationSourceRoundTripsVerbatim]' started.
+Test Case '-[WattsonTests.RawPowerObservationTests testUnknownObservationSourceRoundTripsVerbatim]' passed (0.003 seconds).
+Test Suite 'RawPowerObservationTests' passed at 2026-10-16 22:14:01.657.
+	 Executed 22 tests, with 0 failures (0 unexpected) in 0.156 (0.157) seconds
+Test Suite 'SamplingEfficiencyTests' started at 2026-10-16 22:14:01.657.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testCloseAndReopenRejectsOnlyTheOldOpeningCallback]' started.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testCloseAndReopenRejectsOnlyTheOldOpeningCallback]' passed (0.000 seconds).
+Test Case '-[WattsonTests.SamplingEfficiencyTests testEveryOpeningPhaseSharesHistoryReadsInsteadOfAddingASecondClock]' started.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testEveryOpeningPhaseSharesHistoryReadsInsteadOfAddingASecondClock]' passed (0.000 seconds).
+Test Case '-[WattsonTests.SamplingEfficiencyTests testFailedAndSlowReadsKeepTheCadenceWithoutPeriodicFollowUps]' started.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testFailedAndSlowReadsKeepTheCadenceWithoutPeriodicFollowUps]' passed (0.000 seconds).
+Test Case '-[WattsonTests.SamplingEfficiencyTests testHiddenSamplingUsesFiveReadsAndHistoryRequestsInTenSeconds]' started.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testHiddenSamplingUsesFiveReadsAndHistoryRequestsInTenSeconds]' passed (0.000 seconds).
+Test Case '-[WattsonTests.SamplingEfficiencyTests testOpeningAtAnOverdueDeadlineRecordsOnceWithoutCatchUp]' started.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testOpeningAtAnOverdueDeadlineRecordsOnceWithoutCatchUp]' passed (0.000 seconds).
+Test Case '-[WattsonTests.SamplingEfficiencyTests testPeriodicTickCannotCancelAnOpeningFreshFollowUp]' started.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testPeriodicTickCannotCancelAnOpeningFreshFollowUp]' passed (0.000 seconds).
+Test Case '-[WattsonTests.SamplingEfficiencyTests testRepeatedVisibilityChangesNeverPostponeHistory]' started.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testRepeatedVisibilityChangesNeverPostponeHistory]' passed (0.000 seconds).
+Test Case '-[WattsonTests.SamplingEfficiencyTests testTimerToleranceDoesNotDeferTheNextHistorySampleToAThirdTick]' started.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testTimerToleranceDoesNotDeferTheNextHistorySampleToAThirdTick]' passed (0.000 seconds).
+Test Case '-[WattsonTests.SamplingEfficiencyTests testWakePartialReadStaysDegradedUntilAUsableReadingReturns]' started.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testWakePartialReadStaysDegradedUntilAUsableReadingReturns]' passed (0.000 seconds).
+Test Case '-[WattsonTests.SamplingEfficiencyTests testWakeRestartsCadenceFromItsImmediateHistoryRequest]' started.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testWakeRestartsCadenceFromItsImmediateHistoryRequest]' passed (0.000 seconds).
+Test Case '-[WattsonTests.SamplingEfficiencyTests testWakeRetainsLastReadingButCannotPublishThePreSleepAcquisition]' started.
+Test Case '-[WattsonTests.SamplingEfficiencyTests testWakeRetainsLastReadingButCannotPublishThePreSleepAcquisition]' passed (0.000 seconds).
+Test Suite 'SamplingEfficiencyTests' passed at 2026-10-16 22:14:01.659.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'SettingsControlsRecoveryTests' started at 2026-10-16 22:14:01.659.
+Test Case '-[WattsonTests.SettingsControlsRecoveryTests testFailedReadOffersRepairAndFailedBrowserOpenKeepsControlsUnchanged]' started.
+Test Case '-[WattsonTests.SettingsControlsRecoveryTests testFailedReadOffersRepairAndFailedBrowserOpenKeepsControlsUnchanged]' passed (0.045 seconds).
+Test Case '-[WattsonTests.SettingsControlsRecoveryTests testMissingHelperOffersOptionalInstallerOnlyAfterExplicitClick]' started.
+Test Case '-[WattsonTests.SettingsControlsRecoveryTests testMissingHelperOffersOptionalInstallerOnlyAfterExplicitClick]' passed (0.055 seconds).
+Test Case '-[WattsonTests.SettingsControlsRecoveryTests testStaleFailedReadCannotReopenRecoveryAfterNewerSuccess]' started.
+Test Case '-[WattsonTests.SettingsControlsRecoveryTests testStaleFailedReadCannotReopenRecoveryAfterNewerSuccess]' passed (0.031 seconds).
+Test Suite 'SettingsControlsRecoveryTests' passed at 2026-10-16 22:14:01.789.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.130 (0.131) seconds
+Test Suite 'SettingsGlassOpticalMarginTests' started at 2026-10-16 22:14:01.789.
+Test Case '-[WattsonTests.SettingsGlassOpticalMarginTests testClassicGeneralSeparatesStartupAndUpdatesWithoutShrinkingOperationalRows]' started.
+Test Case '-[WattsonTests.SettingsGlassOpticalMarginTests testClassicGeneralSeparatesStartupAndUpdatesWithoutShrinkingOperationalRows]' passed (0.173 seconds).
+Test Case '-[WattsonTests.SettingsGlassOpticalMarginTests testGeneralUsesConsistentGroupHeadingsAndAppearanceHierarchy]' started.
+Test Case '-[WattsonTests.SettingsGlassOpticalMarginTests testGeneralUsesConsistentGroupHeadingsAndAppearanceHierarchy]' passed (0.135 seconds).
+Test Case '-[WattsonTests.SettingsGlassOpticalMarginTests testGlassGroupsKeepOpticalEdgesInsideClipWhenFeedbackReceivesFocus]' started.
+Test Case '-[WattsonTests.SettingsGlassOpticalMarginTests testGlassGroupsKeepOpticalEdgesInsideClipWhenFeedbackReceivesFocus]' passed (0.208 seconds).
+Test Suite 'SettingsGlassOpticalMarginTests' passed at 2026-10-16 22:14:02.306.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.516 (0.517) seconds
+Test Suite 'StatusClickDismissalTests' started at 2026-10-16 22:14:02.306.
+Test Case '-[WattsonTests.StatusClickDismissalTests testEarlyDismissalSuppressionRequiresLiveUnmodifiedPrimaryPress]' started.
+Test Case '-[WattsonTests.StatusClickDismissalTests testEarlyDismissalSuppressionRequiresLiveUnmodifiedPrimaryPress]' passed (0.000 seconds).
+Test Case '-[WattsonTests.StatusClickDismissalTests testEarlyDismissalThenButtonActionClosesInsteadOfReopening]' started.
+Test Case '-[WattsonTests.StatusClickDismissalTests testEarlyDismissalThenButtonActionClosesInsteadOfReopening]' passed (0.000 seconds).
+Test Case '-[WattsonTests.StatusClickDismissalTests testGlobalAnchorClickThenButtonActionClosesOnceAndNextClickReopens]' started.
+Test Case '-[WattsonTests.StatusClickDismissalTests testGlobalAnchorClickThenButtonActionClosesOnceAndNextClickReopens]' passed (0.000 seconds).
+Test Case '-[WattsonTests.StatusClickDismissalTests testGlobalAnchorIncludesScreenTopButNotNeighboringStatusItem]' started.
+Test Case '-[WattsonTests.StatusClickDismissalTests testGlobalAnchorIncludesScreenTopButNotNeighboringStatusItem]' passed (0.000 seconds).
+Test Case '-[WattsonTests.StatusClickDismissalTests testGlobalAnchorRightClickStaysOpenAndOnlySelectsEnergyMode]' started.
+Test Case '-[WattsonTests.StatusClickDismissalTests testGlobalAnchorRightClickStaysOpenAndOnlySelectsEnergyMode]' passed (0.000 seconds).
+Test Case '-[WattsonTests.StatusClickDismissalTests testGlobalOutsideClickStillDismissesAndMissingAnchorDoesNotBlockDismissal]' started.
+Test Case '-[WattsonTests.StatusClickDismissalTests testGlobalOutsideClickStillDismissesAndMissingAnchorDoesNotBlockDismissal]' passed (0.000 seconds).
+Test Suite 'StatusClickDismissalTests' passed at 2026-10-16 22:14:02.307.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'TestDefaultsCleanupTests' started at 2026-10-16 22:14:02.307.
+Test Case '-[WattsonTests.TestDefaultsCleanupTests testPersistedSuiteFileStaysRemovedAfterDaemonReads]' started.
+Test Case '-[WattsonTests.TestDefaultsCleanupTests testPersistedSuiteFileStaysRemovedAfterDaemonReads]' passed (1.034 seconds).
+Test Suite 'TestDefaultsCleanupTests' passed at 2026-10-16 22:14:03.341.
+	 Executed 1 test, with 0 failures (0 unexpected) in 1.034 (1.034) seconds
+Test Suite 'WattsonTests' started at 2026-10-16 22:14:03.341.
+Test Case '-[WattsonTests.WattsonTests testAdapterOnlyTelemetryUsesSignedInstantBatteryFlow]' started.
+Test Case '-[WattsonTests.WattsonTests testAdapterOnlyTelemetryUsesSignedInstantBatteryFlow]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testAnimatedSliderFrameFitsPositiveAndNegativeScreenOrigins]' started.
+Test Case '-[WattsonTests.WattsonTests testAnimatedSliderFrameFitsPositiveAndNegativeScreenOrigins]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testAnimatedSliderWindowIsOnALiveDisplayWhileRemainingTransparent]' started.
+Test Case '-[WattsonTests.WattsonTests testAnimatedSliderWindowIsOnALiveDisplayWhileRemainingTransparent]' passed (0.088 seconds).
+Test Case '-[WattsonTests.WattsonTests testAvailabilityRetainsUsableStateAcrossDegradationAndRecovery]' started.
+Test Case '-[WattsonTests.WattsonTests testAvailabilityRetainsUsableStateAcrossDegradationAndRecovery]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testAvailableRefreshDuringLoginItemSetDoesNotInvalidateTheWrite]' started.
+Test Case '-[WattsonTests.WattsonTests testAvailableRefreshDuringLoginItemSetDoesNotInvalidateTheWrite]' passed (0.001 seconds).
+Test Case '-[WattsonTests.WattsonTests testBatteryCapacityNormalizesAppleSiliconAndIntelUnits]' started.
+Test Case '-[WattsonTests.WattsonTests testBatteryCapacityNormalizesAppleSiliconAndIntelUnits]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testBatteryCapacityRequiresUnitsFromMaximumCapacity]' started.
+Test Case '-[WattsonTests.WattsonTests testBatteryCapacityRequiresUnitsFromMaximumCapacity]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testBatteryIconRenderKeyIgnoresWattsButTracksVisualChanges]' started.
+Test Case '-[WattsonTests.WattsonTests testBatteryIconRenderKeyIgnoresWattsButTracksVisualChanges]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testBatteryTemperatureRejectsMissingAndSentinelValues]' started.
+Test Case '-[WattsonTests.WattsonTests testBatteryTemperatureRejectsMissingAndSentinelValues]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testBatteryTemperatureUsesPhysicalDeciKelvinThenVirtualCentiCelsius]' started.
+Test Case '-[WattsonTests.WattsonTests testBatteryTemperatureUsesPhysicalDeciKelvinThenVirtualCentiCelsius]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testClosedPopoverCachesSystemBatteryIconStateWithoutFooterWork]' started.
+Test Case '-[WattsonTests.WattsonTests testClosedPopoverCachesSystemBatteryIconStateWithoutFooterWork]' passed (0.020 seconds).
+Test Case '-[WattsonTests.WattsonTests testClosedPopoverCachesWithoutRenderingContent]' started.
+Test Case '-[WattsonTests.WattsonTests testClosedPopoverCachesWithoutRenderingContent]' passed (0.019 seconds).
+Test Case '-[WattsonTests.WattsonTests testColdPartialAvailabilityRecoversAndRecordsRequestedHistory]' started.
+Test Case '-[WattsonTests.WattsonTests testColdPartialAvailabilityRecoversAndRecordsRequestedHistory]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testColdStartAvailabilityDistinguishesAbsentFromRepeatedPartialReads]' started.
+Test Case '-[WattsonTests.WattsonTests testColdStartAvailabilityDistinguishesAbsentFromRepeatedPartialReads]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testContinuousEventSamplesDoNotStarvePublication]' started.
+Test Case '-[WattsonTests.WattsonTests testContinuousEventSamplesDoNotStarvePublication]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testCycleCountRejectsWrappedAndImplausibleValues]' started.
+Test Case '-[WattsonTests.WattsonTests testCycleCountRejectsWrappedAndImplausibleValues]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testDeviceOutputIsAuxiliaryAndCoherent]' started.
+Test Case '-[WattsonTests.WattsonTests testDeviceOutputIsAuxiliaryAndCoherent]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testDeviceOutputParserUsesOnlyValidMeasuredWatts]' started.
+Test Case '-[WattsonTests.WattsonTests testDeviceOutputParserUsesOnlyValidMeasuredWatts]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testDeviceOutputPowerFlowLayoutsFallbacksAndAccessibility]' started.
+Test Case '-[WattsonTests.WattsonTests testDeviceOutputPowerFlowLayoutsFallbacksAndAccessibility]' passed (0.049 seconds).
+Test Case '-[WattsonTests.WattsonTests testDeviceOutputRejectsOversizedPortArraysWithoutReportingZero]' started.
+Test Case '-[WattsonTests.WattsonTests testDeviceOutputRejectsOversizedPortArraysWithoutReportingZero]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testEnablingReduceMotionStopsEveryModeSliderSettleDriverImmediately]' started.
+Test Case '-[WattsonTests.WattsonTests testEnablingReduceMotionStopsEveryModeSliderSettleDriverImmediately]' passed (1.545 seconds).
+Test Case '-[WattsonTests.WattsonTests testEventSampleRequestsRetainAtMostOneFreshFollowUp]' started.
+Test Case '-[WattsonTests.WattsonTests testEventSampleRequestsRetainAtMostOneFreshFollowUp]' passed (0.004 seconds).
+Test Case '-[WattsonTests.WattsonTests testExplicitCancellationDropsOnlyThePendingRead]' started.
+Test Case '-[WattsonTests.WattsonTests testExplicitCancellationDropsOnlyThePendingRead]' passed (0.024 seconds).
+Test Case '-[WattsonTests.WattsonTests testFailedLoginItemSetCompletesBeforeCoalescedReadbackStarts]' started.
+Test Case '-[WattsonTests.WattsonTests testFailedLoginItemSetCompletesBeforeCoalescedReadbackStarts]' passed (0.026 seconds).
+Test Case '-[WattsonTests.WattsonTests testFailedLoginItemSetKeepsRefreshWaitersForAuthoritativeReadback]' started.
+Test Case '-[WattsonTests.WattsonTests testFailedLoginItemSetKeepsRefreshWaitersForAuthoritativeReadback]' passed (0.001 seconds).
+Test Case '-[WattsonTests.WattsonTests testHiddenModulesSkipUpdatesAndRefreshOnceWhenShown]' started.
+Test Case '-[WattsonTests.WattsonTests testHiddenModulesSkipUpdatesAndRefreshOnceWhenShown]' passed (0.024 seconds).
+Test Case '-[WattsonTests.WattsonTests testHistoryIsBoundedAndChronological]' started.
+Test Case '-[WattsonTests.WattsonTests testHistoryIsBoundedAndChronological]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testHistoryPresentationMaterializesOrderAndPeakTogether]' started.
+Test Case '-[WattsonTests.WattsonTests testHistoryPresentationMaterializesOrderAndPeakTogether]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testHistoryRejectsNonFiniteValuesAndSurvivesLongWraps]' started.
+Test Case '-[WattsonTests.WattsonTests testHistoryRejectsNonFiniteValuesAndSurvivesLongWraps]' passed (0.022 seconds).
+Test Case '-[WattsonTests.WattsonTests testHistoryViewSkipsAnIdenticalPathRebuild]' started.
+Test Case '-[WattsonTests.WattsonTests testHistoryViewSkipsAnIdenticalPathRebuild]' passed (0.001 seconds).
+Test Case '-[WattsonTests.WattsonTests testIdleWakeSamplePublishesWithoutUnnecessaryFollowUp]' started.
+Test Case '-[WattsonTests.WattsonTests testIdleWakeSamplePublishesWithoutUnnecessaryFollowUp]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testIndependentControllersShareOneHelperSettingsWorker]' started.
+Test Case '-[WattsonTests.WattsonTests testIndependentControllersShareOneHelperSettingsWorker]' passed (0.054 seconds).
+Test Case '-[WattsonTests.WattsonTests testInitialBatterySampleDistinguishesAbsentFromTemporaryReadFailure]' started.
+Test Case '-[WattsonTests.WattsonTests testInitialBatterySampleDistinguishesAbsentFromTemporaryReadFailure]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testInstantCurrentIsSignedAndFallsBackOnlyWhenMissing]' started.
+Test Case '-[WattsonTests.WattsonTests testInstantCurrentIsSignedAndFallsBackOnlyWhenMissing]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testLegacyClickSettleNeverEnablesDragOnlyRefractionDuringRefresh]' started.
+Test Case '-[WattsonTests.WattsonTests testLegacyClickSettleNeverEnablesDragOnlyRefractionDuringRefresh]' passed (0.573 seconds).
+Test Case '-[WattsonTests.WattsonTests testLegacyModeSliderLensSamplesRealTrackPixelsAndRefractsDuringDrag]' started.
+Test Case '-[WattsonTests.WattsonTests testLegacyModeSliderLensSamplesRealTrackPixelsAndRefractsDuringDrag]' passed (0.071 seconds).
+Test Case '-[WattsonTests.WattsonTests testLivePowerUsesEitherSafeBranchAndRejectsInvalidValues]' started.
+Test Case '-[WattsonTests.WattsonTests testLivePowerUsesEitherSafeBranchAndRejectsInvalidValues]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testLiveSystemPowerPreservesBatteryBranchAndConservation]' started.
+Test Case '-[WattsonTests.WattsonTests testLiveSystemPowerPreservesBatteryBranchAndConservation]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testLoginItemRejectsRepeatedSetWhileUpdateIsInFlightAndRestoresReadback]' started.
+Test Case '-[WattsonTests.WattsonTests testLoginItemRejectsRepeatedSetWhileUpdateIsInFlightAndRestoresReadback]' passed (0.014 seconds).
+Test Case '-[WattsonTests.WattsonTests testMacOS26ModeSliderMovesGlassAndItsGeometryOnOneDisplayTimeline]' started.
+Test Case '-[WattsonTests.WattsonTests testMacOS26ModeSliderMovesGlassAndItsGeometryOnOneDisplayTimeline]' passed (0.385 seconds).
+Test Case '-[WattsonTests.WattsonTests testMacOS26ModeSliderUsesNativeClearGlassAsTheMovingLens]' started.
+Test Case '-[WattsonTests.WattsonTests testMacOS26ModeSliderUsesNativeClearGlassAsTheMovingLens]' passed (0.065 seconds).
+Test Case '-[WattsonTests.WattsonTests testMacOS26NativeGlassStaysAiryAtRestAndOnlyStrengthensDuringMotion]' started.
+Test Case '-[WattsonTests.WattsonTests testMacOS26NativeGlassStaysAiryAtRestAndOnlyStrengthensDuringMotion]' passed (0.387 seconds).
+Test Case '-[WattsonTests.WattsonTests testMissingTelemetryRejectsInvalidFallbackAmperage]' started.
+Test Case '-[WattsonTests.WattsonTests testMissingTelemetryRejectsInvalidFallbackAmperage]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testModeSliderClickDuringSpringStaysInsideItsVisiblePath]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderClickDuringSpringStaysInsideItsVisiblePath]' passed (0.902 seconds).
+Test Case '-[WattsonTests.WattsonTests testModeSliderDirectDragKeepsRestingFootprint]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderDirectDragKeepsRestingFootprint]' passed (0.125 seconds).
+Test Case '-[WattsonTests.WattsonTests testModeSliderRegrabMaterializesPresentationWithoutJump]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderRegrabMaterializesPresentationWithoutJump]' passed (0.139 seconds).
+Test Case '-[WattsonTests.WattsonTests testModeSliderRejectionReversesFromPresentationPosition]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderRejectionReversesFromPresentationPosition]' passed (0.554 seconds).
+Test Case '-[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges]' passed (0.187 seconds).
+Test Case '-[WattsonTests.WattsonTests testModeSliderTwoDetentMotionRecordsTheMiddleLabelPeak]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderTwoDetentMotionRecordsTheMiddleLabelPeak]' passed (0.067 seconds).
+Test Case '-[WattsonTests.WattsonTests testMutationCanCancelPendingReadUntilSharedWorkerSelectsIt]' started.
+Test Case '-[WattsonTests.WattsonTests testMutationCanCancelPendingReadUntilSharedWorkerSelectsIt]' passed (0.008 seconds).
+Test Case '-[WattsonTests.WattsonTests testMutationDiscardsStalePendingReadsAndWaitsForOnlyCurrentRead]' started.
+Test Case '-[WattsonTests.WattsonTests testMutationDiscardsStalePendingReadsAndWaitsForOnlyCurrentRead]' passed (0.015 seconds).
+Test Case '-[WattsonTests.WattsonTests testMutationsStaySerializedAndCompletionsRunOnMainThread]' started.
+Test Case '-[WattsonTests.WattsonTests testMutationsStaySerializedAndCompletionsRunOnMainThread]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testNativeBatteryIconIsAResolutionIndependentTemplate]' started.
+Test Case '-[WattsonTests.WattsonTests testNativeBatteryIconIsAResolutionIndependentTemplate]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testNativeBatteryIconKeyTracksExactFillAndSystemPowerAdornment]' started.
+Test Case '-[WattsonTests.WattsonTests testNativeBatteryIconKeyTracksExactFillAndSystemPowerAdornment]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testNativeBatteryRendersEveryConnectedPowerStateWithTheSameSystemBolt]' started.
+Test Case '-[WattsonTests.WattsonTests testNativeBatteryRendersEveryConnectedPowerStateWithTheSameSystemBolt]' passed (0.004 seconds).
+Test Case '-[WattsonTests.WattsonTests testNativeFullBatteryUsesTheOpaqueSystemFill]' started.
+Test Case '-[WattsonTests.WattsonTests testNativeFullBatteryUsesTheOpaqueSystemFill]' passed (0.001 seconds).
+Test Case '-[WattsonTests.WattsonTests testNativeLowPowerColorsTheFillButKeepsANeutralOutline]' started.
+Test Case '-[WattsonTests.WattsonTests testNativeLowPowerColorsTheFillButKeepsANeutralOutline]' passed (0.001 seconds).
+Test Case '-[WattsonTests.WattsonTests testPeriodicSampleRequestsCoalesceWithoutCatchUpStorm]' started.
+Test Case '-[WattsonTests.WattsonTests testPeriodicSampleRequestsCoalesceWithoutCatchUpStorm]' passed (0.003 seconds).
+Test Case '-[WattsonTests.WattsonTests testPluggedIdleBreathingIsIdempotentAndStopsWhenHidden]' started.
+Test Case '-[WattsonTests.WattsonTests testPluggedIdleBreathingIsIdempotentAndStopsWhenHidden]' passed (0.004 seconds).
+Test Case '-[WattsonTests.WattsonTests testPluggedTransitionUsesInstantBatteryFlowUntilSourceTelemetryArrives]' started.
+Test Case '-[WattsonTests.WattsonTests testPluggedTransitionUsesInstantBatteryFlowUntilSourceTelemetryArrives]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testPopoverSettingsRelayDefersPresenterToNextMainTurn]' started.
+Test Case '-[WattsonTests.WattsonTests testPopoverSettingsRelayDefersPresenterToNextMainTurn]' passed (0.072 seconds).
+Test Case '-[WattsonTests.WattsonTests testPositiveCoherentDeviceOutputUsesSystemTotalAcrossInstrumentLabels]' started.
+Test Case '-[WattsonTests.WattsonTests testPositiveCoherentDeviceOutputUsesSystemTotalAcrossInstrumentLabels]' passed (0.005 seconds).
+Test Case '-[WattsonTests.WattsonTests testPowerSnapshotUsesSignedBatteryFlow]' started.
+Test Case '-[WattsonTests.WattsonTests testPowerSnapshotUsesSignedBatteryFlow]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testQuickMenuModuleActionWritesSharedSettings]' started.
+Test Case '-[WattsonTests.WattsonTests testQuickMenuModuleActionWritesSharedSettings]' passed (0.022 seconds).
+Test Case '-[WattsonTests.WattsonTests testRecoveredAvailabilityRefreshSurvivesAStaleInFlightSet]' started.
+Test Case '-[WattsonTests.WattsonTests testRecoveredAvailabilityRefreshSurvivesAStaleInFlightSet]' passed (0.001 seconds).
+Test Case '-[WattsonTests.WattsonTests testReducedMotionUpdatesCreateNoImplicitGeometryAnimations]' started.
+Test Case '-[WattsonTests.WattsonTests testReducedMotionUpdatesCreateNoImplicitGeometryAnimations]' passed (0.023 seconds).
+Test Case '-[WattsonTests.WattsonTests testRepeatedReadOperationsCollapseToOnePendingRead]' started.
+Test Case '-[WattsonTests.WattsonTests testRepeatedReadOperationsCollapseToOnePendingRead]' passed (0.013 seconds).
+Test Case '-[WattsonTests.WattsonTests testResettingLoginItemTestConfigurationWaitsForInFlightRead]' started.
+Test Case '-[WattsonTests.WattsonTests testResettingLoginItemTestConfigurationWaitsForInFlightRead]' passed (0.055 seconds).
+Test Case '-[WattsonTests.WattsonTests testResolvedPowerRandomizedInputsStayFiniteAndConserveEnergy]' started.
+Test Case '-[WattsonTests.WattsonTests testResolvedPowerRandomizedInputsStayFiniteAndConserveEnergy]' passed (0.132 seconds).
+Test Case '-[WattsonTests.WattsonTests testResolvedSnapshotCarriesDeviceOutputThroughLivePowerMerge]' started.
+Test Case '-[WattsonTests.WattsonTests testResolvedSnapshotCarriesDeviceOutputThroughLivePowerMerge]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testRingGaugeDistinguishesMissingTemperatureFromRealZero]' started.
+Test Case '-[WattsonTests.WattsonTests testRingGaugeDistinguishesMissingTemperatureFromRealZero]' passed (0.001 seconds).
+Test Case '-[WattsonTests.WattsonTests testRingGaugeReusesTrailingSlotWithoutChangingGeometry]' started.
+Test Case '-[WattsonTests.WattsonTests testRingGaugeReusesTrailingSlotWithoutChangingGeometry]' passed (0.003 seconds).
+Test Case '-[WattsonTests.WattsonTests testSettingsModuleChangeUpdatesLivePopover]' started.
+Test Case '-[WattsonTests.WattsonTests testSettingsModuleChangeUpdatesLivePopover]' passed (0.077 seconds).
+Test Case '-[WattsonTests.WattsonTests testShowingModuleWhilePopoverIsClosedDoesNotRenderIt]' started.
+Test Case '-[WattsonTests.WattsonTests testShowingModuleWhilePopoverIsClosedDoesNotRenderIt]' passed (0.063 seconds).
+Test Case '-[WattsonTests.WattsonTests testSignedBatteryCurrentOverridesAsynchronousTotalsAndKeepsDeviceOutputAuxiliary]' started.
+Test Case '-[WattsonTests.WattsonTests testSignedBatteryCurrentOverridesAsynchronousTotalsAndKeepsDeviceOutputAuxiliary]' passed (0.003 seconds).
+Test Case '-[WattsonTests.WattsonTests testStatusButtonPresentationIgnoresNonVisualTelemetry]' started.
+Test Case '-[WattsonTests.WattsonTests testStatusButtonPresentationIgnoresNonVisualTelemetry]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testSupersededLoginItemRefreshStillCompletesEveryWaitingCaller]' started.
+Test Case '-[WattsonTests.WattsonTests testSupersededLoginItemRefreshStillCompletesEveryWaitingCaller]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testSupersedingSampleAlwaysRetainsAFreshFollowUp]' started.
+Test Case '-[WattsonTests.WattsonTests testSupersedingSampleAlwaysRetainsAFreshFollowUp]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testSynchronousMutationIsReentrantOnSharedWorker]' started.
+Test Case '-[WattsonTests.WattsonTests testSynchronousMutationIsReentrantOnSharedWorker]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testUnavailableRefreshCannotBeOverwrittenByInFlightLoginItemSet]' started.
+Test Case '-[WattsonTests.WattsonTests testUnavailableRefreshCannotBeOverwrittenByInFlightLoginItemSet]' passed (0.000 seconds).
+Test Case '-[WattsonTests.WattsonTests testUnavailableRefreshInvalidatesOlderLoginItemCompletion]' started.
+Test Case '-[WattsonTests.WattsonTests testUnavailableRefreshInvalidatesOlderLoginItemCompletion]' passed (0.021 seconds).
+Test Case '-[WattsonTests.WattsonTests testWakeSampleSupersedesUntilOnePostWakeAcquisitionCompletes]' started.
+Test Case '-[WattsonTests.WattsonTests testWakeSampleSupersedesUntilOnePostWakeAcquisitionCompletes]' passed (0.000 seconds).
+Test Suite 'WattsonTests' passed at 2026-10-16 22:14:09.222.
+	 Executed 82 tests, with 0 failures (0 unexpected) in 5.876 (5.881) seconds
+Test Suite 'WattsonPackageTests.xctest' passed at 2026-10-16 22:14:09.222.
+	 Executed 499 tests, with 0 failures (0 unexpected) in 12.263 (12.293) seconds
+Test Suite 'All tests' passed at 2026-10-16 22:14:09.222.
+	 Executed 499 tests, with 0 failures (0 unexpected) in 12.263 (12.294) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

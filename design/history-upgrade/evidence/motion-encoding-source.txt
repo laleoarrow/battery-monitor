@@ -1,0 +1,22 @@
+from pathlib import Path
+import json,subprocess,sys
+p=Path(sys.argv[1]).resolve()
+r=json.loads((p/'history-motion.json').read_text())
+frames=r['frames']
+entries=['ffconcat version 1.0']
+for i,frame in enumerate(frames):
+ path=p/'motion-frames'/frame['file']
+ if not path.is_file() or path.is_symlink(): raise RuntimeError('Missing original measured frame')
+ if "'" in str(path): raise RuntimeError('Unexpected path character')
+ entries.append("file '"+str(path)+"'")
+ if i+1<len(frames): duration=frames[i+1]['elapsedSeconds']-frame['elapsedSeconds']
+ else: duration=max(0.01,r['durationSeconds']-frame['elapsedSeconds'])
+ if not 0<duration<2: raise RuntimeError('Unexpected measured frame interval')
+ entries.append('duration '+str(duration))
+concat=p/'history-motion.ffconcat'
+concat.write_text('\n'.join(entries)+'\n')
+output=p/'history-motion.mp4'
+if output.exists(): raise RuntimeError('Never overwrite a published encoding')
+with (p/'motion-encode.log').open('x') as log:
+ subprocess.run(['/opt/homebrew/bin/ffmpeg','-hide_banner','-loglevel','warning','-f','concat','-safe','0','-i',str(concat),'-vf','pad=ceil(iw/2)*2:ceil(ih/2)*2','-c:v','libx264','-pix_fmt','yuv420p','-movflags','+faststart','-fps_mode','vfr',str(output)],stdout=log,stderr=log,check=True)
+print(output)

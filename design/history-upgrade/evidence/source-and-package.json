@@ -1,0 +1,51 @@
+{
+  "sourceCommit": "5cefb014b845284ae2dd66be039a6fd9abd3d32e",
+  "sourceFiles": [
+    {
+      "path": "Core/HistoryChart.swift",
+      "sha256": "aa79e73ebfe8786ff4d1373a397b762aa572674762b5d153e40472610181b04a"
+    },
+    {
+      "path": "Core/PowerHistory.swift",
+      "sha256": "6eb4a9d5bb892623cc028c3ae517d446b37cacd9df42b97c4df36f79c5caaf95"
+    },
+    {
+      "path": "Popover/HistoryLayer.swift",
+      "sha256": "b8c27b07e5c98b65ccf4dbf70576f0bcca630a68d1b31d23e90ef106ad10f7aa"
+    },
+    {
+      "path": "Popover/PopoverController.swift",
+      "sha256": "5328f727b83af305702a19758a652799eabcbfdb219e74b942206b403c2b1927"
+    },
+    {
+      "path": "Popover/PopoverContentView.swift",
+      "sha256": "b12169b27b78574c23c45e857e441514b85b4789b10746640811b77420783a23"
+    },
+    {
+      "path": "MenuBar/StatusItemController.swift",
+      "sha256": "f3c1b8e412859a3da29f20a405f2834fa4b66a3d2f7e13374b8cfc63bd342c29"
+    },
+    {
+      "path": "tests/interaction/main.swift",
+      "sha256": "acc51f41ee9cb08b7bcbebe27ee7e07db2f6beec19590dbfcd8900148ce0168c"
+    },
+    {
+      "path": "SwiftTests/HistoryChartTests.swift",
+      "sha256": "5e486473693854475a005fec3ff59e648da9d307a4991c0fa1a128db4d551f27"
+    },
+    {
+      "path": "SwiftTests/HistoryViewTests.swift",
+      "sha256": "356162b3c828036b6c21835b9a86bc2c30767985d96007f49fcd7f4b2ba7be48"
+    },
+    {
+      "path": "VERSION",
+      "sha256": "f5cf7fae01ba9951447c530896dd1c5dfbaee76326d84b4909bb3e6bb09c3e08"
+    }
+  ],
+  "artifacts": {
+    "Wattson-v4.3.9-macos-universal.pkg": "50c341b2fb684a19a6e406bb6d98b1d393ca4adc8fd30fa7ab8867f63b9fb599",
+    "Wattson-v4.3.9-macos-universal.dmg": "6d1c42b98c427da27b6cb12f58323facbd588c7d97017d82dde7ebe9b5d25702",
+    "Wattson-v4.3.9-release-info.txt": "689f34c917e0ccdda1f8836c434ca1bbfe9eaac9f69710a29198f4ed6f8652f5",
+    "SHA256SUMS.txt": "aab7da36358de57b6f86471c1ecda0878a3122e454e8bfc4d92862c40e0a94d1"
+  }
+}

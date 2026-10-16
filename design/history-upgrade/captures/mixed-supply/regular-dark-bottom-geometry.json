@@ -1,0 +1,470 @@
+{
+  "anchorButtonFrameAppKit" : [
+    739,
+    742,
+    66.5,
+    22
+  ],
+  "anchorWindowFrameAppKit" : [
+    739,
+    738,
+    67,
+    30
+  ],
+  "arrowClamped" : false,
+  "arrowHeight" : 12,
+  "arrowTipAppKit" : [
+    772.25,
+    734
+  ],
+  "arrowTipLocal" : [
+    212.25,
+    674
+  ],
+  "backingMaskHasArrow" : true,
+  "backingMaskMatchesSelectedShape" : true,
+  "backingOpacity" : 0.0039215686274509803,
+  "bodyFrameAppKit" : [
+    592,
+    92,
+    360,
+    630
+  ],
+  "bodyGridHitCount" : 35,
+  "bodyGridHitRatio" : 1,
+  "bodyGridPicks" : [
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        619,
+        119
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        695.5,
+        119
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        772,
+        119
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        848.5,
+        119
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        925,
+        119
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        619,
+        215
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        695.5,
+        215
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        772,
+        215
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        848.5,
+        215
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        925,
+        215
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        619,
+        311
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        695.5,
+        311
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        772,
+        311
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        848.5,
+        311
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        925,
+        311
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        619,
+        407
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        695.5,
+        407
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        772,
+        407
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        848.5,
+        407
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        925,
+        407
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        619,
+        503
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        695.5,
+        503
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        772,
+        503
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        848.5,
+        503
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        925,
+        503
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        619,
+        599
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        695.5,
+        599
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        772,
+        599
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        848.5,
+        599
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        925,
+        599
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        619,
+        695
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        695.5,
+        695
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        772,
+        695
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        848.5,
+        695
+      ]
+    },
+    {
+      "hitsPanel" : true,
+      "pickedWindow" : 157,
+      "screenPointAppKit" : [
+        925,
+        695
+      ]
+    }
+  ],
+  "bodyGridPointCount" : 35,
+  "bodyHitCalibratesPanel" : true,
+  "bodyPickedWindow" : 157,
+  "captureRectCG" : [
+    552,
+    -6,
+    440,
+    722
+  ],
+  "clampedArrowX" : 180.25,
+  "contentMatchesBodyFrame" : true,
+  "contentSize" : [
+    360,
+    630
+  ],
+  "expectedBackingOpacity" : 0.0039215686274509803,
+  "fixtureScenario" : "mixed-supply",
+  "fixtureValues" : true,
+  "footerFrameInDocument" : [
+    7.5,
+    709,
+    328,
+    78
+  ],
+  "foregroundClipsToBody" : true,
+  "foregroundOpacity" : 1,
+  "glassFrameAppKit" : [
+    592,
+    92,
+    360,
+    642
+  ],
+  "hasVerticalScroller" : true,
+  "hasWindowShadow" : false,
+  "limitations" : "Fixed charging and simulated footer state; production status item, placement and continuous arrow\/body material, no manually adjusted panel\/body geometry; transparent top optical margin may overlap menu bar. Captures own panel plus backdrop only.",
+  "margin" : 32,
+  "materialAndBackingFramesMatch" : true,
+  "materialBounds" : [
+    0,
+    0,
+    360,
+    642
+  ],
+  "materialOpacity" : 1,
+  "minimumInputOpacity" : 0.0039215686274509803,
+  "name" : "regular-dark-bottom",
+  "panelFrameAppKit" : [
+    560,
+    60,
+    424,
+    706
+  ],
+  "pixels" : [
+    880,
+    1444
+  ],
+  "reduceMotionOverride" : false,
+  "requestedArrowX" : 180.25,
+  "runtimeFrameInDocument" : [
+    7.5,
+    621,
+    328,
+    88
+  ],
+  "screenFrameAppKit" : [
+    0,
+    0,
+    1024,
+    768
+  ],
+  "scrollDocumentSize" : [
+    343,
+    799
+  ],
+  "scrollDocumentVisibleRect" : [
+    0,
+    169,
+    343,
+    630
+  ],
+  "scrolling" : true,
+  "showsArrow" : true,
+  "solidAccessibilityBackground" : false,
+  "statusWindowPicks" : [
+    {
+      "avoidsPopupWindow" : true,
+      "closedBaselineWindow" : 0,
+      "matchesClosedBaseline" : true,
+      "pickedWindow" : 0,
+      "point" : "center",
+      "screenPointAppKit" : [
+        772.5,
+        753
+      ],
+      "statusReportedWindow" : 4294967296
+    },
+    {
+      "avoidsPopupWindow" : true,
+      "closedBaselineWindow" : 0,
+      "matchesClosedBaseline" : true,
+      "pickedWindow" : 0,
+      "point" : "top",
+      "screenPointAppKit" : [
+        772.5,
+        767
+      ],
+      "statusReportedWindow" : 4294967296
+    },
+    {
+      "avoidsPopupWindow" : true,
+      "closedBaselineWindow" : 0,
+      "matchesClosedBaseline" : true,
+      "pickedWindow" : 0,
+      "point" : "bottom",
+      "screenPointAppKit" : [
+        772.5,
+        739
+      ],
+      "statusReportedWindow" : 4294967296
+    },
+    {
+      "avoidsPopupWindow" : true,
+      "closedBaselineWindow" : 0,
+      "matchesClosedBaseline" : true,
+      "pickedWindow" : 0,
+      "point" : "left",
+      "screenPointAppKit" : [
+        740,
+        753
+      ],
+      "statusReportedWindow" : 4294967296
+    },
+    {
+      "avoidsPopupWindow" : true,
+      "closedBaselineWindow" : 0,
+      "matchesClosedBaseline" : true,
+      "pickedWindow" : 0,
+      "point" : "right",
+      "screenPointAppKit" : [
+        805,
+        753
+      ],
+      "statusReportedWindow" : 4294967296
+    }
+  ],
+  "transparency" : 1,
+  "visibleFrameAppKit" : [
+    0,
+    60,
+    1024,
+    678
+  ],
+  "window" : 157
+}

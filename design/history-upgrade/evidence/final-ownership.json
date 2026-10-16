@@ -1,0 +1,104 @@
+{
+  "TCCDatabaseAccessRequired": false,
+  "createdEpoch": 1792160868.077725,
+  "deletionAuthorizedByThisManifest": false,
+  "domains": [
+    {
+      "domain": "Wattson.SettingsCommandInteraction.F948EA5C-9F0A-4159-835F-38913D0EFB65",
+      "sourceEvidence": [
+        "sourceqa-5cefb014b845-v2/interaction/owned-domains.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyqa.17cc13e0-115a-432b-8e41-8389983c7af3",
+      "sourceEvidence": [
+        "sourceqa-5cefb014b845-v2/captures/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyqa.267b623c-78f2-4398-8209-4d65389f9c1a",
+      "sourceEvidence": [
+        "sourceqa-5cefb014b845-v6/captures/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyqa.95274ecf-1667-4c04-a73b-a6256e82fd11",
+      "sourceEvidence": [
+        "sourceqa-5cefb014b845-v3/captures/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyqa.d2a4290e-1dc3-4a56-884b-7783a1bfb9ec",
+      "sourceEvidence": [
+        "sourceqa-5cefb014b845-v4/captures/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.historyqa.e7ad5b5d-b586-494a-b448-552a389917f4",
+      "sourceEvidence": [
+        "sourceqa-5cefb014b845-v5/captures/capture-provenance.txt"
+      ]
+    },
+    {
+      "domain": "com.leoarrow.wattson.interactiontests.185b0518-de9b-4d61-b14a-4a74fbd1727b",
+      "sourceEvidence": [
+        "sourceqa-5cefb014b845-v2/interaction/owned-domains.txt"
+      ]
+    }
+  ],
+  "evidenceShare": "/Volumes/My Shared Files/history",
+  "expectedHostname": "Manageds-Virtual-Machine.local",
+  "explicitOwnedApps": [
+    "/Users/admin/Project/Wattson-History-QA/.build/staged-qa.noindex/run.0hFicy/source/.build/history-captures.noindex/run.htBsq8/HistoryProbe.app",
+    "/Users/admin/Project/Wattson-History-QA/.build/staged-qa.noindex/run.1mfURT/source/.build/history-captures.noindex/run.hKAo9J/HistoryProbe.app",
+    "/Users/admin/Project/Wattson-History-QA/.build/staged-qa.noindex/run.ONZJgG/source/.build/history-captures.noindex/run.F6naBz/HistoryProbe.app",
+    "/Users/admin/Project/Wattson-History-QA/.build/staged-qa.noindex/run.fgh0EX/source/.build/history-captures.noindex/run.eL2fTi/HistoryProbe.app",
+    "/Users/admin/Project/Wattson-History-QA/.build/staged-qa.noindex/run.hoAZdS/source/.build/history-captures.noindex/run.fagGRb/HistoryProbe.app"
+  ],
+  "explicitOwnedSettingsWorkspaces": [],
+  "freezerSHA256": "3492d704faf23741e0358d8642df23dd91cbbb6860fb3affa19fdc3e76c41de8",
+  "guestEnvironmentEvidence": {
+    "path": "guest-environment.json",
+    "sha256": "52935344c06eb07ce9058018d669dfbddff379c241caf2e3d8ba5f37afc3a1fb"
+  },
+  "isOwnershipSnapshotOnly": true,
+  "nativeProjectContentsOwnedByThisTask": true,
+  "nativeScratchBasenamePrefix": "run.",
+  "newRunsRequireNewManifest": true,
+  "ownedNativeProject": "/Users/admin/Project/Wattson-History-QA",
+  "ownedVM": "Wattson-History-20261016",
+  "schema": 1,
+  "scope": "Only exact domains recorded by this task's capture provenance, regression owner lists and private Settings owner hook. Native workspace/app searches are restricted to this task's explicitly owned project. Canonical installation cleanup is audited separately.",
+  "sourceEvidence": [
+    {
+      "bytes": 285,
+      "path": "sourceqa-5cefb014b845-v2/captures/capture-provenance.txt",
+      "sha256": "7ff973f7f30dea14e09946f166184a4c1236bfa2cfc5a0c22f7fe13915761e74"
+    },
+    {
+      "bytes": 147,
+      "path": "sourceqa-5cefb014b845-v2/interaction/owned-domains.txt",
+      "sha256": "f87af88fab44ef477f9de2c5ede1fbf32bb4fa1c1f8f68cb4d2e8a42805a2466"
+    },
+    {
+      "bytes": 285,
+      "path": "sourceqa-5cefb014b845-v3/captures/capture-provenance.txt",
+      "sha256": "07226058442e74ace38387aa7d24ed3b36b0ac515eb0726031d98340f1ebe481"
+    },
+    {
+      "bytes": 285,
+      "path": "sourceqa-5cefb014b845-v4/captures/capture-provenance.txt",
+      "sha256": "72f9a8d1c6d78875cc1d33afcd15b44bf8ab2d5e5dc98aecf32f0f6545179e24"
+    },
+    {
+      "bytes": 285,
+      "path": "sourceqa-5cefb014b845-v5/captures/capture-provenance.txt",
+      "sha256": "f8d385e2c0b97c114befb814fd573f862d34bf2a4fa5045ec388fc0d915a9257"
+    },
+    {
+      "bytes": 285,
+      "path": "sourceqa-5cefb014b845-v6/captures/capture-provenance.txt",
+      "sha256": "d1444e8edee4a21149d80ecf74c366f70f6842bdb18e23fc90bcd6de05d6b838"
+    }
+  ]
+}

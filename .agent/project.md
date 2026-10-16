@@ -48,6 +48,8 @@ seconds before a reduction of at least 25%. Contiguous new readings can use one
 the existing presentation and accessibility animation policy; closing, hiding,
 detaching, degraded readings and Reduce Motion stop its animations. No chart
 timer or arbitrary shape-path interpolation is used.
+See the [4.3.9 History review](../design/history-upgrade/README.md) for native
+rendering, motion evidence and verification boundaries.
 
 The system battery-icon control keeps read progress separate from its optional
 last-known value. Opening a popup or Settings starts a coalesced helper read;

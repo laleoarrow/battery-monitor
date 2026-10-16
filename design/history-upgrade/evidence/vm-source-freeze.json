@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "5cefb014b845284ae2dd66be039a6fd9abd3d32e",
+  "sourceArchive": "source-5cefb014b845.tar.gz",
+  "sourceArchiveSHA256": "082e3c5842bad749008aeae26d32f7f18efffa69d75b6b1add52252985cd4d93",
+  "version": "4.3.9",
+  "ownedVM": "Wattson-History-20261016",
+  "nativeProject": "/Users/admin/Project/Wattson-History-QA",
+  "repoShare": "/Volumes/My Shared Files/repo",
+  "evidenceShare": "/Volumes/My Shared Files/history",
+  "bundleIDPrefix": "com.leoarrow.wattson.historyqa.",
+  "testsStarted": false,
+  "requirements": [
+    "content-hash tools tar copied and verified on native storage",
+    "sequential own-window GUI captures using production renderers",
+    "exact UUID preferences finalizer after Foundation process exit",
+    "independent >=90s quiet cleanup audit before clone deletion"
+  ]
+}

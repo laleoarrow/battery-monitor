@@ -1,0 +1,13 @@
+{
+  "checkedAtUTC": "2026-10-16T14:24:04.678158+00:00",
+  "version": "4.3.9",
+  "packageSHA256": "50c341b2fb684a19a6e406bb6d98b1d393ca4adc8fd30fa7ab8867f63b9fb599",
+  "appAndHelperAndDaemonMatchVerifiedPayload": true,
+  "receiptVersion": "4.3.9",
+  "signatureVerified": true,
+  "helperHealth": true,
+  "helperV5": true,
+  "canonicalAppPID": 62192,
+  "stableSeconds": 10,
+  "publicRelease": false
+}

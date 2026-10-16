@@ -1,0 +1,3 @@
+bundleID=com.leoarrow.wattson.historyqa.267b623c-78f2-4398-8209-4d65389f9c1a
+bundlePath=/Users/admin/Project/Wattson-History-QA/.build/staged-qa.noindex/run.hoAZdS/source/.build/history-captures.noindex/run.fagGRb/HistoryProbe.app
+sourceCommit=5cefb014b845284ae2dd66be039a6fd9abd3d32e

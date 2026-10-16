@@ -1,0 +1,81 @@
+system/com.leoarrow.wattson.helper = {
+	active count = 1
+	path = /Library/LaunchDaemons/com.leoarrow.wattson.helper.plist
+	type = LaunchDaemon
+	state = running
+
+	program = /Library/PrivilegedHelperTools/com.leoarrow.wattson.helper
+	arguments = {
+		/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper
+	}
+
+	default environment = {
+		PATH => /usr/bin:/bin:/usr/sbin:/sbin
+	}
+
+	environment = {
+		OSLogRateLimit => 64
+		XPC_SERVICE_NAME => com.leoarrow.wattson.helper
+	}
+
+	domain = system
+	minimum runtime = 10
+	exit timeout = 5
+	runs = 1
+	pid = 1491
+	immediate reason = ipc (socket)
+	forks = 0
+	execs = 1
+	initialized = 1
+	trampolined = 1
+	started suspended = 0
+	proxy started suspended = 0
+	checked allocations = 0 (queried = 1)
+	checked allocations reason = no host
+	checked allocations flags = 0x0
+	last exit code = (never exited)
+
+	sockets = {
+		"Listener" = {
+			type = stream
+			path = /var/run/wattson-helper.sock
+			mode = 666
+
+			sockets = {
+				49 (bytes to read)
+			}
+
+			active = 1
+			passive = 1
+			bonjour = 0
+			ipv4v6 = 0
+			receive_packet_info = 0
+		}
+	}
+
+	resource coalition = {
+		ID = 967
+		type = resource
+		state = active
+		active count = 1
+		name = com.leoarrow.wattson.helper
+	}
+
+	jetsam coalition = {
+		ID = 968
+		type = jetsam
+		state = active
+		active count = 1
+		name = com.leoarrow.wattson.helper
+	}
+
+	spawn type = daemon (3)
+	jetsam priority = 40
+	jetsam memory limit (active) = (unlimited)
+	jetsam memory limit (inactive) = (unlimited)
+	jetsamproperties category = daemon
+	jetsam thread limit = 32
+	cpumon = default
+
+	properties = inferred program | system service | tle system
+}

@@ -1,0 +1,43 @@
+{
+  "TCCDatabaseRead": false,
+  "TCCDatabaseWritten": false,
+  "allPassed": true,
+  "auditedAtEpoch": 1792161003.3009,
+  "checkCount": 8,
+  "checks": {
+    "applicationScriptsRemoved": true,
+    "appsRemoved": true,
+    "containersRemoved": true,
+    "mountsRemoved": true,
+    "nativeRunsRemoved": true,
+    "preferencesRemoved": true,
+    "processesRemoved": true,
+    "registrationsRemoved": true
+  },
+  "deletedAnything": false,
+  "exactDomainsAudited": [
+    "Wattson.SettingsCommandInteraction.F948EA5C-9F0A-4159-835F-38913D0EFB65",
+    "com.leoarrow.wattson.historyqa.17cc13e0-115a-432b-8e41-8389983c7af3",
+    "com.leoarrow.wattson.historyqa.267b623c-78f2-4398-8209-4d65389f9c1a",
+    "com.leoarrow.wattson.historyqa.95274ecf-1667-4c04-a73b-a6256e82fd11",
+    "com.leoarrow.wattson.historyqa.d2a4290e-1dc3-4a56-884b-7783a1bfb9ec",
+    "com.leoarrow.wattson.historyqa.e7ad5b5d-b586-494a-b448-552a389917f4",
+    "com.leoarrow.wattson.interactiontests.185b0518-de9b-4d61-b14a-4a74fbd1727b"
+  ],
+  "ignoredReadOnlyAuditCommands": [],
+  "ownedVMRetained": true,
+  "ownershipManifest": "final-ownership.json",
+  "ownershipManifestSHA256": "b216dc9c4d820135bc87a6e3e260bb8a1be0d5eda57de674d90e5d5f8f800c80",
+  "residuals": {
+    "applicationScripts": [],
+    "apps": [],
+    "containers": [],
+    "mounts": [],
+    "nativeRuns": [],
+    "preferences": [],
+    "processes": [],
+    "registrations": []
+  },
+  "schema": 1,
+  "scope": "Read-only exact-domain and explicitly owned native-project residual audit. Canonical installation audit and >=90-second quiet-window timing are separate caller evidence."
+}
