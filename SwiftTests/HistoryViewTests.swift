@@ -126,6 +126,19 @@ final class HistoryViewTests: XCTestCase {
             XCTAssertEqual(new.y, old.y, accuracy: 1e-8)
         }
         XCTAssertLessThan(after[0].x, 0)
+        let clip = try XCTUnwrap(view.layer?.sublayers?.first(where: { $0.masksToBounds }))
+        let gradient = try XCTUnwrap(clip.sublayers?.first?.sublayers?.compactMap { $0 as? CAGradientLayer }.first)
+        let mask = try XCTUnwrap(gradient.mask as? CAShapeLayer)
+        XCTAssertEqual(gradient.frame.minX, after[0].x, accuracy: 1e-8)
+        XCTAssertEqual(gradient.frame.maxX, PopoverStyle.contentWidth, accuracy: 1e-8)
+        XCTAssertEqual(mask.frame, gradient.bounds)
+        var fillStart: CGPoint?
+        mask.path?.applyWithBlock {
+            if $0.pointee.type == .moveToPoint, fillStart == nil { fillStart = $0.pointee.points[0] }
+        }
+        let fill = try XCTUnwrap(fillStart)
+        XCTAssertEqual(fill.x + gradient.frame.minX, after[0].x, accuracy: 1e-8)
+        XCTAssertEqual(fill.y, after[0].y, accuracy: 1e-8)
     }
 
     func testDrawingContextRemainsBoundedAcrossRepeatedFullRingUpdates() {

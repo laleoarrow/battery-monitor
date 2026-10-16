@@ -83,6 +83,11 @@ final class HistoryView: PopoverSection {
                width: PopoverStyle.contentWidth, height: Self.chartHeight)
     }
 
+    private var gradientRect: CGRect {
+        let left = CGFloat(min(lastGeometry?.points.first?.x ?? 0, 0)) * chartRect.width
+        return CGRect(x: left, y: 0, width: chartRect.width - left, height: chartRect.height)
+    }
+
     override func layout() {
         super.layout()
         caption.frame = NSRect(x: 0, y: PopoverStyle.sectionPadding, width: 180, height: 15)
@@ -92,8 +97,8 @@ final class HistoryView: PopoverSection {
             self.clip.frame = self.chartRect
             self.movingPlot.frame = self.clip.bounds
             self.line.frame = self.clip.bounds
-            self.gradientMask.frame = self.clip.bounds
-            self.areaGradient.frame = self.clip.bounds
+            self.areaGradient.frame = self.gradientRect
+            self.gradientMask.frame = self.areaGradient.bounds
             self.reveal.bounds = CGRect(x: 0, y: 0,
                 width: CGFloat(self.lastGeometry?.points.last?.x ?? 1) * self.clip.bounds.width,
                 height: self.clip.bounds.height)
@@ -197,11 +202,11 @@ final class HistoryView: PopoverSection {
             self.clip.frame = plot
             self.movingPlot.frame = self.clip.bounds
             self.line.frame = self.clip.bounds
-            self.gradientMask.frame = self.clip.bounds
-            self.areaGradient.frame = self.clip.bounds
+            self.areaGradient.frame = self.gradientRect
+            self.gradientMask.frame = self.areaGradient.bounds
             self.line.path = geometry.points.isEmpty ? nil : targetPaths.stroke
             self.line.strokeColor = resolvedColor.cgColor
-            self.gradientMask.path = geometry.points.isEmpty ? nil : targetPaths.filled
+            self.gradientMask.path = geometry.points.isEmpty ? nil : self.fillPath(targetPaths.filled)
             self.areaGradient.colors = [resolvedColor.withAlphaComponent(0.38).cgColor,
                                         resolvedColor.withAlphaComponent(0.03).cgColor]
             self.areaGradient.startPoint = CGPoint(x: 0.5, y: 0)
@@ -260,6 +265,12 @@ final class HistoryView: PopoverSection {
             filled.addPath(subpath)
         }
         return (stroke, filled)
+    }
+
+    private func fillPath(_ path: CGPath) -> CGPath {
+        let translated = CGMutablePath()
+        translated.addPath(path, transform: CGAffineTransform(translationX: -gradientRect.minX, y: 0))
+        return translated
     }
 
     /// Decode the actual presentation controls, retaining the cached model's
@@ -335,7 +346,7 @@ final class HistoryView: PopoverSection {
         if changesShape {
             let startPaths = paths(for: startGeometry), targetPaths = paths(for: geometry)
             for (shape, from, to, key) in [(line, startPaths.stroke, targetPaths.stroke, "history.curve"),
-                (gradientMask, startPaths.filled, targetPaths.filled, "history.fill")] {
+                (gradientMask, fillPath(startPaths.filled), fillPath(targetPaths.filled), "history.fill")] {
                 let curve = CABasicAnimation(keyPath: "path")
                 curve.fromValue = from
                 curve.toValue = to
