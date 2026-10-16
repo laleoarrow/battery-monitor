@@ -44,14 +44,24 @@ request settles. Cross-window notifications carry progress as well as the value.
 A canceled refresh still settles when a following write fails. The fixed getter
 returns allowlisted failure reasons for the console-user worker and the single
 Control Center preference; missing or unfamiliar values are never guessed.
-Feedback diagnostics include the displayed phase and an independent bounded
-read result without changing shared UI state.
+Feedback diagnostics include the displayed phase and an independent read result
+without changing shared UI state. Its four-second socket deadline starts after
+the shared worker becomes available; it is not an end-to-end queue deadline.
+Native checkbox actions invert the current authoritative value, rather than
+AppKit's intermediate mixed state. A failed readback after a successful write
+clears authority and publishes the actual failure. Settings completions render
+the current shared state so an older callback cannot restore stale UI state.
 
 `Support/SystemBatteryIcon/` provides a double-click, read-only collector that
 also works with the public 4.3.6 helper. `scripts/build_system_battery_support.sh`
 packages its source, metadata and checksum under `dist/support`. It observes
 only fixed helper getters and the single current-user/current-host Battery
 preference, producing a local ZIP for the user to review and attach to an issue.
+Collection and packaging share a 45-second monotonic deadline. Each stage owns
+a process group before starting its command; signal-safe registration and group
+cleanup also cover interrupted launches and descendants. File cleanup has a
+separate budget after process termination. The collector does not require Python
+or administrator authorization.
 
 ## Distribution architecture
 
