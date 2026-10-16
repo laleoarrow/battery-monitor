@@ -47,6 +47,12 @@ Control Center preference; missing or unfamiliar values are never guessed.
 Feedback diagnostics include the displayed phase and an independent bounded
 read result without changing shared UI state.
 
+`Support/SystemBatteryIcon/` provides a double-click, read-only collector that
+also works with the public 4.3.6 helper. `scripts/build_system_battery_support.sh`
+packages its source, metadata and checksum under `dist/support`. It observes
+only fixed helper getters and the single current-user/current-host Battery
+preference, producing a local ZIP for the user to review and attach to an issue.
+
 ## Distribution architecture
 
 `VERSION` is the release-version source. `scripts/release.sh` builds one
