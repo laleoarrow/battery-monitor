@@ -25,6 +25,7 @@ class RunPreviewCleanupTests(unittest.TestCase):
         self.bin.mkdir()
         (self.root / 'VERSION').write_text('4.3.3\n')
         self.record = self.root / 'events'
+        self.app_events = self.root / 'app-events'
         self.pid_file = self.root / 'app.pid'
         self.script = self.root / 'script/build_and_run.sh'
         source = (ROOT / 'script/build_and_run.sh').read_text()
@@ -37,11 +38,28 @@ class RunPreviewCleanupTests(unittest.TestCase):
             str(self.bin / 'lsregister'),
         ))
         c_source = self.root / 'fake.c'
-        c_source.write_text('''#include <stdlib.h>
+        c_source.write_text('''#include <fcntl.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
+static int events = -1;
+static void terminate(int number) {
+    (void)number;
+    write(events, "app:TERM\\n", sizeof("app:TERM\\n") - 1);
+    _exit(0);
+}
 int main(void) {
+    events = open(getenv("FAKE_APP_EVENTS"), O_WRONLY | O_CREAT | O_APPEND, 0600);
+    if (events < 0) return 2;
+    signal(SIGTERM, terminate);
+    write(events, "app:started\\n", sizeof("app:started\\n") - 1);
     const char *duration = getenv("FAKE_APP_SECONDS");
+    if (duration && strcmp(duration, "forever") == 0) {
+        for (;;) pause();
+    }
     usleep((useconds_t)((duration ? atof(duration) : 30) * 1000000));
+    write(events, "app:natural-exit\\n", sizeof("app:natural-exit\\n") - 1);
     return 0;
 }
 ''')
@@ -66,10 +84,11 @@ if '-W' in sys.argv:
         self.write_stub('lsregister', '''#!/bin/bash
 [[ -d "$2" ]] || exit 3
 printf 'unregister:%s\n' "$2" >> "$FAKE_EVENTS"
+printf 'unregister\n' >> "$FAKE_APP_EVENTS"
 ''')
         self.env = dict(os.environ, PATH=str(self.bin)+os.pathsep+os.environ['PATH'],
                         FAKE_APP=str(self.fake), FAKE_PID_FILE=str(self.pid_file),
-                        FAKE_EVENTS=str(self.record))
+                        FAKE_EVENTS=str(self.record), FAKE_APP_EVENTS=str(self.app_events))
         self.addCleanup(self.stop_fake)
 
     def write_stub(self, name, content):
@@ -118,23 +137,32 @@ printf 'unregister:%s\n' "$2" >> "$FAKE_EVENTS"
             self.assert_clean()
 
     def test_terminated_log_session_stops_its_detached_app(self):
-        process = subprocess.Popen(['/bin/bash', str(self.script), '--logs'], env=self.env,
+        environment = dict(self.env, FAKE_APP_SECONDS='forever')
+        process = subprocess.Popen(['/bin/bash', str(self.script), '--logs'], env=environment,
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
                                    start_new_session=True)
         process.cleanup_grace = 65
         self.workspace.processes.append(process)
         try:
             deadline = time.monotonic()+10
-            while not self.pid_file.exists() and process.poll() is None:
+            while not (self.pid_file.exists() and self.app_events.exists()
+                       and 'app:started' in self.app_events.read_text().splitlines()) \
+                    and process.poll() is None:
                 self.assertLess(time.monotonic(), deadline)
                 time.sleep(0.02)
             self.assertTrue(self.pid_file.exists())
+            self.assertIn('app:started', self.app_events.read_text().splitlines())
             # Interrupt the shell alone: the app is deliberately not its child.
+            with self.app_events.open('a') as events:
+                events.write('test:shell-TERM\n')
             process.send_signal(signal.SIGTERM)
             # Allow the same bounded lifecycle cleanup used by finally's _stop.
             stdout, stderr = process.communicate(timeout=process.cleanup_grace)
             self.assertEqual(process.returncode, 143, stdout+stderr)
             self.assert_clean()
+            self.assertEqual(self.app_events.read_text().splitlines(), [
+                'app:started', 'test:shell-TERM', 'app:TERM', 'unregister',
+            ])
         finally:
             _stop(process)
             process.communicate()
