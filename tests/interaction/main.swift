@@ -2101,7 +2101,13 @@ if #available(macOS 26.0, *), !screenLocked {
                       && panel.frame == frameWithArrow
                       && panel.convertToScreen(panel.bodyFrame) == bodyWithArrow
                       && root.frame.height == viewportWithArrow
-                      && controller.glassPanelForTest === panel)
+                      && controller.glassPanelForTest === panel,
+                  "panelArrow=\(panel.showsArrow) materialArrow=\(material.showsArrow) "
+                      + "samePanel=\(controller.glassPanelForTest === panel) "
+                      + "frameBefore=\(frameWithArrow) frameAfter=\(panel.frame) "
+                      + "bodyBefore=\(bodyWithArrow) bodyAfter=\(panel.convertToScreen(panel.bodyFrame)) "
+                      + "viewportBefore=\(viewportWithArrow) viewportAfter=\(root.frame.height) "
+                      + "material=\(material.frame) foreground=\(String(describing: foreground?.frame))")
         } else { check("[ARROW-OPTION] \(style.rawValue) 具备实际滚动内容和材质", false) }
         let openVisibilityCount = visibilityEvents.count
         let openObserverCount = controller.lifetimeObserverCountForTest
