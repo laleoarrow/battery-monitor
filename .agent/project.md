@@ -36,6 +36,19 @@ The helper is activated through `/var/run/wattson-helper.sock` and exits after
 fixed operations for power mode, the macOS battery icon, and Wattson's
 launch-at-login agent. Clients cannot supply an SMC key or SMC write command.
 
+Power History retains the original 60-slot, two-minute sample ring and its
+sampling cadence. Ordered monotonic timestamps travel with the cached readings
+to a fixed 120-second viewport. Shape-preserving cubic segments pass through
+the original samples and break across gaps longer than six seconds. It keeps
+the sample-aligned viewport during normal cadence; after a sampling gap, the
+viewport ages the cached readings with the current monotonic time. Peak uses
+the original values; the chart scale adds quantized headroom and waits eight
+seconds before a reduction of at least 25%. Contiguous new readings can use one
+180 ms translation, with the endpoint following the same curve. History joins
+the existing presentation and accessibility animation policy; closing, hiding,
+detaching, degraded readings and Reduce Motion stop its animations. No chart
+timer or arbitrary shape-path interpolation is used.
+
 The system battery-icon control keeps read progress separate from its optional
 last-known value. Opening a popup or Settings starts a coalesced helper read;
 only a settled failure shows an unavailable status. Refreshing preserves the

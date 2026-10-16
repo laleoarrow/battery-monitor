@@ -799,6 +799,7 @@ final class PopoverContentViewController: NSViewController {
     private var latestDegraded = false
     private var latestHistory: [Double] = []
     private var latestPeak: Double = 0
+    private var latestHistoryTiming: HistoryChartTiming?
     private var systemBatteryIconHidden: Bool?
     private var systemBatteryIconReadStatus: SystemBatteryIconReadStatus = .notRequested
     private var modeSelectHandler: ((EnergyMode, @escaping (EnergyMode?) -> Void) -> Void)?
@@ -868,7 +869,7 @@ final class PopoverContentViewController: NSViewController {
                 section.refreshAppearance()
             }
             update(snapshot: latestSnapshot, history: latestHistory,
-                   peak: latestPeak, degraded: latestDegraded)
+                   peak: latestPeak, degraded: latestDegraded, historyTiming: latestHistoryTiming)
         }
     }
 
@@ -882,9 +883,11 @@ final class PopoverContentViewController: NSViewController {
         return total + 24
     }
 
-    func update(snapshot: PowerSnapshot, history: [Double], peak: Double, degraded: Bool) {
+    func update(snapshot: PowerSnapshot, history: [Double], peak: Double, degraded: Bool,
+                historyTiming: HistoryChartTiming? = nil) {
         latestSnapshot = snapshot
         latestHistory = history
+        latestHistoryTiming = historyTiming
         latestPeak = peak
         let degradationChanged = latestDegraded != degraded
         latestDegraded = degraded
@@ -923,7 +926,7 @@ final class PopoverContentViewController: NSViewController {
             ? PopoverStyle.blue
             : PopoverStyle.stateColor(snapshot.state)
         historyView.update(samples: latestHistory, peak: latestPeak,
-                           color: historyColor)
+                           color: historyColor, timing: latestHistoryTiming)
     }
 
     func setModeSelectHandler(
@@ -962,6 +965,7 @@ final class PopoverContentViewController: NSViewController {
         flowView.setAnimationsEnabled(allowsMotion && !flowView.isHidden)
         ringView.setAnimationsEnabled(allowsMotion && !ringView.isHidden)
         laneView.setAnimationsEnabled(allowsMotion && !laneView.isHidden)
+        historyView.setAnimationsEnabled(allowsMotion && !historyView.isHidden)
         if !allowsMotion, let root = view.layer {
             removeAnimationsRecursively(from: root)
         }
@@ -970,6 +974,7 @@ final class PopoverContentViewController: NSViewController {
     func setPresentationActive(_ active: Bool) {
         presentationActive = active
         footer.setHoverPresentationActive(active)
+        historyView.setPresentationActive(active)
         if !active { footer.cancelInteraction() }
     }
 

@@ -690,12 +690,13 @@ final class StatusItemController: NSObject {
     private func refreshPresentation() {
         refreshStatusItem()
         guard hasUsableSnapshot else { return }
-        let historyPresentation = history.presentation
+        let historyPresentation = history.chartPresentation
         popover.update(
             snapshot: snapshot,
             history: historyPresentation.samples,
             peak: historyPresentation.peak,
-            degraded: isDegraded
+            degraded: isDegraded,
+            historyTiming: historyPresentation.timing
         )
     }
 

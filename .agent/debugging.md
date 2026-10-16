@@ -81,6 +81,14 @@ The interaction harness drives real `NSStatusItem`, `NSPopover`, mouse,
 keyboard, VoiceOver, Reduce Motion, and legacy/native selector paths. It does
 not use system event injection or Accessibility permission.
 
+History-specific geometry and renderer checks live in `HistoryChartTests` and
+`HistoryViewTests`. The interaction harness also exercises real-window History
+animation completion and cancellation. Check startup and irregular sample
+spacing, retained peaks, sampling gaps, scale contraction, close/reopen,
+module visibility and accessibility motion policy. Keep six-state light/dark
+production-renderer captures and an actual short motion capture with the
+verified source identity; an HTML algorithm preview alone is insufficient.
+
 ## Release structure
 
 ```bash

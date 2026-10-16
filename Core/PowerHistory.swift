@@ -10,7 +10,7 @@ final class PowerHistory {
     private var sampledAt: [TimeInterval]
     private var writeIndex: Int = 0
     private var filled: Int = 0
-    private var cachedPresentation: (samples: [Double], peak: Double)?
+    private var cachedPresentation: (samples: [Double], peak: Double, timing: HistoryChartTiming)?
     private let clock: () -> TimeInterval
 #if DEBUG
     private(set) var presentationMaterializationCountForTest = 0
@@ -46,14 +46,14 @@ final class PowerHistory {
         presentation.samples
     }
 
-    private func materializedSamples() -> [Double] {
+    private func materialized(_ values: [Double]) -> [Double] {
         guard filled > 0 else { return [] }
         let oldest = (writeIndex - filled + capacity) % capacity
         let end = oldest + filled
         if end <= capacity {
-            return Array(storage[oldest..<end])
+            return Array(values[oldest..<end])
         }
-        return Array(storage[oldest..<capacity]) + Array(storage[0..<(end - capacity)])
+        return Array(values[oldest..<capacity]) + Array(values[0..<(end - capacity)])
     }
 
     private func expireReadings(at now: TimeInterval) {
@@ -69,10 +69,25 @@ final class PowerHistory {
     /// materialized sequence avoids building the wrapped array a second time
     /// on every presentation refresh.
     var presentation: (samples: [Double], peak: Double) {
-        expireReadings(at: clock())
-        if let cachedPresentation { return cachedPresentation }
-        let samples = materializedSamples()
-        let presentation = (samples: samples, peak: samples.max() ?? 0)
+        let frame = chartPresentation
+        return (frame.samples, frame.peak)
+    }
+
+    /// Keep the normal sampling cadence stable; after a gap, render the readings'
+    /// actual age while retaining the materialized values and timestamps.
+    var chartPresentation: (samples: [Double], peak: Double, timing: HistoryChartTiming) {
+        let now = clock()
+        expireReadings(at: now)
+        if let cachedPresentation {
+            guard let latestSample = cachedPresentation.timing.sampledAt.last,
+                  now - latestSample > 6 else { return cachedPresentation }
+            return (samples: cachedPresentation.samples, peak: cachedPresentation.peak,
+                    timing: HistoryChartTiming(sampledAt: cachedPresentation.timing.sampledAt,
+                                               referenceTime: now))
+        }
+        let samples = materialized(storage)
+        let presentation = (samples: samples, peak: samples.max() ?? 0,
+                            timing: HistoryChartTiming(sampledAt: materialized(sampledAt), referenceTime: now))
         cachedPresentation = presentation
 #if DEBUG
         presentationMaterializationCountForTest += 1

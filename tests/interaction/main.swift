@@ -2822,6 +2822,168 @@ if #available(macOS 26.0, *), !screenLocked, let button = item.button {
     }
 }
 
+// ---- 14b. History: real hosted layers, bounded motion and lifecycle cancellation ----
+var historyMotionChecksSkipped = false
+if !screenLocked {
+    let previousMotion = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
+    let previousGlass = Settings.liquidGlassEnabled
+    let previousModules = Settings.Module.allCases.map { ($0, Settings.isModuleVisible($0)) }
+    defer {
+        if let previousMotion { setenv("WATTSON_FORCE_REDUCE_MOTION", previousMotion, 1) }
+        else { unsetenv("WATTSON_FORCE_REDUCE_MOTION") }
+        for (module, visible) in previousModules { Settings.setModule(module, visible: visible) }
+        Settings.liquidGlassEnabled = previousGlass
+    }
+    setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+    Settings.liquidGlassEnabled = false
+    for module in Settings.Module.allCases { Settings.setModule(module, visible: module == .history) }
+
+    func historyAnimations(_ layer: CALayer?) -> [(String, CAAnimation)] {
+        guard let layer else { return [] }
+        let own = (layer.animationKeys() ?? []).compactMap { key -> (String, CAAnimation)? in
+            layer.animation(forKey: key).map { (key, $0) }
+        }
+        return own + (layer.sublayers ?? []).flatMap { historyAnimations($0) }
+    }
+    func historyDescendants(_ view: NSView) -> [NSView] {
+        view.subviews.flatMap { [$0] + historyDescendants($0) }
+    }
+    let fixture = HistoryView()
+    fixture.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
+                          height: HistoryView.preferredHeight)
+    let container = NSView(frame: fixture.bounds)
+    container.addSubview(fixture)
+    let fixtureWindow = NSWindow(contentRect: fixture.bounds, styleMask: [.borderless],
+                                 backing: .buffered, defer: false)
+    fixtureWindow.isReleasedWhenClosed = false
+    fixtureWindow.contentView = container
+    fixtureWindow.orderFront(nil)
+    fixture.layoutSubtreeIfNeeded()
+    fixture.setPresentationActive(true)
+    fixture.setAnimationsEnabled(true)
+    defer { fixture.setPresentationActive(false); fixtureWindow.close() }
+    var values = [40.0, 45.0]
+    var times = [0.0, 2.0]
+    func updateFixture(appending: Bool = true) {
+        if appending { values.append(43); times.append(times.last! + 2) }
+        fixture.update(samples: values, peak: 45, color: .systemBlue,
+                       timing: HistoryChartTiming(sampledAt: times, referenceTime: times.last!))
+        CATransaction.flush()
+    }
+    updateFixture(appending: false)
+    check("History 首帧直接呈现而不伪造滚动", !fixture.hasChartAnimationForTest)
+
+    // The DEBUG policy override does not change the real accessibility setting
+    // read by HistoryView. An enabled system preference cannot prove motion.
+    if NSWorkspace.shared.accessibilityDisplayShouldReduceMotion {
+        updateFixture()
+        check("History 遵守系统减少动态效果", !fixture.hasChartAnimationForTest)
+        historyMotionChecksSkipped = true
+        log("HISTORY_MOTION_CHECKS_SKIPPED: system Reduce Motion is enabled")
+    } else {
+        updateFixture()
+        let animations = historyAnimations(fixture.layer)
+        check("History 连续真实采样启动曲线与末端两项动画",
+              Set(animations.map { $0.0 }) == Set(["history.scroll", "history.head"])
+                  && animations.count == 2 && fixture.hasChartAnimationForTest)
+        check("History 动画限于 180 ms 且没有重复、自动反向或常驻填充",
+              animations.count == 2 && animations.allSatisfy {
+                  abs($0.1.duration - 0.18) < 0.000_001
+                      && $0.1.repeatCount == 0 && $0.1.repeatDuration == 0
+                      && !$0.1.autoreverses && $0.1.isRemovedOnCompletion
+              })
+        check("History 只平移曲线并沿位置路径衔接末端",
+              (animations.first { $0.0 == "history.scroll" }?.1 as? CABasicAnimation)?.keyPath
+                  == "transform.translation.x"
+                  && (animations.first { $0.0 == "history.head" }?.1 as? CAKeyframeAnimation)?.keyPath
+                  == "position")
+        spin(0.3)
+        check("History 短过渡完成后原生图层自行静止", !fixture.hasChartAnimationForTest)
+
+        let cancellations: [(String, () -> Void, () -> Void)] = [
+            ("结束呈现", { fixture.setPresentationActive(false) }, { fixture.setPresentationActive(true) }),
+            ("关闭动画策略", { fixture.setAnimationsEnabled(false) }, { fixture.setAnimationsEnabled(true) }),
+            ("隐藏视图", { fixture.isHidden = true }, { fixture.isHidden = false }),
+            ("脱离窗口", { fixture.removeFromSuperview() }, { container.addSubview(fixture) }),
+        ]
+        for (name, cancel, restore) in cancellations {
+            updateFixture()
+            check("History \(name)前确实有活动动画", fixture.hasChartAnimationForTest)
+            cancel()
+            check("History \(name)立即移除动画", !fixture.hasChartAnimationForTest)
+            updateFixture()
+            check("History \(name)期间新采样不重启动画", !fixture.hasChartAnimationForTest)
+            restore()
+            check("History 恢复\(name)状态不重播旧过渡", !fixture.hasChartAnimationForTest)
+        }
+        fixture.setPresentationActive(false)
+        fixtureWindow.orderOut(nil)
+
+        let controller = PopoverController()
+        let snapshot = PowerSnapshot(percent: 50, plugged: true, adapterW: 45,
+                                     batteryW: 5, systemW: 40)
+        var hostedValues = [40.0, 45.0]
+        var hostedTimes = [0.0, 2.0]
+        func updateController(appending: Bool = true, degraded: Bool = false) {
+            if appending { hostedValues.append(43); hostedTimes.append(hostedTimes.last! + 2) }
+            controller.update(snapshot: snapshot, history: hostedValues, peak: 45, degraded: degraded,
+                              historyTiming: HistoryChartTiming(sampledAt: hostedTimes,
+                                                               referenceTime: hostedTimes.last!))
+            CATransaction.flush()
+        }
+        updateController(appending: false)
+        controller.openForSettingsCommandTest(relativeTo: button)
+        spin(0.4)
+        defer { controller.handleOutsideClick(); spin(0.4) }
+        if let root = controller.contentViewForTest,
+           let hosted = historyDescendants(root).compactMap({ $0 as? HistoryView }).first {
+            root.layoutSubtreeIfNeeded()
+            updateController()
+            check("History 生产弹窗把动画策略传至实际栏目", hosted.hasChartAnimationForTest)
+            Settings.setModule(.history, visible: false)
+            check("History 关闭模块立即取消已有过渡", hosted.isHidden && !hosted.hasChartAnimationForTest)
+            updateController()
+            check("History 模块关闭后采样不会重启过渡", !hosted.hasChartAnimationForTest)
+            Settings.setModule(.history, visible: true)
+            check("History 恢复模块直接呈现最新数据", !hosted.isHidden && !hosted.hasChartAnimationForTest)
+
+            updateController()
+            check("History 失败前的有效采样确实启动过渡", hosted.hasChartAnimationForTest)
+            updateController(appending: false, degraded: true)
+            check("History 读取失败立即取消过渡", !hosted.hasChartAnimationForTest)
+            updateController(degraded: true)
+            check("History 过期数据不重启过渡", !hosted.hasChartAnimationForTest)
+            updateController(appending: false)
+
+            updateController()
+            check("History 减少动态效果变化前确实启动过渡", hosted.hasChartAnimationForTest)
+            setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
+            NSWorkspace.shared.notificationCenter.post(
+                name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+                object: NSWorkspace.shared
+            )
+            spin(0.01)
+            check("History 开启减少动态效果立即取消过渡", !hosted.hasChartAnimationForTest)
+            updateController()
+            check("History 减少动态效果期间采样保持静止", !hosted.hasChartAnimationForTest)
+            setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+            NSWorkspace.shared.notificationCenter.post(
+                name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+                object: NSWorkspace.shared
+            )
+            spin(0.01)
+            updateController()
+            check("History 收起前确实有活动过渡", hosted.hasChartAnimationForTest)
+            controller.handleOutsideClick()
+            check("History 收起弹窗立即取消过渡", !hosted.hasChartAnimationForTest)
+            updateController()
+            check("History 弹窗关闭时新数据不会重启过渡", !hosted.hasChartAnimationForTest)
+        } else {
+            check("History 原生生命周期验证找到真实生产栏目", false)
+        }
+    }
+}
+
 NSStatusBar.system.removeStatusItem(item)
 Settings.resetTestConfiguration()
 settingsDefaults.removePersistentDomain(forName: settingsSuiteName)
@@ -2830,5 +2992,5 @@ if !pass {
     exit(1)
 }
 // 跑过的都过了，但跳过的不能算验过
-log(screenLocked ? "\nRUNNABLE_CHECKS_PASSED_SOME_SKIPPED" : "\nALL_INTERACTION_CHECKS_PASSED")
-exit(screenLocked ? 2 : 0)
+log(screenLocked || historyMotionChecksSkipped ? "\nRUNNABLE_CHECKS_PASSED_SOME_SKIPPED" : "\nALL_INTERACTION_CHECKS_PASSED")
+exit(screenLocked || historyMotionChecksSkipped ? 2 : 0)

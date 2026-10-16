@@ -6,6 +6,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         let history: [Double]
         let peak: Double
         let degraded: Bool
+        let historyTiming: HistoryChartTiming?
     }
 
     private static let entranceAnimationKey = "wattson.popover.entrance"
@@ -148,9 +149,11 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         usingGlassPanel ? glassPanel?.isVisible == true : popover.isShown
     }
 
-    func update(snapshot: PowerSnapshot, history: [Double], peak: Double, degraded: Bool) {
+    func update(snapshot: PowerSnapshot, history: [Double], peak: Double, degraded: Bool,
+                historyTiming: HistoryChartTiming? = nil) {
         latestPresentation = Presentation(
-            snapshot: snapshot, history: history, peak: peak, degraded: degraded
+            snapshot: snapshot, history: history, peak: peak, degraded: degraded,
+            historyTiming: historyTiming
         )
         // Keep data current while closed, but do not rebuild invisible AppKit
         // layers. Continue through AppKit's close fade so its last visible
@@ -341,7 +344,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
             snapshot: latestPresentation.snapshot,
             history: latestPresentation.history,
             peak: latestPresentation.peak,
-            degraded: latestPresentation.degraded
+            degraded: latestPresentation.degraded,
+            historyTiming: latestPresentation.historyTiming
         )
 #if DEBUG
         contentRenderCountForTest += 1

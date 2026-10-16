@@ -166,16 +166,18 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("snapshot.state == .mixedSupply", history_update)
         self.assertIn("? PopoverStyle.blue", history_update)
 
-    def test_history_draws_the_two_minute_samples_without_animation(self):
+    def test_history_draws_samples_without_implicit_path_animation(self):
         self.assertIn("samples: [Double]", self.history)
-        self.assertIn("CATransaction.setDisableActions(true)", self.history)
+        self.assertIn("PopoverStyle.setWithoutAnimation", self.history)
+        self.assertNotIn('CABasicAnimation(keyPath: "path")', self.history)
 
     def test_history_skips_rebuilding_an_identical_path_and_color(self):
         self.assertIn("lastSamples", self.history)
         self.assertIn("lastPeak", self.history)
         self.assertIn("lastColor", self.history)
         self.assertIn("samples == lastSamples", self.history)
-        self.assertIn("lastColor.isEqual(resolvedColor)", self.history)
+        self.assertIn("timing == lastTiming", self.history)
+        self.assertIn("lastColor?.isEqual(resolvedColor) == true", self.history)
         self.assertIn("effectiveAppearance.performAsCurrentDrawingAppearance", self.history)
 
     def test_module_visibility_uses_the_shared_typed_settings_store(self):
