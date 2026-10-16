@@ -1823,6 +1823,171 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn("CFPreferencesSetValue", self.source)
         self.assertIn("CFPreferencesSynchronize", self.source)
 
+    def test_battery_preference_getter_failure_reasons_are_fixed_and_backward_compatible(self):
+        reasons = self.source.split(
+            "private enum BatteryPreferenceFailureReason", 1
+        )[1].split("private func decodeSystemBatteryIconPreference", 1)[0]
+        self.assertEqual(
+            [line.strip().split()[1] for line in reasons.splitlines()
+             if line.strip().startswith("case ") and ":" not in line],
+            ["userContextUnavailable", "preferenceSyncFailed", "preferenceMissing",
+             "preferenceTypeUnsupported", "preferenceValueUnsupported", "preferenceWorkerFailed"],
+        )
+        getter = self.source.split('case "getSystemBatteryIconHidden":', 1)[1].split(
+            'case "setSystemBatteryIconHidden":', 1
+        )[0]
+        self.assertIn('#"{"ok":true,"hidden":true}"#', getter)
+        self.assertIn('#"{"ok":true,"hidden":false}"#', getter)
+        self.assertIn('"ok":false,"error":"unknown battery preference"', getter)
+        self.assertIn('"reason":"\\#(reason.rawValue)"', getter)
+        self.assertNotIn('object["reason"]', getter)
+        worker = self.source.split(
+            "private func runBatteryPreferenceWorkerIfRequested", 1
+        )[1].split("private func handle", 1)[0]
+        self.assertIn("currentUserSystemBatteryIconReadResult()", worker)
+        self.assertIn("case .failure(let reason): exit(reason.workerExitCode)", worker)
+        self.assertIn("BatteryPreferenceFailureReason.userContextUnavailable.workerExitCode", worker)
+
+    def test_battery_preference_classification_without_system_preference_or_worker_operations(self):
+        operation = "private enum BatteryPreferenceWorkerOperation" + self.source.split(
+            "private enum BatteryPreferenceWorkerOperation", 1
+        )[1].split("private func runExitCode", 1)[0]
+        reasons = "private enum BatteryPreferenceFailureReason" + self.source.split(
+            "private enum BatteryPreferenceFailureReason", 1
+        )[1].split("private func currentUserSystemBatteryIconHidden", 1)[0]
+        reading = "private func currentUserSystemBatteryIconHidden" + self.source.split(
+            "private func currentUserSystemBatteryIconHidden", 1
+        )[1].split("private func runBatteryPreferenceWorker", 1)[0]
+        for name in ("Synchronize", "CopyValue", "SetValue"):
+            reading = reading.replace(f"CFPreferences{name}(", f"fakePreferences{name}(")
+        parent = "private func runBatteryPreferenceWorker(" + self.source.split(
+            "private func runBatteryPreferenceWorker(", 1
+        )[1].split("private func restartControlCenter", 1)[0]
+        harness = textwrap.dedent(
+            r'''
+            import Darwin
+            import Foundation
+            private let controlCenterDomain = "com.apple.controlcenter" as CFString
+            private let controlCenterBatteryKey = "Battery" as CFString
+            private let helperExecutablePath = "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper"
+            private var syncSucceeds = true
+            private var rawPreference: Any?
+            private var copies = 0
+            private var written: NSNumber?
+            private func fakePreferencesSynchronize(_ domain: CFString, _ user: CFString, _ host: CFString) -> Bool {
+                syncSucceeds
+            }
+            private func fakePreferencesCopyValue(_ key: CFString, _ domain: CFString, _ user: CFString, _ host: CFString) -> Any? {
+                copies += 1
+                return rawPreference
+            }
+            private func fakePreferencesSetValue(_ key: CFString, _ value: NSNumber, _ domain: CFString, _ user: CFString, _ host: CFString) {
+                written = value
+            }
+            private var currentConsole: uid_t? = 501
+            private var accountExists = true
+            private var workerExit: Int32?
+            private var commands: [[String]] = []
+            private func consoleUID() -> uid_t? { currentConsole }
+            private func userAccount(for uid: uid_t) -> Bool? { accountExists ? true : nil }
+            private func runExitCode(_ args: [String]) -> Int32? {
+                commands.append(args)
+                return workerExit
+            }
+            '''
+        ) + operation + reasons + reading + parent + textwrap.dedent(
+            r'''
+            private func expect(_ result: Result<Bool, BatteryPreferenceFailureReason>, hidden: Bool? = nil,
+                                reason: BatteryPreferenceFailureReason? = nil) {
+                switch result {
+                case .success(let value):
+                    guard reason == nil && hidden == value else {
+                        fputs("Unexpected success \(value); expected hidden=\(String(describing: hidden)), reason=\(String(describing: reason))\n", stderr)
+                        exit(1)
+                    }
+                case .failure(let failure):
+                    guard hidden == nil && reason == failure else {
+                        fputs("Unexpected failure \(failure); expected hidden=\(String(describing: hidden)), reason=\(String(describing: reason))\n", stderr)
+                        exit(1)
+                    }
+                }
+            }
+            expect(decodeSystemBatteryIconPreference(NSNumber(value: 8)), hidden: true)
+            expect(decodeSystemBatteryIconPreference(NSNumber(value: 18)), hidden: false)
+            expect(decodeSystemBatteryIconPreference(NSNumber(value: 8.0)), hidden: true)
+            expect(decodeSystemBatteryIconPreference(nil), reason: .preferenceMissing)
+            for raw: Any in ["8", "18", true, NSNumber(value: false), [8], Data([8])] {
+                expect(decodeSystemBatteryIconPreference(raw), reason: .preferenceTypeUnsupported)
+            }
+            for raw in [NSNumber(value: 0), NSNumber(value: 1), NSNumber(value: 9), NSNumber(value: -1),
+                        NSNumber(value: 8.5), NSNumber(value: 18.5), NSNumber(value: 8.000000000000002),
+                        NSNumber(value: 18.000000000000004), NSNumber(value: Double.nan),
+                        NSNumber(value: Double.infinity), NSDecimalNumber(string: "8.00000000000000001")] {
+                expect(decodeSystemBatteryIconPreference(raw), reason: .preferenceValueUnsupported)
+            }
+            syncSucceeds = false
+            rawPreference = NSNumber(value: 8)
+            expect(currentUserSystemBatteryIconReadResult(), reason: .preferenceSyncFailed)
+            precondition(copies == 0, "A failed sync must not read a stale preference")
+            precondition(currentUserSystemBatteryIconHidden() == nil)
+            syncSucceeds = true
+            rawPreference = nil
+            expect(currentUserSystemBatteryIconReadResult(), reason: .preferenceMissing)
+            rawPreference = NSNumber(value: 8)
+            precondition(setCurrentUserSystemBatteryIconHidden(true) && written == NSNumber(value: 8))
+            precondition(!setCurrentUserSystemBatteryIconHidden(false) && written == NSNumber(value: 18),
+                         "A write without matching readback must remain a failure")
+            syncSucceeds = false
+            precondition(!setCurrentUserSystemBatteryIconHidden(true))
+            private let failures: [(Int32, BatteryPreferenceFailureReason)] = [
+                (21, .userContextUnavailable), (22, .preferenceSyncFailed), (23, .preferenceMissing),
+                (24, .preferenceTypeUnsupported), (25, .preferenceValueUnsupported)]
+            for (code, reason) in failures {
+                precondition(reason.workerExitCode == code)
+                expect(batteryPreferenceReadResult(exitCode: code), reason: reason)
+            }
+            expect(batteryPreferenceReadResult(exitCode: 8), hidden: true)
+            expect(batteryPreferenceReadResult(exitCode: 18), hidden: false)
+            for code: Int32? in [nil, 0, 1, 2, 9, 126, 127, 137, 255] {
+                expect(batteryPreferenceReadResult(exitCode: code), reason: .preferenceWorkerFailed)
+            }
+            workerExit = nil
+            expect(systemBatteryIconReadResult(for: 501), reason: .preferenceWorkerFailed)
+            precondition(commands == [["/bin/launchctl", "asuser", "501", helperExecutablePath,
+                                       "--battery-preference-read", "501"]])
+            commands = []
+            currentConsole = 502
+            expect(systemBatteryIconReadResult(for: 501), reason: .userContextUnavailable)
+            currentConsole = 501
+            accountExists = false
+            expect(systemBatteryIconReadResult(for: 501), reason: .userContextUnavailable)
+            precondition(commands.isEmpty)
+            accountExists = true
+            workerExit = 8
+            expect(systemBatteryIconReadResult(for: 501), hidden: true)
+            workerExit = 18
+            expect(systemBatteryIconReadResult(for: 501), hidden: false)
+            workerExit = 2
+            expect(systemBatteryIconReadResult(for: 501), reason: .preferenceWorkerFailed)
+            print("battery preference classification self-test passed")
+            '''
+        )
+        with TemporaryDirectory() as directory:
+            directory_path = pathlib.Path(directory)
+            harness_path = directory_path / "main.swift"
+            executable_path = directory_path / "battery-preference-self-test"
+            harness_path.write_text(harness, encoding="utf-8")
+            compile_result = run(
+                ["/usr/bin/xcrun", "swiftc", str(harness_path), "-o", str(executable_path)],
+                check=False, text=True, capture_output=True,
+            )
+            self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
+            run_result = run(
+                [str(executable_path)], check=False, text=True, capture_output=True, timeout=5,
+            )
+            self.assertEqual(run_result.returncode, 0, run_result.stderr)
+            self.assertIn("battery preference classification self-test passed", run_result.stdout)
+
     def test_system_battery_visibility_uses_the_console_users_preferences_daemon(self):
         # A root LaunchDaemon remains in the system bootstrap even after an
         # effective-UID change. Run a fixed internal worker in the console
@@ -1846,7 +2011,7 @@ class HelperContractTests(unittest.TestCase):
         self.assertNotIn("withUserPrivileges(account)", battery_helpers)
         self.assertNotIn("userName(for:", self.source)
         current_user_read = battery_helpers.split(
-            "private func systemBatteryIconHidden", 1
+            "private func setCurrentUserSystemBatteryIconHidden", 1
         )[0]
         self.assertLess(
             current_user_read.index("CFPreferencesSynchronize"),

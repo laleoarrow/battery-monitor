@@ -36,6 +36,17 @@ The helper is activated through `/var/run/wattson-helper.sock` and exits after
 fixed operations for power mode, the macOS battery icon, and Wattson's
 launch-at-login agent. Clients cannot supply an SMC key or SMC write command.
 
+The system battery-icon control keeps read progress separate from its optional
+last-known value. Opening a popup or Settings starts a coalesced helper read;
+only a settled failure shows an unavailable status. Refreshing preserves the
+last trusted value for write rollback but disables the checkbox until the newest
+request settles. Cross-window notifications carry progress as well as the value.
+A canceled refresh still settles when a following write fails. The fixed getter
+returns allowlisted failure reasons for the console-user worker and the single
+Control Center preference; missing or unfamiliar values are never guessed.
+Feedback diagnostics include the displayed phase and an independent bounded
+read result without changing shared UI state.
+
 ## Distribution architecture
 
 `VERSION` is the release-version source. `scripts/release.sh` builds one

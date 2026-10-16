@@ -319,24 +319,51 @@ final class NativeModeSegmentedControlTests: XCTestCase {
             $0.action == NSSelectorFromString("systemBatteryIconChanged:")
         })
         let checkboxFrame = checkbox.frame
-        let states: [(Bool, Bool?, String?)] = [
-            (true, false, nil),
-            (true, nil, "Can’t Read System Settings"),
-            (true, true, nil),
-            (false, false, "Helper Not Installed"),
-            (true, false, nil),
+        let states: [(Bool, Bool?, SystemBatteryIconReadStatus, String?)] = [
+            (true, nil, .notRequested, nil),
+            (true, nil, .checking, "Reading…"),
+            (true, nil, .failed(.requestFailed), "Status Unavailable"),
+            (true, nil, .checking, "Reading…"),
+            (true, false, .ready, nil),
+            (true, false, .checking, "Reading…"),
+            (true, true, .ready, nil),
+            (false, nil, .failed(.helperUnavailable), "Helper Not Installed"),
+            (true, false, .ready, nil),
         ]
-        for (helperInstalled, iconHidden, expectedStatus) in states {
+        for (helperInstalled, iconHidden, readStatus, expectedStatus) in states {
             footer.update(mode: .auto, helperInstalled: helperInstalled,
-                          systemBatteryIconHidden: iconHidden, tint: .systemBlue)
+                          systemBatteryIconHidden: iconHidden, tint: .systemBlue,
+                          readStatus: readStatus)
             footer.layoutSubtreeIfNeeded()
             let messages = footer.subviews.compactMap { $0 as? NSTextField }
             XCTAssertEqual(messages.filter { !$0.isHidden }.map(\.stringValue), expectedStatus.map { [$0] } ?? [])
             XCTAssertTrue(messages.filter(\.isHidden).allSatisfy { $0.frame == .zero && $0.stringValue.isEmpty })
-            XCTAssertEqual(checkbox.isEnabled, helperInstalled && iconHidden != nil)
+            XCTAssertEqual(checkbox.isEnabled, helperInstalled && iconHidden != nil && readStatus == .ready)
             XCTAssertEqual(checkbox.frame, checkboxFrame)
             XCTAssertEqual(modeSlider(in: footer).frame, controlFrame)
             XCTAssertEqual(menuButton(in: footer).frame, menuFrame)
+        }
+    }
+
+    func testBatteryCompletionDoesNotOverwriteNewerAuthorityOrPendingRead() throws {
+        let footer = PopoverFooterView()
+        let checkbox = try XCTUnwrap(descendants(of: footer).compactMap { $0 as? NSButton }.first {
+            $0.action == NSSelectorFromString("systemBatteryIconChanged:")
+        })
+        var finish: ((Bool) -> Void)?
+        footer.onSystemBatteryIconToggle = { _, completion in finish = completion }
+        for status: SystemBatteryIconReadStatus in [.ready, .checking] {
+            footer.update(mode: .auto, helperInstalled: true,
+                          systemBatteryIconHidden: false, tint: .systemBlue, readStatus: .ready)
+            checkbox.state = .on
+            _ = checkbox.target?.perform(checkbox.action!, with: checkbox)
+            XCTAssertNotNil(finish)
+            // A newer shared observation is delivered before this older write's callback.
+            footer.update(mode: .auto, helperInstalled: true,
+                          systemBatteryIconHidden: false, tint: .systemBlue, readStatus: status)
+            finish?(true)
+            XCTAssertEqual(checkbox.state, .off)
+            XCTAssertEqual(checkbox.isEnabled, status == .ready)
         }
     }
 

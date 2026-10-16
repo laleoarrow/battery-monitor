@@ -33,6 +33,7 @@ struct SettingsWindowDependencies {
     let announceAccessibility: (_ message: String) -> Void
     var feedbackSnapshot: () -> PowerSnapshot? = { nil }
     var feedbackReadingIsStale: () -> Bool = { false }
+    var systemBatteryIconReadStatus: () -> SystemBatteryIconReadStatus = { .ready }
 
     static let live = SettingsWindowDependencies(
         loginItemState: { LoginItemController.state },
@@ -72,7 +73,8 @@ struct SettingsWindowDependencies {
                     .priority: NSAccessibilityPriorityLevel.high.rawValue,
                 ]
             )
-        }
+        },
+        systemBatteryIconReadStatus: { SystemBatteryIconController.readStatus }
     )
 }
 
@@ -1539,9 +1541,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         ) { [weak self] _ in
             guard let self, !self.batteryMutationInFlight else { return }
             let hidden = self.dependencies.systemBatteryIconHidden()
-            self.lastAuthoritativeBatteryState = hidden
-            self.clearError(self.batteryError)
-            self.renderBatteryIcon(hidden)
+            self.renderObservedBatteryIcon(hidden)
         }
     }
 
@@ -1575,8 +1575,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
                 guard let self,
                       generation == self.batteryGeneration,
                       !self.batteryMutationInFlight else { return }
-                self.lastAuthoritativeBatteryState = hidden
-                self.renderBatteryIcon(hidden)
+                self.renderObservedBatteryIcon(hidden)
             }
         }
     }
@@ -1657,10 +1656,9 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
                 self.batteryMutationInFlight = false
                 if succeeded {
                     let landed = self.dependencies.systemBatteryIconHidden()
-                    self.lastAuthoritativeBatteryState = landed
-                    self.renderBatteryIcon(landed)
+                    self.renderObservedBatteryIcon(landed)
                 } else {
-                    self.renderBatteryIcon(restoration)
+                    self.renderObservedBatteryIcon(restoration)
                     self.showError(
                         "macOS couldn’t update the system battery icon. Try again later.",
                         in: self.batteryError,
@@ -1808,7 +1806,23 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         renderControlsRecovery()
     }
 
+    private func renderObservedBatteryIcon(_ hidden: Bool?) {
+        if dependencies.helperAvailable() {
+            switch dependencies.systemBatteryIconReadStatus() {
+            case .notRequested, .checking:
+                renderBatteryIconChecking()
+                return
+            case .ready, .failed: break
+            }
+        }
+        lastAuthoritativeBatteryState = hidden
+        clearError(batteryError)
+        renderBatteryIcon(hidden)
+    }
+
     private func renderBatteryIconChecking() {
+        batteryNeedsRecovery = false
+        renderControlsRecovery()
         batteryButton.state = .mixed
         batteryButton.isEnabled = false
         batteryDetail.stringValue = "Checking…"

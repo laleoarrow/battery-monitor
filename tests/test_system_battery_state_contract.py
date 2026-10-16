@@ -86,8 +86,49 @@ class SystemBatteryStateContractTests(unittest.TestCase):
                 SystemBatteryIconController.cachedHidden == nil,
                 "unknown cache must remain nil rather than becoming false"
             )
+            require(SystemBatteryIconController.readStatus == .notRequested,
+                    "initial state is not a failed read")
+
+            let probeCases: [(String, [String: Any]?, Bool?, SystemBatteryIconReadFailure?)] = [
+                ("shown", ["ok": true, "hidden": false], false, nil),
+                ("hidden", ["ok": true, "hidden": true], true, nil),
+                ("transport", nil, nil, .requestFailed),
+                ("missing hidden", ["ok": true], nil, .invalidReply),
+                ("numeric hidden", ["ok": true, "hidden": 1], nil, .invalidReply),
+                ("numeric ok", ["ok": 1, "hidden": false], nil, .invalidReply),
+                ("legacy", ["ok": false, "error": "unknown battery preference"], nil, .legacyUnavailable),
+                ("unknown reason", ["ok": false, "reason": "private raw detail"], nil, .requestFailed),
+                ("client-only reason", ["ok": false, "reason": "helperUnavailable"], nil, .requestFailed),
+                ("wrong reason type", ["ok": false, "reason": 1], nil, .invalidReply),
+                ("user context", ["ok": false, "reason": "userContextUnavailable"], nil, .userContextUnavailable),
+                ("sync", ["ok": false, "reason": "preferenceSyncFailed"], nil, .preferenceSyncFailed),
+                ("missing", ["ok": false, "reason": "preferenceMissing"], nil, .preferenceMissing),
+                ("type", ["ok": false, "reason": "preferenceTypeUnsupported"], nil, .preferenceTypeUnsupported),
+                ("value", ["ok": false, "reason": "preferenceValueUnsupported"], nil, .preferenceValueUnsupported),
+                ("worker", ["ok": false, "reason": "preferenceWorkerFailed"], nil, .preferenceWorkerFailed),
+            ]
+            for (name, response, hidden, failure) in probeCases {
+                sender.append(response)
+                let result = SystemBatteryIconController.probe()
+                require(result.hidden == hidden && result.failure == failure, "\(name) probe classification")
+                require(result.elapsedMilliseconds >= 0, "probe elapsed time is nonnegative")
+                require(SystemBatteryIconController.cachedHidden == nil
+                        && SystemBatteryIconController.readStatus == .notRequested,
+                        "read-only probe does not publish state")
+            }
+            SystemBatteryIconController.configureForTest(helperAvailable: false) { _, _ in
+                require(false, "absent helper must not receive an IPC request")
+                return nil
+            }
+            let absent = SystemBatteryIconController.probe()
+            require(absent.hidden == nil && absent.failure == .helperUnavailable, "absent helper classification")
+            SystemBatteryIconController.configureForTest { request, timeout in
+                sender.send(request, timeout)
+            }
 
             var notifications: [String] = []
+            var readNotifications: [SystemBatteryIconReadStatus] = []
+            var lastNotifiedValue = stateName(SystemBatteryIconController.cachedHidden)
             var notificationsOnMain = true
             let observer = NotificationCenter.default.addObserver(
                 forName: SystemBatteryIconController.didChange,
@@ -95,7 +136,12 @@ class SystemBatteryStateContractTests(unittest.TestCase):
                 queue: .main
             ) { _ in
                 notificationsOnMain = notificationsOnMain && Thread.isMainThread
-                notifications.append(stateName(SystemBatteryIconController.cachedHidden))
+                readNotifications.append(SystemBatteryIconController.readStatus)
+                let value = stateName(SystemBatteryIconController.cachedHidden)
+                if value != lastNotifiedValue {
+                    notifications.append(value)
+                    lastNotifiedValue = value
+                }
             }
             defer { NotificationCenter.default.removeObserver(observer) }
 
@@ -108,11 +154,14 @@ class SystemBatteryStateContractTests(unittest.TestCase):
                 refreshed = value
                 completed = true
             }
+            require(SystemBatteryIconController.readStatus == .checking, "refresh immediately reports checking")
+            require(notifications.isEmpty, "checking does not invent a battery preference")
             require(waitUntil { completed }, "successful refresh completion")
             require(completionOnMain, "refresh completion must use main thread")
             require(refreshed == false, "refresh returns authoritative shown state")
             require(SystemBatteryIconController.cachedHidden == false, "refresh updates cache")
             require(notifications == ["shown"], "first known state sends one notification")
+            require(readNotifications == [.checking, .ready], "checking and ready each notify")
 
             sender.append(["ok": true, "hidden": false])
             completed = false
@@ -120,9 +169,12 @@ class SystemBatteryStateContractTests(unittest.TestCase):
                 refreshed = value
                 completed = true
             }
+            require(SystemBatteryIconController.cachedHidden == false, "checking preserves last authoritative cache")
             require(waitUntil { completed }, "same-state refresh completion")
             require(refreshed == false, "same-state refresh still completes")
             require(notifications == ["shown"], "same state must not notify twice")
+            require(readNotifications == [.checking, .ready, .checking, .ready],
+                    "same value still settles its new read phase")
 
             sender.append(["ok": true])
             completed = false
@@ -133,6 +185,7 @@ class SystemBatteryStateContractTests(unittest.TestCase):
             require(waitUntil { completed }, "unknown refresh completion")
             require(refreshed == nil, "missing hidden value remains unknown")
             require(SystemBatteryIconController.cachedHidden == nil, "unknown is cached as nil")
+            require(SystemBatteryIconController.readStatus == .failed(.invalidReply), "invalid read is a settled failure")
             require(
                 notifications == ["shown", "unknown"],
                 "known-to-unknown transition must notify"
@@ -383,6 +436,183 @@ class SystemBatteryStateContractTests(unittest.TestCase):
                 notifications.count == notificationsBeforeOrderedMutations,
                 "stale older mutation cannot emit a false change notification"
             )
+            require(SystemBatteryIconController.readStatus == .ready,
+                    "stale older mutation cannot overwrite the newer read phase")
+
+            SystemBatteryIconController.configureForTest { request, timeout in
+                sender.send(request, timeout)
+            }
+            readNotifications.removeAll()
+            sender.append(nil)
+            completed = false
+            SystemBatteryIconController.refreshHidden { value in
+                require(value == nil, "failed first read returns unknown")
+                completed = true
+            }
+            require(waitUntil { completed }, "failed first read completion")
+            require(readNotifications == [.checking, .failed(.requestFailed)],
+                    "nil-to-nil failure still notifies both phases")
+
+            // Canceling a not-yet-selected read must finish checking even if
+            // its replacement setter fails, with and without a prior value.
+            for previous in [Optional<Bool>.none, .some(false)] {
+                SystemBatteryIconController.configureForTest(initialHidden: previous) { request, timeout in
+                    sender.send(request, timeout)
+                }
+                let blocked = DispatchSemaphore(value: 0)
+                let started = DispatchSemaphore(value: 0)
+                HelperSettingsOperationWorker.shared.async {
+                    started.signal()
+                    blocked.wait()
+                }
+                require(started.wait(timeout: .now() + 1) == .success, "canceled-read worker started")
+                var readCompleted = false
+                var writeCompleted = false
+                let before = sender.requestCount
+                SystemBatteryIconController.refreshHidden { value in
+                    require(value == previous, "canceled read receives restored cache")
+                    readCompleted = true
+                }
+                sender.append(["ok": false, "reason": "preferenceWorkerFailed"])
+                SystemBatteryIconController.setHidden(true) { succeeded in
+                    require(!succeeded, "replacement setter must fail")
+                    writeCompleted = true
+                }
+                blocked.signal()
+                require(waitUntil { readCompleted && writeCompleted }, "canceled-read failure settles both callers")
+                require(sender.requestCount == before + 1, "canceled read never reaches helper")
+                require(SystemBatteryIconController.cachedHidden == previous, "failed setter preserves prior cache")
+                require(SystemBatteryIconController.readStatus == (previous == nil
+                    ? .failed(.preferenceWorkerFailed) : .ready),
+                    "failed replacement cannot leave a canceled read checking")
+            }
+
+            // A selected older read may finish while a newer read is blocked.
+            // Its value is usable, but the newer read still owns checking.
+            let firstReadStarted = DispatchSemaphore(value: 0)
+            let firstReadGate = DispatchSemaphore(value: 0)
+            let secondReadStarted = DispatchSemaphore(value: 0)
+            let secondReadGate = DispatchSemaphore(value: 0)
+            var selectedReads = 0
+            SystemBatteryIconController.configureForTest(initialHidden: false) { _, _ in
+                selectedReads += 1
+                if selectedReads == 1 {
+                    firstReadStarted.signal()
+                    firstReadGate.wait()
+                    return ["ok": true, "hidden": true]
+                }
+                secondReadStarted.signal()
+                secondReadGate.wait()
+                return ["ok": false, "reason": "preferenceMissing"]
+            }
+            var firstReadCompleted = false
+            var secondReadCompleted = false
+            SystemBatteryIconController.refreshHidden { _ in firstReadCompleted = true }
+            require(firstReadStarted.wait(timeout: .now() + 1) == .success, "older read selected")
+            SystemBatteryIconController.refreshHidden { _ in secondReadCompleted = true }
+            firstReadGate.signal()
+            require(waitUntil { firstReadCompleted }, "older read completed")
+            require(secondReadStarted.wait(timeout: .now() + 1) == .success, "newer read selected")
+            require(!secondReadCompleted && SystemBatteryIconController.cachedHidden == true
+                    && SystemBatteryIconController.readStatus == .checking,
+                    "older completion cannot finish a newer read")
+            secondReadGate.signal()
+            require(waitUntil { secondReadCompleted }, "newer read completed")
+            require(SystemBatteryIconController.cachedHidden == nil
+                    && SystemBatteryIconController.readStatus == .failed(.preferenceMissing),
+                    "newer failure clears cache and owns the settled phase")
+
+            // A failing older read has queued its main completion while a
+            // newer synchronous setter publishes a successful readback.
+            let oldReadStarted = DispatchSemaphore(value: 0)
+            let oldReadGate = DispatchSemaphore(value: 0)
+            var oldReadRequests = 0
+            SystemBatteryIconController.configureForTest(initialHidden: false) { request, _ in
+                oldReadRequests += 1
+                if oldReadRequests == 1 {
+                    oldReadStarted.signal()
+                    oldReadGate.wait()
+                    return ["ok": false, "reason": "preferenceSyncFailed"]
+                }
+                return request["op"] as? String == "setSystemBatteryIconHidden"
+                    ? ["ok": true] : ["ok": true, "hidden": false]
+            }
+            var oldReadCompleted = false
+            SystemBatteryIconController.refreshHidden { _ in oldReadCompleted = true }
+            require(oldReadStarted.wait(timeout: .now() + 1) == .success, "old failing read selected")
+            oldReadGate.signal()
+            require(SystemBatteryIconController.setHidden(false), "newer synchronous write succeeds")
+            require(SystemBatteryIconController.readStatus == .ready, "newer write settles ready")
+            require(waitUntil { oldReadCompleted }, "old failed completion delivered")
+            require(SystemBatteryIconController.cachedHidden == false
+                    && SystemBatteryIconController.readStatus == .ready,
+                    "old failure cannot undo newer readback or its phase")
+
+            // A checking observer may request a newer refresh synchronously.
+            // Both callers must finish even when their pending reads coalesce.
+            SystemBatteryIconController.configureForTest { _, _ in ["ok": true, "hidden": false] }
+            var outerCompleted = false
+            var nestedCompleted = false
+            var nestedRequested = false
+            let reentrantObserver = NotificationCenter.default.addObserver(
+                forName: SystemBatteryIconController.didChange, object: nil, queue: .main
+            ) { _ in
+                if SystemBatteryIconController.readStatus == .checking && !nestedRequested {
+                    nestedRequested = true
+                    SystemBatteryIconController.refreshHidden { _ in nestedCompleted = true }
+                }
+            }
+            SystemBatteryIconController.refreshHidden { _ in outerCompleted = true }
+            require(waitUntil { outerCompleted && nestedCompleted }, "reentrant read waiters complete")
+            NotificationCenter.default.removeObserver(reentrantObserver)
+            require(SystemBatteryIconController.readStatus == .ready, "reentrant refresh settles newest phase")
+
+            // Diagnostic reads share the worker without canceling a queued UI
+            // refresh or publishing their own, different observed value.
+            let probeWorkerStarted = DispatchSemaphore(value: 0)
+            let probeWorkerGate = DispatchSemaphore(value: 0)
+            var probeRequests = 0
+            SystemBatteryIconController.configureForTest(initialHidden: true) { _, _ in
+                probeRequests += 1
+                return ["ok": true, "hidden": probeRequests != 1]
+            }
+            HelperSettingsOperationWorker.shared.async {
+                probeWorkerStarted.signal()
+                probeWorkerGate.wait()
+            }
+            require(probeWorkerStarted.wait(timeout: .now() + 1) == .success, "diagnostic worker fixture started")
+            var uiReadCompleted = false
+            var diagnosticResult: SystemBatteryIconReadResult?
+            SystemBatteryIconController.refreshHidden { _ in uiReadCompleted = true }
+            DispatchQueue.global(qos: .utility).async {
+                let result = SystemBatteryIconController.probe()
+                DispatchQueue.main.async { diagnosticResult = result }
+            }
+            probeWorkerGate.signal()
+            require(waitUntil { uiReadCompleted && diagnosticResult != nil }, "UI refresh and diagnostic both complete")
+            require(probeRequests == 2, "diagnostic does not coalesce or cancel a UI read")
+            require(diagnosticResult?.hidden == true && diagnosticResult?.failure == nil,
+                    "diagnostic returns its own observed value")
+            require(SystemBatteryIconController.cachedHidden == false
+                    && SystemBatteryIconController.readStatus == .ready,
+                    "diagnostic never publishes its different value")
+
+            sender.append(["ok": false, "reason": "preferenceMissing"])
+            sender.append(["ok": true, "hidden": false])
+            SystemBatteryIconController.configureForTest { request, timeout in
+                sender.send(request, timeout)
+            }
+            readNotifications.removeAll()
+            completed = false
+            SystemBatteryIconController.refreshHidden { _ in completed = true }
+            require(waitUntil { completed }, "recoverable failure completes")
+            require(SystemBatteryIconController.readStatus == .failed(.preferenceMissing), "failure remains classified")
+            completed = false
+            SystemBatteryIconController.refreshHidden { _ in completed = true }
+            require(waitUntil { completed }, "next read recovers")
+            require(SystemBatteryIconController.cachedHidden == false
+                    && readNotifications == [.checking, .failed(.preferenceMissing), .checking, .ready],
+                    "later successful refresh clears the failure phase")
 
             print("system battery shared-state contract passed")
             """

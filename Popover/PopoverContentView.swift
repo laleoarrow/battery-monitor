@@ -322,6 +322,7 @@ final class PopoverFooterView: PopoverSection {
     private var selectionGeneration = 0
     private var synchronizedModePresentation: ModeControlPresentation?
     private var systemBatteryIconHidden: Bool?
+    private var systemBatteryIconReadStatus: SystemBatteryIconReadStatus = .notRequested
     private var helperInstalled = false
     private var systemBatteryIconUpdateInFlight = false
     private var usesNativeModeControl = false
@@ -464,19 +465,32 @@ final class PopoverFooterView: PopoverSection {
     }
 
     func update(mode: EnergyMode, helperInstalled: Bool, systemBatteryIconHidden: Bool?,
-                tint: NSColor) {
+                tint: NSColor, readStatus: SystemBatteryIconReadStatus = .ready) {
         self.helperInstalled = helperInstalled
         self.systemBatteryIconHidden = systemBatteryIconHidden
+        self.systemBatteryIconReadStatus = readStatus
         if let systemBatteryIconHidden {
             systemBatteryIconButton.state = systemBatteryIconHidden ? .on : .off
-            systemBatteryIconButton.isEnabled = helperInstalled && !systemBatteryIconUpdateInFlight
+            systemBatteryIconButton.isEnabled = helperInstalled && readStatus == .ready
+                && !systemBatteryIconUpdateInFlight
         } else {
             systemBatteryIconButton.state = .mixed
             systemBatteryIconButton.isEnabled = false
         }
-        statusMessage.stringValue = helperInstalled
-            ? (systemBatteryIconHidden == nil ? "Can’t Read System Settings" : "")
-            : "Helper Not Installed"
+        if !helperInstalled {
+            statusMessage.stringValue = "Helper Not Installed"
+        } else {
+            switch readStatus {
+            case .notRequested: statusMessage.stringValue = ""
+            case .checking: statusMessage.stringValue = "Reading…"
+            case .ready: statusMessage.stringValue = ""
+            case .failed: statusMessage.stringValue = "Status Unavailable"
+            }
+        }
+        systemBatteryIconButton.setAccessibilityHelp(
+            "Hide the built-in macOS battery icon in the menu bar"
+                + (statusMessage.stringValue.isEmpty ? "" : ". " + statusMessage.stringValue)
+        )
         let hideStatus = statusMessage.stringValue.isEmpty
         if statusMessage.isHidden != hideStatus {
             statusMessage.isHidden = hideStatus
@@ -706,9 +720,11 @@ final class PopoverFooterView: PopoverSection {
         onSystemBatteryIconToggle(requested) { [weak self, weak sender] succeeded in
             guard let self, let sender else { return }
             self.systemBatteryIconUpdateInFlight = false
-            if succeeded { self.systemBatteryIconHidden = requested }
-            sender.state = self.systemBatteryIconHidden == true ? .on : .off
+            // The owner has already supplied the current authoritative value.
+            // An older completion must not overwrite a newer shared read.
+            sender.state = self.systemBatteryIconHidden.map { $0 ? .on : .off } ?? .mixed
             sender.isEnabled = self.helperInstalled && self.systemBatteryIconHidden != nil
+                && self.systemBatteryIconReadStatus == .ready
             if !succeeded { NSSound.beep() }
         }
     }
@@ -778,6 +794,7 @@ final class PopoverContentViewController: NSViewController {
     private var latestHistory: [Double] = []
     private var latestPeak: Double = 0
     private var systemBatteryIconHidden: Bool?
+    private var systemBatteryIconReadStatus: SystemBatteryIconReadStatus = .notRequested
     private var modeSelectHandler: ((EnergyMode, @escaping (EnergyMode?) -> Void) -> Void)?
     private var systemBatteryIconToggleHandler:
         ((Bool, @escaping (Bool) -> Void) -> Void)?
@@ -919,8 +936,11 @@ final class PopoverContentViewController: NSViewController {
         settingsHandler = handler
     }
 
-    func updateSystemBatteryIconState(_ hidden: Bool?) {
+    func updateSystemBatteryIconState(
+        _ hidden: Bool?, readStatus: SystemBatteryIconReadStatus = .ready
+    ) {
         systemBatteryIconHidden = hidden
+        systemBatteryIconReadStatus = readStatus
         updateFooter()
     }
 
@@ -1024,7 +1044,8 @@ final class PopoverContentViewController: NSViewController {
             mode: EnergyModeController.current,
             helperInstalled: HelperClient.isInstalled,
             systemBatteryIconHidden: systemBatteryIconHidden,
-            tint: PopoverStyle.stateColor(latestSnapshot.state)
+            tint: PopoverStyle.stateColor(latestSnapshot.state),
+            readStatus: systemBatteryIconReadStatus
         )
     }
 

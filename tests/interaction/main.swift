@@ -1353,6 +1353,28 @@ do {
     func footerDescendants(_ view: NSView) -> [NSView] {
         view.subviews.flatMap { [$0] + footerDescendants($0) }
     }
+    if let battery = footerDescendants(footer).compactMap({ $0 as? NSButton }).first(where: {
+        $0.action == NSSelectorFromString("systemBatteryIconChanged:")
+    }) {
+        func footerContains(_ text: String) -> Bool {
+            footerDescendants(footer).compactMap { $0 as? NSTextField }
+                .contains { !$0.isHidden && $0.stringValue == text }
+        }
+        for phase: SystemBatteryIconReadStatus in [.notRequested, .checking, .failed(.requestFailed)] {
+            footer.update(mode: .auto, helperInstalled: true,
+                          systemBatteryIconHidden: nil, tint: .systemBlue, readStatus: phase)
+            footer.layoutSubtreeIfNeeded()
+            check("battery unknown phase disables mutation", !battery.isEnabled && battery.state == .mixed)
+            check("battery pending is not reported as failure",
+                  footerContains("Status Unavailable") == (phase == .failed(.requestFailed)))
+            check("battery reading has explicit feedback", footerContains("Reading…") == (phase == .checking))
+        }
+        footer.update(mode: .auto, helperInstalled: true,
+                      systemBatteryIconHidden: false, tint: .systemBlue, readStatus: .ready)
+        check("battery read recovers checkbox and removes status",
+              battery.isEnabled && battery.state == .off && !footerContains("Status Unavailable")
+                  && !footerContains("Reading…"))
+    } else { check("battery footer control exists", false) }
     if let baseline = footerDescendants(footer).compactMap({ $0 as? ModeSliderView }).first,
        let native = footerDescendants(footer).compactMap({ $0 as? NativeModeSegmentedControl }).first,
        let menu = footerDescendants(footer).compactMap({ $0 as? NSButton }).first(where: {

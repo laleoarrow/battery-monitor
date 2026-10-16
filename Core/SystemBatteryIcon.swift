@@ -168,6 +168,32 @@ final class CoalescingReadOperationQueue<ReadValue> {
     }
 }
 
+enum SystemBatteryIconReadFailure: String, Equatable {
+    case helperUnavailable
+    case requestFailed
+    case invalidReply
+    case legacyUnavailable
+    case userContextUnavailable
+    case preferenceSyncFailed
+    case preferenceMissing
+    case preferenceTypeUnsupported
+    case preferenceValueUnsupported
+    case preferenceWorkerFailed
+}
+
+enum SystemBatteryIconReadStatus: Equatable {
+    case notRequested
+    case checking
+    case ready
+    case failed(SystemBatteryIconReadFailure)
+}
+
+struct SystemBatteryIconReadResult {
+    let hidden: Bool?
+    let failure: SystemBatteryIconReadFailure?
+    let elapsedMilliseconds: Int
+}
+
 /// Reads and changes the Apple battery menu-extra through the privileged
 /// helper. A sandboxed app cannot access another process's preferences.
 enum SystemBatteryIconController {
@@ -179,17 +205,19 @@ enum SystemBatteryIconController {
     private struct MutationResult {
         let succeeded: Bool
         let landedHidden: Bool?
+        let failure: SystemBatteryIconReadFailure?
     }
 
     static let didChange = Notification.Name("WattsonSystemBatteryIconDidChange")
 
-    private static let operations = CoalescingReadOperationQueue<Bool?>(
+    private static let operations = CoalescingReadOperationQueue<SystemBatteryIconReadResult>(
         label: "com.leoarrow.wattson.system-battery-icon",
         qos: .userInitiated
     )
     /// Shared last-known Control Center state. `nil` means unknown, never
     /// "visible", so settings surfaces can keep their control indeterminate.
     private(set) static var cachedHidden: Bool?
+    private(set) static var readStatus: SystemBatteryIconReadStatus = .notRequested
     private static var requestSequence = 0
     private static var latestSettledSequence = 0
     private static var refreshWaiters: [RefreshWaiter] = []
@@ -197,6 +225,7 @@ enum SystemBatteryIconController {
 
 #if DEBUG
     private static var testSend: (([String: Any], Int) -> [String: Any]?)?
+    private static var testHelperAvailable: Bool?
 #endif
 
     static func refreshHidden(_ completion: @escaping (Bool?) -> Void) {
@@ -210,21 +239,76 @@ enum SystemBatteryIconController {
         let generation = configurationGeneration
         refreshWaiters.append(RefreshWaiter(sequence: sequence, completion: completion))
         operations.enqueueRead(
-            operation: {
-                let reply = send(
-                    ["op": "getSystemBatteryIconHidden"], timeoutSeconds: 4
-                )
-                guard HelperClient.strictJSONBool(reply?["ok"]) == true else { return nil }
-                return HelperClient.strictJSONBool(reply?["hidden"])
-            },
-            completion: { hidden in
+            operation: { probe() },
+            completion: { result in
                 guard generation == configurationGeneration else { return }
                 if claimPublication(for: sequence) {
-                    publish(hidden)
+                    // An older read can supply a value while a newer request
+                    // is pending, but cannot finish that request's checking.
+                    publish(result.hidden, status: sequence == requestSequence
+                        ? result.failure.map { .failed($0) } ?? .ready : readStatus)
                 }
                 completeRefreshWaiters(through: sequence, with: cachedHidden)
             }
         )
+        // Enqueue first: a notification observer may request another refresh.
+        // Its newer read must not be replaced by this older invocation.
+        publish(cachedHidden, status: .checking)
+    }
+
+    /// Blocking, read-only diagnostics. Use a worker queue, as refreshHidden
+    /// does. Sharing the settings lane never cancels pending UI reads and does
+    /// not publish a cache, status, or notification.
+    static func probe() -> SystemBatteryIconReadResult {
+        let started = DispatchTime.now().uptimeNanoseconds
+        let value: (Bool?, SystemBatteryIconReadFailure?)
+        if HelperSettingsOperationWorker.shared.isCurrent {
+            value = readValue()
+        } else {
+            let finished = DispatchSemaphore(value: 0)
+            var result: (Bool?, SystemBatteryIconReadFailure?)?
+            HelperSettingsOperationWorker.shared.async {
+                result = readValue()
+                finished.signal()
+            }
+            finished.wait()
+            value = result!
+        }
+        return SystemBatteryIconReadResult(
+            hidden: value.0,
+            failure: value.1,
+            elapsedMilliseconds: Int((DispatchTime.now().uptimeNanoseconds - started) / 1_000_000)
+        )
+    }
+
+    private static func readValue() -> (Bool?, SystemBatteryIconReadFailure?) {
+#if DEBUG
+        let available = testHelperAvailable ?? HelperClient.isInstalled
+#else
+        let available = HelperClient.isInstalled
+#endif
+        guard available else { return (nil, .helperUnavailable) }
+        let reply = send(["op": "getSystemBatteryIconHidden"], timeoutSeconds: 4)
+        guard let reply else { return (nil, .requestFailed) }
+        guard let ok = HelperClient.strictJSONBool(reply["ok"]) else { return (nil, .invalidReply) }
+        guard ok else { return (nil, failure(from: reply)) }
+        guard let hidden = HelperClient.strictJSONBool(reply["hidden"]) else {
+            return (nil, .invalidReply)
+        }
+        return (hidden, nil)
+    }
+
+    private static func failure(from reply: [String: Any]?) -> SystemBatteryIconReadFailure {
+        guard let reply else { return .requestFailed }
+        guard HelperClient.strictJSONBool(reply["ok"]) == false else { return .invalidReply }
+        guard let raw = reply["reason"] else { return .legacyUnavailable }
+        guard let reason = raw as? String else { return .invalidReply }
+        switch SystemBatteryIconReadFailure(rawValue: reason) {
+        case let failure? where [.userContextUnavailable, .preferenceSyncFailed,
+            .preferenceMissing, .preferenceTypeUnsupported, .preferenceValueUnsupported,
+            .preferenceWorkerFailed].contains(failure): return failure
+        default: return .requestFailed
+        }
     }
 
     /// Synchronous compatibility for existing non-settings callers. AppKit
@@ -242,9 +326,7 @@ enum SystemBatteryIconController {
             mutationResult(for: hidden)
         }
         guard generation == configurationGeneration else { return false }
-        if claimPublication(for: sequence), result.succeeded {
-            publish(result.landedHidden)
-        }
+        settleMutation(result, sequence: sequence)
         completeRefreshWaiters(through: sequence, with: cachedHidden)
         return result.succeeded
     }
@@ -262,12 +344,7 @@ enum SystemBatteryIconController {
             operation: { mutationResult(for: hidden) },
             completion: { result in
                 guard generation == configurationGeneration else { return }
-                if claimPublication(for: sequence), result.succeeded {
-                    // Only the separate authoritative readback may publish a
-                    // mutation. A mismatch is failure and preserves the prior
-                    // cache rather than briefly advertising the requested UI.
-                    publish(result.landedHidden)
-                }
+                settleMutation(result, sequence: sequence)
                 // A mutation cancels a not-yet-selected refresh. Complete any
                 // callers that preceded it with the newer landed (or restored
                 // last-known) state, while leaving later refreshes pending.
@@ -289,24 +366,31 @@ enum SystemBatteryIconController {
             timeoutSeconds: 6
         )
         guard HelperClient.strictJSONBool(reply?["ok"]) == true else {
-            return MutationResult(succeeded: false, landedHidden: nil)
+            return MutationResult(succeeded: false, landedHidden: nil, failure: failure(from: reply))
         }
 
         // The setter's success means its fixed preference write and Control
         // Center restart completed. A separate fixed getter is still the
         // authority for the value that actually landed.
-        let readback = send(
-            ["op": "getSystemBatteryIconHidden"], timeoutSeconds: 4
-        )
-        guard HelperClient.strictJSONBool(readback?["ok"]) == true,
-              let landedHidden = HelperClient.strictJSONBool(readback?["hidden"])
-        else {
-            return MutationResult(succeeded: false, landedHidden: nil)
+        let readback = probe()
+        guard let landedHidden = readback.hidden else {
+            return MutationResult(succeeded: false, landedHidden: nil, failure: readback.failure)
         }
         return MutationResult(
             succeeded: landedHidden == hidden,
-            landedHidden: landedHidden
+            landedHidden: landedHidden,
+            failure: landedHidden == hidden ? nil : .requestFailed
         )
+    }
+
+    private static func settleMutation(_ result: MutationResult, sequence: Int) {
+        guard claimPublication(for: sequence) else { return }
+        // Failed writes retain the last authoritative value. They must still
+        // settle a refresh canceled before it reached the worker.
+        let hidden = result.succeeded ? result.landedHidden : cachedHidden
+        let status: SystemBatteryIconReadStatus = hidden != nil
+            ? .ready : .failed(result.failure ?? .requestFailed)
+        publish(hidden, status: sequence == requestSequence ? status : readStatus)
     }
 
     /// Worker operations are serialized, but their main-queue completions can
@@ -330,10 +414,11 @@ enum SystemBatteryIconController {
         return HelperClient.send(request, timeoutSeconds: timeoutSeconds)
     }
 
-    private static func publish(_ hidden: Bool?) {
+    private static func publish(_ hidden: Bool?, status: SystemBatteryIconReadStatus) {
         precondition(Thread.isMainThread)
-        guard cachedHidden != hidden else { return }
+        guard cachedHidden != hidden || readStatus != status else { return }
         cachedHidden = hidden
+        readStatus = status
         NotificationCenter.default.post(name: didChange, object: nil)
     }
 
@@ -354,6 +439,7 @@ enum SystemBatteryIconController {
 #if DEBUG
     static func configureForTest(
         initialHidden: Bool? = nil,
+        helperAvailable: Bool = true,
         send: @escaping ([String: Any], Int) -> [String: Any]?
     ) {
         precondition(Thread.isMainThread)
@@ -362,10 +448,12 @@ enum SystemBatteryIconController {
         operations.performMutation {}
         configurationGeneration += 1
         testSend = send
+        testHelperAvailable = helperAvailable
         requestSequence = 0
         latestSettledSequence = 0
         refreshWaiters.removeAll()
         cachedHidden = initialHidden
+        readStatus = initialHidden == nil ? .notRequested : .ready
     }
 
     static func resetTestConfiguration() {
@@ -375,10 +463,12 @@ enum SystemBatteryIconController {
         operations.performMutation {}
         configurationGeneration += 1
         testSend = nil
+        testHelperAvailable = nil
         requestSequence = 0
         latestSettledSequence = 0
         refreshWaiters.removeAll()
         cachedHidden = nil
+        readStatus = .notRequested
     }
 #endif
 }

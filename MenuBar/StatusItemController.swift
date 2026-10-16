@@ -513,7 +513,10 @@ final class StatusItemController: NSObject {
     }
 
     private func updateSystemBatteryIconPresentation() {
-        popover.updateSystemBatteryIconState(SystemBatteryIconController.cachedHidden)
+        popover.updateSystemBatteryIconState(
+            SystemBatteryIconController.cachedHidden,
+            readStatus: SystemBatteryIconController.readStatus
+        )
     }
 
     private func applySystemBatteryIconHidden(

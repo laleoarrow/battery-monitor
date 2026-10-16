@@ -32,6 +32,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     private var settingsHandler: (() -> Void)?
     private var latestPresentation: Presentation?
     private var latestSystemBatteryIconHidden: Bool?
+    private var latestSystemBatteryIconReadStatus: SystemBatteryIconReadStatus = .notRequested
     private var displayOptionsObserver: NSObjectProtocol?
     private var screenParametersObserver: NSObjectProtocol?
     private var appearanceObserver: NSObjectProtocol?
@@ -173,10 +174,13 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         settingsHandler = handler
     }
 
-    func updateSystemBatteryIconState(_ hidden: Bool?) {
+    func updateSystemBatteryIconState(
+        _ hidden: Bool?, readStatus: SystemBatteryIconReadStatus = .ready
+    ) {
         latestSystemBatteryIconHidden = hidden
+        latestSystemBatteryIconReadStatus = readStatus
         guard wantsOpen || hostIsShown else { return }
-        content.updateSystemBatteryIconState(hidden)
+        content.updateSystemBatteryIconState(hidden, readStatus: readStatus)
     }
 
     func toggle(relativeTo button: NSStatusBarButton) {
@@ -204,7 +208,9 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         // Prime every module with the newest cached telemetry before AppKit
         // captures the first frame. This replaces hidden periodic rendering
         // without introducing a stale flash on open.
-        content.updateSystemBatteryIconState(latestSystemBatteryIconHidden)
+        content.updateSystemBatteryIconState(
+            latestSystemBatteryIconHidden, readStatus: latestSystemBatteryIconReadStatus
+        )
         applyLatestPresentation()
         // A newly visible/hidden module can change the natural height while
         // priming cached data. Resolve the final viewport before hosting it.

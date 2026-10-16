@@ -3,6 +3,21 @@ import XCTest
 @testable import Wattson
 
 final class FeedbackDiagnosticsTests: XCTestCase {
+    func testBatteryIconDiagnosticsDistinguishDisplayedPendingAndProbeFailure() {
+        let report = FeedbackDiagnostics.makeReport(
+            context: .init(version: "4.3.7", build: "4.3.7", settings: [:],
+                           accessibility: [:], displayedSnapshot: nil,
+                           batteryIconReadStatus: .checking),
+            system: [:], helper: [:], batteryProperties: nil,
+            batteryIconReadResult: .init(hidden: nil, failure: .preferenceMissing,
+                                        elapsedMilliseconds: 1500)
+        )
+        XCTAssertTrue(report.text.contains("displayedReadStatus: checking"))
+        XCTAssertTrue(report.text.contains("probeFailure: preferenceMissing"))
+        XCTAssertTrue(report.text.contains("probeHidden: unknown"))
+        XCTAssertTrue(report.text.contains("probeElapsedMilliseconds: 1500"))
+    }
+
     func testBatteryAllowlistExcludesIdentityAndRejectsNonNumericValues() {
         let fields = FeedbackDiagnostics.safeBatteryValues([
             "CurrentCapacity": NSNumber(value: 58),
