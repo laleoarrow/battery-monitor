@@ -339,6 +339,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
             XCTAssertEqual(messages.filter { !$0.isHidden }.map(\.stringValue), expectedStatus.map { [$0] } ?? [])
             XCTAssertTrue(messages.filter(\.isHidden).allSatisfy { $0.frame == .zero && $0.stringValue.isEmpty })
             XCTAssertEqual(checkbox.isEnabled, helperInstalled && iconHidden != nil && readStatus == .ready)
+            XCTAssertEqual(checkbox.state, iconHidden.map { $0 ? .on : .off } ?? .mixed)
             XCTAssertEqual(checkbox.frame, checkboxFrame)
             XCTAssertEqual(modeSlider(in: footer).frame, controlFrame)
             XCTAssertEqual(menuButton(in: footer).frame, menuFrame)

@@ -351,6 +351,7 @@ final class PopoverFooterView: PopoverSection {
 
         systemBatteryIconButton.controlSize = .small
         systemBatteryIconButton.font = .systemFont(ofSize: 11, weight: .regular)
+        systemBatteryIconButton.allowsMixedState = true
         systemBatteryIconButton.state = .mixed
         systemBatteryIconButton.setAccessibilityHelp("Hide the built-in macOS battery icon in the menu bar")
         addSubview(systemBatteryIconButton)
