@@ -1922,12 +1922,14 @@ if #available(macOS 26.0, *) {
 if #available(macOS 26.0, *), !screenLocked {
     let previousAppAppearance = app.appearance
     let previousStyle = Settings.liquidGlassStyle
+    let previousArrow = Settings.showPopoverArrow
     let displayOverrides = ["WATTSON_FORCE_REDUCE_MOTION", "WATTSON_FORCE_REDUCE_TRANSPARENCY",
                             "WATTSON_FORCE_INCREASE_CONTRAST"]
     let previousOverrides = displayOverrides.map { ProcessInfo.processInfo.environment[$0] }
     defer {
         Settings.liquidGlassEnabled = false
         Settings.liquidGlassStyle = previousStyle
+        Settings.showPopoverArrow = previousArrow
         Settings.colorScheme = .system
         app.appearance = previousAppAppearance
         for (name, value) in zip(displayOverrides, previousOverrides) {
@@ -1987,6 +1989,7 @@ if #available(macOS 26.0, *), !screenLocked {
     let outside = NSPoint(x: -10_000, y: -10_000)
     for style in Settings.LiquidGlassStyle.allCases {
         Settings.liquidGlassStyle = style
+        Settings.showPopoverArrow = true
         Settings.liquidGlassEnabled = true
         let statusPickPoints: [NSPoint] = button.window.map { window in [
             NSPoint(x: window.frame.midX, y: window.frame.midY),
@@ -2043,6 +2046,63 @@ if #available(macOS 26.0, *), !screenLocked {
                       && visibilityEvents.count == previousVisibility
                       && controller.lifetimeObserverCountForTest == previousObservers)
         }
+        if let root = originalRoot, let material,
+           let scroll = hostDescendants(root).compactMap({ $0 as? NSScrollView }).first,
+           let document = scroll.documentView {
+            let bodyWithArrow = panel.convertToScreen(panel.bodyFrame)
+            let frameWithArrow = panel.frame
+            let viewportWithArrow = root.frame.height
+            let extraViewport = min(PopoverPlacement.glassArrowHeight,
+                                    max(0, document.bounds.height - viewportWithArrow))
+            let fields = hostDescendants(root).compactMap { $0 as? NSTextField }
+            let fieldIDs = fields.map(ObjectIdentifier.init)
+            let fieldValues = fields.map(\.stringValue)
+            let a2 = hostA2(controller)
+            let observerCount = controller.lifetimeObserverCountForTest
+            let eventCount = visibilityEvents.count
+            let menu = NSMenu(title: "Arrow preference tracking fixture")
+            NotificationCenter.default.post(name: NSMenu.didBeginTrackingNotification, object: menu)
+            Settings.showPopoverArrow = false
+            root.layoutSubtreeIfNeeded()
+            let bodyWithoutArrow = panel.convertToScreen(panel.bodyFrame)
+            let currentFields = hostDescendants(root).compactMap { $0 as? NSTextField }
+            let mask = backgrounds.first?.layer?.mask as? CAShapeLayer
+            check("[ARROW-OPTION] \(style.rawValue) 关闭箭头让正文上移12点并回收受限视口",
+                  !panel.showsArrow && !material.showsArrow
+                      && abs(bodyWithoutArrow.maxY - bodyWithArrow.maxY - 12) < 0.5
+                      && abs(panel.frame.maxY - frameWithArrow.maxY) < 0.5
+                      && abs(root.frame.height - viewportWithArrow - extraViewport) < 0.5
+                      && foreground?.frame == panel.bodyFrame
+                      && root.frame == foreground?.bounds
+                      && material.frame.height == panel.bodyFrame.height,
+                  "bodyTopGain=\(bodyWithoutArrow.maxY - bodyWithArrow.maxY) "
+                      + "viewportGain=\(root.frame.height - viewportWithArrow) expected=\(extraViewport)")
+            check("[ARROW-OPTION] \(style.rawValue) 无箭头背景顶边连续且保留圆角裁切",
+                  mask?.path?.contains(NSPoint(x: GlassPopoverShape.cornerRadius + 2,
+                                               y: material.bounds.maxY - 0.5)) == true
+                      && mask?.path?.contains(NSPoint(x: 1, y: material.bounds.maxY - 0.5)) == false
+                      && foreground?.layer?.masksToBounds == true)
+            panel.cancelOperation(nil)
+            check("[ARROW-OPTION] \(style.rawValue) 在线切换保留宿主内容控件菜单和处理器",
+                  controller.isOpen && controller.isShownForTest
+                      && controller.glassPanelForTest === panel && panel.materialView === material
+                      && controller.contentViewForTest === root && hostA2(controller) === a2
+                      && currentFields.map(ObjectIdentifier.init) == fieldIDs
+                      && currentFields.map(\.stringValue) == fieldValues
+                      && visibilityEvents.count == eventCount
+                      && controller.lifetimeObserverCountForTest == observerCount
+                      && panel.onDismiss != nil && panel.onEscape != nil
+                      && modeRequests == 0 && batteryRequests == 0)
+            NotificationCenter.default.post(name: NSMenu.didEndTrackingNotification, object: menu)
+            Settings.showPopoverArrow = true
+            root.layoutSubtreeIfNeeded()
+            check("[ARROW-OPTION] \(style.rawValue) 恢复箭头回到原始完整布局",
+                  panel.showsArrow && material.showsArrow
+                      && panel.frame == frameWithArrow
+                      && panel.convertToScreen(panel.bodyFrame) == bodyWithArrow
+                      && root.frame.height == viewportWithArrow
+                      && controller.glassPanelForTest === panel)
+        } else { check("[ARROW-OPTION] \(style.rawValue) 具备实际滚动内容和材质", false) }
         let openVisibilityCount = visibilityEvents.count
         let openObserverCount = controller.lifetimeObserverCountForTest
         controller.openForSettingsCommandTest(relativeTo: button)
@@ -2232,6 +2292,19 @@ if #available(macOS 26.0, *), !screenLocked {
         controller.closeBypassingControllerForTest()
         check("\(style.rawValue) 宿主自行关闭仍执行完整清理",
               !controller.isShownForTest && !controller.isOpen && hostMonitorsAreRemoved(controller))
+        Settings.showPopoverArrow = false
+        controller.openForSettingsCommandTest(relativeTo: button)
+        check("[ARROW-OPTION] \(style.rawValue) 保存关闭箭头后再次打开使用同一生产内容",
+              controller.isOpen && controller.glassPanelForTest?.showsArrow == false
+                  && controller.contentViewForTest === originalRoot)
+        controller.toggle(relativeTo: button)
+        check("[ARROW-OPTION] \(style.rawValue) 无箭头时再次点击状态项收起并清理监听",
+              !controller.isOpen && !controller.isShownForTest && hostMonitorsAreRemoved(controller))
+        controller.openForSettingsCommandTest(relativeTo: button)
+        controller.glassPanelForTest?.cancelOperation(nil)
+        check("[ARROW-OPTION] \(style.rawValue) 无箭头重开后Escape仍关闭并清理监听",
+              !controller.isOpen && !controller.isShownForTest && hostMonitorsAreRemoved(controller))
+        Settings.showPopoverArrow = true
     }
 
     Settings.liquidGlassStyle = .regular
@@ -2264,6 +2337,20 @@ if #available(macOS 26.0, *), !screenLocked {
     checkInstalledHost("关闭玻璃后实际 Classic 窗口内容非空", glass: false)
     let retiredClassic = controller.classicPopoverForTest
     let classicWindow = controller.contentWindowForTest
+    let classicFrame = classicWindow?.frame
+    let classicContentFrame = originalRoot?.frame
+    let classicCounts = controller.classicLifecycleCountsForTest
+    let classicVisibilityCount = visibilityEvents.count
+    for showsArrow in [false, true] {
+        Settings.showPopoverArrow = showsArrow
+        check("[ARROW-OPTION] Classic忽略玻璃箭头选择 \(showsArrow)，保留原生窗口及几何",
+              controller.isOpen && controller.classicPopoverForTest === retiredClassic
+                  && controller.contentWindowForTest === classicWindow
+                  && classicWindow?.frame == classicFrame && originalRoot?.frame == classicContentFrame
+                  && controller.classicLifecycleCountsForTest.shows == classicCounts.shows
+                  && controller.classicLifecycleCountsForTest.closes == classicCounts.closes
+                  && visibilityEvents.count == classicVisibilityCount)
+    }
     for scheme in [Settings.ColorScheme.dark, .light, .system] {
         Settings.colorScheme = scheme
         let expected = scheme.appearance?.name ?? .aqua

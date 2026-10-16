@@ -12,6 +12,12 @@ private enum CaptureProductionGlass {
         let defaults = MemoryDefaults()
         Settings.configureForTest(defaults: defaults)
         Settings.liquidGlassEnabled = true
+        let arrowInput = ProcessInfo.processInfo.environment["WATTSON_CAPTURE_POPOVER_ARROW"] ?? "1"
+        guard ["0", "1"].contains(arrowInput) else {
+            fputs("WATTSON_CAPTURE_POPOVER_ARROW must be 0 or 1\n", stderr)
+            exit(2)
+        }
+        Settings.showPopoverArrow = arrowInput == "1"
         let opacityInput = ProcessInfo.processInfo.environment["WATTSON_CAPTURE_GLASS_TRANSPARENCY"] ?? "1"
         guard let transparency = Double(opacityInput), transparency.isFinite, (0...1).contains(transparency) else {
             fputs("WATTSON_CAPTURE_GLASS_TRANSPARENCY must be between 0 and 1\n", stderr)
@@ -158,9 +164,10 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                     }
                     let margin = GlassPopoverPanel.contentInset(for: style)
                     let expectedMaterial = root.bounds.insetBy(dx: margin, dy: margin)
+                    let arrowHeight: CGFloat = Settings.showPopoverArrow ? PopoverPlacement.glassArrowHeight : 0
                     let expectedBody = NSRect(x: expectedMaterial.minX, y: expectedMaterial.minY,
                         width: expectedMaterial.width,
-                        height: expectedMaterial.height - PopoverPlacement.glassArrowHeight)
+                        height: expectedMaterial.height - arrowHeight)
                     let anchorFrame = anchorWindow.convertToScreen(anchor.convert(anchor.bounds, to: nil))
                     let glassFrame = panel.convertToScreen(glass.convert(glass.bounds, to: nil))
                     let bodyFrame = panel.convertToScreen(panel.bodyFrame)
@@ -173,23 +180,29 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                     let foregroundClipsToBody = foreground?.layer?.masksToBounds == true
                         && foreground?.layer?.cornerRadius == GlassPopoverShape.cornerRadius
                     let mask = backing.layer?.mask as? CAShapeLayer
-                    let maskHasArrow = mask?.frame == backing.bounds
+                    let maskHasExpectedShape = mask?.frame == backing.bounds
                         && mask?.path?.boundingBoxOfPath == backing.bounds
-                        && mask?.path?.contains(NSPoint(x: expectedArrowX, y: backing.bounds.maxY - 0.5)) == true
+                        && mask?.path?.contains(NSPoint(x: backing.bounds.midX, y: backing.bounds.midY)) == true
                         && mask?.path?.contains(NSPoint(x: 1, y: backing.bounds.maxY - 0.5)) == false
+                        && (Settings.showPopoverArrow
+                            ? mask?.path?.contains(NSPoint(x: expectedArrowX, y: backing.bounds.maxY - 0.5)) == true
+                            : mask?.path?.contains(NSPoint(x: GlassPopoverShape.cornerRadius + 2,
+                                                         y: backing.bounds.maxY - 0.5)) == true)
                     guard abs(content.frame.width - 360) < 0.01,
                           root.subviews.count == 3,
                           materialAndBackingFramesMatch,
                           contentMatchesBody,
                           root.subviews.last === foreground,
                           foregroundClipsToBody,
-                          maskHasArrow,
+                          maskHasExpectedShape,
+                          panel.showsArrow == Settings.showPopoverArrow,
+                          glass.showsArrow == Settings.showPopoverArrow,
                           panel.frame.minX >= screen.visibleFrame.minX - 0.5,
                           panel.frame.maxX <= screen.visibleFrame.maxX + 0.5,
                           panel.frame.minY >= screen.visibleFrame.minY - 0.5,
                           abs(arrowTip.x - (panel.frame.minX + expectedMaterial.minX + expectedArrowX)) <= 0.5,
                           abs(arrowTip.y - (min(anchorFrame.minY, screen.visibleFrame.maxY) - 4)) <= 0.5,
-                          abs(arrowTip.y - bodyFrame.maxY - PopoverPlacement.glassArrowHeight) <= 0.5,
+                          abs(arrowTip.y - bodyFrame.maxY - arrowHeight) <= 0.5,
                           abs(glassFrame.maxY - (panel.frame.maxY - margin)) <= 0.5
                     else {
                         throw failure("Production geometry failed: panel=\(panel.frame) glass=\(glassFrame) "
@@ -262,14 +275,16 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                         "arrowTipAppKit": [arrowTip.x, arrowTip.y],
                         "requestedArrowX": requestedArrowX, "clampedArrowX": expectedArrowX,
                         "arrowClamped": abs(requestedArrowX - expectedArrowX) > 0.01,
-                        "arrowHeight": PopoverPlacement.glassArrowHeight,
+                        "showsArrow": Settings.showPopoverArrow, "arrowHeight": arrowHeight,
                         "statusWindowPicks": statusWindowPicks,
                         "bodyPickedWindow": bodyPick, "bodyHitCalibratesPanel": bodyPick == panel.windowNumber,
                         "bodyGridPicks": bodyGridPicks, "bodyGridPointCount": bodyGridPicks.count,
                         "bodyGridHitCount": bodyGridHits, "bodyGridHitRatio": Double(bodyGridHits) / Double(bodyGridPicks.count),
                         "minimumInputOpacity": minimumInputOpacity, "expectedBackingOpacity": expectedOpacity,
                         "materialAndBackingFramesMatch": materialAndBackingFramesMatch,
-                        "contentMatchesBodyFrame": contentMatchesBody, "backingMaskHasArrow": maskHasArrow,
+                        "contentMatchesBodyFrame": contentMatchesBody,
+                        "backingMaskHasArrow": Settings.showPopoverArrow && maskHasExpectedShape,
+                        "backingMaskMatchesSelectedShape": maskHasExpectedShape,
                         "foregroundClipsToBody": foregroundClipsToBody,
                         "transparency": Settings.liquidGlassTransparency,
                         "solidAccessibilityBackground": GlassBackgroundView.accessibilityRequiresSolidBackground,
@@ -291,7 +306,8 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                 try await Task.sleep(nanoseconds: 400_000_000)
             }
         }
-        try write(["complete": true, "captures": captures], name: "complete.json")
+        try write(["complete": true, "captures": captures,
+                   "showsArrow": Settings.showPopoverArrow], name: "complete.json")
     }
 
     private func descendants(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(descendants) }

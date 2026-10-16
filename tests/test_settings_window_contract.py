@@ -475,6 +475,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let first = controller.windowForTest
             let glassSwitch = view("settings.appearance.liquid-glass", in: first) as! NSSwitch
             let glassStyle = view("settings.appearance.liquid-glass-style", in: first) as! NSPopUpButton
+            let popoverArrow = view("settings.appearance.popover-arrow", in: first) as! NSSwitch
             let transparency = view("settings.appearance.glass-transparency", in: first) as! NSSlider
             let logoPopup = view("settings.appearance.in-app-logo", in: first) as! NSPopUpButton
             let dockPopup = view("settings.appearance.dock-icon", in: first) as! NSPopUpButton
@@ -490,6 +491,16 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "native popup offers the two approved backgrounds with Standard selected by default")
             require(!glassStyle.isEnabled && Settings.liquidGlassStyle == .regular,
                 "background selection is disabled while Liquid Glass is off")
+            require(!popoverArrow.isEnabled && popoverArrow.state == .on
+                && Settings.showPopoverArrow,
+                "popup arrow defaults on and stays disabled in Classic")
+            require(popoverArrow.accessibilityLabel() == "Show Popover Arrow"
+                && popoverArrow.accessibilityHelp()?.contains("closer to the menu bar") == true,
+                "popup arrow describes its geometry effect accessibly")
+            popoverArrow.state = .off
+            popoverArrow.sendAction(popoverArrow.action!, to: popoverArrow.target)
+            require(Settings.showPopoverArrow, "disabled popup arrow cannot change preferences")
+            popoverArrow.state = .on
             require(!transparency.isEnabled && transparency.minValue == 0 && transparency.maxValue == 100
                 && transparency.doubleValue == 100 && transparency.isContinuous,
                 "transparency starts at unchanged native glass and stays disabled in Classic")
@@ -736,7 +747,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             for (title, inset) in [
                 ("Theme", CGFloat(16)), ("Liquid Glass", 16),
                 ("In-App Logo", 16), ("Dock Icon", 16),
-                ("Popup background", 32), ("Transparency", 32),
+                ("Popup background", 32), ("Show Popover Arrow", 32), ("Transparency", 32),
             ] {
                 let appearanceLabel = descendants(ofType: NSTextField.self, in: appearanceSection)
                     .first { $0.stringValue == title }!
@@ -748,6 +759,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "appearance peers align and only glass dependencies are indented: \(title)")
             }
             for identifier in ["settings.appearance.background.label",
+                               "settings.appearance.popover-arrow.label",
                                "settings.appearance.transparency.label"] {
                 let detail = view(identifier, in: first) as! NSTextField
                 require(approximately(detail.font?.pointSize ?? -1, 12),
@@ -1887,7 +1899,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                 Settings.liquidGlassEnabled = true
                 let transparencyIsAdjustable = !GlassBackgroundView.accessibilityRequiresSolidBackground
                 require(glassStyle.isEnabled && glassSwitch.nextKeyView === glassStyle
-                    && glassStyle.nextKeyView === (transparencyIsAdjustable ? transparency : logoPopup)
+                    && glassStyle.nextKeyView === popoverArrow && popoverArrow.isEnabled
+                    && popoverArrow.nextKeyView === (transparencyIsAdjustable ? transparency : logoPopup)
                     && (!transparencyIsAdjustable || transparency.nextKeyView === logoPopup)
                     && logoPopup.nextKeyView === dockPopup
                     && dockPopup.nextKeyView === feedbackButton,
@@ -1956,7 +1969,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "custom glass never lifts the system sidebar into the detail layer")
                 require(divider.isHidden, "glass navigation has no extra painted divider")
                 let switches = descendants(ofType: NSSwitch.self, in: content).filter { !$0.isHidden }
-                require(switches.count == 4, "General exposes three native switches and one global switch")
+                require(switches.count == 5, "General exposes three native switches and two appearance switches")
                 require(feedbackButton.bezelStyle == .glass,
                     "feedback uses the same native glass style as other actions")
                 let nativeLogin = switches.first { $0.accessibilityLabel() == "Launch at Login" }!
@@ -1971,6 +1984,25 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "native popup persists the selected clear glass background")
                 require(window.firstResponder === glassStyle,
                     "changing background style preserves keyboard focus")
+                let arrowGlassIdentities = descendants(ofType: NSGlassEffectView.self, in: content)
+                    .map(ObjectIdentifier.init)
+                let arrowWindowFrame = window.frame
+                let arrowSectionIdentities = controller.sectionViewIdentitiesForTest
+                window.makeFirstResponder(popoverArrow)
+                popoverArrow.state = .off
+                popoverArrow.sendAction(popoverArrow.action!, to: popoverArrow.target)
+                require(!Settings.showPopoverArrow
+                    && defaults.object(forKey: "appearance.showPopoverArrow") as? Bool == false,
+                    "native popup arrow switch persists the hidden choice")
+                require(window.firstResponder === popoverArrow && window.frame == arrowWindowFrame
+                    && controller.sectionViewIdentitiesForTest == arrowSectionIdentities
+                    && descendants(ofType: NSGlassEffectView.self, in: content)
+                        .map(ObjectIdentifier.init) == arrowGlassIdentities,
+                    "popup arrow changes preserve Settings hosts, geometry and keyboard focus")
+                Settings.showPopoverArrow = true
+                require(popoverArrow.state == .on,
+                    "external popup arrow changes synchronize its visible native switch")
+                Settings.showPopoverArrow = false
                 require(transparency.isEnabled == transparencyIsAdjustable,
                     "macOS accessibility preferences take priority over the transparency control")
                 if transparencyIsAdjustable {
@@ -2123,6 +2155,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(!glassStyle.isEnabled && Settings.liquidGlassStyle == .clear
                     && glassStyle.selectedItem?.representedObject as? String == "clear",
                     "disabling glass retains its saved background choice")
+                require(!popoverArrow.isEnabled && popoverArrow.state == .off
+                    && !Settings.showPopoverArrow,
+                    "disabling glass retains its hidden arrow choice without an active control")
                 require(glassSwitch.nextKeyView === logoPopup
                     && logoPopup.nextKeyView === dockPopup
                     && dockPopup.nextKeyView === feedbackButton,
@@ -2198,6 +2233,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 let globalAppearance = glassControls
                     .first { $0.accessibilityLabel() == "Global Liquid Glass" }!
                 let glassBackground = view("settings.appearance.liquid-glass-style", in: glassWindow) as! NSPopUpButton
+                let restoredArrow = view("settings.appearance.popover-arrow", in: glassWindow) as! NSSwitch
                 let restoredLogo = view("settings.appearance.in-app-logo", in: glassWindow) as! NSPopUpButton
                 let restoredDock = view("settings.appearance.dock-icon", in: glassWindow) as! NSPopUpButton
                 let restoredFeedback = button("Send Feedback", in: glassWindow)
@@ -2205,12 +2241,15 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(glassBackground.isEnabled
                     && glassBackground.selectedItem?.representedObject as? String == "clear"
                     && globalAppearance.nextKeyView === glassBackground
-                    && glassBackground.nextKeyView === (transparencyIsAdjustable ? restoredTransparency : restoredLogo)
+                    && glassBackground.nextKeyView === restoredArrow
+                    && restoredArrow.nextKeyView === (transparencyIsAdjustable ? restoredTransparency : restoredLogo)
                     && (!transparencyIsAdjustable || restoredTransparency.nextKeyView === restoredLogo)
                     && restoredLogo.nextKeyView === restoredDock
                     && restoredDock.nextKeyView === restoredFeedback
                     && restoredFeedback.nextKeyView === glassController.sidebarForTest,
                     "new Settings windows restore the background and complete the native key loop")
+                require(restoredArrow.isEnabled && restoredArrow.state == .off,
+                    "new Settings windows restore the independently saved hidden arrow")
                 require(restoredDock.isEnabled
                     && restoredDock.selectedItem?.representedObject as? String == "clear",
                     "reopening Settings restores the pending Dock choice without needing to restart the app")
@@ -2237,14 +2276,18 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "normal glass Settings keeps the full logo control reachable by scrolling")
                 normalGlassScroll.contentView.scroll(to: .zero)
                 normalGlassScroll.reflectScrolledClipView(normalGlassScroll.contentView)
+                followNativeKeyLoop(in: glassWindow, from: glassBackground, to: restoredArrow)
+                require(normalGlassScroll.documentVisibleRect.contains(restoredArrow.convert(
+                    restoredArrow.bounds, to: normalGlassScroll.documentView)),
+                    "keyboard focus reveals the full popup arrow switch")
                 if transparencyIsAdjustable {
-                    followNativeKeyLoop(in: glassWindow, from: glassBackground, to: restoredTransparency)
+                    followNativeKeyLoop(in: glassWindow, from: restoredArrow, to: restoredTransparency)
                     require(normalGlassScroll.documentVisibleRect.contains(restoredTransparency.convert(
                         restoredTransparency.bounds, to: normalGlassScroll.documentView)),
                         "keyboard focus scrolls the full transparency slider into view")
                     followNativeKeyLoop(in: glassWindow, from: restoredTransparency, to: restoredLogo)
                 } else {
-                    followNativeKeyLoop(in: glassWindow, from: glassBackground, to: restoredLogo)
+                    followNativeKeyLoop(in: glassWindow, from: restoredArrow, to: restoredLogo)
                 }
                 require(glassWindow.firstResponder === restoredLogo,
                     "logo choice receives focus after native key-loop verification")

@@ -5,6 +5,41 @@ import XCTest
 /// These tests construct hidden windows only. Real focus, menu event delivery,
 /// backdrop rendering and cross-app dismissal belong to the GUI VM harness.
 final class GlassPopoverPanelTests: XCTestCase {
+    func testOptionalArrowUpdatesBackingAndBodyWithoutReplacingContent() throws {
+        guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
+        _ = NSApplication.shared
+        for style in [NSGlassEffectView.Style.regular, .clear] {
+            let inset = GlassPopoverPanel.contentInset(for: style == .clear ? .clear : .regular)
+            let content = NSView()
+            let initialFrame = NSRect(x: -440, y: 80, width: 360 + 2 * inset,
+                                      height: 400 + 2 * inset + 12)
+            let panel = GlassPopoverPanel(content: content, frame: initialFrame, style: style)
+            defer { panel.detachContent() }
+            let glass = try XCTUnwrap(panel.materialView)
+            let foreground = try XCTUnwrap(content.superview)
+            let backing = try XCTUnwrap(panel.contentView?.subviews.first as? GlassBackgroundView)
+            let previousTop = panel.convertToScreen(panel.bodyFrame).maxY
+            for showsArrow in [false, true, false, true] {
+                panel.setShowsArrow(showsArrow)
+                let frame = NSRect(x: initialFrame.minX, y: initialFrame.minY + (showsArrow ? 0 : 12),
+                                   width: initialFrame.width, height: initialFrame.height - (showsArrow ? 0 : 12))
+                panel.setFrame(frame, display: false)
+                XCTAssertEqual(panel.showsArrow, showsArrow)
+                XCTAssertEqual(glass.showsArrow, showsArrow)
+                XCTAssertTrue(panel.materialView === glass)
+                XCTAssertTrue(content.superview === foreground)
+                XCTAssertTrue(content.window === panel)
+                XCTAssertEqual(content.bounds.size, NSSize(width: 360, height: 400))
+                XCTAssertEqual(panel.convertToScreen(panel.bodyFrame).maxY, previousTop + (showsArrow ? 0 : 12))
+                let path = try XCTUnwrap((backing.layer?.mask as? CAShapeLayer)?.path)
+                // A shoulder point belongs to the flat top only when the arrow is off.
+                XCTAssertEqual(path.contains(CGPoint(x: 80, y: backing.bounds.maxY - 1)), !showsArrow)
+                XCTAssertFalse(path.contains(CGPoint(x: 1, y: backing.bounds.maxY - 1)))
+                XCTAssertFalse(panel.isVisible)
+            }
+        }
+    }
+
     func testPanelKeepsOneContinuousMaterialAboveTheNonInteractiveBacking() throws {
         guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
         _ = NSApplication.shared

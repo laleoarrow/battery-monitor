@@ -79,6 +79,7 @@ enum Settings {
         case checkForUpdatesOnLaunch
         case liquidGlassAppearance
         case liquidGlassTransparency
+        case popoverArrow
         case colorScheme
         case inAppLogoStyle
         case dockIconStyle
@@ -94,6 +95,7 @@ enum Settings {
     private static let liquidGlassKey = "appearance.liquidGlassEnabled"
     private static let liquidGlassStyleKey = "appearance.liquidGlassStyle"
     private static let liquidGlassTransparencyKey = "appearance.liquidGlassTransparency"
+    private static let popoverArrowKey = "appearance.showPopoverArrow"
     private static let colorSchemeKey = "appearance.colorScheme"
     private static let inAppLogoStyleKey = "appearance.inAppLogoStyle"
     private static let dockIconStyleKey = "appearance.dockIconStyle"
@@ -189,6 +191,17 @@ enum Settings {
             guard liquidGlassTransparency != value else { return }
             defaults.set(value, forKey: liquidGlassTransparencyKey)
             postChange(.liquidGlassTransparency)
+        }
+    }
+
+    /// The Liquid Glass popup keeps its menu-bar arrow unless explicitly hidden.
+    /// Retain the choice when switching to Classic or an older macOS version.
+    static var showPopoverArrow: Bool {
+        get { defaults.object(forKey: popoverArrowKey) as? Bool ?? true }
+        set {
+            guard showPopoverArrow != newValue else { return }
+            defaults.set(newValue, forKey: popoverArrowKey)
+            postChange(.popoverArrow)
         }
     }
 

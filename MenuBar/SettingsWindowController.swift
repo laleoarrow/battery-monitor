@@ -632,6 +632,14 @@ private final class SettingsTransparencySlider: NSSlider {
     }
 }
 
+private final class SettingsPopoverArrowSwitch: NSSwitch {
+    override func becomeFirstResponder() -> Bool {
+        let accepted = super.becomeFirstResponder()
+        if accepted, let row = superview { row.scrollToVisible(row.bounds) }
+        return accepted
+    }
+}
+
 private final class SettingsAppearancePopupButton: NSPopUpButton {
     weak var focusScrollView: NSView?
 
@@ -691,6 +699,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let feedbackError = NSTextField(labelWithString: "")
     private let liquidGlassSwitch = NSSwitch()
     private let liquidGlassStylePopup = NSPopUpButton(frame: .zero, pullsDown: false)
+    private let popoverArrowSwitch = SettingsPopoverArrowSwitch()
     private let transparencySlider = SettingsTransparencySlider()
     private let transparencyValue = NSTextField(labelWithString: "100%")
     private var displayOptionsObserver: NSObjectProtocol?
@@ -1180,6 +1189,24 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         styleRow.addSubview(styleLabel)
         styleRow.addSubview(liquidGlassStylePopup)
 
+        popoverArrowSwitch.identifier = NSUserInterfaceItemIdentifier("settings.appearance.popover-arrow")
+        popoverArrowSwitch.setAccessibilityLabel("Show Popover Arrow")
+        popoverArrowSwitch.setAccessibilityHelp(
+            "Show the arrow connecting the popup to its menu-bar icon. Turn off to move the popup body closer to the menu bar. Requires Liquid Glass to be on."
+        )
+        popoverArrowSwitch.target = self
+        popoverArrowSwitch.action = #selector(togglePopoverArrow(_:))
+        popoverArrowSwitch.translatesAutoresizingMaskIntoConstraints = false
+        let arrowLabel = NSTextField(labelWithString: "Show Popover Arrow")
+        arrowLabel.identifier = NSUserInterfaceItemIdentifier("settings.appearance.popover-arrow.label")
+        arrowLabel.font = .systemFont(ofSize: 12)
+        arrowLabel.textColor = SettingsStyle.secondaryText
+        arrowLabel.translatesAutoresizingMaskIntoConstraints = false
+        let arrowRow = NSView()
+        arrowRow.translatesAutoresizingMaskIntoConstraints = false
+        arrowRow.addSubview(arrowLabel)
+        arrowRow.addSubview(popoverArrowSwitch)
+
         transparencySlider.identifier = NSUserInterfaceItemIdentifier("settings.appearance.glass-transparency")
         transparencySlider.cell?.setAccessibilityLabel("Glass transparency")
         transparencySlider.toolTip = "Adjust popup and Settings content backgrounds. 0% is solid; 100% keeps native glass. Text and controls stay opaque. macOS accessibility settings take priority."
@@ -1268,6 +1295,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         box.addSubview(themeRow)
         box.addSubview(option)
         box.addSubview(styleRow)
+        box.addSubview(arrowRow)
         box.addSubview(transparencyRow)
         box.addSubview(logoRow)
         box.addSubview(dockRow)
@@ -1295,7 +1323,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             switchSlot.heightAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.height),
             liquidGlassSwitch.centerXAnchor.constraint(equalTo: switchSlot.centerXAnchor),
             liquidGlassSwitch.centerYAnchor.constraint(equalTo: switchSlot.centerYAnchor),
-            surface.heightAnchor.constraint(equalToConstant: 44 + SettingsStyle.generalRowHeight + 32 + 36 + 44 + 60),
+            surface.heightAnchor.constraint(equalToConstant: 44 + SettingsStyle.generalRowHeight + 32 + 32 + 36 + 44 + 60),
             themeRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
             themeRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
             themeRow.topAnchor.constraint(equalTo: box.topAnchor),
@@ -1322,9 +1350,18 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             liquidGlassStylePopup.trailingAnchor.constraint(equalTo: styleRow.trailingAnchor, constant: -16),
             liquidGlassStylePopup.centerYAnchor.constraint(equalTo: styleLabel.centerYAnchor),
             liquidGlassStylePopup.widthAnchor.constraint(equalToConstant: 162),
+            arrowRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
+            arrowRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
+            arrowRow.topAnchor.constraint(equalTo: styleRow.bottomAnchor),
+            arrowRow.heightAnchor.constraint(equalToConstant: 32),
+            arrowLabel.leadingAnchor.constraint(equalTo: styleLabel.leadingAnchor),
+            arrowLabel.centerYAnchor.constraint(equalTo: arrowRow.centerYAnchor, constant: -4),
+            arrowLabel.trailingAnchor.constraint(lessThanOrEqualTo: popoverArrowSwitch.leadingAnchor, constant: -12),
+            popoverArrowSwitch.trailingAnchor.constraint(equalTo: liquidGlassSwitch.trailingAnchor),
+            popoverArrowSwitch.centerYAnchor.constraint(equalTo: arrowLabel.centerYAnchor),
             transparencyRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
             transparencyRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
-            transparencyRow.topAnchor.constraint(equalTo: styleRow.bottomAnchor),
+            transparencyRow.topAnchor.constraint(equalTo: arrowRow.bottomAnchor),
             transparencyRow.heightAnchor.constraint(equalToConstant: 36),
             transparencyLabel.leadingAnchor.constraint(equalTo: styleLabel.leadingAnchor),
             transparencyLabel.centerYAnchor.constraint(equalTo: transparencyRow.centerYAnchor, constant: -4),
@@ -1389,6 +1426,11 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         Settings.liquidGlassTransparency = sender.doubleValue.rounded() / 100
     }
 
+    @objc private func togglePopoverArrow(_ sender: NSSwitch) {
+        guard Settings.usesLiquidGlass else { return }
+        Settings.showPopoverArrow = sender.state == .on
+    }
+
     @objc private func selectInAppLogo(_ sender: NSPopUpButton) {
         guard let value = sender.selectedItem?.representedObject as? String,
               let style = Settings.InAppLogoStyle(rawValue: value) else { return }
@@ -1426,6 +1468,12 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             colorSchemePopup.select(item)
         }
         liquidGlassSwitch.state = Settings.liquidGlassEnabled ? .on : .off
+        if !Settings.usesLiquidGlass,
+           popoverArrowSwitch.window?.firstResponder === popoverArrowSwitch {
+            popoverArrowSwitch.window?.makeFirstResponder(liquidGlassSwitch)
+        }
+        popoverArrowSwitch.isEnabled = Settings.usesLiquidGlass
+        popoverArrowSwitch.state = Settings.showPopoverArrow ? .on : .off
         let adjustable = Settings.usesLiquidGlass && !GlassBackgroundView.accessibilityRequiresSolidBackground
         if !adjustable, transparencySlider.window?.firstResponder === transparencySlider {
             transparencySlider.window?.makeFirstResponder(liquidGlassSwitch)
@@ -1526,7 +1574,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             forName: Settings.didChange, object: nil, queue: .main
         ) { [weak self] notification in
             let change = notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
-            if change == .liquidGlassAppearance || change == .liquidGlassTransparency || change == .colorScheme { self?.refreshAppearanceControls() }
+            if change == .liquidGlassAppearance || change == .liquidGlassTransparency || change == .popoverArrow || change == .colorScheme { self?.refreshAppearanceControls() }
             if change == .inAppLogoStyle { self?.refreshLogoControls() }
             if change == nil || change == .dockIconStyle { self?.refreshDockControls() }
         }
@@ -2631,7 +2679,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .checkForUpdatesOnLaunch, .module, .liquidGlassAppearance, .liquidGlassTransparency, .colorScheme, .inAppLogoStyle, .dockIconStyle:
+            case .checkForUpdatesOnLaunch, .module, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
                 break
             }
         }

@@ -303,9 +303,9 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertNotIn("NSGlassEffectView(frame:", self.glass_panel)
         # The material owns one outline; only the opacity backing receives a mask.
         self.assertIn("background.layer?.mask = mask", self.glass_panel)
-        self.assertIn("GlassPopoverShape(arrowX: glass.arrowX).appKitPath", self.glass_panel)
+        self.assertIn("GlassPopoverShape(arrowX: glass.arrowX, showsArrow: showsArrow).appKitPath", self.glass_panel)
         self.assertNotIn("glass.layer?.mask", self.glass_panel)
-        self.assertIn("bodyFrame.size.height -= PopoverPlacement.glassArrowHeight", self.glass_panel)
+        self.assertIn("bodyFrame.size.height -= showsArrow ? PopoverPlacement.glassArrowHeight : 0", self.glass_panel)
         self.assertIn("panel.point(to: placement.anchorFrame.midX)", self.popover)
         self.assertNotIn("glass.contentView = content", self.glass_panel)
         self.assertIn("foreground.addSubview(content)", self.glass_panel)

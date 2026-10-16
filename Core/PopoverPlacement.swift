@@ -13,6 +13,9 @@ struct PopoverPlacement {
     let anchorFrame: CGRect
     let contentSize: CGSize
     let visibleFrame: CGRect
+    let showsArrow: Bool
+
+    var arrowHeight: CGFloat { showsArrow ? Self.glassArrowHeight : 0 }
 
     /// Align the glass arrow's tip to the status item. The transparent top
     /// optical margin may overlap the menu bar; side and bottom margins stay
@@ -20,7 +23,7 @@ struct PopoverPlacement {
     func glassPanelFrame(margin: CGFloat) -> CGRect? {
         guard margin.isFinite, margin >= 0 else { return nil }
         let size = CGSize(width: contentSize.width + 2 * margin,
-                          height: contentSize.height + 2 * margin + Self.glassArrowHeight)
+                          height: contentSize.height + 2 * margin + arrowHeight)
         let top = min(anchorFrame.minY, visibleFrame.maxY) - 4 + margin
         guard size.width <= visibleFrame.width, size.height <= top - visibleFrame.minY else {
             return nil
@@ -34,7 +37,8 @@ struct PopoverPlacement {
         anchor: CGRect,
         displays: [Display],
         naturalSize: CGSize,
-        glassMargin: CGFloat? = nil
+        glassMargin: CGFloat? = nil,
+        showsArrow: Bool = true
     ) -> PopoverPlacement? {
         guard usable(anchor), naturalSize.width.isFinite, naturalSize.height.isFinite,
               naturalSize.width > 0, naturalSize.height > 0 else { return nil }
@@ -50,14 +54,15 @@ struct PopoverPlacement {
         guard usable(visible), naturalSize.width + 2 * (glassMargin ?? 0) <= visible.width else { return nil }
         // Classic keeps its arrow/chrome allowance. Glass reserves the bottom
         // optical margin, arrow and 4pt anchor gap before shrinking the viewport.
-        let hostAllowance = glassMargin.map { $0 + glassArrowHeight + 4 } ?? 24
+        let hostAllowance = glassMargin.map { $0 + (showsArrow ? glassArrowHeight : 0) + 4 } ?? 24
         let availableHeight = min(clippedAnchor.minY, visible.maxY) - visible.minY - hostAllowance
         guard availableHeight > 0 else { return nil }
         return PopoverPlacement(
             anchorFrame: clippedAnchor,
             contentSize: CGSize(width: naturalSize.width,
                                 height: min(naturalSize.height, availableHeight)),
-            visibleFrame: visible
+            visibleFrame: visible,
+            showsArrow: showsArrow
         )
     }
 

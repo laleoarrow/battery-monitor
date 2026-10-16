@@ -57,6 +57,8 @@ class SettingsStoreContractTests(unittest.TestCase):
                    "launch update checking must default on")
             expect(!Settings.liquidGlassEnabled && !Settings.usesLiquidGlass,
                    "upgrades must retain the classic appearance until opted in")
+            expect(Settings.showPopoverArrow,
+                   "upgrades must retain the popup arrow unless the user hides it")
             expect((defaults.persistentDomain(forName: suiteName) ?? [:]).isEmpty,
                    "reading defaults must not persist preferences")
 
@@ -178,6 +180,20 @@ class SettingsStoreContractTests(unittest.TestCase):
             Settings.liquidGlassEnabled = true
             changes.removeAll()
 
+            Settings.showPopoverArrow = true
+            expect(changes.isEmpty, "the default popup arrow must not notify")
+            Settings.showPopoverArrow = false
+            Settings.showPopoverArrow = false
+            expect(changes == [.popoverArrow],
+                   "popup arrow changes use one dedicated notification")
+            expect(defaults.object(forKey: "appearance.showPopoverArrow") as? Bool == false,
+                   "popup arrow choice persists independently")
+            Settings.liquidGlassEnabled = false
+            expect(!Settings.showPopoverArrow,
+                   "Classic retains the saved popup arrow preference")
+            Settings.liquidGlassEnabled = true
+            changes.removeAll()
+
             Settings.setModule(.flow, visible: true)
             expect(changes.isEmpty,
                    "an unchanged module must not notify")
@@ -207,6 +223,13 @@ class SettingsStoreContractTests(unittest.TestCase):
             expect(Settings.showsMenuBarPercentage && Settings.isModuleVisible(.flow),
                    "a fresh suite must retain its own default values")
             expect(!Settings.liquidGlassEnabled, "fresh suites must not inherit the opt-in")
+            expect(Settings.showPopoverArrow, "fresh suites must retain the popup arrow default")
+            secondDefaults.set(false, forKey: "appearance.showPopoverArrow")
+            expect(!Settings.showPopoverArrow, "popup arrow reads external changes immediately")
+            secondDefaults.set(["invalid"], forKey: "appearance.showPopoverArrow")
+            expect(Settings.showPopoverArrow, "invalid arrow preference retains the default")
+            secondDefaults.removeObject(forKey: "appearance.showPopoverArrow")
+            expect(Settings.showPopoverArrow, "removing arrow preference restores its default")
             secondDefaults.set(true, forKey: "appearance.liquidGlassEnabled")
             expect(Settings.liquidGlassEnabled, "appearance reads external writes immediately")
             secondDefaults.removeObject(forKey: "appearance.liquidGlassEnabled")
@@ -240,6 +263,8 @@ class SettingsStoreContractTests(unittest.TestCase):
                    "reopening the original suite must preserve its saved choices")
             expect(Settings.liquidGlassEnabled,
                    "reopening the original suite must preserve the appearance opt-in")
+            expect(!Settings.showPopoverArrow,
+                   "reopening the original suite must preserve the hidden popup arrow")
             '''
         )
 

@@ -92,6 +92,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         ) { [weak self] notification in
             let change = notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change
             if change == .liquidGlassAppearance { self?.refreshLiquidGlassAppearance() }
+            if change == .popoverArrow, self?.usingGlassPanel == true { self?.refreshPlacement() }
             if change == .colorScheme { self?.refreshColorScheme() }
         }
     }
@@ -222,7 +223,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
            let frame = placement.glassPanelFrame(margin: GlassPopoverPanel.contentInset) {
             retireClassicHost()
             let panel = GlassPopoverPanel(content: content.view, frame: frame,
-                style: Settings.liquidGlassStyle == .clear ? .clear : .regular)
+                style: Settings.liquidGlassStyle == .clear ? .clear : .regular,
+                showsArrow: Settings.showPopoverArrow)
             panel.point(to: placement.anchorFrame.midX)
             panel.appearance = Settings.colorScheme.appearance
             panel.onDismiss = { [weak self] in self?.close() }
@@ -299,7 +301,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
             anchor: anchor,
             displays: displays,
             naturalSize: NSSize(width: PopoverStyle.width, height: content.preferredHeight),
-            glassMargin: Settings.usesLiquidGlass ? GlassPopoverPanel.contentInset : nil
+            glassMargin: Settings.usesLiquidGlass ? GlassPopoverPanel.contentInset : nil,
+            showsArrow: Settings.showPopoverArrow
         )
     }
 
@@ -317,6 +320,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
                 close()
                 return
             }
+            if #available(macOS 26.0, *) { glassPanel?.setShowsArrow(Settings.showPopoverArrow) }
             if glassPanel?.frame != frame { glassPanel?.setFrame(frame, display: true) }
             if #available(macOS 26.0, *) { glassPanel?.point(to: placement.anchorFrame.midX) }
         }

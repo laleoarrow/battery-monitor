@@ -53,6 +53,7 @@ enum FeedbackDiagnostics {
                 "liquidGlassEnabled": String(Settings.liquidGlassEnabled),
                 "liquidGlassActive": String(Settings.usesLiquidGlass),
                 "liquidGlassStyle": Settings.liquidGlassStyle.rawValue,
+                "showPopoverArrow": String(Settings.showPopoverArrow),
                 "transparencyPercent": String(Int((Settings.liquidGlassTransparency * 100).rounded())),
                 "inAppLogo": Settings.inAppLogoStyle.rawValue,
                 "dockIcon": Settings.dockIconStyle.rawValue,

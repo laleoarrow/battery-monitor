@@ -7,6 +7,7 @@ struct GlassPopoverShape: Shape {
     static let cornerRadius: CGFloat = 26
     static let arrowHalfWidth: CGFloat = 12
     var arrowX: CGFloat
+    var showsArrow: Bool = true
 
     static func clampedArrowX(_ x: CGFloat, width: CGFloat) -> CGFloat {
         let edge = cornerRadius + arrowHalfWidth
@@ -14,24 +15,26 @@ struct GlassPopoverShape: Shape {
     }
 
     func path(in rect: CGRect) -> Path {
-        let top = rect.minY + PopoverPlacement.glassArrowHeight
+        let top = rect.minY + (showsArrow ? PopoverPlacement.glassArrowHeight : 0)
         let radius = Self.cornerRadius
         let center = rect.minX + Self.clampedArrowX(arrowX, width: rect.width)
         var path = Path()
         path.move(to: CGPoint(x: rect.minX + radius, y: top))
-        path.addLine(to: CGPoint(x: center - Self.arrowHalfWidth, y: top))
-        path.addCurve(to: CGPoint(x: center - 2, y: rect.minY + 2),
-                      control1: CGPoint(x: center - 8, y: top),
-                      control2: CGPoint(x: center - 4, y: rect.minY + 2))
-        path.addCurve(to: CGPoint(x: center, y: rect.minY),
-                      control1: CGPoint(x: center - 1, y: rect.minY + 1),
-                      control2: CGPoint(x: center - 1, y: rect.minY))
-        path.addCurve(to: CGPoint(x: center + 2, y: rect.minY + 2),
-                      control1: CGPoint(x: center + 1, y: rect.minY),
-                      control2: CGPoint(x: center + 1, y: rect.minY + 1))
-        path.addCurve(to: CGPoint(x: center + Self.arrowHalfWidth, y: top),
-                      control1: CGPoint(x: center + 4, y: rect.minY + 2),
-                      control2: CGPoint(x: center + 8, y: top))
+        if showsArrow {
+            path.addLine(to: CGPoint(x: center - Self.arrowHalfWidth, y: top))
+            path.addCurve(to: CGPoint(x: center - 2, y: rect.minY + 2),
+                          control1: CGPoint(x: center - 8, y: top),
+                          control2: CGPoint(x: center - 4, y: rect.minY + 2))
+            path.addCurve(to: CGPoint(x: center, y: rect.minY),
+                          control1: CGPoint(x: center - 1, y: rect.minY + 1),
+                          control2: CGPoint(x: center - 1, y: rect.minY))
+            path.addCurve(to: CGPoint(x: center + 2, y: rect.minY + 2),
+                          control1: CGPoint(x: center + 1, y: rect.minY),
+                          control2: CGPoint(x: center + 1, y: rect.minY + 1))
+            path.addCurve(to: CGPoint(x: center + Self.arrowHalfWidth, y: top),
+                          control1: CGPoint(x: center + 4, y: rect.minY + 2),
+                          control2: CGPoint(x: center + 8, y: top))
+        }
         path.addLine(to: CGPoint(x: rect.maxX - radius, y: top))
         path.addArc(tangent1End: CGPoint(x: rect.maxX, y: top),
                     tangent2End: CGPoint(x: rect.maxX, y: top + radius), radius: radius)
@@ -58,11 +61,13 @@ struct GlassPopoverShape: Shape {
 final class GlassPopoverMaterialView: NSHostingView<AnyView> {
     let style: NSGlassEffectView.Style
     private(set) var arrowX: CGFloat
+    private(set) var showsArrow: Bool
 
-    init(frame: NSRect, style: NSGlassEffectView.Style) {
+    init(frame: NSRect, style: NSGlassEffectView.Style, showsArrow: Bool = true) {
         self.style = style
+        self.showsArrow = showsArrow
         arrowX = frame.width / 2
-        super.init(rootView: Self.material(style: style, arrowX: arrowX))
+        super.init(rootView: Self.material(style: style, arrowX: arrowX, showsArrow: showsArrow))
         sizingOptions = []
         self.frame = frame
         setAccessibilityElement(false)
@@ -78,12 +83,18 @@ final class GlassPopoverMaterialView: NSHostingView<AnyView> {
         let clamped = GlassPopoverShape.clampedArrowX(x, width: bounds.width)
         guard arrowX != clamped else { return }
         arrowX = clamped
-        rootView = Self.material(style: style, arrowX: arrowX)
+        rootView = Self.material(style: style, arrowX: arrowX, showsArrow: showsArrow)
     }
 
-    private static func material(style: NSGlassEffectView.Style, arrowX: CGFloat) -> AnyView {
+    func setShowsArrow(_ value: Bool) {
+        guard showsArrow != value else { return }
+        showsArrow = value
+        rootView = Self.material(style: style, arrowX: arrowX, showsArrow: showsArrow)
+    }
+
+    private static func material(style: NSGlassEffectView.Style, arrowX: CGFloat, showsArrow: Bool) -> AnyView {
         AnyView(Color.clear
-            .glassEffect(style == .clear ? .clear : .regular, in: GlassPopoverShape(arrowX: arrowX))
+            .glassEffect(style == .clear ? .clear : .regular, in: GlassPopoverShape(arrowX: arrowX, showsArrow: showsArrow))
             .allowsHitTesting(false)
             .accessibilityHidden(true))
     }

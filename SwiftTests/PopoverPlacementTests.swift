@@ -256,4 +256,50 @@ final class PopoverPlacementTests: XCTestCase {
         XCTAssertNil(PopoverPlacement.resolve(
             anchor: anchor, displays: [narrow], naturalSize: fullSize, glassMargin: 32))
     }
+
+    func testHidingArrowMovesNaturalBodyUpWithoutChangingItsContentSize() throws {
+        for x: CGFloat in [0, 1200, 1416] {
+            for margin: CGFloat in [10, 32] {
+                let anchor = CGRect(x: x, y: 876, width: 24, height: 24)
+                let shown = try XCTUnwrap(PopoverPlacement.resolve(
+                    anchor: anchor, displays: [main], naturalSize: fullSize,
+                    glassMargin: margin))
+                let hidden = try XCTUnwrap(PopoverPlacement.resolve(
+                    anchor: anchor, displays: [main], naturalSize: fullSize,
+                    glassMargin: margin, showsArrow: false))
+                let shownFrame = try XCTUnwrap(shown.glassPanelFrame(margin: margin))
+                let hiddenFrame = try XCTUnwrap(hidden.glassPanelFrame(margin: margin))
+                XCTAssertEqual(hidden.contentSize, fullSize)
+                XCTAssertEqual(hiddenFrame.maxY, shownFrame.maxY)
+                XCTAssertEqual(hiddenFrame.minX, shownFrame.minX)
+                XCTAssertEqual(hiddenFrame.height, shownFrame.height - 12)
+                XCTAssertEqual(hiddenFrame.minY, shownFrame.minY + 12)
+                XCTAssertEqual(hiddenFrame.minY + margin + fullSize.height, anchor.minY - 4)
+                XCTAssertEqual(hidden.arrowHeight, 0)
+            }
+        }
+    }
+
+    func testHidingArrowReturnsHeightToShortViewportOnNegativeDisplays() throws {
+        for origin in [CGPoint.zero, CGPoint(x: -1024, y: -600)] {
+            let display = PopoverPlacement.Display(
+                frame: CGRect(origin: origin, size: CGSize(width: 1024, height: 600)),
+                visibleFrame: CGRect(x: origin.x, y: origin.y + 40, width: 1024, height: 536))
+            let anchor = CGRect(x: origin.x + 980, y: origin.y + 576, width: 24, height: 24)
+            for margin: CGFloat in [10, 32] {
+                let shown = try XCTUnwrap(PopoverPlacement.resolve(
+                    anchor: anchor, displays: [display], naturalSize: fullSize, glassMargin: margin))
+                let hidden = try XCTUnwrap(PopoverPlacement.resolve(
+                    anchor: anchor, displays: [display], naturalSize: fullSize,
+                    glassMargin: margin, showsArrow: false))
+                XCTAssertEqual(hidden.contentSize.height, shown.contentSize.height + 12)
+                XCTAssertEqual(hidden.glassPanelFrame(margin: margin), shown.glassPanelFrame(margin: margin))
+                let classicShown = try XCTUnwrap(PopoverPlacement.resolve(
+                    anchor: anchor, displays: [display], naturalSize: fullSize))
+                let classicHidden = try XCTUnwrap(PopoverPlacement.resolve(
+                    anchor: anchor, displays: [display], naturalSize: fullSize, showsArrow: false))
+                XCTAssertEqual(classicHidden.contentSize, classicShown.contentSize)
+            }
+        }
+    }
 }

@@ -17,6 +17,7 @@ final class GlassPopoverPanel: NSPanel {
     private var background: GlassBackgroundView?
     private var material: NSView?
     private var anchorX: CGFloat?
+    private(set) var showsArrow: Bool
 
     @available(macOS 26.0, *)
     var materialView: GlassPopoverMaterialView? { material as? GlassPopoverMaterialView }
@@ -33,7 +34,8 @@ final class GlassPopoverPanel: NSPanel {
     override var canBecomeMain: Bool { false }
 
     @available(macOS 26.0, *)
-    init(content: NSView, frame: NSRect, style: NSGlassEffectView.Style) {
+    init(content: NSView, frame: NSRect, style: NSGlassEffectView.Style, showsArrow: Bool = true) {
+        self.showsArrow = showsArrow
         super.init(contentRect: frame, styleMask: [.borderless, .nonactivatingPanel],
                    backing: .buffered, defer: false)
         title = "Wattson Power Monitor"
@@ -48,7 +50,8 @@ final class GlassPopoverPanel: NSPanel {
         level = .popUpMenu
         collectionBehavior = [.transient, .moveToActiveSpace, .fullScreenAuxiliary]
         let inset = Self.contentInset(for: style == .clear ? .clear : .regular)
-        let glass = GlassPopoverMaterialView(frame: contentView!.bounds.insetBy(dx: inset, dy: inset), style: style)
+        let glass = GlassPopoverMaterialView(frame: contentView!.bounds.insetBy(dx: inset, dy: inset),
+                                            style: style, showsArrow: showsArrow)
         glass.autoresizingMask = [.width, .height]
         // SwiftUI glass alone leaves zero-alpha pixels that WindowServer clicks
         // through. One 8-bit alpha step keeps the shaped surface interactive;
@@ -60,7 +63,7 @@ final class GlassPopoverPanel: NSPanel {
         // An ancestor glass effect flattens the footer's SwiftUI glass into
         // solid fills. Keep the backdrop and interactive content as siblings.
         var bodyFrame = glass.frame
-        bodyFrame.size.height -= PopoverPlacement.glassArrowHeight
+        bodyFrame.size.height -= showsArrow ? PopoverPlacement.glassArrowHeight : 0
         let foreground = NSView(frame: bodyFrame)
         foreground.setAccessibilityElement(false)
         foreground.autoresizingMask = [.width, .height]
@@ -87,6 +90,17 @@ final class GlassPopoverPanel: NSPanel {
         updateOutline()
     }
 
+    @available(macOS 26.0, *)
+    func setShowsArrow(_ value: Bool) {
+        guard showsArrow != value, let glass = materialView else { return }
+        showsArrow = value
+        glass.setShowsArrow(value)
+        var bodyFrame = glass.frame
+        bodyFrame.size.height -= value ? PopoverPlacement.glassArrowHeight : 0
+        foreground?.frame = bodyFrame
+        updateOutline()
+    }
+
     override func setFrame(_ frameRect: NSRect, display flag: Bool) {
         super.setFrame(frameRect, display: flag)
         if #available(macOS 26.0, *) { updateOutline() }
@@ -98,7 +112,7 @@ final class GlassPopoverPanel: NSPanel {
         glass.point(to: (anchorX ?? frame.midX) - frame.minX - glass.frame.minX)
         let mask = (background.layer?.mask as? CAShapeLayer) ?? CAShapeLayer()
         mask.frame = background.bounds
-        mask.path = GlassPopoverShape(arrowX: glass.arrowX).appKitPath(in: background.bounds)
+        mask.path = GlassPopoverShape(arrowX: glass.arrowX, showsArrow: showsArrow).appKitPath(in: background.bounds)
         background.layer?.mask = mask
     }
 
