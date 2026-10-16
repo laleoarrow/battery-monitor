@@ -97,6 +97,8 @@ class SystemBatteryStateContractTests(unittest.TestCase):
                 ("numeric hidden", ["ok": true, "hidden": 1], nil, .invalidReply),
                 ("numeric ok", ["ok": 1, "hidden": false], nil, .invalidReply),
                 ("legacy", ["ok": false, "error": "unknown battery preference"], nil, .legacyUnavailable),
+                ("missing reason", ["ok": false], nil, .requestFailed),
+                ("unclassified error", ["ok": false, "error": "private raw detail"], nil, .requestFailed),
                 ("unknown reason", ["ok": false, "reason": "private raw detail"], nil, .requestFailed),
                 ("client-only reason", ["ok": false, "reason": "helperUnavailable"], nil, .requestFailed),
                 ("wrong reason type", ["ok": false, "reason": 1], nil, .invalidReply),
@@ -122,6 +124,19 @@ class SystemBatteryStateContractTests(unittest.TestCase):
             }
             let absent = SystemBatteryIconController.probe()
             require(absent.hidden == nil && absent.failure == .helperUnavailable, "absent helper classification")
+            SystemBatteryIconController.configureForTest { request, timeout in
+                sender.send(request, timeout)
+            }
+
+            sender.append(["ok": false, "error": "control center update failed"])
+            var unclassifiedWriteCompleted = false
+            SystemBatteryIconController.setHidden(true) { succeeded in
+                require(!succeeded, "current helper setter failure remains a failed command")
+                unclassifiedWriteCompleted = true
+            }
+            require(waitUntil { unclassifiedWriteCompleted }, "current setter failure completes")
+            require(SystemBatteryIconController.readStatus == .failed(.requestFailed),
+                    "a current helper setter without reason must not be diagnosed as a legacy getter")
             SystemBatteryIconController.configureForTest { request, timeout in
                 sender.send(request, timeout)
             }

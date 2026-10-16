@@ -301,7 +301,12 @@ enum SystemBatteryIconController {
     private static func failure(from reply: [String: Any]?) -> SystemBatteryIconReadFailure {
         guard let reply else { return .requestFailed }
         guard HelperClient.strictJSONBool(reply["ok"]) == false else { return .invalidReply }
-        guard let raw = reply["reason"] else { return .legacyUnavailable }
+        guard let raw = reply["reason"] else {
+            // Only the old getter's fixed reply identifies its legacy format.
+            // Current setter failures also omit reason and are not legacy reads.
+            return reply["error"] as? String == "unknown battery preference"
+                ? .legacyUnavailable : .requestFailed
+        }
         guard let reason = raw as? String else { return .invalidReply }
         switch SystemBatteryIconReadFailure(rawValue: reason) {
         case let failure? where [.userContextUnavailable, .preferenceSyncFailed,
