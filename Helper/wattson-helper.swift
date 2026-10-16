@@ -1176,23 +1176,53 @@ private func migrateLegacyLoginAgentForInstaller() -> Bool {
 /// the menu bar, and 8 when it remains in Control Center only. Unknown values
 /// are not guessed at, so a future macOS layout cannot be overwritten from a
 /// misleading checkbox state.
+private enum BatteryPreferenceFailureReason: String, Error {
+    case userContextUnavailable
+    case preferenceSyncFailed
+    case preferenceMissing
+    case preferenceTypeUnsupported
+    case preferenceValueUnsupported
+    case preferenceWorkerFailed
+
+    var workerExitCode: Int32 {
+        switch self {
+        case .userContextUnavailable: return 21
+        case .preferenceSyncFailed: return 22
+        case .preferenceMissing: return 23
+        case .preferenceTypeUnsupported: return 24
+        case .preferenceValueUnsupported: return 25
+        case .preferenceWorkerFailed: return 2
+        }
+    }
+}
+
+private func decodeSystemBatteryIconPreference(_ raw: Any?) -> Result<Bool, BatteryPreferenceFailureReason> {
+    guard let raw else { return .failure(.preferenceMissing) }
+    guard let number = raw as? NSNumber,
+          CFGetTypeID(number) != CFBooleanGetTypeID() else {
+        return .failure(.preferenceTypeUnsupported)
+    }
+    if number.doubleValue == 8, number.decimalValue == Decimal(8) { return .success(true) }
+    if number.doubleValue == 18, number.decimalValue == Decimal(18) { return .success(false) }
+    return .failure(.preferenceValueUnsupported)
+}
+
 private func currentUserSystemBatteryIconHidden() -> Bool? {
+    try? currentUserSystemBatteryIconReadResult().get()
+}
+
+private func currentUserSystemBatteryIconReadResult() -> Result<Bool, BatteryPreferenceFailureReason> {
     guard CFPreferencesSynchronize(
         controlCenterDomain,
         kCFPreferencesCurrentUser,
         kCFPreferencesCurrentHost
-    ) else { return nil }
-    guard let raw = CFPreferencesCopyValue(
+    ) else { return .failure(.preferenceSyncFailed) }
+    return decodeSystemBatteryIconPreference(CFPreferencesCopyValue(
         controlCenterBatteryKey,
         controlCenterDomain,
         kCFPreferencesCurrentUser,
         kCFPreferencesCurrentHost
-    ) as? NSNumber else { return nil }
-    switch raw.intValue {
-    case 8: return true
-    case 18: return false
-    default: return nil
-    }
+    ))
 }
 
 private func setCurrentUserSystemBatteryIconHidden(_ hidden: Bool) -> Bool {
@@ -1210,19 +1240,30 @@ private func runBatteryPreferenceWorker(
     _ operation: BatteryPreferenceWorkerOperation,
     for uid: uid_t
 ) -> Int32? {
-    guard uid == consoleUID(), userAccount(for: uid) != nil else { return nil }
+    guard uid == consoleUID(), userAccount(for: uid) != nil else {
+        return BatteryPreferenceFailureReason.userContextUnavailable.workerExitCode
+    }
     return runExitCode([
         "/bin/launchctl", "asuser", "\(uid)", helperExecutablePath,
         operation.rawValue, "\(uid)",
     ])
 }
 
-private func systemBatteryIconHidden(for uid: uid_t) -> Bool? {
-    switch runBatteryPreferenceWorker(.read, for: uid) {
-    case 8: return true
-    case 18: return false
-    default: return nil
+private func batteryPreferenceReadResult(exitCode: Int32?) -> Result<Bool, BatteryPreferenceFailureReason> {
+    switch exitCode {
+    case 8: return .success(true)
+    case 18: return .success(false)
+    case 21: return .failure(.userContextUnavailable)
+    case 22: return .failure(.preferenceSyncFailed)
+    case 23: return .failure(.preferenceMissing)
+    case 24: return .failure(.preferenceTypeUnsupported)
+    case 25: return .failure(.preferenceValueUnsupported)
+    default: return .failure(.preferenceWorkerFailed)
     }
+}
+
+private func systemBatteryIconReadResult(for uid: uid_t) -> Result<Bool, BatteryPreferenceFailureReason> {
+    batteryPreferenceReadResult(exitCode: runBatteryPreferenceWorker(.read, for: uid))
 }
 
 private func restartControlCenter(for uid: uid_t) -> Bool {
@@ -1247,7 +1288,7 @@ private func runBatteryPreferenceWorkerIfRequested() {
           ) else { return }
     guard CommandLine.arguments.count == 3,
           let rawUID = UInt32(CommandLine.arguments[2]),
-          rawUID != 0 else { exit(2) }
+          rawUID != 0 else { exit(BatteryPreferenceFailureReason.userContextUnavailable.workerExitCode) }
     let expectedUID = uid_t(rawUID)
 
     // `launchctl asuser` supplies the console user's bootstrap context but
@@ -1256,11 +1297,15 @@ private func runBatteryPreferenceWorkerIfRequested() {
     // into this worker and checked again so a fast-user switch cannot retarget
     // the request to the newly active user's cfprefsd instance.
     guard expectedUID == consoleUID(),
-          dropPrivileges(to: expectedUID) else { exit(2) }
+          dropPrivileges(to: expectedUID) else {
+        exit(BatteryPreferenceFailureReason.userContextUnavailable.workerExitCode)
+    }
     switch operation {
     case .read:
-        guard let hidden = currentUserSystemBatteryIconHidden() else { exit(2) }
-        exit(hidden ? 8 : 18)
+        switch currentUserSystemBatteryIconReadResult() {
+        case .success(let hidden): exit(hidden ? 8 : 18)
+        case .failure(let reason): exit(reason.workerExitCode)
+        }
     case .hide:
         exit(setCurrentUserSystemBatteryIconHidden(true) ? 0 : 2)
     case .show:
@@ -1337,11 +1382,12 @@ private func handle(_ request: SocketRequest) {
             os_log("rejected setMode with unknown value", log: log, type: .error)
         }
     case "getSystemBatteryIconHidden":
-        if let hidden = systemBatteryIconHidden(for: peerUID) {
+        switch systemBatteryIconReadResult(for: peerUID) {
+        case .success(let hidden):
             reply = hidden ? #"{"ok":true,"hidden":true}"#
                            : #"{"ok":true,"hidden":false}"#
-        } else {
-            reply = #"{"ok":false,"error":"unknown battery preference"}"#
+        case .failure(let reason):
+            reply = #"{"ok":false,"error":"unknown battery preference","reason":"\#(reason.rawValue)"}"#
         }
     case "setSystemBatteryIconHidden":
         if let hidden = strictJSONBool(object["hidden"]) {

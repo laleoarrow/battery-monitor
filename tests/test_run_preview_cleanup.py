@@ -131,7 +131,8 @@ printf 'unregister:%s\n' "$2" >> "$FAKE_EVENTS"
             self.assertTrue(self.pid_file.exists())
             # Interrupt the shell alone: the app is deliberately not its child.
             process.send_signal(signal.SIGTERM)
-            stdout, stderr = process.communicate(timeout=10)
+            # Allow the same bounded lifecycle cleanup used by finally's _stop.
+            stdout, stderr = process.communicate(timeout=process.cleanup_grace)
             self.assertEqual(process.returncode, 143, stdout+stderr)
             self.assert_clean()
         finally:

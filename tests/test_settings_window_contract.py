@@ -261,6 +261,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             final class FixtureState {
                 var loginState = LoginItemState.enabled
                 var batteryHidden: Bool? = false
+                var batteryReadStatus: SystemBatteryIconReadStatus = .ready
                 var helperAvailable = true
                 var increaseContrast = false
                 var loginReads: [(LoginItemState) -> Void] = []
@@ -298,7 +299,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                             return true
                         },
                         increaseContrast: { fixture.increaseContrast },
-                        announceAccessibility: { fixture.announcements.append($0) }
+                        announceAccessibility: { fixture.announcements.append($0) },
+                        systemBatteryIconReadStatus: { fixture.batteryReadStatus }
                     )
                 }
             }
@@ -887,6 +889,27 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(login.state == .on && login.isEnabled, "authoritative login enabled state")
             require(battery.state == .off && battery.isEnabled, "authoritative battery visible state")
 
+            // Shared notifications must distinguish an unfinished read from a
+            // real failure, including nil-to-nil transitions across windows.
+            fixture.batteryReadStatus = .checking
+            fixture.batteryHidden = nil
+            NotificationCenter.default.post(name: batteryNotification, object: nil)
+            require(battery.state == .mixed && !battery.isEnabled, "shared battery checking disables toggle")
+            require(label("settings.general.battery.detail", in: first).stringValue == "Checking…",
+                    "shared checking notification does not render a failure")
+            fixture.batteryReadStatus = .failed(.preferenceMissing)
+            NotificationCenter.default.post(name: batteryNotification, object: nil)
+            require(label("settings.general.battery.detail", in: first).stringValue == "Status unavailable",
+                    "settled shared failure is distinct from checking")
+            fixture.batteryReadStatus = .checking
+            NotificationCenter.default.post(name: batteryNotification, object: nil)
+            require(label("settings.general.battery.detail", in: first).stringValue == "Checking…",
+                    "failed shared state can retry")
+            fixture.batteryReadStatus = .ready
+            fixture.batteryHidden = false
+            NotificationCenter.default.post(name: batteryNotification, object: nil)
+            require(battery.state == .off && battery.isEnabled, "shared retry recovers authority")
+
             controller.refreshSectionsForTest()
             fixture.loginReads.removeFirst()(.unavailable)
             fixture.helperAvailable = false
@@ -963,6 +986,17 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(battery.accessibilityHelp()?.contains("couldn’t update") == true, "battery error accessibility help")
             require(fixture.announcements.count == 2, "one battery error announcement")
 
+            // A newer refresh may begin while this page is waiting on its
+            // write. Completing the write must not re-enable a checking control.
+            fixture.batteryReadStatus = .ready
+            battery.performClick(nil)
+            fixture.batteryReadStatus = .checking
+            NotificationCenter.default.post(name: batteryNotification, object: nil)
+            fixture.batteryWrites.removeFirst().1(true)
+            require(!battery.isEnabled
+                    && label("settings.general.battery.detail", in: first).stringValue == "Checking…",
+                    "write completion respects a newer pending shared read")
+            fixture.batteryReadStatus = .ready
             fixture.batteryHidden = false
             NotificationCenter.default.post(name: batteryNotification, object: nil)
             require(battery.state == .off, "battery notification reloads shared authority")

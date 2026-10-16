@@ -14,6 +14,7 @@ enum FeedbackDiagnostics {
         let accessibility: [String: String]
         let displayedSnapshot: PowerSnapshot?
         var displayedReadingIsStale = false
+        var batteryIconReadStatus: SystemBatteryIconReadStatus = .notRequested
     }
 
     struct Report {
@@ -67,7 +68,8 @@ enum FeedbackDiagnostics {
                 "increaseContrast": String(workspace.accessibilityDisplayShouldIncreaseContrast),
             ],
             displayedSnapshot: displayedSnapshot,
-            displayedReadingIsStale: displayedReadingIsStale
+            displayedReadingIsStale: displayedReadingIsStale,
+            batteryIconReadStatus: SystemBatteryIconController.readStatus
         )
     }
 
@@ -108,7 +110,8 @@ enum FeedbackDiagnostics {
             context: context,
             system: system,
             helper: helper,
-            batteryProperties: readBatteryProperties()
+            batteryProperties: readBatteryProperties(),
+            batteryIconReadResult: SystemBatteryIconController.probe()
         )
     }
 
@@ -116,7 +119,8 @@ enum FeedbackDiagnostics {
         context: Context,
         system: [String: String],
         helper: [String: String],
-        batteryProperties: [String: Any]?
+        batteryProperties: [String: Any]?,
+        batteryIconReadResult: SystemBatteryIconReadResult? = nil
     ) -> Report {
         var sections = [
             "Wattson feedback diagnostics (schema 1)",
@@ -129,6 +133,21 @@ enum FeedbackDiagnostics {
             section("Accessibility", context.accessibility),
             section("Helper and installation", helper),
         ]
+        var iconFields: [String: String] = [:]
+        switch context.batteryIconReadStatus {
+        case .notRequested: iconFields["displayedReadStatus"] = "notRequested"
+        case .checking: iconFields["displayedReadStatus"] = "checking"
+        case .ready: iconFields["displayedReadStatus"] = "ready"
+        case let .failed(reason):
+            iconFields["displayedReadStatus"] = "failed"
+            iconFields["displayedFailure"] = reason.rawValue
+        }
+        if let result = batteryIconReadResult {
+            iconFields["probeHidden"] = result.hidden.map(String.init) ?? "unknown"
+            iconFields["probeFailure"] = result.failure?.rawValue ?? "none"
+            iconFields["probeElapsedMilliseconds"] = String(result.elapsedMilliseconds)
+        }
+        sections.append(section("System battery icon", iconFields))
         if let snapshot = context.displayedSnapshot {
             let readingTitle = context.displayedReadingIsStale
                 ? "Displayed reading (last known; current telemetry unavailable)"
