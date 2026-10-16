@@ -94,4 +94,51 @@ final class HistoryViewTests: XCTestCase {
         XCTAssertLessThan(view.chartCeilingForTest, highCeiling)
         XCTAssertFalse(view.hasChartAnimationForTest)
     }
+
+    func testConsecutiveFullRingUpdatesKeepThePreviousLeftBoundaryInterval() throws {
+        let view = view()
+        func update(_ start: Int) {
+            let times = (start..<(start + 60)).map { Double($0) * 2 }
+            let values = times.map { $0 == 0 ? 100.0 : 10.0 }
+            view.update(samples: values, peak: values.max()!, color: .systemBlue,
+                        timing: .init(sampledAt: times, referenceTime: times.last!))
+        }
+        func firstCubic() throws -> [CGPoint] {
+            var points: [CGPoint] = []
+            try XCTUnwrap(view.chartPathForTest).applyWithBlock {
+                let element = $0.pointee
+                if element.type == .moveToPoint, points.isEmpty { points.append(element.points[0]) }
+                else if element.type == .addCurveToPoint, points.count == 1 {
+                    points.append(contentsOf: (0..<3).map { element.points[$0] })
+                }
+            }
+            XCTAssertEqual(points.count, 4)
+            return points
+        }
+        update(0)
+        update(1)
+        let before = try firstCubic()
+        update(2)
+        let after = try firstCubic()
+        let shift = PopoverStyle.contentWidth * 2 / 120
+        for (old, new) in zip(before, after) {
+            XCTAssertEqual(new.x + shift, old.x, accuracy: 1e-8)
+            XCTAssertEqual(new.y, old.y, accuracy: 1e-8)
+        }
+        XCTAssertLessThan(after[0].x, 0)
+    }
+
+    func testDrawingContextRemainsBoundedAcrossRepeatedFullRingUpdates() {
+        let view = view()
+        for start in 0..<400 {
+            let times = (start..<(start + 60)).map { Double($0) * 2 }
+            view.update(samples: Array(repeating: 10, count: 60), peak: 10, color: .systemBlue,
+                        timing: .init(sampledAt: times, referenceTime: times.last!))
+            var anchors = 0
+            view.chartPathForTest?.applyWithBlock {
+                if $0.pointee.type == .moveToPoint || $0.pointee.type == .addCurveToPoint { anchors += 1 }
+            }
+            XCTAssertLessThanOrEqual(anchors, 64)
+        }
+    }
 }

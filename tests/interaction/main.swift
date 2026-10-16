@@ -2985,6 +2985,17 @@ if !screenLocked {
         func animationStart(_ animation: CABasicAnimation) -> CATransform3D? {
             (animation.fromValue as? NSValue)?.caTransform3DValue
         }
+        func settleHistoryFixture(_ context: String) -> Bool {
+            let started = CACurrentMediaTime()
+            let settled = runApplication(until: { !fixture.hasChartAnimationForTest }, timeout: 1)
+            if !settled {
+                let remaining = historyAnimations(fixture.layer).map {
+                    "\($0.0):\($0.1.duration)s"
+                }.joined(separator: ",")
+                log("HISTORY_COMPLETION_TIMEOUT \(context) elapsed=\(CACurrentMediaTime() - started) remaining=\(remaining)")
+            }
+            return settled
+        }
         func projectedSample(_ watts: Double, sampledAt: Double, reference: Double,
                              ceiling: Double, transform: CATransform3D) -> CGPoint {
             CGPoint(x: CGFloat(1 - (reference - sampledAt) / HistoryChartTiming.window)
@@ -3064,8 +3075,7 @@ if !screenLocked {
         } else {
             check("History 扩缩范围始终以图表底边为原点", false)
         }
-        spin(0.45)
-        check("History 中断后的扩轴完成并自动静止", !fixture.hasChartAnimationForTest)
+        check("History 中断后的扩轴完成并自动静止", settleHistoryFixture("retargeted-axis"))
 
         // Evict the two high readings through the same 60-slot series. Only
         // then advance the four real sample ticks required by scale hysteresis.
@@ -3161,15 +3171,20 @@ if !screenLocked {
                 timeline.beginTime = 0
                 timeline.beginTime = timeline.convertTime(CACurrentMediaTime(), from: nil) - pausedAt
             }
-            spin(0.45)
+            let tailWaitStarted = CACurrentMediaTime()
+            let tailSettled = settleHistoryFixture("matched-tail")
             if let targetTailPath, let targetMidpoint = historyCubicMidpoint(targetTailPath, index: 1),
                let settledPath = tailLine?.presentation()?.path,
                let settledMidpoint = historyCubicMidpoint(settledPath, index: 1) {
+                let dx = settledMidpoint.x - targetMidpoint.x
+                let dy = settledMidpoint.y - targetMidpoint.y
+                if abs(dx) >= 0.000_001 || abs(dy) >= 0.000_001 || !tailSettled {
+                    log("HISTORY_TAIL_SETTLE dx=\(dx) dy=\(dy) elapsed=\(CACurrentMediaTime() - tailWaitStarted) motionSettled=\(tailSettled) keys=\(historyAnimations(fixture.layer).map { $0.0 })")
+                }
                 check("History 控制点过渡到达新曲线后自动静止",
-                      abs(settledMidpoint.x - targetMidpoint.x) < 0.000_001
-                          && abs(settledMidpoint.y - targetMidpoint.y) < 0.000_001
-                          && !fixture.hasChartAnimationForTest)
+                      abs(dx) < 0.000_001 && abs(dy) < 0.000_001 && tailSettled)
             } else {
+                log("HISTORY_TAIL_SETTLE missingPresentation=1 elapsed=\(CACurrentMediaTime() - tailWaitStarted) motionSettled=\(tailSettled) keys=\(historyAnimations(fixture.layer).map { $0.0 })")
                 check("History 控制点过渡到达新曲线后自动静止", false)
             }
         } else {

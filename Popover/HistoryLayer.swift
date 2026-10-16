@@ -24,6 +24,8 @@ final class HistoryView: PopoverSection {
     private var lastPeak: Double?
     private var lastColor: NSColor?
     private var lastGeometry: HistoryChartGeometry?
+    private var lastDrawingSamples: [Double] = []
+    private var lastDrawingTiming: HistoryChartTiming?
     private var scale = HistoryChartScale()
     private var presentationActive = false
     private var animationsEnabled = false
@@ -166,21 +168,28 @@ final class HistoryView: PopoverSection {
         } else {
             viewportFraction = nil
         }
-        // Keep one departing point only as clipped drawing context. Without it,
-        // a full ring would lose its leftmost segment at the start of each slide.
+        // Carry the previous drawing boundary, including its existing context.
+        // A raw ring alone loses that interval on the second consecutive slide.
+        // Six seconds bounds age; at most one additional ring bounds count.
         var drawingSamples = samples
         var drawingTiming = timing
-        var hasLeadingContext = false
-        if viewportFraction != nil, let oldTiming, let oldSamples, let timing,
-           let first = timing.sampledAt.first,
-           let index = oldTiming.sampledAt.firstIndex(of: first), index > 0 {
-            drawingSamples.insert(oldSamples[index - 1], at: 0)
-            drawingTiming = HistoryChartTiming(sampledAt: [oldTiming.sampledAt[index - 1]] + timing.sampledAt,
+        var leadingContextCount = 0
+        if viewportFraction != nil, let timing, let lastDrawingTiming,
+           let first = timing.sampledAt.first {
+            let context = lastDrawingTiming.sampledAt.indices.filter {
+                lastDrawingTiming.sampledAt[$0] < first
+                    && timing.referenceTime - lastDrawingTiming.sampledAt[$0] <= HistoryChartTiming.window + 6
+            }.suffix(samples.count)
+            drawingSamples = context.map { lastDrawingSamples[$0] } + samples
+            drawingTiming = HistoryChartTiming(sampledAt: context.map { lastDrawingTiming.sampledAt[$0] }
+                                                + timing.sampledAt,
                                                referenceTime: timing.referenceTime)
-            hasLeadingContext = true
+            leadingContextCount = context.count
         }
+        lastDrawingSamples = drawingSamples
+        lastDrawingTiming = drawingTiming
         let geometry = HistoryChartGeometry(samples: drawingSamples, timing: drawingTiming, ceiling: ceiling,
-                                             leadingContext: hasLeadingContext)
+                                             leadingContextCount: leadingContextCount)
         lastGeometry = geometry
         let plot = chartRect
         let targetPaths = paths(for: geometry)

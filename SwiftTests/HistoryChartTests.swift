@@ -105,7 +105,7 @@ final class HistoryChartTests: XCTestCase {
         let timing = HistoryChartTiming(sampledAt: [0, 2, 4], referenceTime: 121)
         let normal = HistoryChartGeometry(samples: [10, 20, 30], timing: timing, ceiling: 100)
         let drawing = HistoryChartGeometry(samples: [10, 20, 30], timing: timing, ceiling: 100,
-                                           leadingContext: true)
+                                           leadingContextCount: 1)
         XCTAssertEqual(normal.points.count, 2)
         XCTAssertEqual(drawing.points.count, 3)
         XCTAssertLessThan(drawing.points[0].x, 0)
@@ -116,7 +116,7 @@ final class HistoryChartTests: XCTestCase {
     func testDepartingPeakRetainsItsRawHeightWhenTheViewportScaleContracts() {
         let graph = HistoryChartGeometry(samples: [100, 10, 20],
             timing: .init(sampledAt: [0, 2, 4], referenceTime: 121), ceiling: 40,
-            leadingContext: true)
+            leadingContextCount: 1)
         XCTAssertEqual(graph.points[0].y, 2.5)
         XCTAssertLessThan(graph.points[0].x, 0)
         XCTAssertEqual(graph.points.dropFirst().map(\.y), [0.25, 0.5])
@@ -290,6 +290,29 @@ final class HistoryChartTests: XCTestCase {
         }
     }
 
+    func testAlignedControlsPreserveTheTailWhenANewSampleReversesTheSlope() throws {
+        let old = HistoryChartGeometry(samples: [0, 0, 100],
+            timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 100)
+        let target = HistoryChartGeometry(samples: [0, 0, 100, 0],
+            timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 100)
+        let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: old.segments,
+            fraction: 2.0 / 120, oldCeiling: 100, newCeiling: 100))
+        let x = 1 - 3.0 / 120
+        XCTAssertEqual(try XCTUnwrap(start.value(at: x)), 0.3125, accuracy: 1e-10)
+        XCTAssertEqual(try XCTUnwrap(target.value(at: x)), 0.5, accuracy: 1e-10)
+    }
+
+    func testSeveralDepartingContextPointsKeepTheirRawValuesAndTimestampPairs() {
+        let graph = HistoryChartGeometry(samples: [100, 90, 80, 10],
+            timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 124), ceiling: 40,
+            leadingContextCount: 3)
+        XCTAssertEqual(graph.points.map(\.y), [2.5, 2.25, 2, 0.25])
+        XCTAssertEqual(graph.segmentIDs, [
+            .init(startTime: 0, endTime: 2), .init(startTime: 2, endTime: 4), .init(startTime: 4, endTime: 6),
+        ])
+        XCTAssertEqual(graph.points[0].x, -4.0 / 120, accuracy: 1e-12)
+    }
+
     func testRetargetedControlsUseThePresentationBlendRatherThanItsFinalTarget() throws {
         let original = HistoryChartGeometry(samples: [0, 0, 100],
             timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 200)
@@ -297,18 +320,22 @@ final class HistoryChartTests: XCTestCase {
             timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 200)
         let currentStart = try XCTUnwrap(current.alignedStart(from: original,
             presentedSegments: original.segments, fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 200))
-        let presented = zip(currentStart.segments, current.segments).map { a, b in
-            HistoryChartGeometry.Cubic(start: b.start,
-                control1: .init(x: b.control1.x, y: a.control1.y + (b.control1.y - a.control1.y) * 0.37),
-                control2: .init(x: b.control2.x, y: a.control2.y + (b.control2.y - a.control2.y) * 0.37),
-                end: b.end)
-        }
         let next = HistoryChartGeometry(samples: [0, 0, 100, 150, 200],
             timing: .init(sampledAt: [0, 2, 4, 6, 8], referenceTime: 8), ceiling: 250)
-        let start = try XCTUnwrap(next.alignedStart(from: current, presentedSegments: presented,
-            fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 250))
-        XCTAssertEqual(start.segments[1].control2.y, presented[1].control2.y * 200 / 250, accuracy: 1e-12)
-        XCTAssertNotEqual(start.segments[1].control2.y, current.segments[1].control2.y * 200 / 250)
+        for progress in [0.25, 0.5, 0.9] {
+            let presented = zip(currentStart.segments, current.segments).map { a, b in
+                HistoryChartGeometry.Cubic(start: b.start,
+                    control1: .init(x: b.control1.x, y: a.control1.y + (b.control1.y - a.control1.y) * progress),
+                    control2: .init(x: b.control2.x, y: a.control2.y + (b.control2.y - a.control2.y) * progress),
+                    end: b.end)
+            }
+            let start = try XCTUnwrap(next.alignedStart(from: current, presentedSegments: presented,
+                fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 250))
+            XCTAssertEqual(start.segments[1].control2.y, presented[1].control2.y * 200 / 250, accuracy: 1e-12)
+            XCTAssertNotEqual(start.segments[1].control2.y, current.segments[1].control2.y * 200 / 250)
+            XCTAssertEqual(start.segments[1].value(at: 0.5), presented[1].value(at: 0.5) * 200 / 250,
+                           accuracy: 1e-12)
+        }
     }
 
     func testOnlyIdenticalRawTimestampPairsAndAnchorsCanSupplyControls() throws {

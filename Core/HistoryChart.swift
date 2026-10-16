@@ -139,7 +139,7 @@ struct HistoryChartGeometry {
     }
 
     init(samples: [Double], timing: HistoryChartTiming?, ceiling: Double,
-         leadingContext: Bool = false) {
+         leadingContextCount: Int = 0) {
         let times = timing?.sampledAt ?? samples.indices.map { Double($0) * 2 }
         let reference = timing?.referenceTime ?? times.last ?? 0
         guard times.count == samples.count, ceiling.isFinite, ceiling > 0,
@@ -152,7 +152,7 @@ struct HistoryChartGeometry {
         var timeGroups: [[TimeInterval]] = [], currentTimes: [TimeInterval] = []
         for i in samples.indices {
             let age = reference - times[i]
-            let context = leadingContext && i == 0 && age <= HistoryChartTiming.window + 6
+            let context = i < leadingContextCount && age <= HistoryChartTiming.window + 6
             let valid = samples[i].isFinite && age >= 0 && (age < HistoryChartTiming.window || context)
             let gap = i > 0 && times[i] - times[i - 1] > 6
             if !valid || gap {
