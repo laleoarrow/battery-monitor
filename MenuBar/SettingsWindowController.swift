@@ -2735,6 +2735,82 @@ private final class MenuBarIconSettingsSectionController: NSObject,
     }
 }
 
+private final class ModuleRingGaugeIconView: NSImageView, SettingsContrastRefreshing {
+    private let increaseContrast: () -> Bool
+
+    init(increaseContrast: @escaping () -> Bool) {
+        self.increaseContrast = increaseContrast
+        super.init(frame: .zero)
+        isEditable = false
+        allowsCutCopyPaste = false
+        refreshContrastAppearance()
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError("init(coder:) is unavailable") }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        refreshContrastAppearance()
+    }
+
+    func refreshContrastAppearance() {
+        // Resolve now; the cached image's drawing closure never captures the view.
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            let ink = SettingsStyle.primaryText.usingColorSpace(.sRGB)
+                ?? SettingsStyle.primaryText
+            let blue = NSColor.systemBlue.usingColorSpace(.sRGB) ?? .systemBlue
+            let strokeWidth: CGFloat = increaseContrast() ? 1.8 : 1.35
+            let side = SettingsStyle.rowSymbolSize
+            let artwork = NSImage(size: NSSize(width: side, height: side), flipped: false) { rect in
+                NSGraphicsContext.saveGraphicsState()
+                defer { NSGraphicsContext.restoreGraphicsState() }
+                let transform = NSAffineTransform()
+                transform.translateX(by: rect.minX, yBy: rect.minY)
+                transform.scaleX(by: rect.width / 24, yBy: rect.height / 24)
+                transform.concat()
+
+                // One circular outline. No inner ring or background fill.
+                ink.setStroke()
+                let rim = NSBezierPath(ovalIn: NSRect(x: 1.5, y: 1.5, width: 21, height: 21))
+                rim.lineWidth = strokeWidth
+                rim.stroke()
+
+                let ticks = NSBezierPath()
+                ticks.lineWidth = strokeWidth
+                ticks.lineCapStyle = .round
+                for degrees in stride(from: 0, through: 150, by: 30) {
+                    let angle = CGFloat(degrees) * .pi / 180
+                    func point(_ radius: CGFloat) -> NSPoint {
+                        NSPoint(x: 12 + cos(angle) * radius, y: 12 + sin(angle) * radius)
+                    }
+                    ticks.move(to: point(7.1))
+                    ticks.line(to: point(8.0))
+                }
+                ticks.stroke()
+
+                // Fixed northeast needle and solid hub; independent of Accent Color.
+                blue.setFill()
+                blue.setStroke()
+                let needle = NSBezierPath()
+                needle.move(to: NSPoint(x: 10.7, y: 13.3))
+                needle.line(to: NSPoint(x: 16.5, y: 16.5))
+                needle.line(to: NSPoint(x: 13.3, y: 10.7))
+                needle.close()
+                needle.lineWidth = 0.65
+                needle.lineJoinStyle = .round
+                needle.fill()
+                needle.stroke()
+                NSBezierPath(ovalIn: NSRect(x: 9.9, y: 9.9, width: 4.2, height: 4.2)).fill()
+                return true
+            }
+            artwork.isTemplate = false
+            contentTintColor = nil
+            image = artwork
+        }
+    }
+}
+
 private final class ModuleReorderHandle: NSButton, SettingsContrastRefreshing {
     let module: Settings.Module
     weak var reorderList: ModuleReorderList?
@@ -3166,11 +3242,16 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         row.wantsLayer = true
         row.identifier = NSUserInterfaceItemIdentifier("settings.modules.row.\(module.rawValue)")
 
-        let icon = NSImageView()
+        let icon: NSImageView
+        if module == .ring {
+            icon = ModuleRingGaugeIconView(increaseContrast: increaseContrast)
+        } else {
+            icon = NSImageView()
+            icon.image = NSImage(systemSymbolName: symbolName(for: module), accessibilityDescription: nil)?
+                .withSymbolConfiguration(.init(pointSize: SettingsStyle.rowSymbolSize, weight: .regular))
+            icon.contentTintColor = SettingsStyle.primaryText
+        }
         icon.identifier = NSUserInterfaceItemIdentifier("settings.modules.icon.\(module.rawValue)")
-        icon.image = NSImage(systemSymbolName: symbolName(for: module), accessibilityDescription: nil)?
-            .withSymbolConfiguration(.init(pointSize: SettingsStyle.rowSymbolSize, weight: .regular))
-        icon.contentTintColor = SettingsStyle.primaryText
         icon.imageScaling = .scaleProportionallyDown
         icon.setAccessibilityElement(false)
         icon.translatesAutoresizingMaskIntoConstraints = false
