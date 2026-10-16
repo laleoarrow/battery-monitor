@@ -113,6 +113,21 @@ final class HistoryChartTests: XCTestCase {
         XCTAssertEqual(drawing.points.last, normal.points.last)
     }
 
+    func testDepartingPeakRetainsItsRawHeightWhenTheViewportScaleContracts() {
+        let graph = HistoryChartGeometry(samples: [100, 10, 20],
+            timing: .init(sampledAt: [0, 2, 4], referenceTime: 121), ceiling: 40,
+            leadingContext: true)
+        XCTAssertEqual(graph.points[0].y, 2.5)
+        XCTAssertLessThan(graph.points[0].x, 0)
+        XCTAssertEqual(graph.points.dropFirst().map(\.y), [0.25, 0.5])
+        for segment in graph.segments {
+            for t in stride(from: 0.0, through: 1, by: 0.05) {
+                XCTAssertGreaterThanOrEqual(segment.value(at: t), min(segment.start.y, segment.end.y) - 1e-12)
+                XCTAssertLessThanOrEqual(segment.value(at: t), max(segment.start.y, segment.end.y) + 1e-12)
+            }
+        }
+    }
+
     func testNonFiniteSampleBreaksTheLine() {
         let graph = geometry([10, 20, .nan, 40, 50])
         XCTAssertEqual(graph.runs.count, 2)
@@ -201,6 +216,139 @@ final class HistoryChartTests: XCTestCase {
         XCTAssertEqual(HistoryChartTiming.scrollFraction(
             from: .init(sampledAt: [0, 2], referenceTime: 2.05), samples: [10, 20],
             to: next, samples: [10, 20, 30]), (4 - 2.05) / 120)
+    }
+
+    func testViewportMatchesStationaryAndAgingHistoryWithoutInventingReadings() throws {
+        let old = HistoryChartTiming(sampledAt: [0, 2, 4], referenceTime: 4)
+        let values = [10.0, 20, 30]
+        XCTAssertEqual(HistoryChartTiming.viewportFraction(from: old, samples: values,
+            to: old, samples: values), 0)
+        XCTAssertEqual(HistoryChartTiming.viewportFraction(from: old, samples: values,
+            to: .init(sampledAt: old.sampledAt, referenceTime: 6), samples: values), 2.0 / 120)
+        XCTAssertNil(HistoryChartTiming.viewportFraction(from: old, samples: values,
+            to: .init(sampledAt: [0, 2, 11], referenceTime: 11), samples: values))
+        XCTAssertNil(HistoryChartTiming.viewportFraction(from: old, samples: values,
+            to: old, samples: [10, 99, 30]))
+    }
+
+    func testViewportScaleExpansionAndContractionKeepSharedSamplesAtTheirOldPositions() throws {
+        for (oldCeiling, newCeiling) in [(40.0, 100.0), (100.0, 40.0)] {
+            let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: oldCeiling,
+                newCeiling: newCeiling, fraction: 2.0 / 120, width: 300))
+            XCTAssertEqual(viewport.translationX, 5, accuracy: 1e-12)
+            XCTAssertEqual(viewport.scaleY, newCeiling / oldCeiling, accuracy: 1e-12)
+            for value in [0.0, 10, 25] {
+                let newY = 64 * (1 - value / newCeiling)
+                XCTAssertEqual(64 + (newY - 64) * viewport.scaleY,
+                               64 * (1 - value / oldCeiling), accuracy: 1e-12)
+            }
+        }
+    }
+
+    func testViewportRetargetComposesTheActualPresentationRatherThanItsPreviousTarget() throws {
+        let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: 100,
+            newCeiling: 40, fraction: 2.0 / 120, width: 300,
+            presentedTranslationX: 3.5, presentedScaleY: 1.8))
+        XCTAssertEqual(viewport.translationX, 8.5, accuracy: 1e-12)
+        XCTAssertEqual(viewport.scaleY, 0.72, accuracy: 1e-12)
+        for value in [0.0, 10, 30] {
+            let oldY = 64 * (1 - value / 100)
+            let newY = 64 * (1 - value / 40)
+            XCTAssertEqual(64 + (newY - 64) * viewport.scaleY,
+                           64 + (oldY - 64) * 1.8, accuracy: 1e-12)
+        }
+    }
+
+    func testViewportRejectsInvalidAffineInputs() {
+        for (old, new, fraction, width, tx, sy) in [
+            (0.0, 10.0, 0.0, 300.0, 0.0, 1.0),
+            (10, .infinity, 0, 300, 0, 1),
+            (10, 20, .nan, 300, 0, 1),
+            (10, 20, 0, 0, 0, 1),
+            (10, 20, 0, 300, .nan, 1),
+            (10, 20, 0, 300, 0, 0),
+        ] {
+            XCTAssertNil(HistoryChartViewport(oldCeiling: old, newCeiling: new,
+                fraction: fraction, width: width, presentedTranslationX: tx, presentedScaleY: sy))
+        }
+    }
+
+    func testAlignedControlsPreserveTheActuallyDisplayedFormerTerminalCubic() throws {
+        let old = HistoryChartGeometry(samples: [0, 0, 100],
+            timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 200)
+        let target = HistoryChartGeometry(samples: [0, 0, 100, 150],
+            timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 200)
+        let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: old.segments,
+            fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 200))
+        let x = 1 - 3.0 / 120
+        XCTAssertEqual(try XCTUnwrap(start.value(at: x)), 31.25 / 200, accuracy: 1e-10)
+        XCTAssertEqual(try XCTUnwrap(target.value(at: x)), 41.6666666667 / 200, accuracy: 1e-10)
+        XCTAssertEqual(start.segmentIDs, target.segmentIDs)
+        for (a, b) in zip(start.segments, target.segments) {
+            XCTAssertEqual(a.start, b.start)
+            XCTAssertEqual(a.end, b.end)
+        }
+    }
+
+    func testRetargetedControlsUseThePresentationBlendRatherThanItsFinalTarget() throws {
+        let original = HistoryChartGeometry(samples: [0, 0, 100],
+            timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 200)
+        let current = HistoryChartGeometry(samples: [0, 0, 100, 150],
+            timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 200)
+        let currentStart = try XCTUnwrap(current.alignedStart(from: original,
+            presentedSegments: original.segments, fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 200))
+        let presented = zip(currentStart.segments, current.segments).map { a, b in
+            HistoryChartGeometry.Cubic(start: b.start,
+                control1: .init(x: b.control1.x, y: a.control1.y + (b.control1.y - a.control1.y) * 0.37),
+                control2: .init(x: b.control2.x, y: a.control2.y + (b.control2.y - a.control2.y) * 0.37),
+                end: b.end)
+        }
+        let next = HistoryChartGeometry(samples: [0, 0, 100, 150, 200],
+            timing: .init(sampledAt: [0, 2, 4, 6, 8], referenceTime: 8), ceiling: 250)
+        let start = try XCTUnwrap(next.alignedStart(from: current, presentedSegments: presented,
+            fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 250))
+        XCTAssertEqual(start.segments[1].control2.y, presented[1].control2.y * 200 / 250, accuracy: 1e-12)
+        XCTAssertNotEqual(start.segments[1].control2.y, current.segments[1].control2.y * 200 / 250)
+    }
+
+    func testOnlyIdenticalRawTimestampPairsAndAnchorsCanSupplyControls() throws {
+        let target = HistoryChartGeometry(samples: [0, 0, 100, 150],
+            timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 200)
+        for old in [
+            HistoryChartGeometry(samples: [0, 0, 100],
+                timing: .init(sampledAt: [100, 102, 104], referenceTime: 104), ceiling: 200),
+            HistoryChartGeometry(samples: [0, 0, 99],
+                timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 200),
+        ] {
+            let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: old.segments,
+                fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 200))
+            XCTAssertEqual(start.segments[1].control2, target.segments[1].control2)
+        }
+    }
+
+    func testMatchedControlBlendsRemainInsideEachRawSamplePair() throws {
+        var state: UInt64 = 8719
+        for _ in 0..<40 {
+            let values: [Double] = (0..<20).map { _ in
+                state = state &* 6364136223846793005 &+ 1
+                return Double((state >> 32) % 10001) / 100
+            }
+            let old = HistoryChartGeometry(samples: Array(values.dropLast()),
+                timing: .init(sampledAt: (0..<19).map { Double($0) * 2 }, referenceTime: 36), ceiling: 100)
+            let target = HistoryChartGeometry(samples: values,
+                timing: .init(sampledAt: (0..<20).map { Double($0) * 2 }, referenceTime: 38), ceiling: 150)
+            let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: old.segments,
+                fraction: 2.0 / 120, oldCeiling: 100, newCeiling: 150))
+            for (a, b) in zip(start.segments, target.segments) {
+                for q in stride(from: 0.0, through: 1, by: 0.1) {
+                    for t in stride(from: 0.0, through: 1, by: 0.05) {
+                        let y = a.value(at: t) * (1 - q) + b.value(at: t) * q
+                        XCTAssertGreaterThanOrEqual(y, min(b.start.y, b.end.y) - 1e-12)
+                        XCTAssertLessThanOrEqual(y, max(b.start.y, b.end.y) + 1e-12)
+                    }
+                }
+            }
+        }
     }
 
     func testPausedSamplingMovesCachedHistoryToItsActualAge() {

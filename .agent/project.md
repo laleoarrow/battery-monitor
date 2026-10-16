@@ -43,8 +43,11 @@ the original samples and break across gaps longer than six seconds. It keeps
 the sample-aligned viewport during normal cadence; after a sampling gap, the
 viewport ages the cached readings with the current monotonic time. Peak uses
 the original values; the chart scale adds quantized headroom and waits eight
-seconds before a reduction of at least 25%. Contiguous new readings can use one
-180 ms translation, with the endpoint following the same curve. History joins
+seconds before a reduction of at least 25%. Contiguous changes use a 180 ms
+horizontal translation or a 350 ms eased, baseline-anchored axis transition.
+Interrupted transitions continue from the presentation layers. Curve controls
+may blend only after matching their exact sampling intervals and raw anchors;
+fill and endpoint follow the same geometry and viewport progress. History joins
 the existing presentation and accessibility animation policy; closing, hiding,
 detaching, degraded readings and Reduce Motion stop its animations. No chart
 timer or arbitrary shape-path interpolation is used.

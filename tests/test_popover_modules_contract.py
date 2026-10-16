@@ -169,7 +169,6 @@ class PopoverModulesContractTests(unittest.TestCase):
     def test_history_draws_samples_without_implicit_path_animation(self):
         self.assertIn("samples: [Double]", self.history)
         self.assertIn("PopoverStyle.setWithoutAnimation", self.history)
-        self.assertNotIn('CABasicAnimation(keyPath: "path")', self.history)
 
     def test_history_skips_rebuilding_an_identical_path_and_color(self):
         self.assertIn("lastSamples", self.history)

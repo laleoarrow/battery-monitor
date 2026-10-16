@@ -22,6 +22,49 @@ struct HistoryChartTiming: Equatable {
               Array(oldValues[oldStart...]) == Array(newValues[...retainedLast]) else { return nil }
         return delta / window
     }
+
+    /// A viewport change may only age retained samples, without adding a point.
+    /// Match their actual times and values before reusing the displayed scale.
+    static func viewportFraction(from old: Self, samples oldValues: [Double],
+                                 to new: Self, samples newValues: [Double]) -> Double? {
+        let delta = new.referenceTime - old.referenceTime
+        guard delta.isFinite, delta >= 0, delta <= 6,
+              old.sampledAt.count == oldValues.count, new.sampledAt.count == newValues.count,
+              oldValues.count > 1, newValues.count > 1,
+              oldValues.allSatisfy(\.isFinite), newValues.allSatisfy(\.isFinite),
+              let oldLast = old.sampledAt.last, let newLast = new.sampledAt.last,
+              old.referenceTime >= oldLast, new.referenceTime >= newLast,
+              [old.sampledAt, new.sampledAt].allSatisfy({ times in
+                  times.allSatisfy(\.isFinite)
+                      && zip(times, times.dropFirst()).allSatisfy { $0 < $1 && $1 - $0 <= 6 }
+              }),
+              let retainedLast = new.sampledAt.firstIndex(of: oldLast),
+              let first = new.sampledAt.first,
+              let oldStart = old.sampledAt.firstIndex(of: first), oldStart <= 1,
+              Array(old.sampledAt[oldStart...]) == Array(new.sampledAt[...retainedLast]),
+              Array(oldValues[oldStart...]) == Array(newValues[...retainedLast]) else { return nil }
+        return delta / window
+    }
+}
+
+/// Affine change from the newly rendered model back to the visible viewport.
+/// Scale around the zero-watt baseline; compose an interrupted presentation.
+struct HistoryChartViewport {
+    let translationX: Double
+    let scaleY: Double
+
+    init?(oldCeiling: Double, newCeiling: Double, fraction: Double, width: Double,
+          presentedTranslationX: Double = 0, presentedScaleY: Double = 1) {
+        guard [oldCeiling, newCeiling, fraction, width, presentedTranslationX,
+               presentedScaleY].allSatisfy(\.isFinite),
+              oldCeiling > 0, newCeiling > 0, fraction >= 0, fraction <= 6 / HistoryChartTiming.window,
+              width > 0, presentedScaleY > 0 else { return nil }
+        let tx = fraction * width + presentedTranslationX
+        let sy = newCeiling / oldCeiling * presentedScaleY
+        guard tx.isFinite, sy.isFinite, sy > 0 else { return nil }
+        translationX = tx
+        scaleY = sy
+    }
 }
 
 /// Quantized headroom plus eight seconds of hysteresis when reducing the scale.
@@ -60,6 +103,11 @@ struct HistoryChartScale {
 
 /// Normalized, shape-preserving cubic geometry. No moving average or peak removal.
 struct HistoryChartGeometry {
+    struct SegmentID: Equatable {
+        let startTime: TimeInterval
+        let endTime: TimeInterval
+    }
+
     struct Point: Equatable {
         let x: Double
         let y: Double
@@ -81,6 +129,14 @@ struct HistoryChartGeometry {
     let runs: [[Point]]
     let segments: [Cubic]
     let points: [Point]
+    let segmentIDs: [SegmentID]
+
+    private init(runs: [[Point]], segments: [Cubic], points: [Point], segmentIDs: [SegmentID]) {
+        self.runs = runs
+        self.segments = segments
+        self.points = points
+        self.segmentIDs = segmentIDs
+    }
 
     init(samples: [Double], timing: HistoryChartTiming?, ceiling: Double,
          leadingContext: Bool = false) {
@@ -90,25 +146,63 @@ struct HistoryChartGeometry {
               reference.isFinite, times.allSatisfy(\.isFinite),
               zip(times, times.dropFirst()).allSatisfy({ $0 < $1 }),
               times.last.map({ $0 <= reference }) ?? true else {
-            runs = []; segments = []; points = []; return
+            runs = []; segments = []; points = []; segmentIDs = []; return
         }
         var groups: [[Point]] = [], current: [Point] = []
+        var timeGroups: [[TimeInterval]] = [], currentTimes: [TimeInterval] = []
         for i in samples.indices {
             let age = reference - times[i]
             let context = leadingContext && i == 0 && age <= HistoryChartTiming.window + 6
             let valid = samples[i].isFinite && age >= 0 && (age < HistoryChartTiming.window || context)
             let gap = i > 0 && times[i] - times[i - 1] > 6
             if !valid || gap {
-                if !current.isEmpty { groups.append(current); current = [] }
+                if !current.isEmpty {
+                    groups.append(current); current = []
+                    timeGroups.append(currentTimes); currentTimes = []
+                }
             }
             guard valid else { continue }
             current.append(Point(x: 1 - age / HistoryChartTiming.window,
-                                 y: min(max(samples[i] / ceiling, 0), 1)))
+                                 y: context ? max(samples[i] / ceiling, 0)
+                                            : min(max(samples[i] / ceiling, 0), 1)))
+            currentTimes.append(times[i])
         }
-        if !current.isEmpty { groups.append(current) }
+        if !current.isEmpty { groups.append(current); timeGroups.append(currentTimes) }
         runs = groups
         points = groups.flatMap { $0 }
         segments = groups.flatMap(Self.cubics)
+        segmentIDs = timeGroups.flatMap { times in
+            zip(times, times.dropFirst()).map { SegmentID(startTime: $0, endTime: $1) }
+        }
+    }
+
+    /// Start with the target topology, retaining only the visible controls of
+    /// identical raw sample pairs. Interpolation then preserves every anchor;
+    /// each blended cubic is bounded by the same two original sample values.
+    func alignedStart(from previous: Self, presentedSegments: [Cubic],
+                      fraction: Double, oldCeiling: Double, newCeiling: Double) -> Self? {
+        guard presentedSegments.count == previous.segmentIDs.count,
+              oldCeiling.isFinite, newCeiling.isFinite, oldCeiling > 0, newCeiling > 0 else { return nil }
+        let ratio = oldCeiling / newCeiling
+        func rebase(_ p: Point) -> Point { Point(x: p.x - fraction, y: p.y * ratio) }
+        func same(_ a: Point, _ b: Point) -> Bool {
+            abs(a.x - b.x) < 1e-9 && abs(a.y - b.y) < 1e-9
+        }
+        let aligned = segments.enumerated().map { index, target -> Cubic in
+            guard let priorIndex = previous.segmentIDs.firstIndex(of: segmentIDs[index]) else { return target }
+            let prior = presentedSegments[priorIndex]
+            guard same(rebase(prior.start), target.start), same(rebase(prior.end), target.end) else { return target }
+            let c1 = rebase(prior.control1), c2 = rebase(prior.control2)
+            return Cubic(start: target.start,
+                control1: Point(x: target.control1.x, y: c1.y),
+                control2: Point(x: target.control2.x, y: c2.y), end: target.end)
+        }
+        return Self(runs: runs, segments: aligned, points: points, segmentIDs: segmentIDs)
+    }
+
+    func value(at x: Double, blendingFrom start: Self, progress: Double) -> Double? {
+        guard let targetY = value(at: x), let startY = start.value(at: x) else { return nil }
+        return startY + (targetY - startY) * min(max(progress, 0), 1)
     }
 
     func value(at x: Double) -> Double? {
