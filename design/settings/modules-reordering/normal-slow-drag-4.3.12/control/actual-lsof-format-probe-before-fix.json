@@ -1,0 +1,24 @@
+{
+  "atUTC": "2026-10-17T05:02:46.352833+00:00",
+  "knownOwnedBind": [
+    "127.0.0.1",
+    52864
+  ],
+  "actualLsofFields": [
+    "p44321",
+    "cPython",
+    "\nf3",
+    "n127.0.0.1:52864",
+    "TST=LISTEN",
+    "TQR=0",
+    "TQS=0",
+    "\n"
+  ],
+  "actualLsofExit": 0,
+  "noAuthentication": true,
+  "noInput": true,
+  "parserAccepted": false,
+  "errorType": "GuardError",
+  "error": "listener-proof-invalid",
+  "ownedSocketClosed": true
+}

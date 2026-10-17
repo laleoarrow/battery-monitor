@@ -1,0 +1,27 @@
+{
+  "actualWindowVisibleRectProof" : false,
+  "candidateGeometryValid" : true,
+  "candidateInStack" : [
+    251.5,
+    18
+  ],
+  "effectiveVisibleRectProxy" : [
+    6,
+    6,
+    491,
+    348
+  ],
+  "inputGenerated" : false,
+  "lastRowFrame" : [
+    0,
+    0,
+    503,
+    72
+  ],
+  "newTargetExactStack" : true,
+  "oldTargetExactStack" : false,
+  "passed" : true,
+  "productAcceptance" : false,
+  "scope" : "Native headless NSBox clipping reproduction, exact fixture geometry\/helper typecheck; guest runtime gate remains required",
+  "windowCreated" : false
+}

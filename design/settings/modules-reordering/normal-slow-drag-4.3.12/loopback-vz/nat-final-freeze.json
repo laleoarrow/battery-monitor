@@ -1,0 +1,18 @@
+{
+  "archive": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/loopback-vz/nat-final-freeze.tar.gz",
+  "archiveSHA256": "3bfe92c68d15545a90bfc3a8aefba56cd018df845181859fe044686124a34f1e",
+  "archiveBytes": 38906,
+  "manifestSHA256": "a0322ce2c7fc6b449950063b11f0b0773634c49f2f4beb1ee663470546234505",
+  "files": 179,
+  "builderSHA256": "1e48394afe4df700d971265eb51126e2a9a070478401703e6b6ddf54cb1e53ef",
+  "shimSHA256": "829ed3a9ac14649742be6fbbff69f503eb1922ae0810746189ed4b0e46ae36ae",
+  "sourceOriginalSHA256": "904e0c1f26e3430125549b5e9d063fd35d806cbe4f114d7e14055e28f8676552",
+  "copySHA256": "032c8692d4f0a4995445dc57355484a4b1ee062fe9892a3ab97e5d632b36cdf7",
+  "librarySHA256": "d1b426c822f0bbbab04f862191ba6e836757775b51cea187e5a4f3c750f6387a",
+  "nativeAssertions": 17,
+  "lifecycleCases": 6,
+  "versionExitCode": 0,
+  "constructorTraceLoaded": true,
+  "noVMStarted": true,
+  "actualVZListenerProven": false
+}

@@ -1,0 +1,474 @@
+{
+  "inputMethod": "guest-VNC",
+  "hostInput": false,
+  "inputAttempted": true,
+  "sequencePosted": true,
+  "nativeDragVerdict": "observer-required",
+  "events": [
+    {
+      "mask": 0,
+      "x": 1664,
+      "y": 464,
+      "attemptedAtSystemMonotonic": 272235.619743,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1664,
+      "y": 464,
+      "attemptedAtSystemMonotonic": 272235.619789,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1656,
+      "y": 475,
+      "attemptedAtSystemMonotonic": 272235.950931,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1649,
+      "y": 485,
+      "attemptedAtSystemMonotonic": 272235.97571,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1641,
+      "y": 496,
+      "attemptedAtSystemMonotonic": 272236.00396,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1633,
+      "y": 507,
+      "attemptedAtSystemMonotonic": 272236.02789,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1625,
+      "y": 518,
+      "attemptedAtSystemMonotonic": 272236.054854,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1618,
+      "y": 528,
+      "attemptedAtSystemMonotonic": 272236.076766,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1610,
+      "y": 539,
+      "attemptedAtSystemMonotonic": 272236.102245,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1602,
+      "y": 550,
+      "attemptedAtSystemMonotonic": 272236.128841,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1595,
+      "y": 560,
+      "attemptedAtSystemMonotonic": 272236.151825,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1587,
+      "y": 571,
+      "attemptedAtSystemMonotonic": 272236.175657,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1579,
+      "y": 582,
+      "attemptedAtSystemMonotonic": 272236.200047,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1571,
+      "y": 592,
+      "attemptedAtSystemMonotonic": 272236.227123,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1564,
+      "y": 603,
+      "attemptedAtSystemMonotonic": 272236.252392,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1556,
+      "y": 614,
+      "attemptedAtSystemMonotonic": 272236.279851,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1548,
+      "y": 624,
+      "attemptedAtSystemMonotonic": 272236.304224,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1541,
+      "y": 635,
+      "attemptedAtSystemMonotonic": 272236.328404,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1533,
+      "y": 646,
+      "attemptedAtSystemMonotonic": 272236.352645,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1525,
+      "y": 657,
+      "attemptedAtSystemMonotonic": 272236.378262,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1517,
+      "y": 667,
+      "attemptedAtSystemMonotonic": 272236.401154,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1510,
+      "y": 678,
+      "attemptedAtSystemMonotonic": 272236.429854,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1502,
+      "y": 689,
+      "attemptedAtSystemMonotonic": 272236.454441,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1494,
+      "y": 699,
+      "attemptedAtSystemMonotonic": 272236.476761,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1487,
+      "y": 710,
+      "attemptedAtSystemMonotonic": 272236.504864,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1479,
+      "y": 721,
+      "attemptedAtSystemMonotonic": 272236.527781,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1471,
+      "y": 732,
+      "attemptedAtSystemMonotonic": 272236.553985,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1463,
+      "y": 742,
+      "attemptedAtSystemMonotonic": 272236.576014,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1456,
+      "y": 753,
+      "attemptedAtSystemMonotonic": 272236.601217,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1448,
+      "y": 764,
+      "attemptedAtSystemMonotonic": 272236.626833,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1440,
+      "y": 774,
+      "attemptedAtSystemMonotonic": 272236.654884,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1432,
+      "y": 785,
+      "attemptedAtSystemMonotonic": 272236.677887,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1425,
+      "y": 796,
+      "attemptedAtSystemMonotonic": 272236.703884,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1417,
+      "y": 806,
+      "attemptedAtSystemMonotonic": 272236.725213,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1409,
+      "y": 817,
+      "attemptedAtSystemMonotonic": 272236.754248,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1402,
+      "y": 828,
+      "attemptedAtSystemMonotonic": 272236.778936,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1394,
+      "y": 838,
+      "attemptedAtSystemMonotonic": 272236.802739,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1386,
+      "y": 849,
+      "attemptedAtSystemMonotonic": 272236.827334,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1378,
+      "y": 860,
+      "attemptedAtSystemMonotonic": 272236.854847,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1371,
+      "y": 871,
+      "attemptedAtSystemMonotonic": 272236.878229,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1363,
+      "y": 881,
+      "attemptedAtSystemMonotonic": 272236.904138,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1355,
+      "y": 892,
+      "attemptedAtSystemMonotonic": 272236.928852,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1348,
+      "y": 903,
+      "attemptedAtSystemMonotonic": 272236.95287,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1340,
+      "y": 913,
+      "attemptedAtSystemMonotonic": 272236.978721,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1332,
+      "y": 924,
+      "attemptedAtSystemMonotonic": 272237.002812,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1324,
+      "y": 935,
+      "attemptedAtSystemMonotonic": 272237.029433,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1317,
+      "y": 946,
+      "attemptedAtSystemMonotonic": 272237.054304,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1309,
+      "y": 956,
+      "attemptedAtSystemMonotonic": 272237.079626,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1301,
+      "y": 967,
+      "attemptedAtSystemMonotonic": 272237.104709,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1294,
+      "y": 978,
+      "attemptedAtSystemMonotonic": 272237.126861,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1286,
+      "y": 988,
+      "attemptedAtSystemMonotonic": 272237.151079,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1278,
+      "y": 999,
+      "attemptedAtSystemMonotonic": 272237.177502,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1270,
+      "y": 1010,
+      "attemptedAtSystemMonotonic": 272237.20329,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1263,
+      "y": 1020,
+      "attemptedAtSystemMonotonic": 272237.229559,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1255,
+      "y": 1031,
+      "attemptedAtSystemMonotonic": 272237.253026,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1247,
+      "y": 1042,
+      "attemptedAtSystemMonotonic": 272237.278991,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1240,
+      "y": 1052,
+      "attemptedAtSystemMonotonic": 272237.302945,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1232,
+      "y": 1063,
+      "attemptedAtSystemMonotonic": 272237.328545,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1224,
+      "y": 1074,
+      "attemptedAtSystemMonotonic": 272237.353351,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1216,
+      "y": 1085,
+      "attemptedAtSystemMonotonic": 272237.377338,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1209,
+      "y": 1095,
+      "attemptedAtSystemMonotonic": 272237.404841,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1201,
+      "y": 1106,
+      "attemptedAtSystemMonotonic": 272237.429729,
+      "sent": true
+    },
+    {
+      "mask": 0,
+      "x": 1201,
+      "y": 1106,
+      "attemptedAtSystemMonotonic": 272237.934188,
+      "sent": true
+    }
+  ],
+  "framebufferSize": [
+    2048,
+    1536
+  ],
+  "geometryScale": [
+    2.0,
+    2.0
+  ],
+  "mappedPoints": [
+    [
+      1664,
+      464
+    ],
+    [
+      1201,
+      1106
+    ]
+  ],
+  "case": "classic-slow-drop",
+  "pid": 1683,
+  "windowID": 41,
+  "releaseAttempted": false,
+  "socketClosed": true,
+  "exitCode": 0
+}

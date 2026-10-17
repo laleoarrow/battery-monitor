@@ -1,0 +1,53 @@
+{
+  "scope": "Identical original own-window PNG bytes; case-path copies avoid duplicating each image under the historical live path",
+  "images": [
+    {
+      "case": "classic-slow-drop",
+      "originalOwnedWindowCapturePath": "normal-slow-drag-v8/drag/manual-classic-0/classic-slow-drop-final.png",
+      "durablePath": "normal-slow-drag-v8/cases/classic-slow-drop/window.png",
+      "sha256": "b5ebdd053beefaa0c035186811dfc75704416f10657c0d1f9bd9edc54f4f6bb5",
+      "width": 1472,
+      "height": 1072
+    },
+    {
+      "case": "classic-slow-outside",
+      "originalOwnedWindowCapturePath": "normal-slow-drag-v8/drag/manual-classic-0/classic-slow-outside-final.png",
+      "durablePath": "normal-slow-drag-v8/cases/classic-slow-outside/window.png",
+      "sha256": "c821d61258083bebcbaac4afdbcfb60f70fd28201309a617bcc50179d4a246a5",
+      "width": 1472,
+      "height": 1072
+    },
+    {
+      "case": "standard-slow-drop",
+      "originalOwnedWindowCapturePath": "normal-slow-drag-v8/drag/manual-classic-0/standard-slow-drop-final.png",
+      "durablePath": "normal-slow-drag-v8/cases/standard-slow-drop/window.png",
+      "sha256": "a85749771538931eb78ff77a04d6170073e129f704f672d70fcd6df3fdbdd414",
+      "width": 1472,
+      "height": 1072
+    },
+    {
+      "case": "standard-slow-outside",
+      "originalOwnedWindowCapturePath": "normal-slow-drag-v8/drag/manual-classic-0/standard-slow-outside-final.png",
+      "durablePath": "normal-slow-drag-v8/cases/standard-slow-outside/window.png",
+      "sha256": "dfa4a3f841fa146312a80e9eb08ff8f17503f04c256db04bbe741e36cfcda6fa",
+      "width": 1472,
+      "height": 1072
+    },
+    {
+      "case": "clear-slow-drop",
+      "originalOwnedWindowCapturePath": "normal-slow-drag-v8/drag/manual-classic-0/clear-slow-drop-final.png",
+      "durablePath": "normal-slow-drag-v8/cases/clear-slow-drop/window.png",
+      "sha256": "b0bdc5401eb907fe0b47af7c77fb27c2795a2419e0f0881f6820e76dd6bfca6a",
+      "width": 1472,
+      "height": 1072
+    },
+    {
+      "case": "clear-slow-outside",
+      "originalOwnedWindowCapturePath": "normal-slow-drag-v8/drag/manual-classic-0/clear-slow-outside-final.png",
+      "durablePath": "normal-slow-drag-v8/cases/clear-slow-outside/window.png",
+      "sha256": "dfa4a3f841fa146312a80e9eb08ff8f17503f04c256db04bbe741e36cfcda6fa",
+      "width": 1472,
+      "height": 1072
+    }
+  ]
+}

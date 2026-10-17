@@ -1,0 +1,15 @@
+test_calibration_keeps_socket_open_and_never_down (__main__.Tests.test_calibration_keeps_socket_open_and_never_down) ... ok
+test_drag_only_after_readback (__main__.Tests.test_drag_only_after_readback) ... ok
+test_ignored_move_prevents_every_down_even_if_already_at_source (__main__.Tests.test_ignored_move_prevents_every_down_even_if_already_at_source) ... ok
+test_lease_clock_bound_and_reused_guest_cursor_helper (__main__.Tests.test_lease_clock_bound_and_reused_guest_cursor_helper) ... ok
+test_listener_bind_and_vm_ownership (__main__.Tests.test_listener_bind_and_vm_ownership) ... ok
+test_listener_requires_exact_owned_runtime_path (__main__.Tests.test_listener_requires_exact_owned_runtime_path) ... ok
+test_long_private_password_uses_protocol_prefix_only (__main__.Tests.test_long_private_password_uses_protocol_prefix_only) ... ok
+test_peer_refuses_other_backend_and_host (__main__.Tests.test_peer_refuses_other_backend_and_host) ... ok
+test_preflight_has_no_move_or_cursor_probe (__main__.Tests.test_preflight_has_no_move_or_cursor_probe) ... ok
+test_signal_during_drag_releases (__main__.Tests.test_signal_during_drag_releases) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.016s
+
+OK

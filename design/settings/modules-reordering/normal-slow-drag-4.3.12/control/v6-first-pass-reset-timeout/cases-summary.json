@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+  "version": "4.3.12",
+  "inputMethod": "owned-copy-loopback-directVZ-VNC",
+  "humanMouseInput": false,
+  "hostInput": false,
+  "results": [
+    {
+      "case": "classic-slow-drop",
+      "exitCode": 0,
+      "verdict": "passed",
+      "observedNativeSessionSeconds": 1.9781953749999843,
+      "failedAssertions": [],
+      "missingEvidence": []
+    }
+  ],
+  "allSixPassed": false
+}

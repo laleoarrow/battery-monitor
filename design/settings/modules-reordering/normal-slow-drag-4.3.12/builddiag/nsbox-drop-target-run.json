@@ -1,0 +1,10 @@
+{
+  "actualExitCode": 0,
+  "atUTC": "2026-10-17T05:37:28.883071+00:00",
+  "scope": "Headless AppKit geometry diagnosis only; no app or input",
+  "files": {
+    "nsbox-drop-target.swift": "5cea03b8ea6496a80168f2f843ee42a0874199c2ce467f9f8c4d1a7dfe0017d3",
+    "nsbox-drop-target.stdout.json": "92342e8ce107414b60948c166257f8597fd1b4f7934fb2a9df943461c44d52fb",
+    "nsbox-drop-target.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

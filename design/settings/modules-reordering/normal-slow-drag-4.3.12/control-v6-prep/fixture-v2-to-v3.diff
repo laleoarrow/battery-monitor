@@ -1,0 +1,84 @@
+--- fixture-v2/modules-normal-slow-drag.swift
++++ fixture-v3/modules-normal-slow-drag.swift
+@@ -229,6 +229,39 @@
+         [displayBounds.minX + point.x - screen.frame.minX,
+          displayBounds.minY + screen.frame.maxY - point.y]
+     }
++    private func dropHitTest(_ screenPoint: NSPoint, geometryValid: Bool, window: NSWindow, stack: NSStackView,
++                             screen: NSScreen, displayBounds: CGRect) -> [String: Any] {
++        let windowPoint = window.convertPoint(fromScreen: screenPoint)
++        let stackPoint = stack.convert(windowPoint, from: nil)
++        var ancestry: [[String: Any]] = []
++        var containsExactStack = false
++        var pointInContent: NSPoint?
++        if let content = window.contentView {
++            pointInContent = content.convert(windowPoint, from: nil)
++            // NSView.hitTest takes a point in its superview's coordinate system.
++            let hitPoint = content.superview?.convert(windowPoint, from: nil) ?? windowPoint
++            var current = content.hitTest(hitPoint)
++            while let view = current {
++                let isStack = view === stack
++                containsExactStack = containsExactStack || isStack
++                ancestry.append(["class": String(describing: type(of: view)), "id": view.identifier?.rawValue ?? "",
++                    "objectIdentity": String(describing: ObjectIdentifier(view)), "isExactStack": isStack,
++                    "registeredDraggedTypes": view.registeredDraggedTypes.map(\.rawValue)])
++                current = view.superview
++            }
++        }
++        let cg = cgPoint(screenPoint, screen: screen, displayBounds: displayBounds)
++        var result: [String: Any] = ["passedBool": geometryValid && containsExactStack,
++            "containsExactStack": containsExactStack, "candidateGeometryValid": geometryValid,
++            "candidateCGPoint": ["x": cg[0], "y": cg[1]],
++            "candidateAppKitScreen": [screenPoint.x, screenPoint.y],
++            "pointInWindow": [windowPoint.x, windowPoint.y], "pointInStack": [stackPoint.x, stackPoint.y],
++            "ancestry": ancestry, "stackIdentity": String(describing: ObjectIdentifier(stack)),
++            "registeredTargetAncestors": ancestry.filter { ($0["registeredDraggedTypes"] as? [String])?.isEmpty == false },
++            "inputGeneratedByFixture": false, "nativeHitTestOnly": true]
++        if let pointInContent { result["pointInContent"] = [pointInContent.x, pointInContent.y] }
++        return result
++    }
+     private func state() -> [String: Any] {
+         var value: [String: Any] = ["schema": 2, "pid": ProcessInfo.processInfo.processIdentifier, "hardwareUUID": hardwareUUID, "bundleID": Bundle.main.bundleIdentifier ?? "", "fixtureGeneratesInput": false, "inputMethod": "guest-VNC", "mode": "observational-owned-guest-slow-drag", "style": style, "reduceMotion": reduced,
+             "status": status, "case": caseName, "pressedMouseButtons": NSEvent.pressedMouseButtons, "inputGeneratedByFixture": false, "directDragCallbacks": false,
+@@ -279,8 +312,26 @@
+                let stack {
+                 let bounds = CGDisplayBounds(CGDirectDisplayID(displayID.uint32Value))
+                 let stackFrame = window.convertToScreen(stack.convert(stack.bounds, to: nil))
+-                // End point remains inside the list, below every unchanged row center.
+-                let drop = NSPoint(x: stackFrame.midX, y: stackFrame.minY + 3)
++                let visibleRect = stack.visibleRect
++                let effectiveVisibleRect = visibleRect.intersection(stack.bounds)
++                let lastRowFrame = stack.arrangedSubviews.last.map { stack.convert($0.bounds, from: $0) } ?? .zero
++                // Keep the release inside the visible list and below the last row's center.
++                // The outer NSBox clips a border band from the stack's bounds.
++                let dropInStack = NSPoint(x: effectiveVisibleRect.midX, y: effectiveVisibleRect.minY + 12)
++                let finiteRect: (NSRect) -> Bool = { rect in
++                    [rect.minX, rect.minY, rect.width, rect.height].allSatisfy(\.isFinite) && !rect.isEmpty
++                }
++                let dropGeometryValid = finiteRect(visibleRect) && finiteRect(effectiveVisibleRect) && finiteRect(lastRowFrame)
++                    && dropInStack.x.isFinite && dropInStack.y.isFinite
++                    && effectiveVisibleRect.width > 24 && effectiveVisibleRect.height > 24
++                    && effectiveVisibleRect.contains(dropInStack) && stack.bounds.contains(dropInStack)
++                    && lastRowFrame.contains(dropInStack) && dropInStack.y < lastRowFrame.midY
++                let safeDropInStack = dropGeometryValid ? dropInStack : NSPoint(x: stack.bounds.midX, y: stack.bounds.minY)
++                let drop = window.convertPoint(toScreen: stack.convert(safeDropInStack, to: nil))
++                let effectiveVisibleFrame = window.convertToScreen(stack.convert(effectiveVisibleRect, to: nil))
++                let rectValues: (NSRect) -> [Any] = { rect in
++                    [rect.minX, rect.minY, rect.width, rect.height].map { $0.isFinite ? $0 as Any : String(describing: $0) }
++                }
+                 let outside = NSPoint(x: min(screen.frame.maxX - 20, window.frame.maxX + 60), y: window.frame.midY)
+                 let handles = views.filter { $0.identifier?.rawValue.hasPrefix("settings.modules.reorder.") == true }.map { handle -> [String: Any] in
+                     let frame = window.convertToScreen(handle.convert(handle.bounds, to: nil))
+@@ -291,6 +342,12 @@
+                     "screenFrameAppKit": [screen.frame.minX, screen.frame.minY, screen.frame.width, screen.frame.height],
+                     "displayBoundsCG": [bounds.minX, bounds.minY, bounds.width, bounds.height],
+                     "stackFrameAppKit": [stackFrame.minX, stackFrame.minY, stackFrame.width, stackFrame.height],
++                    "stackBounds": rectValues(stack.bounds), "stackVisibleRect": rectValues(visibleRect),
++                    "stackEffectiveVisibleRect": rectValues(effectiveVisibleRect),
++                    "stackEffectiveVisibleFrameAppKit": rectValues(effectiveVisibleFrame),
++                    "lastRowFrameInStack": rectValues(lastRowFrame), "dropInsetFromVisibleMinY": 12,
++                    "dropTargetHitTest": dropHitTest(drop, geometryValid: dropGeometryValid, window: window, stack: stack,
++                        screen: screen, displayBounds: bounds),
+                     "handles": handles, "dropAfterLastRowInCGScreen": cgPoint(drop, screen: screen, displayBounds: bounds),
+                     "outsideWindowInCGScreen": cgPoint(outside, screen: screen, displayBounds: bounds)]
+                 if let first = handles.first(where: { ($0["id"] as? String) == "settings.modules.reorder.flow" }),

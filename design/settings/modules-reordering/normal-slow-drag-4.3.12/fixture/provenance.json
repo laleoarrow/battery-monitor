@@ -1,0 +1,97 @@
+{
+  "adaptedFixtureTools": {
+    "members": [
+      "run-normal-slow-drag.sh",
+      "modules-normal-slow-drag.swift",
+      "native-drag-observer-v6.swift",
+      "manual-window-capture.c",
+      "manual-window-capture.h",
+      "finalize-owned-defaults.py"
+    ],
+    "name": "normal-slow-drag-v2-tools.tar.gz",
+    "sha256": "5f65080f39ce54ab40b7971c9a9ef38534847cea8dff538c779b6da85c5c20b5"
+  },
+  "appVersion": "4.3.12",
+  "backendPreflight": {
+    "path": "../driver/results/preflight.json",
+    "sha256": "c3c05e44bdb6cf361f4a4c29058da6497274a7ae15b412a97c6a134eb076b764",
+    "status": "CGEvent post access unavailable; inputAttempted false; backend changed to authorized guest VNC; not a product test result"
+  },
+  "compileOnlyHandoff": "Wait for compiled-ready.json; only explicit start-manual launches GUI and begins the 600-second session",
+  "evaluatorPureDataChecks": {
+    "count": 28,
+    "passed": 28,
+    "productionPassClaim": false,
+    "report": "evaluator-mutation-results.json"
+  },
+  "expectedVM": "Wattson-NormalSlowDrag-20261017",
+  "files": {
+    "README-cfca-prep.md": "b5c65a7b9cb207f2b3a83eafe32469ca1d3ca6edbc7202e7c0dd17f941795099",
+    "README.md": "0991e727cacaf34432d95dad89ba2f02c4d68ad98646500e86b00b8fd4caecc6",
+    "SHA256SUMS-cfca-prep": "f04b1c98c796ef386fa000ec80235d9e8fc0df3aa5cf0b38cc3ddde4c1411047",
+    "evaluate-normal-slow-drag-cfca-prep.py": "fc83dfff33da8470abc304982b4443712c07504227351f3aba12dc208ed35a60",
+    "evaluate-normal-slow-drag.py": "d20860269a9f56ca2067207fac6077a2651b0a783846a1bf876536b06807de39",
+    "evaluator-mutation-results-cfca-prep.json": "f035ed056c194279a4626071f1b2f301a057ad33d8497954107d2fa39c00046e",
+    "evaluator-mutation-results.json": "49544e1898f66848dcfee4356527edf103468775e63a233c48f6c26c75db83d7",
+    "finalize-owned-defaults.py": "4f30cc7f2644296a393d0985d22aa70a0cab5dfe2d1114702f581e7c5e3e106b",
+    "historical-native-eligibility-cfca-prep.json": "e8140c882025de11b0e44b3759df297eb8dbbed4d196a4fa3deee7c161ca8282",
+    "historical-native-eligibility.json": "e8140c882025de11b0e44b3759df297eb8dbbed4d196a4fa3deee7c161ca8282",
+    "lifecycle/local_cleanup.sh": "372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e",
+    "lifecycle/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+    "manual-window-capture.c": "de58b9b2aa1f45c4f2b9853c258d16e1c565150776a82e50d529bb3a742579f2",
+    "manual-window-capture.h": "dc787f79e622663ae1ad3aca4687595e3b1a695ff7929125bc01fac0048eeb7a",
+    "modules-normal-slow-drag-cfca-prep.swift": "518d1517e281e4abf34f019316095b861ace972c837f750a476aae433d35e5fc",
+    "modules-normal-slow-drag.swift": "34f6803894118da1d6d80db6d9bf465822bb35d25b7048670884890af977e299",
+    "native-drag-observer-v6.swift": "b7a7eff917edd20e4688762a0e0986c202e0b863e3d7fa4c8fc00a319aa6b83d",
+    "normal-slow-drag-tools-cfca1b490a5f.tar.gz": "cfca1b490a5fff32a11c6abbdb6fe3b2263676c415eed5f432bff66510685307",
+    "normal-slow-drag-tools.tar.gz": "cfca1b490a5fff32a11c6abbdb6fe3b2263676c415eed5f432bff66510685307",
+    "normal-slow-drag-v2-tools.tar.gz": "5f65080f39ce54ab40b7971c9a9ef38534847cea8dff538c779b6da85c5c20b5",
+    "provenance-cfca-prep.json": "13097ec4ea0be63894a0aceb8111c4cca35d023f1f20e3de1ad10d96024b7905",
+    "qa-tools-v6.tar.gz": "89343e38e8ce2e0327bef3324d6a0d308dbfa1a99368409454c190dbe913c9a5",
+    "run-normal-slow-drag.sh": "55e0c826630bd7e7feca968e34d5d8aae4413356322c27e551191c1c5f028c59",
+    "source-5d5c896b7a15-production-files.json": "9c742957a4e9d3133efff324e050643d547d3e3b6998f8b66e6224721818e6d9",
+    "source-5d5c896b7a15.tar.gz": "8aa52b90ec8f2e7f93e2ccc7ebc2fd9ab7e89217a95bfd93edccbb3e90156ca3",
+    "source-e62796901dae.tar.gz": "565d1df4c3b10d0ab0809edc1daa02bc2b099d1a552abd5a14c7d246718d3d57",
+    "stage-normal-slow-drag-cfca-prep.sh": "ed2d5e0078fb969b38c00e858c83f87fc293ea3b495e46ac11e408fc5c398c4b",
+    "stage-normal-slow-drag.sh": "fc6881f8c384cfdce5ef36bf611b0d166ae20b4dd4dbcb6761492c57dabf044f",
+    "static-checks-cfca-prep.json": "9ce9c88ec2fc74d86ad73e4fbf3ec1b0c91e13fc6bfae98b73825c0910d8848d",
+    "static-checks.json": "9a36c6abb3abb497c21bbe0d71183659abccb53416547e18eea64cad06224012",
+    "test-evaluator-data-cfca-prep.py": "af0dccc09609cbb38857d4cb5721771acc663ad81d158be1b501be49b0b73cd4",
+    "test-evaluator-data.py": "23759116d4e4010f5d6ea5dceab8d939774ad2f2ee8c64f7a65b8754e7fb309a",
+    "validate-archives.py": "2070a542ede0c49b7d46e3ca758650804bbe8bb3ec32a03d9bc8f53c6cd24656",
+    "verify-production.py": "722a80eb3100e684dff51a596cfeb9484aaf52553aea1501d298bff46d8ee98b"
+  },
+  "fixtureGeneratesInput": false,
+  "fixtureSessionGuestPath": "/Volumes/My Shared Files/normaldrag/normal-slow-drag-v2/drag/manual-classic-0",
+  "frozenProductionArchive": {
+    "name": "source-5d5c896b7a15.tar.gz",
+    "sha256": "8aa52b90ec8f2e7f93e2ccc7ebc2fd9ab7e89217a95bfd93edccbb3e90156ca3"
+  },
+  "frozenProductionCommit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+  "historicalEligibilityReview": "historical-native-eligibility.json",
+  "inputMethod": "guest-VNC (user explicitly authorized owned-VM input)",
+  "installedPKGSHA256": "e3c34ea049b5ce1458372a901c61208f324d4da3571661c846cb1369eb0c76a2",
+  "originalV6Tools": {
+    "name": "qa-tools-v6.tar.gz",
+    "sha256": "89343e38e8ce2e0327bef3324d6a0d308dbfa1a99368409454c190dbe913c9a5"
+  },
+  "ownedBundleIDPrefix": "com.leoarrow.wattson.modules-slow.",
+  "previousUnexecutedPreparation": {
+    "overlayArchive": "normal-slow-drag-tools-cfca1b490a5f.tar.gz",
+    "provenance": "provenance-cfca-prep.json",
+    "sha256": "cfca1b490a5fff32a11c6abbdb6fe3b2263676c415eed5f432bff66510685307",
+    "sourceCommit": "e62796901dae2255d7645840c21e0ee9b6b8f8c3"
+  },
+  "productionIdentityReport": "source-5d5c896b7a15-production-files.json",
+  "productionPreflightOverrides": "Both required to be nil; passive reflection only",
+  "schema": 2,
+  "shareName": "normaldrag",
+  "stageCommand": [
+    "/bin/bash",
+    "/Volumes/My Shared Files/normaldrag/fixture/stage-normal-slow-drag.sh",
+    "normal-slow-drag-v2",
+    "5f65080f39ce54ab40b7971c9a9ef38534847cea8dff538c779b6da85c5c20b5"
+  ],
+  "staticChecks": "static-checks.json",
+  "supersededUnrunOverlaySHA256": "c8fddd6790e022f4ffd11850b78d5519cfca9b9f385cc1f9787d56c1ed3bb339"
+}

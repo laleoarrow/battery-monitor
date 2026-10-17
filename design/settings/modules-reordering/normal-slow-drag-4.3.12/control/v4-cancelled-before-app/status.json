@@ -1,0 +1,8 @@
+{
+  "stageActualExitCode": 78,
+  "intentionalCancelBeforeStart": true,
+  "appStarted": false,
+  "productPassClaim": false,
+  "reason": "Guest VNC authenticated and returned initialized pixels, but same-open-socket native cursor remained unchanged; no down allowed",
+  "liveRawRecords": "normal-slow-drag-v4"
+}

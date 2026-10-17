@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "atUTC": "2026-10-17T04:39:02.971854+00:00",
+  "userAuthorized": true,
+  "authorization": "Direct user reply: \u5141\u8bb8\uff0c\u4ec5\u9650\u6d4b\u8bd5\u865a\u62df\u673a\uff08\u63a8\u8350\uff09",
+  "scope": "Native event or VNC scripts only inside disposable test VM for normal held drag/drop and cancel acceptance",
+  "ownedVM": "Wattson-NormalSlowDrag-20261017",
+  "hostPointerKeyboardAllowed": false,
+  "hostPermissionChangesAllowed": false,
+  "productionSource": "9fef74944447d4753d1edde82997dc41a479ccad",
+  "guestDriverSHA256": "6096f1adbc87caeee0354874ba45e5b39df9c7e8b15fd2c5fab0632a6472008d",
+  "fixtureOverlaySHA256": "cfca1b490a5fff32a11c6abbdb6fe3b2263676c415eed5f432bff66510685307"
+}

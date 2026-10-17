@@ -1,0 +1,11 @@
+--- fixture/stage-normal-slow-drag.sh
++++ fixture-v6/stage-normal-slow-drag-v6.sh
+@@ -38,7 +38,7 @@
+ trap finish EXIT
+ cp "$fixture/source-5d5c896b7a15.tar.gz" "$run_dir/source.tar.gz"
+ cp "$fixture/qa-tools-v6.tar.gz" "$run_dir/base-tools.tar.gz"
+-cp "$fixture/normal-slow-drag-v2-tools.tar.gz" "$run_dir/overlay-tools.tar.gz"
++cp "$share/fixture-v6/normal-slow-drag-v3-tools.tar.gz" "$run_dir/overlay-tools.tar.gz"
+ [[ "$(/usr/bin/shasum -a 256 "$run_dir/source.tar.gz" | /usr/bin/awk '{print $1}')" == 8aa52b90ec8f2e7f93e2ccc7ebc2fd9ab7e89217a95bfd93edccbb3e90156ca3 ]] || exit 65
+ [[ "$(/usr/bin/shasum -a 256 "$run_dir/base-tools.tar.gz" | /usr/bin/awk '{print $1}')" == 89343e38e8ce2e0327bef3324d6a0d308dbfa1a99368409454c190dbe913c9a5 ]] || exit 65
+ [[ "$(/usr/bin/shasum -a 256 "$run_dir/overlay-tools.tar.gz" | /usr/bin/awk '{print $1}')" == "$overlay_sha" ]] || exit 65

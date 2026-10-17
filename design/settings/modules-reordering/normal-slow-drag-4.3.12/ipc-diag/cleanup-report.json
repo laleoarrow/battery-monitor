@@ -1,0 +1,14 @@
+{
+  "epoch": 1792215705.726599,
+  "guestCleanupProbeActualExitCode": 0,
+  "hostOwnedTartIPCProcesses": [],
+  "hostDataDirectories": [],
+  "guestCleanup": {
+    "epoch": 1792215705.660705,
+    "guestOwnedReaderOrCompilerProcesses": [],
+    "guestOwnedTemporaryRoot": "/Users/admin/Project/.build/wattson-ipc-diag.noindex",
+    "guestOwnedTemporaryRootAbsent": true,
+    "readOnlyCleanupProbe": true
+  },
+  "scope": "Read-only exact owned path/process cleanup checks; no input or product test"
+}

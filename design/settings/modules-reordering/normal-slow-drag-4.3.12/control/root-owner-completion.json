@@ -1,0 +1,14 @@
+{
+  "recordedAtUTC": "2026-10-17T05:50:04.545409+00:00",
+  "tool": "write_stdin",
+  "rootHeldExecSession": 23371,
+  "actualExitCode": 0,
+  "completionReturnedByTool": true,
+  "notInferredFromEvidenceFile": true,
+  "controllerExecSession": 35806,
+  "controllerActualExitCode": 0,
+  "stageExecSession": 17028,
+  "stageActualExitCode": 0,
+  "probeExecSession": 95834,
+  "probeActualExitCode": 0
+}

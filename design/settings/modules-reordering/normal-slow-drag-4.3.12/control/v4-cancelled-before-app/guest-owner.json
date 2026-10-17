@@ -1,0 +1,42 @@
+{
+  "atUTC": "2026-10-17T05:06:30.282608+00:00",
+  "ownedVM": "Wattson-NormalSlowDrag-20261017",
+  "rootOuterExecSessionID": 33682,
+  "sessionDirectory": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/vm-owner/session.9XISv4",
+  "network": "default Tart NAT",
+  "guestIP": "192.168.64.26",
+  "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+  "hwModel": "VirtualMac2,1",
+  "GUIUser": "admin",
+  "vCPU": 2,
+  "memoryBytes": 8589934592,
+  "guestProject": "/Users/admin/Project/Wattson-NormalSlowDrag-QA",
+  "sharedRoot": "/Volumes/My Shared Files/normaldrag",
+  "repoReadOnlyShare": "/Volumes/My Shared Files/repo",
+  "vncBackend": "guestScreenSharing",
+  "vncHost": "192.168.64.26",
+  "vncPort": 5900,
+  "vncConfiguredByOwner": false,
+  "vncPortMetadataOnly": true,
+  "authenticationAttemptedByOwner": false,
+  "inputAuthorizedByOwner": false,
+  "fixtureStartedByOwner": false,
+  "state": "Native identity ready; root owns temporary guest legacy VNC setup and calibration. No VZ host listener.",
+  "twoTestLabVMsStopped": true,
+  "sourceOwnerSHA256": "1b0fc8deb9e27c87d24833fadef96d26b814b8b2b5a5b16041293bea6a124ada",
+  "canonicalHostBaseline": {
+    "version": "4.3.13",
+    "bundleID": "com.leoarrow.wattson",
+    "executableSHA256": "0157da00eee05bd82b4817f4da4de7e1190159c76ad0b83672b6af73b50e610e",
+    "infoSHA256": "553cd094cf3e87872cc82b026aad6d4d2698ac2a46c01b11f7fe790e21d71534",
+    "pids": [
+      {
+        "pid": 40690,
+        "uid": 501,
+        "executable": "/Applications/Wa"
+      }
+    ],
+    "receiptVersion": "4.3.13",
+    "signatureVerified": true
+  }
+}

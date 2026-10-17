@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "readOnlyHistoricalDataReview": true,
+  "productionPassClaim": false,
+  "historicalRecords": [
+    {
+      "path": ".build/modules-drag-review.noindex/rapid-native-ui3-review.noindex/cases-402991-v6/classic-drop-2/state.json",
+      "sha256": "5c1fbb6265a2c991cb872303b0595cc435e704d721994865a7cdef3221c98417",
+      "case": "classic-drop-2",
+      "nativePhaseSequence": [
+        "willBegin.enter",
+        "willBegin.return"
+      ],
+      "oldElapsedDurationSeconds": null,
+      "eligibleForNewSlowDragAcceptance": false,
+      "reasonsNotBorrowed": [
+        "missing-native-begin-or-end",
+        "no-new-absolute-monotonic-timestamps",
+        "native-duration-not-over-one-second",
+        "different-input-provenance",
+        "missing-new-preflight-nil-observation"
+      ]
+    },
+    {
+      "path": ".build/modules-drag-review.noindex/rapid-native-ui3-review.noindex/cases-402991-v6/classic-drop-rapid/state.json",
+      "sha256": "b87b4cd758f90710c81dcd09d9af8826a03e376f4a944279915ec712713c5746",
+      "case": "classic-drop-rapid",
+      "nativePhaseSequence": [
+        "willBegin.enter",
+        "willBegin.return",
+        "endedAt.enter",
+        "endedAt.return"
+      ],
+      "oldElapsedDurationSeconds": 0.2769959166666638,
+      "eligibleForNewSlowDragAcceptance": false,
+      "reasonsNotBorrowed": [
+        "no-new-absolute-monotonic-timestamps",
+        "native-duration-not-over-one-second",
+        "different-input-provenance",
+        "missing-new-preflight-nil-observation"
+      ]
+    }
+  ],
+  "eligibleRecordCount": 0,
+  "oldFilesModified": false
+}

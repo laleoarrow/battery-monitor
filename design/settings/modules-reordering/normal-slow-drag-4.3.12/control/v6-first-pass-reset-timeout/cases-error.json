@@ -1,0 +1,14 @@
+{
+  "errorType": "TimeoutError",
+  "error": "Fixture state predicate timed out",
+  "completedCases": [
+    {
+      "case": "classic-slow-drop",
+      "exitCode": 0,
+      "verdict": "passed",
+      "observedNativeSessionSeconds": 1.9781953749999843,
+      "failedAssertions": [],
+      "missingEvidence": []
+    }
+  ]
+}

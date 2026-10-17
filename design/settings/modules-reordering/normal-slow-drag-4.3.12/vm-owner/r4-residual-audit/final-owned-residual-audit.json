@@ -1,0 +1,184 @@
+{
+  "probeExitCode": 0,
+  "audit": {
+    "schema": 1,
+    "scope": "Disposable native fixture VM only; read-only audit; guest legacy-VNC disable proof recorded separately; no product verdict",
+    "manifest": {
+      "guestProject": "/Users/admin/Project/Wattson-NormalSlowDrag-QA",
+      "ownedDomains": [
+        "Wattson.SwiftTests.ModuleOrderView.0144F646-1882-47DC-A06F-8BE04F14CC6F",
+        "Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9",
+        "Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167",
+        "Wattson.SwiftTests.ModuleOrderView.7A1BA35A-EDC6-47F0-97E0-16A01A7C253D",
+        "Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D",
+        "Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20",
+        "com.leoarrow.wattson.modules-slow.1b90403d-f2f2-45e8-98d0-25c5eab3a05d",
+        "com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab",
+        "com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851"
+      ],
+      "ownedPaths": [
+        "/Users/admin/Library/Preferences/Wattson.SwiftTests.ModuleOrderView.0144F646-1882-47DC-A06F-8BE04F14CC6F.plist",
+        "/Users/admin/Library/Containers/Wattson.SwiftTests.ModuleOrderView.0144F646-1882-47DC-A06F-8BE04F14CC6F",
+        "/Users/admin/Library/Application Scripts/Wattson.SwiftTests.ModuleOrderView.0144F646-1882-47DC-A06F-8BE04F14CC6F",
+        "/Users/admin/Library/Preferences/Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9.plist",
+        "/Users/admin/Library/Containers/Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9",
+        "/Users/admin/Library/Application Scripts/Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9",
+        "/Users/admin/Library/Preferences/Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167.plist",
+        "/Users/admin/Library/Containers/Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167",
+        "/Users/admin/Library/Application Scripts/Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167",
+        "/Users/admin/Library/Preferences/Wattson.SwiftTests.ModuleOrderView.7A1BA35A-EDC6-47F0-97E0-16A01A7C253D.plist",
+        "/Users/admin/Library/Containers/Wattson.SwiftTests.ModuleOrderView.7A1BA35A-EDC6-47F0-97E0-16A01A7C253D",
+        "/Users/admin/Library/Application Scripts/Wattson.SwiftTests.ModuleOrderView.7A1BA35A-EDC6-47F0-97E0-16A01A7C253D",
+        "/Users/admin/Library/Preferences/Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D.plist",
+        "/Users/admin/Library/Containers/Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D",
+        "/Users/admin/Library/Application Scripts/Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D",
+        "/Users/admin/Library/Preferences/Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20.plist",
+        "/Users/admin/Library/Containers/Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20",
+        "/Users/admin/Library/Application Scripts/Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20",
+        "/Users/admin/Library/Preferences/com.leoarrow.wattson.modules-slow.1b90403d-f2f2-45e8-98d0-25c5eab3a05d.plist",
+        "/Users/admin/Library/Containers/com.leoarrow.wattson.modules-slow.1b90403d-f2f2-45e8-98d0-25c5eab3a05d",
+        "/Users/admin/Library/Application Scripts/com.leoarrow.wattson.modules-slow.1b90403d-f2f2-45e8-98d0-25c5eab3a05d",
+        "/Users/admin/Library/Preferences/com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab.plist",
+        "/Users/admin/Library/Containers/com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab",
+        "/Users/admin/Library/Application Scripts/com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab",
+        "/Users/admin/Library/Preferences/com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851.plist",
+        "/Users/admin/Library/Containers/com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851",
+        "/Users/admin/Library/Application Scripts/com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851"
+      ],
+      "ownedGuestProbe": "/Users/admin/Project/Wattson-NormalSlowDrag-QA/.build/control-lease.noindex/guest-lease",
+      "sourceFiles": {
+        "normal-slow-drag-v2/drag/owned-domains.txt": "995bba5f0553a7da5e61895a5f18b6667d6ef75fd8d94989bcdb8d9396cca8c4",
+        "normal-slow-drag-v3/drag/owned-domains.txt": "18b3de8a50daf96a5cbf6c3d094202e36881a3397be8296d17535cda0cfc9573",
+        "normal-slow-drag-v4/drag/owned-domains.txt": "9826cec1d04c03bb47be5dc190b198ab57908108076ab4470bccfcc76a5af440",
+        "control/r4-legacy-secret-cleanup.json": "e79b35aafc6b32d9fd971c7cf687150ce3f6111be5bdd519971e144b0ebac520",
+        "normal-slow-drag-v4/stage-exit-code.txt": "b03c70ff0d641a363f1a021413a098dce02e4c68b75f3a47aa10044f42ee1784"
+      },
+      "scope": "v2/v3/v4 union; r4 stage78 intentional cancellation before App start; temporary guest legacyVNC disable and host private credential removal reported byroot"
+    },
+    "immediate": {
+      "atUTC": "2026-10-17T05:20:20.280558+00:00",
+      "systemMonotonic": 887.562123,
+      "residualOwnedPaths": [],
+      "defaultsDomains": {
+        "Wattson.SwiftTests.ModuleOrderView.0144F646-1882-47DC-A06F-8BE04F14CC6F": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.7A1BA35A-EDC6-47F0-97E0-16A01A7C253D": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "com.leoarrow.wattson.modules-slow.1b90403d-f2f2-45e8-98d0-25c5eab3a05d": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        }
+      },
+      "commandExitCodes": {
+        "registrations": 0,
+        "spotlight": 0,
+        "processes": 0,
+        "mounts": 0
+      },
+      "residualRegistrations": [],
+      "residualSpotlightApps": [],
+      "residualProcesses": [],
+      "residualProjectMounts": [],
+      "residualProjectContents": [],
+      "allAbsent": true
+    },
+    "delayed": {
+      "atUTC": "2026-10-17T05:21:58.246391+00:00",
+      "systemMonotonic": 985.527816,
+      "residualOwnedPaths": [],
+      "defaultsDomains": {
+        "Wattson.SwiftTests.ModuleOrderView.0144F646-1882-47DC-A06F-8BE04F14CC6F": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.7A1BA35A-EDC6-47F0-97E0-16A01A7C253D": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "com.leoarrow.wattson.modules-slow.1b90403d-f2f2-45e8-98d0-25c5eab3a05d": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        }
+      },
+      "commandExitCodes": {
+        "registrations": 0,
+        "spotlight": 0,
+        "processes": 0,
+        "mounts": 0
+      },
+      "residualRegistrations": [],
+      "residualSpotlightApps": [],
+      "residualProcesses": [],
+      "residualProjectMounts": [],
+      "residualProjectContents": [],
+      "allAbsent": true
+    },
+    "withinProcessQuietSeconds": 95.03761800000007,
+    "allAbsent": true,
+    "deletedAnything": false
+  },
+  "stderr": "",
+  "toolArchiveSHA256": "13a0197c9a097a686c760331859ddc83bbdadbff110eeef614403338e9aaa358",
+  "verifiedGuestLocalBeforeExecution": true,
+  "stageExitCode": 0,
+  "stagingRemoved": true,
+  "newStageParentsRemoved": true,
+  "createdStageParents": [
+    "/Users/admin/Project/Wattson-NormalSlowDrag-QA",
+    "/Users/admin/Project/Wattson-NormalSlowDrag-QA/.build",
+    "/Users/admin/Project/Wattson-NormalSlowDrag-QA/.build/package-residual-audit.noindex"
+  ],
+  "cleanupErrors": []
+}

@@ -1,0 +1,41 @@
+{
+  "atUTC": "2026-10-17T05:23:08.854473+00:00",
+  "tartStopActualExit": 0,
+  "wrapperExitCode": 0,
+  "rootOuterExecSessionID": 33682,
+  "rootOwnsOuterActualWait": true,
+  "ownVMAbsent": true,
+  "callerVMs": [
+    {
+      "Name": "macOS-TestLab",
+      "Size": 33,
+      "Disk": 50,
+      "Source": "local",
+      "State": "stopped",
+      "Accessed": "2026-10-15T06:45:45Z",
+      "Running": false
+    },
+    {
+      "Name": "macOS-TestLab-Base",
+      "Disk": 50,
+      "Size": 30,
+      "Source": "local",
+      "State": "stopped",
+      "Accessed": "2026-10-17T05:05:31Z",
+      "Running": false
+    }
+  ],
+  "cleanup": {
+    "ownCloneRemoved": true,
+    "baseAndTestLabStillStopped": true,
+    "independentlyRemovedPeers": [],
+    "independentlyChangedPeers": [],
+    "independentlyAddedPeers": [],
+    "attribution": "This owner issued clone/set/run/stop/delete only for Wattson-NormalSlowDrag-20261017. Peer changes are observations of other owners, not repaired or counted as own cleanup failures."
+  },
+  "auditCLIProbeStageAll0": true,
+  "allAbsentImmediateAndDelayed": true,
+  "withinProcessQuietSeconds": 95.03761800000007,
+  "r4Stage78": "deliberate cancellation before App start, not a product pass/failure",
+  "nextVMNotStarted": true
+}

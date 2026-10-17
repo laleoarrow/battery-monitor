@@ -1,0 +1,10 @@
+{
+  "archive": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/vm-owner/closure-r8-evidence-c341310fc1337d89d7dbed6d2cb8528a9c85afac11749af06561622809f3b1fc.tar.gz",
+  "archiveSHA256": "c341310fc1337d89d7dbed6d2cb8528a9c85afac11749af06561622809f3b1fc",
+  "archiveBytes": 34709,
+  "fileCount": 59,
+  "allMemberHashesVerified": true,
+  "containsRawRuntimeOrSecrets": false,
+  "closure": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/vm-owner/r8-residual-audit/closure.json",
+  "compactGallery": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/vm-owner/r8-residual-audit/compact-gallery.json"
+}

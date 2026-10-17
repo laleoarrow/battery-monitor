@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "scope": "Static artifact identity and existing raw-record consistency verification only; no product test rerun",
+  "copiedSourceFilesVerified": 395,
+  "copiedSourceBytesVerified": 7126489,
+  "embeddedOwnerArchiveMemberHashesVerified": 58,
+  "initialV8PendingSnapshotPreserved": true,
+  "jsonAndJsonlParsed": true,
+  "readmeLocalLinksExist": true,
+  "existingNativeCaseVerdicts": [
+    "classic-slow-drop",
+    "classic-slow-outside",
+    "clear-slow-drop",
+    "clear-slow-outside",
+    "standard-slow-drop",
+    "standard-slow-outside"
+  ],
+  "existingAssertionsPerCase": 25,
+  "closeoutComplete": true
+}

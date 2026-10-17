@@ -146,3 +146,13 @@ the native logs, gesture records, original failures and unverified outcomes,
 frozen tools and final owner cleanup evidence with per-file SHA-256 values.
 The coordinated [canonical 4.3.11 installation](../../history-performance/host/local-install-verified.json)
 subsequently passed exact payload, receipt, signature, helper and process checks.
+
+## Normal slow-drag follow-up — 2026-10-17
+
+The [separate native acceptance record](normal-slow-drag-4.3.12/README.md) passes
+Classic, Standard and Clear × normal held drop and outside cancellation (6/6)
+on frozen `5d5c896` / 4.3.12, with source equivalence for the Modules interaction
+in installed 4.3.13. The driver holds for at least 2.30 seconds; native callbacks,
+order writes, cancellation restoration and view identity are checked independently.
+All input runs in the disposable VM. The earlier failures and unverified records
+above remain historical evidence; the follow-up does not claim human input or FPS.

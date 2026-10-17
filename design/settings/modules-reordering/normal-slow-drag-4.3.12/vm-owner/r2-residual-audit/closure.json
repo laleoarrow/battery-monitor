@@ -1,0 +1,12 @@
+{
+  "atUTC": "2026-10-17T04:57:56.752351+00:00",
+  "tartStopActualExit": 0,
+  "wrapperExitCode": 0,
+  "ownerPIDAbsent": true,
+  "ownedVMAbsent": true,
+  "priorOuterSessionWait": "write_stdin 94437 returned Unknown process id; wrapper exit file and PID/VM absence independently checked",
+  "residualAuditExitCode": 0,
+  "residualQuietSeconds": 95.07125100000007,
+  "allAbsent": true,
+  "newVZLaunchPendingGuardGreen": true
+}

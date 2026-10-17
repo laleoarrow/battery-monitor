@@ -1,0 +1,30 @@
+{
+  "atUTC": "2026-10-17T05:18:14.783343+00:00",
+  "status": "owned-copy-loopback-client-prepared-fake-verified",
+  "actualInputFromWorker": false,
+  "ownerRequirements": {
+    "vncBackend": "directVZ",
+    "vncHost": [
+      "127.0.0.1",
+      "::1"
+    ],
+    "vncExecutablePathPrefix": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/loopback-vz/",
+    "psArgv0": "exactly vncExecutablePath",
+    "listener": "same PID; all binds literal loopback; selected family/port present"
+  },
+  "clockSkewSeconds": 1,
+  "tests": {
+    "count": 10,
+    "result": "pass",
+    "method": "synthetic socketpair and mocked native cursor; no actual listener/VM/UI"
+  },
+  "files": {
+    "direct_vz_loopback.py": "67666db83e520329c21ad5dda0050d9dfec7612c22755bf4610d04b684c9b60d",
+    "test_direct_vz_loopback.py": "4783103947b9939eefae224b6d3515e3560bf00b7ad175327bfa785a11fccf0e",
+    "direct-vz-loopback-fake-tests.log": "cec00079bc7d7fe3e57311bfa11a95c64d57590b3e5e82e57e251c80e4ce041a",
+    "guest_calibrated_7c8aac80.py": "7c8aac8000637ac46472ad29915aad80a6942d559bbf9a0477e444aeb396c0bd",
+    "direct_vz_20378286.py": "203782868882f8e523e149e8cc6cff8b8b16ffc1c424f9f8263a078692f5eb34",
+    "slow_vnc_7c6866aa.py": "7c6866aa9fb1292c260dc694962211968bb18c7a85f693344fb405eb29f04cbe",
+    "calibration_core.py": "c57ae638762f2378cf201c9851e9c8dcbed192b8daad339f54dffe7999c2855e"
+  }
+}

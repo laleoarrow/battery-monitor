@@ -1,0 +1,20 @@
+{
+  "controllerActualExit": 1,
+  "controllerExecSession": 49175,
+  "stageActualExit": 0,
+  "stageExecSession": 58268,
+  "completedNativeCases": [
+    "classic-slow-drop",
+    "classic-slow-outside"
+  ],
+  "verdicts": [
+    "passed",
+    "passed"
+  ],
+  "thirdCase": "standard-slow-drop",
+  "thirdCaseDriverExit": 78,
+  "thirdCaseInputAttempted": false,
+  "cause": "frozen before-state lacked cgWindow immediately after style window rebuild; driver KeyError refused before socket/input",
+  "productionChanged": false,
+  "hostInput": false
+}

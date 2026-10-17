@@ -1,0 +1,77 @@
+{
+  "testedSource": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+  "testedVersion": "4.3.12",
+  "newCandidateSource": "8529889597961de756fa57397b1d1149d6d1b536",
+  "newCandidateVersion": "4.3.13",
+  "actualExecutionClaimForNewCandidate": false,
+  "scope": "Source equivalence for Modules interaction only, not complete 4.3.13 native acceptance or installation",
+  "identicalOtherSwiftFiles": [
+    "Core/AppleSmartBatteryPowerObservationReader.swift",
+    "Core/BatteryRuntimeEstimate.swift",
+    "Core/BatterySampler.swift",
+    "Core/Diagnostics/AppleSmartBatteryObservationReader.swift",
+    "Core/Diagnostics/DirectSMCObservationReader.swift",
+    "Core/Diagnostics/PowerObservationCaptureCommand.swift",
+    "Core/Diagnostics/PowerObservationCollector.swift",
+    "Core/Diagnostics/PowerObservationJSONLWriter.swift",
+    "Core/EnergyMode.swift",
+    "Core/FeedbackDiagnostics.swift",
+    "Core/GlassBackgroundView.swift",
+    "Core/HelperClient.swift",
+    "Core/HelperClientPowerObservationV5.swift",
+    "Core/HistoryChart.swift",
+    "Core/LoginItemController.swift",
+    "Core/PopoverPlacement.swift",
+    "Core/PopupEventLog.swift",
+    "Core/PowerHistory.swift",
+    "Core/PowerObservationFusion.swift",
+    "Core/PowerObservationFusionReplay.swift",
+    "Core/PowerObservationRuntimeController.swift",
+    "Core/PowerObservationShadow.swift",
+    "Core/PowerObservationTrace.swift",
+    "Core/PowerObservationWireV5.swift",
+    "Core/PowerSnapshot.swift",
+    "Core/RawPowerObservation.swift",
+    "Core/Settings.swift",
+    "Core/SettingsAppearance.swift",
+    "Core/SystemBatteryIcon.swift",
+    "Core/UpdateChecker.swift",
+    "Core/VisualEncoding.swift",
+    "MenuBar/AppDelegate.swift",
+    "MenuBar/BatteryIcon.swift",
+    "MenuBar/ClickRouter.swift",
+    "MenuBar/StatusItemController.swift",
+    "Popover/FooterHoverFeedbackView.swift",
+    "Popover/GlassPopoverMaterialView.swift",
+    "Popover/GlassPopoverPanel.swift",
+    "Popover/HistoryLayer.swift",
+    "Popover/InteractiveGlassModeControl.swift",
+    "Popover/LaneLayer.swift",
+    "Popover/ModeSliderView.swift",
+    "Popover/NativeGlassModeControl.swift",
+    "Popover/NativeModeSegmentedControl.swift",
+    "Popover/PopoverContentView.swift",
+    "Popover/PopoverController.swift",
+    "Popover/PopoverPreview.swift",
+    "Popover/PopoverStyle.swift",
+    "Popover/PowerFlowLayer.swift",
+    "Popover/RingGaugeLayer.swift"
+  ],
+  "changedOtherSwiftFiles": [],
+  "regionChecks": {
+    "Settings suffix including all Modules classes and window controller": {
+      "equal": true,
+      "sha256": [
+        "df8a43815bcaf4a92339f9d563f42416cc66e99057a4dcb4acf4a1037afa5b24",
+        "df8a43815bcaf4a92339f9d563f42416cc66e99057a4dcb4acf4a1037afa5b24"
+      ]
+    },
+    "Existing module and sidebar artwork": {
+      "equal": true,
+      "sha256": [
+        "0cf5e51cc2ff885b7ed5bde84eeec0b3ee6b99fba9f32cfdbd650972f0704bac",
+        "0cf5e51cc2ff885b7ed5bde84eeec0b3ee6b99fba9f32cfdbd650972f0704bac"
+      ]
+    }
+  }
+}

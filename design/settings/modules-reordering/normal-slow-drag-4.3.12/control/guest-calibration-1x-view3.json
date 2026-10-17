@@ -1,0 +1,227 @@
+{
+  "inputMethod": "guest-VNC-calibrated",
+  "hostInput": false,
+  "wireScaleMode": "1",
+  "inputAttempted": true,
+  "sequencePosted": false,
+  "nativeDragVerdict": "observer-required",
+  "events": [
+    {
+      "mask": 0,
+      "x": 256,
+      "y": 192,
+      "attemptedAtSystemMonotonic": 273767.666403,
+      "sent": true
+    }
+  ],
+  "leaseAtUTC": "2026-10-17T05:15:55.924Z",
+  "leaseSignedAgeAtCheck": -0.089749,
+  "clockSkewToleranceSeconds": 1,
+  "ownedVM": "Wattson-NormalSlowDrag-20261017",
+  "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+  "guestIP": "192.168.64.26",
+  "framebufferSize": [
+    2048,
+    1536
+  ],
+  "measuredFramebufferScale": [
+    2.0,
+    2.0
+  ],
+  "chosenWireScale": 1,
+  "viewInitialization": {
+    "requestedRegion": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "clientMessages": [
+      {
+        "type": 0,
+        "bytes": 20,
+        "sent": true
+      },
+      {
+        "type": 2,
+        "bytes": 8,
+        "sent": true
+      },
+      {
+        "type": 3,
+        "bytes": 10,
+        "sent": true
+      }
+    ],
+    "completed": true,
+    "budgetSeconds": 3,
+    "serverMessageType": 0,
+    "rectangleCount": 1,
+    "rectangle": [
+      0,
+      0,
+      3,
+      3
+    ],
+    "encoding": 0,
+    "pixelBytes": 36,
+    "pixelSHA256": "baa72acf67548a8994e34ce1e1237419088ce631c6984c464c9cc94e987e0f3f",
+    "elapsedSeconds": 1.0748592909949366
+  },
+  "cursorProbeObservations": [
+    {
+      "atUTC": "2026-10-17T05:15:58.260Z",
+      "guestIP": "192.168.64.26",
+      "hwModel": "VirtualMac2,1",
+      "inputAuthorized": true,
+      "inputGeometry": {
+        "coordinateSpace": "CG-global-top-left",
+        "displayBoundsCG": [
+          0,
+          0,
+          1024,
+          768
+        ],
+        "displayID": 1,
+        "screenCount": 1,
+        "screenFrameAppKit": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "ownedVM": "Wattson-NormalSlowDrag-20261017",
+      "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+      "pointerCG": {
+        "x": 10,
+        "y": 10
+      },
+      "pressedMouseButtons": 0,
+      "signedAgeAtReturn": -0.165953,
+      "clockSkewToleranceSeconds": 1
+    },
+    {
+      "atUTC": "2026-10-17T05:15:58.568Z",
+      "guestIP": "192.168.64.26",
+      "hwModel": "VirtualMac2,1",
+      "inputAuthorized": true,
+      "inputGeometry": {
+        "coordinateSpace": "CG-global-top-left",
+        "displayBoundsCG": [
+          0,
+          0,
+          1024,
+          768
+        ],
+        "displayID": 1,
+        "screenCount": 1,
+        "screenFrameAppKit": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "ownedVM": "Wattson-NormalSlowDrag-20261017",
+      "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+      "pointerCG": {
+        "x": 10,
+        "y": 10
+      },
+      "pressedMouseButtons": 0,
+      "signedAgeAtReturn": -0.16452,
+      "clockSkewToleranceSeconds": 1
+    }
+  ],
+  "calibration": {
+    "requestedCGPoint": {
+      "x": 320.0,
+      "y": 240.0
+    },
+    "mappedRFBPoint": [
+      320,
+      240
+    ],
+    "before": {
+      "atUTC": "2026-10-17T05:15:58.260Z",
+      "guestIP": "192.168.64.26",
+      "hwModel": "VirtualMac2,1",
+      "inputAuthorized": true,
+      "inputGeometry": {
+        "coordinateSpace": "CG-global-top-left",
+        "displayBoundsCG": [
+          0,
+          0,
+          1024,
+          768
+        ],
+        "displayID": 1,
+        "screenCount": 1,
+        "screenFrameAppKit": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "ownedVM": "Wattson-NormalSlowDrag-20261017",
+      "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+      "pointerCG": {
+        "x": 10,
+        "y": 10
+      },
+      "pressedMouseButtons": 0,
+      "signedAgeAtReturn": -0.165953,
+      "clockSkewToleranceSeconds": 1
+    },
+    "waypointCGPoint": {
+      "x": 256.0,
+      "y": 192.0
+    },
+    "mappedWaypoint": [
+      256,
+      192
+    ],
+    "passed": false,
+    "mouseDownMessages": 0,
+    "waypointReadback": {
+      "atUTC": "2026-10-17T05:15:58.568Z",
+      "guestIP": "192.168.64.26",
+      "hwModel": "VirtualMac2,1",
+      "inputAuthorized": true,
+      "inputGeometry": {
+        "coordinateSpace": "CG-global-top-left",
+        "displayBoundsCG": [
+          0,
+          0,
+          1024,
+          768
+        ],
+        "displayID": 1,
+        "screenCount": 1,
+        "screenFrameAppKit": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "ownedVM": "Wattson-NormalSlowDrag-20261017",
+      "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+      "pointerCG": {
+        "x": 10,
+        "y": 10
+      },
+      "pressedMouseButtons": 0,
+      "signedAgeAtReturn": -0.16452,
+      "clockSkewToleranceSeconds": 1
+    },
+    "waypointMaxLogicalPointError": 246.0
+  },
+  "errorType": "ValueError",
+  "error": "Move-only native cursor calibration failed; no down permitted",
+  "releaseAttempted": false,
+  "socketClosed": true,
+  "exitCode": 78
+}

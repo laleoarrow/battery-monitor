@@ -1,0 +1,62 @@
+[
+  {
+    "case": "classic-slow-drop",
+    "verdict": "passed",
+    "nativeSeconds": 1.9761025416667053,
+    "postedHeldSeconds": 2.308666000026278,
+    "writes": 1,
+    "notifications": 1,
+    "targetHitExactStack": true,
+    "capture": "captured"
+  },
+  {
+    "case": "classic-slow-outside",
+    "verdict": "passed",
+    "nativeSeconds": 2.6209635833333778,
+    "postedHeldSeconds": 2.3110889999661595,
+    "writes": 0,
+    "notifications": 0,
+    "targetHitExactStack": true,
+    "capture": "captured"
+  },
+  {
+    "case": "standard-slow-drop",
+    "verdict": "passed",
+    "nativeSeconds": 1.98606883333332,
+    "postedHeldSeconds": 2.3091910000075586,
+    "writes": 1,
+    "notifications": 1,
+    "targetHitExactStack": true,
+    "capture": "captured"
+  },
+  {
+    "case": "standard-slow-outside",
+    "verdict": "passed",
+    "nativeSeconds": 2.643244541666604,
+    "postedHeldSeconds": 2.310961999988649,
+    "writes": 0,
+    "notifications": 0,
+    "targetHitExactStack": true,
+    "capture": "captured"
+  },
+  {
+    "case": "clear-slow-drop",
+    "verdict": "passed",
+    "nativeSeconds": 1.9854279583332755,
+    "postedHeldSeconds": 2.3084449999732897,
+    "writes": 1,
+    "notifications": 1,
+    "targetHitExactStack": true,
+    "capture": "captured"
+  },
+  {
+    "case": "clear-slow-outside",
+    "verdict": "passed",
+    "nativeSeconds": 2.5728242916666204,
+    "postedHeldSeconds": 2.303928999986965,
+    "writes": 0,
+    "notifications": 0,
+    "targetHitExactStack": true,
+    "capture": "captured"
+  }
+]

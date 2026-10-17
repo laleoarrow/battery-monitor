@@ -1,0 +1,2386 @@
+{
+  "schema": 1,
+  "scope": "Frozen public source/raw native records and post-exit owner closure; original pending-status v8 snapshot retained unchanged",
+  "sourceCommit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+  "testedVersion": "4.3.12",
+  "copiedFiles": [
+    {
+      "path": "authorization.json",
+      "source": ".build/normal-slow-drag.noindex/authorization.json",
+      "bytes": 717,
+      "sha256": "6f93d03052e5b5e612beb6cd887b26c951563360f6b70986e0bc5d9bab95aa98"
+    },
+    {
+      "path": "builddiag/nsbox-drop-target-run.json",
+      "source": ".build/normal-slow-drag.noindex/builddiag/nsbox-drop-target-run.json",
+      "bytes": 469,
+      "sha256": "4e3b834d6c2b21e90cea38dfe700a718e5a83714d271d8874c5ee571704833dd"
+    },
+    {
+      "path": "builddiag/nsbox-drop-target.stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/builddiag/nsbox-drop-target.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "builddiag/nsbox-drop-target.stdout.json",
+      "source": ".build/normal-slow-drag.noindex/builddiag/nsbox-drop-target.stdout.json",
+      "bytes": 3189,
+      "sha256": "92342e8ce107414b60948c166257f8597fd1b4f7934fb2a9df943461c44d52fb"
+    },
+    {
+      "path": "builddiag/nsbox-drop-target.swift",
+      "source": ".build/normal-slow-drag.noindex/builddiag/nsbox-drop-target.swift",
+      "bytes": 3943,
+      "sha256": "5cea03b8ea6496a80168f2f843ee42a0874199c2ce467f9f8c4d1a7dfe0017d3"
+    },
+    {
+      "path": "builddiag/v5-classic-drop-diagnosis.json",
+      "source": ".build/normal-slow-drag.noindex/builddiag/v5-classic-drop-diagnosis.json",
+      "bytes": 3835,
+      "sha256": "7e5e5faf42456646df02bb0be78ac3e6a2f30e212b9898169935df796ebbbde4"
+    },
+    {
+      "path": "builddiag/v7-standard-cgwindow-transient.json",
+      "source": ".build/normal-slow-drag.noindex/builddiag/v7-standard-cgwindow-transient.json",
+      "bytes": 7031,
+      "sha256": "136a79dec81d3224594aa7456c1edfc12ee2b8751e3d8a51ff3d09133fa42f3f"
+    },
+    {
+      "path": "control-v6-prep/README.md",
+      "source": ".build/normal-slow-drag.noindex/control-v6-prep/README.md",
+      "bytes": 1388,
+      "sha256": "7c081d3b5b9451af83238cd9a5455ba3738cfd486a8492d9e42d3d3196e3dcea"
+    },
+    {
+      "path": "control-v6-prep/SHA256SUMS.txt",
+      "source": ".build/normal-slow-drag.noindex/control-v6-prep/SHA256SUMS.txt",
+      "bytes": 800,
+      "sha256": "5de09dfcd1137478f282abf2e5161d1ee2042050bdb3c918bfa649dca589dc6f"
+    },
+    {
+      "path": "control-v6-prep/fixture-v2-to-v3.diff",
+      "source": ".build/normal-slow-drag.noindex/control-v6-prep/fixture-v2-to-v3.diff",
+      "bytes": 6864,
+      "sha256": "bce7b95ec58f61a0508b0d44f2d9caf8833aad45ef93cd7389d62d14d7f1b19e"
+    },
+    {
+      "path": "control-v6-prep/headless-target-build.log",
+      "source": ".build/normal-slow-drag.noindex/control-v6-prep/headless-target-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "control-v6-prep/headless-target-check.swift",
+      "source": ".build/normal-slow-drag.noindex/control-v6-prep/headless-target-check.swift",
+      "bytes": 6826,
+      "sha256": "fa4cbe4752acc61a23aba1e4ea9763747ed9d55b87e3a08ab04f4cc7582bd784"
+    },
+    {
+      "path": "control-v6-prep/headless-target-result.json",
+      "source": ".build/normal-slow-drag.noindex/control-v6-prep/headless-target-result.json",
+      "bytes": 562,
+      "sha256": "651901b1b1c4f3f8ad259ad1f5ebe83f97b68e7bf7af6fce555959c758d827da"
+    },
+    {
+      "path": "control-v6-prep/headless-target-stderr.log",
+      "source": ".build/normal-slow-drag.noindex/control-v6-prep/headless-target-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "control-v6-prep/provenance.json",
+      "source": ".build/normal-slow-drag.noindex/control-v6-prep/provenance.json",
+      "bytes": 2959,
+      "sha256": "1c00ebc5195cd6a870b0afb6be70428c79da0413a54892c71e8c4cc04c8dd6ca"
+    },
+    {
+      "path": "control-v6-prep/run-headless-target-check.sh",
+      "source": ".build/normal-slow-drag.noindex/control-v6-prep/run-headless-target-check.sh",
+      "bytes": 598,
+      "sha256": "61f531098be0933a131624c976bc3fae81e72ed89272680be99575db29691aa9"
+    },
+    {
+      "path": "control-v6-prep/stage-v2-to-v3.diff",
+      "source": ".build/normal-slow-drag.noindex/control-v6-prep/stage-v2-to-v3.diff",
+      "bytes": 879,
+      "sha256": "92fc3acc7a5ad308fee6bbc9c68c0967edba78569871bdaec4cce2d378ebc7cf"
+    },
+    {
+      "path": "control/GuestLease.swift",
+      "source": ".build/normal-slow-drag.noindex/control/GuestLease.swift",
+      "bytes": 3306,
+      "sha256": "795cc8aa8bc8799ae7c0ed8fa77cbb38b4f106d22bae8da8cbb3735065514e5c"
+    },
+    {
+      "path": "control/actual-lsof-format-probe-before-fix.json",
+      "source": ".build/normal-slow-drag.noindex/control/actual-lsof-format-probe-before-fix.json",
+      "bytes": 443,
+      "sha256": "20da7393df18d8cd3b39b683fed88bd8394660ec9a1030971425889333b818a0"
+    },
+    {
+      "path": "control/actual-lsof-format-probe.json",
+      "source": ".build/normal-slow-drag.noindex/control/actual-lsof-format-probe.json",
+      "bytes": 474,
+      "sha256": "c03859f9221ebcce1006657e17642688c79a8c984960228dcde2c9c646564797"
+    },
+    {
+      "path": "control/backend-attempts.json",
+      "source": ".build/normal-slow-drag.noindex/control/backend-attempts.json",
+      "bytes": 828,
+      "sha256": "dbde9d2d22ba2c286c76d82132b1c21bb4d7c4e54a4c97eb105fe196c15df869"
+    },
+    {
+      "path": "control/cases-summary.json",
+      "source": ".build/normal-slow-drag.noindex/control/cases-summary.json",
+      "bytes": 1587,
+      "sha256": "5595a67c670e0c942c561e68f44ae4f14caa4878f345ef815bb175b6376c957d"
+    },
+    {
+      "path": "control/cursor-clock-fractional-samples.json",
+      "source": ".build/normal-slow-drag.noindex/control/cursor-clock-fractional-samples.json",
+      "bytes": 704,
+      "sha256": "3d91047d7212c32593eee64a87f95106a84242ccaecd22c23d818a822ea66d48"
+    },
+    {
+      "path": "control/direct-owner.json",
+      "source": ".build/normal-slow-drag.noindex/control/direct-owner.json",
+      "bytes": 2247,
+      "sha256": "e3b1cc531852ca35639f23c7663a85542dcfaf13194c671136eac70a69c1de3e"
+    },
+    {
+      "path": "control/guest-calibration-1x-view3.json",
+      "source": ".build/normal-slow-drag.noindex/control/guest-calibration-1x-view3.json",
+      "bytes": 5058,
+      "sha256": "97683cb6865e9dff55a0dd8729efb0089859badde857512beed32b6236366126"
+    },
+    {
+      "path": "control/guest-calibration-lease-1x-view3.json",
+      "source": ".build/normal-slow-drag.noindex/control/guest-calibration-lease-1x-view3.json",
+      "bytes": 365,
+      "sha256": "4a106e493118d45509f55dd053d13106550ca4b4f467f518769e86954625af57"
+    },
+    {
+      "path": "control/guest-command-publications.jsonl",
+      "source": ".build/normal-slow-drag.noindex/control/guest-command-publications.jsonl",
+      "bytes": 2532,
+      "sha256": "fcd7158f6b662c6c8ebd8375f57eb58b03f7180c474a47c969c3f1160bfc4da2"
+    },
+    {
+      "path": "control/probe-lsof-format.py",
+      "source": ".build/normal-slow-drag.noindex/control/probe-lsof-format.py",
+      "bytes": 1161,
+      "sha256": "6c93a97efe4f6e3b60e8d00dee2aa60fb1ffadb519f1bc3aa3f0243c5687602f"
+    },
+    {
+      "path": "control/r4-legacy-secret-cleanup.json",
+      "source": ".build/normal-slow-drag.noindex/control/r4-legacy-secret-cleanup.json",
+      "bytes": 106,
+      "sha256": "e79b35aafc6b32d9fd971c7cf687150ce3f6111be5bdd519971e144b0ebac520"
+    },
+    {
+      "path": "control/root-owner-completion.json",
+      "source": ".build/normal-slow-drag.noindex/control/root-owner-completion.json",
+      "bytes": 394,
+      "sha256": "0943b5a896a64119aff2aee05e4b235d383b11018476caba3eeaec5be238305f"
+    },
+    {
+      "path": "control/run-six-cases.py",
+      "source": ".build/normal-slow-drag.noindex/control/run-six-cases.py",
+      "bytes": 9034,
+      "sha256": "e6d9d4e8271ac1a9bb576c2bc4caad3814c7d551d8b86d32f06203f7ae0ad7f5"
+    },
+    {
+      "path": "control/source-applicability-4.3.13.json",
+      "source": ".build/normal-slow-drag.noindex/control/source-applicability-4.3.13.json",
+      "bytes": 2998,
+      "sha256": "7ec8e67966d6e7ab86e8765acd8bf29c8f0515629e7aeac8c89a0d106bcf1c20"
+    },
+    {
+      "path": "control/source-applicability.py",
+      "source": ".build/normal-slow-drag.noindex/control/source-applicability.py",
+      "bytes": 2055,
+      "sha256": "652a2ba57eb55ad2f6db0989b9005082c9efc77573584f7d2bd59658d50135d9"
+    },
+    {
+      "path": "control/v2-controller-failure/GuestLease.swift",
+      "source": ".build/normal-slow-drag.noindex/control/v2-controller-failure/GuestLease.swift",
+      "bytes": 2922,
+      "sha256": "a87692d1aaada9651a52f1fc57e7b354263ea9c1c5485c852014a5d422e92b92"
+    },
+    {
+      "path": "control/v2-controller-failure/cases-error.json",
+      "source": ".build/normal-slow-drag.noindex/control/v2-controller-failure/cases-error.json",
+      "bytes": 100,
+      "sha256": "f8113e2cca55e6d112a805efc70ef9f9d5a97949b12689c95d49fb97e9d5539a"
+    },
+    {
+      "path": "control/v2-controller-failure/cases-run.log",
+      "source": ".build/normal-slow-drag.noindex/control/v2-controller-failure/cases-run.log",
+      "bytes": 391,
+      "sha256": "54f9cc12b6d92f6fe3dbd34434ec18177435bf1035b07116562aea421c1efe22"
+    },
+    {
+      "path": "control/v2-controller-failure/cases-summary.json",
+      "source": ".build/normal-slow-drag.noindex/control/v2-controller-failure/cases-summary.json",
+      "bytes": 210,
+      "sha256": "fd1e951fbc9807df868276dc6b2b5acb3fa836d9e4240df6e7b0e9e9b2711ae2"
+    },
+    {
+      "path": "control/v2-controller-failure/lease-compile.log",
+      "source": ".build/normal-slow-drag.noindex/control/v2-controller-failure/lease-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "control/v2-controller-failure/run-six-cases.py",
+      "source": ".build/normal-slow-drag.noindex/control/v2-controller-failure/run-six-cases.py",
+      "bytes": 4601,
+      "sha256": "f20999dd84a2158653ef3656edcf07a258f0c43a85a2e258ebd847f50585750f"
+    },
+    {
+      "path": "control/v3-guest-vnc-no-delivery/GuestLease.swift",
+      "source": ".build/normal-slow-drag.noindex/control/v3-guest-vnc-no-delivery/GuestLease.swift",
+      "bytes": 2928,
+      "sha256": "bb8079ba8fd82b25adabe3e788a5f7b18fc88d674904c743920dbae956685d3e"
+    },
+    {
+      "path": "control/v3-guest-vnc-no-delivery/cases-error.json",
+      "source": ".build/normal-slow-drag.noindex/control/v3-guest-vnc-no-delivery/cases-error.json",
+      "bytes": 106,
+      "sha256": "907b16c2b1e401cb82076d686033ba74ff86b61c27e974143d13b6bf79e2e5d6"
+    },
+    {
+      "path": "control/v3-guest-vnc-no-delivery/cases-run.log",
+      "source": ".build/normal-slow-drag.noindex/control/v3-guest-vnc-no-delivery/cases-run.log",
+      "bytes": 859,
+      "sha256": "90a9447ca00f3d1e39a187ab108cb402c41e8a3bd65e0e2f857464b45ea39759"
+    },
+    {
+      "path": "control/v3-guest-vnc-no-delivery/cases-summary.json",
+      "source": ".build/normal-slow-drag.noindex/control/v3-guest-vnc-no-delivery/cases-summary.json",
+      "bytes": 210,
+      "sha256": "fd1e951fbc9807df868276dc6b2b5acb3fa836d9e4240df6e7b0e9e9b2711ae2"
+    },
+    {
+      "path": "control/v3-guest-vnc-no-delivery/failure-history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/control/v3-guest-vnc-no-delivery/failure-history.jsonl",
+      "bytes": 11307,
+      "sha256": "c44e36fe8e713b26628cc0f4480c56d1730e06507356a9f48182d0efe7f764a9"
+    },
+    {
+      "path": "control/v3-guest-vnc-no-delivery/failure-state.json",
+      "source": ".build/normal-slow-drag.noindex/control/v3-guest-vnc-no-delivery/failure-state.json",
+      "bytes": 5821,
+      "sha256": "707da0488f4a54b605baab13698e307cecb07bbd640dbd3e85587220be80ded4"
+    },
+    {
+      "path": "control/v3-guest-vnc-no-delivery/lease-compile.log",
+      "source": ".build/normal-slow-drag.noindex/control/v3-guest-vnc-no-delivery/lease-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "control/v3-guest-vnc-no-delivery/run-six-cases.py",
+      "source": ".build/normal-slow-drag.noindex/control/v3-guest-vnc-no-delivery/run-six-cases.py",
+      "bytes": 4876,
+      "sha256": "b69fa7ee900e7ce47b859f6dd5e59985849f28a0916a2af88837e7497865abb1"
+    },
+    {
+      "path": "control/v4-cancelled-before-app/GuestLease.swift",
+      "source": ".build/normal-slow-drag.noindex/control/v4-cancelled-before-app/GuestLease.swift",
+      "bytes": 3306,
+      "sha256": "429347be7da84882132d30bdc0141e9b5bd21cd386f3f06e77b5945a132bd5a0"
+    },
+    {
+      "path": "control/v4-cancelled-before-app/guest-owner.json",
+      "source": ".build/normal-slow-drag.noindex/control/v4-cancelled-before-app/guest-owner.json",
+      "bytes": 1637,
+      "sha256": "3210aaa651875e064cea07c367ba5d7991c9ce4b80c85fdfd66f675d8ee57261"
+    },
+    {
+      "path": "control/v4-cancelled-before-app/guest-vnc-disable.json",
+      "source": ".build/normal-slow-drag.noindex/control/v4-cancelled-before-app/guest-vnc-disable.json",
+      "bytes": 329,
+      "sha256": "6ed7845954439572061e4ee1c6668791819b19a8422f7903b16b309c63c0431b"
+    },
+    {
+      "path": "control/v4-cancelled-before-app/guest-vnc-enable.json",
+      "source": ".build/normal-slow-drag.noindex/control/v4-cancelled-before-app/guest-vnc-enable.json",
+      "bytes": 328,
+      "sha256": "38def5b529ed6abefe327c401c324a6d2a74e11180a8a2a7387a7a6af474937c"
+    },
+    {
+      "path": "control/v4-cancelled-before-app/r4-legacy-secret-cleanup.json",
+      "source": ".build/normal-slow-drag.noindex/control/v4-cancelled-before-app/r4-legacy-secret-cleanup.json",
+      "bytes": 106,
+      "sha256": "e79b35aafc6b32d9fd971c7cf687150ce3f6111be5bdd519971e144b0ebac520"
+    },
+    {
+      "path": "control/v4-cancelled-before-app/run-six-cases.py",
+      "source": ".build/normal-slow-drag.noindex/control/v4-cancelled-before-app/run-six-cases.py",
+      "bytes": 7016,
+      "sha256": "70512610762f1cda96024849481c000ab70ba4e112162d502a407f34e055f0a9"
+    },
+    {
+      "path": "control/v4-cancelled-before-app/status.json",
+      "source": ".build/normal-slow-drag.noindex/control/v4-cancelled-before-app/status.json",
+      "bytes": 310,
+      "sha256": "37377a6e673039abb0edf347801200ddedc4eaa40e8b7d2b01b5e71d01fc0bf6"
+    },
+    {
+      "path": "control/v5-calibration-lease.json",
+      "source": ".build/normal-slow-drag.noindex/control/v5-calibration-lease.json",
+      "bytes": 365,
+      "sha256": "35fb3101818e097263a897a0ae70cec3adabadf9a4f6c2a75b48a921eaa5fde8"
+    },
+    {
+      "path": "control/v5-direct-calibration.json",
+      "source": ".build/normal-slow-drag.noindex/control/v5-direct-calibration.json",
+      "bytes": 7146,
+      "sha256": "979e6bbcf4f88f26525e127ee6c155d6f1c0505b0554579714a32739a186b587"
+    },
+    {
+      "path": "control/v5-failed-edge/GuestLease.swift",
+      "source": ".build/normal-slow-drag.noindex/control/v5-failed-edge/GuestLease.swift",
+      "bytes": 3306,
+      "sha256": "daee1cd638c06291b3d3a30441c10140dec3f5a45192406269aeb56a332bb240"
+    },
+    {
+      "path": "control/v5-failed-edge/SHA256.json",
+      "source": ".build/normal-slow-drag.noindex/control/v5-failed-edge/SHA256.json",
+      "bytes": 645,
+      "sha256": "9e5ecfa07ee13d0d78a49a34c118f227d37241a1bb3b2b7c43a065715064db94"
+    },
+    {
+      "path": "control/v5-failed-edge/actual-outcome.json",
+      "source": ".build/normal-slow-drag.noindex/control/v5-failed-edge/actual-outcome.json",
+      "bytes": 593,
+      "sha256": "abcdf0b7099339b781d8c7704fd8259f272dc0e8b4c6a75bf6bc642292e71971"
+    },
+    {
+      "path": "control/v5-failed-edge/cases-error.json",
+      "source": ".build/normal-slow-drag.noindex/control/v5-failed-edge/cases-error.json",
+      "bytes": 449,
+      "sha256": "a3e9cd0c62e85bd7f76b1f6f1a4a7e4da0ae103c507e7d77ef0b865b6f47c3eb"
+    },
+    {
+      "path": "control/v5-failed-edge/cases-summary.json",
+      "source": ".build/normal-slow-drag.noindex/control/v5-failed-edge/cases-summary.json",
+      "bytes": 563,
+      "sha256": "efbb6dcd3ac296f269822a30b750263e9f7b5b1c41b2bfa1d760fed33a93f1cc"
+    },
+    {
+      "path": "control/v5-failed-edge/failure-history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/control/v5-failed-edge/failure-history.jsonl",
+      "bytes": 121394,
+      "sha256": "7b0f834c2d113ec478a0c695be34b5b032319839a09a9eb36148047a894a17c2"
+    },
+    {
+      "path": "control/v5-failed-edge/failure-state.json",
+      "source": ".build/normal-slow-drag.noindex/control/v5-failed-edge/failure-state.json",
+      "bytes": 10879,
+      "sha256": "11ced1fdc44898ef400ed62d4cdb836ee62410fc5a579c274fbfa9bee4d9f463"
+    },
+    {
+      "path": "control/v5-failed-edge/run-six-cases.py",
+      "source": ".build/normal-slow-drag.noindex/control/v5-failed-edge/run-six-cases.py",
+      "bytes": 7045,
+      "sha256": "0f1858e3d3d1b248611abe90bd2c403afcfb328acd3c293accef980d2d214ba7"
+    },
+    {
+      "path": "control/v6-first-pass-reset-timeout/GuestLease.swift",
+      "source": ".build/normal-slow-drag.noindex/control/v6-first-pass-reset-timeout/GuestLease.swift",
+      "bytes": 3306,
+      "sha256": "807edcfd0394b3a92385971c6eb1ef9395558e0ca90cb19d87605d4968f9195a"
+    },
+    {
+      "path": "control/v6-first-pass-reset-timeout/SHA256.json",
+      "source": ".build/normal-slow-drag.noindex/control/v6-first-pass-reset-timeout/SHA256.json",
+      "bytes": 645,
+      "sha256": "dddec4fec0d147f56ff51ae4d91cb1c460b4203c940d273d26d9b9ef6352a8a0"
+    },
+    {
+      "path": "control/v6-first-pass-reset-timeout/actual-outcome.json",
+      "source": ".build/normal-slow-drag.noindex/control/v6-first-pass-reset-timeout/actual-outcome.json",
+      "bytes": 459,
+      "sha256": "242c982f8f49de9db449c01cbf260f9195bd4bbdfdfa07a9b95ed5bcb1ba2ab9"
+    },
+    {
+      "path": "control/v6-first-pass-reset-timeout/cases-error.json",
+      "source": ".build/normal-slow-drag.noindex/control/v6-first-pass-reset-timeout/cases-error.json",
+      "bytes": 320,
+      "sha256": "fa665b56ee533fab17ad9b808f8fa15e80653faa66c3506ef61c82e67cccad1d"
+    },
+    {
+      "path": "control/v6-first-pass-reset-timeout/cases-summary.json",
+      "source": ".build/normal-slow-drag.noindex/control/v6-first-pass-reset-timeout/cases-summary.json",
+      "bytes": 447,
+      "sha256": "a6ee9ad21aca9a7677ae7b81242f01f0cd7f483b34ec4b01836376e2444b428c"
+    },
+    {
+      "path": "control/v6-first-pass-reset-timeout/failure-history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/control/v6-first-pass-reset-timeout/failure-history.jsonl",
+      "bytes": 154426,
+      "sha256": "83911e14387fa22ede0bfa8089d0aaa0ab353a3ef026391a913c7995170b5e88"
+    },
+    {
+      "path": "control/v6-first-pass-reset-timeout/failure-state.json",
+      "source": ".build/normal-slow-drag.noindex/control/v6-first-pass-reset-timeout/failure-state.json",
+      "bytes": 13233,
+      "sha256": "18125f0a6c72a82a5eacac352f5deb698a3d72c0486e84643b40db62b19c9faf"
+    },
+    {
+      "path": "control/v6-first-pass-reset-timeout/run-six-cases.py",
+      "source": ".build/normal-slow-drag.noindex/control/v6-first-pass-reset-timeout/run-six-cases.py",
+      "bytes": 7350,
+      "sha256": "93180aad76daa509416d0c862540ce72f97664bc2f90df0bd7149e95e2bcd80b"
+    },
+    {
+      "path": "control/v7-classic-pass-window-not-ready/GuestLease.swift",
+      "source": ".build/normal-slow-drag.noindex/control/v7-classic-pass-window-not-ready/GuestLease.swift",
+      "bytes": 3306,
+      "sha256": "a73f210e234634a261fa85b6c4d63e0643af8ab7a82a2bfd17bf3da7b2bd3bfe"
+    },
+    {
+      "path": "control/v7-classic-pass-window-not-ready/SHA256.json",
+      "source": ".build/normal-slow-drag.noindex/control/v7-classic-pass-window-not-ready/SHA256.json",
+      "bytes": 751,
+      "sha256": "951a2d99387035bf0f57b6e07014eef3368a097e1ae74387d1c3b00667bf62a0"
+    },
+    {
+      "path": "control/v7-classic-pass-window-not-ready/actual-outcome.json",
+      "source": ".build/normal-slow-drag.noindex/control/v7-classic-pass-window-not-ready/actual-outcome.json",
+      "bytes": 540,
+      "sha256": "8de1957bc43219ed47c51741e5fccfb6756c9b48a3e6b1d50abe51f6a4c2fe61"
+    },
+    {
+      "path": "control/v7-classic-pass-window-not-ready/cases-error.json",
+      "source": ".build/normal-slow-drag.noindex/control/v7-classic-pass-window-not-ready/cases-error.json",
+      "bytes": 526,
+      "sha256": "100f819d754eb1c934bea3d4ed81dba61350734b15f24f7860abf2dcd5d5aeb0"
+    },
+    {
+      "path": "control/v7-classic-pass-window-not-ready/cases-summary.json",
+      "source": ".build/normal-slow-drag.noindex/control/v7-classic-pass-window-not-ready/cases-summary.json",
+      "bytes": 737,
+      "sha256": "7b1d4d64eac2ccf71ea65a02af4a1fda5e8fac9e85e5c8dc02f4508f81915216"
+    },
+    {
+      "path": "control/v7-classic-pass-window-not-ready/failure-history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/control/v7-classic-pass-window-not-ready/failure-history.jsonl",
+      "bytes": 245483,
+      "sha256": "6d193893f46e76d1b7a4109d7ae693950a55ae9af40d7a236266e53d5e524986"
+    },
+    {
+      "path": "control/v7-classic-pass-window-not-ready/failure-state.json",
+      "source": ".build/normal-slow-drag.noindex/control/v7-classic-pass-window-not-ready/failure-state.json",
+      "bytes": 9205,
+      "sha256": "f0e5d8e050dcd8aa2c25d8509accee7aaa9f8170823c71cb7695fc4c5126b725"
+    },
+    {
+      "path": "control/v7-classic-pass-window-not-ready/guest-command-publications.jsonl",
+      "source": ".build/normal-slow-drag.noindex/control/v7-classic-pass-window-not-ready/guest-command-publications.jsonl",
+      "bytes": 1054,
+      "sha256": "950e92840cdd93c9c9db072dcd2935f38579f071f23dc20bfc866e242e5372b7"
+    },
+    {
+      "path": "control/v7-classic-pass-window-not-ready/run-six-cases.py",
+      "source": ".build/normal-slow-drag.noindex/control/v7-classic-pass-window-not-ready/run-six-cases.py",
+      "bytes": 8838,
+      "sha256": "6d5cc0cd1565704f90e3a470e6fd782b692fe7a78cb4c7dd9006eb81f7d81b39"
+    },
+    {
+      "path": "control/v8-actual-outcome.json",
+      "source": ".build/normal-slow-drag.noindex/control/v8-actual-outcome.json",
+      "bytes": 1990,
+      "sha256": "500f77fb95bbff5d799a2255e4dc3e9116620c698a6dc6de35c144086b89ce3b"
+    },
+    {
+      "path": "control/v8-initial-lease.json",
+      "source": ".build/normal-slow-drag.noindex/control/v8-initial-lease.json",
+      "bytes": 365,
+      "sha256": "9e01a0f9a0fa5f7523fd8ee7939a0cb38707ddc52cf3b91153bf4249b81fe058"
+    },
+    {
+      "path": "control/v8-six-case-facts.json",
+      "source": ".build/normal-slow-drag.noindex/control/v8-six-case-facts.json",
+      "bytes": 1522,
+      "sha256": "38fe746184d16e15e7fca263284657777fb6c989995cc171e831beeca87aafa7"
+    },
+    {
+      "path": "driver/GuestSlowInput.swift",
+      "source": ".build/normal-slow-drag.noindex/driver/GuestSlowInput.swift",
+      "bytes": 7412,
+      "sha256": "6096f1adbc87caeee0354874ba45e5b39df9c7e8b15fd2c5fab0632a6472008d"
+    },
+    {
+      "path": "driver/results/preflight.json",
+      "source": ".build/normal-slow-drag.noindex/driver/results/preflight.json",
+      "bytes": 103,
+      "sha256": "c3c05e44bdb6cf361f4a4c29058da6497274a7ae15b412a97c6a134eb076b764"
+    },
+    {
+      "path": "driver/results/preflight.json.source.sha256",
+      "source": ".build/normal-slow-drag.noindex/driver/results/preflight.json.source.sha256",
+      "bytes": 65,
+      "sha256": "1044179371faa7d87d18c5230c640ed90fdb70ec771b5067240ac99a90481293"
+    },
+    {
+      "path": "driver/run-guest-input.sh",
+      "source": ".build/normal-slow-drag.noindex/driver/run-guest-input.sh",
+      "bytes": 1694,
+      "sha256": "14e3f3b8ed1ed5c78a1b0db5a7c01de112432b11608d3be3bf58ac797a6b694c"
+    },
+    {
+      "path": "fixture-v6/normal-slow-drag-v3-tools.tar.gz",
+      "source": ".build/normal-slow-drag.noindex/fixture-v6/normal-slow-drag-v3-tools.tar.gz",
+      "bytes": 13644,
+      "sha256": "937b75bdf4fc9688ba34d62b2d4ffc19371bee0f52518a6b1844bdb67420b79a"
+    },
+    {
+      "path": "fixture-v6/stage-normal-slow-drag-v6.sh",
+      "source": ".build/normal-slow-drag.noindex/fixture-v6/stage-normal-slow-drag-v6.sh",
+      "bytes": 3693,
+      "sha256": "dc1bbdc694e281190c209629d1ab13505096705a52d41cea2b192356d4e5ee31"
+    },
+    {
+      "path": "fixture/README.md",
+      "source": ".build/normal-slow-drag.noindex/fixture/README.md",
+      "bytes": 5733,
+      "sha256": "0991e727cacaf34432d95dad89ba2f02c4d68ad98646500e86b00b8fd4caecc6"
+    },
+    {
+      "path": "fixture/compact-inputs/MEMBER_SHA256SUMS.txt",
+      "source": ".build/normal-slow-drag.noindex/fixture/compact-inputs/MEMBER_SHA256SUMS.txt",
+      "bytes": 5755,
+      "sha256": "20a2ccbdd497353268afbe022b978d38648210b4d6c6f5918bee8379e4aa1b73"
+    },
+    {
+      "path": "fixture/compact-inputs/README.md",
+      "source": ".build/normal-slow-drag.noindex/fixture/compact-inputs/README.md",
+      "bytes": 5576,
+      "sha256": "f6a69dba610fa4496dc16f96997af19ed55b7de6ce25cfb790f5cc3f105275c0"
+    },
+    {
+      "path": "fixture/compact-inputs/SHA256SUMS.txt",
+      "source": ".build/normal-slow-drag.noindex/fixture/compact-inputs/SHA256SUMS.txt",
+      "bytes": 644,
+      "sha256": "127a6edd98fcb3e99d19ca5998dae08386f8081d6bdf3e37b8ec862fb781bbd3"
+    },
+    {
+      "path": "fixture/compact-inputs/build-subset.py",
+      "source": ".build/normal-slow-drag.noindex/fixture/compact-inputs/build-subset.py",
+      "bytes": 4444,
+      "sha256": "5a60739ad470528855bedc8dcaa889ade8fdd4a3c5083f429318028c52190d00"
+    },
+    {
+      "path": "fixture/compact-inputs/build-subset.sh",
+      "source": ".build/normal-slow-drag.noindex/fixture/compact-inputs/build-subset.sh",
+      "bytes": 817,
+      "sha256": "d34a477dc5516259ff235806427f206a58b2a19c40b5506daa6dfdf32cf61e8d"
+    },
+    {
+      "path": "fixture/compact-inputs/historical-attempt-input-status.json",
+      "source": ".build/normal-slow-drag.noindex/fixture/compact-inputs/historical-attempt-input-status.json",
+      "bytes": 3262,
+      "sha256": "f95377d344c5d9865bddc8b3c9837647abeb14aab9dacf0c2bdeb153317453bf"
+    },
+    {
+      "path": "fixture/compact-inputs/source-5d5c896b7a15-native-build-inputs-subset.tar.gz",
+      "source": ".build/normal-slow-drag.noindex/fixture/compact-inputs/source-5d5c896b7a15-native-build-inputs-subset.tar.gz",
+      "bytes": 347288,
+      "sha256": "d200e4a40f75672dffab6ec56e10569cf1bf078d22d385e0fdc15673d852a736"
+    },
+    {
+      "path": "fixture/compact-inputs/subset-member-mapping.json",
+      "source": ".build/normal-slow-drag.noindex/fixture/compact-inputs/subset-member-mapping.json",
+      "bytes": 33700,
+      "sha256": "948e3fd599d65c7244347ca623fef923180bc739f5ef2e4ffbec0e2fc4614c1c"
+    },
+    {
+      "path": "fixture/evaluate-normal-slow-drag.py",
+      "source": ".build/normal-slow-drag.noindex/fixture/evaluate-normal-slow-drag.py",
+      "bytes": 5258,
+      "sha256": "d20860269a9f56ca2067207fac6077a2651b0a783846a1bf876536b06807de39"
+    },
+    {
+      "path": "fixture/evaluator-mutation-results.json",
+      "source": ".build/normal-slow-drag.noindex/fixture/evaluator-mutation-results.json",
+      "bytes": 11479,
+      "sha256": "49544e1898f66848dcfee4356527edf103468775e63a233c48f6c26c75db83d7"
+    },
+    {
+      "path": "fixture/historical-native-eligibility.json",
+      "source": ".build/normal-slow-drag.noindex/fixture/historical-native-eligibility.json",
+      "bytes": 1604,
+      "sha256": "e8140c882025de11b0e44b3759df297eb8dbbed4d196a4fa3deee7c161ca8282"
+    },
+    {
+      "path": "fixture/lifecycle/local_cleanup.sh",
+      "source": ".build/normal-slow-drag.noindex/fixture/lifecycle/local_cleanup.sh",
+      "bytes": 7097,
+      "sha256": "372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e"
+    },
+    {
+      "path": "fixture/lifecycle/run_owned.py",
+      "source": ".build/normal-slow-drag.noindex/fixture/lifecycle/run_owned.py",
+      "bytes": 3778,
+      "sha256": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872"
+    },
+    {
+      "path": "fixture/normal-slow-drag-v2-tools.tar.gz",
+      "source": ".build/normal-slow-drag.noindex/fixture/normal-slow-drag-v2-tools.tar.gz",
+      "bytes": 12862,
+      "sha256": "5f65080f39ce54ab40b7971c9a9ef38534847cea8dff538c779b6da85c5c20b5"
+    },
+    {
+      "path": "fixture/provenance.json",
+      "source": ".build/normal-slow-drag.noindex/fixture/provenance.json",
+      "bytes": 6289,
+      "sha256": "f32544dc8dfd716400a8deb419869184afa2739553a6c809d53ae53955857018"
+    },
+    {
+      "path": "fixture/qa-tools-v6.tar.gz",
+      "source": ".build/normal-slow-drag.noindex/fixture/qa-tools-v6.tar.gz",
+      "bytes": 63868,
+      "sha256": "89343e38e8ce2e0327bef3324d6a0d308dbfa1a99368409454c190dbe913c9a5"
+    },
+    {
+      "path": "fixture/source-5d5c896b7a15-production-files.json",
+      "source": ".build/normal-slow-drag.noindex/fixture/source-5d5c896b7a15-production-files.json",
+      "bytes": 5776,
+      "sha256": "9c742957a4e9d3133efff324e050643d547d3e3b6998f8b66e6224721818e6d9"
+    },
+    {
+      "path": "fixture/stage-normal-slow-drag.sh",
+      "source": ".build/normal-slow-drag.noindex/fixture/stage-normal-slow-drag.sh",
+      "bytes": 3684,
+      "sha256": "fc6881f8c384cfdce5ef36bf611b0d166ae20b4dd4dbcb6761492c57dabf044f"
+    },
+    {
+      "path": "fixture/test-evaluator-data.py",
+      "source": ".build/normal-slow-drag.noindex/fixture/test-evaluator-data.py",
+      "bytes": 8168,
+      "sha256": "23759116d4e4010f5d6ea5dceab8d939774ad2f2ee8c64f7a65b8754e7fb309a"
+    },
+    {
+      "path": "fixture/validate-archives.py",
+      "source": ".build/normal-slow-drag.noindex/fixture/validate-archives.py",
+      "bytes": 801,
+      "sha256": "2070a542ede0c49b7d46e3ca758650804bbe8bb3ec32a03d9bc8f53c6cd24656"
+    },
+    {
+      "path": "fixture/verify-production.py",
+      "source": ".build/normal-slow-drag.noindex/fixture/verify-production.py",
+      "bytes": 961,
+      "sha256": "722a80eb3100e684dff51a596cfeb9484aaf52553aea1501d298bff46d8ee98b"
+    },
+    {
+      "path": "ipc-diag/README.md",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/README.md",
+      "bytes": 1733,
+      "sha256": "6ca6f58acf18470bb1dc6a02b150f557257bb1e7174a97ef0b30fe4ad3c0c96f"
+    },
+    {
+      "path": "ipc-diag/SHA256SUMS.txt",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/SHA256SUMS.txt",
+      "bytes": 984,
+      "sha256": "25e097a18cf89a4273d8626747e36dbeb6fc3c134d029f626c43959c7858b510"
+    },
+    {
+      "path": "ipc-diag/cleanup-guest-stderr.log",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/cleanup-guest-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ipc-diag/cleanup-guest-stdout.json",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/cleanup-guest-stdout.json",
+      "bytes": 224,
+      "sha256": "2e6f51add8b32e6ab5582f19ab6eff2ada66bb9432b3119ccdb5028d8034e9a1"
+    },
+    {
+      "path": "ipc-diag/cleanup-report.json",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/cleanup-report.json",
+      "bytes": 494,
+      "sha256": "bc96a35ddca4c5af0d6ba5bed01d5f055d6cf803a02b3e6c17b031f7b377d349"
+    },
+    {
+      "path": "ipc-diag/guest-raw.jsonl",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/guest-raw.jsonl",
+      "bytes": 29691,
+      "sha256": "e1e0293c8268bdf979acd07e4b7f988b5e34692caf0df5f033fa53caa31b30a1"
+    },
+    {
+      "path": "ipc-diag/guest-run.sh",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/guest-run.sh",
+      "bytes": 713,
+      "sha256": "f776924ef39b00aeaec1e028cdd917b83610dc822a257d48f2e011d5a60a6d56"
+    },
+    {
+      "path": "ipc-diag/guest-stderr.log",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/guest-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ipc-diag/host-run-executed.py",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/host-run-executed.py",
+      "bytes": 2646,
+      "sha256": "cc11922c3c5c39cd33d82a209e7420367b5debf9b79311597969d20ffab297d9"
+    },
+    {
+      "path": "ipc-diag/host-run.py",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/host-run.py",
+      "bytes": 3137,
+      "sha256": "6a3a862c4d91181f3c684ff4b18a3338ff9172b661c6062a89ba38a779fc0f18"
+    },
+    {
+      "path": "ipc-diag/reader.swift",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/reader.swift",
+      "bytes": 2006,
+      "sha256": "243a327d03c905df4aba7f198004ad3dbff1d532ddb3160a4a94ef1a1fd9a1fd"
+    },
+    {
+      "path": "ipc-diag/report.json",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/report.json",
+      "bytes": 1557,
+      "sha256": "783469b6cce7639194b7b2168a5c8743e7f4e53b31ae96391d6d3bfb9d067e4d"
+    },
+    {
+      "path": "ipc-diag/run.sh",
+      "source": ".build/normal-slow-drag.noindex/ipc-diag/run.sh",
+      "bytes": 266,
+      "sha256": "a96963ac0b79596c2b247a3ced9f7d522191ce56cd613d6aec5d7643a7679067"
+    },
+    {
+      "path": "loopback-vz/nat-final-freeze.json",
+      "source": ".build/normal-slow-drag.noindex/loopback-vz/nat-final-freeze.json",
+      "bytes": 970,
+      "sha256": "11126d41ea38937e85d5df666c175967c5a59911bbed84c9693cf6e870213816"
+    },
+    {
+      "path": "loopback-vz/nat-final-freeze.tar.gz",
+      "source": ".build/normal-slow-drag.noindex/loopback-vz/nat-final-freeze.tar.gz",
+      "bytes": 38906,
+      "sha256": "3bfe92c68d15545a90bfc3a8aefba56cd018df845181859fe044686124a34f1e"
+    },
+    {
+      "path": "normal-slow-drag-v2/drag/capture-provenance.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/drag/capture-provenance.txt",
+      "bytes": 316,
+      "sha256": "36ec59b5fe4e1321da23f175864ae55314599b923ab6cb84df16bcd6f2b736b6"
+    },
+    {
+      "path": "normal-slow-drag-v2/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v2/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v2/drag/defaults-delete-com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/drag/defaults-delete-com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v2/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167.json",
+      "bytes": 192,
+      "sha256": "c667f16570809c08d645c37a1c50492fb2a1f8de8ad86d5384fe7daa287e6be3"
+    },
+    {
+      "path": "normal-slow-drag-v2/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D.json",
+      "bytes": 234,
+      "sha256": "eba969c0fb22d0b285eee35b5b04706afdf12459737226f0acfe259c7da1ea22"
+    },
+    {
+      "path": "normal-slow-drag-v2/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab.json",
+      "bytes": 191,
+      "sha256": "4155b6bec2020097dadd72685ef8bffdcf125cdf5b9145f08b72ccbc79d12d49"
+    },
+    {
+      "path": "normal-slow-drag-v2/drag/exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/drag/exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v2/drag/owned-domains.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/drag/owned-domains.txt",
+      "bytes": 215,
+      "sha256": "995bba5f0553a7da5e61895a5f18b6667d6ef75fd8d94989bcdb8d9396cca8c4"
+    },
+    {
+      "path": "normal-slow-drag-v2/drag/runtime-observation-tools.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/drag/runtime-observation-tools.sha256",
+      "bytes": 385,
+      "sha256": "51fb625cc1b4c28697760fefa5ac7e11297e8e09173944ecaa1177e1da46b31b"
+    },
+    {
+      "path": "normal-slow-drag-v2/native-inputs.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/native-inputs.sha256",
+      "bytes": 521,
+      "sha256": "ca80b74f0e1239ee7083134562084a1d8ace96c0ec75b1a8c49fc8ffc4cdeb02"
+    },
+    {
+      "path": "normal-slow-drag-v2/runner-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/runner-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v2/source-production-after.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/source-production-after.json",
+      "bytes": 5119,
+      "sha256": "9c10f3ace70e249c68ea1a4e410b8070869689f411f627bdae4f3fde135fae7e"
+    },
+    {
+      "path": "normal-slow-drag-v2/source-production-before.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/source-production-before.json",
+      "bytes": 4905,
+      "sha256": "d731973e18a77c5fc981349f6fb7101fbb2027b2373b51b484f2ead0919d39e7"
+    },
+    {
+      "path": "normal-slow-drag-v2/stage-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v2/stage-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v3/cases/classic-slow-drop/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/cases/classic-slow-drop/before-state.json",
+      "bytes": 5821,
+      "sha256": "97ecfed15c3583090f50e9b351edcd0a6b4ac28570c9e11109bb93e5fc566d3c"
+    },
+    {
+      "path": "normal-slow-drag-v3/cases/classic-slow-drop/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/cases/classic-slow-drop/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v3/cases/classic-slow-drop/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/cases/classic-slow-drop/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v3/cases/classic-slow-drop/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/cases/classic-slow-drop/input.json",
+      "bytes": 8873,
+      "sha256": "00b917605fa195e2f387a10ba918e0abd8a1d4da906aa30fdf8e7c59296e7841"
+    },
+    {
+      "path": "normal-slow-drag-v3/cases/classic-slow-drop/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/cases/classic-slow-drop/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v3/cases/classic-slow-drop/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/cases/classic-slow-drop/lease.json",
+      "bytes": 1113,
+      "sha256": "d48f3760115f054a6097b770f28ad206588970e81a8aae19d96e76419530ddf4"
+    },
+    {
+      "path": "normal-slow-drag-v3/drag/capture-provenance.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/drag/capture-provenance.txt",
+      "bytes": 316,
+      "sha256": "bbe3b8d118d91a38d8bbebb8bba531154c90ff203ee136b5e9fb4fee15652859"
+    },
+    {
+      "path": "normal-slow-drag-v3/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v3/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v3/drag/defaults-delete-com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/drag/defaults-delete-com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v3/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9.json",
+      "bytes": 192,
+      "sha256": "b396f9f7f43d39244d5f4e75cfaad4c8605f9f74d56a0c13231afa2a9100112c"
+    },
+    {
+      "path": "normal-slow-drag-v3/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20.json",
+      "bytes": 235,
+      "sha256": "db05242998e33e22fc4ee5f138ac2034a356c0f9cd3127200683de3f3cc09491"
+    },
+    {
+      "path": "normal-slow-drag-v3/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851.json",
+      "bytes": 191,
+      "sha256": "58220cde66e99e0cca0f5660b6a3206acc2003f122f45eb7209f002cfc7d68d2"
+    },
+    {
+      "path": "normal-slow-drag-v3/drag/exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/drag/exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v3/drag/owned-domains.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/drag/owned-domains.txt",
+      "bytes": 215,
+      "sha256": "18b3de8a50daf96a5cbf6c3d094202e36881a3397be8296d17535cda0cfc9573"
+    },
+    {
+      "path": "normal-slow-drag-v3/drag/runtime-observation-tools.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/drag/runtime-observation-tools.sha256",
+      "bytes": 385,
+      "sha256": "48ffa60ca8c3f81888b867a904335274bf41582b71cd53c9f7364e0d9d300ad4"
+    },
+    {
+      "path": "normal-slow-drag-v3/native-inputs.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/native-inputs.sha256",
+      "bytes": 521,
+      "sha256": "0d1e49d41eb888a881ddd1295e40d0526da8833f3694f3513a7bf720d3aa0bb0"
+    },
+    {
+      "path": "normal-slow-drag-v3/runner-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/runner-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v3/source-production-after.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/source-production-after.json",
+      "bytes": 5119,
+      "sha256": "9c10f3ace70e249c68ea1a4e410b8070869689f411f627bdae4f3fde135fae7e"
+    },
+    {
+      "path": "normal-slow-drag-v3/source-production-before.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/source-production-before.json",
+      "bytes": 4905,
+      "sha256": "d731973e18a77c5fc981349f6fb7101fbb2027b2373b51b484f2ead0919d39e7"
+    },
+    {
+      "path": "normal-slow-drag-v3/stage-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/stage-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v4/drag/capture-provenance.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/drag/capture-provenance.txt",
+      "bytes": 316,
+      "sha256": "4b3acf0bd1ef601607a68ae69cd9765435487cc64b3ee93c27f1847ed3a3b683"
+    },
+    {
+      "path": "normal-slow-drag-v4/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.0144F646-1882-47DC-A06F-8BE04F14CC6F-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.0144F646-1882-47DC-A06F-8BE04F14CC6F-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v4/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.7A1BA35A-EDC6-47F0-97E0-16A01A7C253D-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.7A1BA35A-EDC6-47F0-97E0-16A01A7C253D-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v4/drag/defaults-delete-com.leoarrow.wattson.modules-slow.1b90403d-f2f2-45e8-98d0-25c5eab3a05d-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/drag/defaults-delete-com.leoarrow.wattson.modules-slow.1b90403d-f2f2-45e8-98d0-25c5eab3a05d-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v4/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.0144F646-1882-47DC-A06F-8BE04F14CC6F.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.0144F646-1882-47DC-A06F-8BE04F14CC6F.json",
+      "bytes": 192,
+      "sha256": "bec4c51639e2abdc75d22f6184ca3a8cce68f017f924337e9bf3b3100d5d9fc7"
+    },
+    {
+      "path": "normal-slow-drag-v4/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.7A1BA35A-EDC6-47F0-97E0-16A01A7C253D.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.7A1BA35A-EDC6-47F0-97E0-16A01A7C253D.json",
+      "bytes": 192,
+      "sha256": "29bc8b438b320521966aef7de22cb225d98e78157c6c97226e75eaaaee90c343"
+    },
+    {
+      "path": "normal-slow-drag-v4/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.1b90403d-f2f2-45e8-98d0-25c5eab3a05d.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.1b90403d-f2f2-45e8-98d0-25c5eab3a05d.json",
+      "bytes": 191,
+      "sha256": "4ebfbaef036516e9cf1807d49886895b421db9852d04c20b96ff4e76a55696ea"
+    },
+    {
+      "path": "normal-slow-drag-v4/drag/exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/drag/exit-code.txt",
+      "bytes": 3,
+      "sha256": "b03c70ff0d641a363f1a021413a098dce02e4c68b75f3a47aa10044f42ee1784"
+    },
+    {
+      "path": "normal-slow-drag-v4/drag/owned-domains.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/drag/owned-domains.txt",
+      "bytes": 215,
+      "sha256": "9826cec1d04c03bb47be5dc190b198ab57908108076ab4470bccfcc76a5af440"
+    },
+    {
+      "path": "normal-slow-drag-v4/drag/runtime-observation-tools.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/drag/runtime-observation-tools.sha256",
+      "bytes": 385,
+      "sha256": "c9fee1d4acafb9d7f15db9fda445269fb9577c9d21c16edcd71622f9e6238148"
+    },
+    {
+      "path": "normal-slow-drag-v4/native-inputs.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/native-inputs.sha256",
+      "bytes": 521,
+      "sha256": "97687073b7c4519e6b33d60b41ead99c54b56d2dd12ca8b9725ed8803eb2bfeb"
+    },
+    {
+      "path": "normal-slow-drag-v4/runner-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/runner-exit-code.txt",
+      "bytes": 3,
+      "sha256": "b03c70ff0d641a363f1a021413a098dce02e4c68b75f3a47aa10044f42ee1784"
+    },
+    {
+      "path": "normal-slow-drag-v4/source-production-after.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/source-production-after.json",
+      "bytes": 5119,
+      "sha256": "9c10f3ace70e249c68ea1a4e410b8070869689f411f627bdae4f3fde135fae7e"
+    },
+    {
+      "path": "normal-slow-drag-v4/source-production-before.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/source-production-before.json",
+      "bytes": 4905,
+      "sha256": "d731973e18a77c5fc981349f6fb7101fbb2027b2373b51b484f2ead0919d39e7"
+    },
+    {
+      "path": "normal-slow-drag-v4/stage-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v4/stage-exit-code.txt",
+      "bytes": 3,
+      "sha256": "b03c70ff0d641a363f1a021413a098dce02e4c68b75f3a47aa10044f42ee1784"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/before-state.json",
+      "bytes": 5819,
+      "sha256": "4a62e81966924d7e0f548f2ed0bcd399140c890c987a33a783b98a0289032713"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/capture-status.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/capture-status.json",
+      "bytes": 191,
+      "sha256": "8956e6533e52a747c656682569fd7a19ae82157d9306c8077e2470a3fcb5eb62"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/evaluation-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/evaluation-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/evaluation.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/evaluation.json",
+      "bytes": 6522,
+      "sha256": "144b165ace668b2b54d4edf0da2045081b13f6cfd49e67e8dcab6b9187395bc2"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/history.jsonl",
+      "bytes": 110513,
+      "sha256": "9bd33756b0b1279104dab6e91a8bb9c3d1c5131ad5cf653441def7dfd30383f2"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/input-timing-check.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/input-timing-check.json",
+      "bytes": 206,
+      "sha256": "aaafeb071fcdb00641b57d0a21ac8af817e3995b5e48c7c9838e6a99377ec760"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/input.json",
+      "bytes": 15733,
+      "sha256": "6863a7436b5463b6dd06801d8cda6efdf603b2ef2f9153e2cfd96404116283a4"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/lease.json",
+      "bytes": 1114,
+      "sha256": "6ff2a9ae731fb58c84f9dbe0a1026bd1796ac68120f9835e3eb9288a00074e6c"
+    },
+    {
+      "path": "normal-slow-drag-v5/cases/classic-slow-drop/state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/cases/classic-slow-drop/state.json",
+      "bytes": 10727,
+      "sha256": "01a25e4d9a25cc6d4bfa3da07fb3dd6427f8644b8256df3be49a79453206275b"
+    },
+    {
+      "path": "normal-slow-drag-v5/drag/capture-provenance.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/drag/capture-provenance.txt",
+      "bytes": 316,
+      "sha256": "bb2688ced886a9f995fe56cfb589d314c6241dbe86826e0e911b41c1c0867df2"
+    },
+    {
+      "path": "normal-slow-drag-v5/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.B3664526-1420-4917-ACFB-D5ECAC5AFBF8-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.B3664526-1420-4917-ACFB-D5ECAC5AFBF8-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v5/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.FD83D68D-54BE-4974-A689-8B4D8687AF7F-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.FD83D68D-54BE-4974-A689-8B4D8687AF7F-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v5/drag/defaults-delete-com.leoarrow.wattson.modules-slow.2de72b2d-ded2-4f7c-bf97-8df857519243-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/drag/defaults-delete-com.leoarrow.wattson.modules-slow.2de72b2d-ded2-4f7c-bf97-8df857519243-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v5/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.B3664526-1420-4917-ACFB-D5ECAC5AFBF8.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.B3664526-1420-4917-ACFB-D5ECAC5AFBF8.json",
+      "bytes": 192,
+      "sha256": "ac3c009fb8acd8da48319be96f0c0272ffc3314fc1f5d23dcc26e5268ea2924b"
+    },
+    {
+      "path": "normal-slow-drag-v5/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.FD83D68D-54BE-4974-A689-8B4D8687AF7F.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.FD83D68D-54BE-4974-A689-8B4D8687AF7F.json",
+      "bytes": 234,
+      "sha256": "e9a16ec0e62ebbaf1145c3ac31f4a5a00ada736e498808fc5c7a4eebf0d76e21"
+    },
+    {
+      "path": "normal-slow-drag-v5/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.2de72b2d-ded2-4f7c-bf97-8df857519243.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.2de72b2d-ded2-4f7c-bf97-8df857519243.json",
+      "bytes": 191,
+      "sha256": "7f5aa82498826f350774a16f73b0fecab37678aa2f4a1801b7b1c84a9b3e36ea"
+    },
+    {
+      "path": "normal-slow-drag-v5/drag/exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/drag/exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v5/drag/owned-domains.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/drag/owned-domains.txt",
+      "bytes": 215,
+      "sha256": "85c3975ea28fb5034c5fef3caed959a933e6f44cf1b13f89f3155b4d0f3e9890"
+    },
+    {
+      "path": "normal-slow-drag-v5/drag/runtime-observation-tools.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/drag/runtime-observation-tools.sha256",
+      "bytes": 385,
+      "sha256": "bb9282ba3967228a94a8f0a0136640ab894d351dd196e01871820c86282256be"
+    },
+    {
+      "path": "normal-slow-drag-v5/native-inputs.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/native-inputs.sha256",
+      "bytes": 521,
+      "sha256": "7fce8e2f84cb6045a3b3beecc7a2678a114cdcfe00370f26f88a662dc4c1529b"
+    },
+    {
+      "path": "normal-slow-drag-v5/runner-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/runner-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v5/source-production-after.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/source-production-after.json",
+      "bytes": 5119,
+      "sha256": "9c10f3ace70e249c68ea1a4e410b8070869689f411f627bdae4f3fde135fae7e"
+    },
+    {
+      "path": "normal-slow-drag-v5/source-production-before.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/source-production-before.json",
+      "bytes": 4905,
+      "sha256": "d731973e18a77c5fc981349f6fb7101fbb2027b2373b51b484f2ead0919d39e7"
+    },
+    {
+      "path": "normal-slow-drag-v5/stage-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v5/stage-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/before-state.json",
+      "bytes": 8171,
+      "sha256": "65b974d65bdac16db441ee5f20ce4ecbaeeec62097dda3fcb56930458b085754"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/capture-status.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/capture-status.json",
+      "bytes": 192,
+      "sha256": "8ddf25365355cfafa30bb16f7880e2a5d2566b82ab8c0518e11eb54d1696867d"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/evaluation-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/evaluation-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/evaluation.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/evaluation.json",
+      "bytes": 6421,
+      "sha256": "f5d624c55d3741dd9c70ddf810ccfcc8f531183ed89430882e48afbb65471ffb"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/history.jsonl",
+      "bytes": 141192,
+      "sha256": "6b244cb8478633bc8c5b2fc2707004481bdddf37a474616022f0b5e34499ede2"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/input-timing-check.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/input-timing-check.json",
+      "bytes": 206,
+      "sha256": "ec8120ca89f8dd762f927ff3a9956e6b4764dfa46c31ccbc9f631c8cb7fd2be6"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/input.json",
+      "bytes": 15733,
+      "sha256": "817a35f0cafc336a9ff55187714e05d5d5944038bc0acf8d268c8401fc2940d4"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/lease.json",
+      "bytes": 1117,
+      "sha256": "e8c90782f5867f324b6dc36d33b1d66ded845839582513e1b2c341b1ce843e1b"
+    },
+    {
+      "path": "normal-slow-drag-v6/cases/classic-slow-drop/state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/cases/classic-slow-drop/state.json",
+      "bytes": 13079,
+      "sha256": "002481f6df6542cace54761985753b63cce1a24c065b0d8c3b58b462e6723762"
+    },
+    {
+      "path": "normal-slow-drag-v6/drag/capture-provenance.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/drag/capture-provenance.txt",
+      "bytes": 316,
+      "sha256": "610008cfd5b211fdc337f353e3a285a9c58ba61560282e3beb0b46969bd5fe16"
+    },
+    {
+      "path": "normal-slow-drag-v6/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.0B29645A-FABF-4AC8-94DD-39B368B72A3C-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.0B29645A-FABF-4AC8-94DD-39B368B72A3C-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v6/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.57740CD3-2F73-4D88-A623-DFF382D21862-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.57740CD3-2F73-4D88-A623-DFF382D21862-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v6/drag/defaults-delete-com.leoarrow.wattson.modules-slow.a4dda140-ba12-4348-9175-53c15b37cb51-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/drag/defaults-delete-com.leoarrow.wattson.modules-slow.a4dda140-ba12-4348-9175-53c15b37cb51-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v6/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.0B29645A-FABF-4AC8-94DD-39B368B72A3C.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.0B29645A-FABF-4AC8-94DD-39B368B72A3C.json",
+      "bytes": 192,
+      "sha256": "9f97b3269cd72d0c230de19700e7ab247844e2c005af554a7019e221b32380c9"
+    },
+    {
+      "path": "normal-slow-drag-v6/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.57740CD3-2F73-4D88-A623-DFF382D21862.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.57740CD3-2F73-4D88-A623-DFF382D21862.json",
+      "bytes": 234,
+      "sha256": "3d6bbd30cd176e0bb0ddd8cc16ff6ecf634ea68e718934bf72a669d1f3aa3239"
+    },
+    {
+      "path": "normal-slow-drag-v6/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.a4dda140-ba12-4348-9175-53c15b37cb51.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.a4dda140-ba12-4348-9175-53c15b37cb51.json",
+      "bytes": 191,
+      "sha256": "a5feb20b7cd5a8939c6c65d3401050ea6667de5ffc332b6e707366ed890768be"
+    },
+    {
+      "path": "normal-slow-drag-v6/drag/exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/drag/exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v6/drag/owned-domains.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/drag/owned-domains.txt",
+      "bytes": 215,
+      "sha256": "d7c0610b9c4ec74e235b734381489f9be34aea9ad1d11a4985e094d89381dc6a"
+    },
+    {
+      "path": "normal-slow-drag-v6/drag/runtime-observation-tools.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/drag/runtime-observation-tools.sha256",
+      "bytes": 385,
+      "sha256": "3444c847d8a605de3cffb430c9a4d73d29fbddee5a38af13ffd6a66844b553ac"
+    },
+    {
+      "path": "normal-slow-drag-v6/native-inputs.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/native-inputs.sha256",
+      "bytes": 521,
+      "sha256": "a61f0b7c3b7b904908592737f2054165b9a9bd3144bc371c0639e1507b9bb524"
+    },
+    {
+      "path": "normal-slow-drag-v6/runner-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/runner-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v6/source-production-after.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/source-production-after.json",
+      "bytes": 5119,
+      "sha256": "9c10f3ace70e249c68ea1a4e410b8070869689f411f627bdae4f3fde135fae7e"
+    },
+    {
+      "path": "normal-slow-drag-v6/source-production-before.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/source-production-before.json",
+      "bytes": 4905,
+      "sha256": "d731973e18a77c5fc981349f6fb7101fbb2027b2373b51b484f2ead0919d39e7"
+    },
+    {
+      "path": "normal-slow-drag-v6/stage-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v6/stage-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/before-state.json",
+      "bytes": 8169,
+      "sha256": "7829ac1e7f0017917623de4e17801dc1799ea01a1d2180565be26185b650ddda"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/capture-status.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/capture-status.json",
+      "bytes": 192,
+      "sha256": "6be13c3459bbf6386c660477eca365c1266a7044c94bd37c748668467e125d77"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/evaluation-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/evaluation-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/evaluation.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/evaluation.json",
+      "bytes": 6418,
+      "sha256": "b510c6ab33ce6b9c51f0661bbb175d83e7da250b469de0208da5c56b78a7d307"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/history.jsonl",
+      "bytes": 141196,
+      "sha256": "c19a98278d7350fd54d8a19bef00658faac0cbd633bdad66b2a396fc18b5f675"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/input-timing-check.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/input-timing-check.json",
+      "bytes": 205,
+      "sha256": "fc26eaa34f0acaf131b5edcabfa8fa9217e6309235e4270e7d1681b06d8c548d"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/input.json",
+      "bytes": 15732,
+      "sha256": "acd539ffe9f800bea20ce9947726b64eef1d2dc8d72e2d707bd80dd2102c0ae2"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/lease.json",
+      "bytes": 1117,
+      "sha256": "1a18f5af319168e43ae32e6313c647997b710fc9ef9d759c8b2777db80c2979e"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-drop/state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-drop/state.json",
+      "bytes": 13086,
+      "sha256": "ee3c9b7f886cb016c71b9bb2d6c390b96059bd5c9f95bef06f58770e7075aa21"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/before-state.json",
+      "bytes": 8371,
+      "sha256": "8adbfb94e2c7bf517c2354e11c8348ae0011cb14c43136ca9ea693f8b55cba7d"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/capture-status.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/capture-status.json",
+      "bytes": 196,
+      "sha256": "6ffdaa4b7f65031a7649ed6a11afdd7b1e884bfaa44b9c3947c33b78789caaba"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/evaluation-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/evaluation-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/evaluation.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/evaluation.json",
+      "bytes": 6447,
+      "sha256": "cc6ecef3a47324a8d43092253045a44ea7620f7d82a08d8c98caea0bea26c3fc"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/history.jsonl",
+      "bytes": 212608,
+      "sha256": "977a7216c25368dd91c37023d2ceb6b83033d0b83ea4c9f5ef51502ba3004e8e"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/input-timing-check.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/input-timing-check.json",
+      "bytes": 205,
+      "sha256": "9e58dc9828689156cba5fefe2e000d52fdcdb544160bfc111187c4ddf3c1e4db"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/input.json",
+      "bytes": 15725,
+      "sha256": "4b824fddf06f35ada8332726276dfa1bd3775912f50fd1d58e195760ccd1f334"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/lease.json",
+      "bytes": 1117,
+      "sha256": "df6408f6871e5f86a2ef48137e1348c5cc17ff0752e788357168c4af804dcc33"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/classic-slow-outside/state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/classic-slow-outside/state.json",
+      "bytes": 14800,
+      "sha256": "7db9a011acbeb0ca9b0797ed25178091406e3f8708daa930cd13701f5fb9b56c"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/standard-slow-drop/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/standard-slow-drop/before-state.json",
+      "bytes": 8866,
+      "sha256": "939661900a7f0d1468609a2c8da6f08abcf212196a2080354d15620ccc0c378d"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/standard-slow-drop/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/standard-slow-drop/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/standard-slow-drop/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/standard-slow-drop/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/standard-slow-drop/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/standard-slow-drop/input.json",
+      "bytes": 423,
+      "sha256": "42f6f4133a6f985946721ebfdb7733cc2b49a3434e52384b598e466e7d0efe3d"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/standard-slow-drop/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/standard-slow-drop/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v7/cases/standard-slow-drop/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/standard-slow-drop/lease.json",
+      "bytes": 1117,
+      "sha256": "5c5aca9b4369e5a3c32ab4b1063d9577bdfa0dc94ac05071fa57936a76efcb10"
+    },
+    {
+      "path": "normal-slow-drag-v7/drag/capture-provenance.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/capture-provenance.txt",
+      "bytes": 316,
+      "sha256": "0ae40df67c379b71a6306710d315b6443d74cf67d5d1d554a914f7a58c1c358d"
+    },
+    {
+      "path": "normal-slow-drag-v7/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.F70411AB-AE24-416F-A45C-85F12176A7D8-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.F70411AB-AE24-416F-A45C-85F12176A7D8-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v7/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.FD74204C-ED1C-406D-A151-8E779D8015AE-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.FD74204C-ED1C-406D-A151-8E779D8015AE-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v7/drag/defaults-delete-com.leoarrow.wattson.modules-slow.84db3ee5-a06d-4b9d-bcff-da20a516af44-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/defaults-delete-com.leoarrow.wattson.modules-slow.84db3ee5-a06d-4b9d-bcff-da20a516af44-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v7/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.F70411AB-AE24-416F-A45C-85F12176A7D8.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.F70411AB-AE24-416F-A45C-85F12176A7D8.json",
+      "bytes": 192,
+      "sha256": "fb8c1087c598eafb9b8d6b9085fb056a44f91537910b11c055d7712593498c00"
+    },
+    {
+      "path": "normal-slow-drag-v7/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.FD74204C-ED1C-406D-A151-8E779D8015AE.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.FD74204C-ED1C-406D-A151-8E779D8015AE.json",
+      "bytes": 234,
+      "sha256": "6a40d8363158acd069089c55423c4e00f06440936304e3beb692b4a8c097ad95"
+    },
+    {
+      "path": "normal-slow-drag-v7/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.84db3ee5-a06d-4b9d-bcff-da20a516af44.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.84db3ee5-a06d-4b9d-bcff-da20a516af44.json",
+      "bytes": 191,
+      "sha256": "5be8fc0307dd592c16d8d60e91f81aaa9c089f5efbed00298a7ee6bbefa6786c"
+    },
+    {
+      "path": "normal-slow-drag-v7/drag/exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v7/drag/owned-domains.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/owned-domains.txt",
+      "bytes": 215,
+      "sha256": "391371b36d82d9336c1a96cc1da7c341873f6da57cce9b4fbb2fa9fb46536ac0"
+    },
+    {
+      "path": "normal-slow-drag-v7/drag/runtime-observation-tools.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/runtime-observation-tools.sha256",
+      "bytes": 385,
+      "sha256": "b63d8c1aeeb2f4b3cee3d2b963f85e49d37ec96071d6a394d978a030be1948be"
+    },
+    {
+      "path": "normal-slow-drag-v7/native-inputs.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/native-inputs.sha256",
+      "bytes": 521,
+      "sha256": "4c4103ffb069ee48c481f55a565a4965b58fd3d3540b0fb51e41287c568fae53"
+    },
+    {
+      "path": "normal-slow-drag-v7/runner-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/runner-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v7/source-production-after.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/source-production-after.json",
+      "bytes": 5119,
+      "sha256": "9c10f3ace70e249c68ea1a4e410b8070869689f411f627bdae4f3fde135fae7e"
+    },
+    {
+      "path": "normal-slow-drag-v7/source-production-before.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/source-production-before.json",
+      "bytes": 4905,
+      "sha256": "d731973e18a77c5fc981349f6fb7101fbb2027b2373b51b484f2ead0919d39e7"
+    },
+    {
+      "path": "normal-slow-drag-v7/stage-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v7/stage-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/before-state.json",
+      "bytes": 8169,
+      "sha256": "17f22909b976f262609651c901e55ec43795ac4beedd91368a7cd0cb931ef5a3"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/capture-status.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/capture-status.json",
+      "bytes": 192,
+      "sha256": "4feff6fcd7313945fa32618624efe65836faa3a3071938ad28247f69fcbb29a6"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/evaluation-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/evaluation-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/evaluation.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/evaluation.json",
+      "bytes": 6406,
+      "sha256": "9e0a7326869c4fe784998cd172c2e12ded69f0445074f09695ade3f5afc9fe75"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/history.jsonl",
+      "bytes": 141195,
+      "sha256": "b311af389c1b8b725cae1063484d6136e7e80ae695b58d9357dd20d56f98f0ec"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/input-timing-check.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/input-timing-check.json",
+      "bytes": 205,
+      "sha256": "df02d4dbf80a1f5efe19c2bfb3e1c554f026baf51b1a047ceb0c8143dd9f6d4f"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/input.json",
+      "bytes": 15731,
+      "sha256": "d95bee3a0b9e8ad31e2aae71f4fa284ecf4197366e74fc10cae79f8671af7828"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/lease.json",
+      "bytes": 1117,
+      "sha256": "848eb16b2733c2122f608863a4050ed24b854fc5e35b0aa7261fb5424a910be1"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/state.json",
+      "bytes": 13085,
+      "sha256": "852cc2938f36010a2e4e58cea1de4db645006d8ff01e54d294a644551bcede04"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-drop/window.png",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-drop/window.png",
+      "bytes": 197563,
+      "sha256": "b5ebdd053beefaa0c035186811dfc75704416f10657c0d1f9bd9edc54f4f6bb5"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/before-state.json",
+      "bytes": 8370,
+      "sha256": "515cf5d2552fcfabc883786b8b5075cdcb9c52340b1dac37b0588a0d23b10d47"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/capture-status.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/capture-status.json",
+      "bytes": 195,
+      "sha256": "68d59b143308852c0564d62a5e4aaaa6e06c22bdc370f88d81a7efefbc7db50f"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/evaluation-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/evaluation-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/evaluation.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/evaluation.json",
+      "bytes": 6445,
+      "sha256": "406c40f4807e752f67d202bba2041f3d2f11f71a49a68a0f60b91f7a623822bb"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/history.jsonl",
+      "bytes": 212616,
+      "sha256": "91fdd6a470d127f8d3760dbeca37df03f834197157d8b5f7e6c7ee351fe6cf42"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/input-timing-check.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/input-timing-check.json",
+      "bytes": 206,
+      "sha256": "32274bae87aa481dd3070c7cbe8eaeffa4b6993d87f5ff40f5e856d782e61aa5"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/input.json",
+      "bytes": 15723,
+      "sha256": "aac53322ef80cfed875d900fe5c3f6cc1e04ec431a6a6651a59b09329ffb8567"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/lease.json",
+      "bytes": 1117,
+      "sha256": "9cb8e68373d2709fa7370bba342b7359744c8fa8aa782be6226ddd6a665ee653"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/state.json",
+      "bytes": 14813,
+      "sha256": "ea9c91bd86d638d45e951647fd5c9dbab65aced4db3add01ca17f0e1975e12c6"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/classic-slow-outside/window.png",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/classic-slow-outside/window.png",
+      "bytes": 197589,
+      "sha256": "c821d61258083bebcbaac4afdbcfb60f70fd28201309a617bcc50179d4a246a5"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/before-state.json",
+      "bytes": 9186,
+      "sha256": "7968aeae2e6a0cf027fad6686d9b6c1123c3f3f13d61492c0ae14d89fb45e30a"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/capture-status.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/capture-status.json",
+      "bytes": 191,
+      "sha256": "30e2048d7f34c3ba4a990dd013017bc76972b1a2f39f226523a08b9c78108222"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/evaluation-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/evaluation-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/evaluation.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/evaluation.json",
+      "bytes": 6416,
+      "sha256": "57584cd1e0dbf0b2624004b9115aece1094a6524dd5e5bb042243e08f95e630f"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/history.jsonl",
+      "bytes": 629002,
+      "sha256": "4f7d75a5082fc31bdfdd45715cc7c23f5805261d3c143ab908f9e8b197b47c57"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/input-timing-check.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/input-timing-check.json",
+      "bytes": 206,
+      "sha256": "2284d4ddb2f8ea7c64b02bbbe2b80f94c36ef0551cb96727f5d7eb368d8323d2"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/input.json",
+      "bytes": 15732,
+      "sha256": "7bb059926ceb45b5cd72e59aab0cfc34321840957ec756278cc53905930a0a86"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/lease.json",
+      "bytes": 1117,
+      "sha256": "cc518d039536896e5a0438f7f0c412adf4efc93f8bc5928a14c9184a0ae84757"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/state.json",
+      "bytes": 14098,
+      "sha256": "7b2b519a6f0c22a059b44ce6ed3030c3ea76b229980215f2bddf4cc56d4c872e"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-drop/window.png",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-drop/window.png",
+      "bytes": 363768,
+      "sha256": "b0bdc5401eb907fe0b47af7c77fb27c2795a2419e0f0881f6820e76dd6bfca6a"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/before-state.json",
+      "bytes": 9231,
+      "sha256": "bdadd14564564e369b6c0f4cbd0f6740801b4a46fea2e80ede7df4791057d32b"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/capture-status.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/capture-status.json",
+      "bytes": 194,
+      "sha256": "61c559c6ba99790ca6b2b57f7848291f26d24dd5e1bc5db0f57d117f7c67c92d"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/evaluation-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/evaluation-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/evaluation.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/evaluation.json",
+      "bytes": 6433,
+      "sha256": "8788110c27a7923cc0ef947b0fe76ebcdbc922e98acc01a548e46b0a397ddfa8"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/history.jsonl",
+      "bytes": 705590,
+      "sha256": "d51a763272e499fe533c8ec53d9c0571ef0cd75e01f7998b5f2e33128995f26a"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/input-timing-check.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/input-timing-check.json",
+      "bytes": 205,
+      "sha256": "74737007e445349da4449b8b315dc5fed7f8d412dc0e7b00726c15f5c5a3de92"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/input.json",
+      "bytes": 15727,
+      "sha256": "c6a3e9d1ab9ffcae4e484641891ae0aad7f13b720e079728925ed7c52ad2cc3c"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/lease.json",
+      "bytes": 1117,
+      "sha256": "077da81937fd560f16a6bcdfee4af8e7615c39af87445fa85797cbc27e12bf87"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/state.json",
+      "bytes": 15669,
+      "sha256": "8a8d2b7e5e95a75f09280841d2dfa71272f7c5c36e21f518b2d245c8f5aa8f27"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/clear-slow-outside/window.png",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/clear-slow-outside/window.png",
+      "bytes": 360968,
+      "sha256": "dfa4a3f841fa146312a80e9eb08ff8f17503f04c256db04bbe741e36cfcda6fa"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/before-state.json",
+      "bytes": 9204,
+      "sha256": "e378d5782eac02432528d83771dbaef75d35681e22a6627274c1e3711fcb1927"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/capture-status.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/capture-status.json",
+      "bytes": 193,
+      "sha256": "68b9284c4997872f6aca61afc1622095a35a515ec4d5f06dd11001b95ae8721d"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/evaluation-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/evaluation-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/evaluation.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/evaluation.json",
+      "bytes": 6429,
+      "sha256": "55241fc25e9bb17ecc6e786e4f997b292bf62d6a78a2870d1857a7fe204a5040"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/history.jsonl",
+      "bytes": 382158,
+      "sha256": "a81cdfb87d418c23506150f69569d1c218fb52b92d1a83fa9686258d3e86cd83"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/input-timing-check.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/input-timing-check.json",
+      "bytes": 206,
+      "sha256": "c1d0c38bd90e44d319dc7992fde63aa92366aaf2e648027b58e7fcce1a318400"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/input.json",
+      "bytes": 15732,
+      "sha256": "c34ab386c1912cf11e70fa574121a269ddefada7aab3f7253c37a7e1057f43f8"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/lease.json",
+      "bytes": 1117,
+      "sha256": "fe87a8e27d066575282209b849f0e7f58b975b7b5c52c90c2ac51b25add302f8"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/state.json",
+      "bytes": 14133,
+      "sha256": "54482224a2c53d5a6546fa2062f2a5a801458e2d18687fd0292f4eb410d9a257"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-drop/window.png",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-drop/window.png",
+      "bytes": 363710,
+      "sha256": "a85749771538931eb78ff77a04d6170073e129f704f672d70fcd6df3fdbdd414"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/before-state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/before-state.json",
+      "bytes": 9248,
+      "sha256": "60471ca77a0ff4f0b20ea2670f560607b996744b0fb4cb3fea049912f203c7a6"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/capture-status.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/capture-status.json",
+      "bytes": 197,
+      "sha256": "958b46f00f85b9c11294e6b8cec9535bd9bba7c0f1902d5b34d538d2a5d94942"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/evaluation-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/evaluation-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/evaluation.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/evaluation.json",
+      "bytes": 6451,
+      "sha256": "d6eb89f12d5a1004b5459f94835fe10f85e67cdabdda1b9590963d648862c7d2"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/history.jsonl",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/history.jsonl",
+      "bytes": 458922,
+      "sha256": "b02dd203952f02229401962946e25932994f2538909b61cfe7609ec22cc39256"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/input-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/input-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/input-stdout.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/input-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/input-timing-check.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/input-timing-check.json",
+      "bytes": 205,
+      "sha256": "606bf6952e87639c315eb7ff2d9e5cbffe4a2a790a660d7ab9871944dd3e6886"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/input.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/input.json",
+      "bytes": 15729,
+      "sha256": "d45b5c4b89fa70ceb8e0d110e154d48cd6511dd9030fde4c20998536b6875f43"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/lease-stderr.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/lease-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/lease.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/lease.json",
+      "bytes": 1117,
+      "sha256": "d4eeaba91679711161666a7f53916e7d23e90f9bf40520748af9ca94c091dede"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/state.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/state.json",
+      "bytes": 15706,
+      "sha256": "25e9c26438babd543ddda95ee95f311aaf20d341245d46b4c4b2108b82068657"
+    },
+    {
+      "path": "normal-slow-drag-v8/cases/standard-slow-outside/window.png",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/cases/standard-slow-outside/window.png",
+      "bytes": 360968,
+      "sha256": "dfa4a3f841fa146312a80e9eb08ff8f17503f04c256db04bbe741e36cfcda6fa"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/capture-provenance.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/capture-provenance.txt",
+      "bytes": 316,
+      "sha256": "9a29ca743c4b990523dea264e21d6ddc44ae3fe0e8e5d720114796abd139837e"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.D90B529E-BB49-4EEB-BB33-9F093F3B114E-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.D90B529E-BB49-4EEB-BB33-9F093F3B114E-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.F09D92E8-E7B1-4758-B2C3-850FB792C7C7-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/defaults-delete-Wattson.SwiftTests.ModuleOrderView.F09D92E8-E7B1-4758-B2C3-850FB792C7C7-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/defaults-delete-com.leoarrow.wattson.modules-slow.4530c59d-b98e-4222-be35-b1747cd4984f-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/defaults-delete-com.leoarrow.wattson.modules-slow.4530c59d-b98e-4222-be35-b1747cd4984f-exit-code.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.D90B529E-BB49-4EEB-BB33-9F093F3B114E.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.D90B529E-BB49-4EEB-BB33-9F093F3B114E.json",
+      "bytes": 234,
+      "sha256": "b9904def30f8a9d5a73ca366b34616242c00b1652c00a76d3ad7dce96ad20ae0"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.F09D92E8-E7B1-4758-B2C3-850FB792C7C7.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/defaults-finalized-Wattson.SwiftTests.ModuleOrderView.F09D92E8-E7B1-4758-B2C3-850FB792C7C7.json",
+      "bytes": 192,
+      "sha256": "966ca4b20496b3059ce58e1213ababd35c1aacb6539af895a9a45f4a8d11938e"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.4530c59d-b98e-4222-be35-b1747cd4984f.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/defaults-finalized-com.leoarrow.wattson.modules-slow.4530c59d-b98e-4222-be35-b1747cd4984f.json",
+      "bytes": 191,
+      "sha256": "e8ce1a5b5cc77c8159014274f76382b4264d07ffaf735a91ac87e0608d504a7b"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/compiled-ready.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/manual-classic-0/compiled-ready.json",
+      "bytes": 132,
+      "sha256": "d1636e99bb06ff49fda561301a8be366e2a390b43fb15d926d8c94bd907191bb"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/complete.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/manual-classic-0/complete.json",
+      "bytes": 23755,
+      "sha256": "be8e8a333252826b3abead4f844d77ff3e01bfbaae778e38c1da3a68122dda5b"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/manual-classic-0/exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/result.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/manual-classic-0/result.json",
+      "bytes": 23755,
+      "sha256": "be8e8a333252826b3abead4f844d77ff3e01bfbaae778e38c1da3a68122dda5b"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/run.err",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/manual-classic-0/run.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/run.log",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/manual-classic-0/run.log",
+      "bytes": 96,
+      "sha256": "91cdcc64d655f700b0803dc5a13bb10da3817afc79550c43f1b40e7251e078fb"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/owned-domains.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/owned-domains.txt",
+      "bytes": 215,
+      "sha256": "1d001fa1d297917d7c645ac564982de221ed20a679fdeaa674608d6d2b14fd0e"
+    },
+    {
+      "path": "normal-slow-drag-v8/drag/runtime-observation-tools.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/drag/runtime-observation-tools.sha256",
+      "bytes": 385,
+      "sha256": "fa65c116db54ddc01240bf0428289509072f5c20664b43736a3bde64351607fe"
+    },
+    {
+      "path": "normal-slow-drag-v8/native-inputs.sha256",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/native-inputs.sha256",
+      "bytes": 521,
+      "sha256": "77655b6f6ffb85f1660e5107bb93a75cd86636b98046c049329c3561d4ad2eab"
+    },
+    {
+      "path": "normal-slow-drag-v8/runner-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/runner-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "normal-slow-drag-v8/source-production-after.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/source-production-after.json",
+      "bytes": 5119,
+      "sha256": "9c10f3ace70e249c68ea1a4e410b8070869689f411f627bdae4f3fde135fae7e"
+    },
+    {
+      "path": "normal-slow-drag-v8/source-production-before.json",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/source-production-before.json",
+      "bytes": 4905,
+      "sha256": "d731973e18a77c5fc981349f6fb7101fbb2027b2373b51b484f2ead0919d39e7"
+    },
+    {
+      "path": "normal-slow-drag-v8/stage-exit-code.txt",
+      "source": ".build/normal-slow-drag.noindex/normal-slow-drag-v8/stage-exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "vm-owner/closure-r8-evidence-c341310fc1337d89d7dbed6d2cb8528a9c85afac11749af06561622809f3b1fc.tar.gz",
+      "source": ".build/normal-slow-drag.noindex/vm-owner/closure-r8-evidence-c341310fc1337d89d7dbed6d2cb8528a9c85afac11749af06561622809f3b1fc.tar.gz",
+      "bytes": 34709,
+      "sha256": "c341310fc1337d89d7dbed6d2cb8528a9c85afac11749af06561622809f3b1fc"
+    },
+    {
+      "path": "vm-owner/closure-r8-package.json",
+      "source": ".build/normal-slow-drag.noindex/vm-owner/closure-r8-package.json",
+      "bytes": 747,
+      "sha256": "ea084a8796f88d07479e1d61257ccaa3caaf31b50127f78b669b3d377d1f32df"
+    },
+    {
+      "path": "vm-owner/r2-residual-audit/closure.json",
+      "source": ".build/normal-slow-drag.noindex/vm-owner/r2-residual-audit/closure.json",
+      "bytes": 424,
+      "sha256": "dbbbabe213f22640038826b2ce1d58c62611534175b99f6b47ec6cfc7514ec05"
+    },
+    {
+      "path": "vm-owner/r2-residual-audit/final-owned-residual-audit.json",
+      "source": ".build/normal-slow-drag.noindex/vm-owner/r2-residual-audit/final-owned-residual-audit.json",
+      "bytes": 7329,
+      "sha256": "8e5867bd347e34e8cad96f32385bb59c2190bd2c3266abdf33cb45ce80c496e8"
+    },
+    {
+      "path": "vm-owner/r4-residual-audit/closure.json",
+      "source": ".build/normal-slow-drag.noindex/vm-owner/r4-residual-audit/closure.json",
+      "bytes": 1252,
+      "sha256": "f7548818719366dfcd0c99a11f82e534af44152e73d802e303cb0bee049fd4a3"
+    },
+    {
+      "path": "vm-owner/r4-residual-audit/final-owned-residual-audit.json",
+      "source": ".build/normal-slow-drag.noindex/vm-owner/r4-residual-audit/final-owned-residual-audit.json",
+      "bytes": 9775,
+      "sha256": "9ee950e1244a96442df3da31aaaee27741ed6287f31cade1345c35c27590c5e7"
+    },
+    {
+      "path": "vm-owner/r8-residual-audit/closure.json",
+      "source": ".build/normal-slow-drag.noindex/vm-owner/r8-residual-audit/closure.json",
+      "bytes": 3783,
+      "sha256": "e190719e4d2fa83fc74917e258d63ec80f880924e723a18f0bee2091c0c5b6f9"
+    },
+    {
+      "path": "vm-owner/r8-residual-audit/compact-gallery.json",
+      "source": ".build/normal-slow-drag.noindex/vm-owner/r8-residual-audit/compact-gallery.json",
+      "bytes": 2398,
+      "sha256": "4bb276fb619c4c195b1ad7e94280243baa8b4cad4c4746c8c79a2e6d80c3ce9c"
+    },
+    {
+      "path": "vm-owner/r8-residual-audit/final-owned-residual-audit.json",
+      "source": ".build/normal-slow-drag.noindex/vm-owner/r8-residual-audit/final-owned-residual-audit.json",
+      "bytes": 20689,
+      "sha256": "134859c18958ebfcb8f2c238f712edd465b3c61eb4666a2929670c37933d9709"
+    },
+    {
+      "path": "vm-owner/session.vQVHVI/vnc-bind-rejection.json",
+      "source": ".build/normal-slow-drag.noindex/vm-owner/session.vQVHVI/vnc-bind-rejection.json",
+      "bytes": 698,
+      "sha256": "9482781dab8b3f1ff6cf4a3aa3a34d7fe7145e45b5a30b8d29a0139d7fd17074"
+    },
+    {
+      "path": "vm-owner/session.vQVHVI/wide-bind-closure.json",
+      "source": ".build/normal-slow-drag.noindex/vm-owner/session.vQVHVI/wide-bind-closure.json",
+      "bytes": 1128,
+      "sha256": "4f8d4ab90efbae41e228be53ca8cea8db6f8fd121d2effe1ba436631c344daad"
+    },
+    {
+      "path": "vnc/calibration_core.py",
+      "source": ".build/normal-slow-drag.noindex/vnc/calibration_core.py",
+      "bytes": 1664,
+      "sha256": "c57ae638762f2378cf201c9851e9c8dcbed192b8daad339f54dffe7999c2855e"
+    },
+    {
+      "path": "vnc/direct-vz-loopback-fake-tests.log",
+      "source": ".build/normal-slow-drag.noindex/vnc/direct-vz-loopback-fake-tests.log",
+      "bytes": 1243,
+      "sha256": "cec00079bc7d7fe3e57311bfa11a95c64d57590b3e5e82e57e251c80e4ce041a"
+    },
+    {
+      "path": "vnc/direct-vz-loopback-prepared-evidence.json",
+      "source": ".build/normal-slow-drag.noindex/vnc/direct-vz-loopback-prepared-evidence.json",
+      "bytes": 1425,
+      "sha256": "453c857a30290aaf8647d65ed14bdb728f1987ee2ee32c99b8ac3fdadd775299"
+    },
+    {
+      "path": "vnc/direct_vz_20378286.py",
+      "source": ".build/normal-slow-drag.noindex/vnc/direct_vz_20378286.py",
+      "bytes": 13849,
+      "sha256": "203782868882f8e523e149e8cc6cff8b8b16ffc1c424f9f8263a078692f5eb34"
+    },
+    {
+      "path": "vnc/direct_vz_loopback.py",
+      "source": ".build/normal-slow-drag.noindex/vnc/direct_vz_loopback.py",
+      "bytes": 13261,
+      "sha256": "67666db83e520329c21ad5dda0050d9dfec7612c22755bf4610d04b684c9b60d"
+    },
+    {
+      "path": "vnc/guest_calibrated_7c8aac80.py",
+      "source": ".build/normal-slow-drag.noindex/vnc/guest_calibrated_7c8aac80.py",
+      "bytes": 14705,
+      "sha256": "7c8aac8000637ac46472ad29915aad80a6942d559bbf9a0477e444aeb396c0bd"
+    },
+    {
+      "path": "vnc/slow_vnc_7c6866aa.py",
+      "source": ".build/normal-slow-drag.noindex/vnc/slow_vnc_7c6866aa.py",
+      "bytes": 12978,
+      "sha256": "7c6866aa9fb1292c260dc694962211968bb18c7a85f693344fb405eb29f04cbe"
+    },
+    {
+      "path": "vnc/test_direct_vz_loopback.py",
+      "source": ".build/normal-slow-drag.noindex/vnc/test_direct_vz_loopback.py",
+      "bytes": 9970,
+      "sha256": "4783103947b9939eefae224b6d3515e3560bf00b7ad175327bfa785a11fccf0e"
+    }
+  ],
+  "totalBytes": 7126489,
+  "omissions": [
+    "Private credentials and raw VNC URL logs",
+    "Tart/app/dylib executables and caches",
+    "115 MB full source archive, whose identity and exact 58 relevant member bytes are retained in the compact subset",
+    "Duplicated expanded fixture tools and prior case PNGs; exact six final own-window images are retained",
+    "Expanded 59-file final owner archive omitted to avoid duplication; compact raw audit, closure, index and actual root completion receipt retained separately"
+  ]
+}

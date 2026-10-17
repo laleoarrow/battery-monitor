@@ -1,0 +1,13 @@
+{
+  "controllerActualExit": 1,
+  "controllerExecSession": 94742,
+  "stageActualExit": 0,
+  "stageExecSession": 38845,
+  "firstCaseVerdict": "passed",
+  "firstCaseNativeSessionSeconds": 1.9781953749999843,
+  "nextCase": "classic-slow-outside",
+  "nextCaseInputAttempted": false,
+  "failure": "next reset not observed in 15seconds while sampler continued; shared fixed-name publication under investigation",
+  "productionChanged": false,
+  "hostInput": false
+}

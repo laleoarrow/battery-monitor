@@ -1,0 +1,11 @@
+{
+  "atUTC": "2026-10-17T05:07:04.250853+00:00",
+  "ownedVM": "Wattson-NormalSlowDrag-20261017",
+  "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+  "action": "enable",
+  "guestOnly": true,
+  "hostPermissionsChanged": false,
+  "exitCode": 0,
+  "stdout": "Starting...\nSet the client options.\nDone.\n",
+  "stderr": ""
+}

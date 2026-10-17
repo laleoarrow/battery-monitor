@@ -1,0 +1,25 @@
+{
+  "CGEvent": {
+    "preflight": "driver/results/preflight.json",
+    "inputAttempted": false,
+    "available": false
+  },
+  "controllerV2": {
+    "actualExitCode": 1,
+    "reason": "Frozen state path rejected by GuestLease whitelist; zero pointer events",
+    "record": "control/v2-controller-failure"
+  },
+  "controllerV3": {
+    "actualExitCode": 1,
+    "reason": "VNC writes completed but no own-window or native drag event observed; not a product verdict",
+    "driverPostedMessages": 63,
+    "sequencePosted": true,
+    "observedOwnWindowEvents": 0,
+    "nativeDragEvents": 0,
+    "pressedMouseButtonsAtFinal": 0,
+    "record": "normal-slow-drag-v3",
+    "inputJournalSHA256": "00b917605fa195e2f387a10ba918e0abd8a1d4da906aa30fdf8e7c59296e7841"
+  },
+  "guestLegacyVNCDisabled": true,
+  "hostLegacyPasswordRemoved": true
+}

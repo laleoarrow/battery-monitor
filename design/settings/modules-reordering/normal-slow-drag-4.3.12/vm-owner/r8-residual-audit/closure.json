@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "atUTC": "2026-10-17T05:49:24.409683+00:00",
+  "ownedVM": "Wattson-NormalSlowDrag-20261017",
+  "sessionDirectory": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/vm-owner/session.tBZbx0",
+  "rootOuter": {
+    "rootOuterExecSessionID": 23371,
+    "actualExit": 0,
+    "origin": "Root retrieved the actual completion-tool result and messaged this owner; not inferred from exit-code.txt."
+  },
+  "audit": {
+    "dispatchActualExit": 0,
+    "probeExit": 0,
+    "stageExit": 0,
+    "allAbsentImmediateAndDelayed": true,
+    "withinProcessQuietSeconds": 95.06225899999993,
+    "ownedDomainCount": 21,
+    "ownedPathCount": 64,
+    "sharedIPCTemporaryFilesAbsent": true,
+    "stagingAndNewParentsRemoved": true
+  },
+  "gracefulStopActualExit": 0,
+  "ownerRepeatedStopActualExit": 2,
+  "ownerRepeatedStopExplanation": "After graceful external stop succeeded, owner cleanup repeated stop and received already-stopped status; then verified stopped/Running=false before delete.",
+  "ownerDeleteActualExit": 0,
+  "ownerWrapperExitCode": 0,
+  "ownVMAbsent": true,
+  "ownVMDiskDirectoryAbsent": true,
+  "ownedRuntimeCopyAndDylibAbsent": true,
+  "ownedProcessesStillRunning": {},
+  "ownedProcessIDs": {
+    "ownerWrapperPID": 55280,
+    "copiedTartPID": 55356,
+    "guardPID": 55351,
+    "guardRunnerPID": 55349
+  },
+  "privateSessionCredentialAbsent": true,
+  "rootDerivedPasswordAbsent": true,
+  "rawVNCFilesAbsent": true,
+  "vncProofInactive": true,
+  "ownedHostMounts": [],
+  "twoTestLabVMsStopped": true,
+  "peerAttribution": {
+    "ownCloneRemoved": true,
+    "baseAndTestLabStillStopped": true,
+    "independentlyRemovedPeers": [],
+    "independentlyChangedPeers": [],
+    "independentlyAddedPeers": [],
+    "attribution": "This owner issued clone/set/run/stop/delete only for Wattson-NormalSlowDrag-20261017. Peer changes are observations of other owners, not repaired or counted as own cleanup failures."
+  },
+  "canonicalBefore": {
+    "version": "4.3.13",
+    "bundleID": "com.leoarrow.wattson",
+    "executableSHA256": "0157da00eee05bd82b4817f4da4de7e1190159c76ad0b83672b6af73b50e610e",
+    "infoSHA256": "553cd094cf3e87872cc82b026aad6d4d2698ac2a46c01b11f7fe790e21d71534",
+    "pids": [
+      {
+        "pid": 40690,
+        "uid": 501,
+        "executable": "/Applications/Wa"
+      }
+    ],
+    "receiptVersion": "4.3.13",
+    "signatureVerified": true
+  },
+  "canonicalAfter": {
+    "version": "4.3.13",
+    "bundleID": "com.leoarrow.wattson",
+    "executableSHA256": "0157da00eee05bd82b4817f4da4de7e1190159c76ad0b83672b6af73b50e610e",
+    "infoSHA256": "553cd094cf3e87872cc82b026aad6d4d2698ac2a46c01b11f7fe790e21d71534",
+    "pids": [
+      {
+        "pid": 40690,
+        "uid": 501,
+        "executable": "/Applications/Wa"
+      }
+    ],
+    "receiptVersion": "4.3.13",
+    "signatureVerified": true
+  },
+  "canonicalMatchesByField": {
+    "version": true,
+    "bundleID": true,
+    "executableSHA256": true,
+    "infoSHA256": true,
+    "pids": true,
+    "receiptVersion": true,
+    "signatureVerified": true
+  },
+  "originalTartSHA256Unchanged": true,
+  "callerVMsAfter": [
+    {
+      "Running": false,
+      "Size": 33,
+      "Source": "local",
+      "Name": "macOS-TestLab",
+      "State": "stopped",
+      "Disk": 50,
+      "Accessed": "2026-10-15T06:45:45Z"
+    },
+    {
+      "Running": false,
+      "Size": 30,
+      "Source": "local",
+      "Name": "macOS-TestLab-Base",
+      "State": "stopped",
+      "Disk": 50,
+      "Accessed": "2026-10-17T05:31:14Z"
+    }
+  ],
+  "productionAppOrHostInputControlledByThisOwner": false,
+  "gallery": "compact-gallery.json",
+  "applicability": "Frozen 5d/4.3.12 native fixture; root source-applicability-4.3.13.json documents production renderer equivalence."
+}

@@ -328,10 +328,19 @@ with unchanged order, zero preference writes and cleared state; none counts as
 a successful native drop or cancellation. `standard-fast-1` missed the handle
 and remains unverified. `standard-held-drop` received no input before the
 600-second fixture deadline (exit 124); the window had automatically closed
-before the user could try it. Normal held-button dragging therefore remains
-unverified on this source. No new live-session hang was observed in the four
+before the user could try it. At that stage, normal held-button dragging remained
+unverified on that source. No new live-session hang was observed in the four
 rejected cases. The separately coordinated, user-authorized local candidate
 installation is not a public release or a claim of complete drag acceptance.
+
+The 2026-10-17 [normal slow-drag follow-up](../design/settings/modules-reordering/normal-slow-drag-4.3.12/README.md)
+closes that narrow interaction gap on frozen `5d5c896` / 4.3.12: Classic,
+Standard and Clear each pass a genuine held native drop and outside cancellation
+in the disposable ARM VM. Drops save once; cancellation saves nothing; identities,
+visibility and final row opacity remain correct. The Modules implementation is
+source-equivalent to installed 4.3.13. Earlier failed/unverified observations remain
+preserved. This is guest VNC input with AppKit callbacks, without host input or an
+FPS/human-mouse claim.
 
 The main popover footer now replaces the UI4 ordinary segmented
 control inside a glass surface with three mutually exclusive native `.glass`

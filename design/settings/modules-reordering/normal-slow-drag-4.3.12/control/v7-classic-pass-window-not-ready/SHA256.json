@@ -1,0 +1,10 @@
+{
+  "failure-state.json": "f0e5d8e050dcd8aa2c25d8509accee7aaa9f8170823c71cb7695fc4c5126b725",
+  "actual-outcome.json": "8de1957bc43219ed47c51741e5fccfb6756c9b48a3e6b1d50abe51f6a4c2fe61",
+  "guest-command-publications.jsonl": "950e92840cdd93c9c9db072dcd2935f38579f071f23dc20bfc866e242e5372b7",
+  "run-six-cases.py": "6d5cc0cd1565704f90e3a470e6fd782b692fe7a78cb4c7dd9006eb81f7d81b39",
+  "failure-history.jsonl": "6d193893f46e76d1b7a4109d7ae693950a55ae9af40d7a236266e53d5e524986",
+  "GuestLease.swift": "a73f210e234634a261fa85b6c4d63e0643af8ab7a82a2bfd17bf3da7b2bd3bfe",
+  "cases-summary.json": "7b1d4d64eac2ccf71ea65a02af4a1fda5e8fac9e85e5c8dc02f4508f81915216",
+  "cases-error.json": "100f819d754eb1c934bea3d4ed81dba61350734b15f24f7860abf2dcd5d5aeb0"
+}

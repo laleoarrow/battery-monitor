@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "status": "prepared-not-product-pass",
+  "frozenProductionCommit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+  "frozenProductionVersion": "4.3.12",
+  "parentOverlaySHA256": "5f65080f39ce54ab40b7971c9a9ef38534847cea8dff538c779b6da85c5c20b5",
+  "overlayArchive": "normal-slow-drag-v3-tools.tar.gz",
+  "overlaySHA256": "937b75bdf4fc9688ba34d62b2d4ffc19371bee0f52518a6b1844bdb67420b79a",
+  "files": {
+    "run-normal-slow-drag.sh": "55e0c826630bd7e7feca968e34d5d8aae4413356322c27e551191c1c5f028c59",
+    "modules-normal-slow-drag.swift": "3923db6563d5a81190f7786ba676a67a19bf6def88a7acd5905975e1d063d0fd",
+    "native-drag-observer-v6.swift": "b7a7eff917edd20e4688762a0e0986c202e0b863e3d7fa4c8fc00a319aa6b83d",
+    "manual-window-capture.c": "de58b9b2aa1f45c4f2b9853c258d16e1c565150776a82e50d529bb3a742579f2",
+    "manual-window-capture.h": "dc787f79e622663ae1ad3aca4687595e3b1a695ff7929125bc01fac0048eeb7a",
+    "finalize-owned-defaults.py": "4f30cc7f2644296a393d0985d22aa70a0cab5dfe2d1114702f581e7c5e3e106b"
+  },
+  "onlyChangedOverlayMember": "modules-normal-slow-drag.swift",
+  "stageSHA256": "dc1bbdc694e281190c209629d1ab13505096705a52d41cea2b192356d4e5ee31",
+  "stageInvocation": [
+    "/opt/homebrew/bin/tart",
+    "exec",
+    "Wattson-NormalSlowDrag-20261017",
+    "/bin/bash",
+    "/Volumes/My Shared Files/normaldrag/fixture-v6/stage-normal-slow-drag-v6.sh",
+    "normal-slow-drag-v6",
+    "937b75bdf4fc9688ba34d62b2d4ffc19371bee0f52518a6b1844bdb67420b79a"
+  ],
+  "observerAndEvaluatorUnchanged": true,
+  "inputGenerated": false,
+  "actualNativeDragAcceptance": false,
+  "target": "finite stack.visibleRect intersect bounds; 12pt above visible minY; within lower half of last row; exact-stack hit-test ancestry required before input",
+  "hitTestCoordinates": "content.superview coordinates from window base; nil-superview fallback window base",
+  "checks": {
+    "swiftParseExitCode": 0,
+    "bashSyntaxExitCode": 0,
+    "headlessTargetBuildAndRunExitCode": 0,
+    "headlessTargetReport": "headless-target-result.json",
+    "headlessTargetSource": "headless-target-check.swift",
+    "scope": "Native headless geometry/helper typecheck only; no window, application, input or product acceptance"
+  },
+  "preparationFiles": {
+    "fixture-v2-to-v3.diff": "bce7b95ec58f61a0508b0d44f2d9caf8833aad45ef93cd7389d62d14d7f1b19e",
+    "headless-target-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "headless-target-check.swift": "fa4cbe4752acc61a23aba1e4ea9763747ed9d55b87e3a08ab04f4cc7582bd784",
+    "headless-target-result.json": "651901b1b1c4f3f8ad259ad1f5ebe83f97b68e7bf7af6fce555959c758d827da",
+    "headless-target-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run-headless-target-check.sh": "61f531098be0933a131624c976bc3fae81e72ed89272680be99575db29691aa9",
+    "stage-v2-to-v3.diff": "92fc3acc7a5ad308fee6bbc9c68c0967edba78569871bdaec4cce2d378ebc7cf"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "atUTC": "2026-10-17T05:31:56.978298+00:00",
+  "ownedVM": "Wattson-NormalSlowDrag-20261017",
+  "rootOuterExecSessionID": 23371,
+  "sessionDirectory": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/vm-owner/session.tBZbx0",
+  "network": "default Tart NAT",
+  "guestIP": "192.168.64.27",
+  "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+  "hwModel": "VirtualMac2,1",
+  "GUIUser": "admin",
+  "vCPU": 2,
+  "memoryBytes": 8589934592,
+  "macOSVersion": "26.6.1",
+  "uname": "arm64",
+  "active": true,
+  "actualBinds": [
+    {
+      "host": "::1",
+      "pid": 55356,
+      "port": 49803
+    }
+  ],
+  "inputAuthorized": false,
+  "interposeEvents": [
+    "bind-pass",
+    "bind-rewrite",
+    "listen-pass",
+    "loaded"
+  ],
+  "vncBackend": "directVZ",
+  "vncExecutablePath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/loopback-vz/runtime.session.tBZbx0/tart",
+  "vncHost": "::1",
+  "vncInterposeTracePath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/vm-owner/session.tBZbx0/vnc-interpose-trace.jsonl",
+  "vncListenerPID": 55356,
+  "vncPort": 49803,
+  "privateConnectionPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/vm-owner/session.tBZbx0/vnc-connection.json",
+  "privateConnectionMode": "0600",
+  "guestProject": "/Users/admin/Project/Wattson-NormalSlowDrag-QA",
+  "sharedRoot": "/Volumes/My Shared Files/normaldrag",
+  "repoReadOnlyShare": "/Volumes/My Shared Files/repo",
+  "guestIdentityCommandActualExit": 0,
+  "twoTestLabVMsStopped": true,
+  "authenticationAttemptedByOwner": false,
+  "inputAttemptedByOwner": false,
+  "fixtureStartedByOwner": false,
+  "canonicalHostBaseline": {
+    "version": "4.3.13",
+    "bundleID": "com.leoarrow.wattson",
+    "executableSHA256": "0157da00eee05bd82b4817f4da4de7e1190159c76ad0b83672b6af73b50e610e",
+    "infoSHA256": "553cd094cf3e87872cc82b026aad6d4d2698ac2a46c01b11f7fe790e21d71534",
+    "pids": [
+      {
+        "pid": 40690,
+        "uid": 501,
+        "executable": "/Applications/Wa"
+      }
+    ],
+    "receiptVersion": "4.3.13",
+    "signatureVerified": true
+  }
+}

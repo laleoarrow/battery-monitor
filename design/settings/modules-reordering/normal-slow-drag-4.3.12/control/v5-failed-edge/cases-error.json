@@ -1,0 +1,20 @@
+{
+  "errorType": "RuntimeError",
+  "error": "Native observer did not pass classic-slow-drop",
+  "completedCases": [
+    {
+      "case": "classic-slow-drop",
+      "exitCode": 1,
+      "verdict": "failed",
+      "observedNativeSessionSeconds": 2.6083211250000033,
+      "failedAssertions": [
+        "operation",
+        "savedOrder",
+        "displayOrder",
+        "writes",
+        "notifications"
+      ],
+      "missingEvidence": []
+    }
+  ]
+}

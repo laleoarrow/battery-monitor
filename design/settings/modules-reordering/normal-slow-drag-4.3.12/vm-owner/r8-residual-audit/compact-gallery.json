@@ -1,0 +1,62 @@
+{
+  "sourceCommit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+  "testedVersion": "4.3.12",
+  "sourceApplicability": "control/source-applicability-4.3.13.json",
+  "hostInput": false,
+  "images": [
+    {
+      "case": "classic-slow-drop",
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/classic-slow-drop-final.png",
+      "sha256": "b5ebdd053beefaa0c035186811dfc75704416f10657c0d1f9bd9edc54f4f6bb5",
+      "width": 1472,
+      "height": 1072,
+      "verdictFromRootController": "passed",
+      "observedNativeSessionSeconds": 1.9761025416667053
+    },
+    {
+      "case": "classic-slow-outside",
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/classic-slow-outside-final.png",
+      "sha256": "c821d61258083bebcbaac4afdbcfb60f70fd28201309a617bcc50179d4a246a5",
+      "width": 1472,
+      "height": 1072,
+      "verdictFromRootController": "passed",
+      "observedNativeSessionSeconds": 2.6209635833333778
+    },
+    {
+      "case": "standard-slow-drop",
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/standard-slow-drop-final.png",
+      "sha256": "a85749771538931eb78ff77a04d6170073e129f704f672d70fcd6df3fdbdd414",
+      "width": 1472,
+      "height": 1072,
+      "verdictFromRootController": "passed",
+      "observedNativeSessionSeconds": 1.98606883333332
+    },
+    {
+      "case": "standard-slow-outside",
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/standard-slow-outside-final.png",
+      "sha256": "dfa4a3f841fa146312a80e9eb08ff8f17503f04c256db04bbe741e36cfcda6fa",
+      "width": 1472,
+      "height": 1072,
+      "verdictFromRootController": "passed",
+      "observedNativeSessionSeconds": 2.643244541666604
+    },
+    {
+      "case": "clear-slow-drop",
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/clear-slow-drop-final.png",
+      "sha256": "b0bdc5401eb907fe0b47af7c77fb27c2795a2419e0f0881f6820e76dd6bfca6a",
+      "width": 1472,
+      "height": 1072,
+      "verdictFromRootController": "passed",
+      "observedNativeSessionSeconds": 1.9854279583332755
+    },
+    {
+      "case": "clear-slow-outside",
+      "path": "normal-slow-drag-v8/drag/manual-classic-0/clear-slow-outside-final.png",
+      "sha256": "dfa4a3f841fa146312a80e9eb08ff8f17503f04c256db04bbe741e36cfcda6fa",
+      "width": 1472,
+      "height": 1072,
+      "verdictFromRootController": "passed",
+      "observedNativeSessionSeconds": 2.5728242916666204
+    }
+  ]
+}

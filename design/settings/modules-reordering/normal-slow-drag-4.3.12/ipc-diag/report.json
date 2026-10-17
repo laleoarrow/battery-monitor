@@ -1,0 +1,55 @@
+{
+  "sourceSHA256": "243a327d03c905df4aba7f198004ad3dbff1d532ddb3160a4a94ef1a1fd9a1fd",
+  "hostWrites": [
+    {
+      "step": 1,
+      "epoch": 1792215636.7558389,
+      "elapsed": 1.012772917,
+      "value": "host-1",
+      "inodeBefore": 143629431,
+      "inodeAfter": 143629443,
+      "mtimeEpoch": 1792215636.7556272
+    },
+    {
+      "step": 2,
+      "epoch": 1792215638.748447,
+      "elapsed": 3.0053739170000004,
+      "value": "host-2",
+      "inodeBefore": 143629443,
+      "inodeAfter": 143629447,
+      "mtimeEpoch": 1792215638.7482183
+    }
+  ],
+  "inputGenerated": false,
+  "applicationStarted": false,
+  "guestActualExitCode": 0,
+  "guestObservedValues": {
+    "host-replaced.json": [
+      "host-0"
+    ],
+    "guest-replaced.json": [
+      "guest-0",
+      "guest-1",
+      "guest-2"
+    ],
+    "local.json": [
+      "local-0",
+      "guest-1",
+      "guest-2"
+    ]
+  },
+  "guestAtomicWriteErrors": [],
+  "hostLastValue": "host-2",
+  "hostTemporaryMarkersRemoved": true,
+  "guestCleanupIndependentProbeActualExitCode": 0,
+  "guestOwnedTemporaryRootAbsent": true,
+  "hostExecutionActualExitCode": 0,
+  "executedHostHarnessSHA256": "cc11922c3c5c39cd33d82a209e7420367b5debf9b79311597969d20ffab297d9",
+  "postExecutionHarnessHardening": "host-run.py adds HUP/INT/TERM finalization and signal-blocked Popen registration for future runs; not a re-executed diagnostic",
+  "cleanupReport": "cleanup-report.json",
+  "actualExecution": {
+    "hostEntryExitCode": 0,
+    "guestReaderEntryExitCode": 0,
+    "independentCleanupProbeExitCode": 0
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "boxFrame" : [
+    0,
+    0,
+    503,
+    360
+  ],
+  "conclusion" : "The fixture's outer-stack minY+3 target is outside the NSBox contentView hit region even though stack.bounds contains it. minY+18 and minY+24 hit within the stack.",
+  "contentViewFrame" : [
+    6,
+    6,
+    491,
+    348
+  ],
+  "contentViewMargins" : [
+    5,
+    5
+  ],
+  "hitTestCoordinateDocumentation" : "https:\/\/developer.apple.com\/documentation\/appkit\/nsview\/hittest(_:)",
+  "macOS" : "Version 26.5.2 (Build 25F84)",
+  "points" : [
+    {
+      "hitAncestors" : [
+        "NSBox"
+      ],
+      "hitAncestryContainsExactStack" : false,
+      "hitClass" : "NSBox",
+      "insideStackBounds" : true,
+      "pointInOuterBox" : [
+        251.5,
+        3
+      ]
+    },
+    {
+      "hitAncestors" : [
+        "NSBox"
+      ],
+      "hitAncestryContainsExactStack" : false,
+      "hitClass" : "NSBox",
+      "insideStackBounds" : true,
+      "pointInOuterBox" : [
+        251.5,
+        6
+      ]
+    },
+    {
+      "hitAncestors" : [
+        "NSView",
+        "NSStackView",
+        "NSView",
+        "NSBox"
+      ],
+      "hitAncestryContainsExactStack" : true,
+      "hitClass" : "NSView",
+      "insideStackBounds" : true,
+      "pointInOuterBox" : [
+        251.5,
+        6.5
+      ]
+    },
+    {
+      "hitAncestors" : [
+        "NSView",
+        "NSStackView",
+        "NSView",
+        "NSBox"
+      ],
+      "hitAncestryContainsExactStack" : true,
+      "hitClass" : "NSView",
+      "insideStackBounds" : true,
+      "pointInOuterBox" : [
+        251.5,
+        7
+      ]
+    },
+    {
+      "hitAncestors" : [
+        "NSView",
+        "NSStackView",
+        "NSView",
+        "NSBox"
+      ],
+      "hitAncestryContainsExactStack" : true,
+      "hitClass" : "NSView",
+      "insideStackBounds" : true,
+      "pointInOuterBox" : [
+        251.5,
+        18
+      ]
+    },
+    {
+      "hitAncestors" : [
+        "NSView",
+        "NSStackView",
+        "NSView",
+        "NSBox"
+      ],
+      "hitAncestryContainsExactStack" : true,
+      "hitClass" : "NSView",
+      "insideStackBounds" : true,
+      "pointInOuterBox" : [
+        251.5,
+        24
+      ]
+    },
+    {
+      "hitAncestors" : [
+        "NSView",
+        "NSStackView",
+        "NSView",
+        "NSBox"
+      ],
+      "hitAncestryContainsExactStack" : true,
+      "hitClass" : "NSView",
+      "insideStackBounds" : true,
+      "pointInOuterBox" : [
+        251.5,
+        35
+      ]
+    }
+  ],
+  "rowFramesInStack" : [
+    [
+      0,
+      288,
+      503,
+      72
+    ],
+    [
+      0,
+      216,
+      503,
+      72
+    ],
+    [
+      0,
+      144,
+      503,
+      72
+    ],
+    [
+      0,
+      72,
+      503,
+      72
+    ],
+    [
+      0,
+      0,
+      503,
+      72
+    ]
+  ],
+  "rowsBounds" : [
+    0,
+    0,
+    503,
+    360
+  ],
+  "rowsFrameInImmediateSuperview" : [
+    -6,
+    -6,
+    503,
+    360
+  ],
+  "rowsSuperviewIsBoxContentView" : true,
+  "scope" : "Headless AppKit NSBox hierarchy\/hit testing; not a native drag or product acceptance",
+  "sourceLines" : [
+    "MenuBar\/SettingsWindowController.swift:3279-3317",
+    ".build\/normal-slow-drag.noindex\/fixture\/modules-normal-slow-drag.swift:281-283"
+  ]
+}

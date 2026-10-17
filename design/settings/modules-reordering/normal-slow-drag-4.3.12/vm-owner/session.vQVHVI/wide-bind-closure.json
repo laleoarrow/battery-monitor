@@ -1,0 +1,39 @@
+{
+  "atUTC": "2026-10-17T05:05:05.027491+00:00",
+  "session": "session.vQVHVI",
+  "actualWideListener": true,
+  "lsofEvidence": "vnc-bind-rejection.json",
+  "nativeInputAttempted": false,
+  "authenticationAttemptedByOwner": false,
+  "ownVMAbsent": true,
+  "privateFilesRemaining": 0,
+  "callerVMs": [
+    {
+      "State": "stopped",
+      "Source": "local",
+      "Disk": 50,
+      "Name": "macOS-TestLab",
+      "Accessed": "2026-10-15T06:45:45Z",
+      "Size": 33,
+      "Running": false
+    },
+    {
+      "State": "stopped",
+      "Source": "local",
+      "Disk": 50,
+      "Name": "macOS-TestLab-Base",
+      "Accessed": "2026-10-17T05:04:18Z",
+      "Size": 30,
+      "Running": false
+    }
+  ],
+  "wrapperExitCode": 1,
+  "cleanup": {
+    "ownCloneRemoved": true,
+    "baseAndTestLabStillStopped": true,
+    "independentlyRemovedPeers": [],
+    "independentlyChangedPeers": [],
+    "independentlyAddedPeers": [],
+    "attribution": "This owner issued clone/set/run/stop/delete only for Wattson-NormalSlowDrag-20261017. Peer changes are observations of other owners, not repaired or counted as own cleanup failures."
+  }
+}

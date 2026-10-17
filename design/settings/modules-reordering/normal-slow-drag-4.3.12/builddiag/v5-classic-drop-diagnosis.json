@@ -1,0 +1,138 @@
+{
+  "scope": "Read-only diagnosis of v5 classic-slow-drop; v5 remains failed and no product source changed",
+  "rootCause": "The frozen fixture target is inside ModuleReorderList bounds but outside the NSBox contentView hit region. NSBox.addSubview routes rows into its inset content view, while production constraints pin rows to outer NSBox edges.",
+  "evidenceBasis": [
+    "Production container source at 5d5c896; current Modules implementation identical according to root equivalence record",
+    "Real v5 native AppKit source callbacks and preview timeline",
+    "Real headless AppKit NSBox hierarchy/hit test, actualExitCode 0"
+  ],
+  "inferenceLimit": "v5 fixture did not observe destination callback entry/exit, so draggingExited is inferred from its matching production behavior and timing; the NSBox hit-region exclusion itself is directly reproduced.",
+  "actualEndpointAppKit": [
+    600.49609375,
+    215.0078125
+  ],
+  "stackFrameAppKit": [
+    349,
+    212,
+    503,
+    360
+  ],
+  "actualEndpointStackLocal": [
+    251.49609375,
+    3.0078125
+  ],
+  "previewTimeline": [
+    {
+      "elapsed": 2.9166377500000067,
+      "pressedMouseButtons": 1,
+      "displayOrder": [
+        "flow",
+        "ring",
+        "lanes",
+        "history",
+        "runtime"
+      ]
+    },
+    {
+      "elapsed": 3.228590125000011,
+      "pressedMouseButtons": 1,
+      "displayOrder": [
+        "ring",
+        "flow",
+        "lanes",
+        "history",
+        "runtime"
+      ]
+    },
+    {
+      "elapsed": 3.46626416666669,
+      "pressedMouseButtons": 1,
+      "displayOrder": [
+        "ring",
+        "flow",
+        "lanes",
+        "history",
+        "runtime"
+      ]
+    },
+    {
+      "elapsed": 3.6672630000000197,
+      "pressedMouseButtons": 1,
+      "displayOrder": [
+        "ring",
+        "lanes",
+        "flow",
+        "history",
+        "runtime"
+      ]
+    },
+    {
+      "elapsed": 3.9357161250000274,
+      "pressedMouseButtons": 1,
+      "displayOrder": [
+        "ring",
+        "lanes",
+        "history",
+        "flow",
+        "runtime"
+      ]
+    },
+    {
+      "elapsed": 4.034029291666684,
+      "pressedMouseButtons": 1,
+      "displayOrder": [
+        "ring",
+        "lanes",
+        "history",
+        "flow",
+        "runtime"
+      ]
+    },
+    {
+      "elapsed": 4.200060250000007,
+      "pressedMouseButtons": 1,
+      "displayOrder": [
+        "ring",
+        "lanes",
+        "history",
+        "runtime",
+        "flow"
+      ]
+    },
+    {
+      "elapsed": 4.351813333333354,
+      "pressedMouseButtons": 1,
+      "displayOrder": [
+        "flow",
+        "ring",
+        "lanes",
+        "history",
+        "runtime"
+      ]
+    },
+    {
+      "elapsed": 4.967660250000023,
+      "pressedMouseButtons": 0,
+      "displayOrder": [
+        "flow",
+        "ring",
+        "lanes",
+        "history",
+        "runtime"
+      ]
+    }
+  ],
+  "nativeOperations": [
+    0,
+    0
+  ],
+  "inputSHA256": {
+    "before-state.json": "4a62e81966924d7e0f548f2ed0bcd399140c890c987a33a783b98a0289032713",
+    "state.json": "01a25e4d9a25cc6d4bfa3da07fb3dd6427f8644b8256df3be49a79453206275b",
+    "history.jsonl": "9bd33756b0b1279104dab6e91a8bb9c3d1c5131ad5cf653441def7dfd30383f2",
+    "input.json": "6863a7436b5463b6dd06801d8cda6efdf603b2ef2f9153e2cfd96404116283a4"
+  },
+  "nextNarrowCheck": "Fixture v6 derives a finite attached visible target and validates exact ModuleReorderList identity in native content hit ancestry before input; native source callbacks and unchanged evaluator determine actual pass/fail.",
+  "hitTestParameterContract": "Point is in receiver superview coordinates; use window.convertPoint(fromScreen:), then content.superview.convert(windowPoint,from:nil) if it exists before content.hitTest.",
+  "docs": "https://developer.apple.com/documentation/appkit/nsview/hittest(_:)"
+}

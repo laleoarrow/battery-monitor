@@ -1,0 +1,253 @@
+{
+  "schema": 1,
+  "case": "standard-slow-outside",
+  "kind": "outside",
+  "verdict": "passed",
+  "checks": {
+    "originalIMPForwarded": true,
+    "exactNativeCallbackSequence": true,
+    "sameNativeSession": true,
+    "sameNativeSource": true,
+    "noSyntheticCallback": true,
+    "realLeftButtonDownAtNativeStart": true,
+    "nativeSessionHeldOverOneSecond": true,
+    "leftButtonUpAfterNativeEnd": true,
+    "operation": true,
+    "stateClearedAfterEnd": true,
+    "stateRemainsCleared": true,
+    "savedOrder": true,
+    "displayOrder": true,
+    "writes": true,
+    "notifications": true,
+    "rowIdentityRetained": true,
+    "alphaRestored": true,
+    "activeRowFeedbackObserved": true,
+    "visibilityUnchanged": true,
+    "windowIdentityRetained": true,
+    "settingsScrollRetained": true,
+    "noMouseKeyboardCue": true,
+    "fixtureDoesNotGenerateInputOrCallbacks": true,
+    "guestVNCLabel": true,
+    "productionPreflightOverridesNil": true
+  },
+  "missingEvidence": [],
+  "failedAssertions": [],
+  "observedNativeSessionSeconds": 2.643244541666604,
+  "nativeSessionEvents": [
+    {
+      "callbackPersistence": "memory-only-existing-sampler",
+      "case": "standard-slow-outside",
+      "currentEvent": {
+        "locationInWindow": [
+          683.49609375,
+          382.0078125
+        ],
+        "timestamp": 800.840057208,
+        "type": 6,
+        "windowNumber": 60
+      },
+      "displayOrder": [
+        "flow",
+        "ring",
+        "lanes",
+        "history",
+        "runtime"
+      ],
+      "dragState": {
+        "available": true,
+        "draggedModuleIsNil": false,
+        "dragSessionIsNil": false,
+        "originalOrderIsEmpty": false,
+        "readOnlySwiftReflection": true
+      },
+      "elapsed": 19.46268541666666,
+      "monotonicUptime": 800.8510234166667,
+      "phase": "willBegin.enter",
+      "pressedMouseButtons": 1,
+      "rowAlpha": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "savedOrder": [
+        "flow",
+        "ring",
+        "lanes",
+        "history",
+        "runtime"
+      ],
+      "screenPoint": [
+        831.99609375,
+        564.00390625
+      ],
+      "sessionIdentity": "ObjectIdentifier(0x000000080efc01c0)",
+      "sourceIdentity": "ObjectIdentifier(0x000000080fed0f00)",
+      "syntheticCallback": false
+    },
+    {
+      "callbackPersistence": "memory-only-existing-sampler",
+      "case": "standard-slow-outside",
+      "currentEvent": {
+        "locationInWindow": [
+          683.49609375,
+          382.0078125
+        ],
+        "timestamp": 800.840057208,
+        "type": 6,
+        "windowNumber": 60
+      },
+      "displayOrder": [
+        "flow",
+        "ring",
+        "lanes",
+        "history",
+        "runtime"
+      ],
+      "dragState": {
+        "available": true,
+        "draggedModuleIsNil": false,
+        "dragSessionIsNil": false,
+        "originalOrderIsEmpty": false,
+        "readOnlySwiftReflection": true
+      },
+      "elapsed": 19.463403458333346,
+      "monotonicUptime": 800.8517415,
+      "phase": "willBegin.return",
+      "pressedMouseButtons": 1,
+      "rowAlpha": [
+        0.25,
+        1,
+        1,
+        1,
+        1
+      ],
+      "savedOrder": [
+        "flow",
+        "ring",
+        "lanes",
+        "history",
+        "runtime"
+      ],
+      "screenPoint": [
+        831.99609375,
+        564.00390625
+      ],
+      "sessionIdentity": "ObjectIdentifier(0x000000080efc01c0)",
+      "sourceIdentity": "ObjectIdentifier(0x000000080fed0f00)",
+      "syntheticCallback": false
+    },
+    {
+      "callbackPersistence": "memory-only-existing-sampler",
+      "case": "standard-slow-outside",
+      "currentEvent": {
+        "locationInWindow": [
+          779.99609375,
+          260.00390625
+        ],
+        "timestamp": 802.793123875,
+        "type": 2,
+        "windowNumber": 60
+      },
+      "displayOrder": [
+        "flow",
+        "ring",
+        "lanes",
+        "history",
+        "runtime"
+      ],
+      "dragState": {
+        "available": true,
+        "draggedModuleIsNil": false,
+        "dragSessionIsNil": false,
+        "originalOrderIsEmpty": false,
+        "readOnlySwiftReflection": true
+      },
+      "elapsed": 22.104852958333367,
+      "monotonicUptime": 803.4931910416667,
+      "operation": 0,
+      "phase": "endedAt.enter",
+      "pressedMouseButtons": 0,
+      "rowAlpha": [
+        0.25,
+        1,
+        1,
+        1,
+        1
+      ],
+      "savedOrder": [
+        "flow",
+        "ring",
+        "lanes",
+        "history",
+        "runtime"
+      ],
+      "screenPoint": [
+        931.99609375,
+        438.00390625
+      ],
+      "sessionIdentity": "ObjectIdentifier(0x000000080efc01c0)",
+      "sourceIdentity": "ObjectIdentifier(0x000000080fed0f00)",
+      "syntheticCallback": false
+    },
+    {
+      "callbackPersistence": "memory-only-existing-sampler",
+      "case": "standard-slow-outside",
+      "currentEvent": {
+        "locationInWindow": [
+          779.99609375,
+          260.00390625
+        ],
+        "timestamp": 802.793123875,
+        "type": 2,
+        "windowNumber": 60
+      },
+      "displayOrder": [
+        "flow",
+        "ring",
+        "lanes",
+        "history",
+        "runtime"
+      ],
+      "dragState": {
+        "available": true,
+        "draggedModuleIsNil": true,
+        "dragSessionIsNil": true,
+        "originalOrderIsEmpty": true,
+        "readOnlySwiftReflection": true
+      },
+      "elapsed": 22.105929916666696,
+      "monotonicUptime": 803.4942679583334,
+      "operation": 0,
+      "phase": "endedAt.return",
+      "pressedMouseButtons": 0,
+      "rowAlpha": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "savedOrder": [
+        "flow",
+        "ring",
+        "lanes",
+        "history",
+        "runtime"
+      ],
+      "screenPoint": [
+        931.99609375,
+        438.00390625
+      ],
+      "sessionIdentity": "ObjectIdentifier(0x000000080efc01c0)",
+      "sourceIdentity": "ObjectIdentifier(0x000000080fed0f00)",
+      "syntheticCallback": false
+    }
+  ],
+  "scope": "WindowServer/AppKit native source callbacks from explicitly authorized guest VNC input, final persistence/state and mouse focus cue. This does not claim human mouse input or a frame-rate measurement.",
+  "inputSHA256": {
+    "state.json": "25e9c26438babd543ddda95ee95f311aaf20d341245d46b4c4b2108b82068657",
+    "history.jsonl": "b02dd203952f02229401962946e25932994f2538909b61cfe7609ec22cc39256"
+  }
+}

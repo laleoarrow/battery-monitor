@@ -1,0 +1,15 @@
+{
+  "inputMethod": "owned-copy-loopback-directVZ-VNC",
+  "hostInput": false,
+  "inputAttempted": false,
+  "sequencePosted": false,
+  "nativeDragVerdict": "observer-required",
+  "events": [],
+  "leaseAtUTC": "2026-10-17T05:42:04.942Z",
+  "leaseSignedAgeAtCheck": 0.058884,
+  "clockSkewToleranceSeconds": 1,
+  "errorType": "KeyError",
+  "error": "Input operation did not complete",
+  "socketClosed": true,
+  "exitCode": 78
+}

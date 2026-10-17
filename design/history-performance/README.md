@@ -4,7 +4,7 @@ This local upgrade reduces History's update preparation work while retaining
 the 4.3.10 presentation-based axis transitions. Raw readings, Peak, the 60-slot
 ring, sampling cadence and animation policy remain unchanged.
 
-Current status: **Wattson 4.3.11 is installed and running on the maintainer
+Status at this closeout: **Wattson 4.3.11 was installed and running on the maintainer
 Mac**, from frozen source **9fef74944447d4753d1edde82997dc41a479ccad** and exact
 PKG SHA-256 `72c2e20dcf13e6d69c27e9aee83528241ab58c881b1e1609a28f87b479caf21a`.
 The [canonical installation check](host/local-install-verified.json) exited zero:
@@ -17,11 +17,17 @@ process. This is a local candidate update, without a public release.
 
 Complete host regression, native interaction checks and the five-mode exact-byte
 ARM VM PKG matrix pass. Actual already-released gestures leave no dimmed row or
-wrong order. Normal held native drop remains unverified: automation batches drag
+wrong order. Normal held native drop was unverified at that stage: automation batches drag
 events in about 18 ms, and the fixture expired before the prepared human check.
 The [local installation decision](host/local-install-gates.json) and original
 unverified cases retain this boundary; successful held native drop or
-cancellation is not claimed for the new preflight source.
+cancellation was not claimed for that preflight source.
+
+The later [normal slow-drag follow-up](../settings/modules-reordering/normal-slow-drag-4.3.12/README.md)
+passes all six genuine held native drop/cancellation cases across Classic,
+Standard and Clear on frozen 4.3.12 source, whose Modules implementation matches
+installed 4.3.13. It preserves the earlier failures and zero-input timeouts and
+does not add an FPS claim or rerun the complete History/installation matrix.
 
 Earlier candidate 91f9072 is superseded: real rapid mouse testing reproduced a
 queued drag starting after release and leaving a row dimmed. The correction

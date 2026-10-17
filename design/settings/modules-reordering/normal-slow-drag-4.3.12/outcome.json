@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "sourceCommit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+  "testedVersion": "4.3.12",
+  "installedVersionApplicability": "Modules implementation equals installed 4.3.13; no full 4.3.13 execution claim",
+  "run": "normal-slow-drag-v8",
+  "nativeGestureAcceptance": "passed",
+  "casesPassed": 6,
+  "caseAssertionsEach": 25,
+  "controllerActualExitCode": 0,
+  "stageActualExitCode": 0,
+  "probeActualExitCode": 0,
+  "productionTopLevelSwiftFilesUnchanged": 47,
+  "productionCodeChanged": false,
+  "hostInput": false,
+  "humanMouseInput": false,
+  "facts": [
+    {
+      "case": "classic-slow-drop",
+      "verdict": "passed",
+      "nativeSeconds": 1.9761025416667053,
+      "postedHeldSeconds": 2.308666000026278,
+      "writes": 1,
+      "notifications": 1,
+      "targetHitExactStack": true,
+      "capture": "captured"
+    },
+    {
+      "case": "classic-slow-outside",
+      "verdict": "passed",
+      "nativeSeconds": 2.6209635833333778,
+      "postedHeldSeconds": 2.3110889999661595,
+      "writes": 0,
+      "notifications": 0,
+      "targetHitExactStack": true,
+      "capture": "captured"
+    },
+    {
+      "case": "standard-slow-drop",
+      "verdict": "passed",
+      "nativeSeconds": 1.98606883333332,
+      "postedHeldSeconds": 2.3091910000075586,
+      "writes": 1,
+      "notifications": 1,
+      "targetHitExactStack": true,
+      "capture": "captured"
+    },
+    {
+      "case": "standard-slow-outside",
+      "verdict": "passed",
+      "nativeSeconds": 2.643244541666604,
+      "postedHeldSeconds": 2.310961999988649,
+      "writes": 0,
+      "notifications": 0,
+      "targetHitExactStack": true,
+      "capture": "captured"
+    },
+    {
+      "case": "clear-slow-drop",
+      "verdict": "passed",
+      "nativeSeconds": 1.9854279583332755,
+      "postedHeldSeconds": 2.3084449999732897,
+      "writes": 1,
+      "notifications": 1,
+      "targetHitExactStack": true,
+      "capture": "captured"
+    },
+    {
+      "case": "clear-slow-outside",
+      "verdict": "passed",
+      "nativeSeconds": 2.5728242916666204,
+      "postedHeldSeconds": 2.303928999986965,
+      "writes": 0,
+      "notifications": 0,
+      "targetHitExactStack": true,
+      "capture": "captured"
+    }
+  ],
+  "initialRawOutcome": "control/v8-actual-outcome.json",
+  "initialRawOutcomeSHA256": "500f77fb95bbff5d799a2255e4dc3e9116620c698a6dc6de35c144086b89ce3b",
+  "finalOwnerActualExitCode": 0,
+  "finalResidualAudit": {
+    "evidence": "vm-owner/r8-residual-audit/final-owned-residual-audit.json",
+    "closure": "vm-owner/r8-residual-audit/closure.json",
+    "quietSeconds": 95.06225899999993,
+    "allAbsentImmediateAndDelayed": true,
+    "ownedDomains": 21,
+    "ownedPaths": 64,
+    "dispatchActualExitCode": 0,
+    "probeActualExitCode": 0,
+    "stageActualExitCode": 0
+  },
+  "VMDeleted": true,
+  "privateFilesRemoved": true,
+  "canonicalInstallationAfterAudit": {
+    "version": "4.3.13",
+    "allBaselineFieldsMatch": true,
+    "evidence": "vm-owner/r8-residual-audit/closure.json"
+  },
+  "closeoutComplete": true,
+  "ownedRuntimeCopyAndDylibAbsent": true,
+  "ownedProcessesStillRunning": {},
+  "ownedHostMounts": [],
+  "twoTestLabVMsStillStopped": true,
+  "originalTartSHA256Unchanged": true,
+  "rootActualCompletionReceipt": "control/root-owner-completion.json"
+}

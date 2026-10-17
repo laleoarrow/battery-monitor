@@ -1,0 +1,149 @@
+{
+  "preparationOnly": false,
+  "nativeProductOutcome": "six-v8-native-cases-passed-owner-cleanup-complete",
+  "productionTestSource": {
+    "commit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+    "version": "4.3.12",
+    "fullArchiveSha256": "8aa52b90ec8f2e7f93e2ccc7ebc2fd9ab7e89217a95bfd93edccbb3e90156ca3",
+    "fullArchiveBytes": 115241614,
+    "fullArchiveOmittedFromDurableCopy": true,
+    "compactSubset": {
+      "path": "fixture/compact-inputs/source-5d5c896b7a15-native-build-inputs-subset.tar.gz",
+      "sha256": "d200e4a40f75672dffab6ec56e10569cf1bf078d22d385e0fdc15673d852a736",
+      "bytes": 347288,
+      "members": 58,
+      "contents": "52 recursive Swift source files, VERSION, 2 lifecycle helpers, 3 production logo PNGs",
+      "identity": "Exact relevant member bytes from full archive and Git source; distinct subset archive",
+      "runtimeBeforeAfterScope": "47 top-level Swift files; five Core/Diagnostics Swift files are subset-verified, not compiled/rehashed by top-level runtime helper",
+      "doesNotReplaceRecordedStageInput": true
+    }
+  },
+  "sealedFixtureInputs": {
+    "v6Tools": {
+      "path": "fixture/qa-tools-v6.tar.gz",
+      "sha256": "89343e38e8ce2e0327bef3324d6a0d308dbfa1a99368409454c190dbe913c9a5"
+    },
+    "v2OverlayTools": {
+      "path": "fixture/normal-slow-drag-v2-tools.tar.gz",
+      "sha256": "5f65080f39ce54ab40b7971c9a9ef38534847cea8dff538c779b6da85c5c20b5"
+    },
+    "v6OverlayTools": {
+      "path": "fixture-v6/normal-slow-drag-v3-tools.tar.gz",
+      "sha256": "937b75bdf4fc9688ba34d62b2d4ffc19371bee0f52518a6b1844bdb67420b79a",
+      "bytes": 13644
+    },
+    "v6Stage": {
+      "path": "fixture-v6/stage-normal-slow-drag-v6.sh",
+      "sha256": "dc1bbdc694e281190c209629d1ab13505096705a52d41cea2b192356d4e5ee31",
+      "bytes": 3693
+    }
+  },
+  "preparedInputChain": [
+    "vnc/direct_vz_loopback.py",
+    "vnc/guest_calibrated_7c8aac80.py",
+    "vnc/direct_vz_20378286.py",
+    "vnc/slow_vnc_7c6866aa.py",
+    "control/GuestLease.swift",
+    "control/run-six-cases.py",
+    "vnc/calibration_core.py"
+  ],
+  "canonicalApplicability": {
+    "installedVersion": "4.3.13",
+    "sourceCommit": "8529889597961de756fa57397b1d1149d6d1b536",
+    "evidence": "control/source-applicability-4.3.13.json",
+    "scope": "50 other Swift files identical; Settings suffix beginning MenuBarIconCardButton includes Modules classes/window controller and equals test source; module/sidebar artwork region equals test source",
+    "fullCanonicalVersionExecutedByThisRun": false
+  },
+  "boundaries": [
+    "Six v8 native cases passed; actual root owner exit 0 and immediate/95.062259-second all-absent union audit complete",
+    "Native backend and evaluator synthetic tests are separate infrastructure evidence",
+    "No human mouse feel, FPS or broad History performance claim",
+    "No host mouse, keyboard, permission change, canonical install or public release was performed by this run"
+  ],
+  "frozenBackendTools": {
+    "path": "loopback-vz/nat-final-freeze.tar.gz",
+    "sha256": "3bfe92c68d15545a90bfc3a8aefba56cd018df845181859fe044686124a34f1e",
+    "bytes": 38906,
+    "members": 179,
+    "scope": "Interposer/temporary-copy sources, actual native checks, retained failure records and artifact metadata; excludes raw Tart, dylib and owned runtime"
+  },
+  "currentPreparedRun": "normal-slow-drag-v8",
+  "v5NativeAttempt": {
+    "evidence": "control/v5-failed-edge/actual-outcome.json",
+    "verdict": "failed",
+    "nativeSessionSeconds": 2.608321125,
+    "controllerActualExitCode": 1,
+    "stageActualExitCode": 0,
+    "productionChanged": false,
+    "scope": "Observed real held native session; clipped-border fixture endpoint is not evidence of a successful normal interior drop. Preserve raw v5 separately from v6."
+  },
+  "pendingGeometryProof": {
+    "status": "actual-headless-proof-present",
+    "source": "builddiag/nsbox-drop-target.swift",
+    "sourceSha256": "5cea03b8ea6496a80168f2f843ee42a0874199c2ce467f9f8c4d1a7dfe0017d3",
+    "stdout": "builddiag/nsbox-drop-target.stdout.json",
+    "stdoutSha256": "92342e8ce107414b60948c166257f8597fd1b4f7934fb2a9df943461c44d52fb",
+    "run": "builddiag/nsbox-drop-target-run.json",
+    "actualExitCode": 0,
+    "diagnosis": "builddiag/v5-classic-drop-diagnosis.json",
+    "diagnosisSha256": "7e5e5faf42456646df02bb0be78ac3e6a2f30e212b9898169935df796ebbbde4",
+    "scope": "Directly reproduces NSBox content hit-region exclusion. v5 destination callback entry/exit was not observed; draggingExited remains inferred from matching production behavior and preview timeline, not directly recorded."
+  },
+  "v6FixtureScope": {
+    "status": "frozen-tools-present-reused-by-v7",
+    "fixtureSource": "fixture-v6/modules-normal-slow-drag.swift",
+    "fixtureSourceSha256": "3923db6563d5a81190f7786ba676a67a19bf6def88a7acd5905975e1d063d0fd",
+    "change": "Finite attached stack.visibleRect intersect bounds target, 12 points above visible minY within last row lower half; actual hit ancestry gate; independent raw v6/v7 cases",
+    "observerRunnerEvaluatorChanged": false,
+    "doesNotRewriteV5Outcome": true
+  },
+  "v6NativeAttempt": {
+    "evidence": "control/v6-first-pass-reset-timeout/actual-outcome.json",
+    "controllerActualExitCode": 1,
+    "stageActualExitCode": 0,
+    "firstCaseVerdict": "passed",
+    "firstCaseNativeSessionSeconds": 1.9781953749999843,
+    "nextCaseInputAttempted": false,
+    "scope": "First interior drop passed; subsequent reset command timed out before input. Not a full six-case pass."
+  },
+  "commandPublicationDiagnostic": {
+    "report": "ipc-diag/report.json",
+    "rawGuest": "ipc-diag/guest-raw.jsonl",
+    "actualExecutedHostSource": "ipc-diag/host-run-executed.py",
+    "actualHostExitCode": 0,
+    "actualGuestExitCode": 0,
+    "cleanupReport": "ipc-diag/cleanup-report.json",
+    "scope": "Eight-second guest Foundation reader retained host-replaced old value while guest-side atomic writes were observed. No product app or pointer input in diagnostic. v7 publishes commands guest-side and records SHA readback. Hardened future host-run.py differs from actual execution; retain both and label correctly."
+  },
+  "v8ActualEvidence": {
+    "outcome": "control/v8-actual-outcome.json",
+    "facts": "control/v8-six-case-facts.json",
+    "cases": "normal-slow-drag-v8/cases",
+    "controllerActualExitCode": 0,
+    "stageActualExitCode": 0,
+    "probeActualExitCode": 0,
+    "productionTopLevelSwiftFilesUnchanged": 47,
+    "finalOwnerCleanup": "vm-owner/r8-residual-audit/closure.json"
+  },
+  "v7NativeAttempt": {
+    "evidence": "control/v7-classic-pass-window-not-ready/actual-outcome.json",
+    "controllerActualExitCode": 1,
+    "stageActualExitCode": 0,
+    "completedNativeCaseVerdicts": [
+      "passed",
+      "passed"
+    ],
+    "thirdCaseInputAttempted": false,
+    "thirdCaseDriverActualExitCode": 78,
+    "readinessProof": "builddiag/v7-standard-cgwindow-transient.json"
+  },
+  "finalOwnerEvidence": {
+    "archive": "vm-owner/closure-r8-evidence-c341310fc1337d89d7dbed6d2cb8528a9c85afac11749af06561622809f3b1fc.tar.gz",
+    "archiveSha256": "c341310fc1337d89d7dbed6d2cb8528a9c85afac11749af06561622809f3b1fc",
+    "bytes": 34709,
+    "regularMembers": 59,
+    "scope": "Exact wrapper/guard/launch freeze, loopback bind and trace proof, audit source/resources/raw output, owner cleanup/canonical identity proof; no runtime binaries or credentials",
+    "rootCompletionReceipt": "control/root-owner-completion.json"
+  },
+  "capturePathMapping": "capture-gallery.json"
+}

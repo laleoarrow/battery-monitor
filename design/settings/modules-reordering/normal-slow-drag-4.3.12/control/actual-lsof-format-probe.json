@@ -1,0 +1,29 @@
+{
+  "atUTC": "2026-10-17T05:03:19.967922+00:00",
+  "knownOwnedBind": [
+    "127.0.0.1",
+    53055
+  ],
+  "actualLsofFields": [
+    "p44468",
+    "cPython",
+    "\nf3",
+    "n127.0.0.1:53055",
+    "TST=LISTEN",
+    "TQR=0",
+    "TQS=0",
+    "\n"
+  ],
+  "actualLsofExit": 0,
+  "noAuthentication": true,
+  "noInput": true,
+  "parsed": [
+    {
+      "host": "127.0.0.1",
+      "port": 53055,
+      "pid": 44468
+    }
+  ],
+  "parserAccepted": true,
+  "ownedSocketClosed": true
+}

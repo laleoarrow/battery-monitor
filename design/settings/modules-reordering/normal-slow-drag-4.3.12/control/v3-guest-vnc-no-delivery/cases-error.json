@@ -1,0 +1,5 @@
+{
+  "errorType": "TimeoutError",
+  "error": "Fixture state predicate timed out",
+  "completedCases": []
+}

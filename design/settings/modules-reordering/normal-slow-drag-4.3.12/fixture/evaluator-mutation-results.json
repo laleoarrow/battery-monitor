@@ -1,0 +1,426 @@
+{
+  "schema": 1,
+  "kind": "PURE_DATA_EVALUATOR_SELF_TESTS",
+  "productionPassClaim": false,
+  "VMStarted": false,
+  "AppCompiledOrLaunched": false,
+  "inputInjected": false,
+  "syntheticPositiveControlsAreNotProductEvidence": true,
+  "tests": [
+    {
+      "name": "synthetic-drop-positive-control",
+      "kind": "drop",
+      "expectedExit": 0,
+      "actualExit": 0,
+      "expectedFailedCheck": null,
+      "evaluatorVerdict": "passed",
+      "failedChecks": [],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "synthetic-outside-positive-control",
+      "kind": "outside",
+      "expectedExit": 0,
+      "actualExit": 0,
+      "expectedFailedCheck": null,
+      "evaluatorVerdict": "passed",
+      "failedChecks": [],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "missing-native-ended-pair",
+      "kind": "drop",
+      "expectedExit": 78,
+      "actualExit": 78,
+      "expectedFailedCheck": null,
+      "evaluatorVerdict": "unverified",
+      "failedChecks": [
+        "exactNativeCallbackSequence",
+        "nativeSessionHeldOverOneSecond",
+        "operation",
+        "stateClearedAfterEnd"
+      ],
+      "missingEvidence": [
+        "Missing genuine native willBegin/end pair",
+        "Missing callback monotonic timestamps"
+      ],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "missing-native-begin-pair",
+      "kind": "drop",
+      "expectedExit": 78,
+      "actualExit": 78,
+      "expectedFailedCheck": null,
+      "evaluatorVerdict": "unverified",
+      "failedChecks": [
+        "exactNativeCallbackSequence",
+        "realLeftButtonDownAtNativeStart",
+        "nativeSessionHeldOverOneSecond"
+      ],
+      "missingEvidence": [
+        "Missing genuine native willBegin/end pair",
+        "Missing callback monotonic timestamps"
+      ],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "missing-all-native-callbacks",
+      "kind": "drop",
+      "expectedExit": 78,
+      "actualExit": 78,
+      "expectedFailedCheck": null,
+      "evaluatorVerdict": "unverified",
+      "failedChecks": [
+        "exactNativeCallbackSequence",
+        "sameNativeSession",
+        "sameNativeSource",
+        "realLeftButtonDownAtNativeStart",
+        "nativeSessionHeldOverOneSecond",
+        "operation",
+        "stateClearedAfterEnd"
+      ],
+      "missingEvidence": [
+        "Missing genuine native willBegin/end pair",
+        "Missing callback monotonic timestamps"
+      ],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "short-native-session-0.99s",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "nativeSessionHeldOverOneSecond",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "nativeSessionHeldOverOneSecond"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "boundary-exactly-1-second",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "nativeSessionHeldOverOneSecond",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "nativeSessionHeldOverOneSecond"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "boundary-over-1-second",
+      "kind": "drop",
+      "expectedExit": 0,
+      "actualExit": 0,
+      "expectedFailedCheck": null,
+      "evaluatorVerdict": "passed",
+      "failedChecks": [],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "nonfinite-native-duration",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "nativeSessionHeldOverOneSecond",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "nativeSessionHeldOverOneSecond"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "zero-native-start-button-mask",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "realLeftButtonDownAtNativeStart",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "realLeftButtonDownAtNativeStart"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "right-only-native-start-button-mask",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "realLeftButtonDownAtNativeStart",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "realLeftButtonDownAtNativeStart"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "pressed-buttons-seam-not-nil",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "productionPreflightOverridesNil",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "productionPreflightOverridesNil"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "native-start-seam-not-nil",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "productionPreflightOverridesNil",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "productionPreflightOverridesNil"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "seam-observation-unavailable",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "productionPreflightOverridesNil",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "productionPreflightOverridesNil"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "wrong-native-session",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "sameNativeSession",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "sameNativeSession"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "wrong-native-source",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "sameNativeSource",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "sameNativeSource"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "extra-native-callback",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "exactNativeCallbackSequence",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "exactNativeCallbackSequence"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "extra-order-write",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "writes",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "writes"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "extra-order-notification",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "notifications",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "notifications"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "unexpected-write-on-outside",
+      "kind": "outside",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "writes",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "writes"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "wrong-final-order",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "savedOrder",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "savedOrder"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "stuck-half-transparent-row",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "alphaRestored",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "alphaRestored"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "stuck-native-state",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "stateRemainsCleared",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "stateRemainsCleared"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "button-remains-down",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "leftButtonUpAfterNativeEnd",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "leftButtonUpAfterNativeEnd"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "observer-does-not-forward-original",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "originalIMPForwarded",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "originalIMPForwarded"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "wrong-input-label",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "guestVNCLabel",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "guestVNCLabel"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "no-active-feedback",
+      "kind": "drop",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "expectedFailedCheck": "activeRowFeedbackObserved",
+      "evaluatorVerdict": "failed",
+      "failedChecks": [
+        "activeRowFeedbackObserved"
+      ],
+      "missingEvidence": [],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "name": "no-reset-baseline",
+      "kind": "drop",
+      "expectedExit": 78,
+      "actualExit": 78,
+      "expectedFailedCheck": null,
+      "evaluatorVerdict": "unverified",
+      "failedChecks": [
+        "rowIdentityRetained",
+        "visibilityUnchanged",
+        "windowIdentityRetained",
+        "settingsScrollRetained"
+      ],
+      "missingEvidence": [
+        "Missing pre-input reset baseline",
+        "Missing five row snapshots"
+      ],
+      "selfTestPassed": true,
+      "syntheticDataOnly": true
+    }
+  ],
+  "passed": 28,
+  "count": 28,
+  "evaluatorSHA256": "d20860269a9f56ca2067207fac6077a2651b0a783846a1bf876536b06807de39"
+}

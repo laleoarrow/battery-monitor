@@ -1,0 +1,751 @@
+{
+  "inputMethod": "owned-copy-loopback-directVZ-VNC",
+  "hostInput": false,
+  "inputAttempted": true,
+  "sequencePosted": true,
+  "nativeDragVerdict": "observer-required",
+  "events": [
+    {
+      "mask": 0,
+      "x": 512,
+      "y": 384,
+      "attemptedAtSystemMonotonic": 275127.599674,
+      "sent": true
+    },
+    {
+      "mask": 0,
+      "x": 1664,
+      "y": 464,
+      "attemptedAtSystemMonotonic": 275127.920746,
+      "sent": true
+    },
+    {
+      "mask": 0,
+      "x": 1664,
+      "y": 464,
+      "attemptedAtSystemMonotonic": 275128.25342,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1664,
+      "y": 464,
+      "attemptedAtSystemMonotonic": 275128.253514,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1656,
+      "y": 474,
+      "attemptedAtSystemMonotonic": 275128.582491,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1649,
+      "y": 485,
+      "attemptedAtSystemMonotonic": 275128.610422,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1641,
+      "y": 495,
+      "attemptedAtSystemMonotonic": 275128.633235,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1633,
+      "y": 506,
+      "attemptedAtSystemMonotonic": 275128.663614,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1625,
+      "y": 516,
+      "attemptedAtSystemMonotonic": 275128.683241,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1618,
+      "y": 526,
+      "attemptedAtSystemMonotonic": 275128.711274,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1610,
+      "y": 537,
+      "attemptedAtSystemMonotonic": 275128.733472,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1602,
+      "y": 547,
+      "attemptedAtSystemMonotonic": 275128.759512,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1595,
+      "y": 558,
+      "attemptedAtSystemMonotonic": 275128.785924,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1587,
+      "y": 568,
+      "attemptedAtSystemMonotonic": 275128.811505,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1579,
+      "y": 578,
+      "attemptedAtSystemMonotonic": 275128.834777,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1571,
+      "y": 589,
+      "attemptedAtSystemMonotonic": 275128.859244,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1564,
+      "y": 599,
+      "attemptedAtSystemMonotonic": 275128.886432,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1556,
+      "y": 610,
+      "attemptedAtSystemMonotonic": 275128.906552,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1548,
+      "y": 620,
+      "attemptedAtSystemMonotonic": 275128.936511,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1541,
+      "y": 630,
+      "attemptedAtSystemMonotonic": 275128.961197,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1533,
+      "y": 641,
+      "attemptedAtSystemMonotonic": 275128.985115,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1525,
+      "y": 651,
+      "attemptedAtSystemMonotonic": 275129.011389,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1517,
+      "y": 662,
+      "attemptedAtSystemMonotonic": 275129.03471,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1510,
+      "y": 672,
+      "attemptedAtSystemMonotonic": 275129.060729,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1502,
+      "y": 682,
+      "attemptedAtSystemMonotonic": 275129.082131,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1494,
+      "y": 693,
+      "attemptedAtSystemMonotonic": 275129.110195,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1487,
+      "y": 703,
+      "attemptedAtSystemMonotonic": 275129.135714,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1479,
+      "y": 714,
+      "attemptedAtSystemMonotonic": 275129.161149,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1471,
+      "y": 724,
+      "attemptedAtSystemMonotonic": 275129.185312,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1463,
+      "y": 734,
+      "attemptedAtSystemMonotonic": 275129.208313,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1456,
+      "y": 745,
+      "attemptedAtSystemMonotonic": 275129.235884,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1448,
+      "y": 755,
+      "attemptedAtSystemMonotonic": 275129.261502,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1440,
+      "y": 766,
+      "attemptedAtSystemMonotonic": 275129.28158,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1432,
+      "y": 776,
+      "attemptedAtSystemMonotonic": 275129.30906,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1425,
+      "y": 786,
+      "attemptedAtSystemMonotonic": 275129.332974,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1417,
+      "y": 797,
+      "attemptedAtSystemMonotonic": 275129.360855,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1409,
+      "y": 807,
+      "attemptedAtSystemMonotonic": 275129.385226,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1402,
+      "y": 818,
+      "attemptedAtSystemMonotonic": 275129.410734,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1394,
+      "y": 828,
+      "attemptedAtSystemMonotonic": 275129.436513,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1386,
+      "y": 838,
+      "attemptedAtSystemMonotonic": 275129.460266,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1378,
+      "y": 849,
+      "attemptedAtSystemMonotonic": 275129.485346,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1371,
+      "y": 859,
+      "attemptedAtSystemMonotonic": 275129.510882,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1363,
+      "y": 870,
+      "attemptedAtSystemMonotonic": 275129.535525,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1355,
+      "y": 880,
+      "attemptedAtSystemMonotonic": 275129.561111,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1348,
+      "y": 890,
+      "attemptedAtSystemMonotonic": 275129.584953,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1340,
+      "y": 901,
+      "attemptedAtSystemMonotonic": 275129.611083,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1332,
+      "y": 911,
+      "attemptedAtSystemMonotonic": 275129.635993,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1324,
+      "y": 922,
+      "attemptedAtSystemMonotonic": 275129.660021,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1317,
+      "y": 932,
+      "attemptedAtSystemMonotonic": 275129.683527,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1309,
+      "y": 942,
+      "attemptedAtSystemMonotonic": 275129.710215,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1301,
+      "y": 953,
+      "attemptedAtSystemMonotonic": 275129.733773,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1294,
+      "y": 963,
+      "attemptedAtSystemMonotonic": 275129.759459,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1286,
+      "y": 974,
+      "attemptedAtSystemMonotonic": 275129.786622,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1278,
+      "y": 984,
+      "attemptedAtSystemMonotonic": 275129.811447,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1270,
+      "y": 994,
+      "attemptedAtSystemMonotonic": 275129.834386,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1263,
+      "y": 1005,
+      "attemptedAtSystemMonotonic": 275129.861078,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1255,
+      "y": 1015,
+      "attemptedAtSystemMonotonic": 275129.885377,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1247,
+      "y": 1026,
+      "attemptedAtSystemMonotonic": 275129.910523,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1240,
+      "y": 1036,
+      "attemptedAtSystemMonotonic": 275129.936516,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1232,
+      "y": 1046,
+      "attemptedAtSystemMonotonic": 275129.959571,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1224,
+      "y": 1057,
+      "attemptedAtSystemMonotonic": 275129.986507,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1216,
+      "y": 1067,
+      "attemptedAtSystemMonotonic": 275130.009243,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1209,
+      "y": 1078,
+      "attemptedAtSystemMonotonic": 275130.034148,
+      "sent": true
+    },
+    {
+      "mask": 1,
+      "x": 1201,
+      "y": 1088,
+      "attemptedAtSystemMonotonic": 275130.059589,
+      "sent": true
+    },
+    {
+      "mask": 0,
+      "x": 1201,
+      "y": 1088,
+      "attemptedAtSystemMonotonic": 275130.561807,
+      "sent": true
+    }
+  ],
+  "leaseAtUTC": "2026-10-17T05:38:37.739Z",
+  "leaseSignedAgeAtCheck": 0.086764,
+  "clockSkewToleranceSeconds": 1,
+  "framebufferSize": [
+    2048,
+    1536
+  ],
+  "ownedVM": "Wattson-NormalSlowDrag-20261017",
+  "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+  "vncListenerPID": 55356,
+  "vncHost": "::1",
+  "vncPort": 49803,
+  "vncExecutablePath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/normal-slow-drag.noindex/loopback-vz/runtime.session.tBZbx0/tart",
+  "cursorProbeObservations": [
+    {
+      "atUTC": "2026-10-17T05:38:38.068Z",
+      "guestIP": "192.168.64.27",
+      "hwModel": "VirtualMac2,1",
+      "inputAuthorized": true,
+      "inputGeometry": {
+        "coordinateSpace": "CG-global-top-left",
+        "displayBoundsCG": [
+          0,
+          0,
+          1024,
+          768
+        ],
+        "displayID": 1,
+        "screenCount": 1,
+        "screenFrameAppKit": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "ownedVM": "Wattson-NormalSlowDrag-20261017",
+      "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+      "pointerCG": {
+        "x": 600.49609375,
+        "y": 552.9921875
+      },
+      "pressedMouseButtons": 0,
+      "signedAgeAtReturn": -0.041956,
+      "clockSkewToleranceSeconds": 1
+    },
+    {
+      "atUTC": "2026-10-17T05:38:38.392Z",
+      "guestIP": "192.168.64.27",
+      "hwModel": "VirtualMac2,1",
+      "inputAuthorized": true,
+      "inputGeometry": {
+        "coordinateSpace": "CG-global-top-left",
+        "displayBoundsCG": [
+          0,
+          0,
+          1024,
+          768
+        ],
+        "displayID": 1,
+        "screenCount": 1,
+        "screenFrameAppKit": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "ownedVM": "Wattson-NormalSlowDrag-20261017",
+      "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+      "pointerCG": {
+        "x": 255.99609375,
+        "y": 191.99609375
+      },
+      "pressedMouseButtons": 0,
+      "signedAgeAtReturn": -0.044407,
+      "clockSkewToleranceSeconds": 1
+    },
+    {
+      "atUTC": "2026-10-17T05:38:38.721Z",
+      "guestIP": "192.168.64.27",
+      "hwModel": "VirtualMac2,1",
+      "inputAuthorized": true,
+      "inputGeometry": {
+        "coordinateSpace": "CG-global-top-left",
+        "displayBoundsCG": [
+          0,
+          0,
+          1024,
+          768
+        ],
+        "displayID": 1,
+        "screenCount": 1,
+        "screenFrameAppKit": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "ownedVM": "Wattson-NormalSlowDrag-20261017",
+      "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+      "pointerCG": {
+        "x": 831.99609375,
+        "y": 231.9921875
+      },
+      "pressedMouseButtons": 0,
+      "signedAgeAtReturn": -0.042463,
+      "clockSkewToleranceSeconds": 1
+    }
+  ],
+  "calibration": {
+    "requestedCGPoint": {
+      "x": 832,
+      "y": 232.25
+    },
+    "mappedRFBPoint": [
+      1664,
+      464
+    ],
+    "geometryScale": [
+      2.0,
+      2.0
+    ],
+    "before": {
+      "atUTC": "2026-10-17T05:38:38.068Z",
+      "guestIP": "192.168.64.27",
+      "hwModel": "VirtualMac2,1",
+      "inputAuthorized": true,
+      "inputGeometry": {
+        "coordinateSpace": "CG-global-top-left",
+        "displayBoundsCG": [
+          0,
+          0,
+          1024,
+          768
+        ],
+        "displayID": 1,
+        "screenCount": 1,
+        "screenFrameAppKit": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "ownedVM": "Wattson-NormalSlowDrag-20261017",
+      "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+      "pointerCG": {
+        "x": 600.49609375,
+        "y": 552.9921875
+      },
+      "pressedMouseButtons": 0,
+      "signedAgeAtReturn": -0.041956,
+      "clockSkewToleranceSeconds": 1
+    },
+    "waypointCGPoint": {
+      "x": 256.0,
+      "y": 192.0
+    },
+    "mappedWaypoint": [
+      512,
+      384
+    ],
+    "passed": true,
+    "mouseDownMessages": 0,
+    "waypointReadback": {
+      "atUTC": "2026-10-17T05:38:38.392Z",
+      "guestIP": "192.168.64.27",
+      "hwModel": "VirtualMac2,1",
+      "inputAuthorized": true,
+      "inputGeometry": {
+        "coordinateSpace": "CG-global-top-left",
+        "displayBoundsCG": [
+          0,
+          0,
+          1024,
+          768
+        ],
+        "displayID": 1,
+        "screenCount": 1,
+        "screenFrameAppKit": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "ownedVM": "Wattson-NormalSlowDrag-20261017",
+      "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+      "pointerCG": {
+        "x": 255.99609375,
+        "y": 191.99609375
+      },
+      "pressedMouseButtons": 0,
+      "signedAgeAtReturn": -0.044407,
+      "clockSkewToleranceSeconds": 1
+    },
+    "waypointMaxLogicalPointError": 0.00390625,
+    "sourceReadback": {
+      "atUTC": "2026-10-17T05:38:38.721Z",
+      "guestIP": "192.168.64.27",
+      "hwModel": "VirtualMac2,1",
+      "inputAuthorized": true,
+      "inputGeometry": {
+        "coordinateSpace": "CG-global-top-left",
+        "displayBoundsCG": [
+          0,
+          0,
+          1024,
+          768
+        ],
+        "displayID": 1,
+        "screenCount": 1,
+        "screenFrameAppKit": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "ownedVM": "Wattson-NormalSlowDrag-20261017",
+      "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+      "pointerCG": {
+        "x": 831.99609375,
+        "y": 231.9921875
+      },
+      "pressedMouseButtons": 0,
+      "signedAgeAtReturn": -0.042463,
+      "clockSkewToleranceSeconds": 1
+    },
+    "sourceMaxLogicalPointError": 0.2578125,
+    "afterWhileSocketOpen": {
+      "atUTC": "2026-10-17T05:38:38.721Z",
+      "guestIP": "192.168.64.27",
+      "hwModel": "VirtualMac2,1",
+      "inputAuthorized": true,
+      "inputGeometry": {
+        "coordinateSpace": "CG-global-top-left",
+        "displayBoundsCG": [
+          0,
+          0,
+          1024,
+          768
+        ],
+        "displayID": 1,
+        "screenCount": 1,
+        "screenFrameAppKit": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "ownedVM": "Wattson-NormalSlowDrag-20261017",
+      "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+      "pointerCG": {
+        "x": 831.99609375,
+        "y": 231.9921875
+      },
+      "pressedMouseButtons": 0,
+      "signedAgeAtReturn": -0.042463,
+      "clockSkewToleranceSeconds": 1
+    },
+    "maxLogicalPointError": 0.2578125,
+    "observedMovement": true
+  },
+  "geometryScale": [
+    2.0,
+    2.0
+  ],
+  "mappedPoints": [
+    [
+      1664,
+      464
+    ],
+    [
+      1201,
+      1088
+    ]
+  ],
+  "case": "classic-slow-drop",
+  "pid": 1112,
+  "windowID": 44,
+  "releaseAttempted": false,
+  "socketClosed": true,
+  "exitCode": 0
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/normal-slow-drag.noindex/control/run-six-cases.py", line 37, in <module>
+    if p.returncode:raise RuntimeError('Guest lease probe failed '+str(p.returncode))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Guest lease probe failed 78

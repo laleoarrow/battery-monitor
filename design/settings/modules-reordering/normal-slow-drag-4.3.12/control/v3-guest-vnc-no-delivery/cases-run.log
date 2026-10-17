@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/normal-slow-drag.noindex/control/run-six-cases.py", line 42, in <module>
+    wait(lambda s:s.get('case')==name and any(e.get('phase')=='endedAt.return' for e in s.get('nativeDragSessionEvents',[])) and s.get('pressedMouseButtons')==0 and all(r.get('alpha')==1 for r in s.get('rows',[])),20)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/normal-slow-drag.noindex/control/run-six-cases.py", line 19, in wait
+    raise TimeoutError('Fixture state predicate timed out')
+TimeoutError: Fixture state predicate timed out

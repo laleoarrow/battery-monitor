@@ -1,0 +1,147 @@
+{
+  "probeExitCode": 0,
+  "audit": {
+    "schema": 1,
+    "scope": "Disposable native fixture VM only; read-only audit; guest legacy-VNC disable proof recorded separately; no product verdict",
+    "manifest": {
+      "guestProject": "/Users/admin/Project/Wattson-NormalSlowDrag-QA",
+      "ownedDomains": [
+        "Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9",
+        "Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167",
+        "Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D",
+        "Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20",
+        "com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab",
+        "com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851"
+      ],
+      "ownedPaths": [
+        "/Users/admin/Library/Preferences/Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9.plist",
+        "/Users/admin/Library/Containers/Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9",
+        "/Users/admin/Library/Application Scripts/Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9",
+        "/Users/admin/Library/Preferences/Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167.plist",
+        "/Users/admin/Library/Containers/Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167",
+        "/Users/admin/Library/Application Scripts/Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167",
+        "/Users/admin/Library/Preferences/Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D.plist",
+        "/Users/admin/Library/Containers/Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D",
+        "/Users/admin/Library/Application Scripts/Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D",
+        "/Users/admin/Library/Preferences/Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20.plist",
+        "/Users/admin/Library/Containers/Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20",
+        "/Users/admin/Library/Application Scripts/Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20",
+        "/Users/admin/Library/Preferences/com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab.plist",
+        "/Users/admin/Library/Containers/com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab",
+        "/Users/admin/Library/Application Scripts/com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab",
+        "/Users/admin/Library/Preferences/com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851.plist",
+        "/Users/admin/Library/Containers/com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851",
+        "/Users/admin/Library/Application Scripts/com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851"
+      ],
+      "ownedGuestProbe": "/Users/admin/Project/Wattson-NormalSlowDrag-QA/.build/control-lease.noindex/guest-lease",
+      "sourceFiles": {
+        "normal-slow-drag-v2/drag/owned-domains.txt": "995bba5f0553a7da5e61895a5f18b6667d6ef75fd8d94989bcdb8d9396cca8c4",
+        "normal-slow-drag-v3/drag/owned-domains.txt": "18b3de8a50daf96a5cbf6c3d094202e36881a3397be8296d17535cda0cfc9573",
+        "control/guest-vnc-disable.json": "8008dccb3ea4570dd1184eca419976241b49969d9bb7059d93ef55a5145b4f7b",
+        "control/legacy-secret-cleanup.json": "aab46ae0cf65ad58d0a1f9f6063a4917cb1e07e2934f99c088c0311049ed8c04"
+      },
+      "scope": "v2/v3 fixture union; backend failure only, zero native case passes; guest legacy VNC disabled and password removed by root before audit"
+    },
+    "immediate": {
+      "atUTC": "2026-10-17T04:54:50.561851+00:00",
+      "systemMonotonic": 872.787594,
+      "residualOwnedPaths": [],
+      "defaultsDomains": {
+        "Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        }
+      },
+      "commandExitCodes": {
+        "registrations": 0,
+        "spotlight": 0,
+        "processes": 0,
+        "mounts": 0
+      },
+      "residualRegistrations": [],
+      "residualSpotlightApps": [],
+      "residualProcesses": [],
+      "residualProjectMounts": [],
+      "residualProjectContents": [],
+      "allAbsent": true
+    },
+    "delayed": {
+      "atUTC": "2026-10-17T04:56:28.420784+00:00",
+      "systemMonotonic": 970.646403,
+      "residualOwnedPaths": [],
+      "defaultsDomains": {
+        "Wattson.SwiftTests.ModuleOrderView.0D37D575-D0A7-4455-BADA-063D7182EAC9": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.3F999331-489F-4272-A3D2-0A616EC35167": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.8EF03978-776E-41B4-B0B5-BCDE804F032D": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "Wattson.SwiftTests.ModuleOrderView.AACD58E9-2DF7-4B20-BB65-2F91390ABF20": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "com.leoarrow.wattson.modules-slow.a64a90ec-2417-4d93-8ac4-87bc9ea2c2ab": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        },
+        "com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851": {
+          "exitCode": 1,
+          "explicitMissingDomain": true
+        }
+      },
+      "commandExitCodes": {
+        "registrations": 0,
+        "spotlight": 0,
+        "processes": 0,
+        "mounts": 0
+      },
+      "residualRegistrations": [],
+      "residualSpotlightApps": [],
+      "residualProcesses": [],
+      "residualProjectMounts": [],
+      "residualProjectContents": [],
+      "allAbsent": true
+    },
+    "withinProcessQuietSeconds": 95.07125100000007,
+    "allAbsent": true,
+    "deletedAnything": false
+  },
+  "stderr": "",
+  "toolArchiveSHA256": "14b83a0ca6076861983d5dd0dbd8ebb4ba294a32707a1e61a54d9c7b45a61a24",
+  "verifiedGuestLocalBeforeExecution": true,
+  "stageExitCode": 0,
+  "stagingRemoved": true,
+  "newStageParentsRemoved": true,
+  "createdStageParents": [
+    "/Users/admin/Project/Wattson-NormalSlowDrag-QA",
+    "/Users/admin/Project/Wattson-NormalSlowDrag-QA/.build",
+    "/Users/admin/Project/Wattson-NormalSlowDrag-QA/.build/package-residual-audit.noindex"
+  ],
+  "cleanupErrors": []
+}

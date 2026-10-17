@@ -1,0 +1,9 @@
+{
+  "failure-state.json": "11ced1fdc44898ef400ed62d4cdb836ee62410fc5a579c274fbfa9bee4d9f463",
+  "actual-outcome.json": "abcdf0b7099339b781d8c7704fd8259f272dc0e8b4c6a75bf6bc642292e71971",
+  "run-six-cases.py": "0f1858e3d3d1b248611abe90bd2c403afcfb328acd3c293accef980d2d214ba7",
+  "failure-history.jsonl": "7b0f834c2d113ec478a0c695be34b5b032319839a09a9eb36148047a894a17c2",
+  "GuestLease.swift": "daee1cd638c06291b3d3a30441c10140dec3f5a45192406269aeb56a332bb240",
+  "cases-summary.json": "efbb6dcd3ac296f269822a30b750263e9f7b5b1c41b2bfa1d760fed33a93f1cc",
+  "cases-error.json": "a3e9cd0c62e85bd7f76b1f6f1a4a7e4da0ae103c507e7d77ef0b865b6f47c3eb"
+}

@@ -1,0 +1,3 @@
+bundleID=com.leoarrow.wattson.modules-slow.d88c52bb-5e94-4d2f-843e-d6244bd0b851
+bundlePath=/Users/admin/Project/Wattson-NormalSlowDrag-QA/.build/normal-slow-drag.noindex/run.fVdSY4/source/.build/normal-slow-drag-native.noindex/run.iPgATI/NormalSlowDragProbe.app
+sourceCommit=5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e

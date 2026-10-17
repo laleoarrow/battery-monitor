@@ -1,0 +1,168 @@
+{
+  "scope": "Read-only v7 Standard window metadata readiness diagnosis; no code changes or VM input",
+  "atUTC": "2026-10-17T05:44:28.368604+00:00",
+  "finding": "The missing cgWindow is transient after fixture style rebuild; identical window53/PID1321 is present in the next sampled record 0.2310523s later, before any Standard input. It is not permanently absent for Glass.",
+  "standardTimeline": [
+    {
+      "elapsed": 12.000414166666701,
+      "epoch": 1792215724.6073642,
+      "windowID": 53,
+      "style": "standard",
+      "cgWindow": null,
+      "visible": true,
+      "keyWindow": true,
+      "ownWindowEventCount": 0
+    },
+    {
+      "elapsed": 12.23146645833333,
+      "epoch": 1792215724.838412,
+      "windowID": 53,
+      "style": "standard",
+      "cgWindow": {
+        "kCGWindowAlpha": 1,
+        "kCGWindowBounds": {
+          "Height": 520,
+          "Width": 720,
+          "X": 152,
+          "Y": 70
+        },
+        "kCGWindowIsOnscreen": true,
+        "kCGWindowLayer": 0,
+        "kCGWindowMemoryUsage": 2368,
+        "kCGWindowName": "Wattson Settings",
+        "kCGWindowNumber": 53,
+        "kCGWindowOwnerName": "NormalSlowDragProbe",
+        "kCGWindowOwnerPID": 1321,
+        "kCGWindowSharingState": 1,
+        "kCGWindowStoreType": 1
+      },
+      "visible": true,
+      "keyWindow": true,
+      "ownWindowEventCount": 0
+    },
+    {
+      "elapsed": 12.600319541666636,
+      "epoch": 1792215725.207261,
+      "windowID": 53,
+      "style": "standard",
+      "cgWindow": {
+        "kCGWindowAlpha": 1,
+        "kCGWindowBounds": {
+          "Height": 520,
+          "Width": 720,
+          "X": 152,
+          "Y": 70
+        },
+        "kCGWindowIsOnscreen": true,
+        "kCGWindowLayer": 0,
+        "kCGWindowMemoryUsage": 2368,
+        "kCGWindowName": "Wattson Settings",
+        "kCGWindowNumber": 53,
+        "kCGWindowOwnerName": "NormalSlowDragProbe",
+        "kCGWindowOwnerPID": 1321,
+        "kCGWindowSharingState": 1,
+        "kCGWindowStoreType": 1
+      },
+      "visible": true,
+      "keyWindow": true,
+      "ownWindowEventCount": 0
+    }
+  ],
+  "lease": {
+    "atUTC": "2026-10-17T05:42:04.942Z",
+    "bundleID": "com.leoarrow.wattson.modules-slow.84db3ee5-a06d-4b9d-bcff-da20a516af44",
+    "executablePath": "/Users/admin/Project/Wattson-NormalSlowDrag-QA/.build/normal-slow-drag.noindex/run.ZbbHZA/source/.build/normal-slow-drag-native.noindex/run.shVN5o/NormalSlowDragProbe.app/Contents/MacOS/NormalSlowDragProbe",
+    "frontmostPID": 1321,
+    "guestIP": "192.168.64.27",
+    "hwModel": "VirtualMac2,1",
+    "inputAuthorized": true,
+    "inputGeometry": {
+      "coordinateSpace": "CG-global-top-left",
+      "displayBoundsCG": [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "displayID": 1,
+      "screenCount": 1,
+      "screenFrameAppKit": [
+        0,
+        0,
+        1024,
+        768
+      ]
+    },
+    "ownedVM": "Wattson-NormalSlowDrag-20261017",
+    "pid": 1321,
+    "platformUUID": "602C7F68-8019-5DD5-ABC9-C96B4696157A",
+    "stateSHA256": "939661900a7f0d1468609a2c8da6f08abcf212196a2080354d15620ccc0c378d",
+    "window": {
+      "kCGWindowAlpha": 1,
+      "kCGWindowBounds": {
+        "Height": 520,
+        "Width": 720,
+        "X": 152,
+        "Y": 70
+      },
+      "kCGWindowIsOnscreen": true,
+      "kCGWindowLayer": 0,
+      "kCGWindowMemoryUsage": 2368,
+      "kCGWindowNumber": 53,
+      "kCGWindowOwnerName": "NormalSlowDragProbe",
+      "kCGWindowOwnerPID": 1321,
+      "kCGWindowSharingState": 0,
+      "kCGWindowStoreType": 1
+    },
+    "windowID": 53
+  },
+  "input": {
+    "inputMethod": "owned-copy-loopback-directVZ-VNC",
+    "hostInput": false,
+    "inputAttempted": false,
+    "sequencePosted": false,
+    "nativeDragVerdict": "observer-required",
+    "events": [],
+    "leaseAtUTC": "2026-10-17T05:42:04.942Z",
+    "leaseSignedAgeAtCheck": 0.058884,
+    "clockSkewToleranceSeconds": 1,
+    "errorType": "KeyError",
+    "error": "Input operation did not complete",
+    "socketClosed": true,
+    "exitCode": 78
+  },
+  "sourceFacts": [
+    {
+      "path": "fixture-v6/modules-normal-slow-drag.swift",
+      "lines": "107-127",
+      "fact": "showWindow closes prior window/controller, constructs new production Settings controller, selects Modules and calls show synchronously."
+    },
+    {
+      "path": "fixture-v6/modules-normal-slow-drag.swift",
+      "lines": "378-407,448-459",
+      "fact": "sample handles reset and immediately persists in the same main-thread call. Applied reset does not promise settled WindowServer metadata."
+    },
+    {
+      "path": "fixture-v6/modules-normal-slow-drag.swift",
+      "lines": "306-308",
+      "fact": "cgWindow is optional: only emitted when optionIncludingWindow query contains matching Int windowNumber."
+    },
+    {
+      "path": "MenuBar/SettingsWindowController.swift",
+      "lines": "3508-3533,3653-3681",
+      "fact": "Production builds buffered defer:false NSWindow, show calls makeKeyAndOrderFront and schedules another activation on next main queue turn."
+    }
+  ],
+  "sharingFinding": "Neither fixture nor production sets sharingType. Independent GuestLease saw sharingState0 while production-own-process sampler saw sharingState1. No cross-process equality of sharing state is required by direct driver; it compares only window number, owner PID and bounds. Do not add sharingState1 as an input prerequisite.",
+  "limit": "Raw v7 does not retain the optional CG query failure reason or returned candidate array. Cannot distinguish a temporary empty WindowServer response from matching-filter failure exactly. Later same-window metadata conclusively excludes always-missing Glass metadata.",
+  "recommendedNarrowGate": "Continue existing root wait for frozen state cgWindow with matching positive windowNumber, PID and bounds after reset. Keep native target hit identity and independent lease checks. No production source change required.",
+  "filesSHA256": {
+    ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/standard-slow-drop/before-state.json": "939661900a7f0d1468609a2c8da6f08abcf212196a2080354d15620ccc0c378d",
+    ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/standard-slow-drop/lease.json": "5c5aca9b4369e5a3c32ab4b1063d9577bdfa0dc94ac05071fa57936a76efcb10",
+    ".build/normal-slow-drag.noindex/normal-slow-drag-v7/cases/standard-slow-drop/input.json": "42f6f4133a6f985946721ebfdb7733cc2b49a3434e52384b598e466e7d0efe3d",
+    ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/manual-classic-0/history.jsonl": "460c15daa2c952049b9110ea4c28df454ed55d4bf715e7b5ffac0b1f0a0710d6",
+    ".build/normal-slow-drag.noindex/normal-slow-drag-v7/drag/manual-classic-0/state.json": "042cb63e27824ad03445b3642960204a29c398dcaf502964cbe53500c32cd2ef",
+    ".build/normal-slow-drag.noindex/fixture-v6/modules-normal-slow-drag.swift": "3923db6563d5a81190f7786ba676a67a19bf6def88a7acd5905975e1d063d0fd",
+    "MenuBar/SettingsWindowController.swift": "e437e168f84102b00f9a9ceebbd27243d636c1ae5a37f2d6bf33065a428b5961"
+  }
+}

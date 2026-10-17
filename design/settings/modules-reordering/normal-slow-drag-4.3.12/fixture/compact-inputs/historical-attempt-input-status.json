@@ -1,0 +1,86 @@
+{
+  "interpretation": "A zero fixture stage exit records clean fixture shutdown only. A posted VNC sequence is not verified input delivery. These attempts do not provide a product acceptance PASS.",
+  "kind": "HISTORICAL_FAILED_ATTEMPT_INPUT_STATUS_ONLY",
+  "newTestExecutionPerformed": false,
+  "productPassClaim": false,
+  "schema": 1,
+  "snapshotAtUTC": "2026-10-17T04:56:27.927266+00:00",
+  "v2": {
+    "controllerError": {
+      "bytes": 100,
+      "data": {
+        "completedCases": [],
+        "error": "Guest lease probe failed 78",
+        "errorType": "RuntimeError"
+      },
+      "path": ".build/normal-slow-drag.noindex/control/v2-controller-failure/cases-error.json",
+      "sha256": "f8113e2cca55e6d112a805efc70ef9f9d5a97949b12689c95d49fb97e9d5539a"
+    },
+    "controllerOutcome": "failed",
+    "controllerSummary": {
+      "bytes": 210,
+      "data": {
+        "allSixPassed": false,
+        "hostInput": false,
+        "humanMouseInput": false,
+        "inputMethod": "guest-VNC",
+        "results": [],
+        "sourceCommit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+        "version": "4.3.12"
+      },
+      "path": ".build/normal-slow-drag.noindex/control/v2-controller-failure/cases-summary.json",
+      "sha256": "fd1e951fbc9807df868276dc6b2b5acb3fa836d9e4240df6e7b0e9e9b2711ae2"
+    },
+    "fixtureRunnerExitCode": 0,
+    "fixtureStageExitCode": 0,
+    "inputAttempted": false,
+    "inputAttemptedBasis": "Controller stopped at rejected guest lease before invoking VNC client",
+    "reason": "Guest lease probe rejected mismatched state path; exit 78"
+  },
+  "v3": {
+    "controllerError": {
+      "bytes": 106,
+      "data": {
+        "completedCases": [],
+        "error": "Fixture state predicate timed out",
+        "errorType": "TimeoutError"
+      },
+      "path": ".build/normal-slow-drag.noindex/control/v3-guest-vnc-no-delivery/cases-error.json",
+      "sha256": "907b16c2b1e401cb82076d686033ba74ff86b61c27e974143d13b6bf79e2e5d6"
+    },
+    "controllerOutcome": "failed",
+    "controllerSummary": {
+      "bytes": 210,
+      "data": {
+        "allSixPassed": false,
+        "hostInput": false,
+        "humanMouseInput": false,
+        "inputMethod": "guest-VNC",
+        "results": [],
+        "sourceCommit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+        "version": "4.3.12"
+      },
+      "path": ".build/normal-slow-drag.noindex/control/v3-guest-vnc-no-delivery/cases-summary.json",
+      "sha256": "fd1e951fbc9807df868276dc6b2b5acb3fa836d9e4240df6e7b0e9e9b2711ae2"
+    },
+    "fixtureRunnerExitCode": 0,
+    "fixtureStageExitCode": 0,
+    "inputAttempted": true,
+    "inputDriverReport": {
+      "bytes": 8873,
+      "path": ".build/normal-slow-drag.noindex/normal-slow-drag-v3/cases/classic-slow-drop/input.json",
+      "selectedNonSecretFields": {
+        "exitCode": 0,
+        "hostInput": false,
+        "inputAttempted": true,
+        "inputMethod": "guest-VNC",
+        "nativeDragVerdict": "observer-required",
+        "sequencePosted": true,
+        "socketClosed": true
+      },
+      "sha256": "00b917605fa195e2f387a10ba918e0abd8a1d4da906aa30fdf8e7c59296e7841"
+    },
+    "nativeDragVerdict": "unverified; required native end predicate did not arrive before timeout",
+    "sequencePosted": true
+  }
+}

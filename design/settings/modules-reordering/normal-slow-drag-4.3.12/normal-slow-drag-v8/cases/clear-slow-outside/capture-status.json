@@ -1,0 +1,11 @@
+{
+  "elapsed": 34.923341875000006,
+  "name": "clear-slow-outside-final",
+  "onlyExplicitOwnedWindow": true,
+  "ownedWindowID": 65,
+  "pixels": [
+    1472,
+    1072
+  ],
+  "result": "captured"
+}
