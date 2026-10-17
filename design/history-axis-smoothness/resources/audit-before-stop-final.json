@@ -1,0 +1,10 @@
+{
+  "domainCount": 15,
+  "appCount": 14,
+  "remainingOwnedPaths": [],
+  "remainingRegistrations": [],
+  "remainingExecutables": [],
+  "remainingProjects": [],
+  "canonicalGuestFixture": "Wattson 4.3.16 app/helper/receipt are owned by enclosing disposable VM; clone deletion removes them.",
+  "passed": true
+}

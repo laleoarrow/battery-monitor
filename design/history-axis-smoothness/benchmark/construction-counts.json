@@ -1,0 +1,570 @@
+{
+  "baseline": {
+    "ordinary-scroll": {
+      "counts": {
+        "decodedPaths": 1,
+        "fillPathCalls": 0,
+        "mutablePaths": 3,
+        "pathsCalls": 0,
+        "rectanglePaths": 1
+      },
+      "animationPayload": [
+        {
+          "duration": 0.18,
+          "key": "history.scroll",
+          "keyPath": "transform.translation.x"
+        },
+        {
+          "duration": 0.18,
+          "key": "history.stroke",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            61,
+            61
+          ]
+        },
+        {
+          "duration": 0.18,
+          "key": "history.head",
+          "keyPath": "position",
+          "valuesCount": 33
+        }
+      ]
+    },
+    "scale-expansion": {
+      "counts": {
+        "decodedPaths": 1,
+        "fillPathCalls": 0,
+        "mutablePaths": 34,
+        "pathsCalls": 0,
+        "rectanglePaths": 1
+      },
+      "animationPayload": [
+        {
+          "duration": 0.35,
+          "key": "history.viewport",
+          "keyPath": "transform"
+        },
+        {
+          "duration": 0.35,
+          "key": "history.gradient",
+          "keyPath": "startPoint",
+          "valuesCount": 257
+        },
+        {
+          "duration": 0.35,
+          "key": "history.stroke",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61
+          ],
+          "valuesCount": 33
+        },
+        {
+          "duration": 0.35,
+          "key": "history.head",
+          "keyPath": "position",
+          "valuesCount": 33
+        }
+      ]
+    },
+    "scale-contraction": {
+      "counts": {
+        "decodedPaths": 1,
+        "fillPathCalls": 0,
+        "mutablePaths": 35,
+        "pathsCalls": 0,
+        "rectanglePaths": 1
+      },
+      "animationPayload": [
+        {
+          "duration": 0.35,
+          "key": "history.viewport",
+          "keyPath": "transform"
+        },
+        {
+          "duration": 0.35,
+          "key": "history.gradient",
+          "keyPath": "startPoint",
+          "valuesCount": 257
+        },
+        {
+          "duration": 0.35,
+          "key": "history.fill",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            67,
+            67
+          ]
+        },
+        {
+          "duration": 0.35,
+          "key": "history.stroke",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64
+          ],
+          "valuesCount": 33
+        },
+        {
+          "duration": 0.35,
+          "key": "history.head",
+          "keyPath": "position",
+          "valuesCount": 33
+        }
+      ]
+    },
+    "interrupted-scale": {
+      "counts": {
+        "decodedPaths": 1,
+        "fillPathCalls": 0,
+        "mutablePaths": 35,
+        "pathsCalls": 0,
+        "rectanglePaths": 1
+      },
+      "animationPayload": [
+        {
+          "duration": 0.35,
+          "key": "history.viewport",
+          "keyPath": "transform"
+        },
+        {
+          "duration": 0.35,
+          "key": "history.gradient",
+          "keyPath": "startPoint",
+          "valuesCount": 257
+        },
+        {
+          "duration": 0.35,
+          "key": "history.fill",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            65,
+            65
+          ]
+        },
+        {
+          "duration": 0.35,
+          "key": "history.stroke",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62
+          ],
+          "valuesCount": 33
+        },
+        {
+          "duration": 0.35,
+          "key": "history.head",
+          "keyPath": "position",
+          "valuesCount": 33
+        }
+      ]
+    },
+    "same-input-noop": {
+      "counts": {
+        "decodedPaths": 0,
+        "fillPathCalls": 0,
+        "mutablePaths": 0,
+        "pathsCalls": 0,
+        "rectanglePaths": 0
+      },
+      "animationPayload": [
+        {
+          "duration": 0.35,
+          "key": "history.viewport",
+          "keyPath": "transform"
+        },
+        {
+          "duration": 0.35,
+          "key": "history.gradient",
+          "keyPath": "startPoint",
+          "valuesCount": 257
+        },
+        {
+          "duration": 0.35,
+          "key": "history.stroke",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61
+          ],
+          "valuesCount": 33
+        },
+        {
+          "duration": 0.35,
+          "key": "history.head",
+          "keyPath": "position",
+          "valuesCount": 33
+        }
+      ]
+    }
+  },
+  "paired": {
+    "ordinary-scroll": {
+      "counts": {
+        "decodedPaths": 1,
+        "fillPathCalls": 0,
+        "mutablePaths": 4,
+        "pathsCalls": 0,
+        "rectanglePaths": 1
+      },
+      "animationPayload": [
+        {
+          "duration": 0.18,
+          "key": "history.fill",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            64,
+            64
+          ]
+        },
+        {
+          "duration": 0.18,
+          "key": "history.stroke",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            61,
+            61
+          ]
+        },
+        {
+          "duration": 0.18,
+          "key": "history.head",
+          "keyPath": "position",
+          "valuesCount": 33
+        }
+      ]
+    },
+    "scale-expansion": {
+      "counts": {
+        "decodedPaths": 1,
+        "fillPathCalls": 0,
+        "mutablePaths": 18,
+        "pathsCalls": 0,
+        "rectanglePaths": 1
+      },
+      "animationPayload": [
+        {
+          "duration": 0.35,
+          "key": "history.fill",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64
+          ],
+          "valuesCount": 9
+        },
+        {
+          "duration": 0.35,
+          "key": "history.stroke",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61
+          ],
+          "valuesCount": 9
+        },
+        {
+          "duration": 0.35,
+          "key": "history.head",
+          "keyPath": "position",
+          "valuesCount": 33
+        }
+      ]
+    },
+    "scale-contraction": {
+      "counts": {
+        "decodedPaths": 1,
+        "fillPathCalls": 0,
+        "mutablePaths": 18,
+        "pathsCalls": 0,
+        "rectanglePaths": 1
+      },
+      "animationPayload": [
+        {
+          "duration": 0.35,
+          "key": "history.fill",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            67,
+            67,
+            67,
+            67,
+            67,
+            67,
+            67,
+            67,
+            67
+          ],
+          "valuesCount": 9
+        },
+        {
+          "duration": 0.35,
+          "key": "history.stroke",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64
+          ],
+          "valuesCount": 9
+        },
+        {
+          "duration": 0.35,
+          "key": "history.head",
+          "keyPath": "position",
+          "valuesCount": 33
+        }
+      ]
+    },
+    "interrupted-scale": {
+      "counts": {
+        "decodedPaths": 1,
+        "fillPathCalls": 0,
+        "mutablePaths": 18,
+        "pathsCalls": 0,
+        "rectanglePaths": 1
+      },
+      "animationPayload": [
+        {
+          "duration": 0.35,
+          "key": "history.fill",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            65
+          ],
+          "valuesCount": 9
+        },
+        {
+          "duration": 0.35,
+          "key": "history.stroke",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62
+          ],
+          "valuesCount": 9
+        },
+        {
+          "duration": 0.35,
+          "key": "history.head",
+          "keyPath": "position",
+          "valuesCount": 34
+        }
+      ]
+    },
+    "same-input-noop": {
+      "counts": {
+        "decodedPaths": 0,
+        "fillPathCalls": 0,
+        "mutablePaths": 0,
+        "pathsCalls": 0,
+        "rectanglePaths": 0
+      },
+      "animationPayload": [
+        {
+          "duration": 0.35,
+          "key": "history.fill",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64,
+            64
+          ],
+          "valuesCount": 9
+        },
+        {
+          "duration": 0.35,
+          "key": "history.stroke",
+          "keyPath": "path",
+          "pathCommandCounts": [
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61,
+            61
+          ],
+          "valuesCount": 9
+        },
+        {
+          "duration": 0.35,
+          "key": "history.head",
+          "keyPath": "position",
+          "valuesCount": 33
+        }
+      ]
+    }
+  }
+}

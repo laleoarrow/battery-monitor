@@ -47,23 +47,27 @@ seconds before a reduction of at least 25%. Contiguous changes use a 180 ms
 horizontal translation or a 350 ms eased, baseline-anchored axis transition.
 The stroke is rendered in viewport coordinates so its 1.6-point width stays
 constant while the fill moves through the changing axis range.
-Interrupted transitions continue from the presentation layers. Curve controls
-may blend only after matching their exact sampling intervals and raw anchors;
-fill and endpoint follow the same geometry and viewport progress. Bounded
-departure context keeps consecutive left-edge intervals intact, including fill
-above a reduced scale. Finite gradient keyframes preserve the displayed color
-band when the axis changes or a transition is interrupted. History joins
-the existing presentation and accessibility animation policy; closing, hiding,
-detaching, degraded readings and Reduce Motion stop its animations. No chart
-timer is used. History emits the final stroke directly; an actual captured
-viewport with `scaleY == 1` uses matched cubic path endpoints in a basic animation,
-while any other scale retains 33 stroke keyframes. Head and gradient keyframes
-remain unchanged. The [4.3.11 performance review](../design/history-performance/README.md)
-records the ABBA preparation measurements, explicit construction counts and
-native continuity checks, including the natural scheduling fixture's limits.
-Wattson 4.3.15 is the current verified local installation, containing all final
-side-chat Settings and Power artwork. Its exact native, package and installation
-evidence is recorded in the [all-icons integration review](../design/popover/all-icons-integration/README.md).
+Interrupted transitions continue from the presentation layers. All four cubic
+points may blend only after matching their exact sampling intervals and raw
+anchors. Stroke and fill share viewport coordinates and cubic construction;
+the gradient uses its actual presented start/end band without reciprocal
+transform compensation. Bounded departure context keeps left-edge intervals
+intact. Axis changes and interrupted motion use nine shared path keyframes;
+ordinary translation uses basic animation. The head retains 33 base positions
+and adds exact sample-junction times when needed. Queries invert actual cubic X
+with bounded Newton/bisection, checking monotonicity before presentation reuse.
+CAShapeLayer may interpolate off-line controls nonlinearly: nine frames are a
+native-tested error bound, not a universal Cartesian interpolation guarantee.
+History joins the existing presentation and accessibility animation policy;
+closing, hiding, detaching, degraded readings and Reduce Motion stop animations.
+No chart timer is used. The [4.3.16 axis motion review](../design/history-axis-smoothness/README.md)
+records the corrected independent native probe, ABBA preparation measurements,
+explicit construction counts, Pro review, and exact installation evidence.
+Wattson 4.3.16 is the current verified local installation. It preserves all final
+4.3.15 Settings and Power artwork, whose earlier evidence remains in the
+[all-icons integration review](../design/popover/all-icons-integration/README.md).
+The [4.3.11 performance review](../design/history-performance/README.md) retains
+the preceding implementation and its verification limits.
 The retained 4.3.14 battery runtime settling fix and its earlier package evidence
 are recorded in the [runtime calculation review](../design/battery-runtime-calculating/README.md).
 The [General icon integration review](../design/settings/general-icons-integration/README.md)

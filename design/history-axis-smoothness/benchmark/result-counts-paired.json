@@ -1,0 +1,10 @@
+{
+  "label": "counts-paired",
+  "archive": "results-counts-paired-296e633df1e69106f4f05e37d6c8b1a00ca7aea630ad863888389dccf06ef44b.tar.gz",
+  "sha256": "296e633df1e69106f4f05e37d6c8b1a00ca7aea630ad863888389dccf06ef44b",
+  "commandExitCode": 0,
+  "stageExitCode": 0,
+  "projectRemoved": true,
+  "cleanupErrors": [],
+  "failure": null
+}

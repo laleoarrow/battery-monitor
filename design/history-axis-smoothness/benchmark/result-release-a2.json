@@ -1,0 +1,10 @@
+{
+  "label": "release-a2",
+  "archive": "results-release-a2-3196e84b23f3edf1defc85af6a0a57aac64db5624947bd31c38d34e945393b7f.tar.gz",
+  "sha256": "3196e84b23f3edf1defc85af6a0a57aac64db5624947bd31c38d34e945393b7f",
+  "commandExitCode": 0,
+  "stageExitCode": 0,
+  "projectRemoved": true,
+  "cleanupErrors": [],
+  "failure": null
+}

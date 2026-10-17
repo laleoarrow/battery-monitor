@@ -1,0 +1,56 @@
+Release mode: community-ad-hoc
+Notarization requested: no
+Building Wattson 4.3.16 (4.3.16) for arm64 and x86_64...
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (92.25s)
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (114.74s)
+/* com.apple.actool.compilation-results */
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/icon-assets/Assets.car
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/icon-assets/WattsonGlass.icns
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/icon-assets/icon-info.plist
+
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/com.leoarrow.wattson.helper: replacing existing signature
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/Wattson.app: replacing existing signature
+Built universal app: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/Wattson.app
+Built universal helper: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/com.leoarrow.wattson.helper
+Signing: ad-hoc community build (not notarized)
+Verified universal release build for Wattson 4.3.16
+pkgbuild: Reading components from /Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/Packaging/pkg/component.plist
+pkgbuild: Adding component at Applications/Wattson.app
+pkgbuild: Adding top-level preinstall script
+pkgbuild: Adding top-level postinstall script
+pkgbuild: Wrote package to /Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/pkg.4RIeJv/Wattson-component.pkg
+productbuild: Wrote product to /Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/pkg.4RIeJv/Wattson-v4.3.16-macos-universal.pkg
+Created unsigned community PKG: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/artifacts/Wattson-v4.3.16-macos-universal.pkg
+Notarization status: no (Developer ID Installer identity is not configured)
+hdiutil: verify: checksum of "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/dmg.6kM4Lx/Wattson-v4.3.16-macos-universal.dmg" is VALID
+Mounted DMG verified: helper-free app and Applications link
+Created unsigned DMG: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/.build/local.noindex/release.mrIb7h/artifacts/Wattson-v4.3.16-macos-universal.dmg
+Notarization/checksums: pending release orchestration
+Mounted DMG verified: helper-free app and Applications link
+Verified Wattson 4.3.16: full PKG and DMG contain byte-identical apps
+Wattson-v4.3.16-macos-universal.pkg: OK
+Wattson-v4.3.16-macos-universal.dmg: OK
+Wattson-v4.3.16-release-info.txt: OK
+Created release artifacts in /Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/dist
+Notarized: no
+Checksums: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/history-axis-smoothness.noindex/checkout/dist/SHA256SUMS.txt

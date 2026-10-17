@@ -1,0 +1,10 @@
+{
+  "label": "native-paired-full",
+  "archive": "results-native-paired-full-10ff1c8861c70f40a54a999bf670a582f5b36ae4220465926567661de614a297.tar.gz",
+  "sha256": "10ff1c8861c70f40a54a999bf670a582f5b36ae4220465926567661de614a297",
+  "commandExitCode": 0,
+  "stageExitCode": 0,
+  "projectRemoved": true,
+  "cleanupErrors": [],
+  "failure": null
+}

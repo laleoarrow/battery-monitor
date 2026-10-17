@@ -1,0 +1,10 @@
+{
+  "label": "counts-baseline",
+  "archive": "results-counts-baseline-b426bf35cd6b5cf2b4dd8a8f4d2da020ddaf11cd5eacb5b1d9ddc124b44bf371.tar.gz",
+  "sha256": "b426bf35cd6b5cf2b4dd8a8f4d2da020ddaf11cd5eacb5b1d9ddc124b44bf371",
+  "commandExitCode": 0,
+  "stageExitCode": 0,
+  "projectRemoved": true,
+  "cleanupErrors": [],
+  "failure": null
+}

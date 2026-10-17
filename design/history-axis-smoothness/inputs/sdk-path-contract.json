@@ -1,0 +1,7 @@
+{
+  "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/CAShapeLayer.h",
+  "sha256": "aaa9d70097736ff15862d67ba0a7cb1754102485d11ca7a349debf02da6dbf71",
+  "lineStart": 24,
+  "lineEnd": 29,
+  "text": " * of CAPropertyAnimation. Paths will interpolate as a linear blend of\n * the \"on-line\" points; \"off-line\" points may be interpolated\n * non-linearly (e.g. to preserve continuity of the curve's\n * derivative). If the two paths have a different number of control\n * points or segments the results are undefined.\n *"
+}

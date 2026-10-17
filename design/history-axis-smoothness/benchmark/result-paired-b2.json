@@ -1,0 +1,10 @@
+{
+  "label": "paired-b2",
+  "archive": "results-paired-b2-16041a3602bc36e016edd376a38dad203d56b853ec913726496879cf2351ecb8.tar.gz",
+  "sha256": "16041a3602bc36e016edd376a38dad203d56b853ec913726496879cf2351ecb8",
+  "commandExitCode": 0,
+  "stageExitCode": 0,
+  "projectRemoved": true,
+  "cleanupErrors": [],
+  "failure": null
+}

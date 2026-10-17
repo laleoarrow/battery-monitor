@@ -1,0 +1,2830 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "synchronized finite native paths ordinary-scroll update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths scale-expansion update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths scale-contraction update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths cancel-presentation update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths cancel-motion update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths repeated-scroll update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths repeated-scroll update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths departing-outlier-contraction update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths gradient-alpha-contraction update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 first-animation-committed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 before-retarget",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 after-retarget-commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-19",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-21",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-22",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-23",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-24",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-26",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-27",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-28",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-29",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-30",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 non-knot-31",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-25 after-settle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 first-animation-committed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 before-retarget",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 after-retarget-commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-19",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-21",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-22",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-23",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-24",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-26",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-27",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-28",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-29",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-30",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 non-knot-31",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-50 after-settle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 first-animation-committed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 before-retarget",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 after-retarget-commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-19",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-21",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-22",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-23",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-24",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-26",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-27",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-28",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-29",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-30",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 non-knot-31",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths interrupted-scale-90 after-settle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 first-animation-committed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 before-retarget",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 after-retarget-commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-19",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-21",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-22",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-23",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-24",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-26",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-27",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-28",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-29",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-30",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 non-knot-31",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-25 after-settle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 first-animation-committed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 before-retarget",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 after-retarget-commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-19",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-21",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-22",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-23",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-24",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-26",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-27",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-28",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-29",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-30",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 non-knot-31",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-50 after-settle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 first-animation-committed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 before-retarget",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 after-retarget-commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-19",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-21",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-22",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-23",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-24",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-26",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-27",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-28",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-29",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-30",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 non-knot-31",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-axis-90 after-settle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 first-animation-committed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 before-retarget",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 after-retarget-commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-19",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-21",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-22",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-23",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-24",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-26",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-27",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-28",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-29",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-30",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 non-knot-31",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-25 after-settle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 first-animation-committed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 before-retarget",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 after-retarget-commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-19",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-21",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-22",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-23",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-24",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-26",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-27",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-28",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-29",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-30",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 non-knot-31",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-50 after-settle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 first-animation-committed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 before-retarget",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 after-retarget-commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-19",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-21",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-22",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-23",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-24",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-26",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-27",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-28",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-29",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-30",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 non-knot-31",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths basic-to-basic-90 after-settle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic first-animation-committed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic before-retarget",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic after-retarget-commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-8",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-19",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-21",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-22",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-23",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-24",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-26",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-27",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-28",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-29",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-30",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic non-knot-31",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "synchronized finite native paths settled-axis-to-basic after-settle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "native path coverage",
+      "passed": true,
+      "detail": 409
+    },
+    {
+      "name": "controlled C0 basic-to-axis-25",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-axis-25",
+        "rawAnchorJumpPoints": 0.0,
+        "interiorJumpPoints": 0.0,
+        "headJumpPoints": 0.0,
+        "gradientBandJumpPoints": 0.0,
+        "alphaEstimateJump": 0.0
+      }
+    },
+    {
+      "name": "all retained controls C0 basic-to-axis-25",
+      "passed": true,
+      "detail": {
+        "points": 232,
+        "maximumJump": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "controlled converges to target basic-to-axis-25",
+      "passed": true,
+      "detail": 0.0
+    },
+    {
+      "name": "controlled C0 basic-to-axis-50",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-axis-50",
+        "rawAnchorJumpPoints": 0.0,
+        "interiorJumpPoints": 0.0,
+        "headJumpPoints": 0.0,
+        "gradientBandJumpPoints": 0.0,
+        "alphaEstimateJump": 0.0
+      }
+    },
+    {
+      "name": "all retained controls C0 basic-to-axis-50",
+      "passed": true,
+      "detail": {
+        "points": 232,
+        "maximumJump": 2.864289338439558e-14
+      }
+    },
+    {
+      "name": "controlled converges to target basic-to-axis-50",
+      "passed": true,
+      "detail": 0.0
+    },
+    {
+      "name": "controlled C0 basic-to-axis-90",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-axis-90",
+        "rawAnchorJumpPoints": 0.0,
+        "interiorJumpPoints": 0.0,
+        "headJumpPoints": 0.0,
+        "gradientBandJumpPoints": 0.0,
+        "alphaEstimateJump": 0.0
+      }
+    },
+    {
+      "name": "all retained controls C0 basic-to-axis-90",
+      "passed": true,
+      "detail": {
+        "points": 232,
+        "maximumJump": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "controlled converges to target basic-to-axis-90",
+      "passed": true,
+      "detail": 0.0
+    },
+    {
+      "name": "controlled C0 basic-to-basic-25",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-basic-25",
+        "rawAnchorJumpPoints": 0.0,
+        "interiorJumpPoints": 0.0,
+        "headJumpPoints": 0.0,
+        "gradientBandJumpPoints": 0.0,
+        "alphaEstimateJump": 0.0
+      }
+    },
+    {
+      "name": "all retained controls C0 basic-to-basic-25",
+      "passed": true,
+      "detail": {
+        "points": 232,
+        "maximumJump": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "controlled converges to target basic-to-basic-25",
+      "passed": true,
+      "detail": 0.0
+    },
+    {
+      "name": "controlled C0 basic-to-basic-50",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-basic-50",
+        "rawAnchorJumpPoints": 0.0,
+        "interiorJumpPoints": 0.0,
+        "headJumpPoints": 0.0,
+        "gradientBandJumpPoints": 0.0,
+        "alphaEstimateJump": 0.0
+      }
+    },
+    {
+      "name": "all retained controls C0 basic-to-basic-50",
+      "passed": true,
+      "detail": {
+        "points": 232,
+        "maximumJump": 2.864289338439558e-14
+      }
+    },
+    {
+      "name": "controlled converges to target basic-to-basic-50",
+      "passed": true,
+      "detail": 0.0
+    },
+    {
+      "name": "controlled C0 basic-to-basic-90",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-basic-90",
+        "rawAnchorJumpPoints": 0.0,
+        "interiorJumpPoints": 0.0,
+        "headJumpPoints": 0.0,
+        "gradientBandJumpPoints": 0.0,
+        "alphaEstimateJump": 0.0
+      }
+    },
+    {
+      "name": "all retained controls C0 basic-to-basic-90",
+      "passed": true,
+      "detail": {
+        "points": 232,
+        "maximumJump": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "controlled converges to target basic-to-basic-90",
+      "passed": true,
+      "detail": 0.0
+    },
+    {
+      "name": "controlled C0 interrupted-scale-25",
+      "passed": true,
+      "detail": {
+        "phase": "interrupted-scale-25",
+        "rawAnchorJumpPoints": 0.0,
+        "interiorJumpPoints": 0.0,
+        "headJumpPoints": 0.0,
+        "gradientBandJumpPoints": 0.0,
+        "alphaEstimateJump": 0.0
+      }
+    },
+    {
+      "name": "all retained controls C0 interrupted-scale-25",
+      "passed": true,
+      "detail": {
+        "points": 232,
+        "maximumJump": 2.864289338439558e-14
+      }
+    },
+    {
+      "name": "controlled converges to target interrupted-scale-25",
+      "passed": true,
+      "detail": 0.0
+    },
+    {
+      "name": "controlled C0 interrupted-scale-50",
+      "passed": true,
+      "detail": {
+        "phase": "interrupted-scale-50",
+        "rawAnchorJumpPoints": 0.0,
+        "interiorJumpPoints": 0.0,
+        "headJumpPoints": 0.0,
+        "gradientBandJumpPoints": 0.0,
+        "alphaEstimateJump": 0.0
+      }
+    },
+    {
+      "name": "all retained controls C0 interrupted-scale-50",
+      "passed": true,
+      "detail": {
+        "points": 232,
+        "maximumJump": 0.0
+      }
+    },
+    {
+      "name": "controlled converges to target interrupted-scale-50",
+      "passed": true,
+      "detail": 0.0
+    },
+    {
+      "name": "controlled C0 interrupted-scale-90",
+      "passed": true,
+      "detail": {
+        "phase": "interrupted-scale-90",
+        "rawAnchorJumpPoints": 0.0,
+        "interiorJumpPoints": 0.0,
+        "headJumpPoints": 0.0,
+        "gradientBandJumpPoints": 0.0,
+        "alphaEstimateJump": 0.0
+      }
+    },
+    {
+      "name": "all retained controls C0 interrupted-scale-90",
+      "passed": true,
+      "detail": {
+        "points": 232,
+        "maximumJump": 5.695433295429594e-14
+      }
+    },
+    {
+      "name": "controlled converges to target interrupted-scale-90",
+      "passed": true,
+      "detail": 0.0
+    },
+    {
+      "name": "controlled C0 settled-axis-to-basic",
+      "passed": true,
+      "detail": {
+        "phase": "settled-axis-to-basic",
+        "rawAnchorJumpPoints": 0.0,
+        "interiorJumpPoints": 0.0,
+        "headJumpPoints": 0.0,
+        "gradientBandJumpPoints": 0.0,
+        "alphaEstimateJump": 0.0
+      }
+    },
+    {
+      "name": "all retained controls C0 settled-axis-to-basic",
+      "passed": true,
+      "detail": {
+        "points": 232,
+        "maximumJump": 0.0
+      }
+    },
+    {
+      "name": "controlled converges to target settled-axis-to-basic",
+      "passed": true,
+      "detail": 0.0
+    },
+    {
+      "name": "controlled transition coverage",
+      "passed": true,
+      "detail": 10
+    },
+    {
+      "name": "native non-knot head/curve and fill/curve coverage",
+      "passed": true,
+      "detail": 1358
+    },
+    {
+      "name": "head stays close between keyframes",
+      "passed": true,
+      "detail": 0.12316284804020938
+    },
+    {
+      "name": "actual presentation fill matches stroke",
+      "passed": true,
+      "detail": 0
+    },
+    {
+      "name": "native X remains monotone",
+      "passed": true,
+      "detail": 1.1517203003675909
+    },
+    {
+      "name": "native cubics do not overshoot adjacent endpoints",
+      "passed": true,
+      "detail": 0
+    },
+    {
+      "name": "physical stroke and endpoint size",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles basic-to-axis-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles basic-to-axis-50",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles basic-to-axis-90",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles basic-to-basic-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles basic-to-basic-50",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles basic-to-basic-90",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles cancel-motion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles cancel-presentation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles departing-outlier-contraction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles gradient-alpha-contraction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles interrupted-scale-25",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles interrupted-scale-50",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles interrupted-scale-90",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles ordinary-scroll",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles repeated-scroll",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles scale-contraction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles scale-expansion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural settles settled-axis-to-basic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel immediately cancel-presentation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel immediately cancel-motion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "natural retarget window interrupted-scale-25",
+      "passed": true,
+      "detail": {
+        "phase": "interrupted-scale-25",
+        "triggerElapsedSeconds": 0.10212650000016765,
+        "visibleGeometryProgress": 0.17100989818572995,
+        "activeBeforeRetarget": true,
+        "hitActiveWindow": true
+      }
+    },
+    {
+      "name": "natural retarget window repeated-scroll",
+      "passed": true,
+      "detail": {
+        "phase": "repeated-scroll",
+        "triggerElapsedSeconds": 0.13313654166677225,
+        "visibleGeometryProgress": 0.7298710942268369,
+        "activeBeforeRetarget": true,
+        "hitActiveWindow": true
+      }
+    },
+    {
+      "name": "natural retarget window interrupted-scale-50",
+      "passed": true,
+      "detail": {
+        "phase": "interrupted-scale-50",
+        "triggerElapsedSeconds": 0.18386899999995876,
+        "visibleGeometryProgress": 0.5339727997779846,
+        "activeBeforeRetarget": true,
+        "hitActiveWindow": true
+      }
+    },
+    {
+      "name": "natural retarget window interrupted-scale-90",
+      "passed": true,
+      "detail": {
+        "phase": "interrupted-scale-90",
+        "triggerElapsedSeconds": 0.31711474999997336,
+        "visibleGeometryProgress": 0.9801139235496521,
+        "activeBeforeRetarget": true,
+        "hitActiveWindow": true
+      }
+    },
+    {
+      "name": "natural retarget window basic-to-axis-25",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-axis-25",
+        "triggerElapsedSeconds": 0.051855333333151066,
+        "visibleGeometryProgress": 0.27921018004417414,
+        "activeBeforeRetarget": true,
+        "hitActiveWindow": true
+      }
+    },
+    {
+      "name": "natural retarget window basic-to-axis-50",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-axis-50",
+        "triggerElapsedSeconds": 0.09981966666668995,
+        "visibleGeometryProgress": 0.5427972078323365,
+        "activeBeforeRetarget": true,
+        "hitActiveWindow": true
+      }
+    },
+    {
+      "name": "natural retarget window basic-to-axis-90",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-axis-90",
+        "triggerElapsedSeconds": 0.16663979166651188,
+        "visibleGeometryProgress": 0.9149071574211131,
+        "activeBeforeRetarget": true,
+        "hitActiveWindow": true
+      }
+    },
+    {
+      "name": "natural retarget window basic-to-basic-25",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-basic-25",
+        "triggerElapsedSeconds": 0.05002516666672818,
+        "visibleGeometryProgress": 0.2678703665733334,
+        "activeBeforeRetarget": true,
+        "hitActiveWindow": true
+      }
+    },
+    {
+      "name": "natural retarget window basic-to-basic-50",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-basic-50",
+        "triggerElapsedSeconds": 0.1003610000000208,
+        "visibleGeometryProgress": 0.5483168959617615,
+        "activeBeforeRetarget": true,
+        "hitActiveWindow": true
+      }
+    },
+    {
+      "name": "natural retarget window basic-to-basic-90",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-basic-90",
+        "triggerElapsedSeconds": 0.16672329166658528,
+        "visibleGeometryProgress": 0.9169331192970286,
+        "activeBeforeRetarget": true,
+        "hitActiveWindow": true
+      }
+    },
+    {
+      "name": "natural retarget window settled-axis-to-basic",
+      "passed": true,
+      "detail": {
+        "phase": "settled-axis-to-basic",
+        "triggerElapsedSeconds": 0.3838845416667027,
+        "visibleGeometryProgress": 1.0,
+        "activeBeforeRetarget": true,
+        "hitActiveWindow": true
+      }
+    },
+    {
+      "name": "actual WindowServer frames",
+      "passed": true,
+      "detail": 457
+    },
+    {
+      "name": "production light and dark charging",
+      "passed": true,
+      "detail": [
+        "regular-light-bottom.png",
+        "regular-dark-bottom.png",
+        "regular-light-top.png",
+        "regular-dark-top.png"
+      ]
+    },
+    {
+      "name": "production light and dark full",
+      "passed": true,
+      "detail": [
+        "regular-light-bottom.png",
+        "regular-dark-bottom.png",
+        "regular-light-top.png",
+        "regular-dark-top.png"
+      ]
+    },
+    {
+      "name": "production light and dark on-battery",
+      "passed": true,
+      "detail": [
+        "regular-light-bottom.png",
+        "regular-dark-bottom.png",
+        "regular-light-top.png",
+        "regular-dark-top.png"
+      ]
+    },
+    {
+      "name": "production light and dark mixed-supply",
+      "passed": true,
+      "detail": [
+        "regular-light-bottom.png",
+        "regular-dark-bottom.png",
+        "regular-light-top.png",
+        "regular-dark-top.png"
+      ]
+    },
+    {
+      "name": "production light and dark low-battery",
+      "passed": true,
+      "detail": [
+        "regular-light-bottom.png",
+        "regular-dark-bottom.png",
+        "regular-light-top.png",
+        "regular-dark-top.png"
+      ]
+    },
+    {
+      "name": "production light and dark low-power",
+      "passed": true,
+      "detail": [
+        "regular-light-bottom.png",
+        "regular-dark-bottom.png",
+        "regular-light-top.png",
+        "regular-dark-top.png"
+      ]
+    }
+  ],
+  "controlledRetargets": [
+    {
+      "phase": "basic-to-axis-25",
+      "rawAnchorJumpPoints": 0.0,
+      "interiorJumpPoints": 0.0,
+      "headJumpPoints": 0.0,
+      "gradientBandJumpPoints": 0.0,
+      "alphaEstimateJump": 0.0
+    },
+    {
+      "phase": "basic-to-axis-50",
+      "rawAnchorJumpPoints": 0.0,
+      "interiorJumpPoints": 0.0,
+      "headJumpPoints": 0.0,
+      "gradientBandJumpPoints": 0.0,
+      "alphaEstimateJump": 0.0
+    },
+    {
+      "phase": "basic-to-axis-90",
+      "rawAnchorJumpPoints": 0.0,
+      "interiorJumpPoints": 0.0,
+      "headJumpPoints": 0.0,
+      "gradientBandJumpPoints": 0.0,
+      "alphaEstimateJump": 0.0
+    },
+    {
+      "phase": "basic-to-basic-25",
+      "rawAnchorJumpPoints": 0.0,
+      "interiorJumpPoints": 0.0,
+      "headJumpPoints": 0.0,
+      "gradientBandJumpPoints": 0.0,
+      "alphaEstimateJump": 0.0
+    },
+    {
+      "phase": "basic-to-basic-50",
+      "rawAnchorJumpPoints": 0.0,
+      "interiorJumpPoints": 0.0,
+      "headJumpPoints": 0.0,
+      "gradientBandJumpPoints": 0.0,
+      "alphaEstimateJump": 0.0
+    },
+    {
+      "phase": "basic-to-basic-90",
+      "rawAnchorJumpPoints": 0.0,
+      "interiorJumpPoints": 0.0,
+      "headJumpPoints": 0.0,
+      "gradientBandJumpPoints": 0.0,
+      "alphaEstimateJump": 0.0
+    },
+    {
+      "phase": "interrupted-scale-25",
+      "rawAnchorJumpPoints": 0.0,
+      "interiorJumpPoints": 0.0,
+      "headJumpPoints": 0.0,
+      "gradientBandJumpPoints": 0.0,
+      "alphaEstimateJump": 0.0
+    },
+    {
+      "phase": "interrupted-scale-50",
+      "rawAnchorJumpPoints": 0.0,
+      "interiorJumpPoints": 0.0,
+      "headJumpPoints": 0.0,
+      "gradientBandJumpPoints": 0.0,
+      "alphaEstimateJump": 0.0
+    },
+    {
+      "phase": "interrupted-scale-90",
+      "rawAnchorJumpPoints": 0.0,
+      "interiorJumpPoints": 0.0,
+      "headJumpPoints": 0.0,
+      "gradientBandJumpPoints": 0.0,
+      "alphaEstimateJump": 0.0
+    },
+    {
+      "phase": "settled-axis-to-basic",
+      "rawAnchorJumpPoints": 0.0,
+      "interiorJumpPoints": 0.0,
+      "headJumpPoints": 0.0,
+      "gradientBandJumpPoints": 0.0,
+      "alphaEstimateJump": 0.0
+    }
+  ],
+  "naturalRetargets": [
+    {
+      "phase": "interrupted-scale-25",
+      "triggerElapsedSeconds": 0.10212650000016765,
+      "visibleGeometryProgress": 0.17100989818572995,
+      "activeBeforeRetarget": true,
+      "hitActiveWindow": true
+    },
+    {
+      "phase": "repeated-scroll",
+      "triggerElapsedSeconds": 0.13313654166677225,
+      "visibleGeometryProgress": 0.7298710942268369,
+      "activeBeforeRetarget": true,
+      "hitActiveWindow": true
+    },
+    {
+      "phase": "interrupted-scale-50",
+      "triggerElapsedSeconds": 0.18386899999995876,
+      "visibleGeometryProgress": 0.5339727997779846,
+      "activeBeforeRetarget": true,
+      "hitActiveWindow": true
+    },
+    {
+      "phase": "interrupted-scale-90",
+      "triggerElapsedSeconds": 0.31711474999997336,
+      "visibleGeometryProgress": 0.9801139235496521,
+      "activeBeforeRetarget": true,
+      "hitActiveWindow": true
+    },
+    {
+      "phase": "basic-to-axis-25",
+      "triggerElapsedSeconds": 0.051855333333151066,
+      "visibleGeometryProgress": 0.27921018004417414,
+      "activeBeforeRetarget": true,
+      "hitActiveWindow": true
+    },
+    {
+      "phase": "basic-to-axis-50",
+      "triggerElapsedSeconds": 0.09981966666668995,
+      "visibleGeometryProgress": 0.5427972078323365,
+      "activeBeforeRetarget": true,
+      "hitActiveWindow": true
+    },
+    {
+      "phase": "basic-to-axis-90",
+      "triggerElapsedSeconds": 0.16663979166651188,
+      "visibleGeometryProgress": 0.9149071574211131,
+      "activeBeforeRetarget": true,
+      "hitActiveWindow": true
+    },
+    {
+      "phase": "basic-to-basic-25",
+      "triggerElapsedSeconds": 0.05002516666672818,
+      "visibleGeometryProgress": 0.2678703665733334,
+      "activeBeforeRetarget": true,
+      "hitActiveWindow": true
+    },
+    {
+      "phase": "basic-to-basic-50",
+      "triggerElapsedSeconds": 0.1003610000000208,
+      "visibleGeometryProgress": 0.5483168959617615,
+      "activeBeforeRetarget": true,
+      "hitActiveWindow": true
+    },
+    {
+      "phase": "basic-to-basic-90",
+      "triggerElapsedSeconds": 0.16672329166658528,
+      "visibleGeometryProgress": 0.9169331192970286,
+      "activeBeforeRetarget": true,
+      "hitActiveWindow": true
+    },
+    {
+      "phase": "settled-axis-to-basic",
+      "triggerElapsedSeconds": 0.3838845416667027,
+      "visibleGeometryProgress": 1.0,
+      "activeBeforeRetarget": true,
+      "hitActiveWindow": true
+    }
+  ],
+  "metricSampleCount": 1358,
+  "maxHeadDeviationPoints": 0.12316284804020938,
+  "maxFillDeviationPoints": 0,
+  "actualRecordedFrameCount": 457,
+  "captures": {
+    "charging": [
+      "regular-light-bottom.png",
+      "regular-dark-bottom.png",
+      "regular-light-top.png",
+      "regular-dark-top.png"
+    ],
+    "full": [
+      "regular-light-bottom.png",
+      "regular-dark-bottom.png",
+      "regular-light-top.png",
+      "regular-dark-top.png"
+    ],
+    "on-battery": [
+      "regular-light-bottom.png",
+      "regular-dark-bottom.png",
+      "regular-light-top.png",
+      "regular-dark-top.png"
+    ],
+    "mixed-supply": [
+      "regular-light-bottom.png",
+      "regular-dark-bottom.png",
+      "regular-light-top.png",
+      "regular-dark-top.png"
+    ],
+    "low-battery": [
+      "regular-light-bottom.png",
+      "regular-dark-bottom.png",
+      "regular-light-top.png",
+      "regular-dark-top.png"
+    ],
+    "low-power": [
+      "regular-light-bottom.png",
+      "regular-dark-bottom.png",
+      "regular-light-top.png",
+      "regular-dark-top.png"
+    ]
+  },
+  "limits": "Position continuity (C0), no claim of velocity continuity (C1), FPS, CPU-time or energy. Frame capture has its own timestamps and overhead."
+}

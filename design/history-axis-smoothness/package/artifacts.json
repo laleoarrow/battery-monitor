@@ -1,0 +1,10 @@
+{
+  "sourceCommit": "f818ae3e06c1fcbd69d506d7631d905a37228ce2",
+  "path": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/history-axis-smoothness-v4.3.16",
+  "sha256": {
+    "Wattson-v4.3.16-macos-universal.pkg": "06996376449ee6fe7c68f976bb1211543f8ad6d15d05827012f9fbcd1255f44b",
+    "Wattson-v4.3.16-macos-universal.dmg": "12e16d3b499c60801ae6e8677ff876c4e3480797574fd562edef2ffcc8c1994a",
+    "Wattson-v4.3.16-release-info.txt": "a563b943c8b3b70bef61b626945b16dc3c5eb4ea2efc02462cdc62c102747f09",
+    "SHA256SUMS.txt": "576acbd25bf4474c9b0105d11fad42c9e096cc53f7b1579ad787e93e798b11a4"
+  }
+}

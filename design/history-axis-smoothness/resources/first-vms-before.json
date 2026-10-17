@@ -1,0 +1,29 @@
+[
+  {
+    "Running" : true,
+    "State" : "running",
+    "Source" : "local",
+    "Size" : 31,
+    "Disk" : 50,
+    "Accessed" : "2026-10-17T05:56:02Z",
+    "Name" : "Wattson-RuntimeCalculating-20261017"
+  },
+  {
+    "Running" : false,
+    "State" : "stopped",
+    "Source" : "local",
+    "Size" : 33,
+    "Disk" : 50,
+    "Accessed" : "2026-10-15T06:45:45Z",
+    "Name" : "macOS-TestLab"
+  },
+  {
+    "Running" : false,
+    "State" : "stopped",
+    "Source" : "local",
+    "Size" : 30,
+    "Disk" : 50,
+    "Name" : "macOS-TestLab-Base",
+    "Accessed" : "2026-10-17T05:55:53Z"
+  }
+]

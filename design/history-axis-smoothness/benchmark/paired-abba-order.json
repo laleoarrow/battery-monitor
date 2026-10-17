@@ -1,0 +1,23 @@
+[
+  {
+    "label": "paired-b1",
+    "source": "paired",
+    "startedEpoch": 1792225631.654266,
+    "endedEpoch": 1792225790.788845,
+    "exitCode": 0
+  },
+  {
+    "label": "paired-b2",
+    "source": "paired",
+    "startedEpoch": 1792225790.789402,
+    "endedEpoch": 1792225954.06944,
+    "exitCode": 0
+  },
+  {
+    "label": "paired-a2",
+    "source": "baseline",
+    "startedEpoch": 1792225954.0701141,
+    "endedEpoch": 1792226118.852818,
+    "exitCode": 0
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "ownCloneRemoved": true,
+  "baseAndTestLabStillStopped": true,
+  "independentlyRemovedPeers": [
+    "Wattson-RuntimeCalculating-20261017"
+  ],
+  "independentlyChangedPeers": [],
+  "independentlyAddedPeers": [],
+  "attribution": "This owner issued clone/set/run/stop/delete only for Wattson-HistorySmooth-20261017. Peer changes are observations of other owners, not repaired or counted as own cleanup failures."
+}

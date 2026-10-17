@@ -1,0 +1,10 @@
+{
+  "archive": "tools.tar.gz",
+  "archiveSHA256": "3e86a970e74f8983b106ef53045d4887e776a71fe1ee079bb411b6e6f4da12d6",
+  "files": {
+    "run-benchmark.sh": "6239b5d407b5fd1bdf5c9612a990fef7606367777d23039cc892c26173844a3a",
+    "benchmark-history.swift": "393695fe2e6eba20d549429e94b2f08850b63edfb13ba9ecab8f6918ce527861",
+    "instrument-path-counts.py": "9af958365706a3037bd85bc18d782ebb7cc590bae5911deaec88528e09e4bea5",
+    "summarize-benchmark.py": "ddfbb8446c49afe8b99a8493982e79b23a864d65104de395b992dccf9d47d42f"
+  }
+}

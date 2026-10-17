@@ -1,0 +1,10 @@
+{
+  "label": "paired-a2",
+  "archive": "results-paired-a2-53e5217857d78ca5cfc8fd8e81cba7894136d3a966ddd8f77a20f6a140209a6e.tar.gz",
+  "sha256": "53e5217857d78ca5cfc8fd8e81cba7894136d3a966ddd8f77a20f6a140209a6e",
+  "commandExitCode": 0,
+  "stageExitCode": 0,
+  "projectRemoved": true,
+  "cleanupErrors": [],
+  "failure": null
+}

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Volumes/My Shared Files/historysmooth/qa/verify-installed.py", line 51, in <module>
+    running = pids();assert len(running)==1, running
+AssertionError: []

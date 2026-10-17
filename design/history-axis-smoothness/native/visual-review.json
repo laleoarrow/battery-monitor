@@ -1,0 +1,84 @@
+{
+  "reviewedAtUTC": "2026-10-17T08:57:58.930695+00:00",
+  "motionFramesInspected": [
+    {
+      "captureDurationSeconds": 0.005757375000030152,
+      "elapsedSeconds": 1.1368563333332986,
+      "file": "frame-0028.png",
+      "phase": "scale-expansion",
+      "phaseElapsedSeconds": 0.10521087500001158,
+      "archivePath": "results/motion/frames/recording-frames/frame-0028.png"
+    },
+    {
+      "captureDurationSeconds": 0.005263791666720863,
+      "elapsedSeconds": 1.3223022083332125,
+      "file": "frame-0033.png",
+      "phase": "scale-expansion",
+      "phaseElapsedSeconds": 0.2906567499999255,
+      "archivePath": "results/motion/frames/recording-frames/frame-0033.png"
+    },
+    {
+      "captureDurationSeconds": 0.006334041666832491,
+      "elapsedSeconds": 2.176022416666683,
+      "file": "frame-0054.png",
+      "phase": "scale-contraction",
+      "phaseElapsedSeconds": 0.07947550000017145,
+      "archivePath": "results/motion/frames/recording-frames/frame-0054.png"
+    },
+    {
+      "captureDurationSeconds": 0.006868791666647667,
+      "elapsedSeconds": 2.3765776666666625,
+      "file": "frame-0059.png",
+      "phase": "scale-contraction",
+      "phaseElapsedSeconds": 0.2800307500001509,
+      "archivePath": "results/motion/frames/recording-frames/frame-0059.png"
+    },
+    {
+      "captureDurationSeconds": 0.0068253333333814226,
+      "elapsedSeconds": 7.410200874999873,
+      "file": "frame-0182.png",
+      "phase": "interrupted-scale-50",
+      "phaseElapsedSeconds": 0.09552725000003193,
+      "archivePath": "results/motion/frames/recording-frames/frame-0182.png"
+    },
+    {
+      "captureDurationSeconds": 0.00634845833315012,
+      "elapsedSeconds": 7.576266041666486,
+      "file": "frame-0186.png",
+      "phase": "interrupted-scale-50",
+      "phaseElapsedSeconds": 0.26159241666664457,
+      "archivePath": "results/motion/frames/recording-frames/frame-0186.png"
+    },
+    {
+      "captureDurationSeconds": 0.010676375000002736,
+      "elapsedSeconds": 12.663503416666572,
+      "file": "frame-0303.png",
+      "phase": "basic-to-axis-50",
+      "phaseElapsedSeconds": 0.09853437499987194,
+      "archivePath": "results/motion/frames/recording-frames/frame-0303.png"
+    },
+    {
+      "captureDurationSeconds": 0.006479791666606616,
+      "elapsedSeconds": 12.825856708333276,
+      "file": "frame-0307.png",
+      "phase": "basic-to-axis-50",
+      "phaseElapsedSeconds": 0.2608876666665765,
+      "archivePath": "results/motion/frames/recording-frames/frame-0307.png"
+    }
+  ],
+  "stateCapturesInspected": [
+    "results/gallery/charging/regular-light-top.png",
+    "results/gallery/charging/regular-dark-bottom.png",
+    "results/gallery/full/regular-light-bottom.png",
+    "results/gallery/full/regular-dark-bottom.png",
+    "results/gallery/on-battery/regular-light-bottom.png",
+    "results/gallery/on-battery/regular-dark-bottom.png",
+    "results/gallery/mixed-supply/regular-light-bottom.png",
+    "results/gallery/mixed-supply/regular-dark-bottom.png",
+    "results/gallery/low-battery/regular-light-bottom.png",
+    "results/gallery/low-battery/regular-dark-bottom.png",
+    "results/gallery/low-power/regular-light-bottom.png",
+    "results/gallery/low-power/regular-dark-bottom.png"
+  ],
+  "findings": "No clipped History text, detached fill edge, unexpected stroke width or head separation was visible in the selected captures. Motion acceptance primarily uses the independent continuous-curve measurements. No display-FPS claim."
+}

@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "measurement": "Independent interpolation of actual native from/to path controls, position values and keyTimes. Continuous geometry lookup uses all four points and bisection in X. Not composited frames or FPS.",
+  "results": [
+    {
+      "phase": "interrupted-scale-25",
+      "keyframes": 34,
+      "denseProgressSamples": 4095,
+      "maximumDeviationPoints": 0.09527872173345742,
+      "progressAtMaximum": 0.014892578125
+    },
+    {
+      "phase": "interrupted-scale-50",
+      "keyframes": 34,
+      "denseProgressSamples": 4095,
+      "maximumDeviationPoints": 0.031079989081515436,
+      "progressAtMaximum": 0.297119140625
+    },
+    {
+      "phase": "interrupted-scale-90",
+      "keyframes": 34,
+      "denseProgressSamples": 4095,
+      "maximumDeviationPoints": 0.0360997203184894,
+      "progressAtMaximum": 0.000244140625
+    },
+    {
+      "phase": "basic-to-axis-25",
+      "keyframes": 34,
+      "denseProgressSamples": 4095,
+      "maximumDeviationPoints": 0.04719163698796791,
+      "progressAtMaximum": 0.452880859375
+    },
+    {
+      "phase": "basic-to-axis-50",
+      "keyframes": 34,
+      "denseProgressSamples": 4095,
+      "maximumDeviationPoints": 0.0382439063031903,
+      "progressAtMaximum": 0.359130859375
+    },
+    {
+      "phase": "basic-to-axis-90",
+      "keyframes": 34,
+      "denseProgressSamples": 4095,
+      "maximumDeviationPoints": 0.027025553642420874,
+      "progressAtMaximum": 0.984375
+    },
+    {
+      "phase": "basic-to-basic-25",
+      "keyframes": 34,
+      "denseProgressSamples": 4095,
+      "maximumDeviationPoints": 0.011332791733121184,
+      "progressAtMaximum": 0.390869140625
+    },
+    {
+      "phase": "basic-to-basic-50",
+      "keyframes": 34,
+      "denseProgressSamples": 4095,
+      "maximumDeviationPoints": 0.007939972275266882,
+      "progressAtMaximum": 0.297119140625
+    },
+    {
+      "phase": "basic-to-basic-90",
+      "keyframes": 34,
+      "denseProgressSamples": 4095,
+      "maximumDeviationPoints": 0.0034123456374821615,
+      "progressAtMaximum": 0.076904296875
+    },
+    {
+      "phase": "settled-axis-to-basic",
+      "keyframes": 33,
+      "denseProgressSamples": 4095,
+      "maximumDeviationPoints": 0.006964150742888364,
+      "progressAtMaximum": 0.984375
+    }
+  ]
+}

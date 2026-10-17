@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "atUTC": "2026-10-17T08:54:02.548738+00:00",
+  "readOnly": true,
+  "commands": {
+    "vms": {
+      "argv": [
+        "/opt/homebrew/bin/tart",
+        "list",
+        "--format",
+        "json"
+      ],
+      "exitCode": 0,
+      "stdout": "[\n  {\n    \"Source\" : \"local\",\n    \"Name\" : \"macOS-TestLab\",\n    \"State\" : \"stopped\",\n    \"Accessed\" : \"2026-10-15T06:45:45Z\",\n    \"Running\" : false,\n    \"Disk\" : 50,\n    \"Size\" : 33\n  },\n  {\n    \"Source\" : \"local\",\n    \"Name\" : \"macOS-TestLab-Base\",\n    \"State\" : \"stopped\",\n    \"Accessed\" : \"2026-10-17T08:08:55Z\",\n    \"Running\" : false,\n    \"Disk\" : 50,\n    \"Size\" : 30\n  }\n]\n",
+      "stderr": ""
+    },
+    "memoryPressure": {
+      "argv": [
+        "/usr/bin/memory_pressure",
+        "-Q"
+      ],
+      "exitCode": 0,
+      "stdout": "The system has 137438953472 (8388608 pages with a page size of 16384).\nSystem-wide memory free percentage: 73%\n",
+      "stderr": ""
+    },
+    "memoryAndSwap": {
+      "argv": [
+        "/usr/sbin/sysctl",
+        "hw.memsize",
+        "vm.swapusage"
+      ],
+      "exitCode": 0,
+      "stdout": "hw.memsize: 137438953472\nvm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)\n",
+      "stderr": ""
+    },
+    "disk": {
+      "argv": [
+        "/bin/df",
+        "-k",
+        "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-axis-smoothness.noindex/vm-owner-final"
+      ],
+      "exitCode": 0,
+      "stdout": "Filesystem   1024-blocks       Used  Available Capacity iused       ifree %iused  Mounted on\n/dev/disk3s5  3902665360 2603385412 1273431252    68% 4177852 12734312520    0%   /System/Volumes/Data\n",
+      "stderr": ""
+    },
+    "signatureVerify": {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "/Applications/Wattson.app"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "signatureIdentity": {
+      "argv": [
+        "/usr/bin/codesign",
+        "-dv",
+        "--verbose=4",
+        "/Applications/Wattson.app"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Executable=/Applications/Wattson.app/Contents/MacOS/Wattson\nIdentifier=com.leoarrow.wattson\nFormat=app bundle with Mach-O universal (x86_64 arm64)\nCodeDirectory v=20400 size=6349 flags=0x2(adhoc) hashes=188+7 location=embedded\nVersionPlatform=1\nVersionMin=786432\nVersionSDK=1705216\nHash type=sha256 size=32\nCandidateCDHash sha256=dfcc0337b581d2317356b64460d0feacaf440c0f\nCandidateCDHashFull sha256=dfcc0337b581d2317356b64460d0feacaf440c0f188e58f5b5a265bd6a69fe0b\nHash choices=sha256\nCMSDigest=dfcc0337b581d2317356b64460d0feacaf440c0f188e58f5b5a265bd6a69fe0b\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=1310720\nExecutable Segment flags=0x1\nPage size=16384\nCDHash=dfcc0337b581d2317356b64460d0feacaf440c0f\nSignature=adhoc\nInfo.plist entries=14\nTeamIdentifier=not set\nSealed Resources version=2 rules=13 files=10\nInternal requirements count=0 size=12\n"
+    },
+    "receipt": {
+      "argv": [
+        "/usr/sbin/pkgutil",
+        "--pkg-info-plist",
+        "com.leoarrow.wattson.pkg"
+      ],
+      "exitCode": 0,
+      "stdout": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<dict>\n\t<key>install-location</key>\n\t<string></string>\n\t<key>install-time</key>\n\t<integer>1792227095</integer>\n\t<key>pkg-version</key>\n\t<string>4.3.16</string>\n\t<key>pkgid</key>\n\t<string>com.leoarrow.wattson.pkg</string>\n\t<key>receipt-plist-version</key>\n\t<real>1</real>\n\t<key>volume</key>\n\t<string>/</string>\n</dict>\n</plist>\n\n",
+      "stderr": ""
+    }
+  },
+  "canonical": {
+    "version": "4.3.16",
+    "bundleID": "com.leoarrow.wattson",
+    "executableSHA256": "09310d97a41aa4a707576ea09f417e0e1e6cb35288dde46a46f5cf313bc83fb2",
+    "infoSHA256": "f6f5cb47f1bea1f21339226be30aa1bf19a05097bc536b46b0500b762865a8bd",
+    "pids": [
+      {
+        "pid": 18025,
+        "uid": 501,
+        "executable": "/Applications/Wa"
+      }
+    ],
+    "receiptVersion": "4.3.16",
+    "signatureVerified": true
+  },
+  "expectedPeerObservedAbsent": true,
+  "peerAttribution": "Read-only inventory only. Any absent or changed peer was not targeted by this owner; correlate with peer owner evidence."
+}
