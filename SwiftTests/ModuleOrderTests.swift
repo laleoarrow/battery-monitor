@@ -97,6 +97,10 @@ final class ModuleOrderSettingsTests: XCTestCase {
         Settings.setModule(.history, visible: true)
         XCTAssertEqual(Settings.moduleOrder, order)
         XCTAssertFalse(Settings.isModuleVisible(.runtime))
+        Settings.moduleOrder = Settings.Module.allCases
+        XCTAssertEqual(Settings.moduleOrder, Settings.Module.allCases)
+        XCTAssertTrue(Settings.isModuleVisible(.history))
+        XCTAssertFalse(Settings.isModuleVisible(.runtime))
     }
 
     func testExternalWritesAndRemovalAreReadDirectly() {
@@ -202,24 +206,27 @@ final class ModuleOrderViewTests: XCTestCase {
         var heightNotifications = 0
         content.heightDidChange = { _ in heightNotifications += 1 }
 
-        let order = Array(Settings.Module.allCases.reversed())
-        Settings.moduleOrder = order
+        for order in [Array(Settings.Module.allCases.reversed()), Settings.Module.allCases] {
+            Settings.moduleOrder = order
 
-        XCTAssertEqual(content.moduleOrderForTest, order)
-        for (module, original) in zip(Settings.Module.allCases, views) {
-            XCTAssertTrue(content.moduleViewForTest(module) === original)
-            XCTAssertTrue(original.window === window)
+            XCTAssertEqual(content.moduleOrderForTest, order)
+            XCTAssertEqual(content.moduleMenuItemsForTest.compactMap { $0.representedObject as? String },
+                           order.map(\.rawValue))
+            for (module, original) in zip(Settings.Module.allCases, views) {
+                XCTAssertTrue(content.moduleViewForTest(module) === original)
+                XCTAssertTrue(original.window === window)
+            }
+            XCTAssertTrue(window.firstResponder === focus)
+            XCTAssertEqual(scroll.contentView.bounds.origin, offset)
+            XCTAssertEqual(content.preferredHeight, naturalHeight)
+            XCTAssertEqual(heightNotifications, 0)
+            XCTAssertEqual(content.latestHistoryForTest, [10, 20])
+            XCTAssertEqual(content.moduleUpdateCountsForTest, counts)
+            XCTAssertEqual(content.footerUpdateCountForTest, footerUpdates)
+            XCTAssertEqual(history.renderCountForTest, renders)
+            XCTAssertEqual(history.chartCeilingForTest, ceiling)
+            XCTAssertTrue(history.hasChartAnimationForTest)
         }
-        XCTAssertTrue(window.firstResponder === focus)
-        XCTAssertEqual(scroll.contentView.bounds.origin, offset)
-        XCTAssertEqual(content.preferredHeight, naturalHeight)
-        XCTAssertEqual(heightNotifications, 0)
-        XCTAssertEqual(content.latestHistoryForTest, [10, 20])
-        XCTAssertEqual(content.moduleUpdateCountsForTest, counts)
-        XCTAssertEqual(content.footerUpdateCountForTest, footerUpdates)
-        XCTAssertEqual(history.renderCountForTest, renders)
-        XCTAssertEqual(history.chartCeilingForTest, ceiling)
-        XCTAssertTrue(history.hasChartAnimationForTest)
     }
 
     func testHiddenModuleRestoresItsReorderedPositionAndExactHeight() {

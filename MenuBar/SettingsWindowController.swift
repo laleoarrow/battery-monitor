@@ -3235,6 +3235,17 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         subtitle.textColor = SettingsStyle.secondaryText
         subtitle.translatesAutoresizingMaskIntoConstraints = false
 
+        let restoreOrder = NSButton(title: "Restore Default Order", target: self,
+                                    action: #selector(restoreDefaultOrder(_:)))
+        restoreOrder.identifier = NSUserInterfaceItemIdentifier("settings.modules.restore-default-order")
+        restoreOrder.setAccessibilityIdentifier("settings.modules.restore-default-order")
+        restoreOrder.setAccessibilityLabel("Restore Default Order")
+        restoreOrder.setAccessibilityHelp("Restore the original module order without changing which modules are shown.")
+        restoreOrder.bezelStyle = .rounded
+        restoreOrder.controlSize = .small
+        restoreOrder.font = .systemFont(ofSize: NSFont.smallSystemFontSize)
+        restoreOrder.translatesAutoresizingMaskIntoConstraints = false
+
         for (index, module) in Settings.Module.allCases.enumerated() {
             rows.rows[module] = makeRow(for: module, index: index)
         }
@@ -3257,15 +3268,19 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         view.addSubview(heading)
         view.addSubview(subtitle)
         view.addSubview(surface)
-        let contentTop = surface.topAnchor.constraint(equalTo: view.topAnchor, constant: 66)
+        view.addSubview(restoreOrder)
+        let contentTop = surface.topAnchor.constraint(equalTo: view.topAnchor, constant: 70)
         heading.contentTopConstraint = contentTop
         NSLayoutConstraint.activate([
             heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             heading.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             heading.topAnchor.constraint(equalTo: view.topAnchor, constant: -3),
             subtitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
-            subtitle.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            subtitle.trailingAnchor.constraint(lessThanOrEqualTo: restoreOrder.leadingAnchor, constant: -12),
             subtitle.bottomAnchor.constraint(equalTo: surface.topAnchor, constant: -10),
+            restoreOrder.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            restoreOrder.centerYAnchor.constraint(equalTo: subtitle.centerYAnchor),
+            restoreOrder.heightAnchor.constraint(equalToConstant: 22),
             surface.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             surface.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             contentTop,
@@ -3390,6 +3405,10 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
 
     private func refresh(_ module: Settings.Module) {
         buttons[module]?.state = Settings.isModuleVisible(module) ? .on : .off
+    }
+
+    @objc private func restoreDefaultOrder(_ sender: NSButton) {
+        Settings.moduleOrder = Settings.Module.allCases
     }
 
     @objc private func toggleModule(_ sender: NSButton) {

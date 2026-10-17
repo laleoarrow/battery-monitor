@@ -1524,6 +1524,24 @@ class SettingsWindowContractTests(unittest.TestCase):
             let moduleHeading = view("settings.modules.heading", in: first)
             let moduleSubtitle = view("settings.modules.subtitle", in: first)
             let moduleList = view("settings.modules.list", in: first)
+            let restoreModuleOrder = button("Restore Default Order", in: first)
+            func verifyRestoreModuleOrderLayout() {
+                let restoreRect = restoreModuleOrder.convert(restoreModuleOrder.bounds, to: modulePage)
+                let subtitleRect = moduleSubtitle.convert(moduleSubtitle.bounds, to: modulePage)
+                let listRect = moduleList.convert(moduleList.bounds, to: modulePage)
+                require(!restoreModuleOrder.isHiddenOrHasHiddenAncestor && restoreModuleOrder.isEnabled,
+                    "Restore Default Order stays visible and enabled")
+                require(modulePage.bounds.insetBy(dx: -0.5, dy: -0.5).contains(restoreRect)
+                    && !restoreRect.intersects(subtitleRect) && !restoreRect.intersects(listRect),
+                    "restore action fits the subtitle row without clipping or covering content")
+                require(restoreModuleOrder.frame.width + 1 >= restoreModuleOrder.intrinsicContentSize.width
+                    && moduleSubtitle.frame.width + 1 >= moduleSubtitle.intrinsicContentSize.width,
+                    "restore action and module subtitle remain fully readable")
+            }
+            require(restoreModuleOrder.identifier?.rawValue == "settings.modules.restore-default-order"
+                && restoreModuleOrder.accessibilityIdentifier() == "settings.modules.restore-default-order",
+                "restore action has a stable view and accessibility identifier")
+            verifyRestoreModuleOrderLayout()
             require(
                 approximately(moduleHeading.frame.height, moduleHeading.intrinsicContentSize.height),
                 "Modules heading keeps intrinsic height"
@@ -1599,7 +1617,9 @@ class SettingsWindowContractTests(unittest.TestCase):
             let flow = button(Settings.Module.flow.title, in: first)
             require(controller.sidebarNextKeyViewForTest === flow, "Tab enters first Modules switch")
             let lastModuleHandle = view("settings.modules.reorder.runtime", in: first)
-            require(lastModuleHandle.nextKeyView === controller.sidebarForTest, "Modules key loop returns from the final reorder handle to navigation")
+            require(lastModuleHandle.nextKeyView === restoreModuleOrder
+                && restoreModuleOrder.nextKeyView === controller.sidebarForTest,
+                "Modules key loop reaches Restore Default Order before returning to navigation")
             flow.performClick(nil)
             require(!Settings.isModuleVisible(.flow), "module writes through shared Settings store")
             Settings.setModule(.flow, visible: true)
@@ -1659,9 +1679,34 @@ class SettingsWindowContractTests(unittest.TestCase):
             button(Settings.Module.flow.title, in: first).performClick(nil)
             require(!Settings.isModuleVisible(.flow) && !Settings.isModuleVisible(.history),
                 "a moved switch still changes its own module")
+            let visibilityBeforeRestore = Settings.Module.allCases.map { Settings.isModuleVisible($0) }
+            var restoreChanges: [Settings.Change] = []
+            let restoreObserver = NotificationCenter.default.addObserver(
+                forName: Settings.didChange, object: nil, queue: .main
+            ) { note in
+                if let change = note.userInfo?[Settings.changeUserInfoKey] as? Settings.Change {
+                    restoreChanges.append(change)
+                }
+            }
+            restoreModuleOrder.performClick(nil)
+            settleModuleOrder()
+            require(Settings.moduleOrder == Settings.Module.allCases
+                && displayedModuleOrder() == Settings.Module.allCases
+                && restoreChanges == [.moduleOrder],
+                "Restore Default Order saves and displays the original order once")
+            require(Settings.Module.allCases.map { Settings.isModuleVisible($0) } == visibilityBeforeRestore,
+                "restoring order preserves every module visibility choice")
+            require(moduleRows.allSatisfy {
+                originalModuleRows[$0.identifier!.rawValue] == ObjectIdentifier($0)
+            } && Settings.Module.allCases.allSatisfy {
+                originalModuleButtons[$0] == ObjectIdentifier(button($0.title, in: first))
+            }, "restoring order retains all module rows and switches")
+            restoreModuleOrder.performClick(nil)
+            require(restoreModuleOrder.isEnabled && restoreChanges == [.moduleOrder],
+                "restoring an already-default order stays enabled and is a no-op")
+            NotificationCenter.default.removeObserver(restoreObserver)
             Settings.setModule(.flow, visible: true)
             Settings.setModule(.history, visible: true)
-            Settings.moduleOrder = Settings.Module.allCases
             settleModuleOrder()
             let flowHandle = view("settings.modules.reorder.flow", in: first)
             first?.makeFirstResponder(controller.sidebarForTest)
@@ -1788,8 +1833,9 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(controller.sidebarNextKeyViewForTest === button(Settings.Module.flow.title, in: first)
                 && button(Settings.Module.flow.title, in: first).nextKeyView === flowHandle
                 && flowHandle.nextKeyView === button(Settings.Module.ring.title, in: first)
-                && finalHandle.nextKeyView === controller.sidebarForTest,
-                "key loop follows visible order with switch then handle in each row")
+                && finalHandle.nextKeyView === restoreModuleOrder
+                && restoreModuleOrder.nextKeyView === controller.sidebarForTest,
+                "key loop follows module order and the restore action before navigation")
             NotificationCenter.default.removeObserver(orderObserver)
 
             // Increase Contrast is a live, appearance-only adaptation. The
@@ -2333,6 +2379,17 @@ class SettingsWindowContractTests(unittest.TestCase):
                     require(inlineTitle.isHidden && pageTitle.stringValue == inlineTitle.stringValue
                         && pageTitleItem.label == inlineTitle.stringValue,
                         "each page updates the visible and accessible native toolbar title")
+                    if identifier == "modules" {
+                        let savedStyle = Settings.liquidGlassStyle
+                        for style: Settings.LiquidGlassStyle in [.regular, .clear] {
+                            Settings.liquidGlassStyle = style
+                            content.layoutSubtreeIfNeeded()
+                            verifyRestoreModuleOrderLayout()
+                            require(restoreModuleOrder.bezelStyle == .glass,
+                                "restore action follows the native glass button appearance")
+                        }
+                        Settings.liquidGlassStyle = savedStyle
+                    }
                     let surfaces = descendants(ofType: NSGlassEffectView.self, in: content)
                         .filter { $0.identifier?.rawValue == "settings.control-group.glass" }
                     let expectedGroups = identifier == "general" ? 4 : 1
