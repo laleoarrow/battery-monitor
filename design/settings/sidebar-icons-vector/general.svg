@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#E9E9E9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title>Wattson General settings</title>
+<defs>
+<linearGradient id="adjustment" gradientUnits="userSpaceOnUse" x1="2.8" y1="0" x2="18" y2="0">
+<stop offset="0" stop-color="#0A84FF" stop-opacity="0.12"/>
+<stop offset="1" stop-color="#0A84FF" stop-opacity="1"/>
+</linearGradient>
+</defs>
+<path d="M 2.8 5 L 21.2 5 M 2.8 12 L 21.2 12 M 2.8 19 L 21.2 19" stroke="currentColor" stroke-width="1.35"/>
+<path d="M 2.8 5 L 7.2 5 M 2.8 12 L 16.8 12 M 2.8 19 L 11.4 19" stroke="url(#adjustment)" stroke-width="1.45"/>
+<circle cx="7.2" cy="5" r="2.25" fill="#0A84FF" stroke="currentColor" stroke-width="1.2"/>
+<circle cx="16.8" cy="12" r="2.25" fill="#0A84FF" stroke="currentColor" stroke-width="1.2"/>
+<circle cx="11.4" cy="19" r="2.25" fill="#0A84FF" stroke="currentColor" stroke-width="1.2"/>
+</svg>

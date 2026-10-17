@@ -4,7 +4,7 @@ import UniformTypeIdentifiers
 protocol SettingsSectionController: AnyObject {
     var identifier: String { get }
     var title: String { get }
-    var symbolName: String { get }
+    var sidebarIcon: ModuleIconArtwork.SidebarIcon { get }
     var view: NSView { get }
     func refresh()
 }
@@ -451,6 +451,44 @@ private final class SettingsToggleButton: NSButton, SettingsContrastRefreshing {
     }
 }
 
+private final class SettingsSidebarCellView: NSTableCellView, SettingsContrastRefreshing {
+    private let icon: ModuleIconArtwork.SidebarIcon
+    private let increaseContrast: () -> Bool
+
+    init(icon: ModuleIconArtwork.SidebarIcon, increaseContrast: @escaping () -> Bool) {
+        self.icon = icon
+        self.increaseContrast = increaseContrast
+        super.init(frame: .zero)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError("init(coder:) is unavailable") }
+
+    override var backgroundStyle: NSView.BackgroundStyle {
+        didSet { refreshContrastAppearance() }
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        refreshContrastAppearance()
+    }
+
+    func refreshContrastAppearance() {
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            let emphasized = backgroundStyle == .emphasized
+            let ink = emphasized ? NSColor.white : SettingsStyle.primaryText
+            let accent = emphasized ? NSColor.white : .systemBlue
+            imageView?.image = ModuleIconArtwork.sidebarImage(
+                for: icon, side: 18,
+                ink: ink.usingColorSpace(.sRGB) ?? ink,
+                accent: accent.usingColorSpace(.sRGB) ?? accent,
+                increasedContrast: increaseContrast()
+            )
+            imageView?.contentTintColor = nil
+        }
+    }
+}
+
 private final class SettingsSidebarRowView: NSTableRowView, SettingsContrastRefreshing {
     private let increaseContrast: () -> Bool
 
@@ -686,7 +724,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
     let identifier = "general"
     let title = "General"
-    let symbolName = "slider.horizontal.3"
+    let sidebarIcon: ModuleIconArtwork.SidebarIcon = .general
     let view = NSView()
 
     private let dependencies: SettingsWindowDependencies
@@ -2547,7 +2585,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
 {
     let identifier = "menu-bar-icon"
     let title = "Display"
-    let symbolName = "rectangle"
+    let sidebarIcon: ModuleIconArtwork.SidebarIcon = .display
     let view = NSView()
 
     private let increaseContrast: () -> Bool
@@ -3148,7 +3186,7 @@ private final class ModuleReorderList: NSStackView, NSDraggingSource, SettingsCo
 private final class ModuleSettingsSectionController: NSObject, SettingsSectionController {
     let identifier = "modules"
     let title = "Modules"
-    let symbolName = "square.grid.2x2.fill"
+    let sidebarIcon: ModuleIconArtwork.SidebarIcon = .modules
     let view = NSView()
 
     private let increaseContrast: () -> Bool
@@ -3965,18 +4003,12 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     ) -> NSView? {
         guard sections.indices.contains(row) else { return nil }
         let section = sections[row]
-        let cell = NSTableCellView()
+        let cell = SettingsSidebarCellView(icon: section.sidebarIcon,
+                                           increaseContrast: increaseContrast)
 
         let icon = NSImageView()
         icon.identifier = NSUserInterfaceItemIdentifier("settings.sidebar.icon.\(section.identifier)")
         icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.image = NSImage(
-            systemSymbolName: section.symbolName,
-            accessibilityDescription: nil
-        )?.withSymbolConfiguration(
-            NSImage.SymbolConfiguration(pointSize: 18, weight: .regular)
-        )
-        icon.contentTintColor = SettingsStyle.primaryText
         icon.imageScaling = .scaleProportionallyDown
         icon.setAccessibilityElement(false)
 
@@ -3990,6 +4022,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
         cell.addSubview(title)
         cell.imageView = icon
         cell.textField = title
+        cell.refreshContrastAppearance()
         NSLayoutConstraint.activate([
             icon.leadingAnchor.constraint(equalTo: cell.leadingAnchor),
             icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
