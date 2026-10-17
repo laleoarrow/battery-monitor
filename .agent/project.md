@@ -283,8 +283,13 @@ to the system appearance. Keep editable vector masters and derive production
 artwork from them. Do not introduce unrelated icon styles or change the app's
 existing identity as part of adding a module icon.
 Native Settings captures and verification notes are in
-`design/settings/modules-reordering/README.md`. Actual pointer-driven drop
-verification remains pending; queued-event tests did not verify a system drop.
+`design/settings/modules-reordering/README.md`. Pointer-driven keyboard/mouse focus switching is verified: only keyboard
+interaction retains a focus outline. Integrated source `402991a` passes eight
+Settings contracts and 12 Modules tests, and 12 own-window icon captures were
+reviewed. Several real native drop/cancel cases pass, but rapid Classic/Standard
+drops left a live session and half-opacity row in the instrumented VM. Overall
+drag acceptance remains blocked pending lower-overhead observation; successful
+retries do not supersede the retained failures.
 
 The main popover footer now replaces the UI4 ordinary segmented
 control inside a glass surface with three mutually exclusive native `.glass`

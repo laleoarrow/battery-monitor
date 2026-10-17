@@ -14,10 +14,29 @@ Reduce Motion removes row displacement and the drag return animation.
 The current source uses the five reference-faithful neutral-and-blue vector
 icons in [the vector artwork review](../module-icons-vector/README.md). All five
 non-template images regenerate for appearance and contrast changes. Row dimensions
-are unchanged. The captured gallery below predates this five-icon refresh and
-shows the earlier glyphs; its original source and image hashes are retained.
+are unchanged. Mouse interaction no longer leaves a blue outline around the
+drag handle. Keyboard navigation still exposes the focus cue.
 
-## Actual native captures
+## Integrated icon and focus captures
+
+Source `402991a57fcbfa715e053b636cc54aceeb0a0a83` was compiled without production
+source changes and rendered in the disposable ARM VM. All 12 unedited own-window
+captures were visually reviewed (three styles, two appearances, both contrast
+settings); no clipped artwork or persistent default focus outline was found.
+[Capture manifest](integrated/capture-manifest.json) records original hashes.
+
+| Appearance | Light | Dark | Increased contrast |
+| --- | --- | --- | --- |
+| Classic | [Light](integrated/contrast-0/classic-light.png) | [Dark](integrated/contrast-0/classic-dark.png) | [Light](integrated/contrast-1/classic-light.png) / [Dark](integrated/contrast-1/classic-dark.png) |
+| Standard | [Light](integrated/contrast-0/standard-light.png) | [Dark](integrated/contrast-0/standard-dark.png) | [Light](integrated/contrast-1/standard-light.png) / [Dark](integrated/contrast-1/standard-dark.png) |
+| Clear | [Light](integrated/contrast-0/clear-light.png) | [Dark](integrated/contrast-0/clear-dark.png) | [Light](integrated/contrast-1/clear-light.png) / [Dark](integrated/contrast-1/clear-dark.png) |
+
+Actual keyboard Up input shows the [focus cue](integrated/focus/keyboard-focus-visible.png).
+A subsequent mouse click removes the [outline](integrated/focus/mouse-focus-hidden.png)
+while retaining the same first responder. Paired JSON snapshots preserve the
+read-only state, input events, unchanged order and zero preference writes.
+
+## Earlier native captures
 
 These are production AppKit renders in a disposable ARM VM running macOS 26.6.1.
 They use isolated preferences and read-only system dependencies. The image
@@ -37,10 +56,19 @@ storage tests and four native view tests pass in the VM. The view tests verify
 actual section adjacency using the parent stack coordinate system, plus retained
 History objects, data, animations, focus and scroll position.
 
-Actual mouse drag-and-drop verification remains pending. Synthetic queued
-NSEvents reached the handle but did not establish a verified destination drop;
-that attempt returned 78 and is not counted as a pass. A second disposable VM
-opened the passive manual fixture, but the host lock prevented the UI tool from
-operating it. No successful system drag-and-drop is claimed from either attempt.
+The eight Settings contracts and 12 Modules tests pass on the integrated source.
+Real pointer cases passed for Classic drop and outside cancellation, Standard
+outside cancellation, Clear drop, and Clear outside cancellation with Reduce
+Motion. These passes require real AppKit source begin/end callbacks, unchanged
+view identities, exact preference write counts and cleared drag state.
+
+Overall drag acceptance remains blocked. Rapid Classic and Standard drops left
+a half-opacity source row and a live drag session until Escape. The passive
+observer writes JSON synchronously around native callbacks, which could perturb
+timing; a separate lower-overhead observation is prepared before attributing a
+production cause. Original failures are retained, and successful retries do not
+replace them. The host locked during the remaining check, so no further mouse
+coverage is claimed. Detailed evidence is retained under
+`.build/modules-drag-review.noindex/final-4311-ui-v2-review.noindex`.
 
 This source change does not install or publish a new application version.

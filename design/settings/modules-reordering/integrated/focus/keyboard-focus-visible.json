@@ -1,0 +1,290 @@
+{
+  "case" : "keyboard-focus",
+  "closeOnPreviewArmed" : false,
+  "closeOnPreviewEvidence" : {
+
+  },
+  "directDragCallbacks" : false,
+  "displayOrder" : [
+    "flow",
+    "ring",
+    "lanes",
+    "history",
+    "runtime"
+  ],
+  "dragState" : {
+    "available" : true,
+    "draggedModuleIsNil" : true,
+    "dragSessionIsNil" : true,
+    "originalOrderIsEmpty" : true,
+    "readOnlySwiftReflection" : true
+  },
+  "firstResponder" : {
+    "class" : "ModuleReorderHandle",
+    "objectIdentity" : "ObjectIdentifier(0x00000009cd537000)",
+    "viewIdentifier" : "settings.modules.reorder.flow"
+  },
+  "handles" : [
+    {
+      "frameInScreen" : [
+        820,
+        526,
+        24,
+        27.5
+      ],
+      "id" : "settings.modules.reorder.flow"
+    },
+    {
+      "frameInScreen" : [
+        820,
+        454,
+        24,
+        27.5
+      ],
+      "id" : "settings.modules.reorder.ring"
+    },
+    {
+      "frameInScreen" : [
+        820,
+        382,
+        24,
+        27.5
+      ],
+      "id" : "settings.modules.reorder.lanes"
+    },
+    {
+      "frameInScreen" : [
+        820,
+        310,
+        24,
+        27.5
+      ],
+      "id" : "settings.modules.reorder.history"
+    },
+    {
+      "frameInScreen" : [
+        820,
+        238,
+        24,
+        27.5
+      ],
+      "id" : "settings.modules.reorder.runtime"
+    }
+  ],
+  "keyboardFocusVisible" : {
+    "flow" : true,
+    "history" : false,
+    "lanes" : false,
+    "ring" : false,
+    "runtime" : false
+  },
+  "keyWindow" : true,
+  "lastCapture" : {
+    "elapsed" : 373.79848729166633,
+    "name" : "keyboard-focus-visible",
+    "onlyExplicitOwnedWindow" : true,
+    "ownedWindowID" : 858,
+    "pixels" : [
+      1472,
+      1072
+    ],
+    "result" : "captured"
+  },
+  "lastCommand" : {
+    "case" : "keyboard-focus",
+    "closeOnPreviewArmed" : false,
+    "reduceMotion" : false,
+    "result" : "applied",
+    "style" : "classic",
+    "windowRebuilt" : true
+  },
+  "mode" : "manual",
+  "nativeDragObservation" : {
+    "argumentsForwardedUnchanged" : true,
+    "beginSelector" : "draggingSession:willBeginAtPoint:",
+    "beginTypeEncoding" : "v40@0:8@16{CGPoint=dd}24",
+    "callbacksGeneratedByFixture" : false,
+    "class" : "_TtC16ModulesDragProbeP33_237E0B1774407A0C43A25172980BC80B17ModuleReorderList",
+    "endSelector" : "draggingSession:endedAtPoint:operation:",
+    "endTypeEncoding" : "v48@0:8@16{CGPoint=dd}24Q40",
+    "installed" : true,
+    "originalIMPInvokedExactlyOncePerObservedCallback" : true,
+    "productionSourceEdited" : false
+  },
+  "nativeDragSessionEvents" : [
+
+  ],
+  "observedOwnWindowEventCount" : 6,
+  "orderNotifications" : 0,
+  "orderWrites" : 0,
+  "recentOwnWindowEvents" : [
+    {
+      "elapsed" : 364.96728287499991,
+      "keyCode" : -1,
+      "number" : 1,
+      "type" : 1,
+      "x" : 679.57421875,
+      "y" : 362.44921875
+    },
+    {
+      "elapsed" : 364.9677483749997,
+      "keyCode" : -1,
+      "number" : 2,
+      "type" : 6,
+      "x" : 679.57421875,
+      "y" : 362.44921875
+    },
+    {
+      "elapsed" : 365.00569816666666,
+      "keyCode" : -1,
+      "number" : 3,
+      "type" : 2,
+      "x" : 679.57421875,
+      "y" : 362.44921875
+    },
+    {
+      "elapsed" : 365.27173537499993,
+      "keyCode" : 53,
+      "number" : 4,
+      "type" : 11,
+      "x" : 0,
+      "y" : 520
+    },
+    {
+      "elapsed" : 365.27190099999962,
+      "keyCode" : 126,
+      "number" : 5,
+      "type" : 10,
+      "x" : 0,
+      "y" : 520
+    },
+    {
+      "elapsed" : 365.27566008333315,
+      "keyCode" : 126,
+      "number" : 6,
+      "type" : 11,
+      "x" : 0,
+      "y" : 520
+    }
+  ],
+  "reduceMotion" : false,
+  "rows" : [
+    {
+      "alpha" : 1,
+      "animationKeys" : [
+
+      ],
+      "attachedToWindow" : true,
+      "frameInWindow" : [
+        197,
+        326,
+        503,
+        72
+      ],
+      "id" : "settings.modules.row.flow",
+      "objectIdentity" : "ObjectIdentifier(0x00000009cc532300)"
+    },
+    {
+      "alpha" : 1,
+      "animationKeys" : [
+
+      ],
+      "attachedToWindow" : true,
+      "frameInWindow" : [
+        197,
+        254,
+        503,
+        72
+      ],
+      "id" : "settings.modules.row.ring",
+      "objectIdentity" : "ObjectIdentifier(0x00000009cc530000)"
+    },
+    {
+      "alpha" : 1,
+      "animationKeys" : [
+
+      ],
+      "attachedToWindow" : true,
+      "frameInWindow" : [
+        197,
+        182,
+        503,
+        72
+      ],
+      "id" : "settings.modules.row.lanes",
+      "objectIdentity" : "ObjectIdentifier(0x00000009cc558500)"
+    },
+    {
+      "alpha" : 1,
+      "animationKeys" : [
+
+      ],
+      "attachedToWindow" : true,
+      "frameInWindow" : [
+        197,
+        110,
+        503,
+        72
+      ],
+      "id" : "settings.modules.row.history",
+      "objectIdentity" : "ObjectIdentifier(0x00000009cc55a800)"
+    },
+    {
+      "alpha" : 1,
+      "animationKeys" : [
+
+      ],
+      "attachedToWindow" : true,
+      "frameInWindow" : [
+        197,
+        38,
+        503,
+        72
+      ],
+      "id" : "settings.modules.row.runtime",
+      "objectIdentity" : "ObjectIdentifier(0x00000009cc55b480)"
+    }
+  ],
+  "savedOrder" : [
+    "flow",
+    "ring",
+    "lanes",
+    "history",
+    "runtime"
+  ],
+  "schema" : 1,
+  "settingsScrollViews" : [
+    {
+      "id" : "settings.sidebar.navigation",
+      "objectIdentity" : "ObjectIdentifier(0x00000009ccda5900)",
+      "origin" : [
+        0,
+        0
+      ]
+    }
+  ],
+  "status" : "running",
+  "style" : "classic",
+  "syntheticInput" : false,
+  "testVerdict" : "not-automatically-evaluated",
+  "visibility" : {
+    "flow" : true,
+    "history" : true,
+    "lanes" : true,
+    "ring" : true,
+    "runtime" : true
+  },
+  "visibilityNotifications" : 0,
+  "visible" : true,
+  "windowFrameInScreen" : [
+    152,
+    178,
+    720,
+    520
+  ],
+  "windowIdentity" : "ObjectIdentifier(0x00000009cc03a080)",
+  "windowLifecycleEvents" : [
+
+  ],
+  "windowNumber" : 858
+}
