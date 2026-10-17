@@ -430,14 +430,6 @@ final class HistoryChartTests: XCTestCase {
         XCTAssertEqual(try XCTUnwrap(start.value(at: 1 - 3.0 / 120)), 31.25 / 200, accuracy: 1e-10)
         XCTAssertEqual(start.segments[1].start, target.segments[1].start)
         XCTAssertEqual(start.segments[1].end, target.segments[1].end)
-        for q in [0.0, 0.25, 0.5, 0.9, 1] {
-            let blended = target.interpolated(from: start, at: q)
-            XCTAssertEqual(blended.segments[1].value(at: 0.5),
-                           start.segments[1].value(at: 0.5) * (1 - q) + target.segments[1].value(at: 0.5) * q,
-                           accuracy: 1e-12)
-            XCTAssertEqual(blended.segments[1].start, target.segments[1].start)
-            XCTAssertEqual(blended.segments[1].end, target.segments[1].end)
-        }
     }
 
     func testMatchedControlBlendsRemainInsideEachRawSamplePair() throws {

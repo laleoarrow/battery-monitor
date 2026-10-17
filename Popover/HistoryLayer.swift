@@ -32,6 +32,11 @@ final class HistoryView: PopoverSection {
 #if DEBUG
     private(set) var renderCountForTest = 0
     var chartPathForTest: CGPath? { line.path }
+    func pathForTest(_ geometry: HistoryChartGeometry, filled: Bool = false,
+                     blendingFrom start: HistoryChartGeometry? = nil, at progress: Double = 1,
+                     transform: CGAffineTransform = .identity) -> CGPath {
+        path(for: geometry, filled: filled, blendingFrom: start, at: progress, transform: transform)
+    }
     var chartCeilingForTest: Double { scale.ceiling }
     var hasChartAnimationForTest: Bool {
         movingPlot.animation(forKey: "history.scroll") != nil
@@ -86,7 +91,7 @@ final class HistoryView: PopoverSection {
 
     private var gradientRect: CGRect {
         let left = CGFloat(min(lastGeometry?.points.first?.x ?? 0, 0)) * chartRect.width
-        let peak = lastGeometry?.points.map(\.y).max() ?? 0
+        let peak = lastGeometry?.points.reduce(0) { max($0, $1.y) } ?? 0
         let top = CGFloat(min(1 - peak, 0)) * chartRect.height
         return CGRect(x: left, y: top, width: chartRect.width - left, height: chartRect.height - top)
     }
@@ -151,16 +156,22 @@ final class HistoryView: PopoverSection {
         let oldSamples = lastSamples, oldTiming = lastTiming
         let sameColor = lastColor?.isEqual(resolvedColor) == true
         let oldCeiling = scale.ceiling
+        let mayAnimate = presentationActive && animationsEnabled
+            && window?.isVisible == true && !isHiddenOrHasHiddenAncestor
+            && !visibleRect.isEmpty && !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+            && sameColor
         // Read the visible transform before removing its animation. A new
         // sample must continue from this viewport, rather than its old target.
-        let presentedTransform = movingPlot.presentation()?.transform ?? movingPlot.transform
-        let presentedHead = head.presentation()?.position ?? head.position
-        let presentedPath = line.presentation()?.path ?? line.path
-        let presentedGradient = areaGradient.presentation() ?? areaGradient
-        let presentedBandY = HistoryChartViewport.gradientScreenStartY(
-            startPointY: Double(presentedGradient.startPoint.y),
-            frameMinY: Double(presentedGradient.frame.minY), frameHeight: Double(presentedGradient.frame.height),
-            scaleY: Double(presentedTransform.m22), plotHeight: Double(Self.chartHeight))
+        let presentedTransform = mayAnimate ? movingPlot.presentation()?.transform ?? movingPlot.transform
+            : CATransform3DIdentity
+        let presentedHead = mayAnimate ? head.presentation()?.position ?? head.position : .zero
+        let presentedPath = mayAnimate ? line.presentation()?.path ?? line.path : nil
+        let presentedGradient = mayAnimate ? areaGradient.presentation() ?? areaGradient : nil
+        let presentedBandY = presentedGradient.map {
+            HistoryChartViewport.gradientScreenStartY(startPointY: Double($0.startPoint.y),
+                frameMinY: Double($0.frame.minY), frameHeight: Double($0.frame.height),
+                scaleY: Double(presentedTransform.m22), plotHeight: Double(Self.chartHeight))
+        } ?? 0
         let oldGeometry = lastGeometry
         lastSamples = samples
         lastTiming = timing
@@ -170,7 +181,7 @@ final class HistoryView: PopoverSection {
         renderCountForTest += 1
 #endif
         stopMotion()
-        let measuredPeak = max(samples.filter(\.isFinite).max() ?? 0, 0)
+        let measuredPeak = samples.reduce(0) { $1.isFinite ? max($0, $1) : $0 }
         peakLabel.stringValue = samples.isEmpty ? "Collecting…" : String(format: "Peak %.1f W", measuredPeak)
         if samples.isEmpty { scale.reset() }
         let ceiling = scale.update(peak: measuredPeak,
@@ -206,19 +217,21 @@ final class HistoryView: PopoverSection {
                                              leadingContextCount: leadingContextCount)
         lastGeometry = geometry
         let plot = chartRect
-        let targetPaths = paths(for: geometry)
+        let gradient = gradientRect
+        let fillTransform = CGAffineTransform(translationX: -gradient.minX, y: -gradient.minY)
+        let targetStroke = path(for: geometry)
+        let targetFill = path(for: geometry, filled: true, transform: fillTransform)
         PopoverStyle.setWithoutAnimation {
             self.clip.frame = plot
             self.movingPlot.frame = self.clip.bounds
             self.line.frame = self.clip.bounds
-            self.areaGradient.frame = self.gradientRect
+            self.areaGradient.frame = gradient
             self.gradientMask.frame = self.areaGradient.bounds
-            self.line.path = geometry.points.isEmpty ? nil : targetPaths.stroke
+            self.line.path = geometry.points.isEmpty ? nil : targetStroke
             self.line.strokeColor = resolvedColor.cgColor
-            self.gradientMask.path = geometry.points.isEmpty ? nil : self.fillPath(targetPaths.filled)
+            self.gradientMask.path = geometry.points.isEmpty ? nil : targetFill
             self.areaGradient.colors = [resolvedColor.withAlphaComponent(0.38).cgColor,
                                         resolvedColor.withAlphaComponent(0.03).cgColor]
-            let gradient = self.gradientRect
             self.areaGradient.startPoint = CGPoint(x: 0.5, y: -gradient.minY / gradient.height)
             self.areaGradient.endPoint = CGPoint(x: 0.5, y: (plot.height - gradient.minY) / gradient.height)
             self.reveal.bounds = CGRect(x: 0, y: 0,
@@ -236,10 +249,7 @@ final class HistoryView: PopoverSection {
                 self.head.opacity = 0
             }
         }
-        guard presentationActive, animationsEnabled,
-              window?.isVisible == true, !isHiddenOrHasHiddenAncestor,
-              !visibleRect.isEmpty, !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion,
-              sameColor, let viewportFraction,
+        guard mayAnimate, let viewportFraction,
               let oldGeometry, let presentedPath,
               let presentedSegments = segments(in: presentedPath, undoing: presentedTransform),
               let startGeometry = geometry.alignedStart(from: oldGeometry, presentedSegments: presentedSegments,
@@ -250,39 +260,46 @@ final class HistoryView: PopoverSection {
                 presentedScaleY: Double(presentedTransform.m22)),
               abs(viewport.translationX) > 1e-8 || abs(viewport.scaleY - 1) > 1e-8 else { return }
         animateViewport(viewport, geometry: geometry, startGeometry: startGeometry,
-                        presentedHead: presentedHead, presentedBandY: presentedBandY)
+                        presentedHead: presentedHead, presentedBandY: presentedBandY,
+                        gradient: gradient, targetStroke: targetStroke, targetFill: targetFill)
     }
 
     private func point(_ p: HistoryChartGeometry.Point) -> CGPoint {
         CGPoint(x: CGFloat(p.x) * chartRect.width, y: CGFloat(1 - p.y) * chartRect.height)
     }
 
-    private func paths(for geometry: HistoryChartGeometry) -> (stroke: CGPath, filled: CGPath) {
-        let stroke = CGMutablePath(), filled = CGMutablePath()
+    private func path(for geometry: HistoryChartGeometry, filled: Bool = false,
+                      blendingFrom start: HistoryChartGeometry? = nil, at progress: Double = 1,
+                      transform: CGAffineTransform = .identity) -> CGPath {
+        let path = CGMutablePath()
+        let q = min(max(progress, 0), 1)
+        func project(_ p: HistoryChartGeometry.Point) -> CGPoint { point(p).applying(transform) }
+        func blend(_ a: HistoryChartGeometry.Point, _ b: HistoryChartGeometry.Point) -> HistoryChartGeometry.Point {
+            .init(x: a.x + (b.x - a.x) * q, y: a.y + (b.y - a.y) * q)
+        }
         var segmentIndex = 0
+        let separateRuns = !filled && geometry.runs.count > 1
         for run in geometry.runs {
             guard let first = run.first, let last = run.last else { continue }
-            let subpath = CGMutablePath()
-            subpath.move(to: point(first))
+            // addPath retains isolated move commands across gaps; consecutive
+            // move(to:) calls would otherwise discard a single-point run.
+            let subpath = separateRuns ? CGMutablePath() : path
+            subpath.move(to: project(first))
             for _ in run.dropFirst() {
                 let s = geometry.segments[segmentIndex]
-                subpath.addCurve(to: point(s.end), control1: point(s.control1), control2: point(s.control2))
+                let c1 = start.map { blend($0.segments[segmentIndex].control1, s.control1) } ?? s.control1
+                let c2 = start.map { blend($0.segments[segmentIndex].control2, s.control2) } ?? s.control2
+                subpath.addCurve(to: project(s.end), control1: project(c1), control2: project(c2))
                 segmentIndex += 1
             }
-            stroke.addPath(subpath)
-            subpath.addLine(to: CGPoint(x: CGFloat(last.x) * chartRect.width, y: chartRect.height))
-            subpath.addLine(to: CGPoint(x: CGFloat(first.x) * chartRect.width, y: chartRect.height))
-            subpath.closeSubpath()
-            filled.addPath(subpath)
+            if filled {
+                subpath.addLine(to: CGPoint(x: CGFloat(last.x) * chartRect.width, y: chartRect.height).applying(transform))
+                subpath.addLine(to: CGPoint(x: CGFloat(first.x) * chartRect.width, y: chartRect.height).applying(transform))
+                subpath.closeSubpath()
+            }
+            if separateRuns { path.addPath(subpath) }
         }
-        return (stroke, filled)
-    }
-
-    private func fillPath(_ path: CGPath) -> CGPath {
-        let translated = CGMutablePath()
-        translated.addPath(path, transform: CGAffineTransform(translationX: -gradientRect.minX,
-                                                             y: -gradientRect.minY))
-        return translated
+        return path
     }
 
     /// Decode the actual presentation controls, retaining the cached model's
@@ -315,7 +332,8 @@ final class HistoryView: PopoverSection {
 
     private func animateViewport(_ viewport: HistoryChartViewport, geometry: HistoryChartGeometry,
                                  startGeometry: HistoryChartGeometry,
-                                 presentedHead: CGPoint, presentedBandY: Double) {
+                                 presentedHead: CGPoint, presentedBandY: Double,
+                                 gradient: CGRect, targetStroke: CGPath, targetFill: CGPath) {
         guard let last = geometry.points.last else { return }
         let plot = chartRect
         let scaling = abs(viewport.scaleY - 1) > 1e-8
@@ -326,6 +344,7 @@ final class HistoryView: PopoverSection {
         let startX = Double((presentedHead.x - plot.minX) / plot.width)
         var positions: [NSValue] = []
         var strokeFrames: [CGPath] = []
+        let linearStroke = viewport.scaleY == 1
         for frame in 0...32 {
             let progress = Double(frame) / 32
             let shift = viewport.translationX / Double(plot.width) * (1 - progress)
@@ -335,12 +354,12 @@ final class HistoryView: PopoverSection {
                                          blendingFrom: startGeometry, progress: progress) else { return }
             positions.append(NSValue(point: CGPoint(x: plot.minX + CGFloat(visibleX) * plot.width,
                 y: plot.minY + plot.height - CGFloat(y * sy) * plot.height)))
-            let blended = geometry.interpolated(from: startGeometry, at: progress)
-            let transformed = CGMutablePath()
-            transformed.addPath(paths(for: blended).stroke,
-                transform: CGAffineTransform(a: 1, b: 0, c: 0, d: CGFloat(sy),
-                    tx: CGFloat(shift) * plot.width, ty: plot.height * CGFloat(1 - sy)))
-            strokeFrames.append(transformed)
+            if !linearStroke {
+                strokeFrames.append(frame == 32 ? targetStroke : path(for: geometry,
+                    blendingFrom: startGeometry, at: progress,
+                    transform: CGAffineTransform(a: 1, b: 0, c: 0, d: CGFloat(sy),
+                        tx: CGFloat(shift) * plot.width, ty: plot.height * CGFloat(1 - sy))))
+            }
         }
         let motion = CABasicAnimation(keyPath: scaling ? "transform" : "transform.translation.x")
         if scaling {
@@ -360,14 +379,25 @@ final class HistoryView: PopoverSection {
         dot.duration = duration
         dot.calculationMode = .linear
         dot.timingFunction = timing
-        let stroke = CAKeyframeAnimation(keyPath: "path")
-        stroke.values = strokeFrames
+        let stroke: CAPropertyAnimation
+        if linearStroke {
+            // With no Y scaling, every matched control moves linearly. The
+            // endpoint paths express the same trajectory without 33 copies.
+            let curve = CABasicAnimation(keyPath: "path")
+            curve.fromValue = path(for: startGeometry,
+                transform: CGAffineTransform(translationX: CGFloat(viewport.translationX), y: 0))
+            curve.toValue = targetStroke
+            stroke = curve
+        } else {
+            let curve = CAKeyframeAnimation(keyPath: "path")
+            curve.values = strokeFrames
+            curve.calculationMode = .linear
+            stroke = curve
+        }
         stroke.duration = duration
-        stroke.calculationMode = .linear
         stroke.timingFunction = timing
         line.add(stroke, forKey: "history.stroke")
         if scaling || abs(presentedBandY) > 1e-8 {
-            let gradient = gradientRect
             let band = CAKeyframeAnimation(keyPath: "startPoint")
             band.values = (0...256).map { frame in
                 NSValue(point: CGPoint(x: 0.5, y: viewport.gradientStartY(at: Double(frame) / 256,
@@ -383,10 +413,10 @@ final class HistoryView: PopoverSection {
             abs($0.control1.y - $1.control1.y) > 1e-12 || abs($0.control2.y - $1.control2.y) > 1e-12
         }
         if changesShape {
-            let startPaths = paths(for: startGeometry), targetPaths = paths(for: geometry)
             let curve = CABasicAnimation(keyPath: "path")
-            curve.fromValue = fillPath(startPaths.filled)
-            curve.toValue = fillPath(targetPaths.filled)
+            curve.fromValue = path(for: startGeometry, filled: true,
+                transform: CGAffineTransform(translationX: -gradient.minX, y: -gradient.minY))
+            curve.toValue = targetFill
             curve.duration = duration
             curve.timingFunction = timing
             gradientMask.add(curve, forKey: "history.fill")
