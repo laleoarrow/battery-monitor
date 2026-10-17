@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24" height="24" viewBox="0 0 24 24"
+     color="#C7C7CC" fill="none">
+  <title>Wattson Adapter B — Disconnected, concept-calibrated</title>
+  <desc>NE-facing angled head, rounded shell, longer parallel pins and an exterior cable join.</desc>
+  <defs>
+    <linearGradient id="adapter-b-wash" gradientUnits="userSpaceOnUse"
+                    x1="12" y1="7" x2="12" y2="18.3">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.02"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0.08"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(-0.75 0.5) rotate(40 12 12)" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 18.875 = shell bottom 18.3 + half of its 1.15-unit stroke.
+         Draw the cable first; its start cap never enters the shell cavity. -->
+    <path id="cable" data-role="accent" d="M12 18.875V23.75"
+          stroke="currentColor" stroke-width="1.6"/>
+    <!-- Each base meets the outside of the top rim: 7 - 1.15/2 = 6.425. -->
+    <path id="pins" data-role="accent" d="M9.35 1.1V6.425M14.65 1.1V6.425"
+          stroke="currentColor" stroke-width="1.6"/>
+    <path id="wash" data-decorative="true" fill="url(#adapter-b-wash)"
+          d="M7.8 7H16.2
+         C16.5314 7 16.8 7.2686 16.8 7.6V13.5
+         C16.8 16.151 14.651 18.3 12 18.3
+         C9.349 18.3 7.2 16.151 7.2 13.5V7.6
+         C7.2 7.2686 7.4686 7 7.8 7Z"/>
+    <!-- The neutral rim is the final layer at all three electrical connections. -->
+    <path id="shell" data-role="outline" stroke="currentColor" stroke-width="1.15"
+          d="M7.8 7H16.2
+         C16.5314 7 16.8 7.2686 16.8 7.6V13.5
+         C16.8 16.151 14.651 18.3 12 18.3
+         C9.349 18.3 7.2 16.151 7.2 13.5V7.6
+         C7.2 7.2686 7.4686 7 7.8 7Z"/>
+  </g>
+</svg>

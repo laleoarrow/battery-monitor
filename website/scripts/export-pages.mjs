@@ -3,6 +3,11 @@ import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 const siteRoot = new URL("../", import.meta.url);
 const outputRoot = new URL("../../docs/", import.meta.url);
 const basePath = "/battery-monitor";
+const releaseVersion = process.env.NEXT_PUBLIC_RELEASE_VERSION ||
+  `v${(await readFile(new URL("../../VERSION", import.meta.url), "utf8")).trim()}`;
+if (!/^v\d+\.\d+\.\d+$/.test(releaseVersion)) {
+  throw new Error("Invalid release version for the design gallery");
+}
 
 const workerUrl = new URL("dist/server/index.js", siteRoot);
 workerUrl.searchParams.set("export", `${process.pid}-${Date.now()}`);
@@ -85,6 +90,19 @@ await cp(
 await writeFile(new URL("index.html", outputRoot), html, "utf8");
 await writeFile(new URL("404.html", outputRoot), html, "utf8");
 await writeFile(new URL(".nojekyll", outputRoot), "", "utf8");
+
+// Versioned artwork is independent of installer assets and historical Pages.
+const gallery = new URL(`../../design/releases/${releaseVersion}/`, import.meta.url);
+let hasGallery = false;
+try {
+  await readFile(new URL("index.html", gallery), "utf8");
+  hasGallery = true;
+} catch (error) {
+  if (error.code !== "ENOENT") throw error;
+}
+if (hasGallery) {
+  await cp(gallery, new URL(`design/${releaseVersion}/`, outputRoot), { recursive: true });
+}
 
 const emitted = await readFile(new URL("index.html", outputRoot), "utf8");
 if (emitted.includes('"/_next/') || emitted.includes("url(/_next/")) {
