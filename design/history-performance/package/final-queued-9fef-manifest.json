@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "archive": "package-tools-31596c3f321b955064ff2ca78ef1ff00f982fcfe66d7ead63c703ec8241fd56f.tar.gz",
+  "archiveSHA256": "31596c3f321b955064ff2ca78ef1ff00f982fcfe66d7ead63c703ec8241fd56f",
+  "files": {
+    "audit-install.py": "84d3be7e5a3d872fe424ba37e579f79fd56093a6c37b598bbe4bde81eef617ea",
+    "check-helper-disabled.py": "b060b3982292c518a5d80fad493302ef64c1458248f05176c6b41cba706ef244",
+    "lib/local_cleanup.sh": "372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e",
+    "lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+    "remove-owned-install.py": "459bf2556f1e63f78b1fe56292ef73a09f7b0e3fc026b8e401bb048b4260e621",
+    "run-package-qa.sh": "ac07460361852e881d94a2f9d361350238c9f0ff6a4c321df1a596d093546e06"
+  },
+  "hostBootstrapSHA256": {
+    "stage-package.py": "3fd10058eae7a73db06ad0d4a04b6ad0fd15d8c77b41d033b9b613ff4f8fc50f",
+    "dispatch-package.py": "e40e728b91c5d09093b7dcb664ed9a2d81bc81e1dc40c7d6c205a8f8c5e5c747"
+  },
+  "validationLabel": "final-queued-9fef",
+  "sourceCommit": "9fef74944447d4753d1edde82997dc41a479ccad",
+  "candidatePackageSHA256": "72c2e20dcf13e6d69c27e9aee83528241ab58c881b1e1609a28f87b479caf21a",
+  "candidateFilename": "Wattson-v4.3.11-72c2e20dcf13-macos-universal.pkg",
+  "callerOwnedQATransferInput": true
+}

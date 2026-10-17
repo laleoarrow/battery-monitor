@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "createdAtUTC": "2026-10-17T04:09:24.538600+00:00",
+  "modulesSource": "e62796901dae2255d7645840c21e0ee9b6b8f8c3",
+  "integratedCandidateSource": "9fef74944447d4753d1edde82997dc41a479ccad",
+  "modulesProductionMatchesIntegratedSource": true,
+  "archive": "modules-closeout-cf5b80650ce7b88f9e2d5d6d9bb50cf084bd87d406bce865ba1a5b4ad31f7186.tar.gz",
+  "archiveSHA256": "cf5b80650ce7b88f9e2d5d6d9bb50cf084bd87d406bce865ba1a5b4ad31f7186",
+  "archiveBytes": 126511,
+  "rawEvidenceFiles": 100,
+  "rawEvidenceBytes": 685826,
+  "settingsContract": {
+    "passed": 8,
+    "entryExit": 0,
+    "runnerExit": 0,
+    "nativeAssertionsSeconds": 141.524,
+    "fullSuiteSeconds": 149.185,
+    "windowReuseCycles": 500,
+    "constructedWindowLifecycleChecks": 500,
+    "successfulNativeDragClaimed": false
+  },
+  "currentSourceCases": {
+    "classic-fast-1": {
+      "verdict": "rejected-before-native-verified",
+      "countsAsSuccessfulDrop": false,
+      "originalNativeEvaluationExit": 78
+    },
+    "classic-diagonal": {
+      "verdict": "rejected-before-native-verified",
+      "countsAsSuccessfulDrop": false,
+      "originalNativeEvaluationExit": 78
+    },
+    "standard-diagonal-2": {
+      "verdict": "rejected-before-native-verified",
+      "countsAsSuccessfulDrop": false,
+      "originalNativeEvaluationExit": 78
+    },
+    "standard-outside": {
+      "verdict": "rejected-before-native-verified",
+      "countsAsSuccessfulDrop": false,
+      "originalNativeEvaluationExit": 78
+    },
+    "standard-fast-1": {
+      "verdict": "unverified",
+      "countsAsSuccessfulDrop": false,
+      "originalNativeEvaluationExit": 78
+    }
+  },
+  "heldDrop": {
+    "case": "standard-held-drop",
+    "verified": false,
+    "inputEvents": 0,
+    "nativeCallbacks": 0,
+    "fixtureExit": 124,
+    "runnerExit": 124,
+    "status": "600-second-deadline"
+  },
+  "nativeHeldDragAndNativeOutsideCancelGate": "unverified",
+  "historical402991": {
+    "includedCases": [
+      "classic-drop-rapid",
+      "classic-drop-2"
+    ],
+    "preservedOriginalEvaluationsAndRawInputs": true,
+    "notRelabeledAsE627Passes": true
+  },
+  "cleanup": {
+    "vm": "Wattson-ModulesRapidUI3-20261017",
+    "ownerActualExit": 0,
+    "immediateChecksPassed": 8,
+    "delayedChecksPassed": 8,
+    "hostSystemMonotonicQuietSeconds": 115.9087549999822,
+    "guestSystemMonotonicQuietSeconds": 115.95058799999993,
+    "ownedVMDeleted": true,
+    "canonicalUnchangedDuringOwnedStage": true,
+    "otherVMsPreserved": true
+  },
+  "collectionChecks": {
+    "fiveRejectionVerifierInputHashesMatchedRawStateAndHistory": true,
+    "toolsArchiveMatchedOriginalFreeze": true,
+    "allCopiedRawBytesUnchanged": true
+  },
+  "exclusions": [
+    "App bundles/executables",
+    "compilation outputs/source archive",
+    "screenshots/movies"
+  ],
+  "verification": "Extract archive into this directory; shasum -a 256 -c SHA256SUMS.txt checks outer files and all extracted members. MEMBERS.sha256 checks raw evidence independently. MANIFEST.json maps every member to its original project-relative source.",
+  "limits": "Collection only; no test or GUI action. Four released-left rejections are not successful native drops/cancels. Standard-fast-1 and held-drop stay unverified. Earlier failed records are copied unchanged. Canonical snapshots describe the Modules stage before the separately owned host installation."
+}

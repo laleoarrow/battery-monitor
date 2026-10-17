@@ -1,0 +1,13 @@
+{
+  "archive": "vm-lifecycle-queued-drag-evidence-0c7a8e87e8bc51ec33040908b1f3eeba23eb2e27ff52397bae6411755bb24e05.tar.gz",
+  "sha256": "0c7a8e87e8bc51ec33040908b1f3eeba23eb2e27ff52397bae6411755bb24e05",
+  "bytes": 21609,
+  "sessionManifestSHA256": "acb83fc10fde99dfe9aed5987781814eacbed457261fc6caaaebdae0e694cebd",
+  "memberFileCount": 38,
+  "summary": "package-session-queued-drag/final-session-summary.json",
+  "allOwnedAuditsPassed": true,
+  "actualVMLifecycleExitCode": 0,
+  "ownVMDeleted": true,
+  "galleryIndex": "package-session-queued-drag/compact-gallery-manifest.json",
+  "previousTwoSessionArchivePreserved": "vm-lifecycle-final-evidence-d6b951ab98f5a8b2ade8e924d774bb183222400d1bccf012b589eed4864575d2.tar.gz"
+}

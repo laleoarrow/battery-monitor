@@ -61,6 +61,8 @@ while any other scale retains 33 stroke keyframes. Head and gradient keyframes
 remain unchanged. The [4.3.11 performance review](../design/history-performance/README.md)
 records the ABBA preparation measurements, explicit construction counts and
 native continuity checks, including the natural scheduling fixture's limits.
+Wattson 4.3.11 is the current verified local installation; exact package, helper,
+receipt and process evidence is linked from that review.
 The [4.3.10 axis transition review](../design/history-axis-upgrade/README.md)
 preserves the earlier native motion, fixed-width stroke and installation evidence. The
 [4.3.9 History review](../design/history-upgrade/README.md) preserves the initial

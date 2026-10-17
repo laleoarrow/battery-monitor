@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "atUTC": "2026-10-17T03:50:01.734674+00:00",
+  "actualVMLifecycleExitCode": 0,
+  "actualAuditTransportExitCode": 0,
+  "probeExitCode": 0,
+  "stageExitCode": 0,
+  "immediateAndDelayedResidualAuditAllAbsent": true,
+  "quietWithinProcessSeconds": 95.15180200000003,
+  "auditStageAndNewEmptyParentsRemoved": true,
+  "ownCloneRemoved": true,
+  "remainingOwnedHostProcesses": [],
+  "remainingOwnedHostMounts": [],
+  "callerVMStatePreserved": {
+    "Wattson-ModulesRapidUI3-20261017": true,
+    "macOS-TestLab": true,
+    "macOS-TestLab-Base": true
+  },
+  "originalTestLabAndBaseStopped": true,
+  "otherOwnerModulesRapidUI3StillRunning": true,
+  "hostCanonicalTouchedByThisAgent": false,
+  "finalPackageSource": "9fef74944447d4753d1edde82997dc41a479ccad",
+  "finalPackageSHA256": "72c2e20dcf13e6d69c27e9aee83528241ab58c881b1e1609a28f87b479caf21a",
+  "packageResultArchiveSHA256": "a4c0377fe0a03c6eef330faeb23f529f6948bc6076f85a3d09f1919b24a5848b",
+  "galleryManifest": "compact-gallery-manifest.json"
+}

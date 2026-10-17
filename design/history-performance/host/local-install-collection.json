@@ -1,0 +1,17 @@
+{
+  "sourceCommit": "9fef74944447d4753d1edde82997dc41a479ccad",
+  "packageSHA256": "72c2e20dcf13e6d69c27e9aee83528241ab58c881b1e1609a28f87b479caf21a",
+  "actualOwnedVerifierExitCode": 0,
+  "nativeInstallerSuccessObserved": true,
+  "installerAuthorization": "System retained existing authorization; no new administrator prompt was presented",
+  "files": {
+    "local-install-verified.json": "bc8c1269f4d6461b964687ebf5b35916aa4635e35436c68095b36b920356dd3d",
+    "local-install-postflight.json": "26c932205a7ba2c8b56d2daa7d45662dac6e6bb40a10ee3de2e253f89d6e0775",
+    "canonical-before-install.json": "c280b611684c12da1d3808b897e99346cc24961125b6335312cc1afef1169ab9",
+    "old-process-exit-before-relaunch.json": "70997073eaf9ed1175ae5aa424f2d103dcdba22babedb149ed57b948a8e59c80",
+    "local-install-verify.log.gz": "839ad3ed7e979e3e9c7d3932f8176980bb05f06b6ab932c08fe8cbcfc11804d5",
+    "verify-local-install.sh": "53cef44a8083d0a21e19d86c6592c7f0d681760da0e49c1c4ba0e9b99a6395f6",
+    "local-install-gates.json": "6bead71b7a3df131ea37c2b57496d55acb63f7ef669940c53624d4b5a7f64c77"
+  },
+  "uncompressedVerifierLogSHA256": "a45dca33bf3495b05e1b455bfc73eb4be6147bea4d8c45b3c1c35afae51ea996"
+}

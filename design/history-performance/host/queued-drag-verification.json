@@ -1,0 +1,26 @@
+{
+  "sourceCommit": "9fef74944447d4753d1edde82997dc41a479ccad",
+  "swift": {
+    "tests": 535,
+    "failures": 0,
+    "exitCode": 0
+  },
+  "python": {
+    "tests": 601,
+    "skipped": 4,
+    "failures": 0,
+    "exitCode": 0
+  },
+  "logs": {
+    "queued-drag-final-swift.log": {
+      "sha256": "725de0684dafb152d60ca2fd60d076356daf8dbb9ea1bf8fe6ee7655d7137d38",
+      "compressed": "queued-drag-final-swift.log.gz",
+      "compressedSHA256": "7f0d962a93baabd01be3938ac2a25f40b505456840abfd0d265ee93c7a2da04f"
+    },
+    "queued-drag-final-python.log": {
+      "sha256": "e5812872b078f90a29bc518665db46495fb416c6a227387df861bd0685b1afa6",
+      "compressed": "queued-drag-final-python.log.gz",
+      "compressedSHA256": "30b6400ae8793f931573620eaa67444dd6b8314fafedeffb9712481859513c6b"
+    }
+  }
+}

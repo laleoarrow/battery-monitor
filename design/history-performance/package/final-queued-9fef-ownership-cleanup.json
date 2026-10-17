@@ -1,0 +1,34 @@
+{
+  "validationLabel": "final-queued-9fef",
+  "preliminary": false,
+  "atUTC": "2026-10-17T03:46:31.065692+00:00",
+  "guestVM": "Wattson-HistoryPerf-20261016",
+  "vmOwner": "perf_benchmark",
+  "vmStoppedByThisWorker": false,
+  "createdGuestProject": "/Users/admin/Project/Wattson-HistoryPerf-QA",
+  "createdGuestProjectRemovedByEmptyRmdir": true,
+  "emptyParentCleanupActualExitCode": 0,
+  "callerOwnedGuestParentHandoff": false,
+  "ownedGuestInstallationPaths": [
+    "/Applications/Wattson.app",
+    "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper",
+    "/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist",
+    "/var/run/wattson-helper.sock"
+  ],
+  "ownedGuestUserDomains": [
+    "com.leoarrow.wattson",
+    "com.leoarrow.Wattson"
+  ],
+  "ownedGuestReceipt": "com.leoarrow.wattson.pkg",
+  "ownedGuestHelperJob": "system/com.leoarrow.wattson.helper",
+  "ownedMounts": [],
+  "ownedProcessesRemaining": [],
+  "installationAndUserDataResidualAuditAllPassed": true,
+  "delayedAuditWithinProcessDelaySeconds": 5.115210999999988,
+  "allGuestRunAndScratchDirectoriesRemoved": true,
+  "hostCanonicalInstallationTouched": false,
+  "otherVMsTouched": false,
+  "resultsArchiveSHA256": "a4c0377fe0a03c6eef330faeb23f529f6948bc6076f85a3d09f1919b24a5848b",
+  "callerOwnedQAInputPreserved": "dist/Wattson-v4.3.11-72c2e20dcf13-macos-universal.pkg",
+  "nextGate": "VM owner performs independent delayed residual audit and stops/deletes only this owned clone. Root owns final Modules GUI and physical host installation/readiness gates."
+}

@@ -1,0 +1,27 @@
+{
+  "checkedAtUTC": "2026-10-17T04:06:35.499062+00:00",
+  "canonicalAppVersion": "4.3.11",
+  "newPID": 17793,
+  "previousPIDs": [
+    96042
+  ],
+  "previousPIDsExited": true,
+  "newPIDDistinct": true,
+  "onlyCanonicalProductionRegistration": true,
+  "launchServicesRecords": [
+    {
+      "identifier": "com.leoarrow.wattson",
+      "paths": [
+        "/Applications/Wattson.app"
+      ],
+      "version": [
+        "4.3.11 ({length = 32, bytes = 0x04000000 00000000 03000000 00000000 ... 00000000 00000000 })"
+      ]
+    }
+  ],
+  "ownedVerificationScratchAbsent": true,
+  "installerProcessStillRunning": false,
+  "newProcessRawPSColumns": "/Applications/Wa Sat Oct 17 12:05:53 2026",
+  "newProcessCommand": "/Applications/Wattson.app/Contents/MacOS/Wattson",
+  "newProcessStart": "Sat Oct 17 12:05:53 2026"
+}
