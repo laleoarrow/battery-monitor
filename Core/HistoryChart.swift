@@ -265,9 +265,9 @@ struct HistoryChartGeometry {
         guard start.segments.count == segments.count else { return nil }
         let q = min(max(progress, 0), 1)
         for (first, target) in zip(start.segments, segments) {
-            let left = target.start.blended(from: first.start, progress: q)
-            let right = target.end.blended(from: first.end, progress: q)
-            if x >= left.x - 1e-12 && x <= right.x + 1e-12 {
+            let left = first.start.x + (target.start.x - first.start.x) * q
+            let right = first.end.x + (target.end.x - first.end.x) * q
+            if x >= left - 1e-12 && x <= right + 1e-12 {
                 return target.blended(from: first, progress: q).value(atX: x)
             }
         }
