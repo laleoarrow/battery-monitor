@@ -72,6 +72,12 @@ focused view tests and three real-window captures with 107 assertions. The
 information text fits its actual native text cell without clipping.
 [Current verification](verification.json) records this final source and evidence.
 
+The subsequent [four-style gradient comparison](gradient-comparison/README.md)
+adds the user's requested fixed 0–100 gradient that reveals only the portion
+through the current value, alongside the three earlier treatments. These are
+DEBUG review alternatives; the current production treatment remains B pending
+the user's visual selection.
+
 ## Earlier rejected candidate
 
 The following images preserve the user's rejected thin-bar candidate. Its

@@ -1,0 +1,240 @@
+{
+  "method": "Read-only decoding of native WindowServer PNGs; no raster editing or compositing. Strong text pixels inside known title/process-label rectangles checked against their panel surface.",
+  "appearances": {
+    "light": {
+      "panels": [
+        {
+          "panel": "A",
+          "surfaceRGB": [
+            255,
+            255,
+            255
+          ],
+          "textChecks": [
+            {
+              "label": "comparison-title",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 2802
+            },
+            {
+              "label": "first-process-name",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 368
+            },
+            {
+              "label": "third-process-name",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 585
+            }
+          ]
+        },
+        {
+          "panel": "B",
+          "surfaceRGB": [
+            255,
+            255,
+            255
+          ],
+          "textChecks": [
+            {
+              "label": "comparison-title",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 3221
+            },
+            {
+              "label": "first-process-name",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 388
+            },
+            {
+              "label": "third-process-name",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 585
+            }
+          ]
+        },
+        {
+          "panel": "C",
+          "surfaceRGB": [
+            255,
+            255,
+            255
+          ],
+          "textChecks": [
+            {
+              "label": "comparison-title",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 1151
+            },
+            {
+              "label": "first-process-name",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 378
+            },
+            {
+              "label": "third-process-name",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 585
+            }
+          ]
+        },
+        {
+          "panel": "D",
+          "surfaceRGB": [
+            255,
+            255,
+            255
+          ],
+          "textChecks": [
+            {
+              "label": "comparison-title",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 2094
+            },
+            {
+              "label": "first-process-name",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 394
+            },
+            {
+              "label": "third-process-name",
+              "maximumContrast": 14.94,
+              "pixelsAtLeast4_5to1": 585
+            }
+          ]
+        }
+      ],
+      "lowScore8_1": {
+        "fixedScaleA_RGB": [
+          145,
+          214,
+          255
+        ],
+        "filledWidthB_RGB": [
+          34,
+          141,
+          243
+        ],
+        "AisLighterThanB": true
+      }
+    },
+    "dark": {
+      "panels": [
+        {
+          "panel": "A",
+          "surfaceRGB": [
+            30,
+            30,
+            30
+          ],
+          "textChecks": [
+            {
+              "label": "comparison-title",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 3387
+            },
+            {
+              "label": "first-process-name",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 528
+            },
+            {
+              "label": "third-process-name",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 754
+            }
+          ]
+        },
+        {
+          "panel": "B",
+          "surfaceRGB": [
+            30,
+            30,
+            30
+          ],
+          "textChecks": [
+            {
+              "label": "comparison-title",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 3923
+            },
+            {
+              "label": "first-process-name",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 528
+            },
+            {
+              "label": "third-process-name",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 754
+            }
+          ]
+        },
+        {
+          "panel": "C",
+          "surfaceRGB": [
+            30,
+            30,
+            30
+          ],
+          "textChecks": [
+            {
+              "label": "comparison-title",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 1478
+            },
+            {
+              "label": "first-process-name",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 528
+            },
+            {
+              "label": "third-process-name",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 754
+            }
+          ]
+        },
+        {
+          "panel": "D",
+          "surfaceRGB": [
+            30,
+            30,
+            30
+          ],
+          "textChecks": [
+            {
+              "label": "comparison-title",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 2562
+            },
+            {
+              "label": "first-process-name",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 528
+            },
+            {
+              "label": "third-process-name",
+              "maximumContrast": 12.27,
+              "pixelsAtLeast4_5to1": 754
+            }
+          ]
+        }
+      ],
+      "lowScore8_1": {
+        "fixedScaleA_RGB": [
+          145,
+          214,
+          255
+        ],
+        "filledWidthB_RGB": [
+          37,
+          146,
+          247
+        ],
+        "AisLighterThanB": true
+      }
+    }
+  },
+  "allPassed": true
+}

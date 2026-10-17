@@ -1,0 +1,256 @@
+{
+  "assertions": 728,
+  "cases": [
+    {
+      "case": "comparison-light",
+      "comparisonLabelsOutsideProduct": true,
+      "composited": true,
+      "fixedScale": [
+        0,
+        100
+      ],
+      "glass": false,
+      "image": "comparison-light.png",
+      "imageSHA256": "2270b0297d798b68ba7a1b37902857ebf5ebc9c8f068370d64874fdfda6d49cb",
+      "pixels": [
+        1592,
+        1064
+      ],
+      "productionSectionOnly": true,
+      "sameFixtureData": true,
+      "variants": [
+        {
+          "explanation": "\u6e10\u53d8\u8986\u76d6\u6574\u4e2a\u523b\u5ea6\uff1b\u4f4e\u503c\u53ea\u9732\u51fa\u5de6\u4fa7\u6d45\u84dd",
+          "fixedScale": [
+            0,
+            100
+          ],
+          "fixtureScores": [
+            84,
+            46,
+            8.1
+          ],
+          "listFrame": "{{16, 52}, {328, 168}}",
+          "title": "A \u00b7 \u56fa\u5b9a 0\u2013100\uff0c\u6309\u6570\u503c\u88c1\u5207",
+          "variant": "fixed-scale-horizontal"
+        },
+        {
+          "explanation": "\u4e0d\u8bba\u6570\u503c\u5927\u5c0f\uff0c\u6bcf\u6761\u90fd\u4ece\u6d45\u84dd\u8d70\u5230\u6df1\u84dd",
+          "fixedScale": [
+            0,
+            100
+          ],
+          "fixtureScores": [
+            84,
+            46,
+            8.1
+          ],
+          "listFrame": "{{16, 52}, {328, 168}}",
+          "title": "B \u00b7 \u6bcf\u6761\u586b\u5145\u533a\u8d70\u5b8c\u5b8c\u6574\u6e10\u53d8",
+          "variant": "filled-width-horizontal"
+        },
+        {
+          "explanation": "\u6bcf\u6761\u5185\u90e8\u7531\u4e0a\u5230\u4e0b\u6e10\u53d8\uff0c\u957f\u5ea6\u4ecd\u8868\u793a\u6570\u503c",
+          "fixedScale": [
+            0,
+            100
+          ],
+          "fixtureScores": [
+            84,
+            46,
+            8.1
+          ],
+          "listFrame": "{{16, 52}, {328, 168}}",
+          "title": "C \u00b7 \u7eb5\u5411\u6e10\u53d8",
+          "variant": "vertical"
+        },
+        {
+          "explanation": "\u5206\u503c\u8d8a\u9ad8\u6574\u4f53\u8d8a\u6df1\uff0c\u53e0\u52a0\u7eb5\u5411\u660e\u6697\u5c42\u6b21",
+          "fixedScale": [
+            0,
+            100
+          ],
+          "fixtureScores": [
+            84,
+            46,
+            8.1
+          ],
+          "listFrame": "{{16, 52}, {328, 168}}",
+          "title": "D \u00b7 \u6309\u5206\u503c\u6574\u4f53\u53d8\u6df1",
+          "variant": "activity-tint"
+        }
+      ],
+      "windowFrame": "{{122, 126}, {780, 516}}"
+    },
+    {
+      "case": "comparison-dark",
+      "comparisonLabelsOutsideProduct": true,
+      "composited": true,
+      "fixedScale": [
+        0,
+        100
+      ],
+      "glass": false,
+      "image": "comparison-dark.png",
+      "imageSHA256": "b9e7012f8eb20f07ee2654f079076d654e32e33624f905c48ae9f50768820986",
+      "pixels": [
+        1592,
+        1064
+      ],
+      "productionSectionOnly": true,
+      "sameFixtureData": true,
+      "variants": [
+        {
+          "explanation": "\u6e10\u53d8\u8986\u76d6\u6574\u4e2a\u523b\u5ea6\uff1b\u4f4e\u503c\u53ea\u9732\u51fa\u5de6\u4fa7\u6d45\u84dd",
+          "fixedScale": [
+            0,
+            100
+          ],
+          "fixtureScores": [
+            84,
+            46,
+            8.1
+          ],
+          "listFrame": "{{16, 52}, {328, 168}}",
+          "title": "A \u00b7 \u56fa\u5b9a 0\u2013100\uff0c\u6309\u6570\u503c\u88c1\u5207",
+          "variant": "fixed-scale-horizontal"
+        },
+        {
+          "explanation": "\u4e0d\u8bba\u6570\u503c\u5927\u5c0f\uff0c\u6bcf\u6761\u90fd\u4ece\u6d45\u84dd\u8d70\u5230\u6df1\u84dd",
+          "fixedScale": [
+            0,
+            100
+          ],
+          "fixtureScores": [
+            84,
+            46,
+            8.1
+          ],
+          "listFrame": "{{16, 52}, {328, 168}}",
+          "title": "B \u00b7 \u6bcf\u6761\u586b\u5145\u533a\u8d70\u5b8c\u5b8c\u6574\u6e10\u53d8",
+          "variant": "filled-width-horizontal"
+        },
+        {
+          "explanation": "\u6bcf\u6761\u5185\u90e8\u7531\u4e0a\u5230\u4e0b\u6e10\u53d8\uff0c\u957f\u5ea6\u4ecd\u8868\u793a\u6570\u503c",
+          "fixedScale": [
+            0,
+            100
+          ],
+          "fixtureScores": [
+            84,
+            46,
+            8.1
+          ],
+          "listFrame": "{{16, 52}, {328, 168}}",
+          "title": "C \u00b7 \u7eb5\u5411\u6e10\u53d8",
+          "variant": "vertical"
+        },
+        {
+          "explanation": "\u5206\u503c\u8d8a\u9ad8\u6574\u4f53\u8d8a\u6df1\uff0c\u53e0\u52a0\u7eb5\u5411\u660e\u6697\u5c42\u6b21",
+          "fixedScale": [
+            0,
+            100
+          ],
+          "fixtureScores": [
+            84,
+            46,
+            8.1
+          ],
+          "listFrame": "{{16, 52}, {328, 168}}",
+          "title": "D \u00b7 \u6309\u5206\u503c\u6574\u4f53\u53d8\u6df1",
+          "variant": "activity-tint"
+        }
+      ],
+      "windowFrame": "{{122, 126}, {780, 516}}"
+    },
+    {
+      "case": "variant-fixed-scale-horizontal-dark",
+      "composited": true,
+      "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer.",
+      "fixtureScores": [
+        84,
+        46,
+        8.1
+      ],
+      "glass": false,
+      "gradientVariant": "fixed-scale-horizontal",
+      "image": "variant-fixed-scale-horizontal-dark.png",
+      "imageSHA256": "6402a907aae1801cab6cf328adde839b7ac2439db980db58ea83fd67d5e76754",
+      "pixels": [
+        752,
+        416
+      ],
+      "processCount": 3,
+      "productionSectionOnly": true,
+      "windowFrame": "{{332, 288}, {360, 192}}"
+    },
+    {
+      "case": "variant-filled-width-horizontal-dark",
+      "composited": true,
+      "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer.",
+      "fixtureScores": [
+        84,
+        46,
+        8.1
+      ],
+      "glass": false,
+      "gradientVariant": "filled-width-horizontal",
+      "image": "variant-filled-width-horizontal-dark.png",
+      "imageSHA256": "e174aa99e72e065cbf14ec638d956bfc8fe1c94af2eecb32837f5af16950d270",
+      "pixels": [
+        752,
+        416
+      ],
+      "processCount": 3,
+      "productionSectionOnly": true,
+      "windowFrame": "{{332, 288}, {360, 192}}"
+    },
+    {
+      "case": "variant-vertical-dark",
+      "composited": true,
+      "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer.",
+      "fixtureScores": [
+        84,
+        46,
+        8.1
+      ],
+      "glass": false,
+      "gradientVariant": "vertical",
+      "image": "variant-vertical-dark.png",
+      "imageSHA256": "3ffb816064fb840d41b7ce08af8e0fe2b005d89da146580b60b1906a53da1d86",
+      "pixels": [
+        752,
+        416
+      ],
+      "processCount": 3,
+      "productionSectionOnly": true,
+      "windowFrame": "{{332, 288}, {360, 192}}"
+    },
+    {
+      "case": "variant-activity-tint-dark",
+      "composited": true,
+      "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer.",
+      "fixtureScores": [
+        84,
+        46,
+        8.1
+      ],
+      "glass": false,
+      "gradientVariant": "activity-tint",
+      "image": "variant-activity-tint-dark.png",
+      "imageSHA256": "1f4581693b5389686a46c3396c1ebeccab8e331765aa942b05a840dc9c191397",
+      "pixels": [
+        752,
+        416
+      ],
+      "processCount": 3,
+      "productionSectionOnly": true,
+      "windowFrame": "{{332, 288}, {360, 192}}"
+    }
+  ],
+  "failures": 0,
+  "limitations": "Process energy, battery telemetry, history, and Settings privileged dependencies are deterministic fixtures. No sampling correctness or physical-hardware power-mode assertion is inferred from screenshots.",
+  "method": "WindowServer capture of a real native 2\u00d72 fixture window containing four production TopProcessesView renderers with DEBUG-only gradient variants, plus four dark standalone owned windows. Same process fixtures and fixed 0\u2013100 scale in every variant. Chinese comparison labels belong only to the fixture.",
+  "mode": "gradient-comparison",
+  "schema": 1
+}

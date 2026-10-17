@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "status": "passed; comparison alternatives await user choice",
+  "captureMode": "gradient-comparison",
+  "sourceArchive": "source-gradient-comparison-fixed-1792241880.tar.gz",
+  "sourceArchiveSHA256": "35c0f253ed7146864800016d81836dfc89dba175659781e652cb9987e0fc7c23",
+  "sourceFiles": 66,
+  "exactSourceStillMatches": true,
+  "captures": 6,
+  "assertions": 728,
+  "failures": 0,
+  "fixtures": {
+    "names": [
+      "Safari",
+      "WindowServer",
+      "backupd"
+    ],
+    "ActivityScores": [
+      84,
+      46,
+      8.1
+    ],
+    "CPUPercent": [
+      72,
+      31,
+      8
+    ],
+    "idleWakeupsPerSecond": [
+      240,
+      300,
+      2
+    ],
+    "barScale": [
+      0,
+      100
+    ]
+  },
+  "renderer": "Production AppKit TopProcessesView with DEBUG-only gradient style hook; Release remains the existing filled-width horizontal gradient. No app settings added.",
+  "dimensions": {
+    "nativeBoardPoints": [
+      780,
+      516
+    ],
+    "capturedPixelsWith8PointMargin": [
+      1592,
+      1064
+    ],
+    "eachProductionViewPoints": [
+      328,
+      168
+    ]
+  },
+  "variants": {
+    "A": "Fixed 114-point horizontal gradient clipped by a 114×score/100-point mask.",
+    "B": "Complete horizontal gradient scaled to each filled width.",
+    "C": "Vertical gradient scaled to each filled width.",
+    "D": "Score-dependent blue tint with vertical gradient."
+  },
+  "pixelContrastAuditPassed": true,
+  "preferencesFilesystemOnly35SecondAuditPassed": true,
+  "resourceAuditPassed": true,
+  "resourceAuditChecks": {
+    "nativeSourceAndBuildScratchRemoved": true,
+    "ownedTestProcessesStopped": true,
+    "ownedLaunchdServicesRemoved": true,
+    "ownedSocketsRemoved": true,
+    "ownedAppRegistrationsRemoved": true,
+    "ownedPreferencesRemoved": true,
+    "ownedContainersRemoved": true,
+    "ownedApplicationScriptsRemoved": true,
+    "canonicalHelperFixtureAbsent": true,
+    "canonicalAppAndHelperNeverInstalled": true
+  },
+  "vmCleanup": {
+    "additionalUnrelatedVMsPreserved": [],
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "ownedCloneRemoved": true,
+    "ownedVM": "Wattson-Gradient-Comparison-20261017"
+  },
+  "installedCanonicalAppOrHelperModified": false,
+  "finalArtifacts": "design/top-energy-processes/gradient-comparison/",
+  "preliminaryRun": "../gradient-comparison is superseded because its dark fixture panel resolved a dynamic CGColor under the wrong appearance. Final run adds panel-surface assertions and includes read-only PNG contrast verification.",
+  "focusedViewTests": {
+    "tests": 12,
+    "failures": 0,
+    "log": ".build/top-processes-review.noindex/gradient-preview-swift.log"
+  },
+  "releaseTypecheck": {
+    "passed": true,
+    "target": "arm64-apple-macosx12.0",
+    "debugDefined": false,
+    "log": ".build/top-processes-review.noindex/gradient-comparison-release-typecheck.log"
+  },
+  "reviewedSourceSHA256": {
+    "Popover/TopProcessesView.swift": "1fb4f75cc4b39d11043f1d357308f1463485e17d8126df27f4bc76150e4a23fc",
+    "SwiftTests/TopProcessesViewTests.swift": "83357b118c001b7941c4676c3aa0139b8a3033212c2dcab886217ddaa9eec9e0",
+    "scripts/verify_top_processes.sh": "c340e824f076afc43e6f749bd34d5f9ed1beb54883dbaa0c8e2beb45a8dce39d",
+    "tests/visual/capture_top_processes.swift": "516e64485c081a2d3d16e8840ee2bc79195a8290fabccca294e88e86e69298b6"
+  }
+}

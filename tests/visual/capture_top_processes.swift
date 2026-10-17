@@ -9,14 +9,15 @@ private enum CaptureTopProcesses {
     static func main() {
         let arguments = Array(CommandLine.arguments.dropFirst())
         let moduleOnly = arguments.first == "--module-only"
-        guard arguments.count == (moduleOnly ? 2 : 1),
+        let gradientComparison = arguments.first == "--gradient-comparison"
+        guard arguments.count == (moduleOnly || gradientComparison ? 2 : 1),
               let output = arguments.last else { exit(64) }
         let defaults = MemoryDefaults()
         Settings.configureForTest(defaults: defaults)
         Settings.checksForUpdatesOnLaunch = false
         let app = NSApplication.shared
         app.setActivationPolicy(.accessory)
-        let delegate = Probe(directory: URL(fileURLWithPath: output), moduleOnly: moduleOnly)
+        let delegate = Probe(directory: URL(fileURLWithPath: output), moduleOnly: moduleOnly, gradientComparison: gradientComparison)
         app.delegate = delegate
         withExtendedLifetime((defaults, delegate)) { app.run() }
         Settings.resetTestConfiguration()
@@ -35,6 +36,7 @@ private final class MemoryDefaults: UserDefaults {
 private final class Probe: NSObject, NSApplicationDelegate {
     private let directory: URL
     private let isModuleOnly: Bool
+    private let isGradientComparison: Bool
     private var records: [[String: Any]] = []
     private var item: NSStatusItem?
     private var backdrop: NSWindow?
@@ -70,13 +72,14 @@ private final class Probe: NSObject, NSApplicationDelegate {
         }
     }
 
-    init(directory: URL, moduleOnly: Bool) {
+    init(directory: URL, moduleOnly: Bool, gradientComparison: Bool) {
         self.directory = directory
         isModuleOnly = moduleOnly
+        isGradientComparison = gradientComparison
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + (isModuleOnly ? 45 : 220)) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + (isModuleOnly || isGradientComparison ? 45 : 220)) { [weak self] in
             self?.stop()
             fputs("TopProcessesProbe: watchdog expired\n", stderr)
             exit(1)
@@ -107,7 +110,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
     @MainActor private func run() async throws {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         Settings.topProcessCount = 3
-        if !isModuleOnly {
+        if !isModuleOnly && !isGradientComparison {
             for module in Settings.Module.allCases { Settings.setModule(module, visible: true) }
             try await hiddenMatrix()
         }
@@ -127,7 +130,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
         background.isOpaque = true
         backdrop = background
         background.orderFrontRegardless()
-        for glass in isModuleOnly ? [false] : [false, true] {
+        for glass in isModuleOnly || isGradientComparison ? [false] : [false, true] {
             Settings.liquidGlassEnabled = glass
             Settings.liquidGlassStyle = .regular
             for scheme in [Settings.ColorScheme.light, .dark] {
@@ -135,6 +138,15 @@ private final class Probe: NSObject, NSApplicationDelegate {
                 NSApp.appearance = scheme.appearance
                 background.backgroundColor = scheme == .light ? .init(white: 0.88, alpha: 1) : .init(white: 0.14, alpha: 1)
                 let theme = glass ? "glass" : "classic"
+                if isGradientComparison {
+                    try await gradientComparison(background: background, name: "comparison-\(scheme.rawValue)")
+                    if scheme == .dark {
+                        for style in TopProcessesView.GradientPreviewStyle.allCases {
+                            try await moduleOnly(background: background, name: "variant-\(gradientName(style))-dark", values: processes, gradientStyle: style)
+                        }
+                    }
+                    continue
+                }
                 if !glass {
                     try await moduleOnly(background: background, name: "module-classic-\(scheme.rawValue)")
                     if !isModuleOnly {
@@ -164,8 +176,10 @@ private final class Probe: NSObject, NSApplicationDelegate {
         }
         let evidence: [String: Any] = [
             "schema": 1, "assertions": assertions, "failures": 0, "cases": records,
-            "mode": isModuleOnly ? "module-only" : "full-matrix",
-            "method": isModuleOnly
+            "mode": isGradientComparison ? "gradient-comparison" : isModuleOnly ? "module-only" : "full-matrix",
+            "method": isGradientComparison
+                ? "WindowServer capture of a real native 2×2 fixture window containing four production TopProcessesView renderers with DEBUG-only gradient variants, plus four dark standalone owned windows. Same process fixtures and fixed 0–100 scale in every variant. Chinese comparison labels belong only to the fixture."
+                : isModuleOnly
                 ? "WindowServer capture of default-three production TopProcessesView in two owned Classic fixture windows, light and dark, with an owned underlay in a disposable ARM GUI VM."
                 : "Production AppKit content cache plus WindowServer capture of real Classic/Regular Glass popover and Settings windows and an owned underlay in a disposable ARM GUI VM.",
             "limitations": "Process energy, battery telemetry, history, and Settings privileged dependencies are deterministic fixtures. No sampling correctness or physical-hardware power-mode assertion is inferred from screenshots.",
@@ -175,7 +189,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
         print("Top processes: \(records.count) captures, \(assertions) assertions, 0 failures")
     }
 
-    @MainActor private func moduleOnly(background: NSWindow, name: String, values: [EnergyProcess]? = nil) async throws {
+    @MainActor private func moduleOnly(background: NSWindow, name: String, values: [EnergyProcess]? = nil, gradientStyle: TopProcessesView.GradientPreviewStyle? = nil) async throws {
         let height = TopProcessesView.preferredHeight(count: 3)
         let window = NSWindow(contentRect: .init(x: background.frame.midX - 180, y: background.frame.midY - height / 2 - 12, width: PopoverStyle.width, height: height + 24), styleMask: .borderless, backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
@@ -189,12 +203,13 @@ private final class Probe: NSObject, NSApplicationDelegate {
         window.contentView?.addSubview(list)
         let displayed = values ?? processes
         list.update(state: .ready(displayed), count: 3)
+        if let gradientStyle { list.setGradientPreviewStyle(gradientStyle) }
         list.setPresentationActive(true)
         defer { list.setPresentationActive(false) }
         window.orderFrontRegardless()
         try await pause(0.15)
-        try validate(list, count: 3, expectedProcesses: Array(displayed.prefix(3)))
-        try composite(window, background: background, name: name, fields: ["productionSectionOnly": true, "processCount": 3, "container": "Fixture window with production Classic surface color and 16-point side insets; unmodified TopProcessesView renderer."])
+        try validate(list, count: 3, expectedProcesses: Array(displayed.prefix(3)), gradientStyle: gradientStyle)
+        try composite(window, background: background, name: name, fields: ["productionSectionOnly": true, "processCount": 3, "gradientVariant": gradientStyle.map(gradientName) ?? "release-default", "fixtureScores": Array(displayed.prefix(3)).map(\.energyImpact), "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer."])
         if isModuleOnly && Settings.colorScheme == .dark {
             guard let button = list.subviews.compactMap({ $0 as? NSButton }).first else { throw failure("Missing standalone info button") }
             button.performClick(nil)
@@ -214,7 +229,62 @@ private final class Probe: NSObject, NSApplicationDelegate {
             try await pause(0.1)
             try check(list.helpWindow == nil, "Standalone info did not close")
         }
-        if !isModuleOnly && values == nil { try await standaloneHelpLifecycle(list) }
+        if !isModuleOnly && !isGradientComparison && values == nil { try await standaloneHelpLifecycle(list) }
+    }
+
+    @MainActor private func gradientComparison(background: NSWindow, name: String) async throws {
+        let window = NSWindow(contentRect: .init(x: background.frame.midX - 390, y: background.frame.midY - 258, width: 780, height: 516), styleMask: .borderless, backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.isOpaque = true
+        window.hasShadow = false
+        window.appearance = NSApp.appearance
+        window.backgroundColor = Settings.colorScheme == .dark ? .init(white: 0.11, alpha: 1) : .init(white: 0.91, alpha: 1)
+        let content = FlippedView(frame: .init(x: 0, y: 0, width: 780, height: 516))
+        window.contentView = content
+        defer { window.close() }
+        let descriptions: [(TopProcessesView.GradientPreviewStyle, String, String)] = [
+            (.fixedScaleHorizontal, "A · 固定 0–100，按数值裁切", "渐变覆盖整个刻度；低值只露出左侧浅蓝"),
+            (.filledWidthHorizontal, "B · 每条填充区走完完整渐变", "不论数值大小，每条都从浅蓝走到深蓝"),
+            (.vertical, "C · 纵向渐变", "每条内部由上到下渐变，长度仍表示数值"),
+            (.activityTint, "D · 按分值整体变深", "分值越高整体越深，叠加纵向明暗层次"),
+        ]
+        var lists: [TopProcessesView] = []
+        var variants: [[String: Any]] = []
+        for (index, description) in descriptions.enumerated() {
+            let (style, title, explanation) = description
+            let origin = NSPoint(x: 20 + CGFloat(index % 2) * 380, y: 20 + CGFloat(index / 2) * 248)
+            let panel = FlippedView(frame: .init(origin: origin, size: .init(width: 360, height: 228)))
+            panel.wantsLayer = true
+            var panelColor = NSColor.clear
+            NSApp.appearance?.performAsCurrentDrawingAppearance {
+                panelColor = PopoverStyle.surface.usingColorSpace(.deviceRGB) ?? .clear
+            }
+            try check(panelColor.alphaComponent == 1 && (Settings.colorScheme == .dark ? panelColor.brightnessComponent < 0.5 : panelColor.brightnessComponent > 0.5), "Comparison panel surface does not match its appearance")
+            panel.layer?.backgroundColor = panelColor.cgColor
+            content.addSubview(panel)
+            for (text, y, font, color) in [(title, CGFloat(8), NSFont.systemFont(ofSize: 14, weight: .medium), PopoverStyle.primaryText), (explanation, CGFloat(30), NSFont.systemFont(ofSize: 11), PopoverStyle.secondaryText)] {
+                let field = NSTextField(labelWithString: text)
+                field.font = font
+                field.textColor = color
+                field.frame = .init(x: 16, y: y, width: 328, height: 18)
+                panel.addSubview(field)
+                try check(field.intrinsicContentSize.width <= field.bounds.width + 0.5, "Comparison label is clipped: \(text)")
+            }
+            let list = TopProcessesView()
+            list.frame = .init(x: 16, y: 52, width: PopoverStyle.contentWidth, height: TopProcessesView.preferredHeight(count: 3))
+            panel.addSubview(list)
+            list.update(state: .ready(processes), count: 3)
+            list.setGradientPreviewStyle(style)
+            list.setPresentationActive(true)
+            lists.append(list)
+            try check(panel.bounds.contains(list.frame), "Comparison production view is clipped")
+            variants.append(["variant": gradientName(style), "title": title, "explanation": explanation, "listFrame": NSStringFromRect(list.frame), "fixtureScores": Array(processes.prefix(3)).map(\.energyImpact), "fixedScale": [0, 100]])
+        }
+        defer { lists.forEach { $0.setPresentationActive(false) } }
+        window.orderFrontRegardless()
+        try await pause(0.2)
+        for (list, description) in zip(lists, descriptions) { try validate(list, count: 3, expectedProcesses: Array(processes.prefix(3)), gradientStyle: description.0) }
+        try composite(window, background: background, name: name, fields: ["productionSectionOnly": true, "comparisonLabelsOutsideProduct": true, "variants": variants, "sameFixtureData": true, "fixedScale": [0, 100]])
     }
 
     @MainActor private func hiddenMatrix() async throws {
@@ -328,7 +398,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
         settings = nil
     }
 
-    private func validate(_ list: TopProcessesView, count: Int, expectedProcesses: [EnergyProcess]) throws {
+    private func validate(_ list: TopProcessesView, count: Int, expectedProcesses: [EnergyProcess], gradientStyle: TopProcessesView.GradientPreviewStyle? = nil) throws {
         list.layoutSubtreeIfNeeded()
         try check(abs(list.bounds.height - TopProcessesView.preferredHeight(count: count)) < 0.1, "Wrong process-list height")
         let visibleViews = descendants(list).filter { !$0.isHiddenOrHasHiddenAncestor }
@@ -348,7 +418,11 @@ private final class Probe: NSObject, NSApplicationDelegate {
             let expectedRatio = CGFloat(min(max(process.energyImpact / 100, 0), 1))
             try check(abs(bar.ratio - expectedRatio) < 0.0001, "Bar does not use the fixed 0–100-point scale")
             try check(bar.track.height == 12 && bar.fill.height == 10, "Incorrect activity-bar height")
-            try check(abs(bar.fill.width - (bar.track.width - 2) * expectedRatio) < 0.01, "Activity-bar fill does not match its fixed scale")
+            let gradient = list.gradientPreviewGeometryForTest[index]
+            let fixedGradient = gradientStyle == .fixedScaleHorizontal
+            try check(gradient.usesFixedScale == fixedGradient, "Gradient mask does not match selected comparison style")
+            try check(abs(gradient.visibleMaskWidth - (bar.track.width - 2) * expectedRatio) < 0.01, "Activity-bar visible fill does not match its fixed scale")
+            try check(abs(gradient.gradientWidth - (fixedGradient ? 114 : 114 * expectedRatio)) < 0.01, "Gradient width does not match fixed-scale or filled-width rendering")
             let fields = rows[index].subviews.compactMap { $0 as? NSTextField }
             try check(fields.count == 3, "Expected process name, score and CPU/wakeups details")
             try check(fields[1].intrinsicContentSize.width <= fields[1].bounds.width, "Activity score is clipped")
@@ -433,6 +507,14 @@ private final class Probe: NSObject, NSApplicationDelegate {
     }
 
     private func descendants(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(descendants) }
+    private func gradientName(_ style: TopProcessesView.GradientPreviewStyle) -> String {
+        switch style {
+        case .fixedScaleHorizontal: return "fixed-scale-horizontal"
+        case .filledWidthHorizontal: return "filled-width-horizontal"
+        case .vertical: return "vertical"
+        case .activityTint: return "activity-tint"
+        }
+    }
     private func pause(_ seconds: Double) async throws { try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000)) }
     private func check(_ passed: Bool, _ message: String) throws { assertions += 1; if !passed { throw failure(message) } }
     private func failure(_ text: String) -> NSError { NSError(domain: "WattsonTopProcessesProbe", code: 1, userInfo: [NSLocalizedDescriptionKey: text]) }
@@ -443,4 +525,8 @@ private extension TopProcessesState {
         if case .ready(let values) = self { return Array(values.prefix(limit)) }
         return []
     }
+}
+
+private final class FlippedView: NSView {
+    override var isFlipped: Bool { true }
 }

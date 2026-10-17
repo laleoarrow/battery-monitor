@@ -267,6 +267,100 @@ final class TopProcessesViewTests: XCTestCase {
         }
     }
 
+    func testFixedScalePreviewKeepsFullGradientWidthAndOnlyRevealsTheMeasuredPrefix() throws {
+        let view = makeView(count: 10)
+        view.setGradientPreviewStyle(.fixedScaleHorizontal)
+        let scores = [0.0, 0.04, 8.1, 46, 84, 100, 125]
+        view.update(state: .ready(scores.enumerated().map { process($0.offset + 1, score: $0.element) }), count: 10)
+        view.layoutSubtreeIfNeeded()
+        let expectedRatios = [0.0, 0.0004, 0.081, 0.46, 0.84, 1, 1]
+        for (geometry, ratio) in zip(view.gradientPreviewGeometryForTest, expectedRatios) {
+            XCTAssertEqual(geometry.gradientWidth, 114)
+            XCTAssertEqual(geometry.visibleMaskWidth, 114 * ratio, accuracy: 0.000_001)
+            XCTAssertTrue(geometry.usesFixedScale)
+        }
+        for row in visibleRows(view) {
+            let gradient = try gradientLayer(row)
+            let mask = try XCTUnwrap(gradient.mask)
+            XCTAssertEqual(mask.frame.origin, .zero)
+            XCTAssertEqual(mask.frame.height, 10)
+            XCTAssertEqual(mask.backgroundColor?.alpha, 1)
+            XCTAssertEqual(mask.cornerRadius, 2)
+            XCTAssertEqual(gradient.startPoint, CGPoint(x: 0, y: 0.5))
+            XCTAssertEqual(gradient.endPoint, CGPoint(x: 1, y: 0.5))
+            XCTAssertTrue(mask.animationKeys()?.isEmpty ?? true)
+        }
+    }
+
+    func testPreviewStyleSwitchesReuseRowsAndRemoveTheFixedScaleMask() throws {
+        let view = makeView()
+        view.update(state: .ready([8.1, 46, 84].enumerated().map {
+            process($0.offset + 1, score: $0.element)
+        }), count: 3)
+        view.layoutSubtreeIfNeeded()
+        let rowIDs = visibleRows(view).map(ObjectIdentifier.init)
+        let frames = view.subviews.map(\.frame)
+        for style in TopProcessesView.GradientPreviewStyle.allCases + [.fixedScaleHorizontal, .filledWidthHorizontal] {
+            view.setGradientPreviewStyle(style)
+            view.layoutSubtreeIfNeeded()
+            XCTAssertEqual(view.subviews.map(\.frame), frames)
+            XCTAssertEqual(visibleRows(view).map(ObjectIdentifier.init), rowIDs)
+            for (index, row) in visibleRows(view).enumerated() {
+                let gradient = try gradientLayer(row)
+                let ratio = view.barGeometryForTest[index].ratio
+                XCTAssertEqual(gradient.frame.width, style == .fixedScaleHorizontal ? 114 : 114 * ratio,
+                               accuracy: 0.000_001)
+                XCTAssertEqual(gradient.mask != nil, style == .fixedScaleHorizontal)
+                let vertical = style == .vertical || style == .activityTint
+                XCTAssertEqual(gradient.startPoint, vertical ? CGPoint(x: 0.5, y: 0) : CGPoint(x: 0, y: 0.5))
+                XCTAssertEqual(gradient.endPoint, vertical ? CGPoint(x: 0.5, y: 1) : CGPoint(x: 1, y: 0.5))
+                XCTAssertTrue(gradient.animationKeys()?.isEmpty ?? true)
+            }
+            if style == .activityTint {
+                let low = [0xD4ECFF, 0x90C9F5, 0x5BA5E3]
+                let high = [0x78BCFF, 0x187DE0, 0x0754B0]
+                for (index, row) in visibleRows(view).enumerated() {
+                    for (actual, stops) in zip(try gradientColors(row), zip(low, high)) {
+                        let expected = NSColor(rgb: UInt32(stops.0)).blended(
+                            withFraction: view.barGeometryForTest[index].ratio, of: NSColor(rgb: UInt32(stops.1)))!
+                        try assertColor(actual, matches: expected, in: view.effectiveAppearance)
+                    }
+                }
+            }
+        }
+    }
+
+    func testFixedScalePreviewRetainsMaskGeometryAcrossThemesAndHighContrast() throws {
+        let view = makeView()
+        view.setGradientPreviewStyle(.fixedScaleHorizontal)
+        view.update(state: .ready([8.1, 46, 84].enumerated().map {
+            process($0.offset + 1, score: $0.element)
+        }), count: 3)
+        let originalContrast = ProcessInfo.processInfo.environment["WATTSON_FORCE_INCREASE_CONTRAST"]
+        defer {
+            if let originalContrast { setenv("WATTSON_FORCE_INCREASE_CONTRAST", originalContrast, 1) }
+            else { unsetenv("WATTSON_FORCE_INCREASE_CONTRAST") }
+        }
+        for (name, contrast): (NSAppearance.Name, Bool) in [(.aqua, false), (.darkAqua, false),
+                (.accessibilityHighContrastAqua, true), (.accessibilityHighContrastDarkAqua, true)] {
+            setenv("WATTSON_FORCE_INCREASE_CONTRAST", contrast ? "1" : "0", 1)
+            view.appearance = try XCTUnwrap(NSAppearance(named: name))
+            view.viewDidChangeEffectiveAppearance()
+            for (geometry, ratio) in zip(view.gradientPreviewGeometryForTest, [0.081, 0.46, 0.84]) {
+                XCTAssertEqual(geometry.gradientWidth, 114)
+                XCTAssertEqual(geometry.visibleMaskWidth, 114 * ratio, accuracy: 0.000_001)
+                XCTAssertTrue(geometry.usesFixedScale)
+            }
+            if contrast {
+                for row in visibleRows(view) {
+                    for color in try gradientColors(row) {
+                        try assertColor(color, matches: .systemBlue, in: view.effectiveAppearance)
+                    }
+                }
+            }
+        }
+    }
+
     func testNativeHelpExplainsActivityMeaningScaleAndCPUConventionWithoutOpeningAWindow() throws {
         let view = makeView()
         let button = try XCTUnwrap(view.subviews.compactMap { $0 as? NSButton }.first)

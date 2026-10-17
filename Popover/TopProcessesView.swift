@@ -156,12 +156,25 @@ final class TopProcessesView: PopoverSection {
     }
 
 #if DEBUG
+    enum GradientPreviewStyle: CaseIterable {
+        case fixedScaleHorizontal, filledWidthHorizontal, vertical, activityTint
+    }
+
+    func setGradientPreviewStyle(_ style: GradientPreviewStyle) {
+        rows.forEach { $0.setGradientPreviewStyle(style) }
+    }
+
     var barGeometryForTest: [(track: NSRect, fill: NSRect, ratio: CGFloat)] {
         layoutSubtreeIfNeeded()
         return rows.filter { !$0.isHidden }.map(\.barGeometry)
     }
 
     var activityHelpForTest: String { Self.activityHelp }
+
+    var gradientPreviewGeometryForTest: [(gradientWidth: CGFloat, visibleMaskWidth: CGFloat, usesFixedScale: Bool)] {
+        layoutSubtreeIfNeeded()
+        return rows.filter { !$0.isHidden }.map(\.gradientPreviewGeometry)
+    }
 #endif
 
     private final class ProcessRow: NSView {
@@ -172,6 +185,10 @@ final class TopProcessesView: PopoverSection {
         private let track = CALayer()
         private let fill = CAGradientLayer()
         private var ratio: CGFloat = 0
+#if DEBUG
+        private var gradientPreviewStyle: GradientPreviewStyle = .filledWidthHorizontal
+        private let previewMask = CALayer()
+#endif
 
         override var isFlipped: Bool { true }
 
@@ -231,6 +248,18 @@ final class TopProcessesView: PopoverSection {
             PopoverStyle.setWithoutAnimation {
                 self.track.frame = NSRect(x: 144, y: 6, width: 116, height: 12)
                 self.fill.frame = NSRect(x: 1, y: 1, width: 114 * self.ratio, height: 10)
+#if DEBUG
+                if self.gradientPreviewStyle == .fixedScaleHorizontal {
+                    self.fill.frame.size.width = 114
+                    self.previewMask.frame = NSRect(x: 0, y: 0, width: 114 * self.ratio, height: 10)
+                    self.previewMask.backgroundColor = NSColor.black.cgColor
+                    self.previewMask.cornerRadius = 2
+                    self.previewMask.cornerCurve = .continuous
+                    self.fill.mask = self.previewMask
+                } else {
+                    self.fill.mask = nil
+                }
+#endif
             }
         }
 
@@ -250,6 +279,18 @@ final class TopProcessesView: PopoverSection {
                     self.fill.colors = contrast
                         ? [NSColor.systemBlue.cgColor, NSColor.systemBlue.cgColor, NSColor.systemBlue.cgColor]
                         : [NSColor(rgb: 0x9CDCFF).cgColor, NSColor(rgb: 0x2C9DFF).cgColor, NSColor(rgb: 0x0B69D9).cgColor]
+#if DEBUG
+                    let vertical = self.gradientPreviewStyle == .vertical || self.gradientPreviewStyle == .activityTint
+                    self.fill.startPoint = vertical ? CGPoint(x: 0.5, y: 0) : CGPoint(x: 0, y: 0.5)
+                    self.fill.endPoint = vertical ? CGPoint(x: 0.5, y: 1) : CGPoint(x: 1, y: 0.5)
+                    if self.gradientPreviewStyle == .activityTint && !contrast {
+                        let low = [0xD4ECFF, 0x90C9F5, 0x5BA5E3].map { NSColor(rgb: $0) }
+                        let high = [0x78BCFF, 0x187DE0, 0x0754B0].map { NSColor(rgb: $0) }
+                        self.fill.colors = zip(low, high).map {
+                            $0.blended(withFraction: self.ratio, of: $1)!.cgColor
+                        }
+                    }
+#endif
                 }
             }
         }
@@ -259,6 +300,9 @@ final class TopProcessesView: PopoverSection {
             name.toolTip = "\(process.name) · PID \(process.pid)"
             let score = process.energyImpact
             ratio = CGFloat(min(max(score / 100, 0), 1))
+#if DEBUG
+            if gradientPreviewStyle == .activityTint { refreshAppearance() }
+#endif
             value.stringValue = Self.shortNumber(score)
             overflow.isHidden = score <= 100
             details.stringValue = "CPU \(Self.shortNumber(process.cpuPercent))% · Idle wakeups \(Self.wakeupNumber(process.idleWakeupsPerSecond))/s"
@@ -287,5 +331,17 @@ final class TopProcessesView: PopoverSection {
         var barGeometry: (track: NSRect, fill: NSRect, ratio: CGFloat) {
             (track.frame, fill.frame, ratio)
         }
+
+#if DEBUG
+        func setGradientPreviewStyle(_ style: GradientPreviewStyle) {
+            gradientPreviewStyle = style
+            refreshAppearance()
+            needsLayout = true
+        }
+
+        var gradientPreviewGeometry: (gradientWidth: CGFloat, visibleMaskWidth: CGFloat, usesFixedScale: Bool) {
+            (fill.frame.width, fill.mask?.frame.width ?? fill.frame.width, fill.mask != nil)
+        }
+#endif
     }
 }
