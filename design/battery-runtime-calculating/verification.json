@@ -1,0 +1,138 @@
+{
+  "version": "4.3.14",
+  "sourceCommit": "d8abc3598f727c0b6f25db453100a3089032d934",
+  "publicRelease": false,
+  "algorithmTests": 36,
+  "nativeVMTests": 48,
+  "nativeVMTestsPassed": true,
+  "pythonSamplerTests": 10,
+  "nativeStateCaptures": 16,
+  "allOriginalCapturesVisuallyReviewed": true,
+  "packageMatrix": {
+    "passed": true,
+    "modes": [
+      "previous-fresh",
+      "disabled-service-upgrade",
+      "fresh",
+      "reinstall",
+      "disabled-service-reinstall"
+    ],
+    "guestNoBatteryAppResidencyBoundaryRecorded": true
+  },
+  "vmCleanup": {
+    "hostCanonicalUnchanged": true,
+    "hostCanonicalVersionAtBaseline": "4.3.13",
+    "hostQuietSeconds": 113.3523479999858,
+    "guestCanonicalUnchanged": true,
+    "guestQuietSeconds": 113.34091899999999,
+    "owned-resources-immediate-4314.json": {
+      "passed": true,
+      "checkCount": 8
+    },
+    "owned-resources-delayed-4314.json": {
+      "passed": true,
+      "checkCount": 8
+    },
+    "package-cleanup-immediate-final.json": {
+      "passed": true,
+      "checkCount": 5
+    },
+    "package-cleanup-delayed-final.json": {
+      "passed": true,
+      "checkCount": 5
+    },
+    "packageQuietSeconds": 113.39511499999992,
+    "ownedVMRemoved": true,
+    "protectedVMsPreserved": true,
+    "vmOwnerExitCode": 0,
+    "hostTemporaryTransfersRemoved": true,
+    "additionalUnrelatedVMsPreserved": [
+      "Wattson-HistorySmooth-20261017"
+    ]
+  },
+  "installed": {
+    "checkedAtUTC": "2026-10-17T06:10:23.786623+00:00",
+    "version": "4.3.14",
+    "sourceCommit": "d8abc3598f727c0b6f25db453100a3089032d934",
+    "packageSHA256": "fedc6570b811270598bd441a142e8ff12255cbb6097b1ecc45c9807c1e6e51c9",
+    "appAndHelperAndDaemonMatchVerifiedPayload": true,
+    "receiptVersion": "4.3.14",
+    "signatureVerified": true,
+    "helperHealth": true,
+    "helperV5": true,
+    "canonicalAppPID": 71073,
+    "stableSeconds": 10,
+    "publicRelease": false
+  },
+  "finalCanonicalCleanup": {
+    "completedAtUTC": "2026-10-17T06:13:24.216470+00:00",
+    "completedSystemMonotonic": 277213.735817,
+    "version": "4.3.14",
+    "sourceCommit": "d8abc3598f727c0b6f25db453100a3089032d934",
+    "publicRelease": false,
+    "passed": true,
+    "immediateUTC": "2026-10-17T06:11:04.625624+00:00",
+    "delayedUTC": "2026-10-17T06:13:02.064891+00:00",
+    "clock": "time.clock_gettime(time.CLOCK_MONOTONIC)",
+    "quietSecondsBeforeDelayedRead": 99.24745399999665,
+    "snapshotIntervalSeconds": 117.43922400003066,
+    "canonicalPID": 71073,
+    "packageSHA256": "fedc6570b811270598bd441a142e8ff12255cbb6097b1ecc45c9807c1e6e51c9",
+    "appBuildReceipt": "4.3.14",
+    "canonicalFullIdentityUnchanged": true,
+    "appTreeSHA256": "ac8b332fbdaf93f52e49b73132a230bcd36b7b78ca3d93d658bd42896581379f",
+    "helperSHA256": "623131c00bc59fd3e362e87727e90e9c503be9a538586747ace9fe91dca02626",
+    "launchDaemonSHA256": "29cd39cb617610c7e42c5c28549d8334c45fbcaf4b1f188fc35bdd6f13f4a599",
+    "signaturesValid": true,
+    "installationEvidenceVerifiedPayloadMatch": true,
+    "installationEvidenceHelperHealthAndV5": true,
+    "canonicalOnlyRegistrationAndSpotlight": true,
+    "scopedResiduals": {
+      "ownedScratch": [],
+      "ownedTransfers": [],
+      "ownedProcesses": [],
+      "installerPIDs": [],
+      "ownedMounts": [],
+      "extraRegistrations": [],
+      "extraSpotlightApps": []
+    },
+    "finalCanonicalInvocations": [
+      {
+        "pid": 71073,
+        "arguments": "/Applications/Wattson.app/Contents/MacOS/Wattson"
+      }
+    ],
+    "noExtraCanonicalProbeProcesses": true,
+    "old4313EvidenceSHA256StillMatchesPreparation": {
+      "4313-success-cleanup-audit.py": true,
+      "4313-success-cleanup-immediate.json": true,
+      "4313-success-cleanup-delayed.json": true,
+      "local-install-verified.json": true,
+      "4313-success-cleanup-summary.json": true
+    },
+    "noTrackedFilesModifiedByAudit": true,
+    "hostGUIOrInstallationRunByAudit": false,
+    "evidence": {
+      "4314-success-cleanup-audit.py": "a6e97d05fad94fe964d8497ccfd7b816cd90e73253a21f113e56c6726bda484d",
+      "4314-approved-package.json": "4ae663825d3fd02da64966dbeac23bd42a189924e98c0ff75b6d3bc46a15485a",
+      "4314-preinstall-4313-baseline.json": "f867194691acf6e0e7e1b47fe03f5b4df05418578ccca8f8507e5d5d4b01f055",
+      "4314-success-cleanup-immediate.json": "ec592fc6565871d4c39c85e11bbf90595dd8629bd147567cfef274c5dacb1c16",
+      "4314-success-cleanup-delayed.json": "5bab89c14449b684b5d4703cc8994cd56cd2e549c85327c6ac74e76933f6151d",
+      "local-install-verified.json": "ad1f774f9c3c84dcdae5327dad10ceb52b0a413b72c4580d2cceac2aa3a6c415"
+    }
+  },
+  "evidenceSHA256": {
+    "session-final-4314.json": "ddd73f9b051bfcb1bbf893a3f68a4e47153a22e9d101bb17c099868dd88e0f06",
+    "validated-results-4314.json": "3c9e7f7cf58dc94a178c79b425718cdb570bc85a342cc9434a70513c49a84673",
+    "artifact-identities.json": "8cd724a1c8b54fea25ddfa840d61ee762e13d8323f45bfbe6e4ce57b490877da",
+    "local-install-verified.json": "ad1f774f9c3c84dcdae5327dad10ceb52b0a413b72c4580d2cceac2aa3a6c415",
+    "native-installer-success.log": "9b8211c508818704d77530f501bf760cf8b3010f3eab6bd7651b29ce066f523e",
+    "local-install-verify-exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "green-algorithm-tests.log": "b7fa9bad3e75615aaed3898cdb8a630e3c2325ec59ba210e95ad47a9525ae6d1",
+    "red-algorithm-tests.log": "325b6818961a0eb0430bce7c625bdaaebd4c3db12aed2d570af9e9d44d66e711",
+    "python-sampler.log": "2e8ac1fc205a24c5624e469bf0c9309a0118e229303d6ae47aca7a17377d0edd",
+    "4314-success-cleanup-summary.json": "d66e4976f2465024c2fdd882f9686dd23a736f1b724de7ab81ce54716f00dbd4",
+    "4314-success-cleanup-immediate.json": "ec592fc6565871d4c39c85e11bbf90595dd8629bd147567cfef274c5dacb1c16",
+    "4314-success-cleanup-delayed.json": "5bab89c14449b684b5d4703cc8994cd56cd2e549c85327c6ac74e76933f6151d"
+  }
+}
