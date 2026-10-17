@@ -1,0 +1,13 @@
+{
+  "checkedAtUTC": "2026-10-17T03:50:05.057539+00:00",
+  "scope": "Only absent project-local run-preview fixture registrations; canonical app untouched",
+  "changes": [
+    {
+      "identifier": "com.leoarrow.wattson.preview.session.Tjz0w0",
+      "path": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/tests.noindex/run-preview-6tt0sjmf/.build/run.noindex/session.Tjz0w0/Wattson Preview.app",
+      "pathAbsent": true,
+      "noMatchingProcess": true,
+      "unregisterExitCode": 0
+    }
+  ]
+}

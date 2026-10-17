@@ -1,0 +1,11 @@
+{
+  "checkedAtUTC": "2026-10-17T03:47:17.797319+00:00",
+  "sourceCommit": "9fef74944447d4753d1edde82997dc41a479ccad",
+  "canonicalPackage": "dist/Wattson-v4.3.11-macos-universal.pkg",
+  "packageSHA256": "72c2e20dcf13e6d69c27e9aee83528241ab58c881b1e1609a28f87b479caf21a",
+  "contentAddressedTransfer": "dist/Wattson-v4.3.11-72c2e20dcf13-macos-universal.pkg",
+  "transferSHA256": "72c2e20dcf13e6d69c27e9aee83528241ab58c881b1e1609a28f87b479caf21a",
+  "transferUsedSeparateInode": true,
+  "transferRemovedAfterVerification": true,
+  "canonicalPreserved": true
+}

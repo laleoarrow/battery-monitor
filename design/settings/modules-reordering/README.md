@@ -140,3 +140,9 @@ preserved. Fixture cleanup and its audit are handled by the owning stage.
 The separately coordinated local candidate installation has explicit user
 authorization. This record does not claim complete drag acceptance or announce
 a public release.
+
+The [compact raw closeout](../../history-performance/modules/summary.json) retains
+the native logs, gesture records, original failures and unverified outcomes,
+frozen tools and final owner cleanup evidence with per-file SHA-256 values.
+The coordinated [canonical 4.3.11 installation](../../history-performance/host/local-install-verified.json)
+subsequently passed exact payload, receipt, signature, helper and process checks.

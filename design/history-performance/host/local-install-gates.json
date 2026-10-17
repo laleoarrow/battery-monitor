@@ -1,0 +1,40 @@
+{
+  "checkedAtUTC": "2026-10-17T04:02:36.422155+00:00",
+  "sourceCommit": "9fef74944447d4753d1edde82997dc41a479ccad",
+  "packageSHA256": "72c2e20dcf13e6d69c27e9aee83528241ab58c881b1e1609a28f87b479caf21a",
+  "scope": "User-authorized local candidate upgrade; no public release",
+  "headlessSwift": {
+    "passed": 535,
+    "failures": 0
+  },
+  "headlessPython": {
+    "tests": 601,
+    "skipped": 4,
+    "failures": 0
+  },
+  "historyProductionHashesUnchangedFromNativeVerification": true,
+  "packageFiveModeMatrixPassed": true,
+  "queuedReleaseSourceReview": "GO",
+  "modulesNativeContract": {
+    "passed": 8,
+    "windowLifecycles": 500
+  },
+  "rapidAlreadyReleasedGestures": {
+    "checked": 4,
+    "stateAndOrderSafe": true,
+    "cases": [
+      "classic-fast-1",
+      "classic-diagonal",
+      "standard-diagonal-2",
+      "standard-outside"
+    ],
+    "source": "Modules owner integration-handoff.json at2026-10-17T04:02:03.325613+00:00; successful held native drops not claimed"
+  },
+  "normalHeldNativeDrop": "unverified; CUA batches input in approximately18ms, no genuine native session pair was observed in these automated cases",
+  "localInstallationDecision": "Proceed with the requested local update using the completed source, headless, native, safety and exact-package evidence; preserve held-drag verification limit and all unsuccessful or unverified fixture records",
+  "hostInstallVerified": true,
+  "hostVerificationActualExitCode": 0,
+  "hostVerificationRecord": "local-install-verified.json",
+  "postflightRecord": "local-install-postflight.json",
+  "verifiedAtUTC": "2026-10-17T04:07:48.689912+00:00"
+}
