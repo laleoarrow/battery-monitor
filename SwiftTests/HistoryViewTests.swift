@@ -74,12 +74,11 @@ final class HistoryViewTests: XCTestCase {
         XCTAssertEqual(path.currentPoint.y,
             HistoryView.chartHeight * CGFloat(1 - 100 / view.chartCeilingForTest), accuracy: 1e-8)
         let clip = try XCTUnwrap(view.layer?.sublayers?.first(where: { $0.masksToBounds }))
-        let plot = try XCTUnwrap(clip.sublayers?.first(where: {
-            $0.sublayers?.contains(where: { $0 is CAGradientLayer }) == true
-        }))
-        XCTAssertEqual(plot.anchorPoint, CGPoint(x: 0, y: 1))
-        XCTAssertEqual(plot.position, CGPoint(x: 0, y: HistoryView.chartHeight))
-        XCTAssertTrue(CATransform3DIsIdentity(plot.transform))
+        let gradient = try XCTUnwrap(clip.sublayers?.compactMap { $0 as? CAGradientLayer }.first)
+        XCTAssertEqual(gradient.frame, clip.bounds)
+        XCTAssertTrue(CATransform3DIsIdentity(gradient.transform))
+        XCTAssertEqual(gradient.startPoint, CGPoint(x: 0.5, y: 0))
+        XCTAssertEqual(gradient.endPoint, CGPoint(x: 0.5, y: 1))
         XCTAssertFalse(view.hasChartAnimationForTest)
     }
 
@@ -129,10 +128,9 @@ final class HistoryViewTests: XCTestCase {
         }
         XCTAssertLessThan(after[0].x, 0)
         let clip = try XCTUnwrap(view.layer?.sublayers?.first(where: { $0.masksToBounds }))
-        let gradient = try XCTUnwrap(clip.sublayers?.flatMap { $0.sublayers ?? [] }
-            .compactMap { $0 as? CAGradientLayer }.first)
+        let gradient = try XCTUnwrap(clip.sublayers?.compactMap { $0 as? CAGradientLayer }.first)
         let mask = try XCTUnwrap(gradient.mask as? CAShapeLayer)
-        XCTAssertEqual(gradient.frame.minX, after[0].x, accuracy: 1e-8)
+        XCTAssertEqual(gradient.frame.minX, 0, accuracy: 1e-8)
         XCTAssertEqual(gradient.frame.maxX, PopoverStyle.contentWidth, accuracy: 1e-8)
         XCTAssertEqual(mask.frame, gradient.bounds)
         var fillStart: CGPoint?
@@ -169,12 +167,11 @@ final class HistoryViewTests: XCTestCase {
         XCTAssertEqual(view.chartCeilingForTest, 15)
         let path = try XCTUnwrap(view.chartPathForTest)
         let clip = try XCTUnwrap(view.layer?.sublayers?.first(where: { $0.masksToBounds }))
-        let gradient = try XCTUnwrap(clip.sublayers?.flatMap { $0.sublayers ?? [] }
-            .compactMap { $0 as? CAGradientLayer }.first)
+        let gradient = try XCTUnwrap(clip.sublayers?.compactMap { $0 as? CAGradientLayer }.first)
         let mask = try XCTUnwrap(gradient.mask as? CAShapeLayer)
         let fill = try XCTUnwrap(mask.path)
         let top = HistoryView.chartHeight * CGFloat(1 - 100.0 / 15)
-        XCTAssertEqual(gradient.frame.minY, top, accuracy: 1e-8)
+        XCTAssertEqual(gradient.frame.minY, 0, accuracy: 1e-8)
         XCTAssertEqual(gradient.frame.maxY, HistoryView.chartHeight, accuracy: 1e-8)
         XCTAssertEqual(path.boundingBoxOfPath.minY, top, accuracy: 1e-8)
         XCTAssertEqual(fill.boundingBoxOfPath.minY + gradient.frame.minY, top, accuracy: 1e-8)
@@ -183,7 +180,7 @@ final class HistoryViewTests: XCTestCase {
                        HistoryView.chartHeight, accuracy: 1e-8)
     }
 
-    func testStrokeLivesOutsideTheScaledFillAndKeepsItsPhysicalWidth() throws {
+    func testStrokeAndFillShareAnUnscaledViewportAndKeepPhysicalWidth() throws {
         let view = view()
         for (times, values) in [([0.0, 2], [40.0, 45]), ([0, 2, 4], [40, 45, 300])] {
             view.update(samples: values, peak: values.max()!, color: .systemBlue,
@@ -191,18 +188,17 @@ final class HistoryViewTests: XCTestCase {
         }
         let clip = try XCTUnwrap(view.layer?.sublayers?.first(where: { $0.masksToBounds }))
         let line = try XCTUnwrap(clip.sublayers?.compactMap { $0 as? CAShapeLayer }.first)
-        let viewport = try XCTUnwrap(clip.sublayers?.first(where: {
-            $0.sublayers?.contains(where: { $0 is CAGradientLayer }) == true
-        }))
+        let gradient = try XCTUnwrap(clip.sublayers?.compactMap { $0 as? CAGradientLayer }.first)
         XCTAssertTrue(line.superlayer === clip)
-        XCTAssertFalse(line.superlayer === viewport)
+        XCTAssertTrue(gradient.superlayer === clip)
+        XCTAssertTrue(CATransform3DIsIdentity(gradient.transform))
         XCTAssertEqual(line.lineWidth, 1.6)
         XCTAssertTrue(CATransform3DIsIdentity(line.transform))
         XCTAssertTrue(CATransform3DIsIdentity(clip.transform))
         XCTAssertEqual(line.path, view.chartPathForTest)
     }
 
-    func testDirectPathsMatchThePreviousBlendThenTransformRenderer() throws {
+    func testStrokeAndFillUseIdenticalCubicEdgesAcrossScaleChangesAndGaps() throws {
         let view = view()
         func graph(_ values: [Double], _ times: [Double], _ now: Double,
                    _ ceiling: Double, _ context: Int = 0) -> HistoryChartGeometry {
@@ -218,129 +214,28 @@ final class HistoryViewTests: XCTestCase {
              graph([100, 10, 20, 30], [0, 2, 4, 6], 122, 40, 2), 200, 40),
             (graph([10, 20, 80, 90], [0, 2, 20, 22], 22, 100),
              graph([10, 20, 80, 90, 60], [0, 2, 20, 22, 24], 24, 100), 100, 100),
-            (graph([10, .nan, 80], [0, 2, 4], 4, 100),
-             graph([10, .nan, 80, 50], [0, 2, 4, 6], 6, 100), 100, 100),
+            (graph([10, .nan, 80, 90], [0, 2, 4, 6], 6, 100),
+             graph([10, .nan, 80, 90, 50], [0, 2, 4, 6, 8], 8, 100), 100, 100),
         ]
         for (old, target, oldCeiling, newCeiling) in fixtures {
-            // Float-rounded presentation controls model an interrupted render;
-            // alignment still uses the unchanged raw model anchors.
-            let shown = old.segments.map {
-                HistoryChartGeometry.Cubic(start: $0.start,
-                    control1: .init(x: $0.control1.x, y: Double(Float($0.control1.y))),
-                    control2: .init(x: $0.control2.x, y: Double(Float($0.control2.y))), end: $0.end)
-            }
-            let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: shown,
+            let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: old.segments,
                 fraction: 2.0 / 120, oldCeiling: oldCeiling, newCeiling: newCeiling))
-            for frame in 0...32 {
-                let q = Double(frame) / 32
-                let sy = 1 + (newCeiling / oldCeiling - 1) * (1 - q)
-                let transform = CGAffineTransform(a: 1, b: 0, c: 0, d: CGFloat(sy),
-                    tx: PopoverStyle.contentWidth * CGFloat(2.0 / 120 * (1 - q)) + 1.25,
-                    ty: HistoryView.chartHeight * CGFloat(1 - sy))
-                for filled in [false, true] {
-                    let expected = legacyPath(target, start: start, progress: q,
-                                              filled: filled, transform: transform)
-                    let actual = view.pathForTest(target, filled: filled,
-                        blendingFrom: start, at: q, transform: transform)
-                    assertSameCommands(actual, expected)
+            for geometry in [start, target] {
+                let stroke = pathCommands(view.pathForTest(geometry))
+                let fill = pathCommands(view.pathForTest(geometry, filled: true))
+                    .filter { $0.0 == .moveToPoint || $0.0 == .addCurveToPoint }
+                XCTAssertEqual(stroke.count, fill.count)
+                XCTAssertEqual(stroke.filter { $0.0 == .moveToPoint }.count, geometry.runs.count)
+                for (line, area) in zip(stroke, fill) {
+                    XCTAssertEqual(line.0, area.0)
+                    XCTAssertEqual(line.1, area.1)
                 }
             }
-        }
-    }
-
-    func testUnscaledStrokeEqualsInterpolationOfItsTwoEndpointPaths() throws {
-        let view = view()
-        let old = HistoryChartGeometry(samples: [0, 0, 100],
-            timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 200)
-        let target = HistoryChartGeometry(samples: [0, 0, 100, 150],
-            timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 200)
-        let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: old.segments,
-            fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 200))
-        let shift = PopoverStyle.contentWidth * 2 / 120 + 1.25
-        let from = pathCommands(view.pathForTest(start,
-            transform: CGAffineTransform(translationX: shift, y: 0)))
-        let to = pathCommands(view.pathForTest(target))
-        XCTAssertEqual(from.count, to.count)
-        for frame in 0...64 {
-            let q = CGFloat(frame) / 64
-            let actual = pathCommands(view.pathForTest(target, blendingFrom: start, at: Double(q),
-                transform: CGAffineTransform(translationX: shift * (1 - q), y: 0)))
-            XCTAssertEqual(actual.count, from.count)
-            for (command, endpoints) in zip(actual, zip(from, to)) {
-                XCTAssertEqual(command.0, endpoints.0.0)
-                XCTAssertEqual(command.0, endpoints.1.0)
-                XCTAssertEqual(command.1.count, endpoints.0.1.count)
-                XCTAssertEqual(command.1.count, endpoints.1.1.count)
-                for (point, pair) in zip(command.1, zip(endpoints.0.1, endpoints.1.1)) {
-                    XCTAssertEqual(point.x, pair.0.x + (pair.1.x - pair.0.x) * q, accuracy: 1e-10)
-                    XCTAssertEqual(point.y, pair.0.y + (pair.1.y - pair.0.y) * q, accuracy: 1e-10)
-                }
-            }
-            // Midpoints also match Core Animation's previous piecewise linear
-            // interpolation between its 33 keyframe paths.
-            let q0 = floor(q * 32) / 32, q1 = min(q0 + 1 / 32, 1)
-            let a = pathCommands(legacyPath(target, start: start, progress: Double(q0), filled: false,
-                transform: CGAffineTransform(translationX: shift * (1 - q0), y: 0)))
-            let b = pathCommands(legacyPath(target, start: start, progress: Double(q1), filled: false,
-                transform: CGAffineTransform(translationX: shift * (1 - q1), y: 0)))
-            let intervalProgress = (q - q0) * 32
-            for (command, endpoints) in zip(actual, zip(a, b)) {
-                XCTAssertEqual(command.0, endpoints.0.0)
-                XCTAssertEqual(command.0, endpoints.1.0)
-                XCTAssertEqual(command.1.count, endpoints.0.1.count)
-                XCTAssertEqual(command.1.count, endpoints.1.1.count)
-                for (point, pair) in zip(command.1, zip(endpoints.0.1, endpoints.1.1)) {
-                    XCTAssertEqual(point.x, pair.0.x + (pair.1.x - pair.0.x) * intervalProgress, accuracy: 1e-10)
-                    XCTAssertEqual(point.y, pair.0.y + (pair.1.y - pair.0.y) * intervalProgress, accuracy: 1e-10)
-                }
-            }
-        }
-    }
-
-    private func legacyPath(_ geometry: HistoryChartGeometry, start: HistoryChartGeometry,
-                            progress: Double, filled: Bool, transform: CGAffineTransform) -> CGPath {
-        func point(_ p: HistoryChartGeometry.Point) -> CGPoint {
-            CGPoint(x: CGFloat(p.x) * PopoverStyle.contentWidth,
-                    y: CGFloat(1 - p.y) * HistoryView.chartHeight)
-        }
-        let controls = zip(start.segments, geometry.segments).map { a, b in
-            func blend(_ a: HistoryChartGeometry.Point, _ b: HistoryChartGeometry.Point) -> HistoryChartGeometry.Point {
-                .init(x: a.x + (b.x - a.x) * progress, y: a.y + (b.y - a.y) * progress)
-            }
-            return (blend(a.control1, b.control1), blend(a.control2, b.control2))
-        }
-        let result = CGMutablePath()
-        var index = 0
-        for run in geometry.runs {
-            let subpath = CGMutablePath()
-            subpath.move(to: point(run.first!))
-            for end in run.dropFirst() {
-                subpath.addCurve(to: point(end), control1: point(controls[index].0),
-                                 control2: point(controls[index].1))
-                index += 1
-            }
-            if filled {
-                subpath.addLine(to: CGPoint(x: CGFloat(run.last!.x) * PopoverStyle.contentWidth,
-                                           y: HistoryView.chartHeight))
-                subpath.addLine(to: CGPoint(x: CGFloat(run.first!.x) * PopoverStyle.contentWidth,
-                                           y: HistoryView.chartHeight))
-                subpath.closeSubpath()
-            }
-            result.addPath(subpath, transform: transform)
-        }
-        return result
-    }
-
-    private func assertSameCommands(_ actual: CGPath, _ expected: CGPath,
-                                    file: StaticString = #filePath, line: UInt = #line) {
-        let actual = pathCommands(actual), expected = pathCommands(expected)
-        XCTAssertEqual(actual.count, expected.count, file: file, line: line)
-        for (a, b) in zip(actual, expected) {
-            XCTAssertEqual(a.0, b.0, file: file, line: line)
-            XCTAssertEqual(a.1.count, b.1.count, file: file, line: line)
-            for (a, b) in zip(a.1, b.1) {
-                XCTAssertEqual(a.x, b.x, accuracy: 1e-10, file: file, line: line)
-                XCTAssertEqual(a.y, b.y, accuracy: 1e-10, file: file, line: line)
+            for filled in [false, true] {
+                let from = pathCommands(view.pathForTest(start, filled: filled))
+                let to = pathCommands(view.pathForTest(target, filled: filled))
+                XCTAssertEqual(from.map { $0.0 }, to.map { $0.0 })
+                XCTAssertEqual(from.map { $0.1.count }, to.map { $0.1.count })
             }
         }
     }

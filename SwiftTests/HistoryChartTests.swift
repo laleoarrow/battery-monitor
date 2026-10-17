@@ -231,108 +231,61 @@ final class HistoryChartTests: XCTestCase {
             to: old, samples: [10, 99, 30]))
     }
 
-    func testViewportScaleExpansionAndContractionKeepSharedSamplesAtTheirOldPositions() throws {
-        for (oldCeiling, newCeiling) in [(40.0, 100.0), (100.0, 40.0)] {
-            let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: oldCeiling,
-                newCeiling: newCeiling, fraction: 2.0 / 120, width: 300))
-            XCTAssertEqual(viewport.translationX, 5, accuracy: 1e-12)
-            XCTAssertEqual(viewport.scaleY, newCeiling / oldCeiling, accuracy: 1e-12)
-            for value in [0.0, 10, 25] {
-                let newY = 64 * (1 - value / newCeiling)
-                XCTAssertEqual(64 + (newY - 64) * viewport.scaleY,
-                               64 * (1 - value / oldCeiling), accuracy: 1e-12)
+    func testViewportStartPreservesVisibleAnchorsAndControlsAcrossScaleChanges() throws {
+        for (oldCeiling, newCeiling, shownScale) in [(40.0, 100.0, 1.0), (100, 40, 1.0), (100, 40, 1.8)] {
+            let old = HistoryChartGeometry(samples: [10, 20, 30],
+                timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: oldCeiling)
+            let target = HistoryChartGeometry(samples: [10, 20, 30, 15],
+                timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: newCeiling)
+            func shown(_ p: HistoryChartGeometry.Point) -> HistoryChartGeometry.Point {
+                .init(x: p.x + 0.01, y: p.y * shownScale)
             }
-        }
-    }
-
-    func testViewportRetargetComposesTheActualPresentationRatherThanItsPreviousTarget() throws {
-        let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: 100,
-            newCeiling: 40, fraction: 2.0 / 120, width: 300,
-            presentedTranslationX: 3.5, presentedScaleY: 1.8))
-        XCTAssertEqual(viewport.translationX, 8.5, accuracy: 1e-12)
-        XCTAssertEqual(viewport.scaleY, 0.72, accuracy: 1e-12)
-        for value in [0.0, 10, 30] {
-            let oldY = 64 * (1 - value / 100)
-            let newY = 64 * (1 - value / 40)
-            XCTAssertEqual(64 + (newY - 64) * viewport.scaleY,
-                           64 + (oldY - 64) * 1.8, accuracy: 1e-12)
-        }
-    }
-
-    func testViewportRejectsInvalidAffineInputs() {
-        for (old, new, fraction, width, tx, sy) in [
-            (0.0, 10.0, 0.0, 300.0, 0.0, 1.0),
-            (10, .infinity, 0, 300, 0, 1),
-            (10, 20, .nan, 300, 0, 1),
-            (10, 20, 0, 0, 0, 1),
-            (10, 20, 0, 300, .nan, 1),
-            (10, 20, 0, 300, 0, 0),
-        ] {
-            XCTAssertNil(HistoryChartViewport(oldCeiling: old, newCeiling: new,
-                fraction: fraction, width: width, presentedTranslationX: tx, presentedScaleY: sy))
-        }
-    }
-
-    func testGradientBandStaysAtTheVisibleChartTopDuringScaleChanges() throws {
-        for (old, new) in [(350.0, 50.0), (350.0, 15.0), (55.0, 250.0)] {
-            let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: old, newCeiling: new,
-                fraction: 2.0 / 120, width: 328))
-            for q in [0.0, 0.25, 0.5, 0.9, 1] {
-                let sy = 1 + (viewport.scaleY - 1) * (1 - q)
-                let normalized = viewport.gradientStartY(at: q, fromScreenY: 0,
-                    frameMinY: -96, frameHeight: 160, plotHeight: 64)
-                let screen = HistoryChartViewport.gradientScreenStartY(startPointY: normalized,
-                    frameMinY: -96, frameHeight: 160, scaleY: sy, plotHeight: 64)
-                XCTAssertEqual(screen, 0, accuracy: 1e-10)
+            let presented = old.segments.map { HistoryChartGeometry.Cubic(start: shown($0.start),
+                control1: shown($0.control1), control2: shown($0.control2), end: shown($0.end)) }
+            let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: presented,
+                fraction: 2.0 / 120, oldCeiling: oldCeiling, newCeiling: newCeiling))
+            for (actual, expected) in zip(start.segments, presented) {
+                XCTAssertEqual(actual.start, expected.start)
+                XCTAssertEqual(actual.control1, expected.control1)
+                XCTAssertEqual(actual.control2, expected.control2)
+                XCTAssertEqual(actual.end, expected.end)
             }
+            XCTAssertGreaterThan(try XCTUnwrap(start.points.last).x, 1)
+            XCTAssertEqual(start.segmentIDs, target.segmentIDs)
         }
     }
 
-    func testGradientAlphaBeginsAtTheOldViewportAndFinishesAtTheNewViewport() throws {
-        let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: 350, newCeiling: 50,
-            fraction: 2.0 / 120, width: 328))
-        func alpha(at progress: Double) -> Double {
-            let start = viewport.gradientStartY(at: progress, fromScreenY: 0,
-                frameMinY: 0, frameHeight: 64, plotHeight: 64) * 64
-            let sampleY = 64 * (1 - 43.0 / 50)
-            return 0.38 + (0.03 - 0.38) * (sampleY - start) / (64 - start)
+    func testViewportStartRejectsInvalidPresentationAndTiming() {
+        let old = HistoryChartGeometry(samples: [10, 20],
+            timing: .init(sampledAt: [0, 2], referenceTime: 2), ceiling: 40)
+        let target = HistoryChartGeometry(samples: [10, 20, 30],
+            timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 40)
+        for fraction in [-1.0, .nan, .infinity, 7.0 / 120] {
+            XCTAssertNil(target.alignedStart(from: old, presentedSegments: old.segments,
+                fraction: fraction, oldCeiling: 40, newCeiling: 40))
         }
-        XCTAssertEqual(alpha(at: 0), 0.073, accuracy: 1e-12)
-        XCTAssertEqual(alpha(at: 1), 0.331, accuracy: 1e-12)
-        XCTAssertLessThan(alpha(at: 0.25), alpha(at: 0.5))
-        XCTAssertLessThan(alpha(at: 0.5), alpha(at: 0.9))
+        XCTAssertNil(target.alignedStart(from: old, presentedSegments: [],
+            fraction: 2.0 / 120, oldCeiling: 40, newCeiling: 40))
+        XCTAssertNil(target.alignedStart(from: old, presentedSegments: old.segments,
+            fraction: 2.0 / 120, oldCeiling: 0, newCeiling: 40))
+        let bad = old.segments.map { HistoryChartGeometry.Cubic(start: $0.start,
+            control1: .init(x: .nan, y: 0), control2: $0.control2, end: $0.end) }
+        XCTAssertNil(target.alignedStart(from: old, presentedSegments: bad,
+            fraction: 2.0 / 120, oldCeiling: 40, newCeiling: 40))
     }
 
-    func testGradientRetargetUsesTheActualPresentedBandAndFrame() throws {
-        let shownY = HistoryChartViewport.gradientScreenStartY(startPointY: 0.3,
-            frameMinY: -96, frameHeight: 160, scaleY: 0.7, plotHeight: 64)
-        XCTAssertEqual(shownY, -14.4, accuracy: 1e-12)
-        let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: 100, newCeiling: 40,
-            fraction: 2.0 / 120, width: 328, presentedScaleY: 0.7))
-        for q in [0.0, 0.25, 0.5, 0.9, 1] {
-            let sy = 1 + (viewport.scaleY - 1) * (1 - q)
-            let normalized = viewport.gradientStartY(at: q, fromScreenY: shownY,
-                frameMinY: -320, frameHeight: 384, plotHeight: 64)
-            let actual = HistoryChartViewport.gradientScreenStartY(startPointY: normalized,
-                frameMinY: -320, frameHeight: 384, scaleY: sy, plotHeight: 64)
-            XCTAssertEqual(actual, shownY * (1 - q), accuracy: 1e-10)
-        }
-    }
-
-    func testBoundedGradientKeyframesKeepTheInterpolatedScreenBandWithinQuarterPoint() throws {
-        let viewport = try XCTUnwrap(HistoryChartViewport(oldCeiling: 350, newCeiling: 15,
-            fraction: 2.0 / 120, width: 328))
-        for frame in 0..<256 {
-            let q0 = Double(frame) / 256, q1 = Double(frame + 1) / 256, q = (q0 + q1) / 2
-            let a = viewport.gradientStartY(at: q0, fromScreenY: 0,
-                frameMinY: 0, frameHeight: 64, plotHeight: 64)
-            let b = viewport.gradientStartY(at: q1, fromScreenY: 0,
-                frameMinY: 0, frameHeight: 64, plotHeight: 64)
-            let sy = 1 + (viewport.scaleY - 1) * (1 - q)
-            let actual = HistoryChartViewport.gradientScreenStartY(startPointY: (a + b) / 2,
-                frameMinY: 0, frameHeight: 64, scaleY: sy, plotHeight: 64)
-            XCTAssertLessThan(abs(actual), 0.25)
-        }
+    func testAllZeroViewportRetainsItsBaselineWhenANewPeakAppears() throws {
+        let old = HistoryChartGeometry(samples: [0, 0, 0],
+            timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 8)
+        let target = HistoryChartGeometry(samples: [0, 0, 0, 100],
+            timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 150)
+        let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: old.segments,
+            fraction: 2.0 / 120, oldCeiling: 8, newCeiling: 150))
+        XCTAssertEqual(Array(start.points.prefix(3)).map(\.y), [0, 0, 0])
+        XCTAssertGreaterThan(start.points.last!.x, 1)
+        XCTAssertEqual(start.segments.last!.end.y, 100 / 8)
+        XCTAssertLessThanOrEqual(start.segments.last!.control1.y, 100 / 8)
+        XCTAssertLessThanOrEqual(start.segments.last!.control2.y, 100 / 8)
     }
 
     func testAlignedControlsPreserveTheActuallyDisplayedFormerTerminalCubic() throws {
@@ -342,11 +295,10 @@ final class HistoryChartTests: XCTestCase {
             timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 200)
         let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: old.segments,
             fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 200))
-        let x = 1 - 3.0 / 120
-        XCTAssertEqual(try XCTUnwrap(start.value(at: x)), 31.25 / 200, accuracy: 1e-10)
-        XCTAssertEqual(try XCTUnwrap(target.value(at: x)), 41.6666666667 / 200, accuracy: 1e-10)
+        XCTAssertEqual(try XCTUnwrap(start.value(at: 1 - 1.0 / 120)), 31.25 / 200, accuracy: 1e-10)
+        XCTAssertEqual(try XCTUnwrap(target.value(at: 1 - 3.0 / 120)), 41.6666666667 / 200, accuracy: 1e-10)
         XCTAssertEqual(start.segmentIDs, target.segmentIDs)
-        for (a, b) in zip(start.segments, target.segments) {
+        for (a, b) in zip(start.segments, old.segments) {
             XCTAssertEqual(a.start, b.start)
             XCTAssertEqual(a.end, b.end)
         }
@@ -359,9 +311,8 @@ final class HistoryChartTests: XCTestCase {
             timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 100)
         let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: old.segments,
             fraction: 2.0 / 120, oldCeiling: 100, newCeiling: 100))
-        let x = 1 - 3.0 / 120
-        XCTAssertEqual(try XCTUnwrap(start.value(at: x)), 0.3125, accuracy: 1e-10)
-        XCTAssertEqual(try XCTUnwrap(target.value(at: x)), 0.5, accuracy: 1e-10)
+        XCTAssertEqual(try XCTUnwrap(start.value(at: 1 - 1.0 / 120)), 0.3125, accuracy: 1e-10)
+        XCTAssertEqual(try XCTUnwrap(target.value(at: 1 - 3.0 / 120)), 0.5, accuracy: 1e-10)
     }
 
     func testSeveralDepartingContextPointsKeepTheirRawValuesAndTimestampPairs() {
@@ -385,34 +336,36 @@ final class HistoryChartTests: XCTestCase {
         let next = HistoryChartGeometry(samples: [0, 0, 100, 150, 200],
             timing: .init(sampledAt: [0, 2, 4, 6, 8], referenceTime: 8), ceiling: 250)
         for progress in [0.25, 0.5, 0.9] {
+            func mix(_ a: HistoryChartGeometry.Point, _ b: HistoryChartGeometry.Point) -> HistoryChartGeometry.Point {
+                .init(x: a.x + (b.x - a.x) * progress, y: a.y + (b.y - a.y) * progress)
+            }
             let presented = zip(currentStart.segments, current.segments).map { a, b in
-                HistoryChartGeometry.Cubic(start: b.start,
-                    control1: .init(x: b.control1.x, y: a.control1.y + (b.control1.y - a.control1.y) * progress),
-                    control2: .init(x: b.control2.x, y: a.control2.y + (b.control2.y - a.control2.y) * progress),
-                    end: b.end)
+                HistoryChartGeometry.Cubic(start: mix(a.start, b.start), control1: mix(a.control1, b.control1),
+                    control2: mix(a.control2, b.control2), end: mix(a.end, b.end))
             }
             let start = try XCTUnwrap(next.alignedStart(from: current, presentedSegments: presented,
                 fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 250))
-            XCTAssertEqual(start.segments[1].control2.y, presented[1].control2.y * 200 / 250, accuracy: 1e-12)
-            XCTAssertNotEqual(start.segments[1].control2.y, current.segments[1].control2.y * 200 / 250)
-            XCTAssertEqual(start.segments[1].value(at: 0.5), presented[1].value(at: 0.5) * 200 / 250,
-                           accuracy: 1e-12)
+            XCTAssertEqual(start.segments[1].control2, presented[1].control2)
+            XCTAssertNotEqual(start.segments[1].control2.y, current.segments[1].control2.y)
+            for t in [0.0, 0.125, 0.5, 0.875, 1] {
+                XCTAssertEqual(start.segments[1].value(at: t), presented[1].value(at: t), accuracy: 1e-12)
+            }
         }
     }
 
     func testOnlyIdenticalRawTimestampPairsAndAnchorsCanSupplyControls() throws {
         let target = HistoryChartGeometry(samples: [0, 0, 100, 150],
             timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 200)
-        for old in [
-            HistoryChartGeometry(samples: [0, 0, 100],
-                timing: .init(sampledAt: [100, 102, 104], referenceTime: 104), ceiling: 200),
-            HistoryChartGeometry(samples: [0, 0, 99],
-                timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 200),
-        ] {
-            let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: old.segments,
-                fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 200))
-            XCTAssertEqual(start.segments[1].control2, target.segments[1].control2)
-        }
+        let unrelated = HistoryChartGeometry(samples: [0, 0, 100],
+            timing: .init(sampledAt: [100, 102, 104], referenceTime: 104), ceiling: 200)
+        XCTAssertNil(target.alignedStart(from: unrelated, presentedSegments: unrelated.segments,
+            fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 200))
+        let changed = HistoryChartGeometry(samples: [0, 0, 99],
+            timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 200)
+        let start = try XCTUnwrap(target.alignedStart(from: changed, presentedSegments: changed.segments,
+            fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 200))
+        XCTAssertEqual(start.segments[1].control2.y, target.segments[1].control2.y)
+        XCTAssertEqual(start.segments[1].control2.x, target.segments[1].control2.x + 2.0 / 120, accuracy: 1e-12)
     }
 
     func testPresentationAnchorRoundingCannotDiscardMatchingRawSegmentControls() throws {
@@ -420,16 +373,17 @@ final class HistoryChartTests: XCTestCase {
             timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 200)
         let target = HistoryChartGeometry(samples: [0, 0, 100, 150],
             timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 200)
-        let rounded = old.segments.map {
-            HistoryChartGeometry.Cubic(start: .init(x: $0.start.x + 1e-7, y: $0.start.y + 1e-7),
-                control1: $0.control1, control2: $0.control2,
-                end: .init(x: $0.end.x - 1e-7, y: $0.end.y - 1e-7))
+        func rounded(_ p: HistoryChartGeometry.Point) -> HistoryChartGeometry.Point {
+            .init(x: Double(Float(p.x)), y: Double(Float(p.y)))
         }
-        let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: rounded,
+        let shown = old.segments.map { HistoryChartGeometry.Cubic(start: rounded($0.start),
+            control1: $0.control1, control2: $0.control2, end: rounded($0.end)) }
+        let start = try XCTUnwrap(target.alignedStart(from: old, presentedSegments: shown,
             fraction: 2.0 / 120, oldCeiling: 200, newCeiling: 200))
-        XCTAssertEqual(try XCTUnwrap(start.value(at: 1 - 3.0 / 120)), 31.25 / 200, accuracy: 1e-10)
-        XCTAssertEqual(start.segments[1].start, target.segments[1].start)
-        XCTAssertEqual(start.segments[1].end, target.segments[1].end)
+        XCTAssertEqual(start.segments[1].control1, shown[1].control1)
+        XCTAssertEqual(start.segments[1].control2, shown[1].control2)
+        XCTAssertEqual(start.segments[1].start, shown[1].start)
+        XCTAssertEqual(start.segments[1].end, shown[1].end)
     }
 
     func testMatchedControlBlendsRemainInsideEachRawSamplePair() throws {
@@ -449,8 +403,14 @@ final class HistoryChartTests: XCTestCase {
                 for q in stride(from: 0.0, through: 1, by: 0.1) {
                     for t in stride(from: 0.0, through: 1, by: 0.05) {
                         let y = a.value(at: t) * (1 - q) + b.value(at: t) * q
-                        XCTAssertGreaterThanOrEqual(y, min(b.start.y, b.end.y) - 1e-12)
-                        XCTAssertLessThanOrEqual(y, max(b.start.y, b.end.y) + 1e-12)
+                        let left = a.start.y * (1 - q) + b.start.y * q
+                        let right = a.end.y * (1 - q) + b.end.y * q
+                        XCTAssertGreaterThanOrEqual(y, min(left, right) - 1e-12)
+                        XCTAssertLessThanOrEqual(y, max(left, right) + 1e-12)
+                        let x0 = a.start.x * (1 - q) + b.start.x * q
+                        let x1 = a.end.x * (1 - q) + b.end.x * q
+                        XCTAssertEqual(try XCTUnwrap(target.value(at: x0 + (x1 - x0) * t,
+                            blendingFrom: start, progress: q)), y, accuracy: 1e-9)
                     }
                 }
             }
