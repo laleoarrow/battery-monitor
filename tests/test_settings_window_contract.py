@@ -1648,6 +1648,56 @@ class SettingsWindowContractTests(unittest.TestCase):
             Settings.moduleOrder = Settings.Module.allCases
             settleModuleOrder()
             let flowHandle = view("settings.modules.reorder.flow", in: first)
+            first?.makeFirstResponder(controller.sidebarForTest)
+            first?.makeFirstResponder(flowHandle)
+            require(controller.moduleReorderShowsKeyboardFocusForTest(.flow),
+                "keyboard focus acquisition shows the reorder cue")
+            let handleCenter = flowHandle.convert(
+                NSPoint(x: flowHandle.bounds.midX, y: flowHandle.bounds.midY), to: nil)
+            func handleMouseEvent(_ type: NSEvent.EventType, at point: NSPoint) -> NSEvent {
+                NSEvent.mouseEvent(with: type, location: point, modifierFlags: [], timestamp: 1,
+                    windowNumber: first!.windowNumber, context: nil, eventNumber: 1,
+                    clickCount: 1, pressure: type == .leftMouseUp ? 0 : 1)!
+            }
+            var observedDragStarts: [NSEvent] = []
+            controller.observeModuleReorderDragStartForTest(.flow) { observedDragStarts.append($0) }
+            let handleDown = handleMouseEvent(.leftMouseDown, at: handleCenter)
+            flowHandle.mouseDown(with: handleDown)
+            require(first?.firstResponder === flowHandle
+                && !controller.moduleReorderShowsKeyboardFocusForTest(.flow),
+                "mouse focus remains keyboard reachable without a persistent blue frame")
+            flowHandle.mouseDragged(with: handleMouseEvent(.leftMouseDragged,
+                at: NSPoint(x: handleCenter.x + 3, y: handleCenter.y)))
+            require(observedDragStarts.isEmpty, "sub-threshold pointer movement does not initiate a drag")
+            let outsideHandle = NSPoint(x: -100, y: -100)
+            let handleDrag = handleMouseEvent(.leftMouseDragged, at: outsideHandle)
+            flowHandle.mouseDragged(with: handleDrag)
+            require(observedDragStarts.count == 1 && observedDragStarts[0] === handleDown
+                && observedDragStarts[0].type == .leftMouseDown
+                && observedDragStarts[0].locationInWindow == handleCenter,
+                "drag initiation receives the original mouse-down object even when the first move is outside")
+            flowHandle.mouseDragged(with: handleDrag)
+            flowHandle.mouseUp(with: handleMouseEvent(.leftMouseUp, at: outsideHandle))
+            require(observedDragStarts.count == 1
+                && !controller.moduleReorderShowsKeyboardFocusForTest(.flow),
+                "one press starts at most one drag and mouse completion keeps the focus cue quiet")
+            flowHandle.keyDown(with: keyEvent(126))
+            require(controller.moduleReorderShowsKeyboardFocusForTest(.flow),
+                "keyboard input after mouse interaction restores the focus cue")
+            flowHandle.mouseDown(with: handleDown)
+            flowHandle.mouseUp(with: handleMouseEvent(.leftMouseUp, at: outsideHandle))
+            flowHandle.mouseDragged(with: handleDrag)
+            require(observedDragStarts.count == 1, "mouse-up clears the pending drag event")
+            flowHandle.mouseDown(with: handleDown)
+            controller.selectSectionForTest(identifier: "general")
+            controller.selectSectionForTest(identifier: "modules")
+            flowHandle.mouseDragged(with: handleDrag)
+            require(observedDragStarts.count == 1, "leaving the page clears the pending drag event")
+            controller.observeModuleReorderDragStartForTest(.flow, handler: nil)
+            require(Settings.moduleOrder == Settings.Module.allCases
+                && Settings.Module.allCases.allSatisfy { Settings.isModuleVisible($0) },
+                "event-forwarding checks do not simulate a drop or modify modules")
+            first?.makeFirstResponder(controller.sidebarForTest)
             first?.makeFirstResponder(flowHandle)
             var orderNotifications = 0
             let orderObserver = NotificationCenter.default.addObserver(

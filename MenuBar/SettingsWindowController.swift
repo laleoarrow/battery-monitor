@@ -2815,7 +2815,11 @@ private final class ModuleReorderHandle: NSButton, SettingsContrastRefreshing {
     let module: Settings.Module
     weak var reorderList: ModuleReorderList?
     private let increaseContrast: () -> Bool
-    private var pressLocation: NSPoint?
+    private var pressEvent: NSEvent?
+    private var keyboardFocusVisible = false
+#if DEBUG
+    var dragStartObserverForTest: ((NSEvent) -> Void)?
+#endif
 
     init(module: Settings.Module, increaseContrast: @escaping () -> Bool) {
         self.module = module
@@ -2846,30 +2850,42 @@ private final class ModuleReorderHandle: NSButton, SettingsContrastRefreshing {
     override func mouseDown(with event: NSEvent) {
         guard isEnabled else { return }
         window?.makeFirstResponder(self)
-        pressLocation = event.locationInWindow
+        keyboardFocusVisible = false
+        needsDisplay = true
+        pressEvent = event
     }
 
     override func mouseDragged(with event: NSEvent) {
-        guard let start = pressLocation,
-              hypot(event.locationInWindow.x - start.x, event.locationInWindow.y - start.y) >= 4 else { return }
-        pressLocation = nil
-        reorderList?.beginReordering(module, event: event)
+        guard let mouseDown = pressEvent else { return }
+        let start = mouseDown.locationInWindow
+        guard hypot(event.locationInWindow.x - start.x, event.locationInWindow.y - start.y) >= 4 else { return }
+        pressEvent = nil
+#if DEBUG
+        if let dragStartObserverForTest {
+            dragStartObserverForTest(mouseDown)
+            return
+        }
+#endif
+        // AppKit requires the original mouse-down event, including its location.
+        reorderList?.beginReordering(module, event: mouseDown)
     }
 
     override func mouseUp(with event: NSEvent) {
-        let wasPressed = pressLocation != nil
-        pressLocation = nil
+        let wasPressed = pressEvent != nil
+        pressEvent = nil
         if wasPressed && window?.isVisible == true && bounds.contains(convert(event.locationInWindow, from: nil)) {
             performClick(nil)
         }
     }
 
     override func viewWillMove(toWindow newWindow: NSWindow?) {
-        pressLocation = nil
+        pressEvent = nil
         super.viewWillMove(toWindow: newWindow)
     }
 
     override func keyDown(with event: NSEvent) {
+        keyboardFocusVisible = true
+        needsDisplay = true
         switch event.keyCode {
         case 126: _ = reorderList?.move(module, by: -1)
         case 125: _ = reorderList?.move(module, by: 1)
@@ -2918,19 +2934,23 @@ private final class ModuleReorderHandle: NSButton, SettingsContrastRefreshing {
 
     override func becomeFirstResponder() -> Bool {
         let accepted = super.becomeFirstResponder()
+        if accepted { keyboardFocusVisible = true }
         needsDisplay = true
         return accepted
     }
 
     override func resignFirstResponder() -> Bool {
         let accepted = super.resignFirstResponder()
+        if accepted { keyboardFocusVisible = false }
         needsDisplay = true
         return accepted
     }
 
+    var showsKeyboardFocus: Bool { keyboardFocusVisible && window?.firstResponder === self }
+
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
-        if window?.firstResponder === self {
+        if showsKeyboardFocus {
             NSColor.keyboardFocusIndicatorColor.setStroke()
             let outline = NSBezierPath(roundedRect: bounds.insetBy(dx: 1, dy: 1), xRadius: 5, yRadius: 5)
             outline.lineWidth = 2
@@ -3017,7 +3037,6 @@ private final class ModuleReorderList: NSStackView, NSDraggingSource, SettingsCo
         item.setDraggingFrame(row.frame.offsetBy(dx: 0, dy: reducesMotion ? 0 : 2), contents: image)
         originalOrder = Settings.moduleOrder
         draggedModule = module
-        row.alphaValue = 0.25
         let session = beginDraggingSession(with: [item], event: event, source: self)
         session.animatesToStartingPositionsOnCancelOrFail = !reducesMotion
         dragSession = session
@@ -3028,6 +3047,10 @@ private final class ModuleReorderList: NSStackView, NSDraggingSource, SettingsCo
     }
 
     func ignoreModifierKeys(for session: NSDraggingSession) -> Bool { true }
+
+    func draggingSession(_ session: NSDraggingSession, willBeginAt screenPoint: NSPoint) {
+        if let module = draggedModule { rows[module]?.alphaValue = 0.25 }
+    }
 
     func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
         cancelReordering()
@@ -4120,6 +4143,20 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     func sidebarRectForRowForTest(_ row: Int) -> NSRect { sidebar.rect(ofRow: row) }
     var sidebarForTest: NSTableView { sidebar }
     var sidebarNextKeyViewForTest: NSView? { sidebar.nextKeyView }
+
+    private func moduleReorderHandleForTest(_ module: Settings.Module) -> ModuleReorderHandle? {
+        sections.flatMap { keyControls(in: $0.view) }
+            .compactMap { $0 as? ModuleReorderHandle }.first { $0.module == module }
+    }
+
+    func observeModuleReorderDragStartForTest(_ module: Settings.Module, handler: ((NSEvent) -> Void)?) {
+        moduleReorderHandleForTest(module)?.dragStartObserverForTest = handler
+    }
+
+    func moduleReorderShowsKeyboardFocusForTest(_ module: Settings.Module) -> Bool {
+        moduleReorderHandleForTest(module)?.showsKeyboardFocus ?? false
+    }
+
     var lastVisibleSwitchNextKeyViewForTest: NSView? {
         switchButtons(in: sections[selectedSectionIndex].view).last?.nextKeyView
     }
