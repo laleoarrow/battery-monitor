@@ -83,6 +83,10 @@ if '-W' in sys.argv:
 ''')
         self.write_stub('lsregister', '''#!/bin/bash
 [[ -d "$2" ]] || exit 3
+registrar='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister'
+if [[ -x "$registrar" ]]; then
+    "$registrar" -u "$2" >/dev/null 2>&1 || true
+fi
 printf 'unregister:%s\n' "$2" >> "$FAKE_EVENTS"
 printf 'unregister\n' >> "$FAKE_APP_EVENTS"
 ''')
