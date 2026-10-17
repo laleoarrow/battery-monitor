@@ -47,43 +47,6 @@ struct HistoryChartTiming: Equatable {
     }
 }
 
-/// Affine change from the newly rendered model back to the visible viewport.
-/// Scale around the zero-watt baseline; compose an interrupted presentation.
-struct HistoryChartViewport {
-    let translationX: Double
-    let scaleY: Double
-
-    init?(oldCeiling: Double, newCeiling: Double, fraction: Double, width: Double,
-          presentedTranslationX: Double = 0, presentedScaleY: Double = 1) {
-        guard [oldCeiling, newCeiling, fraction, width, presentedTranslationX,
-               presentedScaleY].allSatisfy(\.isFinite),
-              oldCeiling > 0, newCeiling > 0, fraction >= 0, fraction <= 6 / HistoryChartTiming.window,
-              width > 0, presentedScaleY > 0 else { return nil }
-        let tx = fraction * width + presentedTranslationX
-        let sy = newCeiling / oldCeiling * presentedScaleY
-        guard tx.isFinite, sy.isFinite, sy > 0 else { return nil }
-        translationX = tx
-        scaleY = sy
-    }
-
-    static func gradientScreenStartY(startPointY: Double, frameMinY: Double, frameHeight: Double,
-                                     scaleY: Double, plotHeight: Double) -> Double {
-        let localY = frameMinY + startPointY * frameHeight
-        return plotHeight + (localY - plotHeight) * scaleY
-    }
-
-    /// Keep the visible color band continuous while the plot changes scale.
-    /// The reciprocal compensates for scaling around the zero-watt baseline.
-    func gradientStartY(at progress: Double, fromScreenY: Double,
-                        frameMinY: Double, frameHeight: Double, plotHeight: Double) -> Double {
-        let q = min(max(progress, 0), 1)
-        let sy = 1 + (scaleY - 1) * (1 - q)
-        let desiredY = fromScreenY * (1 - q)
-        let localY = plotHeight + (desiredY - plotHeight) / sy
-        return (localY - frameMinY) / frameHeight
-    }
-}
-
 /// Quantized headroom plus eight seconds of hysteresis when reducing the scale.
 struct HistoryChartScale {
     private(set) var ceiling = 8.0
@@ -128,6 +91,10 @@ struct HistoryChartGeometry {
     struct Point: Equatable {
         let x: Double
         let y: Double
+
+        func blended(from start: Self, progress q: Double) -> Self {
+            Point(x: start.x + (x - start.x) * q, y: start.y + (y - start.y) * q)
+        }
     }
 
     struct Cubic {
@@ -136,10 +103,49 @@ struct HistoryChartGeometry {
         let control2: Point
         let end: Point
 
+        var isXMonotone: Bool {
+            let a = control1.x - start.x, b = control2.x - control1.x, c = end.x - control2.x
+            let quadratic = a - 2 * b + c
+            var minimum = min(a, c)
+            if quadratic > 0 {
+                let t = (a - b) / quadratic
+                if t > 0 && t < 1 { minimum = min(minimum, a * (1 - t) * (1 - t) + 2 * b * t * (1 - t) + c * t * t) }
+            }
+            return end.x > start.x && minimum >= -1e-12
+        }
+
         func value(at t: Double) -> Double {
             let t = min(max(t, 0), 1), u = 1 - t
             return u * u * u * start.y + 3 * u * u * t * control1.y
                 + 3 * u * t * t * control2.y + t * t * t * end.y
+        }
+
+        func blended(from start: Self, progress q: Double) -> Self {
+            Cubic(start: self.start.blended(from: start.start, progress: q),
+                  control1: control1.blended(from: start.control1, progress: q),
+                  control2: control2.blended(from: start.control2, progress: q),
+                  end: end.blended(from: start.end, progress: q))
+        }
+
+        func value(atX x: Double) -> Double {
+            let width = end.x - start.x
+            guard width > 0 else { return start.y }
+            let u = min(max((x - start.x) / width, 0), 1)
+            let a = (control1.x - start.x) / width, b = (control2.x - start.x) / width
+            if abs(a - 1 / 3) < 1e-10 && abs(b - 2 / 3) < 1e-10 { return value(at: u) }
+            // Actual presentation handles need not be one third apart.
+            // Safeguarded Newton keeps the inverse bounded on monotone X.
+            var t = u, lower = 0.0, upper = 1.0
+            for _ in 0..<24 {
+                let v = 1 - t
+                let error = 3 * v * v * t * a + 3 * v * t * t * b + t * t * t - u
+                if abs(error) < 1e-12 { break }
+                if error < 0 { lower = t } else { upper = t }
+                let derivative = 3 * (v * v * a + 2 * v * t * (b - a) + t * t * (1 - b))
+                let next = derivative > 1e-12 ? t - error / derivative : .infinity
+                t = next > lower && next < upper ? next : (lower + upper) / 2
+            }
+            return value(at: t)
         }
     }
 
@@ -193,41 +199,87 @@ struct HistoryChartGeometry {
         }
     }
 
-    /// Start with the target topology, retaining only the visible controls of
-    /// identical raw sample pairs. Interpolation then preserves every anchor;
-    /// each blended cubic is bounded by the same two original sample values.
+    /// Target topology in the actually displayed viewport. Retained intervals
+    /// keep all four visible points; new intervals use the target's bounded
+    /// curve mapped to that viewport, initially outside the reveal boundary.
     func alignedStart(from previous: Self, presentedSegments: [Cubic],
                       fraction: Double, oldCeiling: Double, newCeiling: Double) -> Self? {
         guard presentedSegments.count == previous.segmentIDs.count,
-              oldCeiling.isFinite, newCeiling.isFinite, oldCeiling > 0, newCeiling > 0 else { return nil }
+              oldCeiling.isFinite, newCeiling.isFinite, fraction.isFinite,
+              oldCeiling > 0, newCeiling > 0, fraction >= 0,
+              fraction <= 6 / HistoryChartTiming.window else { return nil }
+        func finite(_ p: Point) -> Bool { p.x.isFinite && p.y.isFinite }
+        guard presentedSegments.allSatisfy({
+            finite($0.start) && finite($0.control1) && finite($0.control2) && finite($0.end) && $0.isXMonotone
+        }) else { return nil }
         let ratio = oldCeiling / newCeiling
         func rebase(_ p: Point) -> Point { Point(x: p.x - fraction, y: p.y * ratio) }
         func same(_ a: Point, _ b: Point) -> Bool {
             abs(a.x - b.x) < 1e-9 && abs(a.y - b.y) < 1e-9
         }
-        let aligned = segments.enumerated().map { index, target -> Cubic in
-            guard let priorIndex = previous.segmentIDs.firstIndex(of: segmentIDs[index]) else { return target }
-            let prior = presentedSegments[priorIndex]
+        let matches = segments.enumerated().map { index, target -> Int? in
+            guard let priorIndex = previous.segmentIDs.firstIndex(of: segmentIDs[index]) else { return nil }
             let raw = previous.segments[priorIndex]
-            guard same(rebase(raw.start), target.start), same(rebase(raw.end), target.end) else { return target }
-            let c1 = rebase(prior.control1), c2 = rebase(prior.control2)
-            return Cubic(start: target.start,
-                control1: Point(x: target.control1.x, y: c1.y),
-                control2: Point(x: target.control2.x, y: c2.y), end: target.end)
+            return same(rebase(raw.start), target.start) && same(rebase(raw.end), target.end) ? priorIndex : nil
         }
-        return Self(runs: runs, segments: aligned, points: points, segmentIDs: segmentIDs)
+        guard let first = matches.firstIndex(where: { $0 != nil }), let prior = matches[first] else { return nil }
+        var shift = presentedSegments[prior].start.x - segments[first].start.x
+        var scale = newCeiling / oldCeiling, largest = 0.0
+        // A large raw anchor avoids amplifying presentation rounding near zero.
+        // All-zero retained data has no visible Y scale to recover.
+        for (index, prior) in matches.enumerated() {
+            guard let prior else { continue }
+            for (target, shown) in [(segments[index].start, presentedSegments[prior].start),
+                                    (segments[index].end, presentedSegments[prior].end)] where target.y > largest {
+                largest = target.y
+                scale = shown.y / target.y
+                shift = shown.x - target.x
+            }
+        }
+        guard shift.isFinite, scale.isFinite, scale > 0 else { return nil }
+        func project(_ p: Point) -> Point { Point(x: p.x + shift, y: p.y * scale) }
+        var aligned: [Cubic] = [], initialRuns: [[Point]] = [], index = 0
+        for run in runs {
+            var anchors = run.map(project)
+            for offset in 0..<max(0, run.count - 1) {
+                if let prior = matches[index + offset] {
+                    anchors[offset] = presentedSegments[prior].start
+                    anchors[offset + 1] = presentedSegments[prior].end
+                }
+            }
+            for offset in 0..<max(0, run.count - 1) {
+                let target = segments[index]
+                let shown = matches[index].map { presentedSegments[$0] }
+                aligned.append(Cubic(start: anchors[offset],
+                    control1: shown?.control1 ?? project(target.control1),
+                    control2: shown?.control2 ?? project(target.control2), end: anchors[offset + 1]))
+                index += 1
+            }
+            initialRuns.append(anchors)
+        }
+        return Self(runs: initialRuns, segments: aligned,
+                    points: initialRuns.flatMap { $0 }, segmentIDs: segmentIDs)
     }
 
     func value(at x: Double, blendingFrom start: Self, progress: Double) -> Double? {
-        guard let targetY = value(at: x), let startY = start.value(at: x) else { return nil }
-        return startY + (targetY - startY) * min(max(progress, 0), 1)
+        guard start.segments.count == segments.count else { return nil }
+        let q = min(max(progress, 0), 1)
+        for (first, target) in zip(start.segments, segments) {
+            let left = first.start.x + (target.start.x - first.start.x) * q
+            let right = first.end.x + (target.end.x - first.end.x) * q
+            if x >= left - 1e-12 && x <= right + 1e-12 {
+                return target.blended(from: first, progress: q).value(atX: x)
+            }
+        }
+        return zip(start.points, points).lazy.map { $1.blended(from: $0, progress: q) }
+            .first { abs($0.x - x) < 1e-12 }?.y
     }
 
     func value(at x: Double) -> Double? {
         guard let segment = segments.first(where: { x >= $0.start.x && x <= $0.end.x }) else {
             return points.first(where: { abs($0.x - x) < 1e-12 })?.y
         }
-        return segment.value(at: (x - segment.start.x) / (segment.end.x - segment.start.x))
+        return segment.value(atX: x)
     }
 
     private static func cubics(_ p: [Point]) -> [Cubic] {

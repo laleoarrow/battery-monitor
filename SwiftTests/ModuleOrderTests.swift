@@ -185,12 +185,12 @@ final class ModuleOrderViewTests: XCTestCase {
         let views = Settings.Module.allCases.map { content.moduleViewForTest($0) }
         let history = try XCTUnwrap(content.moduleViewForTest(.history) as? HistoryView)
         let clip = try XCTUnwrap(history.layer?.sublayers?.first { $0.masksToBounds })
-        let plot = try XCTUnwrap(clip.sublayers?.first)
+        let line = try XCTUnwrap(clip.sublayers?.compactMap { $0 as? CAShapeLayer }.first { $0.strokeColor != nil })
         // A detach invokes HistoryView.stopMotion(). This sentinel detects that
         // lifecycle side effect without requiring a visible animated window.
         let motion = CABasicAnimation(keyPath: "position.x")
         motion.duration = 60
-        plot.add(motion, forKey: "history.scroll")
+        line.add(motion, forKey: "history.stroke")
         XCTAssertTrue(history.hasChartAnimationForTest)
         let renders = history.renderCountForTest
         let ceiling = history.chartCeilingForTest
