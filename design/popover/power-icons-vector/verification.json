@@ -1,0 +1,261 @@
+{
+  "baseCommit": "c824d1c30bbe6ee2100e9b68a7bb6a728e4e6c67",
+  "scope": "Pro concept-calibrated B Adapter and neutral On Battery counterpart; same shape and existing 0.28 view opacity",
+  "sourceSHA256": {
+    "MenuBar/ModuleIconArtwork.swift": "147edd16e3d32147458044568107a8e9b5dc0a9feec3c7ccbc272edf62a3fe7c",
+    "Popover/PowerIconView.swift": "ce31f7f7929a998ebe05e19b10069740aa649d81400a251f6ec235cca931c21f",
+    "Popover/PowerFlowLayer.swift": "2eeaaa26b058a15505956640b23cfdd9e7fd0fcdfe0457fc687d308c6354148b",
+    "Popover/LaneLayer.swift": "54891b3ba635f106c0b1b2303649aa31dd215f61581363305683389b00704f51",
+    "SwiftTests/PowerSymbolArtworkTests.swift": "ba0029de08dcdf33fb8d49ca61ad8cad8bd439c11fa37c5cbbd37ef4dc92059c",
+    "SwiftTests/FlowNodeIconTests.swift": "8d3d1b0f13bb8f24375a62eaf051bc89d9bd99a31f7e2c3d1c4467682d5b783f",
+    "tests/test_topology_contract.py": "2fa513afb260a36ef5689353048a043cd9351845db2d6e803462c41a5a762193",
+    "design/settings/module-icons-vector/generate-swift.py": "767829039b145ab4ac7647352a4b846addf268ff1ceb0c271866aa0a4482b308",
+    "design/popover/power-icons-vector/render-preview.swift": "34c111a0afdac5a59bfd779874dd80f721a00619c63c983adf190efa409aadbc",
+    "design/popover/power-icons-vector/render-assets.sh": "0d89e9e6a4f66efe922461a8eecdb6a5fc892dd5189c172101cf1dd9167298b4",
+    "design/popover/power-icons-vector/source/normalization.json": "8d56a30ea1697e6c1e35fb575a193d7acaec6a82ea5dffe1272d449ae127469d",
+    "design/popover/power-icons-vector/source/normalize.py": "a9cd5e068f0bc65d468061a1bc4a57969cb106de9ed3fbeb8a654288c71f1808",
+    "design/popover/power-icons-vector/source/pro-b-connected.svg": "a3e77cc0f4690b3ed172f762cb5e28afed01644da1a75370217cf319335b6dc4",
+    "design/popover/power-icons-vector/source/pro-b-disconnected.svg": "892ce4fadeba32967121e9e4b8d2aafeee9581054bdf5e104af72f036286c7fd"
+  },
+  "svgMasters": {
+    "adapter.svg": "ac4bb3e8b73b4dc61b2181e80c26a0da21faeb4c60933c3a03c0c32691242cc4",
+    "battery.svg": "0692d01c6a31e8e331c32177ab3071316f98e08834ebdedcba568e44807da43d",
+    "charging.svg": "6db3bf2053e422e43a2c384d7f4bee82be01b4b9364d5f4359560bf44c2fbd39",
+    "disconnected.svg": "234ea9638c0c611d618f290be06a941c9f92bbdcfc73d306e6c38515120b06ff",
+    "system.svg": "d3cee58412f7ad41e616919b233438d0379b1515d03cc0f5b1964ddfb91212c7"
+  },
+  "previewSHA256": {
+    "power-state-matrix.png": "8a1c76304a556dc02b9e94b6af0e4be13b52dcb55a56d085578ac44175e6082d",
+    "power-vector-preview.png": "d7e058a2d9cbc53274625359a5ee27c5b7700647a5dae8550fde2a3040ffa08b"
+  },
+  "checks": {
+    "fullProductionCompileMacOS12WarningsAsErrors": true,
+    "swiftSelectedTestsPassed": 6,
+    "swiftSelectedTestsSeconds": 0.36,
+    "supplyStateAppearancePairs": 12,
+    "highContrastFunctionalSymbols": 5,
+    "originalOpticalBoundsAssertionsUnchanged": true,
+    "topologyContractTestsPassed": 12,
+    "settingsContractTestsPassed": 8,
+    "settingsContractSeconds": 26.321,
+    "settingsContractInteractive": false,
+    "previousThirteenSVGsDrawingMethodsAndNativeProofsUnchanged": true,
+    "deterministicSwiftGeneration": true,
+    "roleColorsCheckedInNativePixels": true,
+    "cacheAndAppearanceInvalidation": true,
+    "capacityChargingAndDisconnectMarksDistinct": true,
+    "ownedScratchCleaned": true
+  },
+  "nativeRolePixelSamples": [
+    {
+      "appearance": "Dark",
+      "state": "Charging",
+      "SystemFlowBatteryLaneBatteryRGB": [
+        [
+          36,
+          78,
+          48
+        ],
+        [
+          34,
+          66,
+          44
+        ],
+        [
+          37,
+          89,
+          52
+        ]
+      ]
+    },
+    {
+      "appearance": "Dark",
+      "state": "Full",
+      "SystemFlowBatteryLaneBatteryRGB": [
+        [
+          26,
+          58,
+          93
+        ],
+        [
+          26,
+          54,
+          83
+        ],
+        [
+          18,
+          97,
+          178
+        ]
+      ]
+    },
+    {
+      "appearance": "Dark",
+      "state": "OnBattery",
+      "SystemFlowBatteryLaneBatteryRGB": [
+        [
+          76,
+          76,
+          79
+        ],
+        [
+          94,
+          94,
+          97
+        ],
+        [
+          141,
+          141,
+          145
+        ]
+      ]
+    },
+    {
+      "appearance": "Dark",
+      "state": "Mixed",
+      "SystemFlowBatteryLaneBatteryRGB": [
+        [
+          26,
+          58,
+          93
+        ],
+        [
+          114,
+          79,
+          25
+        ],
+        [
+          177,
+          115,
+          19
+        ]
+      ]
+    },
+    {
+      "appearance": "Light",
+      "state": "Charging",
+      "SystemFlowBatteryLaneBatteryRGB": [
+        [
+          186,
+          212,
+          196
+        ],
+        [
+          203,
+          221,
+          211
+        ],
+        [
+          174,
+          205,
+          187
+        ]
+      ]
+    },
+    {
+      "appearance": "Light",
+      "state": "Full",
+      "SystemFlowBatteryLaneBatteryRGB": [
+        [
+          180,
+          207,
+          236
+        ],
+        [
+          191,
+          213,
+          239
+        ],
+        [
+          86,
+          151,
+          221
+        ]
+      ]
+    },
+    {
+      "appearance": "Light",
+      "state": "OnBattery",
+      "SystemFlowBatteryLaneBatteryRGB": [
+        [
+          203,
+          203,
+          207
+        ],
+        [
+          187,
+          187,
+          193
+        ],
+        [
+          142,
+          142,
+          150
+        ]
+      ]
+    },
+    {
+      "appearance": "Light",
+      "state": "Mixed",
+      "SystemFlowBatteryLaneBatteryRGB": [
+        [
+          180,
+          207,
+          236
+        ],
+        [
+          213,
+          187,
+          156
+        ],
+        [
+          187,
+          143,
+          86
+        ]
+      ]
+    }
+  ],
+  "swiftLogSHA256": "7cb17f1be047348ca99cc345a05678d811b2c9a86511dff89d852efbe2045afa",
+  "preview": "Offscreen production Flow/Lane image views, six snapshots in both appearances; enlarged and actual 32/16pt canvases. Not a composited installed app screenshot.",
+  "actualWindowGUIValidation": false,
+  "installedOrPublished": false,
+  "refinementBaseCommit": "57bc3bcfeb1355f6092b7a17bbf994d7df05af72",
+  "currentRevisionChecks": {
+    "fullProductionCompileMacOS12WarningsAsErrors": true,
+    "swiftSelectedTestsPassed": 6,
+    "connectedDisconnectedSameRenderedGeometryWithDecorativeFillRemoved": true,
+    "disconnectedArtworkNeutral": true,
+    "originalOpticalBoundsAssertionsUnchanged": true,
+    "nonAdapterPreviewPixelsUnchanged": true,
+    "systemBatteryAndPriorSettingsMastersUnchanged": true,
+    "runtimeAndGeneratorSourcesUnchanged": true,
+    "deterministicNormalizationAndSwiftGeneration": true,
+    "ownedScratchCleaned": true,
+    "topologyAndSettingsContractRerun": false,
+    "sharedCalibratedSourceGeometry": true,
+    "strokeWidthsAndGradientUniformlyTransformed": true,
+    "cableJoinOutsideCavityByConstruction": true,
+    "onlyAdapterDrawingCasesChanged": true
+  },
+  "selectedConcept": "B / Angled Head",
+  "sourceArchive": "Wattson-Adapter-B-Calibrated.zip",
+  "proportionRecalibrationPending": false,
+  "regressionEvidence": {
+    "redLogSHA256": "4852c648d39823a8cd4dfb589b6fa56fdbbdc985db1829601b470d872c731e88",
+    "failures": [
+      "Old disconnected silhouette differs from selected connected B",
+      "Old disconnected mark retains accent rather than neutral",
+      "Initial B fit visible extent 19pt below unchanged 19.25pt minimum"
+    ],
+    "fix": "Share Pro B geometry and use neutral disconnected styling; uniform fitting resolves optical extent without widening tests."
+  },
+  "sourceArchiveSHA256": "97569a82e3a5b0289ab126cfbce0ff99423db6c74fe3c32b8c59afb7c7bb324d",
+  "calibratedOpticalRegression": {
+    "redLogSHA256": "8daefaf22032f1f925038fab093b9355559e85b12b5e47e64bca125941a7c070",
+    "initialExtent": 22.0,
+    "unchangedMaximumExtent": 21.5,
+    "fix": "Uniformly fit paths, stroke widths and gradient together to a 19-unit control extent; no silhouette edits or test-limit changes."
+  },
+  "designFidelity": "Reconstructed by Pro from the selected B raster; visually compared concept and calibrated SVG. Final native offscreen proof inspected. Final integrated-window review and user approval remain separate."
+}

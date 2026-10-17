@@ -62,7 +62,7 @@ class TopologyContractTests(unittest.TestCase):
     def test_device_output_uses_one_shared_port_icon_template(self):
         icon_factory = self.source.split(
             "fileprivate static func nodeIconImage", 1
-        )[1].split("private static func rotatedAdapterImage", 1)[0]
+        )[1].split("private static func nodeSymbolImage", 1)[0]
         plugged = self.source.split(
             "private func configurePluggedDeviceOutputReadout", 1
         )[1].split("private func configure(_ bundle", 1)[0]
@@ -115,19 +115,15 @@ class TopologyContractTests(unittest.TestCase):
         self.assertIn("withSymbolConfiguration(Self.powerIconConfiguration)", self.source)
         self.assertNotIn("usesEmphasizedPowerIcon", self.source)
         self.assertNotIn("? .scaleProportionallyDown", self.source)
-        self.assertIn("restoredAdapterRotation", self.source)
-        self.assertIn("rotatedAdapterImage(addsSlash:", self.source)
-        self.assertIn("rotation: restoredAdapterRotation", self.source)
-        self.assertIn("context.rotate(by: rotation)", self.source)
-        self.assertIn("restoredChargingBatteryImage", self.source)
-        self.assertIn("chargingBatteryImage()", self.source)
-        self.assertIn("private static let restoredSystemImage = systemChipImage()", self.source)
-        self.assertIn('case "cpu":', self.source)
-        self.assertIn("return restoredSystemImage", self.source)
-        self.assertIn("private static func systemChipImage()", self.source)
-        self.assertIn("private static let nodeIconStrokeWidth: CGFloat = 1.6", self.source)
-        self.assertIn("shell.lineWidth = nodeIconStrokeWidth", self.source)
-        self.assertIn("chip.lineWidth = nodeIconStrokeWidth", self.source)
+        self.assertIn("private let icon = PowerIconImageView()", self.source)
+        self.assertIn("icon.configurePowerIcon", self.source)
+        self.assertIn("side: 32, inset: 4", self.source)
+        self.assertIn("PowerIconImageView.image(for: symbol)", self.source)
+        artwork = (ROOT / "Popover" / "PowerIconView.swift").read_text()
+        for symbol in ("cpu", "powerplug", "powerplug.slash", "battery.100.bolt"):
+            self.assertIn('case "' + symbol + '":', artwork)
+        self.assertIn("PopoverStyle.neutral.usingColorSpace(.sRGB)", artwork)
+        self.assertIn("accent.usingColorSpace(.sRGB)", artwork)
 
 
 if __name__ == "__main__":

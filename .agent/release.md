@@ -250,9 +250,12 @@ design assets separate from the four checksum-gated installer release assets.
 
 With the next validated official release, also publish the approved icon design
 previews and editable SVG originals: five Modules icons, three sidebar icons,
-and five General row icons. Use the latest approved artwork included in that
+five General row icons, and the five Power icon SVG originals used by the
+flow diagram and power lanes. Use the latest approved artwork included in that
 release's frozen source from `design/settings/module-icons-vector`,
-`design/settings/sidebar-icons-vector`, and `design/settings/general-icons-vector`.
+`design/settings/sidebar-icons-vector`, `design/settings/general-icons-vector`,
+and `design/popover/power-icons-vector`. Include the Power state matrix showing
+charging, full, battery and mixed-supply colors.
 Label the artwork as design previews or offscreen renders, not running-app
 screenshots. Provide version-labeled downloadable SVG source ZIPs
 and link them from the release notes/gallery. Keep these design images and source

@@ -284,6 +284,14 @@ They use static blue action marks with faint local areas or arc fades, while
 retaining the existing controls and layout. Increase Contrast removes decorative
 fills and fades without removing the functional contours or action marks.
 
+Runtime power motifs in `design/popover/power-icons-vector` use the same vector
+language with neutral contours and state-dependent accent regions, resolved
+through `PopoverStyle` in each view's appearance. `PowerIconImageView` shares
+the Adapter/System/Battery artwork across Flow and Lanes and retains only its
+last resolved image. Mixed supply keeps adapter/system blue and battery amber.
+Both battery placements share the existing capacity bands and charging bolt.
+The port/cable fallbacks, node and lane geometry, values and motion are retained.
+
 Modules retains its five rows and switches, with a separate trailing drag handle.
 Only a successful local drop saves `popover.moduleOrder`; canceled previews leave
 preferences untouched. Up/Down keys and accessibility move actions use the same

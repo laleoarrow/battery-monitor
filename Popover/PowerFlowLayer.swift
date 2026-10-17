@@ -41,16 +41,8 @@ final class FlowNodeView: NSView {
     static let stackWidth: CGFloat = 92
     private static let nodeIconCanvasSize: CGFloat = 32
     private static let nodeSymbolDrawExtent: CGFloat = 28
-    private static let batterySymbolDrawExtent: CGFloat = 24.5
     private static let powerIconConfiguration =
         NSImage.SymbolConfiguration(pointSize: 21, weight: .regular)
-    private static let nodeIconStrokeWidth: CGFloat = 1.6
-    private static let restoredAdapterRotation = CGFloat.pi / 4
-    private static let restoredAdapterImage = rotatedAdapterImage(addsSlash: false)
-    private static let restoredDisconnectedAdapterImage =
-        rotatedAdapterImage(addsSlash: true)
-    private static let restoredChargingBatteryImage = chargingBatteryImage()
-    private static let restoredSystemImage = systemChipImage()
     /// Byte-for-byte copy of design/icon/device-output-port-template.png,
     /// extracted from the selected design rather than recreated in code.
     private static let deviceOutputPortTemplateImage: NSImage? = {
@@ -90,21 +82,8 @@ final class FlowNodeView: NSView {
         image.isTemplate = true
         return image
     }()
-    private static let normalizedBatteryImages: [String: NSImage] = {
-        let symbols = ["battery.25", "battery.50", "battery.75", "battery.100"]
-        return Dictionary(uniqueKeysWithValues: symbols.compactMap { symbol in
-            nodeSymbolImage(
-                named: symbol,
-                accessibilityDescription: "Battery",
-                drawExtent: batterySymbolDrawExtent
-            ).map {
-                (symbol, $0)
-            }
-        })
-    }()
-
     private let box = NSView()
-    private let icon = NSImageView()
+    private let icon = PowerIconImageView()
     private let caption = NSTextField(labelWithString: "")
     private let value = NSTextField(labelWithString: "")
     private var breathingColor: NSColor?
@@ -157,10 +136,14 @@ final class FlowNodeView: NSView {
         value.frame = NSRect(x: 0, y: size + 20, width: bounds.width, height: 16)
     }
 
-    func configure(symbol: String, caption text: String, value valueText: String, tint: NSColor) {
-        icon.image = Self.nodeIconImage(symbol: symbol, accessibilityDescription: text)
+    func configure(symbol: String, caption text: String, value valueText: String,
+                   tint: NSColor, accent: NSColor? = nil) {
+        if !icon.configurePowerIcon(symbol: symbol, description: text,
+                                    accent: accent ?? tint, side: 32, inset: 4) {
+            icon.image = Self.nodeIconImage(symbol: symbol, accessibilityDescription: text)
+            icon.contentTintColor = tint
+        }
         needsLayout = true
-        icon.contentTintColor = tint
         caption.stringValue = text
         value.stringValue = valueText
         value.setAccessibilityLabel(text)
@@ -173,15 +156,8 @@ final class FlowNodeView: NSView {
         symbol: String,
         accessibilityDescription: String
     ) -> NSImage? {
+        if let image = PowerIconImageView.image(for: symbol) { return image }
         switch symbol {
-        case "cpu":
-            return restoredSystemImage
-        case "powerplug":
-            return restoredAdapterImage
-        case "powerplug.slash":
-            return restoredDisconnectedAdapterImage
-        case "battery.100.bolt":
-            return restoredChargingBatteryImage
         case "device.output.port":
             return deviceOutputPortTemplateImage
         case "cable.connector.horizontal":
@@ -201,31 +177,14 @@ final class FlowNodeView: NSView {
                 accessibilityDescription: accessibilityDescription
             )
         default:
-            return normalizedBatteryImages[symbol]
-                ?? nodeSymbolImage(
-                    named: symbol,
-                    accessibilityDescription: accessibilityDescription
-                )
+            return nodeSymbolImage(named: symbol,
+                                   accessibilityDescription: accessibilityDescription)
         }
-    }
-
-    private static func rotatedAdapterImage(addsSlash: Bool) -> NSImage? {
-        nodeSymbolImage(
-            named: "powerplug",
-            accessibilityDescription: "Adapter",
-            rotation: restoredAdapterRotation,
-            addsSlash: addsSlash,
-            centerOffset: CGPoint(x: -0.75, y: 0.25)
-        )
     }
 
     private static func nodeSymbolImage(
         named symbol: String,
-        accessibilityDescription: String,
-        rotation: CGFloat = 0,
-        addsSlash: Bool = false,
-        drawExtent: CGFloat = nodeSymbolDrawExtent,
-        centerOffset: CGPoint = .zero
+        accessibilityDescription: String
     ) -> NSImage? {
         guard let source = NSImage(
             systemSymbolName: symbol,
@@ -234,7 +193,7 @@ final class FlowNodeView: NSView {
 
         let canvasSize = NSSize(width: nodeIconCanvasSize, height: nodeIconCanvasSize)
         let sourceMax = max(source.size.width, source.size.height)
-        let scale = min(1, drawExtent / sourceMax)
+        let scale = min(1, nodeSymbolDrawExtent / sourceMax)
         let drawSize = NSSize(
             width: source.size.width * scale,
             height: source.size.height * scale
@@ -243,10 +202,9 @@ final class FlowNodeView: NSView {
             guard let context = NSGraphicsContext.current?.cgContext else { return false }
             context.saveGState()
             context.translateBy(
-                x: rect.midX + centerOffset.x,
-                y: rect.midY + centerOffset.y
+                x: rect.midX,
+                y: rect.midY
             )
-            context.rotate(by: rotation)
             source.draw(
                 in: NSRect(
                     x: -drawSize.width / 2,
@@ -256,100 +214,6 @@ final class FlowNodeView: NSView {
                 )
             )
             context.restoreGState()
-            if addsSlash {
-                context.setStrokeColor(NSColor.black.cgColor)
-                context.setLineWidth(nodeIconStrokeWidth)
-                context.setLineCap(.round)
-                context.move(to: CGPoint(x: 10, y: 22))
-                context.addLine(to: CGPoint(x: 22, y: 10))
-                context.strokePath()
-            }
-            return true
-        }
-        image.isTemplate = true
-        return image
-    }
-
-    private static func systemChipImage() -> NSImage {
-        let image = NSImage(size: NSSize(width: 32, height: 32), flipped: false) { _ in
-            NSColor.black.setStroke()
-            let chip = NSBezierPath(
-                roundedRect: NSRect(x: 9.5, y: 9.5, width: 13, height: 13),
-                xRadius: 2.6,
-                yRadius: 2.6
-            )
-            chip.appendRoundedRect(
-                NSRect(x: 12.5, y: 12.5, width: 7, height: 7),
-                xRadius: 1.4,
-                yRadius: 1.4
-            )
-            for coordinate in [12.0, 16.0, 20.0] {
-                chip.move(to: NSPoint(x: coordinate, y: 7))
-                chip.line(to: NSPoint(x: coordinate, y: 9.5))
-                chip.move(to: NSPoint(x: coordinate, y: 22.5))
-                chip.line(to: NSPoint(x: coordinate, y: 25))
-                chip.move(to: NSPoint(x: 7, y: coordinate))
-                chip.line(to: NSPoint(x: 9.5, y: coordinate))
-                chip.move(to: NSPoint(x: 22.5, y: coordinate))
-                chip.line(to: NSPoint(x: 25, y: coordinate))
-            }
-            chip.lineWidth = nodeIconStrokeWidth
-            chip.lineCapStyle = .round
-            chip.lineJoinStyle = .round
-            chip.stroke()
-            return true
-        }
-        image.isTemplate = true
-        return image
-    }
-
-    private static func chargingBatteryImage() -> NSImage {
-        let image = NSImage(size: NSSize(width: 32, height: 32), flipped: false) { _ in
-            NSColor.black.setStroke()
-            let shell = NSBezierPath()
-            shell.move(to: NSPoint(x: 13, y: 23))
-            shell.line(to: NSPoint(x: 9.75, y: 23))
-            shell.curve(
-                to: NSPoint(x: 7, y: 20.25),
-                controlPoint1: NSPoint(x: 8.1, y: 23),
-                controlPoint2: NSPoint(x: 7, y: 21.9)
-            )
-            shell.line(to: NSPoint(x: 7, y: 11.75))
-            shell.curve(
-                to: NSPoint(x: 9.75, y: 9),
-                controlPoint1: NSPoint(x: 7, y: 10.1),
-                controlPoint2: NSPoint(x: 8.1, y: 9)
-            )
-            shell.line(to: NSPoint(x: 13, y: 9))
-            shell.move(to: NSPoint(x: 19, y: 23))
-            shell.line(to: NSPoint(x: 22.25, y: 23))
-            shell.curve(
-                to: NSPoint(x: 25, y: 20.25),
-                controlPoint1: NSPoint(x: 23.9, y: 23),
-                controlPoint2: NSPoint(x: 25, y: 21.9)
-            )
-            shell.line(to: NSPoint(x: 25, y: 11.75))
-            shell.curve(
-                to: NSPoint(x: 22.25, y: 9),
-                controlPoint1: NSPoint(x: 25, y: 10.1),
-                controlPoint2: NSPoint(x: 23.9, y: 9)
-            )
-            shell.line(to: NSPoint(x: 19, y: 9))
-            shell.lineWidth = nodeIconStrokeWidth
-            shell.lineCapStyle = .round
-            shell.lineJoinStyle = .round
-            shell.stroke()
-
-            NSColor.black.setFill()
-            let chargingMark = NSBezierPath()
-            chargingMark.move(to: NSPoint(x: 16.9, y: 22.5))
-            chargingMark.line(to: NSPoint(x: 12.5, y: 15.5))
-            chargingMark.line(to: NSPoint(x: 15.5, y: 15.5))
-            chargingMark.line(to: NSPoint(x: 14.9, y: 10))
-            chargingMark.line(to: NSPoint(x: 20, y: 16.5))
-            chargingMark.line(to: NSPoint(x: 17, y: 16.5))
-            chargingMark.close()
-            chargingMark.fill()
             return true
         }
         image.isTemplate = true
@@ -364,6 +228,9 @@ final class FlowNodeView: NSView {
     var presentationForTest: (caption: String, value: String) {
         (caption.stringValue, value.stringValue)
     }
+
+    var renderedIconForTest: NSImage? { icon.image }
+    var iconRenderCountForTest: Int { icon.renderCountForTest }
 
     var contentFitsBoundsForTest: Bool {
         let captionSize = caption.attributedStringValue.size()
@@ -1079,18 +946,13 @@ final class PowerFlowView: PopoverSection {
     }
 
     private func configureNodes(snapshot: PowerSnapshot, color: NSColor, layout: FlowLayout) {
-        let batterySymbol: String
-        switch snapshot.percent {
-        case ..<25: batterySymbol = "battery.25"
-        case ..<50: batterySymbol = "battery.50"
-        case ..<75: batterySymbol = "battery.75"
-        default: batterySymbol = "battery.100"
-        }
+        let batterySymbol = PowerIconImageView.batterySymbol(percent: snapshot.percent)
 
         let hasPositiveDeviceOutput = snapshot.coherentDeviceOutputW.map { $0 > 0 } ?? false
         systemNode.configure(symbol: "cpu",
                              caption: hasPositiveDeviceOutput ? "System Total" : "System",
-                             value: PopoverStyle.watts(snapshot.systemW), tint: PopoverStyle.neutral)
+                             value: PopoverStyle.watts(snapshot.systemW), tint: PopoverStyle.neutral,
+                             accent: snapshot.state == .mixedSupply ? PopoverStyle.blue : color)
         systemNode.setPresence(1)
         systemNode.setBreathing(false, color: color)
         adapterNode.setBreathing(false, color: color)
@@ -1169,6 +1031,14 @@ final class PowerFlowView: PopoverSection {
 
     var nodePresentationsForTest: [(caption: String, value: String)] {
         [adapterNode, batteryNode, systemNode].map(\.presentationForTest)
+    }
+
+    var nodeIconImagesForTest: [NSImage?] {
+        [adapterNode, batteryNode, systemNode].map(\.renderedIconForTest)
+    }
+
+    var nodeIconRenderCountsForTest: [Int] {
+        [adapterNode, batteryNode, systemNode].map(\.iconRenderCountForTest)
     }
 
     var nodeFramesForTest: [NSRect] {
