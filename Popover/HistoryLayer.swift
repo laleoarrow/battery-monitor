@@ -317,9 +317,19 @@ final class HistoryView: PopoverSection {
         let timing = CAMediaTimingFunction(name: scaling ? .easeInEaseOut : .linear)
         let startX = Double((presentedHead.x - plot.minX) / plot.width)
         let initialLastX = startGeometry.points.last?.x ?? last.x
+        var steps = (0...32).map { Double($0) / 32 }
+        let sourceX = min(startX, initialLastX) - (initialLastX - last.x)
+        if last.x > sourceX {
+            // Retargeting may cross a retained sample whose visible tangent is
+            // still changing. Never interpolate the head across that junction.
+            for p in geometry.points where p.x > sourceX && p.x < last.x {
+                let q = (p.x - sourceX) / (last.x - sourceX)
+                if !steps.contains(where: { abs($0 - q) < 1e-9 }) { steps.append(q) }
+            }
+            if steps.count > 33 { steps.sort() }
+        }
         var positions = [NSValue(point: presentedHead)]
-        for frame in 1..<32 {
-            let q = Double(frame) / 32
+        for q in steps.dropFirst().dropLast() {
             let visibleX = min(startX + (last.x - startX) * q,
                                initialLastX + (last.x - initialLastX) * q)
             guard let y = geometry.value(at: visibleX, blendingFrom: startGeometry, progress: q) else { return }
@@ -358,6 +368,7 @@ final class HistoryView: PopoverSection {
         }
         let dot = CAKeyframeAnimation(keyPath: "position")
         dot.values = positions
+        dot.keyTimes = steps.map { NSNumber(value: $0) }
         dot.calculationMode = .linear
         add(dot, to: head, key: "history.head")
     }
