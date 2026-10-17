@@ -1,9 +1,11 @@
-// Generated from design/settings/{module,sidebar}-icons-vector/*.svg. Edit the SVG masters.
+// Generated from design/settings/{module,sidebar,general}-icons-vector/*.svg. Edit the SVG masters.
 // Regenerate with: python3 design/settings/module-icons-vector/generate-swift.py
 import AppKit
 
 enum ModuleIconArtwork {
     enum SidebarIcon: CaseIterable { case general, display, modules }
+
+    enum GeneralIcon: CaseIterable { case login, battery, update, automatic, feedback }
 
     static func image(for module: Settings.Module, side: CGFloat, ink: NSColor,
                       accent: NSColor, increasedContrast: Bool) -> NSImage {
@@ -376,6 +378,245 @@ enum ModuleIconArtwork {
                     path.lineCapStyle = .round
                     path.lineJoinStyle = .round
                     path.stroke()
+                }
+            }
+            return true
+        }
+        image.isTemplate = false
+        return image
+    }
+
+    static func generalImage(for icon: GeneralIcon, side: CGFloat, ink: NSColor,
+                             accent: NSColor, increasedContrast: Bool) -> NSImage {
+        let image = NSImage(size: NSSize(width: side, height: side), flipped: false) { rect in
+            NSGraphicsContext.saveGraphicsState()
+            defer { NSGraphicsContext.restoreGraphicsState() }
+            let transform = NSAffineTransform()
+            transform.translateX(by: rect.minX, yBy: rect.maxY)
+            transform.scaleX(by: rect.width / 24, yBy: -rect.height / 24)
+            transform.concat()
+            let contrastScale: CGFloat = increasedContrast ? 1.2 : 1
+            switch icon {
+            case .login:
+                do {
+                    let path = NSBezierPath()
+                    path.move(to: NSPoint(x: 18.2, y: 6.2))
+                    path.curve(to: NSPoint(x: 21.2, y: 12.8), controlPoint1: NSPoint(x: 20.2, y: 7.9), controlPoint2: NSPoint(x: 21.2, y: 10.1))
+                    path.curve(to: NSPoint(x: 12, y: 22), controlPoint1: NSPoint(x: 21.2, y: 17.9), controlPoint2: NSPoint(x: 17.1, y: 22))
+                    path.curve(to: NSPoint(x: 2.8, y: 12.8), controlPoint1: NSPoint(x: 6.9, y: 22), controlPoint2: NSPoint(x: 2.8, y: 17.9))
+                    path.curve(to: NSPoint(x: 5.8, y: 6.2), controlPoint1: NSPoint(x: 2.8, y: 10.1), controlPoint2: NSPoint(x: 3.8, y: 7.9))
+                    ink.setStroke()
+                    path.lineWidth = 1.35 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+                do {
+                    if !increasedContrast {
+                        let path = CGMutablePath()
+                        path.move(to: NSPoint(x: 5.8, y: 6.2))
+                        path.addCurve(to: NSPoint(x: 2.8, y: 12.8), control1: NSPoint(x: 3.8, y: 7.9), control2: NSPoint(x: 2.8, y: 10.1))
+                        path.addCurve(to: NSPoint(x: 12, y: 22), control1: NSPoint(x: 2.8, y: 17.9), control2: NSPoint(x: 6.9, y: 22))
+                        drawGradient(path, strokeWidth: 1.35 * contrastScale,
+                                     colors: [accent.withAlphaComponent((increasedContrast ? 1 : 0.12)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 0.7)).cgColor],
+                                     locations: [0, 1], start: NSPoint(x: 5.8, y: 6.2), end: NSPoint(x: 12, y: 21.2))
+                    }
+                }
+                do {
+                    let path = NSBezierPath()
+                    path.move(to: NSPoint(x: 12, y: 2.5))
+                    path.line(to: NSPoint(x: 12, y: 11.3))
+                    accent.setStroke()
+                    path.lineWidth = 1.7 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+            case .battery:
+                do {
+                    if !increasedContrast {
+                        let path = CGMutablePath()
+                        path.addRoundedRect(in: CGRect(x: 3.4, y: 8.8, width: 17.2, height: 10.6), cornerWidth: 1.6, cornerHeight: 1.6)
+                        drawGradient(path, strokeWidth: nil,
+                                     colors: [accent.withAlphaComponent(0.02).cgColor, accent.withAlphaComponent(0.17).cgColor],
+                                     locations: [0, 1], start: NSPoint(x: 0, y: 8.8), end: NSPoint(x: 0, y: 19.4))
+                    }
+                }
+                do {
+                    let path = NSBezierPath(roundedRect: NSRect(x: 2.7, y: 3.8, width: 18.6, height: 16.4), xRadius: 2.4, yRadius: 2.4)
+                    ink.setStroke()
+                    path.lineWidth = 1.35 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+                do {
+                    let path = NSBezierPath()
+                    path.move(to: NSPoint(x: 3.1, y: 8.8))
+                    path.line(to: NSPoint(x: 20.9, y: 8.8))
+                    ink.setStroke()
+                    path.lineWidth = 1.1 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+                do {
+                    let path = NSBezierPath(roundedRect: NSRect(x: 13.3, y: 5.3, width: 4.9, height: 2), xRadius: 0.5, yRadius: 0.5)
+                    accent.setFill()
+                    path.fill()
+                }
+                do {
+                    let path = NSBezierPath()
+                    path.move(to: NSPoint(x: 19.1, y: 5.9))
+                    path.line(to: NSPoint(x: 19.1, y: 6.7))
+                    accent.setStroke()
+                    path.lineWidth = 0.8 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+            case .update:
+                do {
+                    if !increasedContrast {
+                        let path = CGMutablePath()
+                        path.addEllipse(in: CGRect(x: 2.6, y: 2.6, width: 18.8, height: 18.8))
+                        drawGradient(path, strokeWidth: nil,
+                                     colors: [accent.withAlphaComponent(0).cgColor, accent.withAlphaComponent(0.2).cgColor],
+                                     locations: [0, 1], start: NSPoint(x: 0, y: 6), end: NSPoint(x: 0, y: 21.4))
+                    }
+                }
+                do {
+                    let path = NSBezierPath(ovalIn: NSRect(x: 2.6, y: 2.6, width: 18.8, height: 18.8))
+                    ink.setStroke()
+                    path.lineWidth = 1.35 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+                do {
+                    let path = NSBezierPath()
+                    path.move(to: NSPoint(x: 12, y: 6.6))
+                    path.line(to: NSPoint(x: 12, y: 17.1))
+                    path.move(to: NSPoint(x: 8.4, y: 13.5))
+                    path.line(to: NSPoint(x: 12, y: 17.1))
+                    path.line(to: NSPoint(x: 15.6, y: 13.5))
+                    accent.setStroke()
+                    path.lineWidth = 1.65 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+            case .automatic:
+                do {
+                    let path = NSBezierPath()
+                    path.move(to: NSPoint(x: 18.6, y: 5.9))
+                    path.curve(to: NSPoint(x: 17.8, y: 19), controlPoint1: NSPoint(x: 22, y: 9.6), controlPoint2: NSPoint(x: 21.7, y: 15.6))
+                    path.curve(to: NSPoint(x: 4.9, y: 17.3), controlPoint1: NSPoint(x: 13.9, y: 22.3), controlPoint2: NSPoint(x: 8, y: 21.3))
+                    path.curve(to: NSPoint(x: 6.9, y: 4.8), controlPoint1: NSPoint(x: 1.8, y: 13.2), controlPoint2: NSPoint(x: 2.8, y: 7.7))
+                    path.curve(to: NSPoint(x: 18.6, y: 5.9), controlPoint1: NSPoint(x: 10.6, y: 2.2), controlPoint2: NSPoint(x: 15.6, y: 2.9))
+                    ink.setStroke()
+                    path.lineWidth = 1.35 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+                do {
+                    if !increasedContrast {
+                        let path = CGMutablePath()
+                        path.move(to: NSPoint(x: 6.9, y: 4.8))
+                        path.addCurve(to: NSPoint(x: 18.6, y: 5.9), control1: NSPoint(x: 10.6, y: 2.2), control2: NSPoint(x: 15.6, y: 2.9))
+                        drawGradient(path, strokeWidth: 1.35 * contrastScale,
+                                     colors: [accent.withAlphaComponent((increasedContrast ? 1 : 0.12)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 1)).cgColor],
+                                     locations: [0, 1], start: NSPoint(x: 6.9, y: 4.8), end: NSPoint(x: 18.6, y: 5.9))
+                    }
+                }
+                do {
+                    let path = NSBezierPath()
+                    path.move(to: NSPoint(x: 18.4, y: 1.5))
+                    path.line(to: NSPoint(x: 18.6, y: 5.9))
+                    path.line(to: NSPoint(x: 14.2, y: 5.7))
+                    accent.setStroke()
+                    path.lineWidth = 1.65 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+            case .feedback:
+                do {
+                    let path = NSBezierPath()
+                    path.move(to: NSPoint(x: 8.4, y: 13.8))
+                    path.line(to: NSPoint(x: 7.2, y: 13.8))
+                    path.line(to: NSPoint(x: 5, y: 16.2))
+                    path.line(to: NSPoint(x: 5, y: 13.8))
+                    path.line(to: NSPoint(x: 4.8, y: 13.8))
+                    path.curve(to: NSPoint(x: 2.6, y: 11.6), controlPoint1: NSPoint(x: 3.4, y: 13.8), controlPoint2: NSPoint(x: 2.6, y: 13))
+                    path.line(to: NSPoint(x: 2.6, y: 5.8))
+                    path.curve(to: NSPoint(x: 4.8, y: 3.6), controlPoint1: NSPoint(x: 2.6, y: 4.4), controlPoint2: NSPoint(x: 3.4, y: 3.6))
+                    path.line(to: NSPoint(x: 13.6, y: 3.6))
+                    path.curve(to: NSPoint(x: 15.8, y: 5.8), controlPoint1: NSPoint(x: 15, y: 3.6), controlPoint2: NSPoint(x: 15.8, y: 4.4))
+                    path.line(to: NSPoint(x: 15.8, y: 7.2))
+                    ink.setStroke()
+                    path.lineWidth = 1.25 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+                do {
+                    if !increasedContrast {
+                        let path = CGMutablePath()
+                        path.move(to: NSPoint(x: 11.2, y: 8))
+                        path.addLine(to: NSPoint(x: 19, y: 8))
+                        path.addCurve(to: NSPoint(x: 21.2, y: 10.2), control1: NSPoint(x: 20.4, y: 8), control2: NSPoint(x: 21.2, y: 8.8))
+                        path.addLine(to: NSPoint(x: 21.2, y: 15.4))
+                        path.addCurve(to: NSPoint(x: 19, y: 17.6), control1: NSPoint(x: 21.2, y: 16.8), control2: NSPoint(x: 20.4, y: 17.6))
+                        path.addLine(to: NSPoint(x: 18, y: 17.6))
+                        path.addLine(to: NSPoint(x: 18, y: 20.3))
+                        path.addLine(to: NSPoint(x: 14.6, y: 17.6))
+                        path.addLine(to: NSPoint(x: 11.2, y: 17.6))
+                        path.addCurve(to: NSPoint(x: 9, y: 15.4), control1: NSPoint(x: 9.8, y: 17.6), control2: NSPoint(x: 9, y: 16.8))
+                        path.addLine(to: NSPoint(x: 9, y: 10.2))
+                        path.addCurve(to: NSPoint(x: 11.2, y: 8), control1: NSPoint(x: 9, y: 8.8), control2: NSPoint(x: 9.8, y: 8))
+                        path.closeSubpath()
+                        drawGradient(path, strokeWidth: nil,
+                                     colors: [accent.withAlphaComponent(0.04).cgColor, accent.withAlphaComponent(0.26).cgColor],
+                                     locations: [0, 1], start: NSPoint(x: 0, y: 8), end: NSPoint(x: 0, y: 20.3))
+                    }
+                }
+                do {
+                    let path = NSBezierPath()
+                    path.move(to: NSPoint(x: 11.2, y: 8))
+                    path.line(to: NSPoint(x: 19, y: 8))
+                    path.curve(to: NSPoint(x: 21.2, y: 10.2), controlPoint1: NSPoint(x: 20.4, y: 8), controlPoint2: NSPoint(x: 21.2, y: 8.8))
+                    path.line(to: NSPoint(x: 21.2, y: 15.4))
+                    path.curve(to: NSPoint(x: 19, y: 17.6), controlPoint1: NSPoint(x: 21.2, y: 16.8), controlPoint2: NSPoint(x: 20.4, y: 17.6))
+                    path.line(to: NSPoint(x: 18, y: 17.6))
+                    path.line(to: NSPoint(x: 18, y: 20.3))
+                    path.line(to: NSPoint(x: 14.6, y: 17.6))
+                    path.line(to: NSPoint(x: 11.2, y: 17.6))
+                    path.curve(to: NSPoint(x: 9, y: 15.4), controlPoint1: NSPoint(x: 9.8, y: 17.6), controlPoint2: NSPoint(x: 9, y: 16.8))
+                    path.line(to: NSPoint(x: 9, y: 10.2))
+                    path.curve(to: NSPoint(x: 11.2, y: 8), controlPoint1: NSPoint(x: 9, y: 8.8), controlPoint2: NSPoint(x: 9.8, y: 8))
+                    path.close()
+                    ink.setStroke()
+                    path.lineWidth = 1.25 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+                do {
+                    let path = NSBezierPath(ovalIn: NSRect(x: 11.6, y: 12.1, width: 1.2, height: 1.2))
+                    accent.setFill()
+                    path.fill()
+                }
+                do {
+                    let path = NSBezierPath(ovalIn: NSRect(x: 14.6, y: 12.1, width: 1.2, height: 1.2))
+                    accent.setFill()
+                    path.fill()
+                }
+                do {
+                    let path = NSBezierPath(ovalIn: NSRect(x: 17.6, y: 12.1, width: 1.2, height: 1.2))
+                    accent.setFill()
+                    path.fill()
                 }
             }
             return true

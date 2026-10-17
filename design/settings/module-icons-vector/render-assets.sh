@@ -13,7 +13,7 @@ wattson_run_timeout 90 xcrun swiftc -swift-version 5 -warnings-as-errors \
     -module-cache-path "$scratch/module-cache" \
     Core/Settings.swift MenuBar/ModuleIconArtwork.swift "$assets/render-preview.swift" \
     -framework AppKit -o "$scratch/render-icons"
-wattson_run_timeout 20 "$scratch/render-icons" "$assets" "$project/design/settings/sidebar-icons-vector"
+wattson_run_timeout 20 "$scratch/render-icons" "$assets" "$project/design/settings/sidebar-icons-vector" "$project/design/settings/general-icons-vector"
 wattson_run_timeout 120 xcrun swiftc -typecheck -D DEBUG -swift-version 5 -warnings-as-errors \
     -target "$deployment_target" -module-cache-path "$scratch/module-cache" \
     Core/*.swift MenuBar/*.swift Popover/*.swift

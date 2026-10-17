@@ -135,10 +135,11 @@ def emit_cases(lines, assets, names):
 
 
 lines = [
-    "// Generated from design/settings/{module,sidebar}-icons-vector/*.svg. Edit the SVG masters.",
+    "// Generated from design/settings/{module,sidebar,general}-icons-vector/*.svg. Edit the SVG masters.",
     "// Regenerate with: python3 design/settings/module-icons-vector/generate-swift.py",
     "import AppKit", "", "enum ModuleIconArtwork {",
     "    enum SidebarIcon: CaseIterable { case general, display, modules }", "",
+    "    enum GeneralIcon: CaseIterable { case login, battery, update, automatic, feedback }", "",
     "    static func image(for module: Settings.Module, side: CGFloat, ink: NSColor,",
     "                      accent: NSColor, increasedContrast: Bool) -> NSImage {",
     "        let image = NSImage(size: NSSize(width: side, height: side), flipped: false) { rect in",
@@ -167,6 +168,21 @@ lines.extend([
     "            switch icon {",
 ])
 emit_cases(lines, ASSETS.parent / "sidebar-icons-vector", ("general", "display", "modules"))
+lines.extend(["            }", "            return true", "        }", "        image.isTemplate = false", "        return image", "    }", ""])
+lines.extend([
+    "    static func generalImage(for icon: GeneralIcon, side: CGFloat, ink: NSColor,",
+    "                             accent: NSColor, increasedContrast: Bool) -> NSImage {",
+    "        let image = NSImage(size: NSSize(width: side, height: side), flipped: false) { rect in",
+    "            NSGraphicsContext.saveGraphicsState()",
+    "            defer { NSGraphicsContext.restoreGraphicsState() }",
+    "            let transform = NSAffineTransform()",
+    "            transform.translateX(by: rect.minX, yBy: rect.maxY)",
+    "            transform.scaleX(by: rect.width / 24, yBy: -rect.height / 24)",
+    "            transform.concat()",
+    "            let contrastScale: CGFloat = increasedContrast ? 1.2 : 1",
+    "            switch icon {",
+])
+emit_cases(lines, ASSETS.parent / "general-icons-vector", ("login", "battery", "update", "automatic", "feedback"))
 lines.extend(["            }", "            return true", "        }", "        image.isTemplate = false", "        return image", "    }", ""])
 lines.extend('''    private static func drawGradient(_ path: CGPath, strokeWidth: CGFloat?,
                                      colors: [CGColor], locations: [CGFloat],

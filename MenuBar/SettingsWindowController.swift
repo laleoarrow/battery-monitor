@@ -717,6 +717,40 @@ private final class SettingsFeedbackButton: NSButton {
     }
 }
 
+private final class GeneralSettingsIconView: NSImageView, SettingsContrastRefreshing {
+    private let artwork: ModuleIconArtwork.GeneralIcon
+    private let increaseContrast: () -> Bool
+
+    init(artwork: ModuleIconArtwork.GeneralIcon, increaseContrast: @escaping () -> Bool) {
+        self.artwork = artwork
+        self.increaseContrast = increaseContrast
+        super.init(frame: .zero)
+        isEditable = false
+        allowsCutCopyPaste = false
+        refreshContrastAppearance()
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError("init(coder:) is unavailable") }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        refreshContrastAppearance()
+    }
+
+    func refreshContrastAppearance() {
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            let ink = SettingsStyle.primaryText.usingColorSpace(.sRGB) ?? SettingsStyle.primaryText
+            let blue = NSColor.systemBlue.usingColorSpace(.sRGB) ?? .systemBlue
+            image = ModuleIconArtwork.generalImage(
+                for: artwork, side: SettingsStyle.rowSymbolSize, ink: ink,
+                accent: blue, increasedContrast: increaseContrast()
+            )
+            contentTintColor = nil
+        }
+    }
+}
+
 private final class GeneralSettingsSectionController: NSObject, SettingsSectionController {
     private static let controlsInstallerURL = URL(
         string: "https://github.com/laleoarrow/battery-monitor/releases/latest"
@@ -974,7 +1008,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         let startupRows = [
             row(
                 identifier: "login",
-                symbolName: "power",
+                artwork: .login,
                 visibleTitle: "Launch at Login",
                 button: loginButton,
                 detail: loginDetail,
@@ -983,7 +1017,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             ),
             row(
                 identifier: "battery",
-                symbolName: "menubar.rectangle",
+                artwork: .battery,
                 visibleTitle: "Hide System Battery Icon",
                 button: batteryButton,
                 detail: batteryDetail,
@@ -994,7 +1028,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         let updateRows = [
             row(
                 identifier: "update",
-                symbolName: "arrow.down.circle",
+                artwork: .update,
                 visibleTitle: "Check for Updates",
                 button: updateButton,
                 detail: updateDetail,
@@ -1003,7 +1037,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             ),
             row(
                 identifier: "automatic-updates",
-                symbolName: "arrow.clockwise",
+                artwork: .automatic,
                 visibleTitle: "Check for Updates on Launch",
                 button: automaticUpdateButton,
                 detail: automaticUpdateDetail,
@@ -1130,7 +1164,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
     private func makeFeedbackSection() -> NSView {
         let feedbackRow = row(
-            identifier: "feedback", symbolName: "bubble.left.and.bubble.right",
+            identifier: "feedback", artwork: .feedback,
             visibleTitle: "Send Feedback", button: feedbackButton,
             detail: feedbackDetail, error: feedbackError, hasSeparator: false
         )
@@ -1197,7 +1231,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         switchSlot.setAccessibilityElement(false)
         switchSlot.translatesAutoresizingMaskIntoConstraints = false
         switchSlot.addSubview(liquidGlassSwitch)
-        let option = row(identifier: "appearance", symbolName: nil,
+        let option = row(identifier: "appearance", artwork: nil,
                          visibleTitle: "Liquid Glass", button: switchSlot,
                          detail: detail, error: nil, hasSeparator: false)
 
@@ -1536,7 +1570,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
     private func row(
         identifier: String,
-        symbolName: String?,
+        artwork: ModuleIconArtwork.GeneralIcon?,
         visibleTitle: String,
         button: NSControl,
         detail: NSTextField,
@@ -1565,12 +1599,10 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
 
         row.addSubview(text)
         row.addSubview(button)
-        if let symbolName {
-            let icon = NSImageView()
+        if let artwork {
+            let icon = GeneralSettingsIconView(artwork: artwork,
+                                               increaseContrast: dependencies.increaseContrast)
             icon.identifier = NSUserInterfaceItemIdentifier("settings.general.icon.\(identifier)")
-            icon.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)?
-                .withSymbolConfiguration(.init(pointSize: SettingsStyle.rowSymbolSize, weight: .regular))
-            icon.contentTintColor = SettingsStyle.primaryText
             icon.imageScaling = .scaleProportionallyDown
             icon.setAccessibilityElement(false)
             icon.translatesAutoresizingMaskIntoConstraints = false

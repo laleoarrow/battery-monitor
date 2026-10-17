@@ -804,16 +804,27 @@ class SettingsWindowContractTests(unittest.TestCase):
                 ),
                 "General heading uses 18-point type"
             )
-            for identifier in ["login", "battery", "update", "automatic-updates", "feedback"] {
+            for (index, identifier) in ["login", "battery", "update", "automatic-updates", "feedback"].enumerated() {
                 let row = view("settings.general.row.\(identifier)", in: first)
                 let symbols = descendants(ofType: NSImageView.self, in: row)
                 require(symbols.count == 1 && symbols[0].superview === row
                     && symbols[0].image != nil
                     && approximately(symbols[0].alignmentRect(forFrame: symbols[0].frame).width, 28)
                     && approximately(symbols[0].alignmentRect(forFrame: symbols[0].frame).height, 28),
-                    "General uses consistent native symbols without decorative tile enclosures")
+                    "General uses consistent vector icons without decorative tile enclosures")
                 let primary = descendants(ofType: NSTextField.self, in: row)
                     .first { $0.font?.pointSize == 13 }!
+                row.effectiveAppearance.performAsCurrentDrawingAppearance {
+                    let expected = ModuleIconArtwork.generalImage(
+                        for: ModuleIconArtwork.GeneralIcon.allCases[index], side: 20,
+                        ink: primary.textColor!.usingColorSpace(.sRGB)!,
+                        accent: NSColor.systemBlue.usingColorSpace(.sRGB)!,
+                        increasedContrast: false)
+                    require(symbols[0].image?.isTemplate == false
+                        && symbols[0].contentTintColor == nil
+                        && symbols[0].image?.tiffRepresentation == expected.tiffRepresentation,
+                        "each General row resolves its matching 20-point vector artwork")
+                }
                 let alignment = primary.superview!
                     .convert(primary.alignmentRect(forFrame: primary.frame), to: row)
                 require(approximately(alignment.minX, 56),

@@ -44,6 +44,9 @@ The General, Display and Modules sidebar companions live in
 emits their static paths into `ModuleIconArtwork.swift`; the render command below
 also writes their Dark, Light and selected-state artwork proof. The earlier
 module-only verification record remains frozen to its recorded source hashes.
+The five General-page action icons and their Dark/Light proof live in
+[`../general-icons-vector`](../general-icons-vector/README.md) and use the same
+generation and render commands.
 
 ## Approved family for future additions
 

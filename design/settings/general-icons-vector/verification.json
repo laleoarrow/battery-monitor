@@ -1,0 +1,102 @@
+{
+  "baseCommit": "6d87dc9d2f2b6a0ede09d962e6c4d2b16bf4d2b6",
+  "scope": "Five General page icons; prior module/sidebar artwork and control behavior preserved",
+  "svgMasters": {
+    "automatic.svg": "79544b47e4c3a8f77b384d209a4b51f7a626a646066a262b5e4d49648b6ea76e",
+    "battery.svg": "2ac96e43a5e0f0f8a976f7ebb8d177c5c47a8ec3d6ef32e2a9408243a0404956",
+    "feedback.svg": "3e3a039db30e6df4aa8d562b7dec11d82747af1b9183d51bc9ca2575c438e06d",
+    "login.svg": "8aee865a0cfa5845a90d37eb527b5b27ab5f3ebbe4fa9eb7c15850583305091d",
+    "update.svg": "ce2d936eefef8b25abfcf6dba4d4ba92b9fcc540710d4b6d4faff84c50c64bf9"
+  },
+  "rendererSHA256": "4f58facdc984957130fd5afc1ad7d4e6e552702279d9fe5188f3ceb2ae62b80f",
+  "previewSHA256": "06a71b779e47e63b423b014eee8a454f6c2edcbd6c2ce74fd7cdd4bdbf7a9598",
+  "checks": {
+    "fullProductionTypecheckMacOS12WarningsAsErrors": true,
+    "settingsContractTestsPassed": 8,
+    "settingsContractSeconds": 26.519,
+    "settingsContractInteractive": false,
+    "generalRowsMatchProductionArtwork": true,
+    "twentyPointArtworkInExisting28PointFrames": true,
+    "deterministicGeneration": true,
+    "pureVector24UnitMasters": 5,
+    "previousEightSVGsRenderingFunctionsAndPNGProofsUnchanged": true,
+    "nativeActionMarksAndFillDarkLight": true,
+    "automaticSweepEndpointMatchesArrowhead": true,
+    "ownedRenderScratchCleaned": true
+  },
+  "nativePixelSamples": [
+    {
+      "appearance": "Dark",
+      "blueActionMarks": [
+        [
+          10,
+          132,
+          255
+        ],
+        [
+          10,
+          132,
+          255
+        ],
+        [
+          10,
+          132,
+          255
+        ],
+        [
+          10,
+          132,
+          255
+        ],
+        [
+          10,
+          132,
+          255
+        ]
+      ],
+      "updateFillRGB": [
+        29,
+        47,
+        66
+      ]
+    },
+    {
+      "appearance": "Light",
+      "blueActionMarks": [
+        [
+          0,
+          122,
+          255
+        ],
+        [
+          0,
+          122,
+          255
+        ],
+        [
+          0,
+          122,
+          255
+        ],
+        [
+          0,
+          122,
+          255
+        ],
+        [
+          0,
+          122,
+          255
+        ]
+      ],
+      "updateFillRGB": [
+        209,
+        227,
+        248
+      ]
+    }
+  ],
+  "preview": "Native production AppKit drawing methods rendered offscreen, Dark/Light enlarged and actual 20pt. Not a visible Settings window screenshot.",
+  "actualWindowGUIValidation": false,
+  "installedOrPublished": false
+}

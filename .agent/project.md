@@ -254,7 +254,7 @@ for actual test-VM window images and verification. This source refinement does
 not replace the canonical installed app or constitute a new release.
 
 General's functional groups share external 13-point headings. General and
-Modules use 20-point regular SF Symbols in 28-point alignment frames without
+General and Modules use 20-point vector artwork in 28-point alignment frames without
 decorative icon tiles. Appearance aligns Theme, Liquid Glass, In-App Logo and
 Dock Icon as peers; only glass background and transparency are indented.
 Recovery follows the startup controls in both the visual and keyboard order.
@@ -274,6 +274,12 @@ source-list spacing. The identity artwork is 32 points. Settings uses 13-point
 primary labels, 12-point group titles, 11-point descriptions, an 18-point
 Classic page heading and a 15-point native toolbar title. See the
 [quiet navigation and typography review](../design/settings/quiet-navigation/README.md).
+
+General's login, system battery, update, automatic update and feedback icons
+share this family through editable masters in `design/settings/general-icons-vector`.
+They use static blue action marks with faint local areas or arc fades, while
+retaining the existing controls and layout. Increase Contrast removes decorative
+fills and fades without removing the functional contours or action marks.
 
 Modules retains its five rows and switches, with a separate trailing drag handle.
 Only a successful local drop saves `popover.moduleOrder`; canceled previews leave
