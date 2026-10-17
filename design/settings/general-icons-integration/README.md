@@ -21,3 +21,14 @@ The canonical App was updated with native Installer using the verified package. 
 Raw source manifests, contract logs, package lifecycle results and installation verification are retained in `.build/general-row-icons-review.noindex/`.
 
 Independent post-install host audits also passed: the delayed read began after 100.785 seconds of system-monotonic quiet time, with installed payload identity, receipt, signature and normal PID unchanged. No owned temporary installation files, installer/verification processes, mounts or extra Spotlight/LaunchServices registrations remained.
+
+## Running-window gallery
+
+| Appearance | Top rows | Feedback row |
+| --- | --- | --- |
+| Classic Light | [Top](classic-light-general-top.png) | [Bottom](classic-light-general-bottom.png) |
+| Classic Dark | [Top](classic-dark-general-top.png) | [Bottom](classic-dark-general-bottom.png) |
+| Standard Light | [Top](standard-light-general-top.png) | [Bottom](standard-light-general-bottom.png) |
+| Standard Dark | [Top](standard-dark-general-top.png) | [Bottom](standard-dark-general-bottom.png) |
+| Clear Light | [Top](clear-light-general-top.png) | [Bottom](clear-light-general-bottom.png) |
+| Clear Dark | [Top](clear-dark-general-top.png) | [Bottom](clear-dark-general-bottom.png) |
