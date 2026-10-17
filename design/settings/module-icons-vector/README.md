@@ -39,6 +39,19 @@ These are static vector details. Increase Contrast removes the decorative Ring
 sweep and Clock sector, restores full-opacity Flow and bar fills, and retains the
 existing thicker-stroke policy. Row geometry and control behavior are unchanged.
 
+## Approved family for future additions
+
+The user approved this final five-icon family as the reference for replacement
+artwork and future Wattson icon and logo additions. Use rounded neutral contours,
+system-blue accents and restrained gradient regions derived from the app's own
+visuals. Prefer clear silhouettes over extra detail at the actual 20-point size.
+Match stroke weight, optical balance, spacing and Light/Dark contrast across the
+family. Arc endpoints must align with the geometry they describe; the Ring sweep
+ends on the needle radius. Clock emphasis is a soft filled sector between the
+hands. Keep editable vector masters as the source of truth and regenerate the
+native drawing paths after changes. These static details add no animation or
+new interaction. Adding a module icon does not replace the existing app identity.
+
 ## Regeneration
 
 ```sh
