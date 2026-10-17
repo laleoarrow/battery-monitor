@@ -1537,6 +1537,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let moduleList = view("settings.modules.list", in: first)
             let moduleScroll = view("settings.modules.scroll", in: first) as! NSScrollView
             let topProcessCount = view("settings.modules.top-process-count", in: first) as! NSPopUpButton
+            let topProcessesCompact = view("settings.modules.top-processes-compact", in: first) as! NSButton
             let restoreModuleOrder = button("Restore Default Order", in: first)
             func verifyRestoreModuleOrderLayout() {
                 let restoreRect = restoreModuleOrder.convert(restoreModuleOrder.bounds, to: modulePage)
@@ -1621,25 +1622,41 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(topProcessCount.accessibilityLabel() == "Number of Processes Shown"
                 && topProcessCount.accessibilityIdentifier() == "settings.modules.top-process-count",
                 "top process count has stable accessibility identity and purpose")
+            require(topProcessesCompact.accessibilityLabel() == "Compact view"
+                && topProcessesCompact.accessibilityIdentifier() == "settings.modules.top-processes-compact"
+                && topProcessesCompact.accessibilityHelp() == "Hide CPU and idle wakeup details."
+                && topProcessesCompact.state == .off && topProcessesCompact.isEnabled,
+                "compact process view defaults off and has an accessible purpose")
+            topProcessesCompact.performClick(nil)
+            require(Settings.topProcessesCompact && topProcessesCompact.state == .on,
+                "compact process switch writes shared settings in place")
             topProcessCount.selectItem(withTag: 7)
             topProcessCount.sendAction(topProcessCount.action!, to: topProcessCount.target)
             require(Settings.topProcessCount == 7, "process count control writes shared settings")
             Settings.setModule(.topProcesses, visible: false)
-            require(!topProcessCount.isEnabled && topProcessCount.selectedItem?.tag == 7,
-                "hiding the module disables its count while retaining the choice")
+            require(!topProcessCount.isEnabled && topProcessCount.selectedItem?.tag == 7
+                && !topProcessesCompact.isEnabled && topProcessesCompact.state == .on,
+                "hiding the module disables its display options while retaining their choices")
+            topProcessesCompact.performClick(nil)
+            require(Settings.topProcessesCompact, "disabled compact switch cannot change saved preferences")
             let runtimeHandleForCount = view("settings.modules.reorder.runtime", in: first)
             let topProcessSwitch = button(Settings.Module.topProcesses.title, in: first)
             require(runtimeHandleForCount.nextKeyView === topProcessSwitch,
                 "a disabled process count is skipped in the keyboard loop")
             Settings.topProcessCount = 4
+            Settings.topProcessesCompact = false
             require(topProcessCount.selectedItem?.tag == 4,
                 "process count observes external changes while disabled")
+            require(topProcessesCompact.state == .off && !topProcessesCompact.isEnabled,
+                "compact view observes external changes while its module is hidden")
             Settings.setModule(.topProcesses, visible: true)
-            require(topProcessCount.isEnabled && topProcessCount.selectedItem?.tag == 4,
-                "showing the module restores the retained count control")
+            require(topProcessCount.isEnabled && topProcessCount.selectedItem?.tag == 4
+                && topProcessesCompact.isEnabled && topProcessesCompact.state == .off,
+                "showing the module restores both retained display controls")
             require(runtimeHandleForCount.nextKeyView === topProcessCount
-                && topProcessCount.nextKeyView === topProcessSwitch,
-                "the active count selector is in its module's keyboard order")
+                && topProcessCount.nextKeyView === topProcessesCompact
+                && topProcessesCompact.nextKeyView === topProcessSwitch,
+                "count then compact view appear before the module switch in keyboard order")
             Settings.topProcessCount = 3
             let initialModuleOffset = moduleScroll.contentView.bounds.origin
             require(first?.makeFirstResponder(topProcessCount) == true,
@@ -1654,6 +1671,15 @@ class SettingsWindowContractTests(unittest.TestCase):
             )
             require(visibleModuleViewport.contains(countRect),
                 "the focused count stays inside the viewport below the fixed header")
+            require(first?.makeFirstResponder(topProcessesCompact) == true,
+                "the compact process switch accepts keyboard focus")
+            first?.contentView?.layoutSubtreeIfNeeded()
+            let compactRect = topProcessesCompact.convert(topProcessesCompact.bounds, to: modulePage)
+            let compactViewport = moduleScroll.contentView.convert(moduleScroll.contentView.bounds, to: modulePage)
+            require(compactViewport.contains(compactRect) && compactViewport.contains(countRect),
+                "compact switch focus reveals both display options without clipping")
+            require(view("settings.modules.top-processes-compact", in: first) === topProcessesCompact,
+                "display preference changes retain the original compact switch")
             moduleScroll.contentView.scroll(to: initialModuleOffset)
             moduleScroll.reflectScrolledClipView(moduleScroll.contentView)
             first?.contentView?.layoutSubtreeIfNeeded()
@@ -1666,12 +1692,14 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "module rows form one contiguous list")
             for row in moduleRows {
                 let labels = descendants(ofType: NSTextField.self, in: row)
-                require(labels.count == 2 && labels.allSatisfy {
+                let isProcessRow = row.identifier?.rawValue == "settings.modules.row.topProcesses"
+                require(labels.count == (isProcessRow ? 3 : 2) && labels.allSatisfy {
                     $0.frame.width + 1 >= $0.intrinsicContentSize.width
                 }, "module names and descriptions fit without truncation")
                 let primary = labels.first { $0.font?.pointSize == 13 }!
-                let detail = labels.first { $0 !== primary }!
-                require(approximately(detail.font?.pointSize ?? -1, 11),
+                require(labels.filter { $0 !== primary }.allSatisfy {
+                    approximately($0.font?.pointSize ?? -1, 11)
+                },
                     "module descriptions retain a quiet 11-point secondary role")
                 let alignment = primary.superview!
                     .convert(primary.alignmentRect(forFrame: primary.frame), to: row)

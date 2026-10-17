@@ -61,6 +61,7 @@ class SettingsStoreContractTests(unittest.TestCase):
             expect(Settings.showPopoverArrow,
                    "upgrades must retain the popup arrow unless the user hides it")
             expect(Settings.topProcessCount == 3, "energy processes must default to the top three")
+            expect(!Settings.topProcessesCompact, "process activity keeps CPU and wakeup details by default")
             expect((defaults.persistentDomain(forName: suiteName) ?? [:]).isEmpty,
                    "reading defaults must not persist preferences")
 
@@ -218,6 +219,18 @@ class SettingsStoreContractTests(unittest.TestCase):
                    "unknown future values must safely fall back to Wattson")
             expect(keptNilObject, "legacy notification object must remain nil")
 
+            changes.removeAll()
+            Settings.topProcessesCompact = false
+            expect(changes.isEmpty, "default detailed view must not write or notify")
+            Settings.topProcessesCompact = true
+            Settings.topProcessesCompact = true
+            expect(changes == [.topProcessesCompact], "compact view uses one dedicated change")
+            expect(defaults.object(forKey: "popover.topProcessesCompact") as? Bool == true,
+                   "compact view persists under its own key")
+            Settings.setModule(.topProcesses, visible: false)
+            expect(Settings.topProcessesCompact && Settings.topProcessCount == 3,
+                   "hiding process activity preserves compact view and count")
+
             let secondSuite = suiteName + ".second"
             let secondDefaults = UserDefaults(suiteName: secondSuite)!
             defer { secondDefaults.removePersistentDomain(forName: secondSuite) }
@@ -226,6 +239,13 @@ class SettingsStoreContractTests(unittest.TestCase):
                    "a fresh suite must retain its own default values")
             expect(!Settings.liquidGlassEnabled, "fresh suites must not inherit the opt-in")
             expect(Settings.showPopoverArrow, "fresh suites must retain the popup arrow default")
+            expect(!Settings.topProcessesCompact, "fresh suites retain detailed process rows")
+            secondDefaults.set(true, forKey: "popover.topProcessesCompact")
+            expect(Settings.topProcessesCompact, "compact view reads external writes immediately")
+            secondDefaults.set(["invalid"], forKey: "popover.topProcessesCompact")
+            expect(!Settings.topProcessesCompact, "malformed compact preferences use detailed view")
+            secondDefaults.removeObject(forKey: "popover.topProcessesCompact")
+            expect(!Settings.topProcessesCompact, "removing compact view restores its default")
             secondDefaults.set(false, forKey: "appearance.showPopoverArrow")
             expect(!Settings.showPopoverArrow, "popup arrow reads external changes immediately")
             secondDefaults.set(["invalid"], forKey: "appearance.showPopoverArrow")
@@ -267,6 +287,8 @@ class SettingsStoreContractTests(unittest.TestCase):
                    "reopening the original suite must preserve the appearance opt-in")
             expect(!Settings.showPopoverArrow,
                    "reopening the original suite must preserve the hidden popup arrow")
+            expect(Settings.topProcessesCompact,
+                   "reopening the original suite preserves compact process rows")
             '''
         )
 

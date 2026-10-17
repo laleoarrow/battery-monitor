@@ -10,14 +10,15 @@ private enum CaptureTopProcesses {
         let arguments = Array(CommandLine.arguments.dropFirst())
         let moduleOnly = arguments.first == "--module-only"
         let gradientComparison = arguments.first == "--gradient-comparison"
-        guard arguments.count == (moduleOnly || gradientComparison ? 2 : 1),
+        let compactOnly = arguments.first == "--compact-only"
+        guard arguments.count == (moduleOnly || gradientComparison || compactOnly ? 2 : 1),
               let output = arguments.last else { exit(64) }
         let defaults = MemoryDefaults()
         Settings.configureForTest(defaults: defaults)
         Settings.checksForUpdatesOnLaunch = false
         let app = NSApplication.shared
         app.setActivationPolicy(.accessory)
-        let delegate = Probe(directory: URL(fileURLWithPath: output), moduleOnly: moduleOnly, gradientComparison: gradientComparison)
+        let delegate = Probe(directory: URL(fileURLWithPath: output), moduleOnly: moduleOnly, gradientComparison: gradientComparison, compactOnly: compactOnly)
         app.delegate = delegate
         withExtendedLifetime((defaults, delegate)) { app.run() }
         Settings.resetTestConfiguration()
@@ -37,6 +38,8 @@ private final class Probe: NSObject, NSApplicationDelegate {
     private let directory: URL
     private let isModuleOnly: Bool
     private let isGradientComparison: Bool
+    private let isCompactOnly: Bool
+    private var isFocusedCapture: Bool { isModuleOnly || isGradientComparison || isCompactOnly }
     private var records: [[String: Any]] = []
     private var item: NSStatusItem?
     private var backdrop: NSWindow?
@@ -72,14 +75,15 @@ private final class Probe: NSObject, NSApplicationDelegate {
         }
     }
 
-    init(directory: URL, moduleOnly: Bool, gradientComparison: Bool) {
+    init(directory: URL, moduleOnly: Bool, gradientComparison: Bool, compactOnly: Bool) {
         self.directory = directory
         isModuleOnly = moduleOnly
         isGradientComparison = gradientComparison
+        isCompactOnly = compactOnly
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + (isModuleOnly || isGradientComparison ? 45 : 220)) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + (isFocusedCapture ? 45 : 220)) { [weak self] in
             self?.stop()
             fputs("TopProcessesProbe: watchdog expired\n", stderr)
             exit(1)
@@ -110,7 +114,8 @@ private final class Probe: NSObject, NSApplicationDelegate {
     @MainActor private func run() async throws {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         Settings.topProcessCount = 3
-        if !isModuleOnly && !isGradientComparison {
+        Settings.topProcessesCompact = false
+        if !isFocusedCapture {
             for module in Settings.Module.allCases { Settings.setModule(module, visible: true) }
             try await hiddenMatrix()
         }
@@ -130,7 +135,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
         background.isOpaque = true
         backdrop = background
         background.orderFrontRegardless()
-        for glass in isModuleOnly || isGradientComparison ? [false] : [false, true] {
+        for glass in isFocusedCapture ? [false] : [false, true] {
             Settings.liquidGlassEnabled = glass
             Settings.liquidGlassStyle = .regular
             for scheme in [Settings.ColorScheme.light, .dark] {
@@ -138,6 +143,14 @@ private final class Probe: NSObject, NSApplicationDelegate {
                 NSApp.appearance = scheme.appearance
                 background.backgroundColor = scheme == .light ? .init(white: 0.88, alpha: 1) : .init(white: 0.14, alpha: 1)
                 let theme = glass ? "glass" : "classic"
+                if isCompactOnly {
+                    for count in [1, 3, 10] {
+                        for compact in [false, true] {
+                            try await moduleOnly(background: background, name: "module-\(compact ? "compact" : "detailed")-\(scheme.rawValue)-\(count)", values: processes, count: count, compact: compact)
+                        }
+                    }
+                    continue
+                }
                 if isGradientComparison {
                     try await gradientComparison(background: background, name: "comparison-\(scheme.rawValue)")
                     if scheme == .dark {
@@ -176,8 +189,11 @@ private final class Probe: NSObject, NSApplicationDelegate {
         }
         let evidence: [String: Any] = [
             "schema": 1, "assertions": assertions, "failures": 0, "cases": records,
-            "mode": isGradientComparison ? "gradient-comparison" : isModuleOnly ? "module-only" : "full-matrix",
-            "method": isGradientComparison
+            "highContrast": PopoverStyle.isHighContrast(NSApp.effectiveAppearance),
+            "mode": isCompactOnly ? "compact-only" : isGradientComparison ? "gradient-comparison" : isModuleOnly ? "module-only" : "full-matrix",
+            "method": isCompactOnly
+                ? "WindowServer capture of production TopProcessesView detailed/compact modes at counts 1, 3, and 10 in owned Classic fixture windows, light and dark. Each view also switches presentation mode and verifies the score and fixed-scale visible widths are preserved."
+                : isGradientComparison
                 ? "WindowServer capture of a real native 2×2 fixture window containing four production TopProcessesView renderers with DEBUG-only gradient variants, plus four dark standalone owned windows. Same process fixtures and fixed 0–100 scale in every variant. Chinese comparison labels belong only to the fixture."
                 : isModuleOnly
                 ? "WindowServer capture of default-three production TopProcessesView in two owned Classic fixture windows, light and dark, with an owned underlay in a disposable ARM GUI VM."
@@ -189,8 +205,8 @@ private final class Probe: NSObject, NSApplicationDelegate {
         print("Top processes: \(records.count) captures, \(assertions) assertions, 0 failures")
     }
 
-    @MainActor private func moduleOnly(background: NSWindow, name: String, values: [EnergyProcess]? = nil, gradientStyle: TopProcessesView.GradientPreviewStyle? = nil) async throws {
-        let height = TopProcessesView.preferredHeight(count: 3)
+    @MainActor private func moduleOnly(background: NSWindow, name: String, values: [EnergyProcess]? = nil, gradientStyle: TopProcessesView.GradientPreviewStyle? = nil, count: Int = 3, compact: Bool = false) async throws {
+        let height = TopProcessesView.preferredHeight(count: count, compact: compact)
         let window = NSWindow(contentRect: .init(x: background.frame.midX - 180, y: background.frame.midY - height / 2 - 12, width: PopoverStyle.width, height: height + 24), styleMask: .borderless, backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
         window.isOpaque = true
@@ -202,14 +218,26 @@ private final class Probe: NSObject, NSApplicationDelegate {
         list.frame = .init(x: PopoverStyle.sideInset, y: 12, width: PopoverStyle.contentWidth, height: height)
         window.contentView?.addSubview(list)
         let displayed = values ?? processes
-        list.update(state: .ready(displayed), count: 3)
+        list.update(state: .ready(displayed), count: count, compact: compact)
         if let gradientStyle { list.setGradientPreviewStyle(gradientStyle) }
         list.setPresentationActive(true)
         defer { list.setPresentationActive(false) }
         window.orderFrontRegardless()
         try await pause(0.15)
-        try validate(list, count: 3, expectedProcesses: Array(displayed.prefix(3)), gradientStyle: gradientStyle)
-        try composite(window, background: background, name: name, fields: ["productionSectionOnly": true, "processCount": 3, "gradientVariant": gradientStyle.map(gradientName) ?? "release-default", "fixtureScores": Array(displayed.prefix(3)).map(\.energyImpact), "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer."])
+        try validate(list, count: count, expectedProcesses: Array(displayed.prefix(count)), gradientStyle: gradientStyle, compact: compact)
+        try composite(window, background: background, name: name, fields: ["productionSectionOnly": true, "processCount": count, "compact": compact, "gradientVariant": gradientStyle.map(gradientName) ?? "release-default-fixed-scale-horizontal", "fixtureScores": Array(displayed.prefix(count)).map(\.energyImpact), "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer."])
+        if isCompactOnly {
+            let before = list.gradientPreviewGeometryForTest.map(\.visibleMaskWidth)
+            let scores = list.subviews.filter { $0.identifier?.rawValue == "top-processes.row" && !$0.isHidden }.map { $0.accessibilityValue() as? String }
+            let alternateHeight = TopProcessesView.preferredHeight(count: count, compact: !compact)
+            list.frame.size.height = alternateHeight
+            window.setContentSize(.init(width: PopoverStyle.width, height: alternateHeight + 24))
+            list.update(state: .ready(displayed), count: count, compact: !compact)
+            list.layoutSubtreeIfNeeded()
+            try validate(list, count: count, expectedProcesses: Array(displayed.prefix(count)), compact: !compact)
+            try check(list.gradientPreviewGeometryForTest.map(\.visibleMaskWidth) == before, "Compact toggle changed activity-bar widths")
+            try check(list.subviews.filter { $0.identifier?.rawValue == "top-processes.row" && !$0.isHidden }.map { $0.accessibilityValue() as? String } == scores, "Compact toggle changed activity scores")
+        }
         if isModuleOnly && Settings.colorScheme == .dark {
             guard let button = list.subviews.compactMap({ $0 as? NSButton }).first else { throw failure("Missing standalone info button") }
             button.performClick(nil)
@@ -229,7 +257,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
             try await pause(0.1)
             try check(list.helpWindow == nil, "Standalone info did not close")
         }
-        if !isModuleOnly && !isGradientComparison && values == nil { try await standaloneHelpLifecycle(list) }
+        if !isFocusedCapture && values == nil { try await standaloneHelpLifecycle(list) }
     }
 
     @MainActor private func gradientComparison(background: NSWindow, name: String) async throws {
@@ -367,6 +395,12 @@ private final class Probe: NSObject, NSApplicationDelegate {
     }
 
     @MainActor private func actualSettings(background: NSWindow, name: String) async throws {
+        let previousCompact = Settings.topProcessesCompact
+        let previousVisibility = Settings.isModuleVisible(.topProcesses)
+        defer {
+            Settings.topProcessesCompact = previousCompact
+            Settings.setModule(.topProcesses, visible: previousVisibility)
+        }
         let dependencies = SettingsWindowDependencies(loginItemState: { .enabled }, refreshLoginItem: { $0(.enabled) }, setLoginItemEnabled: { value, completion in completion(.success(value ? .enabled : .notRegistered)) }, systemBatteryIconHidden: { false }, helperAvailable: { true }, refreshSystemBatteryIcon: { $0(false) }, setSystemBatteryIconHidden: { _, completion in completion(true) }, systemBatteryIconDidChange: Notification.Name("Wattson.TopProcessesCapture.Battery"), currentVersion: { "Development" }, checkForUpdates: { $0(.success(.upToDate(currentVersion: "Development"))) }, openUpdateURL: { _ in true }, increaseContrast: { false }, announceAccessibility: { _ in })
         let controller = SettingsWindowController(dependencies: dependencies, frameAutosaveName: nil)
         settings = controller
@@ -379,7 +413,8 @@ private final class Probe: NSObject, NSApplicationDelegate {
         guard let content = window.contentView,
               let scroll = descendants(content).compactMap({ $0 as? NSScrollView }).first(where: { $0.identifier?.rawValue == "settings.modules.scroll" }),
               let document = scroll.documentView,
-              let count = descendants(content).compactMap({ $0 as? NSPopUpButton }).first(where: { $0.identifier?.rawValue == "settings.modules.top-process-count" }) else { throw failure("No Settings process count control/scroll view") }
+              let count = descendants(content).compactMap({ $0 as? NSPopUpButton }).first(where: { $0.identifier?.rawValue == "settings.modules.top-process-count" }),
+              let compact = descendants(content).compactMap({ $0 as? NSButton }).first(where: { $0.identifier?.rawValue == "settings.modules.top-processes-compact" }) else { throw failure("No Settings process count/compact controls or scroll view") }
         let viewportFrame = scroll.convert(scroll.bounds, to: content)
         for identifier in ["settings.modules.subtitle", "settings.modules.restore-default-order"] {
             guard let fixedHeader = descendants(content).first(where: { $0.identifier?.rawValue == identifier }) else { throw failure("Missing fixed Settings header") }
@@ -394,13 +429,38 @@ private final class Probe: NSObject, NSApplicationDelegate {
         try check(visible.contains(countRow.convert(countRow.bounds, to: document)), "Process count row clipped: \(name)")
         try check(count.numberOfItems == 10 && count.isEnabled, "Count choices incomplete: \(name)")
         try composite(window, background: background, name: name + "-count", fields: ["count": Settings.topProcessCount, "countFrame": NSStringFromRect(count.convert(count.bounds, to: document)), "scrollVisibleRect": NSStringFromRect(visible)])
+        let compactFocus = Settings.usesLiquidGlass ? compact.subviews.compactMap({ $0 as? NSSwitch }).first : compact
+        try check(compactFocus != nil && window.makeFirstResponder(compactFocus), "Compact control cannot receive keyboard focus: \(name)")
+        try await pause(0.1)
+        let focusedVisible = scroll.documentVisibleRect.insetBy(dx: -0.5, dy: -0.5)
+        try check(focusedVisible.contains(countRow.convert(countRow.bounds, to: document)), "Compact focus leaves its row clipped: \(name)")
+        try check(focusedVisible.contains(compact.convert(compact.bounds, to: document)), "Compact control unreachable: \(name)")
+        try check(compact.isEnabled && compact.state == .off, "Compact default is not enabled/off: \(name)")
+        let compactFrame = compact.convert(compact.bounds, to: countRow)
+        let countFrame = count.convert(count.bounds, to: countRow)
+        try check(!compactFrame.intersects(countFrame), "Count and Compact controls overlap: \(name)")
+        for label in descendants(countRow).compactMap({ $0 as? NSTextField }) where label.stringValue == "Compact view" || label.stringValue == "Processes shown" {
+            try check(label.intrinsicContentSize.width <= label.bounds.width + 0.5, "Settings count/compact label is clipped: \(name)")
+            try check(countRow.bounds.contains(label.convert(label.bounds, to: countRow)), "Settings count/compact label outside row: \(name)")
+        }
+        compact.performClick(nil)
+        try await pause(0.1)
+        try check(Settings.topProcessesCompact && compact.state == .on, "Compact click did not update Settings: \(name)")
+        try composite(window, background: background, name: name + "-compact", fields: ["count": Settings.topProcessCount, "compact": true, "compactFrame": NSStringFromRect(compact.convert(compact.bounds, to: document)), "rowFrame": NSStringFromRect(countRow.frame), "scrollVisibleRect": NSStringFromRect(focusedVisible)])
+        Settings.setModule(.topProcesses, visible: false)
+        controller.refreshSectionsForTest()
+        try check(!count.isEnabled && !compact.isEnabled, "Hidden module leaves count/compact enabled: \(name)")
+        try check(Settings.topProcessesCompact && compact.state == .on, "Hiding module reset Compact preference: \(name)")
+        Settings.setModule(.topProcesses, visible: true)
+        controller.refreshSectionsForTest()
+        try check(count.isEnabled && compact.isEnabled, "Restored module leaves count/compact disabled: \(name)")
         window.close()
         settings = nil
     }
 
-    private func validate(_ list: TopProcessesView, count: Int, expectedProcesses: [EnergyProcess], gradientStyle: TopProcessesView.GradientPreviewStyle? = nil) throws {
+    private func validate(_ list: TopProcessesView, count: Int, expectedProcesses: [EnergyProcess], gradientStyle: TopProcessesView.GradientPreviewStyle? = nil, compact: Bool = false) throws {
         list.layoutSubtreeIfNeeded()
-        try check(abs(list.bounds.height - TopProcessesView.preferredHeight(count: count)) < 0.1, "Wrong process-list height")
+        try check(abs(list.bounds.height - TopProcessesView.preferredHeight(count: count, compact: compact)) < 0.1, "Wrong process-list height")
         let visibleViews = descendants(list).filter { !$0.isHiddenOrHasHiddenAncestor }
         guard let scoreHeader = list.subviews.compactMap({ $0 as? NSTextField }).first(where: { $0.stringValue == "Activity Score" }) else { throw failure("Missing Activity Score header") }
         try check(scoreHeader.intrinsicContentSize.width <= scoreHeader.bounds.width, "Activity Score header is clipped")
@@ -419,12 +479,20 @@ private final class Probe: NSObject, NSApplicationDelegate {
             try check(abs(bar.ratio - expectedRatio) < 0.0001, "Bar does not use the fixed 0–100-point scale")
             try check(bar.track.height == 12 && bar.fill.height == 10, "Incorrect activity-bar height")
             let gradient = list.gradientPreviewGeometryForTest[index]
-            let fixedGradient = gradientStyle == .fixedScaleHorizontal
+            let fixedGradient = gradientStyle == nil || gradientStyle == .fixedScaleHorizontal
             try check(gradient.usesFixedScale == fixedGradient, "Gradient mask does not match selected comparison style")
             try check(abs(gradient.visibleMaskWidth - (bar.track.width - 2) * expectedRatio) < 0.01, "Activity-bar visible fill does not match its fixed scale")
             try check(abs(gradient.gradientWidth - (fixedGradient ? 114 : 114 * expectedRatio)) < 0.01, "Gradient width does not match fixed-scale or filled-width rendering")
+            if PopoverStyle.isHighContrast(list.effectiveAppearance) {
+                guard let track = rows[index].layer?.sublayers?.first(where: { $0.name == "top-processes.track" }),
+                      let fill = track.sublayers?.compactMap({ $0 as? CAGradientLayer }).first,
+                      let colors = fill.colors as? [CGColor], let first = colors.first else { throw failure("Missing high-contrast activity fill") }
+                try check(colors.count == 3 && colors.allSatisfy { $0 == first }, "High-contrast activity fill is not a solid color")
+            }
             let fields = rows[index].subviews.compactMap { $0 as? NSTextField }
             try check(fields.count == 3, "Expected process name, score and CPU/wakeups details")
+            try check(fields[2].isHidden == compact, "CPU/wakeups detail visibility does not match Compact view")
+            try check(abs(rows[index].bounds.height - (compact ? 28 : 44)) < 0.1, "Incorrect detailed/compact row height")
             try check(fields[1].intrinsicContentSize.width <= fields[1].bounds.width, "Activity score is clipped")
             try check(fields[2].stringValue.contains("CPU") && fields[2].stringValue.contains("Idle wakeups"), "Missing CPU/wakeups detail")
             guard let marker = rows[index].subviews.first(where: { $0.identifier?.rawValue == "top-processes.overflow" }) else { throw failure("Missing overflow marker") }

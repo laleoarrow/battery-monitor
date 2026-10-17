@@ -2,8 +2,9 @@
 
 The user-requested Pro redesign replaces the rejected thin relative bars with
 a fixed scale, visible gradients and concrete CPU/wakeup readings. The new
-native previews below are implementation review evidence; user approval is not
-implied. The [Pro design specification](pro-design.md) records the direction
+native previews below are implementation review evidence. The user selected
+fixed-scale horizontal option A from the four-style comparison.
+The [Pro design specification](pro-design.md) records the earlier direction
 and the verified ChatGPT Pro consultation.
 
 Development source based on Wattson 4.3.17. The canonical installed app and
@@ -14,10 +15,12 @@ supports 1–10, visibility and the existing module ordering controls. Its icon
 uses three horizontal bars, descending in length, with neutral outlines and
 blue gradients. Process rows share Wattson's transparent surface and separators.
 
-The fixed **0–100 pts** scale prevents an idle first-ranked process from filling
+The fixed **0–100 Activity Score** scale prevents an idle first-ranked process from filling
 its bar. Each row shows its real activity points and the underlying CPU percent
-and idle wakeups per second. Every twelve-point filled bar has its own complete
-horizontal gradient from pale to deep blue. Rows use the same colors, while
+and idle wakeups per second. Each complete track has a horizontal gradient from
+pale to deep blue; a mask reveals only the portion through the current score.
+For example, 8.1 reveals only the pale first 8.1% of the gradient.
+Rows use the same colors, while
 length and the numeric **Activity Score** convey activity. A chevron at the
 bar's end marks scores above 100 without hiding the
 numeric value. Zero remains empty and tiny values are not inflated. A small
@@ -25,6 +28,11 @@ native information button explains Wattson's CPU-and-wakeup activity indicator
 and the fixed scale; formula lineage is retained in developer documentation.
 These values are not watts or shares of measured battery power. See
 [the data model and formula](../../docs/top-energy-processes.md).
+
+The optional **Compact view** switch in this module's Settings row hides the
+CPU/wakeup line, reducing the default three-process section from 168 to 120
+points. It preserves names, scores, bars, tooltips and accessibility details.
+The switch defaults off and retains its value while the module is disabled.
 
 ## Native visual evidence
 
@@ -35,7 +43,14 @@ demonstration of Liquid Glass translucency.
 
 | Dark | Light |
 | --- | --- |
-| ![Horizontal blue gradient, dark](horizontal-gradient-module-dark.png) | ![Horizontal blue gradient, light](horizontal-gradient-module-light.png) |
+| ![Fixed-scale horizontal gradient, dark](fixed-scale-gradient/module-dark.png) | ![Fixed-scale horizontal gradient, light](fixed-scale-gradient/module-light.png) |
+
+| Compact, dark | Compact, light |
+| --- | --- |
+| ![Compact module, dark](fixed-scale-gradient/compact-module-dark.png) | ![Compact module, light](fixed-scale-gradient/compact-module-light.png) |
+
+[Compact view setting](fixed-scale-gradient/settings-compact-light.png) ·
+[Selected-style verification](fixed-scale-gradient/README.md)
 
 [Supplied style reference](reference-style.png) ·
 [Settings quantity control and horizontal icon](pro-settings-light.png)
@@ -63,20 +78,20 @@ stays absent through 35 seconds of filesystem observation; all ten resource
 checks pass and the disposable VM has been removed, preserving the original VMs.
 [Its verification](blue-scale-review.json) preserves those results and hashes.
 The user subsequently clarified that the gradient belongs inside each bar;
-the current previews above show that horizontal treatment and the final
+the preceding previews show that horizontal treatment and the final
 Activity Score wording. Earlier [per-score dark](blue-scale-module-dark.png),
 [per-score light](blue-scale-module-light.png), [uniform-blue dark](pro-module-dark.png)
 and [uniform-blue light](pro-module-light.png) images remain historical evidence.
-The corrected horizontal gradient and final Activity Score wording pass nine
+The preceding complete-fill horizontal gradient and Activity Score wording passed nine
 focused view tests and three real-window captures with 107 assertions. The
 information text fits its actual native text cell without clipping.
-[Current verification](verification.json) records this final source and evidence.
+[Its verification](verification.json) records that source and evidence.
 
 The subsequent [four-style gradient comparison](gradient-comparison/README.md)
 adds the user's requested fixed 0–100 gradient that reveals only the portion
 through the current value, alongside the three earlier treatments. These are
-DEBUG review alternatives; the current production treatment remains B pending
-the user's visual selection.
+DEBUG review alternatives. The user selected A; the current renderer and compact
+option are documented in [the selected-style review](fixed-scale-gradient/README.md).
 
 ## Earlier rejected candidate
 
@@ -100,6 +115,7 @@ The explicit GUI entrypoints run in the disposable test VM:
 ```sh
 WATTSON_RUN_GUI_TESTS=1 bash scripts/verify_top_processes.sh OUTPUT_DIRECTORY
 WATTSON_RUN_GUI_TESTS=1 bash scripts/verify_top_processes.sh --module-only OUTPUT_DIRECTORY
+WATTSON_RUN_GUI_TESTS=1 bash scripts/verify_top_processes.sh --compact-only OUTPUT_DIRECTORY
 bash scripts/verify_interaction.sh
 bash scripts/verify_animation_stress.sh
 ```

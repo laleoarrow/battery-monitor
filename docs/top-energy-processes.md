@@ -14,10 +14,17 @@ short or empty bar even when it ranks first. Scores above 100 retain their real
 numeric value, with a full bar and an overflow mark. The scale stays the same
 when the ranking or the configured process count changes.
 
-Each filled bar has a complete horizontal gradient from pale blue on the left
-to deep blue on the right, including short bars. Rows share the same colors;
-length and numeric value convey activity. Above 100 the full bar retains its
-overflow mark and real numeric value. High contrast uses solid system blue.
+Each complete 0–100 track has a horizontal gradient from pale blue on the left
+to deep blue on the right. The score reveals only that portion of the gradient:
+8.1 reveals the pale first 8.1%, while 100 reveals the full gradient. Rows share
+the same colors and scale. Above 100 the full bar retains its overflow mark and
+real numeric value. High contrast uses solid system blue.
+
+Settings > Modules > Process Activity also provides **Compact view**, off by
+default. Enabling it hides the CPU and idle-wakeup line and reduces each row
+from 44 to 28 points. Names, scores and bar lengths remain the same; the inputs
+remain available in tooltips and accessibility descriptions. The choice persists
+when the module is hidden and updates an open popover without resampling.
 
 Each row shows its **Activity Score** and the two inputs: **CPU %** and **Idle
 wakeups /s**. The information control explains their meaning. CPU is measured

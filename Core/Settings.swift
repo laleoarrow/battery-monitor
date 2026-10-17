@@ -88,6 +88,7 @@ enum Settings {
         case module(Module)
         case moduleOrder
         case topProcessCount
+        case topProcessesCompact
     }
 
     static let didChange = Notification.Name("WattsonSettingsDidChange")
@@ -105,6 +106,7 @@ enum Settings {
     private static let dockIconStyleKey = "appearance.dockIconStyle"
     private static let moduleOrderKey = "popover.moduleOrder"
     private static let topProcessCountKey = "popover.topProcessCount"
+    private static let topProcessesCompactKey = "popover.topProcessesCompact"
 #if DEBUG
     private static var testDefaults: UserDefaults?
 #endif
@@ -313,6 +315,15 @@ enum Settings {
             guard topProcessCount != value else { return }
             defaults.set(value, forKey: topProcessCountKey)
             postChange(.topProcessCount)
+        }
+    }
+
+    static var topProcessesCompact: Bool {
+        get { defaults.object(forKey: topProcessesCompactKey) as? Bool ?? false }
+        set {
+            guard topProcessesCompact != newValue else { return }
+            defaults.set(newValue, forKey: topProcessesCompactKey)
+            postChange(.topProcessesCompact)
         }
     }
 

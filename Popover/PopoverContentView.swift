@@ -883,7 +883,9 @@ final class PopoverContentViewController: NSViewController {
         if isVisible(.ring) { total += RingGaugeView.preferredHeight }
         if isVisible(.lanes) { total += LaneView.preferredHeight }
         if isVisible(.history) { total += HistoryView.preferredHeight }
-        if isVisible(.topProcesses) { total += TopProcessesView.preferredHeight(count: Settings.topProcessCount) }
+        if isVisible(.topProcesses) {
+            total += TopProcessesView.preferredHeight(count: Settings.topProcessCount, compact: Settings.topProcessesCompact)
+        }
         return total + 24
     }
 
@@ -929,7 +931,8 @@ final class PopoverContentViewController: NSViewController {
         case .history:
             updateHistory()
         case .topProcesses:
-            topProcessesView.update(state: latestTopProcesses, count: Settings.topProcessCount)
+            topProcessesView.update(state: latestTopProcesses, count: Settings.topProcessCount,
+                                    compact: Settings.topProcessesCompact)
         }
     }
 
@@ -1033,7 +1036,7 @@ final class PopoverContentViewController: NSViewController {
         stack.addArrangedSubview(footer)
 
         let processesHeight = topProcessesView.heightAnchor.constraint(
-            equalToConstant: TopProcessesView.preferredHeight(count: Settings.topProcessCount)
+            equalToConstant: TopProcessesView.preferredHeight(count: Settings.topProcessCount, compact: Settings.topProcessesCompact)
         )
         topProcessesHeight = processesHeight
 
@@ -1100,9 +1103,11 @@ final class PopoverContentViewController: NSViewController {
                 self?.applyModuleVisibility()
             case .moduleOrder:
                 self?.applyModuleOrder()
-            case .topProcessCount:
+            case .topProcessCount, .topProcessesCompact:
                 guard let self else { return }
-                self.topProcessesHeight?.constant = TopProcessesView.preferredHeight(count: Settings.topProcessCount)
+                self.topProcessesHeight?.constant = TopProcessesView.preferredHeight(
+                    count: Settings.topProcessCount, compact: Settings.topProcessesCompact
+                )
                 self.updateModule(.topProcesses)
                 self.heightDidChange?(self.preferredHeight)
             default:

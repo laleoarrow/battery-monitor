@@ -295,4 +295,38 @@ final class ModuleOrderViewTests: XCTestCase {
         Settings.setModule(.topProcesses, visible: true)
         XCTAssertEqual(processView.frame.height, TopProcessesView.preferredHeight(count: 1))
     }
+
+    func testCompactProcessSettingResizesTheRetainedModuleWithoutDiscardingReadings() throws {
+        let content = PopoverContentViewController()
+        content.setViewportHeight(content.preferredHeight)
+        let processView = try XCTUnwrap(content.moduleViewForTest(.topProcesses) as? TopProcessesView)
+        content.updateTopProcesses(.ready([
+            EnergyProcess(pid: 42, name: "Safari", energyImpact: 84,
+                          cpuPercent: 72, idleWakeupsPerSecond: 240)
+        ]))
+        let row = try XCTUnwrap(processView.subviews.first { $0.identifier?.rawValue == "top-processes.row" })
+        let reading = row.accessibilityValue() as? String
+        let fullHeight = content.preferredHeight
+        content.heightDidChange = { [weak content] in content?.setViewportHeight($0) }
+
+        Settings.topProcessesCompact = true
+        XCTAssertTrue(processView === content.moduleViewForTest(.topProcesses))
+        XCTAssertEqual(processView.frame.height, TopProcessesView.preferredHeight(count: 3, compact: true))
+        XCTAssertEqual(content.preferredHeight, fullHeight - 48)
+        XCTAssertEqual(row.accessibilityValue() as? String, reading)
+        XCTAssertTrue(row.subviews.compactMap { $0 as? NSTextField }.last?.isHidden == true)
+
+        Settings.topProcessesCompact = false
+        XCTAssertEqual(content.preferredHeight, fullHeight)
+        XCTAssertEqual(row.accessibilityValue() as? String, reading)
+        XCTAssertTrue(row.subviews.compactMap { $0 as? NSTextField }.last?.isHidden == false)
+
+        Settings.setModule(.topProcesses, visible: false)
+        let hiddenHeight = content.preferredHeight
+        Settings.topProcessesCompact = true
+        XCTAssertEqual(content.preferredHeight, hiddenHeight)
+        Settings.setModule(.topProcesses, visible: true)
+        XCTAssertEqual(processView.frame.height, TopProcessesView.preferredHeight(count: 3, compact: true))
+        XCTAssertEqual(row.accessibilityValue() as? String, reading)
+    }
 }

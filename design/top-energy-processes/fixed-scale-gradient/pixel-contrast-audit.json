@@ -1,0 +1,254 @@
+{
+  "compact": {
+    "method": "Read-only native WindowServer PNG inspection; no raster editing. Primary text contrasted with the actual surface; fixed-scale blue and high-contrast solid fill sampled at the 8.1-score row.",
+    "cases": {
+      "module-detailed-light-3.png": {
+        "surfaceRGB": [
+          255,
+          255,
+          255
+        ],
+        "primaryText": [
+          {
+            "row": 0,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 418
+          },
+          {
+            "row": 1,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 968
+          },
+          {
+            "row": 2,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 618
+          }
+        ],
+        "score8_1BlueRGB": [
+          149,
+          216,
+          255
+        ],
+        "allPassed": true
+      },
+      "module-compact-light-3.png": {
+        "surfaceRGB": [
+          255,
+          255,
+          255
+        ],
+        "primaryText": [
+          {
+            "row": 0,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 418
+          },
+          {
+            "row": 1,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 968
+          },
+          {
+            "row": 2,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 618
+          }
+        ],
+        "score8_1BlueRGB": [
+          149,
+          216,
+          255
+        ],
+        "allPassed": true
+      },
+      "module-detailed-dark-3.png": {
+        "surfaceRGB": [
+          30,
+          30,
+          30
+        ],
+        "primaryText": [
+          {
+            "row": 0,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 529
+          },
+          {
+            "row": 1,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 1213
+          },
+          {
+            "row": 2,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 765
+          }
+        ],
+        "score8_1BlueRGB": [
+          150,
+          216,
+          255
+        ],
+        "allPassed": true
+      },
+      "module-compact-dark-3.png": {
+        "surfaceRGB": [
+          30,
+          30,
+          30
+        ],
+        "primaryText": [
+          {
+            "row": 0,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 528
+          },
+          {
+            "row": 1,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 1230
+          },
+          {
+            "row": 2,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 754
+          }
+        ],
+        "score8_1BlueRGB": [
+          149,
+          216,
+          255
+        ],
+        "allPassed": true
+      }
+    },
+    "allPassed": true
+  },
+  "high-contrast": {
+    "method": "Read-only native WindowServer PNG inspection; no raster editing. Primary text contrasted with the actual surface; fixed-scale blue and high-contrast solid fill sampled at the 8.1-score row.",
+    "cases": {
+      "module-detailed-light-3.png": {
+        "surfaceRGB": [
+          255,
+          255,
+          255
+        ],
+        "primaryText": [
+          {
+            "row": 0,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 418
+          },
+          {
+            "row": 1,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 968
+          },
+          {
+            "row": 2,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 618
+          }
+        ],
+        "score8_1BlueRGB": [
+          0,
+          135,
+          255
+        ],
+        "allPassed": true
+      },
+      "module-compact-light-3.png": {
+        "surfaceRGB": [
+          255,
+          255,
+          255
+        ],
+        "primaryText": [
+          {
+            "row": 0,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 418
+          },
+          {
+            "row": 1,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 968
+          },
+          {
+            "row": 2,
+            "maximumContrast": 14.94,
+            "pixelsAtLeast4_5to1": 618
+          }
+        ],
+        "score8_1BlueRGB": [
+          0,
+          135,
+          255
+        ],
+        "allPassed": true
+      },
+      "module-detailed-dark-3.png": {
+        "surfaceRGB": [
+          30,
+          30,
+          30
+        ],
+        "primaryText": [
+          {
+            "row": 0,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 529
+          },
+          {
+            "row": 1,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 1213
+          },
+          {
+            "row": 2,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 765
+          }
+        ],
+        "score8_1BlueRGB": [
+          1,
+          145,
+          255
+        ],
+        "allPassed": true
+      },
+      "module-compact-dark-3.png": {
+        "surfaceRGB": [
+          30,
+          30,
+          30
+        ],
+        "primaryText": [
+          {
+            "row": 0,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 529
+          },
+          {
+            "row": 1,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 1213
+          },
+          {
+            "row": 2,
+            "maximumContrast": 12.27,
+            "pixelsAtLeast4_5to1": 765
+          }
+        ],
+        "score8_1BlueRGB": [
+          1,
+          145,
+          255
+        ],
+        "allPassed": true
+      }
+    },
+    "allPassed": true
+  }
+}

@@ -2763,7 +2763,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .checkForUpdatesOnLaunch, .module, .moduleOrder, .topProcessCount, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
+            case .checkForUpdatesOnLaunch, .module, .moduleOrder, .topProcessCount, .topProcessesCompact, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
                 break
             }
         }
@@ -3245,6 +3245,12 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
     private var separators: [Settings.Module: NSBox] = [:]
     private let rows = ModuleReorderList()
     private let topProcessCount = SettingsAppearancePopupButton()
+    private lazy var topProcessesCompact = SettingsToggleButton(
+        accessibilityLabel: "Compact view",
+        increaseContrast: increaseContrast,
+        target: self,
+        action: #selector(toggleTopProcessesCompact(_:))
+    )
     var orderDidChange: (() -> Void)?
     private var settingsObserver: NSObjectProtocol?
 
@@ -3403,10 +3409,22 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
                 topProcessCount.addItem(withTitle: String(count))
                 topProcessCount.lastItem?.tag = count
             }
-            let countRow = NSStackView(views: [detail, topProcessCount])
+            topProcessesCompact.identifier = NSUserInterfaceItemIdentifier("settings.modules.top-processes-compact")
+            topProcessesCompact.setAccessibilityIdentifier("settings.modules.top-processes-compact")
+            topProcessesCompact.nativeSwitch.setAccessibilityIdentifier("settings.modules.top-processes-compact.native")
+            topProcessesCompact.setAccessibilityHelp("Hide CPU and idle wakeup details.")
+            let compactLabel = NSTextField(labelWithString: "Compact view")
+            compactLabel.font = SettingsStyle.detailFont
+            compactLabel.textColor = SettingsStyle.secondaryText
+            let compactRow = NSStackView(views: [compactLabel, topProcessesCompact])
+            compactRow.orientation = .horizontal
+            compactRow.alignment = .centerY
+            compactRow.spacing = 6
+            let countRow = NSStackView(views: [detail, topProcessCount, compactRow])
             countRow.orientation = .horizontal
             countRow.alignment = .centerY
             countRow.spacing = 6
+            countRow.setCustomSpacing(16, after: topProcessCount)
             secondary = countRow
         } else {
             secondary = detail
@@ -3491,7 +3509,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             }
             if case let .module(module) = change { self.refresh(module) }
             if change == .moduleOrder { self.rows.applySavedOrder() }
-            if change == .topProcessCount { self.refresh(.topProcesses) }
+            if change == .topProcessCount || change == .topProcessesCompact { self.refresh(.topProcesses) }
         }
     }
 
@@ -3508,12 +3526,19 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         if module == .topProcesses {
             topProcessCount.selectItem(withTag: Settings.topProcessCount)
             topProcessCount.isEnabled = Settings.isModuleVisible(module)
+            topProcessesCompact.state = Settings.topProcessesCompact ? .on : .off
+            topProcessesCompact.isEnabled = Settings.isModuleVisible(module)
         }
     }
 
     @objc private func changeTopProcessCount(_ sender: NSPopUpButton) {
         guard let count = sender.selectedItem?.tag else { return }
         Settings.topProcessCount = count
+    }
+
+    @objc private func toggleTopProcessesCompact(_ sender: NSButton) {
+        guard sender.isEnabled else { return }
+        Settings.topProcessesCompact = sender.state == .on
     }
 
     @objc private func restoreDefaultOrder(_ sender: NSButton) {
@@ -4057,6 +4082,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     private func keyControls(in view: NSView) -> [NSView] {
         guard !view.isHidden else { return [] }
         if let toggle = view as? SettingsToggleButton {
+            if !toggle.isEnabled,
+               toggle.identifier?.rawValue == "settings.modules.top-processes-compact" { return [] }
             return [Settings.usesLiquidGlass ? toggle.nativeSwitch : toggle]
         }
         if let control = view as? NSSwitch { return control.isEnabled ? [control] : [] }

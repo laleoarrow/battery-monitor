@@ -45,6 +45,65 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertEqual(TopProcessesView.preferredHeight(count: 99), TopProcessesView.preferredHeight(count: 10))
     }
 
+    func testCompactHeightAndVisibleGeometryFitConfiguredCountsAcrossStates() {
+        XCTAssertEqual(TopProcessesView.preferredHeight(count: 3, compact: true), 120)
+        for count in [1, 3, 10] {
+            let view = makeView(count: count, compact: true)
+            for state: TopProcessesState in [.loading, .unavailable, .ready([]), .ready(processes(count))] {
+                view.update(state: state, count: count, compact: true)
+                view.layoutSubtreeIfNeeded()
+                XCTAssertEqual(view.frame.height, 36 + 28 * CGFloat(count))
+                XCTAssertTrue(view.subviews.filter { !$0.isHidden }.allSatisfy { view.bounds.contains($0.frame) })
+                for row in visibleRows(view) {
+                    XCTAssertEqual(row.frame.height, 28)
+                    XCTAssertTrue(row.subviews.allSatisfy { row.bounds.contains($0.frame) })
+                    let details = row.subviews.compactMap { $0 as? NSTextField }[2]
+                    XCTAssertTrue(details.isHidden)
+                    XCTAssertEqual(details.frame, .zero)
+                }
+            }
+        }
+        XCTAssertEqual(TopProcessesView.preferredHeight(count: 0, compact: true),
+                       TopProcessesView.preferredHeight(count: 1, compact: true))
+        XCTAssertEqual(TopProcessesView.preferredHeight(count: 99, compact: true),
+                       TopProcessesView.preferredHeight(count: 10, compact: true))
+    }
+
+    func testCompactToggleReusesRowsAndPreservesValuesGradientAndAccessibleDetails() throws {
+        let view = makeView()
+        let readings = [0.0, 0.04, 125].enumerated().map { process($0.offset + 1, score: $0.element) }
+        view.update(state: .ready(readings), count: 3)
+        view.layoutSubtreeIfNeeded()
+        let rows = visibleRows(view)
+        let fields = rows.flatMap { $0.subviews }.map(ObjectIdentifier.init)
+        let accessibility = rows.map { $0.accessibilityValue() as? String }
+        let tips = rows.map(\.toolTip)
+        for compact in [true, false, true, false] {
+            view.frame.size.height = TopProcessesView.preferredHeight(count: 3, compact: compact)
+            view.update(state: .ready(readings), count: 3, compact: compact)
+            view.layoutSubtreeIfNeeded()
+            XCTAssertEqual(visibleRows(view).map(ObjectIdentifier.init), rows.map(ObjectIdentifier.init))
+            XCTAssertEqual(rows.flatMap { $0.subviews }.map(ObjectIdentifier.init), fields)
+            XCTAssertEqual(rows.map { $0.accessibilityValue() as? String }, accessibility)
+            XCTAssertEqual(rows.map(\.toolTip), tips)
+            XCTAssertEqual(rows.map { $0.frame.height }, Array(repeating: compact ? 28 : 44, count: 3))
+            for (index, row) in rows.enumerated() {
+                let labels = row.subviews.compactMap { $0 as? NSTextField }
+                XCTAssertEqual(labels[1].stringValue, ["0.0", "<0.1", "125.0"][index])
+                XCTAssertEqual(labels[2].isHidden, compact)
+                XCTAssertFalse(labels[2].stringValue.isEmpty)
+                XCTAssertTrue(row.toolTip?.contains("CPU") == true)
+                XCTAssertTrue((row.accessibilityValue() as? String)?.contains("idle wakeups") == true)
+                XCTAssertTrue(row.subviews.allSatisfy { row.bounds.contains($0.frame) })
+                let gradient = try gradientLayer(row)
+                XCTAssertEqual(gradient.frame.width, 114)
+                XCTAssertEqual(try XCTUnwrap(gradient.mask).frame.width, [0, 0.0456, 114][index], accuracy: 0.000_001)
+                let overflow = try XCTUnwrap(row.subviews.compactMap { $0 as? NSImageView }.first)
+                XCTAssertEqual(overflow.isHidden, index != 2)
+            }
+        }
+    }
+
     func testMeasuringEmptyAndUnavailableRemainDistinctAndAccessible() throws {
         let view = makeView()
         for (state, text, help): (TopProcessesState, String, String) in [
@@ -78,7 +137,11 @@ final class TopProcessesViewTests: XCTestCase {
                 XCTAssertEqual(bar.track, NSRect(x: 144, y: 6, width: 116, height: 12))
                 XCTAssertEqual(bar.fill.origin, NSPoint(x: 1, y: 1))
                 XCTAssertEqual(bar.fill.height, 10)
-                XCTAssertEqual(bar.fill.width, 114 * bar.ratio, accuracy: 0.001)
+                XCTAssertEqual(bar.fill.width, 114)
+            }
+            for (geometry, bar) in zip(view.gradientPreviewGeometryForTest, view.barGeometryForTest) {
+                XCTAssertEqual(geometry.visibleMaskWidth, 114 * bar.ratio, accuracy: 0.001)
+                XCTAssertTrue(geometry.usesFixedScale)
             }
         }
         let fields = view.subviews.compactMap { $0 as? NSTextField }
@@ -97,8 +160,9 @@ final class TopProcessesViewTests: XCTestCase {
         let values = rows.map { $0.subviews.compactMap { $0 as? NSTextField }[1] }
         XCTAssertEqual(values.map(\.stringValue), ["0.0", "<0.1", "100.0", "100.0", "125.5", "999.9", "1000", "9999", "10000", "2e308"])
         XCTAssertEqual(view.barGeometryForTest.map(\.ratio), [0, 0.0004, 1, 1, 1, 1, 1, 1, 1, 1])
-        XCTAssertEqual(view.barGeometryForTest[0].fill.width, 0)
-        XCTAssertEqual(view.barGeometryForTest[1].fill.width, 0.0456, accuracy: 0.000_001)
+        XCTAssertEqual(view.gradientPreviewGeometryForTest[0].visibleMaskWidth, 0)
+        XCTAssertEqual(view.gradientPreviewGeometryForTest[1].visibleMaskWidth, 0.0456, accuracy: 0.000_001)
+        XCTAssertTrue(view.gradientPreviewGeometryForTest.allSatisfy { $0.gradientWidth == 114 && $0.usesFixedScale })
         for (index, score) in scores.enumerated() {
             let field = values[index]
             XCTAssertEqual(field.alignment, .right)
@@ -154,29 +218,41 @@ final class TopProcessesViewTests: XCTestCase {
         let view = makeView()
         let original = processes(3)
         view.update(state: .ready(original), count: 3)
+        view.layoutSubtreeIfNeeded()
         let rows = visibleRows(view)
         let fields = rows.flatMap { $0.subviews }.map(ObjectIdentifier.init)
         let originalColors = try gradientColors(try XCTUnwrap(rows.first))
+        let masks = try rows.map { ObjectIdentifier(try XCTUnwrap(gradientLayer($0).mask)) }
         for iteration in 0..<50 {
-            let updated = original.reversed().map {
-                EnergyProcess(pid: $0.pid, name: $0.name, energyImpact: Double(iteration),
-                              cpuPercent: Double(iteration), idleWakeupsPerSecond: 0)
+            let score = Double(iteration.isMultiple(of: 2) ? iteration : 100 - iteration)
+            let order = iteration.isMultiple(of: 2) ? original : Array(original.reversed())
+            let updated = order.map {
+                EnergyProcess(pid: $0.pid, name: $0.name, energyImpact: score,
+                              cpuPercent: score, idleWakeupsPerSecond: 0)
             }
             view.update(state: .ready(updated), count: 3)
+            view.layoutSubtreeIfNeeded()
+            XCTAssertEqual(try rows.map { ObjectIdentifier(try XCTUnwrap(gradientLayer($0).mask)) }, masks)
+            for geometry in view.gradientPreviewGeometryForTest {
+                XCTAssertEqual(geometry.gradientWidth, 114)
+                XCTAssertEqual(geometry.visibleMaskWidth, 114 * score / 100, accuracy: 0.000_001)
+                XCTAssertTrue(geometry.usesFixedScale)
+            }
+            XCTAssertEqual(rows.map { $0.subviews.compactMap { $0 as? NSTextField }[0].stringValue }, updated.map(\.name))
         }
         XCTAssertEqual(visibleRows(view).map(ObjectIdentifier.init), rows.map(ObjectIdentifier.init))
         XCTAssertEqual(visibleRows(view).flatMap { $0.subviews }.map(ObjectIdentifier.init), fields)
         let updatedColors = try gradientColors(try XCTUnwrap(rows.first))
         XCTAssertEqual(updatedColors, originalColors)
-        XCTAssertEqual(view.barGeometryForTest.map(\.ratio), [0.49, 0.49, 0.49])
+        XCTAssertEqual(view.barGeometryForTest.map(\.ratio), [0.51, 0.51, 0.51])
         for row in visibleRows(view) {
             let value = try XCTUnwrap(row.subviews.compactMap { $0 as? NSTextField }.dropFirst().first)
-            XCTAssertEqual(value.stringValue, "49.0")
+            XCTAssertEqual(value.stringValue, "51.0")
             XCTAssertEqual(try gradientColors(row), originalColors)
         }
     }
 
-    func testEveryFillUsesTheSameCompleteHorizontalLightToDarkBlueGradientIncludingShortBars() throws {
+    func testDefaultBarsUseTheSameFixedHorizontalGradientAndRevealOnlyTheMeasuredPrefix() throws {
         let view = makeView()
         view.appearance = NSAppearance(named: .aqua)
         view.update(state: .ready([8.1, 46, 84].enumerated().map {
@@ -212,9 +288,10 @@ final class TopProcessesViewTests: XCTestCase {
         for (bar, expected) in zip(view.barGeometryForTest, [0.081, 0.46, 0.84]) {
             XCTAssertEqual(bar.ratio, expected, accuracy: 0.000_001)
         }
-        // The gradient belongs to each filled segment, so even an 8.1-point
-        // reading reaches the dark-blue endpoint within its short fill.
-        XCTAssertEqual(try gradientLayer(rows[0]).frame.width, 114 * 0.081, accuracy: 0.000_001)
+        // An 8.1-point reading reveals only the pale first 8.1% of the full-scale gradient.
+        let shortGradient = try gradientLayer(rows[0])
+        XCTAssertEqual(shortGradient.frame.width, 114)
+        XCTAssertEqual(try XCTUnwrap(shortGradient.mask).frame.width, 114 * 0.081, accuracy: 0.000_001)
     }
 
     func testGradientAndOutlineFollowLightDarkAndHighContrastWithoutAnimations() throws {
@@ -267,9 +344,8 @@ final class TopProcessesViewTests: XCTestCase {
         }
     }
 
-    func testFixedScalePreviewKeepsFullGradientWidthAndOnlyRevealsTheMeasuredPrefix() throws {
+    func testDefaultFixedScaleKeepsFullGradientWidthAndOnlyRevealsTheMeasuredPrefix() throws {
         let view = makeView(count: 10)
-        view.setGradientPreviewStyle(.fixedScaleHorizontal)
         let scores = [0.0, 0.04, 8.1, 46, 84, 100, 125]
         view.update(state: .ready(scores.enumerated().map { process($0.offset + 1, score: $0.element) }), count: 10)
         view.layoutSubtreeIfNeeded()
@@ -330,9 +406,8 @@ final class TopProcessesViewTests: XCTestCase {
         }
     }
 
-    func testFixedScalePreviewRetainsMaskGeometryAcrossThemesAndHighContrast() throws {
+    func testDefaultFixedScaleRetainsMaskGeometryAcrossThemesAndHighContrast() throws {
         let view = makeView()
-        view.setGradientPreviewStyle(.fixedScaleHorizontal)
         view.update(state: .ready([8.1, 46, 84].enumerated().map {
             process($0.offset + 1, score: $0.element)
         }), count: 3)
@@ -388,10 +463,10 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertNil(view.helpWindow)
     }
 
-    private func makeView(count: Int = 3) -> TopProcessesView {
+    private func makeView(count: Int = 3, compact: Bool = false) -> TopProcessesView {
         let view = TopProcessesView()
         view.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
-                            height: TopProcessesView.preferredHeight(count: count))
+                            height: TopProcessesView.preferredHeight(count: count, compact: compact))
         return view
     }
 

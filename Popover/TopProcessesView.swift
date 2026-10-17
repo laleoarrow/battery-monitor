@@ -3,6 +3,7 @@ import AppKit
 /// Process activity on a fixed scale, on the popover's shared surface.
 final class TopProcessesView: PopoverSection {
     private static let rowHeight: CGFloat = 44
+    private static let compactRowHeight: CGFloat = 28
     private static let activityHelp = "Activity Score combines CPU usage and idle wakeups. Higher scores indicate greater process activity, not measured power consumption. Bars use a fixed 0–100 scale; › marks scores above 100. CPU 100% means one logical core."
     private let title = NSTextField(labelWithString: "Process Activity")
     private let scale = NSTextField(labelWithString: "Activity Score")
@@ -11,9 +12,10 @@ final class TopProcessesView: PopoverSection {
     private let rows = (0..<10).map { _ in ProcessRow() }
     private var infoPopover: NSPopover?
     private var count = 3
+    private var compact = false
 
-    static func preferredHeight(count: Int) -> CGFloat {
-        36 + rowHeight * CGFloat(min(max(count, 1), 10))
+    static func preferredHeight(count: Int, compact: Bool = false) -> CGFloat {
+        36 + (compact ? compactRowHeight : rowHeight) * CGFloat(min(max(count, 1), 10))
     }
 
     init() {
@@ -60,11 +62,12 @@ final class TopProcessesView: PopoverSection {
         title.frame = NSRect(x: 0, y: 7, width: 190, height: 16)
         scale.frame = NSRect(x: bounds.width - 104, y: 7, width: 78, height: 16)
         infoButton.frame = NSRect(x: bounds.width - 18, y: 5, width: 18, height: 18)
+        let rowHeight = compact ? Self.compactRowHeight : Self.rowHeight
         for (index, row) in rows.enumerated() {
-            row.frame = NSRect(x: 0, y: 28 + CGFloat(index) * Self.rowHeight,
-                               width: bounds.width, height: Self.rowHeight)
+            row.frame = NSRect(x: 0, y: 28 + CGFloat(index) * rowHeight,
+                               width: bounds.width, height: rowHeight)
         }
-        status.frame = NSRect(x: 0, y: 28 + (CGFloat(count) * Self.rowHeight - 20) / 2,
+        status.frame = NSRect(x: 0, y: 28 + (CGFloat(count) * rowHeight - 20) / 2,
                               width: bounds.width, height: 20)
     }
 
@@ -93,8 +96,9 @@ final class TopProcessesView: PopoverSection {
         return infoPopover?.contentViewController?.view.window
     }
 
-    func update(state: TopProcessesState, count: Int) {
+    func update(state: TopProcessesState, count: Int, compact: Bool = false) {
         self.count = min(max(count, 1), 10)
+        self.compact = compact
         let processes: [EnergyProcess]
         switch state {
         case .loading:
@@ -117,7 +121,7 @@ final class TopProcessesView: PopoverSection {
                 row.isHidden = true
                 continue
             }
-            row.update(process: processes[index])
+            row.update(process: processes[index], compact: compact)
             row.isHidden = false
         }
         needsLayout = true
@@ -184,10 +188,10 @@ final class TopProcessesView: PopoverSection {
         private let overflow = NSImageView()
         private let track = CALayer()
         private let fill = CAGradientLayer()
+        private let fillMask = CALayer()
         private var ratio: CGFloat = 0
 #if DEBUG
-        private var gradientPreviewStyle: GradientPreviewStyle = .filledWidthHorizontal
-        private let previewMask = CALayer()
+        private var gradientPreviewStyle: GradientPreviewStyle = .fixedScaleHorizontal
 #endif
 
         override var isFlipped: Bool { true }
@@ -206,6 +210,10 @@ final class TopProcessesView: PopoverSection {
             fill.startPoint = CGPoint(x: 0, y: 0.5)
             fill.endPoint = CGPoint(x: 1, y: 0.5)
             fill.locations = [0, 0.45, 1]
+            fillMask.backgroundColor = NSColor.black.cgColor
+            fillMask.cornerRadius = 2
+            fillMask.cornerCurve = .continuous
+            fill.mask = fillMask
             track.addSublayer(fill)
             layer?.addSublayer(track)
             name.font = .systemFont(ofSize: 13, weight: .regular)
@@ -243,20 +251,16 @@ final class TopProcessesView: PopoverSection {
             super.layout()
             name.frame = NSRect(x: 0, y: 2, width: 132, height: 20)
             value.frame = NSRect(x: 272, y: 2, width: 56, height: 20)
-            details.frame = NSRect(x: 0, y: 25, width: bounds.width, height: 15)
+            details.frame = details.isHidden ? .zero : NSRect(x: 0, y: 25, width: bounds.width, height: 15)
             overflow.frame = NSRect(x: 262, y: 6, width: 8, height: 12)
             PopoverStyle.setWithoutAnimation {
                 self.track.frame = NSRect(x: 144, y: 6, width: 116, height: 12)
-                self.fill.frame = NSRect(x: 1, y: 1, width: 114 * self.ratio, height: 10)
+                self.fill.frame = NSRect(x: 1, y: 1, width: 114, height: 10)
+                self.fillMask.frame = NSRect(x: 0, y: 0, width: 114 * self.ratio, height: 10)
+                self.fill.mask = self.fillMask
 #if DEBUG
-                if self.gradientPreviewStyle == .fixedScaleHorizontal {
-                    self.fill.frame.size.width = 114
-                    self.previewMask.frame = NSRect(x: 0, y: 0, width: 114 * self.ratio, height: 10)
-                    self.previewMask.backgroundColor = NSColor.black.cgColor
-                    self.previewMask.cornerRadius = 2
-                    self.previewMask.cornerCurve = .continuous
-                    self.fill.mask = self.previewMask
-                } else {
+                if self.gradientPreviewStyle != .fixedScaleHorizontal {
+                    self.fill.frame.size.width = 114 * self.ratio
                     self.fill.mask = nil
                 }
 #endif
@@ -295,9 +299,10 @@ final class TopProcessesView: PopoverSection {
             }
         }
 
-        func update(process: EnergyProcess) {
+        func update(process: EnergyProcess, compact: Bool) {
             name.stringValue = process.name
             name.toolTip = "\(process.name) · PID \(process.pid)"
+            details.isHidden = compact
             let score = process.energyImpact
             ratio = CGFloat(min(max(score / 100, 0), 1))
 #if DEBUG

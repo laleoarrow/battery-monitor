@@ -6,6 +6,7 @@ final class TopProcessSettingsTests: XCTestCase {
     private var suite = ""
     private var defaults: UserDefaults!
     private let key = "popover.topProcessCount"
+    private let compactKey = "popover.topProcessesCompact"
 
     override func setUp() {
         super.setUp()
@@ -26,7 +27,9 @@ final class TopProcessSettingsTests: XCTestCase {
         XCTAssertEqual(Settings.Module.topProcesses.title, "Process Activity")
         XCTAssertTrue(Settings.isModuleVisible(.topProcesses))
         XCTAssertEqual(Settings.topProcessCount, 3)
+        XCTAssertFalse(Settings.topProcessesCompact)
         XCTAssertNil(defaults.object(forKey: key))
+        XCTAssertNil(defaults.object(forKey: compactKey))
         XCTAssertNil(defaults.object(forKey: Settings.Module.topProcesses.defaultsKey))
     }
 
@@ -74,5 +77,51 @@ final class TopProcessSettingsTests: XCTestCase {
         Settings.topProcessCount = 100
         XCTAssertEqual(changes, [.topProcessCount, .topProcessCount])
         XCTAssertEqual(values, [1, 10])
+    }
+
+    func testCompactSettingPersistsAcrossHidingAndReopeningWithoutChangingCount() {
+        Settings.topProcessesCompact = true
+        XCTAssertTrue(defaults.bool(forKey: compactKey))
+        Settings.setModule(.topProcesses, visible: false)
+        Settings.configureForTest(defaults: UserDefaults(suiteName: suite)!)
+        XCTAssertTrue(Settings.topProcessesCompact)
+        Settings.setModule(.topProcesses, visible: true)
+        XCTAssertTrue(Settings.topProcessesCompact)
+        XCTAssertEqual(Settings.topProcessCount, 3)
+        XCTAssertNil(defaults.object(forKey: key))
+    }
+
+    func testCompactSettingUsesExternalValuesAndMalformedValuesFallBackWithoutWriting() {
+        for value in [true, false] {
+            defaults.set(value, forKey: compactKey)
+            XCTAssertEqual(Settings.topProcessesCompact, value)
+        }
+        for invalid: Any in ["invalid", [true], ["compact": true]] {
+            defaults.set(invalid, forKey: compactKey)
+            XCTAssertFalse(Settings.topProcessesCompact)
+            XCTAssertNotNil(defaults.object(forKey: compactKey))
+        }
+        defaults.removeObject(forKey: compactKey)
+        XCTAssertFalse(Settings.topProcessesCompact)
+        XCTAssertNil(defaults.object(forKey: compactKey))
+    }
+
+    func testCompactSettingOnlyNotifiesEffectiveChangesAfterPersistence() {
+        var changes: [Settings.Change] = []
+        var values: [Bool] = []
+        let observer = NotificationCenter.default.addObserver(
+            forName: Settings.didChange, object: nil, queue: nil
+        ) { [defaults, compactKey] notification in
+            changes.append(notification.userInfo?[Settings.changeUserInfoKey] as! Settings.Change)
+            values.append(defaults!.bool(forKey: compactKey))
+        }
+        defer { NotificationCenter.default.removeObserver(observer) }
+        Settings.topProcessesCompact = false
+        Settings.topProcessesCompact = true
+        Settings.topProcessesCompact = true
+        Settings.topProcessesCompact = false
+        Settings.topProcessesCompact = false
+        XCTAssertEqual(changes, [.topProcessesCompact, .topProcessesCompact])
+        XCTAssertEqual(values, [true, false])
     }
 }

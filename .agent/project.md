@@ -233,8 +233,11 @@ module orders. Settings > Modules selects 1–10 processes (default 3), and the
 six-row module list scrolls without replacing its reorder controls. It uses a
 fixed helper read for two native process-counter snapshots; the displayed
 blue gradient bars show Wattson's independently calculated Activity Score on a
-fixed 0–100 scale, alongside CPU percent and idle wakeups per second. Each filled
-bar runs horizontally from pale to deep blue. An
+fixed 0–100 scale, alongside CPU percent and idle wakeups per second. Each full
+track runs horizontally from pale to deep blue; the score reveals only the
+matching prefix. The optional Compact view hides the CPU/wakeup line and uses
+28-point rows instead of 44-point rows, preserving readings and the fixed scale.
+An
 information control explains Activity Score and the one-core CPU convention; these
 are never per-process watts or battery shares. Sampling shares the popup clock,
 runs only while open and enabled, and

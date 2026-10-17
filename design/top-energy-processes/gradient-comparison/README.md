@@ -16,9 +16,11 @@ the same three colors: #9CDCFF, #2C9DFF and #0B69D9 at 0%, 45% and 100%.
 The fixed scale remains 0–100 for all four, including zero, tiny and overflow
 values. High contrast retains solid system blue and the numeric values.
 
-The comparison selectors exist only in DEBUG builds. The normal production
-renderer remains B while the user reviews the alternatives. No new preference,
-sampling behavior or installation is introduced by these previews.
+The comparison selectors exist only in DEBUG builds. At capture time the normal
+production renderer remained B for review. The user subsequently selected A;
+see [the selected-style review](../fixed-scale-gradient/README.md) for the adopted
+renderer and compact-display option. These comparison captures themselves add
+no preference, sampling behavior or installation.
 
 ## Native previews
 
