@@ -4,7 +4,7 @@ The General, Display and Modules icons extend the user-approved module family:
 rounded neutral contours, system-blue details and restrained static gradients.
 
 - General retains three sliders with blue knobs and subtle active-track fades.
-- Display uses a rounded window, a short blue title-bar mark and a soft blue
+- Display uses a rounded window, a short blue title-bar mark on the right and a soft blue
   content region.
 - Modules uses four rounded tiles with one blue gradient tile.
 

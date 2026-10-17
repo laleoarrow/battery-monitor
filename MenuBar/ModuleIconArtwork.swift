@@ -336,8 +336,8 @@ enum ModuleIconArtwork {
                 }
                 do {
                     let path = NSBezierPath()
-                    path.move(to: NSPoint(x: 5.4, y: 6.1))
-                    path.line(to: NSPoint(x: 8.2, y: 6.1))
+                    path.move(to: NSPoint(x: 15.8, y: 6.1))
+                    path.line(to: NSPoint(x: 18.6, y: 6.1))
                     accent.setStroke()
                     path.lineWidth = 1.45 * contrastScale
                     path.lineCapStyle = .round
