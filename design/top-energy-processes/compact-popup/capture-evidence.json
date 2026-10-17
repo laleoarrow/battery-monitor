@@ -1,0 +1,175 @@
+{
+  "assertions" : 96,
+  "cases" : [
+    {
+      "case" : "settings-classic-light",
+      "compact" : true,
+      "compactFrame" : "{{321.5, 416.5}, {56.5, 20}}",
+      "composited" : true,
+      "controlSize" : "small",
+      "count" : 3,
+      "countFrame" : "{{173, 416.5}, {52, 20}}",
+      "fontPointSize" : 11,
+      "glass" : false,
+      "image" : "settings-classic-light.png",
+      "imageSHA256" : "422a83da522f95c7b618b9769d2654b5b487f6aa402716e3e16d1fdf367d2732",
+      "pixels" : [
+        1472,
+        1072
+      ],
+      "rowFrame" : "{{0, 0}, {486, 72}}",
+      "scrollVisibleRect" : "{{-0.5, 77.5}, {527, 395}}",
+      "windowFrame" : "{{0, 60}, {720, 520}}"
+    },
+    {
+      "case" : "settings-classic-light-controls",
+      "compact" : true,
+      "compactFrame" : "{{321.5, 416.5}, {56.5, 20}}",
+      "composited" : true,
+      "controlSize" : "small",
+      "count" : 3,
+      "countFrame" : "{{173, 416.5}, {52, 20}}",
+      "fontPointSize" : 11,
+      "glass" : false,
+      "image" : "settings-classic-light-controls.png",
+      "imageSHA256" : "c8315188e109b5fc1459247c5e3d051e00de75921e364643a7654a35b95b82ab",
+      "nativeCaptureScreenRect" : "{{189, 72}, {502, 88}}",
+      "pixels" : [
+        1004,
+        176
+      ],
+      "rowFrame" : "{{0, 0}, {486, 72}}",
+      "scrollVisibleRect" : "{{-0.5, 77.5}, {527, 395}}",
+      "windowFrame" : "{{0, 60}, {720, 520}}"
+    },
+    {
+      "case" : "settings-classic-dark",
+      "compact" : true,
+      "compactFrame" : "{{321.5, 416.5}, {56.5, 20}}",
+      "composited" : true,
+      "controlSize" : "small",
+      "count" : 3,
+      "countFrame" : "{{173, 416.5}, {52, 20}}",
+      "fontPointSize" : 11,
+      "glass" : false,
+      "image" : "settings-classic-dark.png",
+      "imageSHA256" : "107979ec41550e7c48a4b4a0430c8a5f699126408682671b4a1ecfef38c0e026",
+      "pixels" : [
+        1472,
+        1072
+      ],
+      "rowFrame" : "{{0, 0}, {503, 72}}",
+      "scrollVisibleRect" : "{{-0.5, 77.5}, {544, 395}}",
+      "windowFrame" : "{{0, 60}, {720, 520}}"
+    },
+    {
+      "case" : "settings-classic-dark-controls",
+      "compact" : true,
+      "compactFrame" : "{{321.5, 416.5}, {56.5, 20}}",
+      "composited" : true,
+      "controlSize" : "small",
+      "count" : 3,
+      "countFrame" : "{{173, 416.5}, {52, 20}}",
+      "fontPointSize" : 11,
+      "glass" : false,
+      "image" : "settings-classic-dark-controls.png",
+      "imageSHA256" : "1fbd0a25e958fde668b52772309e1f22e3911945229146f0c8ac1c387a453b18",
+      "nativeCaptureScreenRect" : "{{189, 72}, {519, 88}}",
+      "pixels" : [
+        1038,
+        176
+      ],
+      "rowFrame" : "{{0, 0}, {503, 72}}",
+      "scrollVisibleRect" : "{{-0.5, 77.5}, {544, 395}}",
+      "windowFrame" : "{{0, 60}, {720, 520}}"
+    },
+    {
+      "case" : "settings-glass-light",
+      "compact" : true,
+      "compactFrame" : "{{321.5, 416.5}, {56.5, 20}}",
+      "composited" : true,
+      "controlSize" : "small",
+      "count" : 3,
+      "countFrame" : "{{173, 416.5}, {52, 20}}",
+      "fontPointSize" : 11,
+      "glass" : true,
+      "image" : "settings-glass-light.png",
+      "imageSHA256" : "7ca7663bac3d8cf088215724e85df4a3e9cf1e794fd982991c105b4f3fef7c4d",
+      "pixels" : [
+        1472,
+        1072
+      ],
+      "rowFrame" : "{{0, 0}, {496, 72}}",
+      "scrollVisibleRect" : "{{-0.5, 49.5}, {537, 423}}",
+      "windowFrame" : "{{0, 60}, {720, 520}}"
+    },
+    {
+      "case" : "settings-glass-light-controls",
+      "compact" : true,
+      "compactFrame" : "{{321.5, 416.5}, {56.5, 20}}",
+      "composited" : true,
+      "controlSize" : "small",
+      "count" : 3,
+      "countFrame" : "{{173, 416.5}, {52, 20}}",
+      "fontPointSize" : 11,
+      "glass" : true,
+      "image" : "settings-glass-light-controls.png",
+      "imageSHA256" : "c674a63eed59fe285fdb0378f39e4c5bfa28256b50042561a45856bf3f11d0d4",
+      "nativeCaptureScreenRect" : "{{196, 72}, {512, 88}}",
+      "pixels" : [
+        1024,
+        176
+      ],
+      "rowFrame" : "{{0, 0}, {496, 72}}",
+      "scrollVisibleRect" : "{{-0.5, 49.5}, {537, 423}}",
+      "windowFrame" : "{{0, 60}, {720, 520}}"
+    },
+    {
+      "case" : "settings-glass-dark",
+      "compact" : true,
+      "compactFrame" : "{{321.5, 416.5}, {56.5, 20}}",
+      "composited" : true,
+      "controlSize" : "small",
+      "count" : 3,
+      "countFrame" : "{{173, 416.5}, {52, 20}}",
+      "fontPointSize" : 11,
+      "glass" : true,
+      "image" : "settings-glass-dark.png",
+      "imageSHA256" : "bbcd39ab399ba000f7fecf28ee4fc231da30a5a8093f09dc689b8c3efd3752e6",
+      "pixels" : [
+        1472,
+        1072
+      ],
+      "rowFrame" : "{{0, 0}, {496, 72}}",
+      "scrollVisibleRect" : "{{-0.5, 49.5}, {537, 423}}",
+      "windowFrame" : "{{0, 60}, {720, 520}}"
+    },
+    {
+      "case" : "settings-glass-dark-controls",
+      "compact" : true,
+      "compactFrame" : "{{321.5, 416.5}, {56.5, 20}}",
+      "composited" : true,
+      "controlSize" : "small",
+      "count" : 3,
+      "countFrame" : "{{173, 416.5}, {52, 20}}",
+      "fontPointSize" : 11,
+      "glass" : true,
+      "image" : "settings-glass-dark-controls.png",
+      "imageSHA256" : "7d6c04790ba30feabc6498c85a3a97cad9d259c4f567543bb78dc3e6a2244386",
+      "nativeCaptureScreenRect" : "{{196, 72}, {512, 88}}",
+      "pixels" : [
+        1024,
+        176
+      ],
+      "rowFrame" : "{{0, 0}, {496, 72}}",
+      "scrollVisibleRect" : "{{-0.5, 49.5}, {537, 423}}",
+      "windowFrame" : "{{0, 60}, {720, 520}}"
+    }
+  ],
+  "failures" : 0,
+  "highContrast" : false,
+  "limitations" : "Process energy, battery telemetry, history, and Settings privileged dependencies are deterministic fixtures. No sampling correctness or physical-hardware power-mode assertion is inferred from screenshots.",
+  "method" : "WindowServer capture of real Classic\/Glass Settings windows and their process-module row in light and dark. Production count and Compact view popup controls exercise focus, native small-control geometry, Off\/On selection, disabled-state preservation, and external preference synchronization.",
+  "mode" : "settings-only",
+  "schema" : 1
+}

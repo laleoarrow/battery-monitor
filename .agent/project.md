@@ -63,9 +63,11 @@ closing, hiding, detaching, degraded readings and Reduce Motion stop animations.
 No chart timer is used. The [4.3.16 axis motion review](../design/history-axis-smoothness/README.md)
 records the corrected independent native probe, ABBA preparation measurements,
 explicit construction counts, Pro review, and exact installation evidence.
-Wattson 4.3.18 is the current verified local installation. Its
-[Process Activity installation record](../design/top-energy-processes/local-installation-v4.3.18.json)
+Wattson 4.3.19 is the current verified local installation. Its
+[Process Activity installation record](../design/top-energy-processes/compact-popup/local-installation-v4.3.19.json)
 verifies the native PKG, helper, actual process sampling and retained settings.
+The [compact selector review](../design/top-energy-processes/compact-popup/README.md)
+records the small Off/On popup matching Processes shown.
 The preceding 4.3.17
 [popup recovery review](../design/installed-popup-recovery/README.md) records the
 hidden-launch regression, conditional unhide on explicit opening, native and

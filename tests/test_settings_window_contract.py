@@ -1537,7 +1537,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let moduleList = view("settings.modules.list", in: first)
             let moduleScroll = view("settings.modules.scroll", in: first) as! NSScrollView
             let topProcessCount = view("settings.modules.top-process-count", in: first) as! NSPopUpButton
-            let topProcessesCompact = view("settings.modules.top-processes-compact", in: first) as! NSButton
+            let topProcessesCompact = view("settings.modules.top-processes-compact", in: first) as! NSPopUpButton
             let restoreModuleOrder = button("Restore Default Order", in: first)
             func verifyRestoreModuleOrderLayout() {
                 let restoreRect = restoreModuleOrder.convert(restoreModuleOrder.bounds, to: modulePage)
@@ -1625,20 +1625,35 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(topProcessesCompact.accessibilityLabel() == "Compact view"
                 && topProcessesCompact.accessibilityIdentifier() == "settings.modules.top-processes-compact"
                 && topProcessesCompact.accessibilityHelp() == "Hide CPU and idle wakeup details."
-                && topProcessesCompact.state == .off && topProcessesCompact.isEnabled,
+                && topProcessesCompact.selectedItem?.tag == 0 && topProcessesCompact.isEnabled,
                 "compact process view defaults off and has an accessible purpose")
-            topProcessesCompact.performClick(nil)
-            require(Settings.topProcessesCompact && topProcessesCompact.state == .on,
-                "compact process switch writes shared settings in place")
+            require(topProcessesCompact.itemArray.map(\.title) == ["Off", "On"]
+                && topProcessesCompact.itemArray.map(\.tag) == [0, 1],
+                "compact view offers explicit Off and On choices")
+            require(topProcessesCompact.controlSize == .small
+                && topProcessesCompact.controlSize == topProcessCount.controlSize
+                && topProcessesCompact.font == topProcessCount.font,
+                "compact view matches the process count popup's small control size and type")
+            topProcessesCompact.selectItem(withTag: 1)
+            topProcessesCompact.sendAction(topProcessesCompact.action!, to: topProcessesCompact.target)
+            require(Settings.topProcessesCompact && topProcessesCompact.selectedItem?.tag == 1,
+                "compact process popup writes shared settings in place")
+            topProcessesCompact.selectItem(withTag: 0)
+            topProcessesCompact.sendAction(topProcessesCompact.action!, to: topProcessesCompact.target)
+            require(!Settings.topProcessesCompact && topProcessesCompact.selectedItem?.tag == 0,
+                "compact popup Off choice restores detailed rows")
+            topProcessesCompact.selectItem(withTag: 1)
+            topProcessesCompact.sendAction(topProcessesCompact.action!, to: topProcessesCompact.target)
             topProcessCount.selectItem(withTag: 7)
             topProcessCount.sendAction(topProcessCount.action!, to: topProcessCount.target)
             require(Settings.topProcessCount == 7, "process count control writes shared settings")
             Settings.setModule(.topProcesses, visible: false)
             require(!topProcessCount.isEnabled && topProcessCount.selectedItem?.tag == 7
-                && !topProcessesCompact.isEnabled && topProcessesCompact.state == .on,
+                && !topProcessesCompact.isEnabled && topProcessesCompact.selectedItem?.tag == 1,
                 "hiding the module disables its display options while retaining their choices")
-            topProcessesCompact.performClick(nil)
-            require(Settings.topProcessesCompact, "disabled compact switch cannot change saved preferences")
+            topProcessesCompact.selectItem(withTag: 0)
+            topProcessesCompact.sendAction(topProcessesCompact.action!, to: topProcessesCompact.target)
+            require(Settings.topProcessesCompact, "disabled compact popup cannot change saved preferences")
             let runtimeHandleForCount = view("settings.modules.reorder.runtime", in: first)
             let topProcessSwitch = button(Settings.Module.topProcesses.title, in: first)
             require(runtimeHandleForCount.nextKeyView === topProcessSwitch,
@@ -1647,11 +1662,11 @@ class SettingsWindowContractTests(unittest.TestCase):
             Settings.topProcessesCompact = false
             require(topProcessCount.selectedItem?.tag == 4,
                 "process count observes external changes while disabled")
-            require(topProcessesCompact.state == .off && !topProcessesCompact.isEnabled,
+            require(topProcessesCompact.selectedItem?.tag == 0 && !topProcessesCompact.isEnabled,
                 "compact view observes external changes while its module is hidden")
             Settings.setModule(.topProcesses, visible: true)
             require(topProcessCount.isEnabled && topProcessCount.selectedItem?.tag == 4
-                && topProcessesCompact.isEnabled && topProcessesCompact.state == .off,
+                && topProcessesCompact.isEnabled && topProcessesCompact.selectedItem?.tag == 0,
                 "showing the module restores both retained display controls")
             require(runtimeHandleForCount.nextKeyView === topProcessCount
                 && topProcessCount.nextKeyView === topProcessesCompact
@@ -1672,14 +1687,14 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(visibleModuleViewport.contains(countRect),
                 "the focused count stays inside the viewport below the fixed header")
             require(first?.makeFirstResponder(topProcessesCompact) == true,
-                "the compact process switch accepts keyboard focus")
+                "the compact process popup accepts keyboard focus")
             first?.contentView?.layoutSubtreeIfNeeded()
             let compactRect = topProcessesCompact.convert(topProcessesCompact.bounds, to: modulePage)
             let compactViewport = moduleScroll.contentView.convert(moduleScroll.contentView.bounds, to: modulePage)
             require(compactViewport.contains(compactRect) && compactViewport.contains(countRect),
-                "compact switch focus reveals both display options without clipping")
+                "compact popup focus reveals both display options without clipping")
             require(view("settings.modules.top-processes-compact", in: first) === topProcessesCompact,
-                "display preference changes retain the original compact switch")
+                "display preference changes retain the original compact popup")
             moduleScroll.contentView.scroll(to: initialModuleOffset)
             moduleScroll.reflectScrolledClipView(moduleScroll.contentView)
             first?.contentView?.layoutSubtreeIfNeeded()

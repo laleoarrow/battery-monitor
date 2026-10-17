@@ -20,8 +20,9 @@ to deep blue on the right. The score reveals only that portion of the gradient:
 the same colors and scale. Above 100 the full bar retains its overflow mark and
 real numeric value. High contrast uses solid system blue.
 
-Settings > Modules > Process Activity also provides **Compact view**, off by
-default. Enabling it hides the CPU and idle-wakeup line and reduces each row
+Settings > Modules > Process Activity also provides **Compact view**, a small
+Off/On selector matching Processes shown. It defaults to Off. Enabling it hides
+the CPU and idle-wakeup line and reduces each row
 from 44 to 28 points. Names, scores and bar lengths remain the same; the inputs
 remain available in tooltips and accessibility descriptions. The choice persists
 when the module is hidden and updates an open popover without resampling.

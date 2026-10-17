@@ -11,14 +11,15 @@ private enum CaptureTopProcesses {
         let moduleOnly = arguments.first == "--module-only"
         let gradientComparison = arguments.first == "--gradient-comparison"
         let compactOnly = arguments.first == "--compact-only"
-        guard arguments.count == (moduleOnly || gradientComparison || compactOnly ? 2 : 1),
+        let settingsOnly = arguments.first == "--settings-only"
+        guard arguments.count == (moduleOnly || gradientComparison || compactOnly || settingsOnly ? 2 : 1),
               let output = arguments.last else { exit(64) }
         let defaults = MemoryDefaults()
         Settings.configureForTest(defaults: defaults)
         Settings.checksForUpdatesOnLaunch = false
         let app = NSApplication.shared
         app.setActivationPolicy(.accessory)
-        let delegate = Probe(directory: URL(fileURLWithPath: output), moduleOnly: moduleOnly, gradientComparison: gradientComparison, compactOnly: compactOnly)
+        let delegate = Probe(directory: URL(fileURLWithPath: output), moduleOnly: moduleOnly, gradientComparison: gradientComparison, compactOnly: compactOnly, settingsOnly: settingsOnly)
         app.delegate = delegate
         withExtendedLifetime((defaults, delegate)) { app.run() }
         Settings.resetTestConfiguration()
@@ -39,7 +40,8 @@ private final class Probe: NSObject, NSApplicationDelegate {
     private let isModuleOnly: Bool
     private let isGradientComparison: Bool
     private let isCompactOnly: Bool
-    private var isFocusedCapture: Bool { isModuleOnly || isGradientComparison || isCompactOnly }
+    private let isSettingsOnly: Bool
+    private var isFocusedCapture: Bool { isModuleOnly || isGradientComparison || isCompactOnly || isSettingsOnly }
     private var records: [[String: Any]] = []
     private var item: NSStatusItem?
     private var backdrop: NSWindow?
@@ -75,11 +77,12 @@ private final class Probe: NSObject, NSApplicationDelegate {
         }
     }
 
-    init(directory: URL, moduleOnly: Bool, gradientComparison: Bool, compactOnly: Bool) {
+    init(directory: URL, moduleOnly: Bool, gradientComparison: Bool, compactOnly: Bool, settingsOnly: Bool) {
         self.directory = directory
         isModuleOnly = moduleOnly
         isGradientComparison = gradientComparison
         isCompactOnly = compactOnly
+        isSettingsOnly = settingsOnly
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -135,7 +138,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
         background.isOpaque = true
         backdrop = background
         background.orderFrontRegardless()
-        for glass in isFocusedCapture ? [false] : [false, true] {
+        for glass in isSettingsOnly ? [false, true] : isFocusedCapture ? [false] : [false, true] {
             Settings.liquidGlassEnabled = glass
             Settings.liquidGlassStyle = .regular
             for scheme in [Settings.ColorScheme.light, .dark] {
@@ -143,6 +146,10 @@ private final class Probe: NSObject, NSApplicationDelegate {
                 NSApp.appearance = scheme.appearance
                 background.backgroundColor = scheme == .light ? .init(white: 0.88, alpha: 1) : .init(white: 0.14, alpha: 1)
                 let theme = glass ? "glass" : "classic"
+                if isSettingsOnly {
+                    try await actualSettings(background: background, name: "settings-\(theme)-\(scheme.rawValue)")
+                    continue
+                }
                 if isCompactOnly {
                     for count in [1, 3, 10] {
                         for compact in [false, true] {
@@ -190,8 +197,10 @@ private final class Probe: NSObject, NSApplicationDelegate {
         let evidence: [String: Any] = [
             "schema": 1, "assertions": assertions, "failures": 0, "cases": records,
             "highContrast": PopoverStyle.isHighContrast(NSApp.effectiveAppearance),
-            "mode": isCompactOnly ? "compact-only" : isGradientComparison ? "gradient-comparison" : isModuleOnly ? "module-only" : "full-matrix",
-            "method": isCompactOnly
+            "mode": isSettingsOnly ? "settings-only" : isCompactOnly ? "compact-only" : isGradientComparison ? "gradient-comparison" : isModuleOnly ? "module-only" : "full-matrix",
+            "method": isSettingsOnly
+                ? "WindowServer capture of real Classic/Glass Settings windows and their process-module row in light and dark. Production count and Compact view popup controls exercise focus, native small-control geometry, Off/On selection, disabled-state preservation, and external preference synchronization."
+                : isCompactOnly
                 ? "WindowServer capture of production TopProcessesView detailed/compact modes at counts 1, 3, and 10 in owned Classic fixture windows, light and dark. Each view also switches presentation mode and verifies the score and fixed-scale visible widths are preserved."
                 : isGradientComparison
                 ? "WindowServer capture of a real native 2×2 fixture window containing four production TopProcessesView renderers with DEBUG-only gradient variants, plus four dark standalone owned windows. Same process fixtures and fixed 0–100 scale in every variant. Chinese comparison labels belong only to the fixture."
@@ -414,13 +423,13 @@ private final class Probe: NSObject, NSApplicationDelegate {
               let scroll = descendants(content).compactMap({ $0 as? NSScrollView }).first(where: { $0.identifier?.rawValue == "settings.modules.scroll" }),
               let document = scroll.documentView,
               let count = descendants(content).compactMap({ $0 as? NSPopUpButton }).first(where: { $0.identifier?.rawValue == "settings.modules.top-process-count" }),
-              let compact = descendants(content).compactMap({ $0 as? NSButton }).first(where: { $0.identifier?.rawValue == "settings.modules.top-processes-compact" }) else { throw failure("No Settings process count/compact controls or scroll view") }
+              let compact = descendants(content).compactMap({ $0 as? NSPopUpButton }).first(where: { $0.identifier?.rawValue == "settings.modules.top-processes-compact" }) else { throw failure("No Settings process count/compact popup controls or scroll view") }
         let viewportFrame = scroll.convert(scroll.bounds, to: content)
         for identifier in ["settings.modules.subtitle", "settings.modules.restore-default-order"] {
             guard let fixedHeader = descendants(content).first(where: { $0.identifier?.rawValue == identifier }) else { throw failure("Missing fixed Settings header") }
             try check(!viewportFrame.intersects(fixedHeader.convert(fixedHeader.bounds, to: content)), "Module viewport overlaps fixed header: \(name) \(identifier)")
         }
-        try composite(window, background: background, name: name + "-top", fields: ["count": Settings.topProcessCount])
+        if !isSettingsOnly { try composite(window, background: background, name: name + "-top", fields: ["count": Settings.topProcessCount]) }
         window.makeFirstResponder(count)
         try await pause(0.15)
         let visible = scroll.documentVisibleRect.insetBy(dx: -0.5, dy: -0.5)
@@ -428,14 +437,18 @@ private final class Probe: NSObject, NSApplicationDelegate {
         guard let countRow = descendants(document).first(where: { $0.identifier?.rawValue == "settings.modules.row.topProcesses" }) else { throw failure("Missing process-count module row") }
         try check(visible.contains(countRow.convert(countRow.bounds, to: document)), "Process count row clipped: \(name)")
         try check(count.numberOfItems == 10 && count.isEnabled, "Count choices incomplete: \(name)")
-        try composite(window, background: background, name: name + "-count", fields: ["count": Settings.topProcessCount, "countFrame": NSStringFromRect(count.convert(count.bounds, to: document)), "scrollVisibleRect": NSStringFromRect(visible)])
-        let compactFocus = Settings.usesLiquidGlass ? compact.subviews.compactMap({ $0 as? NSSwitch }).first : compact
-        try check(compactFocus != nil && window.makeFirstResponder(compactFocus), "Compact control cannot receive keyboard focus: \(name)")
+        if !isSettingsOnly { try composite(window, background: background, name: name + "-count", fields: ["count": Settings.topProcessCount, "countFrame": NSStringFromRect(count.convert(count.bounds, to: document)), "scrollVisibleRect": NSStringFromRect(visible)]) }
+        try check(window.makeFirstResponder(compact), "Compact popup cannot receive keyboard focus: \(name)")
         try await pause(0.1)
         let focusedVisible = scroll.documentVisibleRect.insetBy(dx: -0.5, dy: -0.5)
         try check(focusedVisible.contains(countRow.convert(countRow.bounds, to: document)), "Compact focus leaves its row clipped: \(name)")
         try check(focusedVisible.contains(compact.convert(compact.bounds, to: document)), "Compact control unreachable: \(name)")
-        try check(compact.isEnabled && compact.state == .off, "Compact default is not enabled/off: \(name)")
+        try check(compact.isEnabled && compact.selectedTag() == 0, "Compact default is not enabled/Off: \(name)")
+        try check(compact.itemArray.map(\.title) == ["Off", "On"] && compact.itemArray.map(\.tag) == [0, 1], "Compact popup does not expose Off/On choices: \(name)")
+        try check(compact.controlSize == .small && compact.controlSize == count.controlSize, "Compact popup size differs from count: \(name)")
+        try check(compact.font == count.font, "Compact popup font differs from count: \(name)")
+        try check(abs(compact.bounds.height - count.bounds.height) <= 0.5, "Compact popup height differs from count: \(name)")
+        try check(compact.bounds.width >= 35 && compact.bounds.width <= 90, "Compact popup width is disproportionate: \(name)")
         let compactFrame = compact.convert(compact.bounds, to: countRow)
         let countFrame = count.convert(count.bounds, to: countRow)
         try check(!compactFrame.intersects(countFrame), "Count and Compact controls overlap: \(name)")
@@ -443,17 +456,26 @@ private final class Probe: NSObject, NSApplicationDelegate {
             try check(label.intrinsicContentSize.width <= label.bounds.width + 0.5, "Settings count/compact label is clipped: \(name)")
             try check(countRow.bounds.contains(label.convert(label.bounds, to: countRow)), "Settings count/compact label outside row: \(name)")
         }
-        compact.performClick(nil)
+        compact.selectItem(withTag: 1)
+        if let action = compact.action { compact.sendAction(action, to: compact.target) }
         try await pause(0.1)
-        try check(Settings.topProcessesCompact && compact.state == .on, "Compact click did not update Settings: \(name)")
-        try composite(window, background: background, name: name + "-compact", fields: ["count": Settings.topProcessCount, "compact": true, "compactFrame": NSStringFromRect(compact.convert(compact.bounds, to: document)), "rowFrame": NSStringFromRect(countRow.frame), "scrollVisibleRect": NSStringFromRect(focusedVisible)])
+        try check(Settings.topProcessesCompact && compact.selectedTag() == 1, "Compact popup selection did not update Settings: \(name)")
+        let fields: [String: Any] = ["count": Settings.topProcessCount, "compact": true, "compactFrame": NSStringFromRect(compact.convert(compact.bounds, to: document)), "countFrame": NSStringFromRect(count.convert(count.bounds, to: document)), "controlSize": "small", "fontPointSize": compact.font?.pointSize ?? 0, "rowFrame": NSStringFromRect(countRow.frame), "scrollVisibleRect": NSStringFromRect(focusedVisible)]
+        try composite(window, background: background, name: isSettingsOnly ? name : name + "-compact", fields: fields)
+        if isSettingsOnly {
+            let rowInWindow = countRow.convert(countRow.bounds, to: nil)
+            try composite(window, background: background, name: name + "-controls", fields: fields, screenRect: window.convertToScreen(rowInWindow).insetBy(dx: -8, dy: -8))
+        }
         Settings.setModule(.topProcesses, visible: false)
         controller.refreshSectionsForTest()
         try check(!count.isEnabled && !compact.isEnabled, "Hidden module leaves count/compact enabled: \(name)")
-        try check(Settings.topProcessesCompact && compact.state == .on, "Hiding module reset Compact preference: \(name)")
+        try check(Settings.topProcessesCompact && compact.selectedTag() == 1, "Hiding module reset Compact popup selection: \(name)")
         Settings.setModule(.topProcesses, visible: true)
         controller.refreshSectionsForTest()
         try check(count.isEnabled && compact.isEnabled, "Restored module leaves count/compact disabled: \(name)")
+        Settings.topProcessesCompact = false
+        try await pause(0.05)
+        try check(compact.selectedTag() == 0, "External preference change did not refresh Compact popup: \(name)")
         window.close()
         settings = nil
     }
@@ -552,13 +574,15 @@ private final class Probe: NSObject, NSApplicationDelegate {
         try check(list.helpWindow == nil, "Closing production popup retained info")
     }
 
-    private func composite(_ window: NSWindow, background: NSWindow, name: String, fields: [String: Any]) throws {
+    private func composite(_ window: NSWindow, background: NSWindow, name: String, fields: [String: Any], screenRect: NSRect? = nil) throws {
         guard let screen = window.screen else { throw failure("No capture screen") }
-        let region = NSRect(x: window.frame.minX - 8, y: screen.frame.maxY - window.frame.maxY - 8, width: window.frame.width + 16, height: window.frame.height + 16)
+        let bounds = screenRect ?? window.frame.insetBy(dx: -8, dy: -8)
+        let region = NSRect(x: bounds.minX, y: screen.frame.maxY - bounds.maxY, width: bounds.width, height: bounds.height)
         guard window.isVisible, let image = WattsonCaptureOwnedWindows(region, CGWindowID(window.windowNumber), CGWindowID(background.windowNumber)) else { throw failure("WindowServer capture refused") }
         var metadata = fields
         metadata["composited"] = true
         metadata["windowFrame"] = NSStringFromRect(window.frame)
+        if let screenRect { metadata["nativeCaptureScreenRect"] = NSStringFromRect(screenRect) }
         metadata["glass"] = Settings.usesLiquidGlass
         try save(NSBitmapImageRep(cgImage: image), name: name, fields: metadata)
     }

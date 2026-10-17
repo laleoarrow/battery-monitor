@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MODULE_ONLY=0
 GRADIENT_COMPARISON=0
 COMPACT_ONLY=0
+SETTINGS_ONLY=0
 if [[ "${1:-}" == --module-only ]]; then
     MODULE_ONLY=1
     shift
@@ -14,9 +15,12 @@ elif [[ "${1:-}" == --gradient-comparison ]]; then
 elif [[ "${1:-}" == --compact-only ]]; then
     COMPACT_ONLY=1
     shift
+elif [[ "${1:-}" == --settings-only ]]; then
+    SETTINGS_ONLY=1
+    shift
 fi
 if [[ "$#" != 1 || "${WATTSON_RUN_GUI_TESTS:-}" != 1 || "$(/usr/sbin/sysctl -n hw.model)" != VirtualMac* ]]; then
-    echo 'usage (disposable macOS VM only): WATTSON_RUN_GUI_TESTS=1 verify_top_processes.sh [--module-only|--gradient-comparison|--compact-only] OUTPUT_DIRECTORY' >&2
+    echo 'usage (disposable macOS VM only): WATTSON_RUN_GUI_TESTS=1 verify_top_processes.sh [--module-only|--gradient-comparison|--compact-only|--settings-only] OUTPUT_DIRECTORY' >&2
     exit 64
 fi
 RESULTS="$1"
@@ -121,6 +125,7 @@ printf 'bundleID=%s\nbundlePath=%s\n' "$TEST_BUNDLE_ID" "$APP_DIR" > "$RESULTS/c
 printf 'moduleOnly=%s\n' "$MODULE_ONLY" >> "$RESULTS/capture-provenance.txt"
 printf 'gradientComparison=%s\n' "$GRADIENT_COMPARISON" >> "$RESULTS/capture-provenance.txt"
 printf 'compactOnly=%s\n' "$COMPACT_ONLY" >> "$RESULTS/capture-provenance.txt"
+printf 'settingsOnly=%s\n' "$SETTINGS_ONLY" >> "$RESULTS/capture-provenance.txt"
 printf 'highContrast=%s\n' "${WATTSON_FORCE_INCREASE_CONTRAST:-0}" >> "$RESULTS/capture-provenance.txt"
 /usr/bin/shasum -a 256 "$ROOT_DIR"/Core/*.swift "$ROOT_DIR"/Popover/*.swift \
     "$ROOT_DIR"/MenuBar/*.swift "$ROOT_DIR/tests/visual/capture_top_processes.swift" \
@@ -135,6 +140,9 @@ elif [[ "$GRADIENT_COMPARISON" == 1 ]]; then
     PROBE_TIMEOUT=60
 elif [[ "$COMPACT_ONLY" == 1 ]]; then
     PROBE_ARGUMENTS=(--compact-only "$RESULTS")
+    PROBE_TIMEOUT=60
+elif [[ "$SETTINGS_ONLY" == 1 ]]; then
+    PROBE_ARGUMENTS=(--settings-only "$RESULTS")
     PROBE_TIMEOUT=60
 fi
 wattson_run_timeout "$PROBE_TIMEOUT" /usr/bin/env WATTSON_FORCE_REDUCE_MOTION=1 \

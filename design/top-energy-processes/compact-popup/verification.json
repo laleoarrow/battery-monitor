@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "version": "4.3.19",
+  "scope": "Settings Compact view presentation only: replace large switch with native small Off/On popup matching Processes shown. The process module renderers, sampling, and persisted Bool semantics are unchanged.",
+  "sourceArchive": {
+    "path": ".build/compact-popup-review.noindex/source-compact-popup-1792246683.tar.gz",
+    "sha256": "2b9413d1d7feb6e2bea2b85903489dd52319d5449f6dffdcfbb71ddba1cdbeb6",
+    "bytes": 378110,
+    "files": 66,
+    "allCurrentInputsMatch": true
+  },
+  "settingsSourceSHA256": "3ae676634e8d30666ac9c79f160adf3cad0d8febff46c09c0b886442acbfd4d5",
+  "nativeVerification": {
+    "mode": "settings-only",
+    "captures": 8,
+    "assertions": 96,
+    "failures": 0,
+    "appearanceCombinations": [
+      "Classic light",
+      "Classic dark",
+      "Glass light",
+      "Glass dark"
+    ],
+    "checks": [
+      "Compact popup is a native small NSPopUpButton with Off=0 and On=1.",
+      "Compact popup matches count control small controlSize, 11-point font, and 20-point height; Compact width56.5pt vs count52pt.",
+      "Count3 and CompactOn row labels and controls fit without overlap.",
+      "Keyboard focus reveals the entire process module row.",
+      "Select tag1 and send native action persists true.",
+      "Hidden module disables count and Compact controls while preserving On selection.",
+      "Restored module re-enables both controls.",
+      "External false preference updates popup selection to Off."
+    ],
+    "captureMethod": "Native WindowServer owned-window capture. Row images are direct WindowServer region captures, never raster crops, edits, or stitched images.",
+    "powerStatesAndModuleLayout": "Unchanged production renderers reuse the prior 154-capture/10932-assertion fixed-scale-gradient verification; this run does not repeat that matrix."
+  },
+  "settingsWindowContract": {
+    "tests": 8,
+    "failures": 0,
+    "durationSeconds": 32.341,
+    "reportedBy": "process_compact_settings worker"
+  },
+  "selectedImageSHA256": {
+    "settings-classic-dark-controls.png": "1fbd0a25e958fde668b52772309e1f22e3911945229146f0c8ac1c387a453b18",
+    "settings-classic-dark.png": "107979ec41550e7c48a4b4a0430c8a5f699126408682671b4a1ecfef38c0e026",
+    "settings-classic-light-controls.png": "c8315188e109b5fc1459247c5e3d051e00de75921e364643a7654a35b95b82ab",
+    "settings-classic-light.png": "422a83da522f95c7b618b9769d2654b5b487f6aa402716e3e16d1fdf367d2732",
+    "settings-glass-dark-controls.png": "7d6c04790ba30feabc6498c85a3a97cad9d259c4f567543bb78dc3e6a2244386",
+    "settings-glass-dark.png": "bbcd39ab399ba000f7fecf28ee4fc231da30a5a8093f09dc689b8c3efd3752e6",
+    "settings-glass-light-controls.png": "c674a63eed59fe285fdb0378f39e4c5bfa28256b50042561a45856bf3f11d0d4",
+    "settings-glass-light.png": "7ca7663bac3d8cf088215724e85df4a3e9cf1e794fd982991c105b4f3fef7c4d"
+  },
+  "preferencesFilesystemObservation": {
+    "ownedDomain": "com.leoarrow.wattson.topprocessesqa.6ac2a7f0-8e7b-46e4-b7cc-e9d9c01fc00a",
+    "durationSeconds": 35.025,
+    "filesystemChecks": 231,
+    "unexpectedPlists": [],
+    "allPassed": true,
+    "method": "Filesystem-only observation after capture script exit; no defaults/CFPreferences API invoked."
+  },
+  "resourceAudit": {
+    "schema": 1,
+    "checks": {
+      "nativeSourceAndBuildScratchRemoved": true,
+      "ownedTestProcessesStopped": true,
+      "ownedLaunchdServicesRemoved": true,
+      "ownedSocketsRemoved": true,
+      "ownedAppRegistrationsRemoved": true,
+      "ownedPreferencesRemoved": true,
+      "ownedContainersRemoved": true,
+      "ownedApplicationScriptsRemoved": true,
+      "canonicalHelperFixtureAbsent": true,
+      "canonicalAppAndHelperNeverInstalled": true
+    },
+    "allPassed": true,
+    "details": {
+      "nativeScratch": [],
+      "processes": [],
+      "launchdServices": [],
+      "socketPaths": [],
+      "appRegistrations": [],
+      "preferences": [],
+      "containers": [],
+      "applicationScripts": []
+    },
+    "vmRetained": "Owned clone is cleaned and deleted by the host owner immediately after this audit; no test bundle or helper service remains."
+  },
+  "ownedVMDeletion": {
+    "additionalUnrelatedVMsPreserved": [],
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "ownedCloneRemoved": true,
+    "ownedVM": "Wattson-Compact-Popup-20261017"
+  },
+  "ownedSessionExitCode": 0,
+  "qaInstalledOrPublished": false,
+  "canonicalInstallationTouchedByThisQARun": false,
+  "evidenceDirectory": ".build/compact-popup-review.noindex/qa-session"
+}

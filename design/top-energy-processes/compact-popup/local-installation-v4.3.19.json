@@ -1,0 +1,48 @@
+{
+  "checkedAtUTC": "2026-10-17T14:20:52.070111+00:00",
+  "version": "4.3.19",
+  "sourceCommit": "05bbfd70884f43eaf3d1ab8d5148f9c3f0e64a53",
+  "packageSHA256": "6945fc82c37f401b2e31f6f1ebc964c8aa242c3f0cd4066dac145288271b34fa",
+  "appAndHelperAndDaemonMatchVerifiedPayload": true,
+  "receiptVersion": "4.3.19",
+  "signatureVerified": true,
+  "architectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "helperHealth": true,
+  "helperV5": true,
+  "existingSettingsUnchanged": true,
+  "existingSettingsCompared": 13,
+  "processSampling": {
+    "count": 10,
+    "elapsedSeconds": 1.088192,
+    "responseBytes": 1347,
+    "formulaPassed": true
+  },
+  "publicRelease": false,
+  "canonicalApp": "/Applications/Wattson.app",
+  "canonicalAppPID": 16100,
+  "canonicalPIDStableAcrossVerification": true,
+  "launchMethod": "open -g",
+  "reopenSettingsRequested": true,
+  "buildAndPackageVerificationPassed": true,
+  "pkgAndDMGContainIdenticalApp": true,
+  "appSignature": "ad-hoc",
+  "packageSignature": "unsigned",
+  "notarized": false,
+  "actualSettingsAcceptance": {
+    "status": "pending-user-review",
+    "automaticUIRead": "Computer Use canonical-path getApp timed out after reopening Settings.",
+    "nativeFixtureVerification": "Classic/Glass light/dark production Settings windows passed."
+  },
+  "cleanup": {
+    "disposableBuildRemoved": true,
+    "disposableVerificationDirectoriesRemoved": true,
+    "reviewScratchArchivedAndRemoved": true
+  },
+  "evidenceArchive": {
+    "file": "local-installation-v4.3.19-evidence.tar.gz",
+    "sha256": "a9c7285daf561a193d0d53b5dea0195f465fdc26ed198a5ca7faf29f0638a029"
+  }
+}

@@ -8,9 +8,9 @@ The [Pro design specification](pro-design.md) records the earlier direction
 and the verified ChatGPT Pro consultation.
 
 Development source based on Wattson 4.3.17. The user subsequently requested
-a local upgrade: **4.3.18** is now installed at `/Applications/Wattson.app`
+a local upgrade: **4.3.19** is now installed at `/Applications/Wattson.app`
 together with its matching helper through the verified native PKG. See the
-[installation record](local-installation-v4.3.18.json). This is a local candidate;
+[installation record](compact-popup/local-installation-v4.3.19.json). This is a local candidate;
 no public release is implied. Earlier verification records describe their
 original pre-installation snapshots.
 
@@ -33,10 +33,12 @@ and the fixed scale; formula lineage is retained in developer documentation.
 These values are not watts or shares of measured battery power. See
 [the data model and formula](../../docs/top-energy-processes.md).
 
-The optional **Compact view** switch in this module's Settings row hides the
+The optional **Compact view** selector in this module's Settings row hides the
 CPU/wakeup line, reducing the default three-process section from 168 to 120
 points. It preserves names, scores, bars, tooltips and accessibility details.
-The switch defaults off and retains its value while the module is disabled.
+The selector uses the same small dropdown as Processes shown, defaults to Off
+and retains its value while the module is disabled. See the
+[compact control review](compact-popup/README.md).
 
 ## Native visual evidence
 
@@ -53,7 +55,7 @@ demonstration of Liquid Glass translucency.
 | --- | --- |
 | ![Compact module, dark](fixed-scale-gradient/compact-module-dark.png) | ![Compact module, light](fixed-scale-gradient/compact-module-light.png) |
 
-[Compact view setting](fixed-scale-gradient/settings-compact-light.png) ·
+[Compact view setting](compact-popup/settings-glass-dark.png) ·
 [Selected-style verification](fixed-scale-gradient/README.md)
 
 [Supplied style reference](reference-style.png) ·
