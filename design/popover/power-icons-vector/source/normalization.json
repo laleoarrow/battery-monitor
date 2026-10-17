@@ -1,0 +1,30 @@
+[
+  {
+    "source": "pro-b-connected.svg",
+    "sourceSHA256": "a3e77cc0f4690b3ed172f762cb5e28afed01644da1a75370217cf319335b6dc4",
+    "output": "adapter.svg",
+    "uniformScale": 0.9971505738875722,
+    "rotatedControlBounds": [
+      3.697245586183164,
+      2.4467284043338093,
+      20.28640271984857,
+      21.501022206647992
+    ],
+    "strokeWidthScaledUniformly": true,
+    "gradientTransformBaked": true
+  },
+  {
+    "source": "pro-b-disconnected.svg",
+    "sourceSHA256": "892ce4fadeba32967121e9e4b8d2aafeee9581054bdf5e104af72f036286c7fd",
+    "output": "disconnected.svg",
+    "uniformScale": 0.9971505738875722,
+    "rotatedControlBounds": [
+      3.697245586183164,
+      2.4467284043338093,
+      20.28640271984857,
+      21.501022206647992
+    ],
+    "strokeWidthScaledUniformly": true,
+    "gradientTransformBaked": true
+  }
+]

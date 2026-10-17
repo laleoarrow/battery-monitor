@@ -198,7 +198,7 @@ final class BatteryRuntimePresentationTests: XCTestCase {
                            batteryTimeEstimate: .notCharging),
              "Estimated Time to Full", "Not Charging", 16),
             (PowerSnapshot(batteryW: -12, systemW: 12, batteryTimeEstimate: .remaining(nil)),
-             "Estimated Battery Runtime", "Estimating…", 16),
+             "Estimated Battery Runtime", "Calculating…", 16),
             (PowerSnapshot(batteryW: -12, systemW: 12, batteryTimeEstimate: .remaining(35)),
              "Estimated Battery Runtime", "35m", 24),
         ]
@@ -225,7 +225,7 @@ final class BatteryRuntimePresentationTests: XCTestCase {
             _ = runtime.runtimePresentationForTest(snapshot: known)
             var snapshot = known
             snapshot.batteryTimeEstimate = plugged ? .charging(nil) : .remaining(nil)
-            XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot), "\(title) · Estimating…")
+            XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot), "\(title) · Calculating…")
             snapshot.batteryTimeEstimate = nil
             XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: snapshot), "\(title) · Unavailable")
             XCTAssertEqual(runtime.runtimePresentationForTest(snapshot: known, degraded: true), "\(title) · Unavailable")
@@ -366,7 +366,9 @@ final class BatteryRuntimePresentationTests: XCTestCase {
     }
 
     private func withIsolatedSettings(_ body: (UserDefaults) throws -> Void) rethrows {
-        let suiteName = "Wattson.SwiftTests.RuntimeModule.\(UUID().uuidString)"
+        let runID = ProcessInfo.processInfo.environment["WATTSON_RUNTIME_TEST_RUN_ID"]
+            .flatMap(UUID.init(uuidString:)) ?? UUID()
+        let suiteName = "Wattson.SwiftTests.RuntimeModule.\(runID.uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)

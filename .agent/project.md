@@ -61,8 +61,11 @@ while any other scale retains 33 stroke keyframes. Head and gradient keyframes
 remain unchanged. The [4.3.11 performance review](../design/history-performance/README.md)
 records the ABBA preparation measurements, explicit construction counts and
 native continuity checks, including the natural scheduling fixture's limits.
-Wattson 4.3.13 is the current verified local installation; exact package, helper,
-receipt and process evidence is in the [General icon integration review](../design/settings/general-icons-integration/README.md).
+Wattson 4.3.14 is the current verified local installation; its battery runtime
+settling fix and exact package verification are recorded in the
+[runtime calculation review](../design/battery-runtime-calculating/README.md).
+The [General icon integration review](../design/settings/general-icons-integration/README.md)
+preserves the preceding 4.3.13 artwork and installation evidence.
 The [4.3.10 axis transition review](../design/history-axis-upgrade/README.md)
 preserves the earlier native motion, fixed-width stroke and installation evidence. The
 [4.3.9 History review](../design/history-upgrade/README.md) preserves the initial
@@ -280,6 +283,14 @@ share this family through editable masters in `design/settings/general-icons-vec
 They use static blue action marks with faint local areas or arc fades, while
 retaining the existing controls and layout. Increase Contrast removes decorative
 fills and fades without removing the functional contours or action marks.
+
+Runtime power motifs in `design/popover/power-icons-vector` use the same vector
+language with neutral contours and state-dependent accent regions, resolved
+through `PopoverStyle` in each view's appearance. `PowerIconImageView` shares
+the Adapter/System/Battery artwork across Flow and Lanes and retains only its
+last resolved image. Mixed supply keeps adapter/system blue and battery amber.
+Both battery placements share the existing capacity bands and charging bolt.
+The port/cable fallbacks, node and lane geometry, values and motion are retained.
 
 Modules retains its five rows and switches, with a separate trailing drag handle.
 Only a successful local drop saves `popover.moduleOrder`; canceled previews leave

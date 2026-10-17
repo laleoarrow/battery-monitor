@@ -69,7 +69,10 @@ def gradient_commands(element, gradients, stroke):
                   f"path.addEllipse(in: CGRect(x: {number(x-r)}, y: {number(y-r)}, width: {number(2*r)}, height: {number(2*r)}))"]
     elif kind == "rect":
         a = element.attrib
-        values = ", ".join(f"{k}: {number(a[k])}" for k in ("x", "y", "width", "height"))
+        values = ", ".join(
+            f"{k}: {number(a[k])}" + (" * fillFraction" if k == "width" and a.get("data-battery-level") == "true" else "")
+            for k in ("x", "y", "width", "height")
+        )
         radius = number(a.get("rx", 0))
         result = ["let path = CGMutablePath()",
                   f"path.addRoundedRect(in: CGRect({values}), cornerWidth: {radius}, cornerHeight: {radius})"]
@@ -135,11 +138,12 @@ def emit_cases(lines, assets, names):
 
 
 lines = [
-    "// Generated from design/settings/{module,sidebar,general}-icons-vector/*.svg. Edit the SVG masters.",
+    "// Generated from design/settings/*-icons-vector and design/popover/power-icons-vector. Edit SVG masters.",
     "// Regenerate with: python3 design/settings/module-icons-vector/generate-swift.py",
     "import AppKit", "", "enum ModuleIconArtwork {",
     "    enum SidebarIcon: CaseIterable { case general, display, modules }", "",
     "    enum GeneralIcon: CaseIterable { case login, battery, update, automatic, feedback }", "",
+    "    enum PowerIcon: CaseIterable { case adapter, disconnected, system, battery, charging }", "",
     "    static func image(for module: Settings.Module, side: CGFloat, ink: NSColor,",
     "                      accent: NSColor, increasedContrast: Bool) -> NSImage {",
     "        let image = NSImage(size: NSSize(width: side, height: side), flipped: false) { rect in",
@@ -183,6 +187,23 @@ lines.extend([
     "            switch icon {",
 ])
 emit_cases(lines, ASSETS.parent / "general-icons-vector", ("login", "battery", "update", "automatic", "feedback"))
+lines.extend(["            }", "            return true", "        }", "        image.isTemplate = false", "        return image", "    }", ""])
+lines.extend([
+    "    static func powerImage(for icon: PowerIcon, side: CGFloat, inset: CGFloat = 0,",
+    "                           chargeFraction: CGFloat = 1, ink: NSColor, accent: NSColor,",
+    "                           increasedContrast: Bool) -> NSImage {",
+    "        let image = NSImage(size: NSSize(width: side, height: side), flipped: false) { rect in",
+    "            NSGraphicsContext.saveGraphicsState()",
+    "            defer { NSGraphicsContext.restoreGraphicsState() }",
+    "            let transform = NSAffineTransform()",
+    "            transform.translateX(by: rect.minX + inset, yBy: rect.maxY - inset)",
+    "            transform.scaleX(by: (rect.width - 2 * inset) / 24, yBy: -(rect.height - 2 * inset) / 24)",
+    "            transform.concat()",
+    "            let contrastScale: CGFloat = increasedContrast ? 1.2 : 1",
+    "            let fillFraction = min(max(chargeFraction, 0), 1)",
+    "            switch icon {",
+])
+emit_cases(lines, ROOT / "design/popover/power-icons-vector", ("adapter", "disconnected", "system", "battery", "charging"))
 lines.extend(["            }", "            return true", "        }", "        image.isTemplate = false", "        return image", "    }", ""])
 lines.extend('''    private static func drawGradient(_ path: CGPath, strokeWidth: CGFloat?,
                                      colors: [CGColor], locations: [CGFloat],

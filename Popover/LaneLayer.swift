@@ -18,7 +18,7 @@ final class LaneView: PopoverSection {
 
     private final class Lane {
         let well = CALayer()
-        let icon = NSImageView()
+        let icon = PowerIconImageView()
         let track = CALayer()
         let fill = CALayer()
         let sweep = CAGradientLayer()
@@ -107,19 +107,21 @@ final class LaneView: PopoverSection {
         motionMultiplier = VisualEncoding.multiplier(snapshot.totalInputW)
 
         apply(lanes[0], symbol: "cpu", caption: systemCaption, watts: systemWatts,
-              ceiling: ceiling, color: color)
+              ceiling: ceiling, color: color, iconColor: color)
         apply(lanes[1],
-              symbol: snapshot.state == .charging ? "battery.100.bolt" : "battery.50",
+              symbol: snapshot.state == .charging ? "battery.100.bolt"
+                  : PowerIconImageView.batterySymbol(percent: snapshot.percent),
               caption: PopoverStyle.batteryFlowLabel(snapshot),
-              watts: batteryWatts, ceiling: ceiling, color: color)
+              watts: batteryWatts, ceiling: ceiling, color: color,
+              iconColor: PopoverStyle.stateColor(snapshot.state))
     }
 
     private func apply(_ lane: Lane, symbol: String, caption: String,
-                       watts: Double, ceiling: Double, color: NSColor) {
+                       watts: Double, ceiling: Double, color: NSColor, iconColor: NSColor) {
         lane.well.backgroundColor = PopoverStyle.well.cgColor
         lane.track.backgroundColor = PopoverStyle.well.cgColor
-        lane.icon.image = NSImage(systemSymbolName: symbol, accessibilityDescription: caption)
-        lane.icon.contentTintColor = color
+        lane.icon.configurePowerIcon(symbol: symbol, description: caption,
+                                     accent: iconColor, side: 16, inset: 0)
         lane.value.stringValue = PopoverStyle.watts(watts)
         lane.caption.stringValue = caption
 
@@ -206,6 +208,9 @@ final class LaneView: PopoverSection {
     }
 
 #if DEBUG
+    var iconImagesForTest: [NSImage?] { lanes.map { $0.icon.image } }
+    var iconRenderCountsForTest: [Int] { lanes.map { $0.icon.renderCountForTest } }
+
     func sweepMetricsForTest(at index: Int) ->
         (fillWidth: CGFloat, travel: CGFloat, beginTime: CFTimeInterval,
          duration: CFTimeInterval, layerSpeed: Float)? {
