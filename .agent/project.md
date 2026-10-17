@@ -275,6 +275,9 @@ vector reference. Editable SVG masters in `design/settings/module-icons-vector`
 generate the static AppKit paths in `MenuBar/ModuleIconArtwork.swift`. Non-template
 images regenerate on appearance and contrast changes. Icon slots and row
 geometry remain unchanged; the artwork preview is an offscreen render.
+In `e627969`, the fourth icon (Power History) extends its area gradient to the
+horizontal axis end; the line, nodes and control geometry are unchanged. Two
+new Standard light/dark own-window captures record this fill-only revision.
 This approved icon family also guides future Wattson in-app icons and logo
 additions: use precise rounded neutral contours with system-blue accents and
 restrained local gradient regions. Keep small-size silhouettes legible, align
@@ -286,10 +289,26 @@ Native Settings captures and verification notes are in
 `design/settings/modules-reordering/README.md`. Pointer-driven keyboard/mouse focus switching is verified: only keyboard
 interaction retains a focus outline. Integrated source `402991a` passes eight
 Settings contracts and 12 Modules tests, and 12 own-window icon captures were
-reviewed. Several real native drop/cancel cases pass, but rapid Classic/Standard
-drops left a live session and half-opacity row in the instrumented VM. Overall
-drag acceptance remains blocked pending lower-overhead observation; successful
-retries do not supersede the retained failures.
+reviewed. Several real native drop/cancel cases passed, but rapid Classic/Standard
+drops left a live session and half-opacity row in the instrumented VM. Those
+failures and the original observation records remain preserved; successful
+retries do not supersede them.
+Candidate `e627969` includes `b5fcedd`: left-button state is checked before and
+after preparing the row snapshot, before registering any drag state. The eight
+Settings contracts pass in the VM, including all five DEBUG preflight cases,
+500 reuse cycles and 500 constructed-window lifecycle checks (141.524 seconds
+of runtime; 149.185 seconds for the test suite). These preflight cases stop at
+the native-session boundary and do not prove an actual pointer drag. The initial
+CUA `noWindowsAvailable` condition recovered. Four subsequent real-input cases
+verified rejection of a released left-button gesture before a native session,
+with unchanged order, zero preference writes and cleared state; none counts as
+a successful native drop or cancellation. `standard-fast-1` missed the handle
+and remains unverified. `standard-held-drop` received no input before the
+600-second fixture deadline (exit 124); the window had automatically closed
+before the user could try it. Normal held-button dragging therefore remains
+unverified on this source. No new live-session hang was observed in the four
+rejected cases. The separately coordinated, user-authorized local candidate
+installation is not a public release or a claim of complete drag acceptance.
 
 The main popover footer now replaces the UI4 ordinary segmented
 control inside a glass surface with three mutually exclusive native `.glass`
