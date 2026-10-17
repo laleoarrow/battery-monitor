@@ -287,16 +287,19 @@ esac
         marker = self.work / "logger.pid"
         log_mock = self.make_mock("log", f"echo $$ > '{marker}'\nexec /bin/sleep 30\n")
         self.script.write_text(self.script.read_text().replace("/usr/bin/log stream", str(log_mock) + " stream"))
-        process = subprocess.Popen(
-            ["/bin/bash", str(self.script), "--output", str(self.out)],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True,
-            env=self.environment,
-        )
+        transcript = self.work / "interrupt.log"
+        # Startup must not block on an undrained pipe before creating the marker.
+        with transcript.open("w") as output:
+            process = subprocess.Popen(
+                ["/bin/bash", str(self.script), "--output", str(self.out)],
+                stdout=output, stderr=subprocess.STDOUT, text=True, start_new_session=True,
+                env=self.environment,
+            )
         self.processes.append(process)
         deadline = time.monotonic() + 10
         while not marker.exists() and time.monotonic() < deadline:
             time.sleep(0.05)
-        self.assertTrue(marker.exists())
+        self.assertTrue(marker.exists(), transcript.read_text())
         process.send_signal(signal.SIGTERM)
         process.communicate(timeout=5)
         self.assertEqual(process.returncode, 143)
