@@ -7,8 +7,12 @@ fixed-scale horizontal option A from the four-style comparison.
 The [Pro design specification](pro-design.md) records the earlier direction
 and the verified ChatGPT Pro consultation.
 
-Development source based on Wattson 4.3.17. The canonical installed app and
-helper are preserved; this review does not publish or install a release.
+Development source based on Wattson 4.3.17. The user subsequently requested
+a local upgrade: **4.3.18** is now installed at `/Applications/Wattson.app`
+together with its matching helper through the verified native PKG. See the
+[installation record](local-installation-v4.3.18.json). This is a local candidate;
+no public release is implied. Earlier verification records describe their
+original pre-installation snapshots.
 
 The independent module defaults to three processes. Settings > Modules
 supports 1–10, visibility and the existing module ordering controls. Its icon

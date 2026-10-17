@@ -1,0 +1,46 @@
+{
+  "checkedAtUTC": "2026-10-17T14:08:46.340630+00:00",
+  "version": "4.3.18",
+  "sourceCommit": "d78f8b82eea30139683ed71d4a0c8b027dd07616",
+  "packageSHA256": "023e64e99f2b9b15a2a5f9220e51b0b9bbc822d56833ac673791feb3d92277c2",
+  "appAndHelperAndDaemonMatchVerifiedPayload": true,
+  "receiptVersion": "4.3.18",
+  "signatureVerified": true,
+  "architectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "helperHealth": true,
+  "helperV5": true,
+  "existingSettingsUnchanged": true,
+  "existingSettingsCompared": 12,
+  "processSampling": {
+    "count": 10,
+    "elapsedSeconds": 1.088312,
+    "responseBytes": 1283,
+    "formulaPassed": true
+  },
+  "publicRelease": false,
+  "canonicalApp": "/Applications/Wattson.app",
+  "canonicalAppPID": 9048,
+  "canonicalPIDStableAcrossVerification": true,
+  "launchMethod": "open -g",
+  "buildAndPackageVerificationPassed": true,
+  "pkgAndDMGContainIdenticalApp": true,
+  "appSignature": "ad-hoc",
+  "packageSignature": "unsigned",
+  "notarized": false,
+  "actualPopupAcceptance": {
+    "status": "pending-user-confirmation",
+    "reason": "Computer Use getApp timed out for the display name, bundle ID and canonical path."
+  },
+  "cleanup": {
+    "disposableBuildRemoved": true,
+    "disposableVerificationDirectoriesRemoved": true,
+    "reviewScratchArchivedAndRemoved": true
+  },
+  "evidenceArchive": {
+    "file": "local-installation-v4.3.18-evidence.tar.gz",
+    "sha256": "a6a18710455c297f59c29f23b8e0da105f8717e62aa194ab3aca96a157917027"
+  }
+}
