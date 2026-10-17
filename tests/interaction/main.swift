@@ -187,6 +187,26 @@ if !screenLocked {
         ) != nil
     }, timeout: 2)
     check("真实状态项完成初始屏幕定位后才模拟点击", anchorReady)
+    let originalGlassSetting = Settings.liquidGlassEnabled
+    let hiddenLaunchHosts: [Bool]
+    if #available(macOS 26.0, *) { hiddenLaunchHosts = [false, true] }
+    else { hiddenLaunchHosts = [false] }
+    for glass in hiddenLaunchHosts {
+        Settings.liquidGlassEnabled = glass
+        let hiddenController = PopoverController()
+        hiddenController.update(snapshot: fullSnapshot, history: [50, 52], peak: 52, degraded: false)
+        app.hide(nil)
+        check("隐藏启动回归建立真实隐藏状态 glass=\(glass)",
+              runApplication(until: { app.isHidden }, timeout: 2))
+        hiddenController.toggle(relativeTo: button)
+        check("菜单栏打开恢复隐藏 App 的实际弹窗 glass=\(glass)",
+              runApplication(until: { hiddenController.isShownForTest && !app.isHidden }, timeout: 2)
+                  && hiddenController.isOpen)
+        hiddenController.handleOutsideClick()
+        spin(0.8)
+        app.unhideWithoutActivation()
+    }
+    Settings.liquidGlassEnabled = originalGlassSetting
     if let anchorWindow = button.window {
         let anchor = anchorWindow.convertToScreen(button.convert(button.bounds, to: nil))
         let displays = NSScreen.screens.map {

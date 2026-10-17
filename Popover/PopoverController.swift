@@ -196,6 +196,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         // Reuse an open host. Reparenting its content into a second panel
         // leaves the original native glass window visible but empty.
         guard !wantsOpen else { refreshPlacement(); return }
+        // A hidden launch keeps new popup hosts hidden until the app is unhidden.
+        if NSApp.isHidden { NSApp.unhideWithoutActivation() }
         let useGlass = Settings.usesLiquidGlass
         guard var placement = resolvePlacement(relativeTo: button) else { return }
         guard !useGlass || placement.glassPanelFrame(margin: GlassPopoverPanel.contentInset) != nil else { return }
