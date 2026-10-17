@@ -246,7 +246,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             final class SelectionFixtureSection: SettingsSectionController {
                 let identifier: String
                 var title: String { identifier }
-                let symbolName = "gearshape"
+                let sidebarIcon: ModuleIconArtwork.SidebarIcon = .general
                 let trackedView = AttachmentTrackingView()
                 var view: NSView { trackedView }
                 init(_ identifier: String) { self.identifier = identifier }
@@ -675,7 +675,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let navigationIcons = ["general", "menu-bar-icon", "modules"].map {
                 view("settings.sidebar.icon.\($0)", in: first) as! NSImageView
             }
-            let navigationSymbols = ["slider.horizontal.3", "rectangle", "square.grid.2x2.fill"]
+            let navigationArtwork = ModuleIconArtwork.SidebarIcon.allCases
             for (index, icon) in navigationIcons.enumerated() {
                 let cell = controller.sidebarForTest.view(
                     atColumn: 0, row: index, makeIfNecessary: true
@@ -690,13 +690,29 @@ class SettingsWindowContractTests(unittest.TestCase):
                 require(approximately(iconAlignment.width, 24)
                     && approximately(iconAlignment.height, 24)
                     && icon.superview === cell && cell.imageView === icon,
-                    "sidebar native symbols use an aligned frame without tile enclosures")
-                let expectedImage = NSImage(systemSymbolName: navigationSymbols[index],
-                    accessibilityDescription: nil)?.withSymbolConfiguration(
-                        NSImage.SymbolConfiguration(pointSize: 18, weight: .regular))
-                require(icon.image != nil && expectedImage != nil
-                    && icon.image?.tiffRepresentation == expectedImage?.tiffRepresentation,
-                    "every sidebar image resolves its restrained 18-point native symbol")
+                    "sidebar vector icons use an aligned frame without tile enclosures")
+                cell.effectiveAppearance.performAsCurrentDrawingAppearance {
+                    let ink = title.textColor!.usingColorSpace(.sRGB)!
+                    let blue = NSColor.systemBlue.usingColorSpace(.sRGB)!
+                    let expectedImage = ModuleIconArtwork.sidebarImage(
+                        for: navigationArtwork[index], side: 18, ink: ink,
+                        accent: blue, increasedContrast: false)
+                    let normalArtwork = expectedImage.tiffRepresentation
+                    require(icon.image?.isTemplate == false && icon.contentTintColor == nil
+                        && icon.image?.tiffRepresentation == normalArtwork,
+                        "each sidebar uses its matching 18-point neutral-and-blue vector artwork")
+                    let previousStyle = cell.backgroundStyle
+                    cell.backgroundStyle = .emphasized
+                    let selectedArtwork = ModuleIconArtwork.sidebarImage(
+                        for: navigationArtwork[index], side: 18, ink: .white,
+                        accent: .white, increasedContrast: false).tiffRepresentation
+                    require(icon.image?.tiffRepresentation == selectedArtwork
+                        && selectedArtwork != normalArtwork,
+                        "emphasized sidebar artwork becomes white rather than blue on blue")
+                    cell.backgroundStyle = previousStyle
+                    require(icon.image?.tiffRepresentation == normalArtwork,
+                        "leaving selection restores the sidebar's neutral-and-blue artwork")
+                }
                 require(approximately(titleAlignment.minX - iconAlignment.maxX, 9),
                     "sidebar titles have a consistent nine-point symbol gap")
                 require(approximately(iconAlignment.midY, cell.bounds.midY)
@@ -2952,7 +2968,7 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("protocol SettingsSectionController: AnyObject", source)
         self.assertIn("var identifier: String { get }", source)
         self.assertIn("var title: String { get }", source)
-        self.assertIn("var symbolName: String { get }", source)
+        self.assertIn("var sidebarIcon: ModuleIconArtwork.SidebarIcon { get }", source)
         self.assertIn("var view: NSView { get }", source)
         self.assertIn("func refresh()", source)
         self.assertNotIn("Timer(", source)

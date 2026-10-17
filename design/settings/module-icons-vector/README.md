@@ -39,6 +39,12 @@ These are static vector details. Increase Contrast removes the decorative Ring
 sweep and Clock sector, restores full-opacity Flow and bar fills, and retains the
 existing thicker-stroke policy. Row geometry and control behavior are unchanged.
 
+The General, Display and Modules sidebar companions live in
+[`../sidebar-icons-vector`](../sidebar-icons-vector/README.md). The same generator
+emits their static paths into `ModuleIconArtwork.swift`; the render command below
+also writes their Dark, Light and selected-state artwork proof. The earlier
+module-only verification record remains frozen to its recorded source hashes.
+
 ## Approved family for future additions
 
 The user approved this final five-icon family as the reference for replacement

@@ -1,0 +1,78 @@
+{
+  "baseCommit": "9fef74944447d4753d1edde82997dc41a479ccad",
+  "scope": "Move the Display title-bar accent from left to right; other artwork and behavior unchanged",
+  "svgMasters": {
+    "display.svg": "894541c98670a340a46d32944d3623eb4e632128ad3305ff204f7ef1d02fe7bf",
+    "general.svg": "73a3a1329995cad9a4daaccdfceca3b43ea23603f391aaa1ae4e9a49b2ec8b18",
+    "modules.svg": "bb0e4b22290166c7dd00d0621711bbf84087f3d4100c1918b58e3c7f2b836ea5"
+  },
+  "rendererSHA256": "e518e1cc18fc62884a4d33a128f99fd0b5ce20bdb35fb40c671cb1f962924563",
+  "previewSHA256": "9337177a387d0562b47f16edfddb9ed5ad965ac3f91566478a13ba75c97d9c5c",
+  "checks": {
+    "deterministicSwiftGeneration": true,
+    "transparent24UnitVectorMasters": 3,
+    "embeddedRasterImages": 0,
+    "existingFiveModuleMastersAndNativeProofUnchanged": true,
+    "existingModuleRenderingFunctionUnchanged": true,
+    "fullProductionSwiftTypecheckMacOS12WarningsAsErrors": true,
+    "settingsContractTestsPassed": 8,
+    "settingsContractSeconds": 25.592,
+    "settingsContractInteractive": false,
+    "nativeContractChecksSelectedWhiteAndDeselectionRestoration": true,
+    "interactionFixtureTypecheckWithoutLaunching": true,
+    "ownedRenderAndCompileScratchCleaned": true
+  },
+  "initialFailure": "The SelectionFixtureSection test fixture still used the replaced symbol-name requirement. Both test fixtures now conform to the typed sidebar-icon requirement; no assertion was removed.",
+  "preview": "Offscreen production AppKit artwork proof: Dark, Light and emphasized colors, enlarged and actual 18-point sizes. Not a visible Settings window screenshot.",
+  "actualWindowGUIValidation": false,
+  "installedOrPublished": false,
+  "refinementBaseCommit": "1f1532c587d688d136bd8ca9962bb9b034df79f0",
+  "behaviorContractEvidenceCommit": "1f1532c587d688d136bd8ca9962bb9b034df79f0",
+  "currentRevisionChecks": {
+    "fullProductionSwiftTypecheckMacOS12WarningsAsErrors": true,
+    "displayMarkAtRightInDarkLightSelected": true,
+    "generalAndModulesMastersUnchanged": true,
+    "behaviorContractRerun": false
+  },
+  "rightAccentPixels": [
+    {
+      "appearance": "Dark",
+      "leftRGB": [
+        31,
+        32,
+        34
+      ],
+      "rightRGB": [
+        10,
+        132,
+        255
+      ]
+    },
+    {
+      "appearance": "Light",
+      "leftRGB": [
+        245,
+        245,
+        247
+      ],
+      "rightRGB": [
+        0,
+        122,
+        255
+      ]
+    },
+    {
+      "appearance": "Selected",
+      "leftRGB": [
+        9,
+        92,
+        209
+      ],
+      "rightRGB": [
+        255,
+        255,
+        255
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile these five SVG masters into static AppKit paths; no runtime SVG parser."""
+"""Compile module and sidebar SVG masters into static AppKit paths."""
 from pathlib import Path
 import re
 import xml.etree.ElementTree as ET
@@ -97,10 +97,48 @@ def gradient_commands(element, gradients, stroke):
     return result
 
 
+def emit_cases(lines, assets, names):
+    for name in names:
+        svg = ET.parse(assets / f"{name}.svg").getroot()
+        if svg.attrib.get("viewBox") != "0 0 24 24":
+            raise ValueError("Expected the common 24-unit artboard")
+        gradients = {e.get("id"): e for e in svg.iter() if e.tag.endswith("}linearGradient")}
+        lines.append(f"            case .{name}:")
+        for element in svg:
+            if element.tag.endswith(("}title", "}defs")):
+                continue
+            lines.append("                do {")
+            gradient_stroke = element.get("stroke", "").startswith("url(#")
+            gradient_fill = element.get("fill", "").startswith("url(#")
+            if gradient_stroke or gradient_fill:
+                decorative = element.get("data-decorative") == "true"
+                if decorative:
+                    lines.append("                    if !increasedContrast {")
+                indent = "                        " if decorative else "                    "
+                lines.extend(indent + command for command in gradient_commands(element, gradients, stroke=gradient_stroke))
+                if decorative:
+                    lines.append("                    }")
+                lines.append("                }")
+                continue
+            lines.extend("                    " + command for command in commands(element))
+            if element.get("fill", "none") != "none":
+                lines.extend([f"                    {color(element.get('fill'))}.setFill()", "                    path.fill()"])
+            if element.get("stroke", "none") != "none":
+                lines.extend([
+                    f"                    {color(element.get('stroke'))}.setStroke()",
+                    f"                    path.lineWidth = {number(element.get('stroke-width', 1))} * contrastScale",
+                    "                    path.lineCapStyle = .round",
+                    "                    path.lineJoinStyle = .round",
+                    "                    path.stroke()",
+                ])
+            lines.append("                }")
+
+
 lines = [
-    "// Generated from design/settings/module-icons-vector/*.svg. Edit the SVG masters.",
+    "// Generated from design/settings/{module,sidebar}-icons-vector/*.svg. Edit the SVG masters.",
     "// Regenerate with: python3 design/settings/module-icons-vector/generate-swift.py",
     "import AppKit", "", "enum ModuleIconArtwork {",
+    "    enum SidebarIcon: CaseIterable { case general, display, modules }", "",
     "    static func image(for module: Settings.Module, side: CGFloat, ink: NSColor,",
     "                      accent: NSColor, increasedContrast: Bool) -> NSImage {",
     "        let image = NSImage(size: NSSize(width: side, height: side), flipped: false) { rect in",
@@ -113,40 +151,22 @@ lines = [
     "            let contrastScale: CGFloat = increasedContrast ? 1.2 : 1",
     "            switch module {",
 ]
-for name in ("flow", "ring", "lanes", "history", "runtime"):
-    svg = ET.parse(ASSETS / f"{name}.svg").getroot()
-    if svg.attrib.get("viewBox") != "0 0 24 24":
-        raise ValueError("Expected the common 24-unit artboard")
-    gradients = {e.get("id"): e for e in svg.iter() if e.tag.endswith("}linearGradient")}
-    lines.append(f"            case .{name}:")
-    for element in svg:
-        if element.tag.endswith(("}title", "}defs")):
-            continue
-        lines.append("                do {")
-        gradient_stroke = element.get("stroke", "").startswith("url(#")
-        gradient_fill = element.get("fill", "").startswith("url(#")
-        if gradient_stroke or gradient_fill:
-            decorative = element.get("data-decorative") == "true"
-            if decorative:
-                lines.append("                    if !increasedContrast {")
-            indent = "                        " if decorative else "                    "
-            lines.extend(indent + command for command in gradient_commands(element, gradients, stroke=gradient_stroke))
-            if decorative:
-                lines.append("                    }")
-            lines.append("                }")
-            continue
-        lines.extend("                    " + command for command in commands(element))
-        if element.get("fill", "none") != "none":
-            lines.extend([f"                    {color(element.get('fill'))}.setFill()", "                    path.fill()"])
-        if element.get("stroke", "none") != "none":
-            lines.extend([
-                f"                    {color(element.get('stroke'))}.setStroke()",
-                f"                    path.lineWidth = {number(element.get('stroke-width', 1))} * contrastScale",
-                "                    path.lineCapStyle = .round",
-                "                    path.lineJoinStyle = .round",
-                "                    path.stroke()",
-            ])
-        lines.append("                }")
+emit_cases(lines, ASSETS, ("flow", "ring", "lanes", "history", "runtime"))
+lines.extend(["            }", "            return true", "        }", "        image.isTemplate = false", "        return image", "    }", ""])
+lines.extend([
+    "    static func sidebarImage(for icon: SidebarIcon, side: CGFloat, ink: NSColor,",
+    "                             accent: NSColor, increasedContrast: Bool) -> NSImage {",
+    "        let image = NSImage(size: NSSize(width: side, height: side), flipped: false) { rect in",
+    "            NSGraphicsContext.saveGraphicsState()",
+    "            defer { NSGraphicsContext.restoreGraphicsState() }",
+    "            let transform = NSAffineTransform()",
+    "            transform.translateX(by: rect.minX, yBy: rect.maxY)",
+    "            transform.scaleX(by: rect.width / 24, yBy: -rect.height / 24)",
+    "            transform.concat()",
+    "            let contrastScale: CGFloat = increasedContrast ? 1.2 : 1",
+    "            switch icon {",
+])
+emit_cases(lines, ASSETS.parent / "sidebar-icons-vector", ("general", "display", "modules"))
 lines.extend(["            }", "            return true", "        }", "        image.isTemplate = false", "        return image", "    }", ""])
 lines.extend('''    private static func drawGradient(_ path: CGPath, strokeWidth: CGFloat?,
                                      colors: [CGColor], locations: [CGFloat],

@@ -259,8 +259,13 @@ Recovery follows the startup controls in both the visual and keyboard order.
 See the [native settings hierarchy review](../design/settings/native-hierarchy/README.md)
 for Apple references, Pro review, production-renderer captures and validation.
 
-Settings navigation now uses unframed monochrome SF Symbols and regular
-13-point labels. Glass retains native source-list selection; Classic uses a
+Settings navigation uses unframed vector sliders, a window and a four-tile grid
+from `design/settings/sidebar-icons-vector`, matching the approved module icon
+family. Neutral contours and blue details render at 18 points in the existing
+24-point frames, beside regular 13-point labels. Native emphasized selection
+uses white artwork; deselection restores neutral-and-blue colors. Appearance
+and Increase Contrast updates regenerate the static images. Glass retains
+native source-list selection; Classic uses a
 subtle neutral fill with a semantic outline for Increase Contrast. The
 124-point navigation viewport accommodates three 32-point rows and AppKit's
 source-list spacing. The identity artwork is 32 points. Settings uses 13-point

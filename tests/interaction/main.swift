@@ -2460,7 +2460,7 @@ if #available(macOS 26.0, *), !screenLocked {
 final class InteractionSettingsSection: SettingsSectionController {
     let identifier = "interaction"
     let title = "Interaction"
-    let symbolName = "gearshape"
+    let sidebarIcon: ModuleIconArtwork.SidebarIcon = .general
     let view = NSView(frame: NSRect(x: 0, y: 0, width: 479, height: 228))
     private(set) var refreshCount = 0
     var onRefresh: (() -> Void)?
