@@ -24,16 +24,19 @@ the artwork when appearance or contrast changes. Its 28-point alignment slot,
 Ring Gauge keeps a fully defined neutral contour. Its upper blue sweep uses the
 same 0.12-to-1 opacity range as `arcGradient` in
 [`Popover/RingGaugeLayer.swift`](../../../Popover/RingGaugeLayer.swift). The
-sweep follows the upper circumference, replacing the previous whole-rim gray
-brightness gradient. It is a static adaptation of the app's power-arc effect.
+sweep follows the upper circumference and ends on the same radius as the
+northeast needle (315 degrees in the SVG coordinate system). It replaces the
+previous whole-rim gray brightness gradient and is a static adaptation of the
+app's power-arc effect.
 
 Energy Flow retains its subtle route fade-in. Power Lanes now has bright-to-soft
 blue fills inside the two taller outlined bars. Power History retains its faint
-area fade. Battery Time has a short, faint blue arc leading toward the clock
-hand, suggesting a trail while keeping the main hand fully opaque.
+area fade. Battery Time uses a soft blue quarter-sector between its two hands.
+The filled region fades toward the vertical hand and leaves the surrounding
+clock face clear; the outline and hands stay fully opaque.
 
 These are static vector details. Increase Contrast removes the decorative Ring
-and Clock sweeps, restores full-opacity Flow and bar fills, and retains the
+sweep and Clock sector, restores full-opacity Flow and bar fills, and retains the
 existing thicker-stroke policy. Row geometry and control behavior are unchanged.
 
 ## Regeneration
@@ -64,6 +67,6 @@ main integrated candidate workflow.
 
 The macOS 12 deployment-target typecheck also passes. `verify-preview.py`
 (requires Pillow) reads the unedited native PNG to check flow fade-in, the upper
-blue sweep and solid lower rim, bar fade, History area fade and clock-trail
-hierarchy.
+blue sweep and solid lower rim, needle/end alignment, bar fade, History area
+fade, and the Clock sector's fade and clipping.
 It compares displayed RGB levels rather than assuming linear alpha mixing.

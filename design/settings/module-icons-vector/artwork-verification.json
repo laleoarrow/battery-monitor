@@ -1,15 +1,15 @@
 {
   "baseCommit": "855fc308f8864940a72ca77c93b0221d4e305a33",
-  "scope": "App-aligned blue rim sweep, subtle bar gradients and clock arc trail in editable vector icons",
+  "scope": "Clock quarter-sector area gradient and Ring sweep endpoint aligned with the needle",
   "svgMasters": {
     "flow.svg": "e39a6f033c7e2d0fb692f4fd616fa8fd1833c9212febca20b3b984b24e68f232",
     "history.svg": "27c5141374aa52d4b88db70906ef58468c56e1b6d0dc539bcf420fedcbd0daf0",
     "lanes.svg": "25f530db992fe2fd0c3d1b3bdd3d0805f75bea0612b17cc3bfa980d771a23cba",
-    "ring.svg": "cf8c59393d31703d389030d000e7bab07401677074d38e5568137aca52e8a472",
-    "runtime.svg": "af7b0b095c839ee8f803c857d1f8b2a01fa61d623bec2b8589bc2022e4b38363"
+    "ring.svg": "a019c3c532ded8d915da49e72999ad2dc28ae2def4ff75d6af813f8d2c5b8ce3",
+    "runtime.svg": "f73bd8ea33f222d5a5ae8bb9bafaaa6151653651552ed4b1c1fdd22caf9b6a4b"
   },
-  "rendererSHA256": "76316581119b3bb4001d7e918d1012df7995e74d60aea13eb002c4daf3ded670",
-  "previewSHA256": "00fb7b3f368b761bcd14b5e7a60f07693a69c8fd9d4042319cb65bf004f64c02",
+  "rendererSHA256": "3644efb7675da70ee115b5ee67a7cef0480fb278c91d30ab6b1d28bb45e48890",
+  "previewSHA256": "934b6e7b3fefb9bab211e8909453517fa473aad28c6fd7ec3f4ed176afa6738b",
   "checks": {
     "svgXMLAnd24UnitArtboards": true,
     "embeddedRasterImages": 0,
@@ -19,13 +19,14 @@
     "interactiveGUIValidation": false,
     "macOS12DeploymentTargetTypecheck": true,
     "gradientPixelDirectionChecks": 8,
-    "flowAndHistoryUnchangedThisRevision": true,
-    "settingsContractSeconds": 28.049
+    "settingsContractSeconds": 25.833,
+    "flowLanesHistoryUnchangedThisRevision": true,
+    "needleAlignmentGeometryChecks": 1
   },
   "initialTestHarnessFailure": "The explicit source list omitted the new artwork file. That source was added and the same 8 tests passed; no assertions were removed.",
   "preview": "Native production vector renderer, offscreen; enlarged and actual 20-point icons. Not an installed-app screenshot.",
   "installedOrPublished": false,
-  "gradientRefinementBaseCommit": "87611f18a140a08b36f98ba3b21514843ab64d21",
+  "gradientRefinementBaseCommit": "6d1b1e60895d508ddaee997419e6c86719d007c4",
   "appRingReference": {
     "source": "Popover/RingGaugeLayer.swift",
     "referenceSHA256": "52b7e639170db8d2371498647d561ebeddea0cd7a6577c40323533bc26b3fcc8",
@@ -33,6 +34,6 @@
       0.12,
       1.0
     ],
-    "adaptation": "Static blue sweep along the icon upper rim, with a solid neutral contour"
+    "adaptation": "Upper-rim static sweep ending at the needle centerline, SVG angle 315 degrees"
   }
 }

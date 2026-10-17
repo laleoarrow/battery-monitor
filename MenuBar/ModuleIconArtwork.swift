@@ -63,11 +63,11 @@ enum ModuleIconArtwork {
                     if !increasedContrast {
                         let path = CGMutablePath()
                         path.move(to: NSPoint(x: 3.03664, y: 6.825))
-                        path.addCurve(to: NSPoint(x: 12, y: 1.65), control1: NSPoint(x: 4.88549, y: 3.6227), control2: NSPoint(x: 8.3023, y: 1.65))
-                        path.addCurve(to: NSPoint(x: 20.96336, y: 6.825), control1: NSPoint(x: 15.6977, y: 1.65), control2: NSPoint(x: 19.11451, y: 3.6227))
+                        path.addCurve(to: NSPoint(x: 10.64905, y: 1.73855), control1: NSPoint(x: 4.64549, y: 4.03838), control2: NSPoint(x: 7.45887, y: 2.15854))
+                        path.addCurve(to: NSPoint(x: 19.31856, y: 4.68144), control1: NSPoint(x: 13.83923, y: 1.31855), control2: NSPoint(x: 17.04329, y: 2.40618))
                         drawGradient(path, strokeWidth: 1.35 * contrastScale,
                                      colors: [accent.withAlphaComponent((increasedContrast ? 1 : 0.12)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 1)).cgColor],
-                                     locations: [0, 1], start: NSPoint(x: 3.0366, y: 6.825), end: NSPoint(x: 20.9634, y: 6.825))
+                                     locations: [0, 1], start: NSPoint(x: 3.0366, y: 6.825), end: NSPoint(x: 19.31856, y: 4.68144))
                     }
                 }
                 do {
@@ -208,11 +208,13 @@ enum ModuleIconArtwork {
                 do {
                     if !increasedContrast {
                         let path = CGMutablePath()
-                        path.move(to: NSPoint(x: 15.84, y: 6.51))
-                        path.addCurve(to: NSPoint(x: 18.47, y: 10.27), control1: NSPoint(x: 17.12, y: 7.41), control2: NSPoint(x: 18.07, y: 8.72))
-                        drawGradient(path, strokeWidth: 0.9 * contrastScale,
-                                     colors: [accent.withAlphaComponent((increasedContrast ? 1 : 0)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 0.34)).cgColor],
-                                     locations: [0, 1], start: NSPoint(x: 15.8, y: 6.5), end: NSPoint(x: 18.5, y: 10.3))
+                        path.move(to: NSPoint(x: 12, y: 12.3))
+                        path.addLine(to: NSPoint(x: 12, y: 5.6))
+                        path.addCurve(to: NSPoint(x: 18.7, y: 12.3), control1: NSPoint(x: 15.70031, y: 5.6), control2: NSPoint(x: 18.7, y: 8.59969))
+                        path.closeSubpath()
+                        drawGradient(path, strokeWidth: nil,
+                                     colors: [accent.withAlphaComponent(0).cgColor, accent.withAlphaComponent(0.1).cgColor, accent.withAlphaComponent(0.22).cgColor],
+                                     locations: [0, 0.55, 1], start: NSPoint(x: 12, y: 5.6), end: NSPoint(x: 18.7, y: 12.3))
                     }
                 }
                 do {

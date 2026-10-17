@@ -5,11 +5,12 @@
     "flowFadesAtStart": true,
     "rimBlueSweepBuildsAlongUpperArc": true,
     "rimLowerContourRemainsSolidNeutral": true,
+    "rimEndAlignedWithPointer": true,
     "lanesFillFadesTowardBaseline": true,
     "historyAreaFadesDownward": true,
     "historyFillQuieterThanStroke": true,
-    "clockTrailBuildsTowardHand": true,
-    "clockTrailQuieterThanHand": true
+    "clockSectorFadesTowardHand": true,
+    "clockSectorStaysInsideRegion": true
   },
   "pixels": {
     "backgroundRGB": [
@@ -25,8 +26,8 @@
       236
     ],
     "rimRightRGB": [
-      12,
-      133,
+      11,
+      132,
       255
     ],
     "rimLowerRGB": [
@@ -39,9 +40,12 @@
     "historyAreaUpperBlue": 115,
     "historyAreaLowerBlue": 43,
     "historyStrokeBlue": 255,
-    "clockTrailStartBlue": 55,
-    "clockTrailEndBlue": 100,
-    "clockHandBlue": 255
+    "clockSectorFaintBlue": 49,
+    "clockSectorStrongBlue": 67,
+    "clockSectorOutsideBlue": 34,
+    "clockHandBlue": 255,
+    "rimEndpointAngleDegrees": -44.99999999999999,
+    "pointerAngleDegrees": -45.000000000000014
   },
   "passed": true
 }
