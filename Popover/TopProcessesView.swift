@@ -3,9 +3,9 @@ import AppKit
 /// Process activity on a fixed scale, on the popover's shared surface.
 final class TopProcessesView: PopoverSection {
     private static let rowHeight: CGFloat = 44
-    private static let activityHelp = "Activity points = CPU % + 0.05 × idle wakeups per second. CPU at 100% means one logical core; multicore activity can exceed 100 points. Each measurement covers about one second, with another measurement starting ten seconds after the previous result. The bar uses a fixed 0–100-point scale; › marks a value above 100. This is a CPU and wakeup activity indicator, not watts or a share of battery consumption. GPU activity is not included."
+    private static let activityHelp = "Activity Score combines CPU usage and idle wakeups. Higher scores indicate greater process activity, not measured power consumption. Bars use a fixed 0–100 scale; › marks scores above 100. CPU 100% means one logical core."
     private let title = NSTextField(labelWithString: "Process Activity")
-    private let scale = NSTextField(labelWithString: "0–100 pts")
+    private let scale = NSTextField(labelWithString: "Activity Score")
     private let infoButton = NSButton(title: "", target: nil, action: nil)
     private let status = NSTextField(labelWithString: "Measuring…")
     private let rows = (0..<10).map { _ in ProcessRow() }
@@ -186,8 +186,8 @@ final class TopProcessesView: PopoverSection {
             track.masksToBounds = true
             fill.cornerRadius = 2
             fill.cornerCurve = .continuous
-            fill.startPoint = CGPoint(x: 0.5, y: 0)
-            fill.endPoint = CGPoint(x: 0.5, y: 1)
+            fill.startPoint = CGPoint(x: 0, y: 0.5)
+            fill.endPoint = CGPoint(x: 1, y: 0.5)
             fill.locations = [0, 0.45, 1]
             track.addSublayer(fill)
             layer?.addSublayer(track)
@@ -249,10 +249,7 @@ final class TopProcessesView: PopoverSection {
                                   alpha: PopoverStyle.isDark(self.effectiveAppearance) ? 0.75 : 1).cgColor
                     self.fill.colors = contrast
                         ? [NSColor.systemBlue.cgColor, NSColor.systemBlue.cgColor, NSColor.systemBlue.cgColor]
-                        : zip([0xD4ECFF, 0x90C9F5, 0x5BA5E3], [0x78BCFF, 0x187DE0, 0x0754B0]).map { low, high in
-                            NSColor(rgb: UInt32(low)).blended(withFraction: self.ratio,
-                                                            of: NSColor(rgb: UInt32(high)))!.cgColor
-                        }
+                        : [NSColor(rgb: 0x9CDCFF).cgColor, NSColor(rgb: 0x2C9DFF).cgColor, NSColor(rgb: 0x0B69D9).cgColor]
                 }
             }
         }
@@ -265,13 +262,12 @@ final class TopProcessesView: PopoverSection {
             value.stringValue = Self.shortNumber(score)
             overflow.isHidden = score <= 100
             details.stringValue = "CPU \(Self.shortNumber(process.cpuPercent))% · Idle wakeups \(Self.wakeupNumber(process.idleWakeupsPerSecond))/s"
-            let exact = "Activity \(score) points; CPU \(process.cpuPercent)%; idle wakeups \(process.idleWakeupsPerSecond) per second"
+            let exact = "Activity Score \(score); CPU \(process.cpuPercent)%; idle wakeups \(process.idleWakeupsPerSecond) per second"
             value.toolTip = exact
             details.toolTip = exact
             setAccessibilityLabel(process.name)
             setAccessibilityValue(exact)
             toolTip = "\(process.name) · PID \(process.pid)\n\(exact)\n\(TopProcessesView.activityHelp)"
-            refreshAppearance()
             needsLayout = true
         }
 

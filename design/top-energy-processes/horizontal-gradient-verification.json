@@ -1,0 +1,60 @@
+{
+  "assertions" : 107,
+  "cases" : [
+    {
+      "case" : "module-classic-light",
+      "composited" : true,
+      "container" : "Fixture window with production Classic surface color and 16-point side insets; unmodified TopProcessesView renderer.",
+      "glass" : false,
+      "image" : "module-classic-light.png",
+      "imageSHA256" : "be23ff4dc0a1fcffcd65675d6999f80931a90de421211ae3664eebf07e85af0c",
+      "pixels" : [
+        752,
+        416
+      ],
+      "processCount" : 3,
+      "productionSectionOnly" : true,
+      "windowFrame" : "{{332, 288}, {360, 192}}"
+    },
+    {
+      "case" : "module-classic-dark",
+      "composited" : true,
+      "container" : "Fixture window with production Classic surface color and 16-point side insets; unmodified TopProcessesView renderer.",
+      "glass" : false,
+      "image" : "module-classic-dark.png",
+      "imageSHA256" : "e174aa99e72e065cbf14ec638d956bfc8fe1c94af2eecb32837f5af16950d270",
+      "pixels" : [
+        752,
+        416
+      ],
+      "processCount" : 3,
+      "productionSectionOnly" : true,
+      "windowFrame" : "{{332, 288}, {360, 192}}"
+    },
+    {
+      "actualInfoPopover" : true,
+      "case" : "module-classic-dark-help",
+      "composited" : true,
+      "glass" : false,
+      "image" : "module-classic-dark-help.png",
+      "imageSHA256" : "9b10b4c564ba08d3b0350b04bdf6b207f6502c40e1118492e1f389c87f150a87",
+      "pixels" : [
+        704,
+        290
+      ],
+      "textCellHeights" : [
+        {
+          "frame" : "{{14, 14}, {282, 75}}",
+          "requiredCellHeight" : 75,
+          "text" : "Activity Score combines CPU usage and idle wakeups. Higher scores indicate greater process activity, not measured power consumption. Bars use a fixed 0–100 scale; › marks scores above 100. CPU 100% means one logical core."
+        }
+      ],
+      "windowFrame" : "{{499, 460}, {336, 129}}"
+    }
+  ],
+  "failures" : 0,
+  "limitations" : "Process energy, battery telemetry, history, and Settings privileged dependencies are deterministic fixtures. No sampling correctness or physical-hardware power-mode assertion is inferred from screenshots.",
+  "method" : "WindowServer capture of default-three production TopProcessesView in two owned Classic fixture windows, light and dark, with an owned underlay in a disposable ARM GUI VM.",
+  "mode" : "module-only",
+  "schema" : 1
+}

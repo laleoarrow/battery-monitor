@@ -195,6 +195,25 @@ private final class Probe: NSObject, NSApplicationDelegate {
         try await pause(0.15)
         try validate(list, count: 3, expectedProcesses: Array(displayed.prefix(3)))
         try composite(window, background: background, name: name, fields: ["productionSectionOnly": true, "processCount": 3, "container": "Fixture window with production Classic surface color and 16-point side insets; unmodified TopProcessesView renderer."])
+        if isModuleOnly && Settings.colorScheme == .dark {
+            guard let button = list.subviews.compactMap({ $0 as? NSButton }).first else { throw failure("Missing standalone info button") }
+            button.performClick(nil)
+            try await pause(0.15)
+            guard let help = list.helpWindow, let content = help.contentView else { throw failure("Standalone info did not open") }
+            let fields = descendants(content).compactMap { $0 as? NSTextField }.filter { !$0.isHiddenOrHasHiddenAncestor }
+            try check(fields.contains { $0.stringValue == list.activityHelpForTest && $0.stringValue.hasSuffix("one logical core.") }, "Info omits the full Activity Score explanation")
+            var heights: [[String: Any]] = []
+            for field in fields {
+                guard let cell = field.cell else { continue }
+                let required = cell.cellSize(forBounds: NSRect(x: 0, y: 0, width: field.bounds.width, height: 100_000))
+                try check(required.height <= field.bounds.height + 0.5, "Standalone info text is clipped")
+                heights.append(["text": field.stringValue, "requiredCellHeight": required.height, "frame": NSStringFromRect(field.frame)])
+            }
+            try composite(help, background: background, name: name + "-help", fields: ["actualInfoPopover": true, "textCellHeights": heights])
+            button.performClick(nil)
+            try await pause(0.1)
+            try check(list.helpWindow == nil, "Standalone info did not close")
+        }
         if !isModuleOnly && values == nil { try await standaloneHelpLifecycle(list) }
     }
 
@@ -313,6 +332,8 @@ private final class Probe: NSObject, NSApplicationDelegate {
         list.layoutSubtreeIfNeeded()
         try check(abs(list.bounds.height - TopProcessesView.preferredHeight(count: count)) < 0.1, "Wrong process-list height")
         let visibleViews = descendants(list).filter { !$0.isHiddenOrHasHiddenAncestor }
+        guard let scoreHeader = list.subviews.compactMap({ $0 as? NSTextField }).first(where: { $0.stringValue == "Activity Score" }) else { throw failure("Missing Activity Score header") }
+        try check(scoreHeader.intrinsicContentSize.width <= scoreHeader.bounds.width, "Activity Score header is clipped")
         let labels = visibleViews.compactMap { $0 as? NSTextField }.map(\.stringValue)
             + visibleViews.compactMap { $0.accessibilityLabel() }
         try check(expectedProcesses.map(\.name).allSatisfy(labels.contains), "A requested process name is missing")
@@ -370,7 +391,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
         let point = NSPoint(x: help.frame.midX, y: help.frame.midY)
         try check(!controller.shouldDismissLocalClickForTest(window: help, screenPoint: point), "Actual info window is not exempt from local dismissal")
         let fields = descendants(content).compactMap { $0 as? NSTextField }.filter { !$0.isHiddenOrHasHiddenAncestor }
-        try check(fields.contains { $0.stringValue.localizedCaseInsensitiveContains("GPU activity is not included") }, "Info omits its final GPU limitation")
+        try check(fields.contains { $0.stringValue.hasSuffix("one logical core.") }, "Info omits its final CPU convention")
         var heights: [[String: Any]] = []
         for field in fields {
             guard let cell = field.cell else { continue }

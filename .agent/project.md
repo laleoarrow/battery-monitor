@@ -232,10 +232,10 @@ Process Activity is an independent, default-on module appended to existing
 module orders. Settings > Modules selects 1–10 processes (default 3), and the
 six-row module list scrolls without replacing its reorder controls. It uses a
 fixed helper read for two native process-counter snapshots; the displayed
-blue gradient bars show Stats/top's CPU-and-idle-wakeup activity points on a
-fixed 0–100 scale, with paler-to-deeper blue for increasing activity, alongside
-CPU percent and idle wakeups per second. An
-information control explains the formula and one-core CPU convention; these
+blue gradient bars show Wattson's independently calculated Activity Score on a
+fixed 0–100 scale, alongside CPU percent and idle wakeups per second. Each filled
+bar runs horizontally from pale to deep blue. An
+information control explains Activity Score and the one-core CPU convention; these
 are never per-process watts or battery shares. Sampling shares the popup clock,
 runs only while open and enabled, and
 waits ten seconds after completion before refreshing. Closed/disabled generations

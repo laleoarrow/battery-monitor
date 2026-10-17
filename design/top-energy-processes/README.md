@@ -16,11 +16,13 @@ blue gradients. Process rows share Wattson's transparent surface and separators.
 
 The fixed **0–100 pts** scale prevents an idle first-ranked process from filling
 its bar. Each row shows its real activity points and the underlying CPU percent
-and idle wakeups per second. Twelve-point bars use one blue color family,
-progressing from pale to deep blue as the fixed-scale activity rises, with a
-vertical highlight. A chevron at the bar's end marks scores above 100 without hiding the
+and idle wakeups per second. Every twelve-point filled bar has its own complete
+horizontal gradient from pale to deep blue. Rows use the same colors, while
+length and the numeric **Activity Score** convey activity. A chevron at the
+bar's end marks scores above 100 without hiding the
 numeric value. Zero remains empty and tiny values are not inflated. A small
-native information button explains the formula, sampling and limitations.
+native information button explains Wattson's CPU-and-wakeup activity indicator
+and the fixed scale; formula lineage is retained in developer documentation.
 These values are not watts or shares of measured battery power. See
 [the data model and formula](../../docs/top-energy-processes.md).
 
@@ -33,14 +35,14 @@ demonstration of Liquid Glass translucency.
 
 | Dark | Light |
 | --- | --- |
-| ![Single blue scale, dark](blue-scale-module-dark.png) | ![Single blue scale, light](blue-scale-module-light.png) |
+| ![Horizontal blue gradient, dark](horizontal-gradient-module-dark.png) | ![Horizontal blue gradient, light](horizontal-gradient-module-light.png) |
 
 [Supplied style reference](reference-style.png) ·
 [Settings quantity control and horizontal icon](pro-settings-light.png)
 
-[Actual Glass host](pro-glass-dark-bottom.png) ·
-[Overflow](pro-overflow-dark.png) · [Tiny and zero values](pro-tiny-light.png) ·
-[Information popover](pro-help-light.png)
+[Earlier Glass host layout](pro-glass-dark-bottom.png) ·
+[Earlier overflow](pro-overflow-dark.png) · [Earlier tiny and zero values](pro-tiny-light.png) ·
+[Current information popover](horizontal-gradient-help-dark.png)
 
 The Modules list scrolls below its fixed subtitle and Restore button. Native
 coordinate assertions cover focusing the quantity control at the bottom without
@@ -54,15 +56,21 @@ activity formula. High-contrast colors are covered by component tests.
 [Pro verification metadata](pro-verification.json) records the source/image hashes,
 Python Settings-test correction, fixture limitations and build scope.
 
-The single-blue-scale refinement keeps that layout, sampling and metric design.
-Its fresh native module previews above are separate evidence for the changed
-palette. The earlier [uniform-blue dark](pro-module-dark.png) and
-[uniform-blue light](pro-module-light.png) captures remain available for comparison.
-The refinement passes nine focused view tests, two native captures with 102
+The preceding per-score blue-tint interpretation passed nine focused view tests,
+two native captures with 102
 assertions, and a fresh universal macOS 12 build. The test preference domain
 stays absent through 35 seconds of filesystem observation; all ten resource
 checks pass and the disposable VM has been removed, preserving the original VMs.
-[Final verification](verification.json) records these results and the new hashes.
+[Its verification](blue-scale-review.json) preserves those results and hashes.
+The user subsequently clarified that the gradient belongs inside each bar;
+the current previews above show that horizontal treatment and the final
+Activity Score wording. Earlier [per-score dark](blue-scale-module-dark.png),
+[per-score light](blue-scale-module-light.png), [uniform-blue dark](pro-module-dark.png)
+and [uniform-blue light](pro-module-light.png) images remain historical evidence.
+The corrected horizontal gradient and final Activity Score wording pass nine
+focused view tests and three real-window captures with 107 assertions. The
+information text fits its actual native text cell without clipping.
+[Current verification](verification.json) records this final source and evidence.
 
 ## Earlier rejected candidate
 

@@ -48,26 +48,28 @@ moving the popup when a read returns fewer rows.
 The Settings icon uses three horizontal bars, descending in length, as the user
 explicitly requested. This is separate from the Power Lanes icon.
 
-## Subsequent user color refinement
+## Final user clarification
 
-After reviewing the native Pro implementation, the user requested a color
-gradient that reflects low-to-high activity and explicitly limited it to one
-color family. The implementation therefore uses the same fixed 0–100-point
-scale to deepen the blue palette as activity rises, while retaining a vertical
-highlight. This user-directed refinement supersedes the uniform blue stop
-colors above. It does not change measurement, bar lengths or layout.
+The user clarified that each individual bar should contain a low-to-high
+gradient within one color family. Every filled bar therefore uses a complete
+horizontal gradient: pale blue #9CDCFF at its left edge, #2C9DFF at 45%, and
+deep blue #0B69D9 at its right edge. Short bars retain the same complete gradient.
+Activity changes the bar's length and value. All rows share the palette.
+High contrast retains the solid system-blue alternative.
 
-The vertical stop palettes interpolate using `min(activity / 100, 1)`:
+The title remains **Process Activity** and the numeric column is labelled
+**Activity Score**. The information popover starts with the user's wording:
 
-| Stop | Low activity | 100 points or above |
-| --- | --- | --- |
-| Top | #D4ECFF | #78BCFF |
-| Middle | #90C9F5 | #187DE0 |
-| Bottom | #5BA5E3 | #0754B0 |
+> Activity Score combines CPU usage and idle wakeups. Higher scores indicate
+> greater process activity, not measured power consumption.
 
-Every stop stays within the blue family and becomes darker as activity rises.
-The same colors remain in light and dark appearances; high contrast retains
-the solid system-blue alternative.
+It also explains the fixed 0–100 scale, overflow mark and one-logical-core CPU
+convention. Formula provenance stays in developer documentation and source
+comments. The app independently samples `libproc` counters and calculates its
+own score; the product UI does not attribute observations to `top`.
+
+This clarification supersedes the earlier vertical gradient and per-score tint
+interpretation. Sampling, numeric calculations and layout remain unchanged.
 
 ## Acceptance status
 

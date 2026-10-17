@@ -65,7 +65,7 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertEqual(visibleRows(view).count, 10)
     }
 
-    func testBarsUseFixedHundredPointScaleIndependentOfOtherRowsAndDisplayCount() {
+    func testBarsUseFixedHundredPointScaleIndependentOfOtherRowsAndDisplayCount() throws {
         let view = makeView(count: 10)
         let readings = [25.0, 50, 0, 500].enumerated().map {
             process($0.offset + 1, score: $0.element)
@@ -83,7 +83,9 @@ final class TopProcessesViewTests: XCTestCase {
         }
         let fields = view.subviews.compactMap { $0 as? NSTextField }
         XCTAssertTrue(fields.contains { $0.stringValue == "Process Activity" })
-        XCTAssertTrue(fields.contains { $0.stringValue == "0–100 pts" })
+        let scoreHeader = try XCTUnwrap(fields.first { $0.stringValue == "Activity Score" })
+        let headerWidth = scoreHeader.stringValue.size(withAttributes: [.font: try XCTUnwrap(scoreHeader.font)]).width
+        XCTAssertLessThanOrEqual(headerWidth, scoreHeader.frame.width - 4)
     }
 
     func testZeroTinyOverflowAndHugeFiniteValuesRemainDistinctAndFit() throws {
@@ -103,7 +105,7 @@ final class TopProcessesViewTests: XCTestCase {
             XCTAssertEqual(field.font, PopoverStyle.mono(13, .semibold))
             let textWidth = field.stringValue.size(withAttributes: [.font: try XCTUnwrap(field.font)]).width
             XCTAssertLessThanOrEqual(textWidth, field.frame.width - 4)
-            XCTAssertTrue(field.toolTip?.contains("Activity \(score) points") == true)
+            XCTAssertTrue(field.toolTip?.contains("Activity Score \(score)") == true)
             let marker = try XCTUnwrap(rows[index].subviews.compactMap { $0 as? NSImageView }
                 .first { $0.identifier?.rawValue == "top-processes.overflow" })
             XCTAssertEqual(marker.isHidden, score <= 100)
@@ -140,7 +142,7 @@ final class TopProcessesViewTests: XCTestCase {
                                  fields[2].frame.width)
         XCTAssertEqual(row.accessibilityLabel(), longName)
         XCTAssertTrue((row.accessibilityValue() as? String)?.contains("CPU 72.0%; idle wakeups 240.0 per second") == true)
-        XCTAssertTrue(row.accessibilityHelp()?.contains("not watts or a share of battery") == true)
+        XCTAssertTrue(row.accessibilityHelp()?.contains("not measured power consumption") == true)
         XCTAssertTrue(row.subviews.allSatisfy { !$0.isAccessibilityElement() })
         let images = row.subviews.compactMap { $0 as? NSImageView }
         XCTAssertEqual(images.count, 1)
@@ -148,7 +150,7 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertTrue(images.first?.isHidden == true)
     }
 
-    func testChangingMeasurementsOrRankReusesTheExistingRowsAndUpdatesValueTint() throws {
+    func testChangingMeasurementsOrRankReusesRowsAndChangesWidthAndValueWithoutChangingPalette() throws {
         let view = makeView()
         let original = processes(3)
         view.update(state: .ready(original), count: 3)
@@ -165,17 +167,23 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertEqual(visibleRows(view).map(ObjectIdentifier.init), rows.map(ObjectIdentifier.init))
         XCTAssertEqual(visibleRows(view).flatMap { $0.subviews }.map(ObjectIdentifier.init), fields)
         let updatedColors = try gradientColors(try XCTUnwrap(rows.first))
-        XCTAssertNotEqual(updatedColors, originalColors)
+        XCTAssertEqual(updatedColors, originalColors)
         XCTAssertEqual(view.barGeometryForTest.map(\.ratio), [0.49, 0.49, 0.49])
+        for row in visibleRows(view) {
+            let value = try XCTUnwrap(row.subviews.compactMap { $0 as? NSTextField }.dropFirst().first)
+            XCTAssertEqual(value.stringValue, "49.0")
+            XCTAssertEqual(try gradientColors(row), originalColors)
+        }
     }
 
-    func testFixedScaleTintGetsDarkerWithActivityWithinOneBlueFamily() throws {
+    func testEveryFillUsesTheSameCompleteHorizontalLightToDarkBlueGradientIncludingShortBars() throws {
         let view = makeView()
         view.appearance = NSAppearance(named: .aqua)
         view.update(state: .ready([8.1, 46, 84].enumerated().map {
             process($0.offset + 1, score: $0.element)
         }), count: 3)
-        let colors = try visibleRows(view).map { try gradientColors($0).map {
+        let rows = visibleRows(view)
+        let colors = try rows.map { try gradientColors($0).map {
             try XCTUnwrap(NSColor(cgColor: $0)?.usingColorSpace(.sRGB))
         } }
         func brightness(_ color: NSColor) -> CGFloat {
@@ -190,14 +198,23 @@ final class TopProcessesViewTests: XCTestCase {
             XCTAssertGreaterThan(brightness(stops[0]), brightness(stops[1]))
             XCTAssertGreaterThan(brightness(stops[1]), brightness(stops[2]))
         }
-        for stop in 0..<3 {
-            XCTAssertGreaterThan(brightness(colors[0][stop]), brightness(colors[1][stop]))
-            XCTAssertGreaterThan(brightness(colors[1][stop]), brightness(colors[2][stop]))
-            XCTAssertGreaterThan(brightness(colors[0][stop]) - brightness(colors[2][stop]), 0.1)
+        let expectedPalette = [0x9CDCFF, 0x2C9DFF, 0x0B69D9].map { NSColor(rgb: $0) }
+        for row in rows {
+            let gradient = try gradientLayer(row)
+            XCTAssertEqual(gradient.startPoint, CGPoint(x: 0, y: 0.5))
+            XCTAssertEqual(gradient.endPoint, CGPoint(x: 1, y: 0.5))
+            XCTAssertEqual(gradient.locations, [0, 0.45, 1])
+            for (actual, expected) in zip(try gradientColors(row), expectedPalette) {
+                try assertColor(actual, matches: expected, in: view.effectiveAppearance)
+            }
+            XCTAssertEqual(try gradientColors(row), try gradientColors(rows[0]))
         }
         for (bar, expected) in zip(view.barGeometryForTest, [0.081, 0.46, 0.84]) {
             XCTAssertEqual(bar.ratio, expected, accuracy: 0.000_001)
         }
+        // The gradient belongs to each filled segment, so even an 8.1-point
+        // reading reaches the dark-blue endpoint within its short fill.
+        XCTAssertEqual(try gradientLayer(rows[0]).frame.width, 114 * 0.081, accuracy: 0.000_001)
     }
 
     func testGradientAndOutlineFollowLightDarkAndHighContrastWithoutAnimations() throws {
@@ -230,6 +247,8 @@ final class TopProcessesViewTests: XCTestCase {
                 let colors = try XCTUnwrap(gradient.colors as? [CGColor])
                 XCTAssertEqual(colors.count, 3)
                 XCTAssertEqual(gradient.locations, [0, 0.45, 1])
+                XCTAssertEqual(gradient.startPoint, CGPoint(x: 0, y: 0.5))
+                XCTAssertEqual(gradient.endPoint, CGPoint(x: 1, y: 0.5))
                 XCTAssertEqual(track.borderWidth, 1)
                 XCTAssertEqual(track.backgroundColor?.alpha, 0)
                 if contrast {
@@ -248,7 +267,7 @@ final class TopProcessesViewTests: XCTestCase {
         }
     }
 
-    func testNativeHelpHasFormulaScaleSamplingAndLimitationsWithoutOpeningAWindow() throws {
+    func testNativeHelpExplainsActivityMeaningScaleAndCPUConventionWithoutOpeningAWindow() throws {
         let view = makeView()
         let button = try XCTUnwrap(view.subviews.compactMap { $0 as? NSButton }.first)
         view.layoutSubtreeIfNeeded()
@@ -263,10 +282,14 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertNotNil(button.action)
         XCTAssertEqual(button.toolTip, view.activityHelpForTest)
         XCTAssertEqual(button.accessibilityHelp(), view.activityHelpForTest)
-        for required in ["CPU % + 0.05", "one logical core", "about one second", "ten seconds",
-                         "fixed 0–100", "above 100", "not watts", "GPU activity is not included"] {
+        for required in ["Activity Score combines CPU usage and idle wakeups",
+                         "Higher scores indicate greater process activity",
+                         "not measured power consumption", "fixed 0–100 scale",
+                         "› marks scores above 100", "CPU 100% means one logical core"] {
             XCTAssertTrue(view.activityHelpForTest.contains(required))
         }
+        XCTAssertFalse(view.activityHelpForTest.contains("POWER"))
+        XCTAssertFalse(view.activityHelpForTest.contains("macOS top"))
         view.setPresentationActive(false)
         XCTAssertNil(view.helpWindow)
     }
@@ -292,9 +315,12 @@ final class TopProcessesViewTests: XCTestCase {
     }
 
     private func gradientColors(_ row: NSView) throws -> [CGColor] {
+        try XCTUnwrap(gradientLayer(row).colors as? [CGColor])
+    }
+
+    private func gradientLayer(_ row: NSView) throws -> CAGradientLayer {
         let track = try XCTUnwrap(row.layer?.sublayers?.first { $0.name == "top-processes.track" })
-        let gradient = try XCTUnwrap(track.sublayers?.first as? CAGradientLayer)
-        return try XCTUnwrap(gradient.colors as? [CGColor])
+        return try XCTUnwrap(track.sublayers?.first as? CAGradientLayer)
     }
 
     private func resolved(_ color: NSColor, in appearance: NSAppearance) -> CGColor {

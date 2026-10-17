@@ -9,28 +9,33 @@ bars with neutral outlines follow the supplied module-icon reference.
 
 ## Reading the values
 
-The blue bars use a fixed **0–100 pts** scale. An idle process therefore keeps a
+The blue bars use a fixed **0–100 Activity Score** scale. An idle process therefore keeps a
 short or empty bar even when it ranks first. Scores above 100 retain their real
 numeric value, with a full bar and an overflow mark. The scale stays the same
 when the ranking or the configured process count changes.
 
-The single blue color family follows the same fixed scale: low activity uses
-paler blue and high activity uses deeper blue. A subtle vertical highlight
-preserves the bar's shape. Above 100 the color stays at the deepest endpoint;
-the numeric value and overflow mark still show the distinction. High contrast
-uses solid system blue, with values and lengths carrying the information.
+Each filled bar has a complete horizontal gradient from pale blue on the left
+to deep blue on the right, including short bars. Rows share the same colors;
+length and numeric value convey activity. Above 100 the full bar retains its
+overflow mark and real numeric value. High contrast uses solid system blue.
 
-Each row shows its activity points and the two inputs: **CPU %** and **Idle
+Each row shows its **Activity Score** and the two inputs: **CPU %** and **Idle
 wakeups /s**. The information control explains their meaning. CPU is measured
 per logical core: 100% means one fully occupied core, and multicore work can
 exceed 100%. Platform idle wakeups count interruptions of platform idle time,
 not all process wakeups. Neither component measures per-process electrical
 power.
 
-The CPU-and-wakeup score follows the POWER metric used by Stats'
-battery process list. It is not watts, a percentage of the battery's measured
-power, or Activity Monitor's private Energy Impact calculation. The visible
-activity points use this formula, alongside its concrete component readings:
+Wattson independently samples CPU time and platform idle wakeups through
+`libproc`, then calculates Activity Score. The user-facing explanation is:
+
+> Activity Score combines CPU usage and idle wakeups. Higher scores indicate
+> greater process activity, not measured power consumption.
+
+The information control also explains the fixed scale, overflow mark and
+one-logical-core CPU convention. Formula provenance stays in developer
+documentation and source comments. The score does not represent watts,
+battery-power share or Activity Monitor's private Energy Impact calculation.
 
 For a process present in two snapshots one second apart:
 
@@ -54,8 +59,11 @@ and never reads command-line arguments or process memory. This is an interval
 ranking: it does not aggregate an application's child processes or attribute
 GPU, display or whole-machine power to an application.
 
-Stats launches `top` for this metric. Wattson calculates the same score from
-native counters to avoid repeatedly traversing process memory maps. The upstream
+The formula references Apple's published `top` POWER calculation, which Stats
+reads by launching `top`. Wattson computes its own score from native counters;
+it does not execute `top` or consume its POWER output. A shared formula does
+not guarantee identical observations across sampling intervals and process
+coverage. The upstream
 references are [Stats' battery reader](https://github.com/exelban/stats/blob/a2836b697de33d71a8bbb880a41c7e12304de9a2/Modules/Battery/readers.swift#L246-L307),
 [Apple top's POWER calculation](https://github.com/apple-oss-distributions/top/blob/1e3b6cace1cbca04536cf325da9adc7389a27e8f/power.c#L82-L89)
 and [XNU process resource counters](https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/osfmk/kern/bsd_kern.c#L1186-L1197).
