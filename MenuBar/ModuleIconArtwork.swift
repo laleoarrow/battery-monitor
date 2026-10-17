@@ -136,7 +136,8 @@ enum ModuleIconArtwork {
                     path.addLine(to: NSPoint(x: 9, y: 11.1))
                     path.addLine(to: NSPoint(x: 14.4, y: 14.6))
                     path.addLine(to: NSPoint(x: 21, y: 7.2))
-                    path.addLine(to: NSPoint(x: 21, y: 21.5))
+                    path.addLine(to: NSPoint(x: 22, y: 7.2))
+                    path.addLine(to: NSPoint(x: 22, y: 21.5))
                     path.addLine(to: NSPoint(x: 3.1, y: 21.5))
                     path.closeSubpath()
                     drawGradient(path, strokeWidth: nil,

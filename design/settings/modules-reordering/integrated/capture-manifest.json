@@ -1,0 +1,59 @@
+{
+  "allExpectedSurfacesCaptured": true,
+  "screenshots": 12,
+  "records": [
+    {
+      "path": "contrast-0/classic-light.png",
+      "sha256": "6fdf5829c5ac611af5e89a24335f2567baef9467cb3a101e15b3f5a6182a5442"
+    },
+    {
+      "path": "contrast-0/standard-light.png",
+      "sha256": "14a0d2ece09fe98cc26500e9b49859d0f9b935bac4359d3384cc172f792ef2b0"
+    },
+    {
+      "path": "contrast-0/clear-light.png",
+      "sha256": "0ae25188bfc7f477b61be2972e58b79f252f9c436e05d0627909af052f5cb253"
+    },
+    {
+      "path": "contrast-0/classic-dark.png",
+      "sha256": "566df9c4e31fd93f796a6d72cb014d4b2bec4bd6a93169036592825bd43a64d6"
+    },
+    {
+      "path": "contrast-0/standard-dark.png",
+      "sha256": "263aa7f9e130d1328015c95c96e6c56192b0afc0926170928044d8092b54bdf7"
+    },
+    {
+      "path": "contrast-0/clear-dark.png",
+      "sha256": "263aa7f9e130d1328015c95c96e6c56192b0afc0926170928044d8092b54bdf7"
+    },
+    {
+      "path": "contrast-1/classic-light.png",
+      "sha256": "219cc33250c4619273f7eb4b486b608c55490bcdba99cff21eede7bb78029ea9"
+    },
+    {
+      "path": "contrast-1/standard-light.png",
+      "sha256": "ff5604234daad555f0f2778e3661b70c250a22dbc568db64f40bc1093aede577"
+    },
+    {
+      "path": "contrast-1/clear-light.png",
+      "sha256": "ff5604234daad555f0f2778e3661b70c250a22dbc568db64f40bc1093aede577"
+    },
+    {
+      "path": "contrast-1/classic-dark.png",
+      "sha256": "94f8bcf8514267a57146f9c9b3f1f829b4d0d912bedbe917a46c7a459243ed91"
+    },
+    {
+      "path": "contrast-1/standard-dark.png",
+      "sha256": "7a9d6c72e40867027f20420cd68314b69afe2c2c0233a4767b10f096b040b917"
+    },
+    {
+      "path": "contrast-1/clear-dark.png",
+      "sha256": "7a9d6c72e40867027f20420cd68314b69afe2c2c0233a4767b10f096b040b917"
+    }
+  ],
+  "visualReviewPending": false,
+  "doesNotProveDragInteraction": true,
+  "sourceCommit": "402991a57fcbfa715e053b636cc54aceeb0a0a83",
+  "visualReview": "All 12 PNGs inspected using native view_image. Five approved vector icons, default quiet drag handles, no clipping in classic/standard/clear light/dark, normal/increased contrast. Static imagery does not establish mouse/keyboard interaction.",
+  "capture": "Production AppKit owned-window composited captures with fixed preferences in disposable ARM VM; unedited PNG bytes."
+}
