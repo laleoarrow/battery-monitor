@@ -2863,18 +2863,12 @@ if !screenLocked {
         return elements
     }
     func alignedHistoryPathAnimation(_ animation: CAAnimation) -> Bool {
-        guard let animation = animation as? CABasicAnimation, animation.keyPath == "path",
-              let fromValue = animation.fromValue, let toValue = animation.toValue,
-              CFGetTypeID(fromValue as CFTypeRef) == CGPath.typeID,
-              CFGetTypeID(toValue as CFTypeRef) == CGPath.typeID else {
-            return false
-        }
-        let from = fromValue as! CGPath, to = toValue as! CGPath
-        let a = historyPathElements(from), b = historyPathElements(to)
-        guard !a.isEmpty, a.map({ $0.0 }) == b.map({ $0.0 }) else { return false }
-        return zip(a, b).allSatisfy { start, end in
-            start.1.count == end.1.count
-                && (start.1 + end.1).allSatisfy { $0.x.isFinite && $0.y.isFinite }
+        guard let paths = historyStrokePaths(animation), let first = paths.first else { return false }
+        let topology = historyPathElements(first).map { $0.0 }
+        return !topology.isEmpty && paths.allSatisfy { path in
+            let elements = historyPathElements(path)
+            return elements.map { $0.0 } == topology
+                && elements.flatMap { $0.1 }.allSatisfy { $0.x.isFinite && $0.y.isFinite }
         }
     }
     func historyStrokePaths(_ animation: CAAnimation) -> [CGPath]? {
@@ -2883,6 +2877,9 @@ if !screenLocked {
         if let animation = animation as? CABasicAnimation,
            let from = animation.fromValue, let to = animation.toValue {
             values = [from, to]
+        } else if let animation = animation as? CAKeyframeAnimation,
+                  let frames = animation.values, frames.count == 9 {
+            values = frames
         } else {
             return nil
         }
@@ -2895,7 +2892,7 @@ if !screenLocked {
     }
     func validHistoryStroke(_ animation: CAAnimation, viewport: CATransform3D) -> Bool {
         guard let paths = historyStrokePaths(animation), let targetPath = paths.last else { return false }
-        guard animation is CABasicAnimation, paths.count == 2 else { return false }
+        guard paths.count == 2 || paths.count == 9 else { return false }
         let target = historyPathElements(targetPath)
         guard !target.isEmpty else { return false }
         for (index, path) in paths.enumerated() {
@@ -3040,17 +3037,17 @@ if !screenLocked {
             return [layer] + (layer.sublayers ?? []).flatMap { historyLayers($0) }
                 + (layer.mask.map { historyLayers($0) } ?? [])
         }
-        func viewportAnimation() -> (CAShapeLayer, CABasicAnimation)? {
+        func viewportAnimation() -> (CAShapeLayer, CAPropertyAnimation)? {
             for case let layer as CAShapeLayer in historyLayers(fixture.layer) {
-                if let animation = layer.animation(forKey: "history.stroke") as? CABasicAnimation {
+                if let animation = layer.animation(forKey: "history.stroke") as? CAPropertyAnimation {
                     return (layer, animation)
                 }
             }
             return nil
         }
-        func animationStart(_ animation: CABasicAnimation) -> CATransform3D? {
-            guard let paths = historyStrokePaths(animation), paths.count == 2 else { return nil }
-            return historyViewport(paths[0], target: paths[1])
+        func animationStart(_ animation: CAPropertyAnimation) -> CATransform3D? {
+            guard let paths = historyStrokePaths(animation), let first = paths.first, let last = paths.last else { return nil }
+            return historyViewport(first, target: last)
         }
         func settleHistoryFixture(_ context: String) -> Bool {
             let started = CACurrentMediaTime()
@@ -3097,7 +3094,7 @@ if !screenLocked {
         }
         let expansionStroke = expansionPaths.first { $0.0 == "history.stroke" }?.1
         check("History 扩轴描边保持路径拓扑及真实采样位置",
-              expansionStroke is CABasicAnimation && expansionStroke.flatMap { stroke in
+              expansionStroke is CAKeyframeAnimation && expansionStroke.flatMap { stroke in
                   expansionStart.map { validHistoryStroke(stroke, viewport: $0) }
               } == true
                   && synchronizedHistoryPaths(expansionStroke,

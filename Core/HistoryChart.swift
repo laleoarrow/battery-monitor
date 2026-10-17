@@ -103,6 +103,17 @@ struct HistoryChartGeometry {
         let control2: Point
         let end: Point
 
+        var isXMonotone: Bool {
+            let a = control1.x - start.x, b = control2.x - control1.x, c = end.x - control2.x
+            let quadratic = a - 2 * b + c
+            var minimum = min(a, c)
+            if quadratic > 0 {
+                let t = (a - b) / quadratic
+                if t > 0 && t < 1 { minimum = min(minimum, a * (1 - t) * (1 - t) + 2 * b * t * (1 - t) + c * t * t) }
+            }
+            return end.x > start.x && minimum >= -1e-12
+        }
+
         func value(at t: Double) -> Double {
             let t = min(max(t, 0), 1), u = 1 - t
             return u * u * u * start.y + 3 * u * u * t * control1.y
@@ -199,7 +210,7 @@ struct HistoryChartGeometry {
               fraction <= 6 / HistoryChartTiming.window else { return nil }
         func finite(_ p: Point) -> Bool { p.x.isFinite && p.y.isFinite }
         guard presentedSegments.allSatisfy({
-            finite($0.start) && finite($0.control1) && finite($0.control2) && finite($0.end)
+            finite($0.start) && finite($0.control1) && finite($0.control2) && finite($0.end) && $0.isXMonotone
         }) else { return nil }
         let ratio = oldCeiling / newCeiling
         func rebase(_ p: Point) -> Point { Point(x: p.x - fraction, y: p.y * ratio) }

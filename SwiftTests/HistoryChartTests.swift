@@ -3,6 +3,21 @@ import XCTest
 @testable import Wattson
 
 final class HistoryChartTests: XCTestCase {
+    func testNativeHandleLoopCannotBeReusedAsMonotoneHistory() {
+        let old = HistoryChartGeometry(samples: [20, 40, 30],
+            timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 50)
+        let target = HistoryChartGeometry(samples: [20, 40, 30, 35],
+            timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 50)
+        var shown = old.segments
+        let first = shown[0], width = first.end.x - first.start.x
+        shown[0] = .init(start: first.start,
+            control1: .init(x: first.start.x + 4 * width, y: first.control1.y),
+            control2: .init(x: first.start.x - 3 * width, y: first.control2.y), end: first.end)
+        XCTAssertFalse(shown[0].isXMonotone)
+        XCTAssertNil(target.alignedStart(from: old, presentedSegments: shown,
+            fraction: 2 / 120, oldCeiling: 50, newCeiling: 50))
+    }
+
     func testPresentationCubicInvertsNonuniformControlX() {
         let curve = HistoryChartGeometry.Cubic(
             start: .init(x: 325.2666667, y: 40.689665),
