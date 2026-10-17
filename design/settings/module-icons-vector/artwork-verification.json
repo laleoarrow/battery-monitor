@@ -1,27 +1,27 @@
 {
   "baseCommit": "855fc308f8864940a72ca77c93b0221d4e305a33",
-  "scope": "Clock quarter-sector area gradient and Ring sweep endpoint aligned with the needle",
+  "scope": "Extend the History area fill to the right axis end; retain the line and nodes",
   "svgMasters": {
     "flow.svg": "e39a6f033c7e2d0fb692f4fd616fa8fd1833c9212febca20b3b984b24e68f232",
-    "history.svg": "27c5141374aa52d4b88db70906ef58468c56e1b6d0dc539bcf420fedcbd0daf0",
+    "history.svg": "80aa04f4db75e7997cca70b06fa4dad5ac9fb93102f24556a322f1dea9d17a57",
     "lanes.svg": "25f530db992fe2fd0c3d1b3bdd3d0805f75bea0612b17cc3bfa980d771a23cba",
     "ring.svg": "a019c3c532ded8d915da49e72999ad2dc28ae2def4ff75d6af813f8d2c5b8ce3",
     "runtime.svg": "f73bd8ea33f222d5a5ae8bb9bafaaa6151653651552ed4b1c1fdd22caf9b6a4b"
   },
-  "rendererSHA256": "3644efb7675da70ee115b5ee67a7cef0480fb278c91d30ab6b1d28bb45e48890",
-  "previewSHA256": "934b6e7b3fefb9bab211e8909453517fa473aad28c6fd7ec3f4ed176afa6738b",
+  "rendererSHA256": "415a5a9b24b8bfc9cf1a4713c118ed721c6017c5ac2522c63e741a8eee6a5ec5",
+  "previewSHA256": "75e8b68e366d57c3a64588ccd29003e7a01b2fbbc3f9986af518dcd3d52317b5",
   "checks": {
     "svgXMLAnd24UnitArtboards": true,
     "embeddedRasterImages": 0,
     "deterministicSwiftGeneration": true,
     "fullProductionSwiftTypecheckWarningsAsErrors": true,
-    "settingsContractTestsPassed": 8,
     "interactiveGUIValidation": false,
     "macOS12DeploymentTargetTypecheck": true,
     "gradientPixelDirectionChecks": 8,
-    "settingsContractSeconds": 25.833,
-    "flowLanesHistoryUnchangedThisRevision": true,
-    "needleAlignmentGeometryChecks": 1
+    "needleAlignmentGeometryChecks": 1,
+    "historyAreaRightExtensionLightAndDark": true,
+    "historyStrokeAndNodesUnchanged": true,
+    "otherFourIconsUnchangedThisRevision": true
   },
   "initialTestHarnessFailure": "The explicit source list omitted the new artwork file. That source was added and the same 8 tests passed; no assertions were removed.",
   "preview": "Native production vector renderer, offscreen; enlarged and actual 20-point icons. Not an installed-app screenshot.",
@@ -35,5 +35,12 @@
       1.0
     ],
     "adaptation": "Upper-rim static sweep ending at the needle centerline, SVG angle 315 degrees"
+  },
+  "refinementBaseCommit": "65e2667a49063455968f84e174575be6a34e52d8",
+  "previousSettingsContractEvidence": {
+    "commit": "3cbd8add23d2d8a8544cd556c317347f4bb4d5fe",
+    "testsPassed": 8,
+    "seconds": 25.833,
+    "note": "Not rerun for this single fill-path edit; the current production sources were typechecked and rendered."
   }
 }
