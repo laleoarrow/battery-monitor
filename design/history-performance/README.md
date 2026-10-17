@@ -4,10 +4,12 @@ This local upgrade reduces History's update preparation work while retaining
 the 4.3.10 presentation-based axis transitions. Raw readings, Peak, the 60-slot
 ring, sampling cadence and animation policy remain unchanged.
 
-Current status: the final 4.3.11 package and integrated regressions are verified.
-The maintainer Mac remains on 4.3.10 while its locked desktop prevents the last
-Modules gesture acceptance and native Installer update. Installation has not
-been claimed complete.
+Current status: the desktop is unlocked, but final gesture testing reproduced
+a queued drag starting after the mouse button was released, leaving a row dimmed.
+The 91f9072 candidate is therefore not being installed. A minimal native button
+state check is being verified, followed by a new package and exact-byte install
+matrix. Existing 91f9072 results below remain historical evidence. The maintainer
+Mac remains on 4.3.10.
 
 The implementation emits the final stroke directly, without intermediate
 geometry, unused fills or transformed path copies. When the actual captured
