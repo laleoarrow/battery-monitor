@@ -38,9 +38,10 @@ class SettingsStoreContractTests(unittest.TestCase):
                 (.lanes, "Power Lanes", "popover.module.lanes"),
                 (.history, "Power History", "popover.module.history"),
                 (.runtime, "Battery Time Estimate", "popover.module.runtime"),
+                (.topProcesses, "Process Activity", "popover.module.topProcesses"),
             ]
             expect(
-                Settings.Module.allCases.map(\.rawValue) == ["flow", "ring", "lanes", "history", "runtime"],
+                Settings.Module.allCases.map(\.rawValue) == ["flow", "ring", "lanes", "history", "runtime", "topProcesses"],
                 "module order or raw values changed"
             )
             for (module, title, key) in expectedModules {
@@ -59,6 +60,7 @@ class SettingsStoreContractTests(unittest.TestCase):
                    "upgrades must retain the classic appearance until opted in")
             expect(Settings.showPopoverArrow,
                    "upgrades must retain the popup arrow unless the user hides it")
+            expect(Settings.topProcessCount == 3, "energy processes must default to the top three")
             expect((defaults.persistentDomain(forName: suiteName) ?? [:]).isEmpty,
                    "reading defaults must not persist preferences")
 

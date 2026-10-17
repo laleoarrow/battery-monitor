@@ -30,20 +30,20 @@ final class ModuleOrderSettingsTests: XCTestCase {
     }
 
     func testDefaultOrderDoesNotPersistAValue() {
-        XCTAssertEqual(Settings.moduleOrder, [.flow, .ring, .lanes, .history, .runtime])
+        XCTAssertEqual(Settings.moduleOrder, [.flow, .ring, .lanes, .history, .runtime, .topProcesses])
         XCTAssertNil(defaults.object(forKey: key))
     }
 
     func testUnknownDuplicateAndMissingModulesNormalizeWithoutRewriting() {
         let saved = ["runtime", "future", "history", "runtime"]
         defaults.set(saved, forKey: key)
-        XCTAssertEqual(Settings.moduleOrder, [.runtime, .history, .flow, .ring, .lanes])
+        XCTAssertEqual(Settings.moduleOrder, [.runtime, .history, .flow, .ring, .lanes, .topProcesses])
         XCTAssertEqual(defaults.stringArray(forKey: key), saved)
     }
 
     func testMalformedElementsRetainKnownModulesAndWrongContainersUseDefault() {
         defaults.set(["history", 3, false, ["flow"], "ring"] as [Any], forKey: key)
-        XCTAssertEqual(Settings.moduleOrder, [.history, .ring, .flow, .lanes, .runtime])
+        XCTAssertEqual(Settings.moduleOrder, [.history, .ring, .flow, .lanes, .runtime, .topProcesses])
         XCTAssertEqual(defaults.array(forKey: key)?.count, 5)
         for invalid: Any in ["history", 4, ["history": 1], [] as [String], ["unknown"]] {
             defaults.set(invalid, forKey: key)
@@ -53,9 +53,9 @@ final class ModuleOrderSettingsTests: XCTestCase {
 
     func testSetterPersistsNormalizedOrderAndSurvivesReopeningStore() {
         Settings.moduleOrder = [.runtime, .history, .runtime]
-        XCTAssertEqual(defaults.stringArray(forKey: key), ["runtime", "history", "flow", "ring", "lanes"])
+        XCTAssertEqual(defaults.stringArray(forKey: key), ["runtime", "history", "flow", "ring", "lanes", "topProcesses"])
         Settings.configureForTest(defaults: UserDefaults(suiteName: suite)!)
-        XCTAssertEqual(Settings.moduleOrder, [.runtime, .history, .flow, .ring, .lanes])
+        XCTAssertEqual(Settings.moduleOrder, [.runtime, .history, .flow, .ring, .lanes, .topProcesses])
     }
 
     func testOnlyChangedOrderNotifiesAfterPersistence() {
@@ -76,7 +76,7 @@ final class ModuleOrderSettingsTests: XCTestCase {
         Settings.moduleOrder = Settings.Module.allCases
 
         XCTAssertEqual(changes, [.moduleOrder, .moduleOrder])
-        XCTAssertEqual(observed, [[.runtime, .flow, .ring, .lanes, .history], Settings.Module.allCases])
+        XCTAssertEqual(observed, [[.runtime, .flow, .ring, .lanes, .history, .topProcesses], Settings.Module.allCases])
     }
 
     func testNoOpSetterDoesNotRewriteMalformedButEquivalentStoredOrder() {
@@ -89,7 +89,7 @@ final class ModuleOrderSettingsTests: XCTestCase {
     func testHiddenModulesKeepTheirPositionAndVisibilityIsIndependent() {
         Settings.setModule(.history, visible: false)
         Settings.setModule(.runtime, visible: false)
-        let order: [Settings.Module] = [.runtime, .history, .lanes, .ring, .flow]
+        let order: [Settings.Module] = [.runtime, .history, .lanes, .ring, .flow, .topProcesses]
         Settings.moduleOrder = order
         XCTAssertFalse(Settings.isModuleVisible(.history))
         XCTAssertFalse(Settings.isModuleVisible(.runtime))
@@ -106,7 +106,7 @@ final class ModuleOrderSettingsTests: XCTestCase {
     func testExternalWritesAndRemovalAreReadDirectly() {
         let external = UserDefaults(suiteName: suite)!
         external.set(["lanes", "ring"], forKey: key)
-        XCTAssertEqual(Settings.moduleOrder, [.lanes, .ring, .flow, .history, .runtime])
+        XCTAssertEqual(Settings.moduleOrder, [.lanes, .ring, .flow, .history, .runtime, .topProcesses])
         external.removeObject(forKey: key)
         XCTAssertEqual(Settings.moduleOrder, Settings.Module.allCases)
     }
@@ -149,7 +149,7 @@ final class ModuleOrderViewTests: XCTestCase {
     }
 
     func testSavedOrderControlsActualFramesAndQuickMenu() {
-        let order: [Settings.Module] = [.runtime, .history, .lanes, .ring, .flow]
+        let order: [Settings.Module] = [.runtime, .history, .lanes, .ring, .flow, .topProcesses]
         Settings.moduleOrder = order
         let content = PopoverContentViewController()
         content.setViewportHeight(content.preferredHeight)
@@ -162,7 +162,7 @@ final class ModuleOrderViewTests: XCTestCase {
         for (first, second) in zip(sections, sections.dropFirst()) {
             assertVerticallyAdjacent(first, second)
         }
-        XCTAssertEqual(content.preferredHeight, 799)
+        XCTAssertEqual(content.preferredHeight, 799 + TopProcessesView.preferredHeight(count: 3))
     }
 
     func testLiveOrderRetainsObjectsDataHeightScrollFocusAndHistoryAttachment() throws {
@@ -235,7 +235,7 @@ final class ModuleOrderViewTests: XCTestCase {
         let fullHeight = content.preferredHeight
         Settings.setModule(.history, visible: false)
         Settings.setModule(.runtime, visible: false)
-        let order: [Settings.Module] = [.runtime, .history, .flow, .lanes, .ring]
+        let order: [Settings.Module] = [.runtime, .history, .flow, .lanes, .ring, .topProcesses]
 
         Settings.moduleOrder = order
 
@@ -244,7 +244,7 @@ final class ModuleOrderViewTests: XCTestCase {
         XCTAssertTrue(content.moduleIsHiddenForTest(.runtime))
         XCTAssertEqual(content.preferredHeight,
                        fullHeight - HistoryView.preferredHeight - PopoverRuntimeView.preferredHeight)
-        XCTAssertEqual(content.moduleMenuItemsForTest.map(\.state), [.off, .off, .on, .on, .on])
+        XCTAssertEqual(content.moduleMenuItemsForTest.map(\.state), [.off, .off, .on, .on, .on, .on])
         content.toggleModuleFromMenuForTest(.runtime)
         Settings.setModule(.history, visible: true)
         content.setViewportHeight(content.preferredHeight)
@@ -258,7 +258,7 @@ final class ModuleOrderViewTests: XCTestCase {
         _ = content.view
         for module in Settings.Module.allCases { Settings.setModule(module, visible: false) }
         let height = content.preferredHeight
-        let order: [Settings.Module] = [.history, .runtime, .lanes, .flow, .ring]
+        let order: [Settings.Module] = [.history, .runtime, .lanes, .flow, .ring, .topProcesses]
         Settings.moduleOrder = order
         content.setViewportHeight(height)
         XCTAssertEqual(height, PopoverHeaderView.preferredHeight + PopoverFooterView.preferredHeight + 24)
@@ -266,5 +266,33 @@ final class ModuleOrderViewTests: XCTestCase {
         XCTAssertEqual(content.moduleOrderForTest, order)
         XCTAssertTrue(Settings.Module.allCases.allSatisfy { content.moduleIsHiddenForTest($0) })
         XCTAssertTrue(content.moduleMenuItemsForTest.allSatisfy { $0.state == .off })
+    }
+
+    func testProcessCountChangesOnlyItsModuleHeightAndHidingRemovesItEntirely() {
+        let content = PopoverContentViewController()
+        content.setViewportHeight(content.preferredHeight)
+        let processView = content.moduleViewForTest(.topProcesses)
+        let defaultHeight = content.preferredHeight
+        var notifications: [CGFloat] = []
+        content.heightDidChange = { height in
+            notifications.append(height)
+            content.setViewportHeight(height)
+        }
+
+        Settings.topProcessCount = 10
+        XCTAssertTrue(processView === content.moduleViewForTest(.topProcesses))
+        XCTAssertEqual(processView.frame.height, TopProcessesView.preferredHeight(count: 10))
+        XCTAssertEqual(content.preferredHeight, defaultHeight
+                       + TopProcessesView.preferredHeight(count: 10)
+                       - TopProcessesView.preferredHeight(count: 3))
+        XCTAssertEqual(notifications.count, 1)
+        let expandedHeight = content.preferredHeight
+        Settings.setModule(.topProcesses, visible: false)
+        XCTAssertEqual(content.preferredHeight, expandedHeight - TopProcessesView.preferredHeight(count: 10))
+        XCTAssertTrue(processView.isHidden)
+        Settings.topProcessCount = 1
+        XCTAssertEqual(content.preferredHeight, expandedHeight - TopProcessesView.preferredHeight(count: 10))
+        Settings.setModule(.topProcesses, visible: true)
+        XCTAssertEqual(processView.frame.height, TopProcessesView.preferredHeight(count: 1))
     }
 }

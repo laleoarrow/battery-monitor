@@ -22,6 +22,7 @@ private let powerObservationV5Service = HelperV5PowerObservationService(
         clock: SystemHelperV5ContinuousClock()
     )
 )
+private let topProcessesWorker = TopProcessesWorker()
 
 // AppleSMC's read-only user-client protocol uses this frozen 80-byte structure.
 // Wattson deliberately exposes only the two fixed whole-machine power keys below;
@@ -1007,9 +1008,12 @@ private func restoreSupplementaryGroups(_ groups: [gid_t]) -> Bool {
 }
 
 /// User-controlled home-directory paths are never touched with root file
-/// privileges. The helper is single-threaded, so changing effective IDs cannot
-/// leak into another request. `defer` also covers every early failure path.
+/// privileges. The FIFO user-file worker and the concurrent process reader
+/// share a credential lock, preventing effective IDs from leaking into a
+/// native snapshot. `defer` also covers every early failure path.
 private func withUserPrivileges(_ account: UserAccount, body: () -> Bool) -> Bool {
+    HelperTopProcesses.credentialLock.lock()
+    defer { HelperTopProcesses.credentialLock.unlock() }
     let originalUID = geteuid()
     let originalGID = getegid()
     guard originalUID == 0, originalGID == 0,
@@ -1316,7 +1320,8 @@ private func runBatteryPreferenceWorkerIfRequested() {
 private func handle(_ request: SocketRequest) {
     let fd = request.fd
     let peerUID = request.peerUID
-    defer { close(fd) }
+    var ownsFD = true
+    defer { if ownsFD { close(fd) } }
 
     guard socketRequestContinuousNowNanoseconds() < request.continuousDeadline else {
         writeExpiredRequestReply(to: fd)
@@ -1355,6 +1360,21 @@ private func handle(_ request: SocketRequest) {
     guard validProtocolVersion(in: object),
           let op = object["op"] as? String else {
         _ = writeAll(Data(#"{"ok":false,"error":"malformed"}"#.utf8), to: fd)
+        return
+    }
+
+    if op == "getTopProcesses" {
+        // Only the operation and protocol marker are accepted. No name, PID,
+        // executable, arguments or sample count can alter the native read.
+        guard Set(object.keys).isSubset(of: ["op", "_wattsonProtocol"]) else {
+            _ = writeAll(Data(#"{"ok":false,"error":"rejected"}"#.utf8), to: fd)
+            return
+        }
+        if topProcessesWorker.start(fd: fd, peerUID: peerUID) {
+            ownsFD = false
+        } else {
+            _ = writeAll(Data(#"{"ok":false,"error":"top processes busy"}"#.utf8), to: fd)
+        }
         return
     }
 
@@ -1422,6 +1442,50 @@ private func handle(_ request: SocketRequest) {
     }
 
     _ = writeAll(Data((reply + "\n").utf8), to: fd)
+}
+
+/// One fixed read-only sample may run alongside the FIFO control worker.
+/// The native reader never changes credentials or accepts client arguments.
+/// The socket is owned by this worker only after start returns true.
+private final class TopProcessesWorker {
+    private let queue = DispatchQueue(label: "com.leoarrow.wattson.helper.top-processes", qos: .utility)
+    private let lock = NSLock()
+    private var sampling = false
+
+    var hasPending: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return sampling
+    }
+
+    func start(fd: Int32, peerUID: uid_t) -> Bool {
+        lock.lock()
+        guard !sampling else {
+            lock.unlock()
+            return false
+        }
+        sampling = true
+        lock.unlock()
+        queue.async {
+            defer {
+                close(fd)
+                self.lock.lock()
+                self.sampling = false
+                self.lock.unlock()
+            }
+            autoreleasepool {
+                guard peerUID == consoleUID() else { return }
+                let processes = HelperTopProcesses.sample()
+                guard peerUID == consoleUID() else { return }
+                let line = processes.flatMap(HelperTopProcesses.responseLine)
+                    ?? Data(#"{"ok":false,"error":"top processes unavailable"}"#.utf8)
+                        + Data([UInt8(ascii: "\n")])
+                guard line.count <= HelperTopProcesses.maximumResponseBytes else { return }
+                _ = writeAll(line, to: fd)
+            }
+        }
+        return true
+    }
 }
 
 @main
@@ -1516,7 +1580,7 @@ private enum WattsonHelperMain {
             }
             let idleUptimeNow = DispatchTime.now().uptimeNanoseconds
             if activity { lastActivityUptime = idleUptimeNow }
-            if !inbox.hasPending,
+            if !inbox.hasPending, !topProcessesWorker.hasPending,
                idleUptimeNow >= lastActivityUptime,
                idleUptimeNow - lastActivityUptime >= idleTimeoutNanoseconds {
                 return

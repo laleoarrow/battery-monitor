@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "date": "2026-10-17",
+  "status": "implementation verified; user approval not recorded",
+  "baseVersion": "4.3.17",
+  "installedOrPublished": false,
+  "swift": {
+    "tests": 571,
+    "failures": 0,
+    "source": "swift-test-pro-final.log"
+  },
+  "python": {
+    "fullRunTests": 601,
+    "skipped": 4,
+    "initialFailures": 1,
+    "initialFailure": "Settings contract required fixed 503-point rows, conflicting with native legacy scrollbar width.",
+    "correction": "Wait for clip/document layout, then strictly compare rows against native available viewport minus 40 optical points. Production source unchanged.",
+    "correctedSettingsTests": 8,
+    "correctedSettingsFailures": 0,
+    "otherFullRunTestsPassed": true
+  },
+  "native": {
+    "captures": 126,
+    "assertions": 5134,
+    "failures": 0,
+    "method": "Production AppKit content cache plus WindowServer capture of real Classic/Regular Glass popover and Settings windows and an owned underlay in a disposable ARM GUI VM.",
+    "limitations": "Process energy, battery telemetry, history, and Settings privileged dependencies are deterministic fixtures. No sampling correctness or physical-hardware power-mode assertion is inferred from screenshots.",
+    "helpTextCellHeight": 150,
+    "helpTextFrameHeight": 150,
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "powerStates": [
+      "charging",
+      "full",
+      "on battery",
+      "mixed supply",
+      "low battery",
+      "Low Power"
+    ],
+    "processCounts": [
+      1,
+      3,
+      10
+    ],
+    "boundaryCases": [
+      "zero",
+      "tiny",
+      "over 100",
+      "rounding carry"
+    ],
+    "highContrast": "Verified by production component tests; not claimed as an additional screenshot matrix."
+  },
+  "helper": {
+    "passed": true,
+    "samples": 1,
+    "elapsedSeconds": 1.019378917,
+    "bytes": 1442,
+    "processes": 10,
+    "assertion": "Finite nonnegative components; activity = CPU percent + 0.05 × idle wakeups per second."
+  },
+  "releaseBuild": {
+    "passed": true,
+    "architectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "deploymentTarget": "macOS 12",
+    "signing": "ad hoc; not notarized",
+    "temporaryAppRemoved": true
+  },
+  "sourceSHA256": {
+    "Core/Settings.swift": "59f9fb4c09a2b5748373900ec1e0c667dab242c9a4608529f08c1742ec62c13d",
+    "Core/TopProcesses.swift": "07622784c22ebae299092d8386a493e3027870120ee43b4d8c0969b15571ed19",
+    "Core/TopProcessesMonitor.swift": "e371db4d81655b79f88c29ad51ba14190716f929a8441ce22105a18072fc0094",
+    "Helper/wattson-helper.swift": "20be488f1ac4ca1f7f5846dec17e12e11659322900a37adab41cbf1e140c84aa",
+    "HelperV5/TopProcesses.swift": "27d1c9b896768b49b236b9bf5d213c20464cf5ccf79327b2a798a2534f8b6492",
+    "Popover/TopProcessesView.swift": "3a7fc4e9c601f583d79117da958bae4d5764e658994e70dbabd9cbd2a023ae4d",
+    "Popover/PopoverController.swift": "c4886b3f87756a32be0aac45b04f61750f196993a000670c893d7227c10f38f5",
+    "Popover/PopoverContentView.swift": "1afe5263777ffbf829d791fc8286a1b7088748f783bb8e04b48077750af0e339",
+    "MenuBar/SettingsWindowController.swift": "78ce7aab8aa23d8babcab19e4476e4e022c7546aeafbd662cf14995926e76cd6",
+    "MenuBar/ModuleIconArtwork.swift": "fe5c32b3c65571e05289dc838b1cb117841f0268abb9016b8e71a59946488106",
+    "MenuBar/StatusItemController.swift": "d06022d02542ed16527ab32b9b661e267f317b85a264df2765951ceabd9d2b30"
+  },
+  "images": {
+    "pro-module-light.png": {
+      "capturedFile": "module-classic-light.png",
+      "sha256": "655df6f619736788101213f589a08a2ff7b13075a0db9a52b4f9ed9f57b0caa1"
+    },
+    "pro-module-dark.png": {
+      "capturedFile": "module-classic-dark.png",
+      "sha256": "96534578b6145636e9aac3f1882e4240dd4785e52a6df1e8093fe38195d3d1d8"
+    },
+    "pro-settings-light.png": {
+      "capturedFile": "settings-classic-light-count.png",
+      "sha256": "1959ad2183d02703873ebcef464d397cf4aae865ae17e4a788d1531960d9be8d"
+    },
+    "pro-glass-dark-bottom.png": {
+      "capturedFile": "glass-dark-on-battery-3-bottom.png",
+      "sha256": "4ec652a983668f491bd2cc82807873ccf4c9b66eea9479a4eab7626a1574e828"
+    },
+    "pro-overflow-dark.png": {
+      "capturedFile": "module-overflow-dark.png",
+      "sha256": "9dd1c6627758fd8a568b061ad2ac6904c2fbed8ea91799ba67716eb7fbde7ac5"
+    },
+    "pro-tiny-light.png": {
+      "capturedFile": "module-tiny-light.png",
+      "sha256": "75282a37291bdebcf0615e828646653b689485a8f8a96b63cfe9d2440298535f"
+    },
+    "pro-help-light.png": {
+      "capturedFile": "classic-light-on-battery-3-help.png",
+      "sha256": "3a9d0c24573ada41bc788dbc7e032d4e61b0fb7ad623f4794f6f69fe70e89daa"
+    }
+  }
+}

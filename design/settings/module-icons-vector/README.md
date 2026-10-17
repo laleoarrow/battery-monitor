@@ -1,12 +1,15 @@
 # Reference-faithful vector module icons
 
-The five editable SVG masters reconstruct the user-selected Modules reference:
+The editable SVG masters follow the user-selected Modules reference:
 
 - Energy Flow: a blue curved/downward route and a separate upright neutral arrow.
 - Ring Gauge: one circular rim, six short upper ticks, blue northeast needle and hub.
 - Power Lanes: three rounded outlined bars; the two taller bars have blue interiors.
 - Power History: neutral axes with a blue connected line and three hollow nodes.
 - Battery Time: neutral circular rim and a blue rounded clock hand.
+- Process Activity: three horizontal outlined bars ordered from longest to
+  shortest, with blue gradients in the two longer bars and a neutral outline
+  for the shortest, following the user's horizontal-layout correction.
 
 Each SVG uses a transparent 24 × 24 artboard and contains only native vector
 paths, circles and rounded rectangles. There are no embedded raster images,
@@ -80,7 +83,7 @@ historical evidence of the ordering layout. A fresh VM window capture belongs
 to the integrated app validation. No installed application or release is changed
 by this vector-source update.
 
-Verification: the five SVGs pass XML/vector-only checks, generated Swift is
+Verification: the six SVGs pass XML/vector-only checks, generated Swift is
 deterministic, production Swift typechecking passes with warnings as errors, and
 all eight non-interactive Settings contract tests pass. No test assertions were
 removed. The new artwork file was added to that harness's explicit compiler

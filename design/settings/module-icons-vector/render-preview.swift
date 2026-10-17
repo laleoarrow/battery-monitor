@@ -4,7 +4,7 @@ import AppKit
     static func main() throws {
         guard CommandLine.arguments.count == 4 else { exit(64) }
         let destination = URL(fileURLWithPath: CommandLine.arguments[1])
-        let width = 1400, height = 660
+        let width = Settings.Module.allCases.count * 280, height = 660
         let bitmap = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: width, pixelsHigh: height,
                                       bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true,
                                       isPlanar: false, colorSpaceName: .deviceRGB,
@@ -13,7 +13,6 @@ import AppKit
         NSGraphicsContext.saveGraphicsState()
         NSGraphicsContext.current = context
         defer { NSGraphicsContext.restoreGraphicsState() }
-        let names = ["Energy Flow", "Ring Gauge", "Power Lanes", "Power History", "Battery Time"]
         for (row, dark) in [true, false].enumerated() {
             let y: CGFloat = CGFloat(1 - row) * 330
             let background = dark ? NSColor(srgbRed: 0.12, green: 0.125, blue: 0.135, alpha: 1)
@@ -32,7 +31,7 @@ import AppKit
                 let small = ModuleIconArtwork.image(for: module, side: 20, ink: ink,
                                                     accent: blue, increasedContrast: false)
                 small.draw(in: NSRect(x: center - 10, y: y + 71, width: 20, height: 20))
-                let text = names[index] as NSString
+                let text = module.title as NSString
                 let attributes: [NSAttributedString.Key: Any] = [
                     .font: NSFont.systemFont(ofSize: 19, weight: .medium), .foregroundColor: ink,
                 ]

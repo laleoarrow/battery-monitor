@@ -224,6 +224,11 @@ final class StatusItemController: NSObject {
         return SettingsWindowController(dependencies: dependencies)
     }()
     private let history = PowerHistory()
+    private lazy var topProcessesMonitor: TopProcessesMonitor = {
+        let monitor = TopProcessesMonitor()
+        monitor.onUpdate = { [weak self] state in self?.popover.updateTopProcesses(state) }
+        return monitor
+    }()
     private let samplingQueue = DispatchQueue(
         label: "com.leoarrow.wattson.sampler",
         qos: .userInitiated
@@ -306,7 +311,9 @@ final class StatusItemController: NSObject {
             switch notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change {
             case .menuBarPercentage, .menuBarIconStyle:
                 self?.refreshStatusItem()
-            case .module, .moduleOrder, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
+            case .module(.topProcesses):
+                self?.refreshTopProcessesMonitoring()
+            case .module, .moduleOrder, .topProcessCount, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
                 break
             case nil:
                 self?.refreshPresentation()
@@ -322,6 +329,8 @@ final class StatusItemController: NSObject {
             self.history.reset()
             self.samplingCadence.resetHistory(at: ProcessInfo.processInfo.systemUptime)
             self.scheduleSamplingClock()
+            self.topProcessesMonitor.setActive(false)
+            self.refreshTopProcessesMonitoring()
             _ = self.startupAvailability.finish(nil, recordHistory: false)
             self.refreshPresentation()
             self.sampleNow(
@@ -593,6 +602,7 @@ final class StatusItemController: NSObject {
                 at: ProcessInfo.processInfo.systemUptime
             )
             self.sampleNow(recordHistory: recordHistory)
+            self.topProcessesMonitor.refreshIfNeeded()
             self.scheduleSamplingClock()
         }
         timer.tolerance = samplingCadence.tolerance
@@ -603,6 +613,7 @@ final class StatusItemController: NSObject {
     private func startDisplayClock() {
         guard !samplingCadence.displayIsActive else { return }
         samplingCadence.displayIsActive = true
+        refreshTopProcessesMonitoring()
         scheduleSamplingClock()
         let openingGeneration = samplingCadence.displayGeneration
         // Let NSPopover hand its first frame to the window server before doing
@@ -621,7 +632,14 @@ final class StatusItemController: NSObject {
     private func stopDisplayClock() {
         guard samplingCadence.displayIsActive else { return }
         samplingCadence.displayIsActive = false
+        refreshTopProcessesMonitoring()
         scheduleSamplingClock()
+    }
+
+    private func refreshTopProcessesMonitoring() {
+        topProcessesMonitor.setActive(
+            samplingCadence.displayIsActive && Settings.isModuleVisible(.topProcesses)
+        )
     }
 
     fileprivate func sampleNow(

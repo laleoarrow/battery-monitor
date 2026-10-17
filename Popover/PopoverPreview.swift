@@ -41,6 +41,11 @@ final class PopoverPreviewWindowController: NSWindowController {
             peak: history.max() ?? snapshot.totalInputW,
             degraded: false
         )
+        content.updateTopProcesses(.ready([
+            EnergyProcess(pid: 101, name: "Safari", energyImpact: 24.8, cpuPercent: 20.8, idleWakeupsPerSecond: 80),
+            EnergyProcess(pid: 102, name: "WindowServer", energyImpact: 12.3, cpuPercent: 11.3, idleWakeupsPerSecond: 20),
+            EnergyProcess(pid: 103, name: "Xcode", energyImpact: 7.6, cpuPercent: 7.1, idleWakeupsPerSecond: 10),
+        ]))
         content.setModeSelectHandler { mode, completion in completion(mode) }
         content.setSystemBatteryIconToggleHandler { _, completion in completion(true) }
         content.updateSystemBatteryIconState(false)

@@ -32,6 +32,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     private var visibilityHandler: ((Bool) -> Void)?
     private var settingsHandler: (() -> Void)?
     private var latestPresentation: Presentation?
+    private var latestTopProcesses: TopProcessesState = .loading
     private var latestSystemBatteryIconHidden: Bool?
     private var latestSystemBatteryIconReadStatus: SystemBatteryIconReadStatus = .notRequested
     private var displayOptionsObserver: NSObjectProtocol?
@@ -166,6 +167,12 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         _ handler: @escaping (EnergyMode, @escaping (EnergyMode?) -> Void) -> Void
     ) {
         content.setModeSelectHandler(handler)
+    }
+
+    func updateTopProcesses(_ state: TopProcessesState) {
+        latestTopProcesses = state
+        guard wantsOpen || hostIsShown else { return }
+        content.updateTopProcesses(state)
     }
 
     func setSystemBatteryIconToggleHandler(
@@ -341,6 +348,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     }
 
     private func applyLatestPresentation() {
+        content.updateTopProcesses(latestTopProcesses)
         guard let latestPresentation else { return }
         content.update(
             snapshot: latestPresentation.snapshot,
@@ -543,6 +551,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
 
     private func shouldDismissLocalClick(window: NSWindow?, screenPoint: NSPoint) -> Bool {
         guard wantsOpen else { return false }
+        if let window, window === content.processActivityHelpWindow { return false }
         if !usingGlassPanel {
             // Semi-transient popovers do not dismiss for other app windows.
             // Keep Classic content and native menu events with AppKit.
@@ -575,7 +584,8 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         let anchorFrame = anchorButton?.window?.frame
         let shouldDismiss = Self.shouldDismissGlobalClick(screenPoint: screenPoint,
             anchorFrame: anchorFrame, eventWindow: event?.window,
-            eventWindowNumber: event?.windowNumber ?? 0, contentWindow: content.view.window)
+            eventWindowNumber: event?.windowNumber ?? 0, contentWindow: content.view.window,
+            informationWindow: content.processActivityHelpWindow)
         if shouldDismiss { close() }
         PopupEventLog.record(source: "global-mouse", event: event,
             openBefore: wasOpen, openAfter: wantsOpen,
@@ -584,14 +594,15 @@ final class PopoverController: NSObject, NSPopoverDelegate {
 
     static func shouldDismissGlobalClick(screenPoint: NSPoint, anchorFrame: NSRect?,
                                         eventWindow: NSWindow? = nil, eventWindowNumber: Int = 0,
-                                        contentWindow: NSWindow? = nil) -> Bool {
-        if let contentWindow {
-            if eventWindow === contentWindow { return false }
+                                        contentWindow: NSWindow? = nil,
+                                        informationWindow: NSWindow? = nil) -> Bool {
+        for ownedWindow in [contentWindow, informationWindow].compactMap({ $0 }) {
+            if eventWindow === ownedWindow { return false }
             // Global delivery can omit the local window object. Only a known
             // positive target number can substitute for its identity; screen
             // overlap must not shelter a different process's window.
             if eventWindow == nil, eventWindowNumber > 0,
-               eventWindowNumber == contentWindow.windowNumber { return false }
+               eventWindowNumber == ownedWindow.windowNumber { return false }
         }
         guard let frame = anchorFrame else { return true }
         // At the display's upper edge the pointer can equal maxY. Keep X

@@ -1,4 +1,5 @@
 import Foundation
+import CoreFoundation
 
 /// Preferences that more than one surface reads. The popover writes them; the
 /// status item listens and redraws.
@@ -58,7 +59,7 @@ enum Settings {
     }
 
     enum Module: String, CaseIterable {
-        case flow, ring, lanes, history, runtime
+        case flow, ring, lanes, history, runtime, topProcesses
 
         var title: String {
             switch self {
@@ -67,6 +68,7 @@ enum Settings {
             case .lanes: return "Power Lanes"
             case .history: return "Power History"
             case .runtime: return "Battery Time Estimate"
+            case .topProcesses: return "Process Activity"
             }
         }
 
@@ -85,6 +87,7 @@ enum Settings {
         case dockIconStyle
         case module(Module)
         case moduleOrder
+        case topProcessCount
     }
 
     static let didChange = Notification.Name("WattsonSettingsDidChange")
@@ -101,6 +104,7 @@ enum Settings {
     private static let inAppLogoStyleKey = "appearance.inAppLogoStyle"
     private static let dockIconStyleKey = "appearance.dockIconStyle"
     private static let moduleOrderKey = "popover.moduleOrder"
+    private static let topProcessCountKey = "popover.topProcessCount"
 #if DEBUG
     private static var testDefaults: UserDefaults?
 #endif
@@ -294,6 +298,22 @@ enum Settings {
 
     static func isModuleVisible(_ module: Module) -> Bool {
         defaults.object(forKey: module.defaultsKey) as? Bool ?? true
+    }
+
+    /// Number of ranked processes shown in the independent energy module.
+    static var topProcessCount: Int {
+        get {
+            guard let stored = defaults.object(forKey: topProcessCountKey) as? NSNumber,
+                  CFGetTypeID(stored) != CFBooleanGetTypeID(),
+                  let value = stored as? Int else { return 3 }
+            return min(max(value, 1), 10)
+        }
+        set {
+            let value = min(max(newValue, 1), 10)
+            guard topProcessCount != value else { return }
+            defaults.set(value, forKey: topProcessCountKey)
+            postChange(.topProcessCount)
+        }
     }
 
     static func setModule(_ module: Module, visible: Bool) {

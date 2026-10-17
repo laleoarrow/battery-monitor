@@ -64,6 +64,7 @@ private enum CaptureRuntimeSections {
             Settings.colorScheme = appearance == "dark" ? .dark : .light
             for (name, snapshot, expectedPresentation, expectedValueFontSize) in fixtures {
                 for module in Settings.Module.allCases { Settings.setModule(module, visible: true) }
+                Settings.setModule(.topProcesses, visible: false)
                 let controller = PopoverContentViewController()
                 controller.setAnimationsEnabled(false)
                 controller.setPresentationActive(true)

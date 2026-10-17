@@ -192,6 +192,12 @@ private protocol SettingsContrastRefreshing: AnyObject {
     func refreshContrastAppearance()
 }
 
+private func revealSettingsRow(_ row: NSView) {
+    let inset = row.enclosingScrollView?.identifier?.rawValue == "settings.modules.scroll"
+        ? SettingsStyle.groupOpticalInset : 0
+    row.scrollToVisible(row.bounds.insetBy(dx: 0, dy: -inset))
+}
+
 /// Glass pages use the window toolbar for their title; Classic keeps it inline.
 private final class SettingsPageHeading: NSTextField, SettingsContrastRefreshing {
     var titleSpace: CGFloat = 40
@@ -296,7 +302,7 @@ private final class SettingsAdaptiveBorderBox: NSBox, SettingsContrastRefreshing
 
 private final class SettingsToggleButton: NSButton, SettingsContrastRefreshing {
     private let increaseContrast: () -> Bool
-    let nativeSwitch = NSSwitch()
+    let nativeSwitch = SettingsScrollingSwitch()
 
     init(
         accessibilityLabel: String,
@@ -346,6 +352,12 @@ private final class SettingsToggleButton: NSButton, SettingsContrastRefreshing {
 
     override var acceptsFirstResponder: Bool {
         Settings.usesLiquidGlass ? false : super.acceptsFirstResponder
+    }
+
+    override func becomeFirstResponder() -> Bool {
+        let accepted = super.becomeFirstResponder()
+        if accepted, let row = superview { revealSettingsRow(row) }
+        return accepted
     }
 
     override func setAccessibilityHelp(_ help: String?) {
@@ -670,10 +682,12 @@ private final class SettingsTransparencySlider: NSSlider {
     }
 }
 
-private final class SettingsPopoverArrowSwitch: NSSwitch {
+private final class SettingsScrollingSwitch: NSSwitch {
     override func becomeFirstResponder() -> Bool {
         let accepted = super.becomeFirstResponder()
-        if accepted, let row = superview { row.scrollToVisible(row.bounds) }
+        if accepted, let host = superview {
+            revealSettingsRow((host as? SettingsToggleButton)?.superview ?? host)
+        }
         return accepted
     }
 }
@@ -685,7 +699,7 @@ private final class SettingsAppearancePopupButton: NSPopUpButton {
         let accepted = super.becomeFirstResponder()
         if accepted {
             let target = focusScrollView ?? self
-            target.scrollToVisible(target.bounds)
+            revealSettingsRow(target)
         }
         return accepted
     }
@@ -771,7 +785,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let feedbackError = NSTextField(labelWithString: "")
     private let liquidGlassSwitch = NSSwitch()
     private let liquidGlassStylePopup = NSPopUpButton(frame: .zero, pullsDown: false)
-    private let popoverArrowSwitch = SettingsPopoverArrowSwitch()
+    private let popoverArrowSwitch = SettingsScrollingSwitch()
     private let transparencySlider = SettingsTransparencySlider()
     private let transparencyValue = NSTextField(labelWithString: "100%")
     private var displayOptionsObserver: NSObjectProtocol?
@@ -2749,7 +2763,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .checkForUpdatesOnLaunch, .module, .moduleOrder, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
+            case .checkForUpdatesOnLaunch, .module, .moduleOrder, .topProcessCount, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
                 break
             }
         }
@@ -2877,10 +2891,10 @@ private final class ModuleReorderHandle: NSButton, SettingsContrastRefreshing {
 
     override func mouseDown(with event: NSEvent) {
         guard isEnabled else { return }
+        pressEvent = event
         window?.makeFirstResponder(self)
         keyboardFocusVisible = false
         needsDisplay = true
-        pressEvent = event
     }
 
     override func mouseDragged(with event: NSEvent) {
@@ -2962,7 +2976,10 @@ private final class ModuleReorderHandle: NSButton, SettingsContrastRefreshing {
 
     override func becomeFirstResponder() -> Bool {
         let accepted = super.becomeFirstResponder()
-        if accepted { keyboardFocusVisible = true }
+        if accepted {
+            keyboardFocusVisible = true
+            if pressEvent == nil, let row = superview { revealSettingsRow(row) }
+        }
         needsDisplay = true
         return accepted
     }
@@ -3210,6 +3227,7 @@ private final class ModuleReorderList: NSStackView, NSDraggingSource, SettingsCo
         order.remove(at: index)
         order.insert(module, at: index + delta)
         Settings.moduleOrder = order
+        if let row = rows[module] { revealSettingsRow(row) }
         NSAccessibility.post(element: self, notification: .layoutChanged)
         return true
     }
@@ -3226,6 +3244,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
     private var handles: [Settings.Module: ModuleReorderHandle] = [:]
     private var separators: [Settings.Module: NSBox] = [:]
     private let rows = ModuleReorderList()
+    private let topProcessCount = SettingsAppearancePopupButton()
     var orderDidChange: (() -> Void)?
     private var settingsObserver: NSObjectProtocol?
 
@@ -3299,9 +3318,28 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
 
         view.addSubview(heading)
         view.addSubview(subtitle)
-        view.addSubview(surface)
+        let opticalInset = SettingsStyle.groupOpticalInset
+        let document = SettingsFormStackView(views: [surface])
+        document.orientation = .vertical
+        document.alignment = .leading
+        document.edgeInsets = NSEdgeInsets(
+            top: opticalInset, left: opticalInset, bottom: opticalInset, right: opticalInset
+        )
+        document.translatesAutoresizingMaskIntoConstraints = false
+        let scroll = NSScrollView()
+        scroll.identifier = NSUserInterfaceItemIdentifier("settings.modules.scroll")
+        scroll.drawsBackground = false
+        scroll.backgroundColor = .clear
+        scroll.borderType = .noBorder
+        scroll.hasVerticalScroller = true
+        scroll.autohidesScrollers = true
+        scroll.scrollerStyle = .overlay
+        scroll.automaticallyAdjustsContentInsets = false
+        scroll.documentView = document
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scroll)
         view.addSubview(restoreOrder)
-        let contentTop = surface.topAnchor.constraint(equalTo: view.topAnchor, constant: 70)
+        let contentTop = scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 70)
         heading.contentTopConstraint = contentTop
         NSLayoutConstraint.activate([
             heading.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
@@ -3309,14 +3347,18 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             heading.topAnchor.constraint(equalTo: view.topAnchor, constant: -3),
             subtitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2),
             subtitle.trailingAnchor.constraint(lessThanOrEqualTo: restoreOrder.leadingAnchor, constant: -12),
-            subtitle.bottomAnchor.constraint(equalTo: surface.topAnchor, constant: -10),
+            subtitle.bottomAnchor.constraint(equalTo: scroll.topAnchor, constant: -10),
             restoreOrder.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             restoreOrder.centerYAnchor.constraint(equalTo: subtitle.centerYAnchor),
             restoreOrder.heightAnchor.constraint(equalToConstant: 22),
-            surface.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            surface.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scroll.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -opticalInset),
+            scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: opticalInset),
             contentTop,
-            surface.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
+            scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: opticalInset),
+            document.leadingAnchor.constraint(equalTo: scroll.contentView.leadingAnchor),
+            document.topAnchor.constraint(equalTo: scroll.contentView.topAnchor),
+            document.widthAnchor.constraint(equalTo: scroll.contentView.widthAnchor),
+            surface.widthAnchor.constraint(equalTo: document.widthAnchor, constant: -2 * opticalInset),
             surface.heightAnchor.constraint(equalToConstant:
                 SettingsStyle.moduleRowHeight * CGFloat(Settings.Module.allCases.count)),
             rows.leadingAnchor.constraint(equalTo: list.leadingAnchor),
@@ -3345,7 +3387,31 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         detail.font = SettingsStyle.detailFont
         detail.textColor = SettingsStyle.secondaryText
         detail.lineBreakMode = .byTruncatingTail
-        let text = NSStackView(views: [primary, detail])
+        let secondary: NSView
+        if module == .topProcesses {
+            detail.stringValue = "Processes shown"
+            topProcessCount.identifier = NSUserInterfaceItemIdentifier("settings.modules.top-process-count")
+            topProcessCount.setAccessibilityIdentifier("settings.modules.top-process-count")
+            topProcessCount.setAccessibilityLabel("Number of Processes Shown")
+            topProcessCount.setAccessibilityHelp("Choose how many processes appear in Process Activity.")
+            topProcessCount.controlSize = .small
+            topProcessCount.font = SettingsStyle.detailFont
+            topProcessCount.target = self
+            topProcessCount.action = #selector(changeTopProcessCount(_:))
+            topProcessCount.focusScrollView = row
+            for count in 1...10 {
+                topProcessCount.addItem(withTitle: String(count))
+                topProcessCount.lastItem?.tag = count
+            }
+            let countRow = NSStackView(views: [detail, topProcessCount])
+            countRow.orientation = .horizontal
+            countRow.alignment = .centerY
+            countRow.spacing = 6
+            secondary = countRow
+        } else {
+            secondary = detail
+        }
+        let text = NSStackView(views: [primary, secondary])
         text.orientation = .vertical
         text.alignment = .leading
         text.spacing = 5
@@ -3407,6 +3473,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         case .lanes: return "Compare system and battery power."
         case .history: return "See recent power use over time."
         case .runtime: return "See time to full charge or remaining battery time."
+        case .topProcesses: return "See processes with the highest recent activity."
         }
     }
 
@@ -3424,6 +3491,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             }
             if case let .module(module) = change { self.refresh(module) }
             if change == .moduleOrder { self.rows.applySavedOrder() }
+            if change == .topProcessCount { self.refresh(.topProcesses) }
         }
     }
 
@@ -3437,6 +3505,15 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
 
     private func refresh(_ module: Settings.Module) {
         buttons[module]?.state = Settings.isModuleVisible(module) ? .on : .off
+        if module == .topProcesses {
+            topProcessCount.selectItem(withTag: Settings.topProcessCount)
+            topProcessCount.isEnabled = Settings.isModuleVisible(module)
+        }
+    }
+
+    @objc private func changeTopProcessCount(_ sender: NSPopUpButton) {
+        guard let count = sender.selectedItem?.tag else { return }
+        Settings.topProcessCount = count
     }
 
     @objc private func restoreDefaultOrder(_ sender: NSButton) {
@@ -3551,6 +3628,7 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             if change == .liquidGlassTransparency { self?.refreshContrastAppearance() }
             if change == .colorScheme { self?.refreshColorScheme() }
             if change == .inAppLogoStyle { self?.identityIcon.refreshLogo() }
+            if case .module? = change { self?.updateVisibleSwitchKeyLoop() }
         }
         refreshLiquidGlassAppearance()
         if let frameAutosaveName {

@@ -790,6 +790,9 @@ final class PopoverContentViewController: NSViewController {
     private let ringView = RingGaugeView()
     private let laneView = LaneView()
     private let historyView = HistoryView()
+    private let topProcessesView = TopProcessesView()
+    private var topProcessesHeight: NSLayoutConstraint?
+    private var latestTopProcesses: TopProcessesState = .loading
     private let footer = PopoverFooterView()
 
     private var moduleVisibility: [PopoverModule: Bool] = [:]
@@ -865,7 +868,7 @@ final class PopoverContentViewController: NSViewController {
             // Keep their foreground clear; Classic retains its own fallback.
             let needsOpaqueForeground = reduceTransparency && !(view.window is GlassPopoverPanel)
             view.layer?.backgroundColor = needsOpaqueForeground ? PopoverStyle.surface.cgColor : nil
-            for section in [header, runtimeView, flowView, ringView, laneView, historyView, footer] {
+            for section in [header, runtimeView, flowView, ringView, laneView, historyView, topProcessesView, footer] {
                 section.refreshAppearance()
             }
             update(snapshot: latestSnapshot, history: latestHistory,
@@ -880,7 +883,15 @@ final class PopoverContentViewController: NSViewController {
         if isVisible(.ring) { total += RingGaugeView.preferredHeight }
         if isVisible(.lanes) { total += LaneView.preferredHeight }
         if isVisible(.history) { total += HistoryView.preferredHeight }
+        if isVisible(.topProcesses) { total += TopProcessesView.preferredHeight(count: Settings.topProcessCount) }
         return total + 24
+    }
+
+    func updateTopProcesses(_ state: TopProcessesState) {
+        guard latestTopProcesses != state else { return }
+        latestTopProcesses = state
+        guard isVisible(.topProcesses) else { return }
+        updateModule(.topProcesses)
     }
 
     func update(snapshot: PowerSnapshot, history: [Double], peak: Double, degraded: Bool,
@@ -917,6 +928,8 @@ final class PopoverContentViewController: NSViewController {
             laneView.update(snapshot: latestSnapshot)
         case .history:
             updateHistory()
+        case .topProcesses:
+            topProcessesView.update(state: latestTopProcesses, count: Settings.topProcessCount)
         }
     }
 
@@ -975,10 +988,13 @@ final class PopoverContentViewController: NSViewController {
         presentationActive = active
         footer.setHoverPresentationActive(active)
         historyView.setPresentationActive(active)
+        topProcessesView.setPresentationActive(active && isVisible(.topProcesses))
         if !active { footer.cancelInteraction() }
     }
 
     func cancelActiveModeDrag() -> Bool { footer.cancelActiveModeDrag() }
+
+    var processActivityHelpWindow: NSWindow? { topProcessesView.helpWindow }
 
     private func removeAnimationsRecursively(from layer: CALayer) {
         layer.removeAllAnimations()
@@ -1016,6 +1032,11 @@ final class PopoverContentViewController: NSViewController {
         }
         stack.addArrangedSubview(footer)
 
+        let processesHeight = topProcessesView.heightAnchor.constraint(
+            equalToConstant: TopProcessesView.preferredHeight(count: Settings.topProcessCount)
+        )
+        topProcessesHeight = processesHeight
+
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -1030,6 +1051,7 @@ final class PopoverContentViewController: NSViewController {
             ringView.heightAnchor.constraint(equalToConstant: RingGaugeView.preferredHeight),
             laneView.heightAnchor.constraint(equalToConstant: LaneView.preferredHeight),
             historyView.heightAnchor.constraint(equalToConstant: HistoryView.preferredHeight),
+            processesHeight,
             footer.heightAnchor.constraint(equalToConstant: PopoverFooterView.preferredHeight),
         ])
 
@@ -1078,6 +1100,11 @@ final class PopoverContentViewController: NSViewController {
                 self?.applyModuleVisibility()
             case .moduleOrder:
                 self?.applyModuleOrder()
+            case .topProcessCount:
+                guard let self else { return }
+                self.topProcessesHeight?.constant = TopProcessesView.preferredHeight(count: Settings.topProcessCount)
+                self.updateModule(.topProcesses)
+                self.heightDidChange?(self.preferredHeight)
             default:
                 break
             }
@@ -1091,6 +1118,7 @@ final class PopoverContentViewController: NSViewController {
         case .ring: return ringView
         case .lanes: return laneView
         case .history: return historyView
+        case .topProcesses: return topProcessesView
         }
     }
 
@@ -1120,6 +1148,7 @@ final class PopoverContentViewController: NSViewController {
             (.runtime, runtimeView),
             (.flow, flowView), (.ring, ringView),
             (.lanes, laneView), (.history, historyView),
+            (.topProcesses, topProcessesView),
         ]
         for (module, moduleView) in views {
             let wasHidden = moduleView.isHidden
@@ -1128,6 +1157,7 @@ final class PopoverContentViewController: NSViewController {
                 updateModule(module)
             }
         }
+        topProcessesView.setPresentationActive(presentationActive && isVisible(.topProcesses))
         if animationsEnabled { setAnimationsEnabled(true) }
         heightDidChange?(preferredHeight)
     }

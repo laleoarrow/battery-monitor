@@ -2796,6 +2796,7 @@ if #available(macOS 26.0, *), !screenLocked, let button = item.button {
     // previousModules restores both fixture changes when this scope exits.
     Settings.setModule(.flow, visible: false)
     Settings.setModule(.history, visible: false)
+    Settings.setModule(.topProcesses, visible: false)
     func runtimeDescendants(_ view: NSView) -> [NSView] {
         view.subviews.flatMap { [$0] + runtimeDescendants($0) }
     }

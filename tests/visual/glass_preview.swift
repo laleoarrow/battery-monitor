@@ -471,6 +471,11 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         let sample = snapshot
         let history = (0..<32).map { sample.totalInputW * (0.88 + 0.08 * sin(Double($0) * 0.4)) }
         popover.update(snapshot: sample, history: history, peak: sample.totalInputW, degraded: false)
+        popover.updateTopProcesses(.ready([
+            EnergyProcess(pid: 101, name: "Safari", energyImpact: 24.8, cpuPercent: 20.8, idleWakeupsPerSecond: 80),
+            EnergyProcess(pid: 102, name: "WindowServer", energyImpact: 12.3, cpuPercent: 11.3, idleWakeupsPerSecond: 20),
+            EnergyProcess(pid: 103, name: "Xcode", energyImpact: 7.6, cpuPercent: 7.1, idleWakeupsPerSecond: 10),
+        ]))
         popover.updateSystemBatteryIconState(hiddenBatteryIcon)
         updateFixtureFooter()
         updateNote()

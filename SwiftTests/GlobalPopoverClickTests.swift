@@ -91,6 +91,33 @@ final class GlobalPopoverClickTests: XCTestCase {
         XCTAssertFalse(dismisses(try mouseDown(in: foreignWindow), content: foreignWindow))
     }
 
+    func testProcessInformationWindowKeepsItsOwnRelayedClicks() throws {
+        let event = try mouseDown(in: foreignWindow)
+        XCTAssertFalse(PopoverController.shouldDismissGlobalClick(
+            screenPoint: .zero, anchorFrame: nil,
+            eventWindow: event.window, eventWindowNumber: event.windowNumber,
+            contentWindow: contentWindow, informationWindow: foreignWindow))
+        XCTAssertFalse(PopoverController.shouldDismissGlobalClick(
+            screenPoint: .zero, anchorFrame: nil,
+            eventWindow: nil, eventWindowNumber: event.windowNumber,
+            contentWindow: contentWindow, informationWindow: foreignWindow))
+        XCTAssertTrue(PopoverController.shouldDismissGlobalClick(
+            screenPoint: .zero, anchorFrame: nil,
+            eventWindow: event.window, eventWindowNumber: event.windowNumber,
+            contentWindow: contentWindow, informationWindow: nil),
+            "Closing the information popover must remove its exemption")
+    }
+
+    func testInformationWindowNumberCannotShelterAnExplicitDifferentWindow() {
+        XCTAssertTrue(PopoverController.shouldDismissGlobalClick(
+            screenPoint: .zero, anchorFrame: nil,
+            eventWindow: contentWindow, eventWindowNumber: foreignWindow.windowNumber,
+            informationWindow: foreignWindow))
+        XCTAssertTrue(PopoverController.shouldDismissGlobalClick(
+            screenPoint: .zero, anchorFrame: nil,
+            eventWindow: nil, eventWindowNumber: 0, informationWindow: foreignWindow))
+    }
+
     func testAnchorAndRightClickRoutingRetainExistingToggleOwnership() throws {
         let anchorPoint = NSPoint(x: anchor.midX, y: anchor.midY)
         for type in [NSEvent.EventType.leftMouseDown, .rightMouseDown, .otherMouseDown] {

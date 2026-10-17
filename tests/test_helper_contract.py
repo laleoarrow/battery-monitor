@@ -10,6 +10,7 @@ HELPER_PLIST = ROOT / "Helper" / "com.leoarrow.wattson.helper.plist"
 CLIENT_SOURCE = ROOT / "Core" / "HelperClient.swift"
 V5_CLIENT_SOURCE = ROOT / "Core" / "HelperClientPowerObservationV5.swift"
 V5_SUPPORT_SOURCE = ROOT / "HelperV5" / "PowerObservationV5Support.swift"
+TOP_PROCESSES_SUPPORT_SOURCE = ROOT / "HelperV5" / "TopProcesses.swift"
 APP_MAIN_SOURCE = ROOT / "main.swift"
 PACKAGE_SOURCE = ROOT / "Package.swift"
 INSTALL_SCRIPT = ROOT / "scripts" / "install.sh"
@@ -674,11 +675,13 @@ class HelperContractTests(unittest.TestCase):
                     "-sdk",
                     sdk_result.stdout.strip(),
                     "-parse-as-library",
+                    "-whole-module-optimization",
                     "-emit-module",
                     "-emit-object",
                     "-module-name",
                     "WattsonHelperV5Support",
                     str(V5_SUPPORT_SOURCE),
+                    str(TOP_PROCESSES_SUPPORT_SOURCE),
                     "-emit-module-path",
                     str(support_module),
                     "-o",
@@ -825,8 +828,43 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn("takeNextReady", self.source)
         self.assertIn("oldest incomplete", self.source)
         self.assertIn("ready requests are never evicted", self.source)
-        self.assertNotIn("DispatchQueue", self.source)
-        self.assertNotIn("Thread", self.source)
+        inbox = self.source.split("// MARK: - Socket Framing", 1)[1].split(
+            "// MARK: - Console User", 1
+        )[0]
+        execution = self.source.split("private func handle", 1)[1].split(
+            "private final class TopProcessesWorker", 1
+        )[0]
+        main_loop = self.source.split("var lastActivity", 1)[1]
+        for serial_path in (inbox, execution, main_loop):
+            self.assertNotIn("DispatchQueue", serial_path)
+            self.assertNotIn(".async", serial_path)
+            self.assertNotIn("Thread", serial_path)
+        self.assertIn("handle(request)", main_loop)
+
+        # Only the fixed read-only process reader is concurrent; it cannot
+        # create unbounded work or race process-wide effective credentials.
+        worker = self.source.split("private final class TopProcessesWorker", 1)[1].split(
+            "@main", 1
+        )[0]
+        self.assertIn('DispatchQueue(label: "com.leoarrow.wattson.helper.top-processes"', worker)
+        self.assertIn("guard !sampling else", worker)
+        self.assertIn("sampling = true", worker)
+        self.assertEqual(worker.count("queue.async"), 1)
+        self.assertIn("self.sampling = false", worker)
+        self.assertIn("!topProcessesWorker.hasPending", main_loop)
+        credential_scope = self.source.split("private func withUserPrivileges", 1)[1].split(
+            "private func loginAgentPlist", 1
+        )[0]
+        self.assertIn("HelperTopProcesses.credentialLock.lock()", credential_scope)
+        self.assertIn("defer { HelperTopProcesses.credentialLock.unlock() }", credential_scope)
+        self.assertLess(
+            credential_scope.index("HelperTopProcesses.credentialLock.lock()"),
+            credential_scope.index("let originalUID = geteuid()"),
+        )
+        process_reader = TOP_PROCESSES_SUPPORT_SOURCE.read_text(encoding="utf-8")
+        self.assertIn("public static let credentialLock = NSLock()", process_reader)
+        self.assertEqual(process_reader.count("credentialLock.lock()"), 2)
+        self.assertEqual(process_reader.count("defer { credentialLock.unlock() }"), 2)
         self.assertNotIn("fork(", self.source)
 
     def test_helper_poll_deadline_executable_self_test(self):
@@ -957,10 +995,23 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn("data.firstIndex(of: UInt8(ascii: \"\\n\"))", framing)
 
         execution = self.source.split("private func handle", 1)[1].split(
-            "@main", 1
+            "private final class TopProcessesWorker", 1
         )[0]
         self.assertIn("peerUID == consoleUID()", execution)
-        self.assertIn("defer { close(fd) }", execution)
+        self.assertIn("var ownsFD = true", execution)
+        self.assertIn("defer { if ownsFD { close(fd) } }", execution)
+        transfer = "if topProcessesWorker.start(fd: fd, peerUID: peerUID) {\n            ownsFD = false"
+        self.assertIn(transfer, execution)
+        self.assertEqual(execution.count("ownsFD = false"), 1)
+        self.assertLess(execution.index("peerUID == consoleUID()"), execution.index(transfer))
+
+        worker = self.source.split("private final class TopProcessesWorker", 1)[1].split(
+            "@main", 1
+        )[0]
+        self.assertIn("defer {\n                close(fd)", worker)
+        self.assertEqual(worker.count("close(fd)"), 1)
+        self.assertEqual(worker.count("guard peerUID == consoleUID() else { return }"), 2)
+        self.assertLess(worker.index("close(fd)"), worker.index("self.sampling = false"))
 
         poll_body = self.source.split(
             "mutating func poll(listener:", 1

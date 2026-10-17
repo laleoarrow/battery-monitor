@@ -22,6 +22,7 @@ mkdir -p "$BUILD_DIR/isolated-home"
 
 wattson_run /usr/sbin/taskpolicy -b /usr/bin/nice -n 15 /usr/bin/xcrun swiftc \
     "$ROOT_DIR"/Core/*.swift \
+    "$ROOT_DIR/MenuBar/ModuleIconArtwork.swift" \
     "$ROOT_DIR"/Popover/*.swift \
     "$ROOT_DIR/tests/animation_stress/main.swift" \
     -D DEBUG \

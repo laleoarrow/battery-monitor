@@ -9,7 +9,7 @@ from PIL import Image
 
 ASSETS = Path(__file__).resolve().parent
 image = Image.open(ASSETS / "vector-preview.png").convert("RGB")
-assert image.size == (1400, 660), "Unexpected proof layout; do not use stale sample coordinates"
+assert image.size == (1680, 660), "Unexpected proof layout; do not use stale sample coordinates"
 background = image.getpixel((0, 0))
 
 

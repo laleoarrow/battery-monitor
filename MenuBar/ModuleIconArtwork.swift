@@ -235,6 +235,31 @@ enum ModuleIconArtwork {
                     path.lineJoinStyle = .round
                     path.stroke()
                 }
+            case .topProcesses:
+                do {
+                    let path = CGMutablePath()
+                    path.addRoundedRect(in: CGRect(x: 2.2, y: 2.2, width: 18.8, height: 4.2), cornerWidth: 0.85, cornerHeight: 0.85)
+                    drawGradient(path, strokeWidth: nil,
+                                 colors: [accent.withAlphaComponent((increasedContrast ? 1 : 1)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 0.38)).cgColor],
+                                 locations: [0, 1], start: NSPoint(x: 2.2, y: 0), end: NSPoint(x: 21, y: 0))
+                    stroke(path, color: ink, width: 1.15 * contrastScale)
+                }
+                do {
+                    let path = CGMutablePath()
+                    path.addRoundedRect(in: CGRect(x: 2.2, y: 9.6, width: 13.8, height: 4.2), cornerWidth: 0.85, cornerHeight: 0.85)
+                    drawGradient(path, strokeWidth: nil,
+                                 colors: [accent.withAlphaComponent((increasedContrast ? 1 : 1)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 0.38)).cgColor],
+                                 locations: [0, 1], start: NSPoint(x: 2.2, y: 0), end: NSPoint(x: 16, y: 0))
+                    stroke(path, color: ink, width: 1.15 * contrastScale)
+                }
+                do {
+                    let path = NSBezierPath(roundedRect: NSRect(x: 2.2, y: 17, width: 9.8, height: 4.2), xRadius: 0.85, yRadius: 0.85)
+                    ink.setStroke()
+                    path.lineWidth = 1.15 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
             }
             return true
         }

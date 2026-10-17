@@ -156,7 +156,7 @@ lines = [
     "            let contrastScale: CGFloat = increasedContrast ? 1.2 : 1",
     "            switch module {",
 ]
-emit_cases(lines, ASSETS, ("flow", "ring", "lanes", "history", "runtime"))
+emit_cases(lines, ASSETS, ("flow", "ring", "lanes", "history", "runtime", "topProcesses"))
 lines.extend(["            }", "            return true", "        }", "        image.isTemplate = false", "        return image", "    }", ""])
 lines.extend([
     "    static func sidebarImage(for icon: SidebarIcon, side: CGFloat, ink: NSColor,",

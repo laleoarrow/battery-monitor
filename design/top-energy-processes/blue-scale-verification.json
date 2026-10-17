@@ -1,0 +1,40 @@
+{
+  "assertions" : 102,
+  "cases" : [
+    {
+      "case" : "module-classic-light",
+      "composited" : true,
+      "container" : "Fixture window with production Classic surface color and 16-point side insets; unmodified TopProcessesView renderer.",
+      "glass" : false,
+      "image" : "module-classic-light.png",
+      "imageSHA256" : "5fb3cf7eb4c39753a6fa05bafddc9013eb6fc10dd857a303c92eb26db8486255",
+      "pixels" : [
+        752,
+        416
+      ],
+      "processCount" : 3,
+      "productionSectionOnly" : true,
+      "windowFrame" : "{{332, 288}, {360, 192}}"
+    },
+    {
+      "case" : "module-classic-dark",
+      "composited" : true,
+      "container" : "Fixture window with production Classic surface color and 16-point side insets; unmodified TopProcessesView renderer.",
+      "glass" : false,
+      "image" : "module-classic-dark.png",
+      "imageSHA256" : "eae87444a7dbff848e31cb84d5dede693d30af56dcaa0ad4641b06e8e95d6830",
+      "pixels" : [
+        752,
+        416
+      ],
+      "processCount" : 3,
+      "productionSectionOnly" : true,
+      "windowFrame" : "{{332, 288}, {360, 192}}"
+    }
+  ],
+  "failures" : 0,
+  "limitations" : "Process energy, battery telemetry, history, and Settings privileged dependencies are deterministic fixtures. No sampling correctness or physical-hardware power-mode assertion is inferred from screenshots.",
+  "method" : "WindowServer capture of default-three production TopProcessesView in two owned Classic fixture windows, light and dark, with an owned underlay in a disposable ARM GUI VM.",
+  "mode" : "module-only",
+  "schema" : 1
+}

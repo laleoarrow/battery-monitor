@@ -1535,15 +1535,21 @@ class SettingsWindowContractTests(unittest.TestCase):
             let moduleHeading = view("settings.modules.heading", in: first)
             let moduleSubtitle = view("settings.modules.subtitle", in: first)
             let moduleList = view("settings.modules.list", in: first)
+            let moduleScroll = view("settings.modules.scroll", in: first) as! NSScrollView
+            let topProcessCount = view("settings.modules.top-process-count", in: first) as! NSPopUpButton
             let restoreModuleOrder = button("Restore Default Order", in: first)
             func verifyRestoreModuleOrderLayout() {
                 let restoreRect = restoreModuleOrder.convert(restoreModuleOrder.bounds, to: modulePage)
                 let subtitleRect = moduleSubtitle.convert(moduleSubtitle.bounds, to: modulePage)
-                let listRect = moduleList.convert(moduleList.bounds, to: modulePage)
+                let viewportRect = moduleScroll.contentView.convert(
+                    moduleScroll.contentView.bounds, to: modulePage
+                )
                 require(!restoreModuleOrder.isHiddenOrHasHiddenAncestor && restoreModuleOrder.isEnabled,
                     "Restore Default Order stays visible and enabled")
                 require(modulePage.bounds.insetBy(dx: -0.5, dy: -0.5).contains(restoreRect)
-                    && !restoreRect.intersects(subtitleRect) && !restoreRect.intersects(listRect),
+                    && !restoreRect.intersects(subtitleRect)
+                    && !restoreRect.intersects(viewportRect)
+                    && !subtitleRect.intersects(viewportRect),
                     "restore action fits the subtitle row without clipping or covering content")
                 require(restoreModuleOrder.frame.width + 1 >= restoreModuleOrder.intrinsicContentSize.width
                     && moduleSubtitle.frame.width + 1 >= moduleSubtitle.intrinsicContentSize.width,
@@ -1571,18 +1577,86 @@ class SettingsWindowContractTests(unittest.TestCase):
             )
             require(
                 approximately(moduleSubtitle.frame.minY
-                    - moduleList.convert(moduleList.bounds, to: modulePage).maxY, 10),
-                "Modules list starts 10 points below subtitle"
+                    - moduleScroll.convert(moduleScroll.bounds, to: modulePage).maxY, 10),
+                "Modules viewport starts 10 points below subtitle"
             )
             let moduleRows = descendants(ofType: NSView.self, in: modulePage)
                 .filter { $0.identifier?.rawValue.hasPrefix("settings.modules.row.") == true }
             let moduleIcons = descendants(ofType: NSImageView.self, in: modulePage)
                 .filter { $0.identifier?.rawValue.hasPrefix("settings.modules.icon.") == true }
-            require(moduleRows.count == 5, "one row per module including battery runtime")
-            require(moduleIcons.count == 5 && moduleIcons.allSatisfy { $0.image != nil },
-                "all five module symbols resolve to native images")
-            require(moduleRows.allSatisfy { approximately($0.frame.width, 503) }, "full-width module rows")
-            require(moduleRows.allSatisfy { approximately($0.frame.height, 72) }, "five compact module rows fit the existing window")
+            require(moduleRows.count == 6, "one row per module including top energy processes")
+            require(moduleIcons.count == 6 && moduleIcons.allSatisfy { $0.image != nil },
+                "all six module symbols resolve to native images")
+            func moduleGeometryDescription() -> String {
+                "rows=\(moduleRows.map { $0.frame.width }) page=\(modulePage.bounds) "
+                    + "scroll=\(moduleScroll.frame) clip=\(moduleScroll.contentView.frame) "
+                    + "document=\(moduleScroll.documentView!.frame) "
+                    + "scroller=\(moduleScroll.scrollerStyle.rawValue) "
+                    + "preferred=\(NSScroller.preferredScrollerStyle.rawValue)"
+            }
+            // AppKit may apply the preferred legacy scroller after the page is
+            // attached. Settle its clip and document before measuring the rows.
+            let moduleLayoutSettled = waitUntil {
+                first?.contentView?.layoutSubtreeIfNeeded()
+                moduleScroll.tile()
+                moduleScroll.contentView.layoutSubtreeIfNeeded()
+                moduleScroll.documentView?.layoutSubtreeIfNeeded()
+                let viewportWidth = moduleScroll.contentView.bounds.width
+                return approximately(moduleScroll.documentView!.frame.width, viewportWidth)
+                    && moduleRows.allSatisfy { approximately($0.frame.width, viewportWidth - 40) }
+            }
+            tracePhase("module-layout \(moduleGeometryDescription())")
+            require(moduleLayoutSettled, "module clip/document layout settles: \(moduleGeometryDescription())")
+            let availableModuleWidth = moduleScroll.contentView.bounds.width - 40
+            require(moduleRows.allSatisfy { approximately($0.frame.width, availableModuleWidth) },
+                "full-width module rows match the native viewport and two 20-point optical insets: "
+                    + moduleGeometryDescription())
+            require(moduleRows.allSatisfy { approximately($0.frame.height, 72) }, "six compact module rows retain their existing geometry")
+            require(moduleScroll.documentView!.frame.height > moduleScroll.contentView.bounds.height
+                && moduleScroll.hasVerticalScroller && !moduleScroll.drawsBackground,
+                "six rows scroll within the compact window on a clear background")
+            require(topProcessCount.itemArray.map(\.tag) == Array(1...10)
+                && topProcessCount.selectedItem?.tag == 3 && topProcessCount.isEnabled,
+                "top process count defaults to three and offers one through ten")
+            require(topProcessCount.accessibilityLabel() == "Number of Processes Shown"
+                && topProcessCount.accessibilityIdentifier() == "settings.modules.top-process-count",
+                "top process count has stable accessibility identity and purpose")
+            topProcessCount.selectItem(withTag: 7)
+            topProcessCount.sendAction(topProcessCount.action!, to: topProcessCount.target)
+            require(Settings.topProcessCount == 7, "process count control writes shared settings")
+            Settings.setModule(.topProcesses, visible: false)
+            require(!topProcessCount.isEnabled && topProcessCount.selectedItem?.tag == 7,
+                "hiding the module disables its count while retaining the choice")
+            let runtimeHandleForCount = view("settings.modules.reorder.runtime", in: first)
+            let topProcessSwitch = button(Settings.Module.topProcesses.title, in: first)
+            require(runtimeHandleForCount.nextKeyView === topProcessSwitch,
+                "a disabled process count is skipped in the keyboard loop")
+            Settings.topProcessCount = 4
+            require(topProcessCount.selectedItem?.tag == 4,
+                "process count observes external changes while disabled")
+            Settings.setModule(.topProcesses, visible: true)
+            require(topProcessCount.isEnabled && topProcessCount.selectedItem?.tag == 4,
+                "showing the module restores the retained count control")
+            require(runtimeHandleForCount.nextKeyView === topProcessCount
+                && topProcessCount.nextKeyView === topProcessSwitch,
+                "the active count selector is in its module's keyboard order")
+            Settings.topProcessCount = 3
+            let initialModuleOffset = moduleScroll.contentView.bounds.origin
+            require(first?.makeFirstResponder(topProcessCount) == true,
+                "the count selector accepts keyboard focus")
+            first?.contentView?.layoutSubtreeIfNeeded()
+            require(moduleScroll.contentView.bounds.origin.y > initialModuleOffset.y,
+                "focusing the process count reveals the bottom of the module list")
+            verifyRestoreModuleOrderLayout()
+            let countRect = topProcessCount.convert(topProcessCount.bounds, to: modulePage)
+            let visibleModuleViewport = moduleScroll.contentView.convert(
+                moduleScroll.contentView.bounds, to: modulePage
+            )
+            require(visibleModuleViewport.contains(countRect),
+                "the focused count stays inside the viewport below the fixed header")
+            moduleScroll.contentView.scroll(to: initialModuleOffset)
+            moduleScroll.reflectScrolledClipView(moduleScroll.contentView)
+            first?.contentView?.layoutSubtreeIfNeeded()
             require(moduleIcons.allSatisfy {
                 let alignment = $0.alignmentRect(forFrame: $0.frame)
                 return approximately(alignment.width, 28) && approximately(alignment.height, 28)
@@ -1607,7 +1681,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let modulePrimaryLabels = descendants(ofType: NSTextField.self, in: modulePage)
                 .filter { Settings.Module.allCases.map(\.title).contains($0.stringValue) }
             require(
-                modulePrimaryLabels.count == 5
+                modulePrimaryLabels.count == 6
                     && modulePrimaryLabels.allSatisfy {
                         approximately($0.font?.pointSize ?? -1, 13)
                     },
@@ -1627,7 +1701,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             }
             let flow = button(Settings.Module.flow.title, in: first)
             require(controller.sidebarNextKeyViewForTest === flow, "Tab enters first Modules switch")
-            let lastModuleHandle = view("settings.modules.reorder.runtime", in: first)
+            let lastModuleHandle = view("settings.modules.reorder.topProcesses", in: first)
             require(lastModuleHandle.nextKeyView === restoreModuleOrder
                 && restoreModuleOrder.nextKeyView === controller.sidebarForTest,
                 "Modules key loop reaches Restore Default Order before returning to navigation")
@@ -1683,7 +1757,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(!Settings.isModuleVisible(.history), "moving a hidden module keeps it disabled")
             require(moduleRows.allSatisfy {
                 originalModuleRows[$0.identifier!.rawValue] == ObjectIdentifier($0)
-            }, "reordering retains all five row instances")
+            }, "reordering retains all six row instances")
             require(Settings.Module.allCases.allSatisfy {
                 originalModuleButtons[$0] == ObjectIdentifier(button($0.title, in: first))
             }, "reordering retains switches and their stable identities")
@@ -1824,7 +1898,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "moving above the first row is a no-op")
             flowHandle.keyDown(with: keyEvent(125))
             settleModuleOrder()
-            require(Settings.moduleOrder == [.ring, .flow, .lanes, .history, .runtime]
+            require(Settings.moduleOrder == [.ring, .flow, .lanes, .history, .runtime, .topProcesses]
                 && displayedModuleOrder() == Settings.moduleOrder && orderNotifications == 1,
                 "Down Arrow moves the focused module once and saves once")
             require(first?.firstResponder === flowHandle,
@@ -1838,7 +1912,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "first row does not advertise an unavailable Move Up action")
             require(Settings.Module.allCases.allSatisfy { Settings.isModuleVisible($0) },
                 "keyboard and accessibility order changes preserve all module switches")
-            let finalHandle = view("settings.modules.reorder.runtime", in: first)
+            let finalHandle = view("settings.modules.reorder.topProcesses", in: first)
             require(finalHandle.accessibilityCustomActions()?.contains { $0.name == "Move Down" } == false,
                 "last row does not advertise an unavailable Move Down action")
             require(controller.sidebarNextKeyViewForTest === button(Settings.Module.flow.title, in: first)
@@ -1975,8 +2049,10 @@ class SettingsWindowContractTests(unittest.TestCase):
             content.layoutSubtreeIfNeeded()
             for module in Settings.Module.allCases {
                 let moduleButton = button(module.title, in: window)
-                requireButtonHit(moduleButton, through: content, phase: "compact Modules")
                 let card = view("settings.modules.row.\(module.rawValue)", in: window)
+                card.scrollToVisible(card.bounds.insetBy(dx: 0, dy: -20))
+                content.layoutSubtreeIfNeeded()
+                requireButtonHit(moduleButton, through: content, phase: "compact Modules")
                 let cardInHost = card.convert(card.bounds, to: contentHost)
                 require(
                     contentHost.bounds.insetBy(dx: -1, dy: -1).contains(cardInHost),
@@ -3063,7 +3139,8 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertNotIn("showSection(", appearance_refresh)
         self.assertIn("Settings.liquidGlassEnabled", source)
         self.assertIn("Settings.usesLiquidGlass", source)
-        self.assertIn("let nativeSwitch = NSSwitch()", source)
+        self.assertIn("let nativeSwitch = SettingsScrollingSwitch()", source)
+        self.assertIn("private final class SettingsScrollingSwitch: NSSwitch", source)
         self.assertIn("NSSplitViewItem(sidebarWithViewController: navigation)", source)
         self.assertIn("detailItem.automaticallyAdjustsSafeAreaInsets = true", source)
         self.assertIn("enabled ? .glass : .rounded", source)
@@ -3137,7 +3214,7 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("if change == nil || change == .dockIconStyle { self?.refreshDockControls() }", source)
         self.assertIn("private let dockPopup = SettingsAppearancePopupButton(", source)
         self.assertIn("dockPopup.focusScrollView = dockRow", source)
-        self.assertIn("target.scrollToVisible(target.bounds)", source)
+        self.assertIn("revealSettingsRow(target)", source)
 
     def test_default_sections_use_only_existing_settings(self):
         source = WINDOW.read_text(encoding="utf-8")
