@@ -19,3 +19,5 @@ The first screenshot fixture mistakenly used `display` instead of `menu-bar-icon
 Existing native-held drag validation remains **unverified** from the previous work; these checks do not claim new pointer-driven drag coverage. No public release or Cody notification is part of this candidate.
 
 Raw logs and lifecycle records: `.build/modules-default-sidebar-review.noindex/`. Final installation and cleanup status are recorded separately in `verification.json`.
+
+The canonical local installation completed successfully through native Installer. App, helper and LaunchDaemon matched the candidate payload, receipt and versions read back as 4.3.12, signatures and helper v5 passed, and the relaunched app stayed alive. Independent read-only immediate and delayed host audits found no owned scratch, installer processes, mounts or extra App registrations; the installed app and process remained unchanged after 99.919 seconds of system-monotonic quiet time.

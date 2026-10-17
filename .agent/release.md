@@ -247,6 +247,19 @@ URLs, never local Markdown image paths. Verify the links without repository
 authentication before sending; keep screenshot assets separate from the four
 checksum-gated installer release assets unless that contract is explicitly revised.
 
+With the next validated official release, also publish the approved icon design
+previews and editable SVG originals: five Modules icons, three sidebar icons,
+and five General row icons. Use the latest approved artwork included in that
+release's frozen source from `design/settings/module-icons-vector`,
+`design/settings/sidebar-icons-vector`, and `design/settings/general-icons-vector`.
+Label design previews, offscreen renders, and actual running-app screenshots
+explicitly and separately. Provide version-labeled downloadable SVG source ZIPs
+and link them from the release notes/gallery. Keep these design images and source
+attachments separate from the existing four checksum-gated installer assets;
+their addition does not change that asset contract or waive any release gate.
+Publish new versioned assets only; never replace earlier published artwork,
+source packages, or installers.
+
 The existing `dist/adaptive-monitoring-20260912/VISUAL-REVIEW.md` contains eight
 Light/Dark state pairs from real AppKit view-owned renders with fixed fixtures,
 Reduce Transparency enabled and only the top scroll viewport visible. Preserve

@@ -79,5 +79,42 @@
     "standard-light-modules.png": "be15ffe4961429edcd44c7adab4c733939df48672ce64948031e6c57bf53e3df"
   },
   "nativeHeldDragNotRetested": true,
-  "hostCleanupAuditPending": true
+  "hostPostInstallCleanup": {
+    "completedAtUTC": "2026-10-17T04:45:37.815832+00:00",
+    "version": "4.3.12",
+    "sourceCommit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+    "publicRelease": false,
+    "passed": true,
+    "immediateUTC": "2026-10-17T04:43:22.554778+00:00",
+    "delayedUTC": "2026-10-17T04:45:26.366273+00:00",
+    "clock": "time.clock_gettime(time.CLOCK_MONOTONIC)",
+    "quietSecondsBeforeDelayedRead": 99.91914600000018,
+    "snapshotIntervalSeconds": 123.8115659999894,
+    "canonicalPID": 26490,
+    "packageSHA256": "e3c34ea049b5ce1458372a901c61208f324d4da3571661c846cb1369eb0c76a2",
+    "appBuildReceipt": "4.3.12",
+    "canonicalFullIdentityUnchanged": true,
+    "signaturesValid": true,
+    "installationEvidenceVerifiedPayloadMatch": true,
+    "installationEvidenceHelperHealthAndV5": true,
+    "canonicalOnlyRegistrationAndSpotlight": true,
+    "scopedResiduals": {
+      "ownedScratch": [],
+      "ownedTransfers": [],
+      "ownedProcesses": [],
+      "installerPIDs": [],
+      "ownedMounts": [],
+      "extraRegistrations": [],
+      "extraSpotlightApps": []
+    },
+    "old4311AuditFilesPreserved": true,
+    "noTrackedFilesModifiedByAudit": true,
+    "hostGUIOrInstallationRunByAudit": false,
+    "evidence": {
+      "4312-success-cleanup-audit.py": "b0d562ebaec81a1e6f21ae20c77658224d0d50ca4206d8b1d01817742378b978",
+      "4312-success-cleanup-immediate.json": "de96ac66fed11e8fb982eaed125c2a7bb38d68fb6b926d12215c4b4eba3f08aa",
+      "4312-success-cleanup-delayed.json": "2b55e728269ff9c0942e267f09422a3292a4d5f788177706778b1e6d7f952a83",
+      "local-install-verified.json": "5511820e0f603dca653f6854b607a38d3cfa76adb83bb585b24ca491cdfe6526"
+    }
+  }
 }

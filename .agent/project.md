@@ -253,7 +253,7 @@ separators and right-aligned switches. See the
 for actual test-VM window images and verification. This source refinement does
 not replace the canonical installed app or constitute a new release.
 
-General's functional groups share external 13-point headings. General and
+General's functional groups share external 13-point headings.
 General and Modules use 20-point vector artwork in 28-point alignment frames without
 decorative icon tiles. Appearance aligns Theme, Liquid Glass, In-App Logo and
 Dock Icon as peers; only glass background and transparency are indented.
