@@ -12,10 +12,17 @@ When that time is missing, the normal sampling reader uses this order:
 3. `Unavailable` if neither source can support an estimate. Sampling continues,
    so a later valid reading restores the time automatically.
 
+While waiting for consistent readings or collecting a new discharge window,
+the runtime row shows `Calculating…`. A full-capacity flag after unplugging
+does not block discharge estimation. A stale IOPS direction gets a bounded
+60-second wait without displaying its old number; continued disagreement then
+shows `Unavailable` until coherent readings return.
+
 Fallback starts after 60 seconds of continuous, consistent sampling. A gap over
 10 seconds, backwards clock, source/direction change, failed sample or wake
 clears its history. Invalid optional measurements do not restart an indefinite
-`Estimating…` loop. IOPS notifications that do not actually change direction,
+`Calculating…` loop. If valid current measurements resume, collecting their new
+60-second window shows `Calculating…` again. IOPS notifications that do not actually change direction,
 and unrelated power-telemetry freshness resets, do not discard this history.
 
 The discharge calculation uses an exponential moving average with a 60-second

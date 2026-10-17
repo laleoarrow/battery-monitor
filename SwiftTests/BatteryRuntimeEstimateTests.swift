@@ -40,7 +40,9 @@ final class BatteryRuntimeEstimateTests: XCTestCase {
         XCTAssertNil(BatteryRuntimeEstimate.estimate(from: [source]))
         source = powerSource(charging: false, minutes: 125)
         source["Is Charged"] = true
-        XCTAssertNil(BatteryRuntimeEstimate.estimate(from: [source]))
+        XCTAssertEqual(BatteryRuntimeEstimate.estimate(from: [source]), .remaining(nil))
+        source["Time to Empty"] = -1
+        XCTAssertEqual(BatteryRuntimeEstimate.estimate(from: [source]), .remaining(nil))
     }
 
     func testUsesOnlyTheEstimateForTheCurrentDirection() {
@@ -433,7 +435,9 @@ final class BatteryTimeFallbackTests: XCTestCase {
         props["Amperage"] = 0
         XCTAssertNil(sample(&tracker, props, at: 61).batteryTimeEstimate)
         props["Amperage"] = -2_000
-        for time: UInt64 in 62...121 { XCTAssertNil(sample(&tracker, props, at: time).batteryTimeEstimate) }
+        for time: UInt64 in 62...121 {
+            XCTAssertEqual(sample(&tracker, props, at: time).batteryTimeEstimate, .remaining(nil))
+        }
         XCTAssertEqual(sample(&tracker, props, at: 122).batteryTimeEstimate, .remaining(180))
     }
 
@@ -460,6 +464,53 @@ final class BatteryTimeFallbackTests: XCTestCase {
         }
     }
 
+    func testFullBatteryUnplugStartsCalculationThenUsesFreshDischarge() {
+        var tracker = BatteryTimeFallback()
+        var props = properties()
+        props["ExternalConnected"] = true
+        props["FullyCharged"] = true
+        props["Amperage"] = 0
+        props["InstantAmperage"] = 0
+        let plugged = PowerSnapshot(percent: 100, plugged: true, systemW: 24)
+        XCTAssertEqual(sample(&tracker, props, at: 0, system: .full, snapshot: plugged).batteryTimeEstimate, .full)
+
+        props["ExternalConnected"] = false
+        props["Amperage"] = -2_000
+        props["InstantAmperage"] = -2_000
+        let unplugged = PowerSnapshot(percent: 100, batteryW: -24, systemW: 24)
+        // The two APIs can still disagree for the first sample after unplugging.
+        let first = sample(&tracker, props, at: 1, system: .full, snapshot: unplugged)
+        XCTAssertEqual(first.batteryTimeEstimate, .remaining(nil))
+        XCTAssertNil(first.batteryTimeEstimateSource)
+        for time: UInt64 in 2...60 {
+            XCTAssertEqual(sample(&tracker, props, at: time, system: .remaining(nil), snapshot: unplugged)
+                .batteryTimeEstimate, .remaining(nil))
+        }
+        let settled = sample(&tracker, props, at: 61, system: .remaining(nil), snapshot: unplugged)
+        XCTAssertEqual(settled.batteryTimeEstimate, .remaining(180))
+        XCTAssertEqual(settled.batteryTimeEstimateSource, .observedDischarge)
+    }
+
+    func testOppositeSystemDirectionWaitIsBoundedAndCanRecover() {
+        for charging in [false, true] {
+            var tracker = BatteryTimeFallback()
+            var props = properties(charging: charging)
+            props[charging ? "AvgTimeToFull" : "AvgTimeToEmpty"] = 19
+            let stale: BatteryTimeEstimate = charging ? .remaining(125) : .charging(19)
+            for time: UInt64 in 0...59 {
+                let result = sample(&tracker, props, at: time, system: stale)
+                XCTAssertEqual(result.batteryTimeEstimate, charging ? .charging(nil) : .remaining(nil))
+                XCTAssertNil(result.batteryTimeEstimateSource)
+            }
+            for time: UInt64 in 60...120 {
+                XCTAssertNil(sample(&tracker, props, at: time, system: stale).batteryTimeEstimate)
+            }
+            let fresh = sample(&tracker, props, at: 121, system: charging ? .charging(42) : .remaining(125))
+            XCTAssertEqual(fresh.batteryTimeEstimate, charging ? .charging(42) : .remaining(125))
+            XCTAssertEqual(fresh.batteryTimeEstimateSource, .system)
+        }
+    }
+
     func testRegistryStateCanRecoverFullOrPausedButDoesNotUseRoundedPercent() {
         var tracker = BatteryTimeFallback()
         var props = properties(charging: true)
@@ -481,7 +532,7 @@ final class BatteryTimeFallbackTests: XCTestCase {
     func testUnknownOrInconsistentRegistryStateIsImmediatelyUnavailable() {
         for patch: [String: Any] in [
             ["ExternalConnected": NSNull()], ["IsCharging": NSNull()],
-            ["IsCharging": true], ["FullyCharged": true],
+            ["IsCharging": true],
         ] {
             var tracker = BatteryTimeFallback()
             var props = properties()
