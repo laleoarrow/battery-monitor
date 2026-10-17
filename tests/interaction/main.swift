@@ -3017,6 +3017,17 @@ if !screenLocked {
         historyMotionChecksSkipped = true
         log("HISTORY_MOTION_CHECKS_SKIPPED: system Reduce Motion is enabled")
     } else {
+        func settleHistoryFixture(_ context: String) -> Bool {
+            let started = CACurrentMediaTime()
+            let settled = runApplication(until: { !fixture.hasChartAnimationForTest }, timeout: 1)
+            if !settled {
+                let remaining = historyAnimations(fixture.layer).map {
+                    "\($0.0):\($0.1.duration)s"
+                }.joined(separator: ",")
+                log("HISTORY_COMPLETION_TIMEOUT \(context) elapsed=\(CACurrentMediaTime() - started) remaining=\(remaining)")
+            }
+            return settled
+        }
         updateFixture()
         let animations = historyAnimations(fixture.layer)
         let animationKeys = Set(animations.map { $0.0 })
@@ -3040,8 +3051,7 @@ if !screenLocked {
                   && ordinaryStroke is CABasicAnimation
                   && ordinaryStroke.map { validHistoryStroke($0, viewport: ordinaryViewport) } == true
                   && synchronizedHistoryPaths(ordinaryStroke, animations.first { $0.0 == "history.fill" }?.1))
-        spin(0.3)
-        check("History 短过渡完成后原生图层自行静止", !fixture.hasChartAnimationForTest)
+        check("History 短过渡完成后原生图层自行静止", settleHistoryFixture("ordinary-scroll"))
 
         let cancellations: [(String, () -> Void, () -> Void)] = [
             ("结束呈现", { fixture.setPresentationActive(false) }, { fixture.setPresentationActive(true) }),
@@ -3078,17 +3088,6 @@ if !screenLocked {
         func animationStart(_ animation: CAPropertyAnimation) -> CATransform3D? {
             guard let paths = historyStrokePaths(animation), let first = paths.first, let last = paths.last else { return nil }
             return historyViewport(first, target: last)
-        }
-        func settleHistoryFixture(_ context: String) -> Bool {
-            let started = CACurrentMediaTime()
-            let settled = runApplication(until: { !fixture.hasChartAnimationForTest }, timeout: 1)
-            if !settled {
-                let remaining = historyAnimations(fixture.layer).map {
-                    "\($0.0):\($0.1.duration)s"
-                }.joined(separator: ",")
-                log("HISTORY_COMPLETION_TIMEOUT \(context) elapsed=\(CACurrentMediaTime() - started) remaining=\(remaining)")
-            }
-            return settled
         }
         func projectedSample(_ watts: Double, sampledAt: Double, reference: Double,
                              ceiling: Double, transform: CATransform3D) -> CGPoint {
@@ -3342,9 +3341,30 @@ if !screenLocked {
             updateController()
             check("History 模块关闭后采样不会重启过渡", !hosted.hasChartAnimationForTest)
             Settings.setModule(.history, visible: true)
-            check("History 恢复模块直接呈现最新数据", !hosted.isHidden && !hosted.hasChartAnimationForTest)
+            let restoredWithoutReplay = !hosted.isHidden && !hosted.hasChartAnimationForTest
+            // Let AppKit restore the viewport and commit the newest static path.
+            // An immediate append could see the old, shorter presentation path.
+            let restoreStarted = CACurrentMediaTime()
+            var restoredBaselineCommitted = false
+            let restoredHistoryReady = runApplication(until: {
+                root.layoutSubtreeIfNeeded()
+                CATransaction.flush()
+                let model = hosted.chartPathForTest
+                let stroke = historyLayers(hosted.layer).compactMap { $0 as? CAShapeLayer }
+                    .first { $0.strokeColor != nil && $0.path == model }
+                restoredBaselineCommitted = model != nil && stroke?.presentation()?.path == model
+                return controller.isOpen && controller.isShownForTest
+                    && hosted.window?.isVisible == true && !hosted.isHiddenOrHasHiddenAncestor
+                    && !hosted.visibleRect.isEmpty && restoredBaselineCommitted
+            }, timeout: 1)
+            log("HISTORY_HOSTED_RESTORE_READY ready=\(restoredHistoryReady) baselineCommitted=\(restoredBaselineCommitted) elapsed=\(CACurrentMediaTime() - restoreStarted) visibleRect=\(hosted.visibleRect) bounds=\(hosted.bounds) windowVisible=\(hosted.window?.isVisible == true) hidden=\(hosted.isHiddenOrHasHiddenAncestor)")
+            check("History 恢复模块直接呈现最新数据",
+                  restoredWithoutReplay && restoredHistoryReady && !hosted.hasChartAnimationForTest)
 
             updateController()
+            if !hosted.hasChartAnimationForTest {
+                log("HISTORY_HOSTED_SAMPLE_NO_MOTION visibleRect=\(hosted.visibleRect) bounds=\(hosted.bounds) windowVisible=\(hosted.window?.isVisible == true) hidden=\(hosted.isHiddenOrHasHiddenAncestor) keys=\(historyAnimations(hosted.layer).map { $0.0 })")
+            }
             check("History 失败前的有效采样确实启动过渡", hosted.hasChartAnimationForTest)
             updateController(appending: false, degraded: true)
             check("History 读取失败立即取消过渡", !hosted.hasChartAnimationForTest)
