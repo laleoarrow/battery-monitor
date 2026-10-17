@@ -224,8 +224,8 @@ claim unmeasured accuracy, performance or energy improvements.
 
 Use a modern card-style HTML email for this and future Cody release updates,
 with a matching plain-text alternative. Keep the visual hierarchy simple: a
-version header, short 🔥 update points, an actual-screenshot card with captions
-and a full-gallery link, clear PKG/DMG download buttons, and brief installation
+version header, short 🔥 update points, an approved-design-preview card with captions
+and a design-gallery link, clear PKG/DMG download buttons, and brief installation
 guidance. Include a separate one-click diagnostics card only when relevant.
 Use generous spacing, restrained colors, readable text and subtle borders;
 avoid decorative gradients, dense technical reports and large caution blocks.
@@ -239,21 +239,22 @@ pass, and retain the recipient privacy and duplicate-send rules above.
 
 ## Visual release overview for Cody and GitHub
 
-For the next UI release, turn the visual review into an easy-to-browse,
-version-labeled gallery with Light/Dark pairs and short power-state captions.
-Include representative inline screenshots and a full-gallery link in both the
-Cody release email and GitHub release notes. Use public HTTPS image/gallery
-URLs, never local Markdown image paths. Verify the links without repository
-authentication before sending; keep screenshot assets separate from the four
-checksum-gated installer release assets unless that contract is explicitly revised.
+For the next UI release, use an easy-to-browse, version-labeled gallery of
+approved design previews with Light/Dark pairs and short artwork captions.
+The user does not want App runtime screenshots in the release presentation;
+keep those captures as internal validation evidence. Include representative
+design previews and a design-gallery link in the Cody release email and GitHub
+release notes. Use public HTTPS image/gallery URLs, never local Markdown image
+paths. Verify the links without repository authentication before sending; keep
+design assets separate from the four checksum-gated installer release assets.
 
 With the next validated official release, also publish the approved icon design
 previews and editable SVG originals: five Modules icons, three sidebar icons,
 and five General row icons. Use the latest approved artwork included in that
 release's frozen source from `design/settings/module-icons-vector`,
 `design/settings/sidebar-icons-vector`, and `design/settings/general-icons-vector`.
-Label design previews, offscreen renders, and actual running-app screenshots
-explicitly and separately. Provide version-labeled downloadable SVG source ZIPs
+Label the artwork as design previews or offscreen renders, not running-app
+screenshots. Provide version-labeled downloadable SVG source ZIPs
 and link them from the release notes/gallery. Keep these design images and source
 attachments separate from the existing four checksum-gated installer assets;
 their addition does not change that asset contract or waive any release gate.
