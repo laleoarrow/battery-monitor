@@ -2857,6 +2857,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     str(POWER_SNAPSHOT),
                     str(ENERGY_MODE),
                     str(BATTERY_ICON),
+                    str(ROOT / "MenuBar" / "ModuleIconArtwork.swift"),
                     str(WINDOW),
                     str(main),
                     "-o",
