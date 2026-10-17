@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "atUTC": "2026-10-17T03:22:57.729998+00:00",
+  "actualVMLifecycleExitCode": 0,
+  "actualAuditTransportExitCode": 0,
+  "probeExitCode": 0,
+  "stageExitCode": 0,
+  "residualAuditAllAbsent": true,
+  "quietWithinProcessSeconds": 95.0967619999999,
+  "ownCloneRemoved": true,
+  "remainingOwnedHostProcesses": [],
+  "remainingOwnedHostMounts": [],
+  "originalTestLabAndBaseStopped": true,
+  "otherOwnerModulesFinalUI2StillRunning": true,
+  "hostCanonicalTouchedByThisAgent": false,
+  "galleryManifest": "compact-gallery-manifest.json",
+  "finalPackageSource": "91f9072d839badc8da4273d56d8215ef776d7d9a",
+  "finalPackageSHA256": "d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590",
+  "packageResultArchiveSHA256": "3b5b60b7d65e6bf40b4bf8e43df114ff8cc401de89256321ae2747c28ee84da9"
+}

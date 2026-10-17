@@ -1,0 +1,13 @@
+{
+  "archive": "vm-lifecycle-final-evidence-d6b951ab98f5a8b2ade8e924d774bb183222400d1bccf012b589eed4864575d2.tar.gz",
+  "sha256": "d6b951ab98f5a8b2ade8e924d774bb183222400d1bccf012b589eed4864575d2",
+  "bytes": 31595,
+  "sessions": {
+    "bench-native-session": "d2d494f9bbf0229f407449b80036c9ca6190110fa8d3da6b4bae2ae9407a3242",
+    "package-session": "c9a323c416c3a62c327a75701e8831a5c899158dad5a1aa1f864c559f2d545f9"
+  },
+  "ownedVMRemoved": true,
+  "allOwnedAuditsPassed": true,
+  "mediaIndex": "package-session/compact-gallery-manifest.json",
+  "actualMediaAlreadyPreservedAt": "design/history-performance/native"
+}

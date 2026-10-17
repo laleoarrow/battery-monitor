@@ -5,6 +5,8 @@ Source **91f9072d839badc8da4273d56d8215ef776d7d9a**, final candidate SHA-256
 The [verified summary](final-91f-r2-verified.json) records actual host, staging
 and guest exit zero. The content-addressed transfer copy is byte-identical to
 the canonical package filename; [transfer record](final-package-transfer.json).
+That temporary transfer copy was removed after validation; the canonical final
+distribution package remains in `dist` with the same exact hash.
 
 All five modes passed: previous 4.3.10 fresh install, disabled-service upgrade,
 4.3.11 fresh install, reinstall, and disabled-service reinstall. Each checks

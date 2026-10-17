@@ -4,6 +4,11 @@ This local upgrade reduces History's update preparation work while retaining
 the 4.3.10 presentation-based axis transitions. Raw readings, Peak, the 60-slot
 ring, sampling cadence and animation policy remain unchanged.
 
+Current status: the final 4.3.11 package and integrated regressions are verified.
+The maintainer Mac remains on 4.3.10 while its locked desktop prevents the last
+Modules gesture acceptance and native Installer update. Installation has not
+been claimed complete.
+
 The implementation emits the final stroke directly, without intermediate
 geometry, unused fills or transformed path copies. When the actual captured
 viewport has `scaleY == 1`, matched cubic path endpoints use `CABasicAnimation`.
@@ -86,6 +91,10 @@ all twelve owned test preference domains and ten temporary app paths absent,
 including registrations, processes, staging directories and mounts, immediately
 and again after 158 seconds. The benchmark/native VM exited zero and was deleted;
 the other chat's VM and the originally stopped TestLab VMs kept their states.
+The final [package-session audit](resources/final-package-vm-summary.json) also
+passed before and after 95.10 seconds, then deleted the second owned clone with
+lifecycle exit zero. Its [sealed evidence](resources/vm-lifecycle-final-evidence.json)
+preserves both VM sessions. No benchmark/package VM remains owned by this chat.
 
 ## Integration and installation
 
