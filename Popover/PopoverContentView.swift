@@ -172,10 +172,10 @@ final class PopoverRuntimeView: PopoverSection {
             switch snapshot.batteryTimeEstimate {
             case .remaining(let value) where !snapshot.plugged:
                 minutes = value
-                stateText = "Estimating…"
+                stateText = "Calculating…"
             case .charging(let value) where snapshot.plugged:
                 minutes = value
-                stateText = "Estimating…"
+                stateText = "Calculating…"
             case .full where snapshot.plugged:
                 stateText = "Fully Charged"
             case .notCharging where snapshot.plugged:

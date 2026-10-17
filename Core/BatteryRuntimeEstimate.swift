@@ -16,7 +16,10 @@ enum BatteryRuntimeEstimate {
         let charged = BatterySampler.optionalBoolValue(battery[kIOPSIsChargedKey]) == true
         switch state {
         case kIOPSBatteryPowerValue:
-            guard !charging && !charged else { return nil }
+            guard !charging else { return nil }
+            // The charged flag can lag a power-source change. Wait for a
+            // coherent description rather than trusting its old minute value.
+            if charged { return .remaining(nil) }
             return .remaining(validMinutes(battery[kIOPSTimeToEmptyKey]))
         case kIOPSACPowerValue:
             guard !(charging && charged) else { return nil }
@@ -130,7 +133,15 @@ struct BatteryTimeFallback {
         guard let rawDirection, let directionSince else { return fresh }
         // Do not combine a stale IOPS direction with a new registry sample.
         if let systemEstimate, !Self.matches(systemEstimate, direction: rawDirection) {
-            reset()
+            // Preserve the start of this wait: a persistent disagreement must
+            // expire, not restart Calculating on every sample.
+            if now - directionSince < Self.settlingNanoseconds {
+                switch rawDirection {
+                case .remaining: fresh.batteryTimeEstimate = .remaining(nil)
+                case .charging: fresh.batteryTimeEstimate = .charging(nil)
+                case .full, .notCharging: break
+                }
+            }
             return fresh
         }
         switch rawDirection {
@@ -152,7 +163,13 @@ struct BatteryTimeFallback {
             fresh.batteryTimeEstimate = rawDirection == .remaining ? .remaining(minutes) : .charging(minutes)
             fresh.batteryTimeEstimateSource = .batteryGauge
         } else if rawDirection == .remaining, let capacity, let averageDischargeMA,
-                  let dischargeSince, now - dischargeSince >= Self.settlingNanoseconds {
+                  let dischargeSince {
+            // Valid discharge measurements may resume after the direction's
+            // initial wait has ended. Show the new calculation while it fills.
+            guard now - dischargeSince >= Self.settlingNanoseconds else {
+                fresh.batteryTimeEstimate = .remaining(nil)
+                return fresh
+            }
             let minutes = 60 * Double(capacity) / averageDischargeMA
             // Do not suggest minute-level precision for a load-based estimate.
             let rounded = minutes < 5 ? Int(minutes.rounded()) : Int((minutes / 5).rounded()) * 5
@@ -170,7 +187,9 @@ struct BatteryTimeFallback {
               let charging = BatterySampler.optionalBoolValue(properties["IsCharging"]) else { return nil }
         let full = BatterySampler.optionalBoolValue(properties["FullyCharged"]) == true
         guard !(charging && full) else { return nil }
-        if !connected { return !charging && !full && snapshot.batteryW <= 0 ? .remaining : nil }
+        // A full-capacity flag does not prevent an unplugged battery from
+        // supplying power. The connection, charging flag and power set direction.
+        if !connected { return !charging && snapshot.batteryW <= 0 ? .remaining : nil }
         if snapshot.state == .mixedSupply { return .notCharging }
         if charging { return .charging }
         guard snapshot.state != .charging else { return nil }
