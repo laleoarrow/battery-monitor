@@ -245,24 +245,28 @@ final class HistoryView: PopoverSection {
         CGPoint(x: CGFloat(p.x) * chartRect.width, y: CGFloat(1 - p.y) * chartRect.height)
     }
 
-    private func path(for geometry: HistoryChartGeometry, filled: Bool = false) -> CGPath {
+    private func path(for geometry: HistoryChartGeometry, filled: Bool = false,
+                      blendingFrom start: HistoryChartGeometry? = nil, at q: Double = 1) -> CGPath {
         let path = CGMutablePath()
         var segmentIndex = 0
         let separateRuns = !filled && geometry.runs.count > 1
-        for run in geometry.runs {
+        for (runIndex, run) in geometry.runs.enumerated() {
             guard let first = run.first, let last = run.last else { continue }
+            let initialFirst = start.map { first.blended(from: $0.runs[runIndex][0], progress: q) } ?? first
+            let initialLast = start.map { last.blended(from: $0.runs[runIndex].last!, progress: q) } ?? last
             // addPath retains isolated move commands across gaps; consecutive
             // move(to:) calls would otherwise discard a single-point run.
             let subpath = separateRuns ? CGMutablePath() : path
-            subpath.move(to: point(first))
+            subpath.move(to: point(initialFirst))
             for _ in run.dropFirst() {
-                let s = geometry.segments[segmentIndex]
+                let target = geometry.segments[segmentIndex]
+                let s = start.map { target.blended(from: $0.segments[segmentIndex], progress: q) } ?? target
                 subpath.addCurve(to: point(s.end), control1: point(s.control1), control2: point(s.control2))
                 segmentIndex += 1
             }
             if filled {
-                subpath.addLine(to: CGPoint(x: CGFloat(last.x) * chartRect.width, y: chartRect.height))
-                subpath.addLine(to: CGPoint(x: CGFloat(first.x) * chartRect.width, y: chartRect.height))
+                subpath.addLine(to: CGPoint(x: CGFloat(initialLast.x) * chartRect.width, y: chartRect.height))
+                subpath.addLine(to: CGPoint(x: CGFloat(initialFirst.x) * chartRect.width, y: chartRect.height))
                 subpath.closeSubpath()
             }
             if separateRuns { path.addPath(subpath) }
@@ -344,14 +348,26 @@ final class HistoryView: PopoverSection {
             animation.beginTime = layer.convertTime(begin, from: nil)
             layer.add(animation, forKey: key)
         }
-        let stroke = CABasicAnimation(keyPath: "path")
-        stroke.fromValue = startStroke
-        stroke.toValue = targetStroke
-        add(stroke, to: line, key: "history.stroke")
-        let fill = CABasicAnimation(keyPath: "path")
-        fill.fromValue = path(for: startGeometry, filled: true)
-        fill.toValue = targetFill
-        add(fill, to: gradientMask, key: "history.fill")
+        let startFill = path(for: startGeometry, filled: true)
+        func morph(on layer: CAShapeLayer, key: String, filled: Bool, from: CGPath, to: CGPath) {
+            if scaling || steps.count > 33 {
+                // CAShapeLayer may interpolate off-curve handles nonlinearly.
+                // Bound each interval with explicit Cartesian curve samples.
+                let animation = CAKeyframeAnimation(keyPath: "path")
+                animation.values = [from] + (1..<8).map {
+                    path(for: geometry, filled: filled, blendingFrom: startGeometry, at: Double($0) / 8)
+                } + [to]
+                animation.calculationMode = .linear
+                add(animation, to: layer, key: key)
+            } else {
+                let animation = CABasicAnimation(keyPath: "path")
+                animation.fromValue = from
+                animation.toValue = to
+                add(animation, to: layer, key: key)
+            }
+        }
+        morph(on: line, key: "history.stroke", filled: false, from: startStroke, to: targetStroke)
+        morph(on: gradientMask, key: "history.fill", filled: true, from: startFill, to: targetFill)
         for (key, from, to) in [("startPoint", bandStart, areaGradient.startPoint),
                                 ("endPoint", bandEnd, areaGradient.endPoint)] where from != to {
             let band = CABasicAnimation(keyPath: key)

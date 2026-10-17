@@ -3,6 +3,53 @@ import XCTest
 @testable import Wattson
 
 final class HistoryChartTests: XCTestCase {
+    func testPresentationCubicInvertsNonuniformControlX() {
+        let curve = HistoryChartGeometry.Cubic(
+            start: .init(x: 325.2666667, y: 40.689665),
+            control1: .init(x: 327.0888889, y: 40.689665),
+            control2: .init(x: 328.0012630, y: 6.7624353),
+            end: .init(x: 330.7333333, y: -27.2))
+        for step in 0...100 {
+            let t = Double(step) / 100, u = 1 - t
+            let x = u * u * u * curve.start.x + 3 * u * u * t * curve.control1.x
+                + 3 * u * t * t * curve.control2.x + t * t * t * curve.end.x
+            XCTAssertEqual(curve.value(atX: x), curve.value(at: t), accuracy: 1e-8)
+        }
+    }
+
+    func testBlendedHeadUsesAllFourActualCoordinates() throws {
+        let previous = HistoryChartGeometry(samples: [20, 60, 90],
+            timing: .init(sampledAt: [0, 2, 4], referenceTime: 4), ceiling: 150)
+        let target = HistoryChartGeometry(samples: [20, 60, 90, 140],
+            timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6), ceiling: 200)
+        let presented = previous.segments.map { curve in
+            let width = curve.end.x - curve.start.x
+            return HistoryChartGeometry.Cubic(start: curve.start,
+                control1: .init(x: curve.start.x + width * 0.17, y: curve.control1.y),
+                control2: .init(x: curve.start.x + width * 0.58, y: curve.control2.y), end: curve.end)
+        }
+        let start = try XCTUnwrap(target.alignedStart(from: previous, presentedSegments: presented,
+            fraction: 2 / 120, oldCeiling: 150, newCeiling: 200))
+        for q in [0.0, 0.13, 0.37, 0.69, 1.0] {
+            for (a, b) in zip(start.segments, target.segments) {
+                func mix(_ x: HistoryChartGeometry.Point, _ y: HistoryChartGeometry.Point) -> HistoryChartGeometry.Point {
+                    .init(x: x.x * (1 - q) + y.x * q, y: x.y * (1 - q) + y.y * q)
+                }
+                let p = [mix(a.start, b.start), mix(a.control1, b.control1),
+                         mix(a.control2, b.control2), mix(a.end, b.end)]
+                for t in [0.07, 0.23, 0.51, 0.82, 0.97] {
+                    let u = 1 - t
+                    let x = u * u * u * p[0].x + 3 * u * u * t * p[1].x
+                        + 3 * u * t * t * p[2].x + t * t * t * p[3].x
+                    let y = u * u * u * p[0].y + 3 * u * u * t * p[1].y
+                        + 3 * u * t * t * p[2].y + t * t * t * p[3].y
+                    XCTAssertEqual(try XCTUnwrap(target.value(at: x, blendingFrom: start, progress: q)),
+                                   y, accuracy: 1e-9)
+                }
+            }
+        }
+    }
+
     private func geometry(_ values: [Double], times: [Double]? = nil, now: Double? = nil) -> HistoryChartGeometry {
         let times = times ?? values.indices.map { Double($0) * 2 }
         return HistoryChartGeometry(samples: values,

@@ -91,6 +91,10 @@ struct HistoryChartGeometry {
     struct Point: Equatable {
         let x: Double
         let y: Double
+
+        func blended(from start: Self, progress q: Double) -> Self {
+            Point(x: start.x + (x - start.x) * q, y: start.y + (y - start.y) * q)
+        }
     }
 
     struct Cubic {
@@ -103,6 +107,34 @@ struct HistoryChartGeometry {
             let t = min(max(t, 0), 1), u = 1 - t
             return u * u * u * start.y + 3 * u * u * t * control1.y
                 + 3 * u * t * t * control2.y + t * t * t * end.y
+        }
+
+        func blended(from start: Self, progress q: Double) -> Self {
+            Cubic(start: self.start.blended(from: start.start, progress: q),
+                  control1: control1.blended(from: start.control1, progress: q),
+                  control2: control2.blended(from: start.control2, progress: q),
+                  end: end.blended(from: start.end, progress: q))
+        }
+
+        func value(atX x: Double) -> Double {
+            let width = end.x - start.x
+            guard width > 0 else { return start.y }
+            let u = min(max((x - start.x) / width, 0), 1)
+            let a = (control1.x - start.x) / width, b = (control2.x - start.x) / width
+            if abs(a - 1 / 3) < 1e-10 && abs(b - 2 / 3) < 1e-10 { return value(at: u) }
+            // Actual presentation handles need not be one third apart.
+            // Safeguarded Newton keeps the inverse bounded on monotone X.
+            var t = u, lower = 0.0, upper = 1.0
+            for _ in 0..<24 {
+                let v = 1 - t
+                let error = 3 * v * v * t * a + 3 * v * t * t * b + t * t * t - u
+                if abs(error) < 1e-12 { break }
+                if error < 0 { lower = t } else { upper = t }
+                let derivative = 3 * (v * v * a + 2 * v * t * (b - a) + t * t * (1 - b))
+                let next = derivative > 1e-12 ? t - error / derivative : .infinity
+                t = next > lower && next < upper ? next : (lower + upper) / 2
+            }
+            return value(at: t)
         }
     }
 
@@ -219,18 +251,24 @@ struct HistoryChartGeometry {
     }
 
     func value(at x: Double, blendingFrom start: Self, progress: Double) -> Double? {
-        guard let firstLast = start.points.last, let last = points.last else { return nil }
-        let q = min(max(progress, 0), 1), shift = firstLast.x - last.x
-        let targetX = min(x - shift * (1 - q), last.x)
-        guard let targetY = value(at: targetX), let startY = start.value(at: targetX + shift) else { return nil }
-        return startY + (targetY - startY) * q
+        guard start.segments.count == segments.count else { return nil }
+        let q = min(max(progress, 0), 1)
+        for (first, target) in zip(start.segments, segments) {
+            let left = target.start.blended(from: first.start, progress: q)
+            let right = target.end.blended(from: first.end, progress: q)
+            if x >= left.x - 1e-12 && x <= right.x + 1e-12 {
+                return target.blended(from: first, progress: q).value(atX: x)
+            }
+        }
+        return zip(start.points, points).lazy.map { $1.blended(from: $0, progress: q) }
+            .first { abs($0.x - x) < 1e-12 }?.y
     }
 
     func value(at x: Double) -> Double? {
         guard let segment = segments.first(where: { x >= $0.start.x && x <= $0.end.x }) else {
             return points.first(where: { abs($0.x - x) < 1e-12 })?.y
         }
-        return segment.value(at: (x - segment.start.x) / (segment.end.x - segment.start.x))
+        return segment.value(atX: x)
     }
 
     private static func cubics(_ p: [Point]) -> [Cubic] {
