@@ -20,7 +20,13 @@ func check(_ n: String, _ ok: Bool, _ d: String = "") {
 /// failure would be inventing eight bugs that do not exist, and reporting it as
 /// a pass would be worse. Say plainly that it could not be checked.
 let screenLocked = (CGSessionCopyCurrentDictionary() as? [String: Any])?["CGSSessionScreenIsLocked"] as? Int == 1
-let forcedReduceMotion = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"] == "1"
+let initialReduceMotionOverride = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
+let forcedReduceMotion: Bool
+switch initialReduceMotionOverride {
+case "1": forcedReduceMotion = true
+case "0": forcedReduceMotion = false
+default: forcedReduceMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+}
 
 // ---- 1. 点击路由：AppKit 可能送达的每一种单击形态 ----
 func run(_ steps: [NSEvent.EventType?], control: Bool = false) -> [ClickIntent] {
@@ -2855,7 +2861,10 @@ if !screenLocked {
         for (module, visible) in previousModules { Settings.setModule(module, visible: visible) }
         Settings.liquidGlassEnabled = previousGlass
     }
-    setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+    let skipHistoryMotion = initialReduceMotionOverride != "0" && initialReduceMotionOverride != "1"
+        && NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+    if skipHistoryMotion { unsetenv("WATTSON_FORCE_REDUCE_MOTION") }
+    else { setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1) }
     Settings.liquidGlassEnabled = false
     for module in Settings.Module.allCases { Settings.setModule(module, visible: module == .history) }
 
@@ -3000,9 +3009,9 @@ if !screenLocked {
     updateFixture(appending: false)
     check("History 首帧直接呈现而不伪造滚动", !fixture.hasChartAnimationForTest)
 
-    // The DEBUG policy override does not change the real accessibility setting
-    // read by HistoryView. An enabled system preference cannot prove motion.
-    if NSWorkspace.shared.accessibilityDisplayShouldReduceMotion {
+    // Explicit DEBUG overrides run the complete motion checks even on CI hosts
+    // with Reduce Motion enabled. Without one, keep the real system policy.
+    if skipHistoryMotion {
         updateFixture()
         check("History 遵守系统减少动态效果", !fixture.hasChartAnimationForTest)
         historyMotionChecksSkipped = true

@@ -28,7 +28,18 @@ final class HistoryView: PopoverSection {
     private var scale = HistoryChartScale()
     private var presentationActive = false
     private var animationsEnabled = false
+    private static var reducesMotion: Bool {
 #if DEBUG
+        switch ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"] {
+        case "1": return true
+        case "0": return false
+        default: break
+        }
+#endif
+        return NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+    }
+#if DEBUG
+    static var reducesMotionForTest: Bool { reducesMotion }
     private(set) var renderCountForTest = 0
     var chartPathForTest: CGPath? { line.path }
     func pathForTest(_ geometry: HistoryChartGeometry, filled: Bool = false) -> CGPath {
@@ -144,7 +155,7 @@ final class HistoryView: PopoverSection {
         let oldCeiling = scale.ceiling
         let mayAnimate = presentationActive && animationsEnabled
             && window?.isVisible == true && !isHiddenOrHasHiddenAncestor
-            && !visibleRect.isEmpty && !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+            && !visibleRect.isEmpty && !Self.reducesMotion
             && sameColor
         // Capture the visible curves and color band before changing the model.
         let presentedHead = mayAnimate ? head.presentation()?.position ?? head.position : .zero

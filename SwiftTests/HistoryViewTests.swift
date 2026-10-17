@@ -4,6 +4,25 @@ import XCTest
 
 /// Native renderer tests. Run in the existing isolated macOS test environment.
 final class HistoryViewTests: XCTestCase {
+    func testDebugMotionOverrideFallsBackToSystemWhenUnspecified() {
+        let key = "WATTSON_FORCE_REDUCE_MOTION"
+        let previous = ProcessInfo.processInfo.environment[key]
+        defer {
+            if let previous { setenv(key, previous, 1) }
+            else { unsetenv(key) }
+        }
+        setenv(key, "0", 1)
+        XCTAssertFalse(HistoryView.reducesMotionForTest)
+        setenv(key, "1", 1)
+        XCTAssertTrue(HistoryView.reducesMotionForTest)
+        unsetenv(key)
+        XCTAssertEqual(HistoryView.reducesMotionForTest,
+                       NSWorkspace.shared.accessibilityDisplayShouldReduceMotion)
+        setenv(key, "invalid", 1)
+        XCTAssertEqual(HistoryView.reducesMotionForTest,
+                       NSWorkspace.shared.accessibilityDisplayShouldReduceMotion)
+    }
+
     private func view() -> HistoryView {
         _ = NSApplication.shared
         let view = HistoryView()
