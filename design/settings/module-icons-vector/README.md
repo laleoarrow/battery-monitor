@@ -19,6 +19,16 @@ on design files being installed. The existing Settings image view regenerates
 the artwork when appearance or contrast changes. Its 28-point alignment slot,
 20-point artwork size, row geometry, switches and reordering handles are retained.
 
+## Restrained fades
+
+Energy Flow fades in at the start of the blue route. Ring Gauge has a soft
+directional brightness transition along its rim. Power History has a faint blue
+area that fades to transparent at the baseline; the line and markers remain
+fully opaque. Power Lanes and Battery Time retain their previous artwork.
+These are static vector gradients, with no animation timer, shadow or outer glow.
+Increase Contrast restores the full opacity of the two gradient strokes while
+retaining the existing thicker-stroke policy.
+
 ## Regeneration
 
 ```sh
@@ -44,3 +54,8 @@ all eight non-interactive Settings contract tests pass. No test assertions were
 removed. The new artwork file was added to that harness's explicit compiler
 source list. Fresh visible-window validation and installation remain with the
 main integrated candidate workflow.
+
+The macOS 12 deployment-target typecheck also passes. `verify-preview.py`
+(requires Pillow) reads the unedited native PNG to check flow fade-in, directional
+rim contrast, downward area fade and a quieter fill than the History stroke.
+It compares displayed RGB levels rather than assuming linear alpha mixing.

@@ -16,15 +16,13 @@ enum ModuleIconArtwork {
             switch module {
             case .flow:
                 do {
-                    let path = NSBezierPath()
+                    let path = CGMutablePath()
                     path.move(to: NSPoint(x: 2.2, y: 4))
-                    path.line(to: NSPoint(x: 2.2, y: 7.6))
-                    path.curve(to: NSPoint(x: 13.1, y: 21), controlPoint1: NSPoint(x: 9.4, y: 7.6), controlPoint2: NSPoint(x: 13.1, y: 12.9))
-                    accent.setStroke()
-                    path.lineWidth = 1.65 * contrastScale
-                    path.lineCapStyle = .round
-                    path.lineJoinStyle = .round
-                    path.stroke()
+                    path.addLine(to: NSPoint(x: 2.2, y: 7.6))
+                    path.addCurve(to: NSPoint(x: 13.1, y: 21), control1: NSPoint(x: 9.4, y: 7.6), control2: NSPoint(x: 13.1, y: 12.9))
+                    drawGradient(path, strokeWidth: 1.65 * contrastScale,
+                                 colors: [accent.withAlphaComponent((increasedContrast ? 1 : 0)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 0.3)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 1)).cgColor],
+                                 locations: [0, 0.32, 1], start: NSPoint(x: 2.2, y: 4), end: NSPoint(x: 2.2, y: 8.4))
                 }
                 do {
                     let path = NSBezierPath()
@@ -54,12 +52,11 @@ enum ModuleIconArtwork {
                 }
             case .ring:
                 do {
-                    let path = NSBezierPath(ovalIn: NSRect(x: 1.65, y: 1.65, width: 20.7, height: 20.7))
-                    ink.setStroke()
-                    path.lineWidth = 1.35 * contrastScale
-                    path.lineCapStyle = .round
-                    path.lineJoinStyle = .round
-                    path.stroke()
+                    let path = CGMutablePath()
+                    path.addEllipse(in: CGRect(x: 1.65, y: 1.65, width: 20.7, height: 20.7))
+                    drawGradient(path, strokeWidth: 1.35 * contrastScale,
+                                 colors: [ink.withAlphaComponent((increasedContrast ? 1 : 0.56)).cgColor, ink.withAlphaComponent((increasedContrast ? 1 : 1)).cgColor, ink.withAlphaComponent((increasedContrast ? 1 : 0.8)).cgColor],
+                                 locations: [0, 0.52, 1], start: NSPoint(x: 3, y: 2), end: NSPoint(x: 22, y: 12))
                 }
                 do {
                     let path = NSBezierPath()
@@ -125,6 +122,19 @@ enum ModuleIconArtwork {
                     path.stroke()
                 }
             case .history:
+                do {
+                    let path = CGMutablePath()
+                    path.move(to: NSPoint(x: 3.1, y: 16.2))
+                    path.addLine(to: NSPoint(x: 9, y: 11.1))
+                    path.addLine(to: NSPoint(x: 14.4, y: 14.6))
+                    path.addLine(to: NSPoint(x: 21, y: 7.2))
+                    path.addLine(to: NSPoint(x: 21, y: 21.5))
+                    path.addLine(to: NSPoint(x: 3.1, y: 21.5))
+                    path.closeSubpath()
+                    drawGradient(path, strokeWidth: nil,
+                                 colors: [accent.withAlphaComponent(0.24).cgColor, accent.withAlphaComponent(0.1).cgColor, accent.withAlphaComponent(0).cgColor],
+                                 locations: [0, 0.55, 1], start: NSPoint(x: 0, y: 7.2), end: NSPoint(x: 0, y: 21.5))
+                }
                 do {
                     let path = NSBezierPath()
                     path.move(to: NSPoint(x: 2, y: 2.5))
@@ -203,5 +213,26 @@ enum ModuleIconArtwork {
         }
         image.isTemplate = false
         return image
+    }
+
+    private static func drawGradient(_ path: CGPath, strokeWidth: CGFloat?,
+                                     colors: [CGColor], locations: [CGFloat],
+                                     start: CGPoint, end: CGPoint) {
+        guard let context = NSGraphicsContext.current?.cgContext,
+              let space = CGColorSpace(name: CGColorSpace.sRGB),
+              let gradient = CGGradient(colorsSpace: space, colors: colors as CFArray,
+                                        locations: locations) else { return }
+        context.saveGState()
+        defer { context.restoreGState() }
+        context.addPath(path)
+        if let strokeWidth {
+            context.setLineWidth(strokeWidth)
+            context.setLineCap(.round)
+            context.setLineJoin(.round)
+            context.replacePathWithStrokedPath()
+        }
+        context.clip()
+        context.drawLinearGradient(gradient, start: start, end: end,
+                                   options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
     }
 }

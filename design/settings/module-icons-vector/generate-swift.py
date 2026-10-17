@@ -58,6 +58,36 @@ def color(value):
     return {"currentColor": "ink", "#0A84FF": "accent"}[value]
 
 
+def gradient_commands(element, gradients, stroke):
+    paint = element.get("stroke" if stroke else "fill")
+    gradient = gradients[paint[5:-1]]
+    kind = element.tag.rsplit("}", 1)[-1]
+    if kind == "circle":
+        a = element.attrib
+        x, y, r = (float(a[k]) for k in ("cx", "cy", "r"))
+        result = ["let path = CGMutablePath()",
+                  f"path.addEllipse(in: CGRect(x: {number(x-r)}, y: {number(y-r)}, width: {number(2*r)}, height: {number(2*r)}))"]
+    else:
+        result = [line.replace("NSBezierPath()", "CGMutablePath()")
+                  .replace("path.line(to:", "path.addLine(to:")
+                  .replace("path.curve(to:", "path.addCurve(to:")
+                  .replace("controlPoint1:", "control1:").replace("controlPoint2:", "control2:")
+                  .replace("path.close()", "path.closeSubpath()") for line in commands(element)]
+    colors, locations = [], []
+    for stop in gradient:
+        alpha = number(stop.get("stop-opacity", 1))
+        opacity = f"(increasedContrast ? 1 : {alpha})" if stroke else alpha
+        colors.append(f"{color(stop.get('stop-color'))}.withAlphaComponent({opacity}).cgColor")
+        locations.append(number(stop.get("offset")))
+    width = f"{number(element.get('stroke-width', 1))} * contrastScale" if stroke else "nil"
+    start = point(gradient.get("x1"), gradient.get("y1"))
+    end = point(gradient.get("x2"), gradient.get("y2"))
+    result.extend([f"drawGradient(path, strokeWidth: {width},",
+                   f"             colors: [{', '.join(colors)}],",
+                   f"             locations: [{', '.join(locations)}], start: {start}, end: {end})"])
+    return result
+
+
 lines = [
     "// Generated from design/settings/module-icons-vector/*.svg. Edit the SVG masters.",
     "// Regenerate with: python3 design/settings/module-icons-vector/generate-swift.py",
@@ -78,11 +108,19 @@ for name in ("flow", "ring", "lanes", "history", "runtime"):
     svg = ET.parse(ASSETS / f"{name}.svg").getroot()
     if svg.attrib.get("viewBox") != "0 0 24 24":
         raise ValueError("Expected the common 24-unit artboard")
+    gradients = {e.get("id"): e for e in svg.iter() if e.tag.endswith("}linearGradient")}
     lines.append(f"            case .{name}:")
     for element in svg:
-        if element.tag.endswith("}title"):
+        if element.tag.endswith(("}title", "}defs")):
             continue
         lines.append("                do {")
+        gradient_stroke = element.get("stroke", "").startswith("url(#")
+        gradient_fill = element.get("fill", "").startswith("url(#")
+        if gradient_stroke or gradient_fill:
+            lines.extend("                    " + command for command in
+                         gradient_commands(element, gradients, stroke=gradient_stroke))
+            lines.append("                }")
+            continue
         lines.extend("                    " + command for command in commands(element))
         if element.get("fill", "none") != "none":
             lines.extend([f"                    {color(element.get('fill'))}.setFill()", "                    path.fill()"])
@@ -95,6 +133,28 @@ for name in ("flow", "ring", "lanes", "history", "runtime"):
                 "                    path.stroke()",
             ])
         lines.append("                }")
-lines.extend(["            }", "            return true", "        }", "        image.isTemplate = false", "        return image", "    }", "}", ""])
-OUTPUT.write_text("\n".join(lines))
+lines.extend(["            }", "            return true", "        }", "        image.isTemplate = false", "        return image", "    }", ""])
+lines.extend('''    private static func drawGradient(_ path: CGPath, strokeWidth: CGFloat?,
+                                     colors: [CGColor], locations: [CGFloat],
+                                     start: CGPoint, end: CGPoint) {
+        guard let context = NSGraphicsContext.current?.cgContext,
+              let space = CGColorSpace(name: CGColorSpace.sRGB),
+              let gradient = CGGradient(colorsSpace: space, colors: colors as CFArray,
+                                        locations: locations) else { return }
+        context.saveGState()
+        defer { context.restoreGState() }
+        context.addPath(path)
+        if let strokeWidth {
+            context.setLineWidth(strokeWidth)
+            context.setLineCap(.round)
+            context.setLineJoin(.round)
+            context.replacePathWithStrokedPath()
+        }
+        context.clip()
+        context.drawLinearGradient(gradient, start: start, end: end,
+                                   options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
+    }
+}
+'''.splitlines())
+OUTPUT.write_text("\n".join(lines) + "\n")
 print(OUTPUT)

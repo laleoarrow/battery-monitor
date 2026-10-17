@@ -1,25 +1,29 @@
 {
   "baseCommit": "855fc308f8864940a72ca77c93b0221d4e305a33",
-  "scope": "Five reference-faithful module icons; isolated side-conversation source change",
+  "scope": "Five reference-faithful vector module icons, with restrained fades in Flow, Ring and History",
   "svgMasters": {
-    "flow.svg": "76b348c1f6ef8f60fc70e56edaf318d19386cabf1ea7026df91c01f343e0118c",
-    "history.svg": "8478479caccfc017a0d41abad98f354c8020f695f971a7e6e6b7d9c139172ea9",
+    "flow.svg": "e39a6f033c7e2d0fb692f4fd616fa8fd1833c9212febca20b3b984b24e68f232",
+    "history.svg": "27c5141374aa52d4b88db70906ef58468c56e1b6d0dc539bcf420fedcbd0daf0",
     "lanes.svg": "4a5d98950d60f8f4c7e763a0ca4e374c89f6b1e34a90fbaa1ab36343273074b0",
-    "ring.svg": "cbfd9d3f42e05fd594457f8f832271a73c9f7fdef907b0adca003eebf2b9a1b2",
+    "ring.svg": "dbdc121c8bbb3e7b1aa597d8392a42f190224dcec52e6a6b8c64f1f3a4d8d4ef",
     "runtime.svg": "917df358bf3c2d4257150c7ba4c17c8a7df5ab6615c02c51d0bda83ed5016cc8"
   },
-  "rendererSHA256": "527ca50fd281db71bd803ca24a8410b61bc4298bdf87b1d9ee6ca9581d598bff",
-  "previewSHA256": "498e514a3307844270301e45083c0f0e98461743438291f5786fd931d4793af8",
+  "rendererSHA256": "ee2709eac55b4a4b05627a8d871f297435c9dff85d15e416bcb5ebed163f81d4",
+  "previewSHA256": "e254790ad00ebe2b6b33c728bfdbdf15796a4f4c1b09d27c73d86e284d8e832c",
   "checks": {
     "svgXMLAnd24UnitArtboards": true,
     "embeddedRasterImages": 0,
     "deterministicSwiftGeneration": true,
     "fullProductionSwiftTypecheckWarningsAsErrors": true,
     "settingsContractTestsPassed": 8,
-    "settingsContractSeconds": 26.8,
-    "interactiveGUIValidation": false
+    "interactiveGUIValidation": false,
+    "macOS12DeploymentTargetTypecheck": true,
+    "gradientPixelDirectionChecks": 4,
+    "unannotatedLanesAndRuntimeUnchanged": true,
+    "settingsContractSeconds": 25.638
   },
   "initialTestHarnessFailure": "The explicit source list omitted the new artwork file. That source was added and the same 8 tests passed; no assertions were removed.",
   "preview": "Native production vector renderer, offscreen; enlarged and actual 20-point icons. Not an installed-app screenshot.",
-  "installedOrPublished": false
+  "installedOrPublished": false,
+  "gradientRefinementBaseCommit": "f98a3411ae5dd672db0ad139f22afe422c2dcca1"
 }

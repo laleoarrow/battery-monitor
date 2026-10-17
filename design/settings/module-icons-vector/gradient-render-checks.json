@@ -1,0 +1,25 @@
+{
+  "source": "Offscreen production vector renderer; no screenshot pixels were edited.",
+  "measurement": "Relative displayed RGB levels, not an estimate of linear alpha.",
+  "checks": {
+    "flowFadesAtStart": true,
+    "rimHasSoftDirectionalContrast": true,
+    "historyAreaFadesDownward": true,
+    "historyFillQuieterThanStroke": true
+  },
+  "pixels": {
+    "backgroundRGB": [
+      31,
+      32,
+      34
+    ],
+    "flowStartBlue": 79,
+    "flowSettledBlue": 199,
+    "rimLeftBrightness": 165,
+    "rimRightBrightness": 206,
+    "historyAreaUpperBlue": 115,
+    "historyAreaLowerBlue": 43,
+    "historyStrokeBlue": 255
+  },
+  "passed": true
+}
