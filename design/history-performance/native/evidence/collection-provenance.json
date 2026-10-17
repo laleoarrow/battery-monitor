@@ -1,0 +1,434 @@
+{
+  "schema": 1,
+  "files": [
+    {
+      "path": "evidence/source-freeze.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/source-freeze.json",
+      "sha256": "eb7415dc9267c276b38acadd1a6ea868eca0d8dee7f6741c9c970e0dba0cfc0c"
+    },
+    {
+      "path": "evidence/first-run-fixture-failures.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/first-run-fixture-failures.json",
+      "sha256": "8aaecfaa56832b147d874041c193bfa02b9a1cb7931177154833108171115f70"
+    },
+    {
+      "path": "evidence/gallery-visual-review.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/gallery-visual-review.json",
+      "sha256": "583a253da2db465c02866ff7a393af6d0cf5bd14782adaf52f2df13230c15756"
+    },
+    {
+      "path": "evidence/first-full-scalar-analysis.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/scalar/analysis.json",
+      "sha256": "08504125f1ee2da9d170bcb949963cdc50f30b22042620d80a7bb6241ac13e64"
+    },
+    {
+      "path": "evidence/first-full-legacy11-analysis.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/scalar/legacy11-analysis.json",
+      "sha256": "253f82f03cc8e085f82fd9169008643393db9fd3e7b1f193c3a2165a2108bc8d"
+    },
+    {
+      "path": "evidence/natural-v2-scalar-analysis.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/motion-855fc308-native-v2/results/motion/scalar/analysis.json",
+      "sha256": "57d1e5f58749c66f17f0a4420fe6c3b883937e4dadc934c4c1271ee940a4613e"
+    },
+    {
+      "path": "evidence/natural-v2-branch-analysis.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/motion-855fc308-native-v2/results/motion/scalar/animation-branches.json",
+      "sha256": "f5986f9d88fb2338ec2fe48de1498d3b4ff8702699ba0f0845e0183c81c1fffb"
+    },
+    {
+      "path": "evidence/natural-v2-baseline-comparison.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/motion-855fc308-native-v2/results/motion/scalar/baseline-comparison.json",
+      "sha256": "a07fbc0b8446469e6373d8ee3b9ebc8efc05ff63028913bfd711e2490c9513e8"
+    },
+    {
+      "path": "evidence/controlled-analysis.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/controlled-855fc308-native/results/motion/controlled/controlled-analysis.json",
+      "sha256": "87c83de10684eef82b6387f04aa6c340c32f0eb16599bed0e1349d345ef2da35"
+    },
+    {
+      "path": "evidence/native-pixel-review.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/native-pixel-review.json",
+      "sha256": "9777ee6b55ec1eeb155e12445c79fb01fb3611510b54cedb5c662e48d257ec2c"
+    },
+    {
+      "path": "evidence/stage-cleanup-check.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/stage-cleanup-check.json",
+      "sha256": "1437c7ce75c68b62aeb67f0d36418bc670d77f961f31f243b212fb44aa92e544"
+    },
+    {
+      "path": "evidence/stage-signal-check.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/stage-signal-check.json",
+      "sha256": "311800d3c091b85a08fc06f542ab94d2f9222738cef856ee3dfd1afbddf83182"
+    },
+    {
+      "path": "evidence/shell-finish-check.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/shell-finish-check.json",
+      "sha256": "7e4c97a1797ca3a8cd4c54d6958b882447fc19f66b3345347425c580e2d91d9d"
+    },
+    {
+      "path": "evidence/full-provenance.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/provenance.json",
+      "sha256": "fc349ff57eb9cf64b20f91f9ab6bd7102272b0db0bd6382d1da87b8c9f4498ec"
+    },
+    {
+      "path": "evidence/full-capture-inputs.sha256",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/capture-inputs.sha256",
+      "sha256": "1dcd5836600438f37b3e2dadeeb34a56960ee77b297c905507f07aab49e6d3b0"
+    },
+    {
+      "path": "evidence/full-capture-bundles.tsv",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/capture-bundles.tsv",
+      "sha256": "492b330eb1afc47bdc531ae9f5cc618ec95e6e8d45f82e10ec8e79fa4aa0ac08"
+    },
+    {
+      "path": "evidence/natural-v2-provenance.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/motion-855fc308-native-v2/results/provenance.json",
+      "sha256": "ecdb180551f7de4c9b29049c9e60548f36e10fcd10a77d764fa948580d76e907"
+    },
+    {
+      "path": "evidence/natural-v2-capture-inputs.sha256",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/motion-855fc308-native-v2/results/capture-inputs.sha256",
+      "sha256": "d528c10ea9836b68db1a667f3177d6a1752ea458001f34bf2bd95e79367c51db"
+    },
+    {
+      "path": "evidence/natural-v2-capture-bundles.tsv",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/motion-855fc308-native-v2/results/capture-bundles.tsv",
+      "sha256": "ce90df28fb1eb5e1c4bffe679123d3f64db82651d1d37d634b9050f249300ee5"
+    },
+    {
+      "path": "evidence/controlled-provenance.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/controlled-855fc308-native/results/provenance.json",
+      "sha256": "48564b388d4f762490fe804ee78fcadd290df7d6d674ec0f844027abc72246a9"
+    },
+    {
+      "path": "evidence/controlled-capture-inputs.sha256",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/controlled-855fc308-native/results/capture-inputs.sha256",
+      "sha256": "2f039b2f59e09fdc23c1b08868082d07c8614884223c085d5d4e7e887816c1ee"
+    },
+    {
+      "path": "evidence/controlled-capture-bundles.tsv",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/controlled-855fc308-native/results/capture-bundles.tsv",
+      "sha256": "4d23e973647f596b63dc712d50d00d964da0cde4b5af9fd88beb1a47565d8c25"
+    },
+    {
+      "path": "evidence/interaction.log.gz",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/interaction/run.log",
+      "sha256": "f5feac8f4191860edae6038828627be596e65008ff6babc65b092721f0d8d8dc",
+      "uncompressedSHA256": "f23f9a0079d80e3fdaf376d86ea7a6380fb0fa3219bc746cf4faa908dd4e086a",
+      "compression": "lossless gzip",
+      "originalBytes": 75286
+    },
+    {
+      "path": "evidence/animation-stress.log.gz",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/animation/run.log",
+      "sha256": "4ed058cd519851a4ca1f6d2efb5280360d8e9b99566ecfb17846e48e3c2d5847",
+      "uncompressedSHA256": "353ca9453c6f30e0a7952e1f76862ed3ba9f54de1ba7ba091c231f913310b2f5",
+      "compression": "lossless gzip",
+      "originalBytes": 18731
+    },
+    {
+      "path": "evidence/raw-full.json.gz",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/scalar/axis-motion.json",
+      "sha256": "bd0747830fc8cf375408d7103004079b8b02ca526cbdb0dfa4e6c489295607ec",
+      "uncompressedSHA256": "1554836e017e7d2e739d4ebdcc5cd320307acdcc5694693d2b832e35d6f7ad1e",
+      "compression": "lossless gzip",
+      "originalBytes": 9811402
+    },
+    {
+      "path": "evidence/raw-natural-v2.json.gz",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/motion-855fc308-native-v2/results/motion/scalar/axis-motion.json",
+      "sha256": "b2278544cc3ed4c079a14da7542c1deb6c56429ae58731983f7ff93ab0ce3725",
+      "uncompressedSHA256": "ed561115820e72e30c2ac22d94d521e7710c8677941a35e8caa4f1ca8fd15247",
+      "compression": "lossless gzip",
+      "originalBytes": 8141586
+    },
+    {
+      "path": "evidence/raw-controlled.json.gz",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/controlled-855fc308-native/results/motion/controlled/axis-motion.json",
+      "sha256": "8f0aace28a10d11bb378a24dd828a9fd79d8b99960931497b378ed19dc89cf49",
+      "uncompressedSHA256": "cea24a7b998adeff4a47f4284d5918ac79adddaea868fa42db1c94a7ea4a1ec3",
+      "compression": "lossless gzip",
+      "originalBytes": 1336545
+    },
+    {
+      "path": "evidence/raw-frames-full.json.gz",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/axis-motion.json",
+      "sha256": "dfd9311ec53b163cdcf781b6c6b96d56d13a84da1481b7ab67b69af4643eb5e0",
+      "uncompressedSHA256": "bb797467ced25e5168c91a5fd8b05555ca954c15e09e2289a38c3f808c9e1b03",
+      "compression": "lossless gzip",
+      "originalBytes": 8853103
+    },
+    {
+      "path": "evidence/tools-freeze-full-native-v2.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/tools-freeze-full-native-v2.json",
+      "sha256": "695a4e0443317fd974b999a31094e0eda37dcd81f4bc06ea171c0ed60bca9018"
+    },
+    {
+      "path": "evidence/tools/native-tools-a55458b045cbb20defac514e0fba81f3d5500a61e48551849523d349e72038aa.tar.gz",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/native-tools-a55458b045cbb20defac514e0fba81f3d5500a61e48551849523d349e72038aa.tar.gz",
+      "sha256": "5aa1e2ed8be3ce2841d1f188c817cde25e72a588e508ed9fbbd93b2777277fa9"
+    },
+    {
+      "path": "evidence/tools-freeze-motion-v3.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/tools-freeze-motion-v3.json",
+      "sha256": "6caadb49258ce3213bc2dbaa75f06cd0d38bd368bfbc13c3e79ef54b12e1b861"
+    },
+    {
+      "path": "evidence/tools/native-tools-0e980a69341d06c7fd190b8bd5b7d98f5640ab77edc6650fc183b6696077b5aa.tar.gz",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/native-tools-0e980a69341d06c7fd190b8bd5b7d98f5640ab77edc6650fc183b6696077b5aa.tar.gz",
+      "sha256": "64f7a8d2e28bc6fa4e39c1f33905c157da7c4a56bb532725411ac5ac72bae5a8"
+    },
+    {
+      "path": "evidence/tools-freeze-controlled-v4.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/tools-freeze-controlled-v4.json",
+      "sha256": "85f5c2cfdd4c8e967d0a2920d78a3d2786fe8059f8f3b58f4e7d6897f69370e8"
+    },
+    {
+      "path": "evidence/tools/native-tools-a38ce095d01e2cc3f252b2bf37c7ab65efcadc7defa5e8153e5ffcdc45f7d4b3.tar.gz",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/native-tools-a38ce095d01e2cc3f252b2bf37c7ab65efcadc7defa5e8153e5ffcdc45f7d4b3.tar.gz",
+      "sha256": "5fc4414171eda8a83a5d6dd1e2ac68df1a0ad20c0055434fad58ea40699c5513"
+    },
+    {
+      "path": "captures/charging-light.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/charging/regular-light-bottom.png",
+      "sha256": "9045b35349cfa67df68137c249aea074c1916c34491c8e2ff4d999a998cdc904"
+    },
+    {
+      "path": "captures/charging-dark.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/charging/regular-dark-bottom.png",
+      "sha256": "849563fd87685366928a14bd045c3aff29884d492e6348588bc57bd2dfa0021f"
+    },
+    {
+      "path": "captures/full-light.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/full/regular-light-bottom.png",
+      "sha256": "1062a2ba1acfbe5164096da2f4362ef29e40806a5fc4279dda38f1e88a5f335e"
+    },
+    {
+      "path": "captures/full-dark.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/full/regular-dark-bottom.png",
+      "sha256": "7b03f7358f41a961e6722d96f3a56ceb5f17cf936cfe2081ae87dc1342a1871e"
+    },
+    {
+      "path": "captures/on-battery-light.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/on-battery/regular-light-bottom.png",
+      "sha256": "9d6b18073254595024283a143531e447b1578f353d4f3de16cb62356d7984665"
+    },
+    {
+      "path": "captures/on-battery-dark.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/on-battery/regular-dark-bottom.png",
+      "sha256": "f3a1e7a37a3057e4ce3f83e1714af486ad1371bb32cf8f555fbe12dd2f3e1efe"
+    },
+    {
+      "path": "captures/mixed-supply-light.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/mixed-supply/regular-light-bottom.png",
+      "sha256": "3c1397c52d5fb1a81a7a14fada238c67e2f5053a1faae9f9905f3419b41a3439"
+    },
+    {
+      "path": "captures/mixed-supply-dark.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/mixed-supply/regular-dark-bottom.png",
+      "sha256": "aa64457728a90c4216ddb321271e5d8998455ca61773ab786970940b56634749"
+    },
+    {
+      "path": "captures/low-battery-light.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/low-battery/regular-light-bottom.png",
+      "sha256": "e668fa0fcf68910e4c9c09ff99ad98fdd29795355ba921819141f00d4e4df191"
+    },
+    {
+      "path": "captures/low-battery-dark.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/low-battery/regular-dark-bottom.png",
+      "sha256": "b6f30a3d0b93b9f69d93ff12510dfcf002a52b4ee0171c847776e85576b48fce"
+    },
+    {
+      "path": "captures/low-power-light.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/low-power/regular-light-bottom.png",
+      "sha256": "642ac3417c025241d8393f5c9e4b574e0b71e1ad09e066642630f9f0b7bfb8fb"
+    },
+    {
+      "path": "captures/low-power-dark.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/low-power/regular-dark-bottom.png",
+      "sha256": "9c0bae387d7461b20c0cf720915b8c1cd5a193fdeaa186662b39c1e0b0242812"
+    },
+    {
+      "path": "motion/ordinary-scroll.mp4",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/ordinary-scroll.mp4",
+      "sha256": "9a6bd3d08d9d6ae1561d18663da50478bcf04d0185983041ede811573d2589d3"
+    },
+    {
+      "path": "motion/scale-expansion.mp4",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/scale-expansion.mp4",
+      "sha256": "f1914e123f279fd3aeaf3b2da0c4e8296b9505ddfe66e47a5e0c9a520d567e25"
+    },
+    {
+      "path": "motion/scale-contraction.mp4",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/scale-contraction.mp4",
+      "sha256": "92f7f6b1e8cb37b00888d064f978b4aae5963804b5ddc88e7ab383e052c26817"
+    },
+    {
+      "path": "motion/interrupted-scale-50.mp4",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/interrupted-scale-50.mp4",
+      "sha256": "d9fbb873e3730049c973c36cb2c386baaf158f43aad55273264a40889b76bc05"
+    },
+    {
+      "path": "motion/departing-outlier-contraction.mp4",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/departing-outlier-contraction.mp4",
+      "sha256": "68b6e77d59cf9d2aeaa42cf1bcec88be7a02d9d76e986d40cae07ee6a11b52dd"
+    },
+    {
+      "path": "motion/gradient-alpha-contraction.mp4",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/gradient-alpha-contraction.mp4",
+      "sha256": "28cffd0b2a1c96e8e2e61706fbd0fac7587f14da60efc449515894bbd30d40eb"
+    },
+    {
+      "path": "motion/selected-native-frames.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/selected-native-frames.png",
+      "sha256": "1beb7288862f7fd7a30234b9f6ceef5509f931f7cb4731b86405d6597b6c57c9"
+    },
+    {
+      "path": "motion/selected-native-frames.json",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/selected-native-frames.json",
+      "sha256": "93fe71887a307f4a8913121cbf24eb8ddf23722b8cdbc6dad415d6f3f320c7ed"
+    },
+    {
+      "path": "motion/frames/frame-0010.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0010.png",
+      "sha256": "90a517d68259b887698d1a1b714abb6720ff14bf0cf2750c1b448237a84247db"
+    },
+    {
+      "path": "motion/frames/frame-0013.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0013.png",
+      "sha256": "7c2d87935f4d6487a16a3d768e5b61cfe5314da99215985d814e71c70a5451e2"
+    },
+    {
+      "path": "motion/frames/frame-0019.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0019.png",
+      "sha256": "90a517d68259b887698d1a1b714abb6720ff14bf0cf2750c1b448237a84247db"
+    },
+    {
+      "path": "motion/frames/frame-0022.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0022.png",
+      "sha256": "828961617801866ae3475b567107f31081d4bb658515f506d0bf705f8e29a40e"
+    },
+    {
+      "path": "motion/frames/frame-0023.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0023.png",
+      "sha256": "79e5f54ffb26e6a17c5e4849f2fa033345692a515babd5c2065ee9061680925d"
+    },
+    {
+      "path": "motion/frames/frame-0027.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0027.png",
+      "sha256": "e4bc69b3a4578fb82dc4f1634658c6dcad64f0c1e4b66175cefdde5fd2c31c57"
+    },
+    {
+      "path": "motion/frames/frame-0056.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0056.png",
+      "sha256": "912fd939443fd73752d91efd3bb625170fc784baecbd4ab2b14e9ceb78c5c9c2"
+    },
+    {
+      "path": "motion/frames/frame-0057.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0057.png",
+      "sha256": "e93b4bc781fcfe7feff90faa9a4ba07507d5569939abf071f2731522c792eb6a"
+    },
+    {
+      "path": "motion/frames/frame-0058.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0058.png",
+      "sha256": "1a2cc0f0d7a90aa7845ef1e441a69c4152c18a0225dedd3f26a48649a504f215"
+    },
+    {
+      "path": "motion/frames/frame-0060.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0060.png",
+      "sha256": "1a2cc0f0d7a90aa7845ef1e441a69c4152c18a0225dedd3f26a48649a504f215"
+    },
+    {
+      "path": "motion/frames/frame-0082.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0082.png",
+      "sha256": "17de3557558139bb069b1f632a0891ae5c73f666fbba0d4513b687b5f0dae79f"
+    },
+    {
+      "path": "motion/frames/frame-0083.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0083.png",
+      "sha256": "60700d42abe62a535c29813b89ad8e0149ab64575269b440e851ffe7d45e09fc"
+    },
+    {
+      "path": "motion/frames/frame-0084.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0084.png",
+      "sha256": "ce3279582dc378a8d3dc9348905ae8a9d3cc323b5200a73ec60e367b918fbe4e"
+    },
+    {
+      "path": "motion/frames/frame-0085.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0085.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200"
+    },
+    {
+      "path": "motion/frames/frame-0086.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0086.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200"
+    },
+    {
+      "path": "motion/frames/frame-0087.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0087.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200"
+    },
+    {
+      "path": "motion/frames/frame-0088.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0088.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200"
+    },
+    {
+      "path": "motion/frames/frame-0089.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0089.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200"
+    },
+    {
+      "path": "motion/frames/frame-0090.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0090.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200"
+    },
+    {
+      "path": "motion/frames/frame-0091.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0091.png",
+      "sha256": "b1c853d4f0647d8a0d733c6b73f5754bba544b816b183394b54a4a950e55a200"
+    },
+    {
+      "path": "motion/frames/frame-0094.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0094.png",
+      "sha256": "a18656f854f880cb5f9b89e9b97c5014bccb6c3630c5033d24d107abe77eac94"
+    },
+    {
+      "path": "motion/frames/frame-0095.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0095.png",
+      "sha256": "1b3abeb89a7b78080aa3f528c0638d8c6015a87ce7d279697cd6c163daa604c2"
+    },
+    {
+      "path": "motion/frames/frame-0096.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0096.png",
+      "sha256": "0bd5b3a90dfcc7d4207dd12099c018942462554e7691aa6b31f86f902e409178"
+    },
+    {
+      "path": "motion/frames/frame-0097.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0097.png",
+      "sha256": "a18656f854f880cb5f9b89e9b97c5014bccb6c3630c5033d24d107abe77eac94"
+    },
+    {
+      "path": "motion/frames/frame-0098.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0098.png",
+      "sha256": "a18656f854f880cb5f9b89e9b97c5014bccb6c3630c5033d24d107abe77eac94"
+    },
+    {
+      "path": "motion/frames/frame-0099.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0099.png",
+      "sha256": "a18656f854f880cb5f9b89e9b97c5014bccb6c3630c5033d24d107abe77eac94"
+    },
+    {
+      "path": "motion/frames/frame-0100.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0100.png",
+      "sha256": "a18656f854f880cb5f9b89e9b97c5014bccb6c3630c5033d24d107abe77eac94"
+    },
+    {
+      "path": "motion/frames/frame-0101.png",
+      "originalPath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/frames/recording-frames/frame-0101.png",
+      "sha256": "a18656f854f880cb5f9b89e9b97c5014bccb6c3630c5033d24d107abe77eac94"
+    }
+  ],
+  "excluded": "102 MB production source archive, redundant unselected movies/PNGs; exact source commit and archive hashes retained in source-freeze/provenance."
+}

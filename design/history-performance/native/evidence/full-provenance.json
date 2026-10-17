@@ -1,0 +1,41 @@
+{
+  "source": {
+    "sourceCommit": "855fc308f8864940a72ca77c93b0221d4e305a33",
+    "archive": "native-review/source-855fc308f886.tar.gz",
+    "archiveSHA256": "11ad07170c1452cc0a43bf89fbf0d0cfaae0595dbaf199f8b8b090fac7f0ff3c",
+    "files": {
+      "Core/HistoryChart.swift": "bbc8051506c7c42b3e6f1906affb6d945b130fdf800e9e6040fc9412ee5f765a",
+      "Popover/HistoryLayer.swift": "091a8fde18fcf52064b238480796124d8ff2884937d9583e4f7780f48ef9ae2f",
+      "VERSION": "fd88a172e2fbd50733c9e66c9b181007ecd310dbdbc352520bd400d14f5e5b89",
+      "tests/interaction/main.swift": "1faa8dd0f291c2cd0b535cd974f36e5c3f05c0caf6a866dfa2ece4e63854d937",
+      "tests/visual/capture_production_glass.swift": "25780ec9b1015e4bd49026420ad30f8e796415cf29f02a1386e4bfaa257ce6d5"
+    },
+    "version": "4.3.11",
+    "HistorySourceIdenticalTo": "9325876f70dc7e6fb722fda90f70ecde38a32c46"
+  },
+  "tools": {
+    "archive": "native-review/native-tools-a55458b045cbb20defac514e0fba81f3d5500a61e48551849523d349e72038aa.tar.gz",
+    "archiveSHA256": "5aa1e2ed8be3ce2841d1f188c817cde25e72a588e508ed9fbbd93b2777277fa9",
+    "files": {
+      "analyze-animation-branches.py": "9b20b7f2458f386bc3376b700ba40bea5d69229e3c251f5de32875aa9e8dab95",
+      "analyze-motion.py": "231b9302f0eca6bd0903af0800e59f7f89519c455a97c973a73014e12381f9b8",
+      "baseline-4.3.10-scalar-analysis.json": "286c9cf35675d76a70d9eefc1b3cf6341c0a36a3b36f2f608dc9ce8fe9d342b7",
+      "capture-axis-motion.swift": "bfc31ff2ee1e16ff0686f281d6a786f837812d4e95364e108fcb5f1e6c2f2097",
+      "compare-with-baseline.py": "b5e054130c3ed8d39a755dc63950a2d6079f1410e285d9181e15db9117ad5e30",
+      "encode-motion.py": "559336df5b4a3c04c0aab92a3e558ad0d6dbe31957a1556d55d9d8241373bf8a",
+      "extract-owned-domains.py": "a861a7fba51d72a70b0aaa03e2b26cc8eac75342d2a787788fe9920893e7f390",
+      "finalize-owned-defaults.py": "fe9b1f649d0696a0e64301cb040d80f0c1826fd4211b074c24ac7c2f1c2e5103",
+      "prepare-gallery.py": "c295068f96174d8bb4b9c13e35be9a14c8e49dc4941f16fe26688f73f69758a2",
+      "prepare-sixstate-harness.py": "607c139e0dcf011bc5de304d252c671abac21b1c4c614ed34ce0bc104f289690",
+      "review-native-frames.py": "5670212af3de9eed0a99253d39138b593fb64af9b7f20e30104a73720f85afdf",
+      "run-axis-capture-only.sh": "6b94f50a1ba7e5b6b182989e939e381c7a14ed9ed7bff453e76dbcda965af853",
+      "run-axis-qa.sh": "2a8936ae5d17c179d90fbdd392bf0d0ccadee3ad937f03253b784fbcdec8f618",
+      "stage-native-qa.py": "996dfe10b82a9c5f2ac672926fdbb1c082fbad3018aa059f9b60fb0b9885ed2f",
+      "synchronize-owned-defaults.js": "6813df8ef108d28bc4a89916abaa9a1fca1eda082ddf7b269ecf8017ee10171a"
+    }
+  },
+  "verifiedGuestLocalBeforeExecution": true,
+  "guestRun": "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/owned.noindex/run._qnxuiv3",
+  "label": "final-855fc308-native",
+  "sourceState": "unmodified frozen production; independent native correctness and visual verification, not a timing benchmark"
+}

@@ -1,0 +1,2655 @@
+{
+  "schema": 1,
+  "source": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/motion/scalar/axis-motion.json",
+  "sourceDescription": "Unmodified production HistoryView, real NSWindow and NSApplication.run",
+  "checks": [
+    {
+      "name": "ordinary-scroll: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 27
+      }
+    },
+    {
+      "name": "ordinary-scroll: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.10004212499984533
+      }
+    },
+    {
+      "name": "ordinary-scroll: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.20265333333327362,
+        "allowedSeconds": 0.4
+      }
+    },
+    {
+      "name": "ordinary-scroll: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.001544274186635164
+      }
+    },
+    {
+      "name": "ordinary-scroll: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 0.0
+      }
+    },
+    {
+      "name": "ordinary-scroll: vertical coordinate remains fixed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 0.0,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 62.03630971012203,
+        "firstMeasuredSeconds": 0.09566533333327243
+      }
+    },
+    {
+      "name": "ordinary-scroll: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0
+      }
+    },
+    {
+      "name": "ordinary-scroll: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.0
+      }
+    },
+    {
+      "name": "scale-expansion: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 33
+      }
+    },
+    {
+      "name": "scale-expansion: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.09308283333325562
+      }
+    },
+    {
+      "name": "scale-expansion: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.39707279166646003,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "scale-expansion: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.024804520288007836
+      }
+    },
+    {
+      "name": "scale-expansion: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 133.38324533359344
+      }
+    },
+    {
+      "name": "scale-expansion: physical y range changes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: intermediate y positions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: y progresses monotonically",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 132.11572556056896,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 65.24937651749742,
+        "firstMeasuredSeconds": 0.0876342083331565
+      }
+    },
+    {
+      "name": "scale-expansion: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0.0013285873750774613
+      }
+    },
+    {
+      "name": "scale-expansion: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.7294762293080623
+      }
+    },
+    {
+      "name": "scale-contraction: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 30
+      }
+    },
+    {
+      "name": "scale-contraction: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.10119587500003036
+      }
+    },
+    {
+      "name": "scale-contraction: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.3862419583333576,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "scale-contraction: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 1.4210854715202004e-14
+      }
+    },
+    {
+      "name": "scale-contraction: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 154.1029448050213
+      }
+    },
+    {
+      "name": "scale-contraction: physical y range changes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: intermediate y positions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: y progresses monotonically",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 154.1029448050213,
+        "beforeY": 86.62666666666667,
+        "firstMeasuredY": 81.48649445533752,
+        "firstMeasuredSeconds": 0.09628129166662802
+      }
+    },
+    {
+      "name": "scale-contraction: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0.0008144815843991182
+      }
+    },
+    {
+      "name": "scale-contraction: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.8427550001918087
+      }
+    },
+    {
+      "name": "interrupted-scale-25: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 20
+      }
+    },
+    {
+      "name": "interrupted-scale-25: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.2258772916666203
+      }
+    },
+    {
+      "name": "interrupted-scale-25: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.5763806249999561,
+        "allowedSeconds": 0.9
+      }
+    },
+    {
+      "name": "interrupted-scale-25: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.047833670959608554
+      }
+    },
+    {
+      "name": "interrupted-scale-25: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 98.55567089902995
+      }
+    },
+    {
+      "name": "interrupted-scale-25: continuous retarget uses intermediate y positions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: retarget observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 97.61911178686461,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 62.97177829378863,
+        "firstMeasuredSeconds": 0.04905720833335181
+      }
+    },
+    {
+      "name": "interrupted-scale-25: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0.0019153863889158629
+      }
+    },
+    {
+      "name": "interrupted-scale-25: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.538975117382971
+      }
+    },
+    {
+      "name": "cancel-presentation: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 29
+      }
+    },
+    {
+      "name": "cancel-presentation: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.13780199999996512
+      }
+    },
+    {
+      "name": "cancel-presentation: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.006842875000074855,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "cancel-presentation: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.0006790829125691289
+      }
+    },
+    {
+      "name": "cancel-presentation: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: cancellation removes animations immediately",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation: cancellation leaves no later animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 29
+      }
+    },
+    {
+      "name": "cancel-motion: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.12024287500003084
+      }
+    },
+    {
+      "name": "cancel-motion: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.08476433333339628,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "cancel-motion: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.02455237795170717
+      }
+    },
+    {
+      "name": "cancel-motion: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: cancellation removes animations immediately",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion: cancellation leaves no later animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 20
+      }
+    },
+    {
+      "name": "repeated-scroll: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.2417291666665733
+      }
+    },
+    {
+      "name": "repeated-scroll: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.38232170833339296,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "repeated-scroll: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.00035028708714435197
+      }
+    },
+    {
+      "name": "repeated-scroll: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 0.0
+      }
+    },
+    {
+      "name": "repeated-scroll: vertical coordinate remains fixed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 0.0,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 62.03630971012203,
+        "firstMeasuredSeconds": 0.006819166666673482
+      }
+    },
+    {
+      "name": "repeated-scroll: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0
+      }
+    },
+    {
+      "name": "repeated-scroll: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.0
+      }
+    },
+    {
+      "name": "interrupted-scale-50: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 25
+      }
+    },
+    {
+      "name": "interrupted-scale-50: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.23352429166652655
+      }
+    },
+    {
+      "name": "interrupted-scale-50: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.623521750000009,
+        "allowedSeconds": 0.9
+      }
+    },
+    {
+      "name": "interrupted-scale-50: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.02952880512520295
+      }
+    },
+    {
+      "name": "interrupted-scale-50: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 135.06240639481044
+      }
+    },
+    {
+      "name": "interrupted-scale-50: continuous retarget uses intermediate y positions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: retarget observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 133.7789298218644,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 62.64980527141921,
+        "firstMeasuredSeconds": 0.04005191666669816
+      }
+    },
+    {
+      "name": "interrupted-scale-50: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0.000564416202053053
+      }
+    },
+    {
+      "name": "interrupted-scale-50: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.7386759948181815
+      }
+    },
+    {
+      "name": "interrupted-scale-90: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 27
+      }
+    },
+    {
+      "name": "interrupted-scale-90: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.16762674999995397
+      }
+    },
+    {
+      "name": "interrupted-scale-90: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.7172738749998189,
+        "allowedSeconds": 0.9
+      }
+    },
+    {
+      "name": "interrupted-scale-90: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.024851466124054866
+      }
+    },
+    {
+      "name": "interrupted-scale-90: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 134.01551470567878
+      }
+    },
+    {
+      "name": "interrupted-scale-90: continuous retarget uses intermediate y positions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: retarget observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 132.74198553994034,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 64.5357001730057,
+        "firstMeasuredSeconds": 0.07639870833327222
+      }
+    },
+    {
+      "name": "interrupted-scale-90: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0.0008321895197411777
+      }
+    },
+    {
+      "name": "interrupted-scale-90: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.7329189746192308
+      }
+    },
+    {
+      "name": "departing-outlier-contraction: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 28
+      }
+    },
+    {
+      "name": "departing-outlier-contraction: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.14382370833322966
+      }
+    },
+    {
+      "name": "departing-outlier-contraction: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.35769074999984696,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "departing-outlier-contraction: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 1.4210854715202004e-14
+      }
+    },
+    {
+      "name": "departing-outlier-contraction: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 200.2165324659676
+      }
+    },
+    {
+      "name": "departing-outlier-contraction: physical y range changes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: intermediate y positions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: y progresses monotonically",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 200.2165324659676,
+        "beforeY": 97.17142857142858,
+        "firstMeasuredY": 94.36865827015468,
+        "firstMeasuredSeconds": 0.06607358333326374
+      }
+    },
+    {
+      "name": "departing-outlier-contraction: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0.01870995657139929
+      }
+    },
+    {
+      "name": "departing-outlier-contraction: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 1.0948738450606461
+      }
+    },
+    {
+      "name": "gradient-alpha-contraction: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 28
+      }
+    },
+    {
+      "name": "gradient-alpha-contraction: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.1435308749998967
+      }
+    },
+    {
+      "name": "gradient-alpha-contraction: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.3730297916665677,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "gradient-alpha-contraction: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 2.842170943040401e-14
+      }
+    },
+    {
+      "name": "gradient-alpha-contraction: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 232.02416204308759
+      }
+    },
+    {
+      "name": "gradient-alpha-contraction: physical y range changes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: intermediate y positions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: y progresses monotonically",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 232.02416204308759,
+        "beforeY": 91.13714285714286,
+        "firstMeasuredY": 88.72994814872742,
+        "firstMeasuredSeconds": 0.05735758333321428
+      }
+    },
+    {
+      "name": "gradient-alpha-contraction: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0.00235185056899212
+      }
+    },
+    {
+      "name": "gradient-alpha-contraction: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 1.268929015832113
+      }
+    },
+    {
+      "name": "basic-to-axis-25: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 20
+      }
+    },
+    {
+      "name": "basic-to-axis-25: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.14147270833336734
+      }
+    },
+    {
+      "name": "basic-to-axis-25: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.46641037500012317,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "basic-to-axis-25: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.034077498260501216
+      }
+    },
+    {
+      "name": "basic-to-axis-25: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 134.71077583348517
+      }
+    },
+    {
+      "name": "basic-to-axis-25: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 133.43064325314347,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 64.51870294995923,
+        "firstMeasuredSeconds": 0.15937587500002337
+      }
+    },
+    {
+      "name": "basic-to-axis-25: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0.0009604048501188345
+      }
+    },
+    {
+      "name": "basic-to-axis-25: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.7367814206299599
+      }
+    },
+    {
+      "name": "basic-to-axis-50: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 19
+      }
+    },
+    {
+      "name": "basic-to-axis-50: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.225935333333382
+      }
+    },
+    {
+      "name": "basic-to-axis-50: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.5015177916666289,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "basic-to-axis-50: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.019309803568013706
+      }
+    },
+    {
+      "name": "basic-to-axis-50: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 128.52538207416723
+      }
+    },
+    {
+      "name": "basic-to-axis-50: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 127.30402529567412,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 62.03630971012203,
+        "firstMeasuredSeconds": 0.017468333333226838
+      }
+    },
+    {
+      "name": "basic-to-axis-50: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0.0017557339018523521
+      }
+    },
+    {
+      "name": "basic-to-axis-50: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.7028774153702428
+      }
+    },
+    {
+      "name": "basic-to-axis-90: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 20
+      }
+    },
+    {
+      "name": "basic-to-axis-90: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.15021662499998456
+      }
+    },
+    {
+      "name": "basic-to-axis-90: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: short bounded native transition",
+      "passed": false,
+      "detail": {
+        "lastActiveSeconds": 0.6109162499999456,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "basic-to-axis-90: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.012565024264745261
+      }
+    },
+    {
+      "name": "basic-to-axis-90: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 124.85587287340337
+      }
+    },
+    {
+      "name": "basic-to-axis-90: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 123.66938690300485,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 62.03630971012203,
+        "firstMeasuredSeconds": 0.11135858333318538
+      }
+    },
+    {
+      "name": "basic-to-axis-90: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0.0018016181041318191
+      }
+    },
+    {
+      "name": "basic-to-axis-90: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.682812691998127
+      }
+    },
+    {
+      "name": "basic-to-basic-25: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 13
+      }
+    },
+    {
+      "name": "basic-to-basic-25: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.12452104166663958
+      }
+    },
+    {
+      "name": "basic-to-basic-25: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.39963712500002657,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "basic-to-basic-25: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0
+      }
+    },
+    {
+      "name": "basic-to-basic-25: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 0.0
+      }
+    },
+    {
+      "name": "basic-to-basic-25: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 0.0,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 62.03630971012203,
+        "firstMeasuredSeconds": 0.2792810833332169
+      }
+    },
+    {
+      "name": "basic-to-basic-25: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0
+      }
+    },
+    {
+      "name": "basic-to-basic-25: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.0
+      }
+    },
+    {
+      "name": "basic-to-basic-50: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 17
+      }
+    },
+    {
+      "name": "basic-to-basic-50: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.13016304166671944
+      }
+    },
+    {
+      "name": "basic-to-basic-50: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.3196560416668035,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "basic-to-basic-50: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.008911776738528943
+      }
+    },
+    {
+      "name": "basic-to-basic-50: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 0.0
+      }
+    },
+    {
+      "name": "basic-to-basic-50: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 0.0,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 62.03630971012203,
+        "firstMeasuredSeconds": 0.028243291666740333
+      }
+    },
+    {
+      "name": "basic-to-basic-50: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0
+      }
+    },
+    {
+      "name": "basic-to-basic-50: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.0
+      }
+    },
+    {
+      "name": "basic-to-basic-90: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 13
+      }
+    },
+    {
+      "name": "basic-to-basic-90: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.23262954166648342
+      }
+    },
+    {
+      "name": "basic-to-basic-90: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: short bounded native transition",
+      "passed": true,
+      "detail": {
+        "lastActiveSeconds": 0.41802883333343743,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "basic-to-basic-90: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.001675720233961897
+      }
+    },
+    {
+      "name": "basic-to-basic-90: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 0.0
+      }
+    },
+    {
+      "name": "basic-to-basic-90: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 0.0,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 62.03630971012203,
+        "firstMeasuredSeconds": 0.08400341666674649
+      }
+    },
+    {
+      "name": "basic-to-basic-90: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0
+      }
+    },
+    {
+      "name": "basic-to-basic-90: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.0
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: real presentation samples",
+      "passed": true,
+      "detail": {
+        "sampleCount": 17
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: monotonic sample timestamps",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: positive finite sampling intervals",
+      "passed": true,
+      "detail": {
+        "maxGapSeconds": 0.13048829166655196
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: animation observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: animation completed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: short bounded native transition",
+      "passed": false,
+      "detail": {
+        "lastActiveSeconds": 0.6871886250000898,
+        "allowedSeconds": 0.6
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: only matched stroke and fill path animations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: path animation duration matches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: actual head-to-stroke position available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: endpoint stays on actual stroke",
+      "passed": true,
+      "detail": {
+        "maxDeviationPoints": 0.018267497300470836
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: stroke width remains 1.6 points",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: stroke transform remains identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: constant endpoint diameter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: no retained-sample jump",
+      "passed": true,
+      "detail": {
+        "maximumYSpeedPointsPerSecond": 127.28192508912686
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: actual presentation path interior finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: actual interval interior stays continuous",
+      "passed": true,
+      "detail": {
+        "maxInteriorYSpeedPointsPerSecond": 126.0723850843507,
+        "beforeY": 62.03630971012203,
+        "firstMeasuredY": 62.93693130484881,
+        "firstMeasuredSeconds": 0.04721470833328567
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: effective gradient band finite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: effective gradient band stays continuous",
+      "passed": true,
+      "detail": {
+        "maxStartBandYDriftPoints": 0.0006552595612205891
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: alpha estimates remain bounded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: retained-sample gradient alpha stays continuous",
+      "passed": true,
+      "detail": {
+        "maximumAlphaChangePerSecond": 0.6960730490449757
+      }
+    }
+  ],
+  "checkCount": 376,
+  "passed": 374,
+  "allPassed": false,
+  "summaries": {
+    "ordinary-scroll": {
+      "maxHeadToStrokeDeviationPoints": 0.001544274186635164,
+      "samples": 27,
+      "medianIntervalSeconds": 0.03177962500001286,
+      "maximumIntervalSeconds": 0.10004212499984533,
+      "beforeY": 61.681679321556324,
+      "finalY": 61.681679321556324,
+      "distinctYPositions": 1,
+      "maximumYSpeedPointsPerSecond": 0.0,
+      "lastAnimationObservedSeconds": 0.20265333333327362,
+      "animationKeys": [
+        "history.head",
+        "history.scroll",
+        "history.stroke"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 62.03630971012203,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.23408456621023888
+    },
+    "scale-expansion": {
+      "maxHeadToStrokeDeviationPoints": 0.024804520288007836,
+      "samples": 33,
+      "medianIntervalSeconds": 0.023384791666671845,
+      "maximumIntervalSeconds": 0.09308283333325562,
+      "beforeY": 61.681679321556324,
+      "finalY": 89.04844781908169,
+      "distinctYPositions": 7,
+      "maximumYSpeedPointsPerSecond": 133.38324533359344,
+      "lastAnimationObservedSeconds": 0.39707279166646003,
+      "animationKeys": [
+        "history.gradient",
+        "history.head",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 89.14301592269922,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.0013285873750774613,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.08442255098939705
+    },
+    "scale-contraction": {
+      "maxHeadToStrokeDeviationPoints": 1.4210854715202004e-14,
+      "samples": 30,
+      "medianIntervalSeconds": 0.031188833333317234,
+      "maximumIntervalSeconds": 0.10119587500003036,
+      "beforeY": 86.62666666666667,
+      "finalY": 52.6,
+      "distinctYPositions": 5,
+      "maximumYSpeedPointsPerSecond": 154.1029448050213,
+      "lastAnimationObservedSeconds": 0.3862419583333576,
+      "animationKeys": [
+        "history.fill",
+        "history.gradient",
+        "history.head",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 86.62666666666667,
+      "actualPathInteriorFinalY": 52.6,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.0008144815843991182,
+      "gradientAlphaBefore": 0.09766666666666668,
+      "gradientAlphaFinal": 0.28375
+    },
+    "interrupted-scale-25": {
+      "maxHeadToStrokeDeviationPoints": 0.047833670959608554,
+      "samples": 20,
+      "medianIntervalSeconds": 0.03229608333322176,
+      "maximumIntervalSeconds": 0.2258772916666203,
+      "beforeY": 61.681679321556324,
+      "finalY": 91.53633586431127,
+      "distinctYPositions": 8,
+      "maximumYSpeedPointsPerSecond": 98.55567089902995,
+      "lastAnimationObservedSeconds": 0.5763806249999561,
+      "animationKeys": [
+        "history.fill",
+        "history.gradient",
+        "history.head",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 91.60726194202441,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.0019153863889158629,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.07081691324204775
+    },
+    "cancel-presentation": {
+      "maxHeadToStrokeDeviationPoints": 0.0006790829125691289,
+      "samples": 29,
+      "medianIntervalSeconds": 0.03058914583323258,
+      "maximumIntervalSeconds": 0.13780199999996512,
+      "beforeY": 61.681679321556324,
+      "finalY": 89.04844781908169,
+      "distinctYPositions": 2,
+      "maximumYSpeedPointsPerSecond": 198.56705533240253,
+      "lastAnimationObservedSeconds": 0.006842875000074855,
+      "animationKeys": [
+        "history.gradient",
+        "history.head",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 89.14301592269922,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 1.8198812739456116e-05,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.08442255098939705
+    },
+    "cancel-motion": {
+      "maxHeadToStrokeDeviationPoints": 0.02455237795170717,
+      "samples": 29,
+      "medianIntervalSeconds": 0.02181229166671983,
+      "maximumIntervalSeconds": 0.12024287500003084,
+      "beforeY": 61.681679321556324,
+      "finalY": 89.04844781908169,
+      "distinctYPositions": 3,
+      "maximumYSpeedPointsPerSecond": 242.31689200386913,
+      "lastAnimationObservedSeconds": 0.08476433333339628,
+      "animationKeys": [
+        "history.gradient",
+        "history.head",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 89.14301592269922,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.0001396292430015933,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.08442255098939705
+    },
+    "repeated-scroll": {
+      "maxHeadToStrokeDeviationPoints": 0.00035028708714435197,
+      "samples": 20,
+      "medianIntervalSeconds": 0.031726375000062035,
+      "maximumIntervalSeconds": 0.2417291666665733,
+      "beforeY": 61.681679321556324,
+      "finalY": 61.681679321556324,
+      "distinctYPositions": 1,
+      "maximumYSpeedPointsPerSecond": 0.0,
+      "lastAnimationObservedSeconds": 0.38232170833339296,
+      "animationKeys": [
+        "history.fill",
+        "history.head",
+        "history.scroll",
+        "history.stroke"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 62.03630971012203,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.23408456621023888
+    },
+    "interrupted-scale-50": {
+      "maxHeadToStrokeDeviationPoints": 0.02952880512520295,
+      "samples": 25,
+      "medianIntervalSeconds": 0.028875666666749567,
+      "maximumIntervalSeconds": 0.23352429166652655,
+      "beforeY": 61.681679321556324,
+      "finalY": 91.53633586431127,
+      "distinctYPositions": 10,
+      "maximumYSpeedPointsPerSecond": 135.06240639481044,
+      "lastAnimationObservedSeconds": 0.623521750000009,
+      "animationKeys": [
+        "history.fill",
+        "history.gradient",
+        "history.head",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 91.60726194202441,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.000564416202053053,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.07081691324204775
+    },
+    "interrupted-scale-90": {
+      "maxHeadToStrokeDeviationPoints": 0.024851466124054866,
+      "samples": 27,
+      "medianIntervalSeconds": 0.01970358333335298,
+      "maximumIntervalSeconds": 0.16762674999995397,
+      "beforeY": 61.681679321556324,
+      "finalY": 91.53633586431127,
+      "distinctYPositions": 14,
+      "maximumYSpeedPointsPerSecond": 134.01551470567878,
+      "lastAnimationObservedSeconds": 0.7172738749998189,
+      "animationKeys": [
+        "history.fill",
+        "history.gradient",
+        "history.head",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 91.60726194202441,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.0008321895197411777,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.07081691324204775
+    },
+    "departing-outlier-contraction": {
+      "maxHeadToStrokeDeviationPoints": 1.4210854715202004e-14,
+      "samples": 28,
+      "medianIntervalSeconds": 0.016836250000096697,
+      "maximumIntervalSeconds": 0.14382370833322966,
+      "beforeY": 97.17142857142858,
+      "finalY": 56.333333333333336,
+      "distinctYPositions": 10,
+      "maximumYSpeedPointsPerSecond": 200.2165324659676,
+      "lastAnimationObservedSeconds": 0.35769074999984696,
+      "animationKeys": [
+        "history.gradient",
+        "history.head",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 97.17142857142858,
+      "actualPathInteriorFinalY": 56.333333333333336,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.01870995657139929,
+      "gradientAlphaBefore": 0.03999999999999998,
+      "gradientAlphaFinal": 0.2633333333333333
+    },
+    "gradient-alpha-contraction": {
+      "maxHeadToStrokeDeviationPoints": 2.842170943040401e-14,
+      "samples": 28,
+      "medianIntervalSeconds": 0.016759333333311588,
+      "maximumIntervalSeconds": 0.1435308749998967,
+      "beforeY": 91.13714285714286,
+      "finalY": 43.96,
+      "distinctYPositions": 8,
+      "maximumYSpeedPointsPerSecond": 232.02416204308759,
+      "lastAnimationObservedSeconds": 0.3730297916665677,
+      "animationKeys": [
+        "history.gradient",
+        "history.head",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 91.13714285714286,
+      "actualPathInteriorFinalY": 43.96,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.00235185056899212,
+      "gradientAlphaBefore": 0.07300000000000001,
+      "gradientAlphaFinal": 0.331
+    },
+    "basic-to-axis-25": {
+      "maxHeadToStrokeDeviationPoints": 0.034077498260501216,
+      "samples": 20,
+      "medianIntervalSeconds": 0.016919583333447008,
+      "maximumIntervalSeconds": 0.14147270833336734,
+      "beforeY": 61.681679321556324,
+      "finalY": 89.04844781908169,
+      "distinctYPositions": 6,
+      "maximumYSpeedPointsPerSecond": 134.71077583348517,
+      "lastAnimationObservedSeconds": 0.46641037500012317,
+      "animationKeys": [
+        "history.fill",
+        "history.gradient",
+        "history.head",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 89.14301592269922,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.0009604048501188345,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.08442255098939705
+    },
+    "basic-to-axis-50": {
+      "maxHeadToStrokeDeviationPoints": 0.019309803568013706,
+      "samples": 19,
+      "medianIntervalSeconds": 0.03936004166666862,
+      "maximumIntervalSeconds": 0.225935333333382,
+      "beforeY": 61.681679321556324,
+      "finalY": 89.04844781908169,
+      "distinctYPositions": 8,
+      "maximumYSpeedPointsPerSecond": 128.52538207416723,
+      "lastAnimationObservedSeconds": 0.5015177916666289,
+      "animationKeys": [
+        "history.fill",
+        "history.gradient",
+        "history.head",
+        "history.scroll",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 89.14301592269922,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.0017557339018523521,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.08442255098939705
+    },
+    "basic-to-axis-90": {
+      "maxHeadToStrokeDeviationPoints": 0.012565024264745261,
+      "samples": 20,
+      "medianIntervalSeconds": 0.03423074999977871,
+      "maximumIntervalSeconds": 0.15021662499998456,
+      "beforeY": 61.681679321556324,
+      "finalY": 89.04844781908169,
+      "distinctYPositions": 6,
+      "maximumYSpeedPointsPerSecond": 124.85587287340337,
+      "lastAnimationObservedSeconds": 0.6109162499999456,
+      "animationKeys": [
+        "history.fill",
+        "history.gradient",
+        "history.head",
+        "history.scroll",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 89.14301592269922,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.0018016181041318191,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.08442255098939705
+    },
+    "basic-to-basic-25": {
+      "maxHeadToStrokeDeviationPoints": 0,
+      "samples": 13,
+      "medianIntervalSeconds": 0.07394233333332068,
+      "maximumIntervalSeconds": 0.12452104166663958,
+      "beforeY": 61.681679321556324,
+      "finalY": 61.681679321556324,
+      "distinctYPositions": 1,
+      "maximumYSpeedPointsPerSecond": 0.0,
+      "lastAnimationObservedSeconds": 0.39963712500002657,
+      "animationKeys": [
+        "history.fill",
+        "history.head",
+        "history.scroll",
+        "history.stroke"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 62.03630971012203,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.23408456621023888
+    },
+    "basic-to-basic-50": {
+      "maxHeadToStrokeDeviationPoints": 0.008911776738528943,
+      "samples": 17,
+      "medianIntervalSeconds": 0.0743619375000435,
+      "maximumIntervalSeconds": 0.13016304166671944,
+      "beforeY": 61.681679321556324,
+      "finalY": 61.681679321556324,
+      "distinctYPositions": 1,
+      "maximumYSpeedPointsPerSecond": 0.0,
+      "lastAnimationObservedSeconds": 0.3196560416668035,
+      "animationKeys": [
+        "history.fill",
+        "history.head",
+        "history.scroll",
+        "history.stroke"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 62.03630971012203,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.23408456621023888
+    },
+    "basic-to-basic-90": {
+      "maxHeadToStrokeDeviationPoints": 0.001675720233961897,
+      "samples": 13,
+      "medianIntervalSeconds": 0.08048554166668964,
+      "maximumIntervalSeconds": 0.23262954166648342,
+      "beforeY": 61.681679321556324,
+      "finalY": 61.681679321556324,
+      "distinctYPositions": 1,
+      "maximumYSpeedPointsPerSecond": 0.0,
+      "lastAnimationObservedSeconds": 0.41802883333343743,
+      "animationKeys": [
+        "history.fill",
+        "history.head",
+        "history.scroll",
+        "history.stroke"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 62.03630971012203,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.23408456621023888
+    },
+    "settled-axis-to-basic": {
+      "maxHeadToStrokeDeviationPoints": 0.018267497300470836,
+      "samples": 17,
+      "medianIntervalSeconds": 0.07890052083337196,
+      "maximumIntervalSeconds": 0.13048829166655196,
+      "beforeY": 61.681679321556324,
+      "finalY": 89.04844781908169,
+      "distinctYPositions": 7,
+      "maximumYSpeedPointsPerSecond": 127.28192508912686,
+      "lastAnimationObservedSeconds": 0.6871886250000898,
+      "animationKeys": [
+        "history.fill",
+        "history.gradient",
+        "history.head",
+        "history.scroll",
+        "history.stroke",
+        "history.viewport"
+      ],
+      "actualPathInteriorBeforeY": 62.03630971012203,
+      "actualPathInteriorFinalY": 89.14301592269922,
+      "effectiveGradientBandStartY": 35,
+      "maxGradientBandDriftY": 0.0006552595612205891,
+      "gradientAlphaBefore": 0.23408456621023888,
+      "gradientAlphaFinal": 0.08442255098939705
+    }
+  },
+  "scope": "Measured real presentation-layer movement in disposable ARM GUI VM. Timer latency is harness timing, not a display FPS benchmark. Sparse PNG pass is independent visual evidence."
+}

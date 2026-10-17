@@ -1,0 +1,29 @@
+[
+  {
+    "Name" : "Wattson-ModulesFinalUI2-20261017",
+    "Accessed" : "2026-10-17T02:42:27Z",
+    "Running" : true,
+    "Source" : "local",
+    "State" : "running",
+    "Disk" : 50,
+    "Size" : 31
+  },
+  {
+    "Name" : "macOS-TestLab",
+    "Accessed" : "2026-10-15T06:45:45Z",
+    "Running" : false,
+    "Source" : "local",
+    "State" : "stopped",
+    "Disk" : 50,
+    "Size" : 33
+  },
+  {
+    "Name" : "macOS-TestLab-Base",
+    "Accessed" : "2026-10-17T02:42:09Z",
+    "Running" : false,
+    "Source" : "local",
+    "State" : "stopped",
+    "Disk" : 50,
+    "Size" : 30
+  }
+]

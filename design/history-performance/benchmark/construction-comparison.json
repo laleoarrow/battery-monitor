@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "scope": "Explicit CGMutablePath and rectangle CGPath construction requests executed in instrumented HistoryLayer.swift copies. Not allocator allocations, memory bytes, CPU/FPS/energy; instrumented wall timings are excluded.",
+  "measuredFields": [
+    "mutablePaths",
+    "rectanglePaths"
+  ],
+  "versions": {
+    "baseline": {
+      "sourceCommit": "27b069e704f9fd5827bcb71b5d13dde2aa7712e9",
+      "toolsArchiveSHA256": "14594df9432d13526db941c68c7b784e68899e7a9fdbf12bf356e1023d1fc567",
+      "resultArchiveSHA256": "7f37833234f1b25e34e20cff7b57b3553df55a6238ec17404b2826e307635288",
+      "instrumentation": {
+        "purpose": "Deterministic construction counts only; do not use instrumented durations as production performance",
+        "originalSHA256": "1706ff17c98789ef33525a2d74b3dac19f705aeedef50dd2ba4e9ef825d022d0",
+        "derivedSHA256": "4ad592f7f053e25b709c2dc7179120f789fc0dd3d90a19fdb5eb3f55f5c60788",
+        "injectedHelpers": {
+          "paths": 1,
+          "fillPath": 1,
+          "segments": 1
+        },
+        "diff": "--- original/HistoryLayer.swift\n+++ counted/HistoryLayer.swift\n@@ -107,7 +107,7 @@\n                 height: self.clip.bounds.height)\n             self.headClip.frame = self.bounds\n             self.headClipMask.frame = self.headClip.bounds\n-            self.headClipMask.path = CGPath(rect: self.chartRect.insetBy(dx: -2.6, dy: -2.6), transform: nil)\n+            self.headClipMask.path = HistoryProfiling.rectPath(rect: self.chartRect.insetBy(dx: -2.6, dy: -2.6), transform: nil)\n         }\n     }\n \n@@ -225,7 +225,7 @@\n                 width: CGFloat(geometry.points.last?.x ?? 1) * plot.width, height: plot.height)\n             self.headClip.frame = self.bounds\n             self.headClipMask.frame = self.headClip.bounds\n-            self.headClipMask.path = CGPath(rect: plot.insetBy(dx: -2.6, dy: -2.6), transform: nil)\n+            self.headClipMask.path = HistoryProfiling.rectPath(rect: plot.insetBy(dx: -2.6, dy: -2.6), transform: nil)\n             if let last = geometry.points.last {\n                 let p = point(last)\n                 self.head.frame = CGRect(x: plot.minX + p.x - 2.6, y: plot.minY + p.y - 2.6,\n@@ -258,11 +258,12 @@\n     }\n \n     private func paths(for geometry: HistoryChartGeometry) -> (stroke: CGPath, filled: CGPath) {\n-        let stroke = CGMutablePath(), filled = CGMutablePath()\n+        HistoryProfiling.pathsCalls += 1\n+        let stroke = HistoryProfiling.path(), filled = HistoryProfiling.path()\n         var segmentIndex = 0\n         for run in geometry.runs {\n             guard let first = run.first, let last = run.last else { continue }\n-            let subpath = CGMutablePath()\n+            let subpath = HistoryProfiling.path()\n             subpath.move(to: point(first))\n             for _ in run.dropFirst() {\n                 let s = geometry.segments[segmentIndex]\n@@ -279,7 +280,8 @@\n     }\n \n     private func fillPath(_ path: CGPath) -> CGPath {\n-        let translated = CGMutablePath()\n+        HistoryProfiling.fillPathCalls += 1\n+        let translated = HistoryProfiling.path()\n         translated.addPath(path, transform: CGAffineTransform(translationX: -gradientRect.minX,\n                                                              y: -gradientRect.minY))\n         return translated\n@@ -288,6 +290,7 @@\n     /// Decode the actual presentation controls, retaining the cached model's\n     /// raw timestamp identities. Never interpolate unrelated path commands.\n     private func segments(in path: CGPath, undoing viewport: CATransform3D) -> [HistoryChartGeometry.Cubic]? {\n+        HistoryProfiling.decodedPaths += 1\n         var segments: [HistoryChartGeometry.Cubic] = []\n         var previous: HistoryChartGeometry.Point?\n         var valid = true\n@@ -336,7 +339,7 @@\n             positions.append(NSValue(point: CGPoint(x: plot.minX + CGFloat(visibleX) * plot.width,\n                 y: plot.minY + plot.height - CGFloat(y * sy) * plot.height)))\n             let blended = geometry.interpolated(from: startGeometry, at: progress)\n-            let transformed = CGMutablePath()\n+            let transformed = HistoryProfiling.path()\n             transformed.addPath(paths(for: blended).stroke,\n                 transform: CGAffineTransform(a: 1, b: 0, c: 0, d: CGFloat(sy),\n                     tx: CGFloat(shift) * plot.width, ty: plot.height * CGFloat(1 - sy)))\n"
+      },
+      "counts": {
+        "ordinary-scroll": [
+          {
+            "mutablePaths": 136,
+            "rectanglePaths": 1
+          },
+          {
+            "mutablePaths": 136,
+            "rectanglePaths": 1
+          }
+        ],
+        "scale-expansion": [
+          {
+            "mutablePaths": 136,
+            "rectanglePaths": 1
+          },
+          {
+            "mutablePaths": 136,
+            "rectanglePaths": 1
+          }
+        ],
+        "scale-contraction": [
+          {
+            "mutablePaths": 144,
+            "rectanglePaths": 1
+          },
+          {
+            "mutablePaths": 144,
+            "rectanglePaths": 1
+          }
+        ],
+        "interrupted-scale": [
+          {
+            "mutablePaths": 144,
+            "rectanglePaths": 1
+          },
+          {
+            "mutablePaths": 144,
+            "rectanglePaths": 1
+          }
+        ],
+        "same-input-noop": [
+          {
+            "mutablePaths": 0,
+            "rectanglePaths": 0
+          },
+          {
+            "mutablePaths": 0,
+            "rectanglePaths": 0
+          }
+        ]
+      },
+      "allExplicitCountsStable": true
+    },
+    "optimized": {
+      "sourceCommit": "9325876f70dc7e6fb722fda90f70ecde38a32c46",
+      "toolsArchiveSHA256": "14594df9432d13526db941c68c7b784e68899e7a9fdbf12bf356e1023d1fc567",
+      "resultArchiveSHA256": "b94e1058721ec00d42c4611e041c9a7ecc8ab8c7a6fafdf71afc90b44f0a381c",
+      "instrumentation": {
+        "purpose": "Deterministic construction counts only; do not use instrumented durations as production performance",
+        "originalSHA256": "091a8fde18fcf52064b238480796124d8ff2884937d9583e4f7780f48ef9ae2f",
+        "derivedSHA256": "f3524e9b91606050201905639591aac62975444502baaa2503174d9ee2d3f6a5",
+        "injectedHelpers": {
+          "paths": 0,
+          "fillPath": 0,
+          "segments": 1
+        },
+        "diff": "--- original/HistoryLayer.swift\n+++ counted/HistoryLayer.swift\n@@ -112,7 +112,7 @@\n                 height: self.clip.bounds.height)\n             self.headClip.frame = self.bounds\n             self.headClipMask.frame = self.headClip.bounds\n-            self.headClipMask.path = CGPath(rect: self.chartRect.insetBy(dx: -2.6, dy: -2.6), transform: nil)\n+            self.headClipMask.path = HistoryProfiling.rectPath(rect: self.chartRect.insetBy(dx: -2.6, dy: -2.6), transform: nil)\n         }\n     }\n \n@@ -238,7 +238,7 @@\n                 width: CGFloat(geometry.points.last?.x ?? 1) * plot.width, height: plot.height)\n             self.headClip.frame = self.bounds\n             self.headClipMask.frame = self.headClip.bounds\n-            self.headClipMask.path = CGPath(rect: plot.insetBy(dx: -2.6, dy: -2.6), transform: nil)\n+            self.headClipMask.path = HistoryProfiling.rectPath(rect: plot.insetBy(dx: -2.6, dy: -2.6), transform: nil)\n             if let last = geometry.points.last {\n                 let p = point(last)\n                 self.head.frame = CGRect(x: plot.minX + p.x - 2.6, y: plot.minY + p.y - 2.6,\n@@ -271,7 +271,7 @@\n     private func path(for geometry: HistoryChartGeometry, filled: Bool = false,\n                       blendingFrom start: HistoryChartGeometry? = nil, at progress: Double = 1,\n                       transform: CGAffineTransform = .identity) -> CGPath {\n-        let path = CGMutablePath()\n+        let path = HistoryProfiling.path()\n         let q = min(max(progress, 0), 1)\n         func project(_ p: HistoryChartGeometry.Point) -> CGPoint { point(p).applying(transform) }\n         func blend(_ a: HistoryChartGeometry.Point, _ b: HistoryChartGeometry.Point) -> HistoryChartGeometry.Point {\n@@ -283,7 +283,7 @@\n             guard let first = run.first, let last = run.last else { continue }\n             // addPath retains isolated move commands across gaps; consecutive\n             // move(to:) calls would otherwise discard a single-point run.\n-            let subpath = separateRuns ? CGMutablePath() : path\n+            let subpath = separateRuns ? HistoryProfiling.path() : path\n             subpath.move(to: project(first))\n             for _ in run.dropFirst() {\n                 let s = geometry.segments[segmentIndex]\n@@ -305,6 +305,7 @@\n     /// Decode the actual presentation controls, retaining the cached model's\n     /// raw timestamp identities. Never interpolate unrelated path commands.\n     private func segments(in path: CGPath, undoing viewport: CATransform3D) -> [HistoryChartGeometry.Cubic]? {\n+        HistoryProfiling.decodedPaths += 1\n         var segments: [HistoryChartGeometry.Cubic] = []\n         var previous: HistoryChartGeometry.Point?\n         var valid = true\n"
+      },
+      "counts": {
+        "ordinary-scroll": [
+          {
+            "mutablePaths": 3,
+            "rectanglePaths": 1
+          },
+          {
+            "mutablePaths": 3,
+            "rectanglePaths": 1
+          }
+        ],
+        "scale-expansion": [
+          {
+            "mutablePaths": 34,
+            "rectanglePaths": 1
+          },
+          {
+            "mutablePaths": 34,
+            "rectanglePaths": 1
+          }
+        ],
+        "scale-contraction": [
+          {
+            "mutablePaths": 35,
+            "rectanglePaths": 1
+          },
+          {
+            "mutablePaths": 35,
+            "rectanglePaths": 1
+          }
+        ],
+        "interrupted-scale": [
+          {
+            "mutablePaths": 35,
+            "rectanglePaths": 1
+          },
+          {
+            "mutablePaths": 35,
+            "rectanglePaths": 1
+          }
+        ],
+        "same-input-noop": [
+          {
+            "mutablePaths": 0,
+            "rectanglePaths": 0
+          },
+          {
+            "mutablePaths": 0,
+            "rectanglePaths": 0
+          }
+        ]
+      },
+      "allExplicitCountsStable": true
+    }
+  },
+  "comparison": {
+    "ordinary-scroll": {
+      "baselineExplicitConstructionRequests": {
+        "mutablePaths": 136,
+        "rectanglePaths": 1
+      },
+      "optimizedExplicitConstructionRequests": {
+        "mutablePaths": 3,
+        "rectanglePaths": 1
+      },
+      "mutablePathReductionPercent": 97.79411764705883,
+      "observationsPerVersion": 2,
+      "sameInputNoopCountsCover512Calls": false
+    },
+    "scale-expansion": {
+      "baselineExplicitConstructionRequests": {
+        "mutablePaths": 136,
+        "rectanglePaths": 1
+      },
+      "optimizedExplicitConstructionRequests": {
+        "mutablePaths": 34,
+        "rectanglePaths": 1
+      },
+      "mutablePathReductionPercent": 75.0,
+      "observationsPerVersion": 2,
+      "sameInputNoopCountsCover512Calls": false
+    },
+    "scale-contraction": {
+      "baselineExplicitConstructionRequests": {
+        "mutablePaths": 144,
+        "rectanglePaths": 1
+      },
+      "optimizedExplicitConstructionRequests": {
+        "mutablePaths": 35,
+        "rectanglePaths": 1
+      },
+      "mutablePathReductionPercent": 75.69444444444444,
+      "observationsPerVersion": 2,
+      "sameInputNoopCountsCover512Calls": false
+    },
+    "interrupted-scale": {
+      "baselineExplicitConstructionRequests": {
+        "mutablePaths": 144,
+        "rectanglePaths": 1
+      },
+      "optimizedExplicitConstructionRequests": {
+        "mutablePaths": 35,
+        "rectanglePaths": 1
+      },
+      "mutablePathReductionPercent": 75.69444444444444,
+      "observationsPerVersion": 2,
+      "sameInputNoopCountsCover512Calls": false
+    },
+    "same-input-noop": {
+      "baselineExplicitConstructionRequests": {
+        "mutablePaths": 0,
+        "rectanglePaths": 0
+      },
+      "optimizedExplicitConstructionRequests": {
+        "mutablePaths": 0,
+        "rectanglePaths": 0
+      },
+      "mutablePathReductionPercent": null,
+      "observationsPerVersion": 2,
+      "sameInputNoopCountsCover512Calls": true
+    }
+  }
+}

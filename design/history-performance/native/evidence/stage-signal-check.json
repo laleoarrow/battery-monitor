@@ -1,0 +1,25 @@
+{
+  "actualHandlerASTTested": true,
+  "stageSHA256": "996dfe10b82a9c5f2ac672926fdbb1c082fbad3018aa059f9b60fb0b9885ed2f",
+  "allPassed": true,
+  "checks": [
+    {
+      "signal": "SIGHUP",
+      "actualExit": 129,
+      "archivedStatus": 129,
+      "passed": true
+    },
+    {
+      "signal": "SIGINT",
+      "actualExit": 130,
+      "archivedStatus": 130,
+      "passed": true
+    },
+    {
+      "signal": "SIGTERM",
+      "actualExit": 143,
+      "archivedStatus": 143,
+      "passed": true
+    }
+  ]
+}

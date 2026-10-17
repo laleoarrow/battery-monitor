@@ -1,0 +1,111 @@
+{
+  "probeExitCode": 0,
+  "audit": {
+    "schema": 1,
+    "atUTC": "2026-10-17T02:49:53.064008+00:00",
+    "monotonicTime": 0.028473875,
+    "ownedDomains": [
+      "Wattson.SettingsCommandInteraction.1D75083B-5D17-4CBD-8B8D-EF4E760CF2D5",
+      "com.leoarrow.wattson.historyaxisqa.1bb674b2-219a-4224-b478-1ccd88241df1",
+      "com.leoarrow.wattson.historyaxisqa.218969cc-92c1-406e-bbd4-e40df366d141",
+      "com.leoarrow.wattson.historyaxisqa.367d5c48-85f3-4c68-afb4-f14bea296c22",
+      "com.leoarrow.wattson.historyaxisqa.a764ffcf-bc53-4b1d-8f26-c6cecaedf4b5",
+      "com.leoarrow.wattson.historyperf.0222de19-bcb6-471a-8aee-736dc04b52a0",
+      "com.leoarrow.wattson.historyperf.69dbba30-7fe6-4fba-be6a-0614c76c1ead",
+      "com.leoarrow.wattson.historyperf.cd0c4537-0ed1-44c3-a383-c3bec722ef40",
+      "com.leoarrow.wattson.historyperf.e7a30dad-1ecb-45ff-959f-49e263aef22a",
+      "com.leoarrow.wattson.historyperf.ea9f49ec-27ef-4c22-b280-52ffc6fadd41",
+      "com.leoarrow.wattson.historyperf.fd4b0101-1172-4b60-b4a5-af75fba45a38",
+      "com.leoarrow.wattson.interactiontests.3c047f89-34aa-454c-b2ac-e80fceb523ae"
+    ],
+    "ownedAppPaths": [
+      "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/owned.noindex/run.1ffdggmu/source/.build/history-axis-captures.noindex/run.Qm3zN2/motion.app",
+      "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/owned.noindex/run.1yoync6k/source/.build/history-axis-captures.noindex/run.BFePVW/motion.app",
+      "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/owned.noindex/run.4f507_3d/source/.build/history-benchmark.noindex/run.xiXRN5/HistoryBenchmark.app",
+      "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/owned.noindex/run._qnxuiv3/source/.build/history-axis-captures.noindex/run.B6peTX/gallery.app",
+      "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/owned.noindex/run._qnxuiv3/source/.build/history-axis-captures.noindex/run.B6peTX/motion.app",
+      "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/owned.noindex/run.ie6hyvyv/source/.build/history-benchmark.noindex/run.yRkSno/HistoryBenchmark.app",
+      "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/owned.noindex/run.l5b884w8/source/.build/history-benchmark.noindex/run.Mxn0xP/HistoryBenchmark.app",
+      "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/owned.noindex/run.n_4a4ga5/source/.build/history-benchmark.noindex/run.bXgKTE/HistoryBenchmark.app",
+      "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/owned.noindex/run.pi5eudtt/source/.build/history-benchmark.noindex/run.IOmzow/HistoryBenchmark.app",
+      "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/owned.noindex/run.sp08n2yg/source/.build/history-benchmark.noindex/run.Uovvkj/HistoryBenchmark.app"
+    ],
+    "manifestSourceFiles": {
+      "evidence/baseline-a1/results/owned-bundle.tsv": "daa783635c1f47f510e28484b74625bb81c883ede9af80f323feb927a31609f0",
+      "evidence/optimized-b1/results/owned-bundle.tsv": "2e4ad40ec8df39b73f0073237fa2a47d5207038771125c01a4f7bbf5879a54c8",
+      "evidence/optimized-b2/results/owned-bundle.tsv": "ba198f019684ea23aaa9d6b7207b6b6cef873d69ac48097760be6cfaca035f9c",
+      "evidence/baseline-a2/results/owned-bundle.tsv": "1c984ae35dea2e5c196118eca89f3c791964f65bc20e030d425234c25a53e894",
+      "evidence/baseline-counts/results/owned-bundle.tsv": "9a48da19c663e3843e922be41c9c33437733d827aefab90052989d2bb34dfa8d",
+      "evidence/optimized-counts/results/owned-bundle.tsv": "d54e8883f9ad93d5c950aefa62a7673f82c4ab5af867e06497f8683e9c0e5875",
+      "native-review/results-controlled-855fc308-native-622828b7c14e66e62b14dfeb3cc3f531c28c6ac88161537c737850624c187a1a.tar.gz!results/capture-bundles.tsv": "4d23e973647f596b63dc712d50d00d964da0cde4b5af9fd88beb1a47565d8c25",
+      "native-review/results-final-855fc308-native-d4a38de322201acb3e4f4582514d570328d57bc31378357c83db2454da40334c.tar.gz!results/capture-bundles.tsv": "492b330eb1afc47bdc531ae9f5cc618ec95e6e8d45f82e10ec8e79fa4aa0ac08",
+      "native-review/results-final-855fc308-native-d4a38de322201acb3e4f4582514d570328d57bc31378357c83db2454da40334c.tar.gz!results/interaction/owned-domains.txt": "45a4c68475fdb6cdc96be2e782d1571ff2d9a3bdbdebb894584c3680b248fcc2",
+      "native-review/results-motion-855fc308-native-v2-9854ec6f3c67de407a36b4de4906069b3a04cc7ad960e4e6aac26b12557f7f6e.tar.gz!results/capture-bundles.tsv": "ce90df28fb1eb5e1c4bffe679123d3f64db82651d1d37d634b9050f249300ee5"
+    },
+    "ownedDomainState": {
+      "Wattson.SettingsCommandInteraction.1D75083B-5D17-4CBD-8B8D-EF4E760CF2D5": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      },
+      "com.leoarrow.wattson.historyaxisqa.1bb674b2-219a-4224-b478-1ccd88241df1": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      },
+      "com.leoarrow.wattson.historyaxisqa.218969cc-92c1-406e-bbd4-e40df366d141": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      },
+      "com.leoarrow.wattson.historyaxisqa.367d5c48-85f3-4c68-afb4-f14bea296c22": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      },
+      "com.leoarrow.wattson.historyaxisqa.a764ffcf-bc53-4b1d-8f26-c6cecaedf4b5": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      },
+      "com.leoarrow.wattson.historyperf.0222de19-bcb6-471a-8aee-736dc04b52a0": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      },
+      "com.leoarrow.wattson.historyperf.69dbba30-7fe6-4fba-be6a-0614c76c1ead": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      },
+      "com.leoarrow.wattson.historyperf.cd0c4537-0ed1-44c3-a383-c3bec722ef40": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      },
+      "com.leoarrow.wattson.historyperf.e7a30dad-1ecb-45ff-959f-49e263aef22a": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      },
+      "com.leoarrow.wattson.historyperf.ea9f49ec-27ef-4c22-b280-52ffc6fadd41": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      },
+      "com.leoarrow.wattson.historyperf.fd4b0101-1172-4b60-b4a5-af75fba45a38": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      },
+      "com.leoarrow.wattson.interactiontests.3c047f89-34aa-454c-b2ac-e80fceb523ae": {
+        "defaultsReadExit": 1,
+        "existingOwnedPaths": []
+      }
+    },
+    "guestProject": "/Users/admin/Project/Wattson-HistoryPerf-QA",
+    "launchServicesAuditExit": 0,
+    "remainingOwnedLaunchServicesIDs": [],
+    "spotlightAuditExit": 0,
+    "remainingOwnedSpotlightApps": [],
+    "remainingOwnedAppPaths": [],
+    "remainingProjectApps": [],
+    "remainingOwnedRunDirectories": [],
+    "remainingOwnedProcesses": [],
+    "remainingProjectMounts": [],
+    "allAbsent": true
+  },
+  "stderr": "",
+  "toolArchiveSHA256": "e4d5fb3f2c9a6fc15d00f5faacd76beab4f90c7f51094b14f00517bb05e431e3",
+  "verifiedGuestLocalBeforeExecution": true,
+  "label": "first-session-immediate"
+}

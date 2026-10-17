@@ -1,0 +1,822 @@
+{
+  "schema": 1,
+  "measurement": "Main-thread HistoryView.update wall-clock preparation in optimized real production renderer; includes scheduling and two monotonic-clock reads; not CPU time, FPS, energy, or compositor cost",
+  "design": "A1/B1/B2/A2, one owned ARM GUI VM, same frozen harness and deterministic inputs; 8 warmups per scenario per run; 64 measured rounds per scenario per run; 512 correlated no-op calls per round",
+  "toolsArchiveSHA256": "14594df9432d13526db941c68c7b784e68899e7a9fdbf12bf356e1023d1fc567",
+  "runs": {
+    "baseline-a1": {
+      "archiveSHA256": "b1064ac3cc96140bb3724f5af78d8eba9c7a6fc68ec0a68c64285c96054f00b5",
+      "sourceCommit": "27b069e704f9fd5827bcb71b5d13dde2aa7712e9",
+      "toolsArchiveSHA256": "14594df9432d13526db941c68c7b784e68899e7a9fdbf12bf356e1023d1fc567",
+      "roundMediansMicroseconds": {
+        "ordinary-scroll": {
+          "n": 64,
+          "min": 200,
+          "median": 274.58349999999996,
+          "p90": 383.7543,
+          "p95": 404.3723499999999,
+          "p99": 466.933,
+          "max": 470.083
+        },
+        "scale-expansion": {
+          "n": 64,
+          "min": 267.25,
+          "median": 388.708,
+          "p90": 527.4955,
+          "p95": 538.4455999999999,
+          "p99": 560.3755399999999,
+          "max": 578.042
+        },
+        "scale-contraction": {
+          "n": 64,
+          "min": 246.792,
+          "median": 399.8755,
+          "p90": 554.0918,
+          "p95": 598.00995,
+          "p99": 649.1857099999999,
+          "max": 669.083
+        },
+        "interrupted-scale": {
+          "n": 64,
+          "min": 280.541,
+          "median": 452.1875,
+          "p90": 553.7251,
+          "p95": 575.6338,
+          "p99": 678.0987499999995,
+          "max": 801.5
+        },
+        "same-input-noop": {
+          "n": 64,
+          "min": 0.5,
+          "median": 0.667,
+          "p90": 0.709,
+          "p95": 0.709,
+          "p99": 0.8117899999999996,
+          "max": 0.917
+        }
+      }
+    },
+    "optimized-b1": {
+      "archiveSHA256": "6063ceb27a9ab0496ce554dc6b21dabfa708a9bfa96565771f92986022ac2c78",
+      "sourceCommit": "9325876f70dc7e6fb722fda90f70ecde38a32c46",
+      "toolsArchiveSHA256": "14594df9432d13526db941c68c7b784e68899e7a9fdbf12bf356e1023d1fc567",
+      "roundMediansMicroseconds": {
+        "ordinary-scroll": {
+          "n": 64,
+          "min": 143.458,
+          "median": 278.58349999999996,
+          "p90": 369.7586,
+          "p95": 383.7295,
+          "p99": 395.34229,
+          "max": 398.125
+        },
+        "scale-expansion": {
+          "n": 64,
+          "min": 215.959,
+          "median": 402.688,
+          "p90": 522.6750000000001,
+          "p95": 550.43125,
+          "p99": 646.6121699999998,
+          "max": 702.708
+        },
+        "scale-contraction": {
+          "n": 64,
+          "min": 207.125,
+          "median": 236.5,
+          "p90": 323.48380000000003,
+          "p95": 330.34184999999997,
+          "p99": 400.76499999999965,
+          "max": 485.5
+        },
+        "interrupted-scale": {
+          "n": 64,
+          "min": 254.541,
+          "median": 305.0,
+          "p90": 396.1293,
+          "p95": 422.78309999999993,
+          "p99": 525.43017,
+          "max": 528.291
+        },
+        "same-input-noop": {
+          "n": 64,
+          "min": 0.542,
+          "median": 0.625,
+          "p90": 0.708,
+          "p95": 0.708,
+          "p99": 0.7655399999999999,
+          "max": 0.792
+        }
+      }
+    },
+    "optimized-b2": {
+      "archiveSHA256": "b5de74123b30af8496b3cc47d3e93be662dccd117cca81b64feb7f308ef797c0",
+      "sourceCommit": "9325876f70dc7e6fb722fda90f70ecde38a32c46",
+      "toolsArchiveSHA256": "14594df9432d13526db941c68c7b784e68899e7a9fdbf12bf356e1023d1fc567",
+      "roundMediansMicroseconds": {
+        "ordinary-scroll": {
+          "n": 64,
+          "min": 142.666,
+          "median": 196.292,
+          "p90": 248.008,
+          "p95": 307.05624999999986,
+          "p99": 351.3982499999999,
+          "max": 367.542
+        },
+        "scale-expansion": {
+          "n": 64,
+          "min": 184.209,
+          "median": 332.35400000000004,
+          "p90": 486.84580000000005,
+          "p95": 503.9937,
+          "p99": 569.9761299999999,
+          "max": 587.458
+        },
+        "scale-contraction": {
+          "n": 64,
+          "min": 204.5,
+          "median": 301.97900000000004,
+          "p90": 427.9123,
+          "p95": 462.8331,
+          "p99": 528.2270799999999,
+          "max": 563.875
+        },
+        "interrupted-scale": {
+          "n": 64,
+          "min": 235.541,
+          "median": 377.72950000000003,
+          "p90": 505.7588,
+          "p95": 537.8982,
+          "p99": 561.36375,
+          "max": 572.625
+        },
+        "same-input-noop": {
+          "n": 64,
+          "min": 0.5,
+          "median": 0.666,
+          "p90": 0.708,
+          "p95": 0.708,
+          "p99": 0.709,
+          "max": 0.709
+        }
+      }
+    },
+    "baseline-a2": {
+      "archiveSHA256": "d025d400319a556b856a99b1b14a5aa323845a0edfc5eaef9461576884b31e64",
+      "sourceCommit": "27b069e704f9fd5827bcb71b5d13dde2aa7712e9",
+      "toolsArchiveSHA256": "14594df9432d13526db941c68c7b784e68899e7a9fdbf12bf356e1023d1fc567",
+      "roundMediansMicroseconds": {
+        "ordinary-scroll": {
+          "n": 64,
+          "min": 222.417,
+          "median": 355.7295,
+          "p90": 483.70360000000005,
+          "p95": 486.95275,
+          "p99": 499.13716999999997,
+          "max": 504.833
+        },
+        "scale-expansion": {
+          "n": 64,
+          "min": 263.292,
+          "median": 305.29150000000004,
+          "p90": 407.4788,
+          "p95": 447.2437499999999,
+          "p99": 545.2616699999999,
+          "max": 568.125
+        },
+        "scale-contraction": {
+          "n": 64,
+          "min": 248.375,
+          "median": 339.60400000000004,
+          "p90": 500.6333000000001,
+          "p95": 539.96245,
+          "p99": 562.375,
+          "max": 570.25
+        },
+        "interrupted-scale": {
+          "n": 64,
+          "min": 274.25,
+          "median": 370.39599999999996,
+          "p90": 511.6623,
+          "p95": 539.9393499999999,
+          "p99": 884.3124999999984,
+          "max": 1282
+        },
+        "same-input-noop": {
+          "n": 64,
+          "min": 0.5,
+          "median": 0.625,
+          "p90": 0.6957000000000001,
+          "p95": 0.708,
+          "p99": 0.75,
+          "max": 0.75
+        }
+      }
+    }
+  },
+  "comparison": {
+    "ordinary-scroll": {
+      "baselineRoundMediansMicroseconds": {
+        "n": 128,
+        "min": 200,
+        "median": 307.8125,
+        "p90": 469.6161,
+        "p95": 483.35569999999996,
+        "p99": 495.56682,
+        "max": 504.833
+      },
+      "optimizedRoundMediansMicroseconds": {
+        "n": 128,
+        "min": 142.666,
+        "median": 220.062,
+        "p90": 343.9582,
+        "p95": 370.08804999999995,
+        "p99": 392.51541000000003,
+        "max": 398.125
+      },
+      "baselinePooledCallsMicroseconds": {
+        "n": 128,
+        "min": 200,
+        "median": 307.8125,
+        "p90": 469.6161,
+        "p95": 483.35569999999996,
+        "p99": 495.56682,
+        "max": 504.833
+      },
+      "optimizedPooledCallsMicroseconds": {
+        "n": 128,
+        "min": 142.666,
+        "median": 220.062,
+        "p90": 343.9582,
+        "p95": 370.08804999999995,
+        "p99": 392.51541000000003,
+        "max": 398.125
+      },
+      "medianReductionPercent": 28.507776649746187,
+      "baselineOverOptimizedMedianRatio": 1.3987535330952185,
+      "roundCountPerVersion": 128,
+      "pooledCallsCorrelatedWithinRound": true,
+      "installedStrokePayloads": {
+        "baseline": [
+          {
+            "category": "CAKeyframeAnimation",
+            "pathCommandCounts": [
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61
+            ],
+            "pathValuesCount": 33
+          }
+        ],
+        "optimized": [
+          {
+            "category": "CABasicAnimation",
+            "pathCommandCounts": [
+              61,
+              61
+            ],
+            "pathValuesCount": 2
+          }
+        ]
+      }
+    },
+    "scale-expansion": {
+      "baselineRoundMediansMicroseconds": {
+        "n": 128,
+        "min": 263.292,
+        "median": 342.5625,
+        "p90": 514.5412,
+        "p95": 530.5773,
+        "p99": 563.23125,
+        "max": 578.042
+      },
+      "optimizedRoundMediansMicroseconds": {
+        "n": 128,
+        "min": 184.209,
+        "median": 366.0,
+        "p90": 504.1125,
+        "p95": 543.93345,
+        "p99": 606.5905700000001,
+        "max": 702.708
+      },
+      "baselinePooledCallsMicroseconds": {
+        "n": 128,
+        "min": 263.292,
+        "median": 342.5625,
+        "p90": 514.5412,
+        "p95": 530.5773,
+        "p99": 563.23125,
+        "max": 578.042
+      },
+      "optimizedPooledCallsMicroseconds": {
+        "n": 128,
+        "min": 184.209,
+        "median": 366.0,
+        "p90": 504.1125,
+        "p95": 543.93345,
+        "p99": 606.5905700000001,
+        "max": 702.708
+      },
+      "medianReductionPercent": -6.841817186644783,
+      "baselineOverOptimizedMedianRatio": 0.9359631147540983,
+      "roundCountPerVersion": 128,
+      "pooledCallsCorrelatedWithinRound": true,
+      "installedStrokePayloads": {
+        "baseline": [
+          {
+            "category": "CAKeyframeAnimation",
+            "pathCommandCounts": [
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61
+            ],
+            "pathValuesCount": 33
+          }
+        ],
+        "optimized": [
+          {
+            "category": "CAKeyframeAnimation",
+            "pathCommandCounts": [
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61
+            ],
+            "pathValuesCount": 33
+          }
+        ]
+      }
+    },
+    "scale-contraction": {
+      "baselineRoundMediansMicroseconds": {
+        "n": 128,
+        "min": 246.792,
+        "median": 371.5,
+        "p90": 538.9081,
+        "p95": 559.3272,
+        "p99": 635.6775,
+        "max": 669.083
+      },
+      "optimizedRoundMediansMicroseconds": {
+        "n": 128,
+        "min": 204.5,
+        "median": 255.8535,
+        "p90": 367.19129999999996,
+        "p95": 443.3272999999998,
+        "p99": 501.4074300000001,
+        "max": 563.875
+      },
+      "baselinePooledCallsMicroseconds": {
+        "n": 128,
+        "min": 246.792,
+        "median": 371.5,
+        "p90": 538.9081,
+        "p95": 559.3272,
+        "p99": 635.6775,
+        "max": 669.083
+      },
+      "optimizedPooledCallsMicroseconds": {
+        "n": 128,
+        "min": 204.5,
+        "median": 255.8535,
+        "p90": 367.19129999999996,
+        "p95": 443.3272999999998,
+        "p99": 501.4074300000001,
+        "max": 563.875
+      },
+      "medianReductionPercent": 31.12960969044415,
+      "baselineOverOptimizedMedianRatio": 1.4520028062934454,
+      "roundCountPerVersion": 128,
+      "pooledCallsCorrelatedWithinRound": true,
+      "installedStrokePayloads": {
+        "baseline": [
+          {
+            "category": "CAKeyframeAnimation",
+            "pathCommandCounts": [
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64
+            ],
+            "pathValuesCount": 33
+          }
+        ],
+        "optimized": [
+          {
+            "category": "CAKeyframeAnimation",
+            "pathCommandCounts": [
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64,
+              64
+            ],
+            "pathValuesCount": 33
+          }
+        ]
+      }
+    },
+    "interrupted-scale": {
+      "baselineRoundMediansMicroseconds": {
+        "n": 128,
+        "min": 274.25,
+        "median": 386.64599999999996,
+        "p90": 542.8582,
+        "p95": 572.26205,
+        "p99": 760.7975000000006,
+        "max": 1282
+      },
+      "optimizedRoundMediansMicroseconds": {
+        "n": 128,
+        "min": 235.541,
+        "median": 316.875,
+        "p90": 490.17509999999993,
+        "p95": 522.9187499999999,
+        "p99": 553.98509,
+        "max": 572.625
+      },
+      "baselinePooledCallsMicroseconds": {
+        "n": 128,
+        "min": 274.25,
+        "median": 386.64599999999996,
+        "p90": 542.8582,
+        "p95": 572.26205,
+        "p99": 760.7975000000006,
+        "max": 1282
+      },
+      "optimizedPooledCallsMicroseconds": {
+        "n": 128,
+        "min": 235.541,
+        "median": 316.875,
+        "p90": 490.17509999999993,
+        "p95": 522.9187499999999,
+        "p99": 553.98509,
+        "max": 572.625
+      },
+      "medianReductionPercent": 18.045188622150487,
+      "baselineOverOptimizedMedianRatio": 1.2201846153846152,
+      "roundCountPerVersion": 128,
+      "pooledCallsCorrelatedWithinRound": true,
+      "installedStrokePayloads": {
+        "baseline": [
+          {
+            "category": "CAKeyframeAnimation",
+            "pathCommandCounts": [
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62
+            ],
+            "pathValuesCount": 33
+          }
+        ],
+        "optimized": [
+          {
+            "category": "CAKeyframeAnimation",
+            "pathCommandCounts": [
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62,
+              62
+            ],
+            "pathValuesCount": 33
+          }
+        ]
+      }
+    },
+    "same-input-noop": {
+      "baselineRoundMediansMicroseconds": {
+        "n": 128,
+        "min": 0.5,
+        "median": 0.625,
+        "p90": 0.709,
+        "p95": 0.709,
+        "p99": 0.75,
+        "max": 0.917
+      },
+      "optimizedRoundMediansMicroseconds": {
+        "n": 128,
+        "min": 0.5,
+        "median": 0.625,
+        "p90": 0.708,
+        "p95": 0.708,
+        "p99": 0.7389300000000002,
+        "max": 0.792
+      },
+      "baselinePooledCallsMicroseconds": {
+        "n": 65536,
+        "min": 0.416,
+        "median": 0.666,
+        "p90": 0.75,
+        "p95": 0.833,
+        "p99": 0.958,
+        "max": 82.708
+      },
+      "optimizedPooledCallsMicroseconds": {
+        "n": 65536,
+        "min": 0.458,
+        "median": 0.666,
+        "p90": 0.709,
+        "p95": 0.792,
+        "p99": 0.917,
+        "max": 157.042
+      },
+      "medianReductionPercent": 0.0,
+      "baselineOverOptimizedMedianRatio": 1.0,
+      "roundCountPerVersion": 128,
+      "pooledCallsCorrelatedWithinRound": true,
+      "installedStrokePayloads": {
+        "baseline": [
+          {
+            "category": "CAKeyframeAnimation",
+            "pathCommandCounts": [
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61
+            ],
+            "pathValuesCount": 33
+          }
+        ],
+        "optimized": [
+          {
+            "category": "CAKeyframeAnimation",
+            "pathCommandCounts": [
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61,
+              61
+            ],
+            "pathValuesCount": 33
+          }
+        ]
+      }
+    }
+  },
+  "allUsedRunManifestsExitCode": 0,
+  "allUsedCLICompletionsObservedExitCode": 0,
+  "CLICompletionEvidence": "All four actual host exec/write_stdin completions were observed exit_code=0; immutable result manifests independently contain exitCode=0. No signal occurred during used runs.",
+  "payloadCategoryEvidence": "Category is identified by successful CAKeyframeAnimation/CABasicAnimation downcasts in the frozen harness; installed value/path-command counts are raw observations.",
+  "statisticalScope": "Descriptive timings only. Round medians are compared; pooled calls in a round are correlated. No inferential significance or FPS claim."
+}

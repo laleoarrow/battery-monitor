@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "baselineSourceCommit": "4c31f01b3cae07a2ae59e32fc8d7a1534b9bd161",
+  "baselineSHA256": "286c9cf35675d76a70d9eefc1b3cf6341c0a36a3b36f2f608dc9ce8fe9d342b7",
+  "candidateAnalysisSHA256": "57d1e5f58749c66f17f0a4420fe6c3b883937e4dadc934c4c1271ee940a4613e",
+  "checks": [
+    {
+      "phase": "ordinary-scroll",
+      "check": "same fixture phase measured",
+      "passed": true
+    },
+    {
+      "phase": "ordinary-scroll",
+      "check": "maxHeadToStrokeDeviationPoints does not materially worsen",
+      "baseline": 0.00208585554112517,
+      "candidate": 0.0009516902026405205,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "ordinary-scroll",
+      "check": "maxGradientBandDriftY does not materially worsen",
+      "baseline": 0,
+      "candidate": 0,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "scale-expansion",
+      "check": "same fixture phase measured",
+      "passed": true
+    },
+    {
+      "phase": "scale-expansion",
+      "check": "maxHeadToStrokeDeviationPoints does not materially worsen",
+      "baseline": 0.021316742996837945,
+      "candidate": 0.0065788745701098605,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "scale-expansion",
+      "check": "maxGradientBandDriftY does not materially worsen",
+      "baseline": 0.0017032262327987269,
+      "candidate": 0.0010283435931484064,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "scale-contraction",
+      "check": "same fixture phase measured",
+      "passed": true
+    },
+    {
+      "phase": "scale-contraction",
+      "check": "maxHeadToStrokeDeviationPoints does not materially worsen",
+      "baseline": 1.4210854715202004e-14,
+      "candidate": 1.4210854715202004e-14,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "scale-contraction",
+      "check": "maxGradientBandDriftY does not materially worsen",
+      "baseline": 0.0011000231627846802,
+      "candidate": 0.0006928742960568002,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "interrupted-scale-25",
+      "check": "same fixture phase measured",
+      "passed": true
+    },
+    {
+      "phase": "interrupted-scale-25",
+      "check": "maxHeadToStrokeDeviationPoints does not materially worsen",
+      "baseline": 0.03319861218713527,
+      "candidate": 0.07597555704169423,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "interrupted-scale-25",
+      "check": "maxGradientBandDriftY does not materially worsen",
+      "baseline": 0.0003649959371330169,
+      "candidate": 0.0013474123385037728,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "cancel-presentation",
+      "check": "same fixture phase measured",
+      "passed": true
+    },
+    {
+      "phase": "cancel-presentation",
+      "check": "maxHeadToStrokeDeviationPoints does not materially worsen",
+      "baseline": 0.02883214147254165,
+      "candidate": 0.008465735586035805,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "cancel-presentation",
+      "check": "maxGradientBandDriftY does not materially worsen",
+      "baseline": 3.541635136627974e-05,
+      "candidate": 0.00013136734947494233,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "cancel-motion",
+      "check": "same fixture phase measured",
+      "passed": true
+    },
+    {
+      "phase": "cancel-motion",
+      "check": "maxHeadToStrokeDeviationPoints does not materially worsen",
+      "baseline": 0.005470500120154043,
+      "candidate": 0.01933898829575753,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "cancel-motion",
+      "check": "maxGradientBandDriftY does not materially worsen",
+      "baseline": 0.00013616681965800126,
+      "candidate": 0.00015010870661313902,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "repeated-scroll",
+      "check": "same fixture phase measured",
+      "passed": true
+    },
+    {
+      "phase": "repeated-scroll",
+      "check": "maxHeadToStrokeDeviationPoints does not materially worsen",
+      "baseline": 0.0018710318536534487,
+      "candidate": 0.002045227696427787,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "repeated-scroll",
+      "check": "maxGradientBandDriftY does not materially worsen",
+      "baseline": 0,
+      "candidate": 0,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "interrupted-scale-50",
+      "check": "same fixture phase measured",
+      "passed": true
+    },
+    {
+      "phase": "interrupted-scale-50",
+      "check": "maxHeadToStrokeDeviationPoints does not materially worsen",
+      "baseline": 0.015399525745081633,
+      "candidate": 0.037007645589284266,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "interrupted-scale-50",
+      "check": "maxGradientBandDriftY does not materially worsen",
+      "baseline": 0.0003589813190529867,
+      "candidate": 0.001385121763917141,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "interrupted-scale-90",
+      "check": "same fixture phase measured",
+      "passed": true
+    },
+    {
+      "phase": "interrupted-scale-90",
+      "check": "maxHeadToStrokeDeviationPoints does not materially worsen",
+      "baseline": 0.0247309950772987,
+      "candidate": 0.02968885156156631,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "interrupted-scale-90",
+      "check": "maxGradientBandDriftY does not materially worsen",
+      "baseline": 0.0008219828615807501,
+      "candidate": 0.00043715444184044827,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "check": "same fixture phase measured",
+      "passed": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "check": "maxHeadToStrokeDeviationPoints does not materially worsen",
+      "baseline": 1.4210854715202004e-14,
+      "candidate": 1.4210854715202004e-14,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "departing-outlier-contraction",
+      "check": "maxGradientBandDriftY does not materially worsen",
+      "baseline": 0.004424462235654403,
+      "candidate": 0.0040156461761782225,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "check": "same fixture phase measured",
+      "passed": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "check": "maxHeadToStrokeDeviationPoints does not materially worsen",
+      "baseline": 7.105427357601002e-15,
+      "candidate": 1.4210854715202004e-14,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    },
+    {
+      "phase": "gradient-alpha-contraction",
+      "check": "maxGradientBandDriftY does not materially worsen",
+      "baseline": 0.0010216648882916957,
+      "candidate": 0.0001883261546069548,
+      "allowedIncreasePoints": 0.05,
+      "passed": true
+    }
+  ],
+  "checkCount": 33,
+  "passed": 33,
+  "allPassed": true,
+  "scope": "Same eleven scalar fixtures, with independently sampled run-loop times. Compares measured geometric deviations, not pixels or display FPS. The native assertion suite and unchanged scalar analyzer apply separately."
+}

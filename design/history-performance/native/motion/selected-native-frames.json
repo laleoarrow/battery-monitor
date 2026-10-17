@@ -1,0 +1,107 @@
+[
+  {
+    "captureDurationSeconds": 0.0067297083335233765,
+    "elapsedSeconds": 1.1147055416668081,
+    "file": "frame-0010.png",
+    "phase": "scale-expansion",
+    "phaseElapsedSeconds": 0.008956375000025218
+  },
+  {
+    "captureDurationSeconds": 0.006564166666748861,
+    "elapsedSeconds": 1.3567371666667896,
+    "file": "frame-0013.png",
+    "phase": "scale-expansion",
+    "phaseElapsedSeconds": 0.25098800000000665
+  },
+  {
+    "captureDurationSeconds": 0.0054594166667811805,
+    "elapsedSeconds": 1.8714197916667672,
+    "file": "frame-0019.png",
+    "phase": "scale-expansion",
+    "phaseElapsedSeconds": 0.7656706249999843
+  },
+  {
+    "captureDurationSeconds": 0.0063862083334242925,
+    "elapsedSeconds": 2.2961210000000847,
+    "file": "frame-0022.png",
+    "phase": "scale-contraction",
+    "phaseElapsedSeconds": 0.09256437499993808
+  },
+  {
+    "captureDurationSeconds": 0.006055875000129163,
+    "elapsedSeconds": 2.4793171250000796,
+    "file": "frame-0023.png",
+    "phase": "scale-contraction",
+    "phaseElapsedSeconds": 0.275760499999933
+  },
+  {
+    "captureDurationSeconds": 0.0059053333334304625,
+    "elapsedSeconds": 2.965525958333501,
+    "file": "frame-0027.png",
+    "phase": "scale-contraction",
+    "phaseElapsedSeconds": 0.7619693333333544
+  },
+  {
+    "captureDurationSeconds": 0.006701083333382485,
+    "elapsedSeconds": 6.732297708333363,
+    "file": "frame-0056.png",
+    "phase": "repeated-scroll",
+    "phaseElapsedSeconds": 0.10058350000008431
+  },
+  {
+    "captureDurationSeconds": 0.005600250000043161,
+    "elapsedSeconds": 6.843113333333349,
+    "file": "frame-0057.png",
+    "phase": "repeated-scroll",
+    "phaseElapsedSeconds": 0.21139912500007085
+  },
+  {
+    "captureDurationSeconds": 0.007445625000173095,
+    "elapsedSeconds": 7.260111208333456,
+    "file": "frame-0060.png",
+    "phase": "repeated-scroll",
+    "phaseElapsedSeconds": 0.6283970000001773
+  },
+  {
+    "captureDurationSeconds": 0.006647458333418399,
+    "elapsedSeconds": 10.029161541666781,
+    "file": "frame-0082.png",
+    "phase": "departing-outlier-contraction",
+    "phaseElapsedSeconds": 0.040365999999949054
+  },
+  {
+    "captureDurationSeconds": 0.006892249999964406,
+    "elapsedSeconds": 10.181687208333415,
+    "file": "frame-0083.png",
+    "phase": "departing-outlier-contraction",
+    "phaseElapsedSeconds": 0.19289166666658275
+  },
+  {
+    "captureDurationSeconds": 0.0056320000001051085,
+    "elapsedSeconds": 10.688863250000168,
+    "file": "frame-0088.png",
+    "phase": "departing-outlier-contraction",
+    "phaseElapsedSeconds": 0.7000677083333358
+  },
+  {
+    "captureDurationSeconds": 0.005032458333289469,
+    "elapsedSeconds": 11.268004499999961,
+    "file": "frame-0094.png",
+    "phase": "gradient-alpha-contraction",
+    "phaseElapsedSeconds": 0.010826124999994136
+  },
+  {
+    "captureDurationSeconds": 0.005159374999948341,
+    "elapsedSeconds": 11.461314583333433,
+    "file": "frame-0096.png",
+    "phase": "gradient-alpha-contraction",
+    "phaseElapsedSeconds": 0.20413620833346613
+  },
+  {
+    "captureDurationSeconds": 0.005921250000028522,
+    "elapsedSeconds": 11.927158583333494,
+    "file": "frame-0099.png",
+    "phase": "gradient-alpha-contraction",
+    "phaseElapsedSeconds": 0.6699802083335271
+  }
+]

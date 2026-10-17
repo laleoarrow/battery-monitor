@@ -1,0 +1,38 @@
+[
+  {
+    "Name" : "Wattson-HistoryPerf-20261016",
+    "Source" : "local",
+    "Accessed" : "2026-10-17T02:52:30Z",
+    "Running" : true,
+    "State" : "running",
+    "Disk" : 50,
+    "Size" : 31
+  },
+  {
+    "Name" : "Wattson-ModulesFinalUI2-20261017",
+    "Source" : "local",
+    "Accessed" : "2026-10-17T02:42:27Z",
+    "Running" : true,
+    "State" : "running",
+    "Disk" : 50,
+    "Size" : 31
+  },
+  {
+    "Name" : "macOS-TestLab",
+    "Source" : "local",
+    "Accessed" : "2026-10-15T06:45:45Z",
+    "Running" : false,
+    "State" : "stopped",
+    "Disk" : 50,
+    "Size" : 33
+  },
+  {
+    "Name" : "macOS-TestLab-Base",
+    "Source" : "local",
+    "Accessed" : "2026-10-17T02:42:09Z",
+    "Running" : false,
+    "State" : "stopped",
+    "Disk" : 50,
+    "Size" : 30
+  }
+]

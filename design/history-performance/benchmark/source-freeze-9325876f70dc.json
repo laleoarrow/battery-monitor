@@ -1,0 +1,9 @@
+{
+  "sourceCommit": "9325876f70dc7e6fb722fda90f70ecde38a32c46",
+  "archive": "source-9325876f70dc.tar.gz",
+  "archiveSHA256": "a90de2bffa78341469227f081496e860c685ef8b1b86dd1d5a6d8780498ff251",
+  "files": {
+    "Core/HistoryChart.swift": "bbc8051506c7c42b3e6f1906affb6d945b130fdf800e9e6040fc9412ee5f765a",
+    "Popover/HistoryLayer.swift": "091a8fde18fcf52064b238480796124d8ff2884937d9583e4f7780f48ef9ae2f"
+  }
+}

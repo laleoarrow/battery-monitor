@@ -1,0 +1,638 @@
+{
+  "schema": 1,
+  "source": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/motion-855fc308-native-v2/results/motion/scalar/axis-motion.json",
+  "checks": [
+    {
+      "name": "ordinary-scroll update 2: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary-scroll update 2: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion update 5: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-expansion update 5: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction update 12: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction update 12: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scale-contraction update 12: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25 update 15: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25 update 15: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25 update 17: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25 update 17: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-25 update 17: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation update 20: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-presentation update 20: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion update 24: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancel-motion update 24: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll update 28: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll update 28: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll update 30: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll update 30: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "repeated-scroll update 30: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50 update 33: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50 update 33: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50 update 35: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50 update 35: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-50 update 35: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90 update 38: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90 update 38: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90 update 40: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90 update 40: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "interrupted-scale-90 update 40: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction update 47: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "departing-outlier-contraction update 47: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction update 54: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gradient-alpha-contraction update 54: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25 update 57: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25 update 57: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25 update 59: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25 update 59: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25 update 59: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50 update 62: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50 update 62: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50 update 64: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50 update 64: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50 update 64: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90 update 67: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90 update 67: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90 update 69: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90 update 69: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90 update 69: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25 update 72: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25 update 72: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25 update 74: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25 update 74: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25 update 74: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50 update 77: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50 update 77: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50 update 79: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50 update 79: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50 update 79: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90 update 82: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90 update 82: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90 update 84: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90 update 84: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90 update 84: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic update 87: scaled stroke retains 33 keyframes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic update 87: all scaled stroke keyframes finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic update 89: unscaled stroke uses a basic path transition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic update 89: basic endpoints finite and same topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic update 89: fill morph retains matched finite topology",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: genuine source updates reach expected branches",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "CABasicAnimation",
+          "CAKeyframeAnimation"
+        ],
+        "actual": [
+          "CABasicAnimation",
+          "CAKeyframeAnimation"
+        ]
+      }
+    },
+    {
+      "name": "basic-to-axis-25: original basic transition active at retarget",
+      "passed": true,
+      "detail": {
+        "requestedFraction": 0.25,
+        "actualElapsedSeconds": 0.07634054166669557,
+        "actualElapsedFractionOf180ms": 0.424114120370531
+      }
+    },
+    {
+      "name": "basic-to-axis-25: production captured actual requested progress before completion",
+      "passed": false,
+      "detail": {
+        "requestedProgress": 0.25,
+        "actualCapturedProgress": 0.41749516129493713,
+        "oneTimerTickProgressTolerance": 0.0925925925925926,
+        "initialMotionFromX": 5.466666666666667,
+        "retargetMotionFromX": 8.651026451587677
+      }
+    },
+    {
+      "name": "basic-to-axis-25: first model committed before measured update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: genuine source updates reach expected branches",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "CABasicAnimation",
+          "CAKeyframeAnimation"
+        ],
+        "actual": [
+          "CABasicAnimation",
+          "CAKeyframeAnimation"
+        ]
+      }
+    },
+    {
+      "name": "basic-to-axis-50: original basic transition active at retarget",
+      "passed": true,
+      "detail": {
+        "requestedFraction": 0.5,
+        "actualElapsedSeconds": 0.09635804166669004,
+        "actualElapsedFractionOf180ms": 0.5353224537038336
+      }
+    },
+    {
+      "name": "basic-to-axis-50: production captured actual requested progress before completion",
+      "passed": true,
+      "detail": {
+        "requestedProgress": 0.5,
+        "actualCapturedProgress": 0.5272509455680847,
+        "oneTimerTickProgressTolerance": 0.0925925925925926,
+        "initialMotionFromX": 5.466666666666667,
+        "retargetMotionFromX": 8.051028164227803
+      }
+    },
+    {
+      "name": "basic-to-axis-50: first model committed before measured update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: genuine source updates reach expected branches",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "CABasicAnimation",
+          "CAKeyframeAnimation"
+        ],
+        "actual": [
+          "CABasicAnimation",
+          "CAKeyframeAnimation"
+        ]
+      }
+    },
+    {
+      "name": "basic-to-axis-90: original basic transition active at retarget",
+      "passed": true,
+      "detail": {
+        "requestedFraction": 0.9,
+        "actualElapsedSeconds": 0.21960837500000707,
+        "actualElapsedFractionOf180ms": 1.2200465277778172
+      }
+    },
+    {
+      "name": "basic-to-axis-90: production captured actual requested progress before completion",
+      "passed": false,
+      "detail": {
+        "requestedProgress": 0.9,
+        "actualCapturedProgress": 1.0,
+        "oneTimerTickProgressTolerance": 0.0925925925925926,
+        "initialMotionFromX": 5.466666666666667,
+        "retargetMotionFromX": 5.466666666666667
+      }
+    },
+    {
+      "name": "basic-to-axis-90: first model committed before measured update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: genuine source updates reach expected branches",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "CABasicAnimation",
+          "CABasicAnimation"
+        ],
+        "actual": [
+          "CABasicAnimation",
+          "CABasicAnimation"
+        ]
+      }
+    },
+    {
+      "name": "basic-to-basic-25: original basic transition active at retarget",
+      "passed": true,
+      "detail": {
+        "requestedFraction": 0.25,
+        "actualElapsedSeconds": 0.18354908333321873,
+        "actualElapsedFractionOf180ms": 1.019717129628993
+      }
+    },
+    {
+      "name": "basic-to-basic-25: production captured actual requested progress before completion",
+      "passed": false,
+      "detail": {
+        "requestedProgress": 0.25,
+        "actualCapturedProgress": 1.0,
+        "oneTimerTickProgressTolerance": 0.0925925925925926,
+        "initialMotionFromX": 5.466666666666667,
+        "retargetMotionFromX": 5.466666666666667
+      }
+    },
+    {
+      "name": "basic-to-basic-25: first model committed before measured update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: genuine source updates reach expected branches",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "CABasicAnimation",
+          "CABasicAnimation"
+        ],
+        "actual": [
+          "CABasicAnimation",
+          "CABasicAnimation"
+        ]
+      }
+    },
+    {
+      "name": "basic-to-basic-50: original basic transition active at retarget",
+      "passed": true,
+      "detail": {
+        "requestedFraction": 0.5,
+        "actualElapsedSeconds": 0.19264324999994642,
+        "actualElapsedFractionOf180ms": 1.0702402777774802
+      }
+    },
+    {
+      "name": "basic-to-basic-50: production captured actual requested progress before completion",
+      "passed": false,
+      "detail": {
+        "requestedProgress": 0.5,
+        "actualCapturedProgress": 1.0,
+        "oneTimerTickProgressTolerance": 0.0925925925925926,
+        "initialMotionFromX": 5.466666666666667,
+        "retargetMotionFromX": 5.466666666666667
+      }
+    },
+    {
+      "name": "basic-to-basic-50: first model committed before measured update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: genuine source updates reach expected branches",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "CABasicAnimation",
+          "CABasicAnimation"
+        ],
+        "actual": [
+          "CABasicAnimation",
+          "CABasicAnimation"
+        ]
+      }
+    },
+    {
+      "name": "basic-to-basic-90: original basic transition active at retarget",
+      "passed": true,
+      "detail": {
+        "requestedFraction": 0.9,
+        "actualElapsedSeconds": 0.237711708333336,
+        "actualElapsedFractionOf180ms": 1.3206206018518667
+      }
+    },
+    {
+      "name": "basic-to-basic-90: production captured actual requested progress before completion",
+      "passed": false,
+      "detail": {
+        "requestedProgress": 0.9,
+        "actualCapturedProgress": 1.0,
+        "oneTimerTickProgressTolerance": 0.0925925925925926,
+        "initialMotionFromX": 5.466666666666667,
+        "retargetMotionFromX": 5.466666666666667
+      }
+    },
+    {
+      "name": "basic-to-basic-90: first model committed before measured update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: genuine source updates reach expected branches",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "CAKeyframeAnimation",
+          "CABasicAnimation"
+        ],
+        "actual": [
+          "CAKeyframeAnimation",
+          "CABasicAnimation"
+        ]
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: axis completed before later basic update",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: first model committed before measured update",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary basic branch observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scaled 33-keyframe branch observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "matched fill morph observed",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "counts": {
+    "basicScrollStrokes": 13,
+    "keyframeAxisStrokes": 16,
+    "matchedFillMorphs": 12
+  },
+  "checkCount": 100,
+  "passed": 94,
+  "allPassed": false,
+  "scope": "Production animation objects recorded immediately after update. Geometry, constant line width, gradient and presentation continuity are checked separately by the unchanged 4.3.10 scalar analyzer and native interaction tests. Not an FPS measurement."
+}

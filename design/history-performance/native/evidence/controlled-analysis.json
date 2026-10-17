@@ -1,0 +1,429 @@
+{
+  "schema": 1,
+  "source": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/native-review/evidence/controlled-855fc308-native/results/motion/controlled/axis-motion.json",
+  "scope": "SYNTHETIC deterministic native presentation test: only the test parent CALayer speed/timeOffset are controlled; production HistoryView is unmodified. Confirms retarget captures and non-knot/head continuity, independently of natural cadence. Does not measure wall-clock animation duration or display FPS.",
+  "checks": [
+    {
+      "name": "basic-to-axis-25: unmodified production reaches expected branches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: synthetic parent clock frozen",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: actual production capture matches exact controlled fraction",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-axis-25",
+        "requestedProgress": 0.25,
+        "actualProductionCapturedProgress": 0.2500000000000001,
+        "absoluteError": 1.1102230246251565e-16,
+        "initialMotionFromX": 5.466666666666667,
+        "newMotionFromX": 9.566666666666666
+      }
+    },
+    {
+      "name": "basic-to-axis-25: retained raw anchors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 5.859285502108464e-14
+      }
+    },
+    {
+      "name": "basic-to-axis-25: non-knot actual path interiors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "basic-to-axis-25: visible endpoint continuous",
+      "passed": true,
+      "detail": {
+        "errorPoints": 3.552713678800501e-14
+      }
+    },
+    {
+      "name": "basic-to-axis-25: fixed stroke width and head stays on actual stroke",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-25: final explicit lifecycle cleanup remains available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: unmodified production reaches expected branches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: synthetic parent clock frozen",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: actual production capture matches exact controlled fraction",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-axis-50",
+        "requestedProgress": 0.5,
+        "actualProductionCapturedProgress": 0.5000000000000002,
+        "absoluteError": 2.220446049250313e-16,
+        "initialMotionFromX": 5.466666666666667,
+        "newMotionFromX": 8.2
+      }
+    },
+    {
+      "name": "basic-to-axis-50: retained raw anchors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "basic-to-axis-50: non-knot actual path interiors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 7.105427357601002e-15
+      }
+    },
+    {
+      "name": "basic-to-axis-50: visible endpoint continuous",
+      "passed": true,
+      "detail": {
+        "errorPoints": 3.552713678800501e-14
+      }
+    },
+    {
+      "name": "basic-to-axis-50: fixed stroke width and head stays on actual stroke",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-50: final explicit lifecycle cleanup remains available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: unmodified production reaches expected branches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: synthetic parent clock frozen",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: actual production capture matches exact controlled fraction",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-axis-90",
+        "requestedProgress": 0.9,
+        "actualProductionCapturedProgress": 0.8999912738800049,
+        "absoluteError": 8.726119995139392e-06,
+        "initialMotionFromX": 5.466666666666667,
+        "newMotionFromX": 6.01338103612264
+      }
+    },
+    {
+      "name": "basic-to-axis-90: retained raw anchors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 5.859285502108464e-14
+      }
+    },
+    {
+      "name": "basic-to-axis-90: non-knot actual path interiors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 5.728578676879116e-14
+      }
+    },
+    {
+      "name": "basic-to-axis-90: visible endpoint continuous",
+      "passed": true,
+      "detail": {
+        "errorPoints": 0.00030656441688847735
+      }
+    },
+    {
+      "name": "basic-to-axis-90: fixed stroke width and head stays on actual stroke",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-axis-90: final explicit lifecycle cleanup remains available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: unmodified production reaches expected branches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: synthetic parent clock frozen",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: actual production capture matches exact controlled fraction",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-basic-25",
+        "requestedProgress": 0.25,
+        "actualProductionCapturedProgress": 0.2500000000000001,
+        "absoluteError": 1.1102230246251565e-16,
+        "initialMotionFromX": 5.466666666666667,
+        "newMotionFromX": 9.566666666666666
+      }
+    },
+    {
+      "name": "basic-to-basic-25: retained raw anchors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "basic-to-basic-25: non-knot actual path interiors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "basic-to-basic-25: visible endpoint continuous",
+      "passed": true,
+      "detail": {
+        "errorPoints": 2.842170943040401e-14
+      }
+    },
+    {
+      "name": "basic-to-basic-25: fixed stroke width and head stays on actual stroke",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-25: final explicit lifecycle cleanup remains available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: unmodified production reaches expected branches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: synthetic parent clock frozen",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: actual production capture matches exact controlled fraction",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-basic-50",
+        "requestedProgress": 0.5,
+        "actualProductionCapturedProgress": 0.5000000000000002,
+        "absoluteError": 2.220446049250313e-16,
+        "initialMotionFromX": 5.466666666666667,
+        "newMotionFromX": 8.2
+      }
+    },
+    {
+      "name": "basic-to-basic-50: retained raw anchors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "basic-to-basic-50: non-knot actual path interiors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 0.0
+      }
+    },
+    {
+      "name": "basic-to-basic-50: visible endpoint continuous",
+      "passed": true,
+      "detail": {
+        "errorPoints": 3.552713678800501e-14
+      }
+    },
+    {
+      "name": "basic-to-basic-50: fixed stroke width and head stays on actual stroke",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-50: final explicit lifecycle cleanup remains available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: unmodified production reaches expected branches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: synthetic parent clock frozen",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: actual production capture matches exact controlled fraction",
+      "passed": true,
+      "detail": {
+        "phase": "basic-to-basic-90",
+        "requestedProgress": 0.9,
+        "actualProductionCapturedProgress": 0.8999912738800049,
+        "absoluteError": 8.726119995139392e-06,
+        "initialMotionFromX": 5.466666666666667,
+        "newMotionFromX": 6.01338103612264
+      }
+    },
+    {
+      "name": "basic-to-basic-90: retained raw anchors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "basic-to-basic-90: non-knot actual path interiors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "basic-to-basic-90: visible endpoint continuous",
+      "passed": true,
+      "detail": {
+        "errorPoints": 0.00030656441688847735
+      }
+    },
+    {
+      "name": "basic-to-basic-90: fixed stroke width and head stays on actual stroke",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "basic-to-basic-90: final explicit lifecycle cleanup remains available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: unmodified production reaches expected branches",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: synthetic parent clock frozen",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: after axis completion production selects basic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: retained raw anchors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 5.684341886080802e-14
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: non-knot actual path interiors continuous",
+      "passed": true,
+      "detail": {
+        "maxErrorPoints": 0.0
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: visible endpoint continuous",
+      "passed": true,
+      "detail": {
+        "errorPoints": 0.0
+      }
+    },
+    {
+      "name": "settled-axis-to-basic: fixed stroke width and head stays on actual stroke",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "settled-axis-to-basic: final explicit lifecycle cleanup remains available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all six exact fraction cases and settled axis boundary observed",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "checkCount": 57,
+  "passed": 57,
+  "allPassed": true,
+  "actualProgress": [
+    {
+      "phase": "basic-to-axis-25",
+      "requestedProgress": 0.25,
+      "actualProductionCapturedProgress": 0.2500000000000001,
+      "absoluteError": 1.1102230246251565e-16,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 9.566666666666666
+    },
+    {
+      "phase": "basic-to-axis-50",
+      "requestedProgress": 0.5,
+      "actualProductionCapturedProgress": 0.5000000000000002,
+      "absoluteError": 2.220446049250313e-16,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 8.2
+    },
+    {
+      "phase": "basic-to-axis-90",
+      "requestedProgress": 0.9,
+      "actualProductionCapturedProgress": 0.8999912738800049,
+      "absoluteError": 8.726119995139392e-06,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 6.01338103612264
+    },
+    {
+      "phase": "basic-to-basic-25",
+      "requestedProgress": 0.25,
+      "actualProductionCapturedProgress": 0.2500000000000001,
+      "absoluteError": 1.1102230246251565e-16,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 9.566666666666666
+    },
+    {
+      "phase": "basic-to-basic-50",
+      "requestedProgress": 0.5,
+      "actualProductionCapturedProgress": 0.5000000000000002,
+      "absoluteError": 2.220446049250313e-16,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 8.2
+    },
+    {
+      "phase": "basic-to-basic-90",
+      "requestedProgress": 0.9,
+      "actualProductionCapturedProgress": 0.8999912738800049,
+      "absoluteError": 8.726119995139392e-06,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 6.01338103612264
+    }
+  ]
+}

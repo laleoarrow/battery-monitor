@@ -1,0 +1,50 @@
+[
+  {
+    "phase": "ordinary-scroll",
+    "frameCount": 9,
+    "measuredDuration": 0.8257827916668248,
+    "largestFrameInterval": 0.18696379166681254,
+    "movie": "ordinary-scroll.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "scale-expansion",
+    "frameCount": 11,
+    "measuredDuration": 0.904715749999923,
+    "largestFrameInterval": 0.15816783333343665,
+    "movie": "scale-expansion.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "scale-contraction",
+    "frameCount": 8,
+    "measuredDuration": 0.832643624999946,
+    "largestFrameInterval": 0.18319612499999494,
+    "movie": "scale-contraction.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "interrupted-scale-50",
+    "frameCount": 9,
+    "measuredDuration": 0.8822355416666596,
+    "largestFrameInterval": 0.18093179166680784,
+    "movie": "interrupted-scale-50.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "departing-outlier-contraction",
+    "frameCount": 10,
+    "measuredDuration": 0.8923721666665188,
+    "largestFrameInterval": 0.1715382499999123,
+    "movie": "departing-outlier-contraction.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  },
+  {
+    "phase": "gradient-alpha-contraction",
+    "frameCount": 8,
+    "measuredDuration": 0.9097429583334815,
+    "largestFrameInterval": 0.18087449999984528,
+    "movie": "gradient-alpha-contraction.mp4",
+    "scope": "Actual native own-window recording; VFR encoding uses measured capture timestamps, without synthetic interpolation."
+  }
+]

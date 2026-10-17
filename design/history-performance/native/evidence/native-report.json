@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "productionSourceCommit": "855fc308f8864940a72ca77c93b0221d4e305a33",
+  "version": "4.3.11",
+  "HistorySourceIdenticalTo": "9325876f70dc7e6fb722fda90f70ecde38a32c46",
+  "interactionAssertionsPassed": 434,
+  "stressIterationsPassed": 20000,
+  "originalElevenScalarChecksPassed": 236,
+  "natural18ScalarChecks": {
+    "passed": 376,
+    "total": 376
+  },
+  "baselineComparisonsPassed": 33,
+  "naturalFractionTargetsPassed": false,
+  "naturalFractionObservedQ": [
+    {
+      "requestedProgress": 0.25,
+      "actualCapturedProgress": 0.41749516129493713,
+      "oneTimerTickProgressTolerance": 0.0925925925925926,
+      "initialMotionFromX": 5.466666666666667,
+      "retargetMotionFromX": 8.651026451587677
+    },
+    {
+      "requestedProgress": 0.5,
+      "actualCapturedProgress": 0.5272509455680847,
+      "oneTimerTickProgressTolerance": 0.0925925925925926,
+      "initialMotionFromX": 5.466666666666667,
+      "retargetMotionFromX": 8.051028164227803
+    },
+    {
+      "requestedProgress": 0.9,
+      "actualCapturedProgress": 1.0,
+      "oneTimerTickProgressTolerance": 0.0925925925925926,
+      "initialMotionFromX": 5.466666666666667,
+      "retargetMotionFromX": 5.466666666666667
+    },
+    {
+      "requestedProgress": 0.25,
+      "actualCapturedProgress": 1.0,
+      "oneTimerTickProgressTolerance": 0.0925925925925926,
+      "initialMotionFromX": 5.466666666666667,
+      "retargetMotionFromX": 5.466666666666667
+    },
+    {
+      "requestedProgress": 0.5,
+      "actualCapturedProgress": 1.0,
+      "oneTimerTickProgressTolerance": 0.0925925925925926,
+      "initialMotionFromX": 5.466666666666667,
+      "retargetMotionFromX": 5.466666666666667
+    },
+    {
+      "requestedProgress": 0.9,
+      "actualCapturedProgress": 1.0,
+      "oneTimerTickProgressTolerance": 0.0925925925925926,
+      "initialMotionFromX": 5.466666666666667,
+      "retargetMotionFromX": 5.466666666666667
+    }
+  ],
+  "naturalFractionLimit": "Five of six requested 25/50/90% targets missed under this VM cadence; animation-key presence alone is not interruption proof. No natural deadline retries or tolerance increase were used after the measured failure.",
+  "syntheticControlledNativeChecks": {
+    "passed": 57,
+    "total": 57,
+    "scope": "TEST ONLY parent CALayer speed/timeOffset control; actual production presentation capture, not a wall-clock/FPS benchmark"
+  },
+  "controlledActualQ": [
+    {
+      "phase": "basic-to-axis-25",
+      "requestedProgress": 0.25,
+      "actualProductionCapturedProgress": 0.2500000000000001,
+      "absoluteError": 1.1102230246251565e-16,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 9.566666666666666
+    },
+    {
+      "phase": "basic-to-axis-50",
+      "requestedProgress": 0.5,
+      "actualProductionCapturedProgress": 0.5000000000000002,
+      "absoluteError": 2.220446049250313e-16,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 8.2
+    },
+    {
+      "phase": "basic-to-axis-90",
+      "requestedProgress": 0.9,
+      "actualProductionCapturedProgress": 0.8999912738800049,
+      "absoluteError": 8.726119995139392e-06,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 6.01338103612264
+    },
+    {
+      "phase": "basic-to-basic-25",
+      "requestedProgress": 0.25,
+      "actualProductionCapturedProgress": 0.2500000000000001,
+      "absoluteError": 1.1102230246251565e-16,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 9.566666666666666
+    },
+    {
+      "phase": "basic-to-basic-50",
+      "requestedProgress": 0.5,
+      "actualProductionCapturedProgress": 0.5000000000000002,
+      "absoluteError": 2.220446049250313e-16,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 8.2
+    },
+    {
+      "phase": "basic-to-basic-90",
+      "requestedProgress": 0.9,
+      "actualProductionCapturedProgress": 0.8999912738800049,
+      "absoluteError": 8.726119995139392e-06,
+      "initialMotionFromX": 5.466666666666667,
+      "newMotionFromX": 6.01338103612264
+    }
+  ],
+  "naturalMaxHeadToStrokeDeviationPoints": 0.07597555704169423,
+  "naturalMaxGradientBandDriftPoints": 0.0040156461761782225,
+  "nativeStrokePixelChecks": 18,
+  "allNativeStrokePixelChecksPassed": true,
+  "comparableNativeFillChecks": 7,
+  "allComparableNativeFillChecksPassed": true,
+  "individuallyInspectedStateImages": 12,
+  "curatedActualMovies": 6,
+  "retainedOriginalPixelCheckFrames": 28,
+  "noDisplayFPSClaim": true,
+  "retainedFailedRecords": true,
+  "guestStageExportAndCleanupActualExitCodes": [
+    0,
+    0,
+    0
+  ],
+  "guestUnionAndQuietAudit": "Owned VM benchmark agent performs final immediate/delayed audit separately; no further guest actions requested."
+}

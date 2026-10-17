@@ -1,0 +1,7 @@
+{
+  "testedStageSHA256": "b8eda808476457da65f09f36542fedba88338c1632655c5c6cc6039eba4107c4",
+  "currentStageSHA256": "4f9c73ca26e0315b79a174c315b3c7b01b8e71126871dbcc8e292dfca81bf6e7",
+  "handlerASTIdenticalToTested": true,
+  "finallyASTIdenticalToTested": true,
+  "scope": "Only allowed native runner entry was extended for controlled mode; signal and nested-finally logic remain byte-for-byte equivalent AST to the actual fault tests."
+}

@@ -1,0 +1,40 @@
+{
+  "productionSourceCommit": "855fc308f8864940a72ca77c93b0221d4e305a33",
+  "finalPythonTestCommit": "d95bb63e988d6cd8a0c9e978c53da950c3bce496",
+  "swift": {
+    "tests": 535,
+    "failures": 0
+  },
+  "python": {
+    "tests": 599,
+    "skipped": 4,
+    "failures": 0
+  },
+  "interruptionTestFix": "Redirect owned child output to fixture-owned log instead of an undrained PIPE; original timeout, signal and cleanup assertions retained. Production source unchanged. Original same-order 182-test prefix failed and fixed prefix passed. Earlier full-suite failures are retained as diagnostic history, not passing runs.",
+  "logs": {
+    "integrated-swift.log.gz": {
+      "uncompressedSHA256": "948bbb88f0463235cf7ee7996c20871f8ef0ab9dcecab379dd426bfc124e3a03",
+      "archiveSHA256": "ad3135b5aa1abda427b7a644ab319647e7efe6823cf5a3f75738e8fcb73a6358"
+    },
+    "integrated-python-fixed.log.gz": {
+      "uncompressedSHA256": "0fbbf7abd81b3daa3ed4ddf696a46a845da4964965ba86f73a6efd962d663995",
+      "archiveSHA256": "2c62415c31bd087c7e4f6350975706079ab5184cf91c44843280dad43ed24874"
+    },
+    "integrated-python.log.gz": {
+      "uncompressedSHA256": "c8cd3f3b759b57b8dea2a811f808fd362dc32720e2cbcfa05da0717d7e6b2de2",
+      "archiveSHA256": "3a81ddef29dbcf382abe142eabeb173e229f1796c65e268bf2fe226d25488992"
+    },
+    "integrated-python-rerun.log.gz": {
+      "uncompressedSHA256": "72bca65a32503bb17522be1c91c702e7765f4f5cf233d899703d22e02df8b5dd",
+      "archiveSHA256": "52c5e464eb61b803a268c6f05988518f325eaa6d596f3f1431928e0ed21cb47b"
+    },
+    "python-prefix-diagnostic.log.gz": {
+      "uncompressedSHA256": "529ccfcbfe46a755111ab730397f900d70688062bbb9a10d39a59c588f8485a9",
+      "archiveSHA256": "4ebfa2242dfd2172775ba418777331e0e73f9c87a9e6f070b8ff1e06b2ae00c5"
+    },
+    "python-prefix-fixed.log.gz": {
+      "uncompressedSHA256": "479201c29f506808736c1664ab08ae5d0d8ebc59db4f4847bc6241a245d042d8",
+      "archiveSHA256": "69a1c3619d0b84f2f280dacf093f265baee4e5d90b6d824ea960d527c41f77cd"
+    }
+  }
+}

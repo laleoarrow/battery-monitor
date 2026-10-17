@@ -1,0 +1,72 @@
+{
+  "sourceCommit": "855fc308f8864940a72ca77c93b0221d4e305a33",
+  "rawSHA256": "1554836e017e7d2e739d4ebdcc5cd320307acdcc5694693d2b832e35d6f7ad1e",
+  "allPassClaimRejected": true,
+  "scalarResults": {
+    "checks": 376,
+    "passed": 374,
+    "failures": [
+      {
+        "name": "basic-to-axis-90: short bounded native transition",
+        "passed": false,
+        "detail": {
+          "lastActiveSeconds": 0.6109162499999456,
+          "allowedSeconds": 0.6
+        }
+      },
+      {
+        "name": "settled-axis-to-basic: short bounded native transition",
+        "passed": false,
+        "detail": {
+          "lastActiveSeconds": 0.6871886250000898,
+          "allowedSeconds": 0.6
+        }
+      }
+    ]
+  },
+  "fractions": [
+    {
+      "phase": "basic-to-axis-25",
+      "requestedProgress": 0.25,
+      "actualPresentationProgressBeforeLogging": 0.45642730593681335,
+      "eventElapsedSeconds": 0.08332533333327774,
+      "sourceCaptureNotYetMeasuredInThisProbe": true
+    },
+    {
+      "phase": "basic-to-axis-50",
+      "requestedProgress": 0.5,
+      "actualPresentationProgressBeforeLogging": 0.7492319345474243,
+      "eventElapsedSeconds": 0.1359975000000304,
+      "sourceCaptureNotYetMeasuredInThisProbe": true
+    },
+    {
+      "phase": "basic-to-axis-90",
+      "requestedProgress": 0.9,
+      "actualPresentationProgressBeforeLogging": 1.0,
+      "eventElapsedSeconds": 0.25505199999997785,
+      "sourceCaptureNotYetMeasuredInThisProbe": true
+    },
+    {
+      "phase": "basic-to-basic-25",
+      "requestedProgress": 0.25,
+      "actualPresentationProgressBeforeLogging": 0.7223027944564819,
+      "eventElapsedSeconds": 0.13123354166668832,
+      "sourceCaptureNotYetMeasuredInThisProbe": true
+    },
+    {
+      "phase": "basic-to-basic-50",
+      "requestedProgress": 0.5,
+      "actualPresentationProgressBeforeLogging": 0.6549899578094482,
+      "eventElapsedSeconds": 0.11911629166684179,
+      "sourceCaptureNotYetMeasuredInThisProbe": true
+    },
+    {
+      "phase": "basic-to-basic-90",
+      "requestedProgress": 0.9,
+      "actualPresentationProgressBeforeLogging": 0.9771707057952881,
+      "eventElapsedSeconds": 0.17711333333340917,
+      "sourceCaptureNotYetMeasuredInThisProbe": true
+    }
+  ],
+  "classification": "Harness missed intended retarget fractions due to deep presentation/path inspection before the deadline; animation-key presence alone did not prove interruption. The first two failures are composite-phase observation-budget failures. Retained evidence is not promoted to a successful fraction matrix. A motion-only fixture correction was authorized and frozen separately; production code is unchanged."
+}

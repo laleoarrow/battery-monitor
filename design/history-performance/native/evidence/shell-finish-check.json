@@ -1,0 +1,19 @@
+{
+  "actualFinishFunctionTested": true,
+  "scriptSHA256": "2a8936ae5d17c179d90fbdd392bf0d0ccadee3ad937f03253b784fbcdec8f618",
+  "allPassed": true,
+  "checks": [
+    {
+      "primaryExit": 0,
+      "cleanupCommandFailed": true,
+      "actualExit": 1,
+      "primaryFailurePreserved": true
+    },
+    {
+      "primaryExit": 23,
+      "cleanupCommandFailed": true,
+      "actualExit": 23,
+      "primaryFailurePreserved": true
+    }
+  ]
+}

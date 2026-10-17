@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "allAbsentImmediate": true,
+  "allAbsentDelayed": true,
+  "domainCount": 12,
+  "appPathCount": 10,
+  "utcGapSeconds": 157.984987,
+  "quietPeriodRunnerCompletedExit": 0,
+  "quietPeriodRequestedSeconds": 95,
+  "timingNote": "Use UTC timestamps for across-process gap. macOS Python monotonicTime is process-relative here; do not subtract these values.",
+  "auditedManifestSources": {
+    "evidence/baseline-a1/results/owned-bundle.tsv": "daa783635c1f47f510e28484b74625bb81c883ede9af80f323feb927a31609f0",
+    "evidence/optimized-b1/results/owned-bundle.tsv": "2e4ad40ec8df39b73f0073237fa2a47d5207038771125c01a4f7bbf5879a54c8",
+    "evidence/optimized-b2/results/owned-bundle.tsv": "ba198f019684ea23aaa9d6b7207b6b6cef873d69ac48097760be6cfaca035f9c",
+    "evidence/baseline-a2/results/owned-bundle.tsv": "1c984ae35dea2e5c196118eca89f3c791964f65bc20e030d425234c25a53e894",
+    "evidence/baseline-counts/results/owned-bundle.tsv": "9a48da19c663e3843e922be41c9c33437733d827aefab90052989d2bb34dfa8d",
+    "evidence/optimized-counts/results/owned-bundle.tsv": "d54e8883f9ad93d5c950aefa62a7673f82c4ab5af867e06497f8683e9c0e5875",
+    "native-review/results-controlled-855fc308-native-622828b7c14e66e62b14dfeb3cc3f531c28c6ac88161537c737850624c187a1a.tar.gz!results/capture-bundles.tsv": "4d23e973647f596b63dc712d50d00d964da0cde4b5af9fd88beb1a47565d8c25",
+    "native-review/results-final-855fc308-native-d4a38de322201acb3e4f4582514d570328d57bc31378357c83db2454da40334c.tar.gz!results/capture-bundles.tsv": "492b330eb1afc47bdc531ae9f5cc618ec95e6e8d45f82e10ec8e79fa4aa0ac08",
+    "native-review/results-final-855fc308-native-d4a38de322201acb3e4f4582514d570328d57bc31378357c83db2454da40334c.tar.gz!results/interaction/owned-domains.txt": "45a4c68475fdb6cdc96be2e782d1571ff2d9a3bdbdebb894584c3680b248fcc2",
+    "native-review/results-motion-855fc308-native-v2-9854ec6f3c67de407a36b4de4906069b3a04cc7ad960e4e6aac26b12557f7f6e.tar.gz!results/capture-bundles.tsv": "ce90df28fb1eb5e1c4bffe679123d3f64db82651d1d37d634b9050f249300ee5"
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "sourceCommit": "855fc308f8864940a72ca77c93b0221d4e305a33",
+  "images": [
+    {
+      "state": "charging",
+      "appearance": "light",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/charging/regular-light-bottom.png",
+      "sha256": "9045b35349cfa67df68137c249aea074c1916c34491c8e2ff4d999a998cdc904",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    },
+    {
+      "state": "charging",
+      "appearance": "dark",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/charging/regular-dark-bottom.png",
+      "sha256": "849563fd87685366928a14bd045c3aff29884d492e6348588bc57bd2dfa0021f",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    },
+    {
+      "state": "full",
+      "appearance": "light",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/full/regular-light-bottom.png",
+      "sha256": "1062a2ba1acfbe5164096da2f4362ef29e40806a5fc4279dda38f1e88a5f335e",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    },
+    {
+      "state": "full",
+      "appearance": "dark",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/full/regular-dark-bottom.png",
+      "sha256": "7b03f7358f41a961e6722d96f3a56ceb5f17cf936cfe2081ae87dc1342a1871e",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    },
+    {
+      "state": "on-battery",
+      "appearance": "light",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/on-battery/regular-light-bottom.png",
+      "sha256": "9d6b18073254595024283a143531e447b1578f353d4f3de16cb62356d7984665",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    },
+    {
+      "state": "on-battery",
+      "appearance": "dark",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/on-battery/regular-dark-bottom.png",
+      "sha256": "f3a1e7a37a3057e4ce3f83e1714af486ad1371bb32cf8f555fbe12dd2f3e1efe",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    },
+    {
+      "state": "mixed-supply",
+      "appearance": "light",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/mixed-supply/regular-light-bottom.png",
+      "sha256": "3c1397c52d5fb1a81a7a14fada238c67e2f5053a1faae9f9905f3419b41a3439",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    },
+    {
+      "state": "mixed-supply",
+      "appearance": "dark",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/mixed-supply/regular-dark-bottom.png",
+      "sha256": "aa64457728a90c4216ddb321271e5d8998455ca61773ab786970940b56634749",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    },
+    {
+      "state": "low-battery",
+      "appearance": "light",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/low-battery/regular-light-bottom.png",
+      "sha256": "e668fa0fcf68910e4c9c09ff99ad98fdd29795355ba921819141f00d4e4df191",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    },
+    {
+      "state": "low-battery",
+      "appearance": "dark",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/low-battery/regular-dark-bottom.png",
+      "sha256": "b6f30a3d0b93b9f69d93ff12510dfcf002a52b4ee0171c847776e85576b48fce",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    },
+    {
+      "state": "low-power",
+      "appearance": "light",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/low-power/regular-light-bottom.png",
+      "sha256": "642ac3417c025241d8393f5c9e4b574e0b71e1ad09e066642630f9f0b7bfb8fb",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    },
+    {
+      "state": "low-power",
+      "appearance": "dark",
+      "path": ".build/history-performance.noindex/native-review/evidence/final-855fc308-native/results/captures/low-power/regular-dark-bottom.png",
+      "sha256": "9c0bae387d7461b20c0cf720915b8c1cd5a193fdeaa186662b39c1e0b0242812",
+      "individuallyInspected": true,
+      "historyCaptionAndPeakComplete": true,
+      "strokeFillEndpointAligned": true,
+      "noObservedTextOverlap": true
+    }
+  ],
+  "allPassed": true,
+  "scope": "Twelve actual WindowServer production-renderer bottom-scroll screenshots individually inspected. History and lower content are complete; the upper power-flow instrument is intentionally outside the bottom-scroll viewport."
+}

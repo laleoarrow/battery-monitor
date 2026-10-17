@@ -1,0 +1,72 @@
+{
+  "actualFinallyASTTested": true,
+  "sealedStageSHA256": "b8eda808476457da65f09f36542fedba88338c1632655c5c6cc6039eba4107c4",
+  "caseCount": 8,
+  "allPassed": true,
+  "checks": [
+    {
+      "failure": "none",
+      "originalExit": 0,
+      "actualExit": 0,
+      "scratchRemoved": true,
+      "expectedFailureStatusPreserved": true,
+      "diagnostic": ""
+    },
+    {
+      "failure": "none",
+      "originalExit": 23,
+      "actualExit": 23,
+      "scratchRemoved": true,
+      "expectedFailureStatusPreserved": true,
+      "diagnostic": ""
+    },
+    {
+      "failure": "archive",
+      "originalExit": 0,
+      "actualExit": 1,
+      "scratchRemoved": true,
+      "expectedFailureStatusPreserved": true,
+      "diagnostic": "NATIVE_QA_CLEANUP_FAILED evidence-export: OSError('injected archive creation failure')"
+    },
+    {
+      "failure": "archive",
+      "originalExit": 23,
+      "actualExit": 23,
+      "scratchRemoved": true,
+      "expectedFailureStatusPreserved": true,
+      "diagnostic": "NATIVE_QA_CLEANUP_FAILED evidence-export: OSError('injected archive creation failure')"
+    },
+    {
+      "failure": "copy",
+      "originalExit": 0,
+      "actualExit": 1,
+      "scratchRemoved": true,
+      "expectedFailureStatusPreserved": true,
+      "diagnostic": "NATIVE_QA_CLEANUP_FAILED evidence-export: OSError('injected archive evidence copy failure')"
+    },
+    {
+      "failure": "copy",
+      "originalExit": 23,
+      "actualExit": 23,
+      "scratchRemoved": true,
+      "expectedFailureStatusPreserved": true,
+      "diagnostic": "NATIVE_QA_CLEANUP_FAILED evidence-export: OSError('injected archive evidence copy failure')"
+    },
+    {
+      "failure": "manifest",
+      "originalExit": 0,
+      "actualExit": 1,
+      "scratchRemoved": true,
+      "expectedFailureStatusPreserved": true,
+      "diagnostic": "NATIVE_QA_CLEANUP_FAILED evidence-export: OSError('injected evidence manifest write failure')"
+    },
+    {
+      "failure": "manifest",
+      "originalExit": 23,
+      "actualExit": 23,
+      "scratchRemoved": true,
+      "expectedFailureStatusPreserved": true,
+      "diagnostic": "NATIVE_QA_CLEANUP_FAILED evidence-export: OSError('injected evidence manifest write failure')"
+    }
+  ]
+}

@@ -55,9 +55,14 @@ above a reduced scale. Finite gradient keyframes preserve the displayed color
 band when the axis changes or a transition is interrupted. History joins
 the existing presentation and accessibility animation policy; closing, hiding,
 detaching, degraded readings and Reduce Motion stop its animations. No chart
-timer or arbitrary shape-path interpolation is used.
-See the [4.3.10 axis transition review](../design/history-axis-upgrade/README.md)
-for current native motion, fixed-width stroke and installation evidence. The
+timer is used. History emits the final stroke directly; an actual captured
+viewport with `scaleY == 1` uses matched cubic path endpoints in a basic animation,
+while any other scale retains 33 stroke keyframes. Head and gradient keyframes
+remain unchanged. The [4.3.11 performance review](../design/history-performance/README.md)
+records the ABBA preparation measurements, explicit construction counts and
+native continuity checks, including the natural scheduling fixture's limits.
+The [4.3.10 axis transition review](../design/history-axis-upgrade/README.md)
+preserves the earlier native motion, fixed-width stroke and installation evidence. The
 [4.3.9 History review](../design/history-upgrade/README.md) preserves the initial
 curve upgrade and its verification boundaries.
 

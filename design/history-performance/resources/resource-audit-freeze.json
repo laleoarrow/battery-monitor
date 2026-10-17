@@ -1,0 +1,10 @@
+{
+  "archive": "resource-audit-inputs/892e4f62ed89c2e7b47bae6462c5f7d7194395ac6f6c7801ea49757f7f6a108e/audit-tools.tar.gz",
+  "archiveSHA256": "e4d5fb3f2c9a6fc15d00f5faacd76beab4f90c7f51094b14f00517bb05e431e3",
+  "files": {
+    "audit-guest-resources.py": "fdcf59c9225e3cff9c4455b2c09bb25be2b8932bd911d0c0b44eb822ac4c3df7",
+    "owned-resources.json": "892e4f62ed89c2e7b47bae6462c5f7d7194395ac6f6c7801ea49757f7f6a108e"
+  },
+  "ownedDomains": 12,
+  "ownedApps": 10
+}

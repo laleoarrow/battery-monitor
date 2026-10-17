@@ -1,0 +1,28 @@
+{
+  "manifest": {
+    "source": {
+      "sourceCommit": "27b069e704f9fd5827bcb71b5d13dde2aa7712e9",
+      "archive": "source-27b069e704f9.tar.gz",
+      "archiveSHA256": "d4566b589ebe7b76b5d60ecddb52dcd59f05c01b2b55b086f62439e2a8f41d8c",
+      "files": {
+        "Core/HistoryChart.swift": "26a013a1c91683384e96d1ee28644634e27683de4cc9d0e6f30cef949d648f18",
+        "Popover/HistoryLayer.swift": "1706ff17c98789ef33525a2d74b3dac19f705aeedef50dd2ba4e9ef825d022d0"
+      }
+    },
+    "tools": {
+      "archive": "tools-fe44bf1988efad8922b8d75d33bb83d489ca2868f0f9111bd7c3bb4f329bb6f7.tar.gz",
+      "archiveSHA256": "14594df9432d13526db941c68c7b784e68899e7a9fdbf12bf356e1023d1fc567",
+      "files": {
+        "benchmark-history.swift": "c0126f11b2835cfc852ec99806eff5ce4fe8f57a02deef2f4bb24c649dbf108f",
+        "run-benchmark.sh": "52eea5405b521fbe2a4244837a5d11fc12d1dbb277150acd0033c078191eb290",
+        "instrument-path-counts.py": "9af958365706a3037bd85bc18d782ebb7cc590bae5911deaec88528e09e4bea5",
+        "summarize-benchmark.py": "ddfbb8446c49afe8b99a8493982e79b23a864d65104de395b992dccf9d47d42f",
+        "stage-benchmark.py": "e1f096f01292e33686c06a36d2a929999afea6ccb20c15ddf2187b0b11c26503"
+      }
+    }
+  },
+  "bootstrapSHA256": "3b8aab19fe9ba8d482554210b23f9ae652b3e393aa90ea654a9e9c7cca5c4b73",
+  "label": "baseline-a1",
+  "count": "64",
+  "mode": "original"
+}

@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "855fc308f8864940a72ca77c93b0221d4e305a33",
+  "archive": "native-review/source-855fc308f886.tar.gz",
+  "archiveSHA256": "11ad07170c1452cc0a43bf89fbf0d0cfaae0595dbaf199f8b8b090fac7f0ff3c",
+  "files": {
+    "Core/HistoryChart.swift": "bbc8051506c7c42b3e6f1906affb6d945b130fdf800e9e6040fc9412ee5f765a",
+    "Popover/HistoryLayer.swift": "091a8fde18fcf52064b238480796124d8ff2884937d9583e4f7780f48ef9ae2f",
+    "VERSION": "fd88a172e2fbd50733c9e66c9b181007ecd310dbdbc352520bd400d14f5e5b89",
+    "tests/interaction/main.swift": "1faa8dd0f291c2cd0b535cd974f36e5c3f05c0caf6a866dfa2ece4e63854d937",
+    "tests/visual/capture_production_glass.swift": "25780ec9b1015e4bd49026420ad30f8e796415cf29f02a1386e4bfaa257ce6d5"
+  },
+  "version": "4.3.11",
+  "HistorySourceIdenticalTo": "9325876f70dc7e6fb722fda90f70ecde38a32c46"
+}
