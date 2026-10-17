@@ -1,0 +1,260 @@
+{
+  "sourceCommit": "8529889597961de756fa57397b1d1149d6d1b536",
+  "version": "4.3.13",
+  "publicRelease": false,
+  "settingsContracts": {
+    "passed": true,
+    "count": 8,
+    "runtimeSeconds": 146.412
+  },
+  "headlessSettingsContracts": {
+    "passed": true,
+    "count": 8,
+    "seconds": 26.05
+  },
+  "packageMatrix": {
+    "passed": true,
+    "modes": [
+      "previous-fresh",
+      "disabled-service-upgrade",
+      "fresh",
+      "reinstall",
+      "disabled-service-reinstall"
+    ],
+    "guestNoBatteryAppResidencyBoundaryRecorded": true
+  },
+  "vmCleanup": {
+    "hostCanonicalUnchanged": true,
+    "hostQuietSeconds": 112.16204199998174,
+    "guestCanonicalUnchanged": true,
+    "guestQuietSeconds": 112.24535300000002,
+    "owned-resources-immediate-4313.json": {
+      "passed": true,
+      "checkCount": 8
+    },
+    "owned-resources-delayed-4313.json": {
+      "passed": true,
+      "checkCount": 8
+    },
+    "package-cleanup-immediate-final.json": {
+      "passed": true,
+      "checkCount": 5
+    },
+    "package-cleanup-delayed-final.json": {
+      "passed": true,
+      "checkCount": 5
+    },
+    "packageQuietSeconds": 112.30007499999999,
+    "ownedVMRemoved": true,
+    "protectedVMsPreserved": true,
+    "vmOwnerExitCode": 0,
+    "hostTemporaryTransfersRemoved": true,
+    "independentNormalSlowDragVMRetained": true
+  },
+  "localInstallation": {
+    "checkedAtUTC": "2026-10-17T04:56:28.013230+00:00",
+    "version": "4.3.13",
+    "sourceCommit": "8529889597961de756fa57397b1d1149d6d1b536",
+    "packageSHA256": "6232abe248e06f583d8832088eaa367e9e10d644d11b9c0eb2996d443bc09d93",
+    "appAndHelperAndDaemonMatchVerifiedPayload": true,
+    "receiptVersion": "4.3.13",
+    "signatureVerified": true,
+    "helperHealth": true,
+    "helperV5": true,
+    "canonicalAppPID": 40690,
+    "stableSeconds": 10,
+    "publicRelease": false
+  },
+  "localVerificationExitCode": 0,
+  "screenshots": [
+    {
+      "path": "classic-light-general-top.png",
+      "sha256": "3a524520bce359ae01b4265adf9059c74e0d8d83d24ec258f804255ed6b30e2d",
+      "position": "top",
+      "visibleRowIcons": [
+        "login",
+        "battery",
+        "update",
+        "automatic-updates"
+      ],
+      "rawCapturePath": "contrast-0/classic-light-general-top.png"
+    },
+    {
+      "path": "classic-light-general-bottom.png",
+      "sha256": "82af8691ca0df3f1567cc9bca2ba7d4e5b19bdc24b14d1b1a0cd73913b19a796",
+      "position": "bottom",
+      "visibleRowIcons": [
+        "feedback"
+      ],
+      "rawCapturePath": "contrast-0/classic-light-general-bottom.png"
+    },
+    {
+      "path": "standard-light-general-top.png",
+      "sha256": "39b273f7c961163671fe664045c27e8c809869648ab5a865c2c4824a4939b5db",
+      "position": "top",
+      "visibleRowIcons": [
+        "login",
+        "battery",
+        "update",
+        "automatic-updates"
+      ],
+      "rawCapturePath": "contrast-0/standard-light-general-top.png"
+    },
+    {
+      "path": "standard-light-general-bottom.png",
+      "sha256": "05c96ec627f114fcf9e3ae3c9bdfba01367bfdfa1981c97478b45e0dac375c4b",
+      "position": "bottom",
+      "visibleRowIcons": [
+        "feedback"
+      ],
+      "rawCapturePath": "contrast-0/standard-light-general-bottom.png"
+    },
+    {
+      "path": "clear-light-general-top.png",
+      "sha256": "396679e7b673791ca1bcd28c473eeb5e40cc379bac0f7c692838337740ec1d46",
+      "position": "top",
+      "visibleRowIcons": [
+        "login",
+        "battery",
+        "update",
+        "automatic-updates"
+      ],
+      "rawCapturePath": "contrast-0/clear-light-general-top.png"
+    },
+    {
+      "path": "clear-light-general-bottom.png",
+      "sha256": "0b19d809fb280de2025d66547da70577fac0437e753cdedbccd2fa23c0f14b27",
+      "position": "bottom",
+      "visibleRowIcons": [
+        "feedback"
+      ],
+      "rawCapturePath": "contrast-0/clear-light-general-bottom.png"
+    },
+    {
+      "path": "classic-dark-general-top.png",
+      "sha256": "71f8c2a0c95399ae778585b8a1e782a140ffca875ab78d48481105892a10150e",
+      "position": "top",
+      "visibleRowIcons": [
+        "login",
+        "battery",
+        "update",
+        "automatic-updates"
+      ],
+      "rawCapturePath": "contrast-0/classic-dark-general-top.png"
+    },
+    {
+      "path": "classic-dark-general-bottom.png",
+      "sha256": "853e0fbddfc8c008b578f4f732cad59281d9612edc0c898e99ac9209a172a78e",
+      "position": "bottom",
+      "visibleRowIcons": [
+        "feedback"
+      ],
+      "rawCapturePath": "contrast-0/classic-dark-general-bottom.png"
+    },
+    {
+      "path": "standard-dark-general-top.png",
+      "sha256": "c2ad5c2f36daa912d670e268b500eed0647922985321313dfd924fa103bb80e5",
+      "position": "top",
+      "visibleRowIcons": [
+        "login",
+        "battery",
+        "update",
+        "automatic-updates"
+      ],
+      "rawCapturePath": "contrast-0/standard-dark-general-top.png"
+    },
+    {
+      "path": "standard-dark-general-bottom.png",
+      "sha256": "966a0bec5d33376accb76fde01f16039508c476808a811d3f0dbf65e04660c3e",
+      "position": "bottom",
+      "visibleRowIcons": [
+        "feedback"
+      ],
+      "rawCapturePath": "contrast-0/standard-dark-general-bottom.png"
+    },
+    {
+      "path": "clear-dark-general-top.png",
+      "sha256": "c2ad5c2f36daa912d670e268b500eed0647922985321313dfd924fa103bb80e5",
+      "position": "top",
+      "visibleRowIcons": [
+        "login",
+        "battery",
+        "update",
+        "automatic-updates"
+      ],
+      "rawCapturePath": "contrast-0/clear-dark-general-top.png"
+    },
+    {
+      "path": "clear-dark-general-bottom.png",
+      "sha256": "55fcedfa264e35d87f13a26affeb71f3c0138c7f176d51c57e3788865b6b5e67",
+      "position": "bottom",
+      "visibleRowIcons": [
+        "feedback"
+      ],
+      "rawCapturePath": "contrast-0/clear-dark-general-bottom.png"
+    }
+  ],
+  "visualReview": {
+    "all12Reviewed": true,
+    "result": "No visual blocker; five General artwork rows fully visible in top/bottom captures and controls unobstructed"
+  },
+  "nativeDragSourceEquivalence": {
+    "baseCommit": "9fef74944447d4753d1edde82997dc41a479ccad",
+    "candidateCommit": "8529889597961de756fa57397b1d1149d6d1b536",
+    "nativeDragClasses": {
+      "ModuleReorderHandle": {
+        "sha256": "fe221086cd7613f196653eb88cf7a21feb24eb2b6748467afed470a499351848",
+        "byteIdentical": true
+      },
+      "ModuleReorderList": {
+        "sha256": "fbbd85a256d2277a567389c3a14057f66dda2775d26573872c35d8f5c00b9820",
+        "byteIdentical": true
+      }
+    },
+    "scope": "Class bodies only; Settings Default Order and artwork changed separately. Does not substitute for genuine held-drag runtime evidence."
+  },
+  "nativeHeldDragNotRetested": true,
+  "hostPostInstallCleanup": {
+    "completedAtUTC": "2026-10-17T04:59:31.198141+00:00",
+    "version": "4.3.13",
+    "sourceCommit": "8529889597961de756fa57397b1d1149d6d1b536",
+    "publicRelease": false,
+    "passed": true,
+    "immediateUTC": "2026-10-17T04:57:21.464381+00:00",
+    "delayedUTC": "2026-10-17T04:59:19.523904+00:00",
+    "clock": "time.clock_gettime(time.CLOCK_MONOTONIC)",
+    "quietSecondsBeforeDelayedRead": 100.78535000002012,
+    "snapshotIntervalSeconds": 118.05955299997004,
+    "canonicalPID": 40690,
+    "packageSHA256": "6232abe248e06f583d8832088eaa367e9e10d644d11b9c0eb2996d443bc09d93",
+    "appBuildReceipt": "4.3.13",
+    "canonicalFullIdentityUnchanged": true,
+    "signaturesValid": true,
+    "installationEvidenceVerifiedPayloadMatch": true,
+    "installationEvidenceHelperHealthAndV5": true,
+    "canonicalOnlyRegistrationAndSpotlight": true,
+    "scopedResiduals": {
+      "ownedScratch": [],
+      "ownedTransfers": [],
+      "ownedProcesses": [],
+      "installerPIDs": [],
+      "ownedMounts": [],
+      "extraRegistrations": [],
+      "extraSpotlightApps": []
+    },
+    "old4312EvidenceSHA256StillMatchesSummary": {
+      "4312-success-cleanup-audit.py": true,
+      "4312-success-cleanup-immediate.json": true,
+      "4312-success-cleanup-delayed.json": true,
+      "local-install-verified.json": true
+    },
+    "noTrackedFilesModifiedByAudit": true,
+    "hostGUIOrInstallationRunByAudit": false,
+    "evidence": {
+      "4313-success-cleanup-audit.py": "21e2705e51d36f2a194bc9ffb8bb1db97bfbba0a7d0fbc4f021522b4d71dd259",
+      "4313-success-cleanup-immediate.json": "00d079e57357882d18b59018bbe4e02b516f53d75b4c3333ef22934b6f859814",
+      "4313-success-cleanup-delayed.json": "478f28fe2f078c8350874f38522c2a9a63af3ba4ad5783d75ade57e751c31d39",
+      "local-install-verified.json": "4ccd026abf4b7960e69cfe90936df1c4bb4ab4790c044de626298a12b4c090cd"
+    }
+  }
+}

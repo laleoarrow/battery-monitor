@@ -42,3 +42,5 @@ These changes are on the isolated `codex/sidebar-vector-icons` branch together
 with the previous sidebar designs, without modifying another task's source,
 VM or package. No canonical application is installed or released by this task.
 Fresh visible-window validation belongs to the final integrated candidate.
+
+The approved artwork was subsequently integrated and installed in local candidate 4.3.13. See the [integration review](../general-icons-integration/README.md) for production-window captures, VM checks and exact installation evidence.
