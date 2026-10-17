@@ -1,3 +1,4 @@
+import json
 import os
 import pathlib
 import shutil
@@ -20,11 +21,15 @@ class ReleaseCleanupTests(unittest.TestCase):
         self.bin.mkdir()
         tool = self.bin / "tool"
         tool.write_text('''#!/usr/bin/python3
-import os, pathlib, plistlib, shutil, sys, zipfile
+import json, os, pathlib, plistlib, shutil, sys, zipfile
 name = pathlib.Path(sys.argv[0]).name
 a = sys.argv[1:]
 def value(flag): return a[a.index(flag) + 1]
+if name == 'swift' or name == 'xcrun' and a[:2] == ['lipo', '-create']:
+    with open(os.environ['FIXTURE_TOOL_LOG'], 'a') as log:
+        log.write(json.dumps({'name': name, 'arguments': a}) + '\\n')
 if name == 'swift':
+    if a.count('--arch') != 1 or value('--build-system') != 'native': sys.exit(90)
     folder = pathlib.Path(value('--scratch-path')) / 'bin'
     folder.mkdir(parents=True, exist_ok=True)
     if '--show-bin-path' in a:
@@ -34,7 +39,9 @@ if name == 'swift':
             p = folder / executable
             p.write_text('#!/bin/sh\\nexit 0\\n')
             p.chmod(0o755)
-        sys.exit(int(os.environ.get('FAIL_COMPILE', '0')))
+        status = int(os.environ.get('FAIL_COMPILE', '0'))
+        if os.environ.get('FAIL_COMPILE_ARCH') not in (None, value('--arch')): status = 0
+        sys.exit(status)
 elif name == 'xcrun':
     if a[0] == 'vtool': print('minos 12.0')
     elif a[0] == 'swiftc':
@@ -42,6 +49,7 @@ elif name == 'xcrun':
         p.write_text('#!/bin/sh\\nexit 0\\n')
         p.chmod(0o755)
     elif a[0] == 'lipo' and '-create' in a:
+        if os.environ.get('FAIL_LIPO'): sys.exit(int(os.environ['FAIL_LIPO']))
         shutil.copy2(a[2], value('-output'))
     elif a[0] == 'actool':
         for resource in ('Assets.car', 'WattsonGlass.icns'):
@@ -106,7 +114,8 @@ fi
             path.write_text("4.3.1\n" if name == "VERSION" else "fixture\n", encoding="utf-8")
 
     def execute(self, name, *arguments, **environment):
-        env = dict(os.environ, FIXTURE_LOG=str(self.root / "stages.log"))
+        env = dict(os.environ, FIXTURE_LOG=str(self.root / "stages.log"),
+                   FIXTURE_TOOL_LOG=str(self.root / "tools.ndjson"))
         for key in ("WATTSON_RELEASE_BUILD_ROOT", "WATTSON_RELEASE_DIST_DIR", "WATTSON_DEVELOPER_ID_APP",
                     "WATTSON_DEVELOPER_ID_INSTALLER", "WATTSON_NOTARIZE"):
             env.pop(key, None)
@@ -122,6 +131,16 @@ fi
         result = self.execute("build_release.sh")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assert_no_disposable_builds()
+        commands = [json.loads(line) for line in (self.root / "tools.ndjson").read_text().splitlines()]
+        builds = [item["arguments"] for item in commands if item["name"] == "swift"]
+        self.assertEqual([args[args.index("--arch") + 1] for args in builds],
+                         ["arm64", "arm64", "x86_64", "x86_64"])
+        self.assertEqual(["--show-bin-path" in args for args in builds], [False, True, False, True])
+        merges = [item["arguments"] for item in commands if item["name"] == "xcrun"]
+        self.assertEqual(len(merges), 2)
+        for args, name in zip(merges, ["Wattson", "wattson-helper"]):
+            self.assertTrue(args[2].endswith(f"/arm64/bin/{name}"))
+            self.assertTrue(args[3].endswith(f"/x86_64/bin/{name}"))
         result = self.execute("build_release.sh", "--keep-build")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertTrue((self.root / ".build/release/Wattson.app").is_dir())
@@ -138,6 +157,26 @@ fi
         result = self.execute("build_release.sh", WATTSON_RELEASE_BUILD_ROOT=str(caller))
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual(marker.read_text(encoding="utf-8"), "preserve")
+
+    def test_second_architecture_failure_cleans_slices_and_preserves_previous_release(self):
+        previous = self.root / "dist/Wattson-v4.3.1-macos-universal.pkg"
+        previous.parent.mkdir()
+        previous.write_text("previous verified bytes", encoding="utf-8")
+        result = self.execute("release.sh", FAIL_COMPILE="8", FAIL_COMPILE_ARCH="x86_64")
+        self.assertEqual(result.returncode, 8, result.stdout + result.stderr)
+        self.assertEqual(previous.read_text(encoding="utf-8"), "previous verified bytes")
+        self.assertEqual(list(previous.parent.iterdir()), [previous])
+        self.assert_no_disposable_builds()
+
+    def test_lipo_failure_cleans_slices_and_preserves_previous_release(self):
+        previous = self.root / "dist/Wattson-v4.3.1-macos-universal.pkg"
+        previous.parent.mkdir()
+        previous.write_text("previous verified bytes", encoding="utf-8")
+        result = self.execute("release.sh", FAIL_LIPO="11")
+        self.assertEqual(result.returncode, 11, result.stdout + result.stderr)
+        self.assertEqual(previous.read_text(encoding="utf-8"), "previous verified bytes")
+        self.assertEqual(list(previous.parent.iterdir()), [previous])
+        self.assert_no_disposable_builds()
 
     def test_release_transfers_only_verified_artifacts_then_cleans_shared_workspace(self):
         result = self.execute("release.sh")

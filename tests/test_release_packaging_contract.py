@@ -336,8 +336,12 @@ class ReleasePackagingContractTests(unittest.TestCase):
     def test_swiftpm_build_must_be_universal_and_target_macos_12(self):
         build = self.source["build_release.sh"]
         self.assertIn("/usr/bin/swift build", build)
-        self.assertIn("--arch arm64", build)
-        self.assertIn("--arch x86_64", build)
+        self.assertIn("for architecture in arm64 x86_64; do", build)
+        self.assertIn("--build-system native", build)
+        self.assertIn('--arch "$architecture"', build)
+        self.assertIn('--scratch-path "$SWIFTPM_BUILD_DIR/$architecture"', build)
+        self.assertIn('lipo -create "${APP_SLICES[@]}"', build)
+        self.assertIn('lipo -create "${HELPER_SLICES[@]}"', build)
         self.assertIn('lipo "$binary_path" -verify_arch arm64 x86_64', build)
         self.assertIn('vtool -arch "$architecture" -show-build', build)
         self.assertIn('MIN_MACOS_VERSION="12.0"', build)

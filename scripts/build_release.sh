@@ -65,26 +65,33 @@ BUILD_NUMBER="${WATTSON_BUILD_NUMBER:-$APP_VERSION}"
 [[ -z "$(/bin/ls -A "$BUILD_ROOT")" ]] || fail "build root must be empty"
 
 echo "Building Wattson $APP_VERSION ($BUILD_NUMBER) for arm64 and x86_64..."
-wattson_run /usr/bin/swift build \
-    --package-path "$ROOT_DIR" \
-    --scratch-path "$SWIFTPM_BUILD_DIR" \
-    --configuration release \
-    --arch arm64 \
-    --arch x86_64
-
-BIN_PATH_FILE="$BUILD_ROOT/bin-path.txt"
-wattson_run /usr/bin/swift build \
-    --package-path "$ROOT_DIR" \
-    --scratch-path "$SWIFTPM_BUILD_DIR" \
-    --configuration release \
-    --arch arm64 \
-    --arch x86_64 \
-    --show-bin-path > "$BIN_PATH_FILE"
-BIN_DIR="$(/bin/cat "$BIN_PATH_FILE")"
-BUILT_APP_EXECUTABLE="$BIN_DIR/Wattson"
-BUILT_HELPER_EXECUTABLE="$BIN_DIR/wattson-helper"
-[[ -x "$BUILT_APP_EXECUTABLE" ]] || fail "SwiftPM did not produce $BUILT_APP_EXECUTABLE"
-[[ -x "$BUILT_HELPER_EXECUTABLE" ]] || fail "SwiftPM did not produce $BUILT_HELPER_EXECUTABLE"
+# Multiple --arch values force SwiftPM onto the Xcode build service even when
+# native is requested. Build each slice natively, then combine before signing.
+APP_SLICES=()
+HELPER_SLICES=()
+for architecture in arm64 x86_64; do
+    BUILD_ARGUMENTS=(
+        --package-path "$ROOT_DIR"
+        --scratch-path "$SWIFTPM_BUILD_DIR/$architecture"
+        --configuration release
+        --build-system native
+        --arch "$architecture"
+    )
+    wattson_run /usr/bin/swift build "${BUILD_ARGUMENTS[@]}"
+    BIN_PATH_FILE="$BUILD_ROOT/bin-path-$architecture.txt"
+    wattson_run /usr/bin/swift build "${BUILD_ARGUMENTS[@]}" \
+        --show-bin-path > "$BIN_PATH_FILE"
+    BIN_DIR="$(/bin/cat "$BIN_PATH_FILE")"
+    [[ -x "$BIN_DIR/Wattson" ]] || fail "SwiftPM did not produce $BIN_DIR/Wattson"
+    [[ -x "$BIN_DIR/wattson-helper" ]] || fail "SwiftPM did not produce $BIN_DIR/wattson-helper"
+    APP_SLICES+=("$BIN_DIR/Wattson")
+    HELPER_SLICES+=("$BIN_DIR/wattson-helper")
+done
+BUILT_APP_EXECUTABLE="$BUILD_ROOT/universal/Wattson"
+BUILT_HELPER_EXECUTABLE="$BUILD_ROOT/universal/wattson-helper"
+/bin/mkdir "$BUILD_ROOT/universal"
+wattson_run /usr/bin/xcrun lipo -create "${APP_SLICES[@]}" -output "$BUILT_APP_EXECUTABLE"
+wattson_run /usr/bin/xcrun lipo -create "${HELPER_SLICES[@]}" -output "$BUILT_HELPER_EXECUTABLE"
 
 verify_universal_binary() {
     local binary_path="$1"

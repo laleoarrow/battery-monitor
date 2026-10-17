@@ -140,8 +140,9 @@ class InstallMigrationContractTests(unittest.TestCase):
     def test_release_binary_matches_the_declared_macos_minimum(self):
         self.assertIn('VERSION_FILE="$ROOT_DIR/VERSION"', self.build_release)
         self.assertIn('MIN_MACOS_VERSION="12.0"', self.build_release)
-        self.assertIn('--arch arm64', self.build_release)
-        self.assertIn('--arch x86_64', self.build_release)
+        self.assertIn('for architecture in arm64 x86_64; do', self.build_release)
+        self.assertIn('--build-system native', self.build_release)
+        self.assertIn('--arch "$architecture"', self.build_release)
 
     def test_settings_identity_uses_a_png_derived_from_the_real_app_icon(self):
         for build_script in (self.build_release, self.install):
