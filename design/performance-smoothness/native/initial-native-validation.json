@@ -1,0 +1,53 @@
+{
+  "attempt": "initial",
+  "benchmarkCompleted": true,
+  "cloneCleanup": {
+    "additionalUnrelatedVMsPreserved": [],
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "ownedCloneRemoved": true,
+    "ownedVM": "Wattson-Performance-Smoothness-20261018"
+  },
+  "diagnosticClassificationPending": true,
+  "normalInteraction": {
+    "assertionsFailed": 1,
+    "assertionsPassed": 437,
+    "failures": [
+      "\u274c History \u63a7\u5236\u70b9\u8fc7\u6e21\u5230\u8fbe\u65b0\u66f2\u7ebf\u540e\u81ea\u52a8\u9759\u6b62"
+    ],
+    "logSHA256": "d680a49782ab5f923932ccbec81d2c52655e9abdd00ce3e8bf56d604d84f490f",
+    "observations": [
+      "HISTORY_COMPLETION_TIMEOUT matched-tail elapsed=1.0737660833333393 remaining=history.fill:0.35s,history.stroke:0.35s,history.head:0.35s",
+      "HISTORY_TAIL_SETTLE dx=0.0 dy=0.0 elapsed=1.0746422916666347 motionSettled=false keys=[\"history.fill\", \"history.stroke\", \"history.head\"]"
+    ]
+  },
+  "postTeardownAudit": {
+    "allPassed": true,
+    "checks": {
+      "canonicalAppAndHelperNeverInstalled": true,
+      "canonicalHelperFixtureAbsent": true,
+      "ownedAppRegistrationsRemoved": true,
+      "ownedApplicationScriptsRemoved": true,
+      "ownedContainersRemoved": true,
+      "ownedPreferencesRemoved": true,
+      "ownedProcessesStopped": true,
+      "sourceAndBuildScratchRemoved": true
+    },
+    "details": {
+      "applicationScripts": [],
+      "containers": [],
+      "preferences": [],
+      "processes": [],
+      "registrations": []
+    },
+    "finishedUTC": "2026-10-17T17:02:18Z",
+    "schema": 1
+  },
+  "qaCleanupWarning": "swift-driver version: 1.148.6 Cleanup could not clear defaults domain: Wattson.PerformanceSmoothness.67EE0E98-1296-4DF9-934A-584BA978766B",
+  "remainingStagesNotRunByInitialFailFastDriver": true,
+  "schema": 1,
+  "status": "failed; preserved without replacement",
+  "vmOwnerExitStatus": 1
+}

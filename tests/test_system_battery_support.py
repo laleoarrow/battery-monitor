@@ -305,8 +305,6 @@ esac
 
     def test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned(self):
         original = self.script.read_text()
-        lifecycle = self.bundle / "lifecycle.sh"
-        lifecycle.write_text(lifecycle.read_text().replace("SUPPORT_STAGE_SECONDS=10", "SUPPORT_STAGE_SECONDS=0.5"))
         for command in ("/usr/bin/ditto", "/usr/bin/unzip", "/bin/cp", "/usr/bin/cmp", "/bin/mv", "/bin/mkdir"):
             with self.subTest(command=command):
                 marker = self.work / "blocked-stage.pid"
@@ -321,7 +319,14 @@ esac
 *) exec /bin/cp "$@" ;;
 esac
 ''')
-                self.script.write_text(original.replace(command, str(blocker)))
+                target = f"support_run {command}"
+                if command == "/bin/cp":
+                    target += ' "$ARCHIVE" "$SUPPORT_OUTPUT_PARTIAL"'
+                elif command == "/bin/mkdir":
+                    target += ' -p -- "$OUTPUT_DIR"'
+                self.assertEqual(original.count(target), 1)
+                replacement = target.replace("support_run ", "support_run_for 0.5 ", 1).replace(command, str(blocker), 1)
+                self.script.write_text(original.replace(target, replacement, 1))
                 # Start the bounded observation at the injected blocked stage,
                 # not before all unrelated collector probes and VM tool startup.
                 with (self.work / "stage-errors").open("w+") as errors:
@@ -333,7 +338,9 @@ esac
                         ready_deadline = time.monotonic() + 15
                         while not marker.exists() and process.poll() is None and time.monotonic() < ready_deadline:
                             time.sleep(0.02)
-                        self.assertTrue(marker.exists(), "Blocked stage was never reached")
+                        self.assertTrue(marker.exists(),
+                                        f"Blocked stage was never reached (exit={process.poll()}): "
+                                        + (self.work / "stage-errors").read_text())
                         # 0.5s stage + independent 5s file cleanup + termination
                         # grace; this does not extend any production deadline.
                         process.wait(timeout=7)

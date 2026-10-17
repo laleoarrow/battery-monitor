@@ -49,7 +49,7 @@ class JunctionContractTests(unittest.TestCase):
         # version did not: alpha differed by 0.14 across the wrap and showed as
         # a seam once per cycle.
         import re
-        block = self.source.split("self.gradient.locations = [", 1)[1].split("]", 1)[0]
+        block = self.source.split("gradient.locations = [", 1)[1].split("]", 1)[0]
         locations = [float(x) for x in re.findall(r"[\d.]+", block)]
         colours = self.source.split("self.gradient.colors = [", 1)[1].split("]", 1)[0]
         names = [n.strip() for n in colours.replace("\n", "").split(",") if n.strip()]

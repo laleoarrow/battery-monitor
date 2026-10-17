@@ -13,6 +13,10 @@ final class TopProcessesView: PopoverSection {
     private var infoPopover: NSPopover?
     private var count = 3
     private var compact = false
+    private var renderedState: TopProcessesState?
+#if DEBUG
+    private(set) var contentUpdatesForTest = 0
+#endif
 
     static func preferredHeight(count: Int, compact: Bool = false) -> CGFloat {
         36 + (compact ? compactRowHeight : rowHeight) * CGFloat(min(max(count, 1), 10))
@@ -97,8 +101,14 @@ final class TopProcessesView: PopoverSection {
     }
 
     func update(state: TopProcessesState, count: Int, compact: Bool = false) {
-        self.count = min(max(count, 1), 10)
+        let count = min(max(count, 1), 10)
+        guard renderedState != state || self.count != count || self.compact != compact else { return }
+        renderedState = state
+        self.count = count
         self.compact = compact
+#if DEBUG
+        contentUpdatesForTest += 1
+#endif
         let processes: [EnergyProcess]
         switch state {
         case .loading:

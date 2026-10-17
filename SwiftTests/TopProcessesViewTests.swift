@@ -21,6 +21,142 @@ final class TopProcessesViewTests: XCTestCase {
         super.tearDown()
     }
 
+    func testIdenticalUpdatesSkipContentWorkAfterInitializingEveryStatus() throws {
+        let view = makeView()
+        XCTAssertEqual(view.contentUpdatesForTest, 0)
+        for (index, state) in [TopProcessesState.loading, .unavailable, .ready([]), .ready(processes(3))].enumerated() {
+            view.update(state: state, count: 3)
+            view.layoutSubtreeIfNeeded()
+            XCTAssertEqual(view.contentUpdatesForTest, index + 1)
+            let status = try XCTUnwrap(view.subviews.compactMap { $0 as? NSTextField }.last)
+            XCTAssertEqual(status.toolTip, status.accessibilityHelp())
+            XCTAssertFalse(status.accessibilityHelp()?.isEmpty ?? true)
+            let rows = visibleRows(view)
+            let fields = rows.flatMap { $0.subviews.compactMap { $0 as? NSTextField } }
+            let text = fields.map(\.stringValue)
+            let tips = rows.map(\.toolTip)
+            let accessibility = rows.map { $0.accessibilityValue() as? String }
+            for _ in 0..<100 {
+                view.update(state: state, count: 3)
+            }
+            XCTAssertEqual(view.contentUpdatesForTest, index + 1)
+            XCTAssertFalse(view.needsLayout)
+            XCTAssertEqual(visibleRows(view).map(ObjectIdentifier.init), rows.map(ObjectIdentifier.init))
+            XCTAssertEqual(fields.map(\.stringValue), text)
+            XCTAssertEqual(rows.map(\.toolTip), tips)
+            XCTAssertEqual(rows.map { $0.accessibilityValue() as? String }, accessibility)
+        }
+    }
+
+    func testNormalizedCountAndCompactChangesInvalidateContentOnlyWhenTheirValuesChange() {
+        let view = makeView(count: 10)
+        let state = TopProcessesState.ready(processes(10))
+        for count in [0, 1, -20] {
+            view.update(state: state, count: count)
+            XCTAssertEqual(view.contentUpdatesForTest, 1)
+            XCTAssertEqual(visibleRows(view).count, 1)
+        }
+        for count in [10, 11, Int.max] {
+            view.update(state: state, count: count)
+            XCTAssertEqual(view.contentUpdatesForTest, 2)
+            XCTAssertEqual(visibleRows(view).count, 10)
+        }
+        for (index, compact) in [true, false, true].enumerated() {
+            view.frame.size.height = TopProcessesView.preferredHeight(count: 10, compact: compact)
+            view.update(state: state, count: 10, compact: compact)
+            view.layoutSubtreeIfNeeded()
+            XCTAssertEqual(view.contentUpdatesForTest, index + 3)
+            XCTAssertEqual(visibleRows(view).map { $0.frame.height }, Array(repeating: compact ? 28 : 44, count: 10))
+            for row in visibleRows(view) {
+                XCTAssertEqual(row.subviews.compactMap { $0 as? NSTextField }[2].isHidden, compact)
+            }
+            for _ in 0..<100 { view.update(state: state, count: 100, compact: compact) }
+            XCTAssertEqual(view.contentUpdatesForTest, index + 3)
+            XCTAssertFalse(view.needsLayout)
+        }
+    }
+
+    func testEveryProcessFieldRankAndUnshownReadingInvalidatesContent() throws {
+        let view = makeView(count: 1)
+        let original = EnergyProcess(pid: 42, name: "Worker", energyImpact: 84,
+                                     cpuPercent: 72, idleWakeupsPerSecond: 240)
+        let variants = [
+            EnergyProcess(pid: 43, name: "Worker", energyImpact: 84, cpuPercent: 72, idleWakeupsPerSecond: 240),
+            EnergyProcess(pid: 42, name: "Renamed", energyImpact: 84, cpuPercent: 72, idleWakeupsPerSecond: 240),
+            EnergyProcess(pid: 42, name: "Worker", energyImpact: 84.01, cpuPercent: 72, idleWakeupsPerSecond: 240),
+            EnergyProcess(pid: 42, name: "Worker", energyImpact: 84, cpuPercent: 72.01, idleWakeupsPerSecond: 240),
+            EnergyProcess(pid: 42, name: "Worker", energyImpact: 84, cpuPercent: 72, idleWakeupsPerSecond: 240.01),
+        ]
+        let second = process(99, score: 20)
+        view.update(state: .ready([original, second]), count: 1)
+        for reading in variants {
+            view.update(state: .ready([original, second]), count: 1)
+            let updates = view.contentUpdatesForTest
+            view.update(state: .ready([reading, second]), count: 1)
+            XCTAssertEqual(view.contentUpdatesForTest, updates + 1)
+            let row = try XCTUnwrap(visibleRows(view).first)
+            let fields = row.subviews.compactMap { $0 as? NSTextField }
+            let exact = "Activity Score \(reading.energyImpact); CPU \(reading.cpuPercent)%; idle wakeups \(reading.idleWakeupsPerSecond) per second"
+            XCTAssertEqual(fields[0].stringValue, reading.name)
+            XCTAssertEqual(fields[0].toolTip, "\(reading.name) · PID \(reading.pid)")
+            XCTAssertEqual(fields[1].toolTip, exact)
+            XCTAssertEqual(fields[2].toolTip, exact)
+            XCTAssertEqual(row.accessibilityLabel(), reading.name)
+            XCTAssertEqual(row.accessibilityValue() as? String, exact)
+            XCTAssertTrue(row.toolTip?.contains("PID \(reading.pid)\n\(exact)") == true)
+        }
+        let updates = view.contentUpdatesForTest
+        view.update(state: .ready([second, variants.last!]), count: 1)
+        XCTAssertEqual(view.contentUpdatesForTest, updates + 1)
+        XCTAssertEqual(try XCTUnwrap(visibleRows(view).first).accessibilityLabel(), second.name)
+        view.update(state: .ready([second, original]), count: 1)
+        XCTAssertEqual(view.contentUpdatesForTest, updates + 2)
+        view.update(state: .ready([second]), count: 1)
+        XCTAssertEqual(view.contentUpdatesForTest, updates + 3)
+    }
+
+    func testIdenticalDataDoesNotBlockExternalLayoutOrAppearanceRefresh() throws {
+        let view = makeView()
+        let state = TopProcessesState.ready(processes(3))
+        view.update(state: state, count: 3)
+        view.layoutSubtreeIfNeeded()
+        let updates = view.contentUpdatesForTest
+        let rows = visibleRows(view)
+        let oldWidth = view.bounds.width
+        view.frame.size.width += 40
+        view.needsLayout = true
+        view.update(state: state, count: 3)
+        view.layoutSubtreeIfNeeded()
+        XCTAssertEqual(view.contentUpdatesForTest, updates)
+        XCTAssertTrue(rows.allSatisfy { $0.frame.width == oldWidth + 40 })
+        XCTAssertTrue(rows.allSatisfy { $0.subviews.compactMap { $0 as? NSTextField }[2].frame.width == oldWidth + 40 })
+
+        let originalContrast = ProcessInfo.processInfo.environment["WATTSON_FORCE_INCREASE_CONTRAST"]
+        defer {
+            if let originalContrast { setenv("WATTSON_FORCE_INCREASE_CONTRAST", originalContrast, 1) }
+            else { unsetenv("WATTSON_FORCE_INCREASE_CONTRAST") }
+        }
+        for (appearanceName, contrast): (NSAppearance.Name, Bool) in [(.accessibilityHighContrastDarkAqua, true), (.aqua, false)] {
+            setenv("WATTSON_FORCE_INCREASE_CONTRAST", contrast ? "1" : "0", 1)
+            let appearance = try XCTUnwrap(NSAppearance(named: appearanceName))
+            view.appearance = appearance
+            view.refreshAppearance()
+            view.update(state: state, count: 3)
+            XCTAssertEqual(view.contentUpdatesForTest, updates)
+            for row in rows {
+                let expected = contrast ? Array(repeating: NSColor.systemBlue, count: 3)
+                    : [0x9CDCFF, 0x2C9DFF, 0x0B69D9].map { NSColor(rgb: $0) }
+                for (actual, color) in zip(try gradientColors(row), expected) {
+                    try assertColor(actual, matches: color, in: appearance)
+                }
+            }
+        }
+        view.setPresentationActive(false)
+        view.update(state: state, count: 3)
+        XCTAssertEqual(view.contentUpdatesForTest, updates)
+        XCTAssertNil(view.helpWindow)
+    }
+
     func testConfiguredHeightAndVisibleGeometryStayStableAcrossStates() {
         XCTAssertEqual(TopProcessesView.preferredHeight(count: 3), 168)
         for count in [1, 3, 10] {

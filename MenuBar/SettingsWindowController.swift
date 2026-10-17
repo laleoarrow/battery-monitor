@@ -463,9 +463,16 @@ private final class SettingsToggleButton: NSButton, SettingsContrastRefreshing {
     }
 }
 
+private struct SettingsIconConfiguration: Equatable {
+    let ink: NSColor
+    let accent: NSColor
+    let increasedContrast: Bool
+}
+
 private final class SettingsSidebarCellView: NSTableCellView, SettingsContrastRefreshing {
     private let icon: ModuleIconArtwork.SidebarIcon
     private let increaseContrast: () -> Bool
+    private var rendered: SettingsIconConfiguration?
 
     init(icon: ModuleIconArtwork.SidebarIcon, increaseContrast: @escaping () -> Bool) {
         self.icon = icon
@@ -486,17 +493,25 @@ private final class SettingsSidebarCellView: NSTableCellView, SettingsContrastRe
     }
 
     func refreshContrastAppearance() {
+        guard let imageView else { return }
         effectiveAppearance.performAsCurrentDrawingAppearance {
             let emphasized = backgroundStyle == .emphasized
             let ink = emphasized ? NSColor.white : SettingsStyle.primaryText
             let accent = emphasized ? NSColor.white : .systemBlue
-            imageView?.image = ModuleIconArtwork.sidebarImage(
-                for: icon, side: 18,
+            let configuration = SettingsIconConfiguration(
                 ink: ink.usingColorSpace(.sRGB) ?? ink,
                 accent: accent.usingColorSpace(.sRGB) ?? accent,
                 increasedContrast: increaseContrast()
             )
-            imageView?.contentTintColor = nil
+            if rendered != configuration {
+                imageView.image = ModuleIconArtwork.sidebarImage(
+                    for: icon, side: 18, ink: configuration.ink,
+                    accent: configuration.accent,
+                    increasedContrast: configuration.increasedContrast
+                )
+                rendered = configuration
+            }
+            imageView.contentTintColor = nil
         }
     }
 }
@@ -734,6 +749,7 @@ private final class SettingsFeedbackButton: NSButton {
 private final class GeneralSettingsIconView: NSImageView, SettingsContrastRefreshing {
     private let artwork: ModuleIconArtwork.GeneralIcon
     private let increaseContrast: () -> Bool
+    private var rendered: SettingsIconConfiguration?
 
     init(artwork: ModuleIconArtwork.GeneralIcon, increaseContrast: @escaping () -> Bool) {
         self.artwork = artwork
@@ -756,10 +772,17 @@ private final class GeneralSettingsIconView: NSImageView, SettingsContrastRefres
         effectiveAppearance.performAsCurrentDrawingAppearance {
             let ink = SettingsStyle.primaryText.usingColorSpace(.sRGB) ?? SettingsStyle.primaryText
             let blue = NSColor.systemBlue.usingColorSpace(.sRGB) ?? .systemBlue
-            image = ModuleIconArtwork.generalImage(
-                for: artwork, side: SettingsStyle.rowSymbolSize, ink: ink,
-                accent: blue, increasedContrast: increaseContrast()
+            let configuration = SettingsIconConfiguration(
+                ink: ink, accent: blue, increasedContrast: increaseContrast()
             )
+            if rendered != configuration {
+                image = ModuleIconArtwork.generalImage(
+                    for: artwork, side: SettingsStyle.rowSymbolSize, ink: configuration.ink,
+                    accent: configuration.accent,
+                    increasedContrast: configuration.increasedContrast
+                )
+                rendered = configuration
+            }
             contentTintColor = nil
         }
     }
@@ -2822,6 +2845,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
 private final class ModuleSettingsIconView: NSImageView, SettingsContrastRefreshing {
     private let module: Settings.Module
     private let increaseContrast: () -> Bool
+    private var rendered: SettingsIconConfiguration?
 
     init(module: Settings.Module, increaseContrast: @escaping () -> Bool) {
         self.module = module
@@ -2845,9 +2869,17 @@ private final class ModuleSettingsIconView: NSImageView, SettingsContrastRefresh
             let ink = SettingsStyle.primaryText.usingColorSpace(.sRGB)
                 ?? SettingsStyle.primaryText
             let blue = NSColor.systemBlue.usingColorSpace(.sRGB) ?? .systemBlue
-            image = ModuleIconArtwork.image(for: module, side: SettingsStyle.rowSymbolSize,
-                                            ink: ink, accent: blue,
-                                            increasedContrast: increaseContrast())
+            let configuration = SettingsIconConfiguration(
+                ink: ink, accent: blue, increasedContrast: increaseContrast()
+            )
+            if rendered != configuration {
+                image = ModuleIconArtwork.image(
+                    for: module, side: SettingsStyle.rowSymbolSize, ink: configuration.ink,
+                    accent: configuration.accent,
+                    increasedContrast: configuration.increasedContrast
+                )
+                rendered = configuration
+            }
             contentTintColor = nil
         }
     }

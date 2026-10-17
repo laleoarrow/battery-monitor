@@ -1,0 +1,388 @@
+{
+  "animationStress": {
+    "iterations": 20000,
+    "passed": true,
+    "rawResult": "ANIMATION_STRESS_PASSED iterations=20000 elapsed=0.100s"
+  },
+  "benchmarkEvidence": "benchmark-summary.json",
+  "cleanup": {
+    "native": {
+      "cloneCleanup": {
+        "additionalUnrelatedVMsPreserved": [],
+        "otherVMStatesPreserved": {
+          "macOS-TestLab": true,
+          "macOS-TestLab-Base": true
+        },
+        "ownedCloneRemoved": true,
+        "ownedVM": "Wattson-Performance-Smoothness-20261018"
+      },
+      "driverExitStatus": 1,
+      "postTeardownAudit": {
+        "allPassed": true,
+        "checks": {
+          "canonicalAppAndHelperNeverInstalled": true,
+          "canonicalHelperFixtureAbsent": true,
+          "ownedAppRegistrationsRemoved": true,
+          "ownedApplicationScriptsRemoved": true,
+          "ownedContainersRemoved": true,
+          "ownedPreferencesRemoved": true,
+          "ownedProcessesStopped": true,
+          "sourceAndBuildScratchRemoved": true
+        },
+        "details": {
+          "applicationScripts": [],
+          "containers": [],
+          "preferences": [],
+          "processes": [],
+          "registrations": []
+        },
+        "finishedUTC": "2026-10-17T17:02:18Z",
+        "schema": 1
+      }
+    },
+    "native-driver-probe": {
+      "cloneCleanup": {
+        "additionalUnrelatedVMsPreserved": [],
+        "otherVMStatesPreserved": {
+          "macOS-TestLab": true,
+          "macOS-TestLab-Base": true
+        },
+        "ownedCloneRemoved": true,
+        "ownedVM": "Wattson-Performance-Driver-Probe-20261018"
+      },
+      "driverExitStatus": 0,
+      "postTeardownAudit": {
+        "allPassed": true,
+        "checks": {
+          "canonicalAppAndHelperNeverInstalled": true,
+          "canonicalHelperFixtureAbsent": true,
+          "ownedAppRegistrationsRemoved": true,
+          "ownedApplicationScriptsRemoved": true,
+          "ownedContainersRemoved": true,
+          "ownedPreferencesRemoved": true,
+          "ownedProcessesStopped": true,
+          "sourceAndBuildScratchRemoved": true
+        },
+        "details": {
+          "applicationScripts": [],
+          "containers": [],
+          "preferences": [],
+          "processes": [],
+          "registrations": []
+        },
+        "finishedUTC": "2026-10-17T17:16:34Z",
+        "schema": 1
+      }
+    },
+    "native-followup": {
+      "cloneCleanup": {
+        "additionalUnrelatedVMsPreserved": [],
+        "otherVMStatesPreserved": {
+          "macOS-TestLab": true,
+          "macOS-TestLab-Base": true
+        },
+        "ownedCloneRemoved": true,
+        "ownedVM": "Wattson-Performance-Smoothness-Followup-20261018"
+      },
+      "driverExitStatus": 0,
+      "postTeardownAudit": {
+        "allPassed": true,
+        "checks": {
+          "canonicalAppAndHelperNeverInstalled": true,
+          "canonicalHelperFixtureAbsent": true,
+          "ownedAppRegistrationsRemoved": true,
+          "ownedApplicationScriptsRemoved": true,
+          "ownedContainersRemoved": true,
+          "ownedPreferencesRemoved": true,
+          "ownedProcessesStopped": true,
+          "sourceAndBuildScratchRemoved": true
+        },
+        "details": {
+          "applicationScripts": [],
+          "containers": [],
+          "preferences": [],
+          "processes": [],
+          "registrations": []
+        },
+        "finishedUTC": "2026-10-17T17:12:54Z",
+        "schema": 1
+      }
+    }
+  },
+  "environment": {
+    "canonicalHostAppInstalledOrReplaced": false,
+    "guestAccessibilityPreserved": [
+      {
+        "after": {
+          "preferenceKeyPresent": false,
+          "preferenceReduceMotion": null,
+          "systemReduceMotion": false,
+          "systemReduceTransparency": false
+        },
+        "before": {
+          "preferenceKeyPresent": false,
+          "preferenceReduceMotion": null,
+          "systemReduceMotion": false,
+          "systemReduceTransparency": false
+        },
+        "systemAccessibilityWritten": false,
+        "unchanged": true
+      },
+      {
+        "after": {
+          "preferenceKeyPresent": false,
+          "preferenceReduceMotion": null,
+          "systemReduceMotion": false,
+          "systemReduceTransparency": false
+        },
+        "before": {
+          "preferenceKeyPresent": false,
+          "preferenceReduceMotion": null,
+          "systemReduceMotion": false,
+          "systemReduceTransparency": false
+        },
+        "systemAccessibilityWritten": false,
+        "unchanged": true
+      }
+    ],
+    "hostGUIUsed": false,
+    "lateHostLockReport": "Root reported host Mac locked during later Pro/browser work. No causal connection to guest History timing is asserted; guest motion tests were not screen-lock-skipped.",
+    "systemAccessibilityPreferencesWritten": false
+  },
+  "focusedHistoryDiagnostics": {
+    "originalAndResumeCommit/history-baseline-committed-clock": {
+      "completionMarker": [
+        "SOME_CHECKS_FAILED"
+      ],
+      "completionTimeouts": [
+        "HISTORY_COMPLETION_TIMEOUT contracted-axis elapsed=1.0179700833333527 remaining=history.fill:0.35s,history.stroke:0.35s,history.head:0.35s"
+      ],
+      "failedAssertions": 1,
+      "failures": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "instrumentation": [
+        "CLOCK_PROBE resumed-before-explicit-commit index=0 name=InteractionTests.HistoryView now=435.1121265416668 local=435.0585916666668 speed=1.0 begin=0.05353487499996845 offset=0.0 presentationSpeed=0.0 presentationLocal=435.0585880416668 presentationBegin=0.0 presentationOffset=435.0585880416668 keys=[]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=4 name=nil now=435.1121265416668 local=435.0585916666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=435.0585880416668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=435.0585880416668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=5 name=nil now=435.1121265416668 local=435.0585916666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=435.0585880416668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=435.0585880416668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=8 name=nil now=435.1121265416668 local=435.0585916666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=435.0585880416668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=435.0585880416668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=0 name=InteractionTests.HistoryView now=435.1131850416668 local=435.0596501666668 speed=1.0 begin=0.05353487499996845 offset=0.0 presentationSpeed=1.0 presentationLocal=435.0596501666668 presentationBegin=0.05353487499996845 presentationOffset=0.0 keys=[]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=4 name=nil now=435.1131850416668 local=435.0596501666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=435.0596501666668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=435.0585880416668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=5 name=nil now=435.1131850416668 local=435.0596501666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=435.0596501666668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=435.0585880416668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=8 name=nil now=435.1131850416668 local=435.0596501666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=435.0596501666668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=435.0585880416668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE after-original-one-second-settle index=0 name=InteractionTests.HistoryView now=435.5689918750001 local=435.51545700000014 speed=1.0 begin=0.05353487499996845 offset=0.0 presentationSpeed=1.0 presentationLocal=435.51545700000014 presentationBegin=0.05353487499996845 presentationOffset=0.0 keys=[]"
+      ],
+      "logSHA256": "26b01bf6d4baf336a3ee2f9225fa6afccf84762807ab2b37a3171d937e754cbe",
+      "matchedTailPassed": true,
+      "passedAssertions": 68
+    },
+    "originalAndResumeCommit/history-baseline-original-clock": {
+      "completionMarker": [
+        "SOME_CHECKS_FAILED"
+      ],
+      "completionTimeouts": [
+        "HISTORY_COMPLETION_TIMEOUT contracted-axis elapsed=1.03889700000002 remaining=history.fill:0.35s,history.stroke:0.35s,history.head:0.35s"
+      ],
+      "failedAssertions": 1,
+      "failures": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "instrumentation": [
+        "CLOCK_PROBE resumed-before-explicit-commit index=0 name=InteractionTests.HistoryView now=411.13501979166676 local=411.0874824166668 speed=1.0 begin=0.047537374999990334 offset=0.0 presentationSpeed=0.0 presentationLocal=411.08747866666675 presentationBegin=0.0 presentationOffset=411.08747866666675 keys=[]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=4 name=nil now=411.13501979166676 local=411.0874824166668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=411.08747866666675 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=411.08747866666675,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=5 name=nil now=411.13501979166676 local=411.0874824166668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=411.08747866666675 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=411.08747866666675,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=8 name=nil now=411.13501979166676 local=411.0874824166668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=411.08747866666675 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=411.08747866666675,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE after-original-one-second-settle index=0 name=InteractionTests.HistoryView now=411.6057198333334 local=411.5581824583334 speed=1.0 begin=0.047537374999990334 offset=0.0 presentationSpeed=1.0 presentationLocal=411.5581824583334 presentationBegin=0.047537374999990334 presentationOffset=0.0 keys=[]"
+      ],
+      "logSHA256": "09b65bdbdf2a3fef0539b8a8ed2eea42d0cd036dafb9654efa1f5b90e9b03bb4",
+      "matchedTailPassed": true,
+      "passedAssertions": 68
+    },
+    "originalAndResumeCommit/history-candidate-committed-clock": {
+      "completionMarker": [
+        "SOME_CHECKS_FAILED"
+      ],
+      "completionTimeouts": [
+        "HISTORY_COMPLETION_TIMEOUT contracted-axis elapsed=1.0308947916666398 remaining=history.fill:0.35s,history.stroke:0.35s,history.head:0.35s"
+      ],
+      "failedAssertions": 1,
+      "failures": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "instrumentation": [
+        "CLOCK_PROBE resumed-before-explicit-commit index=0 name=InteractionTests.HistoryView now=483.46217483333345 local=483.4097212916668 speed=1.0 begin=0.05245354166663674 offset=0.0 presentationSpeed=0.0 presentationLocal=483.40971820833346 presentationBegin=0.0 presentationOffset=483.40971820833346 keys=[]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=4 name=nil now=483.46217483333345 local=483.4097212916668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=483.40971820833346 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=483.40971820833346,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=5 name=nil now=483.46217483333345 local=483.4097212916668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=483.40971820833346 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=483.40971820833346,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=8 name=nil now=483.46217483333345 local=483.4097212916668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=483.40971820833346 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=483.40971820833346,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=0 name=InteractionTests.HistoryView now=483.46324908333344 local=483.4107955416668 speed=1.0 begin=0.05245354166663674 offset=0.0 presentationSpeed=1.0 presentationLocal=483.4107955416668 presentationBegin=0.05245354166663674 presentationOffset=0.0 keys=[]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=4 name=nil now=483.46324908333344 local=483.4107955416668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=483.4107955416668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=483.40971820833346,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=5 name=nil now=483.46324908333344 local=483.4107955416668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=483.4107955416668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=483.40971820833346,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=8 name=nil now=483.46324908333344 local=483.4107955416668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=483.4107955416668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=483.40971820833346,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE after-original-one-second-settle index=0 name=InteractionTests.HistoryView now=483.9374129166668 local=483.88495937500016 speed=1.0 begin=0.05245354166663674 offset=0.0 presentationSpeed=1.0 presentationLocal=483.88495937500016 presentationBegin=0.05245354166663674 presentationOffset=0.0 keys=[]"
+      ],
+      "logSHA256": "69a6df5eda308af860d9d96d38d9f91edca9f1d9569deab7941aa367f773c70e",
+      "matchedTailPassed": true,
+      "passedAssertions": 68
+    },
+    "originalAndResumeCommit/history-candidate-original-clock": {
+      "completionMarker": [
+        "SOME_CHECKS_FAILED"
+      ],
+      "completionTimeouts": [
+        "HISTORY_COMPLETION_TIMEOUT contracted-axis elapsed=1.0006361666666521 remaining=history.fill:0.35s,history.stroke:0.35s,history.head:0.35s"
+      ],
+      "failedAssertions": 1,
+      "failures": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "instrumentation": [
+        "CLOCK_PROBE resumed-before-explicit-commit index=0 name=InteractionTests.HistoryView now=459.48549733333346 local=459.4357061666668 speed=1.0 begin=0.049791166666636855 offset=0.0 presentationSpeed=0.0 presentationLocal=459.43570220833345 presentationBegin=0.0 presentationOffset=459.43570220833345 keys=[]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=4 name=nil now=459.48549733333346 local=459.4357061666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=459.43570220833345 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=459.43570220833345,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=5 name=nil now=459.48549733333346 local=459.4357061666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=459.43570220833345 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=459.43570220833345,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=8 name=nil now=459.48549733333346 local=459.4357061666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=459.43570220833345 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=459.43570220833345,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE after-original-one-second-settle index=0 name=InteractionTests.HistoryView now=459.97358395833345 local=459.9237927916668 speed=1.0 begin=0.049791166666636855 offset=0.0 presentationSpeed=1.0 presentationLocal=459.9237927916668 presentationBegin=0.049791166666636855 presentationOffset=0.0 keys=[]"
+      ],
+      "logSHA256": "352360b65cc29c30bd1840504c5d1e6c482a6e764d6a4066f64baf87435adde2",
+      "matchedTailPassed": true,
+      "passedAssertions": 68
+    },
+    "pollAndResumeCommit/history-baseline-poll-commit": {
+      "completionMarker": [
+        "SOME_CHECKS_FAILED"
+      ],
+      "completionTimeouts": [
+        "HISTORY_COMPLETION_TIMEOUT contracted-axis elapsed=1.0348498333333396 remaining=history.fill:0.35s,history.stroke:0.35s,history.head:0.35s"
+      ],
+      "failedAssertions": 1,
+      "failures": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "instrumentation": [
+        "CLOCK_PROBE timeout-before-extra-flush index=0 name=InteractionTests.HistoryView now=79.40768491666668 local=79.40768491666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=79.40768491666668 presentationBegin=0.0 presentationOffset=0.0 keys=[]",
+        "CLOCK_PROBE timeout-before-extra-flush index=4 name=nil now=79.40768491666668 local=79.40768491666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=79.40768491666668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=78.26143579166668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE timeout-before-extra-flush index=5 name=nil now=79.40768491666668 local=79.40768491666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=79.40768491666668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=78.26143579166668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE timeout-before-extra-flush index=8 name=nil now=79.40768491666668 local=79.40768491666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=79.40768491666668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=78.26143579166668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE timeout-after-extra-flush index=0 name=InteractionTests.HistoryView now=79.41099000000001 local=79.41099000000001 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=79.41099000000001 presentationBegin=0.0 presentationOffset=0.0 keys=[]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=0 name=InteractionTests.HistoryView now=79.48639112500001 local=79.454136375 speed=1.0 begin=0.03225475000000699 offset=0.0 presentationSpeed=0.0 presentationLocal=79.45413329166668 presentationBegin=0.0 presentationOffset=79.45413329166668 keys=[]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=4 name=nil now=79.48639112500001 local=79.454136375 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=79.45413329166668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=79.45413329166668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=5 name=nil now=79.48639112500001 local=79.454136375 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=79.45413329166668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=79.45413329166668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=8 name=nil now=79.48639112500001 local=79.454136375 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=79.45413329166668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=79.45413329166668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=0 name=InteractionTests.HistoryView now=79.48728216666669 local=79.45502741666668 speed=1.0 begin=0.03225475000000699 offset=0.0 presentationSpeed=1.0 presentationLocal=79.45502741666668 presentationBegin=0.03225475000000699 presentationOffset=0.0 keys=[]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=4 name=nil now=79.48728216666669 local=79.45502741666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=79.45502741666668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=79.45413329166668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=5 name=nil now=79.48728216666669 local=79.45502741666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=79.45502741666668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=79.45413329166668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=8 name=nil now=79.48728216666669 local=79.45502741666668 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=79.45502741666668 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=79.45413329166668,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE after-original-one-second-settle index=0 name=InteractionTests.HistoryView now=79.98581695833334 local=79.95356220833334 speed=1.0 begin=0.03225475000000699 offset=0.0 presentationSpeed=1.0 presentationLocal=79.95356220833334 presentationBegin=0.03225475000000699 presentationOffset=0.0 keys=[]"
+      ],
+      "logSHA256": "a5c7ceae0b3a8d0570061274f02ec8d514d030f91be9e37c332b106f702ac6a7",
+      "matchedTailPassed": true,
+      "passedAssertions": 68
+    },
+    "pollAndResumeCommit/history-candidate-poll-commit": {
+      "completionMarker": [
+        "SOME_CHECKS_FAILED"
+      ],
+      "completionTimeouts": [
+        "HISTORY_COMPLETION_TIMEOUT contracted-axis elapsed=1.0434907916666702 remaining=history.fill:0.35s,history.stroke:0.35s,history.head:0.35s"
+      ],
+      "failedAssertions": 1,
+      "failures": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "instrumentation": [
+        "CLOCK_PROBE timeout-before-extra-flush index=0 name=InteractionTests.HistoryView now=102.98544541666669 local=102.98544541666669 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=102.98544541666669 presentationBegin=0.0 presentationOffset=0.0 keys=[]",
+        "CLOCK_PROBE timeout-before-extra-flush index=4 name=nil now=102.98544541666669 local=102.98544541666669 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=102.98544541666669 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=101.83185187500003,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE timeout-before-extra-flush index=5 name=nil now=102.98544541666669 local=102.98544541666669 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=102.98544541666669 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=101.83185187500003,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE timeout-before-extra-flush index=8 name=nil now=102.98544541666669 local=102.98544541666669 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=102.98544541666669 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=101.83185187500003,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE timeout-after-extra-flush index=0 name=InteractionTests.HistoryView now=102.98810600000002 local=102.98810600000002 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=102.98810600000002 presentationBegin=0.0 presentationOffset=0.0 keys=[]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=0 name=InteractionTests.HistoryView now=103.07022687500002 local=103.03404279166669 speed=1.0 begin=0.03618408333332468 offset=0.0 presentationSpeed=0.0 presentationLocal=103.03403575000003 presentationBegin=0.0 presentationOffset=103.03403575000003 keys=[]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=4 name=nil now=103.07022687500002 local=103.03404279166669 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=103.03403575000003 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=103.03403575000003,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=5 name=nil now=103.07022687500002 local=103.03404279166669 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=103.03403575000003 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=103.03403575000003,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-before-explicit-commit index=8 name=nil now=103.07022687500002 local=103.03404279166669 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=103.03403575000003 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=103.03403575000003,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=0 name=InteractionTests.HistoryView now=103.07189354166668 local=103.03570945833336 speed=1.0 begin=0.03618408333332468 offset=0.0 presentationSpeed=1.0 presentationLocal=103.03570945833336 presentationBegin=0.03618408333332468 presentationOffset=0.0 keys=[]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=4 name=nil now=103.07189354166668 local=103.03570945833336 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=103.03570945833336 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.fill:begin=103.03403575000003,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=5 name=nil now=103.07189354166668 local=103.03570945833336 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=103.03570945833336 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.stroke:begin=103.03403575000003,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE resumed-after-explicit-commit index=8 name=nil now=103.07189354166668 local=103.03570945833336 speed=1.0 begin=0.0 offset=0.0 presentationSpeed=1.0 presentationLocal=103.03570945833336 presentationBegin=0.0 presentationOffset=0.0 keys=[\"history.head:begin=103.03403575000003,duration=0.35,removed=true,repeat=0.0,speed=1.0,offset=0.0\"]",
+        "CLOCK_PROBE after-original-one-second-settle index=0 name=InteractionTests.HistoryView now=103.53742462500003 local=103.5012405416667 speed=1.0 begin=0.03618408333332468 offset=0.0 presentationSpeed=1.0 presentationLocal=103.5012405416667 presentationBegin=0.03618408333332468 presentationOffset=0.0 keys=[]"
+      ],
+      "logSHA256": "373416056cf07635b571cf62f09d9ddc118175c7d7374a44e805f58a8a453e9b",
+      "matchedTailPassed": true,
+      "passedAssertions": 68
+    }
+  },
+  "historyClassification": {
+    "baselineComparison": "Exact initial matched-tail failure was not reproduced by extracted fixtures. Both baseline and candidate consistently fail the different contracted-axis key-removal assertion; matched-tail passes in all6focused runs.",
+    "furtherRetryPlan": "None; bounded investigation ended with honest limits.",
+    "inference": "Delayed Core Animation model-key retirement at the fixture event-loop boundary is supported as a hypothesis. Root cause and an exact original-normal-failure baseline reproduction remain unproven.",
+    "initialNormalFailure": "Matched-tail presentation reached target dx=dy=0, but three0.35s animation keys remained after1.074s.437other normal assertions passed.",
+    "keysRemovedByTest": false,
+    "lastSameDeadlineExperiment": "Explicit flush/updateWindows in settle polling and commit after fixture clock resume did not make contracted-axis pass in either revision.",
+    "observedClockState": "At failure model/presentation clocks advance normally, speed1/begin0/offset0; three non-repeating removed-on-completion0.35s keys remain well beyond scheduled end. A diagnostic flush after NSApp.run returns retires them immediately.",
+    "runtimeHistoryChanged": false,
+    "timeoutWidened": false
+  },
+  "legacyInteraction": {
+    "completionMarker": [
+      "ALL_INTERACTION_CHECKS_PASSED"
+    ],
+    "failedAssertions": 0,
+    "failures": [],
+    "logSHA256": "8464024d5b97d180e4aa59e1f2e4fe536e67f494a84088749d289b5012d57f77",
+    "passedAssertions": 436
+  },
+  "limits": "Static renderer geometry and microbenchmarks do not establish display FPS, whole-app CPU/memory/energy, or human-perceived smoothness. Stage lifecycle scripts may print a driver-level ALL marker even when individual diagnostic assertions fail; this report uses individual exit codes/assertions.",
+  "overallNativeMotionGate": "partial; do not describe all native interaction checks as passed",
+  "rawArchive": {
+    "members": 58,
+    "path": "native-validation-raw.tar.gz",
+    "sha256": "3f82bee0f41cf91493366a4afa5d0526600645ec43911ff5ff8884a580c3024e"
+  },
+  "reducedInteraction": {
+    "completionMarker": [
+      "ALL_INTERACTION_CHECKS_PASSED"
+    ],
+    "failedAssertions": 0,
+    "failures": [],
+    "logSHA256": "f58bc9e0fd9665dc55260753cd10d3a1cefbbd27927403e782d421a5b5ba6cdc",
+    "passedAssertions": 430
+  },
+  "rendererMatrices": {
+    "compact-matrix": {
+      "assertions": 2168,
+      "evidenceSHA256": "d2c93b4e46a59d0b52e78242208aee001ff23cf8d52ea4755dba94f1132d711c",
+      "failures": 0,
+      "images": 12,
+      "limits": "Process energy, battery telemetry, history, and Settings privileged dependencies are deterministic fixtures. No sampling correctness or physical-hardware power-mode assertion is inferred from screenshots.",
+      "mode": "compact-only",
+      "productionOffscreen": 0,
+      "windowServerComposited": 12
+    },
+    "production-matrix": {
+      "assertions": 6508,
+      "evidenceSHA256": "8e5be16e11bc267daf8a401a8e1d4f1a42b0a54cf2fa32c062ec33f170681bde",
+      "failures": 0,
+      "images": 130,
+      "limits": "Process energy, battery telemetry, history, and Settings privileged dependencies are deterministic fixtures. No sampling correctness or physical-hardware power-mode assertion is inferred from screenshots.",
+      "mode": "full-matrix",
+      "productionOffscreen": 44,
+      "windowServerComposited": 86
+    }
+  },
+  "schema": 1,
+  "source": {
+    "baselineCommit": "0ec6a855351edc99826c6f3f6060b10267d85c06",
+    "candidateArchiveSHA256": "3d2da8ba507e851038951710f5659328c637a4ec58cf149fb5951e67e7ff5b3d",
+    "candidateFrozen": true,
+    "candidateManifestSHA256": "f5d75e6fa1b4dd3e398795cecc98917c92f2862cbe808da3c2392b5c2682e574",
+    "compiler": "same guest xcrun swiftc for both archives",
+    "files": 2140,
+    "flags": [
+      "-O",
+      "-D",
+      "DEBUG",
+      "-swift-version",
+      "5"
+    ],
+    "newFocusedTestIncluded": true
+  },
+  "visualReview": "visual-review.json"
+}

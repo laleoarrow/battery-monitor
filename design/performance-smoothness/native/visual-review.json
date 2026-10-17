@@ -1,0 +1,205 @@
+{
+  "correction": {
+    "additionalVisualVMCreated": false,
+    "finding": "Original-resolution reinspection is clean: System Load59.7W,Battery Assist31.7W,Battery Temp38.6\u00b0C,Cycle Count116. Root and an independent auditor confirm the same bytes. No differing earlier hash was captured; the original visual impression is unsupported.",
+    "verifiedSHA256": "ea3b9a77cbe776c856a61e06f3d555ff0bda010375415be7569dbfc4c98355c0",
+    "withdrawnClaim": "Initial multi-image preview was reported as garbled Ring stats in classic-dark-mixed-supply-3-top.png."
+  },
+  "coverage": [
+    "Charging, Full, On Battery, Mixed Supply, Low Battery, Low Power fixtures",
+    "Light/Dark, Classic/Regular Glass popup hosts",
+    "Process detailed/compact;3/10 rows; native small Off/On Settings selector"
+  ],
+  "limitations": "Representative static fixture pixels and geometry do not measure FPS or human-perceived animation smoothness. No claim of exhaustive pixel equality against baseline; focused image tests cover cache invalidation.",
+  "method": "Manual pixel inspection of representative owned native AppKit/WindowServer captures; original-resolution reinspection for any concern. Full images remain ignored .build evidence, not release presentation.",
+  "observations": [
+    "Approved fixed0\u2013100 pale-to-deep-blue activity bars retain proportional visible prefixes.",
+    "Detailed process CPU/wakeup lines and compact omission remain as designed.",
+    "Settings Modules icons/sidebar/small selectors are aligned and legible.",
+    "Partial upper/lower section content in scrolled views is expected; harness verifies complete requested process rows and footer after bottom scroll."
+  ],
+  "schema": 1,
+  "selection": [
+    {
+      "nativeCase": "classic-light-charging-3-top",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/classic-light-charging-3-top.png",
+      "pixels": [
+        804,
+        1392
+      ],
+      "sha256": "bd17e60e5bd531f8940bb8cbe0565e9cfedbdeb9d5bfc11ed0bd897e6594f441"
+    },
+    {
+      "nativeCase": "classic-dark-on-battery-3-top",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/classic-dark-on-battery-3-top.png",
+      "pixels": [
+        804,
+        1392
+      ],
+      "sha256": "65ba6b4533f391e9596fb49310e155222f8cef52eb23b4386574ef5b8fdfdea4"
+    },
+    {
+      "nativeCase": "classic-dark-full-3-top",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/classic-dark-full-3-top.png",
+      "pixels": [
+        804,
+        1392
+      ],
+      "sha256": "e3af1df4f0741caa16ce3539aef9a6c88890fae7b7a63769ca71decd007f49be"
+    },
+    {
+      "nativeCase": "classic-light-mixed-supply-3-top",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/classic-light-mixed-supply-3-top.png",
+      "pixels": [
+        804,
+        1392
+      ],
+      "sha256": "ef395f579b4300e4a54d8fbebabe431671d97b619cdd26eb4d00b955fb1f425f"
+    },
+    {
+      "nativeCase": "classic-dark-mixed-supply-3-top",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/classic-dark-mixed-supply-3-top.png",
+      "pixels": [
+        804,
+        1392
+      ],
+      "sha256": "ea3b9a77cbe776c856a61e06f3d555ff0bda010375415be7569dbfc4c98355c0"
+    },
+    {
+      "nativeCase": "classic-dark-mixed-supply-3-bottom",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/classic-dark-mixed-supply-3-bottom.png",
+      "pixels": [
+        804,
+        1392
+      ],
+      "sha256": "48b024e955ced98a802ccdb3e876fb424962c0204b2fc18755dabcbe7fb16406"
+    },
+    {
+      "nativeCase": "classic-light-on-battery-3-bottom",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/classic-light-on-battery-3-bottom.png",
+      "pixels": [
+        804,
+        1392
+      ],
+      "sha256": "a0dca7bf7361a3168da31accd092c8f5071d976993eeabb790f4299a418a8da1"
+    },
+    {
+      "nativeCase": "glass-light-charging-3-top",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/glass-light-charging-3-top.png",
+      "pixels": [
+        880,
+        1444
+      ],
+      "sha256": "94b01258a8bfc70e6390c1189b53f73c916f99c1d761922e3f42008f0d1682e1"
+    },
+    {
+      "nativeCase": "glass-dark-charging-3-top",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/glass-dark-charging-3-top.png",
+      "pixels": [
+        880,
+        1444
+      ],
+      "sha256": "0ce3910fa60f37b2397d6545c6913f3de2f52b44c8e4834968c72e3feaed29b9"
+    },
+    {
+      "nativeCase": "glass-light-mixed-supply-3-top",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/glass-light-mixed-supply-3-top.png",
+      "pixels": [
+        880,
+        1444
+      ],
+      "sha256": "f6e482e735216ce8c6c9550977a65281a3c3218e1478757edf6a81f7422e409b"
+    },
+    {
+      "nativeCase": "glass-dark-mixed-supply-3-top",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/glass-dark-mixed-supply-3-top.png",
+      "pixels": [
+        880,
+        1444
+      ],
+      "sha256": "3de369ee42c9e8e43979502a0b82e197e64c1d185796686952cf4fe86be34581"
+    },
+    {
+      "nativeCase": "glass-light-on-battery-3-bottom",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/glass-light-on-battery-3-bottom.png",
+      "pixels": [
+        880,
+        1444
+      ],
+      "sha256": "2a3c8c61f6067a5961a30a77fc014bad78df0e1b7b89ce88d7038ec3f38c491c"
+    },
+    {
+      "nativeCase": "classic-light-low-battery-3-top",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/classic-light-low-battery-3-top.png",
+      "pixels": [
+        804,
+        1392
+      ],
+      "sha256": "b3ce527d69d568c69cf210fa8526257a87822d99083c5967740060a4fb4799d9"
+    },
+    {
+      "nativeCase": "glass-dark-low-power-3-top",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/glass-dark-low-power-3-top.png",
+      "pixels": [
+        880,
+        1444
+      ],
+      "sha256": "c0dbbc5e4045afe79a7ed359874f1518c8c8785d84a8f8e945eae48ff4c58e4f"
+    },
+    {
+      "nativeCase": "settings-glass-dark-compact",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "production-matrix/settings-glass-dark-compact.png",
+      "pixels": [
+        1472,
+        1072
+      ],
+      "sha256": "68601d38295434c37717223d402e6842403e4798e96762b1681863d63dd508a2"
+    },
+    {
+      "nativeCase": "module-detailed-light-3",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "compact-matrix/module-detailed-light-3.png",
+      "pixels": [
+        752,
+        416
+      ],
+      "sha256": "de11b6a3fbf6ca5a40286acb71df2f88a7c2184756c3021ff81b4f9a250118f9"
+    },
+    {
+      "nativeCase": "module-compact-dark-3",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "compact-matrix/module-compact-dark-3.png",
+      "pixels": [
+        752,
+        320
+      ],
+      "sha256": "e4115562e3aae46350ae68ce4316be856c53a34b3f1334a73d4b7b583425b708"
+    },
+    {
+      "nativeCase": "module-compact-light-10",
+      "observed": "Text/value alignment, original state colors/artwork, separators and available viewport are legible; no supported visual regression.",
+      "path": "compact-matrix/module-compact-light-10.png",
+      "pixels": [
+        752,
+        712
+      ],
+      "sha256": "357a478579d2deeb3f6e55ff2e6c7f673b416830b61c4517eb9cf6ba1aa1441c"
+    }
+  ],
+  "sourceCandidateArchiveSHA256": "3d2da8ba507e851038951710f5659328c637a4ec58cf149fb5951e67e7ff5b3d"
+}

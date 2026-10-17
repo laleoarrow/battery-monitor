@@ -55,12 +55,16 @@ public enum HelperTopProcesses {
         guard elapsedNanoseconds > 0, elapsedNanoseconds <= maximumSamplingNanoseconds,
               timebaseNumerator > 0, timebaseDenominator > 0 else { return nil }
         let nanosecondsPerTick = Double(timebaseNumerator) / Double(timebaseDenominator)
-        let processes: [HelperEnergyProcess] = after.compactMap { pid, current in
+        // Keep only numeric candidates so the full process walk neither sorts
+        // every result nor allocates fallback names for discarded processes.
+        var candidates: [(pid: Int32, energyImpact: Double, cpuPercent: Double, idleWakeupsPerSecond: Double)] = []
+        candidates.reserveCapacity(maximumProcesses)
+        for (pid, current) in after {
             guard pid > 0, let previous = before[pid],
                   previous.startedAt == current.startedAt,
                   current.userMachTime >= previous.userMachTime,
                   current.systemMachTime >= previous.systemMachTime,
-                  current.idleWakeups >= previous.idleWakeups else { return nil }
+                  current.idleWakeups >= previous.idleWakeups else { continue }
             // Convert each delta before addition/multiplication so malformed or
             // wrapped counters cannot overflow an integer in the root helper.
             let cpu = (Double(current.userMachTime - previous.userMachTime)
@@ -69,19 +73,18 @@ public enum HelperTopProcesses {
             let wakeupsPerSecond = Double(current.idleWakeups - previous.idleWakeups)
                 * 1_000_000_000 / Double(elapsedNanoseconds)
             let score = cpuPercent + 0.05 * wakeupsPerSecond
-            guard score.isFinite, score >= 0 else { return nil }
-            return HelperEnergyProcess(
-                pid: pid,
-                name: "Process \(pid)",
-                energyImpact: score,
-                cpuPercent: cpuPercent,
-                idleWakeupsPerSecond: wakeupsPerSecond
-            )
+            guard score.isFinite, score >= 0 else { continue }
+            let index = candidates.firstIndex {
+                score == $0.energyImpact ? pid < $0.pid : score > $0.energyImpact
+            } ?? candidates.endIndex
+            guard index < maximumProcesses else { continue }
+            if candidates.count == maximumProcesses { candidates.removeLast() }
+            candidates.insert((pid, score, cpuPercent, wakeupsPerSecond), at: index)
         }
-        return Array(processes.sorted {
-            $0.energyImpact == $1.energyImpact
-                ? $0.pid < $1.pid : $0.energyImpact > $1.energyImpact
-        }.prefix(maximumProcesses))
+        return candidates.map {
+            HelperEnergyProcess(pid: $0.pid, name: "Process \($0.pid)", energyImpact: $0.energyImpact,
+                                cpuPercent: $0.cpuPercent, idleWakeupsPerSecond: $0.idleWakeupsPerSecond)
+        }
     }
 
     public static func sample() -> [HelperEnergyProcess]? {
@@ -151,6 +154,7 @@ public enum HelperTopProcesses {
         }
         guard count > 0, count < pids.count else { return nil }
         var counters: [Int32: HelperProcessCounters] = [:]
+        counters.reserveCapacity(Int(count))
         for pid in pids.prefix(Int(count)) where pid > 0 {
             guard now() < deadline else { return nil }
             // Races with process exit, unavailable system processes and

@@ -1,0 +1,33 @@
+{
+  "baselineCommit": "0ec6a855351edc99826c6f3f6060b10267d85c06",
+  "canonicalInstallationUpdated": false,
+  "externalProReview": "pending; no Pro review performed",
+  "logSHA256": {
+    "python-blocked-stage-recheck.log.gz": "76426fa5b940a8ef25f5cee9ea7ee0afd9be13ac85caedc80c5d2c69555ca94a",
+    "python-targeted-budget.log.gz": "ac2b12b01ad478f6d05bd204bbd80d70bc5b02b055723c157acd9480d68b4cf8",
+    "python-tests-consolidated.log.gz": "842b4793d5b87c0c9be3e5f37702d88a3c76e25f98869330e21c281318cfccea",
+    "python-tests-final.log.gz": "fa4ac55811d0122a908f911cd35ffb36ebe2ef598ca594ac238fedc32077a3e1",
+    "python-tests-verified.log.gz": "a473999a454b900ca26efe4773b7eeb29212fa0df8f21845ca0801418228443d",
+    "python-tests.log.gz": "cc4a62bd5eee587b36ed89d32e56f3ef478eb9f9ba7ac38c0d393b1a8b9c498e",
+    "swift-tests.log.gz": "afbe31b168bb3d02e60f8403933d2fc575f9152a803376b2e4bf6e7eb574eadb"
+  },
+  "nativeMotionGate": "partial; see ../native/native-validation.json",
+  "python": {
+    "command": "env -u WATTSON_RUN_INTERACTION PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+    "failures": 0,
+    "finalResult": "OK",
+    "priorFailureNotes": [
+      "Initial run failed only the source parser after immutable gradient stops moved to initialization; numerical periodicity assertions retained.",
+      "Two subsequent full runs missed the injected blocked-stage marker. Original isolated test passed unchanged. Test global 0.5s stage budget narrowed to the exact injected command; production collector and its budgets unchanged. Targeted and final full suites pass. The exact earlier missed-marker cause was not captured."
+    ],
+    "priorRunsPreserved": true,
+    "run": 601,
+    "skipped": 4
+  },
+  "swift": {
+    "baselinePassed": 582,
+    "candidatePassed": 592,
+    "command": "env WATTSON_FORCE_REDUCE_MOTION=0 WATTSON_FORCE_REDUCE_TRANSPARENCY=0 swift test",
+    "failures": 0
+  }
+}

@@ -41,6 +41,7 @@ final class LaneView: PopoverSection {
             fill.masksToBounds = true
             sweep.startPoint = CGPoint(x: 0, y: 0.5)
             sweep.endPoint = CGPoint(x: 1, y: 0.5)
+            sweep.locations = [0, 0.2, 0.4, 1].map { NSNumber(value: $0) }
             fill.addSublayer(sweep)
             track.addSublayer(fill)
 
@@ -142,7 +143,6 @@ final class LaneView: PopoverSection {
             lane.sweep.frame = CGRect(x: -width, y: 0, width: width * 2, height: Self.laneHeight)
             let clear = color.withAlphaComponent(0).cgColor
             lane.sweep.colors = [clear, color.withAlphaComponent(0.75).cgColor, clear, clear]
-            lane.sweep.locations = [0, 0.2, 0.4, 1].map { NSNumber(value: $0) }
         }
 
         if animationsEnabled {

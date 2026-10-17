@@ -328,6 +328,8 @@ final class PipeBundle {
 
         gradient.startPoint = CGPoint(x: 0, y: 0.5)
         gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        gradient.locations = [0, 0.13, 0.21, 0.29, 0.42,
+                              0.50, 0.63, 0.71, 0.79, 0.92, 1].map { NSNumber(value: $0) }
         flowHost.addSublayer(gradient)
         container.addSublayer(flowHost)
     }
@@ -362,8 +364,6 @@ final class PipeBundle {
             let core = color.cgColor
             self.gradient.colors = [clear, soft, core, soft, clear,
                                     clear, soft, core, soft, clear, clear]
-            self.gradient.locations = [0, 0.13, 0.21, 0.29, 0.42,
-                                       0.50, 0.63, 0.71, 0.79, 0.92, 1].map { NSNumber(value: $0) }
             self.container.opacity = thickness > 0.5 ? 1 : 0
         }
 
