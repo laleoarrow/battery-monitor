@@ -368,7 +368,7 @@ final class HistoryView: PopoverSection {
         }
         let dot = CAKeyframeAnimation(keyPath: "position")
         dot.values = positions
-        dot.keyTimes = steps.map { NSNumber(value: $0) }
+        if steps.count > 33 { dot.keyTimes = steps.map { NSNumber(value: $0) } }
         dot.calculationMode = .linear
         add(dot, to: head, key: "history.head")
     }
