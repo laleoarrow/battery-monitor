@@ -3,9 +3,13 @@
   "measurement": "Relative displayed RGB levels, not an estimate of linear alpha.",
   "checks": {
     "flowFadesAtStart": true,
-    "rimHasSoftDirectionalContrast": true,
+    "rimBlueSweepBuildsAlongUpperArc": true,
+    "rimLowerContourRemainsSolidNeutral": true,
+    "lanesFillFadesTowardBaseline": true,
     "historyAreaFadesDownward": true,
-    "historyFillQuieterThanStroke": true
+    "historyFillQuieterThanStroke": true,
+    "clockTrailBuildsTowardHand": true,
+    "clockTrailQuieterThanHand": true
   },
   "pixels": {
     "backgroundRGB": [
@@ -15,11 +19,29 @@
     ],
     "flowStartBlue": 79,
     "flowSettledBlue": 199,
-    "rimLeftBrightness": 165,
-    "rimRightBrightness": 206,
+    "rimLeftRGB": [
+      207,
+      222,
+      236
+    ],
+    "rimRightRGB": [
+      12,
+      133,
+      255
+    ],
+    "rimLowerRGB": [
+      233,
+      233,
+      233
+    ],
+    "lanesUpperBlue": 237,
+    "lanesLowerBlue": 134,
     "historyAreaUpperBlue": 115,
     "historyAreaLowerBlue": 43,
-    "historyStrokeBlue": 255
+    "historyStrokeBlue": 255,
+    "clockTrailStartBlue": 55,
+    "clockTrailEndBlue": 100,
+    "clockHandBlue": 255
   },
   "passed": true
 }

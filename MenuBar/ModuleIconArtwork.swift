@@ -52,11 +52,23 @@ enum ModuleIconArtwork {
                 }
             case .ring:
                 do {
-                    let path = CGMutablePath()
-                    path.addEllipse(in: CGRect(x: 1.65, y: 1.65, width: 20.7, height: 20.7))
-                    drawGradient(path, strokeWidth: 1.35 * contrastScale,
-                                 colors: [ink.withAlphaComponent((increasedContrast ? 1 : 0.56)).cgColor, ink.withAlphaComponent((increasedContrast ? 1 : 1)).cgColor, ink.withAlphaComponent((increasedContrast ? 1 : 0.8)).cgColor],
-                                 locations: [0, 0.52, 1], start: NSPoint(x: 3, y: 2), end: NSPoint(x: 22, y: 12))
+                    let path = NSBezierPath(ovalIn: NSRect(x: 1.65, y: 1.65, width: 20.7, height: 20.7))
+                    ink.setStroke()
+                    path.lineWidth = 1.35 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+                do {
+                    if !increasedContrast {
+                        let path = CGMutablePath()
+                        path.move(to: NSPoint(x: 3.03664, y: 6.825))
+                        path.addCurve(to: NSPoint(x: 12, y: 1.65), control1: NSPoint(x: 4.88549, y: 3.6227), control2: NSPoint(x: 8.3023, y: 1.65))
+                        path.addCurve(to: NSPoint(x: 20.96336, y: 6.825), control1: NSPoint(x: 15.6977, y: 1.65), control2: NSPoint(x: 19.11451, y: 3.6227))
+                        drawGradient(path, strokeWidth: 1.35 * contrastScale,
+                                     colors: [accent.withAlphaComponent((increasedContrast ? 1 : 0.12)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 1)).cgColor],
+                                     locations: [0, 1], start: NSPoint(x: 3.0366, y: 6.825), end: NSPoint(x: 20.9634, y: 6.825))
+                    }
                 }
                 do {
                     let path = NSBezierPath()
@@ -102,24 +114,20 @@ enum ModuleIconArtwork {
                     path.stroke()
                 }
                 do {
-                    let path = NSBezierPath(roundedRect: NSRect(x: 9.6, y: 8.2, width: 4.2, height: 13.8), xRadius: 0.85, yRadius: 0.85)
-                    accent.setFill()
-                    path.fill()
-                    ink.setStroke()
-                    path.lineWidth = 1.15 * contrastScale
-                    path.lineCapStyle = .round
-                    path.lineJoinStyle = .round
-                    path.stroke()
+                    let path = CGMutablePath()
+                    path.addRoundedRect(in: CGRect(x: 9.6, y: 8.2, width: 4.2, height: 13.8), cornerWidth: 0.85, cornerHeight: 0.85)
+                    drawGradient(path, strokeWidth: nil,
+                                 colors: [accent.withAlphaComponent((increasedContrast ? 1 : 1)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 0.38)).cgColor],
+                                 locations: [0, 1], start: NSPoint(x: 0, y: 8.2), end: NSPoint(x: 0, y: 22))
+                    stroke(path, color: ink, width: 1.15 * contrastScale)
                 }
                 do {
-                    let path = NSBezierPath(roundedRect: NSRect(x: 17, y: 3.2, width: 4.2, height: 18.8), xRadius: 0.85, yRadius: 0.85)
-                    accent.setFill()
-                    path.fill()
-                    ink.setStroke()
-                    path.lineWidth = 1.15 * contrastScale
-                    path.lineCapStyle = .round
-                    path.lineJoinStyle = .round
-                    path.stroke()
+                    let path = CGMutablePath()
+                    path.addRoundedRect(in: CGRect(x: 17, y: 3.2, width: 4.2, height: 18.8), cornerWidth: 0.85, cornerHeight: 0.85)
+                    drawGradient(path, strokeWidth: nil,
+                                 colors: [accent.withAlphaComponent((increasedContrast ? 1 : 1)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 0.38)).cgColor],
+                                 locations: [0, 1], start: NSPoint(x: 0, y: 3.2), end: NSPoint(x: 0, y: 22))
+                    stroke(path, color: ink, width: 1.15 * contrastScale)
                 }
             case .history:
                 do {
@@ -198,6 +206,16 @@ enum ModuleIconArtwork {
                     path.stroke()
                 }
                 do {
+                    if !increasedContrast {
+                        let path = CGMutablePath()
+                        path.move(to: NSPoint(x: 15.84, y: 6.51))
+                        path.addCurve(to: NSPoint(x: 18.47, y: 10.27), control1: NSPoint(x: 17.12, y: 7.41), control2: NSPoint(x: 18.07, y: 8.72))
+                        drawGradient(path, strokeWidth: 0.9 * contrastScale,
+                                     colors: [accent.withAlphaComponent((increasedContrast ? 1 : 0)).cgColor, accent.withAlphaComponent((increasedContrast ? 1 : 0.34)).cgColor],
+                                     locations: [0, 1], start: NSPoint(x: 15.8, y: 6.5), end: NSPoint(x: 18.5, y: 10.3))
+                    }
+                }
+                do {
                     let path = NSBezierPath()
                     path.move(to: NSPoint(x: 12, y: 5.6))
                     path.line(to: NSPoint(x: 12, y: 12.3))
@@ -234,5 +252,17 @@ enum ModuleIconArtwork {
         context.clip()
         context.drawLinearGradient(gradient, start: start, end: end,
                                    options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
+    }
+
+    private static func stroke(_ path: CGPath, color: NSColor, width: CGFloat) {
+        guard let context = NSGraphicsContext.current?.cgContext else { return }
+        context.saveGState()
+        defer { context.restoreGState() }
+        context.addPath(path)
+        context.setStrokeColor(color.cgColor)
+        context.setLineWidth(width)
+        context.setLineCap(.round)
+        context.setLineJoin(.round)
+        context.strokePath()
     }
 }

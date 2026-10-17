@@ -19,15 +19,22 @@ on design files being installed. The existing Settings image view regenerates
 the artwork when appearance or contrast changes. Its 28-point alignment slot,
 20-point artwork size, row geometry, switches and reordering handles are retained.
 
-## Restrained fades
+## App-aligned fades and trails
 
-Energy Flow fades in at the start of the blue route. Ring Gauge has a soft
-directional brightness transition along its rim. Power History has a faint blue
-area that fades to transparent at the baseline; the line and markers remain
-fully opaque. Power Lanes and Battery Time retain their previous artwork.
-These are static vector gradients, with no animation timer, shadow or outer glow.
-Increase Contrast restores the full opacity of the two gradient strokes while
-retaining the existing thicker-stroke policy.
+Ring Gauge keeps a fully defined neutral contour. Its upper blue sweep uses the
+same 0.12-to-1 opacity range as `arcGradient` in
+[`Popover/RingGaugeLayer.swift`](../../../Popover/RingGaugeLayer.swift). The
+sweep follows the upper circumference, replacing the previous whole-rim gray
+brightness gradient. It is a static adaptation of the app's power-arc effect.
+
+Energy Flow retains its subtle route fade-in. Power Lanes now has bright-to-soft
+blue fills inside the two taller outlined bars. Power History retains its faint
+area fade. Battery Time has a short, faint blue arc leading toward the clock
+hand, suggesting a trail while keeping the main hand fully opaque.
+
+These are static vector details. Increase Contrast removes the decorative Ring
+and Clock sweeps, restores full-opacity Flow and bar fills, and retains the
+existing thicker-stroke policy. Row geometry and control behavior are unchanged.
 
 ## Regeneration
 
@@ -56,6 +63,7 @@ source list. Fresh visible-window validation and installation remain with the
 main integrated candidate workflow.
 
 The macOS 12 deployment-target typecheck also passes. `verify-preview.py`
-(requires Pillow) reads the unedited native PNG to check flow fade-in, directional
-rim contrast, downward area fade and a quieter fill than the History stroke.
+(requires Pillow) reads the unedited native PNG to check flow fade-in, the upper
+blue sweep and solid lower rim, bar fade, History area fade and clock-trail
+hierarchy.
 It compares displayed RGB levels rather than assuming linear alpha mixing.

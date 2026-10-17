@@ -67,6 +67,12 @@ def gradient_commands(element, gradients, stroke):
         x, y, r = (float(a[k]) for k in ("cx", "cy", "r"))
         result = ["let path = CGMutablePath()",
                   f"path.addEllipse(in: CGRect(x: {number(x-r)}, y: {number(y-r)}, width: {number(2*r)}, height: {number(2*r)}))"]
+    elif kind == "rect":
+        a = element.attrib
+        values = ", ".join(f"{k}: {number(a[k])}" for k in ("x", "y", "width", "height"))
+        radius = number(a.get("rx", 0))
+        result = ["let path = CGMutablePath()",
+                  f"path.addRoundedRect(in: CGRect({values}), cornerWidth: {radius}, cornerHeight: {radius})"]
     else:
         result = [line.replace("NSBezierPath()", "CGMutablePath()")
                   .replace("path.line(to:", "path.addLine(to:")
@@ -74,9 +80,10 @@ def gradient_commands(element, gradients, stroke):
                   .replace("controlPoint1:", "control1:").replace("controlPoint2:", "control2:")
                   .replace("path.close()", "path.closeSubpath()") for line in commands(element)]
     colors, locations = [], []
+    solid_contrast = stroke or element.get("data-contrast") == "solid"
     for stop in gradient:
         alpha = number(stop.get("stop-opacity", 1))
-        opacity = f"(increasedContrast ? 1 : {alpha})" if stroke else alpha
+        opacity = f"(increasedContrast ? 1 : {alpha})" if solid_contrast else alpha
         colors.append(f"{color(stop.get('stop-color'))}.withAlphaComponent({opacity}).cgColor")
         locations.append(number(stop.get("offset")))
     width = f"{number(element.get('stroke-width', 1))} * contrastScale" if stroke else "nil"
@@ -85,6 +92,8 @@ def gradient_commands(element, gradients, stroke):
     result.extend([f"drawGradient(path, strokeWidth: {width},",
                    f"             colors: [{', '.join(colors)}],",
                    f"             locations: [{', '.join(locations)}], start: {start}, end: {end})"])
+    if not stroke and element.get("stroke", "none") != "none":
+        result.append(f"stroke(path, color: {color(element.get('stroke'))}, width: {number(element.get('stroke-width', 1))} * contrastScale)")
     return result
 
 
@@ -117,8 +126,13 @@ for name in ("flow", "ring", "lanes", "history", "runtime"):
         gradient_stroke = element.get("stroke", "").startswith("url(#")
         gradient_fill = element.get("fill", "").startswith("url(#")
         if gradient_stroke or gradient_fill:
-            lines.extend("                    " + command for command in
-                         gradient_commands(element, gradients, stroke=gradient_stroke))
+            decorative = element.get("data-decorative") == "true"
+            if decorative:
+                lines.append("                    if !increasedContrast {")
+            indent = "                        " if decorative else "                    "
+            lines.extend(indent + command for command in gradient_commands(element, gradients, stroke=gradient_stroke))
+            if decorative:
+                lines.append("                    }")
             lines.append("                }")
             continue
         lines.extend("                    " + command for command in commands(element))
@@ -153,6 +167,18 @@ lines.extend('''    private static func drawGradient(_ path: CGPath, strokeWidth
         context.clip()
         context.drawLinearGradient(gradient, start: start, end: end,
                                    options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
+    }
+
+    private static func stroke(_ path: CGPath, color: NSColor, width: CGFloat) {
+        guard let context = NSGraphicsContext.current?.cgContext else { return }
+        context.saveGState()
+        defer { context.restoreGState() }
+        context.addPath(path)
+        context.setStrokeColor(color.cgColor)
+        context.setLineWidth(width)
+        context.setLineCap(.round)
+        context.setLineJoin(.round)
+        context.strokePath()
     }
 }
 '''.splitlines())

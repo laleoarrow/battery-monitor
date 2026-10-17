@@ -1,15 +1,15 @@
 {
   "baseCommit": "855fc308f8864940a72ca77c93b0221d4e305a33",
-  "scope": "Five reference-faithful vector module icons, with restrained fades in Flow, Ring and History",
+  "scope": "App-aligned blue rim sweep, subtle bar gradients and clock arc trail in editable vector icons",
   "svgMasters": {
     "flow.svg": "e39a6f033c7e2d0fb692f4fd616fa8fd1833c9212febca20b3b984b24e68f232",
     "history.svg": "27c5141374aa52d4b88db70906ef58468c56e1b6d0dc539bcf420fedcbd0daf0",
-    "lanes.svg": "4a5d98950d60f8f4c7e763a0ca4e374c89f6b1e34a90fbaa1ab36343273074b0",
-    "ring.svg": "dbdc121c8bbb3e7b1aa597d8392a42f190224dcec52e6a6b8c64f1f3a4d8d4ef",
-    "runtime.svg": "917df358bf3c2d4257150c7ba4c17c8a7df5ab6615c02c51d0bda83ed5016cc8"
+    "lanes.svg": "25f530db992fe2fd0c3d1b3bdd3d0805f75bea0612b17cc3bfa980d771a23cba",
+    "ring.svg": "cf8c59393d31703d389030d000e7bab07401677074d38e5568137aca52e8a472",
+    "runtime.svg": "af7b0b095c839ee8f803c857d1f8b2a01fa61d623bec2b8589bc2022e4b38363"
   },
-  "rendererSHA256": "ee2709eac55b4a4b05627a8d871f297435c9dff85d15e416bcb5ebed163f81d4",
-  "previewSHA256": "e254790ad00ebe2b6b33c728bfdbdf15796a4f4c1b09d27c73d86e284d8e832c",
+  "rendererSHA256": "76316581119b3bb4001d7e918d1012df7995e74d60aea13eb002c4daf3ded670",
+  "previewSHA256": "00fb7b3f368b761bcd14b5e7a60f07693a69c8fd9d4042319cb65bf004f64c02",
   "checks": {
     "svgXMLAnd24UnitArtboards": true,
     "embeddedRasterImages": 0,
@@ -18,12 +18,21 @@
     "settingsContractTestsPassed": 8,
     "interactiveGUIValidation": false,
     "macOS12DeploymentTargetTypecheck": true,
-    "gradientPixelDirectionChecks": 4,
-    "unannotatedLanesAndRuntimeUnchanged": true,
-    "settingsContractSeconds": 25.638
+    "gradientPixelDirectionChecks": 8,
+    "flowAndHistoryUnchangedThisRevision": true,
+    "settingsContractSeconds": 28.049
   },
   "initialTestHarnessFailure": "The explicit source list omitted the new artwork file. That source was added and the same 8 tests passed; no assertions were removed.",
   "preview": "Native production vector renderer, offscreen; enlarged and actual 20-point icons. Not an installed-app screenshot.",
   "installedOrPublished": false,
-  "gradientRefinementBaseCommit": "f98a3411ae5dd672db0ad139f22afe422c2dcca1"
+  "gradientRefinementBaseCommit": "87611f18a140a08b36f98ba3b21514843ab64d21",
+  "appRingReference": {
+    "source": "Popover/RingGaugeLayer.swift",
+    "referenceSHA256": "52b7e639170db8d2371498647d561ebeddea0cd7a6577c40323533bc26b3fcc8",
+    "fadeRange": [
+      0.12,
+      1.0
+    ],
+    "adaptation": "Static blue sweep along the icon upper rim, with a solid neutral contour"
+  }
 }
