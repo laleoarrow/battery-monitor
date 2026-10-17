@@ -1,0 +1,17 @@
+{
+  "exitCode": 0,
+  "testsPassed": 68,
+  "elapsedSeconds": 48.722,
+  "suites": [
+    "test_release_cleanup",
+    "test_release_packaging_contract",
+    "test_install_migration_contract",
+    "test_packaging_cleanup"
+  ],
+  "log": ".build/history-performance.noindex/build-recovery/targeted-tests.log",
+  "newFailureFixtures": [
+    "second architecture compile fails8",
+    "lipo fails11"
+  ],
+  "allTestOwnedScratchCleanedByExistingLifecycle": true
+}

@@ -1,0 +1,17 @@
+{
+  "sourceCommit": "c8e75a81ddf28635ea295db2c80b312510327223",
+  "version": "4.3.11",
+  "releaseExitCode": 0,
+  "productionHistoryIdenticalTo": "9325876f70dc7e6fb722fda90f70ecde38a32c46",
+  "appAndDMGAppBytesEqual": true,
+  "nativePerArchitectureBuildAndUniversalVerification": true,
+  "scratchAbsent": true,
+  "installationApproved": false,
+  "pending": "Modules outside-drop cancellation acceptance; rebuild any resulting source before final package matrix and host installation.",
+  "artifacts": {
+    "dist/Wattson-v4.3.11-macos-universal.pkg": "d6407fd27a98ef4396896f391e944d1d8e6eeef2817dcb4a927d58e6ae5bd25a",
+    "dist/Wattson-v4.3.11-macos-universal.dmg": "d2c661e0e9836ec4f5bb8c31042361f89b98b9f129aeff959cbb233b67cc1201",
+    "dist/Wattson-v4.3.11-release-info.txt": "5320df03021f51457c033820cd0cf0e78a8f41d1871dc7be7b2baa7b12088c3e",
+    "dist/SHA256SUMS.txt": "1d4008683b98c85cd5c957d64a44ed70509832f00d73f6e87bc8de1f99b5f667"
+  }
+}

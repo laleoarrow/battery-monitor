@@ -1,0 +1,21 @@
+{
+  "checks": [
+    {
+      "check": "bashSyntax",
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "check": "whitespace",
+      "exitCode": 0,
+      "output": ""
+    }
+  ],
+  "changedFileSHA256": {
+    "scripts/build_release.sh": "5ac8f54538d068b25b6fd0ed696f21d2a6a0cca78248619d84863d1bf6defcd7",
+    "tests/test_release_cleanup.py": "b569e87e7682110947f2ad3b204735919414ec46930297ad5617c1914b075b7a",
+    "tests/test_release_packaging_contract.py": "1a20c90fb04e2cb9cc22fecb59f203d25b8514a5c8ea8effdc931ba6ad19c8a6",
+    "tests/test_install_migration_contract.py": "5d834d4174ccbb689c41d725bec1fee2d1576b1f3996975508bb23b94b079bc2"
+  },
+  "productionBuildExecutedByThisAgent": false
+}

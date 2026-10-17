@@ -1,0 +1,11 @@
+{
+  "scope": "Only three exact PID/UID/executable identities observed as escaped descendants of root candidate release run 78099. No global executable stop.",
+  "before": {
+    "78195": "/Applications/Xcode.app/Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/Support/swbuild",
+    "78196": "/Applications/Xcode.app/Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/PlugIns/SWBBuildService.bundle/Contents/MacOS/SWBBuildService",
+    "78200": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+  },
+  "after": {},
+  "oldReleaseScratchAbsent": true,
+  "releaseExitCode": 143
+}

@@ -93,6 +93,18 @@ Modules ordering and the Ring Gauge icon are coordinated with their owning
 chat and share the same candidate version. Their acceptance evidence lives in
 [Modules reordering](../settings/modules-reordering/README.md).
 
+The initial universal build blocked inside SwiftPM's Xcode build service while
+its clang discovery child waited in a pipe write. The owned invocation was
+interrupted; its scratch and three precisely identified escaped descendants
+were removed. This did not affect the installed app. SwiftPM 6.3.3 forces the
+Xcode engine for multiple architecture arguments, so the formal release entry
+now builds one native slice at a time and merges them before existing universal,
+macOS 12, signing and packaging checks. [Sixty-eight related checks](build/test-summary.json),
+including second-slice and lipo failure cleanup, passed. A real preliminary
+build then passed, including byte-identical PKG/DMG app verification; its
+[record](build/preliminary-native-release.json) explicitly awaits final Modules
+acceptance and does not claim installation.
+
 This is a local candidate and installation workflow. It does not publish a
 GitHub release or substitute for the public exact-SHA CI and hosted platform
 matrix described in the repository release guide.
