@@ -11,9 +11,11 @@ Reordering moves existing arranged views without detaching History or refreshing
 telemetry. It preserves the chart data, animation, scroll offset and focus.
 Reduce Motion removes row displacement and the drag return animation.
 
-Ring Gauge uses the user-approved fine circle, six upper ticks and blue northeast
-needle. The non-template vector image is regenerated for appearance and contrast
-changes. The other four symbols and row dimensions are unchanged.
+The current source uses the five reference-faithful neutral-and-blue vector
+icons in [the vector artwork review](../module-icons-vector/README.md). All five
+non-template images regenerate for appearance and contrast changes. Row dimensions
+are unchanged. The captured gallery below predates this five-icon refresh and
+shows the earlier glyphs; its original source and image hashes are retained.
 
 ## Actual native captures
 

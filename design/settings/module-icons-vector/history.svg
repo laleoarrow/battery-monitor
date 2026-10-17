@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#E9E9E9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title>Wattson history module</title>
+<path d="M 2.0 2.5 L 2.0 21.5 L 22.0 21.5" stroke="currentColor" stroke-width="1.4"/>
+<polyline points="3.1,16.2 9.0,11.1 14.4,14.6 21.0,7.2" stroke="#0A84FF" stroke-width="1.55"/>
+<circle cx="9.0" cy="11.1" r="1.9" fill="#0A84FF"/>
+<circle cx="9.0" cy="11.1" r="0.8" fill="currentColor"/>
+<circle cx="14.4" cy="14.6" r="1.9" fill="#0A84FF"/>
+<circle cx="14.4" cy="14.6" r="0.8" fill="currentColor"/>
+<circle cx="21.0" cy="7.2" r="1.9" fill="#0A84FF"/>
+<circle cx="21.0" cy="7.2" r="0.8" fill="currentColor"/>
+</svg>

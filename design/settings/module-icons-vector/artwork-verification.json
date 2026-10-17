@@ -1,0 +1,25 @@
+{
+  "baseCommit": "855fc308f8864940a72ca77c93b0221d4e305a33",
+  "scope": "Five reference-faithful module icons; isolated side-conversation source change",
+  "svgMasters": {
+    "flow.svg": "76b348c1f6ef8f60fc70e56edaf318d19386cabf1ea7026df91c01f343e0118c",
+    "history.svg": "8478479caccfc017a0d41abad98f354c8020f695f971a7e6e6b7d9c139172ea9",
+    "lanes.svg": "4a5d98950d60f8f4c7e763a0ca4e374c89f6b1e34a90fbaa1ab36343273074b0",
+    "ring.svg": "cbfd9d3f42e05fd594457f8f832271a73c9f7fdef907b0adca003eebf2b9a1b2",
+    "runtime.svg": "917df358bf3c2d4257150c7ba4c17c8a7df5ab6615c02c51d0bda83ed5016cc8"
+  },
+  "rendererSHA256": "527ca50fd281db71bd803ca24a8410b61bc4298bdf87b1d9ee6ca9581d598bff",
+  "previewSHA256": "498e514a3307844270301e45083c0f0e98461743438291f5786fd931d4793af8",
+  "checks": {
+    "svgXMLAnd24UnitArtboards": true,
+    "embeddedRasterImages": 0,
+    "deterministicSwiftGeneration": true,
+    "fullProductionSwiftTypecheckWarningsAsErrors": true,
+    "settingsContractTestsPassed": 8,
+    "settingsContractSeconds": 26.8,
+    "interactiveGUIValidation": false
+  },
+  "initialTestHarnessFailure": "The explicit source list omitted the new artwork file. That source was added and the same 8 tests passed; no assertions were removed.",
+  "preview": "Native production vector renderer, offscreen; enlarged and actual 20-point icons. Not an installed-app screenshot.",
+  "installedOrPublished": false
+}
