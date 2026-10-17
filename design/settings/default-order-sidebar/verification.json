@@ -1,0 +1,83 @@
+{
+  "sourceCommit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+  "version": "4.3.12",
+  "publicRelease": false,
+  "settingsContracts": {
+    "count": 8,
+    "passed": true
+  },
+  "nativeXCTestViewTests": {
+    "count": 4,
+    "passed": true,
+    "runner": "SwiftPM build plus matching copied native XCTest runner"
+  },
+  "headlessStorageTests": 8,
+  "staticContracts": 7,
+  "packageMatrix": {
+    "passed": true,
+    "modes": [
+      "previous-fresh",
+      "disabled-service-upgrade",
+      "fresh",
+      "reinstall",
+      "disabled-service-reinstall"
+    ],
+    "guestNoBatteryAppResidencyBoundaryRecorded": true
+  },
+  "vmCleanup": {
+    "hostCanonicalUnchanged": true,
+    "hostQuietSeconds": 116.15288700000383,
+    "guestCanonicalUnchanged": true,
+    "guestQuietSeconds": 116.15247299999999,
+    "owned-resources-immediate-4312.json": {
+      "passed": true,
+      "checkCount": 8
+    },
+    "owned-resources-delayed-4312.json": {
+      "passed": true,
+      "checkCount": 8
+    },
+    "package-cleanup-immediate-final.json": {
+      "passed": true,
+      "checkCount": 5
+    },
+    "package-cleanup-delayed-final.json": {
+      "passed": true,
+      "checkCount": 5
+    },
+    "packageQuietSeconds": 116.13085000000001,
+    "ownedVMRemoved": true,
+    "protectedVMsPreserved": true,
+    "vmOwnerExitCode": 0,
+    "hostTemporaryTransfersRemoved": true
+  },
+  "localInstallation": {
+    "checkedAtUTC": "2026-10-17T04:34:06.207924+00:00",
+    "version": "4.3.12",
+    "sourceCommit": "5d5c896b7a1531ce4f9783fa467ff8c8eb62b82e",
+    "packageSHA256": "e3c34ea049b5ce1458372a901c61208f324d4da3571661c846cb1369eb0c76a2",
+    "appAndHelperAndDaemonMatchVerifiedPayload": true,
+    "receiptVersion": "4.3.12",
+    "signatureVerified": true,
+    "helperHealth": true,
+    "helperV5": true,
+    "canonicalAppPID": 26490,
+    "stableSeconds": 10,
+    "publicRelease": false
+  },
+  "localVerificationExitCode": 0,
+  "screenshots": {
+    "classic-dark-modules.png": "c7dff81c5dcc849210549fc41be368b05dfada11adb9b5b91b74e6e847cf58ce",
+    "classic-light-modules.png": "aab08a31ba74f5fc4cda2b35795343d0dc7107a2eb0ebdae028e5e4c5976231b",
+    "clear-dark-modules.png": "8d387cf09e68e99bd4253aac518104e1a92160b258cb3dbfb612fd157b44aa69",
+    "clear-light-modules.png": "1e09173694f95e15272361efcd9a435ddf486d5f13854b2e271794833c4e0064",
+    "standard-dark-display.png": "608b604dbce6c27db02053a5292c039389ef114747a8beefb02184d85da3b651",
+    "standard-dark-general.png": "b7da218172591bcf82862024e2a9558a986652c62bff59a2887dc848254ad860",
+    "standard-dark-modules.png": "b0d3173804e43a2886602ad83140078d334cd83f1cb108c1c993f66e22bfc54e",
+    "standard-light-display.png": "39f257c752d82973dd0625102130570f6af68169ce39c120db37416bb3422af4",
+    "standard-light-general.png": "9595612eaa52caa584c3ae5c3a9a637225c7c7dae7e6f1eb22e28c806869c71f",
+    "standard-light-modules.png": "be15ffe4961429edcd44c7adab4c733939df48672ce64948031e6c57bf53e3df"
+  },
+  "nativeHeldDragNotRetested": true,
+  "hostCleanupAuditPending": true
+}

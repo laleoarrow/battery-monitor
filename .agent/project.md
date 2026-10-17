@@ -61,8 +61,8 @@ while any other scale retains 33 stroke keyframes. Head and gradient keyframes
 remain unchanged. The [4.3.11 performance review](../design/history-performance/README.md)
 records the ABBA preparation measurements, explicit construction counts and
 native continuity checks, including the natural scheduling fixture's limits.
-Wattson 4.3.11 is the current verified local installation; exact package, helper,
-receipt and process evidence is linked from that review.
+Wattson 4.3.12 is the current verified local installation; exact package, helper,
+receipt and process evidence is in the [default-order and sidebar review](../design/settings/default-order-sidebar/README.md).
 The [4.3.10 axis transition review](../design/history-axis-upgrade/README.md)
 preserves the earlier native motion, fixed-width stroke and installation evidence. The
 [4.3.9 History review](../design/history-upgrade/README.md) preserves the initial
@@ -280,6 +280,11 @@ Only a successful local drop saves `popover.moduleOrder`; canceled previews leav
 preferences untouched. Up/Down keys and accessibility move actions use the same
 order. Hidden modules retain their positions. The Settings list, popover sections
 and quick menu share that order, while the header and footer stay at the ends.
+The Modules subtitle row includes `Restore Default Order`, which resets only
+the order and preserves module visibility. The always-enabled native action is
+last in the page's keyboard loop; restoring an already-default order is a no-op.
+See the [default-order and sidebar review](../design/settings/default-order-sidebar/README.md)
+for the 4.3.12 candidate's focused validation and real-window captures.
 Reordering moves existing arranged views without detaching History, changing its
 samples, or refreshing telemetry. Reduce Motion removes row movement and drag
 return animation. All five module icons follow the approved neutral-and-blue
