@@ -89,6 +89,18 @@ module visibility and accessibility motion policy. Keep six-state light/dark
 production-renderer captures and an actual short motion capture with the
 verified source identity; an HTML algorithm preview alone is insufficient.
 
+After an authorized canonical PKG upgrade, use `/usr/bin/open -g
+/Applications/Wattson.app`, matching the native postinstall path. Do not add
+`-j` (launch hidden) merely to avoid activating the app: `-g` already requests
+background launch. A stable PID verifies process lifetime, not menu-bar popup
+readiness. Confirm an actual canonical status-item click opens and closes the
+visible popup before marking that behavior accepted. When host input is
+unavailable, keep that final check explicitly pending. The `popup-events` info
+log records `source=status-action openBefore=false openAfter=true` on opening.
+For a silent-click report, preserve that log and a process sample before any
+restart; restarting only Wattson can recover its presentation state without
+resetting preferences or reinstalling the package.
+
 ## Release structure
 
 ```bash

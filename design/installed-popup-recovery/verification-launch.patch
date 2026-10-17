@@ -1,0 +1,11 @@
+--- previous/verify-installed.py
++++ corrected/verify-installed.py
+@@ -45,7 +45,7 @@
+     except (OSError,ValueError,KeyError): pass
+     time.sleep(.2)
+ assert healthy, 'Installed helper did not become healthy'
+-subprocess.run(['/usr/bin/open','-g','-j',str(app)],check=True,timeout=15)
++subprocess.run(['/usr/bin/open','-g',str(app)],check=True,timeout=15)
+ time.sleep(3)
+ def pids():
+     text=subprocess.check_output(['/bin/ps','-axo','pid=,comm='],text=True,timeout=10)

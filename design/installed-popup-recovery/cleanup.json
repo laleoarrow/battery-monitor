@@ -1,0 +1,45 @@
+{
+  "atUTC": "2026-10-17T09:27:02.234965+00:00",
+  "userRequestedRedundantLocalFilesRemoved": true,
+  "canonicalInstalledVersion": "4.3.17",
+  "canonicalInstallationAndUserPreferencesPreserved": true,
+  "finalDistributionDirectoriesPreserved": [
+    "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/history-axis-smoothness-v4.3.16",
+    "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/popup-open-fix-v4.3.17"
+  ],
+  "acceptedHistoryEvidenceSHA256VerifiedFiles": 76,
+  "newEvidenceArchiveSHA256": "379d7f7dbaf56ed5e2377c19fe0c7883fdbcb68912bfae59d02a07c976d48e40",
+  "newEvidenceFileCount": 77,
+  "deleted": [
+    {
+      "path": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/history-axis-smoothness-prototypes",
+      "directoryAllocatedBytesBefore": 26578944,
+      "removed": true
+    },
+    {
+      "path": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-axis-smoothness.noindex",
+      "directoryAllocatedBytesBefore": 1427922944,
+      "removed": true
+    },
+    {
+      "path": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/popup-open-regression.noindex",
+      "directoryAllocatedBytesBefore": 2039808,
+      "removed": true
+    }
+  ],
+  "alreadyRemovedWorktree": {
+    "ownedWorktree": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/popup-open-regression.noindex/checkout",
+    "sourceCommit": "2e1884803bedc25a4877d7693e323af48a8e58bc",
+    "cleanBeforeRemoval": true,
+    "finalArtifactsPreservedAndHashesMatched": true,
+    "directoryAllocatedBytesBefore": 198242304,
+    "commandExitCode": 0,
+    "removed": true,
+    "stderr": ""
+  },
+  "ownedVMDeleted": true,
+  "otherTestVMsStillStopped": true,
+  "hostRegistrationAndMountAuditPassed": true,
+  "removedDirectoryAllocatedBytes": 1654784000,
+  "passed": true
+}

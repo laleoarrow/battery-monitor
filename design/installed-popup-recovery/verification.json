@@ -1,0 +1,149 @@
+{
+  "version": "4.3.17",
+  "sourceCommit": "2e1884803bedc25a4877d7693e323af48a8e58bc",
+  "installed": {
+    "version": "4.3.17",
+    "receiptVersion": "4.3.17",
+    "appMatchesPKG": true,
+    "helperMatchesPKG": true,
+    "appExecutableSHA256": "25c28bb655167fa25879fa0b2706d1378c0e77efc6af7f2bb840bb5dd77cd860",
+    "helperSHA256": "58253c0d80c81d8eceb09b7cab525c9da7e05a3d8eb17dba815a390d427db147",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "signatureValid": true,
+    "helperHealthy": true,
+    "canonicalPID": 21641,
+    "launchStableSeconds": 3,
+    "expectedVirtualNoBatteryExit": false,
+    "installedFixtureCleanupOwner": "Disposable VM owner for guest tests; host installation is the requested persistent result."
+  },
+  "canonicalPopup": {
+    "version": "4.3.17",
+    "canonicalPID": 21641,
+    "realStatusActionOpens": 3,
+    "realStatusActionCloses": 1,
+    "userConfirmedBothOpenAndClose": true,
+    "passed": true
+  },
+  "tests": {
+    "sourceCommit": "2e1884803bedc25a4877d7693e323af48a8e58bc",
+    "nativeInteractionAssertions": 438,
+    "hiddenStateCases": [
+      "Classic",
+      "Liquid Glass"
+    ],
+    "nativePassed": true,
+    "contractChecks": 55,
+    "contractFailures": 0
+  },
+  "baselineLaunchModes": {
+    "normal": {
+      "anchor": "{{753, 742}, {48, 22}}",
+      "anchorVisible": true,
+      "appHidden": false,
+      "appHiddenAfter": false,
+      "buttonHidden": false,
+      "naturalSize": "{360, 799}",
+      "open": true,
+      "panelFrameResolved": true,
+      "placementResolved": true,
+      "shown": true,
+      "windowFrame": "{{753, 738}, {48, 30}}",
+      "windowNumber": 4294967296
+    },
+    "background": {
+      "anchor": "{{753, 742}, {48, 22}}",
+      "anchorVisible": true,
+      "appHidden": false,
+      "appHiddenAfter": false,
+      "buttonHidden": false,
+      "naturalSize": "{360, 799}",
+      "open": true,
+      "panelFrameResolved": true,
+      "placementResolved": true,
+      "shown": true,
+      "windowFrame": "{{753, 738}, {48, 30}}",
+      "windowNumber": 4294967296
+    },
+    "hidden": {
+      "anchor": "{{753, 742}, {48, 22}}",
+      "anchorVisible": true,
+      "appHidden": true,
+      "appHiddenAfter": true,
+      "buttonHidden": false,
+      "naturalSize": "{360, 799}",
+      "open": false,
+      "panelFrameResolved": true,
+      "placementResolved": true,
+      "shown": false,
+      "windowFrame": "{{753, 738}, {48, 30}}",
+      "windowNumber": 4294967296
+    }
+  },
+  "fixedLaunchModes": {
+    "normal": {
+      "anchor": "{{753, 742}, {48, 22}}",
+      "anchorVisible": true,
+      "appHidden": false,
+      "appHiddenAfter": false,
+      "buttonHidden": false,
+      "naturalSize": "{360, 799}",
+      "open": true,
+      "panelFrameResolved": true,
+      "placementResolved": true,
+      "shown": true,
+      "windowFrame": "{{753, 738}, {48, 30}}",
+      "windowNumber": 4294967296
+    },
+    "background": {
+      "anchor": "{{753, 742}, {48, 22}}",
+      "anchorVisible": true,
+      "appHidden": false,
+      "appHiddenAfter": false,
+      "buttonHidden": false,
+      "naturalSize": "{360, 799}",
+      "open": true,
+      "panelFrameResolved": true,
+      "placementResolved": true,
+      "shown": true,
+      "windowFrame": "{{753, 738}, {48, 30}}",
+      "windowNumber": 4294967296
+    },
+    "hidden": {
+      "anchor": "{{753, 742}, {48, 22}}",
+      "anchorVisible": true,
+      "appHidden": true,
+      "appHiddenAfter": false,
+      "buttonHidden": false,
+      "naturalSize": "{360, 799}",
+      "open": true,
+      "panelFrameResolved": true,
+      "placementResolved": true,
+      "shown": true,
+      "windowFrame": "{{753, 738}, {48, 30}}",
+      "windowNumber": 4294967296
+    }
+  },
+  "artifacts": {
+    "sourceCommit": "2e1884803bedc25a4877d7693e323af48a8e58bc",
+    "path": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/popup-open-fix-v4.3.17",
+    "sha256": {
+      "Wattson-v4.3.17-macos-universal.pkg": "194d0e971521899a79d75633b787d17257a900e7b0691fa091922fadbbb93ddc",
+      "Wattson-v4.3.17-macos-universal.dmg": "dcd41f35783af2021deb02dd2225ce6ebd71c6a9a1e52df52db2ced1216120ac",
+      "Wattson-v4.3.17-release-info.txt": "dfc8e819a5ed5392bf470b1b32ca0872a146e61481358f23e279e782223c87e7",
+      "SHA256SUMS.txt": "d4099a7c8ce8f1512a0b46f0f9a9eee71b67edd29a538cbc6bc9827e4d46165c"
+    }
+  },
+  "originalHostInternalNSApplicationHiddenStateCaptured": false,
+  "postflight": {
+    "atUTC": "2026-10-17T09:29:13.693602+00:00",
+    "version": "4.3.17",
+    "currentCanonicalPID": 22266,
+    "singleCanonicalProcess": true,
+    "appAndHelperHashesStillMatchInstalledPKG": true,
+    "receiptVersion": "4.3.17",
+    "historicalAcceptedPID": 21641
+  }
+}

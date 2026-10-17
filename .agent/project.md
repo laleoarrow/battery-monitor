@@ -63,8 +63,11 @@ closing, hiding, detaching, degraded readings and Reduce Motion stop animations.
 No chart timer is used. The [4.3.16 axis motion review](../design/history-axis-smoothness/README.md)
 records the corrected independent native probe, ABBA preparation measurements,
 explicit construction counts, Pro review, and exact installation evidence.
-Wattson 4.3.16 is the current verified local installation. It preserves all final
-4.3.15 Settings and Power artwork, whose earlier evidence remains in the
+Wattson 4.3.17 is the current verified local installation. Its
+[popup recovery review](../design/installed-popup-recovery/README.md) records the
+hidden-launch regression, conditional unhide on explicit opening, native and
+canonical click acceptance, and cleanup. It preserves the 4.3.16 History changes
+and final 4.3.15 Settings and Power artwork, whose earlier evidence remains in the
 [all-icons integration review](../design/popover/all-icons-integration/README.md).
 The [4.3.11 performance review](../design/history-performance/README.md) retains
 the preceding implementation and its verification limits.
