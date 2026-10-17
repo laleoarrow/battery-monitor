@@ -1697,6 +1697,46 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(Settings.moduleOrder == Settings.Module.allCases
                 && Settings.Module.allCases.allSatisfy { Settings.isModuleVisible($0) },
                 "event-forwarding checks do not simulate a drop or modify modules")
+            func verifyModuleDragPreflight(buttons: [Int], expectsStart: Bool) {
+                let savedOrder = Settings.moduleOrder
+                let visibility = Settings.Module.allCases.map { Settings.isModuleVisible($0) }
+                var reads = 0
+                var starts: [NSEvent] = []
+                var changes = 0
+                let observer = NotificationCenter.default.addObserver(
+                    forName: Settings.didChange, object: nil, queue: .main
+                ) { _ in changes += 1 }
+                controller.configureModuleDragPreflightForTest(buttons: {
+                    let value = buttons[min(reads, buttons.count - 1)]
+                    reads += 1
+                    return value
+                }, onStart: { starts.append($0) })
+                defer {
+                    controller.configureModuleDragPreflightForTest(buttons: nil, onStart: nil)
+                    NotificationCenter.default.removeObserver(observer)
+                }
+                let down = handleMouseEvent(.leftMouseDown, at: handleCenter)
+                flowHandle.mouseDown(with: down)
+                flowHandle.mouseDragged(with: handleDrag)
+                flowHandle.mouseUp(with: handleMouseEvent(.leftMouseUp, at: outsideHandle))
+                require(reads == buttons.count, "drag preflight checks live button state at the expected stages")
+                require(starts.count == (expectsStart ? 1 : 0),
+                    "released pointer does not reach the native session boundary")
+                if expectsStart {
+                    require(starts[0] === down && starts[0].type == .leftMouseDown,
+                        "held pointer retains the original mouse-down event at the native boundary")
+                }
+                require(controller.moduleDragStateIsClearForTest
+                    && moduleRows.allSatisfy { $0.alphaValue == 1 },
+                    "preflight rejection leaves no pending session, preview or dimmed row")
+                require(Settings.moduleOrder == savedOrder && changes == 0
+                    && Settings.Module.allCases.map { Settings.isModuleVisible($0) } == visibility,
+                    "preflight checks preserve order and visibility without notifications")
+                require(!controller.moduleReorderShowsKeyboardFocusForTest(.flow),
+                    "preflight rejection does not leave a mouse-origin focus frame")
+            }
+            verifyModuleDragPreflight(buttons: [0], expectsStart: false)
+            verifyModuleDragPreflight(buttons: [2], expectsStart: false)
             first?.makeFirstResponder(controller.sidebarForTest)
             first?.makeFirstResponder(flowHandle)
             var orderNotifications = 0
@@ -2623,6 +2663,13 @@ class SettingsWindowContractTests(unittest.TestCase):
             }
             controller.show(activateApp: false)
             require(first?.isVisible == true, "interactive window visible")
+            let preflightSection = controller.selectedSectionIdentifierForTest
+            controller.selectSectionForTest(identifier: "modules")
+            first?.contentView?.layoutSubtreeIfNeeded()
+            verifyModuleDragPreflight(buttons: [1, 0], expectsStart: false)
+            verifyModuleDragPreflight(buttons: [1, 2], expectsStart: false)
+            verifyModuleDragPreflight(buttons: [1, 1], expectsStart: true)
+            controller.selectSectionForTest(identifier: preflightSection)
             let minimizeTraffic = controller.trafficLightButtonsForTest[1]
             minimizeTraffic.performClick(nil)
             require(

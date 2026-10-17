@@ -2928,6 +2928,13 @@ private final class ModuleReorderList: NSStackView, NSDraggingSource, SettingsCo
     private weak var dragSession: NSDraggingSession?
     private let insertionLine = NSBox()
     private var windowObservers: [NSObjectProtocol] = []
+#if DEBUG
+    var pressedMouseButtonsForTest: (() -> Int)?
+    var nativeDragStartObserverForTest: ((NSEvent) -> Void)?
+    var dragStateIsClearForTest: Bool {
+        draggedModule == nil && originalOrder.isEmpty && dragSession == nil && insertionLine.isHidden
+    }
+#endif
 
     init() {
         super.init(frame: .zero)
@@ -2983,8 +2990,15 @@ private final class ModuleReorderList: NSStackView, NSDraggingSource, SettingsCo
         orderDidChange?()
     }
 
+    private var leftMouseButtonIsDown: Bool {
+#if DEBUG
+        if let pressedMouseButtonsForTest { return pressedMouseButtonsForTest() & 1 != 0 }
+#endif
+        return NSEvent.pressedMouseButtons & 1 != 0
+    }
+
     func beginReordering(_ module: Settings.Module, event: NSEvent) {
-        guard draggedModule == nil, window?.isVisible == true, let row = rows[module],
+        guard leftMouseButtonIsDown, draggedModule == nil, window?.isVisible == true, let row = rows[module],
               let bitmap = row.bitmapImageRepForCachingDisplay(in: row.bounds) else { return }
         row.cacheDisplay(in: row.bounds, to: bitmap)
         let image = NSImage(size: row.bounds.size)
@@ -2993,6 +3007,15 @@ private final class ModuleReorderList: NSStackView, NSDraggingSource, SettingsCo
         pasteboardItem.setString(module.rawValue, forType: Self.dragType)
         let item = NSDraggingItem(pasteboardWriter: pasteboardItem)
         item.setDraggingFrame(row.frame.offsetBy(dx: 0, dy: reducesMotion ? 0 : 2), contents: image)
+        // A queued drag event can arrive after release, including while the
+        // row snapshot is being prepared. Do not start a session in that case.
+        guard leftMouseButtonIsDown else { return }
+#if DEBUG
+        if let nativeDragStartObserverForTest {
+            nativeDragStartObserverForTest(event)
+            return
+        }
+#endif
         originalOrder = Settings.moduleOrder
         draggedModule = module
         let session = beginDraggingSession(with: [item], event: event, source: self)
@@ -4095,6 +4118,18 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
 
     func moduleReorderShowsKeyboardFocusForTest(_ module: Settings.Module) -> Bool {
         moduleReorderHandleForTest(module)?.showsKeyboardFocus ?? false
+    }
+
+    func configureModuleDragPreflightForTest(
+        buttons: (() -> Int)?, onStart: ((NSEvent) -> Void)?
+    ) {
+        let list = moduleReorderHandleForTest(.flow)?.reorderList
+        list?.pressedMouseButtonsForTest = buttons
+        list?.nativeDragStartObserverForTest = onStart
+    }
+
+    var moduleDragStateIsClearForTest: Bool {
+        moduleReorderHandleForTest(.flow)?.reorderList?.dragStateIsClearForTest ?? false
     }
 
     var lastVisibleSwitchNextKeyViewForTest: NSView? {
