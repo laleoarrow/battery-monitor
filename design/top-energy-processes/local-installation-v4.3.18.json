@@ -31,8 +31,10 @@
   "packageSignature": "unsigned",
   "notarized": false,
   "actualPopupAcceptance": {
-    "status": "pending-user-confirmation",
-    "reason": "Computer Use getApp timed out for the display name, bundle ID and canonical path."
+    "status": "confirmed-by-user",
+    "method": "User clicked the installed canonical Wattson menu-bar item and confirmed the Process Activity process list is visible and displays normally.",
+    "userConfirmation": "能看到，显示正常",
+    "automaticUIRead": "Computer Use getApp timed out; no automated visual acceptance is claimed."
   },
   "cleanup": {
     "disposableBuildRemoved": true,
