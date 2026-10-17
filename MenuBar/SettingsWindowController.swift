@@ -2735,10 +2735,12 @@ private final class MenuBarIconSettingsSectionController: NSObject,
     }
 }
 
-private final class ModuleRingGaugeIconView: NSImageView, SettingsContrastRefreshing {
+private final class ModuleSettingsIconView: NSImageView, SettingsContrastRefreshing {
+    private let module: Settings.Module
     private let increaseContrast: () -> Bool
 
-    init(increaseContrast: @escaping () -> Bool) {
+    init(module: Settings.Module, increaseContrast: @escaping () -> Bool) {
+        self.module = module
         self.increaseContrast = increaseContrast
         super.init(frame: .zero)
         isEditable = false
@@ -2755,58 +2757,14 @@ private final class ModuleRingGaugeIconView: NSImageView, SettingsContrastRefres
     }
 
     func refreshContrastAppearance() {
-        // Resolve now; the cached image's drawing closure never captures the view.
         effectiveAppearance.performAsCurrentDrawingAppearance {
             let ink = SettingsStyle.primaryText.usingColorSpace(.sRGB)
                 ?? SettingsStyle.primaryText
             let blue = NSColor.systemBlue.usingColorSpace(.sRGB) ?? .systemBlue
-            let strokeWidth: CGFloat = increaseContrast() ? 1.8 : 1.35
-            let side = SettingsStyle.rowSymbolSize
-            let artwork = NSImage(size: NSSize(width: side, height: side), flipped: false) { rect in
-                NSGraphicsContext.saveGraphicsState()
-                defer { NSGraphicsContext.restoreGraphicsState() }
-                let transform = NSAffineTransform()
-                transform.translateX(by: rect.minX, yBy: rect.minY)
-                transform.scaleX(by: rect.width / 24, yBy: rect.height / 24)
-                transform.concat()
-
-                // One circular outline. No inner ring or background fill.
-                ink.setStroke()
-                let rim = NSBezierPath(ovalIn: NSRect(x: 1.5, y: 1.5, width: 21, height: 21))
-                rim.lineWidth = strokeWidth
-                rim.stroke()
-
-                let ticks = NSBezierPath()
-                ticks.lineWidth = strokeWidth
-                ticks.lineCapStyle = .round
-                for degrees in stride(from: 0, through: 150, by: 30) {
-                    let angle = CGFloat(degrees) * .pi / 180
-                    func point(_ radius: CGFloat) -> NSPoint {
-                        NSPoint(x: 12 + cos(angle) * radius, y: 12 + sin(angle) * radius)
-                    }
-                    ticks.move(to: point(7.1))
-                    ticks.line(to: point(8.0))
-                }
-                ticks.stroke()
-
-                // Fixed northeast needle and solid hub; independent of Accent Color.
-                blue.setFill()
-                blue.setStroke()
-                let needle = NSBezierPath()
-                needle.move(to: NSPoint(x: 10.7, y: 13.3))
-                needle.line(to: NSPoint(x: 16.5, y: 16.5))
-                needle.line(to: NSPoint(x: 13.3, y: 10.7))
-                needle.close()
-                needle.lineWidth = 0.65
-                needle.lineJoinStyle = .round
-                needle.fill()
-                needle.stroke()
-                NSBezierPath(ovalIn: NSRect(x: 9.9, y: 9.9, width: 4.2, height: 4.2)).fill()
-                return true
-            }
-            artwork.isTemplate = false
+            image = ModuleIconArtwork.image(for: module, side: SettingsStyle.rowSymbolSize,
+                                            ink: ink, accent: blue,
+                                            increasedContrast: increaseContrast())
             contentTintColor = nil
-            image = artwork
         }
     }
 }
@@ -2815,7 +2773,11 @@ private final class ModuleReorderHandle: NSButton, SettingsContrastRefreshing {
     let module: Settings.Module
     weak var reorderList: ModuleReorderList?
     private let increaseContrast: () -> Bool
-    private var pressLocation: NSPoint?
+    private var pressEvent: NSEvent?
+    private var keyboardFocusVisible = false
+#if DEBUG
+    var dragStartObserverForTest: ((NSEvent) -> Void)?
+#endif
 
     init(module: Settings.Module, increaseContrast: @escaping () -> Bool) {
         self.module = module
@@ -2846,30 +2808,42 @@ private final class ModuleReorderHandle: NSButton, SettingsContrastRefreshing {
     override func mouseDown(with event: NSEvent) {
         guard isEnabled else { return }
         window?.makeFirstResponder(self)
-        pressLocation = event.locationInWindow
+        keyboardFocusVisible = false
+        needsDisplay = true
+        pressEvent = event
     }
 
     override func mouseDragged(with event: NSEvent) {
-        guard let start = pressLocation,
-              hypot(event.locationInWindow.x - start.x, event.locationInWindow.y - start.y) >= 4 else { return }
-        pressLocation = nil
-        reorderList?.beginReordering(module, event: event)
+        guard let mouseDown = pressEvent else { return }
+        let start = mouseDown.locationInWindow
+        guard hypot(event.locationInWindow.x - start.x, event.locationInWindow.y - start.y) >= 4 else { return }
+        pressEvent = nil
+#if DEBUG
+        if let dragStartObserverForTest {
+            dragStartObserverForTest(mouseDown)
+            return
+        }
+#endif
+        // AppKit requires the original mouse-down event, including its location.
+        reorderList?.beginReordering(module, event: mouseDown)
     }
 
     override func mouseUp(with event: NSEvent) {
-        let wasPressed = pressLocation != nil
-        pressLocation = nil
+        let wasPressed = pressEvent != nil
+        pressEvent = nil
         if wasPressed && window?.isVisible == true && bounds.contains(convert(event.locationInWindow, from: nil)) {
             performClick(nil)
         }
     }
 
     override func viewWillMove(toWindow newWindow: NSWindow?) {
-        pressLocation = nil
+        pressEvent = nil
         super.viewWillMove(toWindow: newWindow)
     }
 
     override func keyDown(with event: NSEvent) {
+        keyboardFocusVisible = true
+        needsDisplay = true
         switch event.keyCode {
         case 126: _ = reorderList?.move(module, by: -1)
         case 125: _ = reorderList?.move(module, by: 1)
@@ -2918,19 +2892,23 @@ private final class ModuleReorderHandle: NSButton, SettingsContrastRefreshing {
 
     override func becomeFirstResponder() -> Bool {
         let accepted = super.becomeFirstResponder()
+        if accepted { keyboardFocusVisible = true }
         needsDisplay = true
         return accepted
     }
 
     override func resignFirstResponder() -> Bool {
         let accepted = super.resignFirstResponder()
+        if accepted { keyboardFocusVisible = false }
         needsDisplay = true
         return accepted
     }
 
+    var showsKeyboardFocus: Bool { keyboardFocusVisible && window?.firstResponder === self }
+
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
-        if window?.firstResponder === self {
+        if showsKeyboardFocus {
             NSColor.keyboardFocusIndicatorColor.setStroke()
             let outline = NSBezierPath(roundedRect: bounds.insetBy(dx: 1, dy: 1), xRadius: 5, yRadius: 5)
             outline.lineWidth = 2
@@ -3017,7 +2995,6 @@ private final class ModuleReorderList: NSStackView, NSDraggingSource, SettingsCo
         item.setDraggingFrame(row.frame.offsetBy(dx: 0, dy: reducesMotion ? 0 : 2), contents: image)
         originalOrder = Settings.moduleOrder
         draggedModule = module
-        row.alphaValue = 0.25
         let session = beginDraggingSession(with: [item], event: event, source: self)
         session.animatesToStartingPositionsOnCancelOrFail = !reducesMotion
         dragSession = session
@@ -3028,6 +3005,10 @@ private final class ModuleReorderList: NSStackView, NSDraggingSource, SettingsCo
     }
 
     func ignoreModifierKeys(for session: NSDraggingSession) -> Bool { true }
+
+    func draggingSession(_ session: NSDraggingSession, willBeginAt screenPoint: NSPoint) {
+        if let module = draggedModule { rows[module]?.alphaValue = 0.25 }
+    }
 
     func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
         cancelReordering()
@@ -3242,15 +3223,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         row.wantsLayer = true
         row.identifier = NSUserInterfaceItemIdentifier("settings.modules.row.\(module.rawValue)")
 
-        let icon: NSImageView
-        if module == .ring {
-            icon = ModuleRingGaugeIconView(increaseContrast: increaseContrast)
-        } else {
-            icon = NSImageView()
-            icon.image = NSImage(systemSymbolName: symbolName(for: module), accessibilityDescription: nil)?
-                .withSymbolConfiguration(.init(pointSize: SettingsStyle.rowSymbolSize, weight: .regular))
-            icon.contentTintColor = SettingsStyle.primaryText
-        }
+        let icon = ModuleSettingsIconView(module: module, increaseContrast: increaseContrast)
         icon.identifier = NSUserInterfaceItemIdentifier("settings.modules.icon.\(module.rawValue)")
         icon.imageScaling = .scaleProportionallyDown
         icon.setAccessibilityElement(false)
@@ -3317,16 +3290,6 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             separator.bottomAnchor.constraint(equalTo: row.bottomAnchor),
         ])
         return row
-    }
-
-    private func symbolName(for module: Settings.Module) -> String {
-        switch module {
-        case .flow: return "arrow.triangle.branch"
-        case .ring: return "gauge"
-        case .lanes: return "chart.bar"
-        case .history: return "chart.xyaxis.line"
-        case .runtime: return "clock"
-        }
     }
 
     private func description(for module: Settings.Module) -> String {
@@ -4120,6 +4083,20 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
     func sidebarRectForRowForTest(_ row: Int) -> NSRect { sidebar.rect(ofRow: row) }
     var sidebarForTest: NSTableView { sidebar }
     var sidebarNextKeyViewForTest: NSView? { sidebar.nextKeyView }
+
+    private func moduleReorderHandleForTest(_ module: Settings.Module) -> ModuleReorderHandle? {
+        sections.flatMap { keyControls(in: $0.view) }
+            .compactMap { $0 as? ModuleReorderHandle }.first { $0.module == module }
+    }
+
+    func observeModuleReorderDragStartForTest(_ module: Settings.Module, handler: ((NSEvent) -> Void)?) {
+        moduleReorderHandleForTest(module)?.dragStartObserverForTest = handler
+    }
+
+    func moduleReorderShowsKeyboardFocusForTest(_ module: Settings.Module) -> Bool {
+        moduleReorderHandleForTest(module)?.showsKeyboardFocus ?? false
+    }
+
     var lastVisibleSwitchNextKeyViewForTest: NSView? {
         switchButtons(in: sections[selectedSectionIndex].view).last?.nextKeyView
     }

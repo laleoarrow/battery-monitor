@@ -275,9 +275,18 @@ order. Hidden modules retain their positions. The Settings list, popover section
 and quick menu share that order, while the header and footer stay at the ends.
 Reordering moves existing arranged views without detaching History, changing its
 samples, or refreshing telemetry. Reduce Motion removes row movement and drag
-return animation. Ring Gauge uses the approved vector circle, six upper ticks and
-blue northeast needle; its non-template image regenerates on appearance and
-contrast changes. The other four module symbols and all row dimensions remain.
+return animation. All five module icons follow the approved neutral-and-blue
+vector reference. Editable SVG masters in `design/settings/module-icons-vector`
+generate the static AppKit paths in `MenuBar/ModuleIconArtwork.swift`. Non-template
+images regenerate on appearance and contrast changes. Icon slots and row
+geometry remain unchanged; the artwork preview is an offscreen render.
+This approved icon family also guides future Wattson in-app icons and logo
+additions: use precise rounded neutral contours with system-blue accents and
+restrained local gradient regions. Keep small-size silhouettes legible, align
+decorative arc endpoints with their pointer, and adapt neutral ink and contrast
+to the system appearance. Keep editable vector masters and derive production
+artwork from them. Do not introduce unrelated icon styles or change the app's
+existing identity as part of adding a module icon.
 Native Settings captures and verification notes are in
 `design/settings/modules-reordering/README.md`. Actual pointer-driven drop
 verification remains pending; queued-event tests did not verify a system drop.
