@@ -61,9 +61,11 @@ while any other scale retains 33 stroke keyframes. Head and gradient keyframes
 remain unchanged. The [4.3.11 performance review](../design/history-performance/README.md)
 records the ABBA preparation measurements, explicit construction counts and
 native continuity checks, including the natural scheduling fixture's limits.
-Wattson 4.3.14 is the current verified local installation; its battery runtime
-settling fix and exact package verification are recorded in the
-[runtime calculation review](../design/battery-runtime-calculating/README.md).
+Wattson 4.3.15 is the current verified local installation, containing all final
+side-chat Settings and Power artwork. Its exact native, package and installation
+evidence is recorded in the [all-icons integration review](../design/popover/all-icons-integration/README.md).
+The retained 4.3.14 battery runtime settling fix and its earlier package evidence
+are recorded in the [runtime calculation review](../design/battery-runtime-calculating/README.md).
 The [General icon integration review](../design/settings/general-icons-integration/README.md)
 preserves the preceding 4.3.13 artwork and installation evidence.
 The [4.3.10 axis transition review](../design/history-axis-upgrade/README.md)

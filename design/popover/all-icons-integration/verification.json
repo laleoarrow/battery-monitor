@@ -1,0 +1,153 @@
+{
+  "sourceCommit": "b6c5d8d54bcd6945e99059958f498fa8d8eb9cdc",
+  "sideArtworkCommit": "c4b84050d9cff0e58b6e4a7fb914dc3dae20c435",
+  "version": "4.3.15",
+  "installed": true,
+  "publicRelease": false,
+  "all18ArtworkMastersIntegrated": true,
+  "nativeTests": 54,
+  "settingsContractTests": 8,
+  "topologyContractTests": 12,
+  "productionCaptures": 48,
+  "visuallyReviewedSurfaces": 6,
+  "packageMatrixCases": 5,
+  "VMQuietSeconds": 98.31258200000002,
+  "hostQuietSeconds": 95.03869800001848,
+  "canonical": {
+    "version": "4.3.15",
+    "build": "4.3.15",
+    "receiptVersion": "4.3.15",
+    "receiptInstallTime": 1792219117,
+    "app": {
+      "entryCount": 18,
+      "treeSHA256": "4b1bf51699d2a95b713a913c895104d1cb2a16755898659d0456b30227e44cf8"
+    },
+    "helper": {
+      "mode": 356,
+      "uid": 0,
+      "gid": 0,
+      "kind": "file",
+      "sha256": "22ead3da08dc34bd90cdeaaf769b826b5a03cc0ad1853d088dc2a1158b7a0b52"
+    },
+    "launchDaemon": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0,
+      "kind": "file",
+      "sha256": "29cd39cb617610c7e42c5c28549d8334c45fbcaf4b1f188fc35bdd6f13f4a599"
+    },
+    "processPIDs": [
+      83898
+    ]
+  },
+  "prior4314EvidenceUnchanged": true,
+  "allCleanupChecksPassed": true,
+  "normalNativeInstallerPID": 83625,
+  "completedUTC": "2026-10-17T06:44:03.927912+00:00",
+  "evidence": [
+    {
+      "path": ".build/all-icons-integration-review.noindex/session-final-4315.json",
+      "sha256": "0218999d8a3e1511ea8221d2229b1b9c23bb068a59464be8f1f7a0aa853595f2"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/approved-artwork-identity.json",
+      "sha256": "fe2b6170ec5b53a4cce95830fc78172eb7e09190501df1ab4dd68c731e0c0ccf"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/svg-archives-verified.json",
+      "sha256": "f41671a6376a6fbf7eb0e60c672bda49eed76645747a4184a0ef7105d1db5c46"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/artifact-identities.json",
+      "sha256": "26d591a2a94a1cd2512716553b990c70ff6ae9092d0aded52b6704774dee6fb2"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/integration-tests-summary.json",
+      "sha256": "6a5921f7eb6405a33e99ee6bdb44b5d63271c1f5aed299b16da7c8d73cd5a242"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/visual-review.json",
+      "sha256": "b9f63b56c387d7b3932d490eed7bca37a1adfd5fe1a815257fe5df4caa7d1e25"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/validated-results-4315.json",
+      "sha256": "c6d9d2a70e010c1cbed82dc67c00d5a11d21f5e0ebac2424c47b8b2a093edd9a"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/owned-domains-final.json",
+      "sha256": "c751a73d5adc1fc9a8ae06074a3ce5e1f39b52adb2b8f1cd42c6241b83e97868"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/owned-resources-immediate.json",
+      "sha256": "a92a1f846467bad127d1eafe3ccc29ece254f79b91637e6dadda03a7a86a9d00"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/owned-resources-delayed.json",
+      "sha256": "3c3a55e5bec579797025132fde2406d073e1b6a990c6fe9fe2b5369388ac6c13"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/vm-cleanup-summary.json",
+      "sha256": "4ab7fe5e0d8570af9a8e7df3ad44acf023b30d3cbfcb4e3ce604e751b61b177a"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/vm-session-exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/transfer-cleanup.json",
+      "sha256": "c056fa3e18dbf124395fd7c092a64665fe72e9b86e209823336f861c45c04ad9"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/native-installer-success.log",
+      "sha256": "38ff27937001aa0e072313488e84cd08a52eca8ad57d139717167ea537c56dad"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/local-install-verified.json",
+      "sha256": "b833534083fb144e9834d790ae8cab4ee2ddb7d224e9c81f9ff2ab4b14b8904b"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/local-install-verify-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/4315-success-cleanup-immediate.json",
+      "sha256": "b4524b58a493dc5be6ffd989db13606363a0908662d90e7ea8975d7becc4e8bd"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/4315-success-cleanup-delayed.json",
+      "sha256": "b431e8dac54c2ccb79748149c6a6333b2a4cd129234ad9e3ab90a72d185815a4"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/prior-4314-evidence-hashes.json",
+      "sha256": "b39432568be919e5e642a96737bda971b2f64696fe19e5f61148c846b3b25552"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/runtime-tests-b6c5d8d54bcd-v1/swift/methods-verified.json",
+      "sha256": "4045a112076ba64c32cf1a003055bae7bbbc70ff2d8c8d2dcf2ab76e7cb86815"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/settings-contract-b6c5d8d54bcd-v1/settings/run.log",
+      "sha256": "3840c0d5da98481d9612481e2d286ce759f4429f8aba2d69679e83a7a4bb9dad"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/captures-b6c5d8d54bcd-v1/capture-verification.json",
+      "sha256": "35d3770446d534f15c6d1d964ff3c88ae2cd6b910409dddb94e6ca51c9d15eaf"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/package-matrix-b6c5d8d54bcd/exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/topology-contract.log",
+      "sha256": "00a720f152f9c77f4310aa15a657e478dd58ab07097631ff26e17313a58aa200"
+    },
+    {
+      "path": ".build/all-icons-integration-review.noindex/release-build-exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "designAssetsManifest": {
+    "path": "dist/local-v4.3.15/design/manifest.json",
+    "sha256": "b0490238be2c1dee08d060854cee43cd1012e3531c22c40f3efcf015772fd73a"
+  }
+}
