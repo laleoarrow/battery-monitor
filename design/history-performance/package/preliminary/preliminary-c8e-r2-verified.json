@@ -1,0 +1,59 @@
+{
+  "validationLabel": "preliminary-c8e-r2",
+  "preliminary": true,
+  "actualOuterExitCode": 0,
+  "actualGuestExitCode": 0,
+  "stageExitCode": 0,
+  "archiveSHA256": "e852816000f5d06151e52d9a57aeb8ea199a0d9b595113a9ce6f9e3f3c694668",
+  "allArchivedHashesVerified": true,
+  "archivedFileCount": 89,
+  "sourceCommit": "c8e75a81ddf28635ea295db2c80b312510327223",
+  "candidatePackageSHA256": "d6407fd27a98ef4396896f391e944d1d8e6eeef2817dcb4a927d58e6ae5bd25a",
+  "passedModes": [
+    "PASS previous-fresh",
+    "PASS disabled-service-upgrade",
+    "PASS fresh",
+    "PASS reinstall",
+    "PASS disabled-service-reinstall",
+    "HISTORY_PERFORMANCE_PACKAGE_MATRIX_PASSED"
+  ],
+  "immediateAudit": {
+    "schema": 1,
+    "atUTC": "2026-10-17T03:08:07.962654+00:00",
+    "atSystemMonotonic": 815.518982,
+    "requestedDelaySeconds": 0,
+    "withinProcessDelaySeconds": 9.999999974752427e-07,
+    "checks": {
+      "ownedPathsRemoved": true,
+      "receiptRemoved": true,
+      "helperJobRemoved": true,
+      "ownedProcessesRemoved": true,
+      "ownedRegistrationsRemoved": true
+    },
+    "allPassed": true,
+    "residualPaths": [],
+    "residualProcesses": [],
+    "residualRegistrations": [],
+    "deletedAnything": false
+  },
+  "delayedAudit": {
+    "schema": 1,
+    "atUTC": "2026-10-17T03:08:15.561857+00:00",
+    "atSystemMonotonic": 823.118183,
+    "requestedDelaySeconds": 5.0,
+    "withinProcessDelaySeconds": 5.014588000000003,
+    "checks": {
+      "ownedPathsRemoved": true,
+      "receiptRemoved": true,
+      "helperJobRemoved": true,
+      "ownedProcessesRemoved": true,
+      "ownedRegistrationsRemoved": true
+    },
+    "allPassed": true,
+    "residualPaths": [],
+    "residualProcesses": [],
+    "residualRegistrations": [],
+    "deletedAnything": false
+  },
+  "finalReleaseGate": false
+}

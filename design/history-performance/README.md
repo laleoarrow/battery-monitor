@@ -76,10 +76,10 @@ The [native evidence](native/README.md) keeps the distinct runs, tools and
 limitations separate. Real recordings use measured frame timestamps, without
 invented frames; capture cadence is not product display FPS.
 
-The full host regression completed with **535 Swift tests** and **599 Python
-tests, four skipped**, with zero failures. [Host verification](host/verification.json)
-retains the final logs and the interruption-fixture diagnosis. Subsequent
-build-entrypoint checks and final Modules acceptance are recorded separately.
+The final integrated host regression on **91f9072d839b** completed with
+**535 Swift tests** and **601 Python tests, four skipped**, with zero failures.
+[Final verification](host/final-verification.json) retains the logs; the earlier
+[verification](host/verification.json) preserves the interruption-fixture diagnosis.
 
 The [resource audit](resources/first-session-resource-audit-summary.json) found
 all twelve owned test preference domains and ten temporary app paths absent,
@@ -89,9 +89,11 @@ the other chat's VM and the originally stopped TestLab VMs kept their states.
 
 ## Integration and installation
 
-Modules ordering and the Ring Gauge icon are coordinated with their owning
+Modules ordering and the five module icons are coordinated with their owning
 chat and share the same candidate version. Their acceptance evidence lives in
-[Modules reordering](../settings/modules-reordering/README.md).
+[Modules reordering](../settings/modules-reordering/README.md). The narrow
+[integrated source review](integration-review.md) also records the bounded
+appearance-refresh allocation that remains outside History's measured hot path.
 
 The initial universal build blocked inside SwiftPM's Xcode build service while
 its clang discovery child waited in a pipe write. The owned invocation was
@@ -104,6 +106,14 @@ including second-slice and lipo failure cleanup, passed. A real preliminary
 build then passed, including byte-identical PKG/DMG app verification; its
 [record](build/preliminary-native-release.json) explicitly awaits final Modules
 acceptance and does not claim installation.
+
+The [final build](build/final-release.json) uses frozen integrated source
+**91f9072d839badc8da4273d56d8215ef776d7d9a**. Its universal App/helper target
+macOS 12, and the App is byte-identical across the PKG and DMG. Both binaries
+are ad-hoc signed; PKG/DMG are unsigned and not notarized. The [final ARM VM
+PKG matrix](package/README.md) passed all five installation modes and cleanup
+audits on exact PKG SHA-256
+`d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590`.
 
 This is a local candidate and installation workflow. It does not publish a
 GitHub release or substitute for the public exact-SHA CI and hosted platform

@@ -1,0 +1,165 @@
+{
+  "validationLabel": "final-91f-r2",
+  "preliminary": false,
+  "actualOuterExitCode": 0,
+  "actualGuestExitCode": 0,
+  "stageExitCode": 0,
+  "archiveSHA256": "3b5b60b7d65e6bf40b4bf8e43df114ff8cc401de89256321ae2747c28ee84da9",
+  "allArchivedHashesVerified": true,
+  "archivedFileCount": 89,
+  "sourceCommit": "91f9072d839badc8da4273d56d8215ef776d7d9a",
+  "actualGuestInputPackageSHA256": [
+    "d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590",
+    "396d713f61e027d4a1ef552a3af2eb267114fe1d29ce4b497495b4f3e92fbe06"
+  ],
+  "candidatePackageSHA256": "d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590",
+  "candidateTransferBasename": "Wattson-v4.3.11-d6624c334c85-macos-universal.pkg",
+  "passedModes": [
+    "PASS previous-fresh",
+    "PASS disabled-service-upgrade",
+    "PASS fresh",
+    "PASS reinstall",
+    "PASS disabled-service-reinstall",
+    "HISTORY_PERFORMANCE_PACKAGE_MATRIX_PASSED"
+  ],
+  "modeProof": {
+    "previous-fresh": {
+      "actualGuestPackageSHA256": "396d713f61e027d4a1ef552a3af2eb267114fe1d29ce4b497495b4f3e92fbe06",
+      "receiptVersion": "4.3.10",
+      "helperV5": true,
+      "exactPayloadAppHelperPlist": true,
+      "helperEnabled": {
+        "label": "com.leoarrow.wattson.helper",
+        "expected": "enabled",
+        "actual": "enabled",
+        "rawValue": "enabled",
+        "uniqueExactEntry": true
+      },
+      "appAndHelperSignatureCommandsPassed": true
+    },
+    "disabled-service-upgrade": {
+      "actualGuestPackageSHA256": "d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590",
+      "receiptVersion": "4.3.11",
+      "helperV5": true,
+      "exactPayloadAppHelperPlist": true,
+      "helperEnabled": {
+        "label": "com.leoarrow.wattson.helper",
+        "expected": "enabled",
+        "actual": "enabled",
+        "rawValue": "enabled",
+        "uniqueExactEntry": true
+      },
+      "appAndHelperSignatureCommandsPassed": true
+    },
+    "fresh": {
+      "actualGuestPackageSHA256": "d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590",
+      "receiptVersion": "4.3.11",
+      "helperV5": true,
+      "exactPayloadAppHelperPlist": true,
+      "helperEnabled": {
+        "label": "com.leoarrow.wattson.helper",
+        "expected": "enabled",
+        "actual": "enabled",
+        "rawValue": "enabled",
+        "uniqueExactEntry": true
+      },
+      "appAndHelperSignatureCommandsPassed": true
+    },
+    "reinstall": {
+      "actualGuestPackageSHA256": "d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590",
+      "receiptVersion": "4.3.11",
+      "helperV5": true,
+      "exactPayloadAppHelperPlist": true,
+      "helperEnabled": {
+        "label": "com.leoarrow.wattson.helper",
+        "expected": "enabled",
+        "actual": "enabled",
+        "rawValue": "enabled",
+        "uniqueExactEntry": true
+      },
+      "appAndHelperSignatureCommandsPassed": true
+    },
+    "disabled-service-reinstall": {
+      "actualGuestPackageSHA256": "d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590",
+      "receiptVersion": "4.3.11",
+      "helperV5": true,
+      "exactPayloadAppHelperPlist": true,
+      "helperEnabled": {
+        "label": "com.leoarrow.wattson.helper",
+        "expected": "enabled",
+        "actual": "enabled",
+        "rawValue": "enabled",
+        "uniqueExactEntry": true
+      },
+      "appAndHelperSignatureCommandsPassed": true
+    }
+  },
+  "immediateAudit": {
+    "schema": 1,
+    "atUTC": "2026-10-17T03:15:12.452542+00:00",
+    "atSystemMonotonic": 1240.067341,
+    "requestedDelaySeconds": 0,
+    "withinProcessDelaySeconds": 0.0,
+    "checks": {
+      "ownedPathsRemoved": true,
+      "receiptRemoved": true,
+      "helperJobRemoved": true,
+      "ownedProcessesRemoved": true,
+      "ownedRegistrationsRemoved": true
+    },
+    "allPassed": true,
+    "residualPaths": [],
+    "residualProcesses": [],
+    "residualRegistrations": [],
+    "deletedAnything": false
+  },
+  "delayedAudit": {
+    "schema": 1,
+    "atUTC": "2026-10-17T03:15:20.072901+00:00",
+    "atSystemMonotonic": 1247.687765,
+    "requestedDelaySeconds": 5.0,
+    "withinProcessDelaySeconds": 5.047064000000091,
+    "checks": {
+      "ownedPathsRemoved": true,
+      "receiptRemoved": true,
+      "helperJobRemoved": true,
+      "ownedProcessesRemoved": true,
+      "ownedRegistrationsRemoved": true
+    },
+    "allPassed": true,
+    "residualPaths": [],
+    "residualProcesses": [],
+    "residualRegistrations": [],
+    "deletedAnything": false
+  },
+  "guestLocalProvenance": {
+    "validationLabel": "final-91f-r2",
+    "preliminary": false,
+    "sourceCommit": "91f9072d839badc8da4273d56d8215ef776d7d9a",
+    "candidateVersion": "4.3.11",
+    "candidatePackageSHA256": "d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590",
+    "previousVersion": "4.3.10",
+    "previousPackageSHA256": "396d713f61e027d4a1ef552a3af2eb267114fe1d29ce4b497495b4f3e92fbe06",
+    "toolsArchiveSHA256": "31596c3f321b955064ff2ca78ef1ff00f982fcfe66d7ead63c703ec8241fd56f",
+    "hostBootstrapSHA256": {
+      "stage-package.py": "3fd10058eae7a73db06ad0d4a04b6ad0fd15d8c77b41d033b9b613ff4f8fc50f",
+      "dispatch-package.py": "e40e728b91c5d09093b7dcb664ed9a2d81bc81e1dc40c7d6c205a8f8c5e5c747"
+    },
+    "guestLocalToolSHA256": {
+      "audit-install.py": "84d3be7e5a3d872fe424ba37e579f79fd56093a6c37b598bbe4bde81eef617ea",
+      "check-helper-disabled.py": "b060b3982292c518a5d80fad493302ef64c1458248f05176c6b41cba706ef244",
+      "lib/local_cleanup.sh": "372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e",
+      "lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+      "remove-owned-install.py": "459bf2556f1e63f78b1fe56292ef73a09f7b0e3fc026b8e401bb048b4260e621",
+      "run-package-qa.sh": "ac07460361852e881d94a2f9d361350238c9f0ff6a4c321df1a596d093546e06"
+    },
+    "allHashesVerifiedBeforeExecution": true,
+    "guestLocalRoot": "/Users/admin/Project/Wattson-HistoryPerf-QA/.build/package-staged.noindex/run.nlmiahq4",
+    "productionAppResidencyApplicable": false,
+    "boundary": "VirtualMac has no AppleSmartBattery; physical host readiness is a separate root-owned gate."
+  },
+  "packageMatrixGatePassed": true,
+  "productionAppResidencyTestedInVM": false,
+  "boundary": "No AppleSmartBattery in disposable ARM VM. Physical host app readiness and final UI gate remain root-owned.",
+  "publicReleaseGateClaimed": false
+}

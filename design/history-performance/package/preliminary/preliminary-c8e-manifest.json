@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "archive": "package-tools-f65118e194f381c2b05a54c138b43335705aabd83387b29b821a99104cc4d7b2.tar.gz",
+  "archiveSHA256": "f65118e194f381c2b05a54c138b43335705aabd83387b29b821a99104cc4d7b2",
+  "files": {
+    "audit-install.py": "5493444e5bc6d42f3241156eb28dbba8027380f2478b8160bc68957433f29d5e",
+    "lib/local_cleanup.sh": "372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e",
+    "lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+    "remove-owned-install.py": "459bf2556f1e63f78b1fe56292ef73a09f7b0e3fc026b8e401bb048b4260e621",
+    "run-package-qa.sh": "47fcd9bb91f3d8f506629c4f5b943090020c3ba83989aa534b02c77dfb4748c2"
+  },
+  "hostBootstrapSHA256": {
+    "stage-package.py": "3fd10058eae7a73db06ad0d4a04b6ad0fd15d8c77b41d033b9b613ff4f8fc50f",
+    "dispatch-package.py": "e40e728b91c5d09093b7dcb664ed9a2d81bc81e1dc40c7d6c205a8f8c5e5c747"
+  },
+  "validationLabel": "preliminary-c8e"
+}

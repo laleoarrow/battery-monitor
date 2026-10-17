@@ -1,0 +1,25 @@
+{
+  "validationLabel": "final-91f-r2",
+  "sourceCommit": "91f9072d839badc8da4273d56d8215ef776d7d9a",
+  "copyFrom": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/history-performance.noindex/package-validation",
+  "scope": "Final package gate plus reviewed immutable tools and preserved first staging hash failure; preliminary matrix is separate.",
+  "files": {
+    "final-91f-r2-verified.json": "15bf7329f3cdcc04ec81f01eae5de27b2597385f9ee4bd25ea819857c286a649",
+    "final-91f-r2-ownership-cleanup.json": "bb97f70e0eda62c20f1ee4e3a2328826d30a4cd27eff785ddf13ce0b8d0ad1ab",
+    "final-91f-r2-manifest.json": "d9000b083d4ec93b3020bb8513f1f48375e91d862c235ad84bda2fd057e27c5c",
+    "final-91f-r2-matrix.log": "5311e9cc940275780763188a83c356ff1103685376f6accde75197ee17a859ac",
+    "final-91f-r2-empty-parent-cleanup.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "package-results-final-91f-r2-91f9072d839b-3b5b60b7d65e6bf40b4bf8e43df114ff8cc401de89256321ae2747c28ee84da9.tar.gz": "3b5b60b7d65e6bf40b4bf8e43df114ff8cc401de89256321ae2747c28ee84da9",
+    "package-tools-31596c3f321b955064ff2ca78ef1ff00f982fcfe66d7ead63c703ec8241fd56f.json": "3f0fc069fa897194cbe0d522c0dcef74e17e8936a7f4237a874686d143e1882e",
+    "package-tools-31596c3f321b955064ff2ca78ef1ff00f982fcfe66d7ead63c703ec8241fd56f.tar.gz": "31596c3f321b955064ff2ca78ef1ff00f982fcfe66d7ead63c703ec8241fd56f",
+    "stage-package.py": "3fd10058eae7a73db06ad0d4a04b6ad0fd15d8c77b41d033b9b613ff4f8fc50f",
+    "dispatch-package.py": "e40e728b91c5d09093b7dcb664ed9a2d81bc81e1dc40c7d6c205a8f8c5e5c747",
+    "test-cleanup.py": "5bf83210922d2d0c6e6b33e5c9c5fabaf3d5e934c1149cb2cfb062995bdfc72f",
+    "preliminary-c8e-cleanup-failure-injection-v3.log": "1a1f87d0ec55c934e781f3cb802e6683ce0e6846106f758315a9457a9972f05d",
+    "final-91f-first-staging-failed.json": "5fc757b5d00015b428c96031c2ea4b6b3981cd828ae319fac0ef4c2e03749ca5",
+    "final-91f-guest-share-hashes.log": "1c7371850570e399ddfc3725e255ed9a4dd332ca33615e41d32f4c179c3ffa39",
+    "final-91f-matrix.log": "0684861735a49fe029f3688b81d7ff34cb505224bba48d2a3fff815b95a11715",
+    "package-results-final-91f-91f9072d839b-5f7b3858b8e7aa2f07127116fa1e4db5792c743f9c5a9cb0b2cdc7b352b6d906.tar.gz": "5f7b3858b8e7aa2f07127116fa1e4db5792c743f9c5a9cb0b2cdc7b352b6d906"
+  },
+  "additionalRootOwnedTransferRecord": "../final-package-transfer.json"
+}

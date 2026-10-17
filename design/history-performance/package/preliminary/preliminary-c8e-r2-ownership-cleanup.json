@@ -1,0 +1,33 @@
+{
+  "validationLabel": "preliminary-c8e-r2",
+  "preliminary": true,
+  "atUTC": "2026-10-17T03:08:53.224288+00:00",
+  "guestVM": "Wattson-HistoryPerf-20261016",
+  "vmOwner": "perf_benchmark",
+  "vmStoppedByThisWorker": false,
+  "createdGuestProject": "/Users/admin/Project/Wattson-HistoryPerf-QA",
+  "createdGuestProjectRemovedByEmptyRmdir": true,
+  "emptyParentCleanupActualExitCode": 0,
+  "callerOwnedGuestParentHandoff": false,
+  "ownedGuestInstallationPaths": [
+    "/Applications/Wattson.app",
+    "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper",
+    "/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist",
+    "/var/run/wattson-helper.sock"
+  ],
+  "ownedGuestUserDomains": [
+    "com.leoarrow.wattson",
+    "com.leoarrow.Wattson"
+  ],
+  "ownedGuestReceipt": "com.leoarrow.wattson.pkg",
+  "ownedGuestHelperJob": "system/com.leoarrow.wattson.helper",
+  "ownedMounts": [],
+  "ownedProcessesRemaining": [],
+  "installationAndUserDataResidualAuditAllPassed": true,
+  "delayedAuditWithinProcessDelaySeconds": 5.014588000000003,
+  "allGuestRunAndScratchDirectoriesRemoved": true,
+  "hostCanonicalInstallationTouched": false,
+  "otherVMsTouched": false,
+  "resultsArchiveSHA256": "e852816000f5d06151e52d9a57aeb8ea199a0d9b595113a9ce6f9e3f3c694668",
+  "nextGate": "Repeat matrix on root-provided final exact package/source after final Modules changes."
+}

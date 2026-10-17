@@ -1,0 +1,12 @@
+test_every_remove_failure_is_reported_and_remaining_steps_run (__main__.CleanupTests) ... ok
+test_export_failure_changes_success_to_failure (__main__.CleanupTests) ... ok
+test_export_failures_preserve_original_23 (__main__.CleanupTests) ... ok
+test_finish_preserves_original_failure_and_continues_all_cleanup (__main__.CleanupTests) ... ok
+test_interruption_record_and_actual_exit_agree (__main__.CleanupTests) ... ok
+test_launchctl_disabled_and_enabled_formats (__main__.CleanupTests) ... ok
+test_remove_success (__main__.CleanupTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.930s
+
+OK

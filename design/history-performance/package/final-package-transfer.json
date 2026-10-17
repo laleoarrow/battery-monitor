@@ -1,0 +1,7 @@
+{
+  "canonicalPackage": "dist/Wattson-v4.3.11-macos-universal.pkg",
+  "guestTransferPackage": "dist/Wattson-v4.3.11-d6624c334c85-macos-universal.pkg",
+  "SHA256": "d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590",
+  "separateInode": true,
+  "reason": "Unique content-addressed basename avoids observed stale VirtioFS bytes at reused preliminary filename. Exact bytes equal final canonical PKG."
+}

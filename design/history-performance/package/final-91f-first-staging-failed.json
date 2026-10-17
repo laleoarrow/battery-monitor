@@ -1,0 +1,16 @@
+{
+  "validationLabel": "final-91f-first-staging-failed",
+  "atUTC": "2026-10-17T03:14:11.976088+00:00",
+  "sourceCommitRequested": "91f9072d839badc8da4273d56d8215ef776d7d9a",
+  "candidatePackageSHA256Expected": "d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590",
+  "candidatePackageSHA256GuestShareObserved": "d6407fd27a98ef4396896f391e944d1d8e6eeef2817dcb4a927d58e6ae5bd25a",
+  "actualExitCode": 1,
+  "stageArchiveSHA256": "5f7b3858b8e7aa2f07127116fa1e4db5792c743f9c5a9cb0b2cdc7b352b6d906",
+  "toolsAndPreviousPackageGuestHashesCorrect": true,
+  "candidateHashVerifiedGuestLocal": false,
+  "installerChildStarted": false,
+  "matrixExecuted": false,
+  "guestRunFinallyRemoved": true,
+  "summaryConstantCorrection": "The stage stdout guestLocalToolsAndPackagesVerified:true is unconditional and is invalid for this failed staging. No installed-package gate passed or was attempted.",
+  "nextStep": "Use root-created immutable content-addressed candidate basename in dist; keep reviewed tools unchanged."
+}

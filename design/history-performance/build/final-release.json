@@ -1,0 +1,22 @@
+{
+  "sourceCommit": "91f9072d839badc8da4273d56d8215ef776d7d9a",
+  "actualReleaseExitCode": 0,
+  "version": "4.3.11",
+  "architectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "minimumMacOS": "12.0",
+  "appAndHelperSignature": "ad-hoc",
+  "packageAndDMGSignature": "unsigned",
+  "notarized": false,
+  "appInPKGAndDMGBytesEqual": true,
+  "buildScratchAbsent": true,
+  "artifacts": {
+    "Wattson-v4.3.11-macos-universal.pkg": "d6624c334c8501b39d8c9b1bcea766c2cc5d661948574068b33be195149af590",
+    "Wattson-v4.3.11-macos-universal.dmg": "2910695efb5004e119c46d42bddbff6d3b05dfcb79776f84a8261bd9e3226bb8",
+    "Wattson-v4.3.11-release-info.txt": "5320df03021f51457c033820cd0cf0e78a8f41d1871dc7be7b2baa7b12088c3e",
+    "SHA256SUMS.txt": "97fcb2483728fc05e53868ef99523a4a692fa54e204f43434fe78971f2b06ec7"
+  },
+  "hostInstallationVerified": false
+}
