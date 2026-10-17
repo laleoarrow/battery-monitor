@@ -38,6 +38,6 @@ has been deleted. See [verification.json](verification.json).
 The verified universal PKG is installed as **4.3.19** at
 `/Applications/Wattson.app`, with matching helper, daemon and receipt. All 13
 existing settings are preserved. See [the installation record](local-installation-v4.3.19.json).
-The canonical process is running; the latest Settings appearance awaits user
-review because the host UI tool times out when reading this menu-bar app.
-No public release is implied.
+The user approved retaining this small dropdown style. The host UI tool timed
+out when reading this menu-bar app, so no automated host visual inspection is
+claimed. No public release is implied.

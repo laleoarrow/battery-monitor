@@ -32,9 +32,11 @@
   "packageSignature": "unsigned",
   "notarized": false,
   "actualSettingsAcceptance": {
-    "status": "pending-user-review",
+    "status": "style-approved-by-user",
     "automaticUIRead": "Computer Use canonical-path getApp timed out after reopening Settings.",
-    "nativeFixtureVerification": "Classic/Glass light/dark production Settings windows passed."
+    "nativeFixtureVerification": "Classic/Glass light/dark production Settings windows passed.",
+    "userConfirmation": "这样可以，就用这个小下拉的样式。",
+    "scope": "User approved retaining the small Off/On selector. No automated host visual inspection is claimed."
   },
   "cleanup": {
     "disposableBuildRemoved": true,
