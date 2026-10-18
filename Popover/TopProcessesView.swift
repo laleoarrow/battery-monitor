@@ -151,6 +151,9 @@ final class TopProcessesView: PopoverSection {
         updateActionFeedback()
         let count = min(max(count, 1), 10)
         guard renderedState != state || self.count != count || self.compact != compact else { return }
+        let focusedRow = rows.first { $0 === window?.firstResponder || $0.forceQuitButton === window?.firstResponder }
+        let focusedProcess = focusedRow?.process.map(Selection.init)
+        let focusedAction = focusedRow != nil && focusedRow?.forceQuitButton === window?.firstResponder
         if count < self.count { select(nil) }
         renderedState = state
         self.count = count
@@ -191,6 +194,15 @@ final class TopProcessesView: PopoverSection {
             row.update(process: processes[index], compact: compact)
             row.isHidden = false
             row.setSelected(selectedProcess == Selection(processes[index]))
+        }
+        if let focusedProcess, let window {
+            if let row = rows.first(where: { !$0.isHidden && $0.process.map(Selection.init) == focusedProcess }) {
+                let target: NSView = focusedAction && row.isSelected && row.forceQuitButton.isEnabled
+                    ? row.forceQuitButton : row
+                if window.firstResponder !== target { window.makeFirstResponder(target) }
+            } else {
+                window.makeFirstResponder(nil)
+            }
         }
         needsLayout = true
         updateActionFeedback()
@@ -454,7 +466,6 @@ final class TopProcessesView: PopoverSection {
             setAccessibilityValue("Activity Score \(Self.shortNumber(score)); CPU \(Self.shortNumber(process.cpuPercent))%; idle wakeups \(Self.wakeupNumber(process.idleWakeupsPerSecond)) per second")
             toolTip = "\(process.name) · PID \(process.pid)\n\(summary)"
             forceQuitButton.isEnabled = process.terminationIdentity != nil
-            forceQuitButton.refreshAppearance()
             forceQuitButton.toolTip = process.terminationIdentity != nil ? "Force Quit" : "Force Quit Unavailable"
             forceQuitButton.setAccessibilityLabel("Force Quit \(process.name)")
             forceQuitButton.setAccessibilityHelp(forceQuitButton.toolTip)

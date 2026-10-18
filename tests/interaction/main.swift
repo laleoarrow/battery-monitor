@@ -1,5 +1,6 @@
 import AppKit
 import ApplicationServices
+import Darwin
 // Isolate appearance before any popover/footer is constructed; an installed
 // app's saved choice must not change which baseline this harness exercises.
 let settingsSuiteName = ProcessInfo.processInfo.environment["WATTSON_TEST_DEFAULTS_SUITE"]!
@@ -2859,6 +2860,106 @@ if #available(macOS 26.0, *), !screenLocked, let button = item.button {
         check("\(name) 重新开启续航后仪表与真实宿主恢复原坐标",
               !runtime.isHidden && abs(footerScreenY() - footerY) < 0.5
                   && abs((root.window?.frame.height ?? 0) - height) < 0.5)
+    }
+}
+
+// ---- 14a. Process Activity: keyboard focus follows identity across reranking ----
+if !screenLocked {
+    // Mock identities are valid, but the handler records requests only. This
+    // fixture never contacts the helper or terminates a process.
+    func focusProcess(_ pid: Int32, _ name: String) -> EnergyProcess {
+        var audit = audit_token_t()
+        audit.val.1 = geteuid()
+        audit.val.5 = UInt32(bitPattern: pid)
+        return EnergyProcess(pid: pid, name: name, energyImpact: 40,
+                             cpuPercent: 40, idleWakeupsPerSecond: 0,
+                             terminationIdentity: ProcessIdentity(
+                                pid: pid, startedAt: UInt64(pid),
+                                auditToken: withUnsafeBytes(of: &audit) { Data($0) }))
+    }
+    let a = focusProcess(41001, "Focus A")
+    let b = focusProcess(41002, "Focus B")
+    let c = focusProcess(41003, "Focus C")
+    let window = NSWindow(contentRect: NSRect(x: 80, y: 100, width: 380, height: 270),
+                          styleMask: [.titled, .closable], backing: .buffered, defer: false)
+    window.isReleasedWhenClosed = false
+    defer { window.makeFirstResponder(nil); window.close() }
+    window.makeKeyAndOrderFront(nil)
+    app.activate(ignoringOtherApps: true)
+    check("进程键盘焦点回归具有真实 key window",
+          runApplication(until: { window.isKeyWindow }, timeout: 1))
+    func focusFixture() -> TopProcessesView {
+        window.makeFirstResponder(nil)
+        window.contentView = NSView(frame: NSRect(x: 0, y: 0, width: 380, height: 270))
+        let view = TopProcessesView()
+        view.frame = NSRect(x: 20, y: 40, width: 328,
+                           height: TopProcessesView.preferredHeight(count: 3))
+        window.contentView!.addSubview(view)
+        view.update(state: .ready([a, b, c]), count: 3)
+        view.layoutSubtreeIfNeeded()
+        _ = view.processRowsForTest[0].accessibilityPerformPress()
+        return view
+    }
+    for compact in [false, true] {
+        let view = focusFixture()
+        let row = view.processRowsForTest[0]
+        check("进程行接受真实键盘焦点 compact=\(compact)",
+              window.makeFirstResponder(row) && window.firstResponder === row)
+        view.update(state: .ready([b, a, c]), count: 3, compact: compact)
+        view.layoutSubtreeIfNeeded()
+        check("重排时选择和行焦点均跟随进程身份 compact=\(compact)",
+              view.selectedProcessForTest?.terminationIdentity == a.terminationIdentity
+                  && window.firstResponder === view.processRowsForTest[1])
+        let space = NSEvent.keyEvent(with: .keyDown, location: .zero, modifierFlags: [],
+                                    timestamp: ProcessInfo.processInfo.systemUptime,
+                                    windowNumber: window.windowNumber, context: nil,
+                                    characters: " ", charactersIgnoringModifiers: " ",
+                                    isARepeat: false, keyCode: 49)!
+        window.firstResponder?.keyDown(with: space)
+        check("真实 firstResponder 的空格只取消原进程选择 compact=\(compact)",
+              view.selectedProcessForTest == nil)
+    }
+    do {
+        let view = focusFixture()
+        let action = view.forceQuitButtonsForTest[0]
+        if window.makeFirstResponder(action), window.firstResponder === action {
+            var requested: EnergyProcess?
+            view.forceQuitHandler = { requested = $0 }
+            view.update(state: .ready([b, a, c]), count: 3)
+            view.layoutSubtreeIfNeeded()
+            check("重排时原生强退按钮焦点跟随原进程",
+                  window.firstResponder === view.forceQuitButtonsForTest[1])
+            (window.firstResponder as? NSButton)?.performClick(nil)
+            check("焦点按钮仅请求原进程身份而不误操作新排名",
+                  requested?.terminationIdentity == a.terminationIdentity)
+        } else {
+            log("PROCESS_ACTION_BUTTON_FOCUS_UNEXERCISED: AppKit rejected native button focus")
+        }
+    }
+    for (name, state, count) in [("移除", TopProcessesState.ready([b, c]), 3),
+                                ("掉出 Top N", .ready([b, a, c]), 1)] {
+        let view = focusFixture()
+        let rows = view.processRowsForTest
+        let actions = view.forceQuitButtonsForTest
+        _ = window.makeFirstResponder(rows[0])
+        view.update(state: state, count: count)
+        check("\(name) 清除选择并退离已换绑或隐藏的进程焦点",
+              view.selectedProcessForTest == nil
+                  && !rows.contains { $0 === window.firstResponder }
+                  && !actions.contains { $0 === window.firstResponder })
+    }
+    do {
+        let view = focusFixture()
+        let text = NSTextField(string: "Unrelated editor")
+        text.frame = NSRect(x: 20, y: 10, width: 280, height: 24)
+        window.contentView!.addSubview(text)
+        check("外部文本框可取得实际 field editor", window.makeFirstResponder(text)
+              && window.firstResponder is NSTextView)
+        let editor = window.firstResponder
+        view.update(state: .ready([b, a, c]), count: 3)
+        check("进程重排不抢占外部文本编辑焦点", window.firstResponder === editor)
+        view.update(state: .unavailable, count: 3)
+        check("进程列表失效不抢占外部文本编辑焦点", window.firstResponder === editor)
     }
 }
 

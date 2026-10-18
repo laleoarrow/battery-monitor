@@ -77,6 +77,24 @@ final class TopProcessesViewTests: XCTestCase {
         }
     }
 
+    func testScoreUpdatesReuseActionImagesWithoutSkippingReadings() throws {
+        let view = makeView()
+        view.update(state: .ready(processes(3)), count: 3)
+        XCTAssertTrue(view.processRowsForTest[0].accessibilityPerformPress())
+        let buttons = view.forceQuitButtonsForTest
+        let images = try buttons.map { try XCTUnwrap($0.image) }
+        for score in [20.0, 40.0, 60.0] {
+            view.update(state: .ready((1...3).map { process($0, score: score) }), count: 3)
+            view.layoutSubtreeIfNeeded()
+            XCTAssertEqual(view.selectedRowIndexForTest, 0)
+            XCTAssertEqual(view.selectedProcessForTest?.energyImpact, score)
+            XCTAssertEqual(view.barGeometryForTest.map(\.ratio), Array(repeating: CGFloat(score / 100), count: 3))
+            for (button, image) in zip(buttons, images) {
+                XCTAssertTrue(button.image === image)
+            }
+        }
+    }
+
     func testEveryProcessFieldRankAndUnshownReadingInvalidatesContent() throws {
         let view = makeView(count: 1)
         let original = EnergyProcess(pid: 42, name: "Worker", energyImpact: 84,

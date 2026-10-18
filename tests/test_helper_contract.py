@@ -901,7 +901,8 @@ class HelperContractTests(unittest.TestCase):
                     requestContinuousNow: requestContinuousNow,
                     nextReadContinuousDeadline: nil,
                     idleUptimeNow: idleUptimeNow,
-                    idleUptimeDeadline: 62_000_000_000
+                    idleUptimeDeadline: 62_000_000_000,
+                    backgroundWorkPending: true
                 ) == 12_000,
                 "idle listener must use only its 12 s uptime deadline"
             )
@@ -910,7 +911,8 @@ class HelperContractTests(unittest.TestCase):
                     requestContinuousNow: requestContinuousNow,
                     nextReadContinuousDeadline: 7_000_000_000,
                     idleUptimeNow: idleUptimeNow,
-                    idleUptimeDeadline: 50_500_000_000
+                    idleUptimeDeadline: 49_999_999_999,
+                    backgroundWorkPending: true
                 ) == 2_000,
                 "reader must use only its continuous deadline"
             )
@@ -919,7 +921,8 @@ class HelperContractTests(unittest.TestCase):
                     requestContinuousNow: requestContinuousNow,
                     nextReadContinuousDeadline: 4_999_999_999,
                     idleUptimeNow: idleUptimeNow,
-                    idleUptimeDeadline: 62_000_000_000
+                    idleUptimeDeadline: 49_999_999_999,
+                    backgroundWorkPending: true
                 ) == 0,
                 "an overdue reader must be serviced without another sleep"
             )
@@ -928,7 +931,8 @@ class HelperContractTests(unittest.TestCase):
                     requestContinuousNow: requestContinuousNow,
                     nextReadContinuousDeadline: nil,
                     idleUptimeNow: idleUptimeNow,
-                    idleUptimeDeadline: idleUptimeNow + 1
+                    idleUptimeDeadline: idleUptimeNow + 1,
+                    backgroundWorkPending: true
                 ) == 1,
                 "sub-millisecond waits must round up"
             )
@@ -937,10 +941,33 @@ class HelperContractTests(unittest.TestCase):
                     requestContinuousNow: requestContinuousNow,
                     nextReadContinuousDeadline: nil,
                     idleUptimeNow: 0,
-                    idleUptimeDeadline: UInt64(Int32.max) * 1_000_000 + 1
+                    idleUptimeDeadline: UInt64(Int32.max) * 1_000_000 + 1,
+                    backgroundWorkPending: true
                 ) == Int32.max,
                 "poll timeout must saturate at Int32.max"
             )
+            for deadline in [idleUptimeNow - 1, idleUptimeNow] {
+                require(
+                    socketPollTimeoutMilliseconds(
+                        requestContinuousNow: requestContinuousNow,
+                        nextReadContinuousDeadline: nil,
+                        idleUptimeNow: idleUptimeNow,
+                        idleUptimeDeadline: deadline,
+                        backgroundWorkPending: true
+                    ) == 100,
+                    "an idle-expired pending worker must not cause zero-timeout polling"
+                )
+                require(
+                    socketPollTimeoutMilliseconds(
+                        requestContinuousNow: requestContinuousNow,
+                        nextReadContinuousDeadline: nil,
+                        idleUptimeNow: idleUptimeNow,
+                        idleUptimeDeadline: deadline,
+                        backgroundWorkPending: false
+                    ) == 0,
+                    "a completed worker must not delay an eligible idle exit"
+                )
+            }
 
             print("poll deadline self-test passed")
             '''
@@ -1029,6 +1056,7 @@ class HelperContractTests(unittest.TestCase):
         self.assertIn("DispatchTime.now().uptimeNanoseconds", main_loop)
         self.assertIn("!inbox.hasPending", main_loop)
         self.assertIn("idleTimeoutNanoseconds", main_loop)
+        self.assertIn("backgroundWorkPending: topProcessesWorker.hasPending", main_loop)
         self.assertIn("autoreleasepool", main_loop)
 
     def test_socket_io_is_sigpipe_partial_and_fragment_safe(self):

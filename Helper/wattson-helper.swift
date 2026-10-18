@@ -392,18 +392,21 @@ private func readJSONObject(from fd: Int32) -> [String: Any]? {
 
 /// Convert the next absolute inbox deadline into poll's relative millisecond
 /// timeout. An incomplete reader owns the deadline while it is pending; without
-/// one, the listener can sleep until the helper's absolute idle deadline.
+/// one, use the absolute idle deadline, or a bounded wait for an overdue worker.
 private func socketPollTimeoutMilliseconds(
     requestContinuousNow: UInt64,
     nextReadContinuousDeadline: UInt64?,
     idleUptimeNow: UInt64,
-    idleUptimeDeadline: UInt64
+    idleUptimeDeadline: UInt64,
+    backgroundWorkPending: Bool
 ) -> Int32 {
     let now: UInt64
     let deadline: UInt64
     if let nextReadContinuousDeadline {
         now = requestContinuousNow
         deadline = nextReadContinuousDeadline
+    } else if backgroundWorkPending, idleUptimeDeadline <= idleUptimeNow {
+        return 100
     } else {
         now = idleUptimeNow
         deadline = idleUptimeDeadline
@@ -1596,7 +1599,8 @@ private enum WattsonHelperMain {
                     requestContinuousNow: requestContinuousNow,
                     nextReadContinuousDeadline: inbox.nextReadContinuousDeadline,
                     idleUptimeNow: idleUptimeNow,
-                    idleUptimeDeadline: lastActivityUptime + idleTimeoutNanoseconds
+                    idleUptimeDeadline: lastActivityUptime + idleTimeoutNanoseconds,
+                    backgroundWorkPending: topProcessesWorker.hasPending
                 )
                 guard let didActivity = inbox.poll(
                     listener: listener,

@@ -45,6 +45,27 @@ final class ProcessActionButtonTests: XCTestCase {
         XCTAssertEqual(target.presses, 1)
     }
 
+    func testRepeatedEnabledStatePreservesTheResolvedGlyph() throws {
+        try withAppearanceOptions(reducedTransparency: false, increasedContrast: false) {
+            let button = ProcessActionButton(frame: NSRect(x: 0, y: 0, width: 38, height: 16))
+            for name: NSAppearance.Name in [.aqua, .darkAqua] {
+                button.appearance = NSAppearance(named: name)
+                button.refreshAppearance()
+                for enabled in [true, false, true] {
+                    button.isEnabled = enabled
+                    let image = try XCTUnwrap(button.image)
+                    let glyph = try XCTUnwrap(button.contentTintColor)
+                    for _ in 0..<50 { button.isEnabled = enabled }
+                    XCTAssertTrue(button.image === image,
+                                  "Repeated \(enabled ? "enabled" : "disabled") state recreated the glyph")
+                    try assertColor(try XCTUnwrap(button.contentTintColor), matches: glyph,
+                                    in: button.effectiveAppearance)
+                    XCTAssertEqual(button.isEnabled, enabled)
+                }
+            }
+        }
+    }
+
     func testAppearanceRefreshPreservesCallerControlConfiguration() {
         let button = ProcessActionButton(frame: NSRect(x: 300, y: 4, width: 38, height: 16))
         let target = Target()
