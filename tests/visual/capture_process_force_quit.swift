@@ -166,6 +166,7 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
         try check(list.selectedRowIndexForTest == 1, "Selection did not follow process identity after reorder")
         list.update(state: .ready(processes), count: 3, compact: !compact)
         try check(list.selectedRowIndexForTest == 0, "Compact change lost selected process identity")
+        list.update(state: .ready(processes), count: 3, compact: compact)
         try click(list.processRowsForTest[2], in: window)
         try check(list.selectedRowIndexForTest == 2 && !list.forceQuitButtonsForTest[2].isEnabled, "Unavailable process exposes an enabled action")
         list.layoutSubtreeIfNeeded()
@@ -173,7 +174,7 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
         try check(shortFrame == actionFrame, "Disabled or short-score capsule changes width or position")
         if name.contains("on-battery-") {
             try await pause(0.05)
-            try captureModule(list, window: window, name: name + "-disabled-module", fields: ["compact": !compact, "selectedProcess": "WindowServer", "actionEnabled": false, "actionCapsuleFrame": NSStringFromRect(shortFrame)])
+            try captureModule(list, window: window, name: name + "-disabled-module", fields: ["compact": compact, "selectedProcess": "WindowServer", "actionEnabled": false, "actionCapsuleFrame": NSStringFromRect(shortFrame)])
         }
         // The first three power states in each theme/host also traverse the
         // unmodified controller path, closing the popup before its live alert.
