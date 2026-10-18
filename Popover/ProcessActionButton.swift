@@ -32,7 +32,7 @@ final class ProcessActionButton: NSButton {
             : (isEnabled ? (PopoverStyle.isDark(effectiveAppearance)
                 ? NSColor(rgb: 0xE5F5FF) : NSColor(rgb: 0x064A83)) : .secondaryLabelColor)
         image = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Force Quit")?
-            .withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 8, weight: .semibold)
+            .withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 9, weight: .semibold)
                 .applying(.init(paletteColors: [glyph])))
         needsDisplay = true
     }

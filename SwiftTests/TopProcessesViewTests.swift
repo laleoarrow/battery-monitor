@@ -619,7 +619,11 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertEqual(view.selectedRowIndexForTest, 1)
         XCTAssertEqual(view.forceQuitButtonsForTest.map(\.isHidden), [true, false, true])
         let button = view.forceQuitButtonsForTest[1]
-        XCTAssertEqual(button.frame, NSRect(x: 284, y: 6, width: 44, height: 12))
+        XCTAssertEqual(button.frame.maxX, 326)
+        XCTAssertEqual(button.frame.minY, 4)
+        XCTAssertEqual(button.frame.height, 16)
+        XCTAssertEqual(button.frame.width, (labels[1][1].stringValue as NSString)
+            .size(withAttributes: [.font: labels[1][1].font!]).width)
         XCTAssertTrue(button.isBordered)
         XCTAssertNotNil(button.image)
         XCTAssertTrue(button.isEnabled)
@@ -640,6 +644,35 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertTrue(labels.allSatisfy { !$0[1].isHidden })
         XCTAssertEqual(labels[1][0].frame, NSRect(x: 0, y: 2, width: 132, height: 20))
         XCTAssertTrue(callbacks.isEmpty)
+    }
+
+    func testSelectedCapsuleTracksScoreTextWidthWithoutMovingOtherContent() throws {
+        for compact in [false, true] {
+            let view = makeView(count: 1, compact: compact)
+            view.update(state: .ready([identifiedProcess(41, score: 8.1)]), count: 1, compact: compact)
+            view.layoutSubtreeIfNeeded()
+            let row = try XCTUnwrap(view.processRowsForTest.first)
+            try clickRow(row, point: NSPoint(x: 40, y: 11))
+            let labels = row.subviews.compactMap { $0 as? NSTextField }
+            let originalFrames = labels.map(\.frame)
+            for score in [8.1, 84, 125.5, 0.04, 0, 999.96, Double.greatestFiniteMagnitude, 8.1] {
+                view.update(state: .ready([identifiedProcess(41, score: score)]), count: 1, compact: compact)
+                view.layoutSubtreeIfNeeded()
+                let button = view.forceQuitButtonsForTest[0]
+                let textWidth = (labels[1].stringValue as NSString)
+                    .size(withAttributes: [.font: labels[1].font!]).width
+                XCTAssertEqual(button.frame.width, textWidth, accuracy: 0.001)
+                XCTAssertEqual(button.frame.maxX, 326)
+                XCTAssertEqual(button.frame.midX, labels[1].frame.maxX - 2 - textWidth / 2, accuracy: 0.001)
+                XCTAssertEqual(button.frame.minY, 4)
+                XCTAssertEqual(button.frame.height, 16)
+                XCTAssertGreaterThan(button.frame.width, button.frame.height)
+                XCTAssertFalse(button.isHidden)
+                XCTAssertTrue(labels[1].isHidden)
+                XCTAssertEqual(labels.map(\.frame), originalFrames)
+                XCTAssertEqual(view.barGeometryForTest[0].track, NSRect(x: 144, y: 6, width: 116, height: 12))
+            }
+        }
     }
 
     func testSelectedCrossKeepsItsButtonHitAndCallsBackWithCurrentImmutableProcess() throws {
@@ -729,7 +762,8 @@ final class TopProcessesViewTests: XCTestCase {
             view.update(state: state, count: 3, compact: compact)
             view.layoutSubtreeIfNeeded()
             XCTAssertEqual(view.selectedProcessForTest?.pid, 41)
-            XCTAssertEqual(view.forceQuitButtonsForTest[0].frame.size, NSSize(width: 44, height: 12))
+            XCTAssertEqual(view.forceQuitButtonsForTest[0].frame.height, 16)
+            XCTAssertEqual(view.forceQuitButtonsForTest[0].frame.maxX, 326)
         }
         view.update(state: state, count: 2, compact: true)
         XCTAssertNil(view.selectedProcessForTest)

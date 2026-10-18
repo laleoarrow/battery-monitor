@@ -1,0 +1,16 @@
+{
+  "unchanged": true,
+  "before": {
+    "preferenceKeyPresent": false,
+    "preferenceReduceMotion": null,
+    "systemReduceMotion": false,
+    "systemReduceTransparency": false
+  },
+  "after": {
+    "preferenceKeyPresent": false,
+    "preferenceReduceMotion": null,
+    "systemReduceMotion": false,
+    "systemReduceTransparency": false
+  },
+  "systemAccessibilityWritten": false
+}

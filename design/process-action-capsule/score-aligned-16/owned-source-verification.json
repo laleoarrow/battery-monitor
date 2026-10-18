@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "wholeCurrentTreeClaimedVerified": false,
+  "acceptedRunScope": "The 100-capture/10424-assertion run applies to the frozen snapshot and actual GUI build recorded in accepted/. Unrelated concurrent source changes are preserved. No rebuild, revert, stage or modification of those files was performed.",
+  "ownedRendererChecksAgainstActualGUIBuild": {
+    "Popover/TopProcessesView.swift": true,
+    "Popover/ProcessActionButton.swift": true,
+    "Popover/FooterHoverFeedbackView.swift": true
+  },
+  "harnessMatchesActualGUIBuild": true,
+  "currentManifestMismatches": [],
+  "missingManifestFiles": [],
+  "previewVerification": "Selected dark compact and light detailed native images show the short score-width capsule shifted left2pt to the native text content edge. The first-row frame is x296.43671154975891, y4, width29.563288450241089, height16, with right edge326. The visible blue bezel is fuller than thin-12 and the9pt X is complete and unclipped. NSView frame height alone is not treated as visible bezel height.",
+  "visualEvidenceLimitations": [
+    "The compact-unselected-module.png and detailed-unselected-module.png crops show the upper Power History area after scrolling, rather than the Process Activity module. These unselected crops are not valid before/after visual evidence. Only selected module images are used for the visual conclusion.",
+    "The native assertions for fixed name, score and bar frames remain valid; screenshot-crop freshness is a separate limitation. Battery and process readings are fixtures."
+  ],
+  "cleanupChecksPassed": true
+}

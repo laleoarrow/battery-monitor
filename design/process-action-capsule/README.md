@@ -1,8 +1,11 @@
 # Process action capsule and concise hover text
 
-The latest [bar-height follow-up](thin-12/README.md) makes the capsule 44 × 12
-points, matching the bar. The [preceding follow-up](thin-18/README.md) records
-the intermediate 44 × 18-point version.
+The latest [text-alignment follow-up](score-aligned-16/README.md) limits the
+capsule to the score text's width, aligns it with the text content and increases
+its height to 16 points. The [preceding intermediate](score-width-16/README.md)
+retains the rejected alignment to the text field's outer edge.
+The earlier [bar-height follow-up](thin-12/README.md) records the 44 × 12-point
+version; the [preceding follow-up](thin-18/README.md) records 44 × 18 points.
 The initial implementation and accepted images below record the preceding
 44 × 22-point version.
 

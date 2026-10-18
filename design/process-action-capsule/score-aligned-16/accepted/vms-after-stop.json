@@ -1,0 +1,29 @@
+[
+  {
+    "State" : "stopped",
+    "Disk" : 50,
+    "Accessed" : "2026-10-18T10:10:27Z",
+    "Name" : "Wattson-Force-Quit-A030A209",
+    "Size" : 31,
+    "Source" : "local",
+    "Running" : false
+  },
+  {
+    "State" : "stopped",
+    "Disk" : 50,
+    "Accessed" : "2026-10-15T06:45:45Z",
+    "Name" : "macOS-TestLab",
+    "Size" : 33,
+    "Source" : "local",
+    "Running" : false
+  },
+  {
+    "State" : "stopped",
+    "Disk" : 50,
+    "Accessed" : "2026-10-18T10:07:22Z",
+    "Name" : "macOS-TestLab-Base",
+    "Size" : 30,
+    "Source" : "local",
+    "Running" : false
+  }
+]

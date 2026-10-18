@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "wholeCurrentTreeClaimedVerified": false,
+  "acceptedRunScope": "The 100-capture/10424-assertion run applies to the frozen snapshot and actual GUI build recorded in accepted/. Unrelated concurrent source changes are preserved. No rebuild, revert, stage or modification of those files was performed.",
+  "ownedRendererChecksAgainstActualGUIBuild": {
+    "Popover/TopProcessesView.swift": true,
+    "Popover/ProcessActionButton.swift": true,
+    "Popover/FooterHoverFeedbackView.swift": true
+  },
+  "harnessMatchesActualGUIBuild": true,
+  "currentManifestMismatches": [],
+  "missingManifestFiles": [],
+  "previewVerification": "Dark compact and light detailed native images show a short score-width capsule. The first-row frame is x298.43671154975891, y4, width29.563288450241089, height16, with right edge328. Compared visually with thin-12, the visible blue bezel is fuller and the 9pt X is complete and unclipped. This describes the rendered appearance; NSView frame height alone is not treated as visible bezel height.",
+  "designAcceptance": "Intermediate native verification only. The user subsequently rejected the right-edge alignment as visually unbalanced; these artifacts do not represent final user-approved design."
+}
