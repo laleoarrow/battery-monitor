@@ -11,6 +11,7 @@ CLIENT_SOURCE = ROOT / "Core" / "HelperClient.swift"
 V5_CLIENT_SOURCE = ROOT / "Core" / "HelperClientPowerObservationV5.swift"
 V5_SUPPORT_SOURCE = ROOT / "HelperV5" / "PowerObservationV5Support.swift"
 TOP_PROCESSES_SUPPORT_SOURCE = ROOT / "HelperV5" / "TopProcesses.swift"
+PROCESS_TERMINATION_SUPPORT_SOURCE = ROOT / "HelperV5" / "ProcessTermination.swift"
 APP_MAIN_SOURCE = ROOT / "main.swift"
 PACKAGE_SOURCE = ROOT / "Package.swift"
 INSTALL_SCRIPT = ROOT / "scripts" / "install.sh"
@@ -682,6 +683,7 @@ class HelperContractTests(unittest.TestCase):
                     "WattsonHelperV5Support",
                     str(V5_SUPPORT_SOURCE),
                     str(TOP_PROCESSES_SUPPORT_SOURCE),
+                    str(PROCESS_TERMINATION_SUPPORT_SOURCE),
                     "-emit-module-path",
                     str(support_module),
                     "-o",

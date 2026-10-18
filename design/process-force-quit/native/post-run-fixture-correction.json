@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "acceptedRun": {
+    "captures": 72,
+    "assertions": 760,
+    "failures": 0,
+    "harnessSHA256": "527e2c7a476de105beaa28491884610574b197d4e892b523293e0632b1a5f236"
+  },
+  "fixtureLimitation": "Accepted detailed screenshots use a visual-only WindowServer fixture with score 8.1, CPU 0.0%, wakeups 240/s; those fixture inputs do not satisfy the scoring formula. The first two rows have consistent counters. Compact previews omit the counter line; their visible bars and scores are correct. Values are fixtures, never measured user processes. Geometry, selection, identity callbacks, modal behavior and signal validation are unaffected.",
+  "postRunCorrection": {
+    "file": "tests/visual/capture_process_force_quit.swift",
+    "sha256": "a83d286b3d463105fd1a380ff408c0e5c2c818f29e249a84b1f1f6478d63968c",
+    "change": "Only fixture arithmetic: wakeups=240 for scores>=12, otherwise 2; cpu=score-0.05*wakeups. WindowServer fixture now CPU 8.0%, wakeups 2/s, score 8.1.",
+    "productionSourceChanged": false,
+    "nativeRerun": false
+  }
+}

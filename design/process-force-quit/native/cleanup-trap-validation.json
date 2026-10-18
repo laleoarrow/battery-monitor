@@ -1,0 +1,11 @@
+{
+  "allPassed": true,
+  "checks": {
+    "originalFailureCodePreserved": true,
+    "sharedCleanupStillRuns": true,
+    "failureDiagnosticsPreserved": true
+  },
+  "exitCode": 23,
+  "stderr": "",
+  "method": "Execute the exact guest EXIT trap extracted from the final script with set -e and an intentional exit 23; preserve an owned diagnostic, then verify shared cleanup removes the owned scratch directory."
+}

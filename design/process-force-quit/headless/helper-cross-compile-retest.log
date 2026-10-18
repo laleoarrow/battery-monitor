@@ -1,0 +1,6 @@
+test_helper_cross_compiles_for_x86_64_macos12 (test_helper_contract.HelperContractTests.test_helper_cross_compiles_for_x86_64_macos12) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.263s
+
+OK

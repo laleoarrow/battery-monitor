@@ -31,6 +31,7 @@ let package = Package(
                 "README.md",
                 "Support",
                 "SwiftTests",
+                "TODO.md",
                 "VERSION",
                 "WidgetExtensionInfo.plist",
                 "battery_monitor.py",

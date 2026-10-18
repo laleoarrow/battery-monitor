@@ -1,7 +1,7 @@
 import Darwin
 import Foundation
 
-// Compile this file with HelperV5/TopProcesses.swift using -O. The caller owns
+// Compile with HelperV5/TopProcesses.swift and ProcessTermination.swift using -O. The caller owns
 // its project-local scratch binary and bounded process lifecycle. No app,
 // preferences, helper connection or native process sampling is used here.
 @main

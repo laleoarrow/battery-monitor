@@ -1,4 +1,5 @@
 import AppKit
+import Darwin
 import XCTest
 @testable import Wattson
 
@@ -597,6 +598,240 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertFalse(view.activityHelpForTest.contains("macOS top"))
         view.setPresentationActive(false)
         XCTAssertNil(view.helpWindow)
+    }
+
+    func testMouseSelectionRevealsOnlySmallInlineForceQuitWithoutMovingMeasurements() throws {
+        let view = makeView()
+        let values = (41...43).map { identifiedProcess($0) }
+        view.update(state: .ready(values), count: 3)
+        view.layoutSubtreeIfNeeded()
+        let rows = view.processRowsForTest
+        let bars = view.barGeometryForTest.map(\.track)
+        let labels = rows.map { $0.subviews.compactMap { $0 as? NSTextField } }
+        let valueFrames = labels.map { $0[1].frame }
+        let detailFrames = labels.map { $0[2].frame }
+        var callbacks: [EnergyProcess] = []
+        view.forceQuitHandler = { callbacks.append($0) }
+
+        try clickRow(rows[1], point: NSPoint(x: 290, y: 11))
+        view.layoutSubtreeIfNeeded()
+        XCTAssertEqual(view.selectedProcessForTest, values[1])
+        XCTAssertEqual(view.selectedRowIndexForTest, 1)
+        XCTAssertEqual(view.forceQuitButtonsForTest.map(\.isHidden), [true, false, true])
+        let button = view.forceQuitButtonsForTest[1]
+        XCTAssertEqual(button.frame, NSRect(x: 0, y: 3, width: 18, height: 18))
+        XCTAssertFalse(button.isBordered)
+        XCTAssertNotNil(button.image)
+        XCTAssertTrue(button.isEnabled)
+        XCTAssertEqual(button.imagePosition, .imageOnly)
+        XCTAssertEqual(labels[1][0].frame, NSRect(x: 22, y: 2, width: 110, height: 20))
+        XCTAssertEqual(labels[0][0].frame, NSRect(x: 0, y: 2, width: 132, height: 20))
+        XCTAssertEqual(view.barGeometryForTest.map(\.track), bars)
+        XCTAssertEqual(labels.map { $0[1].frame }, valueFrames)
+        XCTAssertEqual(labels.map { $0[2].frame }, detailFrames)
+        XCTAssertTrue(callbacks.isEmpty)
+
+        // A second click, including AppKit's double-click event, only cancels selection.
+        try clickRow(rows[1], point: NSPoint(x: 80, y: 11), clickCount: 2)
+        view.layoutSubtreeIfNeeded()
+        XCTAssertNil(view.selectedProcessForTest)
+        XCTAssertTrue(view.forceQuitButtonsForTest.allSatisfy(\.isHidden))
+        XCTAssertEqual(labels[1][0].frame, NSRect(x: 0, y: 2, width: 132, height: 20))
+        XCTAssertTrue(callbacks.isEmpty)
+    }
+
+    func testSelectedCrossKeepsItsButtonHitAndCallsBackWithCurrentImmutableProcess() throws {
+        let view = makeView()
+        let original = identifiedProcess(41)
+        view.update(state: .ready([original]), count: 3)
+        view.layoutSubtreeIfNeeded()
+        let row = try XCTUnwrap(view.processRowsForTest.first)
+        try clickRow(row, point: NSPoint(x: 60, y: 32))
+        view.layoutSubtreeIfNeeded()
+        let button = try XCTUnwrap(view.forceQuitButtonsForTest.first)
+        let buttonPoint = row.convert(NSPoint(x: button.frame.midX, y: button.frame.midY), to: view)
+        XCTAssertTrue(row.hitTest(buttonPoint) === button)
+
+        let refreshed = identifiedProcess(41, score: 91)
+        view.update(state: .ready([refreshed]), count: 3)
+        var callbacks: [EnergyProcess] = []
+        view.forceQuitHandler = { callbacks.append($0) }
+        button.performClick(nil)
+        XCTAssertEqual(callbacks, [refreshed])
+        XCTAssertEqual(view.selectedProcessForTest, refreshed)
+        XCTAssertFalse(button.isHidden)
+        XCTAssertEqual(row.accessibilityRole(), .group)
+        XCTAssertEqual(row.accessibilityChildren()?.count, 1)
+        XCTAssertTrue(row.accessibilityChildren()?.first as? NSButton === button)
+        XCTAssertTrue(button.isAccessibilityElement())
+        XCTAssertEqual(button.accessibilityLabel(), "Force Quit Process 41")
+    }
+
+    func testMissingTrustedIdentityShowsDisabledCrossAndNeverCallsBack() throws {
+        let view = makeView()
+        let reading = process(42, score: 10)
+        view.update(state: .ready([reading]), count: 3)
+        view.layoutSubtreeIfNeeded()
+        let row = try XCTUnwrap(view.processRowsForTest.first)
+        try clickRow(row, point: NSPoint(x: 210, y: 12))
+        let button = try XCTUnwrap(view.forceQuitButtonsForTest.first)
+        XCTAssertFalse(button.isHidden)
+        XCTAssertFalse(button.isEnabled)
+        XCTAssertEqual(button.toolTip, "Force Quit Unavailable")
+        XCTAssertTrue(button.isAccessibilityElement())
+        var callbacks = 0
+        view.forceQuitHandler = { _ in callbacks += 1 }
+        button.performClick(nil)
+        XCTAssertEqual(callbacks, 0)
+        view.update(state: .ready([process(42, score: 20)]), count: 3)
+        XCTAssertEqual(view.selectedProcessForTest?.pid, 42)
+        view.update(state: .ready([EnergyProcess(pid: 42, name: "Renamed", energyImpact: 20,
+                                               cpuPercent: 20, idleWakeupsPerSecond: 0)]), count: 3)
+        XCTAssertNil(view.selectedProcessForTest)
+    }
+
+    func testSelectionFollowsExactIdentityAcrossRankingAndClearsForPIDReuse() throws {
+        let view = makeView()
+        let first = identifiedProcess(41)
+        let second = identifiedProcess(42)
+        view.update(state: .ready([first, second]), count: 3)
+        view.layoutSubtreeIfNeeded()
+        try clickRow(view.processRowsForTest[0], point: NSPoint(x: 40, y: 11))
+        let updated = identifiedProcess(41, score: 99)
+        view.update(state: .ready([second, updated]), count: 3)
+        XCTAssertEqual(view.selectedProcessForTest, updated)
+        XCTAssertEqual(view.selectedRowIndexForTest, 1)
+        XCTAssertEqual(view.forceQuitButtonsForTest.map(\.isHidden), [true, false])
+        let samePIDNewStart = identifiedProcess(41, startedAt: 99)
+        view.update(state: .ready([second, samePIDNewStart]), count: 3)
+        XCTAssertNil(view.selectedProcessForTest)
+        view.layoutSubtreeIfNeeded()
+        try clickRow(view.processRowsForTest[1], point: NSPoint(x: 40, y: 11))
+        let samePIDNewAudit = identifiedProcess(41, startedAt: 99, tokenByte: 9)
+        view.update(state: .ready([second, samePIDNewAudit]), count: 3)
+        XCTAssertNil(view.selectedProcessForTest)
+        XCTAssertTrue(view.forceQuitButtonsForTest.allSatisfy(\.isHidden))
+    }
+
+    func testStatusCountCompactAndPresentationLifecycleManageSelectionIndependentlyOfContentGuard() throws {
+        let view = makeView()
+        let state = TopProcessesState.ready([identifiedProcess(41), identifiedProcess(42)])
+        func selectFirst(count: Int = 3, compact: Bool = false) throws {
+            view.update(state: state, count: count, compact: compact)
+            view.layoutSubtreeIfNeeded()
+            try clickRow(view.processRowsForTest[0], point: NSPoint(x: 40, y: 11))
+            XCTAssertNotNil(view.selectedProcessForTest)
+        }
+        try selectFirst()
+        for compact in [true, false, true] {
+            view.update(state: state, count: 3, compact: compact)
+            view.layoutSubtreeIfNeeded()
+            XCTAssertEqual(view.selectedProcessForTest?.pid, 41)
+            XCTAssertEqual(view.forceQuitButtonsForTest[0].frame.size, NSSize(width: 18, height: 18))
+        }
+        view.update(state: state, count: 2, compact: true)
+        XCTAssertNil(view.selectedProcessForTest)
+        for status: TopProcessesState in [.loading, .unavailable, .ready([])] {
+            try selectFirst()
+            view.update(state: status, count: 3)
+            XCTAssertNil(view.selectedProcessForTest)
+            XCTAssertTrue(view.processRowsForTest.isEmpty)
+        }
+        try selectFirst()
+        let updates = view.contentUpdatesForTest
+        view.setPresentationActive(false)
+        view.setPresentationActive(true)
+        view.update(state: state, count: 3)
+        XCTAssertEqual(view.contentUpdatesForTest, updates)
+        XCTAssertNil(view.selectedProcessForTest)
+        XCTAssertTrue(view.forceQuitButtonsForTest.allSatisfy(\.isHidden))
+        try selectFirst()
+        view.isHidden = true
+        XCTAssertNil(view.selectedProcessForTest)
+        view.isHidden = false
+        try selectFirst()
+        view.viewDidMoveToWindow()
+        XCTAssertNil(view.selectedProcessForTest)
+    }
+
+    func testKeyboardAndAccessibilitySelectionExposeCrossWithoutTerminating() throws {
+        let view = makeView()
+        view.update(state: .ready([identifiedProcess(41), identifiedProcess(42)]), count: 3)
+        view.layoutSubtreeIfNeeded()
+        let rows = view.processRowsForTest
+        var callbacks = 0
+        view.forceQuitHandler = { _ in callbacks += 1 }
+        XCTAssertTrue(rows[0].acceptsFirstResponder)
+        XCTAssertTrue(rows[0].accessibilityPerformPress())
+        XCTAssertEqual(view.selectedRowIndexForTest, 0)
+        rows[0].keyDown(with: try keyEvent(125))
+        XCTAssertEqual(view.selectedRowIndexForTest, 1)
+        rows[1].keyDown(with: try keyEvent(49))
+        XCTAssertNil(view.selectedRowIndexForTest)
+        rows[1].keyDown(with: try keyEvent(36))
+        XCTAssertEqual(view.selectedRowIndexForTest, 1)
+        rows[1].keyDown(with: try keyEvent(53))
+        XCTAssertNil(view.selectedRowIndexForTest)
+        XCTAssertEqual(callbacks, 0)
+        XCTAssertTrue(rows.allSatisfy { $0.accessibilityChildren()?.isEmpty == true })
+        XCTAssertTrue(view.forceQuitButtonsForTest.allSatisfy { !$0.isAccessibilityElement() })
+    }
+
+    func testNeutralSelectionAdaptsToLightDarkAndHighContrastWithoutChangingGradient() throws {
+        let view = makeView()
+        view.update(state: .ready([identifiedProcess(41)]), count: 3)
+        view.layoutSubtreeIfNeeded()
+        try clickRow(view.processRowsForTest[0], point: NSPoint(x: 40, y: 11))
+        let row = view.processRowsForTest[0]
+        let originalContrast = ProcessInfo.processInfo.environment["WATTSON_FORCE_INCREASE_CONTRAST"]
+        defer {
+            if let originalContrast { setenv("WATTSON_FORCE_INCREASE_CONTRAST", originalContrast, 1) }
+            else { unsetenv("WATTSON_FORCE_INCREASE_CONTRAST") }
+        }
+        for (name, contrast): (NSAppearance.Name, Bool) in [(.aqua, false), (.darkAqua, false),
+                (.accessibilityHighContrastAqua, true), (.accessibilityHighContrastDarkAqua, true)] {
+            setenv("WATTSON_FORCE_INCREASE_CONTRAST", contrast ? "1" : "0", 1)
+            view.appearance = try XCTUnwrap(NSAppearance(named: name))
+            view.refreshAppearance()
+            view.layoutSubtreeIfNeeded()
+            XCTAssertEqual(row.layer?.backgroundColor?.alpha ?? 0, contrast ? 0.08 : 0.045, accuracy: 0.000_001)
+            XCTAssertEqual(row.layer?.borderWidth, contrast ? 1 : 0)
+            XCTAssertEqual(view.barGeometryForTest[0].track, NSRect(x: 144, y: 6, width: 116, height: 12))
+            let palette = contrast ? Array(repeating: NSColor.systemBlue, count: 3)
+                : [0x9CDCFF, 0x2C9DFF, 0x0B69D9].map { NSColor(rgb: $0) }
+            for (actual, expected) in zip(try gradientColors(row), palette) {
+                try assertColor(actual, matches: expected, in: view.effectiveAppearance)
+            }
+            XCTAssertTrue(row.layer?.animationKeys()?.isEmpty ?? true)
+        }
+    }
+
+    private func identifiedProcess(_ pid: Int, startedAt: UInt64 = 7, tokenByte: UInt8 = 1,
+                                   score: Double = 40) -> EnergyProcess {
+        var token = audit_token_t()
+        token.val.5 = UInt32(pid)
+        token.val.7 = UInt32(tokenByte)
+        let identity = ProcessIdentity(pid: Int32(pid), startedAt: startedAt,
+                                       auditToken: withUnsafeBytes(of: &token) { Data($0) })
+        XCTAssertTrue(identity.isValid)
+        return EnergyProcess(pid: Int32(pid), name: "Process \(pid)", energyImpact: score,
+                             cpuPercent: score, idleWakeupsPerSecond: 0, terminationIdentity: identity)
+    }
+
+    private func clickRow(_ row: NSView, point: NSPoint, clickCount: Int = 1) throws {
+        let event = try XCTUnwrap(NSEvent.mouseEvent(with: .leftMouseDown, location: point,
+                                                    modifierFlags: [], timestamp: 0, windowNumber: 0,
+                                                    context: nil, eventNumber: 1, clickCount: clickCount, pressure: 1))
+        let pointInParent = row.convert(point, to: row.superview)
+        let target = try XCTUnwrap(row.hitTest(pointInParent))
+        XCTAssertTrue(target === row)
+        target.mouseDown(with: event)
+    }
+
+    private func keyEvent(_ keyCode: UInt16) throws -> NSEvent {
+        try XCTUnwrap(NSEvent.keyEvent(with: .keyDown, location: .zero, modifierFlags: [], timestamp: 0,
+                                      windowNumber: 0, context: nil, characters: "", charactersIgnoringModifiers: "",
+                                      isARepeat: false, keyCode: keyCode))
     }
 
     private func makeView(count: Int = 3, compact: Bool = false) -> TopProcessesView {

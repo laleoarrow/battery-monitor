@@ -1,0 +1,573 @@
+{
+  "assertions" : 760,
+  "captures" : [
+    {
+      "cancelKey" : "\"\\u{1B}\"",
+      "defaultButtonCell" : "nil",
+      "glass" : false,
+      "image" : "confirmation-cancel.png",
+      "terminationExecutor" : "spy",
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "cancelKey" : "\"\\u{1B}\"",
+      "defaultButtonCell" : "nil",
+      "glass" : false,
+      "image" : "confirmation-escape.png",
+      "terminationExecutor" : "spy",
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "cancelKey" : "\"\\u{1B}\"",
+      "defaultButtonCell" : "nil",
+      "glass" : false,
+      "image" : "confirmation-return.png",
+      "terminationExecutor" : "spy",
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "cancelKey" : "\"\\u{1B}\"",
+      "defaultButtonCell" : "nil",
+      "glass" : false,
+      "image" : "confirmation-force-quit.png",
+      "terminationExecutor" : "spy",
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-charging-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "dismissal" : "Cancel",
+      "glass" : false,
+      "image" : "classic-light-charging-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-full-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "dismissal" : "Escape",
+      "glass" : false,
+      "image" : "classic-light-full-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-on-battery-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-on-battery-detailed-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "dismissal" : "Return",
+      "glass" : false,
+      "image" : "classic-light-on-battery-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-mixed-supply-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-low-battery-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-low-power-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-charging-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-full-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-on-battery-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-on-battery-compact-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-mixed-supply-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-low-battery-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-low-power-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-charging-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "dismissal" : "Cancel",
+      "glass" : false,
+      "image" : "classic-dark-charging-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-full-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "dismissal" : "Escape",
+      "glass" : false,
+      "image" : "classic-dark-full-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-detailed-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "dismissal" : "Return",
+      "glass" : false,
+      "image" : "classic-dark-on-battery-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-mixed-supply-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-low-battery-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-low-power-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-charging-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-full-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-compact-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-mixed-supply-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-low-battery-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-low-power-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-charging-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "dismissal" : "Cancel",
+      "glass" : true,
+      "image" : "glass-light-charging-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-full-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "dismissal" : "Escape",
+      "glass" : true,
+      "image" : "glass-light-full-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-on-battery-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-on-battery-detailed-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "dismissal" : "Return",
+      "glass" : true,
+      "image" : "glass-light-on-battery-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-mixed-supply-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-low-battery-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-low-power-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-charging-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-full-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-on-battery-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-on-battery-compact-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-mixed-supply-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-low-battery-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-low-power-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-charging-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "dismissal" : "Cancel",
+      "glass" : true,
+      "image" : "glass-dark-charging-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-full-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "dismissal" : "Escape",
+      "glass" : true,
+      "image" : "glass-dark-full-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-detailed-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "dismissal" : "Return",
+      "glass" : true,
+      "image" : "glass-dark-on-battery-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-mixed-supply-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-low-battery-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-low-power-detailed.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-charging-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-full-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-compact-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-mixed-supply-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-low-battery-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "closeButtonFrame" : "{{0, 3}, {18, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-low-power-compact.png",
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    }
+  ],
+  "failures" : 0,
+  "limitations" : "Battery and process values\/identities are fixtures. The GUI never sends a process signal. A separate owned-child probe verifies the production root helper worker. No canonical app\/helper is installed.",
+  "method" : "Real signed sandboxed AppKit fixture application, production Classic\/Glass popup hosts and Process Activity rows, WindowServer captures in an owned ARM GUI VM. Native mouse events select rows; button target\/action uses a spy. Production NSAlert confirmation is exercised with Cancel and Force Quit using a spy executor.",
+  "schema" : 1
+}

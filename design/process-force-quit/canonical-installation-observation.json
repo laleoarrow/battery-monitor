@@ -1,0 +1,12 @@
+{
+  "canonicalApp": "/Applications/Wattson.app",
+  "appVersion": "4.3.19",
+  "packageReceipt": "com.leoarrow.wattson.pkg",
+  "packageVersion": "4.3.19",
+  "runningPIDBeforeAndAfterNativeQA": 71981,
+  "helper": "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper",
+  "helperOwner": "root:wheel",
+  "spotlightMatches": ["/Applications/Wattson.app"],
+  "launchServicesQuery": "No Wattson records returned in this execution context; no additional registration was observed.",
+  "installedOrReleasedByThisChange": false
+}

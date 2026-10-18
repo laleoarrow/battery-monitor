@@ -7,6 +7,17 @@ struct EnergyProcess: Equatable, Sendable {
     let energyImpact: Double
     let cpuPercent: Double
     let idleWakeupsPerSecond: Double
+    let terminationIdentity: ProcessIdentity?
+
+    init(pid: Int32, name: String, energyImpact: Double, cpuPercent: Double,
+         idleWakeupsPerSecond: Double, terminationIdentity: ProcessIdentity? = nil) {
+        self.pid = pid
+        self.name = name
+        self.energyImpact = energyImpact
+        self.cpuPercent = cpuPercent
+        self.idleWakeupsPerSecond = idleWakeupsPerSecond
+        self.terminationIdentity = terminationIdentity
+    }
 }
 
 enum TopProcessesState: Equatable, Sendable {
@@ -60,12 +71,21 @@ struct TopProcessesClient: Sendable {
                   let wakeupsPerSecond = nonnegativeNumber(row["idleWakeupsPerSecond"]) else {
                 return .unavailable
             }
+            let identity: ProcessIdentity?
+            if let rawIdentity = row["terminationIdentity"] {
+                guard let object = rawIdentity as? [String: Any],
+                      let decoded = ProcessIdentity.decode(pid: pid, object: object) else { return .unavailable }
+                identity = decoded
+            } else {
+                identity = nil // Older helpers still provide readable activity values.
+            }
             processes.append(EnergyProcess(
                 pid: pid,
                 name: name,
                 energyImpact: score,
                 cpuPercent: cpuPercent,
-                idleWakeupsPerSecond: wakeupsPerSecond
+                idleWakeupsPerSecond: wakeupsPerSecond,
+                terminationIdentity: identity
             ))
         }
         return .ready(processes.sorted {

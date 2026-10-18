@@ -250,6 +250,15 @@ waits ten seconds after completion before refreshing. Closed/disabled generation
 discard pending results. See [process energy ranking](../docs/top-energy-processes.md)
 for the formula, helper requirement and attribution limits.
 
+Selecting a Process Activity row reveals a small inline × in both display
+modes. The popup closes before a native force-quit confirmation with no default
+action; Escape cancels and Return does not signal a process.
+The target retains its complete kernel identity across ranking changes. Only
+the authenticated console user's processes with supported identity access are
+eligible; a permanently unprivileged helper worker validates and sends the fixed
+identity-bound signal. Older helpers or systems keep readable rows with the
+action disabled. See the same document for the operation's exact boundaries.
+
 General includes a Send Feedback group below Appearance. Report saves a
 reviewable text attachment and opens an official GitHub Issue draft. Collection
 runs off the UI thread and includes app/system/build/model/architecture,

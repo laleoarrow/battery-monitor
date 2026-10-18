@@ -1,0 +1,14 @@
+{
+  "swift": {"tests": 615, "failures": 0},
+  "rowsAfterValidAuditTokenFixtureUpdate": {"tests": 25, "failures": 0},
+  "presenterAndRowsAfterExplicitNoDefault": {"tests": 30, "failures": 0},
+  "pythonInitial": {"tests": 601, "failures": 1, "skipped": 4},
+  "pythonFailure": {
+    "test": "HelperContractTests.test_helper_cross_compiles_for_x86_64_macos12",
+    "cause": "The explicit swiftc test source list omitted the newly required HelperV5/ProcessTermination.swift.",
+    "fix": "Added the new support source to the existing isolated cross-compilation harness.",
+    "retest": {"tests": 1, "failures": 0}
+  },
+  "checks": {"diffWhitespace": "passed", "shellSyntax": "passed"},
+  "canonicalInstallationUpdated": false
+}

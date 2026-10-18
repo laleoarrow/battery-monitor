@@ -7,13 +7,16 @@ public struct HelperEnergyProcess: Equatable, Sendable {
     public let energyImpact: Double
     public let cpuPercent: Double
     public let idleWakeupsPerSecond: Double
+    public let terminationIdentity: HelperProcessIdentity?
 
-    public init(pid: Int32, name: String, energyImpact: Double, cpuPercent: Double, idleWakeupsPerSecond: Double) {
+    public init(pid: Int32, name: String, energyImpact: Double, cpuPercent: Double, idleWakeupsPerSecond: Double,
+                terminationIdentity: HelperProcessIdentity? = nil) {
         self.pid = pid
         self.name = name
         self.energyImpact = energyImpact
         self.cpuPercent = cpuPercent
         self.idleWakeupsPerSecond = idleWakeupsPerSecond
+        self.terminationIdentity = terminationIdentity
     }
 }
 
@@ -87,7 +90,7 @@ public enum HelperTopProcesses {
         }
     }
 
-    public static func sample() -> [HelperEnergyProcess]? {
+    public static func sample(peerUID: uid_t? = nil) -> [HelperEnergyProcess]? {
         let deadline = now() + maximumSamplingNanoseconds
         var timebase = mach_timebase_info_data_t()
         guard mach_timebase_info(&timebase) == KERN_SUCCESS else { return nil }
@@ -103,21 +106,32 @@ public enum HelperTopProcesses {
                   timebaseDenominator: timebase.denom
               ) else { return nil }
         // Resolve only the ten visible candidates; the full process walk
-        // records counters only and never asks for task ports or memory maps.
+        // records counters only. Only visible candidates request task name
+        // ports; termination identities are offered only to their console user.
         credentialLock.lock()
         defer { credentialLock.unlock() }
         guard now() < deadline else { return nil }
+        let termination = SystemHelperProcessTerminationBackend()
         let processes: [HelperEnergyProcess] = ranked.compactMap {
             let name = processName($0.pid)
             guard now() < deadline,
                   let current = processCounters($0.pid),
                   current.startedAt == second.processes[$0.pid]?.startedAt else { return nil }
+            let identity: HelperProcessIdentity?
+            if let uid = peerUID, uid != 0, termination.consoleUser == uid, termination.signalIsAvailable,
+               case let .success(candidate) = termination.identity(for: $0.pid),
+               candidate.startedAt == current.startedAt, candidate.belongsToConsoleUser(uid) {
+                identity = candidate
+            } else {
+                identity = nil
+            }
             return HelperEnergyProcess(
                 pid: $0.pid,
                 name: name,
                 energyImpact: $0.energyImpact,
                 cpuPercent: $0.cpuPercent,
-                idleWakeupsPerSecond: $0.idleWakeupsPerSecond
+                idleWakeupsPerSecond: $0.idleWakeupsPerSecond,
+                terminationIdentity: identity
             )
         }
         return now() < deadline ? processes : nil
@@ -127,12 +141,17 @@ public enum HelperTopProcesses {
         guard processes.count <= maximumProcesses else { return nil }
         let object: [String: Any] = [
             "ok": true,
-            "processes": processes.map {
-                ["pid": $0.pid, "name": $0.name, "energyImpact": $0.energyImpact,
-                 "cpuPercent": $0.cpuPercent, "idleWakeupsPerSecond": $0.idleWakeupsPerSecond]
+            "processes": processes.map { process -> [String: Any] in
+                var row: [String: Any] = ["pid": process.pid, "name": process.name, "energyImpact": process.energyImpact,
+                                         "cpuPercent": process.cpuPercent, "idleWakeupsPerSecond": process.idleWakeupsPerSecond]
+                if let identity = process.terminationIdentity {
+                    row["terminationIdentity"] = ["startedAt": String(identity.startedAt),
+                                                   "auditToken": identity.auditToken.base64EncodedString()]
+                }
+                return row
             },
         ]
-        guard var data = try? JSONSerialization.data(withJSONObject: object),
+        guard var data = try? JSONSerialization.data(withJSONObject: object, options: [.withoutEscapingSlashes]),
               data.count < maximumResponseBytes else { return nil }
         data.append(UInt8(ascii: "\n"))
         return data

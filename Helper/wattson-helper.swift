@@ -1317,6 +1317,34 @@ private func runBatteryPreferenceWorkerIfRequested() {
     }
 }
 
+private func runProcessTerminationWorkerIfRequested() {
+    guard CommandLine.arguments.count >= 2,
+          CommandLine.arguments[1] == "--force-quit-process" else { return }
+    guard CommandLine.arguments.count == 6,
+          let rawUID = UInt32(CommandLine.arguments[2]), rawUID != 0,
+          String(rawUID) == CommandLine.arguments[2],
+          let pid = Int32(CommandLine.arguments[3]), String(pid) == CommandLine.arguments[3],
+          let identity = HelperProcessIdentity.decodeRequest([
+              "_wattsonProtocol": 4, "op": "forceQuitProcess", "pid": pid,
+              "startedAt": CommandLine.arguments[4], "auditToken": CommandLine.arguments[5],
+          ]), identity.belongsToConsoleUser(rawUID), rawUID == consoleUID(),
+          dropPrivileges(to: rawUID) else { exit(HelperProcessTerminationResult.notPermitted.workerExitCode) }
+    exit(HelperProcessTermination.forceQuit(identity, expectedUID: rawUID).workerExitCode)
+}
+
+private func forceQuitProcessReply(_ object: [String: Any], for uid: uid_t) -> Data {
+    guard uid != 0, uid == consoleUID(),
+          let identity = HelperProcessIdentity.decodeRequest(object),
+          identity.belongsToConsoleUser(uid) else { return HelperProcessTerminationResult.notPermitted.responseLine }
+    // The daemon does not send a process signal. Its fixed, short-lived child
+    // drops all root credentials before validating and signaling the token.
+    let code = runExitCode([
+        helperExecutablePath, "--force-quit-process", String(uid), String(identity.pid),
+        String(identity.startedAt), identity.auditToken.base64EncodedString(),
+    ])
+    return HelperProcessTerminationResult(workerExitCode: code).responseLine
+}
+
 private func handle(_ request: SocketRequest) {
     let fd = request.fd
     let peerUID = request.peerUID
@@ -1375,6 +1403,11 @@ private func handle(_ request: SocketRequest) {
         } else {
             _ = writeAll(Data(#"{"ok":false,"error":"top processes busy"}"#.utf8), to: fd)
         }
+        return
+    }
+
+    if op == "forceQuitProcess" {
+        _ = writeAll(forceQuitProcessReply(object, for: peerUID), to: fd)
         return
     }
 
@@ -1475,7 +1508,7 @@ private final class TopProcessesWorker {
             }
             autoreleasepool {
                 guard peerUID == consoleUID() else { return }
-                let processes = HelperTopProcesses.sample()
+                let processes = HelperTopProcesses.sample(peerUID: peerUID)
                 guard peerUID == consoleUID() else { return }
                 let line = processes.flatMap(HelperTopProcesses.responseLine)
                     ?? Data(#"{"ok":false,"error":"top processes unavailable"}"#.utf8)
@@ -1491,6 +1524,7 @@ private final class TopProcessesWorker {
 @main
 private enum WattsonHelperMain {
     static func main() {
+        runProcessTerminationWorkerIfRequested()
         runBatteryPreferenceWorkerIfRequested()
 
         if CommandLine.arguments.count == 2,

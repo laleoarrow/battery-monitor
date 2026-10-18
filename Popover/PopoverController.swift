@@ -26,6 +26,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     fileprivate var popoverForTest: NSPopover { popover }
 #endif
     private let content = PopoverContentViewController()
+    private let processTerminationPresenter = ProcessTerminationPresenter()
     private var glassPanel: GlassPopoverPanel?
     private var usingGlassPanel = false
     private var presentationGeneration: UInt = 0
@@ -74,6 +75,9 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         }
         content.setSettingsHandler { [weak self] in
             self?.closeBeforePresentingSettings()
+        }
+        content.forceQuitProcessHandler = { [weak self] process in
+            self?.confirmForceQuit(process)
         }
         displayOptionsObserver = NSWorkspace.shared.notificationCenter.addObserver(
             forName: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
@@ -389,6 +393,20 @@ final class PopoverController: NSObject, NSPopoverDelegate {
         DispatchQueue.main.async { [weak self] in
             guard let self, !self.wantsOpen, self.presentationGeneration == generation else { return }
             handler()
+        }
+    }
+
+    private func confirmForceQuit(_ process: EnergyProcess) {
+        guard wantsOpen, !processTerminationPresenter.isBusy,
+              process.terminationIdentity != nil else { return }
+        // Retire the popup and its outside-click monitors before a native
+        // modal window takes focus. The target is a value, never a row index.
+        close()
+        let generation = presentationGeneration
+        DispatchQueue.main.async { [weak self] in
+            guard let self, !self.wantsOpen,
+                  self.presentationGeneration == generation else { return }
+            self.processTerminationPresenter.request(process)
         }
     }
 

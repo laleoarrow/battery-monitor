@@ -816,6 +816,9 @@ final class PopoverContentViewController: NSViewController {
     private(set) var footerUpdateCountForTest = 0
 #endif
     var heightDidChange: ((CGFloat) -> Void)?
+    var forceQuitProcessHandler: ((EnergyProcess) -> Void)? {
+        didSet { topProcessesView.forceQuitHandler = forceQuitProcessHandler }
+    }
 
     deinit {
         if let settingsObserver {

@@ -14,6 +14,21 @@ final class TopProcessesView: PopoverSection {
     private var count = 3
     private var compact = false
     private var renderedState: TopProcessesState?
+    private var selectedProcess: Selection?
+    var forceQuitHandler: ((EnergyProcess) -> Void)?
+
+    private enum Selection: Equatable {
+        case identified(ProcessIdentity)
+        case unavailable(Int32, String)
+
+        init(_ process: EnergyProcess) {
+            if let identity = process.terminationIdentity {
+                self = .identified(identity)
+            } else {
+                self = .unavailable(process.pid, process.name)
+            }
+        }
+    }
 #if DEBUG
     private(set) var contentUpdatesForTest = 0
 #endif
@@ -54,6 +69,21 @@ final class TopProcessesView: PopoverSection {
         addSubview(status)
         for row in rows {
             row.isHidden = true
+            row.selectionHandler = { [weak self, weak row] in
+                guard let self, let process = row?.process else { return }
+                let selection = Selection(process)
+                self.select(self.selectedProcess == selection ? nil : selection)
+            }
+            row.moveSelectionHandler = { [weak self, weak row] direction in
+                guard let self, let row, let index = self.rows.firstIndex(where: { $0 === row }) else { return }
+                let next = index + direction
+                guard self.rows.indices.contains(next), !self.rows[next].isHidden,
+                      let process = self.rows[next].process else { return }
+                self.select(Selection(process))
+                self.window?.makeFirstResponder(self.rows[next])
+            }
+            row.clearSelectionHandler = { [weak self] in self?.select(nil) }
+            row.forceQuitHandler = { [weak self] process in self?.forceQuitHandler?(process) }
             addSubview(row)
         }
         setAccessibilityLabel("Process Activity")
@@ -83,16 +113,23 @@ final class TopProcessesView: PopoverSection {
 
     override func viewDidHide() {
         infoPopover?.performClose(nil)
+        select(nil)
         super.viewDidHide()
     }
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
-        if window == nil { infoPopover?.performClose(nil) }
+        if window == nil {
+            infoPopover?.performClose(nil)
+            select(nil)
+        }
     }
 
     func setPresentationActive(_ active: Bool) {
-        if !active { infoPopover?.performClose(nil) }
+        if !active {
+            infoPopover?.performClose(nil)
+            select(nil)
+        }
     }
 
     var helpWindow: NSWindow? {
@@ -103,6 +140,7 @@ final class TopProcessesView: PopoverSection {
     func update(state: TopProcessesState, count: Int, compact: Bool = false) {
         let count = min(max(count, 1), 10)
         guard renderedState != state || self.count != count || self.compact != compact else { return }
+        if count < self.count { select(nil) }
         renderedState = state
         self.count = count
         self.compact = compact
@@ -126,15 +164,28 @@ final class TopProcessesView: PopoverSection {
         }
         status.isHidden = !processes.isEmpty
         status.toolTip = status.accessibilityHelp()
+        if let selectedProcess, !processes.contains(where: { Selection($0) == selectedProcess }) {
+            self.selectedProcess = nil
+        }
         for (index, row) in rows.enumerated() {
             guard index < processes.count else {
+                row.clear()
                 row.isHidden = true
                 continue
             }
             row.update(process: processes[index], compact: compact)
             row.isHidden = false
+            row.setSelected(selectedProcess == Selection(processes[index]))
         }
         needsLayout = true
+    }
+
+    private func select(_ selection: Selection?) {
+        guard selectedProcess != selection else { return }
+        selectedProcess = selection
+        for row in rows {
+            row.setSelected(!row.isHidden && row.process.map { Selection($0) == selection } == true)
+        }
     }
 
     @objc private func showActivityInfo(_ sender: NSButton) {
@@ -185,6 +236,11 @@ final class TopProcessesView: PopoverSection {
 
     var activityHelpForTest: String { Self.activityHelp }
 
+    var processRowsForTest: [NSView] { rows.filter { !$0.isHidden } }
+    var forceQuitButtonsForTest: [NSButton] { rows.filter { !$0.isHidden }.map(\.forceQuitButton) }
+    var selectedRowIndexForTest: Int? { rows.firstIndex { !$0.isHidden && $0.isSelected } }
+    var selectedProcessForTest: EnergyProcess? { selectedRowIndexForTest.flatMap { rows[$0].process } }
+
     var gradientPreviewGeometryForTest: [(gradientWidth: CGFloat, visibleMaskWidth: CGFloat, usesFixedScale: Bool)] {
         layoutSubtreeIfNeeded()
         return rows.filter { !$0.isHidden }.map(\.gradientPreviewGeometry)
@@ -195,16 +251,25 @@ final class TopProcessesView: PopoverSection {
         private let name = NSTextField(labelWithString: "")
         private let value = NSTextField(labelWithString: "")
         private let details = NSTextField(labelWithString: "")
+        let forceQuitButton = NSButton(title: "", target: nil, action: nil)
         private let overflow = NSImageView()
         private let track = CALayer()
         private let fill = CAGradientLayer()
         private let fillMask = CALayer()
         private var ratio: CGFloat = 0
+        private(set) var process: EnergyProcess?
+        private(set) var isSelected = false
+        var selectionHandler: (() -> Void)?
+        var moveSelectionHandler: ((Int) -> Void)?
+        var clearSelectionHandler: (() -> Void)?
+        var forceQuitHandler: ((EnergyProcess) -> Void)?
 #if DEBUG
         private var gradientPreviewStyle: GradientPreviewStyle = .fixedScaleHorizontal
 #endif
 
         override var isFlipped: Bool { true }
+        override var acceptsFirstResponder: Bool { !isHiddenOrHasHiddenAncestor && process != nil }
+        override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
 
         init() {
             super.init(frame: .zero)
@@ -226,6 +291,8 @@ final class TopProcessesView: PopoverSection {
             fill.mask = fillMask
             track.addSublayer(fill)
             layer?.addSublayer(track)
+            layer?.cornerRadius = 4
+            layer?.cornerCurve = .continuous
             name.font = .systemFont(ofSize: 13, weight: .regular)
             name.textColor = PopoverStyle.primaryText
             value.font = PopoverStyle.mono(13, .semibold)
@@ -249,8 +316,23 @@ final class TopProcessesView: PopoverSection {
             overflow.setAccessibilityElement(false)
             overflow.isHidden = true
             addSubview(overflow)
+            forceQuitButton.identifier = NSUserInterfaceItemIdentifier("top-processes.force-quit")
+            forceQuitButton.isBordered = false
+            forceQuitButton.image = NSImage(systemSymbolName: "xmark", accessibilityDescription: nil)?
+                .withSymbolConfiguration(.init(pointSize: 11, weight: .regular))
+            forceQuitButton.imagePosition = .imageOnly
+            forceQuitButton.imageScaling = .scaleProportionallyDown
+            forceQuitButton.contentTintColor = PopoverStyle.secondaryText
+            forceQuitButton.setButtonType(.momentaryPushIn)
+            forceQuitButton.target = self
+            forceQuitButton.action = #selector(forceQuitSelectedProcess(_:))
+            forceQuitButton.isHidden = true
+            forceQuitButton.setAccessibilityElement(false)
+            addSubview(forceQuitButton)
             setAccessibilityElement(true)
-            setAccessibilityRole(.staticText)
+            setAccessibilityRole(.group)
+            setAccessibilityChildren([])
+            setAccessibilitySelected(false)
             setAccessibilityHelp(TopProcessesView.activityHelp)
             refreshAppearance()
         }
@@ -259,7 +341,8 @@ final class TopProcessesView: PopoverSection {
 
         override func layout() {
             super.layout()
-            name.frame = NSRect(x: 0, y: 2, width: 132, height: 20)
+            name.frame = NSRect(x: isSelected ? 22 : 0, y: 2, width: isSelected ? 110 : 132, height: 20)
+            forceQuitButton.frame = isSelected ? NSRect(x: 0, y: 3, width: 18, height: 18) : .zero
             value.frame = NSRect(x: 272, y: 2, width: 56, height: 20)
             details.frame = details.isHidden ? .zero : NSRect(x: 0, y: 25, width: bounds.width, height: 15)
             overflow.frame = NSRect(x: 262, y: 6, width: 8, height: 12)
@@ -286,6 +369,11 @@ final class TopProcessesView: PopoverSection {
             effectiveAppearance.performAsCurrentDrawingAppearance {
                 let contrast = PopoverStyle.isHighContrast(effectiveAppearance)
                 PopoverStyle.setWithoutAnimation {
+                    self.layer?.backgroundColor = self.isSelected
+                        ? NSColor.labelColor.withAlphaComponent(contrast ? 0.08 : 0.045).cgColor
+                        : NSColor.clear.cgColor
+                    self.layer?.borderColor = contrast ? NSColor.labelColor.cgColor : NSColor.clear.cgColor
+                    self.layer?.borderWidth = self.isSelected && contrast ? 1 : 0
                     self.track.backgroundColor = NSColor.clear.cgColor
                     self.track.borderColor = contrast ? NSColor.labelColor.cgColor
                         : NSColor(rgb: PopoverStyle.isDark(self.effectiveAppearance) ? 0xDCEEFF : 0xAAC7DE,
@@ -310,6 +398,7 @@ final class TopProcessesView: PopoverSection {
         }
 
         func update(process: EnergyProcess, compact: Bool) {
+            self.process = process
             name.stringValue = process.name
             name.toolTip = "\(process.name) · PID \(process.pid)"
             details.isHidden = compact
@@ -327,7 +416,61 @@ final class TopProcessesView: PopoverSection {
             setAccessibilityLabel(process.name)
             setAccessibilityValue(exact)
             toolTip = "\(process.name) · PID \(process.pid)\n\(exact)\n\(TopProcessesView.activityHelp)"
+            forceQuitButton.isEnabled = process.terminationIdentity != nil
+            forceQuitButton.toolTip = process.terminationIdentity != nil ? "Force Quit \(process.name)" : "Force Quit Unavailable"
+            forceQuitButton.setAccessibilityLabel("Force Quit \(process.name)")
+            forceQuitButton.setAccessibilityHelp(forceQuitButton.toolTip)
             needsLayout = true
+        }
+
+        func clear() {
+            process = nil
+            setSelected(false)
+        }
+
+        func setSelected(_ selected: Bool) {
+            guard isSelected != selected else { return }
+            isSelected = selected
+            forceQuitButton.isHidden = !selected
+            forceQuitButton.setAccessibilityElement(selected)
+            setAccessibilitySelected(selected)
+            setAccessibilityChildren(selected ? [forceQuitButton] : [])
+            refreshAppearance()
+            needsLayout = true
+        }
+
+        override func hitTest(_ point: NSPoint) -> NSView? {
+            guard let hit = super.hitTest(point) else { return nil }
+            return hit is NSButton ? hit : self
+        }
+
+        override func mouseDown(with event: NSEvent) {
+            guard !isHiddenOrHasHiddenAncestor, process != nil else { return }
+            window?.makeFirstResponder(self)
+            selectionHandler?()
+        }
+
+        override func keyDown(with event: NSEvent) {
+            guard !isHiddenOrHasHiddenAncestor, process != nil else { return }
+            switch event.keyCode {
+            case 36, 49, 76: selectionHandler?()
+            case 126: moveSelectionHandler?(-1)
+            case 125: moveSelectionHandler?(1)
+            case 53: clearSelectionHandler?()
+            default: super.keyDown(with: event)
+            }
+        }
+
+        override func accessibilityPerformPress() -> Bool {
+            guard !isHiddenOrHasHiddenAncestor, process != nil else { return false }
+            selectionHandler?()
+            return true
+        }
+
+        @objc private func forceQuitSelectedProcess(_ sender: NSButton) {
+            guard isSelected, !isHiddenOrHasHiddenAncestor, sender.isEnabled,
+                  let process, process.terminationIdentity != nil else { return }
+            forceQuitHandler?(process)
         }
 
         private static func shortNumber(_ number: Double) -> String {

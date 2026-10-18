@@ -81,7 +81,7 @@ unavailable state; no CPU-only or inferred-watt fallback changes its meaning.
 ## Sampling and availability
 
 The sandboxed app reads one fixed `getTopProcesses` operation from Wattson's
-existing helper. Clients cannot supply PIDs, paths, commands or sample counts.
+existing helper. This read accepts no PIDs, paths, commands or sample counts.
 The read runs separately from power/control requests and retains console-user
 authorization. An app-only installation or older helper shows **Unavailable**;
 updating both app and helper through the native PKG enables the new operation.
@@ -93,3 +93,35 @@ disabling the module stops requests and invalidates late completions. Reopening
 starts with **Measuring…** and a fresh sample. A failed read replaces previous
 rows with **Unavailable** and can recover on the next interval. No process list
 is saved to preferences, diagnostics or disk.
+
+## Ending a process
+
+Click a process row to select it and reveal a small **×** on the left. Click the
+selected row again or press Escape to clear the selection. The interaction is
+the same in Compact view; the activity bar and score do not move. Arrow keys
+move the selection between visible rows, and the selected button is exposed to
+accessibility clients.
+
+Clicking **×** closes the popup and opens Wattson's native confirmation dialog.
+**Escape** cancels; Return leaves the confirmation open. **Force Quit** requires
+an explicit choice, sends SIGKILL and can discard unsaved
+work. Only processes owned by the current console user are eligible; system and
+other users' processes are not eligible. Missing identity support leaves the
+readings usable and the selected button disabled. Failed requests show a native
+explanation. Reopening the popup always measures a fresh list.
+
+Selection and confirmation retain the PID, monotonic start time and complete
+32-byte kernel audit token, including the process incarnation. Selection follows
+this identity when the ranking changes and clears when the target disappears or
+the popup/module closes. The helper accepts only the fixed `forceQuitProcess`
+operation with that identity. A short-lived worker permanently drops root
+credentials to the authenticated console user before checking the identity and
+sending the fixed signal. The daemon itself never signals a listed process.
+
+The worker uses public `task_name_for_pid` and `task_info(TASK_AUDIT_TOKEN)` to
+validate the identity, then `proc_signal_with_audittoken` to select the original
+kernel process atomically. It never falls back to PID-only signaling if that API
+or identity access is unavailable. The symbol is resolved at runtime so older
+macOS versions and helpers retain monitoring without this optional action.
+These name ports do not provide process memory access. No shell commands,
+user-chosen signals or privileged termination operations are accepted.
