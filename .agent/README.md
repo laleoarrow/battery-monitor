@@ -11,3 +11,11 @@ Recommended reading order:
 1. `project.md`
 2. `debugging.md`
 3. `release.md`
+
+## Pro review browser
+
+When the user requests Pro assistance, use the existing signed-in ChatGPT
+session in SunBrowser (`com.adspower.SunBrowser`). This is the user's preferred
+app; do not start a separate Edge login. If multiple installed SunBrowser
+versions share that bundle identifier, bind the currently running app by its
+full path. Verify the selected Pro mode in the UI before submitting a review.

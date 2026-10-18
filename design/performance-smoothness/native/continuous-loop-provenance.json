@@ -1,0 +1,142 @@
+{
+  "artifacts": {
+    "rawArchive": "continuous-loop-raw.tar.gz",
+    "rawArchiveSHA256": "c8ed4ace0963d4ecc37e68fc023bf7d89e9c48d463c165f207fbbc6d5b0e8183",
+    "rawMembers": 21,
+    "summarySHA256": "f1871a8db33acdcd084edd8952779f2d1fc0f4d50981a81681d0d41bfc79f066"
+  },
+  "cleanup": {
+    "cloneCleanup": {
+      "additionalUnrelatedVMsPreserved": [],
+      "otherVMStatesPreserved": {
+        "macOS-TestLab": true,
+        "macOS-TestLab-Base": true
+      },
+      "ownedCloneRemoved": true,
+      "ownedVM": "Wattson-Continuous-History-Probe-20261018"
+    },
+    "driverExitStatus": 0,
+    "postTeardownAudit": {
+      "allPassed": true,
+      "checks": {
+        "canonicalAppAndHelperNeverInstalled": true,
+        "canonicalHelperFixtureAbsent": true,
+        "ownedAppRegistrationsRemoved": true,
+        "ownedApplicationScriptsRemoved": true,
+        "ownedContainersRemoved": true,
+        "ownedPreferencesRemoved": true,
+        "ownedProcessesStopped": true,
+        "sourceAndBuildScratchRemoved": true
+      },
+      "details": {
+        "applicationScripts": [],
+        "containers": [],
+        "preferences": [],
+        "processes": [],
+        "registrations": []
+      },
+      "finishedUTC": "2026-10-18T07:27:19Z",
+      "schema": 1
+    }
+  },
+  "environment": {
+    "accessibilityPreserved": {
+      "after": {
+        "preferenceKeyPresent": false,
+        "preferenceReduceMotion": null,
+        "systemReduceMotion": false,
+        "systemReduceTransparency": false
+      },
+      "before": {
+        "preferenceKeyPresent": false,
+        "preferenceReduceMotion": null,
+        "systemReduceMotion": false,
+        "systemReduceTransparency": false
+      },
+      "systemAccessibilityWritten": false,
+      "unchanged": true
+    },
+    "canonicalInstallationModified": false,
+    "guestSystem": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.1\nBuildVersion:\t\t25G76\nApple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0\n",
+    "hostGUIUsedByProbe": false,
+    "hostReport": "Human user reported unlock/login before this later diagnostic. This is an environment difference, not an attribution for earlier failures."
+  },
+  "experiment": "One narrow diagnostic, not a replacement for the original normal-motion gate",
+  "findings": {
+    "allFourInitiallyAnimate": "Full-path target delta16points and head delta5.333333points, with three history keys.",
+    "allFourStartWithCommittedBaseline": true,
+    "firstObservation": "Baseline0.457786s/candidate0.454536s: every path/control point and head exactly at model target, delta0, while history.fill/history.stroke/history.head remain.",
+    "notEstablished": [
+      "The cause of the prior full-normal matched-tail timeout",
+      "Whether the old contracted-axis failures were caused by event-loop boundaries",
+      "Exhaustive absence of regressions outside this narrow input pair"
+    ],
+    "originalNormalMotionGateRemains": "partial; all earlier failure records and assertions remain unchanged",
+    "secondObservation": "Baseline0.862914s/candidate0.854604s: geometry still exactly at target and all three keys retired.",
+    "supportedConclusion": "Animation-key presence can outlive complete presented motion in both baseline and candidate, independently of fixture clock freezing. No candidate-only or frozen-only abnormality was observed in this input pair.",
+    "thirdObservation": "Baseline0.989637s/candidate0.981222s: geometry unchanged and no keys, all within original1s deadline."
+  },
+  "limits": "Presentation-layer geometry is an AppKit/Core Animation observation, not an FPS or display-frame delivery measurement. Only this single narrow probe was run; no matrix retries or runtime changes followed.",
+  "method": {
+    "animationKeysRemovedByProbe": false,
+    "deadlineSeconds": 1,
+    "eventLoop": "Each executable enters NSApp.run once; asynchronous preparation and observations stay inside that continuous loop. App.stop runs only after the1s observation interval ends.",
+    "inputs": {
+      "after": [
+        0,
+        0,
+        100,
+        150
+      ],
+      "afterTimestamps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "before": [
+        0,
+        0,
+        100
+      ],
+      "beforeTimestamps": [
+        0,
+        2,
+        4
+      ]
+    },
+    "instancesPerVersion": [
+      "normal clock",
+      "original fixture freeze/resume"
+    ],
+    "observationSchedulesSeconds": [
+      0.45,
+      0.85,
+      0.98
+    ],
+    "runtimeOrOriginalAssertionsModified": false,
+    "scopeLimit": "Fresh narrow sequence, not the full preceding original interaction-suite state; no contracted-axis sequence was replayed."
+  },
+  "schema": 1,
+  "source": {
+    "analysisSHA256": "5ab32fcb208f6b6284eade097756141ba01bc855fef8c79e02ffa4fe836da061",
+    "baselineArchiveSHA256": "15115a9451c52bbc83c5cb5cda7431b9fc38cb9b2b49519f5923e6ff6e9aa196",
+    "baselineCommit": "0ec6a855351edc99826c6f3f6060b10267d85c06",
+    "candidateArchiveSHA256": "3d2da8ba507e851038951710f5659328c637a4ec58cf149fb5951e67e7ff5b3d",
+    "compilerFlags": [
+      "-D",
+      "DEBUG",
+      "-swift-version",
+      "5",
+      "-framework",
+      "AppKit",
+      "-framework",
+      "CoreGraphics",
+      "-framework",
+      "IOKit"
+    ],
+    "currentGitCommit": "fd574bef3ffac4c4729b33d3187143e095357e24",
+    "currentProductFilesMatchingFrozenCandidate": 60,
+    "harnessSHA256": "4d6207f401732a39aea8f8235af196b0c6cf42e47954d071919849eaa98e693b"
+  }
+}

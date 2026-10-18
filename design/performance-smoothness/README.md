@@ -30,8 +30,8 @@ installers, release tag, version, settings, visible content or functionality.
   [Headless results and prior failure records](headless/validation.json) retain
   the exact commands and compressed logs. The earlier parser and blocked-stage
   failures are preserved rather than superseded by successful reruns.
-- A separate static review found no blocking runtime or macOS 12 compatibility
-  issue. That review is not a claim that Pro reviewed or executed this code.
+- A separate local static review found no blocking runtime or macOS 12
+  compatibility issue. Independent Pro feedback is recorded below.
 - The periodic-gradient Python contract now reads the unchanged locations from
   initialization as well as self-qualified assignments. The blocked-support-stage
   fixture limits only its injected target to 0.5 seconds; setup retains production
@@ -59,7 +59,19 @@ without proving the root cause. No animation key is forcibly removed, no deadlin
 is widened, and History runtime/test code is unchanged. This is not an all-green
 native gate or release acceptance.
 
-All three owned VM clones were deleted; process, preferences, app registrations,
+A later [continuous-loop diagnostic](native/continuous-loop-provenance.json)
+uses one narrow matched-tail sequence and fresh History instances. Both revisions,
+with normal and frozen/resumed clocks, reach the complete path and head target
+by approximately 0.46 seconds and remain unchanged at 0.85 and 0.98 seconds.
+All four instances still have three animation keys at the first observation;
+those keys retire by the second. No candidate-only or frozen-clock-only anomaly
+is observed. The uninterrupted loop does not reproduce the original preceding
+suite state or contracted-axis sequence. The host was unlocked for this later
+run; that environment difference is not established as a cause. This evidence
+shows key presence can outlive complete presented motion, without closing the
+original failure or replacing the partial gate.
+
+All four owned VM clones were deleted; process, preferences, app registrations,
 containers and scratch audits pass. The original VMs, canonical host app and
 system accessibility settings are preserved. Current production sources match
 the [frozen candidate](native/current-runtime-equivalence.json). Captures use
@@ -100,9 +112,13 @@ the median of the six run medians, in microseconds.
 | Eleven Settings icons, identical resolved appearance | 99.104 | 26.104 |
 | Eleven Settings icons, changed contrast | 98.292 | 98.605 |
 
-The changed-input controls retain the full update work. Process invalidation
-adds about 0.65 microseconds (4.1%); changing contrast adds 0.31 microseconds
-(0.32%). Repeated unchanged input benefits from avoiding the original work.
+The changed-input controls retain the full update work. Their candidate point
+estimates increase by about 0.65 microseconds (4.1%) for Process updates and
+0.31 microseconds (0.32%) for contrast changes. The AppKit harness uses DEBUG,
+so changed Process input also executes the new test counter; the difference
+cannot be assigned entirely to equality comparison. These small differences
+are not a claim of statistically established regressions. Repeated unchanged
+input benefits from avoiding the original work.
 These measurements time production methods plus an autorelease pool, without
 a per-call layer flush. The 41-nanosecond cached case is close to the measurement
 floor. They do not measure layout/display completion, Settings opening, frame
@@ -112,6 +128,8 @@ focused tests but is not part of the eleven-icon timed batch.
 [Production-view results](native/benchmark-summary.json), the harness, analyzer,
 compressed raw readings and source identities are retained in `native/`.
 
-The broader review artifacts and the prepared Pro review request are under
-`.build/performance-smoothness-review.noindex/`. Pro review remains pending;
-no Pro acceptance or release approval is inferred from local checks.
+The [independent Pro review](pro/review.md), performed in the user's preferred
+SunBrowser session with Pro selected, found no concrete runtime must-fix under
+the supplied contracts. It retains the normal-motion gate as partial and the
+measurement limits above. Broader artifacts and private UI evidence are under
+`.build/performance-smoothness-review.noindex/`. This is not release approval.

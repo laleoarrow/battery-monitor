@@ -1,0 +1,284 @@
+{
+  "geometryTolerancePoints": 0.0001,
+  "isReplacementForOriginalNormalMotionGate": false,
+  "limitations": "Single narrow matched-tail input pair with fresh instances and an uninterrupted AppKit loop. Does not recreate all preceding full-suite state or contracted-axis sequence; host was reported unlocked before this later run. Clean results cannot by themselves establish that loop boundaries caused prior failures. Original failures and gate status remain unchanged.",
+  "schema": 1,
+  "versions": {
+    "baseline": {
+      "eventLoopRuns": 1,
+      "initialExactCGPathEquality": true,
+      "instances": {
+        "frozen": {
+          "inDeadlineLaterObservations": 3,
+          "lastTwoMaxPresentedDeltaPoints": 0.0,
+          "lastTwoPresentedGeometryStable": true,
+          "observations": [
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 4.583333321761529e-07,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "pre-update-baseline",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": false,
+              "animationKeys": [
+                "history.fill",
+                "history.stroke",
+                "history.head"
+              ],
+              "elapsed": 2.0833333280734223e-07,
+              "headTargetDeltaPoints": 5.333333333333336,
+              "maxPathTargetDeltaPoints": 16,
+              "modelPaths": 3,
+              "observation": "committed-start",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [
+                "history.fill",
+                "history.stroke",
+                "history.head"
+              ],
+              "elapsed": 0.4577864166666643,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.45",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 0.8629141666666698,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.85",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 0.9896369583333353,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.98",
+              "withinOneSecond": true
+            }
+          ]
+        },
+        "normal": {
+          "inDeadlineLaterObservations": 3,
+          "lastTwoMaxPresentedDeltaPoints": 0.0,
+          "lastTwoPresentedGeometryStable": true,
+          "observations": [
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 4.583333321761529e-07,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "pre-update-baseline",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": false,
+              "animationKeys": [
+                "history.fill",
+                "history.stroke",
+                "history.head"
+              ],
+              "elapsed": 2.0833333280734223e-07,
+              "headTargetDeltaPoints": 5.333333333333336,
+              "maxPathTargetDeltaPoints": 16,
+              "modelPaths": 3,
+              "observation": "committed-start",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [
+                "history.fill",
+                "history.stroke",
+                "history.head"
+              ],
+              "elapsed": 0.4577864166666643,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.45",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 0.8629141666666698,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.85",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 0.9896369583333353,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.98",
+              "withinOneSecond": true
+            }
+          ]
+        }
+      },
+      "rawSHA256": "91ebfaac39b34abf7d2699218bbfb6a923f43c62390aac5c6e52d9271da6383c",
+      "stopsDuringObservation": 0
+    },
+    "candidate": {
+      "eventLoopRuns": 1,
+      "initialExactCGPathEquality": true,
+      "instances": {
+        "frozen": {
+          "inDeadlineLaterObservations": 3,
+          "lastTwoMaxPresentedDeltaPoints": 0.0,
+          "lastTwoPresentedGeometryStable": true,
+          "observations": [
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 5.416666795099445e-07,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "pre-update-baseline",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": false,
+              "animationKeys": [
+                "history.fill",
+                "history.stroke",
+                "history.head"
+              ],
+              "elapsed": 2.0833333280734223e-07,
+              "headTargetDeltaPoints": 5.333333333333336,
+              "maxPathTargetDeltaPoints": 16,
+              "modelPaths": 3,
+              "observation": "committed-start",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [
+                "history.fill",
+                "history.stroke",
+                "history.head"
+              ],
+              "elapsed": 0.45453645833332246,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.45",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 0.8546043749999939,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.85",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 0.9812216666666558,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.98",
+              "withinOneSecond": true
+            }
+          ]
+        },
+        "normal": {
+          "inDeadlineLaterObservations": 3,
+          "lastTwoMaxPresentedDeltaPoints": 0.0,
+          "lastTwoPresentedGeometryStable": true,
+          "observations": [
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 5.416666795099445e-07,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "pre-update-baseline",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": false,
+              "animationKeys": [
+                "history.fill",
+                "history.stroke",
+                "history.head"
+              ],
+              "elapsed": 2.0833333280734223e-07,
+              "headTargetDeltaPoints": 5.333333333333336,
+              "maxPathTargetDeltaPoints": 16,
+              "modelPaths": 3,
+              "observation": "committed-start",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [
+                "history.fill",
+                "history.stroke",
+                "history.head"
+              ],
+              "elapsed": 0.45453645833332246,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.45",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 0.8546043749999939,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.85",
+              "withinOneSecond": true
+            },
+            {
+              "allPresentationGeometryAtTarget": true,
+              "animationKeys": [],
+              "elapsed": 0.9812216666666558,
+              "headTargetDeltaPoints": 0,
+              "maxPathTargetDeltaPoints": 0.0,
+              "modelPaths": 3,
+              "observation": "scheduled-0.98",
+              "withinOneSecond": true
+            }
+          ]
+        }
+      },
+      "rawSHA256": "5d65df303120ec1adcdd0eb6a84f0e405675e3f3679d5766158e0fc5469d24bf",
+      "stopsDuringObservation": 0
+    }
+  }
+}
