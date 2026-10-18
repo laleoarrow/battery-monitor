@@ -1,0 +1,54 @@
+{
+  "checkedAtUTC": "2026-10-18T10:51:35.508418+00:00",
+  "version": "4.3.21",
+  "sourceCommit": "09167f7f5b00b185d4de8b996579b16dd4ef0b94",
+  "packageSHA256": "b40bb864040c006c7954442e0bae06cddda082c01df6c8355c225cf9787c649a",
+  "appAndHelperAndDaemonMatchVerifiedPayload": true,
+  "receiptVersion": "4.3.21",
+  "signatureVerified": true,
+  "architectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "helperHealth": true,
+  "helperV5": true,
+  "existingSettingsUnchanged": true,
+  "existingSettingsCompared": 15,
+  "processSampling": {
+    "count": 10,
+    "elapsedSeconds": 1.049713,
+    "responseBytes": 2192,
+    "formulaPassed": true
+  },
+  "publicRelease": false,
+  "canonicalApp": "/Applications/Wattson.app",
+  "canonicalAppPID": 39999,
+  "canonicalPIDStableAcrossVerification": true,
+  "minimumStableSeconds": 10,
+  "launchMethod": "open -g",
+  "buildAndPackageVerificationPassed": true,
+  "pkgAndDMGContainIdenticalApp": true,
+  "appSignature": "ad-hoc",
+  "packageSignature": "unsigned",
+  "notarized": false,
+  "installerUIReportedSuccess": true,
+  "userCompletedAdministratorAuthorization": true,
+  "preview": {
+    "processActivityEnabled": true,
+    "count": 3,
+    "compact": true,
+    "uniformCapsulePoints": [
+      38,
+      16
+    ],
+    "disabledAppearanceMeansUnavailable": true,
+    "hostButtonVisualAcceptance": "Not claimed for 4.3.21; the exact source was verified through the native VM renderer and installed payload byte comparison."
+  },
+  "cleanup": {
+    "disposableBuildRemoved": true,
+    "expandedPayloadRemoved": true,
+    "ownedApplicationRegistrationsRemoved": true,
+    "canonicalAppPreserved": true
+  },
+  "finalCheckedAtUTC": "2026-10-18T10:53:08.749843+00:00"
+}

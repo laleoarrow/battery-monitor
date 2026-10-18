@@ -1,0 +1,92 @@
+Release mode: community-ad-hoc
+Notarization requested: no
+Building Wattson 4.3.21 (4.3.21) for arm64 and x86_64...
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/README.md': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/tests': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/website': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/docs': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.agent': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/BatteryPowerWidgetExtension.entitlements': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/HANDOFF.md': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/dist': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/design-qa.md': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/Support': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/battery_monitor.py': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/WidgetExtensionInfo.plist': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.codex': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.github': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/script': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/BatteryPowerWidgetExtension.xcodeproj': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/BatteryPowerWidgetExtension.swift': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/TODO.md': File not found.
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (28.18s)
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/HANDOFF.md': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/docs': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/BatteryPowerWidgetExtension.swift': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/design-qa.md': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/battery_monitor.py': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/tests': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/README.md': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.github': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/Support': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/WidgetExtensionInfo.plist': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/BatteryPowerWidgetExtension.xcodeproj': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/website': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/TODO.md': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/BatteryPowerWidgetExtension.entitlements': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/dist': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.agent': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.codex': File not found.
+warning: 'source.qtsejq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/script': File not found.
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (24.38s)
+/* com.apple.actool.compilation-results */
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/icon-assets/Assets.car
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/icon-assets/WattsonGlass.icns
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/icon-assets/icon-info.plist
+
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/com.leoarrow.wattson.helper: replacing existing signature
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/Wattson.app: replacing existing signature
+Built universal app: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/Wattson.app
+Built universal helper: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/com.leoarrow.wattson.helper
+Signing: ad-hoc community build (not notarized)
+Verified universal release build for Wattson 4.3.21
+pkgbuild: Reading components from /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/Packaging/pkg/component.plist
+pkgbuild: Adding component at Applications/Wattson.app
+pkgbuild: Adding top-level preinstall script
+pkgbuild: Adding top-level postinstall script
+pkgbuild: Wrote package to /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/pkg.0g9H0w/Wattson-component.pkg
+productbuild: Wrote product to /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/pkg.0g9H0w/Wattson-v4.3.21-macos-universal.pkg
+Created unsigned community PKG: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/artifacts/Wattson-v4.3.21-macos-universal.pkg
+Notarization status: no (Developer ID Installer identity is not configured)
+hdiutil: verify: checksum of "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/dmg.cGpS4G/Wattson-v4.3.21-macos-universal.dmg" is VALID
+Mounted DMG verified: helper-free app and Applications link
+Created unsigned DMG: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/.build/local.noindex/release.3v6eTa/artifacts/Wattson-v4.3.21-macos-universal.dmg
+Notarization/checksums: pending release orchestration
+Mounted DMG verified: helper-free app and Applications link
+Verified Wattson 4.3.21: full PKG and DMG contain byte-identical apps
+Wattson-v4.3.21-macos-universal.pkg: OK
+Wattson-v4.3.21-macos-universal.dmg: OK
+Wattson-v4.3.21-release-info.txt: OK
+Created release artifacts in /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/dist
+Notarized: no
+Checksums: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.21.noindex/source.qTSEJq/dist/SHA256SUMS.txt

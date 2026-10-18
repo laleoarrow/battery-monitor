@@ -1,0 +1,249 @@
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/WidgetExtensionInfo.plist': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/BatteryPowerApp.entitlements': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/BatteryPowerWidgetExtension.swift': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/battery_monitor.py': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/BatteryPowerWidgetExtension.xcodeproj': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/website': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/Support': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/scripts': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/.agent': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/tests': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/design-qa.md': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/HANDOFF.md': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/Packaging': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/.codex': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/docs': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/dist': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/BatteryPowerWidgetExtension.entitlements': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/TODO.md': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/.github': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/VERSION': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/design': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/script': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/README.md': File not found.
+warning: 'test.hoh4f4': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/AGENTS.md': File not found.
+Building for debugging...
+[0/19] /Users/leoarrow/Project/mypackage/agents/电池功率/.build/uniform38-review.noindex/test.HOH4F4/.build/arm64-apple-macosx/debug/WattsonPackageTests.derived/runner.swift
+[1/19] Write sources
+[5/19] Write wattson-helper-entitlement.plist
+[5/19] Write sources
+[5/19] Write Wattson-entitlement.plist
+[9/19] Copying Fixtures
+[10/19] Write swift-version--58304C5D6DBC2206.txt
+[12/81] Compiling WattsonHelperV5Support TopProcesses.swift
+[13/81] Compiling WattsonHelperV5Support ProcessTermination.swift
+[14/81] Emitting module WattsonHelperV5Support
+[15/81] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[16/87] Compiling WattsonHelper wattson-helper.swift
+[17/87] Emitting module WattsonHelper
+[17/87] Write Objects.LinkFileList
+[18/87] Linking wattson-helper
+[19/87] Applying wattson-helper
+[21/87] Emitting module Wattson
+[22/90] Compiling Wattson HelperClientPowerObservationV5.swift
+[23/90] Compiling Wattson HistoryChart.swift
+[24/90] Compiling Wattson LoginItemController.swift
+[25/90] Compiling Wattson PopoverPlacement.swift
+[26/90] Compiling Wattson UpdateChecker.swift
+[27/90] Compiling Wattson VisualEncoding.swift
+[28/90] Compiling Wattson AppDelegate.swift
+[29/90] Compiling Wattson BatteryIcon.swift
+[30/90] Compiling Wattson EnergyMode.swift
+[31/90] Compiling Wattson FeedbackDiagnostics.swift
+[32/90] Compiling Wattson GlassBackgroundView.swift
+[33/90] Compiling Wattson HelperClient.swift
+[34/90] Compiling Wattson PopupEventLog.swift
+[35/90] Compiling Wattson PowerHistory.swift
+[36/90] Compiling Wattson PowerObservationFusion.swift
+[37/90] Compiling Wattson PowerObservationFusionReplay.swift
+[38/90] Compiling Wattson PopoverPreview.swift
+[39/90] Compiling Wattson PopoverStyle.swift
+[40/90] Compiling Wattson PowerFlowLayer.swift
+[41/90] Compiling Wattson NativeModeSegmentedControl.swift
+[42/90] Compiling Wattson PopoverContentView.swift
+[43/90] Compiling Wattson PopoverController.swift
+[44/90] Compiling Wattson PowerIconView.swift
+[45/90] Compiling Wattson ProcessActionButton.swift
+[46/90] Compiling Wattson ProcessTerminationPresenter.swift
+[47/90] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[48/90] Compiling Wattson BatteryRuntimeEstimate.swift
+[49/90] Compiling Wattson BatterySampler.swift
+[50/90] Compiling Wattson AppleSmartBatteryObservationReader.swift
+[51/90] Compiling Wattson DirectSMCObservationReader.swift
+[52/90] Compiling Wattson PowerObservationCaptureCommand.swift
+[53/90] Compiling Wattson PowerObservationCollector.swift
+[54/90] Compiling Wattson PowerObservationJSONLWriter.swift
+[55/90] Compiling Wattson FooterHoverFeedbackView.swift
+[56/90] Compiling Wattson GlassPopoverMaterialView.swift
+[57/90] Compiling Wattson GlassPopoverPanel.swift
+[58/90] Compiling Wattson HistoryLayer.swift
+[59/90] Compiling Wattson SettingsAppearance.swift
+[60/90] Compiling Wattson SystemBatteryIcon.swift
+[61/90] Compiling Wattson TopProcesses.swift
+[62/90] Compiling Wattson TopProcessesMonitor.swift
+[63/90] Compiling Wattson InteractiveGlassModeControl.swift
+[64/90] Compiling Wattson LaneLayer.swift
+[65/90] Compiling Wattson ModeSliderView.swift
+[66/90] Compiling Wattson NativeGlassModeControl.swift
+[67/90] Compiling Wattson PowerObservationRuntimeController.swift
+[68/90] Compiling Wattson PowerObservationShadow.swift
+[69/90] Compiling Wattson PowerObservationTrace.swift
+[70/90] Compiling Wattson PowerObservationWireV5.swift
+[71/90] Compiling Wattson PowerSnapshot.swift
+[72/90] Compiling Wattson ProcessTermination.swift
+[73/90] Compiling Wattson RawPowerObservation.swift
+[74/90] Compiling Wattson Settings.swift
+[75/90] Compiling Wattson RingGaugeLayer.swift
+[76/90] Compiling Wattson TopProcessesView.swift
+[77/90] Compiling Wattson main.swift
+[78/90] Compiling Wattson ClickRouter.swift
+[79/90] Compiling Wattson ModuleIconArtwork.swift
+[80/90] Compiling Wattson SettingsWindowController.swift
+[81/90] Compiling Wattson StatusItemController.swift
+[81/90] Write Objects.LinkFileList
+[82/90] Linking Wattson
+[83/90] Applying Wattson
+[85/144] Compiling WattsonTests PowerPresentationStateTests.swift
+[86/144] Compiling WattsonTests PowerSymbolArtworkTests.swift
+[87/144] Compiling WattsonTests ProcessActionButtonTests.swift
+[88/147] Compiling WattsonTests SettingsIconReuseTests.swift
+[89/147] Compiling WattsonTests StatusClickDismissalTests.swift
+[90/147] Compiling WattsonTests TestDefaultsCleanup.swift
+[91/147] Compiling WattsonTests PowerObservationRuntimeTests.swift
+[92/147] Compiling WattsonTests PowerObservationShadowTests.swift
+[93/147] Compiling WattsonTests PowerObservationWireV5Tests.swift
+[94/147] Compiling WattsonTests TopProcessSettingsTests.swift
+[95/147] Compiling WattsonTests TopProcessesMonitorTests.swift
+[96/147] Compiling WattsonTests TopProcessesTests.swift
+[97/147] Compiling WattsonTests SamplingEfficiencyTests.swift
+[98/147] Compiling WattsonTests SettingsControlsRecoveryTests.swift
+[99/147] Compiling WattsonTests SettingsGlassOpticalMarginTests.swift
+[100/147] Compiling WattsonTests RingMetricSettingsTests.swift
+[101/147] Compiling WattsonTests RingMetricTelemetryTests.swift
+[102/147] Compiling WattsonTests RingMetricViewTests.swift
+[103/147] Compiling WattsonHelperV5SupportTests TopProcessesTests.swift
+[104/147] Compiling WattsonTests FeedbackDiagnosticsTests.swift
+[105/147] Compiling WattsonTests FlowNodeIconTests.swift
+[106/147] Compiling WattsonTests FooterHoverFeedbackViewTests.swift
+[107/147] Compiling WattsonTests FooterHoverIntegrationTests.swift
+[108/147] Compiling WattsonTests PopoverPlacementTests.swift
+[109/147] Compiling WattsonTests PowerFlowEfficiencyTests.swift
+[110/147] Compiling WattsonTests PowerHistoryFreshnessTests.swift
+[111/147] Compiling WattsonTests PowerInputFallbackTests.swift
+[112/147] Emitting module WattsonHelperV5SupportTests
+[113/147] Compiling WattsonHelperV5SupportTests PowerObservationV5SupportTests.swift
+[114/147] Compiling WattsonHelperV5SupportTests ProcessTerminationTests.swift
+[115/147] Compiling WattsonTests GlassPopoverBackgroundTests.swift
+[116/147] Compiling WattsonTests GlassPopoverPanelTests.swift
+[117/147] Compiling WattsonTests GlassPopoverShapeTests.swift
+[118/147] Compiling WattsonTests GlassTransparencySettingsTests.swift
+[119/147] Compiling WattsonTests GlobalPopoverClickTests.swift
+[120/147] Compiling WattsonTests HistoryChartTests.swift
+[121/147] Compiling WattsonTests HistoryViewTests.swift
+[122/147] Compiling WattsonTests InAppLogoSettingsTests.swift
+[123/147] Compiling WattsonTests ProcessTerminationPresenterTests.swift
+[124/147] Compiling WattsonTests ProcessTerminationTests.swift
+[125/147] Compiling WattsonTests RawPowerObservationTests.swift
+[126/147] Compiling WattsonTests BatteryRuntimeEstimateTests.swift
+[127/147] Compiling WattsonTests BatteryRuntimePresentationTests.swift
+[128/147] Compiling WattsonTests ColorSchemeSettingsTests.swift
+[129/147] Compiling WattsonTests DockIconSettingsTests.swift
+[130/147] Emitting module WattsonTests
+[131/147] Compiling WattsonTests NativeGlassModeControlTests.swift
+[132/147] Compiling WattsonTests NativeModeSegmentedControlTests.swift
+[133/147] Compiling WattsonTests PopoverAppearanceTests.swift
+[134/147] Compiling WattsonTests PopoverArrowSettingsTests.swift
+[135/147] Compiling WattsonTests InteractiveGlassModeControlTests.swift
+[136/147] Compiling WattsonTests LiquidGlassStyleSettingsTests.swift
+[137/147] Compiling WattsonTests ModeSliderAppearanceTests.swift
+[138/147] Compiling WattsonTests ModuleOrderTests.swift
+[139/147] Compiling WattsonTests PowerObservationCaptureTests.swift
+[140/147] Compiling WattsonTests PowerObservationFusionFoundationTests.swift
+[141/147] Compiling WattsonTests PowerObservationFusionReplayTests.swift
+[142/147] Compiling WattsonTests PowerObservationPhase2FixtureTests.swift
+[143/147] Compiling WattsonTests TopProcessesViewTests.swift
+[144/147] Compiling WattsonTests WattsonTests.swift
+[145/147] Compiling WattsonTests resource_bundle_accessor.swift
+[146/149] Emitting module WattsonPackageTests
+[147/149] Compiling WattsonPackageTests runner.swift
+[147/149] Write Objects.LinkFileList
+[148/149] Linking WattsonPackageTests
+Build complete! (17.01s)
+Test Suite 'Selected tests' started at 2026-10-18 18:47:14.885.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-18 18:47:14.886.
+Test Suite 'ProcessActionButtonTests' started at 2026-10-18 18:47:14.886.
+Test Case '-[WattsonTests.ProcessActionButtonTests testAppearanceRefreshPreservesCallerControlConfiguration]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testAppearanceRefreshPreservesCallerControlConfiguration]' passed (0.081 seconds).
+Test Case '-[WattsonTests.ProcessActionButtonTests testCapsuleKeepsItsAssignedFrameAndNativeAction]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testCapsuleKeepsItsAssignedFrameAndNativeAction]' passed (0.001 seconds).
+Test Case '-[WattsonTests.ProcessActionButtonTests testDisabledCapsuleDoesNotDispatchAndCanBeReenabled]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testDisabledCapsuleDoesNotDispatchAndCanBeReenabled]' passed (0.001 seconds).
+Test Suite 'ProcessActionButtonTests' passed at 2026-10-18 18:47:14.970.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.083 (0.084) seconds
+Test Suite 'TopProcessesViewTests' started at 2026-10-18 18:47:14.970.
+Test Case '-[WattsonTests.TopProcessesViewTests testBarsUseFixedHundredPointScaleIndependentOfOtherRowsAndDisplayCount]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testBarsUseFixedHundredPointScaleIndependentOfOtherRowsAndDisplayCount]' passed (0.037 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testChangingMeasurementsOrRankReusesRowsAndChangesWidthAndValueWithoutChangingPalette]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testChangingMeasurementsOrRankReusesRowsAndChangesWidthAndValueWithoutChangingPalette]' passed (0.078 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactHeightAndVisibleGeometryFitConfiguredCountsAcrossStates]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactHeightAndVisibleGeometryFitConfiguredCountsAcrossStates]' passed (0.048 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactToggleReusesRowsAndPreservesValuesGradientAndAccessibleDetails]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactToggleReusesRowsAndPreservesValuesGradientAndAccessibleDetails]' passed (0.026 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testConfiguredHeightAndVisibleGeometryStayStableAcrossStates]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testConfiguredHeightAndVisibleGeometryStayStableAcrossStates]' passed (0.049 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultBarsUseTheSameFixedHorizontalGradientAndRevealOnlyTheMeasuredPrefix]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultBarsUseTheSameFixedHorizontalGradientAndRevealOnlyTheMeasuredPrefix]' passed (0.029 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleKeepsFullGradientWidthAndOnlyRevealsTheMeasuredPrefix]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleKeepsFullGradientWidthAndOnlyRevealsTheMeasuredPrefix]' passed (0.025 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleRetainsMaskGeometryAcrossThemesAndHighContrast]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleRetainsMaskGeometryAcrossThemesAndHighContrast]' passed (0.051 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testEveryProcessFieldRankAndUnshownReadingInvalidatesContent]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testEveryProcessFieldRankAndUnshownReadingInvalidatesContent]' passed (0.023 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testGradientAndOutlineFollowLightDarkAndHighContrastWithoutAnimations]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testGradientAndOutlineFollowLightDarkAndHighContrastWithoutAnimations]' passed (0.064 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalDataDoesNotBlockExternalLayoutOrAppearanceRefresh]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalDataDoesNotBlockExternalLayoutOrAppearanceRefresh]' passed (0.032 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalUpdatesSkipContentWorkAfterInitializingEveryStatus]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalUpdatesSkipContentWorkAfterInitializingEveryStatus]' passed (0.022 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testKeyboardAndAccessibilitySelectionExposeCrossWithoutTerminating]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testKeyboardAndAccessibilitySelectionExposeCrossWithoutTerminating]' passed (0.022 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testLongNamesTruncateAndCPUWakeupBreakdownUsesActualInputs]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testLongNamesTruncateAndCPUWakeupBreakdownUsesActualInputs]' passed (0.021 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testMeasuringEmptyAndUnavailableRemainDistinctAndAccessible]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testMeasuringEmptyAndUnavailableRemainDistinctAndAccessible]' passed (0.023 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testMissingTrustedIdentityShowsDisabledCrossAndNeverCallsBack]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testMissingTrustedIdentityShowsDisabledCrossAndNeverCallsBack]' passed (0.020 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testMouseSelectionRevealsOnlySmallInlineForceQuitWithoutMovingMeasurements]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testMouseSelectionRevealsOnlySmallInlineForceQuitWithoutMovingMeasurements]' passed (0.020 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testNativeHelpExplainsActivityMeaningScaleAndCPUConventionWithoutOpeningAWindow]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testNativeHelpExplainsActivityMeaningScaleAndCPUConventionWithoutOpeningAWindow]' passed (0.019 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testNeutralSelectionAdaptsToLightDarkAndHighContrastWithoutChangingGradient]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testNeutralSelectionAdaptsToLightDarkAndHighContrastWithoutChangingGradient]' passed (0.063 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testNormalizedCountAndCompactChangesInvalidateContentOnlyWhenTheirValuesChange]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testNormalizedCountAndCompactChangesInvalidateContentOnlyWhenTheirValuesChange]' passed (0.040 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testPreviewStyleSwitchesReuseRowsAndRemoveTheFixedScaleMask]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testPreviewStyleSwitchesReuseRowsAndRemoveTheFixedScaleMask]' passed (0.037 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testRoundedHoverSummaryFitsTwoLinesWithoutRepeatingTheExplanation]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testRoundedHoverSummaryFitsTwoLinesWithoutRepeatingTheExplanation]' passed (0.020 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectedCapsuleKeepsUniformWidthWithoutMovingOtherContent]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectedCapsuleKeepsUniformWidthWithoutMovingOtherContent]' passed (0.039 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectedCrossKeepsItsButtonHitAndCallsBackWithCurrentImmutableProcess]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectedCrossKeepsItsButtonHitAndCallsBackWithCurrentImmutableProcess]' passed (0.022 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectionFollowsExactIdentityAcrossRankingAndClearsForPIDReuse]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectionFollowsExactIdentityAcrossRankingAndClearsForPIDReuse]' passed (0.024 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testSingleSharedReflectionTracksOnlyTheRightActionAndClearsOnDismissal]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testSingleSharedReflectionTracksOnlyTheRightActionAndClearsOnDismissal]' passed (0.021 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testStatusCountCompactAndPresentationLifecycleManageSelectionIndependentlyOfContentGuard]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testStatusCountCompactAndPresentationLifecycleManageSelectionIndependentlyOfContentGuard]' passed (0.029 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testZeroTinyOverflowAndHugeFiniteValuesRemainDistinctAndFit]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testZeroTinyOverflowAndHugeFiniteValuesRemainDistinctAndFit]' passed (0.024 seconds).
+Test Suite 'TopProcessesViewTests' passed at 2026-10-18 18:47:15.901.
+	 Executed 28 tests, with 0 failures (0 unexpected) in 0.929 (0.931) seconds
+Test Suite 'WattsonPackageTests.xctest' passed at 2026-10-18 18:47:15.901.
+	 Executed 31 tests, with 0 failures (0 unexpected) in 1.013 (1.015) seconds
+Test Suite 'Selected tests' passed at 2026-10-18 18:47:15.901.
+	 Executed 31 tests, with 0 failures (0 unexpected) in 1.013 (1.016) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

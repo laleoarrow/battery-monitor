@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "wholeCurrentTreeClaimedVerified": false,
+  "acceptedRunScope": "The 108-capture/10424-assertion run applies to the frozen snapshot and actual GUI build recorded in accepted/. Unrelated concurrent source changes are preserved. No rebuild, revert, stage or modification of those files was performed.",
+  "ownedRendererChecksAgainstActualGUIBuild": {
+    "Popover/TopProcessesView.swift": true,
+    "Popover/ProcessActionButton.swift": true,
+    "Popover/FooterHoverFeedbackView.swift": true
+  },
+  "harnessMatchesActualGUIBuild": true,
+  "currentManifestMismatches": [],
+  "missingManifestFiles": [],
+  "nativeEvidenceSummary": {
+    "captures": 108,
+    "assertions": 10424,
+    "failures": 0,
+    "selectedPopupRecords": 48,
+    "disabledModuleRecords": 8,
+    "productionControllerModalRecords": 12,
+    "actionCapsuleFrames": "All 56 recorded frames equal {{288, 4}, {38, 16}}"
+  },
+  "previewVerification": "Selected dark compact enabled/disabled and light detailed disabled native images show matching 38x16pt capsule bounds at x288, y4. The visible blue and disabled gray bezels have consistent width; the 9pt X is complete and unclipped. Native glass/capsule styling is checked on macOS 26. NSView frame height alone is not treated as visible bezel height.",
+  "visualEvidenceLimitations": [
+    "Existing -unselected-module crops are excluded from visual conclusions because the known scrolling capture can show the upper Power History area. Selected module and new disabled-module captures are the visual evidence used here.",
+    "Disabled behavior is checked as the actual NSButton isEnabled=false state, with a frame equal to the enabled button. This run does not inject a separate mouse event into the disabled button. Enabled action uses native mouse tracking and verifies the exact process identity.",
+    "Battery and process readings are fixtures. The GUI never signals user processes. The separate root-worker probe signals only its own child and does not install or exercise the canonical LaunchDaemon/socket."
+  ],
+  "cleanupChecksPassed": true
+}
