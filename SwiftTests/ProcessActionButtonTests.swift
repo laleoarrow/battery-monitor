@@ -14,7 +14,7 @@ final class ProcessActionButtonTests: XCTestCase {
     }
 
     func testCapsuleKeepsItsAssignedFrameAndNativeAction() {
-        let frame = NSRect(x: 284, y: 3, width: 44, height: 18)
+        let frame = NSRect(x: 284, y: 6, width: 44, height: 12)
         let button = ProcessActionButton(frame: frame)
         let target = Target()
         button.target = target
@@ -23,7 +23,7 @@ final class ProcessActionButtonTests: XCTestCase {
         XCTAssertEqual(target.presses, 1)
         XCTAssertEqual(button.frame, frame)
         XCTAssertEqual(button.imagePosition, .imageOnly)
-        XCTAssertEqual(button.controlSize, .small)
+        XCTAssertEqual(button.controlSize, .mini)
         XCTAssertNotNil(button.image)
         XCTAssertEqual(button.keyEquivalent, "")
         if #available(macOS 26.0, *) {
@@ -33,7 +33,7 @@ final class ProcessActionButtonTests: XCTestCase {
     }
 
     func testDisabledCapsuleDoesNotDispatchAndCanBeReenabled() {
-        let button = ProcessActionButton(frame: NSRect(x: 0, y: 0, width: 44, height: 18))
+        let button = ProcessActionButton(frame: NSRect(x: 0, y: 0, width: 44, height: 12))
         let target = Target()
         button.target = target
         button.action = #selector(Target.press(_:))
@@ -46,7 +46,7 @@ final class ProcessActionButtonTests: XCTestCase {
     }
 
     func testAppearanceRefreshPreservesCallerControlConfiguration() {
-        let button = ProcessActionButton(frame: NSRect(x: 284, y: 3, width: 44, height: 18))
+        let button = ProcessActionButton(frame: NSRect(x: 284, y: 6, width: 44, height: 12))
         let target = Target()
         button.target = target
         button.action = #selector(Target.press(_:))
@@ -60,7 +60,7 @@ final class ProcessActionButtonTests: XCTestCase {
             XCTAssertEqual(button.action, #selector(Target.press(_:)))
             XCTAssertEqual(button.toolTip, "Force Quit")
             XCTAssertEqual(button.accessibilityLabel(), "Force Quit Safari")
-            XCTAssertEqual(button.frame, NSRect(x: 284, y: 3, width: 44, height: 18))
+            XCTAssertEqual(button.frame, NSRect(x: 284, y: 6, width: 44, height: 12))
             XCTAssertNotNil(button.image)
         }
     }

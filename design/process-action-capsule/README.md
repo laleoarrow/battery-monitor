@@ -1,6 +1,8 @@
 # Process action capsule and concise hover text
 
-The [height follow-up](thin-18/README.md) reduces the capsule to 44 × 18 points.
+The latest [bar-height follow-up](thin-12/README.md) makes the capsule 44 × 12
+points, matching the bar. The [preceding follow-up](thin-18/README.md) records
+the intermediate 44 × 18-point version.
 The initial implementation and accepted images below record the preceding
 44 × 22-point version.
 

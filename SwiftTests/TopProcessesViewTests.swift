@@ -619,7 +619,7 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertEqual(view.selectedRowIndexForTest, 1)
         XCTAssertEqual(view.forceQuitButtonsForTest.map(\.isHidden), [true, false, true])
         let button = view.forceQuitButtonsForTest[1]
-        XCTAssertEqual(button.frame, NSRect(x: 284, y: 3, width: 44, height: 18))
+        XCTAssertEqual(button.frame, NSRect(x: 284, y: 6, width: 44, height: 12))
         XCTAssertTrue(button.isBordered)
         XCTAssertNotNil(button.image)
         XCTAssertTrue(button.isEnabled)
@@ -729,7 +729,7 @@ final class TopProcessesViewTests: XCTestCase {
             view.update(state: state, count: 3, compact: compact)
             view.layoutSubtreeIfNeeded()
             XCTAssertEqual(view.selectedProcessForTest?.pid, 41)
-            XCTAssertEqual(view.forceQuitButtonsForTest[0].frame.size, NSSize(width: 44, height: 18))
+            XCTAssertEqual(view.forceQuitButtonsForTest[0].frame.size, NSSize(width: 44, height: 12))
         }
         view.update(state: state, count: 2, compact: true)
         XCTAssertNil(view.selectedProcessForTest)

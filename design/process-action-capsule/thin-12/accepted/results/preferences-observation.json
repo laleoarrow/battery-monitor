@@ -1,0 +1,7 @@
+{
+  "durationSeconds": 35.093,
+  "filesystemChecks": 225,
+  "unexpectedPreferences": [],
+  "allPassed": true,
+  "method": "Filesystem-only observation after test script exit; no defaults/CFPreferences read."
+}

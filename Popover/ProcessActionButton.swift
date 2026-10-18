@@ -9,7 +9,7 @@ final class ProcessActionButton: NSButton {
         title = ""
         imagePosition = .imageOnly
         imageScaling = .scaleNone
-        controlSize = .small
+        controlSize = .mini
         isBordered = true
         if #available(macOS 26.0, *) {
             bezelStyle = .glass
@@ -32,7 +32,7 @@ final class ProcessActionButton: NSButton {
             : (isEnabled ? (PopoverStyle.isDark(effectiveAppearance)
                 ? NSColor(rgb: 0xE5F5FF) : NSColor(rgb: 0x064A83)) : .secondaryLabelColor)
         image = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Force Quit")?
-            .withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 10, weight: .semibold)
+            .withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 8, weight: .semibold)
                 .applying(.init(paletteColors: [glyph])))
         needsDisplay = true
     }

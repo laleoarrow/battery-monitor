@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "wholeCurrentTreeClaimedVerified": false,
+  "acceptedRunScope": "The100-capture/10376-assertion run applies to the frozen snapshot and actual GUI build recorded in accepted/. Unrelated concurrent source changes are preserved. No rebuild, revert, stage or modification of those files was performed.",
+  "ownedRendererChecksAgainstActualGUIBuild": {
+    "Popover/TopProcessesView.swift": true,
+    "Popover/ProcessActionButton.swift": true,
+    "Popover/FooterHoverFeedbackView.swift": true
+  },
+  "harnessMatchesActualGUIBuild": true,
+  "currentManifestMismatches": [
+    {
+      "file": "Core/Settings.swift",
+      "frozenSHA256": "04949e864367cbcbf1d9dae9f9df9dc712f8e9738d2b6e7f127038bff7fb5232",
+      "currentSHA256": "4a4f1e73dfd9fc93d01d41a9012336929e6fa3b1e439adf2bb58f273114f2d84"
+    },
+    {
+      "file": "MenuBar/SettingsWindowController.swift",
+      "frozenSHA256": "ce67f6d2a66c8e3236980dd3925488e92db7277c82bcb8c837a39f569de03860",
+      "currentSHA256": "78475ae01c28108bf9f081930715e271bff6ffed2120dcecd45543e756a547b4"
+    }
+  ],
+  "missingManifestFiles": [],
+  "previewVerification": "Dark compact and light detailed native images show the44x12pt capsule at x284,y6 matching the12pt bar height. The8pt X is centered, readable and unclipped; no symbol-layout adjustment was needed."
+}

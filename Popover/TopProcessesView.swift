@@ -361,7 +361,7 @@ final class TopProcessesView: PopoverSection {
         override func layout() {
             super.layout()
             name.frame = NSRect(x: 0, y: 2, width: 132, height: 20)
-            forceQuitButton.frame = isSelected ? NSRect(x: 284, y: 3, width: 44, height: 18) : .zero
+            forceQuitButton.frame = isSelected ? NSRect(x: 284, y: 6, width: 44, height: 12) : .zero
             value.frame = NSRect(x: 272, y: 2, width: 56, height: 20)
             details.frame = details.isHidden ? .zero : NSRect(x: 0, y: 25, width: bounds.width, height: 15)
             overflow.frame = NSRect(x: 262, y: 6, width: 8, height: 12)
