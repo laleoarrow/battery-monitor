@@ -3038,6 +3038,11 @@ if !screenLocked {
                     "\($0.0):\($0.1.duration)s"
                 }.joined(separator: ",")
                 log("HISTORY_COMPLETION_TIMEOUT \(context) elapsed=\(CACurrentMediaTime() - started) remaining=\(remaining)")
+                if let timeline = fixture.layer {
+                    let now = CACurrentMediaTime()
+                    let shown = timeline.presentation()
+                    log("HISTORY_FIXTURE_CLOCK modelSpeed=\(timeline.speed) modelOffset=\(timeline.timeOffset) modelBegin=\(timeline.beginTime) modelNow=\(timeline.convertTime(now, from: nil)) presentationSpeed=\(shown?.speed ?? -1) presentationOffset=\(shown?.timeOffset ?? -1) presentationBegin=\(shown?.beginTime ?? -1)")
+                }
             }
             return settled
         }
@@ -3306,6 +3311,8 @@ if !screenLocked {
                 timeline.beginTime = 0
                 timeline.beginTime = timeline.convertTime(CACurrentMediaTime(), from: nil) - pausedAt
             }
+            // Submit the fixture's resumed clock before measuring completion.
+            CATransaction.flush()
             let tailWaitStarted = CACurrentMediaTime()
             let tailSettled = settleHistoryFixture("matched-tail")
             if let targetTailPath, let targetMidpoint = historyCubicMidpoint(targetTailPath, index: 1),
