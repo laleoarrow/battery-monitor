@@ -10,6 +10,7 @@ final class TopProcessesView: PopoverSection {
     private let infoButton = NSButton(title: "", target: nil, action: nil)
     private let status = NSTextField(labelWithString: "Measuring…")
     private let rows = (0..<10).map { _ in ProcessRow() }
+    private let actionFeedback = FooterHoverFeedbackView(frame: .zero)
     private var infoPopover: NSPopover?
     private var count = 3
     private var compact = false
@@ -47,7 +48,7 @@ final class TopProcessesView: PopoverSection {
         }
         scale.font = .systemFont(ofSize: 10.5, weight: .regular)
         scale.alignment = .right
-        scale.toolTip = Self.activityHelp
+        scale.toolTip = "CPU and idle-wakeup activity"
         infoButton.isBordered = false
         infoButton.image = NSImage(systemSymbolName: "info.circle", accessibilityDescription: nil)?
             .withSymbolConfiguration(.init(pointSize: 13, weight: .regular))
@@ -57,7 +58,7 @@ final class TopProcessesView: PopoverSection {
         infoButton.setButtonType(.momentaryPushIn)
         infoButton.target = self
         infoButton.action = #selector(showActivityInfo(_:))
-        infoButton.toolTip = Self.activityHelp
+        infoButton.toolTip = "About Activity Score"
         infoButton.setAccessibilityLabel("About Process Activity")
         infoButton.setAccessibilityHelp(Self.activityHelp)
         addSubview(infoButton)
@@ -86,6 +87,7 @@ final class TopProcessesView: PopoverSection {
             row.forceQuitHandler = { [weak self] process in self?.forceQuitHandler?(process) }
             addSubview(row)
         }
+        addSubview(actionFeedback)
         setAccessibilityLabel("Process Activity")
     }
 
@@ -103,6 +105,8 @@ final class TopProcessesView: PopoverSection {
         }
         status.frame = NSRect(x: 0, y: 28 + (CGFloat(count) * rowHeight - 20) / 2,
                               width: bounds.width, height: 20)
+        actionFeedback.frame = bounds
+        updateActionFeedback()
     }
 
     override func refreshAppearance() {
@@ -113,6 +117,7 @@ final class TopProcessesView: PopoverSection {
 
     override func viewDidHide() {
         infoPopover?.performClose(nil)
+        actionFeedback.cancelHover()
         select(nil)
         super.viewDidHide()
     }
@@ -121,11 +126,13 @@ final class TopProcessesView: PopoverSection {
         super.viewDidMoveToWindow()
         if window == nil {
             infoPopover?.performClose(nil)
+            actionFeedback.cancelHover()
             select(nil)
         }
     }
 
     func setPresentationActive(_ active: Bool) {
+        actionFeedback.setPresentationActive(active)
         if !active {
             infoPopover?.performClose(nil)
             select(nil)
@@ -163,7 +170,11 @@ final class TopProcessesView: PopoverSection {
             status.setAccessibilityHelp("No active process readings were reported in the recent sampling interval.")
         }
         status.isHidden = !processes.isEmpty
-        status.toolTip = status.accessibilityHelp()
+        switch state {
+        case .loading: status.toolTip = "Sampling activity…"
+        case .unavailable: status.toolTip = "Requires the Wattson helper"
+        case .ready: status.toolTip = nil
+        }
         if let selectedProcess, !processes.contains(where: { Selection($0) == selectedProcess }) {
             self.selectedProcess = nil
         }
@@ -178,6 +189,7 @@ final class TopProcessesView: PopoverSection {
             row.setSelected(selectedProcess == Selection(processes[index]))
         }
         needsLayout = true
+        updateActionFeedback()
     }
 
     private func select(_ selection: Selection?) {
@@ -186,6 +198,19 @@ final class TopProcessesView: PopoverSection {
         for row in rows {
             row.setSelected(!row.isHidden && row.process.map { Selection($0) == selection } == true)
         }
+        needsLayout = true
+        updateActionFeedback()
+    }
+
+    private func updateActionFeedback() {
+        guard let row = rows.first(where: { !$0.isHidden && $0.isSelected }) else {
+            actionFeedback.update(regions: [])
+            return
+        }
+        row.layoutSubtreeIfNeeded()
+        let button = row.forceQuitButton
+        actionFeedback.update(regions: [.init(rect: button.convert(button.bounds, to: actionFeedback),
+                                              enabled: button.isEnabled)])
     }
 
     @objc private func showActivityInfo(_ sender: NSButton) {
@@ -240,6 +265,7 @@ final class TopProcessesView: PopoverSection {
     var forceQuitButtonsForTest: [NSButton] { rows.filter { !$0.isHidden }.map(\.forceQuitButton) }
     var selectedRowIndexForTest: Int? { rows.firstIndex { !$0.isHidden && $0.isSelected } }
     var selectedProcessForTest: EnergyProcess? { selectedRowIndexForTest.flatMap { rows[$0].process } }
+    var forceQuitFeedbackForTest: FooterHoverFeedbackView { actionFeedback }
 
     var gradientPreviewGeometryForTest: [(gradientWidth: CGFloat, visibleMaskWidth: CGFloat, usesFixedScale: Bool)] {
         layoutSubtreeIfNeeded()
@@ -251,7 +277,7 @@ final class TopProcessesView: PopoverSection {
         private let name = NSTextField(labelWithString: "")
         private let value = NSTextField(labelWithString: "")
         private let details = NSTextField(labelWithString: "")
-        let forceQuitButton = NSButton(title: "", target: nil, action: nil)
+        let forceQuitButton = ProcessActionButton(frame: .zero)
         private let overflow = NSImageView()
         private let track = CALayer()
         private let fill = CAGradientLayer()
@@ -317,13 +343,6 @@ final class TopProcessesView: PopoverSection {
             overflow.isHidden = true
             addSubview(overflow)
             forceQuitButton.identifier = NSUserInterfaceItemIdentifier("top-processes.force-quit")
-            forceQuitButton.isBordered = false
-            forceQuitButton.image = NSImage(systemSymbolName: "xmark", accessibilityDescription: nil)?
-                .withSymbolConfiguration(.init(pointSize: 11, weight: .regular))
-            forceQuitButton.imagePosition = .imageOnly
-            forceQuitButton.imageScaling = .scaleProportionallyDown
-            forceQuitButton.contentTintColor = PopoverStyle.secondaryText
-            forceQuitButton.setButtonType(.momentaryPushIn)
             forceQuitButton.target = self
             forceQuitButton.action = #selector(forceQuitSelectedProcess(_:))
             forceQuitButton.isHidden = true
@@ -333,7 +352,7 @@ final class TopProcessesView: PopoverSection {
             setAccessibilityRole(.group)
             setAccessibilityChildren([])
             setAccessibilitySelected(false)
-            setAccessibilityHelp(TopProcessesView.activityHelp)
+            setAccessibilityHelp("Select to show Force Quit.")
             refreshAppearance()
         }
 
@@ -341,8 +360,8 @@ final class TopProcessesView: PopoverSection {
 
         override func layout() {
             super.layout()
-            name.frame = NSRect(x: isSelected ? 22 : 0, y: 2, width: isSelected ? 110 : 132, height: 20)
-            forceQuitButton.frame = isSelected ? NSRect(x: 0, y: 3, width: 18, height: 18) : .zero
+            name.frame = NSRect(x: 0, y: 2, width: 132, height: 20)
+            forceQuitButton.frame = isSelected ? NSRect(x: 284, y: 1, width: 44, height: 22) : .zero
             value.frame = NSRect(x: 272, y: 2, width: 56, height: 20)
             details.frame = details.isHidden ? .zero : NSRect(x: 0, y: 25, width: bounds.width, height: 15)
             overflow.frame = NSRect(x: 262, y: 6, width: 8, height: 12)
@@ -366,6 +385,7 @@ final class TopProcessesView: PopoverSection {
         }
 
         func refreshAppearance() {
+            forceQuitButton.refreshAppearance()
             effectiveAppearance.performAsCurrentDrawingAppearance {
                 let contrast = PopoverStyle.isHighContrast(effectiveAppearance)
                 PopoverStyle.setWithoutAnimation {
@@ -410,14 +430,15 @@ final class TopProcessesView: PopoverSection {
             value.stringValue = Self.shortNumber(score)
             overflow.isHidden = score <= 100
             details.stringValue = "CPU \(Self.shortNumber(process.cpuPercent))% · Idle wakeups \(Self.wakeupNumber(process.idleWakeupsPerSecond))/s"
-            let exact = "Activity Score \(score); CPU \(process.cpuPercent)%; idle wakeups \(process.idleWakeupsPerSecond) per second"
-            value.toolTip = exact
-            details.toolTip = exact
+            let summary = "Score \(Self.shortNumber(score)) · CPU \(Self.shortNumber(process.cpuPercent))% · Wakeups \(Self.wakeupNumber(process.idleWakeupsPerSecond))/s"
+            value.toolTip = summary
+            details.toolTip = summary
             setAccessibilityLabel(process.name)
-            setAccessibilityValue(exact)
-            toolTip = "\(process.name) · PID \(process.pid)\n\(exact)\n\(TopProcessesView.activityHelp)"
+            setAccessibilityValue("Activity Score \(Self.shortNumber(score)); CPU \(Self.shortNumber(process.cpuPercent))%; idle wakeups \(Self.wakeupNumber(process.idleWakeupsPerSecond)) per second")
+            toolTip = "\(process.name) · PID \(process.pid)\n\(summary)"
             forceQuitButton.isEnabled = process.terminationIdentity != nil
-            forceQuitButton.toolTip = process.terminationIdentity != nil ? "Force Quit \(process.name)" : "Force Quit Unavailable"
+            forceQuitButton.refreshAppearance()
+            forceQuitButton.toolTip = process.terminationIdentity != nil ? "Force Quit" : "Force Quit Unavailable"
             forceQuitButton.setAccessibilityLabel("Force Quit \(process.name)")
             forceQuitButton.setAccessibilityHelp(forceQuitButton.toolTip)
             needsLayout = true
@@ -432,6 +453,7 @@ final class TopProcessesView: PopoverSection {
             guard isSelected != selected else { return }
             isSelected = selected
             forceQuitButton.isHidden = !selected
+            value.isHidden = selected
             forceQuitButton.setAccessibilityElement(selected)
             setAccessibilitySelected(selected)
             setAccessibilityChildren(selected ? [forceQuitButton] : [])

@@ -285,6 +285,10 @@ final class StatusItemController: NSObject {
         popover.onVisibilityChange { [weak self] shown in
             shown ? self?.startDisplayClock() : self?.stopDisplayClock()
         }
+        popover.onProcessTerminationIntent { [weak self] in
+            self?.topProcessesMonitor.setActive(false)
+            self?.topProcessesMonitor.invalidate()
+        }
         popover.setModeSelectHandler { [weak self] mode, completion in
             guard let self else {
                 completion(nil)
@@ -330,6 +334,7 @@ final class StatusItemController: NSObject {
             self.samplingCadence.resetHistory(at: ProcessInfo.processInfo.systemUptime)
             self.scheduleSamplingClock()
             self.topProcessesMonitor.setActive(false)
+            self.topProcessesMonitor.invalidate()
             self.refreshTopProcessesMonitoring()
             _ = self.startupAvailability.finish(nil, recordHistory: false)
             self.refreshPresentation()

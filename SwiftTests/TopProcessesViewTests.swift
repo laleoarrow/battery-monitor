@@ -30,7 +30,7 @@ final class TopProcessesViewTests: XCTestCase {
             view.layoutSubtreeIfNeeded()
             XCTAssertEqual(view.contentUpdatesForTest, index + 1)
             let status = try XCTUnwrap(view.subviews.compactMap { $0 as? NSTextField }.last)
-            XCTAssertEqual(status.toolTip, status.accessibilityHelp())
+            XCTAssertEqual(status.toolTip, ["Sampling activity…", "Requires the Wattson helper", nil, nil][index])
             XCTAssertFalse(status.accessibilityHelp()?.isEmpty ?? true)
             let rows = visibleRows(view)
             let fields = rows.flatMap { $0.subviews.compactMap { $0 as? NSTextField } }
@@ -97,14 +97,14 @@ final class TopProcessesViewTests: XCTestCase {
             XCTAssertEqual(view.contentUpdatesForTest, updates + 1)
             let row = try XCTUnwrap(visibleRows(view).first)
             let fields = row.subviews.compactMap { $0 as? NSTextField }
-            let exact = "Activity Score \(reading.energyImpact); CPU \(reading.cpuPercent)%; idle wakeups \(reading.idleWakeupsPerSecond) per second"
+            let summary = "Score 84.0 · CPU 72.0% · Wakeups 240/s"
             XCTAssertEqual(fields[0].stringValue, reading.name)
             XCTAssertEqual(fields[0].toolTip, "\(reading.name) · PID \(reading.pid)")
-            XCTAssertEqual(fields[1].toolTip, exact)
-            XCTAssertEqual(fields[2].toolTip, exact)
+            XCTAssertEqual(fields[1].toolTip, summary)
+            XCTAssertEqual(fields[2].toolTip, summary)
             XCTAssertEqual(row.accessibilityLabel(), reading.name)
-            XCTAssertEqual(row.accessibilityValue() as? String, exact)
-            XCTAssertTrue(row.toolTip?.contains("PID \(reading.pid)\n\(exact)") == true)
+            XCTAssertEqual(row.accessibilityValue() as? String, "Activity Score 84.0; CPU 72.0%; idle wakeups 240 per second")
+            XCTAssertEqual(row.toolTip, "\(reading.name) · PID \(reading.pid)\n\(summary)")
         }
         let updates = view.contentUpdatesForTest
         view.update(state: .ready([second, variants.last!]), count: 1)
@@ -306,7 +306,7 @@ final class TopProcessesViewTests: XCTestCase {
             XCTAssertEqual(field.font, PopoverStyle.mono(13, .semibold))
             let textWidth = field.stringValue.size(withAttributes: [.font: try XCTUnwrap(field.font)]).width
             XCTAssertLessThanOrEqual(textWidth, field.frame.width - 4)
-            XCTAssertTrue(field.toolTip?.contains("Activity Score \(score)") == true)
+            XCTAssertTrue(field.toolTip?.hasPrefix("Score \(field.stringValue) ·") == true)
             let marker = try XCTUnwrap(rows[index].subviews.compactMap { $0 as? NSImageView }
                 .first { $0.identifier?.rawValue == "top-processes.overflow" })
             XCTAssertEqual(marker.isHidden, score <= 100)
@@ -316,7 +316,7 @@ final class TopProcessesViewTests: XCTestCase {
             XCTAssertFalse(marker.isAccessibilityElement())
             XCTAssertNotNil(marker.image)
         }
-        XCTAssertTrue(rows.last?.accessibilityValue() as? String == values.last?.toolTip)
+        XCTAssertTrue((rows.last?.accessibilityValue() as? String)?.hasPrefix("Activity Score 2e308;") == true)
     }
 
     func testLongNamesTruncateAndCPUWakeupBreakdownUsesActualInputs() throws {
@@ -342,8 +342,8 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertLessThanOrEqual(fields[2].stringValue.size(withAttributes: [.font: fields[2].font!]).width,
                                  fields[2].frame.width)
         XCTAssertEqual(row.accessibilityLabel(), longName)
-        XCTAssertTrue((row.accessibilityValue() as? String)?.contains("CPU 72.0%; idle wakeups 240.0 per second") == true)
-        XCTAssertTrue(row.accessibilityHelp()?.contains("not measured power consumption") == true)
+        XCTAssertTrue((row.accessibilityValue() as? String)?.contains("CPU 72.0%; idle wakeups 240 per second") == true)
+        XCTAssertEqual(row.accessibilityHelp(), "Select to show Force Quit.")
         XCTAssertTrue(row.subviews.allSatisfy { !$0.isAccessibilityElement() })
         let images = row.subviews.compactMap { $0 as? NSImageView }
         XCTAssertEqual(images.count, 1)
@@ -586,7 +586,7 @@ final class TopProcessesViewTests: XCTestCase {
                         matches: PopoverStyle.secondaryText, in: view.effectiveAppearance)
         XCTAssertNotNil(button.target)
         XCTAssertNotNil(button.action)
-        XCTAssertEqual(button.toolTip, view.activityHelpForTest)
+        XCTAssertEqual(button.toolTip, "About Activity Score")
         XCTAssertEqual(button.accessibilityHelp(), view.activityHelpForTest)
         for required in ["Activity Score combines CPU usage and idle wakeups",
                          "Higher scores indicate greater process activity",
@@ -619,16 +619,17 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertEqual(view.selectedRowIndexForTest, 1)
         XCTAssertEqual(view.forceQuitButtonsForTest.map(\.isHidden), [true, false, true])
         let button = view.forceQuitButtonsForTest[1]
-        XCTAssertEqual(button.frame, NSRect(x: 0, y: 3, width: 18, height: 18))
-        XCTAssertFalse(button.isBordered)
+        XCTAssertEqual(button.frame, NSRect(x: 284, y: 1, width: 44, height: 22))
+        XCTAssertTrue(button.isBordered)
         XCTAssertNotNil(button.image)
         XCTAssertTrue(button.isEnabled)
         XCTAssertEqual(button.imagePosition, .imageOnly)
-        XCTAssertEqual(labels[1][0].frame, NSRect(x: 22, y: 2, width: 110, height: 20))
+        XCTAssertEqual(labels[1][0].frame, NSRect(x: 0, y: 2, width: 132, height: 20))
         XCTAssertEqual(labels[0][0].frame, NSRect(x: 0, y: 2, width: 132, height: 20))
         XCTAssertEqual(view.barGeometryForTest.map(\.track), bars)
         XCTAssertEqual(labels.map { $0[1].frame }, valueFrames)
         XCTAssertEqual(labels.map { $0[2].frame }, detailFrames)
+        XCTAssertEqual(labels.map { $0[1].isHidden }, [false, true, false])
         XCTAssertTrue(callbacks.isEmpty)
 
         // A second click, including AppKit's double-click event, only cancels selection.
@@ -636,6 +637,7 @@ final class TopProcessesViewTests: XCTestCase {
         view.layoutSubtreeIfNeeded()
         XCTAssertNil(view.selectedProcessForTest)
         XCTAssertTrue(view.forceQuitButtonsForTest.allSatisfy(\.isHidden))
+        XCTAssertTrue(labels.allSatisfy { !$0[1].isHidden })
         XCTAssertEqual(labels[1][0].frame, NSRect(x: 0, y: 2, width: 132, height: 20))
         XCTAssertTrue(callbacks.isEmpty)
     }
@@ -727,7 +729,7 @@ final class TopProcessesViewTests: XCTestCase {
             view.update(state: state, count: 3, compact: compact)
             view.layoutSubtreeIfNeeded()
             XCTAssertEqual(view.selectedProcessForTest?.pid, 41)
-            XCTAssertEqual(view.forceQuitButtonsForTest[0].frame.size, NSSize(width: 18, height: 18))
+            XCTAssertEqual(view.forceQuitButtonsForTest[0].frame.size, NSSize(width: 44, height: 22))
         }
         view.update(state: state, count: 2, compact: true)
         XCTAssertNil(view.selectedProcessForTest)
@@ -816,6 +818,40 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertTrue(identity.isValid)
         return EnergyProcess(pid: Int32(pid), name: "Process \(pid)", energyImpact: score,
                              cpuPercent: score, idleWakeupsPerSecond: 0, terminationIdentity: identity)
+    }
+
+    func testRoundedHoverSummaryFitsTwoLinesWithoutRepeatingTheExplanation() throws {
+        let view = makeView(count: 1, compact: true)
+        let reading = EnergyProcess(pid: 86572, name: "backupd", energyImpact: 92.41859130318788,
+                                     cpuPercent: 92.41859130318788, idleWakeupsPerSecond: 0)
+        view.update(state: .ready([reading]), count: 1, compact: true)
+        let row = try XCTUnwrap(view.processRowsForTest.first)
+        let summary = "Score 92.4 · CPU 92.4% · Wakeups 0/s"
+        XCTAssertEqual(row.toolTip, "backupd · PID 86572\n\(summary)")
+        XCTAssertEqual(row.toolTip?.split(separator: "\n").count, 2)
+        XCTAssertFalse(row.toolTip?.contains("combines") ?? true)
+        XCTAssertFalse(row.toolTip?.contains("18788") ?? true)
+        for field in row.subviews.compactMap({ $0 as? NSTextField }).dropFirst() {
+            XCTAssertEqual(field.toolTip, summary)
+        }
+    }
+
+    func testSingleSharedReflectionTracksOnlyTheRightActionAndClearsOnDismissal() throws {
+        let view = makeView()
+        view.update(state: .ready([identifiedProcess(41), identifiedProcess(42)]), count: 3)
+        view.layoutSubtreeIfNeeded()
+        let feedback = view.forceQuitFeedbackForTest
+        XCTAssertEqual(view.subviews.compactMap { $0 as? FooterHoverFeedbackView }.count, 1)
+        XCTAssertTrue(feedback.regionsForTest.isEmpty)
+        try clickRow(view.processRowsForTest[1], point: NSPoint(x: 70, y: 11))
+        view.layoutSubtreeIfNeeded()
+        let button = view.forceQuitButtonsForTest[1]
+        XCTAssertEqual(feedback.regionsForTest, [.init(rect: button.convert(button.bounds, to: feedback), enabled: true)])
+        XCTAssertNil(feedback.hitTest(.zero))
+        view.setPresentationActive(false)
+        XCTAssertTrue(feedback.regionsForTest.isEmpty)
+        XCTAssertEqual(feedback.glowForTest.opacity, 0)
+        XCTAssertTrue(feedback.glowForTest.animationKeys()?.isEmpty ?? true)
     }
 
     private func clickRow(_ row: NSView, point: NSPoint, clickCount: Int = 1) throws {

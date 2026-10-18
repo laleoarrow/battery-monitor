@@ -32,6 +32,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     private var presentationGeneration: UInt = 0
     private var visibilityHandler: ((Bool) -> Void)?
     private var settingsHandler: (() -> Void)?
+    private var processTerminationIntentHandler: (() -> Void)?
     private var latestPresentation: Presentation?
     private var latestTopProcesses: TopProcessesState = .loading
     private var latestSystemBatteryIconHidden: Bool?
@@ -399,6 +400,7 @@ final class PopoverController: NSObject, NSPopoverDelegate {
     private func confirmForceQuit(_ process: EnergyProcess) {
         guard wantsOpen, !processTerminationPresenter.isBusy,
               process.terminationIdentity != nil else { return }
+        processTerminationIntentHandler?()
         // Retire the popup and its outside-click monitors before a native
         // modal window takes focus. The target is a value, never a row index.
         close()
@@ -412,6 +414,10 @@ final class PopoverController: NSObject, NSPopoverDelegate {
 
     func onVisibilityChange(_ handler: @escaping (Bool) -> Void) {
         visibilityHandler = handler
+    }
+
+    func onProcessTerminationIntent(_ handler: @escaping () -> Void) {
+        processTerminationIntentHandler = handler
     }
 
     func popoverShouldClose(_ popover: NSPopover) -> Bool {

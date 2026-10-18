@@ -1,0 +1,11 @@
+{
+  "method": "Native Settings UI accessibility controls via cua_repl",
+  "app": "/Applications/Wattson.app",
+  "control": "settings.modules.top-process-count",
+  "countBefore": 10,
+  "countAfter": 3,
+  "verifiedVisibleValue": "3",
+  "processActivityInitiallyEnabled": false,
+  "processActivityFinallyEnabled": false,
+  "newAppOrHelperInstalled": false
+}

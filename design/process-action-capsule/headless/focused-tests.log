@@ -1,0 +1,114 @@
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module WattsonTests
+[4/5] Compiling WattsonTests TopProcessesViewTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking WattsonPackageTests
+Build complete! (2.35s)
+Test Suite 'Selected tests' started at 2026-10-18 17:29:53.581.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-18 17:29:53.582.
+Test Suite 'ProcessActionButtonTests' started at 2026-10-18 17:29:53.582.
+Test Case '-[WattsonTests.ProcessActionButtonTests testAppearanceRefreshPreservesCallerControlConfiguration]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testAppearanceRefreshPreservesCallerControlConfiguration]' passed (0.109 seconds).
+Test Case '-[WattsonTests.ProcessActionButtonTests testCapsuleKeepsItsAssignedFrameAndNativeAction]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testCapsuleKeepsItsAssignedFrameAndNativeAction]' passed (0.001 seconds).
+Test Case '-[WattsonTests.ProcessActionButtonTests testDisabledCapsuleDoesNotDispatchAndCanBeReenabled]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testDisabledCapsuleDoesNotDispatchAndCanBeReenabled]' passed (0.001 seconds).
+Test Suite 'ProcessActionButtonTests' passed at 2026-10-18 17:29:53.693.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.110 (0.111) seconds
+Test Suite 'TopProcessesMonitorTests' started at 2026-10-18 17:29:53.693.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testClosingDiscardsLateResultsAndStopsAllFurtherReads]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testClosingDiscardsLateResultsAndStopsAllFurtherReads]' passed (0.000 seconds).
+Test Case '-[WattsonTests.TopProcessesMonitorTests testCompletedEmptyReadingIsReused]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testCompletedEmptyReadingIsReused]' passed (0.000 seconds).
+Test Case '-[WattsonTests.TopProcessesMonitorTests testForceQuitIntentStopsMonitorBeforeInvalidatingPendingRead]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testForceQuitIntentStopsMonitorBeforeInvalidatingPendingRead]' passed (0.000 seconds).
+Test Case '-[WattsonTests.TopProcessesMonitorTests testInactiveTicksDoNotReadAndActiveTicksCoalesceAtTenSeconds]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testInactiveTicksDoNotReadAndActiveTicksCoalesceAtTenSeconds]' passed (0.000 seconds).
+Test Case '-[WattsonTests.TopProcessesMonitorTests testInvalidationDiscardsRecentCacheWithoutStartingHiddenRead]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testInvalidationDiscardsRecentCacheWithoutStartingHiddenRead]' passed (0.000 seconds).
+Test Case '-[WattsonTests.TopProcessesMonitorTests testRapidReopeningWaitsForOldReadAndPublishesOnlyFreshResult]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testRapidReopeningWaitsForOldReadAndPublishesOnlyFreshResult]' passed (0.000 seconds).
+Test Case '-[WattsonTests.TopProcessesMonitorTests testReopeningAtExactTenSecondAgeRequiresNewReading]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testReopeningAtExactTenSecondAgeRequiresNewReading]' passed (0.000 seconds).
+Test Case '-[WattsonTests.TopProcessesMonitorTests testReopeningReusesRecentReadingWithoutExtendingOriginalRefreshDeadline]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testReopeningReusesRecentReadingWithoutExtendingOriginalRefreshDeadline]' passed (0.000 seconds).
+Test Case '-[WattsonTests.TopProcessesMonitorTests testReopeningWithClockBeforeCompletionRequiresNewReading]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testReopeningWithClockBeforeCompletionRequiresNewReading]' passed (0.000 seconds).
+Test Case '-[WattsonTests.TopProcessesMonitorTests testUnavailableCompletionDoesNotRestorePreviousSuccessfulCache]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testUnavailableCompletionDoesNotRestorePreviousSuccessfulCache]' passed (0.000 seconds).
+Test Case '-[WattsonTests.TopProcessesMonitorTests testUnavailableReadRetriesWithoutKeepingStaleRows]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testUnavailableReadRetriesWithoutKeepingStaleRows]' passed (0.000 seconds).
+Test Case '-[WattsonTests.TopProcessesMonitorTests testWakeInvalidationRejectsPendingResultAndCoalescesFreshRead]' started.
+Test Case '-[WattsonTests.TopProcessesMonitorTests testWakeInvalidationRejectsPendingResultAndCoalescesFreshRead]' passed (0.000 seconds).
+Test Suite 'TopProcessesMonitorTests' passed at 2026-10-18 17:29:53.695.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'TopProcessesViewTests' started at 2026-10-18 17:29:53.695.
+Test Case '-[WattsonTests.TopProcessesViewTests testBarsUseFixedHundredPointScaleIndependentOfOtherRowsAndDisplayCount]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testBarsUseFixedHundredPointScaleIndependentOfOtherRowsAndDisplayCount]' passed (0.036 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testChangingMeasurementsOrRankReusesRowsAndChangesWidthAndValueWithoutChangingPalette]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testChangingMeasurementsOrRankReusesRowsAndChangesWidthAndValueWithoutChangingPalette]' passed (0.079 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactHeightAndVisibleGeometryFitConfiguredCountsAcrossStates]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactHeightAndVisibleGeometryFitConfiguredCountsAcrossStates]' passed (0.049 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactToggleReusesRowsAndPreservesValuesGradientAndAccessibleDetails]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactToggleReusesRowsAndPreservesValuesGradientAndAccessibleDetails]' passed (0.027 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testConfiguredHeightAndVisibleGeometryStayStableAcrossStates]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testConfiguredHeightAndVisibleGeometryStayStableAcrossStates]' passed (0.048 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultBarsUseTheSameFixedHorizontalGradientAndRevealOnlyTheMeasuredPrefix]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultBarsUseTheSameFixedHorizontalGradientAndRevealOnlyTheMeasuredPrefix]' passed (0.030 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleKeepsFullGradientWidthAndOnlyRevealsTheMeasuredPrefix]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleKeepsFullGradientWidthAndOnlyRevealsTheMeasuredPrefix]' passed (0.023 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleRetainsMaskGeometryAcrossThemesAndHighContrast]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleRetainsMaskGeometryAcrossThemesAndHighContrast]' passed (0.053 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testEveryProcessFieldRankAndUnshownReadingInvalidatesContent]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testEveryProcessFieldRankAndUnshownReadingInvalidatesContent]' passed (0.023 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testGradientAndOutlineFollowLightDarkAndHighContrastWithoutAnimations]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testGradientAndOutlineFollowLightDarkAndHighContrastWithoutAnimations]' passed (0.065 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalDataDoesNotBlockExternalLayoutOrAppearanceRefresh]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalDataDoesNotBlockExternalLayoutOrAppearanceRefresh]' passed (0.032 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalUpdatesSkipContentWorkAfterInitializingEveryStatus]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalUpdatesSkipContentWorkAfterInitializingEveryStatus]' passed (0.020 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testKeyboardAndAccessibilitySelectionExposeCrossWithoutTerminating]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testKeyboardAndAccessibilitySelectionExposeCrossWithoutTerminating]' passed (0.023 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testLongNamesTruncateAndCPUWakeupBreakdownUsesActualInputs]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testLongNamesTruncateAndCPUWakeupBreakdownUsesActualInputs]' passed (0.022 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testMeasuringEmptyAndUnavailableRemainDistinctAndAccessible]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testMeasuringEmptyAndUnavailableRemainDistinctAndAccessible]' passed (0.022 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testMissingTrustedIdentityShowsDisabledCrossAndNeverCallsBack]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testMissingTrustedIdentityShowsDisabledCrossAndNeverCallsBack]' passed (0.021 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testMouseSelectionRevealsOnlySmallInlineForceQuitWithoutMovingMeasurements]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testMouseSelectionRevealsOnlySmallInlineForceQuitWithoutMovingMeasurements]' passed (0.023 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testNativeHelpExplainsActivityMeaningScaleAndCPUConventionWithoutOpeningAWindow]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testNativeHelpExplainsActivityMeaningScaleAndCPUConventionWithoutOpeningAWindow]' passed (0.019 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testNeutralSelectionAdaptsToLightDarkAndHighContrastWithoutChangingGradient]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testNeutralSelectionAdaptsToLightDarkAndHighContrastWithoutChangingGradient]' passed (0.054 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testNormalizedCountAndCompactChangesInvalidateContentOnlyWhenTheirValuesChange]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testNormalizedCountAndCompactChangesInvalidateContentOnlyWhenTheirValuesChange]' passed (0.034 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testPreviewStyleSwitchesReuseRowsAndRemoveTheFixedScaleMask]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testPreviewStyleSwitchesReuseRowsAndRemoveTheFixedScaleMask]' passed (0.033 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testRoundedHoverSummaryFitsTwoLinesWithoutRepeatingTheExplanation]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testRoundedHoverSummaryFitsTwoLinesWithoutRepeatingTheExplanation]' passed (0.019 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectedCrossKeepsItsButtonHitAndCallsBackWithCurrentImmutableProcess]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectedCrossKeepsItsButtonHitAndCallsBackWithCurrentImmutableProcess]' passed (0.021 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectionFollowsExactIdentityAcrossRankingAndClearsForPIDReuse]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectionFollowsExactIdentityAcrossRankingAndClearsForPIDReuse]' passed (0.024 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testSingleSharedReflectionTracksOnlyTheRightActionAndClearsOnDismissal]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testSingleSharedReflectionTracksOnlyTheRightActionAndClearsOnDismissal]' passed (0.022 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testStatusCountCompactAndPresentationLifecycleManageSelectionIndependentlyOfContentGuard]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testStatusCountCompactAndPresentationLifecycleManageSelectionIndependentlyOfContentGuard]' passed (0.032 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testZeroTinyOverflowAndHugeFiniteValuesRemainDistinctAndFit]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testZeroTinyOverflowAndHugeFiniteValuesRemainDistinctAndFit]' passed (0.024 seconds).
+Test Suite 'TopProcessesViewTests' passed at 2026-10-18 17:29:54.574.
+	 Executed 27 tests, with 0 failures (0 unexpected) in 0.877 (0.879) seconds
+Test Suite 'WattsonPackageTests.xctest' passed at 2026-10-18 17:29:54.574.
+	 Executed 42 tests, with 0 failures (0 unexpected) in 0.989 (0.992) seconds
+Test Suite 'Selected tests' passed at 2026-10-18 17:29:54.574.
+	 Executed 42 tests, with 0 failures (0 unexpected) in 0.989 (0.993) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

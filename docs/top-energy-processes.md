@@ -27,6 +27,11 @@ from 44 to 28 points. Names, scores and bar lengths remain the same; the inputs
 remain available in tooltips and accessibility descriptions. The choice persists
 when the module is hidden and updates an open popover without resampling.
 
+Hovering a row shows only its full name/PID and one compact line of rounded
+score, CPU and wakeup values. The information button's tooltip is **About
+Activity Score**; click it for the full explanation. Hover text never includes
+the scoring explanation or raw floating-point precision.
+
 Each row shows its **Activity Score** and the two inputs: **CPU %** and **Idle
 wakeups /s**. The information control explains their meaning. CPU is measured
 per logical core: 100% means one fully occupied core, and multicore work can
@@ -90,17 +95,27 @@ Sampling starts when the popup opens with the module enabled. Its existing
 display clock requests another sample ten seconds after the previous completion;
 there is no additional repeating timer. Closing the popup, opening Settings or
 disabling the module stops requests and invalidates late completions. Reopening
-starts with **Measuring…** and a fresh sample. A failed read replaces previous
+within ten seconds of a successful sample immediately reuses it without moving
+its original refresh deadline. An expired or missing sample starts with
+**Measuring…** and a fresh read. Wake and a force-quit action clear the cache;
+force quit also stops monitoring before the popup's closing animation. A failed read replaces previous
 rows with **Unavailable** and can recover on the next interval. No process list
 is saved to preferences, diagnostics or disk.
 
 ## Ending a process
 
-Click a process row to select it and reveal a small **×** on the left. Click the
+Click a process row to select it and reveal a small **×** capsule over its
+right-hand score. The process name, activity bar and other text never move. Click the
 selected row again or press Escape to clear the selection. The interaction is
-the same in Compact view; the activity bar and score do not move. Arrow keys
+the same in Compact view. The score returns when selection clears. Arrow keys
 move the selection between visible rows, and the selected button is exposed to
 accessibility clients.
+
+The action is a 44 × 22-point native glass capsule on macOS 26, with a soft blue
+gradient and reflected rim. Older systems use the same compact capsule shape.
+One shared pointer-feedback surface provides the light effect without a timer.
+Reduced Motion/Transparency and high contrast use static, legible feedback.
+Hiding, deselecting or closing clears the reflection immediately.
 
 Clicking **×** closes the popup and opens Wattson's native confirmation dialog.
 **Escape** cancels; Return leaves the confirmation open. **Force Quit** requires
@@ -108,7 +123,7 @@ an explicit choice, sends SIGKILL and can discard unsaved
 work. Only processes owned by the current console user are eligible; system and
 other users' processes are not eligible. Missing identity support leaves the
 readings usable and the selected button disabled. Failed requests show a native
-explanation. Reopening the popup always measures a fresh list.
+explanation. Reopening after this action always measures a fresh list.
 
 Selection and confirmation retain the PID, monotonic start time and complete
 32-byte kernel audit token, including the process incarnation. Selection follows

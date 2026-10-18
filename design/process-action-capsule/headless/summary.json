@@ -1,0 +1,12 @@
+{
+  "swift": {"tests": 628, "failures": 0},
+  "focused": {"tests": 42, "failures": 0},
+  "python": {"tests": 601, "failures": 0, "skipped": 4},
+  "native": {"captures": 100, "assertions": 10376, "failures": 0},
+  "productionAndHarnessHashesMatch": true,
+  "guestResourceAuditPassed": true,
+  "ownedVMRemoved": true,
+  "systemAppUpdated": false,
+  "requestedExistingProcessCountChangedFrom10To3": true,
+  "variableColorsAddedAsPendingTodo": true
+}

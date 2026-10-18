@@ -86,4 +86,152 @@ final class TopProcessesMonitorTests: XCTestCase {
         completions[2](reading)
         XCTAssertEqual(updates.last, reading)
     }
+
+    func testReopeningReusesRecentReadingWithoutExtendingOriginalRefreshDeadline() {
+        var time: TimeInterval = 1
+        var completions: [(TopProcessesState) -> Void] = []
+        var updates: [TopProcessesState] = []
+        let monitor = TopProcessesMonitor(now: { time }, read: { completions.append($0) })
+        monitor.onUpdate = { updates.append($0) }
+        monitor.setActive(true)
+        time = 2
+        completions[0](reading)
+        monitor.setActive(false)
+        time = 8
+        monitor.setActive(true)
+        XCTAssertEqual(updates, [.loading, reading, .loading, reading])
+        XCTAssertEqual(completions.count, 1)
+
+        monitor.setActive(false)
+        time = 11.999
+        monitor.setActive(true)
+        XCTAssertEqual(updates.last, reading)
+        XCTAssertEqual(completions.count, 1)
+        time = 12
+        monitor.refreshIfNeeded()
+        XCTAssertEqual(completions.count, 2)
+    }
+
+    func testReopeningAtExactTenSecondAgeRequiresNewReading() {
+        var time: TimeInterval = 0
+        var completions: [(TopProcessesState) -> Void] = []
+        var updates: [TopProcessesState] = []
+        let monitor = TopProcessesMonitor(now: { time }, read: { completions.append($0) })
+        monitor.onUpdate = { updates.append($0) }
+        monitor.setActive(true)
+        completions[0](reading)
+        monitor.setActive(false)
+        time = 10
+        monitor.setActive(true)
+        XCTAssertEqual(updates.last, .loading)
+        XCTAssertEqual(completions.count, 2)
+    }
+
+    func testReopeningWithClockBeforeCompletionRequiresNewReading() {
+        var time: TimeInterval = 20
+        var completions: [(TopProcessesState) -> Void] = []
+        var updates: [TopProcessesState] = []
+        let monitor = TopProcessesMonitor(now: { time }, read: { completions.append($0) })
+        monitor.onUpdate = { updates.append($0) }
+        monitor.setActive(true)
+        completions[0](reading)
+        monitor.setActive(false)
+        time = 19
+        monitor.setActive(true)
+        XCTAssertEqual(updates.last, .loading)
+        XCTAssertEqual(completions.count, 2)
+    }
+
+    func testCompletedEmptyReadingIsReused() {
+        var time: TimeInterval = 0
+        var completions: [(TopProcessesState) -> Void] = []
+        var updates: [TopProcessesState] = []
+        let monitor = TopProcessesMonitor(now: { time }, read: { completions.append($0) })
+        monitor.onUpdate = { updates.append($0) }
+        monitor.setActive(true)
+        completions[0](.ready([]))
+        monitor.setActive(false)
+        time = 1
+        monitor.setActive(true)
+        XCTAssertEqual(updates.last, .ready([]))
+        XCTAssertEqual(completions.count, 1)
+    }
+
+    func testUnavailableCompletionDoesNotRestorePreviousSuccessfulCache() {
+        var time: TimeInterval = 0
+        var completions: [(TopProcessesState) -> Void] = []
+        var updates: [TopProcessesState] = []
+        let monitor = TopProcessesMonitor(now: { time }, read: { completions.append($0) })
+        monitor.onUpdate = { updates.append($0) }
+        monitor.setActive(true)
+        completions[0](reading)
+        time = 10
+        monitor.refreshIfNeeded()
+        completions[1](.unavailable)
+        monitor.setActive(false)
+        time = 11
+        monitor.setActive(true)
+        XCTAssertEqual(updates.last, .loading)
+        XCTAssertEqual(completions.count, 3)
+    }
+
+    func testInvalidationDiscardsRecentCacheWithoutStartingHiddenRead() {
+        var time: TimeInterval = 0
+        var completions: [(TopProcessesState) -> Void] = []
+        var updates: [TopProcessesState] = []
+        let monitor = TopProcessesMonitor(now: { time }, read: { completions.append($0) })
+        monitor.onUpdate = { updates.append($0) }
+        monitor.setActive(true)
+        completions[0](reading)
+        monitor.setActive(false)
+        time = 1
+        monitor.invalidate()
+        monitor.refreshIfNeeded()
+        XCTAssertEqual(completions.count, 1)
+        monitor.setActive(true)
+        XCTAssertEqual(updates.last, .loading)
+        XCTAssertEqual(completions.count, 2)
+    }
+
+    func testForceQuitIntentStopsMonitorBeforeInvalidatingPendingRead() {
+        var time: TimeInterval = 0
+        var completions: [(TopProcessesState) -> Void] = []
+        var updates: [TopProcessesState] = []
+        let monitor = TopProcessesMonitor(now: { time }, read: { completions.append($0) })
+        monitor.onUpdate = { updates.append($0) }
+        monitor.setActive(true)
+        completions[0](reading)
+        time = 10
+        monitor.refreshIfNeeded()
+        // Stop before the popup's closing animation can deliver a late result.
+        monitor.setActive(false)
+        monitor.invalidate()
+        completions[1](reading)
+        XCTAssertEqual(completions.count, 2)
+        monitor.setActive(true)
+        XCTAssertEqual(updates.last, .loading)
+        XCTAssertEqual(completions.count, 3)
+    }
+
+    func testWakeInvalidationRejectsPendingResultAndCoalescesFreshRead() {
+        var time: TimeInterval = 0
+        var completions: [(TopProcessesState) -> Void] = []
+        var updates: [TopProcessesState] = []
+        let monitor = TopProcessesMonitor(now: { time }, read: { completions.append($0) })
+        monitor.onUpdate = { updates.append($0) }
+        monitor.setActive(true)
+        completions[0](reading)
+        time = 10
+        monitor.refreshIfNeeded()
+        monitor.setActive(false)
+        monitor.invalidate()
+        monitor.setActive(true)
+        XCTAssertEqual(completions.count, 2)
+        let updatesBeforeLateResult = updates
+        completions[1](reading)
+        XCTAssertEqual(updates, updatesBeforeLateResult)
+        XCTAssertEqual(completions.count, 3)
+        completions[2](.ready([]))
+        XCTAssertEqual(updates.last, .ready([]))
+    }
 }

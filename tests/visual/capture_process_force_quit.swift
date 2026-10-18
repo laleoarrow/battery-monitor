@@ -53,7 +53,7 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
                              idleWakeupsPerSecond: wakeups, terminationIdentity: permitted ? identity : nil)
     }
     private var processes: [EnergyProcess] {
-        [process(990_101, "Safari", 84), process(990_102, "Research Analysis Helper", 46), process(990_103, "WindowServer", 8.1, permitted: false)]
+        [process(990_101, "Safari", 84), process(990_102, "Research Analysis Helper", 46.123456789), process(990_103, "WindowServer", 8.1, permitted: false)]
     }
     init(_ directory: URL) { self.directory = directory }
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -98,14 +98,17 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
                 }
             }
         }
-        let evidence: [String: Any] = ["schema": 1, "assertions": assertions, "failures": 0, "captures": records,
-            "method": "Real signed sandboxed AppKit fixture application, production Classic/Glass popup hosts and Process Activity rows, WindowServer captures in an owned ARM GUI VM. Native mouse events select rows; button target/action uses a spy. Production NSAlert confirmation is exercised with Cancel and Force Quit using a spy executor.",
+        let evidence: [String: Any] = ["schema": 1, "assertions": assertions, "failures": 0, "captures": records, "fixtureScores": processes.map(\.energyImpact),
+            "method": "Real signed sandboxed AppKit fixture application, production Classic/Glass popup hosts and Process Activity rows, WindowServer captures in an owned ARM GUI VM. Native mouse events select rows and track the right-side capsule; action uses a spy. Fixed name/bar geometry, selected-only hidden scores, concise tooltips, native glass capsule and shared pointer-light overlay are checked. The process-only Reduce Motion override is temporarily cleared for hover captures and restored; system accessibility preferences are never written. Production NSAlert confirmation is exercised with a spy executor.",
             "limitations": "Battery and process values/identities are fixtures. The GUI never sends a process signal. A separate owned-child probe verifies the production root helper worker. No canonical app/helper is installed."]
         try JSONSerialization.data(withJSONObject: evidence, options: [.prettyPrinted, .sortedKeys]).write(to: directory.appendingPathComponent("evidence.json"))
         print("PROCESS_FORCE_QUIT_NATIVE_PASSED captures=\(records.count) assertions=\(assertions)")
     }
     @MainActor private func popup(_ anchor: NSStatusBarButton, sample: PowerSnapshot, name: String, compact: Bool) async throws {
         let host = PopoverController(); controller = host
+        var terminationLifecycle: [String] = []
+        host.onProcessTerminationIntent { terminationLifecycle.append("intent") }
+        host.onVisibilityChange { shown in if !shown { terminationLifecycle.append("closed") } }
         host.update(snapshot: sample, history: [10, 20, 30, 20], peak: 30, degraded: false)
         host.updateTopProcesses(.ready(processes)); host.updateSystemBatteryIconState(false)
         host.openForSettingsCommandTest(relativeTo: anchor)
@@ -120,21 +123,37 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
         }
         list.layoutSubtreeIfNeeded()
         try check(list.forceQuitButtonsForTest.allSatisfy(\.isHidden), "Unselected rows show close buttons")
+        let namesBefore = try nameFrames(in: list)
+        try check(namesBefore.allSatisfy { $0 == NSRect(x: 0, y: 2, width: 132, height: 20) }, "Unselected names do not retain their fixed layout")
+        try validateRowTooltips(list)
+        try check(try scoreFields(in: list).allSatisfy { !$0.isHidden }, "Unselected row hides its score")
+        if name.contains("on-battery-") {
+            try captureModule(list, window: window, name: name + "-unselected-module", fields: ["compact": compact, "selection": "none"])
+        }
         let before = list.barGeometryForTest.map(\.track)
         try click(list.processRowsForTest[0], in: window)
         try await pause(0.05)
         try check(list.selectedRowIndexForTest == 0, "Native row click did not select")
         try check(!list.forceQuitButtonsForTest[0].isHidden && list.forceQuitButtonsForTest[0].isEnabled, "Selected row has no enabled close button")
         try check(list.forceQuitButtonsForTest.dropFirst().allSatisfy(\.isHidden), "More than one close button visible")
-        try check(list.forceQuitButtonsForTest[0].frame.size == NSSize(width: 18, height: 18), "Close button is not 18pt")
+        try check(list.forceQuitButtonsForTest[0].frame == NSRect(x: 284, y: 1, width: 44, height: 22), "Action capsule does not overlay the right-side score slot")
         try check(list.barGeometryForTest.map(\.track) == before, "Selection shifted the score bars")
+        try check(try nameFrames(in: list) == namesBefore, "Selection shifted or truncated a process name")
+        let values = try scoreFields(in: list)
+        try check(values[0].isHidden && values.dropFirst().allSatisfy { !$0.isHidden }, "Only the selected row should hide its score")
+        if #available(macOS 26.0, *) {
+            try check(list.forceQuitButtonsForTest[0].bezelStyle == .glass && list.forceQuitButtonsForTest[0].borderShape == .capsule, "macOS 26 action is not a native glass capsule")
+        }
+        try validateRowTooltips(list)
         let row = list.processRowsForTest[0]
         try check(row.isAccessibilitySelected(), "Native AX selection missing")
         try check(abs(row.bounds.height - (compact ? 28 : 44)) < 0.1, "Selection changed row height")
         try check(list.forceQuitButtonsForTest[0].accessibilityLabel()?.contains("Safari") == true, "Close button lacks process name for accessibility")
-        try capture(window, name: name, fields: ["compact": compact, "selectedProcess": "Safari", "closeButtonFrame": NSStringFromRect(list.forceQuitButtonsForTest[0].frame)])
+        try capture(window, name: name, fields: ["compact": compact, "selectedProcess": "Safari", "actionCapsuleFrame": NSStringFromRect(list.forceQuitButtonsForTest[0].frame), "nameFrames": namesBefore.map(NSStringFromRect), "selectedScoreHidden": true, "nativeGlassCapsule": true])
         if name.contains("on-battery-") {
-            try capture(window, name: name + "-module", fields: ["compact": compact, "selectedProcess": "Safari", "productionModuleRegion": true], screenRect: window.convertToScreen(list.convert(list.bounds, to: nil)).insetBy(dx: -6, dy: -6))
+            try captureModule(list, window: window, name: name + "-module", fields: ["compact": compact, "selectedProcess": "Safari"])
+            try await hoverLight(list, window: window, name: name, compact: compact)
+            if !compact { try await activityInfo(list, window: window, name: name) }
         }
         let productionHandler = list.forceQuitHandler
         var requested: [EnergyProcess] = []
@@ -169,11 +188,98 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
             try check(modalAction != "Return" || returnStayedOpen, "Return did not remain inert on the observed production confirmation")
             try check(!host.isShownForTest, "Production popup remained open under confirmation")
             try check(NSApp.modalWindow == nil, "Native confirmation did not finish its safe dismissal sequence")
+            guard let intent = terminationLifecycle.firstIndex(of: "intent"), let closed = terminationLifecycle.firstIndex(of: "closed") else { throw failure("Missing termination intent or popup dismissal callback") }
+            try check(intent < closed, "Process cache invalidation intent arrived after popup dismissal")
         }
         host.handleOutsideClick()
         try check(list.selectedRowIndexForTest == nil, "Dismissal retained row selection")
+        for feedback in descendants(list).compactMap({ $0 as? FooterHoverFeedbackView }) {
+            try check(feedback.hoveredIndexForTest == nil && feedback.glowForTest.opacity == 0, "Dismissal retained capsule hover light")
+        }
         controller = nil
         try await pause(0.1)
+    }
+    private func nameFrames(in list: TopProcessesView) throws -> [NSRect] {
+        try list.processRowsForTest.map { row in
+            guard let field = row.subviews.compactMap({ $0 as? NSTextField }).first else { throw failure("Missing process name field") }
+            return field.frame
+        }
+    }
+    private func scoreFields(in list: TopProcessesView) throws -> [NSTextField] {
+        try list.processRowsForTest.map { row in
+            let fields = row.subviews.compactMap { $0 as? NSTextField }
+            guard fields.count == 3 else { throw failure("Missing name, score or detail field") }
+            return fields[1]
+        }
+    }
+    private func validateRowTooltips(_ list: TopProcessesView) throws {
+        for row in list.processRowsForTest {
+            guard let summary = row.toolTip else { throw failure("Missing concise process tooltip") }
+            try check(summary.components(separatedBy: .newlines).count <= 2, "Process tooltip exceeds two lines")
+            try check(summary.contains("PID") && summary.contains("CPU") && summary.contains("Wakeups"), "Process tooltip omits useful rounded readings")
+            for view in descendants(row) {
+                guard let tooltip = view.toolTip else { continue }
+                try check(tooltip.components(separatedBy: .newlines).count <= 2, "Row control tooltip exceeds two lines")
+                try check(tooltip.range(of: #"\d+\.\d{3,}"#, options: .regularExpression) == nil, "Process tooltip exposes raw floating-point precision")
+                for explanation in ["combines CPU usage", "Higher scores indicate", "one logical core", "fixed 0–100"] {
+                    try check(!tooltip.contains(explanation), "Metric explanation escaped the info control")
+                }
+            }
+        }
+    }
+    private func captureModule(_ list: TopProcessesView, window: NSWindow, name: String, fields: [String: Any]) throws {
+        var metadata = fields
+        metadata["productionModuleRegion"] = true
+        try capture(window, name: name, fields: metadata, screenRect: window.convertToScreen(list.convert(list.bounds, to: nil)).insetBy(dx: -6, dy: -6))
+    }
+    @MainActor private func hoverLight(_ list: TopProcessesView, window: NSWindow, name: String, compact: Bool) async throws {
+        let overlays = descendants(list).compactMap { $0 as? FooterHoverFeedbackView }
+        try check(overlays.count == 1, "Process module must reuse one hover overlay")
+        guard let feedback = overlays.first else { throw failure("No process action hover overlay") }
+        let button = list.forceQuitButtonsForTest[0]
+        let capsule = button.convert(button.bounds, to: feedback)
+        try check(feedback.regionsForTest.filter(\.enabled).count == 1, "Hover does not track only the selected available action")
+        try check(feedback.regionsForTest.contains { $0.rect == capsule && $0.enabled }, "Hover region differs from the native capsule")
+        let previousMotion = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+        NSWorkspace.shared.notificationCenter.post(name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification, object: nil)
+        defer {
+            feedback.pointerLocationForTest = nil
+            if let previousMotion { setenv("WATTSON_FORCE_REDUCE_MOTION", previousMotion, 1) }
+            else { unsetenv("WATTSON_FORCE_REDUCE_MOTION") }
+            NSWorkspace.shared.notificationCenter.post(name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification, object: nil)
+            feedback.cancelHover()
+        }
+        var firstCenter: CGPoint?
+        for (label, fraction) in [("left", CGFloat(0.25)), ("right", CGFloat(0.75))] {
+            let point = NSPoint(x: capsule.minX + capsule.width * fraction, y: capsule.midY)
+            feedback.pointerLocationForTest = point
+            guard let event = NSEvent.mouseEvent(with: .mouseMoved, location: feedback.convert(point, to: nil), modifierFlags: [], timestamp: ProcessInfo.processInfo.systemUptime, windowNumber: window.windowNumber, context: nil, eventNumber: 4, clickCount: 0, pressure: 0) else { throw failure("No native capsule hover event") }
+            feedback.mouseMoved(with: event)
+            try await pause(0.18)
+            try check(feedback.hoveredIndexForTest != nil && feedback.glowForTest.opacity == 1, "Capsule does not receive hover light")
+            try check(!feedback.reflectionForTest.isHidden && !feedback.rimReflectionForTest.isHidden, "Pointer light remains hidden during normal motion")
+            try check(feedback.hitTest(point) == nil, "Hover light intercepts the action")
+            let center = feedback.reflectionForTest.startPoint
+            if let firstCenter { try check(center.x > firstCenter.x, "Light does not follow the pointer within its capsule") }
+            else { firstCenter = center }
+            try captureModule(list, window: window, name: name + "-hover-" + label + "-module", fields: ["compact": compact, "pointerFraction": Double(fraction), "reflectionCenter": NSStringFromPoint(center), "processOnlyReduceMotionOverride": false])
+        }
+        feedback.cancelHover()
+        try check(feedback.glowForTest.opacity == 0, "Capsule hover did not clear")
+    }
+    @MainActor private func activityInfo(_ list: TopProcessesView, window: NSWindow, name: String) async throws {
+        guard let info = list.subviews.compactMap({ $0 as? NSButton }).first else { throw failure("Missing Activity Score info control") }
+        try check(info.toolTip == "About Activity Score", "Info hover still shows the full explanation")
+        info.performClick(nil)
+        try await pause(0.18)
+        guard let help = list.helpWindow, let content = help.contentView else { throw failure("Activity Score explanation did not open") }
+        let text = descendants(content).compactMap { ($0 as? NSTextField)?.stringValue }.joined(separator: "\n")
+        try check(text.contains("Activity Score combines CPU usage and idle wakeups") && text.contains("not measured power consumption"), "Info control lost the metric explanation")
+        try capture(help, name: name + "-info", fields: ["actualInfoPopover": true, "explanationIsInInfoControl": true])
+        info.performClick(nil)
+        try await pause(0.08)
+        try check(list.helpWindow == nil, "Activity Score info failed to close")
     }
     @MainActor private func nativeAlerts() throws {
         for action in ["Cancel", "Escape", "Return", "Force Quit"] {

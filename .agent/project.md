@@ -246,12 +246,17 @@ An
 information control explains Activity Score and the one-core CPU convention; these
 are never per-process watts or battery shares. Sampling shares the popup clock,
 runs only while open and enabled, and
-waits ten seconds after completion before refreshing. Closed/disabled generations
-discard pending results. See [process energy ranking](../docs/top-energy-processes.md)
+waits ten seconds after completion before refreshing. A successful in-memory
+sample can be reused when reopening within that deadline; wake and force-quit
+intent clear it. Closed/disabled generations discard pending results. See [process energy ranking](../docs/top-energy-processes.md)
 for the formula, helper requirement and attribution limits.
 
-Selecting a Process Activity row reveals a small inline × in both display
-modes. The popup closes before a native force-quit confirmation with no default
+Selecting a Process Activity row replaces its right-hand score with a small
+44 × 22 glass × capsule in both display modes, without moving the name or bar.
+A shared pointer reflection follows the existing footer's lifecycle and
+accessibility policy. Row tooltips use two short lines with rounded values;
+the full metric explanation stays behind the information control. The popup
+closes before a native force-quit confirmation with no default
 action; Escape cancels and Return does not signal a process.
 The target retains its complete kernel identity across ranking changes. Only
 the authenticated console user's processes with supported identity access are

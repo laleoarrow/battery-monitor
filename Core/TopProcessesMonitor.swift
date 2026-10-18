@@ -11,6 +11,7 @@ final class TopProcessesMonitor {
     private var generation: UInt = 0
     private var inFlight = false
     private var nextRefresh: TimeInterval = 0
+    private var cachedReady: (state: TopProcessesState, completedAt: TimeInterval)?
 
     init(now: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime },
          read: @escaping Read = { completion in
@@ -27,10 +28,28 @@ final class TopProcessesMonitor {
         guard active != value else { return }
         active = value
         generation &+= 1
-        nextRefresh = 0
-        // Clear the previous opening's readings, including the cached popup.
+        if value, let cachedReady {
+            let age = now() - cachedReady.completedAt
+            if age >= 0, age < 10 {
+                onUpdate?(cachedReady.state)
+                refreshIfNeeded()
+                return
+            }
+        }
+        if value {
+            cachedReady = nil
+            nextRefresh = 0
+        }
+        // Hidden rows clear their selection, while a recent completed sample
+        // can be reused when the popup opens again before its refresh deadline.
         onUpdate?(.loading)
         refreshIfNeeded()
+    }
+
+    func invalidate() {
+        cachedReady = nil
+        nextRefresh = 0
+        generation &+= 1
     }
 
     func refreshIfNeeded() {
@@ -46,7 +65,13 @@ final class TopProcessesMonitor {
                 self.refreshIfNeeded()
                 return
             }
-            self.nextRefresh = self.now() + 10
+            let completedAt = self.now()
+            self.nextRefresh = completedAt + 10
+            if case .ready = result {
+                self.cachedReady = (result, completedAt)
+            } else {
+                self.cachedReady = nil
+            }
             self.onUpdate?(result)
         }
     }

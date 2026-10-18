@@ -1,0 +1,14 @@
+{
+  "allPassed" : true,
+  "checks" : {
+    "invalidUIDLeavesOwnedChildAlive" : true,
+    "ownedChildKilledWithSIGKILLAndReaped" : true,
+    "rootUIDRejected" : true,
+    "rootWorkerDropsCredentialsAndSendsKill" : true,
+    "staleIdentityLeavesOwnedChildAlive" : true,
+    "staleIdentityRejected" : true
+  },
+  "limitations" : "No LaunchDaemon, canonical helper path, socket, app, or receipt is installed. This verifies the production root worker entry and permanent drop path; the socket dispatcher is covered by source and unit tests.",
+  "method" : "Invoke the unmodified production helper's fixed worker entry as root with sudo -n. Its production service refuses to signal unless both real and effective UID equal the authenticated console user. Only this probe's own sleep child receives SIGKILL and is reaped.",
+  "schema" : 1
+}
