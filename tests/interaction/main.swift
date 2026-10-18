@@ -3030,19 +3030,26 @@ if !screenLocked {
         historyMotionChecksSkipped = true
         log("HISTORY_MOTION_CHECKS_SKIPPED: system Reduce Motion is enabled")
     } else {
-        func settleHistoryFixture(_ context: String) -> Bool {
+        func settleHistoryFixture(_ context: String, view: HistoryView = fixture) -> Bool {
             let started = CACurrentMediaTime()
-            let settled = runApplication(until: { !fixture.hasChartAnimationForTest }, timeout: 1)
+            let settled = runApplication(until: { !view.hasChartAnimationForTest }, timeout: 1)
             if !settled {
-                let remaining = historyAnimations(fixture.layer).map {
+                let remaining = historyAnimations(view.layer).map {
                     "\($0.0):\($0.1.duration)s"
                 }.joined(separator: ",")
                 log("HISTORY_COMPLETION_TIMEOUT \(context) elapsed=\(CACurrentMediaTime() - started) remaining=\(remaining)")
-                if let timeline = fixture.layer {
-                    let now = CACurrentMediaTime()
-                    let shown = timeline.presentation()
-                    log("HISTORY_FIXTURE_CLOCK modelSpeed=\(timeline.speed) modelOffset=\(timeline.timeOffset) modelBegin=\(timeline.beginTime) modelNow=\(timeline.convertTime(now, from: nil)) presentationSpeed=\(shown?.speed ?? -1) presentationOffset=\(shown?.timeOffset ?? -1) presentationBegin=\(shown?.beginTime ?? -1)")
+                let now = CACurrentMediaTime()
+                func logClocks(_ layer: CALayer?) {
+                    guard let layer else { return }
+                    for key in layer.animationKeys() ?? [] {
+                        guard let animation = layer.animation(forKey: key) else { continue }
+                        let shown = layer.presentation()
+                        log("HISTORY_OWNER_CLOCK key=\(key) localNow=\(layer.convertTime(now, from: nil)) speed=\(layer.speed) offset=\(layer.timeOffset) begin=\(layer.beginTime) presentationNow=\(shown?.convertTime(now, from: nil) ?? -1) animationBegin=\(animation.beginTime) duration=\(animation.duration) animationSpeed=\(animation.speed) animationOffset=\(animation.timeOffset) removed=\(animation.isRemovedOnCompletion)")
+                    }
+                    for child in layer.sublayers ?? [] { logClocks(child) }
+                    logClocks(layer.mask)
                 }
+                logClocks(view.layer)
             }
             return settled
         }
@@ -3305,34 +3312,82 @@ if !screenLocked {
                 check("History 新增采样首帧保留原区间的实际呈现中点", false)
                 check("History 末段回归夹具确实覆盖新增样本造成的切线变化", false)
             }
-            PopoverStyle.setWithoutAnimation {
-                timeline.speed = 1
-                timeline.timeOffset = 0
-                timeline.beginTime = 0
-                timeline.beginTime = timeline.convertTime(CACurrentMediaTime(), from: nil) - pausedAt
-            }
-            // Submit the fixture's resumed clock before measuring completion.
-            CATransaction.flush()
-            let tailWaitStarted = CACurrentMediaTime()
-            let tailSettled = settleHistoryFixture("matched-tail")
-            if let targetTailPath, let targetMidpoint = historyCubicMidpoint(targetTailPath, index: 1),
-               let settledPath = tailLine?.presentation()?.path,
-               let settledMidpoint = historyCubicMidpoint(settledPath, index: 1) {
-                let dx = settledMidpoint.x - targetMidpoint.x
-                let dy = settledMidpoint.y - targetMidpoint.y
-                if abs(dx) >= 0.000_001 || abs(dy) >= 0.000_001 || !tailSettled {
-                    log("HISTORY_TAIL_SETTLE dx=\(dx) dy=\(dy) elapsed=\(CACurrentMediaTime() - tailWaitStarted) motionSettled=\(tailSettled) keys=\(historyAnimations(fixture.layer).map { $0.0 })")
-                }
-                check("History 控制点过渡到达新曲线后自动静止",
-                      abs(dx) < 0.000_001 && abs(dy) < 0.000_001 && tailSettled)
-            } else {
-                log("HISTORY_TAIL_SETTLE missingPresentation=1 elapsed=\(CACurrentMediaTime() - tailWaitStarted) motionSettled=\(tailSettled) keys=\(historyAnimations(fixture.layer).map { $0.0 })")
-                check("History 控制点过渡到达新曲线后自动静止", false)
-            }
         } else {
             check("History 新增采样首帧保留原区间的实际呈现中点", false)
         }
+        // Clock surgery is only for the exact first-frame assertion above.
+        // Exercise natural completion on a fresh production layer tree whose
+        // time space has never been paused, without cancellation during the wait.
         fixture.setPresentationActive(false)
+        fixture.removeFromSuperview()
+        let completionFixture = HistoryView()
+        completionFixture.frame = container.bounds
+        container.addSubview(completionFixture)
+        completionFixture.layoutSubtreeIfNeeded()
+        completionFixture.setPresentationActive(true)
+        completionFixture.setAnimationsEnabled(true)
+        completionFixture.update(samples: [0, 0, 100], peak: 100, color: .systemBlue,
+                                 timing: .init(sampledAt: [0, 2, 4], referenceTime: 4))
+        CATransaction.flush()
+        func historyPathsMatch(_ target: CGPath?, _ shown: CGPath?) -> Bool {
+            guard let target, let shown else { return false }
+            let a = historyPathElements(target), b = historyPathElements(shown)
+            return a.count == b.count && zip(a, b).allSatisfy { target, shown in
+                target.0 == shown.0 && target.1.count == shown.1.count
+                    && zip(target.1, shown.1).allSatisfy {
+                        abs($0.x - $1.x) < 0.01 && abs($0.y - $1.y) < 0.01
+                    }
+            }
+        }
+        let baselineReady = runApplication(until: {
+            historyLayers(completionFixture.layer).compactMap { $0 as? CAShapeLayer }
+                .contains { $0.path == completionFixture.chartPathForTest
+                    && historyPathsMatch($0.path, $0.presentation()?.path) }
+        }, timeout: 1)
+        check("History 完成检查从未暂停且已呈现的静态曲线开始",
+              baselineReady && !completionFixture.hasChartAnimationForTest
+                  && completionFixture.layer?.speed == 1
+                  && completionFixture.layer?.timeOffset == 0)
+        completionFixture.update(samples: [0, 0, 100, 150], peak: 150, color: .systemBlue,
+                                 timing: .init(sampledAt: [0, 2, 4, 6], referenceTime: 6))
+        CATransaction.flush()
+        let completionAnimations = historyAnimations(completionFixture.layer)
+        check("History 末段完成检查确实启动有界描边、填充与末端动画",
+              Set(["history.fill", "history.stroke", "history.head"])
+                  .isSubset(of: Set(completionAnimations.map { $0.0 }))
+                  && completionAnimations.allSatisfy {
+                      $0.1.duration.isFinite && abs($0.1.duration - 0.35) < 0.000_001
+                          && $0.1.repeatCount == 0 && $0.1.repeatDuration == 0
+                          && !$0.1.autoreverses && $0.1.isRemovedOnCompletion
+                  })
+        let completionLayers = historyLayers(completionFixture.layer)
+        let completionShapes = completionLayers.compactMap { $0 as? CAShapeLayer }.filter {
+            $0.animation(forKey: "history.stroke") != nil || $0.animation(forKey: "history.fill") != nil
+        }
+        let completionHead = completionLayers.first { $0.animation(forKey: "history.head") != nil }
+        let completionLine = completionShapes.first { $0.animation(forKey: "history.stroke") != nil }
+        let targetTailPath = completionFixture.chartPathForTest
+        let tailSettled = settleHistoryFixture("matched-tail-normal-clock", view: completionFixture)
+        let pathsMatch = completionShapes.count == 2 && completionShapes.allSatisfy { shape in
+            historyPathsMatch(shape.path, shape.presentation()?.path)
+        }
+        let headMatches: Bool
+        if let completionHead, let shownHead = completionHead.presentation() {
+            headMatches = abs(completionHead.position.x - shownHead.position.x) < 0.01
+                && abs(completionHead.position.y - shownHead.position.y) < 0.01
+        } else { headMatches = false }
+        if let targetTailPath, let targetMidpoint = historyCubicMidpoint(targetTailPath, index: 1),
+           let settledPath = completionLine?.presentation()?.path,
+           let settledMidpoint = historyCubicMidpoint(settledPath, index: 1) {
+            check("History 控制点过渡到达新曲线后自动静止",
+                  abs(settledMidpoint.x - targetMidpoint.x) < 0.000_001
+                      && abs(settledMidpoint.y - targetMidpoint.y) < 0.000_001
+                      && tailSettled && pathsMatch && headMatches)
+        } else {
+            check("History 控制点过渡到达新曲线后自动静止", false)
+        }
+        completionFixture.setPresentationActive(false)
+        completionFixture.removeFromSuperview()
         fixtureWindow.orderOut(nil)
 
         let controller = PopoverController()
