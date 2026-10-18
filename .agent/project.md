@@ -63,7 +63,12 @@ closing, hiding, detaching, degraded readings and Reduce Motion stop animations.
 No chart timer is used. The [4.3.16 axis motion review](../design/history-axis-smoothness/README.md)
 records the corrected independent native probe, ABBA preparation measurements,
 explicit construction counts, Pro review, and exact installation evidence.
-Wattson 4.3.19 is the current verified local installation. Its
+Wattson 4.3.20 is the current verified local preview installation. Its
+[installation record](../design/process-action-capsule/local-preview-v4.3.20/local-install-verified.json)
+verifies matching App/helper/daemon payloads, retained settings, actual sampling
+and the user-opened popup. Process Activity was then enabled for preview with
+Top 3 and Compact view retained. This preview has not been publicly released.
+The preceding 4.3.19
 [Process Activity installation record](../design/top-energy-processes/compact-popup/local-installation-v4.3.19.json)
 verifies the native PKG, helper, actual process sampling and retained settings.
 The [compact selector review](../design/top-energy-processes/compact-popup/README.md)

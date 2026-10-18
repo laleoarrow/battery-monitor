@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "1533a0c44bda8315d313e50434f1ccf5dcbbc1e1",
+  "packageSHA256": "7af3ecc2496ec47ff52b88f910e9ebe8e17fbfdd16a00670eea16396a139d9c5",
+  "publicRelease": false,
+  "packageVerified": true,
+  "pkgAndDMGContainIdenticalApp": true,
+  "appSignature": "ad-hoc",
+  "helperSignature": "ad-hoc",
+  "packageSignature": "unsigned",
+  "notarized": false,
+  "sourceBuildWorkspaceRemoved": true
+}

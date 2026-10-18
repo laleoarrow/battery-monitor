@@ -1,0 +1,8 @@
+Wattson-v4.3.20-macos-universal.pkg: OK
+Wattson-v4.3.20-macos-universal.dmg: OK
+Wattson-v4.3.20-release-info.txt: OK
+/Applications/Wattson.app: valid on disk
+/Applications/Wattson.app: satisfies its Designated Requirement
+/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper: valid on disk
+/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper: satisfies its Designated Requirement
+LOCAL_INSTALL_VERIFIED
