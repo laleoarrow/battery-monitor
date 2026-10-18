@@ -622,8 +622,7 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertEqual(button.frame.maxX, 326)
         XCTAssertEqual(button.frame.minY, 4)
         XCTAssertEqual(button.frame.height, 16)
-        XCTAssertEqual(button.frame.width, (labels[1][1].stringValue as NSString)
-            .size(withAttributes: [.font: labels[1][1].font!]).width)
+        XCTAssertEqual(button.frame.width, 38)
         XCTAssertTrue(button.isBordered)
         XCTAssertNotNil(button.image)
         XCTAssertTrue(button.isEnabled)
@@ -646,7 +645,7 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertTrue(callbacks.isEmpty)
     }
 
-    func testSelectedCapsuleTracksScoreTextWidthWithoutMovingOtherContent() throws {
+    func testSelectedCapsuleKeepsUniformWidthWithoutMovingOtherContent() throws {
         for compact in [false, true] {
             let view = makeView(count: 1, compact: compact)
             view.update(state: .ready([identifiedProcess(41, score: 8.1)]), count: 1, compact: compact)
@@ -659,11 +658,9 @@ final class TopProcessesViewTests: XCTestCase {
                 view.update(state: .ready([identifiedProcess(41, score: score)]), count: 1, compact: compact)
                 view.layoutSubtreeIfNeeded()
                 let button = view.forceQuitButtonsForTest[0]
-                let textWidth = (labels[1].stringValue as NSString)
-                    .size(withAttributes: [.font: labels[1].font!]).width
-                XCTAssertEqual(button.frame.width, textWidth, accuracy: 0.001)
+                XCTAssertEqual(button.frame.width, 38)
                 XCTAssertEqual(button.frame.maxX, 326)
-                XCTAssertEqual(button.frame.midX, labels[1].frame.maxX - 2 - textWidth / 2, accuracy: 0.001)
+                XCTAssertEqual(button.frame.midX, 307)
                 XCTAssertEqual(button.frame.minY, 4)
                 XCTAssertEqual(button.frame.height, 16)
                 XCTAssertGreaterThan(button.frame.width, button.frame.height)

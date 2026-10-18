@@ -362,11 +362,7 @@ final class TopProcessesView: PopoverSection {
             super.layout()
             name.frame = NSRect(x: 0, y: 2, width: 132, height: 20)
             value.frame = NSRect(x: 272, y: 2, width: 56, height: 20)
-            let textWidth = (value.stringValue as NSString).size(withAttributes: [.font: value.font!]).width
-            let textInset = (value.cell!.cellSize.width - textWidth) / 2
-            let actionWidth = min(value.frame.width - textInset * 2, textWidth)
-            forceQuitButton.frame = isSelected
-                ? NSRect(x: value.frame.maxX - textInset - actionWidth, y: 4, width: actionWidth, height: 16) : .zero
+            forceQuitButton.frame = isSelected ? NSRect(x: 288, y: 4, width: 38, height: 16) : .zero
             details.frame = details.isHidden ? .zero : NSRect(x: 0, y: 25, width: bounds.width, height: 15)
             overflow.frame = NSRect(x: 262, y: 6, width: 8, height: 12)
             PopoverStyle.setWithoutAnimation {

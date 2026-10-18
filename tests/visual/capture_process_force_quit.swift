@@ -137,11 +137,8 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
         try check(!list.forceQuitButtonsForTest[0].isHidden && list.forceQuitButtonsForTest[0].isEnabled, "Selected row has no enabled close button")
         try check(list.forceQuitButtonsForTest.dropFirst().allSatisfy(\.isHidden), "More than one close button visible")
         let actionFrame = list.forceQuitButtonsForTest[0].frame
-        let score = try scoreFields(in: list)[0]
-        let scoreWidth = (score.stringValue as NSString).size(withAttributes: [.font: score.font!]).width
-        try check(actionFrame.maxX == 326 && actionFrame.minY == 4 && actionFrame.height == 16
-                  && actionFrame.width <= scoreWidth && actionFrame.width > 16,
-                  "Action capsule exceeds the score text or has incorrect height/alignment")
+        try check(actionFrame == NSRect(x: 288, y: 4, width: 38, height: 16),
+                  "Action capsule does not retain its fixed width/alignment")
         try check(list.barGeometryForTest.map(\.track) == before, "Selection shifted the score bars")
         try check(try nameFrames(in: list) == namesBefore, "Selection shifted or truncated a process name")
         let values = try scoreFields(in: list)
@@ -173,11 +170,11 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
         try check(list.selectedRowIndexForTest == 2 && !list.forceQuitButtonsForTest[2].isEnabled, "Unavailable process exposes an enabled action")
         list.layoutSubtreeIfNeeded()
         let shortFrame = list.forceQuitButtonsForTest[2].frame
-        let shortScore = try scoreFields(in: list)[2]
-        let shortWidth = (shortScore.stringValue as NSString).size(withAttributes: [.font: shortScore.font!]).width
-        try check(shortFrame.width <= shortWidth && shortFrame.width < actionFrame.width
-                  && shortFrame.maxX == 326 && shortFrame.minY == 4 && shortFrame.height == 16,
-                  "Short score retains an oversized capsule")
+        try check(shortFrame == actionFrame, "Disabled or short-score capsule changes width or position")
+        if name.contains("on-battery-") {
+            try await pause(0.05)
+            try captureModule(list, window: window, name: name + "-disabled-module", fields: ["compact": !compact, "selectedProcess": "WindowServer", "actionEnabled": false, "actionCapsuleFrame": NSStringFromRect(shortFrame)])
+        }
         // The first three power states in each theme/host also traverse the
         // unmodified controller path, closing the popup before its live alert.
         let modalAction = name.contains("charging-") ? "Cancel" : name.contains("full-") ? "Escape" : name.contains("on-battery-") ? "Return" : nil

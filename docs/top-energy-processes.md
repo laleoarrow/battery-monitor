@@ -111,10 +111,11 @@ the same in Compact view. The score returns when selection clears. Arrow keys
 move the selection between visible rows, and the selected button is exposed to
 accessibility clients.
 
-The action is a 16-point-high native glass capsule on macOS 26, no wider than
-the current score text and aligned with its text content rather than the field's
-outer edge, with a soft blue gradient and reflected rim. Older systems use the
-same compact capsule shape.
+The action is a fixed 38 × 16-point native glass capsule on macOS 26, aligned
+with the score text's right edge. Every process uses the same width, independent
+of its score's digit count or eligibility. It has a soft blue gradient and
+reflected rim; unavailable actions use the disabled appearance. Older systems
+use the same compact capsule shape.
 One shared pointer-feedback surface provides the light effect without a timer.
 Reduced Motion/Transparency and high contrast use static, legible feedback.
 Hiding, deselecting or closing clears the reflection immediately.

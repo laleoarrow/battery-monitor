@@ -257,7 +257,7 @@ intent clear it. Closed/disabled generations discard pending results. See [proce
 for the formula, helper requirement and attribution limits.
 
 Selecting a Process Activity row replaces its right-hand score with a small
-16-point-high glass × capsule no wider than the score text in both display modes,
+38 × 16-point glass × capsule with the same fixed width in both display modes,
 without moving the name or bar.
 A shared pointer reflection follows the existing footer's lifecycle and
 accessibility policy. Row tooltips use two short lines with rounded values;
