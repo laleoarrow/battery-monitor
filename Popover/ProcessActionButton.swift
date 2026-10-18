@@ -2,6 +2,9 @@ import AppKit
 
 /// A small native action capsule; the module owns its shared pointer reflection.
 final class ProcessActionButton: NSButton {
+    private var sourceTintColor = PopoverStyle.blue
+    private(set) var tintColor = PopoverStyle.blue
+
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         cell = ProcessActionButtonCell(textCell: "")
@@ -27,13 +30,39 @@ final class ProcessActionButton: NSButton {
         didSet { refreshAppearance() }
     }
 
+    func setTintColor(_ color: NSColor) {
+        guard !sourceTintColor.isEqual(color) else { return }
+        sourceTintColor = color
+        refreshAppearance()
+    }
+
     func refreshAppearance() {
-        let glyph: NSColor = usesOpaqueAppearance && isEnabled ? .white
-            : (isEnabled ? (PopoverStyle.isDark(effectiveAppearance)
-                ? NSColor(rgb: 0xE5F5FF) : NSColor(rgb: 0x064A83)) : .secondaryLabelColor)
-        image = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Force Quit")?
-            .withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 9, weight: .semibold)
-                .applying(.init(paletteColors: [glyph])))
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            tintColor = NSColor(cgColor: sourceTintColor.cgColor)!
+            let glyph: NSColor
+            if !isEnabled {
+                glyph = .secondaryLabelColor
+            } else if usesOpaqueAppearance {
+                let rgb = tintColor.usingColorSpace(.sRGB)!
+                let components = [rgb.redComponent, rgb.greenComponent, rgb.blueComponent].map {
+                    $0 <= 0.04045 ? $0 / 12.92 : pow(($0 + 0.055) / 1.055, 2.4)
+                }
+                let luminance = components[0] * 0.2126 + components[1] * 0.7152 + components[2] * 0.0722
+                glyph = luminance > 0.179 ? .black : .white
+            } else {
+                glyph = PopoverStyle.isDark(effectiveAppearance)
+                    ? tintColor.blended(withFraction: 0.88, of: .white)!
+                    : tintColor.blended(withFraction: 0.68, of: .black)!
+            }
+            bezelColor = isEnabled && !usesOpaqueAppearance ? tintColor : nil
+            if #available(macOS 26.0, *) {
+                tintProminence = isEnabled && !usesOpaqueAppearance ? .secondary : .none
+            }
+            contentTintColor = glyph
+            image = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Force Quit")?
+                .withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 9, weight: .semibold)
+                    .applying(.init(paletteColors: [glyph])))
+        }
         needsDisplay = true
     }
 
@@ -61,7 +90,7 @@ final class ProcessActionButton: NSButton {
                                 xRadius: frame.height / 2, yRadius: frame.height / 2)
         let dark = PopoverStyle.isDark(effectiveAppearance)
         if !isEnabled || usesOpaqueAppearance {
-            (isEnabled ? NSColor(rgb: 0x0867C4) : PopoverStyle.well).setFill()
+            (isEnabled ? tintColor : PopoverStyle.well).setFill()
             path.fill()
             (isEnabled ? NSColor.labelColor : PopoverStyle.wellBorder).setStroke()
             path.lineWidth = 1
@@ -71,10 +100,9 @@ final class ProcessActionButton: NSButton {
         let nativeGlass: Bool
         if #available(macOS 26.0, *) { nativeGlass = true } else { nativeGlass = false }
         let pressed = cell?.isHighlighted == true
-        let start = NSColor(rgb: pressed ? 0x83C8F5 : 0x9EDCFF)
+        let start = tintColor.blended(withFraction: pressed ? 0.42 : 0.58, of: .white)!
             .withAlphaComponent(nativeGlass ? 0.30 : 1)
-        let end = NSColor(rgb: pressed ? 0x2476C2 : 0x3189DE)
-            .withAlphaComponent(nativeGlass ? 0.42 : 1)
+        let end = tintColor.withAlphaComponent(nativeGlass ? (pressed ? 0.50 : 0.42) : 1)
         NSGradient(starting: start, ending: end)?.draw(in: path, angle: 0)
         NSGraphicsContext.saveGraphicsState()
         path.addClip()

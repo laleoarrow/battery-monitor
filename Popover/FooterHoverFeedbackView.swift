@@ -11,6 +11,7 @@ final class FooterHoverFeedbackView: NSView {
     private var regions: [Region] = []
     private var hoveredIndex: Int?
     private var presentationActive = true
+    private var tintColor: NSColor?
     private let glow = CAShapeLayer()
     private let reflection = CAGradientLayer()
     private let rimReflection = CAGradientLayer()
@@ -65,6 +66,12 @@ final class FooterHoverFeedbackView: NSView {
     func setPresentationActive(_ active: Bool) {
         presentationActive = active
         if !active { cancelHover() }
+    }
+
+    func setTintColor(_ color: NSColor) {
+        guard tintColor?.isEqual(color) != true else { return }
+        tintColor = color
+        refreshAppearance()
     }
 
     override func mouseEntered(with event: NSEvent) { updateHover() }
@@ -181,23 +188,26 @@ final class FooterHoverFeedbackView: NSView {
         let dark = PopoverStyle.isDark(effectiveAppearance)
         let contrast = PopoverStyle.isHighContrast(effectiveAppearance)
         let neutral = dark ? NSColor.white : NSColor.black
+        let tint = contrast ? neutral : (tintColor ?? neutral)
+        let highlight = contrast ? NSColor.white
+            : (tintColor?.blended(withFraction: dark ? 0.55 : 0.35, of: .white) ?? .white)
         PopoverStyle.setWithoutAnimation {
-            self.glow.fillColor = neutral.withAlphaComponent(contrast ? 0.08 : (dark ? 0.025 : 0.018)).cgColor
-            self.glow.strokeColor = neutral.withAlphaComponent(contrast ? 0.6 : (dark ? 0.12 : 0.10)).cgColor
+            self.glow.fillColor = tint.withAlphaComponent(contrast ? 0.08 : (dark ? 0.025 : 0.018)).cgColor
+            self.glow.strokeColor = tint.withAlphaComponent(contrast ? 0.6 : (dark ? 0.12 : 0.10)).cgColor
             self.glow.lineWidth = contrast ? 1 : 0.6
-            self.glow.shadowColor = neutral.cgColor
+            self.glow.shadowColor = tint.cgColor
             self.glow.shadowOpacity = self.usesStaticFeedback ? 0 : (dark ? 0.18 : 0.12)
             self.glow.shadowRadius = 3
             self.glow.shadowOffset = .zero
             self.reflection.colors = [
-                NSColor.white.withAlphaComponent(dark ? 0.065 : 0.045).cgColor,
-                NSColor.white.withAlphaComponent(dark ? 0.018 : 0.012).cgColor,
-                NSColor.white.withAlphaComponent(0).cgColor,
+                highlight.withAlphaComponent(dark ? 0.065 : 0.045).cgColor,
+                highlight.withAlphaComponent(dark ? 0.018 : 0.012).cgColor,
+                highlight.withAlphaComponent(0).cgColor,
             ]
             self.rimReflection.colors = [
-                NSColor.white.withAlphaComponent(dark ? 0.24 : 0.16).cgColor,
-                NSColor.white.withAlphaComponent(dark ? 0.07 : 0.04).cgColor,
-                NSColor.white.withAlphaComponent(0).cgColor,
+                highlight.withAlphaComponent(dark ? 0.24 : 0.16).cgColor,
+                highlight.withAlphaComponent(dark ? 0.07 : 0.04).cgColor,
+                highlight.withAlphaComponent(0).cgColor,
             ]
             self.reflection.isHidden = self.usesStaticFeedback
             self.rimReflection.isHidden = self.usesStaticFeedback

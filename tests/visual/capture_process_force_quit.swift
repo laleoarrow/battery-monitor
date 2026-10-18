@@ -123,14 +123,13 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
         }
         list.layoutSubtreeIfNeeded()
         let palette = try validateActivityPalette(list, content: content)
+        let hostColor = NSColor(srgbRed: CGFloat(palette[1][0]), green: CGFloat(palette[1][1]),
+                                blue: CGFloat(palette[1][2]), alpha: CGFloat(palette[1][3]))
         try check(list.forceQuitButtonsForTest.allSatisfy(\.isHidden), "Unselected rows show close buttons")
         let namesBefore = try nameFrames(in: list)
         try check(namesBefore.allSatisfy { $0 == NSRect(x: 0, y: 2, width: 132, height: 20) }, "Unselected names do not retain their fixed layout")
         try validateRowTooltips(list)
         try check(try scoreFields(in: list).allSatisfy { !$0.isHidden }, "Unselected row hides its score")
-        if name.contains("on-battery-") {
-            try captureModule(list, window: window, name: name + "-unselected-module", fields: ["compact": compact, "selection": "none"])
-        }
         let before = list.barGeometryForTest.map(\.track)
         try click(list.processRowsForTest[0], in: window)
         try await pause(0.05)
@@ -152,10 +151,14 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
         try check(row.isAccessibilitySelected(), "Native AX selection missing")
         try check(abs(row.bounds.height - (compact ? 28 : 44)) < 0.1, "Selection changed row height")
         try check(list.forceQuitButtonsForTest[0].accessibilityLabel()?.contains("Safari") == true, "Close button lacks process name for accessibility")
-        try capture(window, name: name, fields: ["compact": compact, "selectedProcess": "Safari", "actionCapsuleFrame": NSStringFromRect(list.forceQuitButtonsForTest[0].frame), "nameFrames": namesBefore.map(NSStringFromRect), "selectedScoreHidden": true, "nativeGlassCapsule": true, "activityPaletteSRGB": palette])
-        try captureModule(list, window: window, name: name + "-module", fields: ["compact": compact, "selectedProcess": "Safari", "activityPaletteSRGB": palette])
+        _ = try validateActivityPalette(list, content: content)
+        let actionMetadata = try actionPaletteMetadata(list, index: 0, palette: palette)
+        try capture(window, name: name, fields: actionMetadata.merging(["compact": compact, "selectedProcess": "Safari", "actionCapsuleFrame": NSStringFromRect(list.forceQuitButtonsForTest[0].frame), "nameFrames": namesBefore.map(NSStringFromRect), "selectedScoreHidden": true, "nativeGlassCapsule": true, "activityPaletteSRGB": palette]) { _, value in value })
+        try captureModule(list, window: window, name: name + "-module", fields: actionMetadata.merging(["compact": compact, "selectedProcess": "Safari", "activityPaletteSRGB": palette]) { _, value in value })
+        if name.contains("charging-") || name.contains("full-") || name.contains("on-battery-") {
+            try await hoverLight(list, content: content, window: window, name: name, compact: compact)
+        }
         if name.contains("on-battery-") {
-            try await hoverLight(list, window: window, name: name, compact: compact)
             if !compact { try await activityInfo(list, window: window, name: name) }
             let updates = list.contentUpdatesForTest
             for transition in [samples[0].1, samples[1].1, sample] {
@@ -172,26 +175,31 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
         list.forceQuitHandler = { requested.append($0) }
         try clickButton(list.forceQuitButtonsForTest[0], in: window)
         try check(requested == [processes[0]], "Native button action did not preserve exact identity")
-        list.update(state: .ready([processes[1], processes[0], processes[2]]), count: 3, compact: compact)
+        list.update(state: .ready([processes[1], processes[0], processes[2]]), count: 3, compact: compact, color: hostColor)
+        _ = try validateActivityPalette(list, content: content)
         try check(list.selectedRowIndexForTest == 1, "Selection did not follow process identity after reorder")
-        list.update(state: .ready(processes), count: 3, compact: !compact)
+        list.update(state: .ready(processes), count: 3, compact: !compact, color: hostColor)
+        _ = try validateActivityPalette(list, content: content)
         try check(list.selectedRowIndexForTest == 0, "Compact change lost selected process identity")
-        list.update(state: .ready(processes), count: 3, compact: compact)
+        list.update(state: .ready(processes), count: 3, compact: compact, color: hostColor)
+        _ = try validateActivityPalette(list, content: content)
         try click(list.processRowsForTest[2], in: window)
         try check(list.selectedRowIndexForTest == 2 && !list.forceQuitButtonsForTest[2].isEnabled, "Unavailable process exposes an enabled action")
         list.layoutSubtreeIfNeeded()
         let shortFrame = list.forceQuitButtonsForTest[2].frame
         try check(shortFrame == actionFrame, "Disabled or short-score capsule changes width or position")
+        let disabledPalette = try validateActivityPalette(list, content: content)
         if name.contains("on-battery-") {
             try await pause(0.05)
-            try captureModule(list, window: window, name: name + "-disabled-module", fields: ["compact": compact, "selectedProcess": "WindowServer", "actionEnabled": false, "actionCapsuleFrame": NSStringFromRect(shortFrame)])
+            try captureModule(list, window: window, name: name + "-disabled-module", fields: try actionPaletteMetadata(list, index: 2, palette: disabledPalette).merging(["compact": compact, "selectedProcess": "WindowServer", "actionEnabled": false, "actionCapsuleFrame": NSStringFromRect(shortFrame), "activityPaletteSRGB": disabledPalette]) { _, value in value })
         }
         // The first three power states in each theme/host also traverse the
         // unmodified controller path, closing the popup before its live alert.
         let modalAction = name.contains("charging-") ? "Cancel" : name.contains("full-") ? "Escape" : name.contains("on-battery-") ? "Return" : nil
         if !compact, let modalAction {
             list.forceQuitHandler = productionHandler
-            list.update(state: .ready(processes), count: 3, compact: compact)
+            list.update(state: .ready(processes), count: 3, compact: compact, color: hostColor)
+            _ = try validateActivityPalette(list, content: content)
             try click(list.processRowsForTest[0], in: window)
             var modalProblems: [String] = []
             var modalObserved = false
@@ -240,7 +248,7 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
             throw failure("Missing production History palette")
         }
         var palette: [[Double]] = []
-        for row in list.processRowsForTest {
+        for (index, row) in list.processRowsForTest.enumerated() {
             guard let track = row.layer?.sublayers?.first(where: { $0.name == "top-processes.track" }),
                   let gradient = track.sublayers?.compactMap({ $0 as? CAGradientLayer }).first,
                   let colors = gradient.colors as? [CGColor], colors.count == 3 else {
@@ -259,6 +267,10 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
                       "Process activity color differs from the production History palette")
             try check(stops.allSatisfy { abs($0.alphaComponent - 1) < 0.00001 },
                       "Process activity gradient is not opaque")
+            guard let button = list.forceQuitButtonsForTest[index] as? ProcessActionButton else {
+                throw failure("Missing production process action capsule")
+            }
+            try checkColor(button.tintColor, stops[2], "Process action tint differs from the full-scale gradient endpoint")
             if !PopoverStyle.isHighContrast(list.effectiveAppearance) {
                 let brightness = stops.map { 0.2126 * $0.redComponent + 0.7152 * $0.greenComponent + 0.0722 * $0.blueComponent }
                 try check(brightness[0] > brightness[1] && brightness[1] > brightness[2],
@@ -268,7 +280,39 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
                 palette = stops.map { [Double($0.redComponent), Double($0.greenComponent), Double($0.blueComponent), Double($0.alphaComponent)] }
             }
         }
+        if let selected = list.selectedRowIndexForTest,
+           let button = list.forceQuitButtonsForTest[selected] as? ProcessActionButton {
+            let feedback = list.forceQuitFeedbackForTest
+            if PopoverStyle.isHighContrast(list.effectiveAppearance) {
+                try check(feedback.glowForTest.shadowOpacity == 0
+                          && feedback.reflectionForTest.isHidden && feedback.rimReflectionForTest.isHidden,
+                          "High contrast retains a colored action shadow or reflection")
+            } else {
+                guard let shadow = feedback.glowForTest.shadowColor.flatMap({ NSColor(cgColor: $0) }) else {
+                    throw failure("Missing process action glow shadow color")
+                }
+                try checkColor(shadow, button.tintColor, "Process action glow differs from the gradient endpoint")
+            }
+        }
         return palette
+    }
+    private func colorComponents(_ color: NSColor) throws -> [Double] {
+        guard let rgb = color.usingColorSpace(.sRGB) else { throw failure("Unresolvable action palette color") }
+        return [Double(rgb.redComponent), Double(rgb.greenComponent), Double(rgb.blueComponent), Double(rgb.alphaComponent)]
+    }
+    private func checkColor(_ actual: NSColor, _ expected: NSColor, _ message: String) throws {
+        let left = try colorComponents(actual), right = try colorComponents(expected)
+        try check(zip(left, right).allSatisfy { abs($0.0 - $0.1) < 0.00001 }, message)
+    }
+    private func actionPaletteMetadata(_ list: TopProcessesView, index: Int, palette: [[Double]]) throws -> [String: Any] {
+        guard let button = list.forceQuitButtonsForTest[index] as? ProcessActionButton,
+              let glyph = button.contentTintColor,
+              let shadow = list.forceQuitFeedbackForTest.glowForTest.shadowColor.flatMap({ NSColor(cgColor: $0) }) else {
+            throw failure("Missing native action palette metadata")
+        }
+        return ["actionTintSRGB": try colorComponents(button.tintColor),
+                "gradientEndpointSRGB": palette[2], "glyphTintSRGB": try colorComponents(glyph),
+                "glowShadowTintSRGB": try colorComponents(shadow)]
     }
     private func validateRowTooltips(_ list: TopProcessesView) throws {
         for row in list.processRowsForTest {
@@ -290,7 +334,7 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
         metadata["productionModuleRegion"] = true
         try capture(window, name: name, fields: metadata, screenRect: window.convertToScreen(list.convert(list.bounds, to: nil)).insetBy(dx: -6, dy: -6))
     }
-    @MainActor private func hoverLight(_ list: TopProcessesView, window: NSWindow, name: String, compact: Bool) async throws {
+    @MainActor private func hoverLight(_ list: TopProcessesView, content: NSView, window: NSWindow, name: String, compact: Bool) async throws {
         let overlays = descendants(list).compactMap { $0 as? FooterHoverFeedbackView }
         try check(overlays.count == 1, "Process module must reuse one hover overlay")
         guard let feedback = overlays.first else { throw failure("No process action hover overlay") }
@@ -318,10 +362,19 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
             try check(feedback.hoveredIndexForTest != nil && feedback.glowForTest.opacity == 1, "Capsule does not receive hover light")
             try check(!feedback.reflectionForTest.isHidden && !feedback.rimReflectionForTest.isHidden, "Pointer light remains hidden during normal motion")
             try check(feedback.hitTest(point) == nil, "Hover light intercepts the action")
+            let palette = try validateActivityPalette(list, content: content)
+            guard let action = button as? ProcessActionButton else { throw failure("Missing native action tint") }
+            let highlight = action.tintColor.blended(withFraction: PopoverStyle.isDark(list.effectiveAppearance) ? 0.55 : 0.35, of: .white)!
+            for gradient in [feedback.reflectionForTest, feedback.rimReflectionForTest] {
+                guard let colors = gradient.colors as? [CGColor], colors.count == 3,
+                      let first = NSColor(cgColor: colors[0]) else { throw failure("Missing action reflection colors") }
+                try checkColor(first.withAlphaComponent(1), highlight.withAlphaComponent(1),
+                               "Pointer reflection does not use the action tint family")
+            }
             let center = feedback.reflectionForTest.startPoint
             if let firstCenter { try check(center.x > firstCenter.x, "Light does not follow the pointer within its capsule") }
             else { firstCenter = center }
-            try captureModule(list, window: window, name: name + "-hover-" + label + "-module", fields: ["compact": compact, "pointerFraction": Double(fraction), "reflectionCenter": NSStringFromPoint(center), "processOnlyReduceMotionOverride": false])
+            try captureModule(list, window: window, name: name + "-hover-" + label + "-module", fields: try actionPaletteMetadata(list, index: 0, palette: palette).merging(["compact": compact, "pointerFraction": Double(fraction), "reflectionCenter": NSStringFromPoint(center), "processOnlyReduceMotionOverride": false]) { _, value in value })
         }
         feedback.cancelHover()
         try check(feedback.glowForTest.opacity == 0, "Capsule hover did not clear")

@@ -265,7 +265,9 @@ for the formula, helper requirement and attribution limits.
 
 Selecting a Process Activity row replaces its right-hand score with a small
 38 × 16-point glass × capsule with the same fixed width in both display modes,
-without moving the name or bar.
+without moving the name or bar. The capsule gradient, native glass tint and
+pointer glow use the full-scale bar's deepest endpoint color and follow the
+App palette and appearance; unavailable actions remain neutral.
 A shared pointer reflection follows the existing footer's lifecycle and
 accessibility policy. Row tooltips use two short lines with rounded values;
 the full metric explanation stays behind the information control. The popup

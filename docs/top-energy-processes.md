@@ -121,9 +121,10 @@ accessibility clients.
 
 The action is a fixed 38 × 16-point native glass capsule on macOS 26, aligned
 with the score text's right edge. Every process uses the same width, independent
-of its score's digit count or eligibility. It has a soft blue gradient and
-reflected rim; unavailable actions use the disabled appearance. Older systems
-use the same compact capsule shape.
+of its score's digit count or eligibility. Its gradient, glass tint and pointer
+glow use the complete activity bar's deepest (100-point) color, updating with
+the App palette and light/dark appearance. Unavailable actions stay neutral.
+Older systems use the same compact capsule shape with a reflected rim.
 One shared pointer-feedback surface provides the light effect without a timer.
 Reduced Motion/Transparency and high contrast use static, legible feedback.
 Hiding, deselecting or closing clears the reflection immediately.

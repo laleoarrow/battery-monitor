@@ -112,6 +112,7 @@ final class TopProcessesView: PopoverSection {
     override func refreshAppearance() {
         super.refreshAppearance()
         rows.forEach { $0.refreshAppearance() }
+        updateActionFeedback()
         infoPopover?.contentViewController?.view.appearance = effectiveAppearance
     }
 
@@ -147,6 +148,7 @@ final class TopProcessesView: PopoverSection {
     func update(state: TopProcessesState, count: Int, compact: Bool = false,
                 color: NSColor = PopoverStyle.blue) {
         rows.forEach { $0.setBarColor(color) }
+        updateActionFeedback()
         let count = min(max(count, 1), 10)
         guard renderedState != state || self.count != count || self.compact != compact else { return }
         if count < self.count { select(nil) }
@@ -211,6 +213,7 @@ final class TopProcessesView: PopoverSection {
         }
         row.layoutSubtreeIfNeeded()
         let button = row.forceQuitButton
+        actionFeedback.setTintColor(button.tintColor)
         actionFeedback.update(regions: [.init(rect: button.convert(button.bounds, to: actionFeedback),
                                               enabled: button.isEnabled)])
     }
@@ -394,10 +397,12 @@ final class TopProcessesView: PopoverSection {
         }
 
         func refreshAppearance() {
-            forceQuitButton.refreshAppearance()
             effectiveAppearance.performAsCurrentDrawingAppearance {
                 let contrast = PopoverStyle.isHighContrast(effectiveAppearance)
                 let tint = barColor.usingColorSpace(.sRGB)!
+                let endpoint = contrast ? tint : tint.blended(withFraction: 0.18, of: .black)!
+                forceQuitButton.setTintColor(endpoint)
+                forceQuitButton.refreshAppearance()
                 PopoverStyle.setWithoutAnimation {
                     self.layer?.backgroundColor = self.isSelected
                         ? NSColor.labelColor.withAlphaComponent(contrast ? 0.08 : 0.045).cgColor
@@ -412,7 +417,7 @@ final class TopProcessesView: PopoverSection {
                     self.fill.colors = contrast
                         ? [tint.cgColor, tint.cgColor, tint.cgColor]
                         : [tint.blended(withFraction: 0.65, of: .white)!.cgColor, tint.cgColor,
-                           tint.blended(withFraction: 0.18, of: .black)!.cgColor]
+                           endpoint.cgColor]
 #if DEBUG
                     let vertical = self.gradientPreviewStyle == .vertical || self.gradientPreviewStyle == .activityTint
                     self.fill.startPoint = vertical ? CGPoint(x: 0.5, y: 0) : CGPoint(x: 0, y: 0.5)

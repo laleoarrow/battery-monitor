@@ -129,6 +129,41 @@ final class FooterHoverFeedbackViewTests: XCTestCase {
         XCTAssertTrue(feedback.trackingAreas[0] === area)
     }
 
+    func testActionTintUpdatesGlowAndReflectionWithoutRestartingHover() throws {
+        for theme in [NSAppearance.Name.aqua, .darkAqua] {
+            feedback.appearance = NSAppearance(named: theme)
+            try hover(NSPoint(x: 45, y: 39))
+            let area = feedback.trackingAreas[0]
+            let center = feedback.reflectionForTest.startPoint
+            for tint in [NSColor(srgbRed: 0.05, green: 0.55, blue: 0.14, alpha: 1),
+                         NSColor(srgbRed: 0.05, green: 0.25, blue: 0.70, alpha: 1),
+                         NSColor(srgbRed: 0.4, green: 0.4, blue: 0.4, alpha: 1)] {
+                feedback.setTintColor(tint)
+                let shadow = try XCTUnwrap(NSColor(cgColor: try XCTUnwrap(feedback.glowForTest.shadowColor))?.usingColorSpace(.sRGB))
+                XCTAssertEqual(shadow.redComponent, tint.redComponent, accuracy: 0.00001)
+                XCTAssertEqual(shadow.greenComponent, tint.greenComponent, accuracy: 0.00001)
+                XCTAssertEqual(shadow.blueComponent, tint.blueComponent, accuracy: 0.00001)
+                let colors = try XCTUnwrap(feedback.reflectionForTest.colors as? [CGColor])
+                let highlight = try XCTUnwrap(NSColor(cgColor: colors[0])?.usingColorSpace(.sRGB))
+                if tint.greenComponent > tint.blueComponent {
+                    XCTAssertGreaterThan(highlight.greenComponent, highlight.blueComponent)
+                } else if tint.blueComponent > tint.greenComponent {
+                    XCTAssertGreaterThan(highlight.blueComponent, highlight.greenComponent)
+                } else {
+                    XCTAssertEqual(highlight.redComponent, highlight.greenComponent, accuracy: 0.001)
+                    XCTAssertEqual(highlight.greenComponent, highlight.blueComponent, accuracy: 0.001)
+                }
+                XCTAssertEqual(feedback.hoveredIndexForTest, 0)
+                XCTAssertEqual(feedback.glowForTest.opacity, 1)
+                XCTAssertEqual(feedback.reflectionForTest.startPoint, center)
+                XCTAssertEqual(feedback.regionsForTest, regions)
+                XCTAssertTrue(feedback.trackingAreas[0] === area)
+                feedback.setTintColor(tint)
+                XCTAssertEqual(try XCTUnwrap(feedback.reflectionForTest.colors as? [CGColor]), colors)
+            }
+        }
+    }
+
     func testReflectionFollowsPointerWithinSameButtonWithoutChangingItsControl() throws {
         let selectedButton = NSButton(title: "Auto", target: nil, action: #selector(NSResponder.cancelOperation(_:)))
         selectedButton.setButtonType(.pushOnPushOff)
@@ -248,6 +283,7 @@ final class FooterHoverFeedbackViewTests: XCTestCase {
         XCTAssertNil(feedback.glowForTest.animationKeys())
         XCTAssertEqual(feedback.glowForTest.shadowOpacity, 0)
         setenv("WATTSON_FORCE_INCREASE_CONTRAST", "1", 1)
+        feedback.setTintColor(NSColor(srgbRed: 0.05, green: 0.55, blue: 0.14, alpha: 1))
         NSWorkspace.shared.notificationCenter.post(name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
                                                    object: nil)
         XCTAssertEqual(feedback.glowForTest.lineWidth, 1)

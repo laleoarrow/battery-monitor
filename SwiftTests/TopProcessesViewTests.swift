@@ -431,6 +431,9 @@ final class TopProcessesViewTests: XCTestCase {
                     try assertPalette(row, follows: color, in: view.effectiveAppearance, contrast: false)
                 }
                 let palette = try gradientColors(rows[0])
+                try assertColor(view.forceQuitFeedbackForTest.glowForTest.shadowColor,
+                                matches: try sRGBColor(try XCTUnwrap(palette.last)),
+                                in: view.effectiveAppearance)
                 XCTAssertNotEqual(palette, previousPalette)
                 previousPalette = palette
                 // A repeated palette update should not rebuild content or schedule layout either.
@@ -983,6 +986,8 @@ final class TopProcessesViewTests: XCTestCase {
         guard colors.count == 3 else { return }
         let accent = try sRGBColor(resolved(appColor, in: appearance))
         let stops = try colors.map(sRGBColor)
+        let button = try XCTUnwrap(row.subviews.compactMap { $0 as? ProcessActionButton }.first)
+        try assertColor(button.tintColor.cgColor, matches: stops[2], in: appearance, file: file, line: line)
         for color in stops {
             XCTAssertEqual(color.alphaComponent, 1, accuracy: 0.001, file: file, line: line)
             assertSameHue(color, accent, file: file, line: line)
