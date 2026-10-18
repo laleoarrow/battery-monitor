@@ -63,14 +63,19 @@ closing, hiding, detaching, degraded readings and Reduce Motion stop animations.
 No chart timer is used. The [4.3.16 axis motion review](../design/history-axis-smoothness/README.md)
 records the corrected independent native probe, ABBA preparation measurements,
 explicit construction counts, Pro review, and exact installation evidence.
-Wattson 4.3.21 is the current verified local preview installation. Its
-[installation record](../design/process-action-capsule/local-preview-v4.3.21/local-install-verified.json)
+Wattson 4.3.22 is the current verified local preview installation. Its
+[installation record](../design/process-activity-palette/local-preview-v4.3.22/local-install-verified.json)
 verifies matching App/helper/daemon payloads, all 15 retained settings and actual
-sampling. It uses uniform 38 × 16-point process action capsules. Process Activity
-remains enabled with Top 3 and Compact view retained. The preceding
+sampling. Process bars follow the App chart palette; the uniform 38 × 16-point
+glass action capsules and pointer glow follow the full-scale bar endpoint.
+Process Activity remains enabled with Top 3 and Compact view retained.
+Canonical popup interaction was not directly re-observed in this upgrade;
+the source passes the six-state production-renderer matrix. The preceding
+[4.3.21 installation](../design/process-action-capsule/local-preview-v4.3.21/local-install-verified.json)
+records the initial uniform capsule update. The preceding
 [4.3.20 installation](../design/process-action-capsule/local-preview-v4.3.20/local-install-verified.json)
-records the user-opened popup and initial preview enablement. Neither preview
-has been publicly released.
+records the user-opened popup and initial preview enablement. These previews
+have not been publicly released.
 The preceding 4.3.19
 [Process Activity installation record](../design/top-energy-processes/compact-popup/local-installation-v4.3.19.json)
 verifies the native PKG, helper, actual process sampling and retained settings.
