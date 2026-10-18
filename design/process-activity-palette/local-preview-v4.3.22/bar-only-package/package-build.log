@@ -1,0 +1,92 @@
+Release mode: community-ad-hoc
+Notarization requested: no
+Building Wattson 4.3.22 (4.3.22) for arm64 and x86_64...
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/design-qa.md': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/TODO.md': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/BatteryPowerWidgetExtension.entitlements': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/WidgetExtensionInfo.plist': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/battery_monitor.py': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/HANDOFF.md': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/BatteryPowerWidgetExtension.xcodeproj': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/script': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.github': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.codex': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/README.md': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/Support': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/BatteryPowerWidgetExtension.swift': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/website': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/dist': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/tests': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.agent': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/docs': File not found.
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (28.06s)
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/tests': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.codex': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/Support': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/WidgetExtensionInfo.plist': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/design-qa.md': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/BatteryPowerWidgetExtension.swift': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/README.md': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/dist': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/BatteryPowerWidgetExtension.xcodeproj': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/docs': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/HANDOFF.md': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/BatteryPowerWidgetExtension.entitlements': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/script': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/website': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.agent': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/TODO.md': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/battery_monitor.py': File not found.
+warning: 'source.ku74s3': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.github': File not found.
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (23.53s)
+/* com.apple.actool.compilation-results */
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/icon-assets/Assets.car
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/icon-assets/WattsonGlass.icns
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/icon-assets/icon-info.plist
+
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/com.leoarrow.wattson.helper: replacing existing signature
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/Wattson.app: replacing existing signature
+Built universal app: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/Wattson.app
+Built universal helper: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/com.leoarrow.wattson.helper
+Signing: ad-hoc community build (not notarized)
+Verified universal release build for Wattson 4.3.22
+pkgbuild: Reading components from /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/Packaging/pkg/component.plist
+pkgbuild: Adding component at Applications/Wattson.app
+pkgbuild: Adding top-level preinstall script
+pkgbuild: Adding top-level postinstall script
+pkgbuild: Wrote package to /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/pkg.sCjGyG/Wattson-component.pkg
+productbuild: Wrote product to /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/pkg.sCjGyG/Wattson-v4.3.22-macos-universal.pkg
+Created unsigned community PKG: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/artifacts/Wattson-v4.3.22-macos-universal.pkg
+Notarization status: no (Developer ID Installer identity is not configured)
+hdiutil: verify: checksum of "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/dmg.WBTRPq/Wattson-v4.3.22-macos-universal.dmg" is VALID
+Mounted DMG verified: helper-free app and Applications link
+Created unsigned DMG: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/.build/local.noindex/release.8rarGt/artifacts/Wattson-v4.3.22-macos-universal.dmg
+Notarization/checksums: pending release orchestration
+Mounted DMG verified: helper-free app and Applications link
+Verified Wattson 4.3.22: full PKG and DMG contain byte-identical apps
+Wattson-v4.3.22-macos-universal.pkg: OK
+Wattson-v4.3.22-macos-universal.dmg: OK
+Wattson-v4.3.22-release-info.txt: OK
+Created release artifacts in /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/dist
+Notarized: no
+Checksums: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local-preview-v4.3.22.noindex/source.Ku74s3/dist/SHA256SUMS.txt

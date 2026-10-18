@@ -1,0 +1,10 @@
+d65e12d97a2b39bf1900614085cf3c45b8d3bcd0bd077df331b52ea71b7cbea6  /Users/leoarrow/Project/mypackage/agents/电池功率/design/process-force-quit/native/guest-run.sh
+39dade93c6b77a1835679843d63527fd416957b23e32b96e30c026a77182be98  /Users/leoarrow/Project/mypackage/agents/电池功率/design/process-force-quit/native/run-owned.sh
+20275bc4f0b91f06e7b10a0efa140ca7add3252ada5597780bcaa155ba1203d6  /Users/leoarrow/Project/mypackage/agents/电池功率/design/process-force-quit/native/audit-guest.py
+8aec65da7cf32d05ae3c661a4b260aa380793bb60d8c8d9e7a87623b9f2e18f7  /Users/leoarrow/Project/mypackage/agents/电池功率/design/process-force-quit/native/vm-state.py
+e02ee7c982674e6bbe755569594583d680210cfd03774efea7d6193856fc7ade  /Users/leoarrow/Project/mypackage/agents/电池功率/design/process-force-quit/native/alert-probe.swift
+15a2ddc2b3e4357a1d9525ad68f1e0c8dbe6ed277d6372ef2ac070a85510ea00  /Users/leoarrow/Project/mypackage/agents/电池功率/design/process-force-quit/native/display-probe.swift
+de5fba7a845fa0ebf3c9f9bc10338041ca3dd5768867a401380b49aab55a3fd8  /Users/leoarrow/Project/mypackage/agents/电池功率/design/process-force-quit/native/root-worker-probe.swift
+48429115b9d97c0e5229896f4bc1b282b9313cfdb32e9ad18149450941a4c904  /Users/leoarrow/Project/mypackage/agents/电池功率/tests/visual/capture_process_force_quit.swift
+372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e  /Users/leoarrow/Project/mypackage/agents/电池功率/scripts/lib/local_cleanup.sh
+812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872  /Users/leoarrow/Project/mypackage/agents/电池功率/scripts/lib/run_owned.py

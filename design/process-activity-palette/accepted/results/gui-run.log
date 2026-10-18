@@ -1,0 +1,5 @@
+NATIVE_ALERT action=Cancel cancelKey="\u{1B}" defaultCell=nil
+NATIVE_ALERT action=Escape cancelKey="\u{1B}" defaultCell=nil
+NATIVE_ALERT action=Return cancelKey="\u{1B}" defaultCell=nil
+NATIVE_ALERT action=Force Quit cancelKey="\u{1B}" defaultCell=nil
+PROCESS_FORCE_QUIT_NATIVE_PASSED captures=148 assertions=11120

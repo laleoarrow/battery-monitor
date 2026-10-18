@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "wholeCurrentTreeClaimedVerified": false,
+  "acceptedRunScope": "The 148-capture/11120-assertion run applies to the frozen snapshot and actual GUI build recorded in accepted/. Unrelated concurrent source changes are preserved. No rebuild, revert, stage or modification of those files was performed.",
+  "ownedRendererChecksAgainstActualGUIBuild": {
+    "Popover/TopProcessesView.swift": true,
+    "Popover/PopoverContentView.swift": true,
+    "Popover/ProcessActionButton.swift": true,
+    "Popover/FooterHoverFeedbackView.swift": true
+  },
+  "harnessMatchesActualGUIBuild": true,
+  "currentManifestMismatches": [],
+  "missingManifestFiles": [],
+  "nativeEvidenceSummary": {
+    "captures": 148,
+    "assertions": 11120,
+    "failures": 0,
+    "selectedPopupRecords": 48,
+    "selectedModuleRecordsWithPalette": 48,
+    "disabledModuleRecords": 8,
+    "productionControllerModalRecords": 12,
+    "actionCapsuleFrames": "All 56 recorded frames equal {{288, 4}, {38, 16}}"
+  },
+  "paletteVerification": "Across six power states, two themes, Classic/Glass and compact/detailed layouts, every visible process gradient middle stop equals the actual production History stroke RGB, all stops are opaque and normal appearance runs pale to deep. Charging is green; full/plugged-idle and mixed supply are blue; on-battery, low battery and Low Power are neutral. In each on-battery case, a live charging -> full -> original sample transition also matches History while preserving selection, data content update count and bar geometry.",
+  "previewVerification": "Charging dark compact and light detailed selected module images show green gradients matching the app palette; full light detailed shows blue; on-battery dark compact shows neutral gray. The unchanged blue force-quit capsule and the disabled gray capsule retain 38x16pt bounds and a complete, unclipped 9pt X.",
+  "visualEvidenceLimitations": [
+    "Existing -unselected-module crops are excluded from visual conclusions because the known scrolling capture can show the upper Power History area. The selected module screenshots for all six states are the palette visual evidence.",
+    "Disabled-module captures occur after harness-only direct list.update calls for reorder/compact tests, which omit the new color argument and therefore reset to its default blue. These screenshots verify disabled/button appearance only; their names do not represent on-battery palette evidence. Selected six-state captures and History comparison assertions occur before those direct calls.",
+    "This native matrix does not enable system high contrast. All normal-appearance stops are checked opaque; high-contrast branching is left to focused unit tests.",
+    "Disabled behavior is checked as the actual NSButton isEnabled=false state; this run does not inject a separate mouse event into the disabled button. Enabled action uses native tracking and verifies the exact process identity.",
+    "Battery and process readings are fixtures. The GUI never signals user processes. The separate root-worker probe signals only its own child and does not install or exercise the canonical LaunchDaemon/socket."
+  ],
+  "cleanupChecksPassed": true,
+  "auditedSourceCommit": "ce08c50e5aeb6ce474a25d64284b7e60e18262ec",
+  "historicalPhase": "Bar-only verification before the additional capsule endpoint color request; superseded by action-endpoint/ for the final capsule source. Current-file comparisons describe the earlier audit time."
+}

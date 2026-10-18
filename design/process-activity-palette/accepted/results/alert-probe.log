@@ -1,0 +1,41 @@
+ALERT_PROBE action=Cancel cancelKey="\u{1B}" defaultCell=nil
+ALERT_PROBE action=Escape cancelKey="\u{1B}" defaultCell=nil
+ALERT_PROBE action=Return cancelKey="\u{1B}" defaultCell=nil
+ALERT_PROBE action=Force Quit cancelKey="\u{1B}" defaultCell=nil
+{
+  "allPassed" : true,
+  "results" : [
+    {
+      "action" : "Cancel",
+      "passed" : true,
+      "problems" : [
+
+      ],
+      "signals" : 0
+    },
+    {
+      "action" : "Escape",
+      "passed" : true,
+      "problems" : [
+
+      ],
+      "signals" : 0
+    },
+    {
+      "action" : "Return",
+      "passed" : true,
+      "problems" : [
+
+      ],
+      "signals" : 0
+    },
+    {
+      "action" : "Force Quit",
+      "passed" : true,
+      "problems" : [
+
+      ],
+      "signals" : 1
+    }
+  ]
+}

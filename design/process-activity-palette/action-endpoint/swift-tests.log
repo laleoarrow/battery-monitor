@@ -1,0 +1,309 @@
+warning: 'source': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/process-palette-review.noindex/tests.tTbmwO/source/dist': File not found.
+Building for debugging...
+[0/19] /Users/leoarrow/Project/mypackage/agents/电池功率/.build/process-palette-review.noindex/tests.tTbmwO/swift-build/arm64-apple-macosx/debug/WattsonPackageTests.derived/runner.swift
+[1/19] Write wattson-helper-entitlement.plist
+[2/19] Write sources
+[3/19] Write Wattson-entitlement.plist
+[8/19] Write sources
+[9/19] Copying Fixtures
+[10/19] Write swift-version--58304C5D6DBC2206.txt
+[12/81] Emitting module WattsonHelperV5Support
+[13/81] Compiling WattsonHelperV5Support TopProcesses.swift
+[14/81] Compiling WattsonHelperV5Support ProcessTermination.swift
+[15/81] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[16/87] Emitting module WattsonHelper
+[17/87] Compiling WattsonHelper wattson-helper.swift
+[17/87] Write Objects.LinkFileList
+[18/87] Linking wattson-helper
+[19/87] Applying wattson-helper
+[21/87] Emitting module Wattson
+[22/90] Compiling Wattson EnergyMode.swift
+[23/90] Compiling Wattson FeedbackDiagnostics.swift
+[24/90] Compiling Wattson GlassBackgroundView.swift
+[25/90] Compiling Wattson HelperClient.swift
+[26/90] Compiling Wattson PopoverPreview.swift
+[27/90] Compiling Wattson PopoverStyle.swift
+[28/90] Compiling Wattson PowerFlowLayer.swift
+[29/90] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[30/90] Compiling Wattson BatteryRuntimeEstimate.swift
+[31/90] Compiling Wattson BatterySampler.swift
+[32/90] Compiling Wattson AppleSmartBatteryObservationReader.swift
+[33/90] Compiling Wattson HelperClientPowerObservationV5.swift
+[34/90] Compiling Wattson HistoryChart.swift
+[35/90] Compiling Wattson LoginItemController.swift
+[36/90] Compiling Wattson PopoverPlacement.swift
+[37/90] Compiling Wattson DirectSMCObservationReader.swift
+[38/90] Compiling Wattson PowerObservationCaptureCommand.swift
+[39/90] Compiling Wattson PowerObservationCollector.swift
+[40/90] Compiling Wattson PowerObservationJSONLWriter.swift
+[41/90] Compiling Wattson SettingsAppearance.swift
+[42/90] Compiling Wattson SystemBatteryIcon.swift
+[43/90] Compiling Wattson TopProcesses.swift
+[44/90] Compiling Wattson TopProcessesMonitor.swift
+[45/90] Compiling Wattson PopupEventLog.swift
+[46/90] Compiling Wattson PowerHistory.swift
+[47/90] Compiling Wattson PowerObservationFusion.swift
+[48/90] Compiling Wattson PowerObservationFusionReplay.swift
+[49/90] Compiling Wattson PowerObservationRuntimeController.swift
+[50/90] Compiling Wattson PowerObservationShadow.swift
+[51/90] Compiling Wattson PowerObservationTrace.swift
+[52/90] Compiling Wattson PowerObservationWireV5.swift
+[53/90] Compiling Wattson NativeModeSegmentedControl.swift
+[54/90] Compiling Wattson PopoverContentView.swift
+[55/90] Compiling Wattson PopoverController.swift
+[56/90] Compiling Wattson FooterHoverFeedbackView.swift
+[57/90] Compiling Wattson GlassPopoverMaterialView.swift
+[58/90] Compiling Wattson GlassPopoverPanel.swift
+[59/90] Compiling Wattson HistoryLayer.swift
+[60/90] Compiling Wattson RingGaugeLayer.swift
+[61/90] Compiling Wattson TopProcessesView.swift
+[62/90] Compiling Wattson main.swift
+[63/90] Compiling Wattson PowerSnapshot.swift
+[64/90] Compiling Wattson ProcessTermination.swift
+[65/90] Compiling Wattson RawPowerObservation.swift
+[66/90] Compiling Wattson Settings.swift
+[67/90] Compiling Wattson InteractiveGlassModeControl.swift
+[68/90] Compiling Wattson LaneLayer.swift
+[69/90] Compiling Wattson ModeSliderView.swift
+[70/90] Compiling Wattson NativeGlassModeControl.swift
+[71/90] Compiling Wattson UpdateChecker.swift
+[72/90] Compiling Wattson VisualEncoding.swift
+[73/90] Compiling Wattson AppDelegate.swift
+[74/90] Compiling Wattson BatteryIcon.swift
+[75/90] Compiling Wattson PowerIconView.swift
+[76/90] Compiling Wattson ProcessActionButton.swift
+[77/90] Compiling Wattson ProcessTerminationPresenter.swift
+[78/90] Compiling Wattson ClickRouter.swift
+[79/90] Compiling Wattson ModuleIconArtwork.swift
+[80/90] Compiling Wattson SettingsWindowController.swift
+[81/90] Compiling Wattson StatusItemController.swift
+[81/90] Write Objects.LinkFileList
+[82/90] Linking Wattson
+[83/90] Applying Wattson
+[85/144] Compiling WattsonTests RingMetricSettingsTests.swift
+[86/144] Compiling WattsonTests RingMetricTelemetryTests.swift
+[87/144] Compiling WattsonTests RingMetricViewTests.swift
+[88/147] Compiling WattsonTests PowerPresentationStateTests.swift
+[89/147] Compiling WattsonTests PowerSymbolArtworkTests.swift
+[90/147] Compiling WattsonTests ProcessActionButtonTests.swift
+[91/147] Compiling WattsonHelperV5SupportTests TopProcessesTests.swift
+[92/147] Compiling WattsonTests SamplingEfficiencyTests.swift
+[93/147] Compiling WattsonTests SettingsControlsRecoveryTests.swift
+[94/147] Compiling WattsonTests SettingsGlassOpticalMarginTests.swift
+[95/147] Compiling WattsonTests FeedbackDiagnosticsTests.swift
+[96/147] Compiling WattsonTests FlowNodeIconTests.swift
+[97/147] Compiling WattsonTests FooterHoverFeedbackViewTests.swift
+[98/147] Compiling WattsonTests FooterHoverIntegrationTests.swift
+[99/147] Compiling WattsonTests InteractiveGlassModeControlTests.swift
+[100/147] Compiling WattsonTests LiquidGlassStyleSettingsTests.swift
+[101/147] Compiling WattsonTests ModeSliderAppearanceTests.swift
+[102/147] Compiling WattsonTests ModuleOrderTests.swift
+[103/147] Compiling WattsonHelperV5SupportTests ProcessTerminationTests.swift
+[104/147] Emitting module WattsonHelperV5SupportTests
+[105/147] Compiling WattsonHelperV5SupportTests PowerObservationV5SupportTests.swift
+[106/147] Compiling WattsonTests SettingsIconReuseTests.swift
+[107/147] Compiling WattsonTests StatusClickDismissalTests.swift
+[108/147] Compiling WattsonTests TestDefaultsCleanup.swift
+[109/147] Compiling WattsonTests PowerObservationRuntimeTests.swift
+[110/147] Compiling WattsonTests PowerObservationShadowTests.swift
+[111/147] Compiling WattsonTests PowerObservationWireV5Tests.swift
+[112/147] Compiling WattsonTests GlassPopoverBackgroundTests.swift
+[113/147] Compiling WattsonTests GlassPopoverPanelTests.swift
+[114/147] Compiling WattsonTests GlassPopoverShapeTests.swift
+[115/147] Compiling WattsonTests GlassTransparencySettingsTests.swift
+[116/147] Emitting module WattsonTests
+[117/147] Compiling WattsonTests NativeGlassModeControlTests.swift
+[118/147] Compiling WattsonTests NativeModeSegmentedControlTests.swift
+[119/147] Compiling WattsonTests PopoverAppearanceTests.swift
+[120/147] Compiling WattsonTests PopoverArrowSettingsTests.swift
+[121/147] Compiling WattsonTests PopoverPlacementTests.swift
+[122/147] Compiling WattsonTests PowerFlowEfficiencyTests.swift
+[123/147] Compiling WattsonTests PowerHistoryFreshnessTests.swift
+[124/147] Compiling WattsonTests PowerInputFallbackTests.swift
+[125/147] Compiling WattsonTests TopProcessSettingsTests.swift
+[126/147] Compiling WattsonTests TopProcessesMonitorTests.swift
+[127/147] Compiling WattsonTests TopProcessesTests.swift
+[128/147] Compiling WattsonTests BatteryRuntimeEstimateTests.swift
+[129/147] Compiling WattsonTests BatteryRuntimePresentationTests.swift
+[130/147] Compiling WattsonTests ColorSchemeSettingsTests.swift
+[131/147] Compiling WattsonTests DockIconSettingsTests.swift
+[132/147] Compiling WattsonTests ProcessTerminationPresenterTests.swift
+[133/147] Compiling WattsonTests ProcessTerminationTests.swift
+[134/147] Compiling WattsonTests RawPowerObservationTests.swift
+[135/147] Compiling WattsonTests GlobalPopoverClickTests.swift
+[136/147] Compiling WattsonTests HistoryChartTests.swift
+[137/147] Compiling WattsonTests HistoryViewTests.swift
+[138/147] Compiling WattsonTests InAppLogoSettingsTests.swift
+[139/147] Compiling WattsonTests PowerObservationCaptureTests.swift
+[140/147] Compiling WattsonTests PowerObservationFusionFoundationTests.swift
+[141/147] Compiling WattsonTests PowerObservationFusionReplayTests.swift
+[142/147] Compiling WattsonTests PowerObservationPhase2FixtureTests.swift
+[143/147] Compiling WattsonTests TopProcessesViewTests.swift
+[144/147] Compiling WattsonTests WattsonTests.swift
+[145/147] Compiling WattsonTests resource_bundle_accessor.swift
+[146/149] Emitting module WattsonPackageTests
+[147/149] Compiling WattsonPackageTests runner.swift
+[147/149] Write Objects.LinkFileList
+[148/149] Linking WattsonPackageTests
+Build complete! (16.61s)
+Test Suite 'Selected tests' started at 2026-10-18 21:00:30.853.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-18 21:00:30.854.
+Test Suite 'FooterHoverFeedbackViewTests' started at 2026-10-18 21:00:30.854.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testAccessibilitySettingsRemoveAnimationAndBlurWithoutAddingColor]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testAccessibilitySettingsRemoveAnimationAndBlurWithoutAddingColor]' passed (0.088 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testAccessibilityUsesStaticFeedbackAtEveryPointerPosition]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testAccessibilityUsesStaticFeedbackAtEveryPointerPosition]' passed (0.007 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testActionTintUpdatesGlowAndReflectionWithoutRestartingHover]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testActionTintUpdatesGlowAndReflectionWithoutRestartingHover]' passed (0.012 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testCancellationRemovesReflectionInterpolationAsWellAsHoverFade]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testCancellationRemovesReflectionInterpolationAsWellAsHoverFade]' passed (0.004 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testCurrentPointerWinsOverOutOfOrderEnterAndExitEvents]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testCurrentPointerWinsOverOutOfOrderEnterAndExitEvents]' passed (0.002 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testHiddenDetachedInactiveAndThemeChangesClearImmediately]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testHiddenDetachedInactiveAndThemeChangesClearImmediately]' passed (0.004 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testInactivePresentationOrOrderedOutWindowRejectsLateTrackingCallbacks]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testInactivePresentationOrOrderedOutWindowRejectsLateTrackingCallbacks]' passed (0.002 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testNonKeyClassicPresentationCanHoverWithoutAcquiringFocus]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testNonKeyClassicPresentationCanHoverWithoutAcquiringFocus]' passed (0.002 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testObserverLifecycleDoesNotRetainDetachedOverlay]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testObserverLifecycleDoesNotRetainDetachedOverlay]' passed (0.003 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOnlyEnabledRoundedRegionsReceiveFeedback]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOnlyEnabledRoundedRegionsReceiveFeedback]' passed (0.002 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOrdinaryRefreshKeepsTrackingAndHoverButGeometryChangesClearIt]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOrdinaryRefreshKeepsTrackingAndHoverButGeometryChangesClearIt]' passed (0.002 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOverlayLeavesClickKeyboardAndAccessibilityWithOriginalControl]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testOverlayLeavesClickKeyboardAndAccessibilityWithOriginalControl]' passed (0.025 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testReflectionCenterStaysInsideTheButtonAndDoesNotSweepAcrossButtons]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testReflectionCenterStaysInsideTheButtonAndDoesNotSweepAcrossButtons]' passed (0.003 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testReflectionFollowsPointerWithinSameButtonWithoutChangingItsControl]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testReflectionFollowsPointerWithinSameButtonWithoutChangingItsControl]' passed (0.004 seconds).
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testTrackingDoesNotLightClippedAwayButtons]' started.
+Test Case '-[WattsonTests.FooterHoverFeedbackViewTests testTrackingDoesNotLightClippedAwayButtons]' passed (0.009 seconds).
+Test Suite 'FooterHoverFeedbackViewTests' passed at 2026-10-18 21:00:31.023.
+	 Executed 15 tests, with 0 failures (0 unexpected) in 0.169 (0.170) seconds
+Test Suite 'FooterHoverIntegrationTests' started at 2026-10-18 21:00:31.024.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testAllPresentationsTrackOnlyTheirVisibleModeButtonsAndMenu]' started.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testAllPresentationsTrackOnlyTheirVisibleModeButtonsAndMenu]' passed (0.093 seconds).
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testClassicPendingRequestKeepsFeedbackForModesThatCanSupersedeIt]' started.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testClassicPendingRequestKeepsFeedbackForModesThatCanSupersedeIt]' passed (0.022 seconds).
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testMissingHelperLeavesOnlyMenuHoverAvailable]' started.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testMissingHelperLeavesOnlyMenuHoverAvailable]' passed (0.019 seconds).
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testPendingModeRequestRemovesFeedbackUntilOwnerConfirms]' started.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testPendingModeRequestRemovesFeedbackUntilOwnerConfirms]' passed (0.027 seconds).
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testResizingAndSwitchingPresentationRebuildsMatchingRegions]' started.
+Test Case '-[WattsonTests.FooterHoverIntegrationTests testResizingAndSwitchingPresentationRebuildsMatchingRegions]' passed (0.033 seconds).
+Test Suite 'FooterHoverIntegrationTests' passed at 2026-10-18 21:00:31.220.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.196 (0.196) seconds
+Test Suite 'PopoverAppearanceTests' started at 2026-10-18 21:00:31.220.
+Test Case '-[WattsonTests.PopoverAppearanceTests testAttachingWindowStartsFocusInViewportWithoutResettingScroll]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testAttachingWindowStartsFocusInViewportWithoutResettingScroll]' passed (0.074 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testBothScrollerStylesKeepInstrumentsInsideTheViewport]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testBothScrollerStylesKeepInstrumentsInsideTheViewport]' passed (0.064 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testFooterButtonsRevealKeyboardFocusWithoutInvokingActions]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testFooterButtonsRevealKeyboardFocusWithoutInvokingActions]' passed (0.055 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testGlassPopoverInitialAppearanceAndObserverLifetime]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testGlassPopoverInitialAppearanceAndObserverLifetime]' passed (0.067 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testGlassPreferencePreservesSystemAppearanceWithoutRebuildingClosedContent]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testGlassPreferencePreservesSystemAppearanceWithoutRebuildingClosedContent]' passed (0.061 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testHistoryCacheIncludesResolvedAppearanceButNotRepeatedSamples]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testHistoryCacheIncludesResolvedAppearanceButNotRepeatedSamples]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testLightDarkSwitchPreservesPowerReadingsAndGeometryAcrossStates]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testLightDarkSwitchPreservesPowerReadingsAndGeometryAcrossStates]' passed (0.376 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testPaletteResolvesToReadableLightAndDarkInstruments]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testPaletteResolvesToReadableLightAndDarkInstruments]' passed (0.000 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testPanelInheritsAppearanceAndKeepsNativePopoverSurfaceUncovered]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testPanelInheritsAppearanceAndKeepsNativePopoverSurfaceUncovered]' passed (0.047 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testRealGlassContentInheritsLightDarkAndResolvesSemanticReadingColor]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testRealGlassContentInheritsLightDarkAndResolvesSemanticReadingColor]' passed (0.352 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testReducedMotionChooserRevealsKeyboardFocusWithoutSelectingMode]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testReducedMotionChooserRevealsKeyboardFocusWithoutSelectingMode]' passed (0.001 seconds).
+Test Case '-[WattsonTests.PopoverAppearanceTests testViewportResizeKeepsNaturalDocumentAndClampsOldScrollOffset]' started.
+Test Case '-[WattsonTests.PopoverAppearanceTests testViewportResizeKeepsNaturalDocumentAndClampsOldScrollOffset]' passed (0.060 seconds).
+Test Suite 'PopoverAppearanceTests' passed at 2026-10-18 21:00:32.378.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 1.158 (1.158) seconds
+Test Suite 'ProcessActionButtonTests' started at 2026-10-18 21:00:32.378.
+Test Case '-[WattsonTests.ProcessActionButtonTests testAppearanceRefreshPreservesCallerControlConfiguration]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testAppearanceRefreshPreservesCallerControlConfiguration]' passed (0.004 seconds).
+Test Case '-[WattsonTests.ProcessActionButtonTests testCapsuleKeepsItsAssignedFrameAndNativeAction]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testCapsuleKeepsItsAssignedFrameAndNativeAction]' passed (0.001 seconds).
+Test Case '-[WattsonTests.ProcessActionButtonTests testDisabledCapsuleDoesNotDispatchAndCanBeReenabled]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testDisabledCapsuleDoesNotDispatchAndCanBeReenabled]' passed (0.001 seconds).
+Test Case '-[WattsonTests.ProcessActionButtonTests testDisabledSurfaceAndGlyphRemainNeutralAcrossTintChanges]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testDisabledSurfaceAndGlyphRemainNeutralAcrossTintChanges]' passed (0.003 seconds).
+Test Case '-[WattsonTests.ProcessActionButtonTests testEnabledGlassSurfaceFollowsTheSuppliedColorFamily]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testEnabledGlassSurfaceFollowsTheSuppliedColorFamily]' passed (0.072 seconds).
+Test Case '-[WattsonTests.ProcessActionButtonTests testOpaqueAccessibilitySurfacesKeepTheExactTintAndLegibleGlyph]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testOpaqueAccessibilitySurfacesKeepTheExactTintAndLegibleGlyph]' passed (0.009 seconds).
+Test Case '-[WattsonTests.ProcessActionButtonTests testTintRefreshIsIdempotentAndResolvesInTheButtonsAppearance]' started.
+Test Case '-[WattsonTests.ProcessActionButtonTests testTintRefreshIsIdempotentAndResolvesInTheButtonsAppearance]' passed (0.002 seconds).
+Test Suite 'ProcessActionButtonTests' passed at 2026-10-18 21:00:32.472.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.093 (0.094) seconds
+Test Suite 'TopProcessesViewTests' started at 2026-10-18 21:00:32.472.
+Test Case '-[WattsonTests.TopProcessesViewTests testAppPaletteChangesImmediatelyWithoutChangingReadingsSelectionOrFixedScale]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testAppPaletteChangesImmediatelyWithoutChangingReadingsSelectionOrFixedScale]' passed (0.123 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testBarsUseFixedHundredPointScaleIndependentOfOtherRowsAndDisplayCount]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testBarsUseFixedHundredPointScaleIndependentOfOtherRowsAndDisplayCount]' passed (0.031 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testChangingMeasurementsOrRankReusesRowsAndChangesWidthAndValueWithoutChangingPalette]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testChangingMeasurementsOrRankReusesRowsAndChangesWidthAndValueWithoutChangingPalette]' passed (0.079 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactHeightAndVisibleGeometryFitConfiguredCountsAcrossStates]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactHeightAndVisibleGeometryFitConfiguredCountsAcrossStates]' passed (0.062 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactToggleReusesRowsAndPreservesValuesGradientAndAccessibleDetails]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testCompactToggleReusesRowsAndPreservesValuesGradientAndAccessibleDetails]' passed (0.029 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testConfiguredHeightAndVisibleGeometryStayStableAcrossStates]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testConfiguredHeightAndVisibleGeometryStayStableAcrossStates]' passed (0.063 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultBarsUseTheSameFixedHorizontalGradientAndRevealOnlyTheMeasuredPrefix]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultBarsUseTheSameFixedHorizontalGradientAndRevealOnlyTheMeasuredPrefix]' passed (0.040 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleKeepsFullGradientWidthAndOnlyRevealsTheMeasuredPrefix]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleKeepsFullGradientWidthAndOnlyRevealsTheMeasuredPrefix]' passed (0.026 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleRetainsMaskGeometryAcrossThemesAndHighContrast]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testDefaultFixedScaleRetainsMaskGeometryAcrossThemesAndHighContrast]' passed (0.082 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testEveryProcessFieldRankAndUnshownReadingInvalidatesContent]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testEveryProcessFieldRankAndUnshownReadingInvalidatesContent]' passed (0.028 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testGradientAndOutlineFollowLightDarkAndHighContrastWithoutAnimations]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testGradientAndOutlineFollowLightDarkAndHighContrastWithoutAnimations]' passed (0.237 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalDataDoesNotBlockExternalLayoutOrAppearanceRefresh]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalDataDoesNotBlockExternalLayoutOrAppearanceRefresh]' passed (0.055 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalUpdatesSkipContentWorkAfterInitializingEveryStatus]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testIdenticalUpdatesSkipContentWorkAfterInitializingEveryStatus]' passed (0.029 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testKeyboardAndAccessibilitySelectionExposeCrossWithoutTerminating]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testKeyboardAndAccessibilitySelectionExposeCrossWithoutTerminating]' passed (0.029 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testLongNamesTruncateAndCPUWakeupBreakdownUsesActualInputs]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testLongNamesTruncateAndCPUWakeupBreakdownUsesActualInputs]' passed (0.025 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testMeasuringEmptyAndUnavailableRemainDistinctAndAccessible]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testMeasuringEmptyAndUnavailableRemainDistinctAndAccessible]' passed (0.026 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testMissingTrustedIdentityShowsDisabledCrossAndNeverCallsBack]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testMissingTrustedIdentityShowsDisabledCrossAndNeverCallsBack]' passed (0.026 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testMouseSelectionRevealsOnlySmallInlineForceQuitWithoutMovingMeasurements]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testMouseSelectionRevealsOnlySmallInlineForceQuitWithoutMovingMeasurements]' passed (0.027 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testNativeHelpExplainsActivityMeaningScaleAndCPUConventionWithoutOpeningAWindow]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testNativeHelpExplainsActivityMeaningScaleAndCPUConventionWithoutOpeningAWindow]' passed (0.024 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testNeutralSelectionAdaptsToLightDarkAndHighContrastWithoutChangingGradient]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testNeutralSelectionAdaptsToLightDarkAndHighContrastWithoutChangingGradient]' passed (0.096 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testNormalizedCountAndCompactChangesInvalidateContentOnlyWhenTheirValuesChange]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testNormalizedCountAndCompactChangesInvalidateContentOnlyWhenTheirValuesChange]' passed (0.038 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testPreviewStyleSwitchesReuseRowsAndRemoveTheFixedScaleMask]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testPreviewStyleSwitchesReuseRowsAndRemoveTheFixedScaleMask]' passed (0.043 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testRoundedHoverSummaryFitsTwoLinesWithoutRepeatingTheExplanation]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testRoundedHoverSummaryFitsTwoLinesWithoutRepeatingTheExplanation]' passed (0.024 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectedCapsuleKeepsUniformWidthWithoutMovingOtherContent]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectedCapsuleKeepsUniformWidthWithoutMovingOtherContent]' passed (0.055 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectedCrossKeepsItsButtonHitAndCallsBackWithCurrentImmutableProcess]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectedCrossKeepsItsButtonHitAndCallsBackWithCurrentImmutableProcess]' passed (0.028 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectionFollowsExactIdentityAcrossRankingAndClearsForPIDReuse]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testSelectionFollowsExactIdentityAcrossRankingAndClearsForPIDReuse]' passed (0.033 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testSingleSharedReflectionTracksOnlyTheRightActionAndClearsOnDismissal]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testSingleSharedReflectionTracksOnlyTheRightActionAndClearsOnDismissal]' passed (0.026 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testStatusCountCompactAndPresentationLifecycleManageSelectionIndependentlyOfContentGuard]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testStatusCountCompactAndPresentationLifecycleManageSelectionIndependentlyOfContentGuard]' passed (0.040 seconds).
+Test Case '-[WattsonTests.TopProcessesViewTests testZeroTinyOverflowAndHugeFiniteValuesRemainDistinctAndFit]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testZeroTinyOverflowAndHugeFiniteValuesRemainDistinctAndFit]' passed (0.029 seconds).
+Test Suite 'TopProcessesViewTests' passed at 2026-10-18 21:00:33.925.
+	 Executed 29 tests, with 0 failures (0 unexpected) in 1.451 (1.454) seconds
+Test Suite 'WattsonPackageTests.xctest' passed at 2026-10-18 21:00:33.925.
+	 Executed 68 tests, with 0 failures (0 unexpected) in 3.066 (3.072) seconds
+Test Suite 'Selected tests' passed at 2026-10-18 21:00:33.925.
+	 Executed 68 tests, with 0 failures (0 unexpected) in 3.066 (3.072) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

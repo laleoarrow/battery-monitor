@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "frozenSourceCommit": "7ec101a5b34a72539305d155608823aa42dc0b15",
+  "wholeCurrentTreeClaimedVerified": false,
+  "acceptedRunScope": "The 172-capture/15532-assertion run applies to the frozen snapshot and actual GUI build recorded in accepted/. Unrelated concurrent source changes are preserved. No source edits, rebuild from a moving tree, revert or stage were performed during this run. Prior ce08c50 bar-only accepted evidence remains untouched in the parent directory.",
+  "ownedRendererChecksAgainstActualGUIBuild": {
+    "Popover/TopProcessesView.swift": true,
+    "Popover/PopoverContentView.swift": true,
+    "Popover/ProcessActionButton.swift": true,
+    "Popover/FooterHoverFeedbackView.swift": true
+  },
+  "ownedRendererSHA256": {
+    "Popover/TopProcessesView.swift": "26eb1c7686db9dac1cc04c7d36df85e698d10b9e29a1290685c6fcf1d517873b",
+    "Popover/PopoverContentView.swift": "36656988dd9094f27389402674238a6dd4449fe9cabcfd9f5d4403e2fce3f32e",
+    "Popover/ProcessActionButton.swift": "163d83bb53bd440bc4a1b6a50855fcd153f338cbe4059c4eb468f81bb373d522",
+    "Popover/FooterHoverFeedbackView.swift": "4df575e283095ebc236e071e3e406cf8fde9cabb5fe4a8035604cd4acb683060"
+  },
+  "harnessMatchesActualGUIBuild": true,
+  "harnessSHA256": "c12840c7ea795a107d12fbb12b37329b854e87f334cef00636c41d56eb52b91b",
+  "currentManifestMismatches": [],
+  "missingManifestFiles": [],
+  "nativeEvidenceSummary": {
+    "captures": 172,
+    "assertions": 15532,
+    "failures": 0,
+    "selectedPopupRecords": 48,
+    "selectedModuleRecords": 48,
+    "greenBlueNeutralHoverModuleRecords": 48,
+    "disabledModuleRecords": 8,
+    "productionControllerModalRecords": 12,
+    "actionPaletteRecords": 152,
+    "unselectedModuleRecords": 0,
+    "actionCapsuleFrames": "All 56 recorded frames equal {{288, 4}, {38, 16}}"
+  },
+  "paletteVerification": "Across six power states, two themes, Classic/Glass and compact/detailed layouts, every process gradient middle stop matches the actual production History stroke. Every action tint matches the full-scale final gradient stop, including disabled rows. Selected overlay glow shadow matches that action tint, and green/blue/neutral native hover captures verify reflection/rim colors follow the same tint family. All 152 captured action/endpoint/glow records match within 1e-5 per RGBA component. Live charging -> full -> original state transitions retain matching colors, selection, content update count and bar geometry. All direct reorder/compact/disabled harness updates now explicitly preserve the host color and revalidate the palette.",
+  "previewVerification": "Charging dark compact uses a green action capsule, full light detailed uses blue, and on-battery dark compact uses neutral gray. Hover feedback follows those families. The 38x16pt capsule and 9pt X remain complete and unclipped; disabled light on-battery shows neutral bars and a disabled gray capsule.",
+  "evidenceLimitations": [
+    "The misleading early unselected-module crops were removed from this run. Selected six-state module and colored hover captures are the visual evidence.",
+    "The native matrix forces normal contrast and transparency settings. High-contrast branching is covered by focused unit tests, not claimed as native screenshot coverage. Light/Dark use separate popup cases.",
+    "Disabled behavior is checked as the actual NSButton isEnabled=false state; this run does not inject a separate mouse event into the disabled button. Enabled action uses native tracking and verifies the exact process identity.",
+    "Battery and process readings are fixtures. The GUI never signals user processes. The separate root-worker probe signals only its own child and does not install or exercise the canonical LaunchDaemon/socket."
+  ],
+  "cleanupChecksPassed": true
+}

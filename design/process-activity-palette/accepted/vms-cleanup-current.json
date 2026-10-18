@@ -1,0 +1,29 @@
+[
+  {
+    "Disk" : 50,
+    "Name" : "Wattson-Force-Quit-72FDF5BA",
+    "Accessed" : "2026-10-18T12:48:50Z",
+    "Running" : true,
+    "Source" : "local",
+    "State" : "running",
+    "Size" : 31
+  },
+  {
+    "Disk" : 50,
+    "Name" : "macOS-TestLab",
+    "Accessed" : "2026-10-15T06:45:45Z",
+    "Running" : false,
+    "Source" : "local",
+    "State" : "stopped",
+    "Size" : 33
+  },
+  {
+    "Disk" : 50,
+    "Name" : "macOS-TestLab-Base",
+    "Accessed" : "2026-10-18T12:46:28Z",
+    "Running" : false,
+    "Source" : "local",
+    "State" : "stopped",
+    "Size" : 30
+  }
+]
