@@ -1,0 +1,15 @@
+{
+  "started_at": "2026-10-18T15:46:25.895038+00:00",
+  "source_commit": "8300cabcb5859fcc74c3ff613a2c530a47c01f30",
+  "workflow": "macos-helper-install.yml",
+  "ref": "main",
+  "version": "4.3.22",
+  "distribution_mode": "community-ad-hoc",
+  "attempted": true,
+  "attempt_count": 1,
+  "outcome": "accepted",
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "",
+  "finished_at": "2026-10-18T15:46:28.746609+00:00"
+}

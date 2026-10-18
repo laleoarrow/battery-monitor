@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "mode": "read-only-preflight",
+  "pushAuthorized": false,
+  "remoteRepository": "laleoarrow/homebrew-tap",
+  "remoteBranch": "main",
+  "remoteCommit": "7b4e9b017a1d2dcd38a5e7e2a4f579c740ef3731",
+  "currentCaskVersion": "4.3.19",
+  "currentCaskPKGSHA256": "6f272099fc8af547c32539a07849d70f017366cfbbea4f560a327bcc654b4d5d",
+  "caskFileSHA256": "0cd8a16cd6bfb98f0df6f5f6d80ad3a0fd379f0bf54b0068b36f1f929050cb08",
+  "workflowSHA256": "34dbee04e7369eb4c7af0ab7577757b4f101bfc891983eb8689752c705703649",
+  "rubySyntax": "Syntax OK",
+  "workflowName": "brew test-bot",
+  "workflowPath": ".github/workflows/tests.yml",
+  "workflowEvent": "push",
+  "expectedJobNames": [
+    "test-bot (ubuntu-24.04)",
+    "test-bot (macos-15-intel)",
+    "test-bot (macos-26)"
+  ],
+  "currentCIRun": 39049550532,
+  "currentCIJobs": [
+    {
+      "name": "test-bot (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "test-bot (macos-26)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "test-bot (macos-15-intel)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "currentCIRunAllThreeSuccess": true,
+  "caskGitBlobs": {
+    "Casks/idata.rb": "570eb4077db1f87230284966d40900bd32e59b5e",
+    "Casks/wattson.rb": "dde08c4483074d3b60a7fe8ba620f548cb82e948"
+  },
+  "futureMutationScope": [
+    "Casks/wattson.rb version and sha256 lines only"
+  ],
+  "futureRequiredChecks": [
+    "Verified public4.3.22PKG checksum and parent publication authorization",
+    "Fresh remote main identity/fastforwardonly",
+    "Ruby syntax and surgical two-line diff",
+    "No other cask/workflow file changes",
+    "Exact newtapSHA tests.yml push run all3jobs completed success"
+  ],
+  "hostHomebrewInstallAttempted": false,
+  "timestampUTC": "2026-10-18T16:51:00.709364+00:00"
+}

@@ -1,0 +1,12 @@
+{
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22.noindex/python-ci-parity.w7FXZ4",
+  "test_defaults_suite": "Wattson.ReleaseHeadless.v4-3-22.0a612b8f-8a17-4074-ab97-faac87652f9d",
+  "started_utc": "2026-10-18T13:32:41.059382+00:00",
+  "CFFIXED_USER_HOME": "unset",
+  "WATTSON_RUN_INTERACTION": "unset",
+  "source_changes": false,
+  "timeout_changes": false,
+  "reason": "Original full suite reached exit124 before the 0.5s injected mock stage wrote a marker. Focused unchanged-fixture rerun diagnoses transient startup; a fresh full default suite is still required.",
+  "focused_command": "PYTHONPATH=tests python3 -m unittest -v test_system_battery_support.SystemBatterySupportLifecycleTests.test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned",
+  "full_command": "env -u WATTSON_RUN_INTERACTION python3 -m unittest discover -s tests -v"
+}

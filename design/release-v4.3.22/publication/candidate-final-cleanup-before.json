@@ -1,0 +1,39 @@
+{
+  "observed_at": "2026-10-18T14:58:55.318120+00:00",
+  "canonical_app_exists": true,
+  "canonical_version": {
+    "exit_code": 0,
+    "stdout": "4.3.22",
+    "stderr": ""
+  },
+  "canonical_build": {
+    "exit_code": 0,
+    "stdout": "4.3.22",
+    "stderr": ""
+  },
+  "canonical_receipt": {
+    "exit_code": 0,
+    "stdout": "package-id: com.leoarrow.wattson.pkg\nversion: 4.3.22\nvolume: /\nlocation: \ninstall-time: 1792329341",
+    "stderr": ""
+  },
+  "canonical_processes": {
+    "exit_code": 0,
+    "stdout": "80435   501 /Applications/Wattson.app/Contents/MacOS/Wattson",
+    "stderr": ""
+  },
+  "spotlight_app_paths": {
+    "exit_code": 0,
+    "stdout": "/Applications/Wattson.app",
+    "stderr": ""
+  },
+  "launchservices_wattson_paths": {
+    "exit_code": 0,
+    "stdout": "path:                       /Applications/Wattson.app (0x217b0)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.IEXM6b (0xe358)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.qCtF6b (0xe368)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.ONYcUF (0xe378)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.h9fb4G (0xe3a8)\npath:                       /Volumes/Wattson v2.0.5 (0xe3b4)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.5FMjx3 (0xe3f4)\npath:                       /Volumes/Wattson v2.0.5 (0xe410)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.j3BKWK (0xe438)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.tW8uqt (0xe460)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.l2bGZH (0xe498)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.S59NMu (0xe508)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.AItSFC (0xe54c)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.ayxoTu (0xe5a8)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.LjhAiG (0xe764)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-inspect.AhAtFF (0xe790)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.uVqKs3 (0xe7c8)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.MP4xaS (0xe7f4)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.j7uyF0 (0xe818)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.RdJWGQ (0xe844)\npath:                       /Volumes/Wattson v2.0.2 (0xd654)\npath:                       /private/tmp/wattson-v2.0.2-install (0xd6a8)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.hpN87R (0xd798)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.U71ie2 (0xd7c4)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.pJQtuH (0xd7fc)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.MKSp28 (0xd838)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.usoKBb (0xd868)\npath:                       /Volumes/Wattson v2.0.3 (0xd894)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.HpD0lC (0xd8b8)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.r0q1FC (0xdac0)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.vcVuzF (0xdaf8)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.f0pOk5 (0xdb28)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.maJw7w (0xdb5c)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.d6hbLJ (0xdb98)\npath:                       /private/var/folders/jc/p8qsvpfd6t71pngj51n4yvvh0000gn/T/wattson-dmg-verify.ZGeFsL (0xdbc8)",
+    "stderr": ""
+  },
+  "project_mounts": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22.noindex/swift-ci-parity.QN8I4n",
+  "test_defaults_suite": "Wattson.ReleaseHeadless.v4-3-22.593e95d9-504b-4354-a038-c7519441c7c1",
+  "started_utc": "2026-10-18T13:31:17.261185+00:00",
+  "CFFIXED_USER_HOME": "unset",
+  "WATTSON_RUN_INTERACTION": "unset",
+  "reason": "Prior caller-supplied CFFIXED_USER_HOME conflicts with intentional persisted-suite fixture. Match CI; all test domains retain their existing exact teardown ownership.",
+  "preparation": "swift build --build-tests with isolated scratch/cache/config/security paths",
+  "test_command": "env -u CFFIXED_USER_HOME WATTSON_FORCE_REDUCE_MOTION=0 WATTSON_FORCE_REDUCE_TRANSPARENCY=0 swift test --skip-build with the same isolated scratch/cache/config/security paths"
+}

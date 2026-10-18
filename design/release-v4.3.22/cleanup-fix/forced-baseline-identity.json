@@ -1,0 +1,9 @@
+{
+  "commit": "fdf6d96d30d30e0aaee709fa8696ce980ea19100",
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-cleanup.noindex/forced-baseline.n7M8uS",
+  "started_utc": "2026-10-18T14:01:09.386838+00:00",
+  "changes": "Only new deterministic regression test overlay; production script, local_cleanup.sh and run_owned.py remain frozen baseline.",
+  "test_sha256": "d1a1d65f371d275ca7161aaead18d64ec37644b5bbaaa423863f5284c11b4f2c",
+  "rendezvous": "Fixture pauses after runner spawn and before parent PID assignment until its log command exists; then TERM targets the shell. Missed runner and log command PIDs are fixture-recorded for bounded cleanup.",
+  "expected_baseline": "Shell exits143; untracked runner/log retain captured pipes, so communicate reaches unchanged65s deadline. Failure diagnostics show only fixture PIDs."
+}

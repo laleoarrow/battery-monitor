@@ -1,0 +1,64 @@
+{
+  "anonymousDownload": true,
+  "authentication": "Anonymous public REST asset API and CDN via urllib; no gh, token, Authorization header, cookies or netrc; default TLS verification",
+  "candidateRunID": 39145124379,
+  "checkedAtUTC": "2026-10-18T17:04:00.129818+00:00",
+  "elapsedSeconds": 11.03,
+  "files": {
+    "SHA256SUMS.txt": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/653975590",
+      "bytes": 303,
+      "cmpToCandidate": true,
+      "http_status": 200,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/SHA256SUMS.txt",
+      "ranges": 0,
+      "releaseAssetID": 653975590,
+      "sha256": "adab1f7501fd7adc39f69f42446a7d359ebf7f3b6f0f3b60c7c6302940dd6697"
+    },
+    "Wattson-v4.3.22-macos-universal.dmg": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/653975587",
+      "boundedSplitRetries": 0,
+      "bytes": 6779793,
+      "cmpToCandidate": true,
+      "http_status": 206,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-macos-universal.dmg",
+      "rangeBytes": 262144,
+      "ranges": 26,
+      "releaseAssetID": 653975587,
+      "sha256": "946de7159e483c0419d5d3ecc79f0b8cc6b673ee7201c53de45fdf2a8b722523"
+    },
+    "Wattson-v4.3.22-macos-universal.pkg": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/653975585",
+      "boundedSplitRetries": 0,
+      "bytes": 6900303,
+      "cmpToCandidate": true,
+      "http_status": 206,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-macos-universal.pkg",
+      "rangeBytes": 262144,
+      "ranges": 27,
+      "releaseAssetID": 653975585,
+      "sha256": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995"
+    },
+    "Wattson-v4.3.22-release-info.txt": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/653975643",
+      "bytes": 395,
+      "cmpToCandidate": true,
+      "http_status": 200,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-release-info.txt",
+      "ranges": 0,
+      "releaseAssetID": 653975643,
+      "sha256": "7f1706b2952afd3e1bacda22053ef81cfbc4732a643eb3a8e3302315eb2f01e5"
+    }
+  },
+  "inheritedRealVerification": "design/release-v4.3.22/publication/artifact-proof-39145124379.json",
+  "inheritedRealVerificationSHA256": "cd648f9e5eb5890c88dcdd1d5bac478b2897502aa01eb4d030f7d041917061ce",
+  "publicAssetsMatchCandidate": true,
+  "rebuildPerformed": false,
+  "releaseID": 416577205,
+  "releaseURL": "https://github.com/laleoarrow/battery-monitor/releases/tag/v4.3.22",
+  "sourceCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "status": "passed",
+  "strictThreeEntryManifest": true,
+  "structureReverified": false,
+  "transport": "Previously validated public REST 302/CDN route; 256 KiB ranges, eight workers per installer, one bounded half-range split retry"
+}

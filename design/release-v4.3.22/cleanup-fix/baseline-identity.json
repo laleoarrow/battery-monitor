@@ -1,0 +1,8 @@
+{
+  "commit": "fdf6d96d30d30e0aaee709fa8696ce980ea19100",
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-cleanup.noindex/baseline.BwxtA2",
+  "started_utc": "2026-10-18T13:56:33.384083+00:00",
+  "command": "env -u CFFIXED_USER_HOME -u WATTSON_RUN_INTERACTION PYTHONPATH=tests python3 -m unittest -v test_run_preview_cleanup.RunPreviewCleanupTests.test_terminated_log_session_stops_its_detached_app",
+  "changes": "none; git archive of frozen source",
+  "ownership": "Shared cleanup owns the unique archive; existing local_runtime owns test fixtures, app processes and exact preference suites. No production app launch."
+}

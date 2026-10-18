@@ -1,0 +1,1 @@
+20261018T152612Z failed to get run: Get "https://api.github.com/repos/laleoarrow/battery-monitor/actions/runs/39139882106?exclude_pull_requests=true": net/http: TLS handshake timeout

@@ -1,0 +1,12 @@
+{
+  "observed_at": "2026-10-18T16:28:03.911297+00:00",
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "remote_main": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "ci_run_id": 39143941668,
+  "ci_conclusion": "success",
+  "native_proof_all_passed": true,
+  "tag_absent": true,
+  "release_absent": true,
+  "existing_exact_source_candidates": [],
+  "root_explicit_authorization_received": true
+}

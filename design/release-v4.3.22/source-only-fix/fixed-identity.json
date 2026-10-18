@@ -1,0 +1,17 @@
+{
+  "baseline_commit": "9d157d496024d32b0f65ec3fe9b1c927678352fc",
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-source-only.noindex/fixed.lY6NMG",
+  "started_utc": "2026-10-18T15:14:40.168732+00:00",
+  "overlay": [
+    "scripts/lib/local_cleanup.sh",
+    "tests/test_local_runtime_cleanup.py"
+  ],
+  "sha256": {
+    "scripts/lib/local_cleanup.sh": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+    "tests/test_local_runtime_cleanup.py": "b3ffc78d00c977c23dff019614ef36459a5bc66678c7502a836fabccb7106ef6",
+    "tests/test_run_preview_cleanup.py": "a5c2fb8911d4c6b14ace3383f19fa5f2b1a2bec6b6874f7dfb34b83210476ba5",
+    "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872"
+  },
+  "command": "env -u CFFIXED_USER_HOME -u WATTSON_RUN_INTERACTION PYTHONPATH=tests python3 -m unittest -v test_local_runtime_cleanup test_packaging_cleanup test_run_preview_cleanup",
+  "requirements": "All three source-only public runners preserve caller TERM/EXIT traps, complete body and cleanup markers, stop child/descendant; original three forced registration-signal tests remain unchanged."
+}

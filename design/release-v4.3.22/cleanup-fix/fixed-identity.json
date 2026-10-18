@@ -1,0 +1,17 @@
+{
+  "baseline_commit": "fdf6d96d30d30e0aaee709fa8696ce980ea19100",
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-cleanup.noindex/fixed.3XOUal",
+  "started_utc": "2026-10-18T14:02:19.230685+00:00",
+  "changes": "Only tests/test_run_preview_cleanup.py and scripts/lib/local_cleanup.sh overlays. Preview script and Python supervisor remain frozen.",
+  "sha256": {
+    "tests/test_run_preview_cleanup.py": "d1a1d65f371d275ca7161aaead18d64ec37644b5bbaaa423863f5284c11b4f2c",
+    "scripts/lib/local_cleanup.sh": "55979bc78be56144c26d667e86122921f08e0223c3c5184936b8ed70628bd7e0",
+    "script/build_and_run.sh": "30cfa9823d065eeac0989af8f0c64e0f9f1b06e58214c1bc3e659f08ca1e5f93",
+    "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872"
+  },
+  "environment": {
+    "CFFIXED_USER_HOME": "unset",
+    "WATTSON_RUN_INTERACTION": "unset"
+  },
+  "ownership": "Shared lifecycle wrapper and existing local_runtime fixtures, with explicit fixture-only runner/log PID fallback cleanup."
+}

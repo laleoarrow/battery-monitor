@@ -1,0 +1,92 @@
+{
+  "run_id": 39137918718,
+  "head_sha": "9d157d496024d32b0f65ec3fe9b1c927678352fc",
+  "event": "workflow_dispatch",
+  "branch": "main",
+  "status": "completed",
+  "conclusion": "failure",
+  "eligible_for_publication": false,
+  "observed_at": "2026-10-18T15:11:44.338838+00:00",
+  "root_cause": "New signal-deferral state is initialized only by wattson_cleanup_init, while workflow custom-cleanup callers source the shared library without that initializer. _wattson_runner_registered reads unset _WATTSON_PENDING_SIGNAL under set -u. First uninstall exits early; cleanup exits again before forgetting receipt. ARM v2 fixture then rejects the leftover receipt. Both Intel jobs report success despite the same early body failure.",
+  "native_and_build_job_conclusion": "success",
+  "install_jobs": [
+    {
+      "runner": "macos-15-intel",
+      "job_id": 117709255285,
+      "github_conclusion": "success",
+      "log": "design/release-v4.3.22/publication/candidate-final-job-macos-15-intel.log",
+      "source_only_unbound_variable_errors": [
+        "Install on macos-15-intel\tTest first install and disabled-service reinstall\t2026-10-18T15:07:32.3715570Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable",
+        "Install on macos-15-intel\tTest first install and disabled-service reinstall\t2026-10-18T15:07:32.4503870Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable"
+      ],
+      "v2_receipt_precondition_errors": [],
+      "first_lifecycle_body_completion_observed": false,
+      "lifecycle_accepted": false,
+      "dmg_helper_free_body_completion_observed": false
+    },
+    {
+      "runner": "macos-26",
+      "job_id": 117709255300,
+      "github_conclusion": "failure",
+      "log": "design/release-v4.3.22/publication/candidate-final-job-macos-26.log",
+      "source_only_unbound_variable_errors": [
+        "Install on macos-26\tTest first install and disabled-service reinstall\t2026-10-18T15:07:20.3120770Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable",
+        "Install on macos-26\tTest first install and disabled-service reinstall\t2026-10-18T15:07:20.3942570Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable"
+      ],
+      "v2_receipt_precondition_errors": [
+        "Install on macos-26\tTest upgrade from the published v2.1.5 release\t2026-10-18T15:07:20.8609820Z v2 fixture requires an absent Wattson package receipt"
+      ],
+      "first_lifecycle_body_completion_observed": false,
+      "lifecycle_accepted": false,
+      "dmg_helper_free_body_completion_observed": false
+    },
+    {
+      "runner": "macos-15",
+      "job_id": 117709255336,
+      "github_conclusion": "failure",
+      "log": "design/release-v4.3.22/publication/candidate-final-job-macos-15.log",
+      "source_only_unbound_variable_errors": [
+        "Install on macos-15\tTest first install and disabled-service reinstall\t2026-10-18T15:07:06.7948420Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable",
+        "Install on macos-15\tTest first install and disabled-service reinstall\t2026-10-18T15:07:06.8669410Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable"
+      ],
+      "v2_receipt_precondition_errors": [
+        "Install on macos-15\tTest upgrade from the published v2.1.5 release\t2026-10-18T15:07:07.2972440Z v2 fixture requires an absent Wattson package receipt"
+      ],
+      "first_lifecycle_body_completion_observed": false,
+      "lifecycle_accepted": false,
+      "dmg_helper_free_body_completion_observed": false
+    },
+    {
+      "runner": "macos-26-intel",
+      "job_id": 117709255357,
+      "github_conclusion": "success",
+      "log": "design/release-v4.3.22/publication/candidate-final-job-macos-26-intel.log",
+      "source_only_unbound_variable_errors": [
+        "Install on macos-26-intel\tTest first install and disabled-service reinstall\t2026-10-18T15:07:09.9850090Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable",
+        "Install on macos-26-intel\tTest first install and disabled-service reinstall\t2026-10-18T15:07:10.0840420Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable"
+      ],
+      "v2_receipt_precondition_errors": [],
+      "first_lifecycle_body_completion_observed": false,
+      "lifecycle_accepted": false,
+      "dmg_helper_free_body_completion_observed": false
+    },
+    {
+      "runner": "macos-14",
+      "job_id": 117709255384,
+      "github_conclusion": "failure",
+      "log": "design/release-v4.3.22/publication/candidate-final-job-macos-14.log",
+      "source_only_unbound_variable_errors": [
+        "Install on macos-14\tTest first install and disabled-service reinstall\t2026-10-18T15:07:04.3570770Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable",
+        "Install on macos-14\tTest first install and disabled-service reinstall\t2026-10-18T15:07:04.4112680Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable"
+      ],
+      "v2_receipt_precondition_errors": [
+        "Install on macos-14\tTest upgrade from the published v2.1.5 release\t2026-10-18T15:07:04.6590750Z v2 fixture requires an absent Wattson package receipt"
+      ],
+      "first_lifecycle_body_completion_observed": false,
+      "lifecycle_accepted": false,
+      "dmg_helper_free_body_completion_observed": false
+    }
+  ],
+  "dmg_false_green_evidence": "All five helper-free DMG steps lack their actual final success echo. Source-only wattson_unregister_app calls redirect the same new unbound-variable error; step status alone is therefore insufficient.",
+  "artifact_download": "Two bounded read-only attempts did not complete. Parent requested a clean handoff; the owned wrapper was terminated, all scratch removed, and no artifact/signature/PKG-DMG review is claimed."
+}

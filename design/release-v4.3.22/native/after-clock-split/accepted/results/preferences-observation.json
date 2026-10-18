@@ -1,0 +1,7 @@
+{
+  "durationSeconds": 35.011,
+  "filesystemChecks": 157,
+  "unexpectedPreferences": [],
+  "allPassed": true,
+  "method": "Filesystem-only observation after gate script cleanup; no defaults reads."
+}

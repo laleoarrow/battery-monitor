@@ -1,0 +1,6 @@
+cef71cc27055570f4069332e460f533261d9c81053a8cdff6d16eb68765cc82b  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/artifact-v4.3.22.noindex/run.PKQPnN/frozen/VERSION
+7c701bfd8298ead217eaad4e805fcc51cefd7ae910ef33a3792594b97f2f92f5  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/artifact-v4.3.22.noindex/run.PKQPnN/frozen/BatteryPowerApp.entitlements
+b09b5d7d8e205b1bafed5c3375702469a179446e5ed0d2126c3c432bf7d34712  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/artifact-v4.3.22.noindex/run.PKQPnN/frozen/scripts/verify_release.sh
+f435b86a6c90e44b6ccf8b36fa5249f6b3c5329b02d5d4d15d56a861760aa03d  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/artifact-v4.3.22.noindex/run.PKQPnN/frozen/scripts/verify_dmg.sh
+9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/artifact-v4.3.22.noindex/run.PKQPnN/frozen/scripts/lib/local_cleanup.sh
+812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/artifact-v4.3.22.noindex/run.PKQPnN/frozen/scripts/lib/run_owned.py

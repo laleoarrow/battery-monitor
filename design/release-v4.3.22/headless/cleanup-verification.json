@@ -1,0 +1,88 @@
+{
+  "checked_utc": "2026-10-18T13:38:03.821714+00:00",
+  "workspaces": [
+    {
+      "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22.noindex/headless.CGZ6US",
+      "exists": false,
+      "matching_processes": [],
+      "launchservices_mentions_workspace": false,
+      "spotlight_mentions_workspace": false,
+      "parent_owned_domains": [
+        {
+          "domain": "Wattson.ReleaseHeadless.v4-3-22.98408c93-2e0b-457f-9821-5644242a29a1",
+          "defaults_read_status": 1,
+          "plist_exists": false
+        },
+        {
+          "domain": "Wattson.ReleaseHeadless.v4-3-22.98408c93-2e0b-457f-9821-5644242a29a1.second",
+          "defaults_read_status": 1,
+          "plist_exists": false
+        },
+        {
+          "domain": "Wattson.ReleaseHeadless.v4-3-22.98408c93-2e0b-457f-9821-5644242a29a1.app",
+          "defaults_read_status": 1,
+          "plist_exists": false
+        }
+      ]
+    },
+    {
+      "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22.noindex/swift-ci-parity.QN8I4n",
+      "exists": false,
+      "matching_processes": [],
+      "launchservices_mentions_workspace": false,
+      "spotlight_mentions_workspace": false,
+      "parent_owned_domains": [
+        {
+          "domain": "Wattson.ReleaseHeadless.v4-3-22.593e95d9-504b-4354-a038-c7519441c7c1",
+          "defaults_read_status": 1,
+          "plist_exists": false
+        },
+        {
+          "domain": "Wattson.ReleaseHeadless.v4-3-22.593e95d9-504b-4354-a038-c7519441c7c1.second",
+          "defaults_read_status": 1,
+          "plist_exists": false
+        },
+        {
+          "domain": "Wattson.ReleaseHeadless.v4-3-22.593e95d9-504b-4354-a038-c7519441c7c1.app",
+          "defaults_read_status": 1,
+          "plist_exists": false
+        }
+      ]
+    },
+    {
+      "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22.noindex/python-ci-parity.w7FXZ4",
+      "exists": false,
+      "matching_processes": [],
+      "launchservices_mentions_workspace": false,
+      "spotlight_mentions_workspace": false,
+      "parent_owned_domains": [
+        {
+          "domain": "Wattson.ReleaseHeadless.v4-3-22.0a612b8f-8a17-4074-ab97-faac87652f9d",
+          "defaults_read_status": 1,
+          "plist_exists": false
+        },
+        {
+          "domain": "Wattson.ReleaseHeadless.v4-3-22.0a612b8f-8a17-4074-ab97-faac87652f9d.second",
+          "defaults_read_status": 1,
+          "plist_exists": false
+        },
+        {
+          "domain": "Wattson.ReleaseHeadless.v4-3-22.0a612b8f-8a17-4074-ab97-faac87652f9d.app",
+          "defaults_read_status": 1,
+          "plist_exists": false
+        }
+      ]
+    }
+  ],
+  "spotlight_query_status": 0,
+  "remaining_headless_workspaces": [],
+  "canonical_app_exists": true,
+  "canonical_helper_exists": true,
+  "scope": "Read-only verification. Only parent-created exact test suites were queried. No production defaults, apps, helper, receipt, or mounts changed.",
+  "owned_resources_clean": true,
+  "syntax_workspace": {
+    "path": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22.noindex/syntax.16ieeW",
+    "exists": false
+  },
+  "scratch_root_exists": false
+}

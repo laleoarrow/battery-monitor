@@ -1,0 +1,15 @@
+{
+  "comparisons": {
+    "canonical_app_version": true,
+    "canonical_files": true,
+    "canonical_running_pids": true,
+    "receipt": true,
+    "selected_wattson_registered_paths": true
+  },
+  "download_occurred": false,
+  "owned_mounts_absent": true,
+  "owned_processes_absent": true,
+  "reason": "Overstrict total-artifact guard rejected expected separate build-log artifact; corrected to unique matching candidate",
+  "status": "passed",
+  "workspace_removed": true
+}

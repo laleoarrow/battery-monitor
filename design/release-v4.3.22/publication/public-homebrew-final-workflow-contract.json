@@ -1,0 +1,55 @@
+{
+  "reviewed_at": "2026-10-18T16:57:02.547082+00:00",
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "workflow_sha256": {
+    ".github/workflows/homebrew-install-test.yml": "0ab831cd022d06d9912b73f2f5485810d6dfe2e992b3a52615a929dc5e9c6356",
+    ".github/workflows/pages.yml": "1581c1d6b68f8d785c82731095208bae48bc8192b301a8776825fed4e4ca93a9"
+  },
+  "dispatch": {
+    "workflow": "homebrew-install-test.yml",
+    "ref": "main",
+    "sole_input": {
+      "release_tag": "v4.3.22"
+    },
+    "authorized": false,
+    "attempts": 0
+  },
+  "prepare_requires": [
+    "Dispatched SHA equals current remote main and matching VERSION",
+    "Successful exact-source main push ci.yml",
+    "Stable nondraft release and four unique distribution assets;3-line public manifest verifies all",
+    "Current public tap main snapshots exact SHA with version and PKG digest matching manifest",
+    "Successful exact-tap-SHA main push tests.yml"
+  ],
+  "matrix": {
+    "Homebrew lifecycle on macos-15-intel": "x86_64",
+    "Homebrew lifecycle on macos-26": "arm64"
+  },
+  "actual_required_marker_per_architecture": "Public Homebrew cask install, helper health, and uninstall cleanup passed.",
+  "public_checks": [
+    "Exact cloned tap SHA and cask version/checksum/URL",
+    "Installed app identity/version and universal app/helper",
+    "Helper root ownership and modes; loaded service and successful health probe",
+    "Receipt and Homebrew installed version",
+    "Normal uninstall removes app/helper/plist/socket/login plist,receipt,cask listing,helper/login registrations and disabled state"
+  ],
+  "auto_after_both_pass": [
+    "Mark stable release latest and confirm /releases/latest",
+    "Dispatch pages.yml on main with release_tag=v4.3.22"
+  ],
+  "pages_requires": [
+    "Dispatched source still current main,VERSION4.3.22,exact-source pushCI success",
+    "Stable public release",
+    "npm ci,test,lint,export:pages and artifact upload",
+    "Deploy GitHub Pages job success and deployment URL"
+  ],
+  "observation_limits": [
+    "Workflow does not assert public GUI popup/process stability; do not claim it",
+    "Latest may update before a later Pages failure; require Pages deploy success separately"
+  ],
+  "freeze_constraints": [
+    "Keep battery-monitor main exact7f until Pages green",
+    "Keep tap main unchanged until both public cask validations finish"
+  ],
+  "no_duplicate_manual_latest_or_pages": true
+}

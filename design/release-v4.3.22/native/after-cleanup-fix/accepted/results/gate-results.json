@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "checks": {
+    "animationExitZero": true,
+    "animationFullPass": true,
+    "systemAccessibilityUnchanged": true,
+    "baselineExitZero": true,
+    "baselineFullPass": true,
+    "baselineChecksAtLeast32": true,
+    "legacyExitZero": true,
+    "legacyFullPass": true,
+    "legacyChecksAtLeast32": true,
+    "accessibilityExitZero": true,
+    "accessibilityFullPass": true,
+    "accessibilityChecksAtLeast32": true
+  },
+  "interactionChecks": {
+    "baseline": 440,
+    "legacy": 438,
+    "accessibility": 432
+  },
+  "systemAccessibilityWritten": false
+}

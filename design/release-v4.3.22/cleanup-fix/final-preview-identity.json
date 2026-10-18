@@ -1,0 +1,17 @@
+{
+  "baseline_commit": "fdf6d96d30d30e0aaee709fa8696ce980ea19100",
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-cleanup.noindex/final-preview.vg22u1",
+  "started_utc": "2026-10-18T14:07:03.294394+00:00",
+  "changes_since_initial27_tests": "Test fallback ignores Darwin killpg PermissionError only for the exact log group with no live members, using existing local_runtime._live_group; production helper adds one explanatory comment only.",
+  "sha256": {
+    "tests/test_run_preview_cleanup.py": "a5c2fb8911d4c6b14ace3383f19fa5f2b1a2bec6b6874f7dfb34b83210476ba5",
+    "scripts/lib/local_cleanup.sh": "e78cf3c2a5bece68162fe8b044451f4e67cdd54df34626a4697d8ec34ecd7d41",
+    "script/build_and_run.sh": "30cfa9823d065eeac0989af8f0c64e0f9f1b06e58214c1bc3e659f08ca1e5f93",
+    "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872"
+  },
+  "environment": {
+    "CFFIXED_USER_HOME": "unset",
+    "WATTSON_RUN_INTERACTION": "unset"
+  },
+  "command": "env -u CFFIXED_USER_HOME -u WATTSON_RUN_INTERACTION PYTHONPATH=tests python3 -m unittest -v test_run_preview_cleanup"
+}

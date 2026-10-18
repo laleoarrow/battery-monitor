@@ -1,0 +1,7039 @@
+{
+  "observations" : [
+    {
+      "elapsed" : 1.6666666624587378e-07,
+      "hasHistoryAnimations" : true,
+      "mediaNow" : 80.354339083333358,
+      "owners" : [
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                64,
+                322.5333333333333,
+                64
+              ],
+              [
+                3,
+                324.35555555555555,
+                64,
+                326.17777777777781,
+                42.666666666666693,
+                328,
+                21.333333333333336
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                317.06666666666666,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                64,
+                322.5333333333333,
+                64
+              ],
+              [
+                3,
+                324.35555555555555,
+                64,
+                326.17777777777781,
+                42.666666666666693,
+                328,
+                21.333333333333336
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 5.3333333333333357,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              56.333333333333336
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "installed-before-flush",
+      "rootClock" : {
+        "beginTime" : 0,
+        "hasSuperlayer" : true,
+        "localNow" : 80.353807125000017,
+        "speed" : 0,
+        "timeOffset" : 80.353807125000017
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0,
+        "hasSuperlayer" : true,
+        "localNow" : 80.353807125000017,
+        "speed" : 0,
+        "timeOffset" : 80.353807125000017
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 0.035183083333322429,
+      "hasHistoryAnimations" : true,
+      "mediaNow" : 80.389522000000014,
+      "owners" : [
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : 16,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                64,
+                322.5333333333333,
+                64
+              ],
+              [
+                3,
+                324.35555555555555,
+                64,
+                326.17777777777781,
+                42.666666666666693,
+                328,
+                21.333333333333336
+              ],
+              [
+                3,
+                329.82222222222219,
+                11.851851851851833,
+                331.64444444444445,
+                3.5555555555555003,
+                333.46666666666664,
+                0
+              ],
+              [
+                1,
+                333.46666666666664,
+                64
+              ],
+              [
+                1,
+                317.06666666666666,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : 16,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                64,
+                322.5333333333333,
+                64
+              ],
+              [
+                3,
+                324.35555555555555,
+                64,
+                326.17777777777781,
+                42.666666666666693,
+                328,
+                21.333333333333336
+              ],
+              [
+                3,
+                329.82222222222219,
+                11.851851851851833,
+                331.64444444444445,
+                3.5555555555555003,
+                333.46666666666664,
+                0
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 5.3333333333333357,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              56.333333333333336
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353807125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "installed-after-compositor-turn",
+      "rootClock" : {
+        "beginTime" : 0,
+        "hasSuperlayer" : true,
+        "localNow" : 80.353807125000017,
+        "speed" : 0,
+        "timeOffset" : 80.353807125000017
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0,
+        "hasSuperlayer" : true,
+        "localNow" : 80.353807125000017,
+        "speed" : 0,
+        "timeOffset" : 80.353807125000017
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 8.3333333122936892e-08,
+      "hasHistoryAnimations" : true,
+      "mediaNow" : 80.389908125000019,
+      "owners" : [
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 6.5708333337965996e-05,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : 16,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353872833333355,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                64,
+                322.5333333333333,
+                64
+              ],
+              [
+                3,
+                324.35555555555555,
+                64,
+                326.17777777777781,
+                42.666666666666693,
+                328,
+                21.333333333333336
+              ],
+              [
+                3,
+                329.82222222222219,
+                11.851851851851833,
+                331.64444444444445,
+                3.5555555555555003,
+                333.46666666666664,
+                0
+              ],
+              [
+                1,
+                333.46666666666664,
+                64
+              ],
+              [
+                1,
+                317.06666666666666,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353872833333355,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 6.5708333337965996e-05,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : 16,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353872833333355,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                64,
+                322.5333333333333,
+                64
+              ],
+              [
+                3,
+                324.35555555555555,
+                64,
+                326.17777777777781,
+                42.666666666666693,
+                328,
+                21.333333333333336
+              ],
+              [
+                3,
+                329.82222222222219,
+                11.851851851851833,
+                331.64444444444445,
+                3.5555555555555003,
+                333.46666666666664,
+                0
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353872833333355,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 6.5708333337965996e-05,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353872833333355,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 5.3333333333333357,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              56.333333333333336
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.353872833333355,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "observe-start",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.353872833333355,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.353872833333355,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 0.00080683333332842722,
+      "hasHistoryAnimations" : true,
+      "mediaNow" : 80.390714875000015,
+      "owners" : [
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0.00087245833333327028,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : 16,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.35467958333335,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                64,
+                322.5333333333333,
+                64
+              ],
+              [
+                3,
+                324.35555555555555,
+                64,
+                326.17777777777781,
+                42.666666666666693,
+                328,
+                21.333333333333336
+              ],
+              [
+                3,
+                329.82222222222219,
+                11.851851851851833,
+                331.64444444444445,
+                3.5555555555555003,
+                333.46666666666664,
+                0
+              ],
+              [
+                1,
+                333.46666666666664,
+                64
+              ],
+              [
+                1,
+                317.06666666666666,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.35467958333335,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0.00087245833333327028,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : 16,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.35467958333335,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                64,
+                322.5333333333333,
+                64
+              ],
+              [
+                3,
+                324.35555555555555,
+                64,
+                326.17777777777781,
+                42.666666666666693,
+                328,
+                21.333333333333336
+              ],
+              [
+                3,
+                329.82222222222219,
+                11.851851851851833,
+                331.64444444444445,
+                3.5555555555555003,
+                333.46666666666664,
+                0
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.35467958333335,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0.00087245833333327028,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.35467958333335,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 5.3333333333333357,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              56.333333333333336
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.35467958333335,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.35467958333335,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.35467958333335,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 0.11955591666666976,
+      "hasHistoryAnimations" : true,
+      "mediaNow" : 80.509463958333356,
+      "owners" : [
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0.1196215416666746,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.473428666666692,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                315.73427888552345,
+                64
+              ],
+              [
+                3,
+                317.55650110774565,
+                64,
+                319.3787233299679,
+                64,
+                321.20094555219009,
+                64
+              ],
+              [
+                3,
+                323.02316777441234,
+                64,
+                324.84461197783071,
+                41.800033490925223,
+                326.66761221885679,
+                23.933114369710285
+              ],
+              [
+                3,
+                328.48992238164578,
+                15.029370825595599,
+                330.31199243543028,
+                7.2385633971016166,
+                332.13427888552343,
+                3.8996715545654297
+              ],
+              [
+                3,
+                332.13427888552343,
+                23.933114369710285,
+                332.13427888552343,
+                43.966557184855148,
+                332.13427888552343,
+                64
+              ],
+              [
+                3,
+                326.66761221885679,
+                64,
+                321.20094555219009,
+                64,
+                315.73427888552345,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.473428666666692,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0.1196215416666746,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : 12.10032844543457,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.473428666666692,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                315.73427888552345,
+                64
+              ],
+              [
+                3,
+                317.55650110774565,
+                64,
+                319.3787233299679,
+                64,
+                321.20094555219009,
+                64
+              ],
+              [
+                3,
+                323.02316777441234,
+                64,
+                324.84461197783071,
+                41.800033490925223,
+                326.66761221885679,
+                23.933114369710285
+              ],
+              [
+                3,
+                328.48992238164578,
+                15.029370825595599,
+                330.31199243543028,
+                7.2385633971016166,
+                332.13427888552343,
+                3.8996715545654297
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.473428666666692,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0.1196215416666746,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.473428666666692,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 1.6714020435820984,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              52.671402043582098
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.473428666666692,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.473428666666692,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.473428666666692,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 0.24545437499999423,
+      "hasHistoryAnimations" : true,
+      "mediaNow" : 80.63536241666668,
+      "owners" : [
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0.24551999999999907,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.599327125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                312.61379570960997,
+                64
+              ],
+              [
+                3,
+                314.43601793183223,
+                64,
+                316.25824015405448,
+                64,
+                318.08046237627667,
+                64
+              ],
+              [
+                3,
+                319.90268459849887,
+                64,
+                321.71050543872815,
+                39.769157133102183,
+                323.54712904294331,
+                30.0218620300293
+              ],
+              [
+                3,
+                325.36999465192082,
+                22.471240169427233,
+                327.19115082297208,
+                15.864191832009837,
+                329.01379570960995,
+                13.032793045043945
+              ],
+              [
+                3,
+                329.01379570960995,
+                30.021862030029293,
+                329.01379570960995,
+                47.010931015014648,
+                329.01379570960995,
+                64
+              ],
+              [
+                3,
+                323.54712904294331,
+                64,
+                318.08046237627661,
+                64,
+                312.61379570960997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.599327125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0.24551999999999907,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "fullPathMaximumError" : 2.9672069549560547,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.599327125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                312.61379570960997,
+                64
+              ],
+              [
+                3,
+                314.43601793183223,
+                64,
+                316.25824015405448,
+                64,
+                318.08046237627667,
+                64
+              ],
+              [
+                3,
+                319.90268459849887,
+                64,
+                321.71050543872815,
+                39.769157133102183,
+                323.54712904294331,
+                30.0218620300293
+              ],
+              [
+                3,
+                325.36999465192082,
+                22.471240169427233,
+                327.19115082297208,
+                15.864191832009837,
+                329.01379570960995,
+                13.032793045043945
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.599327125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : {
+            "autoreverses" : false,
+            "beginTime" : 80.353807125000017,
+            "beginTimeChangedSinceInstall" : false,
+            "configuredEndInOwnerTime" : 80.703807125000012,
+            "duration" : 0.34999999999999998,
+            "ownerElapsedSinceAnimationBegin" : 0.24551999999999907,
+            "removedOnCompletion" : true,
+            "repeatCount" : 0,
+            "repeatDuration" : 0,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.599327125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 1.0196111714758302,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              49.98038882852417
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.599327125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.599327125000016,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.599327125000016,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 0.36915287499999749,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 80.759060916666684,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.72302562500002,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.72302562500002,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.72302562500002,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.72302562500002,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.72302562500002,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.72302562500002,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.72302562500002,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.72302562500002,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 0.49521975000000396,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 80.88512779166669,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.849092500000026,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.849092500000026,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.849092500000026,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.849092500000026,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.849092500000026,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.849092500000026,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.849092500000026,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.849092500000026,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 0.57627483333332918,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 80.966182875000015,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.930147583333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.930147583333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.930147583333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.930147583333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.930147583333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.930147583333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.930147583333351,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.930147583333351,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 0.63226695833333224,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.022175000000018,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.986139708333354,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.986139708333354,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.986139708333354,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.986139708333354,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.986139708333354,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 80.986139708333354,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.986139708333354,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 80.986139708333354,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 0.68695708333332561,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.076865125000012,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.040829833333348,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.040829833333348,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.040829833333348,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.040829833333348,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.040829833333348,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.040829833333348,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.040829833333348,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.040829833333348,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 0.80833745833332671,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.198245500000013,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.162210208333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.162210208333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.162210208333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.162210208333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.162210208333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.162210208333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.162210208333349,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.162210208333349,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 0.91577695833332484,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.305685000000011,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.269649708333347,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.269649708333347,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.269649708333347,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.269649708333347,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.269649708333347,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.269649708333347,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.269649708333347,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.269649708333347,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 1.0416749999999979,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.431583041666684,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.39554775000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.39554775000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.39554775000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.39554775000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.39554775000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.39554775000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.39554775000002,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.39554775000002,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 1.169138458333336,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.559046500000022,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.523011208333358,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.523011208333358,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.523011208333358,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.523011208333358,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.523011208333358,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.523011208333358,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.523011208333358,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.523011208333358,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 1.2235703749999942,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.61347841666668,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.577443125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.577443125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.577443125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.577443125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.577443125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.577443125000016,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.577443125000016,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.577443125000016,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 1.2929303749999974,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.682838416666684,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.646803125000019,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.646803125000019,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.646803125000019,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.646803125000019,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.646803125000019,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.646803125000019,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.646803125000019,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.646803125000019,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 1.3457434999999975,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.735651541666684,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.69961625000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.69961625000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.69961625000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.69961625000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.69961625000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.69961625000002,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.69961625000002,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.69961625000002,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 1.3982665833333385,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.788174625000025,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.752139333333361,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.752139333333361,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.752139333333361,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.752139333333361,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.752139333333361,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.752139333333361,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.752139333333361,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.752139333333361,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 1.4521533749999946,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.842061416666681,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.806026125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.806026125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.806026125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.806026125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.806026125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.806026125000017,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.806026125000017,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.806026125000017,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 1.5087993333333287,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.898707375000015,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.862672083333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.862672083333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.862672083333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.862672083333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.862672083333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.862672083333351,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.862672083333351,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.862672083333351,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 1.5780285416666686,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 81.967936583333355,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.931901291666691,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.931901291666691,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.931901291666691,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.931901291666691,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.931901291666691,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 81.931901291666691,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.931901291666691,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 81.931901291666691,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    },
+    {
+      "elapsed" : 1.6840635833333266,
+      "hasHistoryAnimations" : false,
+      "mediaNow" : 82.073971625000013,
+      "owners" : [
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.fill",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer0\/mask",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 82.037936333333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ],
+              [
+                1,
+                328,
+                64
+              ],
+              [
+                1,
+                311.59999999999997,
+                64
+              ],
+              [
+                4
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 82.037936333333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "fullPathMaximumError" : 0,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.stroke",
+          "model" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "owner" : "root\/sublayer1\/sublayer1",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 82.037936333333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {328, 64}}",
+            "path" : [
+              [
+                0,
+                311.59999999999997,
+                64
+              ],
+              [
+                3,
+                313.42222222222222,
+                64,
+                315.24444444444447,
+                64,
+                317.06666666666666,
+                64
+              ],
+              [
+                3,
+                318.88888888888886,
+                64,
+                320.71111111111111,
+                39.111111111111086,
+                322.5333333333333,
+                32
+              ],
+              [
+                3,
+                324.35555555555555,
+                24.888888888888872,
+                326.17777777777781,
+                18.666666666666622,
+                328,
+                16
+              ]
+            ],
+            "position" : [
+              164,
+              32
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 82.037936333333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        },
+        {
+          "animation" : null,
+          "installedAnimationBeginTime" : 80.353807125000017,
+          "key" : "history.head",
+          "model" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "owner" : "root\/sublayer2\/sublayer0",
+          "ownerClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 82.037936333333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          },
+          "positionError" : 0,
+          "presentation" : {
+            "bounds" : "{{0, 0}, {5.2000000000000002, 5.2000000000000002}}",
+            "position" : [
+              328,
+              51
+            ]
+          },
+          "presentationClock" : {
+            "beginTime" : 0,
+            "hasSuperlayer" : true,
+            "localNow" : 82.037936333333349,
+            "speed" : 1,
+            "timeOffset" : 0
+          }
+        }
+      ],
+      "phase" : "poll",
+      "rootClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 82.037936333333349,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "rootPresentationClock" : {
+        "beginTime" : 0.036035291666664193,
+        "hasSuperlayer" : true,
+        "localNow" : 82.037936333333349,
+        "speed" : 1,
+        "timeOffset" : 0
+      },
+      "viewHidden" : false,
+      "viewVisibleRect" : "{{0, 0}, {328, 112}}",
+      "windowFrame" : "{{0, 0}, {328, 112}}",
+      "windowOcclusionVisible" : true,
+      "windowVisible" : true
+    }
+  ],
+  "schema" : 1,
+  "summary" : {
+    "firstAutomaticKeyRemovalElapsed" : 0.36913887500000442,
+    "keysAtOneSecond" : false,
+    "keysRemainAfterObservation" : false,
+    "name" : "normal-original-3-paused",
+    "observationSeconds" : 1.6850707499999942,
+    "paused" : true,
+    "placement" : "original",
+    "policy" : "normal",
+    "repetition" : 3,
+    "samples" : 23
+  }
+}

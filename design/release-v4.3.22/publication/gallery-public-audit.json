@@ -1,0 +1,245 @@
+{
+  "version": "v4.3.22",
+  "frozenCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "anonymous": true,
+  "checkedAtUTC": "2026-10-18T17:06:52.040452+00:00",
+  "localReferences": "pass",
+  "remoteRequested": true,
+  "sourcePackages": 4,
+  "svgMasters": 19,
+  "previews": 9,
+  "checks": [
+    {
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/tags/v4.3.22",
+      "finalUrl": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/tags/v4.3.22",
+      "kind": "public-release",
+      "ok": true
+    },
+    {
+      "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-General-SVG.zip",
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1269478704/19f01853-5801-4690-837e-80d2a883f689",
+      "method": "GET",
+      "sha256": "5dbdbbf43c1ae3177255e68f1030a036825bac4e65b3ec3ae964b6f94a717244",
+      "ok": true
+    },
+    {
+      "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-Modules-SVG.zip",
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1269478704/6dcb1f5d-0411-4e0a-8463-5ac6ec3a49d4",
+      "method": "GET",
+      "sha256": "e67e8c3b3224c7a022b4bdedd01edc4828ae51ed3c44a36abf1bb4153d9b36ef",
+      "ok": true
+    },
+    {
+      "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-Power-SVG.zip",
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1269478704/0ef22dfe-6df0-432d-8702-e8b107e9f1b3",
+      "method": "GET",
+      "sha256": "bdf1d718921648320e485a8a0e38358b8bef365264ec86883bd8f29318710651",
+      "ok": true
+    },
+    {
+      "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-Sidebar-SVG.zip",
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1269478704/f369dfe4-618b-4583-aa1a-c3caac1c6168",
+      "method": "GET",
+      "sha256": "be8559d694518648b693c4ec8c71785bd9e56757373e5506fd217d8b23620a6e",
+      "ok": true
+    },
+    {
+      "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-macos-universal.dmg",
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1269478704/7255c861-fed5-4c35-8379-4e27841b049b",
+      "method": "HEAD",
+      "sha256": null,
+      "ok": true
+    },
+    {
+      "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-macos-universal.pkg",
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1269478704/e3688d9f-de3e-4241-89ba-5a5f26e85f4d",
+      "method": "HEAD",
+      "sha256": null,
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/",
+      "method": "GET",
+      "sha256": "c63020a7cd784c6cc512920d16492c5f2bc279455f31a737253c3f980559d3c6",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/README.md",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/README.md",
+      "method": "GET",
+      "sha256": "4eaf740e22b4ee69637a360c0769ddae538d929a2684d1ed54dd3daa83873e12",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/SHA256SUMS.txt",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/SHA256SUMS.txt",
+      "method": "GET",
+      "sha256": "3afffc6ce473f17865c4acc3b315c668690928aacba9e5b2df5c6b8821862e71",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/Wattson-v4.3.22-General-SVG.zip",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/Wattson-v4.3.22-General-SVG.zip",
+      "method": "GET",
+      "sha256": "5dbdbbf43c1ae3177255e68f1030a036825bac4e65b3ec3ae964b6f94a717244",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/Wattson-v4.3.22-Modules-SVG.zip",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/Wattson-v4.3.22-Modules-SVG.zip",
+      "method": "GET",
+      "sha256": "e67e8c3b3224c7a022b4bdedd01edc4828ae51ed3c44a36abf1bb4153d9b36ef",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/Wattson-v4.3.22-Power-SVG.zip",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/Wattson-v4.3.22-Power-SVG.zip",
+      "method": "GET",
+      "sha256": "bdf1d718921648320e485a8a0e38358b8bef365264ec86883bd8f29318710651",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/Wattson-v4.3.22-Sidebar-SVG.zip",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/Wattson-v4.3.22-Sidebar-SVG.zip",
+      "method": "GET",
+      "sha256": "be8559d694518648b693c4ec8c71785bd9e56757373e5506fd217d8b23620a6e",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/manifest.json",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/manifest.json",
+      "method": "GET",
+      "sha256": "3bb14e6d6eb5401daaf3ded236f99cc5965757d2966230675b7b7ec92ea6272f",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/general-vector-preview.png",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/general-vector-preview.png",
+      "method": "GET",
+      "sha256": "06a71b779e47e63b423b014eee8a454f6c2edcbd6c2ce74fd7cdd4bdbf7a9598",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/power-state-matrix.png",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/power-state-matrix.png",
+      "method": "GET",
+      "sha256": "8a1c76304a556dc02b9e94b6af0e4be13b52dcb55a56d085578ac44175e6082d",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/power-vector-preview.png",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/power-vector-preview.png",
+      "method": "GET",
+      "sha256": "d7e058a2d9cbc53274625359a5ee27c5b7700647a5dae8550fde2a3040ffa08b",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/process-compact-dark.png",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/process-compact-dark.png",
+      "method": "GET",
+      "sha256": "acda08d6aa986aee17a29e9020bc0d2e77991046a844060635b3c7551aee1a14",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/process-compact-light.png",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/process-compact-light.png",
+      "method": "GET",
+      "sha256": "eb6bb9def6bc9bfe7435058ac56cec894851af32065c1bc394004e3b8cda3175",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/process-detailed-dark.png",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/process-detailed-dark.png",
+      "method": "GET",
+      "sha256": "7262e2c9b7d358de5c5d676c800830ebbe8f7980d1bba8bf4ed6c1137247c964",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/process-detailed-light.png",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/process-detailed-light.png",
+      "method": "GET",
+      "sha256": "6451777657e1a0b25f37198691d3e713e75fa5db0ba85836278527ed37e9e912",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/sidebar-vector-preview.png",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/sidebar-vector-preview.png",
+      "method": "GET",
+      "sha256": "9337177a387d0562b47f16edfddb9ed5ad965ac3f91566478a13ba75c97d9c5c",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/vector-preview.png",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/design/v4.3.22/previews/vector-preview.png",
+      "method": "GET",
+      "sha256": "2a5ffae110a6cda6ea88ca123467af52e3b97e8405a89d079d37d164da913886",
+      "ok": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/general-vector-preview.png",
+      "finalUrl": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/general-vector-preview.png",
+      "method": "GET",
+      "sha256": "06a71b779e47e63b423b014eee8a454f6c2edcbd6c2ce74fd7cdd4bdbf7a9598",
+      "ok": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/power-state-matrix.png",
+      "finalUrl": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/power-state-matrix.png",
+      "method": "GET",
+      "sha256": "8a1c76304a556dc02b9e94b6af0e4be13b52dcb55a56d085578ac44175e6082d",
+      "ok": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/power-vector-preview.png",
+      "finalUrl": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/power-vector-preview.png",
+      "method": "GET",
+      "sha256": "d7e058a2d9cbc53274625359a5ee27c5b7700647a5dae8550fde2a3040ffa08b",
+      "ok": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/process-compact-dark.png",
+      "finalUrl": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/process-compact-dark.png",
+      "method": "GET",
+      "sha256": "acda08d6aa986aee17a29e9020bc0d2e77991046a844060635b3c7551aee1a14",
+      "ok": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/process-compact-light.png",
+      "finalUrl": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/process-compact-light.png",
+      "method": "GET",
+      "sha256": "eb6bb9def6bc9bfe7435058ac56cec894851af32065c1bc394004e3b8cda3175",
+      "ok": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/process-detailed-dark.png",
+      "finalUrl": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/process-detailed-dark.png",
+      "method": "GET",
+      "sha256": "7262e2c9b7d358de5c5d676c800830ebbe8f7980d1bba8bf4ed6c1137247c964",
+      "ok": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/process-detailed-light.png",
+      "finalUrl": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/process-detailed-light.png",
+      "method": "GET",
+      "sha256": "6451777657e1a0b25f37198691d3e713e75fa5db0ba85836278527ed37e9e912",
+      "ok": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/sidebar-vector-preview.png",
+      "finalUrl": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/sidebar-vector-preview.png",
+      "method": "GET",
+      "sha256": "9337177a387d0562b47f16edfddb9ed5ad965ac3f91566478a13ba75c97d9c5c",
+      "ok": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/vector-preview.png",
+      "finalUrl": "https://raw.githubusercontent.com/laleoarrow/battery-monitor/v4.3.22/design/releases/v4.3.22/previews/vector-preview.png",
+      "method": "GET",
+      "sha256": "2a5ffae110a6cda6ea88ca123467af52e3b97e8405a89d079d37d164da913886",
+      "ok": true
+    }
+  ],
+  "failures": [],
+  "ok": true
+}

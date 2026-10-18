@@ -1,0 +1,39 @@
+{
+  "checked_utc": "2026-10-18T14:08:11.802743+00:00",
+  "workspaces": [
+    {
+      "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-cleanup.noindex/baseline.BwxtA2",
+      "exists": false,
+      "matching_processes": [],
+      "launchservices_mentions_workspace": false,
+      "spotlight_mentions_workspace": false
+    },
+    {
+      "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-cleanup.noindex/forced-baseline.n7M8uS",
+      "exists": false,
+      "matching_processes": [],
+      "launchservices_mentions_workspace": false,
+      "spotlight_mentions_workspace": false
+    },
+    {
+      "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-cleanup.noindex/fixed.3XOUal",
+      "exists": false,
+      "matching_processes": [],
+      "launchservices_mentions_workspace": false,
+      "spotlight_mentions_workspace": false
+    }
+  ],
+  "remaining_scratch": [],
+  "scratch_root_exists": false,
+  "owned_resources_clean": true,
+  "canonical_app_exists": true,
+  "canonical_helper_exists": true,
+  "scope": "Only fixture paths/PIDs and groups were stopped/unregistered. No production App, helper, preferences, or receipt modified. Existing local_runtime and lifecycle cleanup own every test fixture.",
+  "final_preview_revalidation": {
+    "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-cleanup.noindex/final-preview.vg22u1",
+    "exists": false,
+    "matching_processes": [],
+    "launchservices_mentions_workspace": false,
+    "spotlight_mentions_workspace": false
+  }
+}

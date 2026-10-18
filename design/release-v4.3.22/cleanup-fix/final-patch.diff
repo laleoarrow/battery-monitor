@@ -1,0 +1,178 @@
+diff --git a/scripts/lib/local_cleanup.sh b/scripts/lib/local_cleanup.sh
+index debeaeb..ee70e11 100644
+--- a/scripts/lib/local_cleanup.sh
++++ b/scripts/lib/local_cleanup.sh
+@@ -2,9 +2,27 @@
+ # Source this file, initialize once, then register only this invocation's paths.
+ _WATTSON_CLEANUP_LIB="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ 
++# A signal must not enter cleanup between runner spawn and PID publication.
++_wattson_signal() {
++    if [[ "$_WATTSON_RUNNER_STARTING" == 1 ]]; then
++        [[ "$_WATTSON_PENDING_SIGNAL" != 0 ]] || _WATTSON_PENDING_SIGNAL=$1
++    else
++        exit "$1"
++    fi
++}
++
++_wattson_runner_registered() {
++    _WATTSON_RUNNER_STARTING=0
++    if [[ "$_WATTSON_PENDING_SIGNAL" != 0 ]]; then
++        exit "$_WATTSON_PENDING_SIGNAL"
++    fi
++}
++
+ wattson_run() {
++    _WATTSON_RUNNER_STARTING=1
+     /usr/bin/python3 "$_WATTSON_CLEANUP_LIB/run_owned.py" -- "$@" &
+     _WATTSON_RUNNER_PID=$!
++    _wattson_runner_registered
+     local status=0
+     wait "$_WATTSON_RUNNER_PID" || status=$?
+     _WATTSON_RUNNER_PID=""
+@@ -14,8 +32,10 @@ wattson_run() {
+ wattson_run_timeout() {
+     local seconds="$1"
+     shift
++    _WATTSON_RUNNER_STARTING=1
+     /usr/bin/python3 "$_WATTSON_CLEANUP_LIB/run_owned.py" --timeout "$seconds" -- "$@" &
+     _WATTSON_RUNNER_PID=$!
++    _wattson_runner_registered
+     local status=0
+     wait "$_WATTSON_RUNNER_PID" || status=$?
+     _WATTSON_RUNNER_PID=""
+@@ -25,8 +45,10 @@ wattson_run_timeout() {
+ # Lifecycle scripts need time to finish their own unmount/unregister traps.
+ # Their compiler/tool children still use the ordinary two-second grace period.
+ wattson_run_script() {
++    _WATTSON_RUNNER_STARTING=1
+     /usr/bin/python3 "$_WATTSON_CLEANUP_LIB/run_owned.py" --grace 60 -- /bin/bash "$@" &
+     _WATTSON_RUNNER_PID=$!
++    _wattson_runner_registered
+     local status=0
+     wait "$_WATTSON_RUNNER_PID" || status=$?
+     _WATTSON_RUNNER_PID=""
+@@ -104,6 +126,8 @@ _wattson_cleanup() {
+     local status=$?
+     trap - EXIT
+     trap '' HUP INT TERM
++    _WATTSON_RUNNER_STARTING=0
++    _WATTSON_PENDING_SIGNAL=0
+     set +e
+     if [[ -n "${_WATTSON_RUNNER_PID:-}" ]]; then
+         kill -TERM "$_WATTSON_RUNNER_PID" 2>/dev/null
+@@ -181,8 +205,10 @@ wattson_cleanup_init() {
+     _WATTSON_CLEANUP_EXECUTABLES=()
+     _WATTSON_CLEANUP_DEFAULTS=()
+     _WATTSON_RUNNER_PID=""
++    _WATTSON_RUNNER_STARTING=0
++    _WATTSON_PENDING_SIGNAL=0
+     trap _wattson_cleanup EXIT
+-    trap 'exit 129' HUP
+-    trap 'exit 130' INT
+-    trap 'exit 143' TERM
++    trap '_wattson_signal 129' HUP
++    trap '_wattson_signal 130' INT
++    trap '_wattson_signal 143' TERM
+ }
+diff --git a/tests/test_run_preview_cleanup.py b/tests/test_run_preview_cleanup.py
+index e03156f..18069c4 100644
+--- a/tests/test_run_preview_cleanup.py
++++ b/tests/test_run_preview_cleanup.py
+@@ -6,7 +6,7 @@ import subprocess
+ import time
+ import unittest
+ 
+-from local_runtime import TemporaryDirectory, _stop, run
++from local_runtime import TemporaryDirectory, _live_group, _stop, run
+ 
+ ROOT = pathlib.Path(__file__).resolve().parents[1]
+ 
+@@ -172,6 +172,87 @@ printf 'unregister\n' >> "$FAKE_APP_EVENTS"
+             process.communicate()
+             self.workspace.processes.remove(process)
+ 
++    def assert_termination_during_runner_registration(self, runner):
++        runner_pid = self.root / 'log-runner.pid'
++        log_pid = self.root / 'log.pid'
++        log_ready = self.root / 'log-ready'
++        self.write_stub('log', '''#!/bin/bash
++while [[ ! -s "$FAKE_APP_EVENTS" ]]; do /bin/sleep 0.01; done
++printf '%s\\n' "$$" > "$FAKE_LOG_PID"
++touch "$FAKE_LOG_READY"
++while :; do /bin/sleep 1; done
++''')
++        helper = self.root / 'scripts/lib/local_cleanup.sh'
++        source = helper.read_text()
++        registration = '    _WATTSON_RUNNER_PID=$!\n'
++        self.assertIn(registration, source)
++        # Hold the real spawn/registration boundary until its command exists,
++        # then deliver TERM before the parent can publish the runner PID.
++        source = source.replace(registration, '''    if [[ "${1:-}" == "$FAKE_LOG_COMMAND" ]]; then
++        printf '%s\\n' "$!" > "$FAKE_RUNNER_PID"
++        while [[ ! -f "$FAKE_LOG_READY" ]]; do /bin/sleep 0.01; done
++        printf 'test:shell-TERM\\n' >> "$FAKE_APP_EVENTS"
++        kill -TERM "$$"
++    fi
++''' + registration)
++        helper.write_text(source)
++        log_command = str(self.bin / 'log')
++        self.script.write_text(self.script.read_text().replace(
++            'wattson_run ' + log_command, runner + ' ' + log_command,
++        ))
++        environment = dict(self.env, FAKE_APP_SECONDS='forever',
++                           FAKE_LOG_COMMAND=log_command, FAKE_RUNNER_PID=str(runner_pid),
++                           FAKE_LOG_PID=str(log_pid), FAKE_LOG_READY=str(log_ready))
++        process = subprocess.Popen(['/bin/bash', str(self.script), '--logs'], env=environment,
++                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
++                                   start_new_session=True)
++        process.cleanup_grace = 65
++        self.workspace.processes.append(process)
++        try:
++            stdout, stderr = process.communicate(timeout=process.cleanup_grace)
++            self.assertEqual(process.returncode, 143, stdout+stderr)
++            self.assert_clean()
++            self.assertEqual(self.app_events.read_text().splitlines(), [
++                'app:started', 'test:shell-TERM', 'app:TERM', 'unregister',
++            ])
++            for marker in (runner_pid, log_pid):
++                self.assertTrue(marker.exists())
++                state = subprocess.run(['/bin/ps', '-p', marker.read_text().strip(), '-o', 'stat='],
++                                       capture_output=True, text=True, timeout=5).stdout.strip()
++                self.assertTrue(not state or state.startswith('Z'), state)
++        except subprocess.TimeoutExpired as error:
++            owned = [str(process.pid)] + [marker.read_text().strip()
++                     for marker in (self.pid_file, runner_pid, log_pid) if marker.exists()]
++            tree = subprocess.run(['/bin/ps', '-p', ','.join(owned),
++                                   '-o', 'pid=,ppid=,pgid=,stat=,command='],
++                                  capture_output=True, text=True, timeout=5).stdout
++            self.fail(f'Cleanup timed out with shell status {process.poll()}: {error}\n{tree}')
++        finally:
++            # A broken registration can miss the runner and its new session.
++            # These fixture-written PIDs keep even the failing test bounded.
++            for marker, group in ((log_pid, True), (runner_pid, False)):
++                if marker.exists():
++                    pid = int(marker.read_text())
++                    try:
++                        (os.killpg if group else os.kill)(pid, signal.SIGTERM)
++                    except ProcessLookupError:
++                        pass
++                    except PermissionError:
++                        if not group or _live_group(pid):
++                            raise
++            _stop(process)
++            process.communicate()
++            self.workspace.processes.remove(process)
++
++    def test_term_during_log_runner_registration_cleans_detached_app(self):
++        self.assert_termination_during_runner_registration('wattson_run')
++
++    def test_term_during_timed_log_runner_registration_cleans_detached_app(self):
++        self.assert_termination_during_runner_registration('wattson_run_timeout 30')
++
++    def test_term_during_script_log_runner_registration_cleans_detached_app(self):
++        self.assert_termination_during_runner_registration('wattson_run_script')
++
+ 
+ if __name__ == '__main__':
+     unittest.main()

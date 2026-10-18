@@ -1,0 +1,45 @@
+{
+  "total_count": 2,
+  "artifacts": [
+    {
+      "id": 12143358543,
+      "node_id": "MDg6QXJ0aWZhY3QxMjE0MzM1ODU0Mw==",
+      "name": "Wattson-release-candidate-v4.3.22",
+      "size_in_bytes": 13594989,
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12143358543",
+      "archive_download_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12143358543/zip",
+      "expired": false,
+      "digest": "sha256:b77ea10608e2238ea5c29dc2085ad04c0a1b01f9fcff0a342393c730a9207b0d",
+      "created_at": "2026-10-18T16:46:44Z",
+      "updated_at": "2026-10-18T16:46:44Z",
+      "expires_at": "2026-10-25T16:46:41Z",
+      "workflow_run": {
+        "id": 39145124379,
+        "repository_id": 1269478704,
+        "head_repository_id": 1269478704,
+        "head_branch": "main",
+        "head_sha": "7f41533b017d26519a69d541d3ffd2dea587f413"
+      }
+    },
+    {
+      "id": 12143229031,
+      "node_id": "MDg6QXJ0aWZhY3QxMjE0MzIyOTAzMQ==",
+      "name": "wattson-release-build-log-39145124379-1",
+      "size_in_bytes": 1144,
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12143229031",
+      "archive_download_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12143229031/zip",
+      "expired": false,
+      "digest": "sha256:9a2cac9103221b22cfd20246c47a1aa42e6ce75979589751e9b284fc3a4dc96e",
+      "created_at": "2026-10-18T16:46:45Z",
+      "updated_at": "2026-10-18T16:46:45Z",
+      "expires_at": "2026-10-25T16:46:43Z",
+      "workflow_run": {
+        "id": 39145124379,
+        "repository_id": 1269478704,
+        "head_repository_id": 1269478704,
+        "head_branch": "main",
+        "head_sha": "7f41533b017d26519a69d541d3ffd2dea587f413"
+      }
+    }
+  ]
+}

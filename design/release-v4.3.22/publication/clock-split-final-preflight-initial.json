@@ -1,0 +1,10 @@
+{
+  "observed_at": "2026-10-18T16:13:51.482975+00:00",
+  "local_head": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "remote_main": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "push_ci_run_id": 39143941668,
+  "candidate_dispatch_authorization": "pending explicit root authorization after successful fresh native proof",
+  "dispatch_attempts": 0,
+  "native_proof_path": "design/release-v4.3.22/native/after-clock-split/owned-source-verification.json",
+  "native_proof_exists": false
+}

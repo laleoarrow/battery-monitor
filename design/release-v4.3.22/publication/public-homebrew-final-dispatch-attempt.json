@@ -1,0 +1,16 @@
+{
+  "attempt_count": 1,
+  "started_at": "2026-10-18T17:03:02.672167+00:00",
+  "workflow": "homebrew-install-test.yml",
+  "ref": "main",
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "inputs": {
+    "release_tag": "v4.3.22"
+  },
+  "expected_tap_commit": "8ba66c2e53e5f51393708c9a6e5c76644841b50e",
+  "outcome": "accepted",
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "",
+  "finished_at": "2026-10-18T17:03:05.232280+00:00"
+}

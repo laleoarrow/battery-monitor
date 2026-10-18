@@ -1,0 +1,46 @@
+{
+  "baseline_commit": "9d157d496024d32b0f65ec3fe9b1c927678352fc",
+  "mechanism": "Public runners are also used source-only under set-euo with caller-owned traps. _wattson_runner_registered previously required _WATTSON_PENDING_SIGNAL to have been initialized by wattson_cleanup_init, aborting both the workflow body and its custom EXIT cleanup.",
+  "production_fix": "One unset-safe ${_WATTSON_PENDING_SIGNAL:-0} read in _wattson_runner_registered. No auto-init, caller trap replacement, timeout, grace, or initialized signal-deferral change.",
+  "changed_files": [
+    "scripts/lib/local_cleanup.sh",
+    "tests/test_local_runtime_cleanup.py"
+  ],
+  "checks": {
+    "immutable9d_new_regression": {
+      "tests": 1,
+      "failed_subtests": 3,
+      "seconds": 0.862,
+      "result": "failed as expected for all3 public runners",
+      "markers": [],
+      "error": "_WATTSON_PENDING_SIGNAL: unbound variable in body and caller EXIT trap",
+      "log": "baseline-regression.log"
+    },
+    "fixed_scoped_suites": {
+      "tests": 28,
+      "seconds": 81.179,
+      "result": "passed",
+      "log": "fixed-scoped-regression.log",
+      "includes": "all3 source-only public runners and unchanged3 forced runner-registration signal tests; packaging and local_runtime lifecycle invariants"
+    },
+    "independent_read_only_review": "No concrete issues found; caller traps preserved and fallback targets only worker-owned process group.",
+    "bash_syntax": "passed",
+    "diff_check": "passed",
+    "cleanup": "passed"
+  },
+  "regression_invariants": [
+    "caller TERM handler runs",
+    "body-final marker present",
+    "caller EXIT cleanup marker present after its own runner call",
+    "exit0 and no unbound error",
+    "worker and descendant no longer live",
+    "fixture group cleanup on failure"
+  ],
+  "sha256": {
+    "scripts/lib/local_cleanup.sh": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+    "tests/test_local_runtime_cleanup.py": "b3ffc78d00c977c23dff019614ef36459a5bc66678c7502a836fabccb7106ef6",
+    "tests/test_run_preview_cleanup.py": "a5c2fb8911d4c6b14ace3383f19fa5f2b1a2bec6b6874f7dfb34b83210476ba5",
+    "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872"
+  },
+  "authority": "Scoped repair validation only; root owns workflow hardening, final freeze, exact-SHA CI/candidate and publication. No commits/push performed by this agent."
+}

@@ -1,0 +1,41 @@
+{
+  "checkedAtUTC": "2026-10-18T17:08:36.494288+00:00",
+  "anonymous": true,
+  "sourceCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "latestRelease": "v4.3.22",
+  "releaseID": 416577205,
+  "stableRelease": true,
+  "annotatedTagPeelsToFrozenSource": true,
+  "homepageVersionAndBothInstallerLinksMatch": true,
+  "checks": [
+    {
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest",
+      "finalUrl": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/latest",
+      "bytes": 18732,
+      "sha256": "050945ab62970b31163dea9a71c1064cbf5cbee65cd26d0a36e671b7d56f4b89",
+      "ok": true
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/",
+      "finalUrl": "https://laleoarrow.github.io/battery-monitor/",
+      "bytes": 21458,
+      "sha256": "0976f0bda3a47c2ecda912416c372201532626f859006e0876d47a9e256f3d89",
+      "ok": true
+    },
+    {
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/git/ref/tags/v4.3.22",
+      "finalUrl": "https://api.github.com/repos/laleoarrow/battery-monitor/git/ref/tags/v4.3.22",
+      "bytes": 351,
+      "sha256": "73a3d8db54fcefd69c7edf63d1ccda38cc60b9f371d122651dcc376c84e6a8ff",
+      "ok": true
+    },
+    {
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/git/tags/5c4a0fcba9e3f5f2c545ec93e9b6e76c21efc39a",
+      "finalUrl": "https://api.github.com/repos/laleoarrow/battery-monitor/git/tags/5c4a0fcba9e3f5f2c545ec93e9b6e76c21efc39a",
+      "bytes": 677,
+      "sha256": "05f7384c744f6334a140099cf169df7013f3c461c2b45f30496be4367d8a65f0",
+      "ok": true
+    }
+  ],
+  "ok": true
+}

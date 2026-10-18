@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "testedCommit": "9d157d496024d32b0f65ec3fe9b1c927678352fc",
+  "releaseSourceCommit": "9d157d496024d32b0f65ec3fe9b1c927678352fc",
+  "filesCompared": 157,
+  "allInputsIdentical": true,
+  "mismatches": [],
+  "changedInputsFromPriorNativeGate": [
+    {
+      "file": "tests/interaction/main.swift",
+      "priorSHA256": "8ff4b5efedde66365b522d9ef082f1be60608fec1c4676987edbffe7a88fd33f",
+      "currentSHA256": "ed94595c9db296c564ec07a25c18c1f5865f3c98cb9f37d981356fded92b5474"
+    }
+  ],
+  "method": "SHA256 of each frozen archive input compared with git show of the exact new release commit; also compared with prior cleanup-fix native manifest. No working-tree source used."
+}

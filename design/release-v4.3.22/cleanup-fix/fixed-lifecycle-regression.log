@@ -1,0 +1,25 @@
+test_container_cleanup_requires_creation_ownership (test_packaging_cleanup.PackagingCleanupTests) ... ok
+test_detach_failure_preserves_mount_and_ancestors_but_cleans_independent_paths (test_packaging_cleanup.PackagingCleanupTests) ... ok
+test_exact_executable_stop_leaves_other_process_untouched (test_packaging_cleanup.PackagingCleanupTests) ... ok
+test_nested_script_signals_wait_for_inner_unmount_and_cleanup (test_packaging_cleanup.PackagingCleanupTests) ... ok
+test_only_explicit_unique_defaults_suite_is_deleted (test_packaging_cleanup.PackagingCleanupTests) ... ok
+test_outer_cleanup_preserves_an_inner_script_mount_after_detach_failure (test_packaging_cleanup.PackagingCleanupTests) ... ok
+test_parent_signals_stop_term_ignoring_owned_group_and_remove_scratch (test_packaging_cleanup.PackagingCleanupTests) ... ok
+test_success_and_failure_unregister_owned_apps_before_removing_scratch (test_packaging_cleanup.PackagingCleanupTests) ... ok
+test_successful_detach_then_removal_and_unmounted_noop (test_packaging_cleanup.PackagingCleanupTests) ... ok
+test_timeout_and_normal_exit_reap_background_descendants (test_packaging_cleanup.PackagingCleanupTests) ... ok
+test_assertion_failure_also_cleans_workspace (test_local_runtime_cleanup.LocalRuntimeCleanupTests) ... ok
+test_cleanup_error_does_not_skip_later_resources_or_mask_failure (test_local_runtime_cleanup.LocalRuntimeCleanupTests) ... ok
+test_communicate_retries_preserve_input_output_and_timeout (test_local_runtime_cleanup.LocalRuntimeCleanupTests) ... ok
+test_foundation_preferences_are_removed_after_harness_failure (test_local_runtime_cleanup.LocalRuntimeCleanupTests) ... ok
+test_parent_interrupts_stop_children_and_remove_workspace (test_local_runtime_cleanup.LocalRuntimeCleanupTests) ... ok
+test_signals_inside_popen_wait_locks_do_not_reenter_cleanup (test_local_runtime_cleanup.LocalRuntimeCleanupTests) ... ok
+test_success_and_command_failure_remove_workspace (test_local_runtime_cleanup.LocalRuntimeCleanupTests) ... ok
+test_timeout_allows_nested_shell_supervisor_to_reap_its_group (test_local_runtime_cleanup.LocalRuntimeCleanupTests) ... ok
+test_timeout_stops_descendants_before_unregistering (test_local_runtime_cleanup.LocalRuntimeCleanupTests) ... ok
+test_timeout_waits_for_slow_nested_lifecycle_cleanup (test_local_runtime_cleanup.LocalRuntimeCleanupTests) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 62.668s
+
+OK

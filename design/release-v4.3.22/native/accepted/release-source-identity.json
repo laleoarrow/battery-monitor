@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "testedCommit": "b51e12bc87364a8f7ede342302bc5682b3e53c95",
+  "releaseSourceCommit": "fdf6d96d30d30e0aaee709fa8696ce980ea19100",
+  "filesCompared": 157,
+  "allInputsIdentical": true,
+  "mismatches": [],
+  "method": "SHA256 of each frozen archive input compared with git show of the exact release source commit. No working-tree source is used for comparison."
+}

@@ -1,0 +1,14 @@
+{
+  "version": "v4.3.22",
+  "frozenCommit": "d1e72bd31675121e2729f84cff37efb33fdddbeb",
+  "anonymous": true,
+  "checkedAtUTC": "2026-10-18T14:25:45.280638+00:00",
+  "localReferences": "pass",
+  "remoteRequested": false,
+  "sourcePackages": 4,
+  "svgMasters": 19,
+  "previews": 9,
+  "checks": [],
+  "failures": [],
+  "ok": true
+}

@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "scratchEmpty": true,
+  "matchingOwnedCheckoutProcesses": [],
+  "checkoutRemoved": true,
+  "appsPreferencesContainersOrMountsCreated": false,
+  "hostHomebrewInstallAttempted": false,
+  "canonicalInstallationTouched": false,
+  "runnerExitCodeUsedAsSoleSuccessProof": false,
+  "sharedCleanupLibrarySHA256": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249"
+}

@@ -1,0 +1,67 @@
+{
+  "observed_at": "2026-10-18T16:00:38.385158+00:00",
+  "candidate_run_id": 39141992490,
+  "source_commit": "8300cabcb5859fcc74c3ff613a2c530a47c01f30",
+  "event": "workflow_dispatch",
+  "branch": "main",
+  "status": "completed",
+  "conclusion": "failure",
+  "eligible_for_publication": false,
+  "dispatch_attempt_count": 1,
+  "headless_push_run_id": 39141158685,
+  "headless_push_success": true,
+  "failing_step": "Replay real AppKit interaction and animation lifecycles",
+  "actual_native_completed_pass_summaries": [
+    {
+      "line": 3002,
+      "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T15:55:12.5888190Z ALL_INTERACTION_CHECKS_PASSED"
+    },
+    {
+      "line": 3460,
+      "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T15:57:10.3592640Z ALL_INTERACTION_CHECKS_PASSED"
+    }
+  ],
+  "actual_native_failure_summaries": [
+    "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T15:59:06.4541500Z SOME_CHECKS_FAILED"
+  ],
+  "failure_observations": [
+    "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T15:59:04.6788800Z HISTORY_COMPLETION_TIMEOUT matched-tail elapsed=1.0371007083333552 remaining=history.fill:0.35s,history.stroke:0.35s,history.head:0.35s",
+    "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T15:59:04.6794350Z HISTORY_FIXTURE_CLOCK modelSpeed=1.0 modelOffset=0.0 modelBegin=0.1758988333333491 modelNow=801.6114822083335 presentationSpeed=1.0 presentationOffset=0.0 presentationBegin=0.1758988333333491",
+    "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T15:59:04.6799360Z HISTORY_TAIL_SETTLE dx=0.0 dy=0.0 elapsed=1.037273750000054 motionSettled=false keys=[\"history.fill\", \"history.stroke\", \"history.head\"]",
+    "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T15:59:04.6802390Z ❌ History 控制点过渡到达新曲线后自动静止"
+  ],
+  "conclusion_limits": "The resumed root model and presentation clocks both report speed1/offset0. Geometry reaches target, but three finite animation keys remain after the1s completion gate. This disproves the still-paused-root explanation for this run; it does not alone establish whether production animations remain visually active or whether fixture/client completion bookkeeping is delayed.",
+  "artifact_build_started": false,
+  "artifact_download_attempted": false,
+  "matrix_started": false,
+  "gate_rerun_attempted": false,
+  "corrected_at": "2026-10-18T16:04:14.427318+00:00",
+  "correction_reason": "Initial analysis searched the wrong success token ALL_CHECKS_PASSED; the actual native runner emits ALL_INTERACTION_CHECKS_PASSED.",
+  "actual_native_completed_replay_count": 2,
+  "native_replays": [
+    {
+      "ordinal": 1,
+      "mode": "normal",
+      "result": "passed",
+      "success_summary_line": 3002
+    },
+    {
+      "ordinal": 2,
+      "mode": "legacy-knob",
+      "result": "passed",
+      "success_summary_line": 3460
+    },
+    {
+      "ordinal": 3,
+      "mode": "legacy-knob with reduce-motion and reduce-transparency",
+      "result": "failed",
+      "environment": {
+        "WATTSON_FORCE_LEGACY_KNOB": "1",
+        "WATTSON_FORCE_REDUCE_MOTION": "1",
+        "WATTSON_FORCE_REDUCE_TRANSPARENCY": "1"
+      },
+      "failure_line": 3900
+    }
+  ],
+  "stress_started": false
+}

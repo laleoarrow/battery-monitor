@@ -1,0 +1,129 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 117699241357,
+      "run_id": 39135559350,
+      "workflow_name": "Wattson release candidate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/runs/39135559350",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOS6q1MM8AAAAbZ2vljQ",
+      "head_sha": "d1e72bd31675121e2729f84cff37efb33fdddbeb",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/jobs/117699241357",
+      "html_url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39135559350/job/117699241357",
+      "status": "in_progress",
+      "conclusion": null,
+      "created_at": "2026-10-18T14:20:40Z",
+      "started_at": "2026-10-18T14:20:48Z",
+      "completed_at": null,
+      "name": "Build universal PKG and DMG once",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-18T14:20:48Z",
+          "completed_at": "2026-10-18T14:20:49Z"
+        },
+        {
+          "name": "Check out the candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-18T14:20:49Z",
+          "completed_at": "2026-10-18T14:20:59Z"
+        },
+        {
+          "name": "Require Headless CI on the frozen main commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-18T14:20:59Z",
+          "completed_at": "2026-10-18T14:21:00Z"
+        },
+        {
+          "name": "Resolve and validate the candidate version",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-18T14:21:00Z",
+          "completed_at": "2026-10-18T14:21:00Z"
+        },
+        {
+          "name": "Run headless release tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-18T14:21:00Z",
+          "completed_at": "2026-10-18T14:29:47Z"
+        },
+        {
+          "name": "Replay real AppKit interaction and animation lifecycles",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 6,
+          "started_at": "2026-10-18T14:29:47Z",
+          "completed_at": null
+        },
+        {
+          "name": "Import the Developer ID and notarization credentials",
+          "status": "pending",
+          "conclusion": null,
+          "number": 7,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Build and verify the release artifacts",
+          "status": "pending",
+          "conclusion": null,
+          "number": 8,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Scrub signing credentials",
+          "status": "pending",
+          "conclusion": null,
+          "number": 9,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Upload the exact release candidate bytes",
+          "status": "pending",
+          "conclusion": null,
+          "number": 10,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Upload the release build log",
+          "status": "pending",
+          "conclusion": null,
+          "number": 11,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Check out the candidate",
+          "status": "pending",
+          "conclusion": null,
+          "number": 22,
+          "started_at": null,
+          "completed_at": null
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/check-runs/117699241357",
+      "labels": [
+        "macos-26"
+      ],
+      "runner_id": 1000003063,
+      "runner_name": "GitHub Actions 1000003063",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

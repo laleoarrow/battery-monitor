@@ -1,0 +1,17 @@
+{
+  "observed_at": "2026-10-18T16:51:15.344721+00:00",
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "candidate_run_id": 39145124379,
+  "headless_observer_completed": true,
+  "candidate_observer_completed": true,
+  "log_reader_completed": true,
+  "owned_atomic_review_scratch_remaining": [],
+  "local_mounts_or_app_registrations_created": false,
+  "local_app_launches_or_installations_performed": false,
+  "artifact_download_performed_by_observer": false,
+  "source_edits_performed": false,
+  "git_tag_release_or_homebrew_mutations_performed": false,
+  "only_authorized_remote_mutation": "One accepted community-ad-hoc candidate dispatch; attempt_count=1; no reruns",
+  "artifact_review_owner": "action_palette",
+  "homebrew_or_pages_dispatch_authorized": false
+}

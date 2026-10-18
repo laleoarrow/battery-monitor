@@ -1,0 +1,20 @@
+{
+  "observed_at": "2026-10-18T17:03:02.667826+00:00",
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "remote_main": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "annotated_tag_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "release_id": 416577205,
+  "release_stable_and_all_eight_digests_unchanged": true,
+  "public_pkg_sha256": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995",
+  "source_ci_run_id": 39143941668,
+  "source_ci_conclusion": "success",
+  "tap_commit": "8ba66c2e53e5f51393708c9a6e5c76644841b50e",
+  "tap_ci_run_id": 39147269521,
+  "tap_ci_conclusion": "success",
+  "tap_ci_all_three_jobs_success": true,
+  "public_cask_matches_verified_postimage": true,
+  "existing_exact_source_lifecycle_runs": [],
+  "existing_exact_source_pages_runs": [],
+  "latest_before_lifecycle": "v4.3.19",
+  "root_explicit_authorization_received": true
+}

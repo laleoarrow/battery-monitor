@@ -1,0 +1,16 @@
+{
+  "commit": "9d157d496024d32b0f65ec3fe9b1c927678352fc",
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-source-only.noindex/baseline.Jg1gWU",
+  "started_utc": "2026-10-18T15:13:45.643816+00:00",
+  "overlay": "Only new source-only regression test; library remains immutable9d.",
+  "sha256": {
+    "scripts/lib/local_cleanup.sh": "e78cf3c2a5bece68162fe8b044451f4e67cdd54df34626a4697d8ec34ecd7d41",
+    "tests/test_local_runtime_cleanup.py": "b3ffc78d00c977c23dff019614ef36459a5bc66678c7502a836fabccb7106ef6"
+  },
+  "command": "PYTHONPATH=tests python3 -m unittest -v test_local_runtime_cleanup.LocalRuntimeCleanupTests.test_source_only_runners_preserve_caller_traps_and_complete_cleanup",
+  "required_markers": [
+    "caller-signal",
+    "body-final",
+    "caller-cleanup"
+  ]
+}

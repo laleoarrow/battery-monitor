@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "proofKind": "native_execution_input_equivalence",
+  "testedCommit": "67b3f60138074823857a3f86f4d517c87f2ac9e2",
+  "releaseSourceCommit": "8300cabcb5859fcc74c3ff613a2c530a47c01f30",
+  "nativeTestsReexecutedForReleaseCommit": false,
+  "executionInputsIdentical": true,
+  "nativeExecutionFootprintFiles": 62,
+  "qaRunnerInputsIdentical": true,
+  "workflowReplayStepUnchanged": true,
+  "workflowBuildJobUnchanged": true,
+  "frozenInputFilesInRetainedArchive": 157,
+  "archiveInputsIdenticalCount": 156,
+  "allArchiveInputsIdentical": false,
+  "archiveInputDifferences": [
+    {
+      "file": "tests/test_release_workflow_contract.py",
+      "testedSHA256": "f67cd0be2db49389a9806b9ed9505b3f0d4316d677854223a8b292a057cb8e27",
+      "releaseSHA256": "13e8fa4d4f15a8fda75af1c7b4cb1b38ec92d0cd2bd36013cc7758c94e49918d",
+      "executedOrCompiledByNativeGate": false
+    }
+  ],
+  "allCommitChanges": [
+    ".github/workflows/macos-helper-install.yml",
+    "tests/test_release_workflow_contract.py"
+  ],
+  "gateResults": {
+    "schema": 1,
+    "allPassed": true,
+    "checks": {
+      "animationExitZero": true,
+      "animationFullPass": true,
+      "systemAccessibilityUnchanged": true,
+      "baselineExitZero": true,
+      "baselineFullPass": true,
+      "baselineChecksAtLeast32": true,
+      "legacyExitZero": true,
+      "legacyFullPass": true,
+      "legacyChecksAtLeast32": true,
+      "accessibilityExitZero": true,
+      "accessibilityFullPass": true,
+      "accessibilityChecksAtLeast32": true
+    },
+    "interactionChecks": {
+      "baseline": 440,
+      "legacy": 438,
+      "accessibility": 432
+    },
+    "systemAccessibilityWritten": false
+  },
+  "matchedTailAllThreeVariantsPassed": true,
+  "matchedTailFailureDiagnosticsAbsent": true,
+  "guestResourceCleanupPassed": true,
+  "ownedVMDeleted": true,
+  "originalVMStatesPreserved": {
+    "macOS-TestLab": true,
+    "macOS-TestLab-Base": true
+  },
+  "hostSnapshotScratchEmpty": true,
+  "cleanupEvidenceAppliesToTestedCommit": "67b3f60138074823857a3f86f4d517c87f2ac9e2",
+  "noNewTestVMOrAppCreated": true,
+  "canonicalAppOrHelperModified": false,
+  "priorNativeEvidencePreserved": true,
+  "retainedExecutionEvidence": {
+    "proof": {
+      "path": "design/release-v4.3.22/native/after-source-only-fix/owned-source-verification.json",
+      "sha256": "de9bd98c69a2946545ff75c3a52bcb94cb2cab1ae39131ccaa011fe8ae2baf00"
+    },
+    "gateResults": {
+      "path": "design/release-v4.3.22/native/after-source-only-fix/accepted/results/gate-results.json",
+      "sha256": "4bee1c8953ca2bd269af297a7272e1bcfc9d00c53ab0eb81ec94b1a92ebd2af9"
+    },
+    "resourceAudit": {
+      "path": "design/release-v4.3.22/native/after-source-only-fix/accepted/results/resource-audit.json",
+      "sha256": "7583252c704196d4a567e4e7bd7b51af55fc262e058c973171e6fb1e69ac068f"
+    },
+    "vmCleanup": {
+      "path": "design/release-v4.3.22/native/after-source-only-fix/accepted/vm-cleanup-summary.json",
+      "sha256": "ef69373dfadb75e4bf57b37534dbdd31d94bc2246c42af3da65cfc4e160fbd75"
+    },
+    "sourceBefore": {
+      "path": "design/release-v4.3.22/native/after-source-only-fix/accepted/results/source-before.json",
+      "sha256": "c0aecd9cdc9fafe3064c1e60a12aa5544c0b8188e0cd3fdeac987f6c0c390911"
+    },
+    "sourceAfter": {
+      "path": "design/release-v4.3.22/native/after-source-only-fix/accepted/results/source-after.json",
+      "sha256": "c0aecd9cdc9fafe3064c1e60a12aa5544c0b8188e0cd3fdeac987f6c0c390911"
+    },
+    "exitCode": {
+      "path": "design/release-v4.3.22/native/after-source-only-fix/accepted/exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "matchedTail": {
+      "path": "design/release-v4.3.22/native/after-source-only-fix/accepted/matched-tail-results.json",
+      "sha256": "909ae96156c66d80da83b5e9e187775223a534fb3613ad8aa44340535e8bbc1f"
+    }
+  },
+  "scope": "Reuse of the fully executed 67b3f60 native release gate for 8300cab strictly through identical native execution/compilation inputs and unchanged native workflow invocation. It does not assert all157 archived files are identical and is not a new native run.",
+  "limitations": [
+    "The changed install lifecycle workflow guards and Python contract test require independent validation on8300cab; this proof does not cover those changed checks.",
+    "Hosted candidate/install/publication gates must still pass on the exact releaseSourceCommit.",
+    "The retained display-policy comparison covers four DisplayProbe fields, not the full accessibility preference domain."
+  ],
+  "wholeCurrentTreeClaimedVerified": false
+}

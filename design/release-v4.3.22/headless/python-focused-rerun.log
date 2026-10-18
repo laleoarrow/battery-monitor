@@ -1,0 +1,37 @@
+test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned (test_system_battery_support.SystemBatterySupportLifecycleTests) ... 
+======================================================================
+FAIL: test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned (test_system_battery_support.SystemBatterySupportLifecycleTests) (command='/usr/bin/ditto')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22.noindex/python-ci-parity.w7FXZ4/source/tests/test_system_battery_support.py", line 341, in test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned
+    self.assertTrue(marker.exists(),
+AssertionError: False is not true : Blocked stage was never reached (exit=124): 
+
+======================================================================
+FAIL: test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned (test_system_battery_support.SystemBatterySupportLifecycleTests) (command='/bin/cp')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22.noindex/python-ci-parity.w7FXZ4/source/tests/test_system_battery_support.py", line 341, in test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned
+    self.assertTrue(marker.exists(),
+AssertionError: False is not true : Blocked stage was never reached (exit=124): 
+
+======================================================================
+FAIL: test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned (test_system_battery_support.SystemBatterySupportLifecycleTests) (command='/bin/mv')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22.noindex/python-ci-parity.w7FXZ4/source/tests/test_system_battery_support.py", line 341, in test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned
+    self.assertTrue(marker.exists(),
+AssertionError: False is not true : Blocked stage was never reached (exit=124): 
+
+======================================================================
+FAIL: test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned (test_system_battery_support.SystemBatterySupportLifecycleTests) (command='/bin/mkdir')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22.noindex/python-ci-parity.w7FXZ4/source/tests/test_system_battery_support.py", line 341, in test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned
+    self.assertTrue(marker.exists(),
+AssertionError: False is not true : Blocked stage was never reached (exit=124): 
+
+----------------------------------------------------------------------
+Ran 1 test in 14.804s
+
+FAILED (failures=4)

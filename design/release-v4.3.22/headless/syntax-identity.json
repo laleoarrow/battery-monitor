@@ -1,0 +1,6 @@
+{
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22.noindex/syntax.16ieeW",
+  "baseline": "b51e12bc87364a8f7ede342302bc5682b3e53c95",
+  "command": "for file in scripts/*.sh scripts/lib/*.sh script/*.sh Packaging/pkg/preinstall Packaging/pkg/postinstall; do wattson_run /bin/bash -n \"$file\"; printf \"PASS %s\\n\" \"$file\"; done",
+  "correction": "Direct Bash per-file parsing with the shared owned-process runner; no stdin driver."
+}

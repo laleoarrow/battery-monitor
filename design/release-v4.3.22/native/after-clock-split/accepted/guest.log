@@ -1,0 +1,7 @@
+{"schema": 1, "allPassed": true, "filesChecked": 157, "mismatches": []}
+INTERACTION_baseline_EXIT_STATUS 0
+INTERACTION_legacy_EXIT_STATUS 0
+INTERACTION_accessibility_EXIT_STATUS 0
+ANIMATION_STRESS_EXIT_STATUS 0
+{"schema": 1, "allPassed": true, "filesChecked": 157, "mismatches": []}
+RELEASE_NATIVE_GATES_PASSED

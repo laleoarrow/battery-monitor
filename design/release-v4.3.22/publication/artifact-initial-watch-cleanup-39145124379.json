@@ -1,0 +1,16 @@
+{
+  "comparisons": {
+    "canonical_app_version": true,
+    "canonical_files": true,
+    "canonical_running_pids": true,
+    "receipt": true,
+    "selected_wattson_registered_paths": true
+  },
+  "download_occurred": false,
+  "owned_mounts_absent": true,
+  "owned_processes_absent": true,
+  "reason": "Read-only GitHub query exited 1; initial watcher stopped and cleaned",
+  "source_identity": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "status": "passed",
+  "workspace_removed": true
+}

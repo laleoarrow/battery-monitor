@@ -1,0 +1,29 @@
+{
+  "observed_at": "2026-10-18T16:56:22.033519+00:00",
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "remote_main": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "release_id": 416577205,
+  "release_tag": "v4.3.22",
+  "release_stable": true,
+  "tag_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "release_all_eight_digests_match_publication": true,
+  "public_pkg_sha256": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995",
+  "latest_release_before_lifecycle": {
+    "id": 415924696,
+    "tag_name": "v4.3.19"
+  },
+  "headless_ci": {
+    "conclusion": "success",
+    "databaseId": 39143941668,
+    "event": "push",
+    "headBranch": "main",
+    "headSha": "7f41533b017d26519a69d541d3ffd2dea587f413",
+    "status": "completed"
+  },
+  "existing_homebrew_runs": [],
+  "existing_pages_runs": [],
+  "required_tap_sha": "pending root-provided exact tested SHA",
+  "dispatch_authorization": false,
+  "dispatch_attempt_count": 0,
+  "automatic_latest_and_pages_workflow_owned": true
+}

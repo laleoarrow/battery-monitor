@@ -1,0 +1,29 @@
+test_candidate_rejects_missing_lifecycle_completion_outputs (test_release_workflow_contract.ReleaseWorkflowContractTests) ... 
+======================================================================
+FAIL: test_candidate_rejects_missing_lifecycle_completion_outputs (test_release_workflow_contract.ReleaseWorkflowContractTests) (dmg_complete='', pkg_complete='true', expect_v2='false')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/tests/test_release_workflow_contract.py", line 40, in test_candidate_rejects_missing_lifecycle_completion_outputs
+    self.assertIn(f"Missing {missing} lifecycle completion", result.stderr)
+AssertionError: 'Missing DMG lifecycle completion' not found in 'installation lifecycle cleanup left the package receipt\n'
+
+======================================================================
+FAIL: test_candidate_rejects_missing_lifecycle_completion_outputs (test_release_workflow_contract.ReleaseWorkflowContractTests) (dmg_complete='true', pkg_complete='', expect_v2='false')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/tests/test_release_workflow_contract.py", line 40, in test_candidate_rejects_missing_lifecycle_completion_outputs
+    self.assertIn(f"Missing {missing} lifecycle completion", result.stderr)
+AssertionError: 'Missing PKG lifecycle completion' not found in 'installation lifecycle cleanup left the package receipt\n'
+
+======================================================================
+FAIL: test_candidate_rejects_missing_lifecycle_completion_outputs (test_release_workflow_contract.ReleaseWorkflowContractTests) (dmg_complete='true', pkg_complete='true', expect_v2='true')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/tests/test_release_workflow_contract.py", line 40, in test_candidate_rejects_missing_lifecycle_completion_outputs
+    self.assertIn(f"Missing {missing} lifecycle completion", result.stderr)
+AssertionError: 'Missing V2 lifecycle completion' not found in 'installation lifecycle cleanup left the package receipt\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.149s
+
+FAILED (failures=3)

@@ -1,0 +1,599 @@
+{
+  "conclusion": "",
+  "createdAt": "2026-10-18T16:28:05Z",
+  "databaseId": 39145124379,
+  "event": "workflow_dispatch",
+  "headBranch": "main",
+  "headSha": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "jobs": [
+    {
+      "completedAt": "2026-10-18T16:46:49Z",
+      "conclusion": "success",
+      "databaseId": 117727301321,
+      "name": "Build universal PKG and DMG once",
+      "startedAt": "2026-10-18T16:28:16Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T16:28:18Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T16:28:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:28:29Z",
+          "conclusion": "success",
+          "name": "Check out the candidate",
+          "number": 2,
+          "startedAt": "2026-10-18T16:28:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:28:30Z",
+          "conclusion": "success",
+          "name": "Require Headless CI on the frozen main commit",
+          "number": 3,
+          "startedAt": "2026-10-18T16:28:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:28:31Z",
+          "conclusion": "success",
+          "name": "Resolve and validate the candidate version",
+          "number": 4,
+          "startedAt": "2026-10-18T16:28:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:36:59Z",
+          "conclusion": "success",
+          "name": "Run headless release tests",
+          "number": 5,
+          "startedAt": "2026-10-18T16:28:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:44:26Z",
+          "conclusion": "success",
+          "name": "Replay real AppKit interaction and animation lifecycles",
+          "number": 6,
+          "startedAt": "2026-10-18T16:36:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:44:26Z",
+          "conclusion": "skipped",
+          "name": "Import the Developer ID and notarization credentials",
+          "number": 7,
+          "startedAt": "2026-10-18T16:44:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:46:40Z",
+          "conclusion": "success",
+          "name": "Build and verify the release artifacts",
+          "number": 8,
+          "startedAt": "2026-10-18T16:44:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:46:40Z",
+          "conclusion": "success",
+          "name": "Scrub signing credentials",
+          "number": 9,
+          "startedAt": "2026-10-18T16:46:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:46:43Z",
+          "conclusion": "success",
+          "name": "Upload the exact release candidate bytes",
+          "number": 10,
+          "startedAt": "2026-10-18T16:46:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:46:44Z",
+          "conclusion": "success",
+          "name": "Upload the release build log",
+          "number": 11,
+          "startedAt": "2026-10-18T16:46:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:46:45Z",
+          "conclusion": "success",
+          "name": "Post Check out the candidate",
+          "number": 22,
+          "startedAt": "2026-10-18T16:46:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:46:46Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-10-18T16:46:45Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39145124379/job/117727301321"
+    },
+    {
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "databaseId": 117731477565,
+      "name": "Install on macos-15",
+      "startedAt": "2026-10-18T16:46:57Z",
+      "status": "in_progress",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T16:46:59Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T16:46:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:11Z",
+          "conclusion": "success",
+          "name": "Check out the candidate lifecycle scripts",
+          "number": 2,
+          "startedAt": "2026-10-18T16:46:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:12Z",
+          "conclusion": "success",
+          "name": "Download the single release build",
+          "number": 3,
+          "startedAt": "2026-10-18T16:47:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:19Z",
+          "conclusion": "success",
+          "name": "Verify checksums, universal payloads, and DMG identity",
+          "number": 4,
+          "startedAt": "2026-10-18T16:47:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:24Z",
+          "conclusion": "success",
+          "name": "Test helper-free DMG copy launch and removal without elevation",
+          "number": 5,
+          "startedAt": "2026-10-18T16:47:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:43Z",
+          "conclusion": "success",
+          "name": "Test first install and disabled-service reinstall",
+          "number": 6,
+          "startedAt": "2026-10-18T16:47:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:56Z",
+          "conclusion": "success",
+          "name": "Test upgrade from the published v2.1.5 release",
+          "number": 7,
+          "startedAt": "2026-10-18T16:47:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:56Z",
+          "conclusion": "success",
+          "name": "Require complete installation lifecycles and clean receipts",
+          "number": 8,
+          "startedAt": "2026-10-18T16:47:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:57Z",
+          "conclusion": "success",
+          "name": "Upload installation logs",
+          "number": 9,
+          "startedAt": "2026-10-18T16:47:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:58Z",
+          "conclusion": "success",
+          "name": "Post Check out the candidate lifecycle scripts",
+          "number": 18,
+          "startedAt": "2026-10-18T16:47:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Complete job",
+          "number": 19,
+          "startedAt": "2026-10-18T16:47:58Z",
+          "status": "in_progress"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39145124379/job/117731477565"
+    },
+    {
+      "completedAt": "2026-10-18T16:47:52Z",
+      "conclusion": "success",
+      "databaseId": 117731477584,
+      "name": "Install on macos-14",
+      "startedAt": "2026-10-18T16:46:57Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T16:47:00Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T16:46:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:09Z",
+          "conclusion": "success",
+          "name": "Check out the candidate lifecycle scripts",
+          "number": 2,
+          "startedAt": "2026-10-18T16:47:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:11Z",
+          "conclusion": "success",
+          "name": "Download the single release build",
+          "number": 3,
+          "startedAt": "2026-10-18T16:47:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:14Z",
+          "conclusion": "success",
+          "name": "Verify checksums, universal payloads, and DMG identity",
+          "number": 4,
+          "startedAt": "2026-10-18T16:47:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:20Z",
+          "conclusion": "success",
+          "name": "Test helper-free DMG copy launch and removal without elevation",
+          "number": 5,
+          "startedAt": "2026-10-18T16:47:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:37Z",
+          "conclusion": "success",
+          "name": "Test first install and disabled-service reinstall",
+          "number": 6,
+          "startedAt": "2026-10-18T16:47:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:48Z",
+          "conclusion": "success",
+          "name": "Test upgrade from the published v2.1.5 release",
+          "number": 7,
+          "startedAt": "2026-10-18T16:47:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:48Z",
+          "conclusion": "success",
+          "name": "Require complete installation lifecycles and clean receipts",
+          "number": 8,
+          "startedAt": "2026-10-18T16:47:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:49Z",
+          "conclusion": "success",
+          "name": "Upload installation logs",
+          "number": 9,
+          "startedAt": "2026-10-18T16:47:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:50Z",
+          "conclusion": "success",
+          "name": "Post Check out the candidate lifecycle scripts",
+          "number": 18,
+          "startedAt": "2026-10-18T16:47:49Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:50Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 19,
+          "startedAt": "2026-10-18T16:47:50Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39145124379/job/117731477584"
+    },
+    {
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "databaseId": 117731477619,
+      "name": "Install on macos-26",
+      "startedAt": "2026-10-18T16:46:57Z",
+      "status": "in_progress",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T16:46:59Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T16:46:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:16Z",
+          "conclusion": "success",
+          "name": "Check out the candidate lifecycle scripts",
+          "number": 2,
+          "startedAt": "2026-10-18T16:46:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:17Z",
+          "conclusion": "success",
+          "name": "Download the single release build",
+          "number": 3,
+          "startedAt": "2026-10-18T16:47:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:34Z",
+          "conclusion": "success",
+          "name": "Verify checksums, universal payloads, and DMG identity",
+          "number": 4,
+          "startedAt": "2026-10-18T16:47:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:40Z",
+          "conclusion": "success",
+          "name": "Test helper-free DMG copy launch and removal without elevation",
+          "number": 5,
+          "startedAt": "2026-10-18T16:47:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Test first install and disabled-service reinstall",
+          "number": 6,
+          "startedAt": "2026-10-18T16:47:40Z",
+          "status": "in_progress"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Test upgrade from the published v2.1.5 release",
+          "number": 7,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Require complete installation lifecycles and clean receipts",
+          "number": 8,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Upload installation logs",
+          "number": 9,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Post Check out the candidate lifecycle scripts",
+          "number": 18,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39145124379/job/117731477619"
+    },
+    {
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "databaseId": 117731477636,
+      "name": "Install on macos-15-intel",
+      "startedAt": "2026-10-18T16:46:55Z",
+      "status": "in_progress",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T16:47:02Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T16:46:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:18Z",
+          "conclusion": "success",
+          "name": "Check out the candidate lifecycle scripts",
+          "number": 2,
+          "startedAt": "2026-10-18T16:47:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:21Z",
+          "conclusion": "success",
+          "name": "Download the single release build",
+          "number": 3,
+          "startedAt": "2026-10-18T16:47:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:34Z",
+          "conclusion": "success",
+          "name": "Verify checksums, universal payloads, and DMG identity",
+          "number": 4,
+          "startedAt": "2026-10-18T16:47:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:45Z",
+          "conclusion": "success",
+          "name": "Test helper-free DMG copy launch and removal without elevation",
+          "number": 5,
+          "startedAt": "2026-10-18T16:47:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Test first install and disabled-service reinstall",
+          "number": 6,
+          "startedAt": "2026-10-18T16:47:45Z",
+          "status": "in_progress"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Test upgrade from the published v2.1.5 release",
+          "number": 7,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Require complete installation lifecycles and clean receipts",
+          "number": 8,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Upload installation logs",
+          "number": 9,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Post Check out the candidate lifecycle scripts",
+          "number": 18,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39145124379/job/117731477636"
+    },
+    {
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "databaseId": 117731477639,
+      "name": "Install on macos-26-intel",
+      "startedAt": "2026-10-18T16:46:52Z",
+      "status": "in_progress",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T16:46:56Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T16:46:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:10Z",
+          "conclusion": "success",
+          "name": "Check out the candidate lifecycle scripts",
+          "number": 2,
+          "startedAt": "2026-10-18T16:46:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:14Z",
+          "conclusion": "success",
+          "name": "Download the single release build",
+          "number": 3,
+          "startedAt": "2026-10-18T16:47:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:30Z",
+          "conclusion": "success",
+          "name": "Verify checksums, universal payloads, and DMG identity",
+          "number": 4,
+          "startedAt": "2026-10-18T16:47:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T16:47:35Z",
+          "conclusion": "success",
+          "name": "Test helper-free DMG copy launch and removal without elevation",
+          "number": 5,
+          "startedAt": "2026-10-18T16:47:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Test first install and disabled-service reinstall",
+          "number": 6,
+          "startedAt": "2026-10-18T16:47:35Z",
+          "status": "in_progress"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Test upgrade from the published v2.1.5 release",
+          "number": 7,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Require complete installation lifecycles and clean receipts",
+          "number": 8,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Upload installation logs",
+          "number": 9,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Post Check out the candidate lifecycle scripts",
+          "number": 18,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39145124379/job/117731477639"
+    }
+  ],
+  "status": "in_progress",
+  "updatedAt": "2026-10-18T16:46:58Z",
+  "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39145124379"
+}

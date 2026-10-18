@@ -1,0 +1,81 @@
+{
+  "baseline_commit": "fdf6d96d30d30e0aaee709fa8696ce980ea19100",
+  "mechanism": "A catchable signal between background runner spawn and _WATTSON_RUNNER_PID assignment invokes cleanup with no registered runner. The shell can exit143 while the orphan runner and its separate log-command session retain captured pipes, so communicate cannot receive EOF.",
+  "deterministic_proof": {
+    "log": "forced-baseline.log",
+    "shell_exit_status": 143,
+    "communicate_timeout_seconds": 65,
+    "observed_orphan_runner_pid": 13846,
+    "observed_log_session_pid": 13849,
+    "fixture_only_snapshot": true,
+    "test_result": "expected baseline failure"
+  },
+  "fix": "Defer catchable signal exit only during background spawn/PID publication in all three runner entrypoints, then immediately replay the first pending status. Reset deferral state before cleanup commands.",
+  "changed_files": [
+    "scripts/lib/local_cleanup.sh",
+    "tests/test_run_preview_cleanup.py"
+  ],
+  "unchanged_files": [
+    "script/build_and_run.sh",
+    "scripts/lib/run_owned.py"
+  ],
+  "retained_invariants": [
+    "all prior timeouts and grace periods",
+    "shell-only TERM status143",
+    "detached app receives TERM before unregister",
+    "app bundle/scratch removal",
+    "owned runner and log session stop; no inherited pipe survives",
+    "existing HUP/INT/TERM, timeout, descendants and nested-cleanup behavior"
+  ],
+  "checks": {
+    "untouched_focused_baseline": {
+      "tests": 1,
+      "result": "passed",
+      "seconds": 3.081,
+      "log": "baseline-focused.log"
+    },
+    "deterministic_baseline": {
+      "tests": 1,
+      "result": "failed as expected",
+      "seconds": 65.175,
+      "log": "forced-baseline.log"
+    },
+    "fixed_preview_cleanup": {
+      "tests": 7,
+      "result": "passed",
+      "seconds": 23.697,
+      "log": "fixed-preview-cleanup.log"
+    },
+    "fixed_packaging_and_runtime_cleanup": {
+      "tests": 20,
+      "result": "passed",
+      "seconds": 62.668,
+      "log": "fixed-lifecycle-regression.log"
+    },
+    "bash_syntax": "passed",
+    "diff_check": "passed",
+    "cleanup": "passed"
+  },
+  "sha256": {
+    "scripts/lib/local_cleanup.sh": "55979bc78be56144c26d667e86122921f08e0223c3c5184936b8ed70628bd7e0",
+    "tests/test_run_preview_cleanup.py": "d1a1d65f371d275ca7161aaead18d64ec37644b5bbaaa423863f5284c11b4f2c",
+    "script/build_and_run.sh": "30cfa9823d065eeac0989af8f0c64e0f9f1b06e58214c1bc3e659f08ca1e5f93",
+    "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872"
+  },
+  "authority": "Focused repair validation only; root must freeze a new commit and rerun exact-SHA release gates. The previously documented support0.5 fixture is a separate finding.",
+  "final_preview_revalidation": {
+    "result": "passed",
+    "tests": 7,
+    "seconds": 16.384,
+    "log": "final-preview-cleanup.log",
+    "identity": "final-preview-identity.json",
+    "changes": "Darwin zombie-only exact-PGID PermissionError fallback in test cleanup; one production critical-section comment. Prior27-test logs remain unchanged.",
+    "cleanup": "passed"
+  },
+  "final_sha256": {
+    "tests/test_run_preview_cleanup.py": "a5c2fb8911d4c6b14ace3383f19fa5f2b1a2bec6b6874f7dfb34b83210476ba5",
+    "scripts/lib/local_cleanup.sh": "e78cf3c2a5bece68162fe8b044451f4e67cdd54df34626a4697d8ec34ecd7d41",
+    "script/build_and_run.sh": "30cfa9823d065eeac0989af8f0c64e0f9f1b06e58214c1bc3e659f08ca1e5f93",
+    "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872"
+  }
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "Name" : "Wattson-Release-Gates-E74C64C3",
+    "State" : "running",
+    "Accessed" : "2026-10-18T14:16:58Z",
+    "Size" : 31,
+    "Running" : true,
+    "Disk" : 50,
+    "Source" : "local"
+  },
+  {
+    "Name" : "macOS-TestLab",
+    "State" : "stopped",
+    "Accessed" : "2026-10-15T06:45:45Z",
+    "Size" : 33,
+    "Running" : false,
+    "Disk" : 50,
+    "Source" : "local"
+  },
+  {
+    "Name" : "macOS-TestLab-Base",
+    "State" : "stopped",
+    "Accessed" : "2026-10-18T14:10:48Z",
+    "Size" : 30,
+    "Running" : false,
+    "Disk" : 50,
+    "Source" : "local"
+  }
+]

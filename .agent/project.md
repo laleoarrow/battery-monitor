@@ -63,6 +63,12 @@ closing, hiding, detaching, degraded readings and Reduce Motion stop animations.
 No chart timer is used. The [4.3.16 axis motion review](../design/history-axis-smoothness/README.md)
 records the corrected independent native probe, ABBA preparation measurements,
 explicit construction counts, Pro review, and exact installation evidence.
+Wattson 4.3.22 is now the stable [public GitHub release](https://github.com/laleoarrow/battery-monitor/releases/tag/v4.3.22)
+from frozen `7f41533b017d26519a69d541d3ffd2dea587f413`; exact candidate,
+Homebrew, Pages and anonymous public-asset checks passed. The
+[publication record](../design/release-v4.3.22/publication/final-release-verification.json)
+keeps maintainer synchronization separate: the verified public PKG is ready,
+but installation is waiting for the Mac to be unlocked.
 Wattson 4.3.22 is the current verified local preview installation. Its
 [installation record](../design/process-activity-palette/local-preview-v4.3.22/local-install-verified.json)
 verifies matching App/helper/daemon payloads, all 15 retained settings and actual

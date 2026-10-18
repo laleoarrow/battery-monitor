@@ -1,0 +1,158 @@
+{
+  "conclusion": "",
+  "createdAt": "2026-10-18T17:03:04Z",
+  "databaseId": 39147785416,
+  "event": "workflow_dispatch",
+  "headBranch": "main",
+  "headSha": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "jobs": [
+    {
+      "completedAt": "2026-10-18T17:03:16Z",
+      "conclusion": "success",
+      "databaseId": 117735049943,
+      "name": "Verify the public release and tested Homebrew cask",
+      "startedAt": "2026-10-18T17:03:08Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T17:03:09Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T17:03:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:03:10Z",
+          "conclusion": "success",
+          "name": "Resolve the release tag from the current main commit",
+          "number": 2,
+          "startedAt": "2026-10-18T17:03:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:03:14Z",
+          "conclusion": "success",
+          "name": "Require the exact tested public cask",
+          "number": 3,
+          "startedAt": "2026-10-18T17:03:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:03:14Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 4,
+          "startedAt": "2026-10-18T17:03:14Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39147785416/job/117735049943"
+    },
+    {
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "databaseId": 117735088123,
+      "name": "Homebrew lifecycle on macos-15-intel",
+      "startedAt": "2026-10-18T17:03:18Z",
+      "status": "in_progress",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T17:03:19Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T17:03:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:03:29Z",
+          "conclusion": "success",
+          "name": "Validate the hosted runner and stable release",
+          "number": 2,
+          "startedAt": "2026-10-18T17:03:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:03:50Z",
+          "conclusion": "success",
+          "name": "Validate the public Homebrew cask",
+          "number": 3,
+          "startedAt": "2026-10-18T17:03:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:04:09Z",
+          "conclusion": "success",
+          "name": "Test public cask install and uninstall",
+          "number": 4,
+          "startedAt": "2026-10-18T17:03:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Complete job",
+          "number": 5,
+          "startedAt": "2026-10-18T17:04:09Z",
+          "status": "in_progress"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39147785416/job/117735088123"
+    },
+    {
+      "completedAt": "2026-10-18T17:03:47Z",
+      "conclusion": "success",
+      "databaseId": 117735088132,
+      "name": "Homebrew lifecycle on macos-26",
+      "startedAt": "2026-10-18T17:03:23Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T17:03:23Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T17:03:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:03:27Z",
+          "conclusion": "success",
+          "name": "Validate the hosted runner and stable release",
+          "number": 2,
+          "startedAt": "2026-10-18T17:03:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:03:30Z",
+          "conclusion": "success",
+          "name": "Validate the public Homebrew cask",
+          "number": 3,
+          "startedAt": "2026-10-18T17:03:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:03:44Z",
+          "conclusion": "success",
+          "name": "Test public cask install and uninstall",
+          "number": 4,
+          "startedAt": "2026-10-18T17:03:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:03:44Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 5,
+          "startedAt": "2026-10-18T17:03:44Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39147785416/job/117735088132"
+    }
+  ],
+  "status": "in_progress",
+  "updatedAt": "2026-10-18T17:03:23Z",
+  "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39147785416"
+}

@@ -1,0 +1,10 @@
+{
+  "checked_at": "2026-10-18T15:45:51.748739+00:00",
+  "sha": "8300cabcb5859fcc74c3ff613a2c530a47c01f30",
+  "headless_run_id": 39141158685,
+  "headless_success": true,
+  "native_final_proof_accepted": true,
+  "remote_main_matches": true,
+  "existing_exact_candidate_runs": [],
+  "dispatch_attempted": false
+}

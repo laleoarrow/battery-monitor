@@ -1,0 +1,1088 @@
+Verify the public release and tested Homebrew cask	Set up job	﻿2026-10-18T17:03:09.3866877Z Current runner version: '2.337.0'
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3893872Z ##[group]Runner Image Provisioner
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3894830Z Hosted Compute Agent
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3895550Z Version: 20261012.601
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3896231Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3897013Z Build Date: 2026-10-12T17:48:21Z
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3897885Z Worker ID: {1919366c-3bf1-4822-bdea-c48b2b9d2055}
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3898662Z Region: westus
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3899275Z Cloud: Azure
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3899870Z ##[endgroup]
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3901503Z ##[group]Operating System
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3902578Z Ubuntu
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3903151Z 24.04.5
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3903736Z LTS
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3904301Z ##[endgroup]
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3904895Z ##[group]Runner Image
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3905616Z Image: ubuntu-24.04
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3906224Z Version: 20261012.334.1
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3907398Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3909384Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3910478Z ##[endgroup]
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3911715Z ##[group]GITHUB_TOKEN Permissions
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3914122Z Actions: read
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3914769Z Contents: read
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3915481Z Metadata: read
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3916056Z ##[endgroup]
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3918124Z Secret source: Actions
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3919175Z Cache mode: write
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.3919919Z Prepare workflow directory
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.4511414Z Prepare all required actions
+Verify the public release and tested Homebrew cask	Set up job	2026-10-18T17:03:09.4578124Z Complete job name: Verify the public release and tested Homebrew cask
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	﻿2026-10-18T17:03:09.5340637Z ##[group]Run set -euo pipefail
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5341650Z [36;1mset -euo pipefail[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5342764Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5343554Z [36;1m[[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]][0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5344413Z [36;1m[[ "$GITHUB_REF" == "refs/heads/main" ]][0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5345242Z [36;1mreadonly RELEASE_TAG="$REQUESTED_TAG"[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5346078Z [36;1m[[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]][0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5346800Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5347419Z [36;1mMAIN_SHA="$([0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5348007Z [36;1m  gh api \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5348680Z [36;1m    --header 'Accept: application/vnd.github+json' \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5349680Z [36;1m    --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5350529Z [36;1m    "repos/$GITHUB_REPOSITORY/git/ref/heads/main" \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5351345Z [36;1m    --jq .object.sha[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5352312Z [36;1m)"[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5352888Z [36;1mreadonly MAIN_SHA[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5353721Z [36;1m[[ "$MAIN_SHA" =~ ^[0-9a-f]{40}$ ]][0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5354431Z [36;1m[[ "$GITHUB_SHA" == "$MAIN_SHA" ]] || {[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5355405Z [36;1m  echo "The lifecycle must use the current main commit." >&2[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5356246Z [36;1m  exit 1[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5356838Z [36;1m}[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5357355Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5357857Z [36;1mSOURCE_VERSION="$([0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5358554Z [36;1m  /usr/bin/curl \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5359148Z [36;1m    --fail \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5359765Z [36;1m    --location \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5360364Z [36;1m    --proto '=https' \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5361093Z [36;1m    --retry 3 \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5361715Z [36;1m    --retry-delay 2 \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5362684Z [36;1m    --tlsv1.2 \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5363663Z [36;1m    "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/VERSION" \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5364730Z [36;1m    | /usr/bin/tr -d '\r\n'[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5365438Z [36;1m)"[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5365995Z [36;1mreadonly SOURCE_VERSION[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5366760Z [36;1m[[ "$SOURCE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]][0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5367884Z [36;1m[[ "$RELEASE_TAG" == "v$SOURCE_VERSION" ]] || {[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5368877Z [36;1m  echo "The release tag must match VERSION at the current main commit." >&2[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5369849Z [36;1m  exit 1[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5370397Z [36;1m}[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5370903Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5371637Z [36;1mreadonly CI_RUNS="$RUNNER_TEMP/wattson-headless-ci.json"[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5372630Z [36;1mgh api \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5373256Z [36;1m  --method GET \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5373986Z [36;1m  --header 'Accept: application/vnd.github+json' \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5374853Z [36;1m  --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5375802Z [36;1m  "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs" \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5376696Z [36;1m  -f branch=main \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5377451Z [36;1m  -f event=push \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5378138Z [36;1m  -f head_sha="$GITHUB_SHA" \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5378887Z [36;1m  -f per_page=100 \[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5379633Z [36;1m  > "$CI_RUNS"[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5380292Z [36;1m/usr/bin/jq -e --arg sha "$GITHUB_SHA" '[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5381095Z [36;1m  any([0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5381643Z [36;1m    .workflow_runs[];[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5382639Z [36;1m    .head_sha == $sha and[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5383460Z [36;1m    .head_branch == "main" and[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5384231Z [36;1m    .event == "push" and[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5385049Z [36;1m    .status == "completed" and[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5385730Z [36;1m    .conclusion == "success"[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5386378Z [36;1m  )[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5386976Z [36;1m' "$CI_RUNS" >/dev/null[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5387643Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.5388533Z [36;1mecho "release_tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"[0m
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.6549022Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.6550721Z env:
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.6556476Z   GH_TOKEN: ***
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.6557155Z   REQUESTED_TAG: v4.3.22
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:09.6557969Z ##[endgroup]
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:10.2484440Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:10.2486672Z                                  Dload  Upload   Total   Spent    Left  Speed
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:10.2487581Z 
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:10.4094755Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Resolve the release tag from the current main commit	2026-10-18T17:03:10.4097443Z 100     7  100     7    0     0     42      0 --:--:-- --:--:-- --:--:--    42
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	﻿2026-10-18T17:03:10.9780867Z ##[group]Run set -euo pipefail
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9782672Z [36;1mset -euo pipefail[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9783994Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9785189Z [36;1mreadonly VERSION="${RELEASE_TAG#v}"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9787183Z [36;1mreadonly PKG_NAME="Wattson-v${VERSION}-macos-universal.pkg"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9789560Z [36;1mreadonly DMG_NAME="Wattson-v${VERSION}-macos-universal.dmg"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9792052Z [36;1mreadonly INFO_NAME="Wattson-v${VERSION}-release-info.txt"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9794093Z [36;1mreadonly CHECKSUM_NAME="SHA256SUMS.txt"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9796769Z [36;1mreadonly ASSET_BASE="https://github.com/laleoarrow/battery-monitor/releases/download/${RELEASE_TAG}"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9799775Z [36;1mreadonly DOWNLOAD_DIR="$RUNNER_TEMP/wattson-homebrew-recovery"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9802261Z [36;1mreadonly RELEASE_JSON="$RUNNER_TEMP/wattson-stable-release.json"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9804160Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9805156Z [36;1mgh api \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9806537Z [36;1m  --header 'Accept: application/vnd.github+json' \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9808367Z [36;1m  --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9810272Z [36;1m  "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9812046Z [36;1m  > "$RELEASE_JSON"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9813612Z [36;1m[[ "$(/usr/bin/jq -r .tag_name "$RELEASE_JSON")" == "$RELEASE_TAG" ]][0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9815811Z [36;1m[[ "$(/usr/bin/jq -r .draft "$RELEASE_JSON")" == "false" ]][0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9817766Z [36;1m[[ "$(/usr/bin/jq -r .prerelease "$RELEASE_JSON")" == "false" ]][0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9819442Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9820457Z [36;1m/bin/mkdir -p "$DOWNLOAD_DIR"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9822437Z [36;1mfor asset_name in "$PKG_NAME" "$DMG_NAME" "$INFO_NAME" "$CHECKSUM_NAME"; do[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9824367Z [36;1m  /usr/bin/jq -e \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9825616Z [36;1m    --arg name "$asset_name" \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9827238Z [36;1m    '[.assets[] | select(.name == $name)] | length == 1' \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9828920Z [36;1m    "$RELEASE_JSON" >/dev/null[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9830275Z [36;1m  /usr/bin/curl \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9831455Z [36;1m    --fail \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9832710Z [36;1m    --location \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9833932Z [36;1m    --proto '=https' \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9835179Z [36;1m    --retry 3 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9836352Z [36;1m    --retry-delay 2 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9837560Z [36;1m    --tlsv1.2 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9838836Z [36;1m    --output "$DOWNLOAD_DIR/$asset_name" \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9840352Z [36;1m    "$ASSET_BASE/$asset_name"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9841644Z [36;1mdone[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9843438Z [36;1m[[ "$(/usr/bin/wc -l < "$DOWNLOAD_DIR/$CHECKSUM_NAME" | /usr/bin/tr -d ' ')" == "3" ]][0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9845430Z [36;1m([0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9846415Z [36;1m  cd "$DOWNLOAD_DIR"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9847740Z [36;1m  /usr/bin/sha256sum -c "$CHECKSUM_NAME"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9849162Z [36;1m)[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9850105Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9851073Z [36;1mEXPECTED_SHA="$([0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9852721Z [36;1m  /usr/bin/awk -v name="$PKG_NAME" '$2 == name { print $1 }' \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9854526Z [36;1m    "$DOWNLOAD_DIR/$CHECKSUM_NAME"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9855872Z [36;1m)"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9856888Z [36;1mreadonly EXPECTED_SHA[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9858213Z [36;1m[[ "$EXPECTED_SHA" =~ ^[0-9a-f]{64}$ ]][0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9859593Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9860956Z [36;1mreadonly TAP_REF="$RUNNER_TEMP/wattson-tap-main-ref.json"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9862795Z [36;1m/usr/bin/curl \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9863879Z [36;1m  --fail \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9864876Z [36;1m  --location \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9865952Z [36;1m  --proto '=https' \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9867084Z [36;1m  --retry 3 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9868149Z [36;1m  --retry-delay 2 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9869480Z [36;1m  --tlsv1.2 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9870573Z [36;1m  --output "$TAP_REF" \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9872544Z [36;1m  'https://api.github.com/repos/laleoarrow/homebrew-tap/git/ref/heads/main'[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9874853Z [36;1mTAP_SHA="$(/usr/bin/jq -r '.object.sha // empty' "$TAP_REF")"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9876505Z [36;1mreadonly TAP_SHA[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9877648Z [36;1m[[ "$TAP_SHA" =~ ^[0-9a-f]{40}$ ]][0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9878920Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9880243Z [36;1mreadonly PUBLIC_CASK="$RUNNER_TEMP/wattson-public-cask.rb"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9882099Z [36;1m/usr/bin/curl \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9883165Z [36;1m  --fail \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9884153Z [36;1m  --location \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9885219Z [36;1m  --proto '=https' \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9886333Z [36;1m  --retry 3 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9887379Z [36;1m  --retry-delay 2 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9888476Z [36;1m  --tlsv1.2 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9889579Z [36;1m  --output "$PUBLIC_CASK" \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9891683Z [36;1m  "https://raw.githubusercontent.com/laleoarrow/homebrew-tap/$TAP_SHA/Casks/wattson.rb"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9894261Z [36;1m/usr/bin/grep -Fxq "  version \"$VERSION\"" "$PUBLIC_CASK"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9896250Z [36;1m/usr/bin/grep -Fxq "  sha256 \"$EXPECTED_SHA\"" "$PUBLIC_CASK"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9897952Z [36;1mruby -c "$PUBLIC_CASK"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9899252Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9900506Z [36;1mreadonly TAP_RUNS="$RUNNER_TEMP/wattson-tap-runs.json"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9902279Z [36;1m/usr/bin/curl \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9903349Z [36;1m  --fail \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9904350Z [36;1m  --location \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9905431Z [36;1m  --proto '=https' \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9906560Z [36;1m  --retry 3 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9907630Z [36;1m  --retry-delay 2 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9908736Z [36;1m  --tlsv1.2 \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9909824Z [36;1m  --output "$TAP_RUNS" \[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9912663Z [36;1m  "https://api.github.com/repos/laleoarrow/homebrew-tap/actions/workflows/tests.yml/runs?event=push&head_sha=$TAP_SHA&per_page=10"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9915563Z [36;1m/usr/bin/jq -e --arg sha "$TAP_SHA" '[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9916883Z [36;1m  any([0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9917844Z [36;1m    .workflow_runs[];[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9919000Z [36;1m    .head_sha == $sha and[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9920245Z [36;1m    .head_branch == "main" and[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9921508Z [36;1m    .event == "push" and[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9922890Z [36;1m    .status == "completed" and[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9924171Z [36;1m    .conclusion == "success"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9925346Z [36;1m  )[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9926268Z [36;1m' "$TAP_RUNS" >/dev/null[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9927413Z [36;1m[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9928475Z [36;1mecho "tap_sha=$TAP_SHA" >> "$GITHUB_OUTPUT"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9930104Z [36;1mecho "pkg_sha=$EXPECTED_SHA" >> "$GITHUB_OUTPUT"[0m
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9997344Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:10.9998989Z env:
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.0010471Z   GH_TOKEN: ***
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.0011488Z   REQUESTED_TAG: v4.3.22
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.0012738Z   RELEASE_TAG: v4.3.22
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.0013769Z ##[endgroup]
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.4221761Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.4222991Z                                  Dload  Upload   Total   Spent    Left  Speed
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.4223404Z 
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.6039747Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.6041205Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.8534530Z 
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.8535560Z 100 6738k  100 6738k    0     0  15.2M      0 --:--:-- --:--:-- --:--:-- 15.2M
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.8657006Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.8659602Z                                  Dload  Upload   Total   Spent    Left  Speed
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:11.8660960Z 
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.0454830Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.0456315Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.5135785Z 
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.5136981Z 100 6620k  100 6620k    0     0   9.9M      0 --:--:-- --:--:-- --:--:--  9.9M
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.5253625Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.5255533Z                                  Dload  Upload   Total   Spent    Left  Speed
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.5257028Z 
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.7260409Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.7262274Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.8213259Z 
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.8214429Z 100   395  100   395    0     0   1334      0 --:--:-- --:--:-- --:--:--  1334
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.8334493Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.8336143Z                                  Dload  Upload   Total   Spent    Left  Speed
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.8338755Z 
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:12.8709441Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.0493036Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.0494416Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.1520845Z 
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.1521702Z 100   303  100   303    0     0    950      0 --:--:-- --:--:-- --:--:--   950
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.1670652Z Wattson-v4.3.22-macos-universal.pkg: OK
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.1722872Z Wattson-v4.3.22-macos-universal.dmg: OK
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.1724069Z Wattson-v4.3.22-release-info.txt: OK
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.1819032Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.1820376Z                                  Dload  Upload   Total   Spent    Left  Speed
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.1843415Z 
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.3553138Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.3554787Z 100   383  100   383    0     0   2207      0 --:--:-- --:--:-- --:--:--  2213
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.3679791Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.3681172Z                                  Dload  Upload   Total   Spent    Left  Speed
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.3682509Z 
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.5427975Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.5429525Z 100  1312  100  1312    0     0   7501      0 --:--:-- --:--:-- --:--:--  7540
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.7920157Z Syntax OK
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.7999307Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.8000246Z                                  Dload  Upload   Total   Spent    Left  Speed
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:13.8000646Z 
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:14.1788924Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:14.1945701Z  75 14725   75 11140    0     0  29388      0 --:--:-- --:--:-- --:--:-- 29393
+Verify the public release and tested Homebrew cask	Require the exact tested public cask	2026-10-18T17:03:14.1946745Z 100 14725  100 14725    0     0  37302      0 --:--:-- --:--:-- --:--:-- 37278
+Verify the public release and tested Homebrew cask	Complete job	﻿2026-10-18T17:03:14.2097291Z Evaluate and set job outputs
+Verify the public release and tested Homebrew cask	Complete job	2026-10-18T17:03:14.2106249Z Set output 'release_tag'
+Verify the public release and tested Homebrew cask	Complete job	2026-10-18T17:03:14.2108016Z Set output 'tap_sha'
+Verify the public release and tested Homebrew cask	Complete job	2026-10-18T17:03:14.2108869Z Set output 'pkg_sha'
+Verify the public release and tested Homebrew cask	Complete job	2026-10-18T17:03:14.2109554Z Cleaning up orphan processes
+Homebrew lifecycle on macos-15-intel	Set up job	﻿2026-10-18T17:03:19.8148440Z Current runner version: '2.337.0'
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8198500Z ##[group]Runner Image Provisioner
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8200330Z Hosted Compute Agent
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8201800Z Version: 20260819.586
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8203190Z Commit: 3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8204510Z Build Date: 2026-08-18T23:20:18Z
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8205720Z Worker ID: {6b316cee-1e4f-4a89-9210-e14ce81ea8cf}
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8207190Z Azure Region: westus
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8208090Z ##[endgroup]
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8211480Z ##[group]Operating System
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8212480Z macOS
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8213200Z 15.7.9
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8213970Z 24G830
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8214740Z ##[endgroup]
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8215520Z ##[group]Runner Image
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8216430Z Image: macos-15
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8217270Z Version: 20260824.0482.1
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8219190Z Included Software: https://github.com/actions/runner-images/blob/macos-15/20260824.0482/images/macos/macos-15-Readme.md
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8222140Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15%2F20260824.0482
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8223830Z ##[endgroup]
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8225860Z ##[group]GITHUB_TOKEN Permissions
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8230550Z Actions: read
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8231650Z Contents: read
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8232520Z Metadata: read
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8233490Z ##[endgroup]
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8236900Z Secret source: Actions
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8238330Z Cache mode: write
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.8240330Z Prepare workflow directory
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.9239070Z Prepare all required actions
+Homebrew lifecycle on macos-15-intel	Set up job	2026-10-18T17:03:19.9343130Z Complete job name: Homebrew lifecycle on macos-15-intel
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	﻿2026-10-18T17:03:20.0410750Z ##[group]Run set -euo pipefail
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0412430Z [36;1mset -euo pipefail[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0413610Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0414920Z [36;1m[[ "${GITHUB_ACTIONS:-}" == "true" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0416410Z [36;1m[[ "${RUNNER_OS:-}" == "macOS" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0418380Z [36;1m[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0420210Z [36;1m[[ "$(/usr/bin/uname -m)" == "$EXPECTED_ARCHITECTURE" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0421660Z [36;1m[[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0422850Z [36;1m/usr/bin/sudo -n /usr/bin/true[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0424020Z [36;1m/usr/bin/command -v brew >/dev/null[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0425090Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0426170Z [36;1mAWS_TAP_DIR="$(brew --repository)/Library/Taps/aws/homebrew-tap"[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0427590Z [36;1mreadonly AWS_TAP_DIR[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0428580Z [36;1mif [[ -d "$AWS_TAP_DIR" ]]; then[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0429770Z [36;1m  [[ ! -L "$AWS_TAP_DIR" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0431080Z [36;1m  brew untap --force aws/tap[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0432260Z [36;1mfi[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0433670Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0434880Z [36;1mreadonly VERSION="${RELEASE_TAG#v}"[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0436590Z [36;1mreadonly PKG_NAME="Wattson-v${VERSION}-macos-universal.pkg"[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0438930Z [36;1mreadonly RELEASE_JSON="$RUNNER_TEMP/wattson-stable-release.json"[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0441230Z [36;1mreadonly TAG_JSON="$RUNNER_TEMP/wattson-stable-tag.json"[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0442640Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0443580Z [36;1mgh api \[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0444940Z [36;1m  --header 'Accept: application/vnd.github+json' \[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0447020Z [36;1m  --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0448920Z [36;1m  "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" \[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0450630Z [36;1m  > "$RELEASE_JSON"[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0452110Z [36;1m[[ "$(/usr/bin/jq -r .tag_name "$RELEASE_JSON")" == "$RELEASE_TAG" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0454340Z [36;1m[[ "$(/usr/bin/jq -r .draft "$RELEASE_JSON")" == "false" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0455890Z [36;1m[[ "$(/usr/bin/jq -r .prerelease "$RELEASE_JSON")" == "false" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0460940Z [36;1m/usr/bin/jq -e \[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0462490Z [36;1m  --arg name "$PKG_NAME" \[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0463750Z [36;1m  '[.assets[] | select(.name == $name)] | length == 1' \[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0465290Z [36;1m  "$RELEASE_JSON" >/dev/null[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0466320Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0467090Z [36;1mgh api \[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0468100Z [36;1m  --header 'Accept: application/vnd.github+json' \[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0469510Z [36;1m  --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0470930Z [36;1m  "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" \[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0472210Z [36;1m  > "$TAG_JSON"[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0473440Z [36;1m[[ "$(/usr/bin/jq -r .ref "$TAG_JSON")" == "refs/tags/$RELEASE_TAG" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0474800Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.0475780Z [36;1mecho "WATTSON_VERSION=$VERSION" >> "$GITHUB_ENV"[0m
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.2603920Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.2606140Z env:
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.2613560Z   GH_TOKEN: ***
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.2614390Z   RELEASE_TAG: v4.3.22
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.2615430Z   EXPECTED_TAP_SHA: 8ba66c2e53e5f51393708c9a6e5c76644841b50e
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.2617070Z   EXPECTED_PKG_SHA: 63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.2618680Z   EXPECTED_ARCHITECTURE: x86_64
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.2619660Z   HOMEBREW_NO_AUTO_UPDATE: 1
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.2620530Z   HOMEBREW_NO_ENV_HINTS: 1
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:20.2621410Z ##[endgroup]
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:26.9834930Z Untapping aws/tap...
+Homebrew lifecycle on macos-15-intel	Validate the hosted runner and stable release	2026-10-18T17:03:27.0075510Z Untapped 1 cask and 26 formulae (59 files, 1.7MB).
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	﻿2026-10-18T17:03:30.0028920Z ##[group]Run set -euo pipefail
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0030010Z [36;1mset -euo pipefail[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0030660Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0031430Z [36;1mreadonly CASK_JSON="$RUNNER_TEMP/wattson-public-cask.json"[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0033840Z [36;1mreadonly EXPECTED_URL="https://github.com/laleoarrow/battery-monitor/releases/download/${RELEASE_TAG}/Wattson-v${WATTSON_VERSION}-macos-universal.pkg"[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0036160Z [36;1m[[ "$EXPECTED_TAP_SHA" =~ ^[0-9a-f]{40}$ ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0037190Z [36;1m[[ "$EXPECTED_PKG_SHA" =~ ^[0-9a-f]{64}$ ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0038110Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0038720Z [36;1mbrew tap laleoarrow/tap[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0039700Z [36;1mTAP_REPOSITORY="$(brew --repository laleoarrow/tap)"[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0040670Z [36;1mreadonly TAP_REPOSITORY[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0041440Z [36;1m[[ -d "$TAP_REPOSITORY/.git" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0043180Z [36;1m[[ -f "$TAP_REPOSITORY/Casks/wattson.rb" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0044990Z [36;1m[[ ! -L "$TAP_REPOSITORY/Casks/wattson.rb" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0046540Z [36;1mCURRENT_TAP_SHA="$(git -C "$TAP_REPOSITORY" rev-parse HEAD)"[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0047660Z [36;1mreadonly CURRENT_TAP_SHA[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0048470Z [36;1m[[ "$CURRENT_TAP_SHA" == "$EXPECTED_TAP_SHA" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0049580Z [36;1m/usr/bin/grep -Fxq "  version \"$WATTSON_VERSION\"" \[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0050600Z [36;1m  "$TAP_REPOSITORY/Casks/wattson.rb"[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0051600Z [36;1m/usr/bin/grep -Fxq "  sha256 \"$EXPECTED_PKG_SHA\"" \[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0052570Z [36;1m  "$TAP_REPOSITORY/Casks/wattson.rb"[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0053650Z [36;1mbrew info --cask --json=v2 laleoarrow/tap/wattson > "$CASK_JSON"[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0054900Z [36;1m[[ "$(/usr/bin/jq -r '.casks | length' "$CASK_JSON")" == "1" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0056500Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].token' "$CASK_JSON")" == "wattson" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0103730Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].version' "$CASK_JSON")" == "$WATTSON_VERSION" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0106300Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].sha256' "$CASK_JSON")" == "$EXPECTED_PKG_SHA" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0107760Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].url' "$CASK_JSON")" == "$EXPECTED_URL" ]][0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0216600Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0217760Z env:
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0224040Z   GH_TOKEN: ***
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0224650Z   RELEASE_TAG: v4.3.22
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0225520Z   EXPECTED_TAP_SHA: 8ba66c2e53e5f51393708c9a6e5c76644841b50e
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0226890Z   EXPECTED_PKG_SHA: 63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0228040Z   EXPECTED_ARCHITECTURE: x86_64
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0228750Z   HOMEBREW_NO_AUTO_UPDATE: 1
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0229410Z   HOMEBREW_NO_ENV_HINTS: 1
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0230070Z   WATTSON_VERSION: 4.3.22
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:30.0230680Z ##[endgroup]
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:31.7806910Z [34m==>[0m [1mTapping laleoarrow/tap[0m
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:31.8597600Z Cloning into '/usr/local/Homebrew/Library/Taps/laleoarrow/homebrew-tap'...
+Homebrew lifecycle on macos-15-intel	Validate the public Homebrew cask	2026-10-18T17:03:33.7596930Z Tapped 2 casks (18 files, 67.3KB).
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	﻿2026-10-18T17:03:50.9822050Z ##[group]Run set -euo pipefail
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9827650Z [36;1mset -euo pipefail[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9829050Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9830040Z [36;1mreadonly APP_DIR="/Applications/Wattson.app"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9831820Z [36;1mreadonly APP_BIN="$APP_DIR/Contents/MacOS/Wattson"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9833760Z [36;1mreadonly HELPER_LABEL="com.leoarrow.wattson.helper"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9835350Z [36;1mreadonly HELPER_TARGET="system/$HELPER_LABEL"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9837270Z [36;1mreadonly HELPER_BIN="/Library/PrivilegedHelperTools/$HELPER_LABEL"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9839350Z [36;1mreadonly HELPER_PLIST="/Library/LaunchDaemons/$HELPER_LABEL.plist"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9841410Z [36;1mreadonly HELPER_SOCKET="/var/run/wattson-helper.sock"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9843230Z [36;1mreadonly RECEIPT="com.leoarrow.wattson.pkg"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9844990Z [36;1mreadonly LOGIN_LABEL="com.leoarrow.wattson.login"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9846890Z [36;1mLOGIN_TARGET="gui/$(/usr/bin/id -u)/$LOGIN_LABEL"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9848640Z [36;1mreadonly LOGIN_TARGET[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9850270Z [36;1mreadonly LOGIN_PLIST="$HOME/Library/LaunchAgents/$LOGIN_LABEL.plist"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9852060Z [36;1mCLEANUP_REQUIRED=0[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9853020Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9853810Z [36;1mfail() {[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9854980Z [36;1m  echo "Homebrew lifecycle test: $*" >&2[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9856620Z [36;1m  exit 1[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9857630Z [36;1m}[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9858420Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9859480Z [36;1mprobe_helper_service() {[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9860540Z [36;1m  local output[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9861820Z [36;1m  if output="$([0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9862790Z [36;1m    /usr/bin/sudo -n /usr/bin/env -i \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9864290Z [36;1m      PATH=/usr/bin:/bin:/usr/sbin:/sbin \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9865700Z [36;1m      LANG=C \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9866630Z [36;1m      LC_ALL=C \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9868010Z [36;1m      /bin/launchctl print "$HELPER_TARGET" 2>&1[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9869270Z [36;1m  )"; then[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9870370Z [36;1m    return 0[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9871300Z [36;1m  fi[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9872330Z [36;1m  case "$output" in[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9873760Z [36;1m    *"Could not find service"*|*"Could not find specified service"*) return 1 ;;[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9875880Z [36;1m    *) echo "Unexpected launchd query failure: $output" >&2; return 2 ;;[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9877580Z [36;1m  esac[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9878490Z [36;1m}[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9879330Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9880080Z [36;1massert_helper_absent() {[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9881280Z [36;1m  local status[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9882210Z [36;1m  if probe_helper_service; then[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9883690Z [36;1m    fail "helper service remains registered"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9884950Z [36;1m  else[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9885980Z [36;1m    status="$?"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9886930Z [36;1m  fi[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9889980Z [36;1m  [[ "$status" == "1" ]] || fail "could not confirm helper service removal"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9891320Z [36;1m}[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9892400Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9893280Z [36;1massert_login_agent_absent() {[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9894490Z [36;1m  local output[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9895370Z [36;1m  local status[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9896770Z [36;1m  if output="$(/bin/launchctl print "$LOGIN_TARGET" 2>&1)"; then[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9898340Z [36;1m    fail "login agent remains registered"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9899430Z [36;1m  else[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9900440Z [36;1m    status="$?"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9901320Z [36;1m  fi[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9902260Z [36;1m  case "$output" in[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9903550Z [36;1m    *"Could not find service"*|*"Could not find specified service"*) ;;[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9905540Z [36;1m    *) fail "could not confirm login agent removal (status=$status): $output" ;;[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9908990Z [36;1m  esac[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9909830Z [36;1m}[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9910940Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9911760Z [36;1massert_helper_enabled() {[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9913480Z [36;1m  local disabled_state[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9915160Z [36;1m  disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9917120Z [36;1m  case "$disabled_state" in[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9918540Z [36;1m    *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*)[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9920290Z [36;1m      fail "helper service is disabled"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9921710Z [36;1m      ;;[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9922530Z [36;1m  esac[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9923410Z [36;1m}[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9924340Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9925190Z [36;1massert_quarantine_absent() {[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9926670Z [36;1m  local attributes[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9927740Z [36;1m  attributes="$(/usr/bin/sudo -n /usr/bin/xattr "$1")"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9929340Z [36;1m  case $'\n'"$attributes"$'\n' in[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9931290Z [36;1m    *$'\ncom.apple.quarantine\n'*) fail "installed item retains quarantine: $1" ;;[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9934550Z [36;1m  esac[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9936210Z [36;1m}[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9937530Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9938590Z [36;1mcollect_diagnostics() {[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9940060Z [36;1m  echo "::group::Wattson Homebrew diagnostics"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9941850Z [36;1m  brew config || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9943100Z [36;1m  brew info --cask laleoarrow/tap/wattson || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9944740Z [36;1m  brew list --cask --versions wattson || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9946520Z [36;1m  /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9948480Z [36;1m  /usr/bin/sudo -n /bin/launchctl print-disabled system || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9950200Z [36;1m  /usr/bin/sudo -n /usr/bin/xattr "$HELPER_BIN" || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9951960Z [36;1m  /usr/bin/sudo -n /usr/bin/xattr "$HELPER_PLIST" || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9953770Z [36;1m  /usr/bin/sudo -n /usr/bin/tail -n 500 /var/log/install.log || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9955460Z [36;1m  /usr/bin/log show --style compact --last 10m \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9957320Z [36;1m    --predicate '(process == "wattson-helper") OR (eventMessage CONTAINS[c] "Wattson")' \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9959210Z [36;1m    || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9960340Z [36;1m  echo "::endgroup::"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9961360Z [36;1m}[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9962370Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9963210Z [36;1munregister_test_app() {[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9964590Z [36;1m  [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]] || return 0[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9966180Z [36;1m  [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]] || return 1[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9969050Z [36;1m  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]] || return 1[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9972930Z [36;1m  /usr/bin/python3 - "$APP_DIR" <<'PY'[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9974270Z [36;1mimport subprocess[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9975290Z [36;1mimport sys[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9976280Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9978360Z [36;1mregistrar = "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9980770Z [36;1mtry:[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9981800Z [36;1m    # An already unregistered app may return nonzero.[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9983600Z [36;1m    subprocess.run([registrar, "-u", sys.argv[1]], timeout=10,[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9985610Z [36;1m                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9987300Z [36;1mexcept subprocess.TimeoutExpired:[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9988860Z [36;1m    sys.exit("Timed out unregistering the test app")[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9990220Z [36;1mPY[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9992640Z [36;1m}[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9993420Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9994200Z [36;1mcleanup() {[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9995410Z [36;1m  local status="$?"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9996840Z [36;1m  local cleanup_failed=0[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9998040Z [36;1m  trap - EXIT[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:50.9999040Z [36;1m  trap '' HUP INT TERM[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0000010Z [36;1m  set +e[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0000890Z [36;1m  if [[ "$status" != "0" ]]; then[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0001900Z [36;1m    collect_diagnostics[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0002810Z [36;1m  fi[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0003920Z [36;1m  if [[ "$CLEANUP_REQUIRED" == "1" ]]; then[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0005150Z [36;1m    unregister_test_app || cleanup_failed=1[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0006780Z [36;1m    brew uninstall --cask --force laleoarrow/tap/wattson >/dev/null 2>&1 || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0008470Z [36;1m    /bin/launchctl bootout "$LOGIN_TARGET" >/dev/null 2>&1 || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0010070Z [36;1m    /bin/rm -f -- "$LOGIN_PLIST" || cleanup_failed=1[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0012010Z [36;1m    /usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0014160Z [36;1m    /usr/bin/sudo -n /bin/launchctl enable "$HELPER_TARGET" >/dev/null 2>&1 || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0016400Z [36;1m    /usr/bin/sudo -n /bin/rm -f -- "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN" || cleanup_failed=1[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0018410Z [36;1m    /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0020310Z [36;1m    /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0022170Z [36;1m  fi[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0023290Z [36;1m  if [[ "$status" == "0" && "$cleanup_failed" != "0" ]]; then[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0024480Z [36;1m    status=1[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0025370Z [36;1m  fi[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0026210Z [36;1m  exit "$status"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0027280Z [36;1m}[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0052540Z [36;1mtrap cleanup EXIT[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0053780Z [36;1mtrap 'exit 129' HUP[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0054670Z [36;1mtrap 'exit 130' INT[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0055650Z [36;1mtrap 'exit 143' TERM[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0056520Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0057530Z [36;1m[[ "${GITHUB_ACTIONS:-}" == "true" ]] || fail "GitHub Actions is required"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0059310Z [36;1m[[ "${RUNNER_OS:-}" == "macOS" ]] || fail "a macOS runner is required"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0060750Z [36;1m[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]] \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0062170Z [36;1m  || fail "a GitHub-hosted ephemeral runner is required"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0063680Z [36;1m[[ "$(/usr/bin/uname -m)" == "$EXPECTED_ARCHITECTURE" ]] \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0065170Z [36;1m  || fail "runner architecture does not match the matrix"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0066590Z [36;1m/usr/bin/sudo -n /usr/bin/true[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0067980Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0069040Z [36;1mfor initial_path in \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0071610Z [36;1m  "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LOGIN_PLIST"; do[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0073360Z [36;1m  [[ ! -e "$initial_path" && ! -L "$initial_path" ]] \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0074900Z [36;1m    || fail "refusing to touch pre-existing path: $initial_path"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0076200Z [36;1mdone[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0077440Z [36;1mif /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0079310Z [36;1m  fail "fresh runner unexpectedly has a Wattson package receipt"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0080780Z [36;1mfi[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0081440Z [36;1massert_helper_absent[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0082280Z [36;1massert_login_agent_absent[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0083160Z [36;1massert_helper_enabled[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0083910Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0084530Z [36;1mCLEANUP_REQUIRED=1[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0085600Z [36;1mbrew install --cask laleoarrow/tap/wattson[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0087900Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0088880Z [36;1m[[ -d "$APP_DIR" && ! -L "$APP_DIR" ]] || fail "app was not installed"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0090540Z [36;1m[[ -f "$APP_BIN" && ! -L "$APP_BIN" ]] || fail "app executable is missing"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0092320Z [36;1m[[ -f "$HELPER_BIN" && ! -L "$HELPER_BIN" ]] || fail "helper is missing"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0094060Z [36;1m[[ -f "$HELPER_PLIST" && ! -L "$HELPER_PLIST" ]] || fail "helper plist is missing"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0096370Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]][0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0099390Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]][0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0101900Z [36;1m[[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_BIN")" == "0:0:544" ]][0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0103740Z [36;1m[[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_PLIST")" == "0:0:644" ]][0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0105410Z [36;1m/usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0106930Z [36;1m/usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0108860Z [36;1m/usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0110190Z [36;1m/usr/bin/sudo -n "$HELPER_BIN" --health-probe[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0111260Z [36;1massert_helper_enabled[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0112360Z [36;1massert_quarantine_absent "$HELPER_BIN"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0113450Z [36;1massert_quarantine_absent "$HELPER_PLIST"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0115220Z [36;1m[[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]][0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0117290Z [36;1m[[ "$(brew list --cask --versions wattson)" == "wattson $WATTSON_VERSION" ]][0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0118600Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0119300Z [36;1munregister_test_app[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0120290Z [36;1mbrew uninstall --cask laleoarrow/tap/wattson[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0121250Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0121900Z [36;1mfor removed_path in \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0123150Z [36;1m  "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LOGIN_PLIST"; do[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0124560Z [36;1m  [[ ! -e "$removed_path" && ! -L "$removed_path" ]] \[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0125760Z [36;1m    || fail "Homebrew uninstall left $removed_path"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0126960Z [36;1mdone[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0127950Z [36;1mif /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0129360Z [36;1m  fail "Homebrew uninstall left the package receipt"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0130550Z [36;1mfi[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0131460Z [36;1mif brew list --cask --versions wattson >/dev/null 2>&1; then[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0132890Z [36;1m  fail "Homebrew still reports Wattson as installed"[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0134420Z [36;1mfi[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0137070Z [36;1massert_helper_absent[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0138000Z [36;1massert_login_agent_absent[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0138930Z [36;1massert_helper_enabled[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0139910Z [36;1m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0140590Z [36;1mCLEANUP_REQUIRED=0[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0142110Z [36;1mecho "Public Homebrew cask install, helper health, and uninstall cleanup passed."[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0293000Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0294090Z env:
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0301680Z   GH_TOKEN: ***
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0302510Z   RELEASE_TAG: v4.3.22
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0303350Z   EXPECTED_TAP_SHA: 8ba66c2e53e5f51393708c9a6e5c76644841b50e
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0304940Z   EXPECTED_PKG_SHA: 63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0306460Z   EXPECTED_ARCHITECTURE: x86_64
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0307220Z   HOMEBREW_NO_AUTO_UPDATE: 1
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0309030Z   HOMEBREW_NO_ENV_HINTS: 1
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0309610Z   WATTSON_VERSION: 4.3.22
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:51.0310630Z ##[endgroup]
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:52.2841800Z [34m==>[0m [1mTrusted cask laleoarrow/tap/wattson[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:52.4370160Z [34m==>[0m [1mWould install 1 cask:[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:52.4371900Z laleoarrow/tap/wattson
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:53.2660090Z [32m==>[0m [1mFetching downloads for: [32mlaleoarrow/tap/wattson[39m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:54.0862090Z ✔︎ Cask wattson (4.3.22)
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:54.1635530Z [32m==>[0m [1mInstalling Cask [32mwattson[39m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:54.1728480Z [34m==>[0m [1mRunning installer for wattson with `sudo` (which may request your password)...[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:58.2762330Z installer: Package name is 
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:58.2765550Z installer: Installing at base path /
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:58.2766790Z installer: The install was successful.
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:03:59.1529290Z 🍺  wattson was successfully installed!
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:06.2476640Z [32m==>[0m [1mUninstalling Cask [32mwattson[39m[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:06.2482390Z [34m==>[0m [1mRemoving launchctl service com.leoarrow.wattson.helper[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:07.5820930Z [34m==>[0m [1mRemoving launchctl service com.leoarrow.wattson.login[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:07.8645270Z [34m==>[0m [1mUninstalling packages with `sudo` (which may request your password)...[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:07.8962490Z com.leoarrow.wattson.pkg
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:08.0967790Z [34m==>[0m [1mRemoving files:[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:08.0969630Z /Applications/Wattson.app
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:08.1314070Z /Library/LaunchDaemons/com.leoarrow.wattson.helper.plist
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:08.1652490Z /Library/PrivilegedHelperTools/com.leoarrow.wattson.helper
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:08.1970660Z /var/run/wattson-helper.sock
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:08.2325620Z ~/Library/LaunchAgents/com.leoarrow.wattson.login.plist
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:08.2675240Z [34m==>[0m [1mPurging files for version 4.3.22 of Cask wattson[0m
+Homebrew lifecycle on macos-15-intel	Test public cask install and uninstall	2026-10-18T17:04:09.4693000Z Public Homebrew cask install, helper health, and uninstall cleanup passed.
+Homebrew lifecycle on macos-15-intel	Complete job	﻿2026-10-18T17:04:09.4908710Z Cleaning up orphan processes
+Homebrew lifecycle on macos-26	Set up job	﻿2026-10-18T17:03:23.4296060Z Current runner version: '2.337.0'
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4313330Z ##[group]Runner Image Provisioner
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4313890Z Hosted Compute Agent
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4314260Z Version: 20261012.601
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4314660Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4315120Z Build Date: 2026-10-12T17:48:21Z
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4315540Z Worker ID: {ee40ad63-1356-4f86-969c-16274bd5a792}
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4315990Z Region: westus
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4316340Z Cloud: MacCloud
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4316680Z ##[endgroup]
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4317520Z ##[group]Operating System
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4317900Z macOS
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4318220Z 26.6.2
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4318540Z 25G83
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4318860Z ##[endgroup]
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4319210Z ##[group]Runner Image
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4319580Z Image: macos-26-arm64
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4319940Z Version: 20261013.0424.1
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4320670Z Included Software: https://github.com/actions/runner-images/blob/macos-26-arm64/20261013.0424/images/macos/macos-26-arm64-Readme.md
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4321770Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-26-arm64%2F20261013.0424
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4322410Z ##[endgroup]
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4323160Z ##[group]GITHUB_TOKEN Permissions
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4324130Z Actions: read
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4324480Z Contents: read
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4324830Z Metadata: read
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4325180Z ##[endgroup]
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4326620Z Secret source: Actions
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4327160Z Cache mode: write
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4327580Z Prepare workflow directory
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4652800Z Prepare all required actions
+Homebrew lifecycle on macos-26	Set up job	2026-10-18T17:03:23.4697400Z Complete job name: Homebrew lifecycle on macos-26
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	﻿2026-10-18T17:03:23.5074600Z ##[group]Run set -euo pipefail
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5075130Z [36;1mset -euo pipefail[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5075590Z [36;1m[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5075950Z [36;1m[[ "${GITHUB_ACTIONS:-}" == "true" ]][0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5076410Z [36;1m[[ "${RUNNER_OS:-}" == "macOS" ]][0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5076920Z [36;1m[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]][0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5077470Z [36;1m[[ "$(/usr/bin/uname -m)" == "$EXPECTED_ARCHITECTURE" ]][0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5078010Z [36;1m[[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]][0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5078500Z [36;1m/usr/bin/sudo -n /usr/bin/true[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5078940Z [36;1m/usr/bin/command -v brew >/dev/null[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5079380Z [36;1m[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5079810Z [36;1mAWS_TAP_DIR="$(brew --repository)/Library/Taps/aws/homebrew-tap"[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5080350Z [36;1mreadonly AWS_TAP_DIR[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5080760Z [36;1mif [[ -d "$AWS_TAP_DIR" ]]; then[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5081190Z [36;1m  [[ ! -L "$AWS_TAP_DIR" ]][0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5081650Z [36;1m  brew untap --force aws/tap[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5082050Z [36;1mfi[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5082360Z [36;1m[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5082710Z [36;1mreadonly VERSION="${RELEASE_TAG#v}"[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5083250Z [36;1mreadonly PKG_NAME="Wattson-v${VERSION}-macos-universal.pkg"[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5083890Z [36;1mreadonly RELEASE_JSON="$RUNNER_TEMP/wattson-stable-release.json"[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5084520Z [36;1mreadonly TAG_JSON="$RUNNER_TEMP/wattson-stable-tag.json"[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5085010Z [36;1m[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5085330Z [36;1mgh api \[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5085740Z [36;1m  --header 'Accept: application/vnd.github+json' \[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5086380Z [36;1m  --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5086970Z [36;1m  "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" \[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5087470Z [36;1m  > "$RELEASE_JSON"[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5087960Z [36;1m[[ "$(/usr/bin/jq -r .tag_name "$RELEASE_JSON")" == "$RELEASE_TAG" ]][0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5088560Z [36;1m[[ "$(/usr/bin/jq -r .draft "$RELEASE_JSON")" == "false" ]][0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5089130Z [36;1m[[ "$(/usr/bin/jq -r .prerelease "$RELEASE_JSON")" == "false" ]][0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5090110Z [36;1m/usr/bin/jq -e \[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5090490Z [36;1m  --arg name "$PKG_NAME" \[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5090950Z [36;1m  '[.assets[] | select(.name == $name)] | length == 1' \[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5091430Z [36;1m  "$RELEASE_JSON" >/dev/null[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5091820Z [36;1m[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5092130Z [36;1mgh api \[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5092530Z [36;1m  --header 'Accept: application/vnd.github+json' \[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5093050Z [36;1m  --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5093590Z [36;1m  "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" \[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5094070Z [36;1m  > "$TAG_JSON"[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5094540Z [36;1m[[ "$(/usr/bin/jq -r .ref "$TAG_JSON")" == "refs/tags/$RELEASE_TAG" ]][0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5095050Z [36;1m[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.5095420Z [36;1mecho "WATTSON_VERSION=$VERSION" >> "$GITHUB_ENV"[0m
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.6232330Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.6233110Z env:
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.6235890Z   GH_TOKEN: ***
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.6236220Z   RELEASE_TAG: v4.3.22
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.6236650Z   EXPECTED_TAP_SHA: 8ba66c2e53e5f51393708c9a6e5c76644841b50e
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.6237310Z   EXPECTED_PKG_SHA: 63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.6237900Z   EXPECTED_ARCHITECTURE: arm64
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.6238290Z   HOMEBREW_NO_AUTO_UPDATE: 1
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.6238660Z   HOMEBREW_NO_ENV_HINTS: 1
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:23.6239020Z ##[endgroup]
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:25.7001670Z Untapping aws/tap...
+Homebrew lifecycle on macos-26	Validate the hosted runner and stable release	2026-10-18T17:03:25.7078480Z Untapped 1 cask and 26 formulae (59 files, 1.7MB).
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	﻿2026-10-18T17:03:27.3468310Z ##[group]Run set -euo pipefail
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3468900Z [36;1mset -euo pipefail[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3469160Z [36;1m[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3469460Z [36;1mreadonly CASK_JSON="$RUNNER_TEMP/wattson-public-cask.json"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3470370Z [36;1mreadonly EXPECTED_URL="https://github.com/laleoarrow/battery-monitor/releases/download/${RELEASE_TAG}/Wattson-v${WATTSON_VERSION}-macos-universal.pkg"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3471520Z [36;1m[[ "$EXPECTED_TAP_SHA" =~ ^[0-9a-f]{40}$ ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3472010Z [36;1m[[ "$EXPECTED_PKG_SHA" =~ ^[0-9a-f]{64}$ ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3472290Z [36;1m[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3472590Z [36;1mbrew tap laleoarrow/tap[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3473000Z [36;1mTAP_REPOSITORY="$(brew --repository laleoarrow/tap)"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3473350Z [36;1mreadonly TAP_REPOSITORY[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3473610Z [36;1m[[ -d "$TAP_REPOSITORY/.git" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3473950Z [36;1m[[ -f "$TAP_REPOSITORY/Casks/wattson.rb" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3474400Z [36;1m[[ ! -L "$TAP_REPOSITORY/Casks/wattson.rb" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3474750Z [36;1mCURRENT_TAP_SHA="$(git -C "$TAP_REPOSITORY" rev-parse HEAD)"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3475370Z [36;1mreadonly CURRENT_TAP_SHA[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3475730Z [36;1m[[ "$CURRENT_TAP_SHA" == "$EXPECTED_TAP_SHA" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3476130Z [36;1m/usr/bin/grep -Fxq "  version \"$WATTSON_VERSION\"" \[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3476580Z [36;1m  "$TAP_REPOSITORY/Casks/wattson.rb"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3477050Z [36;1m/usr/bin/grep -Fxq "  sha256 \"$EXPECTED_PKG_SHA\"" \[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3477470Z [36;1m  "$TAP_REPOSITORY/Casks/wattson.rb"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3477840Z [36;1mbrew info --cask --json=v2 laleoarrow/tap/wattson > "$CASK_JSON"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3478440Z [36;1m[[ "$(/usr/bin/jq -r '.casks | length' "$CASK_JSON")" == "1" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3479000Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].token' "$CASK_JSON")" == "wattson" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3479470Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].version' "$CASK_JSON")" == "$WATTSON_VERSION" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3501890Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].sha256' "$CASK_JSON")" == "$EXPECTED_PKG_SHA" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3502580Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].url' "$CASK_JSON")" == "$EXPECTED_URL" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3543110Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3543590Z env:
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3546030Z   GH_TOKEN: ***
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3546310Z   RELEASE_TAG: v4.3.22
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3546610Z   EXPECTED_TAP_SHA: 8ba66c2e53e5f51393708c9a6e5c76644841b50e
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3547090Z   EXPECTED_PKG_SHA: 63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3547640Z   EXPECTED_ARCHITECTURE: arm64
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3547910Z   HOMEBREW_NO_AUTO_UPDATE: 1
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3548180Z   HOMEBREW_NO_ENV_HINTS: 1
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3548400Z   WATTSON_VERSION: 4.3.22
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.3548670Z ##[endgroup]
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.8884660Z [34m==>[0m [1mTapping laleoarrow/tap[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:27.9875290Z Cloning into '/opt/homebrew/Library/Taps/laleoarrow/homebrew-tap'...
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-18T17:03:28.9716460Z Tapped 2 casks (18 files, 67.3KB).
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	﻿2026-10-18T17:03:30.0874990Z ##[group]Run set -euo pipefail
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0876040Z [36;1mset -euo pipefail[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0876280Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0876510Z [36;1mreadonly APP_DIR="/Applications/Wattson.app"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0876860Z [36;1mreadonly APP_BIN="$APP_DIR/Contents/MacOS/Wattson"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0877230Z [36;1mreadonly HELPER_LABEL="com.leoarrow.wattson.helper"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0877620Z [36;1mreadonly HELPER_TARGET="system/$HELPER_LABEL"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0878020Z [36;1mreadonly HELPER_BIN="/Library/PrivilegedHelperTools/$HELPER_LABEL"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0878470Z [36;1mreadonly HELPER_PLIST="/Library/LaunchDaemons/$HELPER_LABEL.plist"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0878920Z [36;1mreadonly HELPER_SOCKET="/var/run/wattson-helper.sock"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0879270Z [36;1mreadonly RECEIPT="com.leoarrow.wattson.pkg"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0879680Z [36;1mreadonly LOGIN_LABEL="com.leoarrow.wattson.login"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0880100Z [36;1mLOGIN_TARGET="gui/$(/usr/bin/id -u)/$LOGIN_LABEL"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0880500Z [36;1mreadonly LOGIN_TARGET[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0880910Z [36;1mreadonly LOGIN_PLIST="$HOME/Library/LaunchAgents/$LOGIN_LABEL.plist"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0881280Z [36;1mCLEANUP_REQUIRED=0[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0881490Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0881710Z [36;1mfail() {[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0881930Z [36;1m  echo "Homebrew lifecycle test: $*" >&2[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0882240Z [36;1m  exit 1[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0882430Z [36;1m}[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0882590Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0882800Z [36;1mprobe_helper_service() {[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0883040Z [36;1m  local output[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0883270Z [36;1m  if output="$([0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0883500Z [36;1m    /usr/bin/sudo -n /usr/bin/env -i \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0883800Z [36;1m      PATH=/usr/bin:/bin:/usr/sbin:/sbin \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0884070Z [36;1m      LANG=C \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0884320Z [36;1m      LC_ALL=C \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0884700Z [36;1m      /bin/launchctl print "$HELPER_TARGET" 2>&1[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0884990Z [36;1m  )"; then[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0885290Z [36;1m    return 0[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0885540Z [36;1m  fi[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0885780Z [36;1m  case "$output" in[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0886190Z [36;1m    *"Could not find service"*|*"Could not find specified service"*) return 1 ;;[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0886760Z [36;1m    *) echo "Unexpected launchd query failure: $output" >&2; return 2 ;;[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0887170Z [36;1m  esac[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0887400Z [36;1m}[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0887590Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0887850Z [36;1massert_helper_absent() {[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0888140Z [36;1m  local status[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0888420Z [36;1m  if probe_helper_service; then[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0888750Z [36;1m    fail "helper service remains registered"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0889080Z [36;1m  else[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0889320Z [36;1m    status="$?"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0889900Z [36;1m  fi[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0890240Z [36;1m  [[ "$status" == "1" ]] || fail "could not confirm helper service removal"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0890630Z [36;1m}[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0890920Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0891160Z [36;1massert_login_agent_absent() {[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0891460Z [36;1m  local output[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0891720Z [36;1m  local status[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0892070Z [36;1m  if output="$(/bin/launchctl print "$LOGIN_TARGET" 2>&1)"; then[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0892520Z [36;1m    fail "login agent remains registered"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0892830Z [36;1m  else[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0893060Z [36;1m    status="$?"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0893300Z [36;1m  fi[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0893610Z [36;1m  case "$output" in[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0894000Z [36;1m    *"Could not find service"*|*"Could not find specified service"*) ;;[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0894620Z [36;1m    *) fail "could not confirm login agent removal (status=$status): $output" ;;[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0895480Z [36;1m  esac[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0895690Z [36;1m}[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0895910Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0896130Z [36;1massert_helper_enabled() {[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0896440Z [36;1m  local disabled_state[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0896890Z [36;1m  disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0897360Z [36;1m  case "$disabled_state" in[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0897700Z [36;1m    *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*)[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0898060Z [36;1m      fail "helper service is disabled"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0898310Z [36;1m      ;;[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0898510Z [36;1m  esac[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0898680Z [36;1m}[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0898910Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0899090Z [36;1massert_quarantine_absent() {[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0899380Z [36;1m  local attributes[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0899700Z [36;1m  attributes="$(/usr/bin/sudo -n /usr/bin/xattr "$1")"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0900140Z [36;1m  case $'\n'"$attributes"$'\n' in[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0900540Z [36;1m    *$'\ncom.apple.quarantine\n'*) fail "installed item retains quarantine: $1" ;;[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0900900Z [36;1m  esac[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0901080Z [36;1m}[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0901270Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0901460Z [36;1mcollect_diagnostics() {[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0901730Z [36;1m  echo "::group::Wattson Homebrew diagnostics"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0902030Z [36;1m  brew config || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0902310Z [36;1m  brew info --cask laleoarrow/tap/wattson || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0902630Z [36;1m  brew list --cask --versions wattson || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0903000Z [36;1m  /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0903500Z [36;1m  /usr/bin/sudo -n /bin/launchctl print-disabled system || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0903990Z [36;1m  /usr/bin/sudo -n /usr/bin/xattr "$HELPER_BIN" || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0904350Z [36;1m  /usr/bin/sudo -n /usr/bin/xattr "$HELPER_PLIST" || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0904780Z [36;1m  /usr/bin/sudo -n /usr/bin/tail -n 500 /var/log/install.log || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0905270Z [36;1m  /usr/bin/log show --style compact --last 10m \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0905920Z [36;1m    --predicate '(process == "wattson-helper") OR (eventMessage CONTAINS[c] "Wattson")' \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0906420Z [36;1m    || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0906670Z [36;1m  echo "::endgroup::"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0906910Z [36;1m}[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0907080Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0907270Z [36;1munregister_test_app() {[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0907540Z [36;1m  [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]] || return 0[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0907910Z [36;1m  [[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]] || return 1[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0908610Z [36;1m  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]] || return 1[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0909400Z [36;1m  /usr/bin/python3 - "$APP_DIR" <<'PY'[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0909670Z [36;1mimport subprocess[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0909880Z [36;1mimport sys[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0910100Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0910540Z [36;1mregistrar = "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0911070Z [36;1mtry:[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0911390Z [36;1m    # An already unregistered app may return nonzero.[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0911810Z [36;1m    subprocess.run([registrar, "-u", sys.argv[1]], timeout=10,[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0912240Z [36;1m                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0912640Z [36;1mexcept subprocess.TimeoutExpired:[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0913040Z [36;1m    sys.exit("Timed out unregistering the test app")[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0913350Z [36;1mPY[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0913740Z [36;1m}[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0913910Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0914100Z [36;1mcleanup() {[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0914310Z [36;1m  local status="$?"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0914580Z [36;1m  local cleanup_failed=0[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0914830Z [36;1m  trap - EXIT[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0915050Z [36;1m  trap '' HUP INT TERM[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0915290Z [36;1m  set +e[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0915510Z [36;1m  if [[ "$status" != "0" ]]; then[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0915770Z [36;1m    collect_diagnostics[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0916020Z [36;1m  fi[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0916250Z [36;1m  if [[ "$CLEANUP_REQUIRED" == "1" ]]; then[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0916560Z [36;1m    unregister_test_app || cleanup_failed=1[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0916950Z [36;1m    brew uninstall --cask --force laleoarrow/tap/wattson >/dev/null 2>&1 || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0917500Z [36;1m    /bin/launchctl bootout "$LOGIN_TARGET" >/dev/null 2>&1 || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0917880Z [36;1m    /bin/rm -f -- "$LOGIN_PLIST" || cleanup_failed=1[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0918390Z [36;1m    /usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0918970Z [36;1m    /usr/bin/sudo -n /bin/launchctl enable "$HELPER_TARGET" >/dev/null 2>&1 || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0919770Z [36;1m    /usr/bin/sudo -n /bin/rm -f -- "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN" || cleanup_failed=1[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0920370Z [36;1m    /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0920880Z [36;1m    /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0921430Z [36;1m  fi[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0921750Z [36;1m  if [[ "$status" == "0" && "$cleanup_failed" != "0" ]]; then[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0922180Z [36;1m    status=1[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0922500Z [36;1m  fi[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0922720Z [36;1m  exit "$status"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0922990Z [36;1m}[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0923280Z [36;1mtrap cleanup EXIT[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0923540Z [36;1mtrap 'exit 129' HUP[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0923820Z [36;1mtrap 'exit 130' INT[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0924090Z [36;1mtrap 'exit 143' TERM[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0924360Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0924680Z [36;1m[[ "${GITHUB_ACTIONS:-}" == "true" ]] || fail "GitHub Actions is required"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0925170Z [36;1m[[ "${RUNNER_OS:-}" == "macOS" ]] || fail "a macOS runner is required"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0925570Z [36;1m[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]] \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0926040Z [36;1m  || fail "a GitHub-hosted ephemeral runner is required"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0926470Z [36;1m[[ "$(/usr/bin/uname -m)" == "$EXPECTED_ARCHITECTURE" ]] \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0938610Z [36;1m  || fail "runner architecture does not match the matrix"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0939040Z [36;1m/usr/bin/sudo -n /usr/bin/true[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0939360Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0940100Z [36;1mfor initial_path in \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0940540Z [36;1m  "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LOGIN_PLIST"; do[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0940950Z [36;1m  [[ ! -e "$initial_path" && ! -L "$initial_path" ]] \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0941340Z [36;1m    || fail "refusing to touch pre-existing path: $initial_path"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0941690Z [36;1mdone[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0941980Z [36;1mif /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0942420Z [36;1m  fail "fresh runner unexpectedly has a Wattson package receipt"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0942770Z [36;1mfi[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0942950Z [36;1massert_helper_absent[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0943170Z [36;1massert_login_agent_absent[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0943390Z [36;1massert_helper_enabled[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0943590Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0943760Z [36;1mCLEANUP_REQUIRED=1[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0944010Z [36;1mbrew install --cask laleoarrow/tap/wattson[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0944490Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0944960Z [36;1m[[ -d "$APP_DIR" && ! -L "$APP_DIR" ]] || fail "app was not installed"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0945470Z [36;1m[[ -f "$APP_BIN" && ! -L "$APP_BIN" ]] || fail "app executable is missing"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0946070Z [36;1m[[ -f "$HELPER_BIN" && ! -L "$HELPER_BIN" ]] || fail "helper is missing"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0946580Z [36;1m[[ -f "$HELPER_PLIST" && ! -L "$HELPER_PLIST" ]] || fail "helper plist is missing"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0947300Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]][0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0948170Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]][0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0948910Z [36;1m[[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_BIN")" == "0:0:544" ]][0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0949490Z [36;1m[[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_PLIST")" == "0:0:644" ]][0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0950020Z [36;1m/usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0950460Z [36;1m/usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0950930Z [36;1m/usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0951340Z [36;1m/usr/bin/sudo -n "$HELPER_BIN" --health-probe[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0951670Z [36;1massert_helper_enabled[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0951950Z [36;1massert_quarantine_absent "$HELPER_BIN"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0952310Z [36;1massert_quarantine_absent "$HELPER_PLIST"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0952810Z [36;1m[[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]][0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0953480Z [36;1m[[ "$(brew list --cask --versions wattson)" == "wattson $WATTSON_VERSION" ]][0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0953880Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0954100Z [36;1munregister_test_app[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0954470Z [36;1mbrew uninstall --cask laleoarrow/tap/wattson[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0954790Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0954970Z [36;1mfor removed_path in \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0955380Z [36;1m  "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LOGIN_PLIST"; do[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0955970Z [36;1m  [[ ! -e "$removed_path" && ! -L "$removed_path" ]] \[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0957460Z [36;1m    || fail "Homebrew uninstall left $removed_path"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0957820Z [36;1mdone[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0958150Z [36;1mif /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0958600Z [36;1m  fail "Homebrew uninstall left the package receipt"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0958870Z [36;1mfi[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0959120Z [36;1mif brew list --cask --versions wattson >/dev/null 2>&1; then[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0959470Z [36;1m  fail "Homebrew still reports Wattson as installed"[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0960080Z [36;1mfi[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0960320Z [36;1massert_helper_absent[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0960560Z [36;1massert_login_agent_absent[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0960790Z [36;1massert_helper_enabled[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0960990Z [36;1m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0961150Z [36;1mCLEANUP_REQUIRED=0[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.0961500Z [36;1mecho "Public Homebrew cask install, helper health, and uninstall cleanup passed."[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.1004790Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.1005140Z env:
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.1007640Z   GH_TOKEN: ***
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.1007820Z   RELEASE_TAG: v4.3.22
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.1008110Z   EXPECTED_TAP_SHA: 8ba66c2e53e5f51393708c9a6e5c76644841b50e
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.1008580Z   EXPECTED_PKG_SHA: 63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.1008940Z   EXPECTED_ARCHITECTURE: arm64
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.1009160Z   HOMEBREW_NO_AUTO_UPDATE: 1
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.1009630Z   HOMEBREW_NO_ENV_HINTS: 1
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.1009900Z   WATTSON_VERSION: 4.3.22
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.1010130Z ##[endgroup]
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:30.6947570Z [34m==>[0m [1mTrusted cask laleoarrow/tap/wattson[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:31.1163490Z [32m==>[0m [1mFetching downloads for: [32mlaleoarrow/tap/wattson[39m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:32.3617550Z ✔︎ Cask wattson (4.3.22)
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:32.4088000Z [32m==>[0m [1mInstalling Cask [32mwattson[39m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:32.4110490Z [34m==>[0m [1mRunning installer for wattson with `sudo` (which may request your password)...[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:34.9864190Z installer: Package name is 
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:34.9871920Z installer: Installing at base path /
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:34.9884090Z installer: The install was successful.
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:35.4526320Z 🍺  wattson was successfully installed!
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:41.3725830Z [32m==>[0m [1mUninstalling Cask [32mwattson[39m[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:41.3748960Z [34m==>[0m [1mRemoving launchctl service com.leoarrow.wattson.helper[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:42.7471970Z [34m==>[0m [1mRemoving launchctl service com.leoarrow.wattson.login[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:43.0531950Z [34m==>[0m [1mUninstalling packages with `sudo` (which may request your password)...[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:43.0868920Z com.leoarrow.wattson.pkg
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:43.2849760Z [34m==>[0m [1mRemoving files:[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:43.2858940Z /Applications/Wattson.app
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:43.3140740Z /Library/LaunchDaemons/com.leoarrow.wattson.helper.plist
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:43.3369460Z /Library/PrivilegedHelperTools/com.leoarrow.wattson.helper
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:43.3756160Z /var/run/wattson-helper.sock
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:43.4087940Z ~/Library/LaunchAgents/com.leoarrow.wattson.login.plist
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:43.4340520Z [34m==>[0m [1mPurging files for version 4.3.22 of Cask wattson[0m
+Homebrew lifecycle on macos-26	Test public cask install and uninstall	2026-10-18T17:03:44.2160520Z Public Homebrew cask install, helper health, and uninstall cleanup passed.
+Homebrew lifecycle on macos-26	Complete job	﻿2026-10-18T17:03:44.2292930Z Cleaning up orphan processes
+Deploy site after both public cask lifecycles pass	Set up job	﻿2026-10-18T17:04:14.0663644Z Current runner version: '2.337.0'
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0693297Z ##[group]Runner Image Provisioner
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0694195Z Hosted Compute Agent
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0694803Z Version: 20261012.601
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0695405Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0696072Z Build Date: 2026-10-12T17:48:21Z
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0696783Z Worker ID: {5790dc56-2afa-4c8a-813c-9cfdbbc5c852}
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0697508Z Region: westus3
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0698021Z Cloud: Azure
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0698795Z ##[endgroup]
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0700494Z ##[group]Operating System
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0701191Z Ubuntu
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0701684Z 24.04.5
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0702173Z LTS
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0702671Z ##[endgroup]
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0703197Z ##[group]Runner Image
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0703775Z Image: ubuntu-24.04
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0704312Z Version: 20261012.334.1
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0705363Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0707048Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0707948Z ##[endgroup]
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0709251Z ##[group]GITHUB_TOKEN Permissions
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0711574Z Actions: write
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0712161Z Contents: write
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0712707Z Metadata: read
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0713326Z ##[endgroup]
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0715456Z Secret source: Actions
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0716372Z Cache mode: write
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.0717461Z Prepare workflow directory
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.1230641Z Prepare all required actions
+Deploy site after both public cask lifecycles pass	Set up job	2026-10-18T17:04:14.1296952Z Complete job name: Deploy site after both public cask lifecycles pass
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	﻿2026-10-18T17:04:14.1929325Z ##[group]Run set -euo pipefail
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1930252Z [36;1mset -euo pipefail[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1931299Z [36;1m[[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]][0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1932078Z [36;1mRELEASE_ID="$([0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1932651Z [36;1m  gh api \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1933275Z [36;1m    --header 'Accept: application/vnd.github+json' \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1934080Z [36;1m    --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1934880Z [36;1m    "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1935654Z [36;1m    --jq .id[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1936183Z [36;1m)"[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1936683Z [36;1mreadonly RELEASE_ID[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1937267Z [36;1m[[ "$RELEASE_ID" =~ ^[0-9]+$ ]][0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1937848Z [36;1mgh api \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1938423Z [36;1m  --method PATCH \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1939166Z [36;1m  --header 'Accept: application/vnd.github+json' \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1939932Z [36;1m  --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1940812Z [36;1m  "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID" \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1941510Z [36;1m  -f make_latest=true \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1942117Z [36;1m  >/dev/null[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1942684Z [36;1m[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1943175Z [36;1mlatest_matches=0[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1943726Z [36;1mfor attempt in {1..12}; do[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1944330Z [36;1m  if [[ "$([0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1944829Z [36;1m    gh api \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1945424Z [36;1m      --header 'Accept: application/vnd.github+json' \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1946417Z [36;1m      --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1947154Z [36;1m      "repos/$GITHUB_REPOSITORY/releases/latest" \[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1947823Z [36;1m      --jq .tag_name[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1948524Z [36;1m  )" == "$RELEASE_TAG" ]]; then[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1949125Z [36;1m    latest_matches=1[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1949671Z [36;1m    break[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1950160Z [36;1m  fi[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1950787Z [36;1m  echo "latest-release verification poll $attempt/12"[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1951493Z [36;1m  /bin/sleep 5[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1952238Z [36;1mdone[0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.1952780Z [36;1m[[ "$latest_matches" == "1" ]][0m
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.3047444Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.3049216Z env:
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.3053358Z   GH_TOKEN: ***
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.3053871Z   RELEASE_TAG: v4.3.22
+Deploy site after both public cask lifecycles pass	Mark the fully validated stable release as latest	2026-10-18T17:04:14.3054432Z ##[endgroup]
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	﻿2026-10-18T17:04:17.2241792Z ##[group]Run set -euo pipefail
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:17.2242385Z [36;1mset -euo pipefail[0m
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:17.2242834Z [36;1m[[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]][0m
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:17.2243358Z [36;1mgh workflow run pages.yml \[0m
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:17.2243787Z [36;1m  --repo "$GITHUB_REPOSITORY" \[0m
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:17.2244200Z [36;1m  --ref main \[0m
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:17.2244608Z [36;1m  --field "release_tag=$RELEASE_TAG"[0m
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:17.2287589Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:17.2288156Z env:
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:17.2292093Z   GH_TOKEN: ***
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:17.2292534Z   RELEASE_TAG: v4.3.22
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:17.2292918Z ##[endgroup]
+Deploy site after both public cask lifecycles pass	Dispatch the stable-release Pages deployment	2026-10-18T17:04:18.7559854Z https://github.com/laleoarrow/battery-monitor/actions/runs/39147879672
+Deploy site after both public cask lifecycles pass	Complete job	﻿2026-10-18T17:04:18.7658276Z Cleaning up orphan processes

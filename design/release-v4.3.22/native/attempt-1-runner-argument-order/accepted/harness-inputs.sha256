@@ -1,0 +1,9 @@
+6895349b4ff2695e985bdfe17ba86ff1e9b36172062c7a445890347289489593  /Users/leoarrow/Project/mypackage/agents/电池功率/design/release-v4.3.22/native/guest-run.sh
+177ed7dcdc765dbac411ed99caa3b0db2b043eac7ca4164802c37c46d2c25f2a  /Users/leoarrow/Project/mypackage/agents/电池功率/design/release-v4.3.22/native/run-owned.sh
+204cad349de979a83d1bba26a374fd70ae59ffedf277d5b9534945d133f164d0  /Users/leoarrow/Project/mypackage/agents/电池功率/design/release-v4.3.22/native/audit-guest.py
+277f5291773633b7785fe4d9ab6dbe7af02e96aaea60efe5ccbf438c540751b5  /Users/leoarrow/Project/mypackage/agents/电池功率/design/release-v4.3.22/native/source-manifest.py
+8aec65da7cf32d05ae3c661a4b260aa380793bb60d8c8d9e7a87623b9f2e18f7  /Users/leoarrow/Project/mypackage/agents/电池功率/design/release-v4.3.22/native/vm-state.py
+372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-native.noindex/snapshot.7fobDn/local_cleanup.sh
+812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-native.noindex/snapshot.7fobDn/run_owned.py
+372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e  /Users/leoarrow/Project/mypackage/agents/电池功率/scripts/lib/local_cleanup.sh
+812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872  /Users/leoarrow/Project/mypackage/agents/电池功率/scripts/lib/run_owned.py

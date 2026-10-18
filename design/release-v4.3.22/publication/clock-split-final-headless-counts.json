@@ -1,0 +1,33 @@
+{
+  "reviewed_at": "2026-10-18T16:24:23.398943+00:00",
+  "run_id": 39143941668,
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "conclusion": "success",
+  "swift_tests": 662,
+  "swift_failures": 0,
+  "python_tests": 608,
+  "python_skipped": 4,
+  "swift_summary_lines": [
+    {
+      "line": 2262,
+      "text": "SwiftPM and Python tests\tTest Swift package\t2026-10-18T16:16:51.6516300Z \t Executed 662 tests, with 0 failures (0 unexpected) in 70.937 (71.144) seconds"
+    },
+    {
+      "line": 2264,
+      "text": "SwiftPM and Python tests\tTest Swift package\t2026-10-18T16:16:51.6726250Z \t Executed 662 tests, with 0 failures (0 unexpected) in 70.937 (71.151) seconds"
+    }
+  ],
+  "python_summary_lines": [
+    {
+      "line": 2884,
+      "text": "SwiftPM and Python tests\tRun the default headless Python suite\t2026-10-18T16:23:49.1062210Z Ran 608 tests in 411.450s"
+    }
+  ],
+  "python_ok_lines": [
+    {
+      "line": 2886,
+      "text": "SwiftPM and Python tests\tRun the default headless Python suite\t2026-10-18T16:23:49.1065740Z OK (skipped=4)"
+    }
+  ],
+  "log_sha256": "044d7a3ddc74d459c992ee8d81e66f7a2a177123ab2e2d39904d948b21782992"
+}

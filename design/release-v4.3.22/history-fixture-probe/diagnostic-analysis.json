@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "diagnosticSourceCommit": "8300cabcb5859fcc74c3ff613a2c530a47c01f30",
+  "caseCount": 36,
+  "pairedCases": 18,
+  "hostedFailureReproduced": false,
+  "causalMechanismEstablished": false,
+  "anyAnimationKeysAtOneSecond": false,
+  "anyAnimationKeysAtObservationEnd": false,
+  "firstObservedAutomaticKeyRemovalSeconds": {
+    "minimum": 0.2783400416666666,
+    "maximum": 0.4826948750000071
+  },
+  "observedSeconds": {
+    "minimum": 1.6063782083333393,
+    "maximum": 1.720171541666673
+  },
+  "fullStrokeAndFillPresentationEqualsModelAtEnd": true,
+  "headPresentationEqualsModelAtEnd": true,
+  "installedKeyBeginTimeChangedDuringObservation": false,
+  "allInstalledAnimationConfigurationsFiniteAndRemoved": true,
+  "groups": [
+    {
+      "policy": "normal",
+      "paused": false,
+      "caseCount": 9,
+      "firstRemovalMinimumSeconds": 0.2783400416666666,
+      "firstRemovalMaximumSeconds": 0.3828434999999928,
+      "firstRemovalMeanSeconds": 0.3505697916666656
+    },
+    {
+      "policy": "normal",
+      "paused": true,
+      "caseCount": 9,
+      "firstRemovalMinimumSeconds": 0.3691388750000044,
+      "firstRemovalMaximumSeconds": 0.4826948750000071,
+      "firstRemovalMeanSeconds": 0.4039040925925911
+    },
+    {
+      "policy": "accessibility",
+      "paused": false,
+      "caseCount": 9,
+      "firstRemovalMinimumSeconds": 0.3312498333333451,
+      "firstRemovalMaximumSeconds": 0.4317749166666687,
+      "firstRemovalMeanSeconds": 0.36377590277777944
+    },
+    {
+      "policy": "accessibility",
+      "paused": true,
+      "caseCount": 9,
+      "firstRemovalMinimumSeconds": 0.3718521666666703,
+      "firstRemovalMaximumSeconds": 0.482342999999986,
+      "firstRemovalMeanSeconds": 0.4199147916666656
+    }
+  ],
+  "visibility": {
+    "original": {
+      "caseCount": 12,
+      "occlusionVisibleAtObserveStart": 11,
+      "occlusionHiddenAtObserveStart": 1,
+      "occlusionVisibleAtEnd": 12,
+      "allWindowsVisibleAtEnd": true
+    },
+    "centered": {
+      "caseCount": 12,
+      "occlusionVisibleAtObserveStart": 12,
+      "occlusionHiddenAtObserveStart": 0,
+      "occlusionVisibleAtEnd": 12,
+      "allWindowsVisibleAtEnd": true
+    },
+    "covered": {
+      "caseCount": 12,
+      "occlusionVisibleAtObserveStart": 0,
+      "occlusionHiddenAtObserveStart": 12,
+      "occlusionVisibleAtEnd": 12,
+      "allWindowsVisibleAtEnd": true
+    }
+  },
+  "limitations": [
+    "The hosted one-second retained-key failure did not reproduce. These successful bounded cases do not establish that artificial clock manipulation caused that failure.",
+    "First removal is sampled after a roughly 50 ms run-loop turn; times are observational, not exact Core Animation completion timestamps.",
+    "Each case observed until at least 1.6 seconds after observation-start when no keys remained; the five-second diagnostic maximum was never needed.",
+    "The original placement had one observe-start with occlusionVisible false; the other eleven were true. Covered placements were all occluded at observe-start and visible at end after the explicit 1.25-second cover removal.",
+    "A local disposable ARM GUI VM does not reproduce all compositor/runner load and environment conditions of a GitHub-hosted accessibility replay.",
+    "Some intermediate fill paths have different element topology and therefore null path error; null is not zero. Head target distance is not strictly monotonic, so these samples do not establish smoothness throughout the transition."
+  ],
+  "transientCompletedGeometryWithRetainedKeys": [
+    {
+      "case": "accessibility-centered-3-normal",
+      "endpointSamplesWithRetainedKeys": [
+        {
+          "observationElapsed": 0.3058200833333302,
+          "maximumOwnerElapsed": 0.3548542083333359,
+          "keys": [
+            "history.fill",
+            "history.stroke",
+            "history.head"
+          ]
+        }
+      ],
+      "firstObservedAutomaticRemoval": 0.4317749166666687
+    },
+    {
+      "case": "accessibility-covered-3-paused",
+      "endpointSamplesWithRetainedKeys": [
+        {
+          "observationElapsed": 0.42943420833333334,
+          "maximumOwnerElapsed": 0.42962058333333175,
+          "keys": [
+            "history.fill",
+            "history.stroke",
+            "history.head"
+          ]
+        }
+      ],
+      "firstObservedAutomaticRemoval": 0.482342999999986
+    },
+    {
+      "case": "normal-covered-3-paused",
+      "endpointSamplesWithRetainedKeys": [
+        {
+          "observationElapsed": 0.42739137499999913,
+          "maximumOwnerElapsed": 0.4274997499999955,
+          "keys": [
+            "history.fill",
+            "history.stroke",
+            "history.head"
+          ]
+        }
+      ],
+      "firstObservedAutomaticRemoval": 0.4826948750000071
+    },
+    {
+      "case": "normal-original-2-normal",
+      "endpointSamplesWithRetainedKeys": [
+        {
+          "observationElapsed": 0.3252262916666666,
+          "maximumOwnerElapsed": 0.35767562500001304,
+          "keys": [
+            "history.fill",
+            "history.stroke",
+            "history.head"
+          ]
+        }
+      ],
+      "firstObservedAutomaticRemoval": 0.3828434999999928
+    }
+  ],
+  "transientRetentionInterpretation": "Four cases briefly retained configured animation keys beyond owner-local active duration while complete stroke/fill/head presentation already matched target. All cleared before one second. This demonstrates that key presence and visible motion are distinct in this run; it does not reproduce or establish the cause of the hosted one-second failure.",
+  "observationCount": 911,
+  "firstRemovalOwnerAgeSeconds": {
+    "minimum": 0.36921850000000234,
+    "maximum": 0.48282916666666154
+  }
+}

@@ -1,0 +1,103 @@
+name: brew test-bot
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-bot:
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        os: [ ubuntu-24.04, macos-15-intel, macos-26 ]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      actions: read
+      checks: read
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Homebrew Bundler RubyGems
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
+          key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ matrix.os }}-rubygems-
+
+      - run: brew test-bot --only-cleanup-before
+
+      - run: brew test-bot --only-setup
+
+      # Both formula install paths reach GMP, which has no Intel macOS bottle.
+      # Matching upstream linters keep all style checks without source mirrors.
+      - name: Provision Intel style tools
+        if: matrix.os == 'macos-15-intel'
+        shell: bash
+        run: |
+          set -euo pipefail
+          shellcheck_dir="$(mktemp -d "${RUNNER_TEMP}/wattson-shellcheck.XXXXXX")"
+          archive="${shellcheck_dir}/shellcheck.tar.gz"
+          curl --fail --silent --show-error --location \
+            --proto '=https' --proto-redir '=https' --tlsv1.2 \
+            --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 120 \
+            --output "$archive" \
+            https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.darwin.x86_64.tar.gz
+          printf '%s  %s\n' \
+            c2c15e08df0e8fbc374c335b230a7ee958c313fa5714817a59aa59f1aa594f51 \
+            "$archive" | shasum -a 256 -c -
+          tar --no-same-owner -xzf "$archive" -C "$shellcheck_dir" \
+            shellcheck-v0.11.0/shellcheck
+          shellcheck_bin="${shellcheck_dir}/shellcheck-v0.11.0"
+          file "${shellcheck_bin}/shellcheck" | grep -F 'Mach-O 64-bit executable x86_64'
+          "${shellcheck_bin}/shellcheck" --version | grep -Fx 'version: 0.11.0'
+          archive="${shellcheck_dir}/actionlint.tar.gz"
+          curl --fail --silent --show-error --location \
+            --proto '=https' --proto-redir '=https' --tlsv1.2 \
+            --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 120 \
+            --output "$archive" \
+            https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_darwin_amd64.tar.gz
+          printf '%s  %s\n' \
+            5b44c3bc2255115c9b69e30efc0fecdf498fdb63c5d58e17084fd5f16324c644 \
+            "$archive" | shasum -a 256 -c -
+          tar --no-same-owner -xzf "$archive" -C "$shellcheck_bin" actionlint
+          file "${shellcheck_bin}/actionlint" | grep -F 'Mach-O 64-bit executable x86_64'
+          "${shellcheck_bin}/actionlint" -version | grep -Fx '1.7.12'
+          # test-bot rebuilds PATH from its filtered environment, retaining
+          # Homebrew bin/sbin but dropping directories added via GITHUB_PATH.
+          brew_bin="$(brew --prefix)/bin"
+          for tool in shellcheck actionlint; do
+            entry="${brew_bin}/${tool}"
+            if [[ -e "$entry" || -L "$entry" ]]; then
+              mv "$entry" "${shellcheck_dir}/${tool}.previous"
+            fi
+            ln -s "${shellcheck_bin}/${tool}" "$entry"
+          done
+          # Verify lookup using the prefix/system-only PATH test-bot retains.
+          PATH="${brew_bin}:${brew_bin%/bin}/sbin:/usr/bin:/bin:/usr/sbin:/sbin" \
+            brew ruby -- -e '
+              %w[shellcheck actionlint].each do |tool|
+                selected = which(tool, ORIGINAL_PATHS)
+                expected = Pathname.new(ARGV.fetch(0))/tool
+                abort "Wrong #{tool} selected: #{selected}" unless selected&.realpath == expected.realpath
+                puts "Verified #{tool}: #{selected} -> #{selected.realpath}"
+              end
+            ' "$shellcheck_bin"
+
+      - run: brew test-bot --only-tap-syntax --verbose
+      - run: brew test-bot --only-formulae
+        if: github.event_name == 'pull_request'
+
+      - name: Upload bottles as artifact
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: bottles_${{ matrix.os }}
+          path: '*.bottle.*'

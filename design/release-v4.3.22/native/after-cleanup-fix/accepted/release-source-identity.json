@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "testedCommit": "d1e72bd31675121e2729f84cff37efb33fdddbeb",
+  "releaseSourceCommit": "d1e72bd31675121e2729f84cff37efb33fdddbeb",
+  "filesCompared": 157,
+  "allInputsIdentical": true,
+  "mismatches": [],
+  "changedInputsFromPriorNativeGate": [
+    {
+      "file": "scripts/lib/local_cleanup.sh",
+      "priorSHA256": "372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e",
+      "currentSHA256": "e78cf3c2a5bece68162fe8b044451f4e67cdd54df34626a4697d8ec34ecd7d41"
+    },
+    {
+      "file": "tests/test_run_preview_cleanup.py",
+      "priorSHA256": "22bb7cbd2679e3074ea2b06b328fbdcc9d8f7c4029685b879c23fe62bfc407aa",
+      "currentSHA256": "a5c2fb8911d4c6b14ace3383f19fa5f2b1a2bec6b6874f7dfb34b83210476ba5"
+    }
+  ],
+  "method": "SHA256 of each frozen archive input compared with git show of the exact new release commit; also compared with prior accepted native manifest. No working-tree source used."
+}

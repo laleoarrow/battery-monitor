@@ -1,0 +1,96 @@
+{
+  "completed_utc": "2026-10-18T13:38:03.822232+00:00",
+  "baseline_commit": "b51e12bc87364a8f7ede342302bc5682b3e53c95",
+  "frozen_release_commit": "fdf6d96d30d30e0aaee709fa8696ce980ea19100",
+  "local_headless_gate_passed": false,
+  "status": "blocked_unresolved_repeated_python_failure",
+  "gates": {
+    "swift": {
+      "status": "passed_after_launcher_environment_correction",
+      "tests": 662,
+      "failures": 0,
+      "duration_seconds": 17.792,
+      "log": "swift-test-ci-parity.log",
+      "build_log": "swift-ci-parity-build.log",
+      "exit_status": 0
+    },
+    "python_default": {
+      "status": "failed",
+      "tests": 601,
+      "failures": 1,
+      "skipped": 4,
+      "duration_seconds": 250.321,
+      "log": "python-unittest.log",
+      "exit_status": 1
+    },
+    "python_focused_diagnosis": {
+      "status": "failed_again_no_full_retry",
+      "tests": 1,
+      "failed_subtests": 4,
+      "duration_seconds": 14.804,
+      "log": "python-focused-rerun.log",
+      "exit_status": 1
+    },
+    "shell_syntax": {
+      "status": "passed",
+      "log": "bash-syntax.log",
+      "exit_status": 0,
+      "files_parsed": 21,
+      "identity": "syntax-identity.json",
+      "command": "for file in scripts/*.sh scripts/lib/*.sh script/*.sh Packaging/pkg/preinstall Packaging/pkg/postinstall; do wattson_run /bin/bash -n \"$file\"; printf \"PASS %s\\n\" \"$file\"; done"
+    },
+    "source_equivalence": {
+      "status": "passed",
+      "compared_files": 1001,
+      "log": "source-equivalence.json"
+    },
+    "cleanup": {
+      "status": "passed",
+      "log": "cleanup-verification.json"
+    }
+  },
+  "earlier_unsuccessful_attempts": [
+    {
+      "stage": "launcher",
+      "status": "failed_before_archive_or_tests",
+      "reason": "exec inherited zsh but shared lifecycle helper requires bash",
+      "correction": "explicit /bin/bash, login=false",
+      "log": "initial-launcher.log"
+    },
+    {
+      "stage": "initial_swift",
+      "tests": 662,
+      "failures": 1,
+      "exit_status": 1,
+      "log": "swift-test.log",
+      "failure": "TestDefaultsCleanupTests.testPersistedSuiteFileStaysRemovedAfterDaemonReads at SwiftTests/TestDefaultsCleanup.swift:75",
+      "reason": "Caller-supplied CFFIXED_USER_HOME relocates preferences while fixture intentionally checks actual user home. Full unchanged suite passed with that variable unset."
+    },
+    {
+      "stage": "initial_shell_syntax_launcher",
+      "status": "invalid_empty_stdin_driver_no_files_parsed",
+      "exit_status": 0,
+      "reason": "Background shared owned runner did not preserve stdin Python script input; empty log exposed this during evidence audit.",
+      "correction": "Replaced stdin driver with direct Bash per-file owned-runner loop. All 21 source entrypoints/hooks produced explicit PASS lines."
+    }
+  ],
+  "unresolved_python_failure": {
+    "test": "test_system_battery_support.SystemBatterySupportLifecycleTests.test_blocked_archive_verify_and_output_stages_are_bounded_and_cleaned",
+    "assertion": "tests/test_system_battery_support.py:341: blocked-stage marker absent, process exit124",
+    "original_failed_subtests": [
+      "/usr/bin/ditto"
+    ],
+    "focused_failed_subtests": [
+      "/usr/bin/ditto",
+      "/bin/cp",
+      "/bin/mv",
+      "/bin/mkdir"
+    ],
+    "confirmed_scope": "The 0.5s injected timeout includes fork/exec and Bash startup. The 15s marker observation does not extend it. Exit124 may also originate from earlier mandatory support stages; existing logs do not attribute the timeout.",
+    "cause": "unresolved; startup scheduling remains an inference, not an established finding",
+    "next_step": "Obtain stage attribution/timing evidence before changing source or deadlines. No blind retry was performed after focused failure."
+  },
+  "source_or_test_edits": false,
+  "production_install_or_preferences_changes": false,
+  "policy": "No green local release-gate claim: Python remains unresolved. Exact frozen-SHA hosted Headless CI run 39132151994 is separately tracked by the release owner and may supply release-gate authority if its complete suite succeeds. Native GUI/VM and distribution/release gates remain separate requirements."
+}

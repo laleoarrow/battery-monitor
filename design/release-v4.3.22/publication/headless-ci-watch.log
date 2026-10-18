@@ -1,0 +1,292 @@
+Refreshing run status every 30 seconds. Press Ctrl+C to quit.
+
+* main Headless CI · 39132151994
+Triggered via push about 2 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+* SwiftPM and Python tests (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  * Test Swift package
+  * Run the default headless Python suite
+  * Post Check out the repository
+Refreshing run status every 30 seconds. Press Ctrl+C to quit.
+
+* main Headless CI · 39132151994
+Triggered via push about 2 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+* SwiftPM and Python tests (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  ✓ Test Swift package
+  * Run the default headless Python suite
+  * Post Check out the repository
+Refreshing run status every 30 seconds. Press Ctrl+C to quit.
+
+* main Headless CI · 39132151994
+Triggered via push about 3 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+* SwiftPM and Python tests (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  ✓ Test Swift package
+  * Run the default headless Python suite
+  * Post Check out the repository
+Refreshing run status every 30 seconds. Press Ctrl+C to quit.
+
+* main Headless CI · 39132151994
+Triggered via push about 3 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+* SwiftPM and Python tests (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  ✓ Test Swift package
+  * Run the default headless Python suite
+  * Post Check out the repository
+Refreshing run status every 30 seconds. Press Ctrl+C to quit.
+
+* main Headless CI · 39132151994
+Triggered via push about 4 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+* SwiftPM and Python tests (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  ✓ Test Swift package
+  * Run the default headless Python suite
+  * Post Check out the repository
+Refreshing run status every 30 seconds. Press Ctrl+C to quit.
+
+* main Headless CI · 39132151994
+Triggered via push about 4 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+* SwiftPM and Python tests (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  ✓ Test Swift package
+  * Run the default headless Python suite
+  * Post Check out the repository
+Refreshing run status every 30 seconds. Press Ctrl+C to quit.
+
+* main Headless CI · 39132151994
+Triggered via push about 5 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+* SwiftPM and Python tests (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  ✓ Test Swift package
+  * Run the default headless Python suite
+  * Post Check out the repository
+Refreshing run status every 30 seconds. Press Ctrl+C to quit.
+
+* main Headless CI · 39132151994
+Triggered via push about 6 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+* SwiftPM and Python tests (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  ✓ Test Swift package
+  * Run the default headless Python suite
+  * Post Check out the repository
+Refreshing run status every 30 seconds. Press Ctrl+C to quit.
+
+* main Headless CI · 39132151994
+Triggered via push about 6 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+* SwiftPM and Python tests (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  ✓ Test Swift package
+  * Run the default headless Python suite
+  * Post Check out the repository
+Refreshing run status every 30 seconds. Press Ctrl+C to quit.
+
+* main Headless CI · 39132151994
+Triggered via push about 7 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+* SwiftPM and Python tests (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  ✓ Test Swift package
+  * Run the default headless Python suite
+  * Post Check out the repository
+Refreshing run status every 30 seconds. Press Ctrl+C to quit.
+
+* main Headless CI · 39132151994
+Triggered via push about 7 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+* SwiftPM and Python tests (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  ✓ Test Swift package
+  * Run the default headless Python suite
+  * Post Check out the repository
+✓ main Headless CI · 39132151994
+Triggered via push about 8 minutes ago
+
+JOBS
+✓ Website build, test, lint, and export in 44s (ID 117689332781)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job
+✓ SwiftPM and Python tests in 7m50s (ID 117689333077)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Build Swift package
+  ✓ Test Swift package
+  ✓ Run the default headless Python suite
+  ✓ Post Check out the repository
+  ✓ Complete job
+
+ANNOTATIONS
+- Due to capacity constraints, jobs targeting macOS arm64 runners may experience longer queue times.
+SwiftPM and Python tests: .github#1
+

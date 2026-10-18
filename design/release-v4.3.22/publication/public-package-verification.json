@@ -1,0 +1,119 @@
+{
+  "anonymousDownload": true,
+  "authorizationHeaderSent": false,
+  "candidateRunID": 39145124379,
+  "checkedAtUTC": "2026-10-18T17:04:55.936709+00:00",
+  "cleanup": {
+    "canonicalBeforeAfterEqual": {
+      "canonical_app_version": true,
+      "canonical_files": true,
+      "canonical_running_pids": true,
+      "receipt": true,
+      "selected_wattson_registered_paths": true
+    },
+    "canonicalInstallationModified": false,
+    "installedAppHelperReceiptAndProcessesUnchanged": true,
+    "ownedMountsAfter": [],
+    "ownedProcessesAfter": [],
+    "ownedScratchParentEmpty": true,
+    "ownedWorkspacesRemoved": {
+      "artifact-public-browser-retry-workspace-v4.3.22.txt": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/public-v4.3.22.noindex/download.NySdIZ",
+      "artifact-public-first-workspace-v4.3.22.txt": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/public-v4.3.22.noindex/download.Pz4N2b",
+      "artifact-public-workspace-v4.3.22.txt": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/public-v4.3.22.noindex/download.VVFiyL"
+    },
+    "ownerExitCode": 0,
+    "sharedLifecycle": "scripts/lib/local_cleanup.sh and run_owned.py",
+    "signedRedirectsFragmentsAndScratchRemoved": true,
+    "testPreferencesOrContainersCreated": false
+  },
+  "cookieHeaderSent": false,
+  "credentialsUsed": false,
+  "directory": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/public-v4.3.22-verify",
+  "downloadAuthentication": "Anonymous public REST asset API and CDN via urllib; no gh, token, Authorization header, cookies or netrc; default TLS verification",
+  "fileSHA256": {
+    "SHA256SUMS.txt": "adab1f7501fd7adc39f69f42446a7d359ebf7f3b6f0f3b60c7c6302940dd6697",
+    "Wattson-v4.3.22-macos-universal.dmg": "946de7159e483c0419d5d3ecc79f0b8cc6b673ee7201c53de45fdf2a8b722523",
+    "Wattson-v4.3.22-macos-universal.pkg": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995",
+    "Wattson-v4.3.22-release-info.txt": "7f1706b2952afd3e1bacda22053ef81cfbc4732a643eb3a8e3302315eb2f01e5"
+  },
+  "files": {
+    "SHA256SUMS.txt": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/653975590",
+      "bytes": 303,
+      "cmpToCandidate": true,
+      "http_status": 200,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/SHA256SUMS.txt",
+      "ranges": 0,
+      "releaseAssetID": 653975590,
+      "sha256": "adab1f7501fd7adc39f69f42446a7d359ebf7f3b6f0f3b60c7c6302940dd6697"
+    },
+    "Wattson-v4.3.22-macos-universal.dmg": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/653975587",
+      "boundedSplitRetries": 0,
+      "bytes": 6779793,
+      "cmpToCandidate": true,
+      "http_status": 206,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-macos-universal.dmg",
+      "rangeBytes": 262144,
+      "ranges": 26,
+      "releaseAssetID": 653975587,
+      "sha256": "946de7159e483c0419d5d3ecc79f0b8cc6b673ee7201c53de45fdf2a8b722523"
+    },
+    "Wattson-v4.3.22-macos-universal.pkg": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/653975585",
+      "boundedSplitRetries": 0,
+      "bytes": 6900303,
+      "cmpToCandidate": true,
+      "http_status": 206,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-macos-universal.pkg",
+      "rangeBytes": 262144,
+      "ranges": 27,
+      "releaseAssetID": 653975585,
+      "sha256": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995"
+    },
+    "Wattson-v4.3.22-release-info.txt": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/653975643",
+      "bytes": 395,
+      "cmpToCandidate": true,
+      "http_status": 200,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.22/Wattson-v4.3.22-release-info.txt",
+      "ranges": 0,
+      "releaseAssetID": 653975643,
+      "sha256": "7f1706b2952afd3e1bacda22053ef81cfbc4732a643eb3a8e3302315eb2f01e5"
+    }
+  },
+  "inheritedRealVerification": {
+    "basis": "All four anonymous public assets match accepted candidate by SHA256, size and actual cmp; inherit its frozen standalone verify_release.sh plus actual signatures/entitlements proof.",
+    "fullCandidateProofPassed": true,
+    "pkgDmgAppsByteIdentical": true,
+    "reference": "design/release-v4.3.22/publication/artifact-proof-39145124379.json",
+    "sha256": "cd648f9e5eb5890c88dcdd1d5bac478b2897502aa01eb4d030f7d041917061ce"
+  },
+  "limits": [
+    "Public files were not installed or launched by this task.",
+    "Community package inherits ad-hoc App/helper and unsigned, not notarized container status.",
+    "Only four installer assets were downloaded; design ZIPs were excluded."
+  ],
+  "packagePath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/public-v4.3.22-verify/Wattson-v4.3.22-macos-universal.pkg",
+  "packageSHA256": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995",
+  "packageVerified": true,
+  "preservedNetworkFailures": [
+    "design/release-v4.3.22/publication/artifact-public-first-failure-v4.3.22.json",
+    "design/release-v4.3.22/publication/artifact-public-browser-retry-failure-v4.3.22.json"
+  ],
+  "publicAssetsMatchCandidate": true,
+  "rebuildPerformed": false,
+  "releaseID": 416577205,
+  "releaseURL": "https://github.com/laleoarrow/battery-monitor/releases/tag/v4.3.22",
+  "sourceCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "status": "passed",
+  "strictThreeLineManifest": true,
+  "structuralVerificationRepeated": false,
+  "transport": "Previously validated public REST 302/CDN route; 256 KiB ranges, eight workers per installer, one bounded half-range split retry",
+  "verificationHelperSHA256": {
+    "artifact-public-download-v4.3.22.py": "f93339f306916148c3ceeddc20ebfc358e8fd2b8367041cad5dbbd5f264aa8ad",
+    "artifact-public-urllib-v4.3.22.py": "6d39aba2cb861863d31b29e1478b882737e4f455d63fcc3d7e730f3b24447c8e",
+    "artifact-public-verify-v4.3.22.sh": "2f2a235d0ed561a7eaeb520d8acc1777e8c05938abc6102666ba6f12e5b386e5"
+  },
+  "version": "4.3.22"
+}

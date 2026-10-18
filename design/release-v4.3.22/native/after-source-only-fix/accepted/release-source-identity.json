@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "testedCommit": "67b3f60138074823857a3f86f4d517c87f2ac9e2",
+  "releaseSourceCommit": "67b3f60138074823857a3f86f4d517c87f2ac9e2",
+  "filesCompared": 157,
+  "allInputsIdentical": true,
+  "mismatches": [],
+  "changedInputsFromPriorNativeGate": [
+    {
+      "file": "scripts/lib/local_cleanup.sh",
+      "priorSHA256": "e78cf3c2a5bece68162fe8b044451f4e67cdd54df34626a4697d8ec34ecd7d41",
+      "currentSHA256": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249"
+    },
+    {
+      "file": "tests/test_local_runtime_cleanup.py",
+      "priorSHA256": "52e7f8a234db9494afe213fd5d6c96836de1a216aa28fb6d9a55e4511e7c8f44",
+      "currentSHA256": "b3ffc78d00c977c23dff019614ef36459a5bc66678c7502a836fabccb7106ef6"
+    },
+    {
+      "file": "tests/test_release_workflow_contract.py",
+      "priorSHA256": "a8ede55f70fcbfac755ef0aa15e3665ea5a92c2bb89520e1daf0df2d2694b799",
+      "currentSHA256": "f67cd0be2db49389a9806b9ed9505b3f0d4316d677854223a8b292a057cb8e27"
+    }
+  ],
+  "allCommitChangesFromPriorNativeGate": [
+    ".github/workflows/macos-helper-install.yml",
+    "scripts/lib/local_cleanup.sh",
+    "tests/test_local_runtime_cleanup.py",
+    "tests/test_release_workflow_contract.py"
+  ],
+  "method": "SHA256 of each frozen archive input compared with git show of the exact new release commit; also compared with prior resume-flush native manifest. No working-tree source used."
+}

@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "repository": "laleoarrow/homebrew-tap",
+  "branch": "main",
+  "tapCommit": "8ba66c2e53e5f51393708c9a6e5c76644841b50e",
+  "baseCommit": "7b4e9b017a1d2dcd38a5e7e2a4f579c740ef3731",
+  "version": "4.3.22",
+  "releaseID": 416577205,
+  "releaseTag": "v4.3.22",
+  "publicPKGSHA256": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995",
+  "fastForwardPushVerified": true,
+  "remoteMainMatches": true,
+  "onlyCaskVersionAndSHAChanged": true,
+  "changedFiles": [
+    "Casks/wattson.rb"
+  ],
+  "diffAdditions": 2,
+  "diffDeletions": 2,
+  "otherFiveRepositoryBlobsPreserved": true,
+  "idataBlobPreserved": true,
+  "rubySyntaxPassed": true,
+  "publicCaskBytesMatchVerifiedPostimage": true,
+  "exactTapCI": {
+    "runID": 39147269521,
+    "url": "https://github.com/laleoarrow/homebrew-tap/actions/runs/39147269521",
+    "headSHA": "8ba66c2e53e5f51393708c9a6e5c76644841b50e",
+    "headBranch": "main",
+    "event": "push",
+    "workflowPath": ".github/workflows/tests.yml",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 117733541949,
+        "name": "test-bot (macos-26)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/laleoarrow/homebrew-tap/actions/runs/39147269521/job/117733541949"
+      },
+      {
+        "id": 117733541981,
+        "name": "test-bot (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/laleoarrow/homebrew-tap/actions/runs/39147269521/job/117733541981"
+      },
+      {
+        "id": 117733542003,
+        "name": "test-bot (macos-15-intel)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/laleoarrow/homebrew-tap/actions/runs/39147269521/job/117733542003"
+      }
+    ]
+  },
+  "ownedCheckoutRemoved": true,
+  "ownedScratchEmpty": true,
+  "ownedCheckoutProcessesAbsent": true,
+  "hostBrewInstallAttempted": false,
+  "canonicalInstallationTouched": false,
+  "publicLifecycleOrPagesDispatched": false,
+  "successProofUsesIndependentRemoteCommitTreeCaskCIAndCleanup": true,
+  "runnerDiagnostics": [
+    "Initial repo-root path typo failed before checkout creation; corrected before sync.",
+    "A live runner script edit affected its final logging parse after successful push and remote SHA comparison. The raw diagnostic is preserved. Remote commit/tree/cask API proofs independently validate the mutation; no duplicate push or retry occurred."
+  ],
+  "runnerExitCodeNotUsedAsSuccessProof": true,
+  "limitations": [
+    "Tap CI validates setup and tap syntax; it does not replace the app repository public PKG install/uninstall lifecycle.",
+    "The public Homebrew lifecycle, latest promotion and Pages remain owned by the parent release task."
+  ],
+  "evidenceSHA256": {
+    "tap-published-commit.json": "a9748edd6b551c5587268adf97b06682b0f20430e347ea195da88acd6a5ff309",
+    "tap-main-final.json": "14b4c10c57310346efb2b49558ffa1b68c8b60df6c638cbc260258859b92b9ce",
+    "tap-tree-before.json": "e4a3c812ed63134518d1b4f68be3566c55023d5d989e46cb2cb2a96a5fae4ecb",
+    "tap-tree-after.json": "bc6b038c2f58f5a77da79fb49d8aa14e8e4fbdd2a1286ec36422f38bc49a6be5",
+    "tap-cask-public.rb": "70ac7868a88995d8bb50183bdd63d8f97285cfdb8ad419e32c9928fc650b601c",
+    "tap-change.diff": "6ad42d0daa5ca6b97489cc854ad7c48826c3591bf0085c2ff05d60a25c3ed56c",
+    "tap-ruby-syntax.log": "bbafef10c22b9323fa5589564990f57fbf57f9a632381d5e765dc5a3b25b4a1b",
+    "tap-ci-run-final.json": "adfddb5e8ab3410793359afe50de3e8cbb2a747abf5341ea705cf75a471297e3",
+    "tap-ci-jobs-after.json": "20489f8be8016a637beed3b1bef3b5fbc99f88969cf812d0f0f4bc20d083b96b",
+    "tap-ci-final.log": "37a45372d267c0aac5fb5d1c2ca4211601e8496bfd0fa88004b72132f8572923",
+    "tap-resource-audit.json": "67821f2985c63dda157035bf693d9e3426da43331f51f996318f9332f3e0b061",
+    "tap-sync-verification.json": "24149273e41295d1cf5b7531dfef2ae4178637242a834b1d39206b490bf316ef",
+    "tap-sync.err": "ed3f3a659f82add68afc4d215646f4d3458ce3bba2cdd0b9b1f153cce3b674b4",
+    "tap-sync-initial-path-error.err": "cd50f72feec8f24c8ef2feff7cc11f3172e195036e3ad5fbbf0b00e35d34a239"
+  },
+  "verifiedUTC": "2026-10-18T17:00:59.966433+00:00"
+}

@@ -1,0 +1,27 @@
+{
+  "reviewed_at": "2026-10-18T17:01:41.911441+00:00",
+  "tap_commit": "8ba66c2e53e5f51393708c9a6e5c76644841b50e",
+  "tap_ci_run_id": 39147269521,
+  "tap_ci_conclusion": "success",
+  "all_three_jobs_success": true,
+  "proof_sha256": "a50205ccc5aa427c604f9c6d643bd932f03efa5fdb29f103153b6f8e0f1e58f1",
+  "all_evidence_hashes_verified": [
+    "tap-published-commit.json",
+    "tap-main-final.json",
+    "tap-tree-before.json",
+    "tap-tree-after.json",
+    "tap-cask-public.rb",
+    "tap-change.diff",
+    "tap-ruby-syntax.log",
+    "tap-ci-run-final.json",
+    "tap-ci-jobs-after.json",
+    "tap-ci-final.log",
+    "tap-resource-audit.json",
+    "tap-sync-verification.json",
+    "tap-sync.err",
+    "tap-sync-initial-path-error.err"
+  ],
+  "public_pkg_sha256": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995",
+  "worker_cleanup_fields_verified": true,
+  "public_lifecycle_dispatch_authorization": "pending explicit root approval"
+}

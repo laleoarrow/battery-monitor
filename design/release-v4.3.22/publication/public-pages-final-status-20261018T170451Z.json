@@ -1,0 +1,120 @@
+{
+  "conclusion": "",
+  "createdAt": "2026-10-18T17:04:18Z",
+  "databaseId": 39147879672,
+  "event": "workflow_dispatch",
+  "headBranch": "main",
+  "headSha": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "jobs": [
+    {
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "databaseId": 117735329179,
+      "name": "Build the static Pages artifact",
+      "startedAt": "2026-10-18T17:04:21Z",
+      "status": "in_progress",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T17:04:23Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T17:04:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:04:29Z",
+          "conclusion": "success",
+          "name": "Check out the repository",
+          "number": 2,
+          "startedAt": "2026-10-18T17:04:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:04:31Z",
+          "conclusion": "success",
+          "name": "Verify the stable release identity",
+          "number": 3,
+          "startedAt": "2026-10-18T17:04:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:04:37Z",
+          "conclusion": "success",
+          "name": "Set up Node.js",
+          "number": 4,
+          "startedAt": "2026-10-18T17:04:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:04:37Z",
+          "conclusion": "success",
+          "name": "Configure GitHub Pages",
+          "number": 5,
+          "startedAt": "2026-10-18T17:04:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:04:53Z",
+          "conclusion": "success",
+          "name": "Install locked website dependencies",
+          "number": 6,
+          "startedAt": "2026-10-18T17:04:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T17:05:01Z",
+          "conclusion": "success",
+          "name": "Build and test the rendered website",
+          "number": 7,
+          "startedAt": "2026-10-18T17:04:53Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Lint the website",
+          "number": 8,
+          "startedAt": "2026-10-18T17:05:01Z",
+          "status": "in_progress"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Export and validate the project-scoped static site",
+          "number": 9,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Upload the Pages artifact",
+          "number": 10,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Post Set up Node.js",
+          "number": 19,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Post Check out the repository",
+          "number": 20,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39147879672/job/117735329179"
+    }
+  ],
+  "status": "in_progress",
+  "updatedAt": "2026-10-18T17:04:22Z",
+  "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39147879672"
+}

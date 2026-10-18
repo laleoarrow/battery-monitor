@@ -1,0 +1,667 @@
+Build the static Pages artifact	Set up job	﻿2026-10-18T17:04:22.3303728Z Current runner version: '2.337.0'
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3333743Z ##[group]Runner Image Provisioner
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3334638Z Hosted Compute Agent
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3335351Z Version: 20261012.601
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3335998Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3336731Z Build Date: 2026-10-12T17:48:21Z
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3337488Z Worker ID: {3b3654c6-6c0a-4506-a96c-45c8a101def8}
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3338189Z Region: eastus
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3338770Z Cloud: Azure
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3339365Z ##[endgroup]
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3341182Z ##[group]Operating System
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3341990Z Ubuntu
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3342518Z 24.04.5
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3343108Z LTS
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3343655Z ##[endgroup]
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3344224Z ##[group]Runner Image
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3344900Z Image: ubuntu-24.04
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3345480Z Version: 20261012.334.1
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3346613Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3348482Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3349499Z ##[endgroup]
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3351033Z ##[group]GITHUB_TOKEN Permissions
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3353897Z Actions: read
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3354538Z Contents: read
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3355203Z Metadata: read
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3355794Z Pages: write
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3356776Z ##[endgroup]
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3360102Z Secret source: Actions
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3361951Z Cache mode: write
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3363548Z Prepare workflow directory
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.3981850Z Prepare all required actions
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.4031911Z Getting action download info
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.5651145Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.7318440Z Download action repository 'actions/setup-node@820762786026740c76f36085b0efc47a31fe5020' (SHA:820762786026740c76f36085b0efc47a31fe5020)
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.8271376Z Download action repository 'actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d' (SHA:45bfe0192ca1faeb007ade9deae92b16b8254a0d)
+Build the static Pages artifact	Set up job	2026-10-18T17:04:22.9670637Z Download action repository 'actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9' (SHA:fc324d3547104276b827a68afc52ff2a11cc49c9)
+Build the static Pages artifact	Set up job	2026-10-18T17:04:23.1524103Z Getting action download info
+Build the static Pages artifact	Set up job	2026-10-18T17:04:23.2144875Z Download action repository 'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f' (SHA:bbbca2ddaa5d8feaa63e36b76fdaad77386f024f)
+Build the static Pages artifact	Set up job	2026-10-18T17:04:23.3619560Z Complete job name: Build the static Pages artifact
+Build the static Pages artifact	Check out the repository	﻿2026-10-18T17:04:23.4380115Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4381542Z with:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4382100Z   ref: 7f41533b017d26519a69d541d3ffd2dea587f413
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4382725Z   persist-credentials: false
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4383274Z   repository: laleoarrow/battery-monitor
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4387019Z   token: ***
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4387461Z   ssh-strict: true
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4387903Z   ssh-user: git
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4388339Z   clean: true
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4388782Z   sparse-checkout-cone-mode: true
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4389310Z   fetch-depth: 1
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4389736Z   fetch-tags: false
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4390180Z   show-progress: true
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4390859Z   lfs: false
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4391282Z   submodules: false
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4391729Z   set-safe-directory: true
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4392249Z   allow-unsafe-pr-checkout: false
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4393070Z env:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4393525Z   NEXT_PUBLIC_RELEASE_VERSION: v4.3.22
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.4394130Z ##[endgroup]
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5463039Z Syncing repository: laleoarrow/battery-monitor
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5465613Z ##[group]Getting Git version info
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5466489Z Working directory is '/home/runner/work/battery-monitor/battery-monitor'
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5468219Z [command]/usr/bin/git version
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5654445Z git version 2.55.0
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5687961Z ##[endgroup]
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5698560Z Temporarily overriding HOME='/home/runner/work/_temp/bbe374b6-25ea-4b8d-85ae-e0a468efa669' before making global git config changes
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5704216Z Adding repository directory to the temporary git global config as a safe directory
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5706795Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/battery-monitor/battery-monitor
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5766352Z Deleting the contents of '/home/runner/work/battery-monitor/battery-monitor'
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5773672Z ##[group]Determining repository object format
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5789293Z ##[endgroup]
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5790856Z ##[group]Initializing the repository
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5792766Z [command]/usr/bin/git init /home/runner/work/battery-monitor/battery-monitor
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5908366Z hint: Using 'master' as the name for the initial branch. This default branch name
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5921648Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5924037Z hint: to use in all of your new repositories, which will suppress this warning,
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5925871Z hint: call:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5926788Z hint:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5927841Z hint: 	git config --global init.defaultBranch <name>
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5929063Z hint:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5930496Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5932784Z hint: 'development'. The just-created branch can be renamed via this command:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5934124Z hint:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5935034Z hint: 	git branch -m <name>
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5936140Z hint:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5937575Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5939401Z Initialized empty Git repository in /home/runner/work/battery-monitor/battery-monitor/.git/
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5943175Z [command]/usr/bin/git remote add origin https://github.com/laleoarrow/battery-monitor
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5989011Z ##[endgroup]
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.5990461Z ##[group]Disabling automatic garbage collection
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6002997Z [command]/usr/bin/git config --local gc.auto 0
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6045081Z ##[endgroup]
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6048188Z ##[group]Setting up auth
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6049503Z Removing SSH command configuration
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6072047Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6101158Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6529556Z Removing HTTP extra header
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6541416Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6576470Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6811820Z Removing includeIf entries pointing to credentials config files
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6812994Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.6859247Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.7101793Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-882bdaf3-bc21-4623-aa61-0be30612b675.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.7144613Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git.path /home/runner/work/_temp/git-credentials-882bdaf3-bc21-4623-aa61-0be30612b675.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.7179754Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-882bdaf3-bc21-4623-aa61-0be30612b675.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.7388772Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-882bdaf3-bc21-4623-aa61-0be30612b675.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.7393612Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-882bdaf3-bc21-4623-aa61-0be30612b675.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.7396288Z ##[endgroup]
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.7397156Z ##[group]Fetching the repository
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:23.7398560Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 7f41533b017d26519a69d541d3ffd2dea587f413
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:28.5805917Z From https://github.com/laleoarrow/battery-monitor
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:28.5806958Z  * branch            7f41533b017d26519a69d541d3ffd2dea587f413 -> FETCH_HEAD
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:28.5815367Z [command]/usr/bin/git rev-parse --verify --quiet 7f41533b017d26519a69d541d3ffd2dea587f413^{object}
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:28.5846087Z 7f41533b017d26519a69d541d3ffd2dea587f413
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:28.5851446Z ##[endgroup]
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:28.5852353Z ##[group]Determining the checkout info
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:28.5856980Z ##[endgroup]
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:28.5865704Z [command]/usr/bin/git sparse-checkout disable
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:28.5915178Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:28.5949243Z ##[group]Checking out the ref
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:28.5953653Z [command]/usr/bin/git checkout --progress --force 7f41533b017d26519a69d541d3ffd2dea587f413
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6208005Z Updating files:  78% (2986/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6234783Z Updating files:  79% (3020/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6258757Z Updating files:  80% (3058/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6286749Z Updating files:  81% (3096/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6304486Z Updating files:  82% (3135/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6320779Z Updating files:  83% (3173/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6339781Z Updating files:  84% (3211/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6358018Z Updating files:  85% (3249/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6418660Z Updating files:  86% (3287/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6473789Z Updating files:  87% (3326/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6509474Z Updating files:  88% (3364/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6700690Z Updating files:  89% (3402/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.6923901Z Updating files:  90% (3440/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.7085294Z Updating files:  91% (3479/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.7275648Z Updating files:  92% (3517/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.7428804Z Updating files:  93% (3555/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.7841708Z Updating files:  94% (3593/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.7962944Z Updating files:  95% (3631/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8050635Z Updating files:  96% (3670/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8084726Z Updating files:  97% (3708/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8124291Z Updating files:  98% (3746/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8179000Z Updating files:  99% (3784/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8179919Z Updating files: 100% (3822/3822)
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8180778Z Updating files: 100% (3822/3822), done.
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8226817Z Note: switching to '7f41533b017d26519a69d541d3ffd2dea587f413'.
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8227459Z 
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8227854Z You are in 'detached HEAD' state. You can look around, make experimental
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8228962Z changes and commit them, and you can discard any commits you make in this
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8230477Z state without impacting any branches by switching back to a branch.
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8231227Z 
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8231733Z If you want to create a new branch to retain commits you create, you may
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8232905Z do so (now or later) by using -c with the switch command. Example:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8233604Z 
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8233912Z   git switch -c <new-branch-name>
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8234420Z 
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8234648Z Or undo this operation with:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8237205Z 
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8237370Z   git switch -
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8237583Z 
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8237960Z Turn off this advice by setting config variable advice.detachedHead to false
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8238497Z 
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8238940Z HEAD is now at 7f41533 Separate paused History geometry from normal-clock completion
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8322250Z ##[endgroup]
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8365601Z [command]/usr/bin/git log -1 --format=%H
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8403549Z 7f41533b017d26519a69d541d3ffd2dea587f413
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8415582Z ##[group]Removing auth
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8416384Z Removing SSH command configuration
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8422423Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8467648Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8722854Z Removing HTTP extra header
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8732096Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.8771340Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9025838Z Removing includeIf entries pointing to credentials config files
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9029456Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9065481Z includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git.path
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9066861Z includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9068124Z includeif.gitdir:/github/workspace/.git.path
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9069137Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9076676Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git.path
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9109339Z /home/runner/work/_temp/git-credentials-882bdaf3-bc21-4623-aa61-0be30612b675.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9124228Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-882bdaf3\-bc21\-4623\-aa61\-0be30612b675\.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9172480Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9206903Z /home/runner/work/_temp/git-credentials-882bdaf3-bc21-4623-aa61-0be30612b675.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9217496Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-882bdaf3\-bc21\-4623\-aa61\-0be30612b675\.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9270747Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9303589Z /github/runner_temp/git-credentials-882bdaf3-bc21-4623-aa61-0be30612b675.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9316426Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-882bdaf3\-bc21\-4623\-aa61\-0be30612b675\.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9358706Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9387709Z /github/runner_temp/git-credentials-882bdaf3-bc21-4623-aa61-0be30612b675.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9396301Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-882bdaf3\-bc21\-4623\-aa61\-0be30612b675\.config
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9438110Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9678591Z Removing credentials config '/home/runner/work/_temp/git-credentials-882bdaf3-bc21-4623-aa61-0be30612b675.config'
+Build the static Pages artifact	Check out the repository	2026-10-18T17:04:29.9690702Z ##[endgroup]
+Build the static Pages artifact	Verify the stable release identity	﻿2026-10-18T17:04:29.9904704Z ##[group]Run set -euo pipefail
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9905132Z [36;1mset -euo pipefail[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9905450Z [36;1m[[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]][0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9905754Z [36;1m[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9905944Z [36;1mMAIN_SHA="$([0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9906158Z [36;1m  gh api \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9906450Z [36;1m    --header 'Accept: application/vnd.github+json' \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9906841Z [36;1m    --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9907205Z [36;1m    "repos/$GITHUB_REPOSITORY/git/ref/heads/main" \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9907527Z [36;1m    --jq .object.sha[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9907757Z [36;1m)"[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9907958Z [36;1mreadonly MAIN_SHA[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9908201Z [36;1m[[ "$MAIN_SHA" =~ ^[0-9a-f]{40}$ ]][0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9908520Z [36;1m[[ "$GITHUB_SHA" == "$MAIN_SHA" ]][0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9908843Z [36;1m[[ "$(tr -d '\r\n' < VERSION)" == "${RELEASE_TAG#v}" ]][0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9909202Z [36;1m[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9909505Z [36;1mreadonly CI_RUNS="$RUNNER_TEMP/wattson-pages-headless-ci.json"[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9909900Z [36;1mgh api \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9910159Z [36;1m  --method GET \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9911979Z [36;1m  --header 'Accept: application/vnd.github+json' \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9912375Z [36;1m  --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9912779Z [36;1m  "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs" \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9913141Z [36;1m  -f branch=main \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9913388Z [36;1m  -f event=push \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9913644Z [36;1m  -f head_sha="$GITHUB_SHA" \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9913914Z [36;1m  -f per_page=100 \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9914149Z [36;1m  > "$CI_RUNS"[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9914423Z [36;1mjq -e --arg sha "$GITHUB_SHA" '[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9914691Z [36;1m  any([0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9914896Z [36;1m    .workflow_runs[];[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9915160Z [36;1m    .head_sha == $sha and[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9915413Z [36;1m    .head_branch == "main" and[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9915677Z [36;1m    .event == "push" and[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9915932Z [36;1m    .status == "completed" and[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9916194Z [36;1m    .conclusion == "success"[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9916437Z [36;1m  )[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9916630Z [36;1m' "$CI_RUNS" >/dev/null[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9916860Z [36;1m[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9917138Z [36;1mreadonly RELEASE_JSON="$RUNNER_TEMP/wattson-release.json"[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9917488Z [36;1mgh api \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9917753Z [36;1m  --header 'Accept: application/vnd.github+json' \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9918119Z [36;1m  --header 'X-GitHub-Api-Version: 2022-11-28' \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9918509Z [36;1m  "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" \[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9918845Z [36;1m  > "$RELEASE_JSON"[0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9919137Z [36;1m[[ "$(jq -r .tag_name "$RELEASE_JSON")" == "$RELEASE_TAG" ]][0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9919517Z [36;1m[[ "$(jq -r .draft "$RELEASE_JSON")" == "false" ]][0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:29.9919870Z [36;1m[[ "$(jq -r .prerelease "$RELEASE_JSON")" == "false" ]][0m
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:30.0229082Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:30.0229598Z env:
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:30.0229884Z   NEXT_PUBLIC_RELEASE_VERSION: v4.3.22
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:30.0234048Z   GH_TOKEN: ***
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:30.0234327Z   RELEASE_TAG: v4.3.22
+Build the static Pages artifact	Verify the stable release identity	2026-10-18T17:04:30.0234591Z ##[endgroup]
+Build the static Pages artifact	Set up Node.js	﻿2026-10-18T17:04:31.2825578Z ##[group]Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:31.2826013Z with:
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:31.2826226Z   node-version: 22.13.0
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:31.2826449Z   cache: npm
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:31.2826706Z   cache-dependency-path: website/package-lock.json
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:31.2827293Z   check-latest: false
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:31.2829837Z   token: ***
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:31.2830058Z   package-manager-cache: true
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:31.2830667Z env:
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:31.2830903Z   NEXT_PUBLIC_RELEASE_VERSION: v4.3.22
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:31.2831170Z ##[endgroup]
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:31.6127998Z Attempting to download 22.13.0...
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:32.0772087Z Acquiring 22.13.0 - x64 from https://github.com/actions/node-versions/releases/download/22.13.0-12683784390/node-22.13.0-linux-x64.tar.gz
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:32.5647905Z Extracting ...
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:32.5786819Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/16322164-8156-4f5c-a7e8-bc1403514c89 -f /home/runner/work/_temp/bd51867a-5948-4d7b-9d0f-e1e3c4bce2b7
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:33.7743072Z Adding to the cache ...
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:35.9235708Z ##[group]Environment details
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:36.1509551Z node: v22.13.0
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:36.1510068Z npm: 10.9.2
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:36.1510731Z yarn: 1.22.22
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:36.1511460Z ##[endgroup]
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:36.1528563Z [command]/opt/hostedtoolcache/node/22.13.0/x64/bin/npm config get cache
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:36.2484408Z /home/runner/.npm
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:36.3326524Z Cache hit for: node-cache-Linux-x64-npm-0ac22d024bb03ef0133a439258b27339c172387865a837b94ad6706ce3308aac
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:37.1396488Z Received 159315621 of 159315621 (100.0%), 202.3 MBs/sec
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:37.1398274Z Cache Size: ~152 MB (159315621 B)
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:37.1457069Z [command]/usr/bin/tar -xf /home/runner/work/_temp/48399150-1e94-4762-b82f-f27e010eb162/cache.tzst -P -C /home/runner/work/battery-monitor/battery-monitor --use-compress-program unzstd
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:37.5814335Z Cache restored successfully
+Build the static Pages artifact	Set up Node.js	2026-10-18T17:04:37.5892604Z Cache restored from key: node-cache-Linux-x64-npm-0ac22d024bb03ef0133a439258b27339c172387865a837b94ad6706ce3308aac
+Build the static Pages artifact	Configure GitHub Pages	﻿2026-10-18T17:04:37.6160511Z ##[group]Run actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d
+Build the static Pages artifact	Configure GitHub Pages	2026-10-18T17:04:37.6161314Z with:
+Build the static Pages artifact	Configure GitHub Pages	2026-10-18T17:04:37.6166079Z   token: ***
+Build the static Pages artifact	Configure GitHub Pages	2026-10-18T17:04:37.6166443Z   enablement: false
+Build the static Pages artifact	Configure GitHub Pages	2026-10-18T17:04:37.6166817Z env:
+Build the static Pages artifact	Configure GitHub Pages	2026-10-18T17:04:37.6167172Z   NEXT_PUBLIC_RELEASE_VERSION: v4.3.22
+Build the static Pages artifact	Configure GitHub Pages	2026-10-18T17:04:37.6167650Z ##[endgroup]
+Build the static Pages artifact	Install locked website dependencies	﻿2026-10-18T17:04:37.9021172Z ##[group]Run npm ci
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:37.9021636Z [36;1mnpm ci[0m
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:37.9107644Z shell: /usr/bin/bash -e {0}
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:37.9108083Z env:
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:37.9108450Z   NEXT_PUBLIC_RELEASE_VERSION: v4.3.22
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:37.9108942Z   GITHUB_PAGES: true
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:37.9109314Z ##[endgroup]
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:41.6078133Z npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:41.8051603Z npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.5854602Z 
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.5855824Z added 479 packages, and audited 480 packages in 16s
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.5856863Z 
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.5857541Z 159 packages are looking for funding
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.5858402Z   run `npm fund` for details
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.7215078Z 
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.7216338Z 30 vulnerabilities (1 low, 6 moderate, 23 high)
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.7217292Z 
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.7218220Z To address issues that do not require attention, run:
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.7219338Z   npm audit fix
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.7219852Z 
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.7220829Z To address all issues (including breaking changes), run:
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.7221844Z   npm audit fix --force
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.7222389Z 
+Build the static Pages artifact	Install locked website dependencies	2026-10-18T17:04:53.7222869Z Run `npm audit` for details.
+Build the static Pages artifact	Build and test the rendered website	﻿2026-10-18T17:04:53.8503241Z ##[group]Run npm test
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:53.8503553Z [36;1mnpm test[0m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:53.8567540Z shell: /usr/bin/bash -e {0}
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:53.8567810Z env:
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:53.8568033Z   NEXT_PUBLIC_RELEASE_VERSION: v4.3.22
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:53.8568327Z   GITHUB_PAGES: true
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:53.8568552Z ##[endgroup]
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:53.9632248Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:53.9633658Z > wattson-site@0.1.0 test
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:53.9634908Z > npm run build && npm run export:pages && node --test tests/*.test.mjs
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:53.9635683Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:54.0669005Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:54.0669830Z > wattson-site@0.1.0 build
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:54.0671045Z > WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:54.0671627Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:54.5248511Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:54.5249639Z   vinext build  (Vite 8.0.13)
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:54.5250097Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:55.5206267Z (node:3265) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:55.5207672Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:55.7308534Z (node:3265) ExperimentalWarning: glob is an experimental feature and might change at any time
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:55.7812854Z [34m[1/5] analyze client references...[39m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:55.8359631Z [2K
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:56.6154263Z transforming...✓ 218 modules transformed.
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:56.6292772Z rendering chunks...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:56.6364322Z [32m✓ built in 853ms[39m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:56.6424318Z [34m[2/5] analyze server references...[39m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:56.6892038Z [2K
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:56.9696869Z transforming...✓ 130 modules transformed.
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:56.9721914Z rendering chunks...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:56.9744124Z [32m✓ built in 331ms[39m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:56.9795401Z [34m[3/5] build rsc environment...[39m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:57.0070025Z [2K
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:57.5252359Z transforming...✓ 216 modules transformed.
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:57.5942985Z rendering chunks...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:57.6364327Z computing gzip size...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:57.6462848Z [32m✓ built in 666ms[39m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:57.6512948Z [34m[4/5] build client environment...[39m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:57.6766109Z [2K
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:59.7230410Z transforming...✓ 1712 modules transformed.
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:59.7728956Z rendering chunks...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:59.8267553Z computing gzip size...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:59.8352789Z [32m✓ built in 2.18s[39m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:59.8412996Z [34m[5/5] build ssr environment...[39m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:04:59.8683886Z [2K
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.2570799Z transforming...✓ 136 modules transformed.
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.3446827Z rendering chunks...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.3839352Z computing gzip size...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.3915778Z [32m✓ built in 549ms[39m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4007007Z [0m
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4007443Z   Route (app)
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4007748Z   ─ ? /
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4007874Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4007970Z   ? Unknown
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4008096Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4008420Z   ? Some routes could not be classified. vinext currently uses static analysis
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4009070Z     and cannot detect dynamic API usage (headers(), cookies(), etc.) at build time.
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4009650Z     Automatic classification will be improved in a future release.
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4009952Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4010505Z   Build complete. Run `vinext start` to start the production server.
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.4010859Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.5433386Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.5434472Z > wattson-site@0.1.0 export:pages
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.5434996Z > node scripts/export-pages.mjs
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.5435234Z 
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.7836771Z Exported GitHub Pages site to /home/runner/work/battery-monitor/battery-monitor/docs/
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:00.8294119Z TAP version 13
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.0387374Z # Subtest: renders the complete English Wattson release page
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.0394345Z ok 1 - renders the complete English Wattson release page
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.0395531Z   ---
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.0396199Z   duration_ms: 177.500552
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.0397212Z   ...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.0779373Z # Subtest: groups the install routes in one compact, accessible panel
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.0781125Z ok 2 - groups the install routes in one compact, accessible panel
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.0781977Z   ---
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.0782596Z   duration_ms: 40.138668
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.0783520Z   ...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1143310Z # Subtest: shows the current AppKit popover instead of an invented web mock
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1144697Z ok 3 - shows the current AppKit popover instead of an invented web mock
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1145481Z   ---
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1145961Z   duration_ms: 36.493711
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1146325Z   ...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1150078Z # Subtest: ships the required static assets
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1151842Z ok 4 - ships the required static assets
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1152580Z   ---
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1152974Z   duration_ms: 0.983031
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1153401Z   ...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1178289Z # Subtest: exports a server-independent GitHub Pages document
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1180156Z ok 5 - exports a server-independent GitHub Pages document
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1181234Z   ---
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1181676Z   duration_ms: 2.901494
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1182131Z   ...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1191502Z # Subtest: preserves non-site documentation during the Pages export
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1192830Z ok 6 - preserves non-site documentation during the Pages export
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1202180Z   ---
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1210587Z   duration_ms: 1.109955
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1211324Z   ...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1212166Z # Subtest: lets release workflows read VERSION when the optional input is blank
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1213331Z ok 7 - lets release workflows read VERSION when the optional input is blank
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1214063Z   ---
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1214426Z   duration_ms: 2.078082
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1214836Z   ...
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1378378Z 1..7
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1378793Z # tests 7
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1379147Z # suites 0
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1379481Z # pass 7
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1379843Z # fail 0
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1382567Z # cancelled 0
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1382950Z # skipped 0
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1383286Z # todo 0
+Build the static Pages artifact	Build and test the rendered website	2026-10-18T17:05:01.1383679Z # duration_ms 320.014687
+Build the static Pages artifact	Lint the website	﻿2026-10-18T17:05:01.1520204Z ##[group]Run npm run lint
+Build the static Pages artifact	Lint the website	2026-10-18T17:05:01.1521148Z [36;1mnpm run lint[0m
+Build the static Pages artifact	Lint the website	2026-10-18T17:05:01.1606407Z shell: /usr/bin/bash -e {0}
+Build the static Pages artifact	Lint the website	2026-10-18T17:05:01.1606684Z env:
+Build the static Pages artifact	Lint the website	2026-10-18T17:05:01.1606911Z   NEXT_PUBLIC_RELEASE_VERSION: v4.3.22
+Build the static Pages artifact	Lint the website	2026-10-18T17:05:01.1607201Z   GITHUB_PAGES: true
+Build the static Pages artifact	Lint the website	2026-10-18T17:05:01.1607429Z ##[endgroup]
+Build the static Pages artifact	Lint the website	2026-10-18T17:05:01.2643415Z 
+Build the static Pages artifact	Lint the website	2026-10-18T17:05:01.2643966Z > wattson-site@0.1.0 lint
+Build the static Pages artifact	Lint the website	2026-10-18T17:05:01.2644531Z > eslint . --ignore-pattern dist --ignore-pattern .next
+Build the static Pages artifact	Lint the website	2026-10-18T17:05:01.2644815Z 
+Build the static Pages artifact	Export and validate the project-scoped static site	﻿2026-10-18T17:05:03.9762797Z ##[group]Run npm run export:pages
+Build the static Pages artifact	Export and validate the project-scoped static site	2026-10-18T17:05:03.9763244Z [36;1mnpm run export:pages[0m
+Build the static Pages artifact	Export and validate the project-scoped static site	2026-10-18T17:05:03.9825624Z shell: /usr/bin/bash -e {0}
+Build the static Pages artifact	Export and validate the project-scoped static site	2026-10-18T17:05:03.9825903Z env:
+Build the static Pages artifact	Export and validate the project-scoped static site	2026-10-18T17:05:03.9826136Z   NEXT_PUBLIC_RELEASE_VERSION: v4.3.22
+Build the static Pages artifact	Export and validate the project-scoped static site	2026-10-18T17:05:03.9826431Z   GITHUB_PAGES: true
+Build the static Pages artifact	Export and validate the project-scoped static site	2026-10-18T17:05:03.9826664Z ##[endgroup]
+Build the static Pages artifact	Export and validate the project-scoped static site	2026-10-18T17:05:04.0866623Z 
+Build the static Pages artifact	Export and validate the project-scoped static site	2026-10-18T17:05:04.0867350Z > wattson-site@0.1.0 export:pages
+Build the static Pages artifact	Export and validate the project-scoped static site	2026-10-18T17:05:04.0868109Z > node scripts/export-pages.mjs
+Build the static Pages artifact	Export and validate the project-scoped static site	2026-10-18T17:05:04.0868468Z 
+Build the static Pages artifact	Export and validate the project-scoped static site	2026-10-18T17:05:04.3263572Z Exported GitHub Pages site to /home/runner/work/battery-monitor/battery-monitor/docs/
+Build the static Pages artifact	Upload the Pages artifact	﻿2026-10-18T17:05:04.3459321Z ##[group]Run actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3459799Z with:
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3460005Z   path: docs
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3460498Z   name: github-pages
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3460826Z   retention-days: 1
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3461063Z   include-hidden-files: false
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3461316Z env:
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3461527Z   NEXT_PUBLIC_RELEASE_VERSION: v4.3.22
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3461815Z   GITHUB_PAGES: true
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3462034Z ##[endgroup]
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3521887Z ##[start-action display=Archive artifact;id=__actions_upload-pages-artifact.__run]
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3572915Z ##[group]Run echo ::group::Archive artifact
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3573281Z [36;1mecho ::group::Archive artifact[0m
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3573554Z [36;1mtar \[0m
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3573802Z [36;1m  --dereference --hard-dereference \[0m
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3574283Z [36;1m  --directory "$INPUT_PATH" \[0m
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3574582Z [36;1m  -cvf "$RUNNER_TEMP/artifact.tar" \[0m
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3574916Z [36;1m  --exclude=.git \[0m
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3575173Z [36;1m  --exclude=.github \[0m
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3575430Z [36;1m  --exclude=.[^/]* \[0m
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3575662Z [36;1m  .[0m
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3575868Z [36;1mecho ::endgroup::[0m
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3601069Z shell: /usr/bin/sh -e {0}
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3601337Z env:
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3601552Z   NEXT_PUBLIC_RELEASE_VERSION: v4.3.22
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3601841Z   GITHUB_PAGES: true
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3602059Z   INPUT_PATH: docs
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3602268Z ##[endgroup]
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3644398Z ##[group]Archive artifact
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3658399Z ./
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3658856Z ./battery-time-estimate.md
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3659321Z ./og.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3666474Z ./superpowers/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3666920Z ./superpowers/plans/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3667518Z ./superpowers/plans/2026-08-13-settings-window.md
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3668138Z ./superpowers/specs/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3668790Z ./superpowers/specs/2026-08-13-settings-window-design.md
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3669441Z ./superpowers/specs/assets/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3669894Z ./superpowers/specs/assets/wattson-settings-c-plus-e.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3678000Z ./design/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3678398Z ./design/v4.3.22/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3678863Z ./design/v4.3.22/manifest.json
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3681181Z ./design/v4.3.22/Wattson-v4.3.22-General-SVG.zip
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3681859Z ./design/v4.3.22/prepare-assets.py
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3682415Z ./design/v4.3.22/SHA256SUMS.txt
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3683035Z ./design/v4.3.22/Wattson-v4.3.22-Power-SVG.zip
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3683588Z ./design/v4.3.22/svg/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3684174Z ./design/v4.3.22/svg/general/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3684860Z ./design/v4.3.22/svg/general/update.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3685734Z ./design/v4.3.22/svg/general/feedback.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3686511Z ./design/v4.3.22/svg/general/automatic.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3687350Z ./design/v4.3.22/svg/general/battery.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3688198Z ./design/v4.3.22/svg/general/README.txt
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3688930Z ./design/v4.3.22/svg/general/login.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3689703Z ./design/v4.3.22/svg/modules/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3690635Z ./design/v4.3.22/svg/modules/runtime.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3691424Z ./design/v4.3.22/svg/modules/history.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3692260Z ./design/v4.3.22/svg/modules/flow.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3693031Z ./design/v4.3.22/svg/modules/lanes.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3693862Z ./design/v4.3.22/svg/modules/topProcesses.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3707061Z ./design/v4.3.22/svg/modules/ring.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3707795Z ./design/v4.3.22/svg/modules/README.txt
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3708418Z ./design/v4.3.22/svg/sidebar/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3709239Z ./design/v4.3.22/svg/sidebar/display.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3709885Z ./design/v4.3.22/svg/sidebar/modules.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3710705Z ./design/v4.3.22/svg/sidebar/general.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3711085Z ./design/v4.3.22/svg/sidebar/README.txt
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3711672Z ./design/v4.3.22/svg/power/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3712167Z ./design/v4.3.22/svg/power/system.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3712533Z ./design/v4.3.22/svg/power/disconnected.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3712894Z ./design/v4.3.22/svg/power/battery.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3713225Z ./design/v4.3.22/svg/power/charging.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3713545Z ./design/v4.3.22/svg/power/README.txt
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3713863Z ./design/v4.3.22/svg/power/adapter.svg
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3714152Z ./design/v4.3.22/previews/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3714497Z ./design/v4.3.22/previews/process-detailed-dark.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3714915Z ./design/v4.3.22/previews/process-compact-dark.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3715335Z ./design/v4.3.22/previews/general-vector-preview.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3715751Z ./design/v4.3.22/previews/power-vector-preview.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3716158Z ./design/v4.3.22/previews/process-compact-light.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3716776Z ./design/v4.3.22/previews/sidebar-vector-preview.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3717178Z ./design/v4.3.22/previews/vector-preview.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3717559Z ./design/v4.3.22/previews/power-state-matrix.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3718274Z ./design/v4.3.22/previews/process-detailed-light.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3718965Z ./design/v4.3.22/index.html
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3719601Z ./design/v4.3.22/render-previews.sh
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3720175Z ./design/v4.3.22/README.md
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3721128Z ./design/v4.3.22/Wattson-v4.3.22-Modules-SVG.zip
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3721977Z ./design/v4.3.22/render-process-preview.swift
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3722712Z ./design/v4.3.22/Wattson-v4.3.22-Sidebar-SVG.zip
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3723260Z ./wattson-popover-real.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3723535Z ./index.html
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3723753Z ./favicon.png
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3723963Z ./404.html
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3724192Z ./top-energy-processes.md
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3724434Z ./releases/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3724658Z ./releases/v4.3.22/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3724937Z ./releases/v4.3.22/release-notes.md
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3725213Z ./_next/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3725405Z ./_next/static/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3725645Z ./_next/static/_vinext_fonts/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3725995Z ./_next/static/_vinext_fonts/geist-8ac0455e797f/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3726482Z ./_next/static/_vinext_fonts/geist-8ac0455e797f/geist-001175b1.woff2
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3727010Z ./_next/static/_vinext_fonts/geist-8ac0455e797f/geist-ff2310f5.woff2
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3727521Z ./_next/static/_vinext_fonts/geist-8ac0455e797f/geist-875ccdd4.woff2
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3728029Z ./_next/static/_vinext_fonts/geist-8ac0455e797f/geist-52306abf.woff2
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3728533Z ./_next/static/_vinext_fonts/geist-8ac0455e797f/geist-98bbbccb.woff2
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3728985Z ./_next/static/_vinext_fonts/geist-mono-00e989178794/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3729511Z ./_next/static/_vinext_fonts/geist-mono-00e989178794/geist-mono-971fb274.woff2
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3730110Z ./_next/static/_vinext_fonts/geist-mono-00e989178794/geist-mono-0638449e.woff2
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3731096Z ./_next/static/_vinext_fonts/geist-mono-00e989178794/geist-mono-44e03052.woff2
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3731687Z ./_next/static/_vinext_fonts/geist-mono-00e989178794/geist-mono-44745446.woff2
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3732262Z ./_next/static/_vinext_fonts/geist-mono-00e989178794/geist-mono-f6b33328.woff2
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3732846Z ./_next/static/_vinext_fonts/geist-mono-00e989178794/geist-mono-013b2f2f.woff2
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3733246Z ./_next/static/css/
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3733528Z ./_next/static/css/index.DiQt9SzU.css
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3734001Z ##[endgroup]
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3745610Z ##[end-action id=__actions_upload-pages-artifact.__run;outcome=success;conclusion=success;duration_ms=22]
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3750020Z ##[start-action display=Archive artifact;id=__actions_upload-pages-artifact.__run_2]
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3755918Z ##[end-action id=__actions_upload-pages-artifact.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3758765Z ##[start-action display=Archive artifact;id=__actions_upload-pages-artifact.__run_3]
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3763373Z ##[end-action id=__actions_upload-pages-artifact.__run_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3765410Z ##[start-action display=Upload artifact;id=__actions_upload-pages-artifact.upload-artifact]
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3804056Z ##[group]Run actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3804471Z with:
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3804674Z   name: github-pages
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3804930Z   path: /home/runner/work/_temp/artifact.tar
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3805229Z   retention-days: 1
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3805451Z   if-no-files-found: error
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3805693Z   compression-level: 6
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3805912Z   overwrite: false
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3806135Z   include-hidden-files: false
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3806378Z   archive: true
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3806575Z env:
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3806917Z   NEXT_PUBLIC_RELEASE_VERSION: v4.3.22
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3807191Z   GITHUB_PAGES: true
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.3807404Z ##[endgroup]
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.5272615Z With the provided path, there will be 1 file uploaded
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.5274148Z Artifact name is valid!
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.5275236Z Root directory input is valid!
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.7191638Z Uploading artifact: github-pages.zip
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:04.7265982Z Beginning upload of artifact content to blob storage
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:05.0785373Z Uploaded bytes 3161950
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:05.0940863Z Finished uploading artifact content to blob storage!
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:05.0942705Z SHA256 digest of uploaded artifact is 404b6b06d3b5624dccd9c3f740399a5a90c1036c3714599fb224b815a3387632
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:05.0943982Z Finalizing artifact upload
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:05.3501530Z Artifact github-pages successfully finalized. Artifact ID 12144470435
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:05.3503257Z Artifact github-pages has been successfully uploaded! Final size is 3161950 bytes. Artifact ID is 12144470435
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:05.3506240Z Artifact download URL: https://github.com/laleoarrow/battery-monitor/actions/runs/39147879672/artifacts/12144470435
+Build the static Pages artifact	Upload the Pages artifact	2026-10-18T17:05:05.3613460Z ##[end-action id=__actions_upload-pages-artifact.upload-artifact;outcome=success;conclusion=success;duration_ms=984]
+Build the static Pages artifact	Post Set up Node.js	﻿2026-10-18T17:05:05.3716232Z Post job cleanup.
+Build the static Pages artifact	Post Set up Node.js	2026-10-18T17:05:05.4842517Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-0ac22d024bb03ef0133a439258b27339c172387865a837b94ad6706ce3308aac, not saving cache.
+Build the static Pages artifact	Post Check out the repository	﻿2026-10-18T17:05:05.4975807Z Post job cleanup.
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.5826343Z [command]/usr/bin/git version
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.5874345Z git version 2.55.0
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.5922827Z Temporarily overriding HOME='/home/runner/work/_temp/2147e4b6-c07b-495f-a880-2612ecede66c' before making global git config changes
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.5924708Z Adding repository directory to the temporary git global config as a safe directory
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.5930063Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/battery-monitor/battery-monitor
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.5968499Z Removing SSH command configuration
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.5977211Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.6023734Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.6282515Z Removing HTTP extra header
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.6289085Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.6328053Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.6590497Z Removing includeIf entries pointing to credentials config files
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.6602448Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Build the static Pages artifact	Post Check out the repository	2026-10-18T17:05:05.6640450Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Build the static Pages artifact	Complete job	﻿2026-10-18T17:05:05.7045239Z Cleaning up orphan processes
+Deploy GitHub Pages	Set up job	﻿2026-10-18T17:05:12.1897699Z Current runner version: '2.337.0'
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1923086Z ##[group]Runner Image Provisioner
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1923984Z Hosted Compute Agent
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1924631Z Version: 20261012.601
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1925324Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1926046Z Build Date: 2026-10-12T17:48:21Z
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1926805Z Worker ID: {5ec21ed0-1e3b-4ff5-859d-8441557f1f08}
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1927543Z Region: westus3
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1928111Z Cloud: Azure
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1928941Z ##[endgroup]
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1930816Z ##[group]Operating System
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1931457Z Ubuntu
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1932076Z 24.04.5
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1932617Z LTS
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1933167Z ##[endgroup]
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1933742Z ##[group]Runner Image
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1934362Z Image: ubuntu-24.04
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1934990Z Version: 20261012.334.1
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1936089Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1937840Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1939118Z ##[endgroup]
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1940399Z ##[group]GITHUB_TOKEN Permissions
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1942318Z Contents: read
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1943044Z Metadata: read
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1943600Z Pages: write
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1944174Z ##[endgroup]
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1946355Z Secret source: Actions
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1947373Z Cache mode: write
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.1948075Z Prepare workflow directory
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.2300908Z Prepare all required actions
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.2354202Z Getting action download info
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:12.5370735Z Download action repository 'actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128' (SHA:cd2ce8fcbc39b97be8ca5fce6e763baed58fa128)
+Deploy GitHub Pages	Set up job	2026-10-18T17:05:13.6054071Z Complete job name: Deploy GitHub Pages
+Deploy GitHub Pages	Deploy to GitHub Pages	﻿2026-10-18T17:05:13.6908301Z ##[group]Run actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:13.6909920Z with:
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:13.6914513Z   token: ***
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:13.6914987Z   timeout: 600000
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:13.6915469Z   error_count: 10
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:13.6915969Z   reporting_interval: 5000
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:13.6916522Z   artifact_name: github-pages
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:13.6917075Z   preview: false
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:13.6917780Z ##[endgroup]
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:13.8905447Z (node:2184) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:13.8908453Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:14.1177887Z Fetching artifact metadata for "github-pages" in this workflow run
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:14.3260660Z Found 1 artifact(s)
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:14.3275270Z Creating Pages deployment with payload:
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:14.3276925Z {
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:14.3277830Z 	"artifact_id": 12144470435,
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:14.3279902Z 	"pages_build_version": "7f41533b017d26519a69d541d3ffd2dea587f413",
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:14.3461049Z 	"oidc_token": "***"
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:14.3461897Z }
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:15.4565438Z Created deployment for 7f41533b017d26519a69d541d3ffd2dea587f413, ID: 7f41533b017d26519a69d541d3ffd2dea587f413
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:20.6756284Z Getting Pages deployment status...
+Deploy GitHub Pages	Deploy to GitHub Pages	2026-10-18T17:05:20.9679163Z Reported success!
+Deploy GitHub Pages	Complete job	﻿2026-10-18T17:05:20.9993979Z Evaluate and set environment url
+Deploy GitHub Pages	Complete job	2026-10-18T17:05:21.0000147Z Evaluated environment url: https://laleoarrow.github.io/battery-monitor/
+Deploy GitHub Pages	Complete job	2026-10-18T17:05:21.0001452Z Cleaning up orphan processes

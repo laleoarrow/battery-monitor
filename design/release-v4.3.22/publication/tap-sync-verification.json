@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "allMutationChecksPassed": true,
+  "tapCommit": "8ba66c2e53e5f51393708c9a6e5c76644841b50e",
+  "baseCommit": "7b4e9b017a1d2dcd38a5e7e2a4f579c740ef3731",
+  "remoteMainMatches": true,
+  "publicCaskBytesMatch": true,
+  "changedBlobPaths": [
+    "Casks/wattson.rb"
+  ],
+  "unchangedBlobCount": 5,
+  "idataBlobBefore": "570eb4077db1f87230284966d40900bd32e59b5e",
+  "idataBlobAfter": "570eb4077db1f87230284966d40900bd32e59b5e",
+  "publicCaskSHA256": "70ac7868a88995d8bb50183bdd63d8f97285cfdb8ad419e32c9928fc650b601c",
+  "version": "4.3.22",
+  "publicPKGSHA256": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995",
+  "rubySyntax": "Syntax OK",
+  "diffAdditions": 2,
+  "diffDeletions": 2,
+  "localCheckoutRemoved": true,
+  "scratchEmpty": true,
+  "runnerDiagnostics": [
+    "Initial repo-root path typo failed before checkout creation; corrected before sync.",
+    "A live runner script edit affected its final logging parse after successful push and remote SHA comparison. The raw diagnostic is preserved. Remote commit/tree/cask API proofs independently validate the mutation; no duplicate push or retry occurred."
+  ],
+  "ciPending": false,
+  "runnerExitCodeNotUsedAsSuccessProof": true,
+  "ownedCheckoutProcessAuditPassed": true,
+  "exactTapCIRunID": 39147269521,
+  "exactTapCIAllThreeJobsSuccess": true
+}

@@ -1,0 +1,119 @@
+{
+  "conclusion": "",
+  "databaseId": 39137918718,
+  "event": "workflow_dispatch",
+  "headBranch": "main",
+  "headSha": "9d157d496024d32b0f65ec3fe9b1c927678352fc",
+  "jobs": [
+    {
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "databaseId": 117706126321,
+      "name": "Build universal PKG and DMG once",
+      "startedAt": "2026-10-18T14:52:16Z",
+      "status": "in_progress",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T14:52:17Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T14:52:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T14:52:32Z",
+          "conclusion": "success",
+          "name": "Check out the candidate",
+          "number": 2,
+          "startedAt": "2026-10-18T14:52:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T14:52:33Z",
+          "conclusion": "success",
+          "name": "Require Headless CI on the frozen main commit",
+          "number": 3,
+          "startedAt": "2026-10-18T14:52:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T14:52:33Z",
+          "conclusion": "success",
+          "name": "Resolve and validate the candidate version",
+          "number": 4,
+          "startedAt": "2026-10-18T14:52:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T14:58:44Z",
+          "conclusion": "success",
+          "name": "Run headless release tests",
+          "number": 5,
+          "startedAt": "2026-10-18T14:52:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:04:47Z",
+          "conclusion": "success",
+          "name": "Replay real AppKit interaction and animation lifecycles",
+          "number": 6,
+          "startedAt": "2026-10-18T14:58:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:04:47Z",
+          "conclusion": "skipped",
+          "name": "Import the Developer ID and notarization credentials",
+          "number": 7,
+          "startedAt": "2026-10-18T15:04:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Build and verify the release artifacts",
+          "number": 8,
+          "startedAt": "2026-10-18T15:04:47Z",
+          "status": "in_progress"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Scrub signing credentials",
+          "number": 9,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Upload the exact release candidate bytes",
+          "number": 10,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Upload the release build log",
+          "number": 11,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Post Check out the candidate",
+          "number": 22,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39137918718/job/117706126321"
+    }
+  ],
+  "status": "in_progress",
+  "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39137918718",
+  "workflowName": "Wattson release candidate"
+}

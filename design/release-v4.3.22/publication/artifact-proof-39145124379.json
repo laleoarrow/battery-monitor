@@ -1,0 +1,117 @@
+{
+  "archive_bytes": 13594989,
+  "archive_sha256": "b77ea10608e2238ea5c29dc2085ad04c0a1b01f9fcff0a342393c730a9207b0d",
+  "artifact_id": 12143358543,
+  "artifact_name": "Wattson-release-candidate-v4.3.22",
+  "candidate_run_id": 39145124379,
+  "checked_at_utc": "2026-10-18T16:52:47.886477+00:00",
+  "cleanup": {
+    "before_after_equal": {
+      "canonical_app_version": true,
+      "canonical_files": true,
+      "canonical_running_pids": true,
+      "receipt": true,
+      "selected_wattson_registered_paths": true
+    },
+    "canonical_install_modified": false,
+    "canonical_required_files_and_receipt_present": true,
+    "canonical_running_pids": {
+      "app": [
+        80435
+      ],
+      "helper": [
+        80414
+      ]
+    },
+    "owned_mounts_after": [],
+    "owned_parent_scratch_empty": true,
+    "owned_process_references_after": [],
+    "owned_workspaces_removed": {
+      "artifact-initial-watch-workspace-39145124379.txt": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/artifact-v4.3.22.noindex/run.TgQr60",
+      "artifact-selection-watch-workspace-39145124379.txt": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/artifact-v4.3.22.noindex/run.QidM5B",
+      "artifact-workspace-39145124379.txt": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/artifact-v4.3.22.noindex/run.PKQPnN"
+    },
+    "private_credentials_redirects_fragments_expansions_removed": true,
+    "shared_lifecycle": "scripts/lib/local_cleanup.sh + run_owned.py; bounded children and catchable-signal cleanup",
+    "sole_wattson_launchservices_path": "/Applications/Wattson.app",
+    "test_preferences_or_containers_created": false
+  },
+  "exact_four_files": {
+    "SHA256SUMS.txt": {
+      "bytes": 303,
+      "sha256": "adab1f7501fd7adc39f69f42446a7d359ebf7f3b6f0f3b60c7c6302940dd6697"
+    },
+    "Wattson-v4.3.22-macos-universal.dmg": {
+      "bytes": 6779793,
+      "sha256": "946de7159e483c0419d5d3ecc79f0b8cc6b673ee7201c53de45fdf2a8b722523"
+    },
+    "Wattson-v4.3.22-macos-universal.pkg": {
+      "bytes": 6900303,
+      "sha256": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995"
+    },
+    "Wattson-v4.3.22-release-info.txt": {
+      "bytes": 395,
+      "sha256": "7f1706b2952afd3e1bacda22053ef81cfbc4732a643eb3a8e3302315eb2f01e5"
+    }
+  },
+  "inspection_helpers_sha256": {
+    "artifact-inspect-39145124379.py": "cc113601b730a9c9ac47c81aaccf29a7757698ad9ed02ae0a1302da360335fc0",
+    "artifact-transfer-39145124379.py": "1ffa0d8abf610cf3c1543fa9fa1410e9ee567e1dd7b46a53e33cb10a88a929cf",
+    "artifact-verify-39145124379.sh": "28e9c93fb1c931864f4173ef91d47ccc633b4b69058ab913584fdab68b861f5a"
+  },
+  "limits": [
+    "Local static verification did not install or launch the candidate App/helper.",
+    "Existing canonical 4.3.22 binary hashes remain unchanged and differ from this hosted candidate; maintainer sync is a later release action.",
+    "Community artifacts are ad-hoc/unsigned; no Developer ID, notarization, stapling or Gatekeeper-acceptance claim.",
+    "Hosted install matrix and publication authorization are independently owned by the root release task.",
+    "The unrelated historical 4.3.2 temporary ZIP was left untouched."
+  ],
+  "preserved_prior_stops": [
+    "artifact-owner-startup-error-39145124379.log",
+    "artifact-initial-watch-lifecycle-39145124379.log",
+    "artifact-initial-watch-cleanup-39145124379.json",
+    "artifact-selection-watch-lifecycle-39145124379.log",
+    "artifact-selection-watch-cleanup-39145124379.json"
+  ],
+  "real_verification": {
+    "actual_environment": {
+      "WATTSON_EXPECT_DMG_SIGNED": "0",
+      "WATTSON_EXPECT_INSTALLER_SIGNED": "0",
+      "WATTSON_EXPECT_NOTARIZED": "0",
+      "WATTSON_EXPECT_TEAM_ID": ""
+    },
+    "actual_pkg_and_dmg_signatures": "unsigned",
+    "app_and_helper_architectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "app_entitlements_match_frozen_on_both_slices": true,
+    "completion_marker": "Verified Wattson 4.3.22: full PKG and DMG contain byte-identical apps",
+    "debug_entitlements_absent": true,
+    "minimum_macos": "12.0",
+    "owner_exit_code": 0,
+    "per_slice_actual_app_and_helper_signatures": "ad-hoc; no TeamIdentifier or Authority",
+    "pkg_dmg_apps_byte_identical": true,
+    "rebuild_performed": false,
+    "release_build_root_unset": true,
+    "source": "frozen git archive of 7f41533b017d26519a69d541d3ffd2dea587f413",
+    "source_hashes": {
+      "BatteryPowerApp.entitlements": "7c701bfd8298ead217eaad4e805fcc51cefd7ae910ef33a3792594b97f2f92f5",
+      "VERSION": "cef71cc27055570f4069332e460f533261d9c81053a8cdff6d16eb68765cc82b",
+      "scripts/lib/local_cleanup.sh": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+      "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+      "scripts/verify_dmg.sh": "f435b86a6c90e44b6ccf8b36fa5249f6b3c5329b02d5d4d15d56a861760aa03d",
+      "scripts/verify_release.sh": "b09b5d7d8e205b1bafed5c3375702469a179446e5ed0d2126c3c432bf7d34712"
+    },
+    "standalone_packaged_inputs": true
+  },
+  "retained_directory": "dist/github-candidate-v4.3.22-39145124379",
+  "source_sha": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "status": "passed",
+  "strict_contract": {
+    "exact_fifteen_metadata_fields": true,
+    "github_zip_digest_and_size": true,
+    "three_unique_manifest_entries": true,
+    "zip_crc_and_exact_four_regular_files": true
+  }
+}

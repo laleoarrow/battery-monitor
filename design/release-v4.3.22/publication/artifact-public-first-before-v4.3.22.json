@@ -1,0 +1,92 @@
+{
+  "action": "snapshot",
+  "canonical_app_version": {
+    "CFBundleShortVersionString": "4.3.22",
+    "CFBundleVersion": "4.3.22"
+  },
+  "canonical_files": {
+    "app_code_resources": {
+      "present": true,
+      "sha256": "4258af545975b5a8a958bf40971ff28a34d6e8266baa73eded9798c496ebdb31",
+      "size": 4644
+    },
+    "app_executable": {
+      "present": true,
+      "sha256": "6a721cc8fc83110df986f1ea647639ce521f46215d5c05ef0123d4475262388f",
+      "size": 6894272
+    },
+    "app_info": {
+      "present": true,
+      "sha256": "538d891eacf371bd34cd27e4966323c8dca6662d021c7b4ddeb031ae48ed3c2b",
+      "size": 991
+    },
+    "daemon": {
+      "present": true,
+      "sha256": "29cd39cb617610c7e42c5c28549d8334c45fbcaf4b1f188fc35bdd6f13f4a599",
+      "size": 783
+    },
+    "helper": {
+      "present": true,
+      "sha256": "06699d001b972bd4bf66fdd35e447a7063fa08067cfef517ffa53b145bcdd870",
+      "size": 1084400
+    },
+    "receipt_bom": {
+      "present": true,
+      "sha256": "c638794da8c6a190ebff9d6c60a25b6c0a6e4d38f7488dfbd0ae58854595ef27",
+      "size": 64600
+    },
+    "receipt_plist": {
+      "present": true,
+      "sha256": "6eb845303f4ae1d922030e8bf648cbdc48a4b773552716624597442b8512b67a",
+      "size": 250
+    }
+  },
+  "canonical_running_pids": {
+    "app": [
+      80435
+    ],
+    "helper": [
+      80414
+    ]
+  },
+  "checked_at_utc": "2026-10-18T16:56:10.249618+00:00",
+  "commands": [
+    {
+      "check": "canonical receipt",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "canonical process identities",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "owned workspace process references",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "selected Wattson LaunchServices paths",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "owned workspace mounts",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    }
+  ],
+  "receipt": {
+    "present": true,
+    "version": "4.3.22"
+  },
+  "selected_wattson_registered_paths": [
+    "/Applications/Wattson.app"
+  ],
+  "status": "passed",
+  "workspace_exists": true,
+  "workspace_mount_references": [],
+  "workspace_process_references": [],
+  "workspace_process_references_exclude_observer": true
+}

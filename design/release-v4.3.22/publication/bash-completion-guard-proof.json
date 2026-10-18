@@ -1,0 +1,60 @@
+{
+  "shell": "GNU bash, version 3.2.57(1)-release (arm64-apple-darwin25)",
+  "scope": "Guard prefix only; no canonical filesystem, receipt or service queries executed.",
+  "results": [
+    {
+      "source": "frozen67",
+      "DMG": "",
+      "PKG": "true",
+      "expectV2": "false",
+      "exitCode": 0,
+      "stdout": "past-completion-guards\n",
+      "stderr": ""
+    },
+    {
+      "source": "frozen67",
+      "DMG": "true",
+      "PKG": "",
+      "expectV2": "false",
+      "exitCode": 0,
+      "stdout": "past-completion-guards\n",
+      "stderr": ""
+    },
+    {
+      "source": "frozen67",
+      "DMG": "true",
+      "PKG": "true",
+      "expectV2": "true",
+      "exitCode": 0,
+      "stdout": "past-completion-guards\n",
+      "stderr": ""
+    },
+    {
+      "source": "explicit-exit",
+      "DMG": "",
+      "PKG": "true",
+      "expectV2": "false",
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Missing DMG lifecycle completion\n"
+    },
+    {
+      "source": "explicit-exit",
+      "DMG": "true",
+      "PKG": "",
+      "expectV2": "false",
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Missing PKG lifecycle completion\n"
+    },
+    {
+      "source": "explicit-exit",
+      "DMG": "true",
+      "PKG": "true",
+      "expectV2": "true",
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Missing V2 lifecycle completion\n"
+    }
+  ]
+}

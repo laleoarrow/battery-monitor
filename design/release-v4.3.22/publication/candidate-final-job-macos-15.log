@@ -1,0 +1,1157 @@
+Install on macos-15	Set up job	﻿2026-10-18T15:06:35.2635700Z Current runner version: '2.337.0'
+Install on macos-15	Set up job	2026-10-18T15:06:35.2654980Z ##[group]Runner Image Provisioner
+Install on macos-15	Set up job	2026-10-18T15:06:35.2655710Z Hosted Compute Agent
+Install on macos-15	Set up job	2026-10-18T15:06:35.2656170Z Version: 20260828.587
+Install on macos-15	Set up job	2026-10-18T15:06:35.2656670Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+Install on macos-15	Set up job	2026-10-18T15:06:35.2657230Z Build Date: 2026-08-28T16:44:25Z
+Install on macos-15	Set up job	2026-10-18T15:06:35.2657750Z Worker ID: {182b545b-3257-4527-8b1f-c84e29290c0b}
+Install on macos-15	Set up job	2026-10-18T15:06:35.2658310Z Azure Region: westus
+Install on macos-15	Set up job	2026-10-18T15:06:35.2658760Z ##[endgroup]
+Install on macos-15	Set up job	2026-10-18T15:06:35.2660930Z ##[group]Operating System
+Install on macos-15	Set up job	2026-10-18T15:06:35.2661500Z macOS
+Install on macos-15	Set up job	2026-10-18T15:06:35.2661910Z 15.7.9
+Install on macos-15	Set up job	2026-10-18T15:06:35.2662320Z 24G830
+Install on macos-15	Set up job	2026-10-18T15:06:35.2662730Z ##[endgroup]
+Install on macos-15	Set up job	2026-10-18T15:06:35.2663190Z ##[group]Runner Image
+Install on macos-15	Set up job	2026-10-18T15:06:35.2663660Z Image: macos-15-arm64
+Install on macos-15	Set up job	2026-10-18T15:06:35.2664110Z Version: 20260907.0337.1
+Install on macos-15	Set up job	2026-10-18T15:06:35.2664930Z Included Software: https://github.com/actions/runner-images/blob/macos-15-arm64/20260907.0337/images/macos/macos-15-arm64-Readme.md
+Install on macos-15	Set up job	2026-10-18T15:06:35.2666170Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15-arm64%2F20260907.0337
+Install on macos-15	Set up job	2026-10-18T15:06:35.2666900Z ##[endgroup]
+Install on macos-15	Set up job	2026-10-18T15:06:35.2667850Z ##[group]GITHUB_TOKEN Permissions
+Install on macos-15	Set up job	2026-10-18T15:06:35.2670240Z Actions: read
+Install on macos-15	Set up job	2026-10-18T15:06:35.2670690Z Contents: read
+Install on macos-15	Set up job	2026-10-18T15:06:35.2671170Z Metadata: read
+Install on macos-15	Set up job	2026-10-18T15:06:35.2671620Z ##[endgroup]
+Install on macos-15	Set up job	2026-10-18T15:06:35.2673460Z Secret source: Actions
+Install on macos-15	Set up job	2026-10-18T15:06:35.2674150Z Cache mode: write
+Install on macos-15	Set up job	2026-10-18T15:06:35.2674720Z Prepare workflow directory
+Install on macos-15	Set up job	2026-10-18T15:06:35.3218490Z Prepare all required actions
+Install on macos-15	Set up job	2026-10-18T15:06:35.3260770Z Getting action download info
+Install on macos-15	Set up job	2026-10-18T15:06:35.6129270Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+Install on macos-15	Set up job	2026-10-18T15:06:36.0018060Z Download action repository 'actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c' (SHA:3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c)
+Install on macos-15	Set up job	2026-10-18T15:06:36.5407400Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+Install on macos-15	Set up job	2026-10-18T15:06:36.7140940Z Complete job name: Install on macos-15
+Install on macos-15	Check out the candidate lifecycle scripts	﻿2026-10-18T15:06:36.7697680Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7698740Z with:
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7699180Z   persist-credentials: false
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7699670Z   repository: laleoarrow/battery-monitor
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7702390Z   token: ***
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7702800Z   ssh-strict: true
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7703220Z   ssh-user: git
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7703620Z   clean: true
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7704050Z   sparse-checkout-cone-mode: true
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7704540Z   fetch-depth: 1
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7705060Z   fetch-tags: false
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7705540Z   show-progress: true
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7706320Z   lfs: false
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7706920Z   submodules: false
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7707580Z   set-safe-directory: true
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7708160Z   allow-unsafe-pr-checkout: false
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7709260Z env:
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7709700Z   WATTSON_VERSION: 4.3.22
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7710220Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7710840Z   EXPECTED_TEAM_ID: 
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:36.7711380Z ##[endgroup]
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.1873540Z Syncing repository: laleoarrow/battery-monitor
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.1875410Z ##[group]Getting Git version info
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.1876100Z Working directory is '/Users/runner/work/battery-monitor/battery-monitor'
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.1877050Z [command]/opt/homebrew/bin/git version
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2464120Z git version 2.55.0
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2521770Z ##[endgroup]
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2527500Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/d2ac1fa3-8774-44c5-b647-89c57312a9a2/.gitconfig'
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2590750Z Temporarily overriding HOME='/Users/runner/work/_temp/d2ac1fa3-8774-44c5-b647-89c57312a9a2' before making global git config changes
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2614500Z Adding repository directory to the temporary git global config as a safe directory
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2615600Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/battery-monitor/battery-monitor
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2730130Z Deleting the contents of '/Users/runner/work/battery-monitor/battery-monitor'
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2759430Z ##[group]Determining repository object format
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2760480Z ##[endgroup]
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2761190Z ##[group]Initializing the repository
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2761910Z [command]/opt/homebrew/bin/git init /Users/runner/work/battery-monitor/battery-monitor
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2980390Z hint: Using 'master' as the name for the initial branch. This default branch name
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2981680Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2982490Z hint: to use in all of your new repositories, which will suppress this warning,
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2983200Z hint: call:
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2983680Z hint:
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2984180Z hint: 	git config --global init.defaultBranch <name>
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2984730Z hint:
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2985270Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2986050Z hint: 'development'. The just-created branch can be renamed via this command:
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2986690Z hint:
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2987120Z hint: 	git branch -m <name>
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2987580Z hint:
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2988150Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.2989930Z Initialized empty Git repository in /Users/runner/work/battery-monitor/battery-monitor/.git/
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.3001360Z [command]/opt/homebrew/bin/git remote add origin https://github.com/laleoarrow/battery-monitor
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.3087210Z ##[endgroup]
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.3089360Z ##[group]Disabling automatic garbage collection
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.3091100Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.3154350Z ##[endgroup]
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.3156100Z ##[group]Setting up auth
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.3157380Z Removing SSH command configuration
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.3159100Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.3224040Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.4280090Z Removing HTTP extra header
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.4283250Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.4338150Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.5060500Z Removing includeIf entries pointing to credentials config files
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.5062960Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.5125640Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.5934550Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-c198f9ec-a275-41e4-8977-120c46b3eaf5.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.6003180Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git.path /Users/runner/work/_temp/git-credentials-c198f9ec-a275-41e4-8977-120c46b3eaf5.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.6060730Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-c198f9ec-a275-41e4-8977-120c46b3eaf5.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.6120290Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-c198f9ec-a275-41e4-8977-120c46b3eaf5.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.6180500Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-c198f9ec-a275-41e4-8977-120c46b3eaf5.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.6235670Z ##[endgroup]
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.6236480Z ##[group]Fetching the repository
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:37.6239810Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +9d157d496024d32b0f65ec3fe9b1c927678352fc:refs/remotes/origin/main
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7167440Z From https://github.com/laleoarrow/battery-monitor
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7176550Z  * [new ref]         9d157d496024d32b0f65ec3fe9b1c927678352fc -> origin/main
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7183600Z [command]/opt/homebrew/bin/git branch --list --remote origin/main
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7352660Z   origin/main
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7365970Z [command]/opt/homebrew/bin/git rev-parse refs/remotes/origin/main
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7454010Z 9d157d496024d32b0f65ec3fe9b1c927678352fc
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7460710Z ##[endgroup]
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7462030Z ##[group]Determining the checkout info
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7463180Z ##[endgroup]
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7464050Z [command]/opt/homebrew/bin/git sparse-checkout disable
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7558070Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7628090Z ##[group]Checking out the ref
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7630570Z [command]/opt/homebrew/bin/git checkout --progress --force -B main refs/remotes/origin/main
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.7990080Z Updating files:  51% (1984/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.8158840Z Updating files:  52% (1988/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.8253300Z Updating files:  53% (2026/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.8328510Z Updating files:  54% (2064/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.8543230Z Updating files:  55% (2103/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.8729870Z Updating files:  56% (2141/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.8898900Z Updating files:  57% (2179/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.9150660Z Updating files:  58% (2217/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.9192050Z Updating files:  59% (2255/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.9228440Z Updating files:  60% (2294/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.9451230Z Updating files:  61% (2332/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.9713300Z Updating files:  62% (2370/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:45.9793770Z Updating files:  63% (2408/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.1197690Z Updating files:  64% (2447/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.1430500Z Updating files:  65% (2485/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.1652010Z Updating files:  66% (2523/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.1850440Z Updating files:  67% (2561/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.1938550Z Updating files:  68% (2599/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.2191280Z Updating files:  69% (2638/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.2354630Z Updating files:  70% (2676/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.2585320Z Updating files:  71% (2714/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.2864710Z Updating files:  72% (2752/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.3056170Z Updating files:  73% (2791/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.3323080Z Updating files:  74% (2829/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.3592270Z Updating files:  75% (2867/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.3902150Z Updating files:  76% (2905/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4051170Z Updating files:  77% (2943/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4306620Z Updating files:  78% (2982/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4346050Z Updating files:  79% (3020/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4389230Z Updating files:  80% (3058/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4451460Z Updating files:  81% (3096/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4487280Z Updating files:  82% (3135/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4516000Z Updating files:  83% (3173/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4599290Z Updating files:  84% (3211/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4635940Z Updating files:  85% (3249/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4716350Z Updating files:  86% (3287/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4798760Z Updating files:  87% (3326/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.4854250Z Updating files:  88% (3364/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.5115600Z Updating files:  89% (3402/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.5463010Z Updating files:  90% (3440/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.5794330Z Updating files:  91% (3479/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.5996570Z Updating files:  92% (3517/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.6231260Z Updating files:  93% (3555/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.7106130Z Updating files:  94% (3593/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.7328530Z Updating files:  95% (3631/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.7642740Z Updating files:  96% (3670/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.7664860Z Updating files:  97% (3708/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.7727200Z Updating files:  98% (3746/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.7795990Z Updating files:  99% (3784/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.7796470Z Updating files: 100% (3822/3822)
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.7796820Z Updating files: 100% (3822/3822), done.
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.7862620Z Switched to a new branch 'main'
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.7868010Z branch 'main' set up to track 'origin/main'.
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.7893250Z ##[endgroup]
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.8017590Z [command]/opt/homebrew/bin/git log -1 --format=%H
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.8110610Z 9d157d496024d32b0f65ec3fe9b1c927678352fc
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.8142080Z ##[group]Removing auth
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.8143500Z Removing SSH command configuration
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.8157390Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.8249420Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.9060090Z Removing HTTP extra header
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.9062120Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.9120650Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.9919660Z Removing includeIf entries pointing to credentials config files
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.9923030Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.9984780Z includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git.path
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.9986170Z includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.9986780Z includeif.gitdir:/github/workspace/.git.path
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:46.9996760Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0000900Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git.path
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0065490Z /Users/runner/work/_temp/git-credentials-c198f9ec-a275-41e4-8977-120c46b3eaf5.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0083040Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-c198f9ec\-a275\-41e4\-8977\-120c46b3eaf5\.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0226330Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0362610Z /Users/runner/work/_temp/git-credentials-c198f9ec-a275-41e4-8977-120c46b3eaf5.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0371160Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-c198f9ec\-a275\-41e4\-8977\-120c46b3eaf5\.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0555530Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0661150Z /github/runner_temp/git-credentials-c198f9ec-a275-41e4-8977-120c46b3eaf5.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0666890Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-c198f9ec\-a275\-41e4\-8977\-120c46b3eaf5\.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0791000Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0889170Z /github/runner_temp/git-credentials-c198f9ec-a275-41e4-8977-120c46b3eaf5.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.0898400Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-c198f9ec\-a275\-41e4\-8977\-120c46b3eaf5\.config
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.1044390Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.2106410Z Removing credentials config '/Users/runner/work/_temp/git-credentials-c198f9ec-a275-41e4-8977-120c46b3eaf5.config'
+Install on macos-15	Check out the candidate lifecycle scripts	2026-10-18T15:06:47.2124210Z ##[endgroup]
+Install on macos-15	Download the single release build	﻿2026-10-18T15:06:47.2554160Z ##[group]Run actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2554580Z with:
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2554800Z   name: Wattson-release-candidate-v4.3.22
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2555140Z   path: /Users/runner/work/_temp/wattson-release
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2555430Z   merge-multiple: false
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2555700Z   repository: laleoarrow/battery-monitor
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2556100Z   run-id: 39137918718
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2556340Z   skip-decompress: false
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2556610Z   digest-mismatch: error
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2556810Z env:
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2556960Z   WATTSON_VERSION: 4.3.22
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2557150Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2557410Z   EXPECTED_TEAM_ID: 
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.2557790Z ##[endgroup]
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.4408200Z Downloading single artifact
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.6167040Z Preparing to download the following artifacts:
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.6168410Z - Wattson-release-candidate-v4.3.22 (ID: 12140767132, Size: 13594677, Expected Digest: sha256:c0d41cdce41ed0b0e7c9c303a638176b309b8ef94f40936b1c23d283d70c73db)
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.9416510Z Redirecting to blob download url: https://productionresultssa11.blob.core.windows.net/actions-results/4cbb2111-caab-464b-971b-224c37b08ff0/workflow-job-run-5c57e85b-a277-5478-bad5-75695141153d/artifacts/b40ec5bd434c6c65981e9a626e788edbcd30e0d6cb626f7dc0c6a301bdd3fa4f.zip
+Install on macos-15	Download the single release build	2026-10-18T15:06:47.9419400Z Starting download of artifact to: /Users/runner/work/_temp/wattson-release
+Install on macos-15	Download the single release build	2026-10-18T15:06:48.1051820Z (node:10031) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+Install on macos-15	Download the single release build	2026-10-18T15:06:48.1053150Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Install on macos-15	Download the single release build	2026-10-18T15:06:49.0479430Z SHA256 digest of downloaded artifact is c0d41cdce41ed0b0e7c9c303a638176b309b8ef94f40936b1c23d283d70c73db
+Install on macos-15	Download the single release build	2026-10-18T15:06:49.0481300Z Artifact download completed successfully.
+Install on macos-15	Download the single release build	2026-10-18T15:06:49.0481720Z Total of 1 artifact(s) downloaded
+Install on macos-15	Download the single release build	2026-10-18T15:06:49.0486390Z Download artifact has finished successfully
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	﻿2026-10-18T15:06:49.0616190Z ##[group]Run set -euo pipefail
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0617300Z [36;1mset -euo pipefail[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0617500Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0617730Z [36;1mreadonly RELEASE_DIR="$RUNNER_TEMP/wattson-release"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0618190Z [36;1mreadonly PKG_NAME="Wattson-v${WATTSON_VERSION}-macos-universal.pkg"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0618640Z [36;1mreadonly DMG_NAME="Wattson-v${WATTSON_VERSION}-macos-universal.dmg"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0619190Z [36;1mreadonly INFO_NAME="Wattson-v${WATTSON_VERSION}-release-info.txt"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0619560Z [36;1mreadonly PKG_PATH="$RELEASE_DIR/$PKG_NAME"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0619840Z [36;1mreadonly DMG_PATH="$RELEASE_DIR/$DMG_NAME"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0620160Z [36;1mreadonly INFO_PATH="$RELEASE_DIR/$INFO_NAME"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0620480Z [36;1mreadonly CHECKSUM_PATH="$RELEASE_DIR/SHA256SUMS.txt"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0621250Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0621450Z [36;1massert_metadata_line() {[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0621690Z [36;1m  local expected="$1"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0622120Z [36;1m  [[ "$(/usr/bin/awk -v expected="$expected" \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0622580Z [36;1m    '$0 == expected { count++ } END { print count + 0 }' "$INFO_PATH")" == "1" ]][0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0622900Z [36;1m}[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0623040Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0623220Z [36;1massert_metadata_key_once() {[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0623450Z [36;1m  local expected_key="$1"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0623820Z [36;1m  [[ "$(/usr/bin/awk -F= -v expected_key="$expected_key" \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0624280Z [36;1m    '$1 == expected_key { count++ } END { print count + 0 }' "$INFO_PATH")" == "1" ]][0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0624620Z [36;1m}[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0624770Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0624940Z [36;1massert_runner_temp_path() {[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0625170Z [36;1m  case "$1" in[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0625360Z [36;1m    "$RUNNER_TEMP"/*) ;;[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0625640Z [36;1m    *) echo "path escaped RUNNER_TEMP: $1" >&2; exit 1 ;;[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0625940Z [36;1m  esac[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0626090Z [36;1m}[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0626240Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0626440Z [36;1m[[ "$WATTSON_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]][0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0626800Z [36;1mfor artifact in "$PKG_PATH" "$DMG_PATH" "$INFO_PATH" "$CHECKSUM_PATH"; do[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0627170Z [36;1m  [[ -f "$artifact" && ! -L "$artifact" ]][0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0627420Z [36;1mdone[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0627670Z [36;1m[[ "$(/usr/bin/wc -l < "$CHECKSUM_PATH" | /usr/bin/tr -d ' ')" == "3" ]][0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0628070Z [36;1m/usr/bin/grep -Eq "^[0-9a-f]{64}  ${PKG_NAME}$" "$CHECKSUM_PATH"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0628450Z [36;1m/usr/bin/grep -Eq "^[0-9a-f]{64}  ${DMG_NAME}$" "$CHECKSUM_PATH"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0628860Z [36;1m/usr/bin/grep -Eq "^[0-9a-f]{64}  ${INFO_NAME}$" "$CHECKSUM_PATH"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0629140Z [36;1m([0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0629290Z [36;1m  cd "$RELEASE_DIR"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0629510Z [36;1m  /usr/bin/shasum -a 256 -c SHA256SUMS.txt[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0629750Z [36;1m)[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0629950Z [36;1massert_metadata_line "version=$WATTSON_VERSION"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0630270Z [36;1massert_metadata_line "architectures=arm64,x86_64"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0630560Z [36;1massert_metadata_line "minimum_macos=12.0"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0630900Z [36;1massert_metadata_line "install_path=/Applications/Wattson.app"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0631260Z [36;1massert_metadata_line "dmg_contents=app-only"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0631550Z [36;1massert_metadata_line "pkg_contents=app-and-helper"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0631850Z [36;1mfor metadata_key in \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0632070Z [36;1m  distribution_mode \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0632270Z [36;1m  app_signature \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0632490Z [36;1m  helper_signature \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0632700Z [36;1m  package_signature \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0632970Z [36;1m  dmg_signature \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0633600Z [36;1m  notarized \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0633830Z [36;1m  stapled; do[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0634140Z [36;1m  assert_metadata_key_once "$metadata_key"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0634470Z [36;1mdone[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0634660Z [36;1mcase "$WATTSON_DISTRIBUTION_MODE" in[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0634920Z [36;1m  community-ad-hoc)[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0635250Z [36;1m    [[ -z "$EXPECTED_TEAM_ID" ]][0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0635650Z [36;1m    assert_metadata_line "distribution_mode=community-ad-hoc"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0636000Z [36;1m    assert_metadata_line "app_signature=ad-hoc"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0636700Z [36;1m    assert_metadata_line "helper_signature=ad-hoc"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0637060Z [36;1m    assert_metadata_line "package_signature=unsigned"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0637380Z [36;1m    assert_metadata_line "dmg_signature=unsigned"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0637960Z [36;1m    assert_metadata_line "notarized=no"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0638230Z [36;1m    assert_metadata_line "stapled=no"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0638500Z [36;1m    SIGNED_RELEASE=0[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0638700Z [36;1m    ;;[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0638900Z [36;1m  developer-id-notarized)[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0639230Z [36;1m    [[ "$EXPECTED_TEAM_ID" =~ ^[A-Z0-9]{10}$ ]][0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0639570Z [36;1m    assert_metadata_line "distribution_mode=developer-id"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0639990Z [36;1m    assert_metadata_line "app_signature=developer-id"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0640420Z [36;1m    assert_metadata_line "helper_signature=developer-id"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0640830Z [36;1m    assert_metadata_line "package_signature=developer-id"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0641250Z [36;1m    assert_metadata_line "dmg_signature=developer-id"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0641600Z [36;1m    assert_metadata_line "notarized=yes"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0641890Z [36;1m    assert_metadata_line "stapled=yes"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0642170Z [36;1m    SIGNED_RELEASE=1[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0642410Z [36;1m    ;;[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0642590Z [36;1m  *)[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0642890Z [36;1m    echo "unexpected candidate distribution mode: $WATTSON_DISTRIBUTION_MODE" >&2[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0643230Z [36;1m    exit 1[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0643450Z [36;1m    ;;[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0643640Z [36;1mesac[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0643810Z [36;1mreadonly SIGNED_RELEASE[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0644000Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0644160Z [36;1mEXPAND_BASE=""[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0644340Z [36;1mcleanup() {[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0644590Z [36;1m  local status="$?"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0644860Z [36;1m  trap - EXIT[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0645090Z [36;1m  trap '' HUP INT TERM[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0645320Z [36;1m  if [[ -n "$EXPAND_BASE" ]]; then[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0645590Z [36;1m    /bin/rm -rf -- "$EXPAND_BASE" || status=1[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0645870Z [36;1m  fi[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0646050Z [36;1m  exit "$status"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0646290Z [36;1m}[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0646470Z [36;1mtrap cleanup EXIT[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0646670Z [36;1mtrap 'exit 129' HUP[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0646870Z [36;1mtrap 'exit 130' INT[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0647050Z [36;1mtrap 'exit 143' TERM[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0647260Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0647530Z [36;1mEXPAND_BASE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-pkg.XXXXXX")"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0647890Z [36;1mEXPAND_DIR="$EXPAND_BASE/expanded"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0648160Z [36;1massert_runner_temp_path "$EXPAND_BASE"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0648430Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0648710Z [36;1m/usr/sbin/pkgutil --expand-full "$PKG_PATH" "$EXPAND_DIR"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0649020Z [36;1mPACKAGED_APP_BIN="$([0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0649260Z [36;1m  /usr/bin/find "$EXPAND_DIR" -type f \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0649660Z [36;1m    -path '*/Payload/Applications/Wattson.app/Contents/MacOS/Wattson' \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0650050Z [36;1m    -print -quit[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0650460Z [36;1m)"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0650630Z [36;1mPACKAGED_APP_INFO="$([0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0650980Z [36;1m  /usr/bin/find "$EXPAND_DIR" -type f \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0651380Z [36;1m    -path '*/Payload/Applications/Wattson.app/Contents/Info.plist' \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0651700Z [36;1m    -print -quit[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0651890Z [36;1m)"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0652060Z [36;1mPACKAGED_HELPER="$([0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0652310Z [36;1m  /usr/bin/find "$EXPAND_DIR" -type f \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0652710Z [36;1m    -path '*/Payload/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper' \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0653220Z [36;1m    -print -quit[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0653470Z [36;1m)"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0653830Z [36;1m[[ -n "$PACKAGED_APP_BIN" && -n "$PACKAGED_APP_INFO" && -n "$PACKAGED_HELPER" ]][0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0654590Z [36;1mPACKAGED_APP_DIR="${PACKAGED_APP_BIN%/Contents/MacOS/Wattson}"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0654940Z [36;1mreadonly PACKAGED_APP_DIR[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0655310Z [36;1m/usr/bin/xcrun lipo "$PACKAGED_APP_BIN" -verify_arch arm64 x86_64[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0655730Z [36;1m/usr/bin/xcrun lipo "$PACKAGED_HELPER" -verify_arch arm64 x86_64[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0656260Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$PACKAGED_APP_INFO")" == "$WATTSON_VERSION" ]][0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0656790Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0656990Z [36;1mif [[ "$SIGNED_RELEASE" == "1" ]]; then[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0657350Z [36;1m  readonly PKG_SIGNATURE_INFO="$EXPAND_BASE/pkg-signature.txt"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0657800Z [36;1m  readonly APP_SIGNATURE_INFO="$EXPAND_BASE/app-signature.txt"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0658230Z [36;1m  readonly HELPER_SIGNATURE_INFO="$EXPAND_BASE/helper-signature.txt"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0658750Z [36;1m  readonly DMG_SIGNATURE_INFO="$EXPAND_BASE/dmg-signature.txt"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0659040Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0659250Z [36;1m  /usr/sbin/pkgutil --check-signature "$PKG_PATH" \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0659520Z [36;1m    > "$PKG_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0659750Z [36;1m  /usr/bin/grep -Fq \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0660010Z [36;1m    "Developer ID Installer:" "$PKG_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0660290Z [36;1m  /usr/bin/grep -Fq \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0660570Z [36;1m    "($EXPECTED_TEAM_ID)" "$PKG_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0660890Z [36;1m  /usr/bin/grep -Eq \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0661180Z [36;1m    '(Signed with a trusted timestamp|Timestamp)' "$PKG_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0661490Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0661790Z [36;1m  /usr/bin/codesign --verify --deep --strict --verbose=2 "$PACKAGED_APP_DIR"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0662250Z [36;1m  /usr/bin/codesign -d --verbose=4 "$PACKAGED_APP_DIR" \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0662560Z [36;1m    2> "$APP_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0662950Z [36;1m  /usr/bin/grep -Fq "Authority=Developer ID Application:" "$APP_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0663410Z [36;1m  /usr/bin/grep -Fxq "TeamIdentifier=$EXPECTED_TEAM_ID" "$APP_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0663870Z [36;1m  /usr/bin/grep -Eq '^CodeDirectory .*flags=.*\(runtime\)' "$APP_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0664260Z [36;1m  /usr/bin/grep -Eq '^Timestamp=.+' "$APP_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0664530Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0664840Z [36;1m  /usr/bin/codesign --verify --strict --verbose=2 "$PACKAGED_HELPER"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0665290Z [36;1m  /usr/bin/codesign -d --verbose=4 "$PACKAGED_HELPER" \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0665580Z [36;1m    2> "$HELPER_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0665930Z [36;1m  /usr/bin/grep -Fq "Authority=Developer ID Application:" "$HELPER_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0666480Z [36;1m  /usr/bin/grep -Fxq "TeamIdentifier=$EXPECTED_TEAM_ID" "$HELPER_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0667050Z [36;1m  /usr/bin/grep -Eq '^CodeDirectory .*flags=.*\(runtime\)' "$HELPER_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0667670Z [36;1m  /usr/bin/grep -Eq '^Timestamp=.+' "$HELPER_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0667930Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0668150Z [36;1m  /usr/bin/codesign --verify --strict --verbose=2 "$DMG_PATH"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0668490Z [36;1m  /usr/bin/codesign -d --verbose=4 "$DMG_PATH" \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0668790Z [36;1m    2> "$DMG_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0669200Z [36;1m  /usr/bin/grep -Fq "Authority=Developer ID Application:" "$DMG_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0669720Z [36;1m  /usr/bin/grep -Fxq "TeamIdentifier=$EXPECTED_TEAM_ID" "$DMG_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0670120Z [36;1m  /usr/bin/grep -Eq '^Timestamp=.+' "$DMG_SIGNATURE_INFO"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0670450Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0670650Z [36;1m  /usr/bin/xcrun stapler validate -v "$PKG_PATH"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0671150Z [36;1m  /usr/bin/xcrun stapler validate -v "$DMG_PATH"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0671540Z [36;1m  /usr/sbin/spctl --assess --type execute --verbose=4 "$PACKAGED_APP_DIR"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0672010Z [36;1m  /usr/sbin/spctl --assess --type install --verbose=4 "$PKG_PATH"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0672370Z [36;1m  /usr/sbin/spctl --assess \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0672570Z [36;1m    --type open \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0672790Z [36;1m    --context context:primary-signature \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0673030Z [36;1m    --verbose=4 \[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0673210Z [36;1m    "$DMG_PATH"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0673370Z [36;1mfi[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0673520Z [36;1m[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0673850Z [36;1m# Compare the complete DMG app with this candidate's expanded PKG,[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0674250Z [36;1m# never with a locally rebuilt app or a different candidate run.[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0674700Z [36;1m/bin/bash scripts/verify_dmg.sh "$DMG_PATH" "$PACKAGED_APP_DIR"[0m
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0756490Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0758270Z env:
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0759100Z   WATTSON_VERSION: 4.3.22
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0759910Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0760300Z   EXPECTED_TEAM_ID: 
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.0760490Z ##[endgroup]
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.2871730Z Wattson-v4.3.22-macos-universal.pkg: OK
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.3149830Z Wattson-v4.3.22-macos-universal.dmg: OK
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:49.3150770Z Wattson-v4.3.22-release-info.txt: OK
+Install on macos-15	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:54.7628260Z Mounted DMG verified: helper-free app and Applications link
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	﻿2026-10-18T15:06:55.3793520Z ##[group]Run set -euo pipefail
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3794240Z [36;1mset -euo pipefail[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3794590Z [36;1m[[ "${GITHUB_ACTIONS:-}" == "true" ]][0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3795000Z [36;1m[[ "${RUNNER_OS:-}" == "macOS" ]][0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3795330Z [36;1m[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]][0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3796400Z [36;1m[[ "$(/usr/bin/id -u)" != "0" ]][0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3797250Z [36;1msource scripts/lib/local_cleanup.sh[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3797970Z [36;1m[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3798990Z [36;1mreadonly DMG_PATH="$RUNNER_TEMP/wattson-release/Wattson-v${WATTSON_VERSION}-macos-universal.dmg"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3800390Z [36;1mREADONLY_ROOT=""[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3800750Z [36;1mMOUNT_DIR=""[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3801040Z [36;1mAPP_DIR=""[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3801300Z [36;1mAPP_BIN=""[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3801890Z [36;1mreadonly HELPER_LABEL="com.leoarrow.wattson.helper"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3802270Z [36;1mAPP_PID=""[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3802780Z [36;1m[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3802930Z [36;1mcleanup() {[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3803210Z [36;1m  local status="$?"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3803600Z [36;1m  local app_removed=1[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3803910Z [36;1m  local mount_removed=1[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3804250Z [36;1m  trap - EXIT[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3804530Z [36;1m  trap '' HUP INT TERM[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3804840Z [36;1m  set +e[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3805090Z [36;1m  if [[ -n "$APP_DIR" ]]; then[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3805480Z [36;1m    if wattson_stop_executable "$APP_BIN" && wattson_unregister_app "$APP_DIR"; then[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3805970Z [36;1m      /bin/rm -rf -- "$APP_DIR" || app_removed=0[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3806280Z [36;1m    else[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3806550Z [36;1m      app_removed=0[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3806900Z [36;1m    fi[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3807120Z [36;1m  fi[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3807450Z [36;1m  if [[ -n "$MOUNT_DIR" ]] && ! wattson_detach "$MOUNT_DIR"; then[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3807900Z [36;1m    mount_removed=0[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3808100Z [36;1m    status=1[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3808460Z [36;1m  fi[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3808920Z [36;1m  if [[ "$mount_removed" == "1" && "$app_removed" == "1" && -n "$READONLY_ROOT" ]]; then[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3809540Z [36;1m    /bin/rm -rf -- "$READONLY_ROOT" || status=1[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3810690Z [36;1m  fi[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3811000Z [36;1m  [[ "$app_removed" == "1" ]] || status=1[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3811590Z [36;1m  exit "$status"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3813630Z [36;1m}[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3813850Z [36;1mtrap cleanup EXIT[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3814220Z [36;1mtrap 'exit 129' HUP[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3814570Z [36;1mtrap 'exit 130' INT[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3814850Z [36;1mtrap 'exit 143' TERM[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3815150Z [36;1m[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3815450Z [36;1mREADONLY_ROOT="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-readonly.XXXXXX")"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3815990Z [36;1mcase "$READONLY_ROOT" in "$RUNNER_TEMP"/wattson-readonly.*) ;; *) exit 1 ;; esac[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3816460Z [36;1mMOUNT_DIR="$READONLY_ROOT/mount"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3816770Z [36;1mAPP_DIR="$READONLY_ROOT/Wattson.app"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3817140Z [36;1mAPP_BIN="$APP_DIR/Contents/MacOS/Wattson"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3817460Z [36;1m[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3817720Z [36;1massert_no_privileged_install() {[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3818060Z [36;1m  local path[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3818320Z [36;1m  for path in \[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3818600Z [36;1m    /Applications/Wattson.app \[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3818990Z [36;1m    "/Library/PrivilegedHelperTools/$HELPER_LABEL" \[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3819390Z [36;1m    "/Library/LaunchDaemons/$HELPER_LABEL.plist" \[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3819770Z [36;1m    /var/run/wattson-helper.sock; do[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3820110Z [36;1m    [[ ! -e "$path" && ! -L "$path" ]][0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3820400Z [36;1m  done[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3821260Z [36;1m  if /usr/sbin/pkgutil --pkg-info com.leoarrow.wattson.pkg >/dev/null 2>&1; then[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3821840Z [36;1m    echo "read-only copying must not create a package receipt" >&2[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3822210Z [36;1m    return 1[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3822490Z [36;1m  fi[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3822900Z [36;1m  if /bin/launchctl print "system/$HELPER_LABEL" >/dev/null 2>&1; then[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3823350Z [36;1m    echo "read-only copying must not register the helper" >&2[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3823740Z [36;1m    return 1[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3824040Z [36;1m  fi[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3824240Z [36;1m}[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3824450Z [36;1m[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3824670Z [36;1massert_no_privileged_install[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3825040Z [36;1m/bin/mkdir "$MOUNT_DIR"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3825530Z [36;1m/usr/bin/hdiutil attach -nobrowse -readonly -mountpoint "$MOUNT_DIR" "$DMG_PATH" >/dev/null[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3826090Z [36;1m# A user-writable destination exercises copying without granting the[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3826630Z [36;1m# runner any privileged install operation. Repeat to cover replacement.[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3827080Z [36;1mfor copy_attempt in 1 2; do[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3827400Z [36;1m  /usr/bin/ditto "$MOUNT_DIR/Wattson.app" "$APP_DIR"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3827840Z [36;1m  /usr/bin/diff -qr "$MOUNT_DIR/Wattson.app" "$APP_DIR"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3828200Z [36;1m  /usr/bin/codesign --verify --deep --strict "$APP_DIR"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3828860Z [36;1m  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]][0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3829460Z [36;1m  has_battery=0[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3829810Z [36;1m  battery_registry="$(/usr/sbin/ioreg -r -c AppleSmartBattery 2>/dev/null)"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3830320Z [36;1m  if [[ "$battery_registry" == *AppleSmartBattery* ]]; then[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3830730Z [36;1m    has_battery=1[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3830950Z [36;1m  fi[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3831330Z [36;1m  "$APP_BIN" >"$RUNNER_TEMP/wattson-readonly-$copy_attempt.log" 2>&1 &[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3831950Z [36;1m  APP_PID="$!"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3832170Z [36;1m  /bin/sleep 2[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3832530Z [36;1m  if /bin/kill -0 "$APP_PID" >/dev/null 2>&1; then[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3833660Z [36;1m    wattson_stop_executable "$APP_BIN"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3834140Z [36;1m  else[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3834490Z [36;1m    app_status=0[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3834770Z [36;1m    wait "$APP_PID" || app_status="$?"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3835160Z [36;1m    # Hosted Mac minis may exit cleanly without a battery. Real[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3835680Z [36;1m    # missing-helper monitoring stays covered by the AppKit suite.[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3836090Z [36;1m    [[ "$has_battery" == "0" && "$app_status" == "0" ]][0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3836450Z [36;1m  fi[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3836730Z [36;1m  APP_PID=""[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3837050Z [36;1m  assert_no_privileged_install[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3837410Z [36;1mdone[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3837630Z [36;1mwattson_unregister_app "$APP_DIR"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3837990Z [36;1m/bin/rm -rf -- "$APP_DIR"[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3838350Z [36;1m[[ ! -e "$APP_DIR" && ! -L "$APP_DIR" ]][0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3838610Z [36;1massert_no_privileged_install[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3839100Z [36;1mecho "Helper-free DMG copy, replacement, launch and removal passed without elevation."[0m
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3893630Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3894020Z env:
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3894230Z   WATTSON_VERSION: 4.3.22
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3894520Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3894860Z   EXPECTED_TEAM_ID: 
+Install on macos-15	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:55.3895070Z ##[endgroup]
+Install on macos-15	Test first install and disabled-service reinstall	﻿2026-10-18T15:07:00.3925060Z ##[group]Run set -euo pipefail
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3926160Z [36;1mset -euo pipefail[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3926430Z [36;1m[[ "${GITHUB_ACTIONS:-}" == "true" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3926690Z [36;1m[[ "${RUNNER_OS:-}" == "macOS" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3926960Z [36;1m[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3927310Z [36;1msource scripts/lib/local_cleanup.sh[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3927560Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3927990Z [36;1mreadonly PKG_PATH="$RUNNER_TEMP/wattson-release/Wattson-v${WATTSON_VERSION}-macos-universal.pkg"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3928480Z [36;1mreadonly APP_DIR="/Applications/Wattson.app"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3928780Z [36;1mreadonly APP_BIN="$APP_DIR/Contents/MacOS/Wattson"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3929120Z [36;1mreadonly HELPER_LABEL="com.leoarrow.wattson.helper"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3929550Z [36;1mreadonly HELPER_TARGET="system/$HELPER_LABEL"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3929930Z [36;1mreadonly HELPER_BIN="/Library/PrivilegedHelperTools/$HELPER_LABEL"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3930550Z [36;1mreadonly HELPER_PLIST="/Library/LaunchDaemons/$HELPER_LABEL.plist"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3931000Z [36;1mreadonly HELPER_SOCKET="/var/run/wattson-helper.sock"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3931320Z [36;1mreadonly RECEIPT="com.leoarrow.wattson.pkg"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3931680Z [36;1mreadonly LOGIN_LABEL="com.leoarrow.wattson.login"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3932070Z [36;1mLOGIN_TARGET="gui/$(/usr/bin/id -u)/$LOGIN_LABEL"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3932410Z [36;1mreadonly LOGIN_TARGET[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3932810Z [36;1mreadonly LOGIN_PLIST="$HOME/Library/LaunchAgents/$LOGIN_LABEL.plist"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3933250Z [36;1mreadonly LEGACY_APP="$HOME/Applications/Wattson.app"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3933700Z [36;1mreadonly USER_SUPPORT="$HOME/Library/Application Support/Wattson"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3934120Z [36;1mreadonly USER_CONTAINER="$HOME/Library/Containers/com.leoarrow.wattson"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3934610Z [36;1mreadonly USER_PREFERENCES="$HOME/Library/Preferences/com.leoarrow.wattson.plist"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3935250Z [36;1mreadonly SANDBOX_PREFERENCES="$USER_CONTAINER/Data/Library/Preferences/com.leoarrow.wattson.plist"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3935660Z [36;1mAPP_ONLY_STAGE=""[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3935850Z [36;1mAPP_PID=""[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3936020Z [36;1mCLEANUP_REQUIRED=0[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3936200Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3936360Z [36;1mcleanup() {[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3937050Z [36;1m  local status="$?"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3937280Z [36;1m  local cleanup_failed=0[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3937510Z [36;1m  local disabled_state[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3937720Z [36;1m  local residual[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3937910Z [36;1m  trap - EXIT[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3938110Z [36;1m  trap '' HUP INT TERM[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3938310Z [36;1m  set +e[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3938460Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3938690Z [36;1m  if [[ -n "$APP_ONLY_STAGE" ]]; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3939030Z [36;1m    /bin/rm -rf -- "$APP_ONLY_STAGE" || cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3939320Z [36;1m  fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3939520Z [36;1m  if [[ "$CLEANUP_REQUIRED" == "0" ]]; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3939800Z [36;1m    [[ "$cleanup_failed" == "0" ]] || status=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3940110Z [36;1m    exit "$status"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3940280Z [36;1m  fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3940550Z [36;1m  /bin/launchctl bootout "$LOGIN_TARGET" >/dev/null 2>&1 || true[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3940950Z [36;1m  /bin/rm -f -- "$LOGIN_PLIST" "$USER_PREFERENCES" || cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3941400Z [36;1m  /usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3941850Z [36;1m  /usr/bin/sudo -n /bin/launchctl enable "$HELPER_TARGET" >/dev/null 2>&1 \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3942170Z [36;1m    || cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3942400Z [36;1m  /usr/bin/sudo -n /bin/rm -f -- \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3942740Z [36;1m    "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN" || cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3943500Z [36;1m  if wattson_stop_executable "$APP_BIN" && wattson_unregister_app "$APP_DIR"; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3943950Z [36;1m    /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3944230Z [36;1m  else[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3944400Z [36;1m    cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3944610Z [36;1m  fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3944990Z [36;1m  if wattson_stop_executable "$LEGACY_APP/Contents/MacOS/Wattson" && wattson_unregister_app "$LEGACY_APP"; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3945470Z [36;1m    /bin/rm -rf -- "$LEGACY_APP" || cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3945750Z [36;1m  else[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3945920Z [36;1m    cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3946130Z [36;1m  fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3946360Z [36;1m  /bin/rm -rf -- "$USER_SUPPORT" "$USER_CONTAINER" \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3946630Z [36;1m    || cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3946980Z [36;1m  /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3947380Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3947660Z [36;1m  if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3948100Z [36;1m    echo "helper service remains registered after cleanup" >&2[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3948430Z [36;1m    cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3948640Z [36;1m  fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3948980Z [36;1m  disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system 2>/dev/null)" \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3949360Z [36;1m    || cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3949700Z [36;1m  case "$disabled_state" in[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3950030Z [36;1m    *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*)[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3950440Z [36;1m      echo "helper remains disabled after cleanup" >&2[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3950740Z [36;1m      cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3950990Z [36;1m      ;;[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3951240Z [36;1m  esac[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3951590Z [36;1m  for residual in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3952050Z [36;1m    if [[ -e "$residual" || -L "$residual" ]]; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3952480Z [36;1m      echo "cleanup left $residual" >&2[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3952830Z [36;1m      cleanup_failed=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3953030Z [36;1m    fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3953490Z [36;1m  done[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3953710Z [36;1m  if [[ "$status" == "0" && "$cleanup_failed" != "0" ]]; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3954050Z [36;1m    status=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3954780Z [36;1m  fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3954960Z [36;1m  exit "$status"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3955150Z [36;1m}[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3955330Z [36;1mtrap cleanup EXIT[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3955570Z [36;1mtrap 'exit 129' HUP[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3955800Z [36;1mtrap 'exit 130' INT[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3956030Z [36;1mtrap 'exit 143' TERM[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3956210Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3956570Z [36;1mAPP_ONLY_STAGE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-app-only-upgrade.XXXXXX")"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3957240Z [36;1mcase "$APP_ONLY_STAGE" in "$RUNNER_TEMP"/wattson-app-only-upgrade.*) ;; *) exit 1 ;; esac[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3957640Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3957820Z [36;1mverify_install() {[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3958160Z [36;1m  local expected_version="${1:-$WATTSON_VERSION}"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3958460Z [36;1m  local disabled_state[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3958730Z [36;1m  [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3959000Z [36;1m  [[ -f "$APP_BIN" && ! -L "$APP_BIN" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3959350Z [36;1m  [[ -f "$HELPER_BIN" && ! -L "$HELPER_BIN" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3959660Z [36;1m  [[ -f "$HELPER_PLIST" && ! -L "$HELPER_PLIST" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3960220Z [36;1m  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3961240Z [36;1m  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3961970Z [36;1m  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3962520Z [36;1m  /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3962930Z [36;1m  /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3963290Z [36;1m  /usr/bin/codesign --verify --deep --strict "$APP_DIR"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3963690Z [36;1m  /usr/bin/sudo -n /usr/bin/codesign --verify --strict "$HELPER_BIN"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3964140Z [36;1m  [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_BIN")" == "0:0:544" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3964620Z [36;1m  [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_PLIST")" == "0:0:644" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3965160Z [36;1m  /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3965600Z [36;1m  /usr/bin/sudo -n "$HELPER_BIN" --health-probe[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3965910Z [36;1m  "$APP_BIN" --helper-health-probe[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3966210Z [36;1m  "$APP_BIN" --helper-v5-observation-probe[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3966600Z [36;1m  # Hosted Mac minis have no internal battery, but SMC availability[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3967010Z [36;1m  # is independent. Exercise the shipped getPower IPC when the[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3967430Z [36;1m  # runner exposes the fixed keys; older runners may legitimately[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3967860Z [36;1m  # report them unavailable and retain the public IOKit fallback.[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3968200Z [36;1m  "$APP_BIN" --helper-power-probe \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3968540Z [36;1m    || echo "fixed SMC power keys unavailable on this runner"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3969070Z [36;1m  [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$expected_version" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3969690Z [36;1m  disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3970110Z [36;1m  case "$disabled_state" in[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3970470Z [36;1m    *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*) return 1 ;;[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3971280Z [36;1m  esac[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3971480Z [36;1m}[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3971680Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3971900Z [36;1mverify_app_launch_stability() {[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3972170Z [36;1m  local attempt[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3972460Z [36;1m  local battery_registry[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3972730Z [36;1m  local exit_status[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3973020Z [36;1m  local has_battery=0[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3973260Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3973590Z [36;1m  battery_registry="$(/usr/sbin/ioreg -r -c AppleSmartBattery 2>/dev/null)"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3974120Z [36;1m  if [[ "$battery_registry" == *AppleSmartBattery* ]]; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3974430Z [36;1m    has_battery=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3974680Z [36;1m  fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3974930Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3975200Z [36;1m  "$APP_BIN" >"$RUNNER_TEMP/wattson-app-launch.log" 2>&1 &[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3975560Z [36;1m  APP_PID="$!"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3975860Z [36;1m  for ((attempt = 0; attempt < 20; attempt++)); do[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3976260Z [36;1m    if ! /bin/kill -0 "$APP_PID" >/dev/null 2>&1; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3976550Z [36;1m      if wait "$APP_PID"; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3976810Z [36;1m        exit_status=0[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3977050Z [36;1m      else[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3977290Z [36;1m        exit_status="$?"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3977500Z [36;1m      fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3977660Z [36;1m      APP_PID=""[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3977950Z [36;1m      if [[ "$has_battery" == "0" && "$exit_status" == "0" ]]; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3978600Z [36;1m        echo "Wattson exited cleanly because this hosted runner has no AppleSmartBattery."[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3978990Z [36;1m        return 0[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3979170Z [36;1m      fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3979610Z [36;1m      echo "Wattson exited during the packaged-app launch check (status=$exit_status, AppleSmartBattery=$has_battery)." >&2[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3980240Z [36;1m      /bin/cat "$RUNNER_TEMP/wattson-app-launch.log" >&2 || true[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3980560Z [36;1m      return 1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3980760Z [36;1m    fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3980960Z [36;1m    /bin/sleep 0.1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3981170Z [36;1m  done[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3981450Z [36;1m  wattson_stop_executable "$APP_BIN"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3981750Z [36;1m  APP_PID=""[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3981970Z [36;1m}[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3982130Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3982330Z [36;1muninstall_and_verify() {[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3982730Z [36;1m  wattson_stop_executable "$APP_BIN"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3983030Z [36;1m  wattson_unregister_app "$APP_DIR"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3983330Z [36;1m  wattson_unregister_app "$LEGACY_APP"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3983610Z [36;1m  /bin/bash scripts/uninstall.sh \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3983980Z [36;1m    2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-uninstall.log"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3984540Z [36;1m  for removed_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3985070Z [36;1m    [[ ! -e "$removed_path" && ! -L "$removed_path" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3985320Z [36;1m  done[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3985600Z [36;1m  if /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3986050Z [36;1m    echo "the shipped uninstaller left the package receipt" >&2[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3986400Z [36;1m    return 1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3986610Z [36;1m  fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3986960Z [36;1m  if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3987460Z [36;1m    echo "the shipped uninstaller left the helper registered" >&2[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3987820Z [36;1m    return 1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3987990Z [36;1m  fi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3988170Z [36;1m}[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3988320Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3988480Z [36;1m[[ "${GITHUB_ACTIONS:-}" == "true" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3988990Z [36;1m[[ "${RUNNER_OS:-}" == "macOS" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3989250Z [36;1m[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3989540Z [36;1m[[ -f "$PKG_PATH" && ! -L "$PKG_PATH" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3989780Z [36;1m/usr/bin/sudo -n /usr/bin/true[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3990190Z [36;1mfor initial_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3990620Z [36;1m  [[ ! -e "$initial_path" && ! -L "$initial_path" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3990940Z [36;1mdone[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3991200Z [36;1mif /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3991660Z [36;1m  echo "fresh runner unexpectedly has a Wattson package receipt" >&2[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3991960Z [36;1m  exit 1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3992100Z [36;1mfi[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3992280Z [36;1mCLEANUP_REQUIRED=1[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3992460Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3992680Z [36;1mecho "Installing the candidate on a fresh runner..."[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3992990Z [36;1m/usr/bin/sudo -n /usr/sbin/installer \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3993220Z [36;1m  -verboseR \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3993390Z [36;1m  -pkg "$PKG_PATH" \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3993580Z [36;1m  -target / \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3993840Z [36;1m  2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-install.log"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3994120Z [36;1mverify_install[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3994300Z [36;1mverify_app_launch_stability[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3994700Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3994910Z [36;1mecho "Reinstalling after an explicit launchd disable..."[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3995270Z [36;1m/usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3995600Z [36;1m/usr/bin/sudo -n /bin/launchctl disable "$HELPER_TARGET"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3996000Z [36;1mdisabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3996410Z [36;1mcase "$disabled_state" in[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3996750Z [36;1m  *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*) ;;[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3997120Z [36;1m  *) echo "launchd did not record the disabled state" >&2; exit 1 ;;[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3997440Z [36;1mesac[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3997670Z [36;1m/usr/bin/sudo -n /usr/sbin/installer \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3997920Z [36;1m  -verboseR \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3998180Z [36;1m  -pkg "$PKG_PATH" \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3998370Z [36;1m  -target / \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3998610Z [36;1m  2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-install.log"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3998970Z [36;1mverify_install[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.3999130Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4021210Z [36;1mecho "Testing the published 3.0.28 PKG upgrade baseline..."[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4021550Z [36;1muninstall_and_verify[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4021860Z [36;1m# This immutable public release is a test baseline, not the candidate.[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4022210Z [36;1mreadonly BASELINE_VERSION="3.0.28"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4022600Z [36;1mreadonly BASELINE_SHA="86db43a02a79769cd02f022cf6bd5721cdbb96927a83a67e9f144dc8d27127da"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4023160Z [36;1mreadonly BASELINE_PKG="$APP_ONLY_STAGE/Wattson-v${BASELINE_VERSION}-macos-universal.pkg"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4023620Z [36;1m/usr/bin/curl --fail --location --proto '=https' --tlsv1.2 \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4024010Z [36;1m  --retry 3 --retry-delay 2 --output "$BASELINE_PKG" \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4024600Z [36;1m  "https://github.com/laleoarrow/battery-monitor/releases/download/v${BASELINE_VERSION}/Wattson-v${BASELINE_VERSION}-macos-universal.pkg"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4025260Z [36;1m[[ "$(/usr/bin/shasum -a 256 "$BASELINE_PKG" | /usr/bin/awk '{print $1}')" == "$BASELINE_SHA" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4025760Z [36;1m/usr/sbin/pkgutil --expand-full "$BASELINE_PKG" "$APP_ONLY_STAGE/baseline"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4026240Z [36;1mreadonly BASELINE_PAYLOAD="$APP_ONLY_STAGE/baseline/Wattson-component.pkg/Payload"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4027260Z [36;1m/usr/bin/sudo -n /usr/sbin/installer -verboseR -pkg "$BASELINE_PKG" -target / \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4027690Z [36;1m  2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4027990Z [36;1mverify_install "$BASELINE_VERSION"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4028320Z [36;1m/usr/bin/diff -qr "$BASELINE_PAYLOAD/Applications/Wattson.app" "$APP_DIR"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4028870Z [36;1m/usr/bin/sudo -n /usr/bin/cmp -s "$BASELINE_PAYLOAD/Library/PrivilegedHelperTools/$HELPER_LABEL" "$HELPER_BIN"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4029330Z [36;1mverify_app_launch_stability[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4029630Z [36;1m# Let the real sandboxed baseline create its container before seeding[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4030040Z [36;1m# the UserDefaults.standard plist, never the non-sandbox domain.[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4030370Z [36;1mfor preference_directory in \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4030620Z [36;1m  "$USER_CONTAINER" "$USER_CONTAINER/Data" \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4031020Z [36;1m  "$USER_CONTAINER/Data/Library" "$USER_CONTAINER/Data/Library/Preferences"; do[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4031470Z [36;1m  [[ -d "$preference_directory" && ! -L "$preference_directory" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4031890Z [36;1m  [[ "$(/usr/bin/stat -f '%u' "$preference_directory")" == "$(/usr/bin/id -u)" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4032300Z [36;1mdone[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4032480Z [36;1m[[ ! -L "$SANDBOX_PREFERENCES" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4032770Z [36;1m[[ ! -e "$SANDBOX_PREFERENCES" || -f "$SANDBOX_PREFERENCES" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4033670Z [36;1m/usr/bin/defaults write "$SANDBOX_PREFERENCES" updates.checkOnLaunch -bool false[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4034220Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4034620Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4034880Z [36;1m/usr/sbin/pkgutil --expand-full "$PKG_PATH" "$APP_ONLY_STAGE/expanded"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4035350Z [36;1mreadonly CANDIDATE_PAYLOAD="$APP_ONLY_STAGE/expanded/Wattson-component.pkg/Payload"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4035820Z [36;1mreadonly APP_ONLY_SOURCE="$CANDIDATE_PAYLOAD/Applications/Wattson.app"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4036290Z [36;1m/usr/bin/sudo -n /usr/sbin/installer -verboseR -pkg "$PKG_PATH" -target / \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4036730Z [36;1m  2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4037030Z [36;1mverify_install[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4037260Z [36;1m/usr/bin/diff -qr "$APP_ONLY_SOURCE" "$APP_DIR"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4037740Z [36;1m/usr/bin/sudo -n /usr/bin/cmp -s "$CANDIDATE_PAYLOAD/Library/PrivilegedHelperTools/$HELPER_LABEL" "$HELPER_BIN"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4038370Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4038800Z [36;1mverify_app_launch_stability[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4039180Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4039670Z [36;1m# Batteryless hosted runners may exit before Settings is consumed;[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4040070Z [36;1m# this proves installer preservation of the correct sandbox file,[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4040440Z [36;1m# not that a visible UI read and applied the preference.[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4041160Z [36;1mecho "Public $BASELINE_VERSION ($BASELINE_SHA) to $WATTSON_VERSION: receipt, exact App/helper bytes, health, launch and sandbox preference-file preservation passed (not a UI-read assertion)." \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4041890Z [36;1m  | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4042240Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4042520Z [36;1mecho "Running the shipped uninstaller, then upgrading an app-only copy..."[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4042860Z [36;1muninstall_and_verify[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4043040Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4043260Z [36;1m# Seed only the App, which was already proved byte-identical to the[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4043880Z [36;1m# DMG App. This is fixture setup for the privileged upgrade, not the[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4045690Z [36;1m# separate no-elevation copy test above. No helper or receipt exists.[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4046090Z [36;1m[[ -d "$APP_ONLY_SOURCE" && ! -L "$APP_ONLY_SOURCE" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4046450Z [36;1m/usr/bin/sudo -n /usr/bin/ditto "$APP_ONLY_SOURCE" "$APP_DIR"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4046780Z [36;1m/usr/bin/diff -qr "$APP_ONLY_SOURCE" "$APP_DIR"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4047150Z [36;1m[[ ! -e "$HELPER_BIN" && ! -e "$HELPER_PLIST" && ! -e "$HELPER_SOCKET" ]][0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4047480Z [36;1m/usr/bin/sudo -n /usr/sbin/installer \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4047710Z [36;1m  -verboseR \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4047900Z [36;1m  -pkg "$PKG_PATH" \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4048080Z [36;1m  -target / \[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4048320Z [36;1m  2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-install.log"[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4048610Z [36;1mverify_install[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4048800Z [36;1mverify_app_launch_stability[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4048980Z [36;1m[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4049420Z [36;1mecho "First install, disabled-service reinstall, public v3 upgrade, uninstall, app-only upgrade, app launch, and cleanup checks passed."[0m
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4105900Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4106170Z env:
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4106310Z   WATTSON_VERSION: 4.3.22
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4106520Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4107000Z   EXPECTED_TEAM_ID: 
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.4107150Z ##[endgroup]
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:00.6286990Z Installing the candidate on a fresh runner...
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:01.0005020Z installer: Package name is 
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:01.0005630Z installer: Installing at base path /
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:01.0007370Z installer:PHASE:Preparing for installation…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:01.0191960Z installer:PHASE:Preparing the disk…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:01.0243020Z installer:PHASE:Preparing …
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:01.2883200Z installer:PHASE:Waiting for other installations to complete…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3041310Z installer:PHASE:Configuring the installation…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3042240Z installer:STATUS:
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:01.8114030Z installer:%86.830558
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:01.8114860Z installer:PHASE:Running package scripts…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:02.3888150Z installer:PHASE:Validating packages…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:03.4933500Z installer:%97.750000
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:03.4936220Z installer:STATUS:Running installer actions…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:03.4956010Z installer:STATUS:
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:03.4957640Z installer:PHASE:Finishing the Installation…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:03.4989510Z installer:STATUS:
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:03.4990240Z installer:%100.000000
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:03.4991300Z installer:PHASE:The software was successfully installed.
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:03.4996160Z installer: The install was successful.
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:03.7272700Z helperV5=v5
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:03.7373740Z fixed SMC power keys unavailable on this runner
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.0565580Z Wattson exited cleanly because this hosted runner has no AppleSmartBattery.
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.0566280Z Reinstalling after an explicit launchd disable...
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.2977380Z installer: Package name is 
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.2977740Z installer: Upgrading at base path /
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.2978340Z installer:PHASE:Preparing for installation…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.3116610Z installer:PHASE:Preparing the disk…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.3141400Z installer:PHASE:Preparing …
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.3216190Z installer:PHASE:Waiting for other installations to complete…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.3290580Z installer:PHASE:Configuring the installation…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.3291450Z installer:STATUS:
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.8574290Z installer:%2.229250
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:04.8577000Z installer:PHASE:Validating packages…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:05.3794560Z installer:PHASE:Validating packages…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.4991020Z installer:%97.750000
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.4994080Z installer:STATUS:Running installer actions…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.5014800Z installer:STATUS:
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.5016630Z installer:PHASE:Finishing the Installation…
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.5051020Z installer:STATUS:
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.5052020Z installer:%100.000000
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.5053130Z installer:PHASE:The software was successfully installed.
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.5068130Z installer: The upgrade was successful.
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.7555140Z helperV5=v5
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.7681430Z fixed SMC power keys unavailable on this runner
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.7944320Z Testing the published 3.0.28 PKG upgrade baseline...
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.7948420Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable
+Install on macos-15	Test first install and disabled-service reinstall	2026-10-18T15:07:06.8669410Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable
+Install on macos-15	Test upgrade from the published v2.1.5 release	﻿2026-10-18T15:07:07.1908960Z ##[group]Run set -euo pipefail
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1910870Z [36;1mset -euo pipefail[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1911540Z [36;1m[[ "${GITHUB_ACTIONS:-}" == "true" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1912430Z [36;1m[[ "${RUNNER_OS:-}" == "macOS" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1913230Z [36;1m[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1914160Z [36;1msource scripts/lib/local_cleanup.sh[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1914860Z [36;1m[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1915470Z [36;1mreadonly V2_VERSION="2.1.5"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1916630Z [36;1mreadonly V2_SHA256="1a5054dfbc3f3a4ff9518620d3a9b49c282ff42973f9952a076470c05cf4caf6"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1945680Z [36;1mreadonly V2_DMG="$RUNNER_TEMP/Wattson-v${V2_VERSION}.dmg"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1946430Z [36;1mreadonly V2_URL="https://github.com/laleoarrow/battery-monitor/releases/download/v${V2_VERSION}/Wattson-v${V2_VERSION}.dmg"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1947260Z [36;1mreadonly PKG_PATH="$RUNNER_TEMP/wattson-release/Wattson-v${WATTSON_VERSION}-macos-universal.pkg"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1947970Z [36;1mreadonly APP_DIR="/Applications/Wattson.app"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1948360Z [36;1mreadonly APP_BIN="$APP_DIR/Contents/MacOS/Wattson"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1948760Z [36;1mreadonly LEGACY_APP="$HOME/Applications/Wattson.app"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1949160Z [36;1mreadonly HELPER_LABEL="com.leoarrow.wattson.helper"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1949590Z [36;1mreadonly HELPER_TARGET="system/$HELPER_LABEL"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1950000Z [36;1mreadonly HELPER_BIN="/Library/PrivilegedHelperTools/$HELPER_LABEL"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1950530Z [36;1mreadonly HELPER_PLIST="/Library/LaunchDaemons/$HELPER_LABEL.plist"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1950950Z [36;1mreadonly HELPER_SOCKET="/var/run/wattson-helper.sock"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1951280Z [36;1mreadonly RECEIPT="com.leoarrow.wattson.pkg"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1951640Z [36;1mreadonly LOGIN_LABEL="com.leoarrow.wattson.login"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1952000Z [36;1mLOGIN_TARGET="gui/$(/usr/bin/id -u)/$LOGIN_LABEL"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1952290Z [36;1mreadonly LOGIN_TARGET[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1952620Z [36;1mreadonly LOGIN_PLIST="$HOME/Library/LaunchAgents/$LOGIN_LABEL.plist"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1953060Z [36;1mMOUNT_DIR=""[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1953260Z [36;1mCANDIDATE_EXPAND=""[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1953510Z [36;1mV2_STAGE=""[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1953710Z [36;1mCLEANUP_REQUIRED=0[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1953970Z [36;1m[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1954140Z [36;1mcleanup() {[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1954360Z [36;1m  local status="$?"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1954750Z [36;1m  local cleanup_failed=0[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1954990Z [36;1m  local residual[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1955220Z [36;1m  trap - EXIT[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1955480Z [36;1m  trap '' HUP INT TERM[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1955700Z [36;1m  set +e[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1955930Z [36;1m  if [[ -n "$MOUNT_DIR" ]]; then[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1956330Z [36;1m    if wattson_detach "$MOUNT_DIR"; then[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1956720Z [36;1m      /bin/rm -rf -- "$MOUNT_DIR" || cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1957060Z [36;1m    else[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1957280Z [36;1m      cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1957870Z [36;1m    fi[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1958130Z [36;1m  fi[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1958340Z [36;1m  if [[ -n "$CANDIDATE_EXPAND" ]]; then[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1958700Z [36;1m    /bin/rm -rf -- "$CANDIDATE_EXPAND" || cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1959090Z [36;1m  fi[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1959270Z [36;1m  if [[ -n "$V2_STAGE" ]]; then[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1959600Z [36;1m    case "$V2_STAGE" in[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1959920Z [36;1m      /private/tmp/com.leoarrow.wattson.v2-ci.*)[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1960350Z [36;1m        /usr/bin/sudo -n /bin/rm -rf -- "$V2_STAGE" || cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1960700Z [36;1m        ;;[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1961000Z [36;1m      *) echo "v2 root stage escaped its fixed prefix" >&2; cleanup_failed=1 ;;[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1961800Z [36;1m    esac[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1962050Z [36;1m  fi[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1962300Z [36;1m  if [[ "$CLEANUP_REQUIRED" == "0" ]]; then[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1962690Z [36;1m    [[ "$cleanup_failed" == "0" ]] || status=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1962990Z [36;1m    exit "$status"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1963290Z [36;1m  fi[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1963620Z [36;1m  /bin/launchctl bootout "$LOGIN_TARGET" >/dev/null 2>&1 || true[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1964020Z [36;1m  /bin/rm -f -- "$LOGIN_PLIST" || cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1964490Z [36;1m  /usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1965060Z [36;1m  /usr/bin/sudo -n /bin/launchctl enable "$HELPER_TARGET" >/dev/null 2>&1 \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1965510Z [36;1m    || cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1965750Z [36;1m  /usr/bin/sudo -n /bin/rm -f -- \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1966130Z [36;1m    "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN" || cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1966600Z [36;1m  if wattson_stop_executable "$APP_BIN" && wattson_unregister_app "$APP_DIR"; then[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1967020Z [36;1m    /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1967360Z [36;1m  else[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1967600Z [36;1m    cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1967810Z [36;1m  fi[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1968300Z [36;1m  if wattson_stop_executable "$LEGACY_APP/Contents/MacOS/Wattson" && wattson_unregister_app "$LEGACY_APP"; then[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1968840Z [36;1m    /bin/rm -rf -- "$LEGACY_APP" || cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1969170Z [36;1m  else[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1969400Z [36;1m    cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1969640Z [36;1m  fi[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1970000Z [36;1m  /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1970450Z [36;1m  if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1970920Z [36;1m    echo "helper service remains registered after v2 upgrade cleanup" >&2[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1971240Z [36;1m    cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1971430Z [36;1m  fi[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1971730Z [36;1m  for residual in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1972150Z [36;1m    if [[ -e "$residual" || -L "$residual" ]]; then[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1972540Z [36;1m      echo "v2 upgrade cleanup left $residual" >&2[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1972900Z [36;1m      cleanup_failed=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1973170Z [36;1m    fi[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1973340Z [36;1m  done[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1973620Z [36;1m  if [[ "$status" == "0" && "$cleanup_failed" != "0" ]]; then[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1973890Z [36;1m    status=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1974090Z [36;1m  fi[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1974330Z [36;1m  exit "$status"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1974500Z [36;1m}[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1974650Z [36;1mtrap cleanup EXIT[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1974840Z [36;1mtrap 'exit 129' HUP[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1975060Z [36;1mtrap 'exit 130' INT[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1975400Z [36;1mtrap 'exit 143' TERM[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1975580Z [36;1m[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1975750Z [36;1m[[ "$(/usr/bin/uname -m)" == "arm64" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1976010Z [36;1m[[ -f "$PKG_PATH" && ! -L "$PKG_PATH" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1976430Z [36;1mfor initial_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP" "$LOGIN_PLIST"; do[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1976960Z [36;1m  [[ ! -e "$initial_path" && ! -L "$initial_path" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1977240Z [36;1mdone[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1977500Z [36;1mif /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1978000Z [36;1m  echo "v2 fixture requires an absent Wattson package receipt" >&2[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1978340Z [36;1m  exit 1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1978490Z [36;1mfi[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1978890Z [36;1mCLEANUP_REQUIRED=1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1979240Z [36;1mMOUNT_DIR="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-v2-dmg.XXXXXX")"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1979760Z [36;1mCANDIDATE_EXPAND="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-v5-candidate.XXXXXX")"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1980320Z [36;1m/usr/sbin/pkgutil --expand-full "$PKG_PATH" "$CANDIDATE_EXPAND/expanded"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1980690Z [36;1mCANDIDATE_APP_BIN="$([0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1980930Z [36;1m  /usr/bin/find "$CANDIDATE_EXPAND/expanded" \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1981230Z [36;1m    -type f \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1981580Z [36;1m    -path '*/Payload/Applications/Wattson.app/Contents/MacOS/Wattson' \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1982330Z [36;1m    -print[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1982540Z [36;1m)"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1982720Z [36;1mreadonly CANDIDATE_APP_BIN[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1983070Z [36;1m[[ -f "$CANDIDATE_APP_BIN" && ! -L "$CANDIDATE_APP_BIN" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1983490Z [36;1m[[ "$(/usr/bin/wc -l <<< "$CANDIDATE_APP_BIN" | /usr/bin/tr -d ' ')" == "1" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1983890Z [36;1m/usr/bin/curl \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1984150Z [36;1m  --fail \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1984370Z [36;1m  --location \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1984700Z [36;1m  --proto '=https' \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1984950Z [36;1m  --retry 3 \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1985170Z [36;1m  --retry-delay 2 \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1985470Z [36;1m  --tlsv1.2 \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1985660Z [36;1m  --output "$V2_DMG" \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1985920Z [36;1m  "$V2_URL"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1986260Z [36;1m[[ "$(/usr/bin/shasum -a 256 "$V2_DMG" | /usr/bin/awk '{ print $1 }')" == "$V2_SHA256" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1986650Z [36;1m[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1986800Z [36;1m/usr/bin/hdiutil attach \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1987040Z [36;1m  -nobrowse \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1987250Z [36;1m  -readonly \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1987470Z [36;1m  -mountpoint "$MOUNT_DIR" \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1987680Z [36;1m  "$V2_DMG" >/dev/null[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1987950Z [36;1mreadonly V2_INSTALLER="$MOUNT_DIR/Install Wattson.app"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1988290Z [36;1mreadonly V2_RESOURCES="$V2_INSTALLER/Contents/Resources"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1988620Z [36;1m[[ -d "$V2_INSTALLER" && ! -L "$V2_INSTALLER" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1988940Z [36;1m/usr/bin/codesign --verify --deep --strict "$V2_INSTALLER"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1989340Z [36;1m"$V2_INSTALLER/Contents/MacOS/Install Wattson" --verify[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1989600Z [36;1m[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1989760Z [36;1m/bin/mkdir -p "$HOME/Applications"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1990110Z [36;1m/usr/bin/ditto -x -k "$V2_RESOURCES/Payload/Wattson.zip" "$HOME/Applications"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1990470Z [36;1m[[ -d "$LEGACY_APP" && ! -L "$LEGACY_APP" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1991000Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$LEGACY_APP/Contents/Info.plist")" == "$V2_VERSION" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1991540Z [36;1m/usr/bin/codesign --verify --deep --strict "$LEGACY_APP"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1991800Z [36;1m[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1991970Z [36;1m/bin/mkdir -p "$HOME/Library/LaunchAgents"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1992450Z [36;1m/usr/bin/plutil -create xml1 "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1992800Z [36;1m/usr/libexec/PlistBuddy -c "Add :Label string $LOGIN_LABEL" "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1993240Z [36;1m/usr/libexec/PlistBuddy -c 'Add :ProgramArguments array' "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1993740Z [36;1m/usr/libexec/PlistBuddy -c 'Add :ProgramArguments:0 string /usr/bin/open' "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1994230Z [36;1m/usr/libexec/PlistBuddy -c 'Add :ProgramArguments:1 string -gj' "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1994780Z [36;1m/usr/libexec/PlistBuddy -c "Add :ProgramArguments:2 string $LEGACY_APP" "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1995260Z [36;1m/usr/libexec/PlistBuddy -c 'Add :RunAtLoad bool true' "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1995720Z [36;1m/usr/libexec/PlistBuddy -c 'Add :LimitLoadToSessionType string Aqua' "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1996480Z [36;1m/usr/libexec/PlistBuddy -c 'Add :ProcessType string Interactive' "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1996950Z [36;1m/usr/libexec/PlistBuddy -c 'Add :AssociatedBundleIdentifiers array' "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1997520Z [36;1m/usr/libexec/PlistBuddy -c 'Add :AssociatedBundleIdentifiers:0 string com.leoarrow.wattson' "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1997960Z [36;1m/bin/chmod 644 "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1998250Z [36;1m/bin/launchctl bootstrap "gui/$(/usr/bin/id -u)" "$LOGIN_PLIST"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1998590Z [36;1m/bin/launchctl print "$LOGIN_TARGET" >/dev/null[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1998820Z [36;1m[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1998960Z [36;1mV2_STAGE="$([0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1999140Z [36;1m  /usr/bin/sudo -n /usr/bin/mktemp \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1999420Z [36;1m    -d /private/tmp/com.leoarrow.wattson.v2-ci.XXXXXX[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1999690Z [36;1m)"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.1999840Z [36;1mcase "$V2_STAGE" in[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2000070Z [36;1m  /private/tmp/com.leoarrow.wattson.v2-ci.*) ;;[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2000360Z [36;1m  *) echo "invalid v2 root stage" >&2; exit 1 ;;[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2000590Z [36;1mesac[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2000860Z [36;1m/usr/bin/sudo -n /usr/bin/install -d -o root -g wheel -m 700 "$V2_STAGE/Payload"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2001260Z [36;1m/usr/bin/sudo -n /usr/bin/install -o root -g wheel -m 500 \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2001630Z [36;1m  "$V2_RESOURCES/install-helper.sh" "$V2_STAGE/install-helper.sh"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2002000Z [36;1m/usr/bin/sudo -n /usr/bin/install -o root -g wheel -m 500 \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2002390Z [36;1m  "$V2_RESOURCES/Payload/$HELPER_LABEL" "$V2_STAGE/Payload/$HELPER_LABEL"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2002770Z [36;1m/usr/bin/sudo -n /usr/bin/install -o root -g wheel -m 400 \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2003210Z [36;1m  "$V2_RESOURCES/Payload/$HELPER_LABEL.plist" "$V2_STAGE/Payload/$HELPER_LABEL.plist"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2003600Z [36;1m/usr/bin/sudo -n /usr/bin/env -i \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2003840Z [36;1m  PATH=/usr/bin:/bin:/usr/sbin:/sbin \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2004140Z [36;1m  HOME=/var/root \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2004330Z [36;1m  USER=root \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2004500Z [36;1m  LOGNAME=root \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2004740Z [36;1m  /bin/bash -p "$V2_STAGE/install-helper.sh"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2005080Z [36;1m/usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2005420Z [36;1m/usr/bin/sudo -n "$HELPER_BIN" --health-probe[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2005670Z [36;1m[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2005900Z [36;1m# A legacy v2 helper remains a valid v4 peer, but must never satisfy[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2006280Z [36;1m# the strict v5 capability gate exposed by the candidate app.[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2006580Z [36;1mset +e[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2006750Z [36;1mlegacy_v5_probe_output="$([0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2007040Z [36;1m  "$CANDIDATE_APP_BIN" --helper-v5-observation-probe 2>&1[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2007320Z [36;1m)"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2007480Z [36;1mlegacy_v5_probe_status="$?"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2007840Z [36;1mset -e[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2008010Z [36;1m[[ "$legacy_v5_probe_status" != "0" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2008250Z [36;1mcase "$legacy_v5_probe_output" in[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2008500Z [36;1m  *helperV5=legacy*|*helperV5=failed*) ;;[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2008850Z [36;1m  *) echo "candidate v5 probe returned unexpected legacy result" >&2; exit 1 ;;[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2009170Z [36;1mesac[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2009300Z [36;1m[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2009450Z [36;1mwattson_detach "$MOUNT_DIR"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2009690Z [36;1m/usr/bin/sudo -n /bin/rm -rf -- "$V2_STAGE"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2009930Z [36;1mV2_STAGE=""[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2010080Z [36;1m[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2010350Z [36;1mecho "Upgrading the exact v2.1.5 app and helper state to v${WATTSON_VERSION}..."[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2010940Z [36;1mwattson_stop_executable "$LEGACY_APP/Contents/MacOS/Wattson"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2011250Z [36;1mwattson_unregister_app "$LEGACY_APP"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2011510Z [36;1m/usr/bin/sudo -n /usr/sbin/installer \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2011750Z [36;1m  -verboseR \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2011940Z [36;1m  -pkg "$PKG_PATH" \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2012130Z [36;1m  -target / \[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2012380Z [36;1m  2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v2-upgrade.log"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2012690Z [36;1m[[ ! -e "$LEGACY_APP" && ! -L "$LEGACY_APP" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2012950Z [36;1m[[ -d "$APP_DIR" && ! -L "$APP_DIR" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2013390Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :ProgramArguments:2' "$LOGIN_PLIST")" == "/Applications/Wattson.app" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2013850Z [36;1m/bin/launchctl print "$LOGIN_TARGET" >/dev/null[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2014360Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2014900Z [36;1m/usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2015260Z [36;1m/usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2015610Z [36;1m/usr/bin/codesign --verify --deep --strict "$APP_DIR"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2015980Z [36;1m/usr/bin/sudo -n /usr/bin/codesign --verify --strict "$HELPER_BIN"[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2016360Z [36;1m/usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2016720Z [36;1m/usr/bin/sudo -n "$HELPER_BIN" --health-probe[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2016980Z [36;1m"$APP_BIN" --helper-health-probe[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2017240Z [36;1m"$APP_BIN" --helper-v5-observation-probe[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2017700Z [36;1m[[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]][0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2018180Z [36;1mecho "v2.1.5 upgrade and cleanup checks passed."[0m
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2081220Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2081510Z env:
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2081670Z   WATTSON_VERSION: 4.3.22
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2081870Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2082270Z   EXPECTED_TEAM_ID: 
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2082570Z ##[endgroup]
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2972440Z v2 fixture requires an absent Wattson package receipt
+Install on macos-15	Test upgrade from the published v2.1.5 release	2026-10-18T15:07:07.2986360Z ##[error]Process completed with exit code 1.
+Install on macos-15	Upload installation logs	﻿2026-10-18T15:07:07.3072320Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3072730Z with:
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3072940Z   name: wattson-install-log-macos-15-39137918718-1
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3073240Z   path: /Users/runner/work/_temp/wattson-*.log
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3073480Z   if-no-files-found: warn
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3073690Z   retention-days: 7
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3073880Z   compression-level: 6
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3074070Z   overwrite: false
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3074250Z   include-hidden-files: false
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3074530Z   archive: true
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3074880Z env:
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3075030Z   WATTSON_VERSION: 4.3.22
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3075250Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3075500Z   EXPECTED_TEAM_ID: 
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.3075680Z ##[endgroup]
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.4697050Z With the provided path, there will be 4 files uploaded
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.4705330Z Artifact name is valid!
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.4709300Z Root directory input is valid!
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.7454580Z Uploading artifact: wattson-install-log-macos-15-39137918718-1.zip
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.7483250Z Beginning upload of artifact content to blob storage
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.9316270Z Uploaded bytes 860
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.9725840Z Finished uploading artifact content to blob storage!
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.9757110Z SHA256 digest of uploaded artifact is 28c542d5f259030e96d50e9191fefb48d15e93d5e0314c907c03e7801fdb1d0a
+Install on macos-15	Upload installation logs	2026-10-18T15:07:07.9760620Z Finalizing artifact upload
+Install on macos-15	Upload installation logs	2026-10-18T15:07:08.2646050Z Artifact wattson-install-log-macos-15-39137918718-1 successfully finalized. Artifact ID 12140678594
+Install on macos-15	Upload installation logs	2026-10-18T15:07:08.2648080Z Artifact wattson-install-log-macos-15-39137918718-1 has been successfully uploaded! Final size is 860 bytes. Artifact ID is 12140678594
+Install on macos-15	Upload installation logs	2026-10-18T15:07:08.2657610Z Artifact download URL: https://github.com/laleoarrow/battery-monitor/actions/runs/39137918718/artifacts/12140678594
+Install on macos-15	Post Check out the candidate lifecycle scripts	﻿2026-10-18T15:07:08.2894000Z Post job cleanup.
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.3802530Z [command]/opt/homebrew/bin/git version
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.3920960Z git version 2.55.0
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.3938000Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/bb1e1871-27d2-4a80-bdbc-08c794246b82/.gitconfig'
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.3948090Z Temporarily overriding HOME='/Users/runner/work/_temp/bb1e1871-27d2-4a80-bdbc-08c794246b82' before making global git config changes
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.3950190Z Adding repository directory to the temporary git global config as a safe directory
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.3952010Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/battery-monitor/battery-monitor
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.4015530Z Removing SSH command configuration
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.4021120Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.4080510Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.4824420Z Removing HTTP extra header
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.4826890Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.4882380Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.5573460Z Removing includeIf entries pointing to credentials config files
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.5577820Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Install on macos-15	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:08.5633510Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Install on macos-15	Complete job	﻿2026-10-18T15:07:08.6454640Z Cleaning up orphan processes
+Install on macos-15	Complete job	2026-10-18T15:07:08.8285800Z Terminate orphan process: pid (10194) (diskimages-help)

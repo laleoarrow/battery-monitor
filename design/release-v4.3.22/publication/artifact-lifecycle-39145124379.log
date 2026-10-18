@@ -1,0 +1,4 @@
+Build succeeded; candidate artifact 12143358543 is ready.
+Exact four candidate assets downloaded; archive digest, manifest and metadata pass.
+Running frozen standalone verify_release.sh on uploaded PKG and DMG.
+Real verification and actual signatures passed; exact four assets retained.

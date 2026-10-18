@@ -1,0 +1,12 @@
+test_compile_failure_and_invalid_mode_leave_no_app (test_run_preview_cleanup.RunPreviewCleanupTests) ... ok
+test_run_waits_for_app_exit_then_cleans (test_run_preview_cleanup.RunPreviewCleanupTests) ... ok
+test_term_during_log_runner_registration_cleans_detached_app (test_run_preview_cleanup.RunPreviewCleanupTests) ... ok
+test_term_during_script_log_runner_registration_cleans_detached_app (test_run_preview_cleanup.RunPreviewCleanupTests) ... ok
+test_term_during_timed_log_runner_registration_cleans_detached_app (test_run_preview_cleanup.RunPreviewCleanupTests) ... ok
+test_terminated_log_session_stops_its_detached_app (test_run_preview_cleanup.RunPreviewCleanupTests) ... ok
+test_verify_stops_detached_app_and_cleans_every_run (test_run_preview_cleanup.RunPreviewCleanupTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 16.384s
+
+OK

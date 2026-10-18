@@ -1,0 +1,10 @@
+{
+  "ref": "refs/heads/main",
+  "node_id": "REF_kwDOS6q1MK9yZWZzL2hlYWRzL21haW4",
+  "url": "https://api.github.com/repos/laleoarrow/battery-monitor/git/refs/heads/main",
+  "object": {
+    "sha": "7f41533b017d26519a69d541d3ffd2dea587f413",
+    "type": "commit",
+    "url": "https://api.github.com/repos/laleoarrow/battery-monitor/git/commits/7f41533b017d26519a69d541d3ffd2dea587f413"
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "testedCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "releaseSourceCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "wholeCurrentTreeClaimedVerified": false,
+  "frozenInputFiles": 157,
+  "releaseCommitInputsIdentical": true,
+  "beforeAndAfterGuestSourceHashesMatch": true,
+  "currentFrozenInputMismatches": [],
+  "productionCodeChangedFromPriorNativeGate": false,
+  "priorNativeCommit": "67b3f60138074823857a3f86f4d517c87f2ac9e2",
+  "changedArchivedInputsFromPriorNativeGate": [
+    "tests/interaction/main.swift",
+    "tests/test_release_workflow_contract.py"
+  ],
+  "hostLifecycleLibraryMatchesFrozenCommit": true,
+  "lifecycleLibrarySHA256": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+  "interactionHarnessSHA256": "39664a45f868cbe6c86c93e2ca041f6ac812b83d55c8564c0964b410e5c2c4a0",
+  "qaRunnerSHA256": {
+    "design/release-v4.3.22/history-fixture-probe/run-owned.sh": "5f0afe783cc44422004ea25c63c4330238555176917c348a3b58605b35ec7e49",
+    "design/release-v4.3.22/history-fixture-probe/guest-run.sh": "37f9348487821524d0f1aa2fbc79f9e86815632ad74ca357ca6801d0c32d39d7",
+    "design/release-v4.3.22/history-fixture-probe/audit-guest.py": "b2801f4922bee3b25cc5c57aae838e189ac83e214f621f7d6ad187c158531b96",
+    "design/release-v4.3.22/history-fixture-probe/source-manifest.py": "277f5291773633b7785fe4d9ab6dbe7af02e96aaea60efe5ccbf438c540751b5",
+    "design/release-v4.3.22/history-fixture-probe/vm-state.py": "8aec65da7cf32d05ae3c661a4b260aa380793bb60d8c8d9e7a87623b9f2e18f7",
+    "design/release-v4.3.22/history-fixture-probe/probe.swift": "d267be6c79887034d02f6e798f3bad9728fdad98a87e6fb235d7c80813c34f15",
+    "design/release-v4.3.22/native/guest-run.sh": "c36f2772a25e1ee4c805b0233fccab108452cc6bf7612e53f0df617501e6d2cf",
+    "design/release-v4.3.22/native/audit-guest.py": "bdff4b08671cf60e8fa474201311c94e1c111cbcca90b714b1bc0bb38c0581ea"
+  },
+  "gateResults": {
+    "schema": 1,
+    "allPassed": true,
+    "checks": {
+      "animationExitZero": true,
+      "animationFullPass": true,
+      "systemAccessibilityUnchanged": true,
+      "baselineExitZero": true,
+      "baselineFullPass": true,
+      "baselineChecksAtLeast32": true,
+      "legacyExitZero": true,
+      "legacyFullPass": true,
+      "legacyChecksAtLeast32": true,
+      "accessibilityExitZero": true,
+      "accessibilityFullPass": true,
+      "accessibilityChecksAtLeast32": true
+    },
+    "interactionChecks": {
+      "baseline": 442,
+      "legacy": 440,
+      "accessibility": 434
+    },
+    "systemAccessibilityWritten": false
+  },
+  "interactionChecksTotal": 1316,
+  "criticalHistoryAssertions": {
+    "baseline": {
+      "History 新增采样首帧保留原区间的实际呈现中点": true,
+      "History 末段回归夹具确实覆盖新增样本造成的切线变化": true,
+      "History 完成检查从未暂停且已呈现的静态曲线开始": true,
+      "History 末段完成检查确实启动有界描边、填充与末端动画": true,
+      "History 控制点过渡到达新曲线后自动静止": true
+    },
+    "legacy": {
+      "History 新增采样首帧保留原区间的实际呈现中点": true,
+      "History 末段回归夹具确实覆盖新增样本造成的切线变化": true,
+      "History 完成检查从未暂停且已呈现的静态曲线开始": true,
+      "History 末段完成检查确实启动有界描边、填充与末端动画": true,
+      "History 控制点过渡到达新曲线后自动静止": true
+    },
+    "accessibility": {
+      "History 新增采样首帧保留原区间的实际呈现中点": true,
+      "History 末段回归夹具确实覆盖新增样本造成的切线变化": true,
+      "History 完成检查从未暂停且已呈现的静态曲线开始": true,
+      "History 末段完成检查确实启动有界描边、填充与末端动画": true,
+      "History 控制点过渡到达新曲线后自动静止": true
+    }
+  },
+  "matchedTailAllThreeVariantsPassed": true,
+  "matchedTailFailureDiagnosticsAbsent": true,
+  "automaticCompletionDeadlineSeconds": 1,
+  "animationStress": {
+    "iterations": 20000,
+    "elapsedSeconds": 0.095
+  },
+  "guestResourceCleanupPassed": true,
+  "ownedVMDeleted": true,
+  "originalVMStatesPreserved": {
+    "macOS-TestLab": true,
+    "macOS-TestLab-Base": true
+  },
+  "originalVMsStopped": true,
+  "hostSnapshotScratchEmpty": true,
+  "canonicalAppOrHelperModified": false,
+  "priorNativeEvidencePreserved": true,
+  "sharedVMWithDiagnostic": {
+    "sourceCommit": "8300cabcb5859fcc74c3ff613a2c530a47c01f30",
+    "evidence": "design/release-v4.3.22/history-fixture-probe/accepted",
+    "diagnosticAndResourceAuditPassed": true,
+    "probeFailureReproduced": false
+  },
+  "scope": "Fresh native AppKit interaction replay in three modes and animation stress from exact immutable release source. The sacrificial paused first-frame fixture is retired; automatic completion uses a new never-paused production layer tree, unchanged one-second key-removal limit, full stroke/fill/head presentation targets and strict retained midpoint.",
+  "limitations": [
+    "Local native gates do not replace the hosted candidate/install matrix or publishing gates.",
+    "The bounded diagnostic did not reproduce or establish the cause of the prior hosted retained-key failure.",
+    "Display-policy comparison covers four DisplayProbe fields, not the full accessibility preferences domain.",
+    "Animation stress elapsed time is a test result, not an app performance benchmark."
+  ],
+  "verificationWrittenUTC": "2026-10-18T16:26:45.763017+00:00"
+}

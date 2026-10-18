@@ -1,0 +1,31 @@
+{
+  "reviewed_at": "2026-10-18T16:12:51.105225+00:00",
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "scope": [
+    "tests/interaction/main.swift"
+  ],
+  "review_kind": "read_only_harness_diff_review",
+  "material_findings": [],
+  "preserved_assertions": [
+    "Paused real-presentation first-frame midpoint tolerance 0.01 point",
+    "Raw tangent witness 31.25 to 125/3",
+    "Natural removal gate remains one second",
+    "Final midpoint tolerance 0.000001 point"
+  ],
+  "added_coverage": [
+    "Fresh never-paused HistoryView and layer tree in same visible window",
+    "Baseline requires full presented stroke path match",
+    "Actual fill/stroke/head animations required with finite 0.35 second duration, no repeats/autoreverse, automatic removal",
+    "Full final stroke/fill topology and control points plus head position within 0.01 point"
+  ],
+  "cleanup_review": {
+    "paused_fixture_stopped_and_detached_before_new_tree": true,
+    "normal_fixture_has_no_cancellation_during_wait": true,
+    "normal_fixture_stopped_and_detached_after_assertions": true,
+    "existing_window_defer_preserved": true
+  },
+  "syntax_validation": "Root reported successful owned whole-App plus harness typecheck; reviewer did not rerun",
+  "coverage_limit": "Normal-clock completion is covered; earlier paused-tree retention remains unexplained, and pause-resume completion is no longer asserted.",
+  "runtime_verification": "pending fresh after-clock-split native proof and hosted candidate replay",
+  "candidate_dispatch_authorized": false
+}

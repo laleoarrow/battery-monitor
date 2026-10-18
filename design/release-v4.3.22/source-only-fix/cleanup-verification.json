@@ -1,0 +1,25 @@
+{
+  "checked_utc": "2026-10-18T15:17:13.333578+00:00",
+  "workspaces": [
+    {
+      "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-source-only.noindex/baseline.Jg1gWU",
+      "exists": false,
+      "matching_processes": [],
+      "launchservices_mentions_workspace": false,
+      "spotlight_mentions_workspace": false
+    },
+    {
+      "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.22-source-only.noindex/fixed.lY6NMG",
+      "exists": false,
+      "matching_processes": [],
+      "launchservices_mentions_workspace": false,
+      "spotlight_mentions_workspace": false
+    }
+  ],
+  "remaining_scratch": [],
+  "scratch_root_exists": false,
+  "owned_resources_clean": true,
+  "canonical_app_exists": true,
+  "canonical_helper_exists": true,
+  "scope": "Shared outer cleanup + local_runtime fixture ownership; only recorded fixture process groups were stopped. No production app/helper/preferences/receipt actions."
+}

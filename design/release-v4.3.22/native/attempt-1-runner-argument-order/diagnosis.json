@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "testsStarted": false,
+  "cause": "New QA runner put --timeout before --grace, but run_owned.py only parses --grace first; it attempted to launch --grace and returned127.",
+  "productionFailure": false,
+  "ownedVMDeleted": true,
+  "hostSnapshotScratchRemoved": true,
+  "fix": "Only new QA runner argument ordering corrected; audit output directory now created even on early failure and full process command paths are checked. Frozen source b51e12b unchanged."
+}

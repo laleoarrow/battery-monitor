@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "testedCommit": "67b3f60138074823857a3f86f4d517c87f2ac9e2",
+  "releaseSourceCommit": "67b3f60138074823857a3f86f4d517c87f2ac9e2",
+  "wholeCurrentTreeClaimedVerified": false,
+  "frozenInputFiles": 157,
+  "releaseCommitInputsIdentical": true,
+  "beforeAndAfterGuestSourceHashesMatch": true,
+  "currentFrozenInputMismatches": [],
+  "changedInputsFromPriorNativeGate": [
+    {
+      "file": "scripts/lib/local_cleanup.sh",
+      "priorSHA256": "e78cf3c2a5bece68162fe8b044451f4e67cdd54df34626a4697d8ec34ecd7d41",
+      "currentSHA256": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249"
+    },
+    {
+      "file": "tests/test_local_runtime_cleanup.py",
+      "priorSHA256": "52e7f8a234db9494afe213fd5d6c96836de1a216aa28fb6d9a55e4511e7c8f44",
+      "currentSHA256": "b3ffc78d00c977c23dff019614ef36459a5bc66678c7502a836fabccb7106ef6"
+    },
+    {
+      "file": "tests/test_release_workflow_contract.py",
+      "priorSHA256": "a8ede55f70fcbfac755ef0aa15e3665ea5a92c2bb89520e1daf0df2d2694b799",
+      "currentSHA256": "f67cd0be2db49389a9806b9ed9505b3f0d4316d677854223a8b292a057cb8e27"
+    }
+  ],
+  "allCommitChangesFromPriorNativeGate": [
+    ".github/workflows/macos-helper-install.yml",
+    "scripts/lib/local_cleanup.sh",
+    "tests/test_local_runtime_cleanup.py",
+    "tests/test_release_workflow_contract.py"
+  ],
+  "productionCodeChangedFromPriorNativeGate": false,
+  "hostLifecycleLibraryMatchesFrozenCommit": true,
+  "lifecycleLibrarySHA256": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+  "interactionHarnessSHA256": "ed94595c9db296c564ec07a25c18c1f5865f3c98cb9f37d981356fded92b5474",
+  "qaRunnerSHA256": {
+    "design/release-v4.3.22/native/audit-guest.py": "bdff4b08671cf60e8fa474201311c94e1c111cbcca90b714b1bc0bb38c0581ea",
+    "design/release-v4.3.22/native/guest-run.sh": "c36f2772a25e1ee4c805b0233fccab108452cc6bf7612e53f0df617501e6d2cf",
+    "design/release-v4.3.22/native/run-owned.sh": "78eb84bef5721cde9fdb7a9c6ada5cfa46c4b674da8661efc0d6418cd0b343dc",
+    "design/release-v4.3.22/native/source-manifest.py": "277f5291773633b7785fe4d9ab6dbe7af02e96aaea60efe5ccbf438c540751b5",
+    "design/release-v4.3.22/native/vm-state.py": "8aec65da7cf32d05ae3c661a4b260aa380793bb60d8c8d9e7a87623b9f2e18f7"
+  },
+  "gateResults": {
+    "schema": 1,
+    "allPassed": true,
+    "checks": {
+      "animationExitZero": true,
+      "animationFullPass": true,
+      "systemAccessibilityUnchanged": true,
+      "baselineExitZero": true,
+      "baselineFullPass": true,
+      "baselineChecksAtLeast32": true,
+      "legacyExitZero": true,
+      "legacyFullPass": true,
+      "legacyChecksAtLeast32": true,
+      "accessibilityExitZero": true,
+      "accessibilityFullPass": true,
+      "accessibilityChecksAtLeast32": true
+    },
+    "interactionChecks": {
+      "baseline": 440,
+      "legacy": 438,
+      "accessibility": 432
+    },
+    "systemAccessibilityWritten": false
+  },
+  "matchedTailAllThreeVariantsPassed": true,
+  "matchedTailFailureDiagnosticsAbsent": true,
+  "guestResourceCleanupPassed": true,
+  "ownedVMDeleted": true,
+  "originalVMStatesPreserved": {
+    "macOS-TestLab": true,
+    "macOS-TestLab-Base": true
+  },
+  "hostSnapshotScratchEmpty": true,
+  "canonicalAppOrHelperModified": false,
+  "priorNativeEvidencePreserved": true,
+  "scope": "Native AppKit interaction and animation release gates after shared lifecycle source-only compatibility fix. Exact frozen git archive and matching fixed host/guest cleanup library.",
+  "limitations": [
+    "Local native gates do not replace the hosted candidate/install matrix or publishing gates.",
+    "Display-policy comparison covers the four DisplayProbe fields, not the full accessibility preferences domain.",
+    "Animation stress elapsed time is a test result, not an app performance benchmark."
+  ]
+}

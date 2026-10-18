@@ -1,0 +1,33 @@
+{
+  "scope": [
+    "tests/interaction/main.swift"
+  ],
+  "production": {
+    "Popover/HistoryLayer.swift": {
+      "unchangedFromPreviousFrozenSource": true,
+      "sha256": "f5b3ad0a53691be908b6da06d3186758e4cfeff9a505e457669fcaa6ef000458"
+    },
+    "Popover/TopProcessesView.swift": {
+      "unchangedFromPreviousFrozenSource": true,
+      "sha256": "26eb1c7686db9dac1cc04c7d36df85e698d10b9e29a1290685c6fcf1d517873b"
+    },
+    "Popover/PopoverContentView.swift": {
+      "unchangedFromPreviousFrozenSource": true,
+      "sha256": "36656988dd9094f27389402674238a6dd4449fe9cabcfd9f5d4403e2fce3f32e"
+    },
+    "Popover/ProcessActionButton.swift": {
+      "unchangedFromPreviousFrozenSource": true,
+      "sha256": "163d83bb53bd440bc4a1b6a50855fcd153f338cbe4059c4eb468f81bb373d522"
+    },
+    "Popover/FooterHoverFeedbackView.swift": {
+      "unchangedFromPreviousFrozenSource": true,
+      "sha256": "4df575e283095ebc236e071e3e406cf8fde9cabb5fe4a8035604cd4acb683060"
+    }
+  },
+  "completionDeadlineSeconds": 1,
+  "retainedMidpointTolerance": 1e-06,
+  "additionalFullGeometryTolerancePoints": 0.01,
+  "initialDraftWholeAppTypecheckPassed": true,
+  "finalMinorBaselineHelperPendingNativeCompilation": true,
+  "mechanismProven": false
+}

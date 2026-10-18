@@ -1,0 +1,162 @@
+{
+  "conclusion": "",
+  "databaseId": 39141158685,
+  "event": "push",
+  "headBranch": "main",
+  "headSha": "8300cabcb5859fcc74c3ff613a2c530a47c01f30",
+  "jobs": [
+    {
+      "completedAt": "2026-10-18T15:36:09Z",
+      "conclusion": "success",
+      "databaseId": 117715699136,
+      "name": "Website build, test, lint, and export",
+      "startedAt": "2026-10-18T15:35:21Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T15:35:23Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T15:35:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:35:30Z",
+          "conclusion": "success",
+          "name": "Check out the repository",
+          "number": 2,
+          "startedAt": "2026-10-18T15:35:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:35:39Z",
+          "conclusion": "success",
+          "name": "Set up Node.js",
+          "number": 3,
+          "startedAt": "2026-10-18T15:35:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:35:55Z",
+          "conclusion": "success",
+          "name": "Install locked website dependencies",
+          "number": 4,
+          "startedAt": "2026-10-18T15:35:39Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:36:02Z",
+          "conclusion": "success",
+          "name": "Build and test the rendered website",
+          "number": 5,
+          "startedAt": "2026-10-18T15:35:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:36:05Z",
+          "conclusion": "success",
+          "name": "Lint the website",
+          "number": 6,
+          "startedAt": "2026-10-18T15:36:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:36:06Z",
+          "conclusion": "success",
+          "name": "Export the GitHub Pages site",
+          "number": 7,
+          "startedAt": "2026-10-18T15:36:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:36:06Z",
+          "conclusion": "success",
+          "name": "Post Set up Node.js",
+          "number": 13,
+          "startedAt": "2026-10-18T15:36:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:36:06Z",
+          "conclusion": "success",
+          "name": "Post Check out the repository",
+          "number": 14,
+          "startedAt": "2026-10-18T15:36:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:36:06Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 15,
+          "startedAt": "2026-10-18T15:36:06Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39141158685/job/117715699136"
+    },
+    {
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "databaseId": 117715699428,
+      "name": "SwiftPM and Python tests",
+      "startedAt": "2026-10-18T15:35:27Z",
+      "status": "in_progress",
+      "steps": [
+        {
+          "completedAt": "2026-10-18T15:35:29Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-18T15:35:28Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:35:46Z",
+          "conclusion": "success",
+          "name": "Check out the repository",
+          "number": 2,
+          "startedAt": "2026-10-18T15:35:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-18T15:36:43Z",
+          "conclusion": "success",
+          "name": "Build Swift package",
+          "number": 3,
+          "startedAt": "2026-10-18T15:35:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Test Swift package",
+          "number": 4,
+          "startedAt": "2026-10-18T15:36:43Z",
+          "status": "in_progress"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Run the default headless Python suite",
+          "number": 5,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Post Check out the repository",
+          "number": 10,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39141158685/job/117715699428"
+    }
+  ],
+  "status": "in_progress",
+  "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39141158685",
+  "workflowName": "Headless CI"
+}

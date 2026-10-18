@@ -1,0 +1,3 @@
+bundleID=com.leoarrow.wattson.historyfixtureprobe.a9aa1767-4582-4cb2-9a77-cec927a420a1
+sandboxed=true
+frozenSourceCommit=8300cabcb5859fcc74c3ff613a2c530a47c01f30

@@ -1,0 +1,309 @@
+{
+  "reviewed_at": "2026-10-18T16:50:06.538336+00:00",
+  "candidate_run_id": 39145124379,
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "event": "workflow_dispatch",
+  "branch": "main",
+  "status": "completed",
+  "conclusion": "success",
+  "exact_six_jobs_success": true,
+  "native_mode_check_counts": [
+    441,
+    439,
+    434
+  ],
+  "native_hosted_check_total": 1314,
+  "native_local_comparison": {
+    "baseline": {
+      "host_count": 441,
+      "local_count": 442,
+      "only_local": [
+        "关闭中途重开不会从低透明度重播入场"
+      ],
+      "only_hosted": []
+    },
+    "legacy": {
+      "host_count": 439,
+      "local_count": 440,
+      "only_local": [
+        "关闭中途重开不会从低透明度重播入场"
+      ],
+      "only_hosted": []
+    },
+    "accessibility": {
+      "host_count": 434,
+      "local_count": 434,
+      "only_local": [],
+      "only_hosted": []
+    }
+  },
+  "native_count_difference_explained": "Hosted AppKit completed dismissal synchronously; existing conditional in-flight-reopen assertion unavailable in baseline/legacy and explicitly logged. Fresh local native proof covers the assertion in both modes.",
+  "candidate_headless_counts": {
+    "swift": 662,
+    "swift_failures": 0,
+    "python": 608,
+    "python_skipped": 4
+  },
+  "native_full_pass_summaries": [
+    {
+      "line": 3035,
+      "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:39:21.9572620Z ALL_INTERACTION_CHECKS_PASSED"
+    },
+    {
+      "line": 3495,
+      "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:41:41.5674060Z ALL_INTERACTION_CHECKS_PASSED"
+    },
+    {
+      "line": 3950,
+      "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:43:55.6458620Z ALL_INTERACTION_CHECKS_PASSED"
+    }
+  ],
+  "native_history_checks": {
+    "History 新增采样首帧保留原区间的实际呈现中点": [
+      {
+        "line": 3015,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:39:18.3524070Z ✅ History 新增采样首帧保留原区间的实际呈现中点"
+      },
+      {
+        "line": 3475,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:41:38.1727290Z ✅ History 新增采样首帧保留原区间的实际呈现中点"
+      },
+      {
+        "line": 3930,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:43:52.3892480Z ✅ History 新增采样首帧保留原区间的实际呈现中点"
+      }
+    ],
+    "History 末段回归夹具确实覆盖新增样本造成的切线变化": [
+      {
+        "line": 3016,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:39:18.3549080Z ✅ History 末段回归夹具确实覆盖新增样本造成的切线变化"
+      },
+      {
+        "line": 3476,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:41:38.1728120Z ✅ History 末段回归夹具确实覆盖新增样本造成的切线变化"
+      },
+      {
+        "line": 3931,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:43:52.3893490Z ✅ History 末段回归夹具确实覆盖新增样本造成的切线变化"
+      }
+    ],
+    "History 完成检查从未暂停且已呈现的静态曲线开始": [
+      {
+        "line": 3017,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:39:18.3597370Z ✅ History 完成检查从未暂停且已呈现的静态曲线开始"
+      },
+      {
+        "line": 3477,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:41:38.1954140Z ✅ History 完成检查从未暂停且已呈现的静态曲线开始"
+      },
+      {
+        "line": 3932,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:43:52.4114460Z ✅ History 完成检查从未暂停且已呈现的静态曲线开始"
+      }
+    ],
+    "History 末段完成检查确实启动有界描边、填充与末端动画": [
+      {
+        "line": 3018,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:39:18.3661330Z ✅ History 末段完成检查确实启动有界描边、填充与末端动画"
+      },
+      {
+        "line": 3478,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:41:38.2000760Z ✅ History 末段完成检查确实启动有界描边、填充与末端动画"
+      },
+      {
+        "line": 3933,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:43:52.4168580Z ✅ History 末段完成检查确实启动有界描边、填充与末端动画"
+      }
+    ],
+    "History 控制点过渡到达新曲线后自动静止": [
+      {
+        "line": 3019,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:39:19.3436600Z ✅ History 控制点过渡到达新曲线后自动静止"
+      },
+      {
+        "line": 3479,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:41:39.0304810Z ✅ History 控制点过渡到达新曲线后自动静止"
+      },
+      {
+        "line": 3934,
+        "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:43:52.9977320Z ✅ History 控制点过渡到达新曲线后自动静止"
+      }
+    ]
+  },
+  "stress_summary": [
+    {
+      "line": 3951,
+      "log": "Build universal PKG and DMG once\tReplay real AppKit interaction and animation lifecycles\t2026-10-18T16:44:26.5529110Z ANIMATION_STRESS_PASSED iterations=20000 elapsed=0.136s"
+    }
+  ],
+  "matrix": [
+    {
+      "name": "Install on macos-15",
+      "job_id": 117731477565,
+      "conclusion": "success",
+      "v2_required": true,
+      "actual_endmarkers": {
+        "dmg": [
+          {
+            "line": 4691,
+            "log": "Install on macos-15\tTest helper-free DMG copy launch and removal without elevation\t2026-10-18T16:47:23.9115710Z Helper-free DMG copy, replacement, launch and removal passed without elevation."
+          }
+        ],
+        "pkg": [
+          {
+            "line": 5116,
+            "log": "Install on macos-15\tTest first install and disabled-service reinstall\t2026-10-18T16:47:42.9307810Z First install, disabled-service reinstall, public v3 upgrade, uninstall, app-only upgrade, app launch, and cleanup checks passed."
+          }
+        ],
+        "v2": [
+          {
+            "line": 5387,
+            "log": "Install on macos-15\tTest upgrade from the published v2.1.5 release\t2026-10-18T16:47:56.0908640Z v2.1.5 upgrade and cleanup checks passed."
+          }
+        ],
+        "final_cleanup": [
+          {
+            "line": 5449,
+            "log": "Install on macos-15\tRequire complete installation lifecycles and clean receipts\t2026-10-18T16:47:56.9623530Z All required installation lifecycles completed and cleanup was independently verified."
+          }
+        ]
+      },
+      "independent_final_gate": "success"
+    },
+    {
+      "name": "Install on macos-14",
+      "job_id": 117731477584,
+      "conclusion": "success",
+      "v2_required": true,
+      "actual_endmarkers": {
+        "dmg": [
+          {
+            "line": 6013,
+            "log": "Install on macos-14\tTest helper-free DMG copy launch and removal without elevation\t2026-10-18T16:47:19.5954750Z Helper-free DMG copy, replacement, launch and removal passed without elevation."
+          }
+        ],
+        "pkg": [
+          {
+            "line": 6436,
+            "log": "Install on macos-14\tTest first install and disabled-service reinstall\t2026-10-18T16:47:36.8982820Z First install, disabled-service reinstall, public v3 upgrade, uninstall, app-only upgrade, app launch, and cleanup checks passed."
+          }
+        ],
+        "v2": [
+          {
+            "line": 6705,
+            "log": "Install on macos-14\tTest upgrade from the published v2.1.5 release\t2026-10-18T16:47:47.4067530Z v2.1.5 upgrade and cleanup checks passed."
+          }
+        ],
+        "final_cleanup": [
+          {
+            "line": 6767,
+            "log": "Install on macos-14\tRequire complete installation lifecycles and clean receipts\t2026-10-18T16:47:48.3048380Z All required installation lifecycles completed and cleanup was independently verified."
+          }
+        ]
+      },
+      "independent_final_gate": "success"
+    },
+    {
+      "name": "Install on macos-26",
+      "job_id": 117731477619,
+      "conclusion": "success",
+      "v2_required": true,
+      "actual_endmarkers": {
+        "dmg": [
+          {
+            "line": 7392,
+            "log": "Install on macos-26\tTest helper-free DMG copy launch and removal without elevation\t2026-10-18T16:47:39.6399990Z Helper-free DMG copy, replacement, launch and removal passed without elevation."
+          }
+        ],
+        "pkg": [
+          {
+            "line": 7818,
+            "log": "Install on macos-26\tTest first install and disabled-service reinstall\t2026-10-18T16:47:59.5188240Z First install, disabled-service reinstall, public v3 upgrade, uninstall, app-only upgrade, app launch, and cleanup checks passed."
+          }
+        ],
+        "v2": [
+          {
+            "line": 8087,
+            "log": "Install on macos-26\tTest upgrade from the published v2.1.5 release\t2026-10-18T16:48:16.0821970Z v2.1.5 upgrade and cleanup checks passed."
+          }
+        ],
+        "final_cleanup": [
+          {
+            "line": 8149,
+            "log": "Install on macos-26\tRequire complete installation lifecycles and clean receipts\t2026-10-18T16:48:17.0862620Z All required installation lifecycles completed and cleanup was independently verified."
+          }
+        ]
+      },
+      "independent_final_gate": "success"
+    },
+    {
+      "name": "Install on macos-15-intel",
+      "job_id": 117731477636,
+      "conclusion": "success",
+      "v2_required": false,
+      "actual_endmarkers": {
+        "dmg": [
+          {
+            "line": 8774,
+            "log": "Install on macos-15-intel\tTest helper-free DMG copy launch and removal without elevation\t2026-10-18T16:47:42.4303430Z Helper-free DMG copy, replacement, launch and removal passed without elevation."
+          }
+        ],
+        "pkg": [
+          {
+            "line": 9210,
+            "log": "Install on macos-15-intel\tTest first install and disabled-service reinstall\t2026-10-18T16:48:10.7800920Z First install, disabled-service reinstall, public v3 upgrade, uninstall, app-only upgrade, app launch, and cleanup checks passed."
+          }
+        ],
+        "v2": [],
+        "final_cleanup": [
+          {
+            "line": 9272,
+            "log": "Install on macos-15-intel\tRequire complete installation lifecycles and clean receipts\t2026-10-18T16:48:12.1400790Z All required installation lifecycles completed and cleanup was independently verified."
+          }
+        ]
+      },
+      "independent_final_gate": "success"
+    },
+    {
+      "name": "Install on macos-26-intel",
+      "job_id": 117731477639,
+      "conclusion": "success",
+      "v2_required": false,
+      "actual_endmarkers": {
+        "dmg": [
+          {
+            "line": 9868,
+            "log": "Install on macos-26-intel\tTest helper-free DMG copy launch and removal without elevation\t2026-10-18T16:47:35.2845260Z Helper-free DMG copy, replacement, launch and removal passed without elevation."
+          }
+        ],
+        "pkg": [
+          {
+            "line": 10306,
+            "log": "Install on macos-26-intel\tTest first install and disabled-service reinstall\t2026-10-18T16:47:59.9180010Z First install, disabled-service reinstall, public v3 upgrade, uninstall, app-only upgrade, app launch, and cleanup checks passed."
+          }
+        ],
+        "v2": [],
+        "final_cleanup": [
+          {
+            "line": 10368,
+            "log": "Install on macos-26-intel\tRequire complete installation lifecycles and clean receipts\t2026-10-18T16:48:01.6211950Z All required installation lifecycles completed and cleanup was independently verified."
+          }
+        ]
+      },
+      "independent_final_gate": "success"
+    }
+  ],
+  "actual_endmarker_counts": {
+    "native": 3,
+    "stress": 1,
+    "dmg": 5,
+    "pkg": 5,
+    "v2": 3,
+    "final_cleanup": 5
+  },
+  "workflow_log_sha256": "3da6d9caeaa521e8b30a8632fac8390c4232fcf5a628d4dd0da1f214255c66a6",
+  "artifact_and_standalone_verification": "Owned independently by action_palette; not asserted by this workflow-log review",
+  "workflow_reruns_by_observer": 0,
+  "dispatch_attempt_count": 1,
+  "atomic_review_finalized_at": "2026-10-18T16:50:44.733017+00:00"
+}

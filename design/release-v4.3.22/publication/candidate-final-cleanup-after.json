@@ -1,0 +1,41 @@
+{
+  "observed_at": "2026-10-18T15:14:20.268541+00:00",
+  "candidate_run_id": 39137918718,
+  "download_attempts": 2,
+  "download_cancelled_by_owner_request": true,
+  "artifact_directory_created": false,
+  "download_scratch_remaining": [],
+  "expanded_apps_created": false,
+  "mounts_created": false,
+  "app_registrations_created": false,
+  "signature_and_pkg_dmg_verification_performed": false,
+  "canonical_version": {
+    "exit_code": 0,
+    "stdout": "4.3.22",
+    "stderr": ""
+  },
+  "canonical_build": {
+    "exit_code": 0,
+    "stdout": "4.3.22",
+    "stderr": ""
+  },
+  "canonical_receipt": {
+    "exit_code": 0,
+    "stdout": "package-id: com.leoarrow.wattson.pkg\nversion: 4.3.22\nvolume: /\nlocation: \ninstall-time: 1792329341",
+    "stderr": ""
+  },
+  "canonical_processes": {
+    "exit_code": 0,
+    "stdout": "80435   501 /Applications/Wattson.app/Contents/MacOS/Wattson",
+    "stderr": ""
+  },
+  "project_mounts": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "canonical_version_unchanged": true,
+  "canonical_build_unchanged": true,
+  "canonical_receipt_unchanged": true,
+  "canonical_processes_unchanged": true
+}

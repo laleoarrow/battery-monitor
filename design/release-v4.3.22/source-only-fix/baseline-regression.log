@@ -1,0 +1,59 @@
+test_source_only_runners_preserve_caller_traps_and_complete_cleanup (test_local_runtime_cleanup.LocalRuntimeCleanupTests) ... 
+======================================================================
+FAIL: test_source_only_runners_preserve_caller_traps_and_complete_cleanup (test_local_runtime_cleanup.LocalRuntimeCleanupTests) (runner='wattson_run')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-source-only.noindex/baseline.Jg1gWU/source/tests/test_local_runtime_cleanup.py", line 109, in test_source_only_runners_preserve_caller_traps_and_complete_cleanup
+    self.assertEqual(markers, ["caller-signal", "body-final", "caller-cleanup"], detail)
+AssertionError: Lists differ: [] != ['caller-signal', 'body-final', 'caller-cleanup']
+
+Second list contains 3 additional elements.
+First extra element 0:
+'caller-signal'
+
+- []
++ ['caller-signal', 'body-final', 'caller-cleanup'] : exit=1, markers=[]
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-source-only.noindex/baseline.Jg1gWU/source/scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-source-only.noindex/baseline.Jg1gWU/source/scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable
+
+
+======================================================================
+FAIL: test_source_only_runners_preserve_caller_traps_and_complete_cleanup (test_local_runtime_cleanup.LocalRuntimeCleanupTests) (runner='wattson_run_timeout 5')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-source-only.noindex/baseline.Jg1gWU/source/tests/test_local_runtime_cleanup.py", line 109, in test_source_only_runners_preserve_caller_traps_and_complete_cleanup
+    self.assertEqual(markers, ["caller-signal", "body-final", "caller-cleanup"], detail)
+AssertionError: Lists differ: [] != ['caller-signal', 'body-final', 'caller-cleanup']
+
+Second list contains 3 additional elements.
+First extra element 0:
+'caller-signal'
+
+- []
++ ['caller-signal', 'body-final', 'caller-cleanup'] : exit=1, markers=[]
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-source-only.noindex/baseline.Jg1gWU/source/scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-source-only.noindex/baseline.Jg1gWU/source/scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable
+
+
+======================================================================
+FAIL: test_source_only_runners_preserve_caller_traps_and_complete_cleanup (test_local_runtime_cleanup.LocalRuntimeCleanupTests) (runner='wattson_run_script')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-source-only.noindex/baseline.Jg1gWU/source/tests/test_local_runtime_cleanup.py", line 109, in test_source_only_runners_preserve_caller_traps_and_complete_cleanup
+    self.assertEqual(markers, ["caller-signal", "body-final", "caller-cleanup"], detail)
+AssertionError: Lists differ: [] != ['caller-signal', 'body-final', 'caller-cleanup']
+
+Second list contains 3 additional elements.
+First extra element 0:
+'caller-signal'
+
+- []
++ ['caller-signal', 'body-final', 'caller-cleanup'] : exit=1, markers=[]
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-source-only.noindex/baseline.Jg1gWU/source/scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-source-only.noindex/baseline.Jg1gWU/source/scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.862s
+
+FAILED (failures=3)

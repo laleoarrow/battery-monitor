@@ -1,0 +1,35 @@
+{
+  "old_candidate_run_id": 39137918718,
+  "observed_at": "2026-10-18T15:42:06.700545+00:00",
+  "correction": "The prior audit checked project-owned download staging only. gh2.86 also left these partial ZIPs in OS TMPDIR on external termination. Two attempts reached180s deadlines; a third started before owner cancellation. All three incomplete owned files have now been removed after identity/UID/time/ZIP-header validation. No complete archive or caller-owned input was removed. Future downloads force TMPDIR inside the owned project-local .noindex scratch.",
+  "removed_incomplete_files": [
+    {
+      "temporary_name": "gh-artifact.3165625986.zip",
+      "size": 113627,
+      "mtime_utc": "2026-10-18T15:13:04.014735+00:00",
+      "sha256": "7f5414412b47cfda52537949da9339f01b025f39e711b7fb8a12bfea916ce80b",
+      "first_zip_member": "Wattson-v4.3.22-macos-universal.pkg",
+      "complete_zip": false,
+      "ownership": "The three only artifact-download attempts in this task window, matching the old39137918718 named artifact and observed timeout/cancellation times."
+    },
+    {
+      "temporary_name": "gh-artifact.2767581737.zip",
+      "size": 3914715,
+      "mtime_utc": "2026-10-18T15:12:57.904882+00:00",
+      "sha256": "700caf94a13b9c53b64aa79f8db8a6b8d006c948c42b41a3ed665b24c4a62f50",
+      "first_zip_member": "Wattson-v4.3.22-macos-universal.pkg",
+      "complete_zip": false,
+      "ownership": "The three only artifact-download attempts in this task window, matching the old39137918718 named artifact and observed timeout/cancellation times."
+    },
+    {
+      "temporary_name": "gh-artifact.1395566338.zip",
+      "size": 4603904,
+      "mtime_utc": "2026-10-18T15:09:58.020839+00:00",
+      "sha256": "5ea583b0be63ee0ebfe8933eac8b6333df60ff62473d50098684f3db1e08d9e1",
+      "first_zip_member": "Wattson-v4.3.22-macos-universal.pkg",
+      "complete_zip": false,
+      "ownership": "The three only artifact-download attempts in this task window, matching the old39137918718 named artifact and observed timeout/cancellation times."
+    }
+  ],
+  "all_removed": true
+}

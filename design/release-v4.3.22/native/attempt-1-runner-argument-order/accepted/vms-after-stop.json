@@ -1,0 +1,29 @@
+[
+  {
+    "Size" : 30,
+    "Disk" : 50,
+    "State" : "stopped",
+    "Source" : "local",
+    "Running" : false,
+    "Name" : "Wattson-Release-Gates-A477D39D",
+    "Accessed" : "2026-10-18T13:25:47Z"
+  },
+  {
+    "Size" : 33,
+    "Disk" : 50,
+    "State" : "stopped",
+    "Source" : "local",
+    "Running" : false,
+    "Name" : "macOS-TestLab",
+    "Accessed" : "2026-10-15T06:45:45Z"
+  },
+  {
+    "Size" : 30,
+    "Disk" : 50,
+    "State" : "stopped",
+    "Source" : "local",
+    "Running" : false,
+    "Name" : "macOS-TestLab-Base",
+    "Accessed" : "2026-10-18T13:24:56Z"
+  }
+]

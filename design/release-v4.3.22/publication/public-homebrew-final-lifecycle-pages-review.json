@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "verified_at": "2026-10-18T17:06:54.053822+00:00",
+  "allPassed": true,
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "remote_main": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "release_tag": "v4.3.22",
+  "release_id": 416577205,
+  "public_pkg_sha256": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995",
+  "tap_commit": "8ba66c2e53e5f51393708c9a6e5c76644841b50e",
+  "tap_ci_run_id": 39147269521,
+  "public_homebrew_run_id": 39147785416,
+  "public_homebrew_conclusion": "success",
+  "all_four_homebrew_jobs_success": true,
+  "public_architecture_lifecycles": [
+    {
+      "job": "Homebrew lifecycle on macos-15-intel",
+      "architecture": "x86_64",
+      "job_id": 117735088123,
+      "conclusion": "success",
+      "actual_install_success_logged": true,
+      "exact_tap_and_pkg_binding_logged": true,
+      "actual_lifecycle_endmarker": {
+        "line": 633,
+        "log": "Homebrew lifecycle on macos-15-intel\tTest public cask install and uninstall\t2026-10-18T17:04:09.4693000Z Public Homebrew cask install, helper health, and uninstall cleanup passed."
+      }
+    },
+    {
+      "job": "Homebrew lifecycle on macos-26",
+      "architecture": "arm64",
+      "job_id": 117735088132,
+      "conclusion": "success",
+      "actual_install_success_logged": true,
+      "exact_tap_and_pkg_binding_logged": true,
+      "actual_lifecycle_endmarker": {
+        "line": 1001,
+        "log": "Homebrew lifecycle on macos-26\tTest public cask install and uninstall\t2026-10-18T17:03:44.2160520Z Public Homebrew cask install, helper health, and uninstall cleanup passed."
+      }
+    }
+  ],
+  "actual_public_lifecycle_marker_count": 2,
+  "workflow_latest_promotion_success": true,
+  "latest_release_verified": {
+    "tag_name": "v4.3.22",
+    "id": 416577205,
+    "stable": true,
+    "all_eight_asset_digests_unchanged": true
+  },
+  "automatic_pages_run_id": 39147879672,
+  "automatic_pages_source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "pages_conclusion": "success",
+  "both_pages_jobs_success": true,
+  "pages_identity_website_checks_export_upload_and_deploy_success": true,
+  "pages_run_url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39147879672",
+  "public_homebrew_run_url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39147785416",
+  "workflow_log_sha256": {
+    "homebrew": "d4c1b5ad9f95f472633a840480c38fb00c40e8606ff0291aee3eea963be41b4c",
+    "pages": "d4cf7f134ec949b88c27528cc4565e9c7aee97a30e99ef5dcc85029c42713129"
+  },
+  "dispatch_attempt_count": 1,
+  "manual_latest_mutations": 0,
+  "manual_pages_dispatches": 0,
+  "failed_workflow_reruns": 0,
+  "limitations": [
+    "Public workflow does not assert visible GUI popup or process stability; canonical install and anonymous gallery audit remain root-owned."
+  ],
+  "observer_completed_and_reaped": true
+}

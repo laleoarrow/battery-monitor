@@ -1,0 +1,29 @@
+[
+  {
+    "Running" : true,
+    "Source" : "local",
+    "Disk" : 50,
+    "Size" : 31,
+    "Accessed" : "2026-10-18T16:24:43Z",
+    "State" : "running",
+    "Name" : "Wattson-History-Fixture-91AC4281"
+  },
+  {
+    "Running" : false,
+    "Source" : "local",
+    "Disk" : 50,
+    "Size" : 33,
+    "Accessed" : "2026-10-15T06:45:45Z",
+    "State" : "stopped",
+    "Name" : "macOS-TestLab"
+  },
+  {
+    "Running" : false,
+    "Source" : "local",
+    "Disk" : 50,
+    "Size" : 30,
+    "Accessed" : "2026-10-18T16:16:18Z",
+    "State" : "stopped",
+    "Name" : "macOS-TestLab-Base"
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "observed_at": "2026-10-18T15:30:32.518495+00:00",
+  "source_commit": "67b3f60138074823857a3f86f4d517c87f2ac9e2",
+  "headless_run_id": 39139882106,
+  "headless_status": "completed",
+  "headless_conclusion": "failure",
+  "swift_tests": 662,
+  "swift_failures": 0,
+  "python_tests": 607,
+  "python_failures": 3,
+  "python_skipped": 4,
+  "failed_test": "ReleaseWorkflowContractTests.test_candidate_rejects_missing_lifecycle_completion_outputs",
+  "failure_details": [
+    "SwiftPM and Python tests\tRun the default headless Python suite\t2026-10-18T15:26:09.1164050Z FAIL: test_candidate_rejects_missing_lifecycle_completion_outputs (test_release_workflow_contract.ReleaseWorkflowContractTests) (dmg_complete='', pkg_complete='true', expect_v2='false')",
+    "SwiftPM and Python tests\tRun the default headless Python suite\t2026-10-18T15:26:09.1169120Z AssertionError: 0 == 0",
+    "SwiftPM and Python tests\tRun the default headless Python suite\t2026-10-18T15:26:09.1170670Z FAIL: test_candidate_rejects_missing_lifecycle_completion_outputs (test_release_workflow_contract.ReleaseWorkflowContractTests) (dmg_complete='true', pkg_complete='', expect_v2='false')",
+    "SwiftPM and Python tests\tRun the default headless Python suite\t2026-10-18T15:26:09.1174590Z AssertionError: 0 == 0",
+    "SwiftPM and Python tests\tRun the default headless Python suite\t2026-10-18T15:26:09.1175860Z FAIL: test_candidate_rejects_missing_lifecycle_completion_outputs (test_release_workflow_contract.ReleaseWorkflowContractTests) (dmg_complete='true', pkg_complete='true', expect_v2='true')",
+    "SwiftPM and Python tests\tRun the default headless Python suite\t2026-10-18T15:26:09.1180040Z AssertionError: 0 == 0"
+  ],
+  "native_exact_source_and_cleanup_passed": true,
+  "native_proof_sha256": "de9bd98c69a2946545ff75c3a52bcb94cb2cab1ae39131ccaa011fe8ae2baf00",
+  "candidate_dispatch_attempted": false,
+  "candidate_eligible": false,
+  "blocking_gate": "Exact push Headless CI failed; no workflow dispatch attempted.",
+  "diagnosed_cause": "The new independent workflow gate relied on set -e to stop false [[ ]] compound commands. Apple Bash 3.2.57 continues to following commands instead. The whole-gate local test was masked by later explicit canonical-receipt failure, while the clean hosted runner reached success and returned0. Action_palette reproduced all three guard failures in clean environment and through local_runtime.run. Explicit guard failure exits and stage-specific stderr assertions are required.",
+  "production_app_regression_established": false
+}

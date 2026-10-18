@@ -1,0 +1,6 @@
+SHA256SUMS.txt: anonymous public transfer started
+Wattson-v4.3.22-release-info.txt: anonymous public transfer started
+Wattson-v4.3.22-macos-universal.dmg: anonymous public transfer started
+Wattson-v4.3.22-macos-universal.pkg: anonymous public transfer started
+Wattson-v4.3.22-macos-universal.dmg: public hash/size and candidate cmp passed
+artifact-public-download: SHA256SUMS.txt: curl failed (exit 28)

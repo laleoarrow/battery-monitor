@@ -1,0 +1,70 @@
+{
+  "prepared_utc": "2026-10-18T16:17:45.588336+00:00",
+  "frozen_source_sha": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "version": "4.3.22",
+  "candidate_run_id": null,
+  "status": "ready_waiting_for_root_run_id_no_download_or_publication_started",
+  "future_retained_directory": "dist/github-candidate-v4.3.22-RUNID/",
+  "expected_candidate_artifact_name": "Wattson-release-candidate-v4.3.22",
+  "exact_final_files": [
+    "SHA256SUMS.txt",
+    "Wattson-v4.3.22-macos-universal.dmg",
+    "Wattson-v4.3.22-macos-universal.pkg",
+    "Wattson-v4.3.22-release-info.txt"
+  ],
+  "download_ownership": {
+    "scratch": "Unique project-local .build/*.noindex workspace registered with scripts/lib/local_cleanup.sh before invoking gh/curl.",
+    "temporary_directory": "Force TMPDIR to an owned subdirectory before every gh call; gh2.86 uses OS TMPDIR for artifact ZIPs otherwise.",
+    "processes": "Bounded shared run_owned.py process groups; lifecycle verification receives its existing cleanup grace.",
+    "transport": "Prefer bounded gh artifact download; any HTTP1 fallback keeps token/signed redirect configuration in memory or mode0600 owned scratch, never argv or evidence.",
+    "redaction": "No shell tracing, tokens, signed URL queries, response Location headers, raw curl configs or unredacted transport exceptions in retained logs.",
+    "retention": "Only the four fully verified candidate assets move to the run-specific final directory. Archive, partials, credentials, extracted Apps and mounts remain disposable."
+  },
+  "strict_checks": [
+    "Candidate run/artifact identity matches root-provided run ID, frozen SHA, main branch and expected artifact name; require successful build and nonexpired artifact.",
+    "Match downloaded ZIP to API artifact digest/size where provided; require exact four safe regular-file ZIP entries and valid CRC before extraction.",
+    "Require exactly three unique SHA256SUMS lines covering PKG, DMG and release-info; match each digest and reject extra files/paths/duplicates.",
+    "Require exact15 release-info keys, no duplicates, version/build4.3.22, arm64+x86_64, minOS12, fixed app/helper paths, app-only DMG and app+helper PKG, community-ad-hoc signatures, unsigned PKG/DMG, notarized=no, stapled=no.",
+    "Run frozen real scripts/verify_release.sh PKG DMG without rebuilding or setting WATTSON_RELEASE_BUILD_ROOT; require its final verification marker as well as exit0.",
+    "Verify actual App/helper architecture and ad-hoc signatures for both slices, actual unsigned PKG/DMG, and PKG/DMG App byte identity; do not infer these facts from metadata alone.",
+    "After verification, require owned process termination, mount detach, disposable App unregistration and scratch deletion; preserve a mounted path and report failure if bounded detach fails."
+  ],
+  "verifier_environment": {
+    "WATTSON_EXPECT_INSTALLER_SIGNED": "0",
+    "WATTSON_EXPECT_DMG_SIGNED": "0",
+    "WATTSON_EXPECT_NOTARIZED": "0",
+    "WATTSON_EXPECT_TEAM_ID": "",
+    "WATTSON_RELEASE_BUILD_ROOT": "unset"
+  },
+  "verification_input_sha256": {
+    "scripts/verify_release.sh": "b09b5d7d8e205b1bafed5c3375702469a179446e5ed0d2126c3c432bf7d34712",
+    "scripts/verify_dmg.sh": "f435b86a6c90e44b6ccf8b36fa5249f6b3c5329b02d5d4d15d56a861760aa03d",
+    "scripts/lib/local_cleanup.sh": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+    "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+    "VERSION": "cef71cc27055570f4069332e460f533261d9c81053a8cdff6d16eb68765cc82b",
+    "BatteryPowerApp.entitlements": "7c701bfd8298ead217eaad4e805fcc51cefd7ae910ef33a3792594b97f2f92f5"
+  },
+  "prior_download_cleanup": {
+    "known_interrupted_4_3_22_partials": {
+      "gh-artifact.3165625986.zip": "absent",
+      "gh-artifact.2767581737.zip": "absent",
+      "gh-artifact.1395566338.zip": "absent"
+    },
+    "project_artifact_speed_probe_directory": "empty",
+    "project_public_release_download_directory": "empty",
+    "project_local_preview_4_3_22_directory": "empty",
+    "existing_final_4_3_22_candidate_directories": [],
+    "unrelated_partial_left_untouched": {
+      "temporary_name": "gh-artifact.3822405779.zip",
+      "version_from_first_zip_member": "4.3.2",
+      "size": 5357568,
+      "mtime_utc": "2026-10-14T15:50:20.592011+00:00",
+      "same_user": true,
+      "complete_zip": false,
+      "open_handles": false,
+      "reason": "Outside current4.3.22 task ownership; root confirmed leave untouched."
+    }
+  },
+  "historic_helper_audit": "Old4.3.6 helper stops at metadata/signature and hosted-log evidence; it is insufficient for current real local verification. Old4.3.3 helper stages a redundant build tree; current verifier supports independent packaged inputs, so no reconstructed build is needed.",
+  "prohibited_actions": "No canonical installation/helper/preferences changes, product execution, tag/source edits, commits, pushes or publication."
+}

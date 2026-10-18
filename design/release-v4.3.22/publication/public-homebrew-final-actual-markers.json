@@ -1,0 +1,15 @@
+{
+  "run_id": 39147785416,
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "conclusion": "success",
+  "actual_public_lifecycle_markers": [
+    {
+      "line": 633,
+      "log": "Homebrew lifecycle on macos-15-intel\tTest public cask install and uninstall\t2026-10-18T17:04:09.4693000Z Public Homebrew cask install, helper health, and uninstall cleanup passed."
+    },
+    {
+      "line": 1001,
+      "log": "Homebrew lifecycle on macos-26\tTest public cask install and uninstall\t2026-10-18T17:03:44.2160520Z Public Homebrew cask install, helper health, and uninstall cleanup passed."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "State" : "stopped",
+    "Running" : false,
+    "Disk" : 50,
+    "Name" : "Wattson-Release-Gates-7264F29F",
+    "Accessed" : "2026-10-18T14:46:35Z",
+    "Size" : 31,
+    "Source" : "local"
+  },
+  {
+    "State" : "stopped",
+    "Running" : false,
+    "Disk" : 50,
+    "Name" : "macOS-TestLab",
+    "Accessed" : "2026-10-15T06:45:45Z",
+    "Size" : 33,
+    "Source" : "local"
+  },
+  {
+    "State" : "stopped",
+    "Running" : false,
+    "Disk" : 50,
+    "Name" : "macOS-TestLab-Base",
+    "Accessed" : "2026-10-18T14:39:46Z",
+    "Size" : 30,
+    "Source" : "local"
+  }
+]

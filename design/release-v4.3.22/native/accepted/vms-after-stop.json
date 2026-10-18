@@ -1,0 +1,29 @@
+[
+  {
+    "Name" : "Wattson-Release-Gates-91D64075",
+    "Accessed" : "2026-10-18T13:34:33Z",
+    "Running" : false,
+    "State" : "stopped",
+    "Size" : 31,
+    "Source" : "local",
+    "Disk" : 50
+  },
+  {
+    "Name" : "macOS-TestLab",
+    "Accessed" : "2026-10-15T06:45:45Z",
+    "Running" : false,
+    "State" : "stopped",
+    "Size" : 33,
+    "Source" : "local",
+    "Disk" : 50
+  },
+  {
+    "Name" : "macOS-TestLab-Base",
+    "Accessed" : "2026-10-18T13:27:34Z",
+    "Running" : false,
+    "State" : "stopped",
+    "Size" : 30,
+    "Source" : "local",
+    "Disk" : 50
+  }
+]

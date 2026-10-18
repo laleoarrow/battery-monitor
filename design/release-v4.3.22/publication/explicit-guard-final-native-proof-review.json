@@ -1,0 +1,21 @@
+{
+  "observed_at": "2026-10-18T15:42:45.335847+00:00",
+  "release_source_commit": "8300cabcb5859fcc74c3ff613a2c530a47c01f30",
+  "tested_commit": "67b3f60138074823857a3f86f4d517c87f2ac9e2",
+  "proof_kind": "native_execution_input_equivalence",
+  "proof_sha256": "4c43433a8282dfda3ee25dda17e71a23b2819715d3bf17dfcfb568fdc958e66b",
+  "execution_inputs_identical": true,
+  "native_reexecuted_for_release_commit": false,
+  "retained_evidence_hashes_verified": [
+    "proof",
+    "gateResults",
+    "resourceAudit",
+    "vmCleanup",
+    "sourceBefore",
+    "sourceAfter",
+    "exitCode",
+    "matchedTail"
+  ],
+  "cleanup_and_original_vm_states_verified": true,
+  "native_gate_accepted_under_explicit_parent_authorization": true
+}

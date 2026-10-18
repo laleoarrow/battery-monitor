@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Volumes/My Shared Files/snapshot/audit-guest.py", line 20, in <module>
+    (result / 'preferences-observation.json').write_text(json.dumps({'durationSeconds':round(time.monotonic()-start,3),'filesystemChecks':count,'unexpectedPreferences':unexpected,'allPassed':not unexpected,'method':'Filesystem-only observation after gate script cleanup; no defaults reads.'},indent=2)+'\n')
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/pathlib.py", line 1275, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors) as f:
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/pathlib.py", line 1242, in open
+    return io.open(self, mode, buffering, encoding, errors, newline,
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/pathlib.py", line 1110, in _opener
+    return self._accessor.open(self, flags, mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/Volumes/My Shared Files/review/results/preferences-observation.json'

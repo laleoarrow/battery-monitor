@@ -1,0 +1,29 @@
+test_term_during_log_runner_registration_cleans_detached_app (test_run_preview_cleanup.RunPreviewCleanupTests) ... FAIL
+
+======================================================================
+FAIL: test_term_during_log_runner_registration_cleans_detached_app (test_run_preview_cleanup.RunPreviewCleanupTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-cleanup.noindex/forced-baseline.n7M8uS/source/tests/test_run_preview_cleanup.py", line 212, in assert_termination_during_runner_registration
+    stdout, stderr = process.communicate(timeout=process.cleanup_grace)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1134, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+subprocess.TimeoutExpired: Command '['/bin/bash', '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-cleanup.noindex/forced-baseline.n7M8uS/source/.build/tests.noindex/run-preview-s9zgvj77/script/build_and_run.sh', '--logs']' timed out after 65 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-cleanup.noindex/forced-baseline.n7M8uS/source/tests/test_run_preview_cleanup.py", line 244, in test_term_during_log_runner_registration_cleans_detached_app
+    self.assert_termination_during_runner_registration('wattson_run')
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-cleanup.noindex/forced-baseline.n7M8uS/source/tests/test_run_preview_cleanup.py", line 229, in assert_termination_during_runner_registration
+    self.fail(f'Cleanup timed out with shell status {process.poll()}: {error}\n{tree}')
+AssertionError: Cleanup timed out with shell status 143: Command '['/bin/bash', '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-cleanup.noindex/forced-baseline.n7M8uS/source/.build/tests.noindex/run-preview-s9zgvj77/script/build_and_run.sh', '--logs']' timed out after 65 seconds
+13822 13818 13822 Z    <defunct>
+13846     1 13822 S    /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python /Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-cleanup.noindex/forced-baseline.n7M8uS/source/.build/tests.noindex/run-preview-s9zgvj77/scripts/lib/run_owned.py -- /Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-cleanup.noindex/forced-baseline.n7M8uS/source/.build/tests.noindex/run-preview-s9zgvj77/bin/log stream --info --style compact --predicate process == "WattsonPreview"
+13849 13846 13849 Ss   /bin/bash /Users/leoarrow/Project/mypackage/agents/电池功率/.build/release-v4.3.22-cleanup.noindex/forced-baseline.n7M8uS/source/.build/tests.noindex/run-preview-s9zgvj77/bin/log stream --info --style compact --predicate process == "WattsonPreview"
+
+
+----------------------------------------------------------------------
+Ran 1 test in 65.175s
+
+FAILED (failures=1)

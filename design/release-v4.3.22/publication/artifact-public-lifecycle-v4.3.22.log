@@ -1,0 +1,10 @@
+SHA256SUMS.txt: anonymous public transfer started
+Wattson-v4.3.22-release-info.txt: anonymous public transfer started
+Wattson-v4.3.22-release-info.txt: public hash/size and candidate cmp passed
+SHA256SUMS.txt: public hash/size and candidate cmp passed
+Wattson-v4.3.22-macos-universal.dmg: anonymous public transfer started
+Wattson-v4.3.22-macos-universal.pkg: anonymous public transfer started
+Wattson-v4.3.22-macos-universal.pkg: public hash/size and candidate cmp passed
+Wattson-v4.3.22-macos-universal.dmg: public hash/size and candidate cmp passed
+Four anonymously downloaded public installer assets match candidate hashes and cmp; public manifest passes.
+Exact four public installer assets retained; shared owner will remove download scratch.

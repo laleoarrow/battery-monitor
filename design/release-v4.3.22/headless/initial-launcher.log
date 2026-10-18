@@ -1,0 +1,4 @@
+Initial launcher exited before archive/testing because exec inherited zsh while local_cleanup.sh requires bash.
+/Users/leoarrow/Project/mypackage/agents/电池功率/scripts/lib/local_cleanup.sh:3: BASH_SOURCE[0]: parameter not set
+_wattson_cleanup:1: read-only variable: status
+Correction: reran the unchanged gate script using shell=/bin/bash, login=false. No source changes.

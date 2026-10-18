@@ -1,0 +1,17 @@
+{
+  "observed_at": "2026-10-18T17:07:54.013714+00:00",
+  "public_homebrew_run_id": 39147785416,
+  "automatic_pages_run_id": 39147879672,
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "observer_completed_exit_code": 0,
+  "deployment_reader_completed_exit_code": 0,
+  "owned_review_scratch_remaining": [],
+  "public_dispatch_attempts": 1,
+  "direct_pages_dispatches": 0,
+  "direct_latest_mutations": 0,
+  "workflow_reruns": 0,
+  "source_tag_release_asset_or_tap_edits": false,
+  "local_app_helper_or_canonical_install_touched_by_observer": false,
+  "local_mounts_or_registrations_created_by_observer": false,
+  "site_content_audit_performed_by_observer": false
+}

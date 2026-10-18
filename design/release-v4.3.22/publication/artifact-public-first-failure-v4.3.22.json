@@ -1,0 +1,16 @@
+{
+  "comparisons": {
+    "canonical_app_version": true,
+    "canonical_files": true,
+    "canonical_running_pids": true,
+    "receipt": true,
+    "selected_wattson_registered_paths": true
+  },
+  "downloaderSHA256": "c9c6410259f83f0757c6db5c765a0632fae3c0df72ff51d5e6b7e1fcde620b87",
+  "ownedMountsAbsent": true,
+  "ownedProcessesAbsent": true,
+  "publicPackageVerified": false,
+  "status": "failed-transfer-cleanup-passed",
+  "transferFailure": "curl exit28 timeout; exact failed file not identified by first instrumentation",
+  "workspaceRemoved": true
+}

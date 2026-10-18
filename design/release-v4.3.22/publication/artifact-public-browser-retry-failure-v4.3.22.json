@@ -1,0 +1,15 @@
+{
+  "comparisons": {
+    "canonical_app_version": true,
+    "canonical_files": true,
+    "canonical_running_pids": true,
+    "receipt": true,
+    "selected_wattson_registered_paths": true
+  },
+  "ownedMountsAbsent": true,
+  "ownedProcessesAbsent": true,
+  "publicPackageVerified": false,
+  "status": "failed-transfer-cleanup-passed",
+  "transferFailure": "SHA256SUMS.txt browser-URL curl exit28 after bounded retry; DMG passed SHA/size/cmp before overall failure",
+  "workspaceRemoved": true
+}

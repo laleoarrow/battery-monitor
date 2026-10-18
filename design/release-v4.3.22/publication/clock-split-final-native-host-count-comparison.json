@@ -1,0 +1,24 @@
+{
+  "baseline": {
+    "host_count": 441,
+    "local_count": 442,
+    "only_local": [
+      "关闭中途重开不会从低透明度重播入场"
+    ],
+    "only_hosted": []
+  },
+  "legacy": {
+    "host_count": 439,
+    "local_count": 440,
+    "only_local": [
+      "关闭中途重开不会从低透明度重播入场"
+    ],
+    "only_hosted": []
+  },
+  "accessibility": {
+    "host_count": 434,
+    "local_count": 434,
+    "only_local": [],
+    "only_hosted": []
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "testedCommit": "d1e72bd31675121e2729f84cff37efb33fdddbeb",
+  "releaseSourceCommit": "d1e72bd31675121e2729f84cff37efb33fdddbeb",
+  "wholeCurrentTreeClaimedVerified": false,
+  "frozenInputFiles": 157,
+  "releaseCommitInputsIdentical": true,
+  "beforeAndAfterGuestSourceHashesMatch": true,
+  "currentFrozenInputMismatches": [],
+  "changedInputsFromPriorNativeGate": [
+    {
+      "file": "scripts/lib/local_cleanup.sh",
+      "priorSHA256": "372067719fdfd007b2f229daf6ac743803dbaac57875976465e22e6a42da013e",
+      "currentSHA256": "e78cf3c2a5bece68162fe8b044451f4e67cdd54df34626a4697d8ec34ecd7d41"
+    },
+    {
+      "file": "tests/test_run_preview_cleanup.py",
+      "priorSHA256": "22bb7cbd2679e3074ea2b06b328fbdcc9d8f7c4029685b879c23fe62bfc407aa",
+      "currentSHA256": "a5c2fb8911d4c6b14ace3383f19fa5f2b1a2bec6b6874f7dfb34b83210476ba5"
+    }
+  ],
+  "hostLifecycleLibraryMatchesFrozenCommit": true,
+  "lifecycleLibrarySHA256": "e78cf3c2a5bece68162fe8b044451f4e67cdd54df34626a4697d8ec34ecd7d41",
+  "ownedProcessRunnerSHA256": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+  "qaRunnerSHA256": {
+    "design/release-v4.3.22/native/audit-guest.py": "bdff4b08671cf60e8fa474201311c94e1c111cbcca90b714b1bc0bb38c0581ea",
+    "design/release-v4.3.22/native/guest-run.sh": "c36f2772a25e1ee4c805b0233fccab108452cc6bf7612e53f0df617501e6d2cf",
+    "design/release-v4.3.22/native/run-owned.sh": "78eb84bef5721cde9fdb7a9c6ada5cfa46c4b674da8661efc0d6418cd0b343dc",
+    "design/release-v4.3.22/native/source-manifest.py": "277f5291773633b7785fe4d9ab6dbe7af02e96aaea60efe5ccbf438c540751b5",
+    "design/release-v4.3.22/native/vm-state.py": "8aec65da7cf32d05ae3c661a4b260aa380793bb60d8c8d9e7a87623b9f2e18f7"
+  },
+  "gateResults": {
+    "schema": 1,
+    "allPassed": true,
+    "checks": {
+      "animationExitZero": true,
+      "animationFullPass": true,
+      "systemAccessibilityUnchanged": true,
+      "baselineExitZero": true,
+      "baselineFullPass": true,
+      "baselineChecksAtLeast32": true,
+      "legacyExitZero": true,
+      "legacyFullPass": true,
+      "legacyChecksAtLeast32": true,
+      "accessibilityExitZero": true,
+      "accessibilityFullPass": true,
+      "accessibilityChecksAtLeast32": true
+    },
+    "interactionChecks": {
+      "baseline": 440,
+      "legacy": 438,
+      "accessibility": 432
+    },
+    "systemAccessibilityWritten": false
+  },
+  "guestResourceCleanupPassed": true,
+  "ownedVMDeleted": true,
+  "originalVMStatesPreserved": {
+    "macOS-TestLab": true,
+    "macOS-TestLab-Base": true
+  },
+  "hostSnapshotScratchEmpty": true,
+  "canonicalAppOrHelperModified": false,
+  "priorNativeEvidencePreserved": true,
+  "scope": "Native AppKit interaction and animation release gates rerun after shared lifecycle signal-deferral fix. Exact frozen git archive and matching fixed host cleanup library, full per-file manifests retained.",
+  "limitations": [
+    "These local tests do not replace the hosted installer/candidate matrix or publishing gates.",
+    "Display-policy before/after comparison covers the four DisplayProbe fields, not the full accessibility preferences domain.",
+    "The animation stress elapsed value is a test result, not an app performance benchmark."
+  ]
+}

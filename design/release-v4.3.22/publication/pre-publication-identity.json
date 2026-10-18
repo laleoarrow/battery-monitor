@@ -1,0 +1,11 @@
+{
+  "checkedAtUTC": "2026-10-18T16:52:40.047812+00:00",
+  "sourceCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "remoteMainMatches": true,
+  "remoteTagAbsent": true,
+  "releaseAbsentHTTP404": true,
+  "trackedTreeClean": true,
+  "releaseBodySHA256": "5b55bd7dbf89c240e23d2fd35045dda52aaf4abf16a5ecfe11f43adc27a970da",
+  "candidateRunID": 39145124379,
+  "artifactVerificationStillRequired": true
+}

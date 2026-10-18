@@ -1,0 +1,949 @@
+Install on macos-26-intel	Set up job	﻿2026-10-18T15:06:32.4782860Z Current runner version: '2.337.0'
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4812680Z ##[group]Runner Image Provisioner
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4813770Z Hosted Compute Agent
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4814470Z Version: 20260819.586
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4815260Z Commit: 3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4816190Z Build Date: 2026-08-18T23:20:18Z
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4817050Z Worker ID: {ab1d7cc3-3803-4c1a-a95b-d2e1f064f751}
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4817970Z Azure Region: westus
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4818660Z ##[endgroup]
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4820680Z ##[group]Operating System
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4821440Z macOS
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4822040Z 26.6.1
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4822630Z 25G76
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4823240Z ##[endgroup]
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4823880Z ##[group]Runner Image
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4824590Z Image: macos-26
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4825350Z Version: 20260824.0517.1
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4826900Z Included Software: https://github.com/actions/runner-images/blob/macos-26/20260824.0517/images/macos/macos-26-Readme.md
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4829230Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-26%2F20260824.0517
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4830620Z ##[endgroup]
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4832190Z ##[group]GITHUB_TOKEN Permissions
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4834240Z Actions: read
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4834940Z Contents: read
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4835610Z Metadata: read
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4836260Z ##[endgroup]
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4839150Z Secret source: Actions
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4840290Z Cache mode: write
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.4841140Z Prepare workflow directory
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.5475790Z Prepare all required actions
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.5536390Z Getting action download info
+Install on macos-26-intel	Set up job	2026-10-18T15:06:32.9910580Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+Install on macos-26-intel	Set up job	2026-10-18T15:06:33.4035920Z Download action repository 'actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c' (SHA:3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c)
+Install on macos-26-intel	Set up job	2026-10-18T15:06:33.9688890Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+Install on macos-26-intel	Set up job	2026-10-18T15:06:34.2016180Z Complete job name: Install on macos-26-intel
+Install on macos-26-intel	Check out the candidate lifecycle scripts	﻿2026-10-18T15:06:34.2894520Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2896410Z with:
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2897180Z   persist-credentials: false
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2897990Z   repository: laleoarrow/battery-monitor
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2905310Z   token: ***
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2906060Z   ssh-strict: true
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2906780Z   ssh-user: git
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2907450Z   clean: true
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2908220Z   sparse-checkout-cone-mode: true
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2909110Z   fetch-depth: 1
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2909860Z   fetch-tags: false
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2910610Z   show-progress: true
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2911370Z   lfs: false
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2912050Z   submodules: false
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2912850Z   set-safe-directory: true
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2914180Z   allow-unsafe-pr-checkout: false
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2916230Z env:
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2917090Z   WATTSON_VERSION: 4.3.22
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2918620Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2919640Z   EXPECTED_TEAM_ID: 
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.2922110Z ##[endgroup]
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.9989620Z Syncing repository: laleoarrow/battery-monitor
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.9992650Z ##[group]Getting Git version info
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.9994690Z Working directory is '/Users/runner/work/battery-monitor/battery-monitor'
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:34.9996760Z [command]/usr/local/bin/git version
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.0506580Z git version 2.55.0
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.0539930Z ##[endgroup]
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.0551300Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/7fd20e66-1c44-46d5-82c1-04f362b9dcf3/.gitconfig'
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.0567430Z Temporarily overriding HOME='/Users/runner/work/_temp/7fd20e66-1c44-46d5-82c1-04f362b9dcf3' before making global git config changes
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.0572270Z Adding repository directory to the temporary git global config as a safe directory
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.0575190Z [command]/usr/local/bin/git config --global --add safe.directory /Users/runner/work/battery-monitor/battery-monitor
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.0717220Z Deleting the contents of '/Users/runner/work/battery-monitor/battery-monitor'
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.0722440Z ##[group]Determining repository object format
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.0724070Z ##[endgroup]
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.0725280Z ##[group]Initializing the repository
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.0728940Z [command]/usr/local/bin/git init /Users/runner/work/battery-monitor/battery-monitor
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1085660Z hint: Using 'master' as the name for the initial branch. This default branch name
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1087480Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1088980Z hint: to use in all of your new repositories, which will suppress this warning,
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1090220Z hint: call:
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1090920Z hint:
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1091800Z hint: 	git config --global init.defaultBranch <name>
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1092840Z hint:
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1094160Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1095800Z hint: 'development'. The just-created branch can be renamed via this command:
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1097440Z hint:
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1098120Z hint: 	git branch -m <name>
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1099240Z hint:
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1100360Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1103030Z Initialized empty Git repository in /Users/runner/work/battery-monitor/battery-monitor/.git/
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1106160Z [command]/usr/local/bin/git remote add origin https://github.com/laleoarrow/battery-monitor
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1292160Z ##[endgroup]
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1294200Z ##[group]Disabling automatic garbage collection
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1296830Z [command]/usr/local/bin/git config --local gc.auto 0
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1468540Z ##[endgroup]
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1470660Z ##[group]Setting up auth
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1472170Z Removing SSH command configuration
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1478460Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.1656570Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.3625640Z Removing HTTP extra header
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.3633400Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.3818400Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.6718060Z Removing includeIf entries pointing to credentials config files
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.6837750Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.7095000Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.9341390Z [command]/usr/local/bin/git config --file /Users/runner/work/_temp/git-credentials-f9f5b55d-39ff-41e1-a170-6822099d5fd6.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.9367660Z [command]/usr/local/bin/git config --local includeIf.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git.path /Users/runner/work/_temp/git-credentials-f9f5b55d-39ff-41e1-a170-6822099d5fd6.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.9381180Z [command]/usr/local/bin/git config --local includeIf.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-f9f5b55d-39ff-41e1-a170-6822099d5fd6.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.9392730Z [command]/usr/local/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-f9f5b55d-39ff-41e1-a170-6822099d5fd6.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.9411000Z [command]/usr/local/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-f9f5b55d-39ff-41e1-a170-6822099d5fd6.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.9480310Z ##[endgroup]
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.9484900Z ##[group]Fetching the repository
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:35.9488070Z [command]/usr/local/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +9d157d496024d32b0f65ec3fe9b1c927678352fc:refs/remotes/origin/main
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.1537900Z From https://github.com/laleoarrow/battery-monitor
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.1541370Z  * [new ref]         9d157d496024d32b0f65ec3fe9b1c927678352fc -> origin/main
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.1547420Z [command]/usr/local/bin/git branch --list --remote origin/main
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.1667720Z   origin/main
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.1682250Z [command]/usr/local/bin/git rev-parse refs/remotes/origin/main
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.1778270Z 9d157d496024d32b0f65ec3fe9b1c927678352fc
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.1784470Z ##[endgroup]
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.1786180Z ##[group]Determining the checkout info
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.1788390Z ##[endgroup]
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.1790000Z [command]/usr/local/bin/git sparse-checkout disable
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.1929920Z [command]/usr/local/bin/git config --local --unset-all extensions.worktreeConfig
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.2043830Z ##[group]Checking out the ref
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:41.2048110Z [command]/usr/local/bin/git checkout --progress --force -B main refs/remotes/origin/main
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.4310560Z Updating files:  30% (1182/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.4791510Z Updating files:  31% (1185/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.4913990Z Updating files:  32% (1224/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.5349970Z Updating files:  33% (1262/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.6197950Z Updating files:  34% (1300/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.7201620Z Updating files:  35% (1338/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.7407010Z Updating files:  36% (1376/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.7412640Z Updating files:  37% (1415/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.7417080Z Updating files:  38% (1453/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.7422240Z Updating files:  39% (1491/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.7426380Z Updating files:  40% (1529/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.7431200Z Updating files:  41% (1568/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.7435150Z Updating files:  42% (1606/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.7439930Z Updating files:  43% (1644/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.7448970Z Updating files:  44% (1682/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.7455480Z Updating files:  45% (1720/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.8336990Z Updating files:  46% (1759/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.8364240Z Updating files:  47% (1797/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:42.9864960Z Updating files:  48% (1835/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.0185500Z Updating files:  49% (1873/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.0212920Z Updating files:  50% (1911/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.0253260Z Updating files:  51% (1950/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.0274090Z Updating files:  52% (1988/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.0375180Z Updating files:  53% (2026/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.0642910Z Updating files:  54% (2064/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.1032540Z Updating files:  55% (2103/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.1288090Z Updating files:  56% (2141/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.1506010Z Updating files:  57% (2179/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.1687600Z Updating files:  58% (2217/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.1785410Z Updating files:  59% (2255/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.1893970Z Updating files:  60% (2294/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.2113850Z Updating files:  61% (2332/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.2284760Z Updating files:  62% (2370/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.2336630Z Updating files:  62% (2401/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.2442300Z Updating files:  63% (2408/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.3171860Z Updating files:  64% (2447/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.3400180Z Updating files:  65% (2485/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.3596040Z Updating files:  66% (2523/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.3785350Z Updating files:  67% (2561/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.3959690Z Updating files:  68% (2599/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.4205080Z Updating files:  69% (2638/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.4385550Z Updating files:  70% (2676/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.4578850Z Updating files:  71% (2714/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.4836870Z Updating files:  72% (2752/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.6624980Z Updating files:  73% (2791/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.6870530Z Updating files:  74% (2829/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.7122020Z Updating files:  75% (2867/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.7488480Z Updating files:  76% (2905/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.7667430Z Updating files:  77% (2943/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.7956400Z Updating files:  78% (2982/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.8073380Z Updating files:  79% (3020/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.8189790Z Updating files:  80% (3058/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.8298500Z Updating files:  81% (3096/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.8399470Z Updating files:  82% (3135/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.8504690Z Updating files:  83% (3173/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.8606410Z Updating files:  84% (3211/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.8706570Z Updating files:  85% (3249/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.8836310Z Updating files:  86% (3287/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.9029020Z Updating files:  87% (3326/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.9121560Z Updating files:  88% (3364/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.9397810Z Updating files:  89% (3402/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.9688330Z Updating files:  90% (3440/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:43.9909260Z Updating files:  91% (3479/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.0147220Z Updating files:  92% (3517/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.0394320Z Updating files:  93% (3555/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.0939650Z Updating files:  94% (3593/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.1158110Z Updating files:  95% (3631/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.1348240Z Updating files:  96% (3670/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.1472980Z Updating files:  97% (3708/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.1601320Z Updating files:  98% (3746/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.1744720Z Updating files:  99% (3784/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.1745530Z Updating files: 100% (3822/3822)
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.1746260Z Updating files: 100% (3822/3822), done.
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.1861310Z Switched to a new branch 'main'
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.1867820Z branch 'main' set up to track 'origin/main'.
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.1955070Z ##[endgroup]
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.2176080Z [command]/usr/local/bin/git log -1 --format=%H
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.2362040Z 9d157d496024d32b0f65ec3fe9b1c927678352fc
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.2379500Z ##[group]Removing auth
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.2380140Z Removing SSH command configuration
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.2385830Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.2504550Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.3959910Z Removing HTTP extra header
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.3962800Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.4268090Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6155210Z Removing includeIf entries pointing to credentials config files
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6483500Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6622360Z includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git.path
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6640890Z includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6646330Z includeif.gitdir:/github/workspace/.git.path
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6656690Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6667630Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git.path
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6671620Z /Users/runner/work/_temp/git-credentials-f9f5b55d-39ff-41e1-a170-6822099d5fd6.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6679310Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-f9f5b55d\-39ff\-41e1\-a170\-6822099d5fd6\.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6687620Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6731390Z /Users/runner/work/_temp/git-credentials-f9f5b55d-39ff-41e1-a170-6822099d5fd6.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6745400Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:/Users/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-f9f5b55d\-39ff\-41e1\-a170\-6822099d5fd6\.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6877920Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6979740Z /github/runner_temp/git-credentials-f9f5b55d-39ff-41e1-a170-6822099d5fd6.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.6990370Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-f9f5b55d\-39ff\-41e1\-a170\-6822099d5fd6\.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7105640Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7205460Z /github/runner_temp/git-credentials-f9f5b55d-39ff-41e1-a170-6822099d5fd6.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7216250Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-f9f5b55d\-39ff\-41e1\-a170\-6822099d5fd6\.config
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.7365920Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.8821210Z Removing credentials config '/Users/runner/work/_temp/git-credentials-f9f5b55d-39ff-41e1-a170-6822099d5fd6.config'
+Install on macos-26-intel	Check out the candidate lifecycle scripts	2026-10-18T15:06:44.8835240Z ##[endgroup]
+Install on macos-26-intel	Download the single release build	﻿2026-10-18T15:06:44.9207090Z ##[group]Run actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9208220Z with:
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9208790Z   name: Wattson-release-candidate-v4.3.22
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9209370Z   path: /Users/runner/work/_temp/wattson-release
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9209910Z   merge-multiple: false
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9210340Z   repository: laleoarrow/battery-monitor
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9210820Z   run-id: 39137918718
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9211180Z   skip-decompress: false
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9211590Z   digest-mismatch: error
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9211960Z env:
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9212270Z   WATTSON_VERSION: 4.3.22
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9212720Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9213240Z   EXPECTED_TEAM_ID: 
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:44.9213580Z ##[endgroup]
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:45.1491080Z Downloading single artifact
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:45.4472770Z Preparing to download the following artifacts:
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:45.4475570Z - Wattson-release-candidate-v4.3.22 (ID: 12140767132, Size: 13594677, Expected Digest: sha256:c0d41cdce41ed0b0e7c9c303a638176b309b8ef94f40936b1c23d283d70c73db)
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:45.9540500Z Redirecting to blob download url: https://productionresultssa11.blob.core.windows.net/actions-results/4cbb2111-caab-464b-971b-224c37b08ff0/workflow-job-run-5c57e85b-a277-5478-bad5-75695141153d/artifacts/b40ec5bd434c6c65981e9a626e788edbcd30e0d6cb626f7dc0c6a301bdd3fa4f.zip
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:45.9543330Z Starting download of artifact to: /Users/runner/work/_temp/wattson-release
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:46.2780900Z (node:27710) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:46.2782960Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:48.0700270Z SHA256 digest of downloaded artifact is c0d41cdce41ed0b0e7c9c303a638176b309b8ef94f40936b1c23d283d70c73db
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:48.0704840Z Artifact download completed successfully.
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:48.0706630Z Total of 1 artifact(s) downloaded
+Install on macos-26-intel	Download the single release build	2026-10-18T15:06:48.0717890Z Download artifact has finished successfully
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	﻿2026-10-18T15:06:48.0935530Z ##[group]Run set -euo pipefail
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0936980Z [36;1mset -euo pipefail[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0937480Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0938080Z [36;1mreadonly RELEASE_DIR="$RUNNER_TEMP/wattson-release"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0939080Z [36;1mreadonly PKG_NAME="Wattson-v${WATTSON_VERSION}-macos-universal.pkg"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0940170Z [36;1mreadonly DMG_NAME="Wattson-v${WATTSON_VERSION}-macos-universal.dmg"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0941270Z [36;1mreadonly INFO_NAME="Wattson-v${WATTSON_VERSION}-release-info.txt"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0942220Z [36;1mreadonly PKG_PATH="$RELEASE_DIR/$PKG_NAME"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0942990Z [36;1mreadonly DMG_PATH="$RELEASE_DIR/$DMG_NAME"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0943730Z [36;1mreadonly INFO_PATH="$RELEASE_DIR/$INFO_NAME"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0944560Z [36;1mreadonly CHECKSUM_PATH="$RELEASE_DIR/SHA256SUMS.txt"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0945280Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0945690Z [36;1massert_metadata_line() {[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0946250Z [36;1m  local expected="$1"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0946960Z [36;1m  [[ "$(/usr/bin/awk -v expected="$expected" \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0947870Z [36;1m    '$0 == expected { count++ } END { print count + 0 }' "$INFO_PATH")" == "1" ]][0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0950840Z [36;1m}[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0952550Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0953000Z [36;1massert_metadata_key_once() {[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0953590Z [36;1m  local expected_key="$1"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0954290Z [36;1m  [[ "$(/usr/bin/awk -F= -v expected_key="$expected_key" \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0955340Z [36;1m    '$1 == expected_key { count++ } END { print count + 0 }' "$INFO_PATH")" == "1" ]][0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0956230Z [36;1m}[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0956630Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0957260Z [36;1massert_runner_temp_path() {[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0957840Z [36;1m  case "$1" in[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0958310Z [36;1m    "$RUNNER_TEMP"/*) ;;[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0958980Z [36;1m    *) echo "path escaped RUNNER_TEMP: $1" >&2; exit 1 ;;[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0959680Z [36;1m  esac[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0960100Z [36;1m}[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0960480Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0960950Z [36;1m[[ "$WATTSON_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]][0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0961860Z [36;1mfor artifact in "$PKG_PATH" "$DMG_PATH" "$INFO_PATH" "$CHECKSUM_PATH"; do[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0962790Z [36;1m  [[ -f "$artifact" && ! -L "$artifact" ]][0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0963380Z [36;1mdone[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0963970Z [36;1m[[ "$(/usr/bin/wc -l < "$CHECKSUM_PATH" | /usr/bin/tr -d ' ')" == "3" ]][0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0964930Z [36;1m/usr/bin/grep -Eq "^[0-9a-f]{64}  ${PKG_NAME}$" "$CHECKSUM_PATH"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0965920Z [36;1m/usr/bin/grep -Eq "^[0-9a-f]{64}  ${DMG_NAME}$" "$CHECKSUM_PATH"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0966850Z [36;1m/usr/bin/grep -Eq "^[0-9a-f]{64}  ${INFO_NAME}$" "$CHECKSUM_PATH"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0967590Z [36;1m([0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0967930Z [36;1m  cd "$RELEASE_DIR"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0968490Z [36;1m  /usr/bin/shasum -a 256 -c SHA256SUMS.txt[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0969070Z [36;1m)[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0969550Z [36;1massert_metadata_line "version=$WATTSON_VERSION"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0970330Z [36;1massert_metadata_line "architectures=arm64,x86_64"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0971180Z [36;1massert_metadata_line "minimum_macos=12.0"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0972110Z [36;1massert_metadata_line "install_path=/Applications/Wattson.app"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0973140Z [36;1massert_metadata_line "dmg_contents=app-only"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0974190Z [36;1massert_metadata_line "pkg_contents=app-and-helper"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0975900Z [36;1mfor metadata_key in \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0976490Z [36;1m  distribution_mode \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0977020Z [36;1m  app_signature \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0977530Z [36;1m  helper_signature \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0978060Z [36;1m  package_signature \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0978570Z [36;1m  dmg_signature \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0979550Z [36;1m  notarized \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0980000Z [36;1m  stapled; do[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0980570Z [36;1m  assert_metadata_key_once "$metadata_key"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0981170Z [36;1mdone[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0981640Z [36;1mcase "$WATTSON_DISTRIBUTION_MODE" in[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0982240Z [36;1m  community-ad-hoc)[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0982840Z [36;1m    [[ -z "$EXPECTED_TEAM_ID" ]][0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0983770Z [36;1m    assert_metadata_line "distribution_mode=community-ad-hoc"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0984630Z [36;1m    assert_metadata_line "app_signature=ad-hoc"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0985440Z [36;1m    assert_metadata_line "helper_signature=ad-hoc"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0986380Z [36;1m    assert_metadata_line "package_signature=unsigned"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0987170Z [36;1m    assert_metadata_line "dmg_signature=unsigned"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0987910Z [36;1m    assert_metadata_line "notarized=no"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0988570Z [36;1m    assert_metadata_line "stapled=no"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0989180Z [36;1m    SIGNED_RELEASE=0[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0989670Z [36;1m    ;;[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0990120Z [36;1m  developer-id-notarized)[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0990770Z [36;1m    [[ "$EXPECTED_TEAM_ID" =~ ^[A-Z0-9]{10}$ ]][0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0991570Z [36;1m    assert_metadata_line "distribution_mode=developer-id"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0992450Z [36;1m    assert_metadata_line "app_signature=developer-id"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0993330Z [36;1m    assert_metadata_line "helper_signature=developer-id"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0994300Z [36;1m    assert_metadata_line "package_signature=developer-id"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0995180Z [36;1m    assert_metadata_line "dmg_signature=developer-id"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0995950Z [36;1m    assert_metadata_line "notarized=yes"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0996670Z [36;1m    assert_metadata_line "stapled=yes"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0997290Z [36;1m    SIGNED_RELEASE=1[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0997800Z [36;1m    ;;[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0998200Z [36;1m  *)[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0998980Z [36;1m    echo "unexpected candidate distribution mode: $WATTSON_DISTRIBUTION_MODE" >&2[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.0999930Z [36;1m    exit 1[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1000340Z [36;1m    ;;[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1000730Z [36;1mesac[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1001140Z [36;1mreadonly SIGNED_RELEASE[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1001700Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1002070Z [36;1mEXPAND_BASE=""[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1002530Z [36;1mcleanup() {[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1003000Z [36;1m  local status="$?"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1003540Z [36;1m  trap - EXIT[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1004030Z [36;1m  trap '' HUP INT TERM[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1004580Z [36;1m  if [[ -n "$EXPAND_BASE" ]]; then[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1005240Z [36;1m    /bin/rm -rf -- "$EXPAND_BASE" || status=1[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1005900Z [36;1m  fi[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1006300Z [36;1m  exit "$status"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1006930Z [36;1m}[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1007460Z [36;1mtrap cleanup EXIT[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1007990Z [36;1mtrap 'exit 129' HUP[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1008470Z [36;1mtrap 'exit 130' INT[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1009050Z [36;1mtrap 'exit 143' TERM[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1009570Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1010340Z [36;1mEXPAND_BASE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-pkg.XXXXXX")"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1011250Z [36;1mEXPAND_DIR="$EXPAND_BASE/expanded"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1011920Z [36;1massert_runner_temp_path "$EXPAND_BASE"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1012530Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1013150Z [36;1m/usr/sbin/pkgutil --expand-full "$PKG_PATH" "$EXPAND_DIR"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1014470Z [36;1mPACKAGED_APP_BIN="$([0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1015050Z [36;1m  /usr/bin/find "$EXPAND_DIR" -type f \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1015940Z [36;1m    -path '*/Payload/Applications/Wattson.app/Contents/MacOS/Wattson' \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1016820Z [36;1m    -print -quit[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1017590Z [36;1m)"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1018020Z [36;1mPACKAGED_APP_INFO="$([0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1018600Z [36;1m  /usr/bin/find "$EXPAND_DIR" -type f \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1019490Z [36;1m    -path '*/Payload/Applications/Wattson.app/Contents/Info.plist' \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1020330Z [36;1m    -print -quit[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1020810Z [36;1m)"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1021230Z [36;1mPACKAGED_HELPER="$([0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1021830Z [36;1m  /usr/bin/find "$EXPAND_DIR" -type f \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1022830Z [36;1m    -path '*/Payload/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper' \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1023810Z [36;1m    -print -quit[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1024290Z [36;1m)"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1024990Z [36;1m[[ -n "$PACKAGED_APP_BIN" && -n "$PACKAGED_APP_INFO" && -n "$PACKAGED_HELPER" ]][0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1026100Z [36;1mPACKAGED_APP_DIR="${PACKAGED_APP_BIN%/Contents/MacOS/Wattson}"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1027060Z [36;1mreadonly PACKAGED_APP_DIR[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1027810Z [36;1m/usr/bin/xcrun lipo "$PACKAGED_APP_BIN" -verify_arch arm64 x86_64[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1028820Z [36;1m/usr/bin/xcrun lipo "$PACKAGED_HELPER" -verify_arch arm64 x86_64[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1030220Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$PACKAGED_APP_INFO")" == "$WATTSON_VERSION" ]][0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1031420Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1031840Z [36;1mif [[ "$SIGNED_RELEASE" == "1" ]]; then[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1032660Z [36;1m  readonly PKG_SIGNATURE_INFO="$EXPAND_BASE/pkg-signature.txt"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1033650Z [36;1m  readonly APP_SIGNATURE_INFO="$EXPAND_BASE/app-signature.txt"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1034690Z [36;1m  readonly HELPER_SIGNATURE_INFO="$EXPAND_BASE/helper-signature.txt"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1035740Z [36;1m  readonly DMG_SIGNATURE_INFO="$EXPAND_BASE/dmg-signature.txt"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1036470Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1036980Z [36;1m  /usr/sbin/pkgutil --check-signature "$PKG_PATH" \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1037680Z [36;1m    > "$PKG_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1038260Z [36;1m  /usr/bin/grep -Fq \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1038880Z [36;1m    "Developer ID Installer:" "$PKG_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1039570Z [36;1m  /usr/bin/grep -Fq \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1040140Z [36;1m    "($EXPECTED_TEAM_ID)" "$PKG_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1040780Z [36;1m  /usr/bin/grep -Eq \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1041470Z [36;1m    '(Signed with a trusted timestamp|Timestamp)' "$PKG_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1042210Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1042810Z [36;1m  /usr/bin/codesign --verify --deep --strict --verbose=2 "$PACKAGED_APP_DIR"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1043790Z [36;1m  /usr/bin/codesign -d --verbose=4 "$PACKAGED_APP_DIR" \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1044460Z [36;1m    2> "$APP_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1045250Z [36;1m  /usr/bin/grep -Fq "Authority=Developer ID Application:" "$APP_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1046390Z [36;1m  /usr/bin/grep -Fxq "TeamIdentifier=$EXPECTED_TEAM_ID" "$APP_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1047510Z [36;1m  /usr/bin/grep -Eq '^CodeDirectory .*flags=.*\(runtime\)' "$APP_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1048480Z [36;1m  /usr/bin/grep -Eq '^Timestamp=.+' "$APP_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1049120Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1049710Z [36;1m  /usr/bin/codesign --verify --strict --verbose=2 "$PACKAGED_HELPER"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1050620Z [36;1m  /usr/bin/codesign -d --verbose=4 "$PACKAGED_HELPER" \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1051320Z [36;1m    2> "$HELPER_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1052700Z [36;1m  /usr/bin/grep -Fq "Authority=Developer ID Application:" "$HELPER_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1053880Z [36;1m  /usr/bin/grep -Fxq "TeamIdentifier=$EXPECTED_TEAM_ID" "$HELPER_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1055040Z [36;1m  /usr/bin/grep -Eq '^CodeDirectory .*flags=.*\(runtime\)' "$HELPER_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1056580Z [36;1m  /usr/bin/grep -Eq '^Timestamp=.+' "$HELPER_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1057250Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1057770Z [36;1m  /usr/bin/codesign --verify --strict --verbose=2 "$DMG_PATH"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1058570Z [36;1m  /usr/bin/codesign -d --verbose=4 "$DMG_PATH" \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1059180Z [36;1m    2> "$DMG_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1059990Z [36;1m  /usr/bin/grep -Fq "Authority=Developer ID Application:" "$DMG_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1061130Z [36;1m  /usr/bin/grep -Fxq "TeamIdentifier=$EXPECTED_TEAM_ID" "$DMG_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1062120Z [36;1m  /usr/bin/grep -Eq '^Timestamp=.+' "$DMG_SIGNATURE_INFO"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1062760Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1063200Z [36;1m  /usr/bin/xcrun stapler validate -v "$PKG_PATH"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1063900Z [36;1m  /usr/bin/xcrun stapler validate -v "$DMG_PATH"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1064780Z [36;1m  /usr/sbin/spctl --assess --type execute --verbose=4 "$PACKAGED_APP_DIR"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1065810Z [36;1m  /usr/sbin/spctl --assess --type install --verbose=4 "$PKG_PATH"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1066570Z [36;1m  /usr/sbin/spctl --assess \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1067070Z [36;1m    --type open \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1067570Z [36;1m    --context context:primary-signature \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1068160Z [36;1m    --verbose=4 \[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1068580Z [36;1m    "$DMG_PATH"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1068970Z [36;1mfi[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1069290Z [36;1m[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1069870Z [36;1m# Compare the complete DMG app with this candidate's expanded PKG,[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1070870Z [36;1m# never with a locally rebuilt app or a different candidate run.[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1071840Z [36;1m/bin/bash scripts/verify_dmg.sh "$DMG_PATH" "$PACKAGED_APP_DIR"[0m
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1144000Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1144650Z env:
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1144970Z   WATTSON_VERSION: 4.3.22
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1145460Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1146000Z   EXPECTED_TEAM_ID: 
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.1146370Z ##[endgroup]
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.3149750Z Wattson-v4.3.22-macos-universal.pkg: OK
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.3498960Z Wattson-v4.3.22-macos-universal.dmg: OK
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:48.3508260Z Wattson-v4.3.22-release-info.txt: OK
+Install on macos-26-intel	Verify checksums, universal payloads, and DMG identity	2026-10-18T15:06:55.8742690Z Mounted DMG verified: helper-free app and Applications link
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	﻿2026-10-18T15:06:56.5158110Z ##[group]Run set -euo pipefail
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5158870Z [36;1mset -euo pipefail[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5159420Z [36;1m[[ "${GITHUB_ACTIONS:-}" == "true" ]][0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5160150Z [36;1m[[ "${RUNNER_OS:-}" == "macOS" ]][0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5160820Z [36;1m[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]][0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5161490Z [36;1m[[ "$(/usr/bin/id -u)" != "0" ]][0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5162110Z [36;1msource scripts/lib/local_cleanup.sh[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5162730Z [36;1m[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5163610Z [36;1mreadonly DMG_PATH="$RUNNER_TEMP/wattson-release/Wattson-v${WATTSON_VERSION}-macos-universal.dmg"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5164690Z [36;1mREADONLY_ROOT=""[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5165170Z [36;1mMOUNT_DIR=""[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5165650Z [36;1mAPP_DIR=""[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5166100Z [36;1mAPP_BIN=""[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5166700Z [36;1mreadonly HELPER_LABEL="com.leoarrow.wattson.helper"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5167410Z [36;1mAPP_PID=""[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5167960Z [36;1m[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5168340Z [36;1mcleanup() {[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5168780Z [36;1m  local status="$?"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5169980Z [36;1m  local app_removed=1[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5170510Z [36;1m  local mount_removed=1[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5171040Z [36;1m  trap - EXIT[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5171510Z [36;1m  trap '' HUP INT TERM[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5172040Z [36;1m  set +e[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5172480Z [36;1m  if [[ -n "$APP_DIR" ]]; then[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5173370Z [36;1m    if wattson_stop_executable "$APP_BIN" && wattson_unregister_app "$APP_DIR"; then[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5174390Z [36;1m      /bin/rm -rf -- "$APP_DIR" || app_removed=0[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5175050Z [36;1m    else[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5175480Z [36;1m      app_removed=0[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5175960Z [36;1m    fi[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5176350Z [36;1m  fi[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5176950Z [36;1m  if [[ -n "$MOUNT_DIR" ]] && ! wattson_detach "$MOUNT_DIR"; then[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5177690Z [36;1m    mount_removed=0[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5178190Z [36;1m    status=1[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5178620Z [36;1m  fi[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5179330Z [36;1m  if [[ "$mount_removed" == "1" && "$app_removed" == "1" && -n "$READONLY_ROOT" ]]; then[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5180280Z [36;1m    /bin/rm -rf -- "$READONLY_ROOT" || status=1[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5180900Z [36;1m  fi[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5181350Z [36;1m  [[ "$app_removed" == "1" ]] || status=1[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5181980Z [36;1m  exit "$status"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5182440Z [36;1m}[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5182980Z [36;1mtrap cleanup EXIT[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5183580Z [36;1mtrap 'exit 129' HUP[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5184120Z [36;1mtrap 'exit 130' INT[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5184600Z [36;1mtrap 'exit 143' TERM[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5185090Z [36;1m[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5185780Z [36;1mREADONLY_ROOT="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-readonly.XXXXXX")"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5187010Z [36;1mcase "$READONLY_ROOT" in "$RUNNER_TEMP"/wattson-readonly.*) ;; *) exit 1 ;; esac[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5187950Z [36;1mMOUNT_DIR="$READONLY_ROOT/mount"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5188580Z [36;1mAPP_DIR="$READONLY_ROOT/Wattson.app"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5189280Z [36;1mAPP_BIN="$APP_DIR/Contents/MacOS/Wattson"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5189920Z [36;1m[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5190340Z [36;1massert_no_privileged_install() {[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5190920Z [36;1m  local path[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5191360Z [36;1m  for path in \[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5191900Z [36;1m    /Applications/Wattson.app \[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5192600Z [36;1m    "/Library/PrivilegedHelperTools/$HELPER_LABEL" \[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5193400Z [36;1m    "/Library/LaunchDaemons/$HELPER_LABEL.plist" \[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5194130Z [36;1m    /var/run/wattson-helper.sock; do[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5194800Z [36;1m    [[ ! -e "$path" && ! -L "$path" ]][0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5195370Z [36;1m  done[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5196520Z [36;1m  if /usr/sbin/pkgutil --pkg-info com.leoarrow.wattson.pkg >/dev/null 2>&1; then[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5197650Z [36;1m    echo "read-only copying must not create a package receipt" >&2[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5198480Z [36;1m    return 1[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5198910Z [36;1m  fi[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5199550Z [36;1m  if /bin/launchctl print "system/$HELPER_LABEL" >/dev/null 2>&1; then[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5200540Z [36;1m    echo "read-only copying must not register the helper" >&2[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5201310Z [36;1m    return 1[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5201860Z [36;1m  fi[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5202280Z [36;1m}[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5202650Z [36;1m[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5203080Z [36;1massert_no_privileged_install[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5203660Z [36;1m/bin/mkdir "$MOUNT_DIR"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5204610Z [36;1m/usr/bin/hdiutil attach -nobrowse -readonly -mountpoint "$MOUNT_DIR" "$DMG_PATH" >/dev/null[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5205880Z [36;1m# A user-writable destination exercises copying without granting the[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5207040Z [36;1m# runner any privileged install operation. Repeat to cover replacement.[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5208240Z [36;1mfor copy_attempt in 1 2; do[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5208920Z [36;1m  /usr/bin/ditto "$MOUNT_DIR/Wattson.app" "$APP_DIR"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5209750Z [36;1m  /usr/bin/diff -qr "$MOUNT_DIR/Wattson.app" "$APP_DIR"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5210630Z [36;1m  /usr/bin/codesign --verify --deep --strict "$APP_DIR"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5212060Z [36;1m  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]][0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5213360Z [36;1m  has_battery=0[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5214180Z [36;1m  battery_registry="$(/usr/sbin/ioreg -r -c AppleSmartBattery 2>/dev/null)"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5215210Z [36;1m  if [[ "$battery_registry" == *AppleSmartBattery* ]]; then[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5215930Z [36;1m    has_battery=1[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5216410Z [36;1m  fi[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5217060Z [36;1m  "$APP_BIN" >"$RUNNER_TEMP/wattson-readonly-$copy_attempt.log" 2>&1 &[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5217880Z [36;1m  APP_PID="$!"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5218580Z [36;1m  /bin/sleep 2[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5219150Z [36;1m  if /bin/kill -0 "$APP_PID" >/dev/null 2>&1; then[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5220190Z [36;1m    wattson_stop_executable "$APP_BIN"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5220790Z [36;1m  else[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5221220Z [36;1m    app_status=0[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5221740Z [36;1m    wait "$APP_PID" || app_status="$?"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5222550Z [36;1m    # Hosted Mac minis may exit cleanly without a battery. Real[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5223530Z [36;1m    # missing-helper monitoring stays covered by the AppKit suite.[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5224580Z [36;1m    [[ "$has_battery" == "0" && "$app_status" == "0" ]][0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5225570Z [36;1m  fi[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5226580Z [36;1m  APP_PID=""[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5227430Z [36;1m  assert_no_privileged_install[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5228860Z [36;1mdone[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5229880Z [36;1mwattson_unregister_app "$APP_DIR"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5231170Z [36;1m/bin/rm -rf -- "$APP_DIR"[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5231760Z [36;1m[[ ! -e "$APP_DIR" && ! -L "$APP_DIR" ]][0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5232390Z [36;1massert_no_privileged_install[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5233330Z [36;1mecho "Helper-free DMG copy, replacement, launch and removal passed without elevation."[0m
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5302390Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5303080Z env:
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5303490Z   WATTSON_VERSION: 4.3.22
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5304050Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5304660Z   EXPECTED_TEAM_ID: 
+Install on macos-26-intel	Test helper-free DMG copy launch and removal without elevation	2026-10-18T15:06:56.5305100Z ##[endgroup]
+Install on macos-26-intel	Test first install and disabled-service reinstall	﻿2026-10-18T15:07:01.3370040Z ##[group]Run set -euo pipefail
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3371710Z [36;1mset -euo pipefail[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3372220Z [36;1m[[ "${GITHUB_ACTIONS:-}" == "true" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3372870Z [36;1m[[ "${RUNNER_OS:-}" == "macOS" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3373630Z [36;1m[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3374360Z [36;1msource scripts/lib/local_cleanup.sh[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3374960Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3376620Z [36;1mreadonly PKG_PATH="$RUNNER_TEMP/wattson-release/Wattson-v${WATTSON_VERSION}-macos-universal.pkg"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3378650Z [36;1mreadonly APP_DIR="/Applications/Wattson.app"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3379460Z [36;1mreadonly APP_BIN="$APP_DIR/Contents/MacOS/Wattson"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3380460Z [36;1mreadonly HELPER_LABEL="com.leoarrow.wattson.helper"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3381300Z [36;1mreadonly HELPER_TARGET="system/$HELPER_LABEL"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3382530Z [36;1mreadonly HELPER_BIN="/Library/PrivilegedHelperTools/$HELPER_LABEL"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3383980Z [36;1mreadonly HELPER_PLIST="/Library/LaunchDaemons/$HELPER_LABEL.plist"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3385090Z [36;1mreadonly HELPER_SOCKET="/var/run/wattson-helper.sock"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3386450Z [36;1mreadonly RECEIPT="com.leoarrow.wattson.pkg"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3389700Z [36;1mreadonly LOGIN_LABEL="com.leoarrow.wattson.login"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3390970Z [36;1mLOGIN_TARGET="gui/$(/usr/bin/id -u)/$LOGIN_LABEL"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3391880Z [36;1mreadonly LOGIN_TARGET[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3393080Z [36;1mreadonly LOGIN_PLIST="$HOME/Library/LaunchAgents/$LOGIN_LABEL.plist"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3394410Z [36;1mreadonly LEGACY_APP="$HOME/Applications/Wattson.app"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3395540Z [36;1mreadonly USER_SUPPORT="$HOME/Library/Application Support/Wattson"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3397280Z [36;1mreadonly USER_CONTAINER="$HOME/Library/Containers/com.leoarrow.wattson"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3399080Z [36;1mreadonly USER_PREFERENCES="$HOME/Library/Preferences/com.leoarrow.wattson.plist"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3400660Z [36;1mreadonly SANDBOX_PREFERENCES="$USER_CONTAINER/Data/Library/Preferences/com.leoarrow.wattson.plist"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3401870Z [36;1mAPP_ONLY_STAGE=""[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3402380Z [36;1mAPP_PID=""[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3402800Z [36;1mCLEANUP_REQUIRED=0[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3403480Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3404200Z [36;1mcleanup() {[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3404830Z [36;1m  local status="$?"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3405460Z [36;1m  local cleanup_failed=0[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3406150Z [36;1m  local disabled_state[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3406680Z [36;1m  local residual[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3407160Z [36;1m  trap - EXIT[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3407700Z [36;1m  trap '' HUP INT TERM[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3408200Z [36;1m  set +e[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3408600Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3409110Z [36;1m  if [[ -n "$APP_ONLY_STAGE" ]]; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3409920Z [36;1m    /bin/rm -rf -- "$APP_ONLY_STAGE" || cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3410750Z [36;1m  fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3411360Z [36;1m  if [[ "$CLEANUP_REQUIRED" == "0" ]]; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3412870Z [36;1m    [[ "$cleanup_failed" == "0" ]] || status=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3413590Z [36;1m    exit "$status"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3414110Z [36;1m  fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3414750Z [36;1m  /bin/launchctl bootout "$LOGIN_TARGET" >/dev/null 2>&1 || true[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3415790Z [36;1m  /bin/rm -f -- "$LOGIN_PLIST" "$USER_PREFERENCES" || cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3417020Z [36;1m  /usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET" >/dev/null 2>&1 || true[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3418360Z [36;1m  /usr/bin/sudo -n /bin/launchctl enable "$HELPER_TARGET" >/dev/null 2>&1 \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3419240Z [36;1m    || cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3419890Z [36;1m  /usr/bin/sudo -n /bin/rm -f -- \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3420730Z [36;1m    "$HELPER_SOCKET" "$HELPER_PLIST" "$HELPER_BIN" || cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3422420Z [36;1m  if wattson_stop_executable "$APP_BIN" && wattson_unregister_app "$APP_DIR"; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3423780Z [36;1m    /usr/bin/sudo -n /bin/rm -rf -- "$APP_DIR" || cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3424810Z [36;1m  else[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3425370Z [36;1m    cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3426030Z [36;1m  fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3427070Z [36;1m  if wattson_stop_executable "$LEGACY_APP/Contents/MacOS/Wattson" && wattson_unregister_app "$LEGACY_APP"; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3428880Z [36;1m    /bin/rm -rf -- "$LEGACY_APP" || cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3429670Z [36;1m  else[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3430150Z [36;1m    cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3430640Z [36;1m  fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3431210Z [36;1m  /bin/rm -rf -- "$USER_SUPPORT" "$USER_CONTAINER" \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3431900Z [36;1m    || cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3432940Z [36;1m  /usr/bin/sudo -n /usr/sbin/pkgutil --forget "$RECEIPT" >/dev/null 2>&1 || true[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3433870Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3434800Z [36;1m  if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3437070Z [36;1m    echo "helper service remains registered after cleanup" >&2[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3437910Z [36;1m    cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3438420Z [36;1m  fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3439370Z [36;1m  disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system 2>/dev/null)" \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3440410Z [36;1m    || cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3441300Z [36;1m  case "$disabled_state" in[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3442110Z [36;1m    *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*)[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3443440Z [36;1m      echo "helper remains disabled after cleanup" >&2[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3444260Z [36;1m      cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3445030Z [36;1m      ;;[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3445490Z [36;1m  esac[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3446280Z [36;1m  for residual in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3447840Z [36;1m    if [[ -e "$residual" || -L "$residual" ]]; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3448570Z [36;1m      echo "cleanup left $residual" >&2[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3449300Z [36;1m      cleanup_failed=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3449930Z [36;1m    fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3450360Z [36;1m  done[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3450940Z [36;1m  if [[ "$status" == "0" && "$cleanup_failed" != "0" ]]; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3451650Z [36;1m    status=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3452080Z [36;1m  fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3452830Z [36;1m  exit "$status"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3453310Z [36;1m}[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3453730Z [36;1mtrap cleanup EXIT[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3454330Z [36;1mtrap 'exit 129' HUP[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3454840Z [36;1mtrap 'exit 130' INT[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3455400Z [36;1mtrap 'exit 143' TERM[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3456470Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3457480Z [36;1mAPP_ONLY_STAGE="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-app-only-upgrade.XXXXXX")"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3458830Z [36;1mcase "$APP_ONLY_STAGE" in "$RUNNER_TEMP"/wattson-app-only-upgrade.*) ;; *) exit 1 ;; esac[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3460160Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3460560Z [36;1mverify_install() {[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3461620Z [36;1m  local expected_version="${1:-$WATTSON_VERSION}"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3462670Z [36;1m  local disabled_state[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3463240Z [36;1m  [[ -d "$APP_DIR" && ! -L "$APP_DIR" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3464250Z [36;1m  [[ -f "$APP_BIN" && ! -L "$APP_BIN" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3465290Z [36;1m  [[ -f "$HELPER_BIN" && ! -L "$HELPER_BIN" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3466070Z [36;1m  [[ -f "$HELPER_PLIST" && ! -L "$HELPER_PLIST" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3467810Z [36;1m  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3470770Z [36;1m  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3473090Z [36;1m  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3474800Z [36;1m  /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3475800Z [36;1m  /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3477020Z [36;1m  /usr/bin/codesign --verify --deep --strict "$APP_DIR"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3477990Z [36;1m  /usr/bin/sudo -n /usr/bin/codesign --verify --strict "$HELPER_BIN"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3479620Z [36;1m  [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_BIN")" == "0:0:544" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3480940Z [36;1m  [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_PLIST")" == "0:0:644" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3482060Z [36;1m  /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3482940Z [36;1m  /usr/bin/sudo -n "$HELPER_BIN" --health-probe[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3484520Z [36;1m  "$APP_BIN" --helper-health-probe[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3485210Z [36;1m  "$APP_BIN" --helper-v5-observation-probe[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3486400Z [36;1m  # Hosted Mac minis have no internal battery, but SMC availability[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3487390Z [36;1m  # is independent. Exercise the shipped getPower IPC when the[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3488750Z [36;1m  # runner exposes the fixed keys; older runners may legitimately[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3489850Z [36;1m  # report them unavailable and retain the public IOKit fallback.[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3490770Z [36;1m  "$APP_BIN" --helper-power-probe \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3491530Z [36;1m    || echo "fixed SMC power keys unavailable on this runner"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3492870Z [36;1m  [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$expected_version" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3494290Z [36;1m  disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3495530Z [36;1m  case "$disabled_state" in[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3496390Z [36;1m    *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*) return 1 ;;[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3497230Z [36;1m  esac[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3497620Z [36;1m}[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3498000Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3498450Z [36;1mverify_app_launch_stability() {[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3499030Z [36;1m  local attempt[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3499520Z [36;1m  local battery_registry[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3500050Z [36;1m  local exit_status[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3500570Z [36;1m  local has_battery=0[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3501070Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3501750Z [36;1m  battery_registry="$(/usr/sbin/ioreg -r -c AppleSmartBattery 2>/dev/null)"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3502770Z [36;1m  if [[ "$battery_registry" == *AppleSmartBattery* ]]; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3503520Z [36;1m    has_battery=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3504000Z [36;1m  fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3504400Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3504940Z [36;1m  "$APP_BIN" >"$RUNNER_TEMP/wattson-app-launch.log" 2>&1 &[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3505710Z [36;1m  APP_PID="$!"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3506270Z [36;1m  for ((attempt = 0; attempt < 20; attempt++)); do[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3507170Z [36;1m    if ! /bin/kill -0 "$APP_PID" >/dev/null 2>&1; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3507850Z [36;1m      if wait "$APP_PID"; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3508430Z [36;1m        exit_status=0[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3508920Z [36;1m      else[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3509350Z [36;1m        exit_status="$?"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3509840Z [36;1m      fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3510280Z [36;1m      APP_PID=""[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3510890Z [36;1m      if [[ "$has_battery" == "0" && "$exit_status" == "0" ]]; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3512600Z [36;1m        echo "Wattson exited cleanly because this hosted runner has no AppleSmartBattery."[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3513920Z [36;1m        return 0[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3514420Z [36;1m      fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3515480Z [36;1m      echo "Wattson exited during the packaged-app launch check (status=$exit_status, AppleSmartBattery=$has_battery)." >&2[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3516890Z [36;1m      /bin/cat "$RUNNER_TEMP/wattson-app-launch.log" >&2 || true[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3518000Z [36;1m      return 1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3518460Z [36;1m    fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3518890Z [36;1m    /bin/sleep 0.1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3519360Z [36;1m  done[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3519820Z [36;1m  wattson_stop_executable "$APP_BIN"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3520450Z [36;1m  APP_PID=""[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3521240Z [36;1m}[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3521630Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3522370Z [36;1muninstall_and_verify() {[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3523350Z [36;1m  wattson_stop_executable "$APP_BIN"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3524000Z [36;1m  wattson_unregister_app "$APP_DIR"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3524810Z [36;1m  wattson_unregister_app "$LEGACY_APP"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3526050Z [36;1m  /bin/bash scripts/uninstall.sh \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3526830Z [36;1m    2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-uninstall.log"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3527970Z [36;1m  for removed_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3529070Z [36;1m    [[ ! -e "$removed_path" && ! -L "$removed_path" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3529720Z [36;1m  done[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3530380Z [36;1m  if /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3531360Z [36;1m    echo "the shipped uninstaller left the package receipt" >&2[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3532110Z [36;1m    return 1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3532560Z [36;1m  fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3533300Z [36;1m  if /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null 2>&1; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3535090Z [36;1m    echo "the shipped uninstaller left the helper registered" >&2[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3535860Z [36;1m    return 1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3536310Z [36;1m  fi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3536660Z [36;1m}[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3537360Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3537770Z [36;1m[[ "${GITHUB_ACTIONS:-}" == "true" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3538370Z [36;1m[[ "${RUNNER_OS:-}" == "macOS" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3539080Z [36;1m[[ "${RUNNER_ENVIRONMENT:-}" == "github-hosted" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3539800Z [36;1m[[ -f "$PKG_PATH" && ! -L "$PKG_PATH" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3540430Z [36;1m/usr/bin/sudo -n /usr/bin/true[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3541420Z [36;1mfor initial_path in "$APP_DIR" "$HELPER_BIN" "$HELPER_PLIST" "$HELPER_SOCKET" "$LEGACY_APP"; do[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3542540Z [36;1m  [[ ! -e "$initial_path" && ! -L "$initial_path" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3543190Z [36;1mdone[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3543810Z [36;1mif /usr/sbin/pkgutil --pkg-info "$RECEIPT" >/dev/null 2>&1; then[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3544800Z [36;1m  echo "fresh runner unexpectedly has a Wattson package receipt" >&2[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3545550Z [36;1m  exit 1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3545880Z [36;1mfi[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3546220Z [36;1mCLEANUP_REQUIRED=1[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3546630Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3547090Z [36;1mecho "Installing the candidate on a fresh runner..."[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3548140Z [36;1m/usr/bin/sudo -n /usr/sbin/installer \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3549020Z [36;1m  -verboseR \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3549780Z [36;1m  -pkg "$PKG_PATH" \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3550220Z [36;1m  -target / \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3550750Z [36;1m  2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-install.log"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3551400Z [36;1mverify_install[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3551840Z [36;1mverify_app_launch_stability[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3552670Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3553170Z [36;1mecho "Reinstalling after an explicit launchd disable..."[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3567380Z [36;1m/usr/bin/sudo -n /bin/launchctl bootout "$HELPER_TARGET"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3568290Z [36;1m/usr/bin/sudo -n /bin/launchctl disable "$HELPER_TARGET"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3569380Z [36;1mdisabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3570360Z [36;1mcase "$disabled_state" in[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3571110Z [36;1m  *"\"$HELPER_LABEL\" => disabled"*|*"\"$HELPER_LABEL\" => true"*) ;;[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3572200Z [36;1m  *) echo "launchd did not record the disabled state" >&2; exit 1 ;;[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3572950Z [36;1mesac[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3573350Z [36;1m/usr/bin/sudo -n /usr/sbin/installer \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3573920Z [36;1m  -verboseR \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3574360Z [36;1m  -pkg "$PKG_PATH" \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3574780Z [36;1m  -target / \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3575340Z [36;1m  2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-install.log"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3576010Z [36;1mverify_install[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3576400Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3577020Z [36;1mecho "Testing the published 3.0.28 PKG upgrade baseline..."[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3578370Z [36;1muninstall_and_verify[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3579150Z [36;1m# This immutable public release is a test baseline, not the candidate.[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3579990Z [36;1mreadonly BASELINE_VERSION="3.0.28"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3580950Z [36;1mreadonly BASELINE_SHA="86db43a02a79769cd02f022cf6bd5721cdbb96927a83a67e9f144dc8d27127da"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3582560Z [36;1mreadonly BASELINE_PKG="$APP_ONLY_STAGE/Wattson-v${BASELINE_VERSION}-macos-universal.pkg"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3583970Z [36;1m/usr/bin/curl --fail --location --proto '=https' --tlsv1.2 \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3585180Z [36;1m  --retry 3 --retry-delay 2 --output "$BASELINE_PKG" \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3586660Z [36;1m  "https://github.com/laleoarrow/battery-monitor/releases/download/v${BASELINE_VERSION}/Wattson-v${BASELINE_VERSION}-macos-universal.pkg"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3589020Z [36;1m[[ "$(/usr/bin/shasum -a 256 "$BASELINE_PKG" | /usr/bin/awk '{print $1}')" == "$BASELINE_SHA" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3590320Z [36;1m/usr/sbin/pkgutil --expand-full "$BASELINE_PKG" "$APP_ONLY_STAGE/baseline"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3591550Z [36;1mreadonly BASELINE_PAYLOAD="$APP_ONLY_STAGE/baseline/Wattson-component.pkg/Payload"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3592770Z [36;1m/usr/bin/sudo -n /usr/sbin/installer -verboseR -pkg "$BASELINE_PKG" -target / \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3593780Z [36;1m  2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3594500Z [36;1mverify_install "$BASELINE_VERSION"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3595310Z [36;1m/usr/bin/diff -qr "$BASELINE_PAYLOAD/Applications/Wattson.app" "$APP_DIR"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3596680Z [36;1m/usr/bin/sudo -n /usr/bin/cmp -s "$BASELINE_PAYLOAD/Library/PrivilegedHelperTools/$HELPER_LABEL" "$HELPER_BIN"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3597850Z [36;1mverify_app_launch_stability[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3599130Z [36;1m# Let the real sandboxed baseline create its container before seeding[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3600410Z [36;1m# the UserDefaults.standard plist, never the non-sandbox domain.[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3601550Z [36;1mfor preference_directory in \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3602270Z [36;1m  "$USER_CONTAINER" "$USER_CONTAINER/Data" \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3603250Z [36;1m  "$USER_CONTAINER/Data/Library" "$USER_CONTAINER/Data/Library/Preferences"; do[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3604380Z [36;1m  [[ -d "$preference_directory" && ! -L "$preference_directory" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3605470Z [36;1m  [[ "$(/usr/bin/stat -f '%u' "$preference_directory")" == "$(/usr/bin/id -u)" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3606330Z [36;1mdone[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3606710Z [36;1m[[ ! -L "$SANDBOX_PREFERENCES" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3608070Z [36;1m[[ ! -e "$SANDBOX_PREFERENCES" || -f "$SANDBOX_PREFERENCES" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3609700Z [36;1m/usr/bin/defaults write "$SANDBOX_PREFERENCES" updates.checkOnLaunch -bool false[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3611070Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3612190Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3612800Z [36;1m/usr/sbin/pkgutil --expand-full "$PKG_PATH" "$APP_ONLY_STAGE/expanded"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3614310Z [36;1mreadonly CANDIDATE_PAYLOAD="$APP_ONLY_STAGE/expanded/Wattson-component.pkg/Payload"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3615490Z [36;1mreadonly APP_ONLY_SOURCE="$CANDIDATE_PAYLOAD/Applications/Wattson.app"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3616620Z [36;1m/usr/bin/sudo -n /usr/sbin/installer -verboseR -pkg "$PKG_PATH" -target / \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3619310Z [36;1m  2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3620360Z [36;1mverify_install[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3620870Z [36;1m/usr/bin/diff -qr "$APP_ONLY_SOURCE" "$APP_DIR"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3622050Z [36;1m/usr/bin/sudo -n /usr/bin/cmp -s "$CANDIDATE_PAYLOAD/Library/PrivilegedHelperTools/$HELPER_LABEL" "$HELPER_BIN"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3623660Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3625110Z [36;1mverify_app_launch_stability[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3626420Z [36;1m[[ "$(/usr/libexec/PlistBuddy -c 'Print :updates.checkOnLaunch' "$SANDBOX_PREFERENCES")" == "false" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3628030Z [36;1m# Batteryless hosted runners may exit before Settings is consumed;[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3629020Z [36;1m# this proves installer preservation of the correct sandbox file,[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3629910Z [36;1m# not that a visible UI read and applied the preference.[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3631820Z [36;1mecho "Public $BASELINE_VERSION ($BASELINE_SHA) to $WATTSON_VERSION: receipt, exact App/helper bytes, health, launch and sandbox preference-file preservation passed (not a UI-read assertion)." \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3633750Z [36;1m  | /usr/bin/tee -a "$RUNNER_TEMP/wattson-v3-upgrade.log"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3634730Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3635350Z [36;1mecho "Running the shipped uninstaller, then upgrading an app-only copy..."[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3636400Z [36;1muninstall_and_verify[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3636860Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3637400Z [36;1m# Seed only the App, which was already proved byte-identical to the[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3638350Z [36;1m# DMG App. This is fixture setup for the privileged upgrade, not the[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3639430Z [36;1m# separate no-elevation copy test above. No helper or receipt exists.[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3640440Z [36;1m[[ -d "$APP_ONLY_SOURCE" && ! -L "$APP_ONLY_SOURCE" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3641500Z [36;1m/usr/bin/sudo -n /usr/bin/ditto "$APP_ONLY_SOURCE" "$APP_DIR"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3642490Z [36;1m/usr/bin/diff -qr "$APP_ONLY_SOURCE" "$APP_DIR"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3643300Z [36;1m[[ ! -e "$HELPER_BIN" && ! -e "$HELPER_PLIST" && ! -e "$HELPER_SOCKET" ]][0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3644080Z [36;1m/usr/bin/sudo -n /usr/sbin/installer \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3644620Z [36;1m  -verboseR \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3645050Z [36;1m  -pkg "$PKG_PATH" \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3645480Z [36;1m  -target / \[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3646040Z [36;1m  2>&1 | /usr/bin/tee -a "$RUNNER_TEMP/wattson-install.log"[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3646690Z [36;1mverify_install[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3647120Z [36;1mverify_app_launch_stability[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3647590Z [36;1m[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3648720Z [36;1mecho "First install, disabled-service reinstall, public v3 upgrade, uninstall, app-only upgrade, app launch, and cleanup checks passed."[0m
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3717720Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3718490Z env:
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3719230Z   WATTSON_VERSION: 4.3.22
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3719800Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3721110Z   EXPECTED_TEAM_ID: 
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.3721720Z ##[endgroup]
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:01.6691680Z Installing the candidate on a fresh runner...
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:02.1658010Z installer: Package name is 
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:02.1659040Z installer: Installing at base path /
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:02.1660900Z installer:PHASE:Preparing for installation…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:02.1947870Z installer:PHASE:Preparing the disk…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:02.2010420Z installer:PHASE:Preparing …
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:02.3830050Z installer:PHASE:Waiting for other installations to complete…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:02.4135550Z installer:PHASE:Configuring the installation…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:02.4136790Z installer:STATUS:
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:03.0152470Z installer:%86.753939
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:03.0153650Z installer:PHASE:Running package scripts…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:03.5168750Z installer:%88.634413
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:03.5218450Z installer:PHASE:Running package scripts…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:04.0290760Z installer:%90.240344
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:04.0292430Z installer:PHASE:Running package scripts…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:04.5053220Z installer:PHASE:Validating packages…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:05.7108460Z installer:%97.750000
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:05.7110890Z installer:STATUS:Running installer actions…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:05.7169250Z installer:STATUS:
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:05.7170710Z installer:PHASE:Finishing the Installation…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:05.7196190Z installer:STATUS:
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:05.7197070Z installer:%100.000000
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:05.7199470Z installer:PHASE:The software was successfully installed.
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:05.7209980Z installer: The install was successful.
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:06.2083680Z helperV5=v5
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:06.2323600Z adapterW=unavailable systemW=88.828
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:06.7799320Z Wattson exited cleanly because this hosted runner has no AppleSmartBattery.
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:06.7800660Z Reinstalling after an explicit launchd disable...
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:07.1346370Z installer: Package name is 
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:07.1347750Z installer: Upgrading at base path /
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:07.1349890Z installer:PHASE:Preparing for installation…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:07.1660510Z installer:PHASE:Preparing the disk…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:07.1716750Z installer:PHASE:Preparing …
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:07.1870670Z installer:PHASE:Waiting for other installations to complete…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:07.2034350Z installer:PHASE:Configuring the installation…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:07.2035220Z installer:STATUS:
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:07.8008190Z installer:%87.564424
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:07.8009030Z installer:PHASE:Running package scripts…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:08.3152710Z installer:%89.494394
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:08.3155840Z installer:PHASE:Running package scripts…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:08.8270730Z installer:PHASE:Validating packages…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.3971990Z installer:%97.750000
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.3975300Z installer:STATUS:Running installer actions…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.3989720Z installer:STATUS:
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.3992150Z installer:PHASE:Finishing the Installation…
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.4015450Z installer:STATUS:
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.4030250Z installer:%100.000000
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.4032090Z installer:PHASE:The software was successfully installed.
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.4033660Z installer: The upgrade was successful.
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.9166250Z helperV5=v5
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.9406760Z adapterW=unavailable systemW=91.156
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.9844000Z Testing the published 3.0.28 PKG upgrade baseline...
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:09.9850090Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable
+Install on macos-26-intel	Test first install and disabled-service reinstall	2026-10-18T15:07:10.0840420Z scripts/lib/local_cleanup.sh: line 16: _WATTSON_PENDING_SIGNAL: unbound variable
+Install on macos-26-intel	Upload installation logs	﻿2026-10-18T15:07:10.6263710Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6264680Z with:
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6265250Z   name: wattson-install-log-macos-26-intel-39137918718-1
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6266050Z   path: /Users/runner/work/_temp/wattson-*.log
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6266860Z   if-no-files-found: warn
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6267380Z   retention-days: 7
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6268020Z   compression-level: 6
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6268500Z   overwrite: false
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6268980Z   include-hidden-files: false
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6269520Z   archive: true
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6269950Z env:
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6270540Z   WATTSON_VERSION: 4.3.22
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6271170Z   WATTSON_DISTRIBUTION_MODE: community-ad-hoc
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6271840Z   EXPECTED_TEAM_ID: 
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.6272290Z ##[endgroup]
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.9109410Z With the provided path, there will be 4 files uploaded
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.9166570Z Artifact name is valid!
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:10.9178050Z Root directory input is valid!
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:11.2991020Z Uploading artifact: wattson-install-log-macos-26-intel-39137918718-1.zip
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:11.3014660Z Beginning upload of artifact content to blob storage
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:11.6365050Z Uploaded bytes 888
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:11.7129050Z Finished uploading artifact content to blob storage!
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:11.7169670Z SHA256 digest of uploaded artifact is e8661c686a5363b366215cc4a96fe5b9e10179859ec5eb92c73ba7be34e89ede
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:11.7179110Z Finalizing artifact upload
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:12.1115350Z Artifact wattson-install-log-macos-26-intel-39137918718-1 successfully finalized. Artifact ID 12140489619
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:12.1118150Z Artifact wattson-install-log-macos-26-intel-39137918718-1 has been successfully uploaded! Final size is 888 bytes. Artifact ID is 12140489619
+Install on macos-26-intel	Upload installation logs	2026-10-18T15:07:12.1133080Z Artifact download URL: https://github.com/laleoarrow/battery-monitor/actions/runs/39137918718/artifacts/12140489619
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	﻿2026-10-18T15:07:12.1421280Z Post job cleanup.
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.2943550Z [command]/usr/local/bin/git version
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.3064190Z git version 2.55.0
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.3109750Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/dd4290ee-1a40-4125-ae0c-d5d65a7dc02e/.gitconfig'
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.3126740Z Temporarily overriding HOME='/Users/runner/work/_temp/dd4290ee-1a40-4125-ae0c-d5d65a7dc02e' before making global git config changes
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.3128780Z Adding repository directory to the temporary git global config as a safe directory
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.3134460Z [command]/usr/local/bin/git config --global --add safe.directory /Users/runner/work/battery-monitor/battery-monitor
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.3243350Z Removing SSH command configuration
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.3252160Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.3379900Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.4852100Z Removing HTTP extra header
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.4860310Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.4996310Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.6521130Z Removing includeIf entries pointing to credentials config files
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.6529790Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Install on macos-26-intel	Post Check out the candidate lifecycle scripts	2026-10-18T15:07:12.6653150Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Install on macos-26-intel	Complete job	﻿2026-10-18T15:07:12.9053980Z Cleaning up orphan processes
+Install on macos-26-intel	Complete job	2026-10-18T15:07:13.0357160Z Terminate orphan process: pid (28126) (diskimages-help)

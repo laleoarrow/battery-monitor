@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "deadlineSeconds": 1,
+  "exactGeometryAndAutomaticKeyRemovalStillRequired": true,
+  "variants": {
+    "baseline": {
+      "passed": true,
+      "log": "accepted/results/interaction-baseline.log",
+      "assertion": {
+        "line": 444,
+        "message": "✅ History 控制点过渡到达新曲线后自动静止"
+      },
+      "failureDiagnostics": [],
+      "suiteExitCode": 0
+    },
+    "legacy": {
+      "passed": true,
+      "log": "accepted/results/interaction-legacy.log",
+      "assertion": {
+        "line": 442,
+        "message": "✅ History 控制点过渡到达新曲线后自动静止"
+      },
+      "failureDiagnostics": [],
+      "suiteExitCode": 0
+    },
+    "accessibility": {
+      "passed": true,
+      "log": "accepted/results/interaction-accessibility.log",
+      "assertion": {
+        "line": 437,
+        "message": "✅ History 控制点过渡到达新曲线后自动静止"
+      },
+      "failureDiagnostics": [],
+      "suiteExitCode": 0
+    }
+  }
+}

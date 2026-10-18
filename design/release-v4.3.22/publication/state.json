@@ -1,0 +1,216 @@
+{
+  "version": "4.3.22",
+  "repository": "laleoarrow/battery-monitor",
+  "distributionMode": "community-ad-hoc",
+  "requestedByUser": true,
+  "preparationBaseCommit": "b51e12bc87364a8f7ede342302bc5682b3e53c95",
+  "priorRemoteMain": "0ec6a855351edc99826c6f3f6060b10267d85c06",
+  "previousLatestRelease": "v4.3.19",
+  "installerAssetNames": [
+    "Wattson-v4.3.22-macos-universal.pkg",
+    "Wattson-v4.3.22-macos-universal.dmg",
+    "Wattson-v4.3.22-release-info.txt",
+    "SHA256SUMS.txt"
+  ],
+  "releaseCreated": true,
+  "maintainerSyncComplete": false,
+  "releaseSourceCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "mainPushed": true,
+  "mainPushStarted": true,
+  "remoteMainVerifiedCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "headlessCIRunID": 39143941668,
+  "headlessCIURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39143941668",
+  "nativeGate": {
+    "interactionChecks": 1316,
+    "variants": [
+      442,
+      440,
+      434
+    ],
+    "stressIterations": 20000,
+    "passed": true,
+    "sourceCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+    "testedCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+    "inputsMatchRelease": 157,
+    "evidence": "native/after-clock-split/owned-source-verification.json",
+    "matchedTailAllVariantsPassed": true,
+    "proofKind": "fresh_native_execution",
+    "nativeTestsReexecutedForReleaseCommit": true
+  },
+  "localHeadless": {
+    "swiftPassed": 662,
+    "pythonTests": 601,
+    "pythonFailures": 1,
+    "pythonSkipped": 4,
+    "pythonStatus": "Unresolved local injected-deadline fixture; original and focused failures retained, no source changes. Exact-release hosted Headless CI is separately required.",
+    "shellSyntaxFilesPassed": 21,
+    "sourceFilesIdentical": 1001
+  },
+  "headlessCIPassed": true,
+  "localPythonContext": "The exact-release clean hosted full Python suite passed. Local short injected-deadline fixture failures remain recorded without source changes.",
+  "candidateRunID": 39145124379,
+  "candidateURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39145124379",
+  "candidateAttempts": [
+    {
+      "runID": 39132846417,
+      "sourceCommit": "fdf6d96d30d30e0aaee709fa8696ce980ea19100",
+      "conclusion": "failure",
+      "stage": "headless release tests",
+      "swiftPassed": 662,
+      "pythonTests": 601,
+      "pythonErrors": 1,
+      "failure": "test_run_preview_cleanup.RunPreviewCleanupTests.test_terminated_log_session_stops_its_detached_app: captured pipes did not close within65s after TERM",
+      "artifactsBuilt": false,
+      "tagOrReleaseCreated": false
+    },
+    {
+      "runID": 39135559350,
+      "sourceCommit": "d1e72bd31675121e2729f84cff37efb33fdddbeb",
+      "conclusion": "failure",
+      "stage": "baseline native interaction",
+      "headlessPassed": true,
+      "failure": "History matched-tail: endpoint equals target but three0.35sanimationkeys remain after1.011s fixture-resume deadline",
+      "artifactsBuilt": false,
+      "tagOrReleaseCreated": false
+    },
+    {
+      "runID": 39137918718,
+      "sourceCommit": "9d157d496024d32b0f65ec3fe9b1c927678352fc",
+      "conclusion": "failure",
+      "stage": "installer lifecycle cleanup",
+      "headlessPassed": true,
+      "nativePassed": true,
+      "artifactsBuilt": true,
+      "allInstallerLifecyclesAccepted": false,
+      "platformsReportingSuccessButNotAccepted": [
+        "macos-15-intel",
+        "macos-26-intel"
+      ],
+      "failure": "Source-only/custom-trap cleanup consumers hit unset _WATTSON_PENDING_SIGNAL in runner registration; lifecycle exits early and receipt remains. All5 failed strict acceptance; no publictag/release created."
+    },
+    {
+      "runID": 39141992490,
+      "sourceCommit": "8300cabcb5859fcc74c3ff613a2c530a47c01f30",
+      "conclusion": "failure",
+      "stage": "third accessibility native interaction",
+      "headlessPassed": true,
+      "nativeVariantsPassed": [
+        "baseline",
+        "legacy"
+      ],
+      "failure": "Artificially paused/resumed History matched-tail fixture retained stroke/fill/head keys beyond1s. Root model and presentation clocks resumed; no production defect established.",
+      "artifactsBuilt": false,
+      "tagOrReleaseCreated": false
+    }
+  ],
+  "candidatePassed": true,
+  "status": "GitHub stable latest4.3.22,8assets,Homebrew,Pagesandanonymouspubliccheckscomplete. Canonicalpublic-PKGsyncpendingMacunlock; existinglocalpreviewremainsunchanged.",
+  "previousFrozenSourceCommit": "8300cabcb5859fcc74c3ff613a2c530a47c01f30",
+  "cleanupFixCommit": "d1e72bd31675121e2729f84cff37efb33fdddbeb",
+  "cleanupFixScope": [
+    "scripts/lib/local_cleanup.sh",
+    "tests/test_run_preview_cleanup.py"
+  ],
+  "headlessCIAttempts": [
+    {
+      "runID": 39132151994,
+      "sourceCommit": "fdf6d96d30d30e0aaee709fa8696ce980ea19100",
+      "conclusion": "success",
+      "swiftTests": 662,
+      "pythonTests": 601,
+      "pythonSkipped": 4
+    },
+    {
+      "runID": 39134781464,
+      "sourceCommit": "d1e72bd31675121e2729f84cff37efb33fdddbeb",
+      "conclusion": "success",
+      "swiftTests": 662,
+      "pythonTests": 604,
+      "pythonSkipped": 4
+    },
+    {
+      "runID": 39136964969,
+      "sourceCommit": "9d157d496024d32b0f65ec3fe9b1c927678352fc",
+      "conclusion": "success",
+      "swiftTests": 662,
+      "pythonTests": 604,
+      "pythonSkipped": 4
+    },
+    {
+      "runID": 39139882106,
+      "sourceCommit": "67b3f60138074823857a3f86f4d517c87f2ac9e2",
+      "conclusion": "failure",
+      "swiftTests": 662,
+      "pythonTests": 607,
+      "pythonFailures": 3,
+      "pythonSkipped": 4,
+      "failure": "New marker test relied on system Bash3.2 errexit for [[ ]] compound conditions; local receipt masked incorrect guard behavior. No candidate dispatch."
+    },
+    {
+      "runID": 39141158685,
+      "sourceCommit": "8300cabcb5859fcc74c3ff613a2c530a47c01f30",
+      "conclusion": "success",
+      "swiftTests": 662,
+      "pythonTests": 608,
+      "pythonSkipped": 4
+    }
+  ],
+  "paletteRendererHashesMatchAcceptedSource": {
+    "Popover/TopProcessesView.swift": true,
+    "Popover/PopoverContentView.swift": true,
+    "Popover/ProcessActionButton.swift": true,
+    "Popover/FooterHoverFeedbackView.swift": true
+  },
+  "nativeAfterCleanupFix": "native/after-cleanup-fix/owned-source-verification.json",
+  "nativeGateCurrentSourcePassed": true,
+  "candidateNativePassed": true,
+  "historyHarnessSplitCommit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "headlessCIResults": {
+    "swiftTests": 662,
+    "pythonTests": 608,
+    "pythonSkipped": 4,
+    "failures": 0
+  },
+  "candidateDispatchCountForCurrentSource": 1,
+  "candidateArtifact": {
+    "id": 12143358543,
+    "zipSizeBytes": 13594989,
+    "githubDigest": "sha256:b77ea10608e2238ea5c29dc2085ad04c0a1b01f9fcff0a342393c730a9207b0d",
+    "runID": 39145124379,
+    "sourceCommit": "7f41533b017d26519a69d541d3ffd2dea587f413"
+  },
+  "candidateHostedNativeChecks": 1314,
+  "candidateHostedNativeVariants": [
+    441,
+    439,
+    434
+  ],
+  "candidateGateReview": "publication/clock-split-final-candidate-gate-review.json",
+  "tagPushed": true,
+  "releaseTag": "v4.3.22",
+  "artifactVerificationPassed": true,
+  "artifactVerification": "publication/artifact-proof-39145124379.json",
+  "releaseURL": "https://github.com/laleoarrow/battery-monitor/releases/tag/v4.3.22",
+  "releaseID": 416577205,
+  "latestPromotionPending": false,
+  "tapSyncComplete": true,
+  "tapCommit": "8ba66c2e53e5f51393708c9a6e5c76644841b50e",
+  "tapCIRunID": 39147269521,
+  "tapCIPassed": true,
+  "tapSyncEvidence": "publication/tap-publication-proof.json",
+  "publicHomebrewRunID": 39147785416,
+  "publicHomebrewURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39147785416",
+  "publicHomebrewDispatchCount": 1,
+  "publicHomebrewPassed": true,
+  "pagesPassed": true,
+  "publicDownloadVerified": true,
+  "publicDownloadEvidence": "publication/public-package-verification.json",
+  "pagesRunID": 39147879672,
+  "pagesURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39147879672",
+  "latestRelease": "v4.3.22",
+  "anonymousGalleryVerified": true,
+  "anonymousSiteVerified": true,
+  "githubReleaseComplete": true,
+  "maintainerSyncBlocker": "mac_locked",
+  "requiredUserAction": "Unlock the Mac so the verified public PKG can be opened in the system installer; OS administrator authorization may then be required."
+}

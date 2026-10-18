@@ -1,0 +1,29 @@
+{
+  "observed_at": "2026-10-18T16:58:07.744490+00:00",
+  "source_commit": "7f41533b017d26519a69d541d3ffd2dea587f413",
+  "workflow": "homebrew-tap.yml",
+  "workflow_sha256": "4bc7b4378de4c4959b6da23c20fa0e2eaa993249e070fb40626c308f6ab4bb42",
+  "configured_events": [
+    "workflow_dispatch"
+  ],
+  "release_event_run_history_read": {
+    "command": "gh run list --repo laleoarrow/battery-monitor --workflow homebrew-tap.yml --event release --limit10",
+    "exit_code": 0,
+    "runs": []
+  },
+  "automatic_run_triggered_by_release_observed": false,
+  "missing_credentials_failure_observed": false,
+  "manual_trusted_path": {
+    "owner": "root and force_quit_native_qa",
+    "tap_commit": "8ba66c2e53e5f51393708c9a6e5c76644841b50e",
+    "change": "Only public version and public PKG SHA256 in Casks/wattson.rb",
+    "public_pkg_sha256": "63a4b356a46d8aae086cb6045825f503ec937c7a7db4950bb74b6b1a1394b995",
+    "required_tap_ci_run": 39147269521,
+    "tap_ci_result": "pending final owner proof",
+    "next_authorized_path": "After exact tap CI success and root authorization, dispatch homebrew-install-test.yml directly once"
+  },
+  "sync_workflow_rerun_attempted": false,
+  "latest_or_pages_mutation_performed": false,
+  "credentials_read_or_recorded": false,
+  "pitfall": "Do not dispatch homebrew-tap.yml as a recovery rerun with no HOMEBREW_TAP_TOKEN; its exact-tap CI step explicitly assigns GH_TOKEN from that missing secret even if the cask already matches."
+}

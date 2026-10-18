@@ -1,0 +1,6 @@
+test_terminated_log_session_stops_its_detached_app (test_run_preview_cleanup.RunPreviewCleanupTests) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.081s
+
+OK
