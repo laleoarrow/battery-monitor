@@ -40,6 +40,15 @@ struct PowerSnapshot {
     var temperatureC: Double? = nil
     var cycleCount: Int = 0
     var lowPowerMode: Bool = false
+    var batteryVoltageV: Double? = nil
+    /// Signed milliamps: positive charges the battery, negative discharges it.
+    var batteryCurrentMA: Int? = nil
+    /// Measured adapter input, distinct from negotiated adapter capability.
+    var adapterVoltageV: Double? = nil
+    var adapterCurrentMA: Int? = nil
+    var batteryHealthPercent: Double? = nil
+    var maxCapacityMAh: Int? = nil
+    var designCapacityMAh: Int? = nil
     /// Internal-battery state and time from IOPS, the gauge, or observed discharge.
     /// `nil` means no trustworthy state or estimate is available for this sample.
     var batteryTimeEstimate: BatteryTimeEstimate? = nil

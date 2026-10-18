@@ -1,6 +1,6 @@
 import AppKit
 
-/// Charge as the outer ring, power intensity as a rotating inner arc, four
+/// Charge as the outer ring, power intensity as a rotating inner arc, selected
 /// readings beside it.
 ///
 /// The centre reads charge percentage, not watts — the header already owns the
@@ -25,6 +25,7 @@ final class RingGaugeView: PopoverSection {
 
     private var captions: [NSTextField] = []
     private var values: [NSTextField] = []
+    private var metrics: [Settings.RingMetric] = []
     private var animationsEnabled = false
     private var intensity: CGFloat = 0
     private var motionMultiplier: CGFloat = 1
@@ -62,21 +63,38 @@ final class RingGaugeView: PopoverSection {
         percentUnit.alignment = .center
         addSubview(percentUnit)
 
-        for text in ["System Load", "To Battery", "Battery Temp", "Cycle Count"] {
-            captions.append(label(text, size: 11, color: PopoverStyle.secondaryText))
-        }
-        for _ in 0..<4 {
-            let field = label("--", size: 15, color: PopoverStyle.primaryText, mono: true)
-            values.append(field)
-        }
-        captions[3].setAccessibilityElement(false)
-        captions[3].cell?.setAccessibilityElement(false)
-        values[3].setAccessibilityElement(true)
-        values[3].setAccessibilityRole(.staticText)
-        values[3].setAccessibilityLabel("Cycle Count")
+        reloadMetrics()
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    func reloadMetrics() {
+        let selected = Settings.ringMetrics
+        guard metrics != selected else { return }
+        (captions + values).forEach { $0.removeFromSuperview() }
+        captions.removeAll()
+        values.removeAll()
+        metrics = selected
+        for metric in metrics {
+            let caption = label(metric.title, size: 11, color: PopoverStyle.secondaryText)
+            caption.setAccessibilityElement(false)
+            caption.cell?.setAccessibilityElement(false)
+            captions.append(caption)
+            let value = label("—", size: 15, color: PopoverStyle.primaryText, mono: true)
+            value.setAccessibilityElement(true)
+            value.setAccessibilityRole(.staticText)
+            value.setAccessibilityLabel(metric.title)
+            if metric == .batteryCurrent {
+                value.toolTip = "Battery current: positive charges the battery; negative discharges it."
+                value.setAccessibilityHelp(value.toolTip)
+            } else if metric == .adapterCurrent || metric == .adapterVoltage {
+                value.toolTip = "Measured adapter input, when available from this Mac."
+                value.setAccessibilityHelp(value.toolTip)
+            }
+            values.append(value)
+        }
+        needsLayout = true
+    }
 
     override func layout() {
         super.layout()
@@ -85,7 +103,7 @@ final class RingGaugeView: PopoverSection {
 
         // Two columns beside the ring. The trailing slot may change content,
         // but its geometry remains identical.
-        for index in 0..<4 {
+        for index in metrics.indices {
             let column = index % 2
             let row = index / 2
             let x = 132 + CGFloat(column) * 100
@@ -124,13 +142,13 @@ final class RingGaugeView: PopoverSection {
         }
     }
 
-    func update(snapshot: PowerSnapshot) {
+    func update(snapshot: PowerSnapshot, degraded: Bool = false) {
         effectiveAppearance.performAsCurrentDrawingAppearance {
-            updateContents(snapshot: snapshot)
+            updateContents(snapshot: snapshot, degraded: degraded)
         }
     }
 
-    private func updateContents(snapshot: PowerSnapshot) {
+    private func updateContents(snapshot: PowerSnapshot, degraded: Bool) {
         let color = PopoverStyle.stateColor(snapshot.state)
         intensity = VisualEncoding.t(snapshot.totalInputW)
         motionMultiplier = VisualEncoding.multiplier(snapshot.totalInputW)
@@ -138,23 +156,14 @@ final class RingGaugeView: PopoverSection {
         percentLabel.stringValue = "\(snapshot.percent)"
         percentLabel.textColor = snapshot.percent <= 20 ? PopoverStyle.red : PopoverStyle.primaryText
 
-        let hasPositiveDeviceOutput = snapshot.coherentDeviceOutputW.map { $0 > 0 } ?? false
-        captions[0].stringValue = hasPositiveDeviceOutput ? "System Total" : "System Load"
-        captions[1].stringValue = PopoverStyle.batteryFlowLabel(snapshot)
-        values[0].stringValue = PopoverStyle.watts(snapshot.systemW)
-        values[1].stringValue = snapshot.state == .pluggedIdle
-            ? "0.0 W" : PopoverStyle.watts(abs(snapshot.batteryW))
-        values[2].stringValue = snapshot.temperatureC.map {
-            String(format: "%.1f°C", $0)
-        } ?? "—"
-        if let deviceOutputW = snapshot.coherentDeviceOutputW {
-            captions[3].stringValue = "Device Output"
-            values[3].stringValue = PopoverStyle.watts(deviceOutputW)
-            values[3].setAccessibilityLabel("Device Output")
-        } else {
-            captions[3].stringValue = "Cycle Count"
-            values[3].stringValue = "\(snapshot.cycleCount)"
-            values[3].setAccessibilityLabel("Cycle Count")
+        for (index, metric) in metrics.enumerated() {
+            let reading = reading(metric, snapshot: snapshot, degraded: degraded)
+            captions[index].stringValue = reading.caption
+            values[index].stringValue = reading.value
+            values[index].setAccessibilityLabel(reading.caption)
+            // State words need a smaller proportional face than numeric values.
+            values[index].font = metric == .timeEstimate
+                ? .systemFont(ofSize: 12, weight: .medium) : PopoverStyle.mono(15)
         }
 
         PopoverStyle.setWithoutAnimation {
@@ -166,6 +175,61 @@ final class RingGaugeView: PopoverSection {
             self.rotatingArc.strokeEnd = max(0.06, self.intensity)
         }
         applyRotation()
+    }
+
+    private func reading(_ metric: Settings.RingMetric, snapshot: PowerSnapshot, degraded: Bool) -> (caption: String, value: String) {
+        var caption = metric.title
+        let value: String
+        switch metric {
+        case .systemLoad:
+            let hasPositiveDeviceOutput = snapshot.coherentDeviceOutputW.map { $0 > 0 } ?? false
+            caption = hasPositiveDeviceOutput ? "System Total" : "System Load"
+            value = PopoverStyle.watts(snapshot.systemW)
+        case .batteryPower:
+            caption = PopoverStyle.batteryFlowLabel(snapshot)
+            value = snapshot.state == .pluggedIdle ? "0.0 W" : PopoverStyle.watts(abs(snapshot.batteryW))
+        case .temperature:
+            value = snapshot.temperatureC.map { String(format: "%.1f°C", $0) } ?? "—"
+        case .cycleCount:
+            value = "\(snapshot.cycleCount)"
+        case .timeEstimate:
+            caption = snapshot.plugged ? "Time to Full" : "Battery Runtime"
+            value = degraded ? "—" : timeEstimate(snapshot)
+        case .batteryHealth:
+            value = snapshot.batteryHealthPercent.map { String(format: "%.0f%%", $0) } ?? "—"
+        case .batteryVoltage:
+            value = snapshot.batteryVoltageV.map { String(format: "%.2f V", $0) } ?? "—"
+        case .batteryCurrent:
+            value = snapshot.batteryCurrentMA.map { String(format: "%+d mA", $0) } ?? "—"
+        case .adapterVoltage:
+            value = snapshot.adapterVoltageV.map { String(format: "%.2f V", $0) } ?? "—"
+        case .adapterCurrent:
+            value = snapshot.adapterCurrentMA.map { "\($0) mA" } ?? "—"
+        case .adapterPower:
+            value = PopoverStyle.watts(snapshot.adapterW)
+        case .deviceOutput:
+            value = snapshot.coherentDeviceOutputW.map(PopoverStyle.watts) ?? "—"
+        case .maxCapacity:
+            value = snapshot.maxCapacityMAh.map { "\($0) mAh" } ?? "—"
+        case .designCapacity:
+            value = snapshot.designCapacityMAh.map { "\($0) mAh" } ?? "—"
+        }
+        return (caption, value)
+    }
+
+    private func timeEstimate(_ snapshot: PowerSnapshot) -> String {
+        if snapshot.state == .mixedSupply { return "Not Charging" }
+        let minutes: Int?
+        switch snapshot.batteryTimeEstimate {
+        case .charging(let value) where snapshot.plugged: minutes = value
+        case .remaining(let value) where !snapshot.plugged: minutes = value
+        case .full where snapshot.plugged: return "Fully Charged"
+        case .notCharging where snapshot.plugged: return "Not Charging"
+        default: return "—"
+        }
+        guard let minutes, minutes >= 0 else { return "Calculating…" }
+        let time = minutes == 0 ? "<1m" : minutes < 60 ? "\(minutes)m" : "\(minutes / 60)h \(minutes % 60)m"
+        return !snapshot.plugged && snapshot.batteryTimeEstimateSource == .observedDischarge ? "≈\(time)" : time
     }
 
     private func applyRotation() {
@@ -188,7 +252,12 @@ final class RingGaugeView: PopoverSection {
     }
 
 #if DEBUG
-    var temperatureTextForTest: String { values[2].stringValue }
+    var selectedMetricsForTest: [Settings.RingMetric] { metrics }
+    func readingForTest(_ metric: Settings.RingMetric) -> (caption: String, value: String)? {
+        guard let index = metrics.firstIndex(of: metric) else { return nil }
+        return (captions[index].stringValue, values[index].stringValue)
+    }
+    var temperatureTextForTest: String { readingForTest(.temperature)?.value ?? "" }
     var trailingReadingForTest: (caption: String, value: String) {
         (captions[3].stringValue, values[3].stringValue)
     }

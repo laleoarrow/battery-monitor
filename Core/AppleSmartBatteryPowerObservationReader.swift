@@ -47,7 +47,7 @@ final class AppleSmartBatteryPowerObservationReader:
     static let runtimePropertyAllowlist = propertyAllowlist + [
         "CurrentCapacity", "MaxCapacity", "CycleCount",
         "Temperature", "VirtualTemperature",
-        "AppleRawCurrentCapacity", "AppleRawMaxCapacity",
+        "AppleRawCurrentCapacity", "AppleRawMaxCapacity", "DesignCapacity",
         "AvgTimeToEmpty", "AvgTimeToFull", "FullyCharged",
     ]
 

@@ -928,7 +928,7 @@ final class PopoverContentViewController: NSViewController {
         case .flow:
             flowView.update(snapshot: latestSnapshot, animated: animationsEnabled && !latestDegraded)
         case .ring:
-            ringView.update(snapshot: latestSnapshot)
+            ringView.update(snapshot: latestSnapshot, degraded: latestDegraded)
         case .lanes:
             laneView.update(snapshot: latestSnapshot)
         case .history:
@@ -1106,6 +1106,10 @@ final class PopoverContentViewController: NSViewController {
                 self?.applyModuleVisibility()
             case .moduleOrder:
                 self?.applyModuleOrder()
+            case .ringMetrics:
+                guard let self else { return }
+                self.ringView.reloadMetrics()
+                self.updateModule(.ring)
             case .topProcessCount, .topProcessesCompact:
                 guard let self else { return }
                 self.topProcessesHeight?.constant = TopProcessesView.preferredHeight(

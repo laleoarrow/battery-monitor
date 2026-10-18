@@ -447,7 +447,9 @@ class SamplerContractTests(unittest.TestCase):
         self.assertIn("min(staleBatteryW, liveAdapter)", self.source)
         self.assertIn("liveAdapter - maxBatteryPowerWatts", self.source)
         self.assertNotIn("fresh.batteryW = adapterW - systemW", self.source)
-        self.assertIn("else { return snapshot }", self.source)
+        self.assertIn("guard let liveSystem else { return fresh }", self.source)
+        self.assertIn("fresh.adapterVoltageV = nil", self.source)
+        self.assertIn("fresh.adapterCurrentMA = nil", self.source)
 
     def test_iokit_source_and_sink_signs_are_normalized_to_the_core_model(self):
         # Firmware can expose BatteryPower with either raw sign, IsCharging can

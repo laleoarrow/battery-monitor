@@ -1,0 +1,3 @@
+bundleID=com.leoarrow.wattson.ringmetricsqa.25c1a7c2-e329-469d-8b9b-c1ccc6d19e77
+bundlePath=/Users/leoarrow/Project/mypackage/agents/电池功率/.build/ring-metrics-capture.noindex/run.pg1Blp/RingMetricsProbe.app
+method=hidden-production-renderers

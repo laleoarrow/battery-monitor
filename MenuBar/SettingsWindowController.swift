@@ -2786,7 +2786,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .checkForUpdatesOnLaunch, .module, .moduleOrder, .topProcessCount, .topProcessesCompact, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
+            case .checkForUpdatesOnLaunch, .module, .moduleOrder, .ringMetrics, .topProcessCount, .topProcessesCompact, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
                 break
             }
         }
@@ -3276,6 +3276,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
     private var handles: [Settings.Module: ModuleReorderHandle] = [:]
     private var separators: [Settings.Module: NSBox] = [:]
     private let rows = ModuleReorderList()
+    private let ringMetrics = SettingsAppearancePopupButton(frame: .zero, pullsDown: true)
     private let topProcessCount = SettingsAppearancePopupButton()
     private let topProcessesCompact = SettingsAppearancePopupButton()
     var orderDidChange: (() -> Void)?
@@ -3421,7 +3422,35 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         detail.textColor = SettingsStyle.secondaryText
         detail.lineBreakMode = .byTruncatingTail
         let secondary: NSView
-        if module == .topProcesses {
+        if module == .ring {
+            ringMetrics.identifier = NSUserInterfaceItemIdentifier("settings.modules.ring-metrics")
+            ringMetrics.setAccessibilityIdentifier("settings.modules.ring-metrics")
+            ringMetrics.setAccessibilityLabel("Ring Gauge Metrics")
+            ringMetrics.setAccessibilityHelp("Choose up to four readings beside the Ring Gauge. Selecting a fifth replaces the earliest selected metric.")
+            ringMetrics.controlSize = .small
+            ringMetrics.font = SettingsStyle.detailFont
+            ringMetrics.focusScrollView = row
+            ringMetrics.addItem(withTitle: "Metrics")
+            ringMetrics.menu?.autoenablesItems = false
+            for metric in Settings.RingMetric.allCases {
+                let item = NSMenuItem(title: metric.title, action: #selector(toggleRingMetric(_:)), keyEquivalent: "")
+                item.representedObject = metric.rawValue
+                item.target = self
+                ringMetrics.menu?.addItem(item)
+            }
+            ringMetrics.menu?.addItem(.separator())
+            let restore = NSMenuItem(title: "Restore Default Metrics", action: #selector(restoreDefaultMetrics(_:)), keyEquivalent: "")
+            restore.target = self
+            ringMetrics.menu?.addItem(restore)
+            ringMetrics.setContentCompressionResistancePriority(.required, for: .horizontal)
+            detail.maximumNumberOfLines = 1
+            detail.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            let metricsRow = NSStackView(views: [detail, ringMetrics])
+            metricsRow.orientation = .horizontal
+            metricsRow.alignment = .centerY
+            metricsRow.spacing = 8
+            secondary = metricsRow
+        } else if module == .topProcesses {
             detail.stringValue = "Processes shown"
             topProcessCount.identifier = NSUserInterfaceItemIdentifier("settings.modules.top-process-count")
             topProcessCount.setAccessibilityIdentifier("settings.modules.top-process-count")
@@ -3545,6 +3574,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             }
             if case let .module(module) = change { self.refresh(module) }
             if change == .moduleOrder { self.rows.applySavedOrder() }
+            if change == .ringMetrics { self.refresh(.ring) }
             if change == .topProcessCount || change == .topProcessesCompact { self.refresh(.topProcesses) }
         }
     }
@@ -3559,6 +3589,15 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
 
     private func refresh(_ module: Settings.Module) {
         buttons[module]?.state = Settings.isModuleVisible(module) ? .on : .off
+        if module == .ring {
+            let selected = Set(Settings.ringMetrics)
+            for item in ringMetrics.itemArray {
+                guard let rawValue = item.representedObject as? String,
+                      let metric = Settings.RingMetric(rawValue: rawValue) else { continue }
+                item.state = selected.contains(metric) ? .on : .off
+            }
+            ringMetrics.isEnabled = Settings.isModuleVisible(module)
+        }
         if module == .topProcesses {
             topProcessCount.selectItem(withTag: Settings.topProcessCount)
             topProcessCount.isEnabled = Settings.isModuleVisible(module)
@@ -3570,6 +3609,24 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
     @objc private func changeTopProcessCount(_ sender: NSPopUpButton) {
         guard let count = sender.selectedItem?.tag else { return }
         Settings.topProcessCount = count
+    }
+
+    @objc private func toggleRingMetric(_ sender: NSMenuItem) {
+        guard ringMetrics.isEnabled,
+              let rawValue = sender.representedObject as? String,
+              let metric = Settings.RingMetric(rawValue: rawValue) else { return }
+        var selection = Settings.ringMetrics
+        if selection.contains(metric) {
+            selection.removeAll { $0 == metric }
+        } else {
+            selection.append(metric)
+        }
+        Settings.ringMetrics = selection
+    }
+
+    @objc private func restoreDefaultMetrics(_ sender: NSMenuItem) {
+        guard ringMetrics.isEnabled else { return }
+        Settings.ringMetrics = Settings.defaultRingMetrics
     }
 
     @objc private func changeTopProcessesCompact(_ sender: NSPopUpButton) {

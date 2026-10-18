@@ -1268,7 +1268,7 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(gauge.temperatureTextForTest, "0.0°C")
     }
 
-    func testRingGaugeReusesTrailingSlotWithoutChangingGeometry() {
+    func testRingGaugeKeepsSelectedCycleCountWhenDeviceOutputChanges() {
         let gauge = RingGaugeView()
         gauge.frame = NSRect(
             x: 0, y: 0,
@@ -1284,8 +1284,8 @@ final class WattsonTests: XCTestCase {
         )
         let sequence: [(Double?, String, String)] = [
             (nil, "Cycle Count", "116"),
-            (7.5, "Device Output", "7.5 W"),
-            (0, "Device Output", "0.0 W"),
+            (7.5, "Cycle Count", "116"),
+            (0, "Cycle Count", "116"),
             (46.2, "Cycle Count", "116"),
             (nil, "Cycle Count", "116"),
         ]
@@ -1306,8 +1306,7 @@ final class WattsonTests: XCTestCase {
             let fields = children.compactMap { $0 as? NSTextField }
             let trailingElements = fields
                 .filter { $0.accessibilityLabel() == caption }
-            XCTAssertEqual(children.count, 9)
-            XCTAssertEqual(fields.count, 1)
+            XCTAssertEqual(fields.count, 4)
             XCTAssertEqual(trailingElements.count, 1)
             XCTAssertEqual(trailingElements.first?.accessibilityRole(), .staticText)
             XCTAssertEqual(trailingElements.first?.accessibilityValue(), value)

@@ -322,7 +322,8 @@ final class PowerObservationRuntimeTests: XCTestCase {
             XCTAssertFalse(result.resolution.userVisibleEligible)
         }
         let keys = try XCTUnwrap(backend.requestedKeys.first)
-        XCTAssertEqual(keys.count, 17)
+        XCTAssertEqual(keys.count, 18)
+        XCTAssertTrue(keys.contains("DesignCapacity"))
         XCTAssertEqual(Set(keys).count, keys.count)
     }
 

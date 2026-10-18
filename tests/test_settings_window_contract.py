@@ -1956,11 +1956,13 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(Settings.Module.allCases.allSatisfy { Settings.isModuleVisible($0) },
                 "keyboard and accessibility order changes preserve all module switches")
             let finalHandle = view("settings.modules.reorder.topProcesses", in: first)
+            let ringMetrics = view("settings.modules.ring-metrics", in: first)
             require(finalHandle.accessibilityCustomActions()?.contains { $0.name == "Move Down" } == false,
                 "last row does not advertise an unavailable Move Down action")
             require(controller.sidebarNextKeyViewForTest === button(Settings.Module.flow.title, in: first)
                 && button(Settings.Module.flow.title, in: first).nextKeyView === flowHandle
-                && flowHandle.nextKeyView === button(Settings.Module.ring.title, in: first)
+                && flowHandle.nextKeyView === ringMetrics
+                && ringMetrics.nextKeyView === button(Settings.Module.ring.title, in: first)
                 && finalHandle.nextKeyView === restoreModuleOrder
                 && restoreModuleOrder.nextKeyView === controller.sidebarForTest,
                 "key loop follows module order and the restore action before navigation")

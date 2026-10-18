@@ -1,0 +1,3567 @@
+{
+  "assertions" : 658,
+  "cases" : [
+    {
+      "case" : "ring-metrics-light-charging-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-charging-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "fe4ba526e0115d984f0ff9e9385ebd22956a3fe6ab86bfeab611b1ae54663a48",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "45.8 W"
+        },
+        {
+          "caption" : "To Battery",
+          "metric" : "batteryPower",
+          "value" : "22.2 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "34.2°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-charging-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "9f2393a00699f735a27f3ae262c9517041b1834631aebc6e798b6117a31d291d"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-charging-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-charging-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "578e4f0657b7bfb25fc16517e3c971d8c4cb92a25b759b4e067e6c801c03dd4d",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "+1733 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "20.00 V"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "3400 mA"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-charging-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "cea3f7852f7de9b0160d0321e5f5b7f7c6bb1480540ac11df1e41e59620aa14b"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-charging-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-charging-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "5f2bb2024ff2dbe7ca69239d1a0010d34d5906c79fccbbf30bff339e9a625992",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Time to Full",
+          "metric" : "timeEstimate",
+          "value" : "42m"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-charging-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "ad79726591ad8f27c509b5e1faa3dcb8ec2a9f1e9121cc4dbc604f31aba9d7bc"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-charging-power",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-charging-power.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "c9827d910f2ceca9f157a57081f6ddf90296907b96e62ad7d319a0b7936728a8",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "45.8 W"
+        },
+        {
+          "caption" : "To Battery",
+          "metric" : "batteryPower",
+          "value" : "22.2 W"
+        },
+        {
+          "caption" : "Adapter Power",
+          "metric" : "adapterPower",
+          "value" : "68.0 W"
+        },
+        {
+          "caption" : "Device Output",
+          "metric" : "deviceOutput",
+          "value" : "—"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-charging-power-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "50e492590dc4dc88cf2a39acceabd3dae7f19f7ed1140a7247b1fce681a6f8cd"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "adapterPower",
+        "deviceOutput"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-charging-none",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-charging-none.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "6adc9133148ee7d7292278b889cee7143fc27f4af6ee211852c4c040a2163101",
+      "readingFrames" : [
+
+      ],
+      "readings" : [
+
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-charging-none-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "6b4153c3ee8a6782ebef9948503f07705dc8614c82614ca742896f929e3a587c"
+      },
+      "selection" : [
+
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-full-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-full-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "e1bb5f76079d4535f373e3df1853cce96e5b9b20f71c5cf54896213977471390",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "52.0 W"
+        },
+        {
+          "caption" : "Full",
+          "metric" : "batteryPower",
+          "value" : "0.0 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "31.8°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-full-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "db9f78824a5365e2fdafbbe74b19739d44127854ce611ce1242e1efab98470fa"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-full-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-full-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "3f475804adab44ebfde59cb1c0f41809b828aff2215ca7e7379f7ad472ee91b5",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "+0 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "20.00 V"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "2600 mA"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-full-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "e418acf143e6e7a114b5480a11daac2d3c58e69f6249120129ea5bfc164559a4"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-full-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-full-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "80a39a3190e25dd1966d6f2ac83f0b0a825e74545d29755ace9947499d623a8f",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Time to Full",
+          "metric" : "timeEstimate",
+          "value" : "Fully Charged"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-full-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "8a7e006f4a77539130ec483cd02d277bcbf3cfe666f2948f54fd433f73e98368"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-on-battery-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-on-battery-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "4e692f846cb1ea796a90fbc636f5e215ac337f9eea566f4127dec4bfcc843453",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Total",
+          "metric" : "systemLoad",
+          "value" : "39.7 W"
+        },
+        {
+          "caption" : "Battery Output",
+          "metric" : "batteryPower",
+          "value" : "39.7 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "33.1°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-on-battery-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "1291dc9762b67a13e45aebdfe0736e078f3ba25cb29c676c82cc73db4f3483f5"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-on-battery-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-on-battery-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "45c857e839f7e1410677c2e5f6a97c48101e7608a244dc8ac70e1fda1e97af20",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "-3099 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "—"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "—"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-on-battery-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "9252405cb896aae4f111c6dd746beaac993bed6c7210681c8909c7fab47c7c4b"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-on-battery-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-on-battery-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "7fef404be89ee1b83ff296f07588c64f5530a7549581fbc7876d427bdc40b879",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Runtime",
+          "metric" : "timeEstimate",
+          "value" : "4h 25m"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-on-battery-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "e1fd511197f6c82d74b5bc72d4ee20bceb63e09e425f303cda48c750e10f38c5"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-mixed-supply-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-mixed-supply-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "93014498f3456fa3e0562d676a5080000ef65c8a3d5bb389d0f152904eba9c41",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "59.7 W"
+        },
+        {
+          "caption" : "Battery Assist",
+          "metric" : "batteryPower",
+          "value" : "31.7 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "38.6°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-mixed-supply-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "6f6aac7ab3e1af2275abc3df74cd4316c9e33199bd1613ba910a90115e1b7dbb"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-mixed-supply-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-mixed-supply-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "9298e5ee9e06c2b21bb8f6f67f1d44aba64ca819f487b9b6b2e4f8aadeb0fe86",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "-2475 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "20.00 V"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "1400 mA"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-mixed-supply-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "d95a75c6877b57a7148230a7cc7b4ef5fceda49b18e91c22a9ab758dea329045"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-mixed-supply-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-mixed-supply-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "16d71e68fd07b1a5966f2860c189218bf7a4fea0b63a35fc434180a858a73886",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Time to Full",
+          "metric" : "timeEstimate",
+          "value" : "Not Charging"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-mixed-supply-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "8e58dd7828484d2aa8ce1e141436fa5fd9ef7ce6581f08c9f9f1ed9ac1bc43df"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-low-battery-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-low-battery-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "a2ae88e0e232226b1148d688f73cd975f69aa068128e5078ce14ee4196ec6ac2",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "12.0 W"
+        },
+        {
+          "caption" : "Battery Output",
+          "metric" : "batteryPower",
+          "value" : "12.0 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "32.4°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-low-battery-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "b64a4bd74e8931a0b41d124177774b1e576a8387184b90a9b45450e20438db94"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-low-battery-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-low-battery-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "36173dccfafc96b927a7d72c0ed43828d40bc178b161ee1618d1863a38e7b46b",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "-937 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "—"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "—"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-low-battery-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "e8c5f8e3bd2166cc1cd5bdf1cfe506b3e32554d19f94980ca5250cc8c828fcf3"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-low-battery-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-low-battery-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "b85bc155c3c1187b0e01c121a0c7c29425f7cd11a3f0af877813530794704664",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Runtime",
+          "metric" : "timeEstimate",
+          "value" : "18m"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-low-battery-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "72b567f81f6e59f261de1f8da3b44bcc540fa6f8318a88244de3799f019c2ff0"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-low-power-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-low-power-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "52b4bf6551057dea54f35b715d1323e14d05e628ab1f5af28c8d60c35795a609",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "12.0 W"
+        },
+        {
+          "caption" : "Battery Output",
+          "metric" : "batteryPower",
+          "value" : "12.0 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "32.4°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-low-power-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "ac1f9dbeea5272e388039c79c661c0713a8bacd13b2bffcffd9ad4461f8ce649"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-low-power-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-low-power-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "aa9e99a7da9d2eee9ba398edb155a8fc9de9ceb06090d786aa3c0acd567aeb13",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "-937 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "—"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "—"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-low-power-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "05a281ca5cdfb9dfc4ea198cb03313a79458011fd09cca1e4f4123bcc47b996b"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-light-low-power-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-light-low-power-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "f0f799b7d0542ccb60509987208462e2a92228068f0fdbd7fbbab954c428fd1c",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Runtime",
+          "metric" : "timeEstimate",
+          "value" : "5h 10m"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-light-low-power-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "188c1d4af32a246cdb42b4104e41bbe0156f38363d76295369140a76f5e6d587"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-settings-light-default",
+      "checks" : {
+        "allMetricItemsPresent" : true,
+        "checkmarksMatchSelection" : true,
+        "metricsButtonEnabled" : true,
+        "metricsButtonInsideRingRow" : true,
+        "metricTitlesExplicit" : true,
+        "nativeMenuNeverOpened" : true,
+        "restoreDefaultActionPresent" : true,
+        "settingsLabelsFit" : true,
+        "windowNeverShown" : true
+      },
+      "image" : "ring-metrics-settings-light-default.png",
+      "imageDimensions" : [
+        1440,
+        1040
+      ],
+      "imageSHA256" : "f45d918cd568b4ebaecf676e9285b26d235303ae58b4e01a2a1b31147321046e",
+      "menuItems" : [
+        {
+          "checked" : true,
+          "metric" : "systemLoad",
+          "title" : "System Load"
+        },
+        {
+          "checked" : true,
+          "metric" : "batteryPower",
+          "title" : "Battery Power"
+        },
+        {
+          "checked" : true,
+          "metric" : "temperature",
+          "title" : "Battery Temp"
+        },
+        {
+          "checked" : true,
+          "metric" : "cycleCount",
+          "title" : "Cycle Count"
+        },
+        {
+          "checked" : false,
+          "metric" : "timeEstimate",
+          "title" : "Battery Time Estimate"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryHealth",
+          "title" : "Battery Health"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryVoltage",
+          "title" : "Battery Voltage"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryCurrent",
+          "title" : "Battery Current"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterVoltage",
+          "title" : "Adapter Voltage"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterCurrent",
+          "title" : "Adapter Current"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterPower",
+          "title" : "Adapter Power"
+        },
+        {
+          "checked" : false,
+          "metric" : "deviceOutput",
+          "title" : "Device Output"
+        },
+        {
+          "checked" : false,
+          "metric" : "maxCapacity",
+          "title" : "Max Capacity"
+        },
+        {
+          "checked" : false,
+          "metric" : "designCapacity",
+          "title" : "Design Capacity"
+        }
+      ],
+      "metricsButtonFrame" : "{{263.5, 15.5}, {79, 20}}",
+      "nativeMenuOpened" : false,
+      "ringRowImage" : {
+        "image" : "ring-metrics-settings-light-default-row.png",
+        "imageDimensions" : [
+          1006,
+          144
+        ],
+        "imageSHA256" : "50a860e6fba016da886fddaf5a1ea8221be0cca63134d3d9bd13f72be3bd7352"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-settings-light-electrical",
+      "checks" : {
+        "allMetricItemsPresent" : true,
+        "checkmarksMatchSelection" : true,
+        "metricsButtonEnabled" : true,
+        "metricsButtonInsideRingRow" : true,
+        "metricTitlesExplicit" : true,
+        "nativeMenuNeverOpened" : true,
+        "restoreDefaultActionPresent" : true,
+        "settingsLabelsFit" : true,
+        "windowNeverShown" : true
+      },
+      "image" : "ring-metrics-settings-light-electrical.png",
+      "imageDimensions" : [
+        1440,
+        1040
+      ],
+      "imageSHA256" : "f45d918cd568b4ebaecf676e9285b26d235303ae58b4e01a2a1b31147321046e",
+      "menuItems" : [
+        {
+          "checked" : false,
+          "metric" : "systemLoad",
+          "title" : "System Load"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryPower",
+          "title" : "Battery Power"
+        },
+        {
+          "checked" : false,
+          "metric" : "temperature",
+          "title" : "Battery Temp"
+        },
+        {
+          "checked" : false,
+          "metric" : "cycleCount",
+          "title" : "Cycle Count"
+        },
+        {
+          "checked" : false,
+          "metric" : "timeEstimate",
+          "title" : "Battery Time Estimate"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryHealth",
+          "title" : "Battery Health"
+        },
+        {
+          "checked" : true,
+          "metric" : "batteryVoltage",
+          "title" : "Battery Voltage"
+        },
+        {
+          "checked" : true,
+          "metric" : "batteryCurrent",
+          "title" : "Battery Current"
+        },
+        {
+          "checked" : true,
+          "metric" : "adapterVoltage",
+          "title" : "Adapter Voltage"
+        },
+        {
+          "checked" : true,
+          "metric" : "adapterCurrent",
+          "title" : "Adapter Current"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterPower",
+          "title" : "Adapter Power"
+        },
+        {
+          "checked" : false,
+          "metric" : "deviceOutput",
+          "title" : "Device Output"
+        },
+        {
+          "checked" : false,
+          "metric" : "maxCapacity",
+          "title" : "Max Capacity"
+        },
+        {
+          "checked" : false,
+          "metric" : "designCapacity",
+          "title" : "Design Capacity"
+        }
+      ],
+      "metricsButtonFrame" : "{{263.5, 15.5}, {79, 20}}",
+      "nativeMenuOpened" : false,
+      "ringRowImage" : {
+        "image" : "ring-metrics-settings-light-electrical-row.png",
+        "imageDimensions" : [
+          1006,
+          144
+        ],
+        "imageSHA256" : "50a860e6fba016da886fddaf5a1ea8221be0cca63134d3d9bd13f72be3bd7352"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-settings-light-none",
+      "checks" : {
+        "allMetricItemsPresent" : true,
+        "checkmarksMatchSelection" : true,
+        "metricsButtonEnabled" : true,
+        "metricsButtonInsideRingRow" : true,
+        "metricTitlesExplicit" : true,
+        "nativeMenuNeverOpened" : true,
+        "restoreDefaultActionPresent" : true,
+        "settingsLabelsFit" : true,
+        "windowNeverShown" : true
+      },
+      "image" : "ring-metrics-settings-light-none.png",
+      "imageDimensions" : [
+        1440,
+        1040
+      ],
+      "imageSHA256" : "f45d918cd568b4ebaecf676e9285b26d235303ae58b4e01a2a1b31147321046e",
+      "menuItems" : [
+        {
+          "checked" : false,
+          "metric" : "systemLoad",
+          "title" : "System Load"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryPower",
+          "title" : "Battery Power"
+        },
+        {
+          "checked" : false,
+          "metric" : "temperature",
+          "title" : "Battery Temp"
+        },
+        {
+          "checked" : false,
+          "metric" : "cycleCount",
+          "title" : "Cycle Count"
+        },
+        {
+          "checked" : false,
+          "metric" : "timeEstimate",
+          "title" : "Battery Time Estimate"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryHealth",
+          "title" : "Battery Health"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryVoltage",
+          "title" : "Battery Voltage"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryCurrent",
+          "title" : "Battery Current"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterVoltage",
+          "title" : "Adapter Voltage"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterCurrent",
+          "title" : "Adapter Current"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterPower",
+          "title" : "Adapter Power"
+        },
+        {
+          "checked" : false,
+          "metric" : "deviceOutput",
+          "title" : "Device Output"
+        },
+        {
+          "checked" : false,
+          "metric" : "maxCapacity",
+          "title" : "Max Capacity"
+        },
+        {
+          "checked" : false,
+          "metric" : "designCapacity",
+          "title" : "Design Capacity"
+        }
+      ],
+      "metricsButtonFrame" : "{{263.5, 15.5}, {79, 20}}",
+      "nativeMenuOpened" : false,
+      "ringRowImage" : {
+        "image" : "ring-metrics-settings-light-none-row.png",
+        "imageDimensions" : [
+          1006,
+          144
+        ],
+        "imageSHA256" : "50a860e6fba016da886fddaf5a1ea8221be0cca63134d3d9bd13f72be3bd7352"
+      },
+      "selection" : [
+
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-charging-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-charging-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "de477610659984ff9d35cd4580d7e60824686f5e511951afd358dfd55ba40006",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "45.8 W"
+        },
+        {
+          "caption" : "To Battery",
+          "metric" : "batteryPower",
+          "value" : "22.2 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "34.2°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-charging-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "32563faabda4f48d170369f33b3ac3d79bdb73f9d196a422ae7d366d558cd74b"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-charging-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-charging-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "a2fb026c293aade3a21bc6007a5160bba3625e6af254259bd43d31d05e866ba1",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "+1733 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "20.00 V"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "3400 mA"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-charging-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "a74eeecb35c35f98a962f7967d0652b40dbd79fc176333d6ed94e680914b0b3c"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-charging-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-charging-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "b49da29e866e6f78fe26b44863dadb5e7018301f8ba7c5b644dd486ca33a8331",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Time to Full",
+          "metric" : "timeEstimate",
+          "value" : "42m"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-charging-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "3b4292e0b20c121dc08360b2598e8d662ad984702927ad8fad6a45e7b8781a18"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-charging-power",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-charging-power.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "bd02ac21d07bf5ed986c7bfe2225e1a316467ce3cc495cbc3d1972c7d4cc0190",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "45.8 W"
+        },
+        {
+          "caption" : "To Battery",
+          "metric" : "batteryPower",
+          "value" : "22.2 W"
+        },
+        {
+          "caption" : "Adapter Power",
+          "metric" : "adapterPower",
+          "value" : "68.0 W"
+        },
+        {
+          "caption" : "Device Output",
+          "metric" : "deviceOutput",
+          "value" : "—"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-charging-power-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "7d0ad4c8e3b0a1c1220e84b212ae2d6fa20e45eb8fff7e49c44c29f2267c891b"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "adapterPower",
+        "deviceOutput"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-charging-none",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-charging-none.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "942c0288507f88af2b943e20eac802f6b21c83b98e005dd5130190a89c38afb7",
+      "readingFrames" : [
+
+      ],
+      "readings" : [
+
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-charging-none-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "799cb75724c0f2c8436a5c62ace5e79766ae6f4ff9fc45eac28331aae50cc18f"
+      },
+      "selection" : [
+
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-full-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-full-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "42e7b1b1555c35efceca7a5aadc1614220ae8b521bf7d0184ee30f359aa176b2",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "52.0 W"
+        },
+        {
+          "caption" : "Full",
+          "metric" : "batteryPower",
+          "value" : "0.0 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "31.8°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-full-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "ad46ff751f510778357773318bbf4dd01e04734ca018c586273f2ea842f92fca"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-full-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-full-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "8cd068d0ea202b62657aee981a664624d8df1cbf9e1334dfe1a658a3497d68f7",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "+0 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "20.00 V"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "2600 mA"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-full-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "b5a33c23be2d0443ac03de88cee083a27acbe9ba5c217d4a8029a34c2b7af98c"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-full-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-full-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "0500ec7e5530eb87659cdf2cb8e65cb832986f7ec0fa800b0d4499063cfaf2b9",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Time to Full",
+          "metric" : "timeEstimate",
+          "value" : "Fully Charged"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-full-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "bed80a503b4e480b94d7667c714695f554eb34d9aef795a5e13db7c140051c88"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-on-battery-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-on-battery-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "e98564666f65c093015d8f6e6ac6e77ebff1fceba2dbd082cc376c67ff10def3",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Total",
+          "metric" : "systemLoad",
+          "value" : "39.7 W"
+        },
+        {
+          "caption" : "Battery Output",
+          "metric" : "batteryPower",
+          "value" : "39.7 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "33.1°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-on-battery-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "5884fc92aad36fae796e2ece6e12da6722a511232ee83d94332aad45eaf3fc0c"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-on-battery-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-on-battery-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "cc7456fb8fb904fb8eb9de4e906bc2f88eebbfe0c9333b72c825cbd2d2742f25",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "-3099 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "—"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "—"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-on-battery-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "39e0932f8b286d13995fec36fead69e1ed8a514b4651deec02e34e97cc3b5937"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-on-battery-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-on-battery-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "3b367be4ed7fe5c5af8f9123c02f727232d4303f3e5904774a315afb082cf982",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Runtime",
+          "metric" : "timeEstimate",
+          "value" : "4h 25m"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-on-battery-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "4c7649f59d3ad547d39e6fe223942fbc8ea25096324490a6eed70a51ac0f534e"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-mixed-supply-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-mixed-supply-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "56891cfc3907dd4f74029e039922df05e7299d60f45879e6e52b159c70b6de09",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "59.7 W"
+        },
+        {
+          "caption" : "Battery Assist",
+          "metric" : "batteryPower",
+          "value" : "31.7 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "38.6°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-mixed-supply-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "c79b520925ca26c4d83ab6413a3bed6ff85cab24d05b3f18756583891babe798"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-mixed-supply-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-mixed-supply-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "e0f2cf10a2a83ca34cbbecc35739896442d78585e8524f593cfdd4fa34857470",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "-2475 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "20.00 V"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "1400 mA"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-mixed-supply-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "2c512a987f9e729e1cf7685198c57397ad9d2248065e94bc2a44d6299343bfe2"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-mixed-supply-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-mixed-supply-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "11d3eb3b2dddf781a1a58dc4aaf7143b69225231b6b3b13b195dad04796a3ad3",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Time to Full",
+          "metric" : "timeEstimate",
+          "value" : "Not Charging"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-mixed-supply-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "ef90e6ee40dee2938b5abc32a9886f2f81a7b3854530189df1bf42a77073051a"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-low-battery-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-low-battery-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "74c6018385c8968f4e89ff23298ab967e3039de450e33cb854ee8ac0802a8a35",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "12.0 W"
+        },
+        {
+          "caption" : "Battery Output",
+          "metric" : "batteryPower",
+          "value" : "12.0 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "32.4°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-low-battery-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "29c038988e14ecaf16bf1fa764df5de8a235604b3ce866ed1e116f0e034c4c7e"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-low-battery-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-low-battery-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "5b1a219314979214a6faa97f7c6191e4503cfd6592a90ae62f63df5108fa4fa3",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "-937 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "—"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "—"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-low-battery-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "c9e8f53ea76e6005c93e3554fe6911fde3c6f6149e946229e7761be244d7f7e9"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-low-battery-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-low-battery-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "3948ba2e5367eee43e9a668e03758427121fdcfebaadd94450b5e8a038e4da1d",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Runtime",
+          "metric" : "timeEstimate",
+          "value" : "18m"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-low-battery-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "8d391bcd6f08c6c60c9f55aee52fa344ae46a59acf7625b2173ebb4d238bcbf4"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-low-power-default",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-low-power-default.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "8cd8a2e58924bc924171c38225e907d084c45c9138257c64f2e61319bf1b9970",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "System Load",
+          "metric" : "systemLoad",
+          "value" : "12.0 W"
+        },
+        {
+          "caption" : "Battery Output",
+          "metric" : "batteryPower",
+          "value" : "12.0 W"
+        },
+        {
+          "caption" : "Battery Temp",
+          "metric" : "temperature",
+          "value" : "32.4°C"
+        },
+        {
+          "caption" : "Cycle Count",
+          "metric" : "cycleCount",
+          "value" : "307"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-low-power-default-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "dcd9a81cc4d81f2511f25222c902a9c3ad09d2f44df28900fd18c50af40096af"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-low-power-electrical",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-low-power-electrical.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "89144ede5783bd506e2ece3d94224dabfd760162df2e6c1edfcbfebd5bb8d6e2",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Voltage",
+          "metric" : "batteryVoltage",
+          "value" : "12.81 V"
+        },
+        {
+          "caption" : "Battery Current",
+          "metric" : "batteryCurrent",
+          "value" : "-937 mA"
+        },
+        {
+          "caption" : "Adapter Voltage",
+          "metric" : "adapterVoltage",
+          "value" : "—"
+        },
+        {
+          "caption" : "Adapter Current",
+          "metric" : "adapterCurrent",
+          "value" : "—"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-low-power-electrical-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "f561a117e9aaa76e573d021d5d20169a39c8f4aa72ef4d90a3d1beba0a99d318"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-dark-low-power-health",
+      "checks" : {
+        "allSelectedReadingsPresent" : true,
+        "batteryAndAdapterVoltagesDistinct" : true,
+        "captionsAndValuesFit" : true,
+        "currentSourcesExplicit" : true,
+        "exactlyTwoFramesPerMetric" : true,
+        "fixedContentHeight" : true,
+        "fixedRingHeight" : true,
+        "flowRingAndNextSectionContiguous" : true,
+        "footerContained" : true,
+        "noRunningAnimations" : true,
+        "readingFramesContained" : true,
+        "readingFramesDoNotOverlap" : true,
+        "selectionMatchesPreference" : true,
+        "voltageSourcesExplicit" : true,
+        "windowNeverShown" : true
+      },
+      "contentHeight" : 799,
+      "image" : "ring-metrics-dark-low-power-health.png",
+      "imageDimensions" : [
+        720,
+        1598
+      ],
+      "imageSHA256" : "212ff981ca672fa8739d927ed4787308abbf57523103c54e88e6f9154b32e269",
+      "readingFrames" : [
+        "{{132, 27}, {96, 14}}",
+        "{{132, 42}, {96, 19}}",
+        "{{232, 27}, {96, 14}}",
+        "{{232, 42}, {96, 19}}",
+        "{{132, 77}, {96, 14}}",
+        "{{132, 92}, {96, 19}}",
+        "{{232, 77}, {96, 14}}",
+        "{{232, 92}, {96, 19}}"
+      ],
+      "readings" : [
+        {
+          "caption" : "Battery Runtime",
+          "metric" : "timeEstimate",
+          "value" : "5h 10m"
+        },
+        {
+          "caption" : "Battery Health",
+          "metric" : "batteryHealth",
+          "value" : "81%"
+        },
+        {
+          "caption" : "Max Capacity",
+          "metric" : "maxCapacity",
+          "value" : "6975 mAh"
+        },
+        {
+          "caption" : "Design Capacity",
+          "metric" : "designCapacity",
+          "value" : "8579 mAh"
+        }
+      ],
+      "ringFrame" : "{{16, 377}, {328, 138}}",
+      "ringImage" : {
+        "image" : "ring-metrics-dark-low-power-health-section.png",
+        "imageDimensions" : [
+          656,
+          276
+        ],
+        "imageSHA256" : "c3ccca3b02f8dc4c10de18bbc72446cb8bfd44f180525bbf3884244e1c43e523"
+      },
+      "selection" : [
+        "timeEstimate",
+        "batteryHealth",
+        "maxCapacity",
+        "designCapacity"
+      ]
+    },
+    {
+      "case" : "ring-metrics-settings-dark-default",
+      "checks" : {
+        "allMetricItemsPresent" : true,
+        "checkmarksMatchSelection" : true,
+        "metricsButtonEnabled" : true,
+        "metricsButtonInsideRingRow" : true,
+        "metricTitlesExplicit" : true,
+        "nativeMenuNeverOpened" : true,
+        "restoreDefaultActionPresent" : true,
+        "settingsLabelsFit" : true,
+        "windowNeverShown" : true
+      },
+      "image" : "ring-metrics-settings-dark-default.png",
+      "imageDimensions" : [
+        1440,
+        1040
+      ],
+      "imageSHA256" : "d7cbd5826d8e925347526c991a9aa6df98d161a305622337bb957283085db019",
+      "menuItems" : [
+        {
+          "checked" : true,
+          "metric" : "systemLoad",
+          "title" : "System Load"
+        },
+        {
+          "checked" : true,
+          "metric" : "batteryPower",
+          "title" : "Battery Power"
+        },
+        {
+          "checked" : true,
+          "metric" : "temperature",
+          "title" : "Battery Temp"
+        },
+        {
+          "checked" : true,
+          "metric" : "cycleCount",
+          "title" : "Cycle Count"
+        },
+        {
+          "checked" : false,
+          "metric" : "timeEstimate",
+          "title" : "Battery Time Estimate"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryHealth",
+          "title" : "Battery Health"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryVoltage",
+          "title" : "Battery Voltage"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryCurrent",
+          "title" : "Battery Current"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterVoltage",
+          "title" : "Adapter Voltage"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterCurrent",
+          "title" : "Adapter Current"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterPower",
+          "title" : "Adapter Power"
+        },
+        {
+          "checked" : false,
+          "metric" : "deviceOutput",
+          "title" : "Device Output"
+        },
+        {
+          "checked" : false,
+          "metric" : "maxCapacity",
+          "title" : "Max Capacity"
+        },
+        {
+          "checked" : false,
+          "metric" : "designCapacity",
+          "title" : "Design Capacity"
+        }
+      ],
+      "metricsButtonFrame" : "{{263.5, 15.5}, {79, 20}}",
+      "nativeMenuOpened" : false,
+      "ringRowImage" : {
+        "image" : "ring-metrics-settings-dark-default-row.png",
+        "imageDimensions" : [
+          1006,
+          144
+        ],
+        "imageSHA256" : "2dec1b1d3536dfa509e5e35781a6a5f603696d94657c3dcdd5a1bf3d473c893b"
+      },
+      "selection" : [
+        "systemLoad",
+        "batteryPower",
+        "temperature",
+        "cycleCount"
+      ]
+    },
+    {
+      "case" : "ring-metrics-settings-dark-electrical",
+      "checks" : {
+        "allMetricItemsPresent" : true,
+        "checkmarksMatchSelection" : true,
+        "metricsButtonEnabled" : true,
+        "metricsButtonInsideRingRow" : true,
+        "metricTitlesExplicit" : true,
+        "nativeMenuNeverOpened" : true,
+        "restoreDefaultActionPresent" : true,
+        "settingsLabelsFit" : true,
+        "windowNeverShown" : true
+      },
+      "image" : "ring-metrics-settings-dark-electrical.png",
+      "imageDimensions" : [
+        1440,
+        1040
+      ],
+      "imageSHA256" : "d7cbd5826d8e925347526c991a9aa6df98d161a305622337bb957283085db019",
+      "menuItems" : [
+        {
+          "checked" : false,
+          "metric" : "systemLoad",
+          "title" : "System Load"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryPower",
+          "title" : "Battery Power"
+        },
+        {
+          "checked" : false,
+          "metric" : "temperature",
+          "title" : "Battery Temp"
+        },
+        {
+          "checked" : false,
+          "metric" : "cycleCount",
+          "title" : "Cycle Count"
+        },
+        {
+          "checked" : false,
+          "metric" : "timeEstimate",
+          "title" : "Battery Time Estimate"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryHealth",
+          "title" : "Battery Health"
+        },
+        {
+          "checked" : true,
+          "metric" : "batteryVoltage",
+          "title" : "Battery Voltage"
+        },
+        {
+          "checked" : true,
+          "metric" : "batteryCurrent",
+          "title" : "Battery Current"
+        },
+        {
+          "checked" : true,
+          "metric" : "adapterVoltage",
+          "title" : "Adapter Voltage"
+        },
+        {
+          "checked" : true,
+          "metric" : "adapterCurrent",
+          "title" : "Adapter Current"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterPower",
+          "title" : "Adapter Power"
+        },
+        {
+          "checked" : false,
+          "metric" : "deviceOutput",
+          "title" : "Device Output"
+        },
+        {
+          "checked" : false,
+          "metric" : "maxCapacity",
+          "title" : "Max Capacity"
+        },
+        {
+          "checked" : false,
+          "metric" : "designCapacity",
+          "title" : "Design Capacity"
+        }
+      ],
+      "metricsButtonFrame" : "{{263.5, 15.5}, {79, 20}}",
+      "nativeMenuOpened" : false,
+      "ringRowImage" : {
+        "image" : "ring-metrics-settings-dark-electrical-row.png",
+        "imageDimensions" : [
+          1006,
+          144
+        ],
+        "imageSHA256" : "2dec1b1d3536dfa509e5e35781a6a5f603696d94657c3dcdd5a1bf3d473c893b"
+      },
+      "selection" : [
+        "batteryVoltage",
+        "batteryCurrent",
+        "adapterVoltage",
+        "adapterCurrent"
+      ]
+    },
+    {
+      "case" : "ring-metrics-settings-dark-none",
+      "checks" : {
+        "allMetricItemsPresent" : true,
+        "checkmarksMatchSelection" : true,
+        "metricsButtonEnabled" : true,
+        "metricsButtonInsideRingRow" : true,
+        "metricTitlesExplicit" : true,
+        "nativeMenuNeverOpened" : true,
+        "restoreDefaultActionPresent" : true,
+        "settingsLabelsFit" : true,
+        "windowNeverShown" : true
+      },
+      "image" : "ring-metrics-settings-dark-none.png",
+      "imageDimensions" : [
+        1440,
+        1040
+      ],
+      "imageSHA256" : "d7cbd5826d8e925347526c991a9aa6df98d161a305622337bb957283085db019",
+      "menuItems" : [
+        {
+          "checked" : false,
+          "metric" : "systemLoad",
+          "title" : "System Load"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryPower",
+          "title" : "Battery Power"
+        },
+        {
+          "checked" : false,
+          "metric" : "temperature",
+          "title" : "Battery Temp"
+        },
+        {
+          "checked" : false,
+          "metric" : "cycleCount",
+          "title" : "Cycle Count"
+        },
+        {
+          "checked" : false,
+          "metric" : "timeEstimate",
+          "title" : "Battery Time Estimate"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryHealth",
+          "title" : "Battery Health"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryVoltage",
+          "title" : "Battery Voltage"
+        },
+        {
+          "checked" : false,
+          "metric" : "batteryCurrent",
+          "title" : "Battery Current"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterVoltage",
+          "title" : "Adapter Voltage"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterCurrent",
+          "title" : "Adapter Current"
+        },
+        {
+          "checked" : false,
+          "metric" : "adapterPower",
+          "title" : "Adapter Power"
+        },
+        {
+          "checked" : false,
+          "metric" : "deviceOutput",
+          "title" : "Device Output"
+        },
+        {
+          "checked" : false,
+          "metric" : "maxCapacity",
+          "title" : "Max Capacity"
+        },
+        {
+          "checked" : false,
+          "metric" : "designCapacity",
+          "title" : "Design Capacity"
+        }
+      ],
+      "metricsButtonFrame" : "{{263.5, 15.5}, {79, 20}}",
+      "nativeMenuOpened" : false,
+      "ringRowImage" : {
+        "image" : "ring-metrics-settings-dark-none-row.png",
+        "imageDimensions" : [
+          1006,
+          144
+        ],
+        "imageSHA256" : "2dec1b1d3536dfa509e5e35781a6a5f603696d94657c3dcdd5a1bf3d473c893b"
+      },
+      "selection" : [
+
+      ]
+    }
+  ],
+  "executableSHA256" : "d60f66da4a18c0ee79f9aba5aa683ef34a2dff500c83436cda795675c8df5ec3",
+  "failures" : 0,
+  "finalChecks" : {
+    "canonicalAppHelperAndPreferencesUnchanged" : true,
+    "captureNeverForeground" : true,
+    "foregroundApplicationUnchanged" : true,
+    "memoryDefaultsCleared" : true
+  },
+  "limitations" : "Layout evidence only, not WindowServer screenshots or composited Liquid Glass. Native Metrics menu is inspected without opening it; menu checked states are recorded as data. No pointer, keyboard or VoiceOver acceptance is claimed.",
+  "method" : "Hidden NSWindow; production PopoverContentViewController and SettingsWindowController cacheDisplay bitmaps; Classic with Reduce Transparency and Reduce Motion; in-memory Settings; fixture readings and dependencies; no live battery sampling or helper IPC.",
+  "protectedFileHashes" : {
+    "installedBinary" : "f7d0286a17d1dc790946c9aa769e65079ced6663cd80690345f2386fa7a42c49",
+    "installedHelper" : "19c5258489f0e2b0c1c8f1d113d9f04ad38d21cb85172b09bdca2a82b5862476",
+    "installedInfo" : "c92d6d726a315af8c635c87698178ac3529830131fc89177e66b37bb80bffeb1",
+    "legacyPreferences" : "absent",
+    "sandboxPreferences" : "e9067423789e3822a8eeac68e03b6ab8607ae36ee78c56e18c28595ed4a3f34b"
+  },
+  "schema" : 1
+}

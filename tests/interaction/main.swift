@@ -1242,6 +1242,7 @@ flowView.layoutSubtreeIfNeeded()
 flowView.update(snapshot: sharedMotionSnapshot, animated: false)
 flowView.setAnimationsEnabled(true)
 
+Settings.ringMetrics = Settings.defaultRingMetrics
 let ringView = RingGaugeView()
 ringView.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
                         height: RingGaugeView.preferredHeight)
@@ -1257,7 +1258,7 @@ func ringPresentationMatches(_ snapshot: PowerSnapshot,
         .filter { $0.accessibilityLabel() == caption }
     return trailing.caption == caption
         && trailing.value == value
-        && accessibilityChildren.count == 9
+        && accessibilityChildren.compactMap { $0 as? NSTextField }.count == 4
         && trailingElements.count == 1
         && trailingElements.first?.accessibilityRole() == .staticText
         && trailingElements.first?.accessibilityValue() == value
@@ -1266,7 +1267,7 @@ func ringPresentationMatches(_ snapshot: PowerSnapshot,
         && ringView.statsFitBoundsForTest
 }
 
-check("外接设备输出未测到时保留原四格布局",
+check("默认显示循环次数并保留原四格布局",
       RingGaugeView.preferredHeight == 138
           && ringView.bounds.height == 138
           && baselineRingFrames.count == 8
@@ -1275,7 +1276,13 @@ check("外接设备输出未测到时保留原四格布局",
 
 var measuredDeviceOutput = sharedMotionSnapshot
 measuredDeviceOutput.deviceOutputW = 7.5
-check("外接设备输出显示实测标签和功率",
+check("设备实测输出不会自动覆盖已选循环次数",
+      ringPresentationMatches(measuredDeviceOutput,
+                              caption: "Cycle Count", value: "116"))
+Settings.ringMetrics = [.systemLoad, .batteryPower, .temperature, .deviceOutput]
+ringView.reloadMetrics()
+ringView.layoutSubtreeIfNeeded()
+check("选择外接设备输出后显示实测标签和功率",
       ringPresentationMatches(measuredDeviceOutput,
                               caption: "Device Output", value: "7.5 W"))
 
@@ -1285,7 +1292,13 @@ check("实测零输出与不可用数据保持可区分",
       ringPresentationMatches(measuredZeroDeviceOutput,
                               caption: "Device Output", value: "0.0 W"))
 
-check("输出数据变为不可用后恢复循环次数",
+check("选择的输出数据变为不可用时显示破折号",
+      ringPresentationMatches(sharedMotionSnapshot,
+                              caption: "Device Output", value: "—"))
+Settings.ringMetrics = Settings.defaultRingMetrics
+ringView.reloadMetrics()
+ringView.layoutSubtreeIfNeeded()
+check("恢复默认指标后显示循环次数",
       ringPresentationMatches(sharedMotionSnapshot,
                               caption: "Cycle Count", value: "116"))
 ringView.setAnimationsEnabled(true)

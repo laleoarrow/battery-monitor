@@ -264,14 +264,14 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("Settings.changeUserInfoKey", observer)
         self.assertIn("case .menuBarPercentage, .menuBarIconStyle:", observer)
         self.assertIn(
-            "case .module, .moduleOrder, .topProcessCount, .topProcessesCompact, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:\n                break",
+            "case .module, .moduleOrder, .ringMetrics, .topProcessCount, .topProcessesCompact, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:\n                break",
             observer,
         )
         status_scope = observer.split("case .menuBarPercentage, .menuBarIconStyle:", 1)[1].split("case", 1)[0]
         self.assertIn("refreshStatusItem()", status_scope)
         self.assertNotIn("refreshPresentation()", status_scope)
         ignored_scope = observer.split(
-            "case .module, .moduleOrder, .topProcessCount, .topProcessesCompact, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:", 1
+            "case .module, .moduleOrder, .ringMetrics, .topProcessCount, .topProcessesCompact, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:", 1
         )[1].split("case", 1)[0]
         self.assertNotIn("refresh", ignored_scope)
         self.assertIn("case .module(.topProcesses):", observer)

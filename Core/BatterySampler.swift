@@ -83,6 +83,23 @@ enum BatterySampler {
         let instantAmperage = optionalIntValue(props["InstantAmperage"])
         let amperage = optionalIntValue(props["Amperage"])
         let telemetry = parsedPowerTelemetry(props["PowerTelemetryData"])
+        snapshot.batteryVoltageV = voltage.map { Double($0) / 1_000 }
+        snapshot.batteryCurrentMA = validBatteryCurrent(instantAmperage)
+            ?? validBatteryCurrent(amperage)
+        if plugged {
+            // These are the live PowerTelemetryData input readings in mV/mA.
+            // AdapterDetails describes negotiated capability, not measured input.
+            snapshot.adapterVoltageV = telemetry["SystemVoltageIn"].map { Double($0) / 1_000 }
+            snapshot.adapterCurrentMA = telemetry["SystemCurrentIn"]
+        }
+        // MaxCapacity is a percentage on Apple silicon. Only the explicit raw
+        // maximum and design capacity supply physical mAh for battery health.
+        snapshot.maxCapacityMAh = validCapacityMAh(props["AppleRawMaxCapacity"])
+        snapshot.designCapacityMAh = validCapacityMAh(props["DesignCapacity"])
+        if let maximum = snapshot.maxCapacityMAh,
+           let design = snapshot.designCapacityMAh {
+            snapshot.batteryHealthPercent = Double(maximum) * 100 / Double(design)
+        }
         let instantBatteryW = resolvedInstantBatteryW(
             voltage: voltage,
             instantAmperage: instantAmperage,
@@ -176,6 +193,12 @@ enum BatterySampler {
         return voltage
     }
 
+    private static func validCapacityMAh(_ raw: Any?) -> Int? {
+        guard let value = optionalIntValue(raw),
+              (1...maxBatteryCapacityUnits).contains(value) else { return nil }
+        return value
+    }
+
     private static func validTelemetryMilliwatts(
         _ value: Int?,
         signed: Bool
@@ -201,6 +224,14 @@ enum BatterySampler {
             ) {
                 values[key] = value
             }
+        }
+        if let voltage = optionalIntValue(dict["SystemVoltageIn"]),
+           (0...maxBatteryVoltageMillivolts).contains(voltage) {
+            values["SystemVoltageIn"] = voltage
+        }
+        if let current = optionalIntValue(dict["SystemCurrentIn"]),
+           (0...100_000).contains(current) {
+            values["SystemCurrentIn"] = current
         }
         return values
     }
@@ -399,7 +430,9 @@ enum BatterySampler {
 
         var fresh = snapshot
         if !snapshot.plugged {
-            guard let liveSystem else { return snapshot }
+            fresh.adapterVoltageV = nil
+            fresh.adapterCurrentMA = nil
+            guard let liveSystem else { return fresh }
             fresh.adapterW = 0
             fresh.systemW = liveSystem
             fresh.batteryW = liveSystem > 0 ? -liveSystem : 0
@@ -463,7 +496,7 @@ enum BatterySampler {
             "CurrentCapacity", "MaxCapacity", "ExternalConnected", "IsCharging", "CycleCount",
             "Temperature", "VirtualTemperature", "Voltage", "InstantAmperage",
             "Amperage", "PowerTelemetryData", "PowerOutDetails",
-            "AppleRawCurrentCapacity", "AppleRawMaxCapacity",
+            "AppleRawCurrentCapacity", "AppleRawMaxCapacity", "DesignCapacity",
             "AvgTimeToEmpty", "AvgTimeToFull", "FullyCharged",
         ]
         var props: [String: Any] = [:]

@@ -75,6 +75,32 @@ enum Settings {
         var defaultsKey: String { "popover.module.\(rawValue)" }
     }
 
+    enum RingMetric: String, CaseIterable {
+        case systemLoad, batteryPower, temperature, cycleCount
+        case timeEstimate, batteryHealth, batteryVoltage, batteryCurrent
+        case adapterVoltage, adapterCurrent, adapterPower, deviceOutput
+        case maxCapacity, designCapacity
+
+        var title: String {
+            switch self {
+            case .systemLoad: return "System Load"
+            case .batteryPower: return "Battery Power"
+            case .temperature: return "Battery Temp"
+            case .cycleCount: return "Cycle Count"
+            case .timeEstimate: return "Battery Time Estimate"
+            case .batteryHealth: return "Battery Health"
+            case .batteryVoltage: return "Battery Voltage"
+            case .batteryCurrent: return "Battery Current"
+            case .adapterVoltage: return "Adapter Voltage"
+            case .adapterCurrent: return "Adapter Current"
+            case .adapterPower: return "Adapter Power"
+            case .deviceOutput: return "Device Output"
+            case .maxCapacity: return "Max Capacity"
+            case .designCapacity: return "Design Capacity"
+            }
+        }
+    }
+
     enum Change: Equatable {
         case menuBarPercentage
         case menuBarIconStyle
@@ -87,6 +113,7 @@ enum Settings {
         case dockIconStyle
         case module(Module)
         case moduleOrder
+        case ringMetrics
         case topProcessCount
         case topProcessesCompact
     }
@@ -105,6 +132,7 @@ enum Settings {
     private static let inAppLogoStyleKey = "appearance.inAppLogoStyle"
     private static let dockIconStyleKey = "appearance.dockIconStyle"
     private static let moduleOrderKey = "popover.moduleOrder"
+    private static let ringMetricsKey = "popover.ringMetrics"
     private static let topProcessCountKey = "popover.topProcessCount"
     private static let topProcessesCompactKey = "popover.topProcessesCompact"
 #if DEBUG
@@ -296,6 +324,31 @@ enum Settings {
     private static func normalizedModuleOrder(_ order: [Module]) -> [Module] {
         var seen = Set<Module>()
         return (order + Module.allCases).filter { seen.insert($0).inserted }
+    }
+
+    static let defaultRingMetrics: [RingMetric] = [
+        .systemLoad, .batteryPower, .temperature, .cycleCount,
+    ]
+
+    /// Keep selection order so a fifth choice replaces the oldest selected
+    /// metric. Unknown names are ignored without rewriting preferences.
+    static var ringMetrics: [RingMetric] {
+        get {
+            guard let values = defaults.object(forKey: ringMetricsKey) as? [String] else {
+                return defaultRingMetrics
+            }
+            var seen = Set<RingMetric>()
+            let selected = values.compactMap(RingMetric.init(rawValue:))
+                .filter { seen.insert($0).inserted }
+            return Array(selected.suffix(4))
+        }
+        set {
+            var seen = Set<RingMetric>()
+            let values = Array(newValue.filter { seen.insert($0).inserted }.suffix(4))
+            guard ringMetrics != values else { return }
+            defaults.set(values.map(\.rawValue), forKey: ringMetricsKey)
+            postChange(.ringMetrics)
+        }
     }
 
     static func isModuleVisible(_ module: Module) -> Bool {
