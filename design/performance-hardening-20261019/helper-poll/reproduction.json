@@ -1,0 +1,65 @@
+{
+  "credentialLockHeldMilliseconds": 12205.214125,
+  "measurements": [
+    {
+      "case": "production-expired-idle-deadline",
+      "cpuMilliseconds": 55.197,
+      "pollCalls": 35904,
+      "productionTimeoutMilliseconds": 0,
+      "round": 0,
+      "wallMilliseconds": 250.082583
+    },
+    {
+      "case": "diagnostic-100ms-idle-wait-control",
+      "cpuMilliseconds": 0.066,
+      "pollCalls": 3,
+      "productionTimeoutMilliseconds": 0,
+      "round": 0,
+      "wallMilliseconds": 303.096375
+    },
+    {
+      "case": "production-expired-idle-deadline",
+      "cpuMilliseconds": 50.164,
+      "pollCalls": 36839,
+      "productionTimeoutMilliseconds": 0,
+      "round": 1,
+      "wallMilliseconds": 250.007917
+    },
+    {
+      "case": "diagnostic-100ms-idle-wait-control",
+      "cpuMilliseconds": 0.043000000000000003,
+      "pollCalls": 3,
+      "productionTimeoutMilliseconds": 0,
+      "round": 1,
+      "wallMilliseconds": 303.016667
+    },
+    {
+      "case": "production-expired-idle-deadline",
+      "cpuMilliseconds": 51.738,
+      "pollCalls": 39266,
+      "productionTimeoutMilliseconds": 0,
+      "round": 2,
+      "wallMilliseconds": 250.000625
+    },
+    {
+      "case": "diagnostic-100ms-idle-wait-control",
+      "cpuMilliseconds": 0.088,
+      "pollCalls": 3,
+      "productionTimeoutMilliseconds": 0,
+      "round": 2,
+      "wallMilliseconds": 303.201125
+    }
+  ],
+  "readerDeadlinePriorityMilliseconds": 2,
+  "realProductionSamplePendingBeyondTwelveSeconds": true,
+  "workerSettledAfterLockRelease": true,
+  "sourceFilesSHA256": {
+    "Helper/wattson-helper.swift": "3b58dc6cf398958b2e35d8a59944018a106413f3829ff5631ac477489dca1fc6",
+    "HelperV5/TopProcesses.swift": "267ec03e224eaeddbf85d6d831f966c8ec45521e1d1602b03234e2eb4733dd2a",
+    "HelperV5/ProcessTermination.swift": "d94adccaf285845db1c28e08e04243c94510883fdcafd978b9288533257b5ce7"
+  },
+  "scope": "Actual HelperTopProcesses.sample blocked on its actual credential lock; exact production timeout function and real Darwin.poll on an owned empty pipe. No installed helper, socket, app, preferences, credentials, process signal or UI touched.",
+  "limitations": "The long lock is deliberately injected. This establishes a rare blocked-worker boundary, not ordinary-sampling CPU usage or whole-app performance. The finite wait is a diagnostic control, not a production patch.",
+  "temporaryLifecycle": "tests/local_runtime.py TemporaryDirectory and bounded run own compiler/binary process groups; pipe and worker settle before normal exit; temporary directory removed.",
+  "elapsedSeconds": 17.15469125000527
+}

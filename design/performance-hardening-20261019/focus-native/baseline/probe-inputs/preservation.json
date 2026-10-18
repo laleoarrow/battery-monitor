@@ -1,0 +1,12 @@
+{
+  "allPassed": true,
+  "scriptBytesMatchOriginalRecordedHashes": {
+    "source-manifest.py": true,
+    "guest-run.sh": true,
+    "vm-state.py": true,
+    "run-owned.sh": true,
+    "audit-guest.py": true
+  },
+  "mainSourceSHA256": "9aba8d7dff4636f3d6a0febf08b35b9d36a422dde0f57d61f13ce215bdf3be02",
+  "note": "main.swift retained unchanged before creating v2; baseline lifecycle script hashes were recorded during execution."
+}

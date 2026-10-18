@@ -1,0 +1,66 @@
+{
+  "credentialLockHeldMilliseconds": 12200.387666,
+  "measurements": [
+    {
+      "case": "baseline-production-timeout",
+      "cpuMilliseconds": 56.075,
+      "pollCalls": 35015,
+      "productionTimeoutMilliseconds": 0,
+      "round": 0,
+      "wallMilliseconds": 250.074042
+    },
+    {
+      "case": "fixed-production-timeout",
+      "cpuMilliseconds": 0.081,
+      "pollCalls": 3,
+      "productionTimeoutMilliseconds": 100,
+      "round": 0,
+      "wallMilliseconds": 303.107834
+    },
+    {
+      "case": "baseline-production-timeout",
+      "cpuMilliseconds": 51.30500000000001,
+      "pollCalls": 38921,
+      "productionTimeoutMilliseconds": 0,
+      "round": 1,
+      "wallMilliseconds": 250.00575
+    },
+    {
+      "case": "fixed-production-timeout",
+      "cpuMilliseconds": 0.068,
+      "pollCalls": 3,
+      "productionTimeoutMilliseconds": 100,
+      "round": 1,
+      "wallMilliseconds": 303.093458
+    },
+    {
+      "case": "baseline-production-timeout",
+      "cpuMilliseconds": 52.537,
+      "pollCalls": 30226,
+      "productionTimeoutMilliseconds": 0,
+      "round": 2,
+      "wallMilliseconds": 250.010125
+    },
+    {
+      "case": "fixed-production-timeout",
+      "cpuMilliseconds": 0.045000000000000005,
+      "pollCalls": 3,
+      "productionTimeoutMilliseconds": 100,
+      "round": 2,
+      "wallMilliseconds": 303.06225
+    }
+  ],
+  "readerDeadlinePriorityMilliseconds": 2,
+  "realProductionSamplePendingBeyondTwelveSeconds": true,
+  "workerSettledAfterLockRelease": true,
+  "sourceFilesSHA256": {
+    "Helper/wattson-helper.swift": "b73f948185df94c667b62a240ce1f69e91be1ebe71d4c4bca0dcef1ea526d453",
+    "HelperV5/TopProcesses.swift": "267ec03e224eaeddbf85d6d831f966c8ec45521e1d1602b03234e2eb4733dd2a",
+    "HelperV5/ProcessTermination.swift": "d94adccaf285845db1c28e08e04243c94510883fdcafd978b9288533257b5ce7"
+  },
+  "scope": "Actual HelperTopProcesses.sample blocked on its actual credential lock; exact production timeout function and real Darwin.poll on an owned empty pipe. No installed helper, socket, app, preferences, credentials, process signal or UI touched.",
+  "baselineTimeoutSHA256": "002c29d129ff79bcbf5ec78a4a1aafc43b0e9d45c3bfd0e689d0c240b1f94ede",
+  "limitations": "The long lock is deliberately injected. This establishes a rare blocked-worker boundary, not ordinary-sampling CPU usage or whole-app performance. Both baseline and fixed waits are extracted from their exact production functions.",
+  "temporaryLifecycle": "tests/local_runtime.py TemporaryDirectory and bounded run own compiler/binary process groups; pipe and worker settle before normal exit; temporary directory removed.",
+  "elapsedSeconds": 16.503010291955434
+}

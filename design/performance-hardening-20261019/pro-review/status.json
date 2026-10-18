@@ -1,0 +1,12 @@
+{
+  "status": "pending_manual_unlock",
+  "browser": "SunBrowser (com.adspower.SunBrowser)",
+  "selectedProModeVerified": false,
+  "promptSubmitted": false,
+  "responseReceived": false,
+  "blocker": "CUA app inventory reported that the Mac is locked and automatic unlock failed. Manual unlock was requested; no unlock reply has arrived.",
+  "availableBrowserConnector": "No SunBrowser connector was present; an unrelated Edge session was not used.",
+  "preparedPrompt": "prompt.txt",
+  "localReviewIsNotProReview": true,
+  "nextStep": "After manual unlock, bind the running SunBrowser by its full path, verify actual Pro mode, submit this bounded source review, evaluate its advice against the code and rerun affected checks if changes are needed."
+}

@@ -1,0 +1,29 @@
+{
+  "samples": 24,
+  "uniqueFreshProcesses": 24,
+  "allMainThread": true,
+  "allFirstSamplerCalls": true,
+  "outcomes": {
+    "snapshot": 24
+  },
+  "samplerElapsedMilliseconds": {
+    "minimum": 0.807333,
+    "median": 1.024146,
+    "p95NearestRank": 1.898,
+    "maximum": 7.52675,
+    "firstProcess": 1.306417
+  },
+  "processCPUMilliseconds": {
+    "minimum": 0.437,
+    "median": 0.598,
+    "maximum": 1.266
+  },
+  "over60HzFrameBudgetCount": 0,
+  "over120HzFrameBudgetCount": 0,
+  "productionSourcesUnchangedDuringMeasurement": true,
+  "canonicalPIDsAfter": [
+    80435
+  ],
+  "canonicalPIDsUnchanged": true,
+  "wallFinishedUTC": "2026-10-18T17:18:51Z"
+}

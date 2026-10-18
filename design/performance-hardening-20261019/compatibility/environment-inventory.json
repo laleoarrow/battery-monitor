@@ -1,0 +1,133 @@
+{
+  "host": {
+    "command": [
+      "/usr/bin/sw_vers"
+    ],
+    "exitCode": 0,
+    "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.5.2\nBuildVersion:\t\t25F84",
+    "stderr": ""
+  },
+  "activeDeveloperDirectory": {
+    "command": [
+      "/usr/bin/xcode-select",
+      "-p"
+    ],
+    "exitCode": 0,
+    "stdout": "/Applications/Xcode.app/Contents/Developer",
+    "stderr": ""
+  },
+  "xcode": {
+    "command": [
+      "/usr/bin/xcodebuild",
+      "-version"
+    ],
+    "exitCode": 0,
+    "stdout": "Xcode 26.6\nBuild version 17F113",
+    "stderr": ""
+  },
+  "activeSDKVersion": {
+    "command": [
+      "/usr/bin/xcrun",
+      "--sdk",
+      "macosx",
+      "--show-sdk-version"
+    ],
+    "exitCode": 0,
+    "stdout": "26.5",
+    "stderr": ""
+  },
+  "sdks": {
+    "command": [
+      "/usr/bin/xcodebuild",
+      "-showsdks"
+    ],
+    "exitCode": 0,
+    "stdout": "DriverKit SDKs:\n\tDriverKit 25.5                \t-sdk driverkit25.5\n\niOS SDKs:\n\tiOS 26.5                      \t-sdk iphoneos26.5\n\niOS Simulator SDKs:\n\tSimulator - iOS 26.5          \t-sdk iphonesimulator26.5\n\nmacOS SDKs:\n\tmacOS 26.5                    \t-sdk macosx26.5\n\tmacOS 26.5                    \t-sdk macosx26.5\n\ntvOS SDKs:\n\ttvOS 26.5                     \t-sdk appletvos26.5\n\ntvOS Simulator SDKs:\n\tSimulator - tvOS 26.5         \t-sdk appletvsimulator26.5\n\nvisionOS SDKs:\n\tvisionOS 26.5                 \t-sdk xros26.5\n\nvisionOS Simulator SDKs:\n\tSimulator - visionOS 26.5     \t-sdk xrsimulator26.5\n\nwatchOS SDKs:\n\twatchOS 26.5                  \t-sdk watchos26.5\n\nwatchOS Simulator SDKs:\n\tSimulator - watchOS 26.5      \t-sdk watchsimulator26.5",
+    "stderr": ""
+  },
+  "tartList": {
+    "command": [
+      "/opt/homebrew/bin/tart",
+      "list",
+      "--format",
+      "json"
+    ],
+    "exitCode": 0,
+    "stdout": "[\n  {\n    \"State\" : \"stopped\",\n    \"Disk\" : 50,\n    \"Accessed\" : \"2026-10-18T17:23:09Z\",\n    \"Source\" : \"local\",\n    \"Name\" : \"macOS-TestLab\",\n    \"Size\" : 33,\n    \"Running\" : false\n  },\n  {\n    \"State\" : \"stopped\",\n    \"Disk\" : 50,\n    \"Accessed\" : \"2026-10-18T17:23:09Z\",\n    \"Source\" : \"local\",\n    \"Name\" : \"macOS-TestLab-Base\",\n    \"Size\" : 30,\n    \"Running\" : false\n  }\n]",
+    "stderr": ""
+  },
+  "tartTestLabConfig": {
+    "command": [
+      "/opt/homebrew/bin/tart",
+      "get",
+      "macOS-TestLab",
+      "--format",
+      "json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"Size\" : \"33.986\",\n  \"Running\" : false,\n  \"State\" : \"stopped\",\n  \"Disk\" : 50,\n  \"Memory\" : 32768,\n  \"DiskFormat\" : \"raw\",\n  \"Display\" : \"1440x900\",\n  \"OS\" : \"darwin\",\n  \"CPU\" : 8\n}",
+    "stderr": ""
+  },
+  "tartBaseConfig": {
+    "command": [
+      "/opt/homebrew/bin/tart",
+      "get",
+      "macOS-TestLab-Base",
+      "--format",
+      "json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"Memory\" : 32768,\n  \"OS\" : \"darwin\",\n  \"CPU\" : 8,\n  \"Display\" : \"1440x900\",\n  \"Running\" : false,\n  \"DiskFormat\" : \"raw\",\n  \"Size\" : \"30.743\",\n  \"State\" : \"stopped\",\n  \"Disk\" : 50\n}",
+    "stderr": ""
+  },
+  "capturedUTC": "2026-10-18T17:24:53Z",
+  "XcodeBundlesInApplications": [
+    "/Applications/Xcode.app"
+  ],
+  "XcodeMacOSSDKEntries": [
+    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.sdk",
+    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk"
+  ],
+  "CommandLineToolsSDKEntries": [
+    "/Library/Developer/CommandLineTools/SDKs/MacOSX15.2.sdk",
+    "/Library/Developer/CommandLineTools/SDKs/MacOSX15.4.sdk",
+    "/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk",
+    "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+    "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk",
+    "/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk"
+  ],
+  "knownFreshVMCloneSystemEvidence": "design/performance-hardening-20261019/focus-native/baseline/results/system.txt",
+  "knownFreshVMCloneSystemEvidenceSHA256": "f664be9f8f167a891dc31020eda8d3334cd8ff55841c7e65b29878b50105bf22",
+  "runtimeLimitations": [
+    "No available macOS 27 SDK was found in active Xcode, its SDK entries, or CommandLineTools SDK entries.",
+    "Tart list/get only exposes darwin, not the guest product version; stopped user VM contents were not mounted or started.",
+    "The existing owned focus QA clone reports macOS 26.6.1, not 27; it was not started or modified by this inventory.",
+    "No SDK download, OS upgrade, VM start/stop/mount/clone, installed-app restart, helper mutation, or TCC permission change was performed.",
+    "No temporary files or processes were created beyond bounded read-only commands; this directory contains retained evidence only."
+  ],
+  "canonicalLaunchDaemon": {
+    "exists": true,
+    "extendedAttributeNames": {
+      "command": [
+        "/usr/bin/xattr",
+        "/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist"
+      ],
+      "exitCode": 0,
+      "stdout": "com.apple.provenance",
+      "stderr": ""
+    }
+  },
+  "currentUserLoginAgent": {
+    "exists": true,
+    "extendedAttributeNames": {
+      "command": [
+        "/usr/bin/xattr",
+        "/Users/leoarrow/Library/LaunchAgents/com.leoarrow.wattson.login.plist"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  }
+}

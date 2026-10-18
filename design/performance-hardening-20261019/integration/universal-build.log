@@ -1,0 +1,39 @@
+Building Wattson 4.3.22 (4.3.22) for arm64 and x86_64...
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (24.69s)
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (22.65s)
+/* com.apple.actool.compilation-results */
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.OPyxbX/icon-assets/Assets.car
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.OPyxbX/icon-assets/WattsonGlass.icns
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.OPyxbX/icon-assets/icon-info.plist
+
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.OPyxbX/com.leoarrow.wattson.helper: replacing existing signature
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.OPyxbX/Wattson.app: replacing existing signature
+Verified universal release build for Wattson 4.3.22
+Built universal app: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.OPyxbX/Wattson.app
+Built universal helper: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.OPyxbX/com.leoarrow.wattson.helper
+Signing: ad-hoc community build (not notarized)
+Build verified; disposable app and build files are removed on exit.

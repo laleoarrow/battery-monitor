@@ -1,0 +1,39 @@
+Read-only integration review — Process Activity focus and action redraw
+2026-10-19, independent local code review; NOT a Pro review.
+
+Scope: TopProcessesView identity-based first-responder restoration and removal of the extra ProcessRow.update button refresh; ProcessActionButton isEnabled no-op guard. No source/test/installation changes made by this review.
+
+Conclusion
+No evidenced new production defect found in the inspected patch. Native fixed-source acceptance remains pending in the evidence available at review time. No zero-bug or newest-macOS acceptance claim follows from this review.
+
+Focus ownership
+- TopProcessesView.swift:154 captures focus only if NSWindow.firstResponder is the exact ProcessRow or its exact forceQuitButton. An unrelated NSTextView field editor is neither and therefore does not enter the restoration block. This avoids stealing text-editor or other control focus.
+- Lines155 and199 compare the existing Selection key rather than row index. Identified selection uses full ProcessIdentity (pid, startedAt, auditToken), so reused PIDs with a changed start or audit token do not inherit identified process focus. Identity becoming unavailable also changes the enum case and retires that old identified focus.
+- Lines199–204 search only a surviving visible row. If the process was removed, fell below Top N, or loading/unavailable/empty cleared rows, focus is retired via makeFirstResponder(nil). Clearing selection does not incorrectly clear a still-useful row focus when the same process survives.
+- Lines200–201 restore a focused action only if the matching row is selected and its button enabled; otherwise the target is the row. This avoids explicitly targeting an unselected/hidden or disabled action. Top N count reduction deliberately clears selection at157, so a surviving process should receive row focus, not its hidden action.
+- An unselected-but-focused row is intentionally captured: Space toggles selection off while retaining row keyboard navigation, and later reranks should preserve that process context.
+- The new block executes synchronously. The concrete ProcessRow and ProcessActionButton classes do not override become/resignFirstResponder to run external callbacks, and no asynchronous work was added. No evidenced reentrancy defect was found. makeFirstResponder return values are ignored; the native probe must verify AppKit actually accepted the target rather than assume it from the call.
+
+Appearance and redraw
+- ProcessActionButton.swift:29–32 guards only identical enabled-state assignments. Actual enable/disable still calls refreshAppearance.
+- setTintColor:35–38 remains independently refreshing on tint changes. viewDidChangeEffectiveAppearance:71–74 refreshes unconditionally. TopProcessesView.refreshAppearance still refreshes all rows; each ProcessRow.refreshAppearance calls forceQuitButton.refreshAppearance even if its endpoint tint did not change. PopoverContentView observes accessibility options and explicitly refreshes section appearance. The removed extra call from ProcessRow.update does not remove those paths.
+- Current integration focused-swift.log reports 38 tests passed: all8 button tests plus all30 process view tests. New score-update image reuse test verifies score/bar values still change and selected process remains while image objects are reused. Button baseline had6 failing identity assertions; fixed button suite passes. These are operation/object-reuse checks, not a controlled app speed/energy benchmark.
+
+Independent existing coverage
+- Focus-native baseline was run against an immutable baseline and actually reproduced row/button rerank focus defects, wrong Space selection, removal/Top N retained focus and Compact rerank. Baseline external field-editor and status-clearing cases passed. Its allPassed:false is preserved; zero diagnostic runner exit was not counted as successful regression acceptance.
+- Existing native main.swift covers real window firstResponder ownership, rerank selection vs focus separately, Space dispatch to actual firstResponder, native action dispatch with a spy, process removal, Top N exclusion, loading/unavailable/empty, Compact rerank and unrelated text-field field editor. Button focus acceptance is explicitly qualified if AppKit refuses it.
+- Swift tests cover selection clearing for both changed startedAt and changed auditToken, unavailable identities and disabled action dispatch; these do not prove real NSWindow focus.
+
+Remaining narrow coverage gaps (NOT observed failures)
+1. Real focused action -> Top N count reduction clears selection while the same identified process remains visible; assert fallback to row and no focused hidden button.
+2. Real focused identified row/action -> same PID with changed startedAt or auditToken, or identity becoming unavailable; assert focus retirement and no signal spy call.
+3. Real unselected-but-focused row -> rerank; assert focus follows its identity while selection stays nil, then Space selects that same process.
+
+These cases should be added to the existing disposable VM probe before claiming comprehensive focus acceptance. No additional runtime cache or architectural abstraction is justified by this patch.
+
+Reviewed input SHA-256
+66dfb53aed4430e85f94ca87a9f8c0cf41555bb2007d6432b206c7c658fbeb3f  Popover/TopProcessesView.swift
+8329aee74f67bef2c513d781ac6acc12e07e0be3f99dd893729ec651be745ace  Popover/ProcessActionButton.swift
+1e341a45c476beee6b5908be051a52acc73d12e516c5ea5c9b3b4641a1a3297d  SwiftTests/TopProcessesViewTests.swift
+74583cb5bd75fe880ec3b9596159bc184935b316c9c4f6f63c683009583d888f  SwiftTests/ProcessActionButtonTests.swift
+9aba8d7dff4636f3d6a0febf08b35b9d36a422dde0f57d61f13ce215bdf3be02  design/performance-hardening-20261019/focus-native/main.swift

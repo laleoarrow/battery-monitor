@@ -1,0 +1,16 @@
+test_helper_poll_deadline_executable_self_test (test_helper_contract.HelperContractTests.test_helper_poll_deadline_executable_self_test) ... FAIL
+
+======================================================================
+FAIL: test_helper_poll_deadline_executable_self_test (test_helper_contract.HelperContractTests.test_helper_poll_deadline_executable_self_test)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/tests/test_helper_contract.py", line 994, in test_helper_poll_deadline_executable_self_test
+    self.assertEqual(run_result.returncode, 0, run_result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : an idle-expired pending worker must not cause zero-timeout polling
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.004s
+
+FAILED (failures=1)

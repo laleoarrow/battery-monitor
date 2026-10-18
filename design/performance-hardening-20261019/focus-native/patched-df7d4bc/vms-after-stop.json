@@ -1,0 +1,29 @@
+[
+  {
+    "Size" : 31,
+    "Name" : "Wattson-Focus-QA-C2C73395",
+    "Running" : false,
+    "Disk" : 50,
+    "Source" : "local",
+    "State" : "stopped",
+    "Accessed" : "2026-10-18T17:34:29Z"
+  },
+  {
+    "Size" : 33,
+    "Name" : "macOS-TestLab",
+    "Running" : false,
+    "Disk" : 50,
+    "Source" : "local",
+    "State" : "stopped",
+    "Accessed" : "2026-10-18T17:24:53Z"
+  },
+  {
+    "Size" : 30,
+    "Name" : "macOS-TestLab-Base",
+    "Running" : false,
+    "Disk" : 50,
+    "Source" : "local",
+    "State" : "stopped",
+    "Accessed" : "2026-10-18T17:27:22Z"
+  }
+]

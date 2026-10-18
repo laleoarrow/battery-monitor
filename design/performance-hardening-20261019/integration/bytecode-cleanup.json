@@ -1,0 +1,13 @@
+{
+  "ownedBytecodeCreatedSinceSuiteStartRemoved": [
+    "tests/__pycache__/test_local_runtime_cleanup.cpython-314.pyc",
+    "tests/__pycache__/test_release_workflow_contract.cpython-314.pyc",
+    "tests/__pycache__/test_run_preview_cleanup.cpython-314.pyc",
+    "tests/__pycache__/test_popover_modules_contract.cpython-314.pyc",
+    "tests/__pycache__/test_settings_window_contract.cpython-314.pyc",
+    "tests/__pycache__/test_statusitem_contract.cpython-314.pyc",
+    "tests/__pycache__/test_sampler_contract.cpython-314.pyc"
+  ],
+  "preexistingBytecodeRetained": true,
+  "ownedBytecodeRemaining": []
+}

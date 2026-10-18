@@ -1,0 +1,8 @@
+{
+  "expectedRuntimeFailureObserved": true,
+  "testsRun": 1,
+  "failures": 1,
+  "errors": 0,
+  "baseline": "Unmodified original timeout body. A harness-only overload accepts the new Boolean but forwards the original four arguments unchanged; this adapts the API without changing old timeout behavior.",
+  "newRegression": "tests/test_helper_contract.py::HelperContractTests::test_helper_poll_deadline_executable_self_test"
+}

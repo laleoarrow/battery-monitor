@@ -1,0 +1,41 @@
+{
+  "allPassed": false,
+  "buttonDispatch": "performClick on actual focused native NSButton; no termination",
+  "checks": {
+    "belowTopNClearsSelection": true,
+    "belowTopNRetiresProcessFocus": false,
+    "buttonFocusAcceptedByAppKit": true,
+    "buttonFocusFollowsIdentityOnRerank": false,
+    "clearDoesNotStealExternalFocus": true,
+    "compactFocusFollowsIdentity": false,
+    "compactSelectionFollowsIdentity": true,
+    "emptyClearsSelection": true,
+    "emptyRetiresProcessFocus": true,
+    "externalTextFocusAccepted": true,
+    "externalTextUsesFieldEditor": true,
+    "fixtureIdentitiesValid": true,
+    "focusedButtonActsOnOriginalProcessAfterRerank": false,
+    "keyWindowIsActualFixture": true,
+    "loadingClearsSelection": true,
+    "loadingRetiresProcessFocus": true,
+    "removedClearsSelection": true,
+    "removedRetiresProcessFocus": false,
+    "rerankDoesNotStealExternalFocus": true,
+    "rowFocusAccepted": true,
+    "rowFocusFollowsIdentityOnRerank": false,
+    "rowSelectionViaAccessibilityPress": true,
+    "selectionFollowsIdentityOnRerank": true,
+    "spaceActsOnOriginalProcessAfterRerank": false,
+    "unavailableClearsSelection": true,
+    "unavailableRetiresProcessFocus": true
+  },
+  "details": {
+    "rerankActualFocusedRow": 0,
+    "selectedAfterSpace": "Fixture B"
+  },
+  "helperContacted": false,
+  "keyboardDispatch": "keyDown on actual NSWindow.firstResponder; no system event injection",
+  "mockedTerminationHandlerOnly": true,
+  "qualifiedUnexercisedPaths": [],
+  "schema": 1
+}

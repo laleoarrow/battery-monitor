@@ -1,0 +1,11 @@
+{
+  "officialURL": "https://developer.apple.com/documentation/macos-release-notes/macos-27-release-notes.md",
+  "localSource": "design/performance-hardening-20261019/pro-review/macos-27-release-notes.md",
+  "localSHA256": "0616186e80cae8071deee10b3010c97b1a07f128b68f340d3497d01f424c118a",
+  "retrievedUTC": "2026-10-18T17:24:53Z",
+  "status": 200,
+  "contentType": "text/markdown; charset=utf-8",
+  "remoteSHA256": "0616186e80cae8071deee10b3010c97b1a07f128b68f340d3497d01f424c118a",
+  "remoteBytes": 66704,
+  "matchesLocalSource": true
+}

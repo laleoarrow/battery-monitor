@@ -36,6 +36,12 @@ The helper is activated through `/var/run/wattson-helper.sock` and exits after
 fixed operations for power mode, the macOS battery icon, and Wattson's
 launch-at-login agent. Clients cannot supply an SMC key or SMC write command.
 
+The unreleased [2026-10-19 performance review](../design/performance-hardening-20261019/README.md)
+preserves process keyboard focus by identity across ranking changes, avoids
+unchanged action-image refreshes, and bounds the helper's poll wait when an
+overdue background sample prevents idle exit. Actual Pro review is waiting for
+manual Mac unlock; macOS 27 SDK/runtime acceptance remains explicitly pending.
+
 Power History retains the original 60-slot, two-minute sample ring and its
 sampling cadence. Ordered monotonic timestamps travel with the cached readings
 to a fixed 120-second viewport. Shape-preserving cubic segments pass through

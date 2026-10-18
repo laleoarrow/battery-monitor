@@ -1,0 +1,1 @@
+error: InternalError(description: "Internal error. Please file a bug at https://github.com/swiftlang/swift-package-manager/issues with this info. Failed to parse target info (malformed(json: \"\", underlyingError: Error Domain=NSCocoaErrorDomain Code=3840 \"Unable to parse empty data.\" UserInfo={NSDebugDescription=Unable to parse empty data.})).\nRaw compiler output: ")

@@ -1,0 +1,9 @@
+a3509fe56303b9f5938c29603d206545986b3e67ff1cbf38eba640c7ddc44a5a  /Users/leoarrow/Project/mypackage/agents/电池功率/design/performance-hardening-20261019/focus-native/guest-run.sh
+76d7d766684e73aa629715be729eb826429fc9046d140b12599cbce23dd8b8ab  /Users/leoarrow/Project/mypackage/agents/电池功率/design/performance-hardening-20261019/focus-native/run-owned.sh
+66563a561b1bb46737136509ab4e319f9da5cc9a04786dc0609bc8233eeb4215  /Users/leoarrow/Project/mypackage/agents/电池功率/design/performance-hardening-20261019/focus-native/audit-guest.py
+277f5291773633b7785fe4d9ab6dbe7af02e96aaea60efe5ccbf438c540751b5  /Users/leoarrow/Project/mypackage/agents/电池功率/design/performance-hardening-20261019/focus-native/source-manifest.py
+8aec65da7cf32d05ae3c661a4b260aa380793bb60d8c8d9e7a87623b9f2e18f7  /Users/leoarrow/Project/mypackage/agents/电池功率/design/performance-hardening-20261019/focus-native/vm-state.py
+9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/focus-native.noindex/snapshot.Y2l69d/local_cleanup.sh
+812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/focus-native.noindex/snapshot.Y2l69d/run_owned.py
+9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249  /Users/leoarrow/Project/mypackage/agents/电池功率/scripts/lib/local_cleanup.sh
+812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872  /Users/leoarrow/Project/mypackage/agents/电池功率/scripts/lib/run_owned.py

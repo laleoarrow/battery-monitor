@@ -1,0 +1,45 @@
+请独立审查 Wattson 4.3.22 之后这一轮最小性能与稳定性补丁，检查遗漏、回归风险和测试盲区。用户要求保留所有现有功能、视觉与交互，仅改善性能、边界正确性和稳定性；请不要扩展功能或推测性重构。
+
+上下文：原生 AppKit 菜单栏应用，SwiftPM、最低 macOS 12、arm64/x86_64。电池数据来自 IOKit，root LaunchDaemon 通过固定 JSON 操作和 console-user peer 验证提供 SMC 与控制功能。Process Activity 用 libproc 两次采样的 CPU 与 idle wakeups，自行计算活动分，不直接读取 top POWER，不是实测功率。进程操作携带完整 ProcessIdentity（PID、start time、audit token），helper 在执行前重新核验并保护系统/跨用户进程。既有串行刷新合并、过期回复与 wake generation 保护、动画可见性生命周期都保留。
+
+公共基线：https://github.com/laleoarrow/battery-monitor/tree/v4.3.22
+本轮仅改三个生产文件：
+
+1. Popover/ProcessActionButton.swift
+isEnabled 的 didSet 从无条件 refreshAppearance 改为：
+    if isEnabled != oldValue { refreshAppearance() }
+AppKit setter 仍然收到赋值；实际 enabled 变化、setTintColor、viewDidChangeEffectiveAppearance 和主动 refreshAppearance 路径保留。TopProcessesView.ProcessRow.update 删去 isEnabled 赋值之后那次重复的显式 refreshAppearance。没有图像缓存，没有配色、几何或 target/action 改动。
+证据：旧实现的图像身份回归失败，修复后按钮 enabled→disabled→enabled、浅/深、主题、高对比、Reduce Transparency、真实 action 以及更新读数测试通过。普通 score-only 更新现在保持 image 身份，同时文本与条长仍更新。
+
+2. Popover/TopProcessesView.swift
+固定十个物理 row 会按排名重新绑定 process。selection 本已按完整进程身份跟随，但 window.firstResponder 留在旧物理 row/button，排序后空格/按钮操作会指向另一个进程。真实 GUI 基线已复现，未调用真实终止。
+最小修复在更新内容 guard 后、重绑前捕获属于本列表的 focused row/button 与其 Selection(process)；重绑完成后按身份找可见新 row：若原来是 action 且该 row 仍选中且 button enabled，则聚焦其 button，否则聚焦该 row。进程离开列表则 makeFirstResponder(nil)。外部 responder（包括 NSTextView field editor）不捕获、不更改。没有 selection 规则或布局改变。
+    let focusedRow = rows.first { $0 === window?.firstResponder || $0.forceQuitButton === window?.firstResponder }
+    let focusedProcess = focusedRow?.process.map(Selection.init)
+    let focusedAction = focusedRow != nil && focusedRow?.forceQuitButton === window?.firstResponder
+    // Existing state/row update unchanged.
+    if let focusedProcess, let window {
+        if let row = rows.first(where: { !$0.isHidden && $0.process.map(Selection.init) == focusedProcess }) {
+            let target: NSView = focusedAction && row.isSelected && row.forceQuitButton.isEnabled
+                ? row.forceQuitButton : row
+            if window.firstResponder !== target { window.makeFirstResponder(target) }
+        } else {
+            window.makeFirstResponder(nil)
+        }
+    }
+原生回归检查真实 firstResponder、Space、native button mock action、Compact、Top N、进程离开/身份替换、loading/unavailable/empty、外部 field editor；按钮拒绝焦点时标记未覆盖而不是当通过。
+
+3. Helper/wattson-helper.swift
+socketPollTimeoutMilliseconds 原来无 reader 时使用 absolute idle uptime deadline。worker pending 会阻止 idle exit；若它被阻塞超过 12 秒，idle deadline 已过，poll(timeout:0) 会反复空转。人为阻塞现有采样锁的受控夹具已复现，不能据此声称正常使用有性能退化。
+函数新增 backgroundWorkPending: Bool，优先保留 nextReadContinuousDeadline；只有没有 reader、idle deadline 已到且后台 worker pending 时返回 100 ms。main loop 传入 thread-safe topProcessesWorker.hasPending。完成后的退出 predicate、12 秒生命周期、两个时钟域与 reader round-up/clamp 均不变。新连接仍可立即唤醒 poll。
+53 项 helper contract 通过，新的 executable regression 在旧 body 明确运行时失败，在修复后通过。夹具每约 303 ms 的 poll 次数从数万降为 3 次；只是异常边界的对照。
+
+另做 24 次独立进程首次 IOKit 采样测量：median 1.024 ms / p95 1.898 ms / max 7.527 ms。没有证据支持重构这条启动路径，因此保留。
+
+主机 macOS 26.5.2，SDK 26.5。已读 Apple macOS 27 官方 release notes；不能假称已经在 macOS 27 runtime/SDK 实测，也不能承诺零 bug。请指出与实际代码有关的兼容风险，区分真实缺陷、需要验证的假设与无证据的建议。
+
+请给出：
+- 这三处修复是否准确保留原语义？有无可具体定位的回归或竞态？
+- 有哪些必要而尚缺失的边界测试？尤其 focus ownership、重入、身份变化和 reader timeout。
+- 若建议修改，只给最小必要补丁及可验证理由；没有证据的重构请明确不建议。
+- 最终分别列出已支持的结论与仍需 macOS 27 实机验证的限制。

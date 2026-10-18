@@ -1,0 +1,28 @@
+{
+  "reviewedAtUTC": "2026-10-18T17:26:21Z",
+  "baseHEAD": "9ab0c43911eb8780fc3772397228acbae33039a1",
+  "scope": "read-only compatibility source review; other agents may own concurrent edits",
+  "sourceFilesSHA256": {
+    "MenuBar/StatusItemController.swift": "3404cce573d2599f3704b246914c36832c56922b4e21ea957093ed8cc5d8534c",
+    "MenuBar/BatteryIcon.swift": "f53a5e8b6805d3a8d074fa96ef59d90e3bdb93333d2d0f83bab89c6ac13c70a9",
+    "MenuBar/SettingsWindowController.swift": "78475ae01c28108bf9f081930715e271bff6ffed2120dcecd45543e756a547b4",
+    "Popover/PopoverContentView.swift": "36656988dd9094f27389402674238a6dd4449fe9cabcfd9f5d4403e2fce3f32e",
+    "Popover/GlassPopoverMaterialView.swift": "822a8a2762bfbf68264750eecf2424b2cb7f6dc1a3180d8a43c7a5a8fd8aac3b",
+    "Popover/GlassPopoverPanel.swift": "f446c587fcec748e097f8dcc64caba0d0b98221c206bffce9341fd3038af01eb",
+    "Popover/InteractiveGlassModeControl.swift": "a65dc2d2563ed99030a59bd63d14f2eac2965bec9f9686ec60a1a2dcb419894a",
+    "Core/AppleSmartBatteryPowerObservationReader.swift": "2c88aadecb9b2a03a4d4d426056c1978f0a4e4e391c5741a9911ebcc507377d8",
+    "Core/ProcessTermination.swift": "5b26d5166a22c279a0caa67f66b826df88a149060856c690ea40400cdfed51bb",
+    "Core/LoginItemController.swift": "0d9ef7aad7666f2c373f4349e8ee4b538c2d07374af44153addce14649b43169",
+    "HelperV5/TopProcesses.swift": "267ec03e224eaeddbf85d6d831f966c8ec45521e1d1602b03234e2eb4733dd2a",
+    "HelperV5/ProcessTermination.swift": "d94adccaf285845db1c28e08e04243c94510883fdcafd978b9288533257b5ce7",
+    "Helper/wattson-helper.swift": "b73f948185df94c667b62a240ce1f69e91be1ebe71d4c4bca0dcef1ea526d453",
+    "scripts/package_pkg.sh": "451cf99e708e2c2b435ce5dc1746b449a278c7589d3dceeaa451d72d064d9950",
+    ".github/workflows/macos-helper-install.yml": "af33cd3739bf3ead9a0236d0c770c725872ec5bf3e213702eb66290045ecaf35",
+    ".github/workflows/homebrew-install-test.yml": "0ab831cd022d06d9912b73f2f5485810d6dfe2e992b3a52615a929dc5e9c6356"
+  },
+  "productionEditsByThisReview": false,
+  "macOS27SDKBuildExecuted": false,
+  "macOS27RuntimeTestsExecuted": false,
+  "confirmedMacOS27ProductionBugs": 0,
+  "targetEnvironmentValidationGaps": 3
+}

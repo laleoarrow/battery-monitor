@@ -1,0 +1,33 @@
+{
+  "head": "9ab0c43911eb8780fc3772397228acbae33039a1",
+  "osVersion": "26.5.2",
+  "osBuild": "25F84",
+  "architecture": "arm64",
+  "compiler": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0",
+  "sourceFiles": {
+    "Core/PowerSnapshot.swift": {
+      "compiledSHA256": "59646f03f806218a3100403873dd114fb6901f67fe96b1ed55c6f8d06db9223d"
+    },
+    "Core/BatterySampler.swift": {
+      "compiledSHA256": "6c1ce82bd47a3550cc8030dad20d856c84ae169328edde49958375730ea92bd1"
+    },
+    "Core/BatteryRuntimeEstimate.swift": {
+      "compiledSHA256": "46cbabf239194a8c514fd95e9edfa43905f0a772792b8319a0147a21e4b37445"
+    }
+  },
+  "optimization": "-O -whole-module-optimization; arm64-apple-macos12.0",
+  "sampleCount": 24,
+  "minimumProcessSpacingSeconds": 2,
+  "perProcessTimeoutSeconds": 5,
+  "canonicalPIDsBefore": [
+    80435
+  ],
+  "wallStartedUTC": "2026-10-18T17:18:04Z",
+  "limitations": [
+    "First sampler call in each fresh CLI process; OS/disk/IOKit caches are not flushed.",
+    "Does not measure dyld/process launch, NSApplication startup, status item creation, or time to first frame.",
+    "Optimized unsandboxed CLI; app sandbox and complete app image may have different costs.",
+    "One host and session; background load is not controlled and no macOS 27 runtime was tested.",
+    "Existing canonical app remains running; measurements neither restart it nor call the helper."
+  ]
+}

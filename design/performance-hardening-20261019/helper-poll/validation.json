@@ -1,0 +1,22 @@
+{
+  "helperContract": {
+    "testsPassed": 53,
+    "seconds": 17.644,
+    "log": "helper-contract.log"
+  },
+  "oldBehaviorMeaningfullyFailsNewRegression": true,
+  "fixedBlockedWorkerTimeoutMilliseconds": 100,
+  "idleLifetimeSecondsUnchanged": 12,
+  "readerDeadlinePriorityPreserved": true,
+  "sourceFilesSHA256": {
+    "Helper/wattson-helper.swift": "b73f948185df94c667b62a240ce1f69e91be1ebe71d4c4bca0dcef1ea526d453",
+    "tests/test_helper_contract.py": "c3453750ef3e6fb37d211bdac20b71221edcce4e5e9089381e2f52c6709478ca",
+    "design/performance-hardening-20261019/helper-poll/reproduce.py": "e76cfe12e3ddc6c1dddc0ab184d0a9085862331cd852a46a0f5eec2e70670dbc"
+  },
+  "ownedScratchLeftovers": [],
+  "productionFilesChanged": [
+    "Helper/wattson-helper.swift"
+  ],
+  "permissionsProtocolAndFeaturesUnchanged": true,
+  "installedAppOrHelperTouched": false
+}
