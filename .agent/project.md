@@ -74,8 +74,9 @@ the source passes the six-state production-renderer matrix. The preceding
 [4.3.21 installation](../design/process-action-capsule/local-preview-v4.3.21/local-install-verified.json)
 records the initial uniform capsule update. The preceding
 [4.3.20 installation](../design/process-action-capsule/local-preview-v4.3.20/local-install-verified.json)
-records the user-opened popup and initial preview enablement. These previews
-have not been publicly released.
+records the user-opened popup and initial preview enablement. These records
+describe local preview packages; public releases use the separately validated
+candidate artifacts.
 The preceding 4.3.19
 [Process Activity installation record](../design/top-energy-processes/compact-popup/local-installation-v4.3.19.json)
 verifies the native PKG, helper, actual process sampling and retained settings.

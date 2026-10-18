@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Wattson 4.3.22 approved Light and Dark icon design proofs, full Power state matrix, and editable SVG originals.">
+<title>Wattson 4.3.22 · Design gallery</title>
+<style>
+:root{color-scheme:light dark;--bg:#f5f6f8;--surface:#fff;--ink:#20232b;--muted:#5e6673;--line:#dfe3e9;--blue:#0868cb}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1100px;margin:auto;padding:48px 24px 64px}header{max-width:820px;margin-bottom:36px}.eyebrow{font-size:14px;font-weight:650;color:var(--blue)}h1{font-size:clamp(30px,5vw,48px);line-height:1.15;letter-spacing:-1.2px;margin:10px 0 18px}h2{font-size:25px;line-height:1.3;margin:0 0 12px}p{margin:10px 0;color:var(--muted)}a{color:var(--blue);text-underline-offset:3px}nav{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px}section{margin-top:28px;padding:28px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}figure{margin:24px 0 0}figure img{display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--line)}figcaption{color:var(--muted);font-size:14px;margin-top:10px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}.pair figure{min-width:0}.downloads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}.downloads a{display:block;padding:14px 18px;border:1px solid var(--line);border-radius:10px;font-weight:600;text-decoration:none}.downloads small{display:block;font-weight:400;color:var(--muted)}footer{margin-top:32px;color:var(--muted);font-size:14px}@media(prefers-color-scheme:dark){:root{--bg:#14171d;--surface:#1c2028;--ink:#edf0f7;--muted:#aeb7c7;--line:#333b49;--blue:#70b7ff}}@media(max-width:650px){main{padding:30px 16px 48px}section{padding:20px}.pair,.downloads{grid-template-columns:1fr}}
+</style>
+</head>
+<body><main>
+<header>
+<div class="eyebrow">Wattson · Version 4.3.22</div>
+<h1>Approved design gallery</h1>
+<p>Rounded neutral contours, blue accents and the Power state palette. Browse the approved icon artwork included in Wattson 4.3.22 and download its editable SVG masters.</p>
+<p>The icon images are retained native <strong>offscreen artwork proofs</strong>; the Process Activity pairs are fresh production-view offscreen renders with fixed fixtures. They are not screenshots of the running app.</p>
+<nav aria-label="Gallery navigation"><a href="#process">Process Activity</a><a href="#icons">Settings icons</a><a href="#power">Power states</a><a href="#sources">SVG originals</a><a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v4.3.22">Release &amp; downloads ↗</a></nav>
+</header>
+<section id="process">
+<h2>Process Activity · Light / Dark</h2>
+<p>Selected Safari shows the uniform 38 × 16-point action capsule. A charging fixture supplies the current App chart palette; the capsule tint uses the complete bar’s deepest endpoint independently of the score. The renderer checks both dimensions and endpoint color.</p>
+<div class="pair"><figure><img src="previews/process-detailed-light.png" width="656" height="336" alt="Offscreen detailed Process Activity charging fixture in Light; Safari is selected with a green 38 by 16 point force-quit capsule."><figcaption>Detailed · Light. Fixed process fixtures, selected action.</figcaption></figure><figure><img src="previews/process-detailed-dark.png" width="656" height="336" alt="The same offscreen detailed charging fixture and selected endpoint-tinted action in Dark."><figcaption>Detailed · Dark. Names and bars retain their positions.</figcaption></figure></div>
+<div class="pair"><figure><img src="previews/process-compact-light.png" width="656" height="240" alt="Offscreen compact charging fixture in Light, with CPU and idle-wakeup details hidden and Safari selected."><figcaption>Compact · Light. The action uses the same uniform bounds.</figcaption></figure><figure><img src="previews/process-compact-dark.png" width="656" height="240" alt="The same offscreen compact charging fixture in Dark."><figcaption>Compact · Dark. Score scale stays fixed at 0–100.</figcaption></figure></div>
+<p>Scores 84, 46 and 8.1 are illustrative Activity Scores derived from CPU and idle wakeups, not watts or percentages of battery use. These view-owned bitmap renders create no app/window or helper request and do not demonstrate composited native glass or pointer glow motion.</p>
+</section>
+<section id="icons">
+<h2>Settings artwork · Dark / Light</h2>
+<p>Each proof shows Dark above Light. The sidebar proof adds emphasized-selection artwork below the pair. The icon family is retained from 4.3.19.</p>
+<figure><img src="previews/vector-preview.png" width="1680" height="660" alt="Six approved Modules icons, Dark above Light: Energy Flow, Ring Gauge, Power Lanes, Power History, Battery Time and Process Activity."><figcaption>Six Modules icons, including the approved horizontal Process Activity symbol. Enlarged artwork and actual 20-point size.</figcaption></figure>
+<figure><img src="previews/sidebar-vector-preview.png" width="900" height="780" alt="General, Display and Modules sidebar icons in Dark, Light and white emphasized-selection variants."><figcaption>Three sidebar icons, with enlarged artwork and actual 18-point size. The blue cards illustrate selection contrast.</figcaption></figure>
+<figure><img src="previews/general-vector-preview.png" width="1400" height="660" alt="Five General icons, Dark above Light: Launch at Login, System Battery Icon, Check for Updates, Automatic Updates and Send Feedback."><figcaption>Five General icons. These are artwork proofs rather than installed Settings windows.</figcaption></figure>
+</section>
+<section id="power">
+<h2>Power artwork · full state matrix</h2>
+<p>The production Flow and Lane drawing paths use fixed supply-state fixtures. Charging uses green, plugged-in states use blue, mixed supply uses amber for battery assistance, and on-battery adapter artwork is neutral and dimmed.</p>
+<figure><img src="previews/power-vector-preview.png" width="1400" height="1120" alt="Power icon artwork in Dark above Light across Charging, Plugged In Full, On Battery and Mixed Supply."><figcaption>Four supply states in Dark and Light; enlarged artwork and actual Flow/Lane sizes.</figcaption></figure>
+<figure><img src="previews/power-state-matrix.png" width="1400" height="1632" alt="Full Power icon matrix in Dark above Light covering Charging, Plugged In Full, On Battery, Mixed Supply, Low Battery and Low Power."><figcaption>The full six-state matrix includes Low Battery and Low Power, with the production 32/16-point canvases.</figcaption></figure>
+</section>
+<section id="sources">
+<h2>Editable SVG originals</h2>
+<p>Version-labeled packages contain 19 approved runtime SVG masters copied byte-for-byte from the 4.3.22 source. All use transparent vector artboards without embedded bitmaps or external resources. Native AppKit paths supply runtime appearance and state colors.</p>
+<div class="downloads"><a href="Wattson-v4.3.22-Modules-SVG.zip">Modules SVGs <small>6 icons, including Process Activity</small></a><a href="Wattson-v4.3.22-Sidebar-SVG.zip">Sidebar SVGs <small>3 navigation icons</small></a><a href="Wattson-v4.3.22-General-SVG.zip">General SVGs <small>5 action icons</small></a><a href="Wattson-v4.3.22-Power-SVG.zip">Power SVGs <small>5 runtime masters</small></a></div>
+<p><a href="manifest.json">Asset provenance</a> · <a href="SHA256SUMS.txt">Design checksums</a> · <a href="README.md">Artwork notes</a></p>
+<p>Design downloads remain separate from installer assets. See the <a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v4.3.22">GitHub release page</a> for PKG/DMG installation and signing guidance.</p>
+</section>
+<footer>The Ring Gauge metric selector is not pictured. Offscreen previews do not demonstrate live telemetry, window compositing or animation.</footer>
+</main></body></html>

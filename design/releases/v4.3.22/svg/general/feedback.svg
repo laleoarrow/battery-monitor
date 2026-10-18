@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#E9E9E9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title>Wattson Send Feedback</title>
+<defs>
+<linearGradient id="reply" gradientUnits="userSpaceOnUse" x1="0" y1="8" x2="0" y2="20.3">
+<stop offset="0" stop-color="#0A84FF" stop-opacity="0.04"/>
+<stop offset="1" stop-color="#0A84FF" stop-opacity="0.26"/>
+</linearGradient>
+</defs>
+<path d="M 8.4 13.8 L 7.2 13.8 L 5 16.2 L 5 13.8 L 4.8 13.8 C 3.4 13.8 2.6 13 2.6 11.6 L 2.6 5.8 C 2.6 4.4 3.4 3.6 4.8 3.6 L 13.6 3.6 C 15 3.6 15.8 4.4 15.8 5.8 L 15.8 7.2" stroke="currentColor" stroke-width="1.25"/>
+<path d="M 11.2 8 L 19 8 C 20.4 8 21.2 8.8 21.2 10.2 L 21.2 15.4 C 21.2 16.8 20.4 17.6 19 17.6 L 18 17.6 L 18 20.3 L 14.6 17.6 L 11.2 17.6 C 9.8 17.6 9 16.8 9 15.4 L 9 10.2 C 9 8.8 9.8 8 11.2 8 Z" fill="url(#reply)" data-decorative="true"/>
+<path d="M 11.2 8 L 19 8 C 20.4 8 21.2 8.8 21.2 10.2 L 21.2 15.4 C 21.2 16.8 20.4 17.6 19 17.6 L 18 17.6 L 18 20.3 L 14.6 17.6 L 11.2 17.6 C 9.8 17.6 9 16.8 9 15.4 L 9 10.2 C 9 8.8 9.8 8 11.2 8 Z" stroke="currentColor" stroke-width="1.25"/>
+<circle cx="12.2" cy="12.7" r="0.6" fill="#0A84FF"/>
+<circle cx="15.2" cy="12.7" r="0.6" fill="#0A84FF"/>
+<circle cx="18.2" cy="12.7" r="0.6" fill="#0A84FF"/>
+</svg>
