@@ -518,6 +518,7 @@ jobs:
           /bin/bash scripts/verify_dmg.sh "$DMG_PATH" "$PACKAGED_APP_DIR"
 
       - name: Test helper-free DMG copy launch and removal without elevation
+        id: dmg_lifecycle
         shell: bash
         run: |
           set -euo pipefail
@@ -624,8 +625,10 @@ jobs:
           [[ ! -e "$APP_DIR" && ! -L "$APP_DIR" ]]
           assert_no_privileged_install
           echo "Helper-free DMG copy, replacement, launch and removal passed without elevation."
+          echo "complete=true" >> "$GITHUB_OUTPUT"
 
       - name: Test first install and disabled-service reinstall
+        id: pkg_lifecycle
         shell: bash
         run: |
           set -euo pipefail
@@ -916,8 +919,10 @@ jobs:
           verify_app_launch_stability
 
           echo "First install, disabled-service reinstall, public v3 upgrade, uninstall, app-only upgrade, app launch, and cleanup checks passed."
+          echo "complete=true" >> "$GITHUB_OUTPUT"
 
       - name: Test upgrade from the published v2.1.5 release
+        id: v2_lifecycle
         if: matrix.test_v2_upgrade
         shell: bash
         run: |
@@ -1148,6 +1153,57 @@ jobs:
           "$APP_BIN" --helper-v5-observation-probe
           [[ "$(/usr/sbin/pkgutil --pkg-info "$RECEIPT" | /usr/bin/awk -F': ' '$1 == "version" { print $2 }')" == "$WATTSON_VERSION" ]]
           echo "v2.1.5 upgrade and cleanup checks passed."
+          echo "complete=true" >> "$GITHUB_OUTPUT"
+
+      - name: Require complete installation lifecycles and clean receipts
+        if: always()
+        shell: bash
+        env:
+          DMG_COMPLETE: ${{ steps.dmg_lifecycle.outputs.complete }}
+          PKG_COMPLETE: ${{ steps.pkg_lifecycle.outputs.complete }}
+          V2_COMPLETE: ${{ steps.v2_lifecycle.outputs.complete }}
+          EXPECT_V2: ${{ matrix.test_v2_upgrade }}
+        run: |
+          set -euo pipefail
+          [[ "$DMG_COMPLETE" == "true" ]]
+          [[ "$PKG_COMPLETE" == "true" ]]
+          if [[ "$EXPECT_V2" == "true" ]]; then
+            [[ "$V2_COMPLETE" == "true" ]]
+          fi
+          for removed_path in \
+            /Applications/Wattson.app \
+            /Library/PrivilegedHelperTools/com.leoarrow.wattson.helper \
+            /Library/LaunchDaemons/com.leoarrow.wattson.helper.plist \
+            /var/run/wattson-helper.sock \
+            "$HOME/Library/LaunchAgents/com.leoarrow.wattson.login.plist" \
+            "$HOME/Applications/Wattson.app"; do
+            [[ ! -e "$removed_path" && ! -L "$removed_path" ]]
+          done
+          if /usr/sbin/pkgutil --pkg-info com.leoarrow.wattson.pkg >/dev/null 2>&1; then
+            echo "installation lifecycle cleanup left the package receipt" >&2
+            exit 1
+          fi
+          assert_service_absent() {
+            local details
+            if details="$("$@" 2>&1)"; then
+              echo "installation lifecycle cleanup left a service registered" >&2
+              exit 1
+            fi
+            case "$details" in
+              *"Could not find service"*|*"Could not find specified service"*) ;;
+              *) echo "$details" >&2; exit 1 ;;
+            esac
+          }
+          assert_service_absent /usr/bin/sudo -n /bin/launchctl print system/com.leoarrow.wattson.helper
+          assert_service_absent /bin/launchctl print "gui/$(/usr/bin/id -u)/com.leoarrow.wattson.login"
+          disabled_state="$(/usr/bin/sudo -n /bin/launchctl print-disabled system)"
+          case "$disabled_state" in
+            *'"com.leoarrow.wattson.helper" => disabled'*|*'"com.leoarrow.wattson.helper" => true'*)
+              echo "installation lifecycle cleanup left the helper disabled" >&2
+              exit 1
+              ;;
+          esac
+          echo "All required installation lifecycles completed and cleanup was independently verified."
 
       - name: Upload installation logs
         if: always()

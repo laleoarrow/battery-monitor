@@ -70,6 +70,61 @@ class LocalRuntimeCleanupTests(unittest.TestCase):
             shell = prefix + "wattson_run_script " + shlex.quote(str(inner))
         return ["/bin/bash", "-c", shell]
 
+    def test_source_only_runners_preserve_caller_traps_and_complete_cleanup(self):
+        library = local_runtime.ROOT / "scripts/lib/local_cleanup.sh"
+        events = self.root / "source-only-events"
+        worker = self.root / "source-only-worker.py"
+        worker.write_text(
+            "import os,pathlib,subprocess,sys\n"
+            "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)'])\n"
+            f"pathlib.Path({str(self.pids)!r}).write_text(str(os.getpid())+' '+str(child.pid))\n"
+        )
+        command = self.root / "source-only-command.sh"
+        command.write_text("#!/bin/bash\nexec " + shlex.join([sys.executable, str(worker)]) + "\n")
+        command.chmod(0o755)
+        for runner in ("wattson_run", "wattson_run_timeout 5", "wattson_run_script"):
+            with self.subTest(runner=runner):
+                self.pids.unlink(missing_ok=True)
+                events.unlink(missing_ok=True)
+                shell = '''set -euo pipefail
+unset _WATTSON_PENDING_SIGNAL
+caller_cleanup() {
+    wattson_run /usr/bin/true
+    printf 'caller-cleanup\\n' >> "$SOURCE_ONLY_EVENTS"
+}
+trap caller_cleanup EXIT
+trap 'printf "caller-signal\\n" >> "$SOURCE_ONLY_EVENTS"' TERM
+''' + f"source {shlex.quote(str(library))}\n" + runner + " " + shlex.quote(str(command)) + '''
+kill -TERM "$$"
+printf 'body-final\\n' >> "$SOURCE_ONLY_EVENTS"
+'''
+                try:
+                    result = local_runtime.run(
+                        ["/bin/bash", "-c", shell],
+                        env=dict(os.environ, SOURCE_ONLY_EVENTS=str(events)),
+                        capture_output=True, text=True, timeout=15, cleanup_grace=65,
+                    )
+                    markers = events.read_text().splitlines() if events.exists() else []
+                    detail = f"exit={result.returncode}, markers={markers!r}\n{result.stdout}{result.stderr}"
+                    self.assertEqual(markers, ["caller-signal", "body-final", "caller-cleanup"], detail)
+                    self.assertEqual(result.returncode, 0, detail)
+                    self.assertNotIn("unbound variable", result.stderr)
+                    self.assertTrue(self.pids.exists(), detail)
+                    for pid in self.pids.read_text().split():
+                        state = subprocess.run(['/bin/ps', '-p', pid, '-o', 'stat='],
+                                               capture_output=True, text=True, timeout=5).stdout.strip()
+                        self.assertTrue(not state or state.startswith('Z'), state)
+                finally:
+                    if self.pids.exists():
+                        group = int(self.pids.read_text().split()[0])
+                        try:
+                            os.killpg(group, signal.SIGKILL)
+                        except ProcessLookupError:
+                            pass
+                        except PermissionError:
+                            if local_runtime._live_group(group):
+                                raise
+
     def test_success_and_command_failure_remove_workspace(self):
         for status in (0, 7):
             with self.subTest(status=status), patch.object(local_runtime, "LSREGISTER", self.registrar):

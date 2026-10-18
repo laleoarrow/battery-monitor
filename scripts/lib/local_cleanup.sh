@@ -13,7 +13,7 @@ _wattson_signal() {
 
 _wattson_runner_registered() {
     _WATTSON_RUNNER_STARTING=0
-    if [[ "$_WATTSON_PENDING_SIGNAL" != 0 ]]; then
+    if [[ "${_WATTSON_PENDING_SIGNAL:-0}" != 0 ]]; then
         exit "$_WATTSON_PENDING_SIGNAL"
     fi
 }

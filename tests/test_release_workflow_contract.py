@@ -18,6 +18,47 @@ CANDIDATE = (ROOT / ".github/workflows/macos-helper-install.yml").read_text(enco
 
 
 class ReleaseWorkflowContractTests(unittest.TestCase):
+    def test_candidate_rejects_missing_lifecycle_completion_outputs(self):
+        gate = CANDIDATE.split(
+            "- name: Require complete installation lifecycles and clean receipts", 1
+        )[1].split("      - name:", 1)[0]
+        script = textwrap.dedent(gate.split("run: |", 1)[1])
+        for dmg_complete, pkg_complete, expect_v2 in (
+            ("", "true", "false"), ("true", "", "false"),
+            ("true", "true", "true"),
+        ):
+            with self.subTest(dmg_complete=dmg_complete, pkg_complete=pkg_complete,
+                              expect_v2=expect_v2):
+                result = run(
+                    ["/bin/bash", "-c", script],
+                    env=dict(os.environ, DMG_COMPLETE=dmg_complete, PKG_COMPLETE=pkg_complete,
+                             V2_COMPLETE="", EXPECT_V2=expect_v2),
+                    capture_output=True, text=True, timeout=5,
+                )
+                self.assertNotIn("unbound variable", result.stderr)
+                self.assertNotEqual(result.returncode, 0)
+
+    def test_candidate_service_absence_rejects_unexpected_query_errors(self):
+        gate = CANDIDATE.split(
+            "- name: Require complete installation lifecycles and clean receipts", 1
+        )[1].split("      - name:", 1)[0]
+        function = textwrap.dedent(re.search(
+            r"(?ms)^          assert_service_absent\(\) \{\n.*?^          \}\n", gate
+        ).group())
+        for message, status, expected in (
+            ("Could not find service", 113, 0),
+            ("Could not find specified service", 113, 0),
+            ("permission denied", 1, 1), ("registered", 0, 1),
+        ):
+            with self.subTest(message=message):
+                result = run(
+                    ["/bin/bash", "-c", function +
+                     '\nassert_service_absent /bin/bash -c \'echo "$MESSAGE"; exit "$STATUS"\''],
+                    env=dict(os.environ, MESSAGE=message, STATUS=str(status)),
+                    capture_output=True, text=True, timeout=5,
+                )
+                self.assertEqual(result.returncode, expected, result.stderr)
+
     def test_macos_workflows_use_the_tk_capable_system_python(self):
         command = "/usr/bin/python3 -m unittest discover -s tests -v"
         self.assertIn(command, CI)
