@@ -23,9 +23,9 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
             "- name: Require complete installation lifecycles and clean receipts", 1
         )[1].split("      - name:", 1)[0]
         script = textwrap.dedent(gate.split("run: |", 1)[1])
-        for dmg_complete, pkg_complete, expect_v2 in (
-            ("", "true", "false"), ("true", "", "false"),
-            ("true", "true", "true"),
+        for dmg_complete, pkg_complete, expect_v2, missing in (
+            ("", "true", "false", "DMG"), ("true", "", "false", "PKG"),
+            ("true", "true", "true", "V2"),
         ):
             with self.subTest(dmg_complete=dmg_complete, pkg_complete=pkg_complete,
                               expect_v2=expect_v2):
@@ -36,7 +36,27 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
                     capture_output=True, text=True, timeout=5,
                 )
                 self.assertNotIn("unbound variable", result.stderr)
-                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(result.returncode, 1, result.stderr)
+                self.assertIn(f"Missing {missing} lifecycle completion", result.stderr)
+
+    def test_candidate_rejects_an_owned_residual_before_receipt_queries(self):
+        gate = CANDIDATE.split(
+            "- name: Require complete installation lifecycles and clean receipts", 1
+        )[1].split("      - name:", 1)[0]
+        script = textwrap.dedent(gate.split("run: |", 1)[1]).replace(
+            "/Applications/Wattson.app", '"$RESIDUAL_PATH"', 1
+        )
+        with TemporaryDirectory() as temporary:
+            residual = pathlib.Path(temporary) / "residual"
+            residual.touch()
+            result = run(
+                ["/bin/bash", "-c", script],
+                env=dict(os.environ, DMG_COMPLETE="true", PKG_COMPLETE="true",
+                         V2_COMPLETE="", EXPECT_V2="false", RESIDUAL_PATH=str(residual)),
+                capture_output=True, text=True, timeout=5,
+            )
+            self.assertEqual(result.returncode, 1, result.stderr)
+            self.assertIn(f"installation lifecycle cleanup left {residual}", result.stderr)
 
     def test_candidate_service_absence_rejects_unexpected_query_errors(self):
         gate = CANDIDATE.split(

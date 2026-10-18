@@ -1165,10 +1165,17 @@ jobs:
           EXPECT_V2: ${{ matrix.test_v2_upgrade }}
         run: |
           set -euo pipefail
-          [[ "$DMG_COMPLETE" == "true" ]]
-          [[ "$PKG_COMPLETE" == "true" ]]
-          if [[ "$EXPECT_V2" == "true" ]]; then
-            [[ "$V2_COMPLETE" == "true" ]]
+          if [[ "$DMG_COMPLETE" != "true" ]]; then
+            echo "Missing DMG lifecycle completion" >&2
+            exit 1
+          fi
+          if [[ "$PKG_COMPLETE" != "true" ]]; then
+            echo "Missing PKG lifecycle completion" >&2
+            exit 1
+          fi
+          if [[ "$EXPECT_V2" == "true" && "$V2_COMPLETE" != "true" ]]; then
+            echo "Missing V2 lifecycle completion" >&2
+            exit 1
           fi
           for removed_path in \
             /Applications/Wattson.app \
@@ -1177,7 +1184,10 @@ jobs:
             /var/run/wattson-helper.sock \
             "$HOME/Library/LaunchAgents/com.leoarrow.wattson.login.plist" \
             "$HOME/Applications/Wattson.app"; do
-            [[ ! -e "$removed_path" && ! -L "$removed_path" ]]
+            if [[ -e "$removed_path" || -L "$removed_path" ]]; then
+              echo "installation lifecycle cleanup left $removed_path" >&2
+              exit 1
+            fi
           done
           if /usr/sbin/pkgutil --pkg-info com.leoarrow.wattson.pkg >/dev/null 2>&1; then
             echo "installation lifecycle cleanup left the package receipt" >&2
