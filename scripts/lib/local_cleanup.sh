@@ -2,9 +2,27 @@
 # Source this file, initialize once, then register only this invocation's paths.
 _WATTSON_CLEANUP_LIB="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# A signal must not enter cleanup between runner spawn and PID publication.
+_wattson_signal() {
+    if [[ "$_WATTSON_RUNNER_STARTING" == 1 ]]; then
+        [[ "$_WATTSON_PENDING_SIGNAL" != 0 ]] || _WATTSON_PENDING_SIGNAL=$1
+    else
+        exit "$1"
+    fi
+}
+
+_wattson_runner_registered() {
+    _WATTSON_RUNNER_STARTING=0
+    if [[ "$_WATTSON_PENDING_SIGNAL" != 0 ]]; then
+        exit "$_WATTSON_PENDING_SIGNAL"
+    fi
+}
+
 wattson_run() {
+    _WATTSON_RUNNER_STARTING=1
     /usr/bin/python3 "$_WATTSON_CLEANUP_LIB/run_owned.py" -- "$@" &
     _WATTSON_RUNNER_PID=$!
+    _wattson_runner_registered
     local status=0
     wait "$_WATTSON_RUNNER_PID" || status=$?
     _WATTSON_RUNNER_PID=""
@@ -14,8 +32,10 @@ wattson_run() {
 wattson_run_timeout() {
     local seconds="$1"
     shift
+    _WATTSON_RUNNER_STARTING=1
     /usr/bin/python3 "$_WATTSON_CLEANUP_LIB/run_owned.py" --timeout "$seconds" -- "$@" &
     _WATTSON_RUNNER_PID=$!
+    _wattson_runner_registered
     local status=0
     wait "$_WATTSON_RUNNER_PID" || status=$?
     _WATTSON_RUNNER_PID=""
@@ -25,8 +45,10 @@ wattson_run_timeout() {
 # Lifecycle scripts need time to finish their own unmount/unregister traps.
 # Their compiler/tool children still use the ordinary two-second grace period.
 wattson_run_script() {
+    _WATTSON_RUNNER_STARTING=1
     /usr/bin/python3 "$_WATTSON_CLEANUP_LIB/run_owned.py" --grace 60 -- /bin/bash "$@" &
     _WATTSON_RUNNER_PID=$!
+    _wattson_runner_registered
     local status=0
     wait "$_WATTSON_RUNNER_PID" || status=$?
     _WATTSON_RUNNER_PID=""
@@ -104,6 +126,8 @@ _wattson_cleanup() {
     local status=$?
     trap - EXIT
     trap '' HUP INT TERM
+    _WATTSON_RUNNER_STARTING=0
+    _WATTSON_PENDING_SIGNAL=0
     set +e
     if [[ -n "${_WATTSON_RUNNER_PID:-}" ]]; then
         kill -TERM "$_WATTSON_RUNNER_PID" 2>/dev/null
@@ -181,8 +205,10 @@ wattson_cleanup_init() {
     _WATTSON_CLEANUP_EXECUTABLES=()
     _WATTSON_CLEANUP_DEFAULTS=()
     _WATTSON_RUNNER_PID=""
+    _WATTSON_RUNNER_STARTING=0
+    _WATTSON_PENDING_SIGNAL=0
     trap _wattson_cleanup EXIT
-    trap 'exit 129' HUP
-    trap 'exit 130' INT
-    trap 'exit 143' TERM
+    trap '_wattson_signal 129' HUP
+    trap '_wattson_signal 130' INT
+    trap '_wattson_signal 143' TERM
 }
