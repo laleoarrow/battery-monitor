@@ -1,0 +1,2 @@
+bundleID=com.leoarrow.wattson.forcequitqa.961c7c03-4886-4325-b65a-4a9a77f750d8
+sandboxed=true

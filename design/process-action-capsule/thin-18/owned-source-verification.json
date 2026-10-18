@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "wholeCurrentTreeClaimedVerified": false,
+  "acceptedRunScope": "The accepted100-capture/10376-assertion run used its frozen snapshot. Concurrent edits appeared afterward in unrelated source files. No rebuild, revert, stage or modification of those files was performed.",
+  "ownedRendererChecks": {
+    "Popover/TopProcessesView.swift": true,
+    "Popover/ProcessActionButton.swift": true,
+    "Popover/FooterHoverFeedbackView.swift": true
+  },
+  "harnessStillMatches": true,
+  "currentManifestMismatches": [
+    {
+      "file": "Core/AppleSmartBatteryPowerObservationReader.swift",
+      "frozenSHA256": "b5a86dbdafca4acfb80d7bd91071e5a04100c38c78591a7d7cbb3fc96c0fc9c5",
+      "currentSHA256": "2c88aadecb9b2a03a4d4d426056c1978f0a4e4e391c5741a9911ebcc507377d8"
+    },
+    {
+      "file": "Core/BatterySampler.swift",
+      "frozenSHA256": "e13d3140628ed001206ec9e560ea74597da4a8d599a063a42151b393c8441675",
+      "currentSHA256": "6c1ce82bd47a3550cc8030dad20d856c84ae169328edde49958375730ea92bd1"
+    },
+    {
+      "file": "Core/PowerSnapshot.swift",
+      "frozenSHA256": "48ae64641190df24487c1af7589ad62c7b98bbcafd212dc5d97f75079bfefa96",
+      "currentSHA256": "59646f03f806218a3100403873dd114fb6901f67fe96b1ed55c6f8d06db9223d"
+    },
+    {
+      "file": "Core/Settings.swift",
+      "frozenSHA256": "30ef8e258f7636eef48002914b6bcec6460cd3b22c4d594229992a4f8793f60e",
+      "currentSHA256": "04949e864367cbcbf1d9dae9f9df9dc712f8e9738d2b6e7f127038bff7fb5232"
+    },
+    {
+      "file": "MenuBar/SettingsWindowController.swift",
+      "frozenSHA256": "f309742598cdcdd0f4567b462ed4d298634834d94e398e51d98e38fe1ba4abea",
+      "currentSHA256": "ce67f6d2a66c8e3236980dd3925488e92db7277c82bcb8c837a39f569de03860"
+    },
+    {
+      "file": "Popover/PopoverContentView.swift",
+      "frozenSHA256": "47d3bf0ec34fa8be9115b9b05893438b552ece1e788c1fb0f30765310a015444",
+      "currentSHA256": "6d0ba8daf8878932490560300c7600554c5a7cf173e4fa0900ab0e9eb81989fd"
+    },
+    {
+      "file": "Popover/RingGaugeLayer.swift",
+      "frozenSHA256": "52b7e639170db8d2371498647d561ebeddea0cd7a6577c40323533bc26b3fcc8",
+      "currentSHA256": "aa325738167f58b707ebab0d5dbb0646d4159cdb3a89610826e57514a2a4b67b"
+    }
+  ],
+  "missingManifestFiles": [],
+  "previewVerification": "Dark compact and light detailed native images show an18pt capsule at x284,y3,width44; the10pt glyph is clear, centered and unclipped. Names, bars and row geometry remain fixed.",
+  "ownedRendererChecksAgainstActualGUIBuild": {
+    "Popover/TopProcessesView.swift": true,
+    "Popover/ProcessActionButton.swift": true,
+    "Popover/FooterHoverFeedbackView.swift": true
+  },
+  "harnessMatchesActualGUIBuild": true
+}

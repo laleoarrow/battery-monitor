@@ -1,0 +1,1166 @@
+{
+  "assertions" : 10376,
+  "captures" : [
+    {
+      "cancelKey" : "\"\\u{1B}\"",
+      "defaultButtonCell" : "nil",
+      "glass" : false,
+      "image" : "confirmation-cancel.png",
+      "terminationExecutor" : "spy",
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "cancelKey" : "\"\\u{1B}\"",
+      "defaultButtonCell" : "nil",
+      "glass" : false,
+      "image" : "confirmation-escape.png",
+      "terminationExecutor" : "spy",
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "cancelKey" : "\"\\u{1B}\"",
+      "defaultButtonCell" : "nil",
+      "glass" : false,
+      "image" : "confirmation-return.png",
+      "terminationExecutor" : "spy",
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "cancelKey" : "\"\\u{1B}\"",
+      "defaultButtonCell" : "nil",
+      "glass" : false,
+      "image" : "confirmation-force-quit.png",
+      "terminationExecutor" : "spy",
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-charging-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "dismissal" : "Cancel",
+      "glass" : false,
+      "image" : "classic-light-charging-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-full-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "dismissal" : "Escape",
+      "glass" : false,
+      "image" : "classic-light-full-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-on-battery-detailed-unselected-module.png",
+      "productionModuleRegion" : true,
+      "selection" : "none",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-on-battery-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-on-battery-detailed-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-on-battery-detailed-hover-left-module.png",
+      "pointerFraction" : 0.25,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.25, 0.5}",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-on-battery-detailed-hover-right-module.png",
+      "pointerFraction" : 0.75,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.75, 0.5}",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actualInfoPopover" : true,
+      "explanationIsInInfoControl" : true,
+      "glass" : false,
+      "image" : "classic-light-on-battery-detailed-info.png",
+      "windowFrame" : "{{688, 184}, {336, 129}}"
+    },
+    {
+      "dismissal" : "Return",
+      "glass" : false,
+      "image" : "classic-light-on-battery-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-mixed-supply-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-low-battery-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-light-low-power-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-charging-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-full-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-on-battery-compact-unselected-module.png",
+      "productionModuleRegion" : true,
+      "selection" : "none",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-on-battery-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-on-battery-compact-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-on-battery-compact-hover-left-module.png",
+      "pointerFraction" : 0.25,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.25, 0.5}",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-on-battery-compact-hover-right-module.png",
+      "pointerFraction" : 0.75,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.75, 0.5}",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-mixed-supply-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-low-battery-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-light-low-power-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-charging-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "dismissal" : "Cancel",
+      "glass" : false,
+      "image" : "classic-dark-charging-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-full-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "dismissal" : "Escape",
+      "glass" : false,
+      "image" : "classic-dark-full-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-detailed-unselected-module.png",
+      "productionModuleRegion" : true,
+      "selection" : "none",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-detailed-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-detailed-hover-left-module.png",
+      "pointerFraction" : 0.25,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.25, 0.5}",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-detailed-hover-right-module.png",
+      "pointerFraction" : 0.75,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.75, 0.5}",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actualInfoPopover" : true,
+      "explanationIsInInfoControl" : true,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-detailed-info.png",
+      "windowFrame" : "{{688, 184}, {336, 129}}"
+    },
+    {
+      "dismissal" : "Return",
+      "glass" : false,
+      "image" : "classic-dark-on-battery-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-mixed-supply-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-low-battery-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : false,
+      "image" : "classic-dark-low-power-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-charging-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-full-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-compact-unselected-module.png",
+      "productionModuleRegion" : true,
+      "selection" : "none",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-compact-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-compact-hover-left-module.png",
+      "pointerFraction" : 0.25,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.25, 0.5}",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-on-battery-compact-hover-right-module.png",
+      "pointerFraction" : 0.75,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.75, 0.5}",
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-mixed-supply-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-low-battery-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : false,
+      "image" : "classic-dark-low-power-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{571, 62}, {386, 680}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-charging-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "dismissal" : "Cancel",
+      "glass" : true,
+      "image" : "glass-light-charging-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-full-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "dismissal" : "Escape",
+      "glass" : true,
+      "image" : "glass-light-full-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-on-battery-detailed-unselected-module.png",
+      "productionModuleRegion" : true,
+      "selection" : "none",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-on-battery-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-on-battery-detailed-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-on-battery-detailed-hover-left-module.png",
+      "pointerFraction" : 0.25,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.25, 0.5}",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-on-battery-detailed-hover-right-module.png",
+      "pointerFraction" : 0.75,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.75, 0.5}",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actualInfoPopover" : true,
+      "explanationIsInInfoControl" : true,
+      "glass" : true,
+      "image" : "glass-light-on-battery-detailed-info.png",
+      "windowFrame" : "{{688, 342}, {336, 129}}"
+    },
+    {
+      "dismissal" : "Return",
+      "glass" : true,
+      "image" : "glass-light-on-battery-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-mixed-supply-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-low-battery-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-light-low-power-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-charging-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-full-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-on-battery-compact-unselected-module.png",
+      "productionModuleRegion" : true,
+      "selection" : "none",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-on-battery-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-on-battery-compact-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-on-battery-compact-hover-left-module.png",
+      "pointerFraction" : 0.25,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.25, 0.5}",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-on-battery-compact-hover-right-module.png",
+      "pointerFraction" : 0.75,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.75, 0.5}",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-mixed-supply-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-low-battery-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-light-low-power-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-charging-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "dismissal" : "Cancel",
+      "glass" : true,
+      "image" : "glass-dark-charging-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-full-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "dismissal" : "Escape",
+      "glass" : true,
+      "image" : "glass-dark-full-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-detailed-unselected-module.png",
+      "productionModuleRegion" : true,
+      "selection" : "none",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-detailed-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-detailed-hover-left-module.png",
+      "pointerFraction" : 0.25,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.25, 0.5}",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-detailed-hover-right-module.png",
+      "pointerFraction" : 0.75,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.75, 0.5}",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actualInfoPopover" : true,
+      "explanationIsInInfoControl" : true,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-detailed-info.png",
+      "windowFrame" : "{{688, 342}, {336, 129}}"
+    },
+    {
+      "dismissal" : "Return",
+      "glass" : true,
+      "image" : "glass-dark-on-battery-detailed-confirmation.png",
+      "productionController" : true,
+      "windowFrame" : "{{382, 405}, {260, 218}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-mixed-supply-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-low-battery-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : false,
+      "glass" : true,
+      "image" : "glass-dark-low-power-detailed.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-charging-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-full-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-compact-unselected-module.png",
+      "productionModuleRegion" : true,
+      "selection" : "none",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-compact-module.png",
+      "productionModuleRegion" : true,
+      "selectedProcess" : "Safari",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-compact-hover-left-module.png",
+      "pointerFraction" : 0.25,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.25, 0.5}",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-on-battery-compact-hover-right-module.png",
+      "pointerFraction" : 0.75,
+      "processOnlyReduceMotionOverride" : false,
+      "productionModuleRegion" : true,
+      "reflectionCenter" : "{0.75, 0.5}",
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-mixed-supply-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-low-battery-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    },
+    {
+      "actionCapsuleFrame" : "{{284, 3}, {44, 18}}",
+      "compact" : true,
+      "glass" : true,
+      "image" : "glass-dark-low-power-compact.png",
+      "nameFrames" : [
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}",
+        "{{0, 2}, {132, 20}}"
+      ],
+      "nativeGlassCapsule" : true,
+      "selectedProcess" : "Safari",
+      "selectedScoreHidden" : true,
+      "windowFrame" : "{{552, 60}, {424, 706}}"
+    }
+  ],
+  "failures" : 0,
+  "fixtureScores" : [
+    84,
+    46.123456789000002,
+    8.0999999999999996
+  ],
+  "limitations" : "Battery and process values\/identities are fixtures. The GUI never sends a process signal. A separate owned-child probe verifies the production root helper worker. No canonical app\/helper is installed.",
+  "method" : "Real signed sandboxed AppKit fixture application, production Classic\/Glass popup hosts and Process Activity rows, WindowServer captures in an owned ARM GUI VM. Native mouse events select rows and track the right-side capsule; action uses a spy. Fixed name\/bar geometry, selected-only hidden scores, concise tooltips, native glass capsule and shared pointer-light overlay are checked. The process-only Reduce Motion override is temporarily cleared for hover captures and restored; system accessibility preferences are never written. Production NSAlert confirmation is exercised with a spy executor.",
+  "schema" : 1
+}

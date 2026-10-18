@@ -1,0 +1,29 @@
+[
+  {
+    "Source" : "local",
+    "Disk" : 50,
+    "Name" : "Wattson-Force-Quit-3495CF39",
+    "State" : "running",
+    "Running" : true,
+    "Size" : 31,
+    "Accessed" : "2026-10-18T09:40:07Z"
+  },
+  {
+    "Source" : "local",
+    "Disk" : 50,
+    "Name" : "macOS-TestLab",
+    "State" : "stopped",
+    "Running" : false,
+    "Size" : 33,
+    "Accessed" : "2026-10-15T06:45:45Z"
+  },
+  {
+    "Source" : "local",
+    "Disk" : 50,
+    "Name" : "macOS-TestLab-Base",
+    "State" : "stopped",
+    "Running" : false,
+    "Size" : 30,
+    "Accessed" : "2026-10-18T09:37:45Z"
+  }
+]

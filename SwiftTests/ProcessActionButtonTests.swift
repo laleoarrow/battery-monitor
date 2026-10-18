@@ -14,7 +14,7 @@ final class ProcessActionButtonTests: XCTestCase {
     }
 
     func testCapsuleKeepsItsAssignedFrameAndNativeAction() {
-        let frame = NSRect(x: 284, y: 1, width: 44, height: 22)
+        let frame = NSRect(x: 284, y: 3, width: 44, height: 18)
         let button = ProcessActionButton(frame: frame)
         let target = Target()
         button.target = target
@@ -33,7 +33,7 @@ final class ProcessActionButtonTests: XCTestCase {
     }
 
     func testDisabledCapsuleDoesNotDispatchAndCanBeReenabled() {
-        let button = ProcessActionButton(frame: NSRect(x: 0, y: 0, width: 44, height: 22))
+        let button = ProcessActionButton(frame: NSRect(x: 0, y: 0, width: 44, height: 18))
         let target = Target()
         button.target = target
         button.action = #selector(Target.press(_:))
@@ -46,7 +46,7 @@ final class ProcessActionButtonTests: XCTestCase {
     }
 
     func testAppearanceRefreshPreservesCallerControlConfiguration() {
-        let button = ProcessActionButton(frame: NSRect(x: 284, y: 1, width: 44, height: 22))
+        let button = ProcessActionButton(frame: NSRect(x: 284, y: 3, width: 44, height: 18))
         let target = Target()
         button.target = target
         button.action = #selector(Target.press(_:))
@@ -60,7 +60,7 @@ final class ProcessActionButtonTests: XCTestCase {
             XCTAssertEqual(button.action, #selector(Target.press(_:)))
             XCTAssertEqual(button.toolTip, "Force Quit")
             XCTAssertEqual(button.accessibilityLabel(), "Force Quit Safari")
-            XCTAssertEqual(button.frame, NSRect(x: 284, y: 1, width: 44, height: 22))
+            XCTAssertEqual(button.frame, NSRect(x: 284, y: 3, width: 44, height: 18))
             XCTAssertNotNil(button.image)
         }
     }

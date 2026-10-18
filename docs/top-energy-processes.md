@@ -111,7 +111,7 @@ the same in Compact view. The score returns when selection clears. Arrow keys
 move the selection between visible rows, and the selected button is exposed to
 accessibility clients.
 
-The action is a 44 × 22-point native glass capsule on macOS 26, with a soft blue
+The action is a 44 × 18-point native glass capsule on macOS 26, with a soft blue
 gradient and reflected rim. Older systems use the same compact capsule shape.
 One shared pointer-feedback surface provides the light effect without a timer.
 Reduced Motion/Transparency and high contrast use static, legible feedback.

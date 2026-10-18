@@ -136,7 +136,7 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
         try check(list.selectedRowIndexForTest == 0, "Native row click did not select")
         try check(!list.forceQuitButtonsForTest[0].isHidden && list.forceQuitButtonsForTest[0].isEnabled, "Selected row has no enabled close button")
         try check(list.forceQuitButtonsForTest.dropFirst().allSatisfy(\.isHidden), "More than one close button visible")
-        try check(list.forceQuitButtonsForTest[0].frame == NSRect(x: 284, y: 1, width: 44, height: 22), "Action capsule does not overlay the right-side score slot")
+        try check(list.forceQuitButtonsForTest[0].frame == NSRect(x: 284, y: 3, width: 44, height: 18), "Action capsule does not overlay the right-side score slot")
         try check(list.barGeometryForTest.map(\.track) == before, "Selection shifted the score bars")
         try check(try nameFrames(in: list) == namesBefore, "Selection shifted or truncated a process name")
         let values = try scoreFields(in: list)

@@ -1,5 +1,9 @@
 # Process action capsule and concise hover text
 
+The [height follow-up](thin-18/README.md) reduces the capsule to 44 × 18 points.
+The initial implementation and accepted images below record the preceding
+44 × 22-point version.
+
 Selecting a process replaces its score with a 44 × 22-point × capsule at the
 right edge. The process name remains at x=0, width=132, and the bar and all other
 text retain their frames. Deselecting restores the score. The native force-quit
