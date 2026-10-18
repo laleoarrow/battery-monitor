@@ -144,7 +144,9 @@ final class TopProcessesView: PopoverSection {
         return infoPopover?.contentViewController?.view.window
     }
 
-    func update(state: TopProcessesState, count: Int, compact: Bool = false) {
+    func update(state: TopProcessesState, count: Int, compact: Bool = false,
+                color: NSColor = PopoverStyle.blue) {
+        rows.forEach { $0.setBarColor(color) }
         let count = min(max(count, 1), 10)
         guard renderedState != state || self.count != count || self.compact != compact else { return }
         if count < self.count { select(nil) }
@@ -282,6 +284,7 @@ final class TopProcessesView: PopoverSection {
         private let track = CALayer()
         private let fill = CAGradientLayer()
         private let fillMask = CALayer()
+        private var barColor = PopoverStyle.blue
         private var ratio: CGFloat = 0
         private(set) var process: EnergyProcess?
         private(set) var isSelected = false
@@ -384,10 +387,17 @@ final class TopProcessesView: PopoverSection {
             refreshAppearance()
         }
 
+        func setBarColor(_ color: NSColor) {
+            guard !barColor.isEqual(color) else { return }
+            barColor = color
+            refreshAppearance()
+        }
+
         func refreshAppearance() {
             forceQuitButton.refreshAppearance()
             effectiveAppearance.performAsCurrentDrawingAppearance {
                 let contrast = PopoverStyle.isHighContrast(effectiveAppearance)
+                let tint = barColor.usingColorSpace(.sRGB)!
                 PopoverStyle.setWithoutAnimation {
                     self.layer?.backgroundColor = self.isSelected
                         ? NSColor.labelColor.withAlphaComponent(contrast ? 0.08 : 0.045).cgColor
@@ -396,11 +406,13 @@ final class TopProcessesView: PopoverSection {
                     self.layer?.borderWidth = self.isSelected && contrast ? 1 : 0
                     self.track.backgroundColor = NSColor.clear.cgColor
                     self.track.borderColor = contrast ? NSColor.labelColor.cgColor
-                        : NSColor(rgb: PopoverStyle.isDark(self.effectiveAppearance) ? 0xDCEEFF : 0xAAC7DE,
-                                  alpha: PopoverStyle.isDark(self.effectiveAppearance) ? 0.75 : 1).cgColor
+                        : tint.blended(withFraction: PopoverStyle.isDark(self.effectiveAppearance) ? 0.72 : 0.5,
+                                       of: .white)!
+                            .withAlphaComponent(PopoverStyle.isDark(self.effectiveAppearance) ? 0.75 : 1).cgColor
                     self.fill.colors = contrast
-                        ? [NSColor.systemBlue.cgColor, NSColor.systemBlue.cgColor, NSColor.systemBlue.cgColor]
-                        : [NSColor(rgb: 0x9CDCFF).cgColor, NSColor(rgb: 0x2C9DFF).cgColor, NSColor(rgb: 0x0B69D9).cgColor]
+                        ? [tint.cgColor, tint.cgColor, tint.cgColor]
+                        : [tint.blended(withFraction: 0.65, of: .white)!.cgColor, tint.cgColor,
+                           tint.blended(withFraction: 0.18, of: .black)!.cgColor]
 #if DEBUG
                     let vertical = self.gradientPreviewStyle == .vertical || self.gradientPreviewStyle == .activityTint
                     self.fill.startPoint = vertical ? CGPoint(x: 0.5, y: 0) : CGPoint(x: 0, y: 0.5)

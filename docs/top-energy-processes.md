@@ -4,21 +4,29 @@ The popover's **Process Activity** module ranks recent process activity.
 Settings > Modules provides its visibility switch, reorder handle, and
 **Processes shown** choice (1–10, default 3). Existing saved module orders keep
 their positions and append the new module. The list shares Wattson's transparent
-surface, inset separators and semantic colors. Blue gradient
-bars with neutral outlines follow the supplied module-icon reference.
+surface, inset separators and semantic colors. Gradient bars and their outlines
+follow the App's existing main-chart palette.
 
 ## Reading the values
 
-The blue bars use a fixed **0–100 Activity Score** scale. An idle process therefore keeps a
+The bars use a fixed **0–100 Activity Score** scale. An idle process therefore keeps a
 short or empty bar even when it ranks first. Scores above 100 retain their real
 numeric value, with a full bar and an overflow mark. The scale stays the same
 when the ranking or the configured process count changes.
 
-Each complete 0–100 track has a horizontal gradient from pale blue on the left
-to deep blue on the right. The score reveals only that portion of the gradient:
+Each complete 0–100 track has a horizontal gradient from pale on the left to
+deep on the right within the same color family. The score reveals only that portion of the gradient:
 8.1 reveals the pale first 8.1%, while 100 reveals the full gradient. Rows share
 the same colors and scale. Above 100 the full bar retains its overflow mark and
-real numeric value. High contrast uses solid system blue.
+real numeric value. High contrast uses the same App color as an opaque solid
+fill with a label-color outline.
+
+The palette matches Power History and the power lanes: green while charging,
+blue while plugged in without charging or on mixed supply, and neutral on
+battery. Low battery and Low Power retain the existing main-chart palette;
+the activity score does not introduce a separate severity color. Changes apply
+immediately even when the process readings are unchanged. Light/dark appearance
+refreshes resolve the adaptive colors again, without adding timers or sampling.
 
 Settings > Modules > Process Activity also provides **Compact view**, a small
 Off/On selector matching Processes shown. It defaults to Off. Enabling it hides

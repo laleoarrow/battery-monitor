@@ -122,6 +122,7 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
             scroll.reflectScrolledClipView(scroll.contentView)
         }
         list.layoutSubtreeIfNeeded()
+        let palette = try validateActivityPalette(list, content: content)
         try check(list.forceQuitButtonsForTest.allSatisfy(\.isHidden), "Unselected rows show close buttons")
         let namesBefore = try nameFrames(in: list)
         try check(namesBefore.allSatisfy { $0 == NSRect(x: 0, y: 2, width: 132, height: 20) }, "Unselected names do not retain their fixed layout")
@@ -151,11 +152,20 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
         try check(row.isAccessibilitySelected(), "Native AX selection missing")
         try check(abs(row.bounds.height - (compact ? 28 : 44)) < 0.1, "Selection changed row height")
         try check(list.forceQuitButtonsForTest[0].accessibilityLabel()?.contains("Safari") == true, "Close button lacks process name for accessibility")
-        try capture(window, name: name, fields: ["compact": compact, "selectedProcess": "Safari", "actionCapsuleFrame": NSStringFromRect(list.forceQuitButtonsForTest[0].frame), "nameFrames": namesBefore.map(NSStringFromRect), "selectedScoreHidden": true, "nativeGlassCapsule": true])
+        try capture(window, name: name, fields: ["compact": compact, "selectedProcess": "Safari", "actionCapsuleFrame": NSStringFromRect(list.forceQuitButtonsForTest[0].frame), "nameFrames": namesBefore.map(NSStringFromRect), "selectedScoreHidden": true, "nativeGlassCapsule": true, "activityPaletteSRGB": palette])
+        try captureModule(list, window: window, name: name + "-module", fields: ["compact": compact, "selectedProcess": "Safari", "activityPaletteSRGB": palette])
         if name.contains("on-battery-") {
-            try captureModule(list, window: window, name: name + "-module", fields: ["compact": compact, "selectedProcess": "Safari"])
             try await hoverLight(list, window: window, name: name, compact: compact)
             if !compact { try await activityInfo(list, window: window, name: name) }
+            let updates = list.contentUpdatesForTest
+            for transition in [samples[0].1, samples[1].1, sample] {
+                host.update(snapshot: transition, history: [10, 20, 30, 20], peak: 30, degraded: false)
+                _ = try validateActivityPalette(list, content: content)
+                try check(list.selectedRowIndexForTest == 0 && list.contentUpdatesForTest == updates,
+                          "Power color change rebuilt process data or cleared selection")
+                try check(list.barGeometryForTest.map(\.track) == before,
+                          "Power color change moved the activity bars")
+            }
         }
         let productionHandler = list.forceQuitHandler
         var requested: [EnergyProcess] = []
@@ -221,6 +231,44 @@ private final class Probe: NSObject, NSApplicationDelegate, @unchecked Sendable 
             guard fields.count == 3 else { throw failure("Missing name, score or detail field") }
             return fields[1]
         }
+    }
+    private func validateActivityPalette(_ list: TopProcessesView, content: NSView) throws -> [[Double]] {
+        guard let history = descendants(content).compactMap({ $0 as? HistoryView }).first,
+              let stroke = history.layer?.sublayers?.flatMap({ $0.sublayers ?? [] })
+                .compactMap({ $0 as? CAShapeLayer }).first(where: { $0.strokeColor != nil })?.strokeColor,
+              let expected = NSColor(cgColor: stroke)?.usingColorSpace(.sRGB) else {
+            throw failure("Missing production History palette")
+        }
+        var palette: [[Double]] = []
+        for row in list.processRowsForTest {
+            guard let track = row.layer?.sublayers?.first(where: { $0.name == "top-processes.track" }),
+                  let gradient = track.sublayers?.compactMap({ $0 as? CAGradientLayer }).first,
+                  let colors = gradient.colors as? [CGColor], colors.count == 3 else {
+                throw failure("Missing process activity gradient")
+            }
+            let stops = try colors.map { color -> NSColor in
+                guard let result = NSColor(cgColor: color)?.usingColorSpace(.sRGB) else {
+                    throw failure("Unresolvable process activity color")
+                }
+                return result
+            }
+            let middle = stops[1]
+            try check(abs(middle.redComponent - expected.redComponent) < 0.00001
+                      && abs(middle.greenComponent - expected.greenComponent) < 0.00001
+                      && abs(middle.blueComponent - expected.blueComponent) < 0.00001,
+                      "Process activity color differs from the production History palette")
+            try check(stops.allSatisfy { abs($0.alphaComponent - 1) < 0.00001 },
+                      "Process activity gradient is not opaque")
+            if !PopoverStyle.isHighContrast(list.effectiveAppearance) {
+                let brightness = stops.map { 0.2126 * $0.redComponent + 0.7152 * $0.greenComponent + 0.0722 * $0.blueComponent }
+                try check(brightness[0] > brightness[1] && brightness[1] > brightness[2],
+                          "Process activity gradient does not run from pale to deep")
+            }
+            if palette.isEmpty {
+                palette = stops.map { [Double($0.redComponent), Double($0.greenComponent), Double($0.blueComponent), Double($0.alphaComponent)] }
+            }
+        }
+        return palette
     }
     private func validateRowTooltips(_ list: TopProcessesView) throws {
         for row in list.processRowsForTest {

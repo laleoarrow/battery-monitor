@@ -1,8 +1,10 @@
 # TODO
 
-- [ ] **Process Activity：支持可变配色。**
+- [x] **Process Activity：支持可变配色。**
 
   活动条的样式颜色不能固定为蓝色，需要能与 App 整体配色协调；保留每条内部从浅到深的同色系横向渐变和固定 0–100 刻度。
+
+  已接入与 Power History、功率条相同的主图表配色，随供电状态、浅深外观和高对比刷新；见 [配色与验证](design/process-activity-palette/README.md)。
 
 - [x] **Process Activity：点选进程后可强制结束。**
 

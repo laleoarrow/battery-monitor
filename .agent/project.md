@@ -245,11 +245,15 @@ Process Activity is an independent, default-on module appended to existing
 module orders. Settings > Modules selects 1–10 processes (default 3), and the
 six-row module list scrolls without replacing its reorder controls. It uses a
 fixed helper read for two native process-counter snapshots; the displayed
-blue gradient bars show Wattson's independently calculated Activity Score on a
+theme-colored gradient bars show Wattson's independently calculated Activity Score on a
 fixed 0–100 scale, alongside CPU percent and idle wakeups per second. Each full
-track runs horizontally from pale to deep blue; the score reveals only the
+track runs horizontally from pale to deep within the same hue; the score reveals only the
 matching prefix. The optional Compact view hides the CPU/wakeup line and uses
 28-point rows instead of 44-point rows, preserving readings and the fixed scale.
+Bars follow the Power History/Lanes palette: green while charging, blue while
+plugged idle or on mixed supply, and neutral on battery. Palette changes update
+independently of process data; existing appearance refresh resolves the adaptive
+colors again for light/dark and high contrast without adding observers or timers.
 An
 information control explains Activity Score and the one-core CPU convention; these
 are never per-process watts or battery shares. Sampling shares the popup clock,

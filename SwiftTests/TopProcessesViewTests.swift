@@ -145,11 +145,7 @@ final class TopProcessesViewTests: XCTestCase {
             view.update(state: state, count: 3)
             XCTAssertEqual(view.contentUpdatesForTest, updates)
             for row in rows {
-                let expected = contrast ? Array(repeating: NSColor.systemBlue, count: 3)
-                    : [0x9CDCFF, 0x2C9DFF, 0x0B69D9].map { NSColor(rgb: $0) }
-                for (actual, color) in zip(try gradientColors(row), expected) {
-                    try assertColor(actual, matches: color, in: appearance)
-                }
+                try assertPalette(row, follows: PopoverStyle.blue, in: appearance, contrast: contrast)
             }
         }
         view.setPresentationActive(false)
@@ -354,7 +350,7 @@ final class TopProcessesViewTests: XCTestCase {
     func testChangingMeasurementsOrRankReusesRowsAndChangesWidthAndValueWithoutChangingPalette() throws {
         let view = makeView()
         let original = processes(3)
-        view.update(state: .ready(original), count: 3)
+        view.update(state: .ready(original), count: 3, color: PopoverStyle.green)
         view.layoutSubtreeIfNeeded()
         let rows = visibleRows(view)
         let fields = rows.flatMap { $0.subviews }.map(ObjectIdentifier.init)
@@ -367,7 +363,7 @@ final class TopProcessesViewTests: XCTestCase {
                 EnergyProcess(pid: $0.pid, name: $0.name, energyImpact: score,
                               cpuPercent: score, idleWakeupsPerSecond: 0)
             }
-            view.update(state: .ready(updated), count: 3)
+            view.update(state: .ready(updated), count: 3, color: PopoverStyle.green)
             view.layoutSubtreeIfNeeded()
             XCTAssertEqual(try rows.map { ObjectIdentifier(try XCTUnwrap(gradientLayer($0).mask)) }, masks)
             for geometry in view.gradientPreviewGeometryForTest {
@@ -386,6 +382,63 @@ final class TopProcessesViewTests: XCTestCase {
             let value = try XCTUnwrap(row.subviews.compactMap { $0 as? NSTextField }.dropFirst().first)
             XCTAssertEqual(value.stringValue, "51.0")
             XCTAssertEqual(try gradientColors(row), originalColors)
+            try assertPalette(row, follows: PopoverStyle.green, in: view.effectiveAppearance, contrast: false)
+        }
+    }
+
+    func testAppPaletteChangesImmediatelyWithoutChangingReadingsSelectionOrFixedScale() throws {
+        for compact in [false, true] {
+            let view = makeView(compact: compact)
+            view.appearance = NSAppearance(named: .aqua)
+            let readings = [8.1, 46, 131.2].enumerated().map { identifiedProcess($0.offset + 41, score: $0.element) }
+            let state = TopProcessesState.ready(readings)
+            view.update(state: state, count: 3, compact: compact, color: PopoverStyle.blue)
+            view.layoutSubtreeIfNeeded()
+            let rows = view.processRowsForTest
+            try clickRow(rows[1], point: NSPoint(x: 40, y: 11))
+            view.layoutSubtreeIfNeeded()
+            let rowIDs = rows.map(ObjectIdentifier.init)
+            let labels = rows.map { $0.subviews.compactMap { $0 as? NSTextField } }
+            let values = labels.flatMap { $0.map(\.stringValue) }
+            let labelFrames = labels.flatMap { $0.map(\.frame) }
+            let accessibility = rows.map { $0.accessibilityValue() as? String }
+            let maskIDs = try rows.map { ObjectIdentifier(try XCTUnwrap(gradientLayer($0).mask)) }
+            let updates = view.contentUpdatesForTest
+            var previousPalette = try gradientColors(rows[0])
+
+            for color in [PopoverStyle.green, PopoverStyle.blue, PopoverStyle.neutral, PopoverStyle.green] {
+                view.update(state: state, count: 3, compact: compact, color: color)
+                XCTAssertEqual(view.contentUpdatesForTest, updates)
+                XCTAssertFalse(view.needsLayout)
+                XCTAssertEqual(view.processRowsForTest.map(ObjectIdentifier.init), rowIDs)
+                XCTAssertEqual(labels.flatMap { $0.map(\.stringValue) }, values)
+                XCTAssertEqual(labels.flatMap { $0.map(\.frame) }, labelFrames)
+                XCTAssertEqual(rows.map { $0.accessibilityValue() as? String }, accessibility)
+                XCTAssertEqual(view.selectedProcessForTest, readings[1])
+                XCTAssertEqual(view.selectedRowIndexForTest, 1)
+                XCTAssertEqual(view.forceQuitButtonsForTest.map(\.isHidden), [true, false, true])
+                XCTAssertEqual(view.forceQuitButtonsForTest[1].frame, NSRect(x: 288, y: 4, width: 38, height: 16))
+                XCTAssertEqual(try rows.map { ObjectIdentifier(try XCTUnwrap(gradientLayer($0).mask)) }, maskIDs)
+                for (bar, ratio) in zip(view.barGeometryForTest, [0.081, 0.46, 1.0]) {
+                    XCTAssertEqual(bar.ratio, ratio, accuracy: 0.000_001)
+                }
+                for (geometry, ratio) in zip(view.gradientPreviewGeometryForTest, [0.081, 0.46, 1.0]) {
+                    XCTAssertEqual(geometry.gradientWidth, 114)
+                    XCTAssertEqual(geometry.visibleMaskWidth, 114 * ratio, accuracy: 0.000_001)
+                    XCTAssertTrue(geometry.usesFixedScale)
+                }
+                for row in rows {
+                    try assertPalette(row, follows: color, in: view.effectiveAppearance, contrast: false)
+                }
+                let palette = try gradientColors(rows[0])
+                XCTAssertNotEqual(palette, previousPalette)
+                previousPalette = palette
+                // A repeated palette update should not rebuild content or schedule layout either.
+                view.update(state: state, count: 3, compact: compact, color: color)
+                XCTAssertEqual(view.contentUpdatesForTest, updates)
+                XCTAssertFalse(view.needsLayout)
+                XCTAssertEqual(try gradientColors(rows[0]), palette)
+            }
         }
     }
 
@@ -411,15 +464,12 @@ final class TopProcessesViewTests: XCTestCase {
             XCTAssertGreaterThan(brightness(stops[0]), brightness(stops[1]))
             XCTAssertGreaterThan(brightness(stops[1]), brightness(stops[2]))
         }
-        let expectedPalette = [0x9CDCFF, 0x2C9DFF, 0x0B69D9].map { NSColor(rgb: $0) }
         for row in rows {
             let gradient = try gradientLayer(row)
             XCTAssertEqual(gradient.startPoint, CGPoint(x: 0, y: 0.5))
             XCTAssertEqual(gradient.endPoint, CGPoint(x: 1, y: 0.5))
             XCTAssertEqual(gradient.locations, [0, 0.45, 1])
-            for (actual, expected) in zip(try gradientColors(row), expectedPalette) {
-                try assertColor(actual, matches: expected, in: view.effectiveAppearance)
-            }
+            try assertPalette(row, follows: PopoverStyle.blue, in: view.effectiveAppearance, contrast: false)
             XCTAssertEqual(try gradientColors(row), try gradientColors(rows[0]))
         }
         for (bar, expected) in zip(view.barGeometryForTest, [0.081, 0.46, 0.84]) {
@@ -433,50 +483,52 @@ final class TopProcessesViewTests: XCTestCase {
 
     func testGradientAndOutlineFollowLightDarkAndHighContrastWithoutAnimations() throws {
         let view = makeView()
-        view.update(state: .ready([8.1, 46, 84].enumerated().map {
+        let state = TopProcessesState.ready([8.1, 46, 84].enumerated().map {
             process($0.offset + 1, score: $0.element)
-        }), count: 3)
+        })
+        view.update(state: state, count: 3)
         view.layoutSubtreeIfNeeded()
         let frames = view.subviews.map(\.frame)
-        let valueColors = try visibleRows(view).map { try gradientColors($0) }
         let originalContrast = ProcessInfo.processInfo.environment["WATTSON_FORCE_INCREASE_CONTRAST"]
         defer {
             if let originalContrast { setenv("WATTSON_FORCE_INCREASE_CONTRAST", originalContrast, 1) }
             else { unsetenv("WATTSON_FORCE_INCREASE_CONTRAST") }
         }
-        for (name, contrast): (NSAppearance.Name, Bool) in [(.aqua, false), (.darkAqua, false),
-                (.accessibilityHighContrastAqua, true), (.accessibilityHighContrastDarkAqua, true),
-                (.aqua, false)] {
-            setenv("WATTSON_FORCE_INCREASE_CONTRAST", contrast ? "1" : "0", 1)
-            let appearance = try XCTUnwrap(NSAppearance(named: name))
-            view.appearance = appearance
-            view.viewDidChangeEffectiveAppearance()
-            view.layoutSubtreeIfNeeded()
-            XCTAssertEqual(view.subviews.map(\.frame), frames)
-            let separator = try XCTUnwrap(view.layer?.sublayers?.first)
-            try assertColor(separator.backgroundColor, matches: PopoverStyle.separator, in: appearance)
-            for (index, row) in visibleRows(view).enumerated() {
-                let track = try XCTUnwrap(row.layer?.sublayers?.first { $0.name == "top-processes.track" })
-                let gradient = try XCTUnwrap(track.sublayers?.first as? CAGradientLayer)
-                let colors = try XCTUnwrap(gradient.colors as? [CGColor])
-                XCTAssertEqual(colors.count, 3)
-                XCTAssertEqual(gradient.locations, [0, 0.45, 1])
-                XCTAssertEqual(gradient.startPoint, CGPoint(x: 0, y: 0.5))
-                XCTAssertEqual(gradient.endPoint, CGPoint(x: 1, y: 0.5))
-                XCTAssertEqual(track.borderWidth, 1)
-                XCTAssertEqual(track.backgroundColor?.alpha, 0)
-                if contrast {
-                    try assertColor(track.borderColor, matches: .labelColor, in: appearance)
-                    for color in colors { try assertColor(color, matches: .systemBlue, in: appearance) }
-                } else {
-                    let dark = PopoverStyle.isDark(appearance)
-                    try assertColor(track.borderColor, matches: NSColor(rgb: dark ? 0xDCEEFF : 0xAAC7DE,
-                                                                         alpha: dark ? 0.75 : 1), in: appearance)
-                    XCTAssertEqual(colors, valueColors[index])
+        for appColor in [PopoverStyle.green, PopoverStyle.blue, PopoverStyle.neutral] {
+            view.update(state: state, count: 3, color: appColor)
+            for (name, contrast): (NSAppearance.Name, Bool) in [(.aqua, false), (.darkAqua, false),
+                    (.accessibilityHighContrastAqua, true), (.accessibilityHighContrastDarkAqua, true),
+                    (.aqua, false)] {
+                setenv("WATTSON_FORCE_INCREASE_CONTRAST", contrast ? "1" : "0", 1)
+                let appearance = try XCTUnwrap(NSAppearance(named: name))
+                view.appearance = appearance
+                view.viewDidChangeEffectiveAppearance()
+                view.layoutSubtreeIfNeeded()
+                XCTAssertEqual(view.subviews.map(\.frame), frames)
+                let separator = try XCTUnwrap(view.layer?.sublayers?.first)
+                try assertColor(separator.backgroundColor, matches: PopoverStyle.separator, in: appearance)
+                for row in visibleRows(view) {
+                    let track = try XCTUnwrap(row.layer?.sublayers?.first { $0.name == "top-processes.track" })
+                    let gradient = try XCTUnwrap(track.sublayers?.first as? CAGradientLayer)
+                    XCTAssertEqual(gradient.locations, [0, 0.45, 1])
+                    XCTAssertEqual(gradient.startPoint, CGPoint(x: 0, y: 0.5))
+                    XCTAssertEqual(gradient.endPoint, CGPoint(x: 1, y: 0.5))
+                    XCTAssertEqual(track.borderWidth, 1)
+                    XCTAssertEqual(track.backgroundColor?.alpha, 0)
+                    try assertPalette(row, follows: appColor, in: appearance, contrast: contrast)
+                    if contrast {
+                        try assertColor(track.borderColor, matches: .labelColor, in: appearance)
+                    } else {
+                        let outline = try sRGBColor(try XCTUnwrap(track.borderColor))
+                        let accent = try sRGBColor(resolved(appColor, in: appearance))
+                        assertSameHue(outline, accent)
+                        XCTAssertGreaterThanOrEqual(brightness(outline), brightness(accent))
+                        XCTAssertGreaterThanOrEqual(outline.alphaComponent, 0.75)
+                    }
+                    XCTAssertTrue(row.layer?.animationKeys()?.isEmpty ?? true)
+                    XCTAssertTrue(track.animationKeys()?.isEmpty ?? true)
+                    XCTAssertTrue(gradient.animationKeys()?.isEmpty ?? true)
                 }
-                XCTAssertTrue(row.layer?.animationKeys()?.isEmpty ?? true)
-                XCTAssertTrue(track.animationKeys()?.isEmpty ?? true)
-                XCTAssertTrue(gradient.animationKeys()?.isEmpty ?? true)
             }
         }
     }
@@ -565,9 +617,7 @@ final class TopProcessesViewTests: XCTestCase {
             }
             if contrast {
                 for row in visibleRows(view) {
-                    for color in try gradientColors(row) {
-                        try assertColor(color, matches: .systemBlue, in: view.effectiveAppearance)
-                    }
+                    try assertPalette(row, follows: PopoverStyle.blue, in: view.effectiveAppearance, contrast: true)
                 }
             }
         }
@@ -830,11 +880,7 @@ final class TopProcessesViewTests: XCTestCase {
             XCTAssertEqual(row.layer?.backgroundColor?.alpha ?? 0, contrast ? 0.08 : 0.045, accuracy: 0.000_001)
             XCTAssertEqual(row.layer?.borderWidth, contrast ? 1 : 0)
             XCTAssertEqual(view.barGeometryForTest[0].track, NSRect(x: 144, y: 6, width: 116, height: 12))
-            let palette = contrast ? Array(repeating: NSColor.systemBlue, count: 3)
-                : [0x9CDCFF, 0x2C9DFF, 0x0B69D9].map { NSColor(rgb: $0) }
-            for (actual, expected) in zip(try gradientColors(row), palette) {
-                try assertColor(actual, matches: expected, in: view.effectiveAppearance)
-            }
+            try assertPalette(row, follows: PopoverStyle.blue, in: view.effectiveAppearance, contrast: contrast)
             XCTAssertTrue(row.layer?.animationKeys()?.isEmpty ?? true)
         }
     }
@@ -928,6 +974,49 @@ final class TopProcessesViewTests: XCTestCase {
     private func gradientLayer(_ row: NSView) throws -> CAGradientLayer {
         let track = try XCTUnwrap(row.layer?.sublayers?.first { $0.name == "top-processes.track" })
         return try XCTUnwrap(track.sublayers?.first as? CAGradientLayer)
+    }
+
+    private func assertPalette(_ row: NSView, follows appColor: NSColor, in appearance: NSAppearance,
+                               contrast: Bool, file: StaticString = #filePath, line: UInt = #line) throws {
+        let colors = try gradientColors(row)
+        XCTAssertEqual(colors.count, 3, file: file, line: line)
+        guard colors.count == 3 else { return }
+        let accent = try sRGBColor(resolved(appColor, in: appearance))
+        let stops = try colors.map(sRGBColor)
+        for color in stops {
+            XCTAssertEqual(color.alphaComponent, 1, accuracy: 0.001, file: file, line: line)
+            assertSameHue(color, accent, file: file, line: line)
+        }
+        try assertColor(colors[1], matches: accent, in: appearance, file: file, line: line)
+        if contrast {
+            for color in colors {
+                try assertColor(color, matches: accent, in: appearance, file: file, line: line)
+            }
+        } else {
+            XCTAssertGreaterThanOrEqual(brightness(stops[0]), brightness(stops[1]), file: file, line: line)
+            XCTAssertGreaterThanOrEqual(brightness(stops[1]), brightness(stops[2]), file: file, line: line)
+            XCTAssertGreaterThan(brightness(stops[0]), brightness(stops[2]), file: file, line: line)
+        }
+    }
+
+    private func assertSameHue(_ color: NSColor, _ accent: NSColor,
+                               file: StaticString = #filePath, line: UInt = #line) {
+        if accent.saturationComponent < 0.01 {
+            XCTAssertEqual(color.redComponent, color.greenComponent, accuracy: 0.001, file: file, line: line)
+            XCTAssertEqual(color.greenComponent, color.blueComponent, accuracy: 0.001, file: file, line: line)
+        } else {
+            let distance = abs(color.hueComponent - accent.hueComponent)
+            // Native NSColor blending can shift hue slightly during color-space conversion.
+            XCTAssertLessThan(min(distance, 1 - distance), 0.02, file: file, line: line)
+        }
+    }
+
+    private func brightness(_ color: NSColor) -> CGFloat {
+        0.2126 * color.redComponent + 0.7152 * color.greenComponent + 0.0722 * color.blueComponent
+    }
+
+    private func sRGBColor(_ color: CGColor) throws -> NSColor {
+        try XCTUnwrap(NSColor(cgColor: color)?.usingColorSpace(.sRGB))
     }
 
     private func resolved(_ color: NSColor, in appearance: NSAppearance) -> CGColor {

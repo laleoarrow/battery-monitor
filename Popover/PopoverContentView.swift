@@ -934,8 +934,10 @@ final class PopoverContentViewController: NSViewController {
         case .history:
             updateHistory()
         case .topProcesses:
+            let color = latestSnapshot.state == .mixedSupply
+                ? PopoverStyle.blue : PopoverStyle.stateColor(latestSnapshot.state)
             topProcessesView.update(state: latestTopProcesses, count: Settings.topProcessCount,
-                                    compact: Settings.topProcessesCompact)
+                                    compact: Settings.topProcessesCompact, color: color)
         }
     }
 
