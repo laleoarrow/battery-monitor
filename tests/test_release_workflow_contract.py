@@ -23,7 +23,48 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("type: boolean\n        default: false", CI)
         self.assertIn("runs-on: ${{ " + condition + " && 'xcode-27' || 'macos-26' }}", CI)
         self.assertIn("timeout-minutes: ${{ " + condition + " && 60 || 30 }}", CI)
-        self.assertEqual(CI.count("if: " + condition), 3)
+        self.assertEqual(CI.count("if: " + condition), 5)
+        self.assertIn("if: github.event_name != 'workflow_dispatch' || !inputs.macos27", CI)
+
+    def test_macos27_swift_diagnostics_preserve_failure_and_bound_children(self):
+        for name, log_name, arguments in (
+            ("Build macOS 27 Swift test bundle", "swift-test-build.log", "build --build-tests --jobs 2"),
+            ("Execute macOS 27 Swift tests", "swift-test-run.log", "test --skip-build"),
+        ):
+            step = CI.split("- name: " + name, 1)[1].split("      - name:", 1)[0]
+            script = textwrap.dedent(step.split("run: |", 1)[1]).replace(
+                "source scripts/lib/local_cleanup.sh",
+                f'source "{ROOT}/scripts/lib/local_cleanup.sh"',
+            ).replace("wattson_run_timeout 360", "wattson_run_timeout 1")
+            # The executable seam exercises the real owned runner and pipefail.
+            script = "\n".join(line for line in script.splitlines() if not any(
+                command in line for command in ("git rev-parse", "/usr/bin/sw_vers",
+                                               "/usr/bin/xcodebuild", "/usr/bin/xcrun")))
+            for mode, expected in (("pass", 0), ("fail", 2), ("hang", 124)):
+                with self.subTest(name=name, mode=mode), TemporaryDirectory() as temporary:
+                    workspace = pathlib.Path(temporary)
+                    binary_dir = workspace / "bin"
+                    binary_dir.mkdir()
+                    swift = binary_dir / "swift"
+                    swift.write_text(
+                        '#!/bin/bash\nprintf "swift %s\\n" "$*"\n'
+                        'case "$STUB_MODE" in fail) exit 2;; hang) exec /bin/sleep 30;; esac\n'
+                    )
+                    swift.chmod(0o755)
+                    evidence = workspace / ".build/macos27-evidence.noindex"
+                    evidence.mkdir(parents=True)
+                    result = run(
+                        ["/bin/bash", "-c", script], cwd=workspace,
+                        env=dict(os.environ, STUB_MODE=mode,
+                                 PATH=str(binary_dir) + os.pathsep + os.environ["PATH"]),
+                        capture_output=True, text=True, timeout=8,
+                    )
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    self.assertIn("swift " + arguments, (evidence / log_name).read_text())
+                    self.assertIn("swift " + arguments, result.stdout)
+        self.assertIn("if: always() && github.event_name == 'workflow_dispatch' && inputs.macos27", CI)
+        self.assertIn("path: .build/macos27-evidence.noindex", CI)
+        self.assertIn("include-hidden-files: true", CI)
 
     def test_macos27_native_gate_rejects_missing_skipped_and_failed_completion(self):
         gate = CI.split(
