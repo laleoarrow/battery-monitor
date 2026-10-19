@@ -30,11 +30,12 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
     private var controller: SettingsWindowController!
     private let directory = URL(fileURLWithPath: CommandLine.arguments[1])
     private let before = CommandLine.arguments.contains("--before")
+    private let nativeSelected = CommandLine.arguments.contains("--native-selected")
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         Settings.configureForTest(defaults: defaults)
         Settings.checksForUpdatesOnLaunch = false
-        Settings.menuBarIconStyle = .wattson
+        Settings.menuBarIconStyle = nativeSelected ? .native : .wattson
         let dependencies = SettingsWindowDependencies(
             loginItemState: { .enabled }, refreshLoginItem: { $0(.enabled) },
             setLoginItemEnabled: { enabled, done in done(.success(enabled ? .enabled : .notRegistered)) },
@@ -58,7 +59,7 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
                 try await captureAll()
                 controller.windowForTest?.close()
                 Settings.resetTestConfiguration()
-                print("DISPLAY_CAPTURE_COMPLETE count=\(before ? 4 : 8) before=\(before)")
+                print("DISPLAY_CAPTURE_COMPLETE count=\(nativeSelected ? 2 : (before ? 4 : 8)) before=\(before)")
                 fflush(stdout)
                 NSApp.terminate(nil)
             } catch {
@@ -74,13 +75,13 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
 
     @MainActor private func captureAll() async throws {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        for glass in [false, true] {
+        for glass in nativeSelected ? [true] : [false, true] {
             Settings.liquidGlassStyle = .regular
             Settings.liquidGlassEnabled = glass
             for dark in [false, true] {
                 Settings.colorScheme = dark ? .dark : .light
                 NSApp.appearance = NSAppearance(named: dark ? .darkAqua : .aqua)
-                for percentage in before ? [true] : [false, true] {
+                for percentage in before || nativeSelected ? [true] : [false, true] {
                     Settings.showsMenuBarPercentage = percentage
                     controller.selectSectionForTest(identifier: "menu-bar-icon")
                     controller.refreshSectionsForTest()
@@ -110,6 +111,36 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
                             row["fontSize"] = text.font?.pointSize
                             row["intrinsicWidth"] = text.intrinsicContentSize.width
                             row["intrinsicHeight"] = text.intrinsicContentSize.height
+                            let insets = text.alignmentRectInsets
+                            row["alignmentRectInsets"] = [insets.top, insets.left, insets.bottom, insets.right]
+                            if let parent = text.superview {
+                                let alignment = parent.convert(text.alignmentRect(forFrame: text.frame), to: content)
+                                row["alignmentRect"] = [alignment.minX, alignment.minY, alignment.width, alignment.height]
+                            }
+                            if let cell = text.cell {
+                                let drawing = text.convert(cell.drawingRect(forBounds: text.bounds), to: content)
+                                let title = text.convert(cell.titleRect(forBounds: text.bounds), to: content)
+                                row["cellDrawingRect"] = [drawing.minX, drawing.minY, drawing.width, drawing.height]
+                                row["cellTitleRect"] = [title.minX, title.minY, title.width, title.height]
+                            }
+                            let size = text.attributedStringValue.size()
+                            row["attributedStringSize"] = [size.width, size.height]
+                            var state = text.superview
+                            while let candidate = state,
+                                  !(candidate.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.state.") ?? false) {
+                                state = candidate.superview
+                            }
+                            if let state, let parent = text.superview {
+                                row["stateIdentifier"] = state.identifier?.rawValue
+                                let alignment = parent.convert(text.alignmentRect(forFrame: text.frame), to: state)
+                                row["alignmentRectInState"] = [alignment.minX, alignment.minY, alignment.width, alignment.height]
+                                if let cell = text.cell {
+                                    let drawing = text.convert(cell.drawingRect(forBounds: text.bounds), to: state)
+                                    let title = text.convert(cell.titleRect(forBounds: text.bounds), to: state)
+                                    row["cellDrawingRectInState"] = [drawing.minX, drawing.minY, drawing.width, drawing.height]
+                                    row["cellTitleRectInState"] = [title.minX, title.minY, title.width, title.height]
+                                }
+                            }
                         }
                         if let image = view as? NSImageView, let artwork = image.image {
                             row["imageSize"] = [artwork.size.width, artwork.size.height]
@@ -121,6 +152,7 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
                         "schema": 1, "before": before, "glassRequested": glass,
                         "glassEffective": Settings.usesLiquidGlass, "dark": dark,
                         "showsPercentage": percentage, "windowKey": window.isKeyWindow,
+                        "selectedIconStyle": Settings.menuBarIconStyle == .native ? "native" : "wattson",
                         "windowSize": [window.frame.width, window.frame.height],
                         "contentSize": [content.bounds.width, content.bounds.height],
                         "increaseContrast": ProcessInfo.processInfo.environment["WATTSON_FORCE_INCREASE_CONTRAST"] == "1",

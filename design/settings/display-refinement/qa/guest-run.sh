@@ -44,6 +44,7 @@ EOF
         wattson_run_timeout 240 /usr/bin/env WATTSON_FORCE_INCREASE_CONTRAST="$contrast" WATTSON_FORCE_REDUCE_TRANSPARENCY="$transparency" WATTSON_FORCE_REDUCE_MOTION=1 /usr/bin/python3 "$snapshot/capture-compositor.py" "$app/Contents/MacOS/DisplayCapture" "$share/results/$phase-$variant" ${before_arg[@]+"${before_arg[@]}"}
     done
     if [[ "$phase" == after ]]; then
+        wattson_run_timeout 240 /usr/bin/env WATTSON_FORCE_INCREASE_CONTRAST=0 WATTSON_FORCE_REDUCE_TRANSPARENCY=0 WATTSON_FORCE_REDUCE_MOTION=1 /usr/bin/python3 "$snapshot/capture-compositor.py" "$app/Contents/MacOS/DisplayCapture" "$share/results/after-native-selected" --native-selected
         cd "$src"
         _WATTSON_RUNNER_STARTING=1
         /usr/bin/python3 "$src/scripts/lib/run_owned.py" --grace 65 --timeout 360 -- /usr/bin/env WATTSON_RUN_INTERACTION=1 PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -m unittest discover -s tests -p test_settings_window_contract.py -v > "$share/results/settings-contract.log" 2> "$share/results/settings-contract.err" &

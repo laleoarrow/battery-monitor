@@ -106,7 +106,7 @@ checks['guestCompleted']='DISPLAY_SETTINGS_CAPTURE_AND_NATIVE_CONTRACT_PASSED' i
 contract=results/'settings-contract.log';errors=results/'settings-contract.err'
 checks['nativeAssertionsCompleted']=contract.exists() and 'all assertions complete' in contract.read_text()
 checks['unittestPassed']=errors.exists() and '\nOK\n' in errors.read_text()
-for name,count in [('before-baseline',4),('after-baseline',8),('after-high-contrast',8),('after-reduce-transparency',8)]:
+for name,count in [('before-baseline',4),('after-baseline',8),('after-high-contrast',8),('after-reduce-transparency',8),('after-native-selected',2)]:
     directory=results/name;path=directory/'capture-results.json'
     report=json.loads(path.read_text()) if path.is_file() else {}
     checks[name]=report.get('allPassed') is True and report.get('captureCount')==count and len(list(directory.glob('*.png')))==count and len(list(directory.glob('*-geometry.json')))==count

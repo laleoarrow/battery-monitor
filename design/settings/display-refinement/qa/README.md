@@ -25,9 +25,14 @@ surface, rather than bitmap approximations. The expected set is:
 - After: Classic/Glass × Light/Dark × percentage Off/On, eight captures.
 - After with forced Increase Contrast: the same eight captures.
 - After with forced Reduce Transparency: the same eight captures.
+- After with macOS 26 selected: Glass × Light/Dark with percentage On, two
+  additional captures to inspect the lower selected row against the surface.
 
 Each frame has real view geometry, native image sizes, visible text/font sizes
-and intrinsic text widths recorded alongside its PNG. The unmodified fixture
+and intrinsic text widths recorded alongside its PNG. NSTextField frame padding,
+alignment rectangles, cell drawing/title rectangles and attributed text sizes
+are recorded separately, so transparent native frame padding is not mistaken
+for clipped text. The fixture
 uses environment-only accessibility overrides; system accessibility preferences
 are never changed. The complete native Settings contract then runs once with
 `WATTSON_RUN_INTERACTION=1`. Its own assertions cover persistence, keyboard,

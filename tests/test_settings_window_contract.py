@@ -37,6 +37,7 @@ class SettingsWindowContractTests(unittest.TestCase):
         harness = textwrap.dedent(
             r"""
             import AppKit
+            import CoreText
             import Darwin
             import Foundation
 
@@ -1212,8 +1213,20 @@ class SettingsWindowContractTests(unittest.TestCase):
                         require(percentage.isHidden == !showingPercentage,
                             "one percentage choice updates both retained style rows: " + suffix)
                         if showingPercentage {
-                            let textInState = percentage.convert(percentage.bounds, to: state)
-                            require(percentage.attributedStringValue.size().width <= percentage.frame.width + 0.5
+                            // NSTextField adds transparent frame padding outside its
+                            // alignment rect. Measure text and glyph ink inside the
+                            // actual column rather than treating that padding as ink.
+                            let textInState = percentage.superview!.convert(
+                                percentage.alignmentRect(forFrame: percentage.frame), to: state
+                            )
+                            let textSize = percentage.attributedStringValue.size()
+                            let textInk = CTLineGetBoundsWithOptions(
+                                CTLineCreateWithAttributedString(percentage.attributedStringValue),
+                                .useGlyphPathBounds
+                            )
+                            require(textSize.width <= textInState.width + 0.5
+                                && textSize.height <= textInState.height + 0.5
+                                && textInk.minX >= -0.5 && textInk.maxX <= textInState.width + 0.5
                                 && state.bounds.insetBy(dx: -0.5, dy: -0.5).contains(textInState)
                                 && textInState.maxX <= glyphInState.minX + 0.5,
                                 "percentage stays fully visible to the left of its icon: "
