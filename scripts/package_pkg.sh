@@ -45,10 +45,12 @@ OUTPUT_PKG="$DIST_DIR/${APP_NAME}-v${APP_VERSION}-macos-universal.pkg"
     || fail "release build metadata does not match VERSION"
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$APP_VERSION" ]] \
     || fail "release app version does not match VERSION"
-/usr/bin/xcrun lipo "$APP_DIR/Contents/MacOS/Wattson" -verify_arch arm64 x86_64 \
-    || fail "release app is not universal"
-/usr/bin/xcrun lipo "$HELPER_EXECUTABLE" -verify_arch arm64 x86_64 \
-    || fail "release helper is not universal"
+for architecture in arm64 x86_64; do
+    /usr/bin/xcrun lipo "$APP_DIR/Contents/MacOS/Wattson" -verify_arch "$architecture" \
+        || fail "release app is missing $architecture"
+    /usr/bin/xcrun lipo "$HELPER_EXECUTABLE" -verify_arch "$architecture" \
+        || fail "release helper is missing $architecture"
+done
 /usr/bin/codesign --verify --deep --strict "$APP_DIR"
 /usr/bin/codesign --verify --strict "$HELPER_EXECUTABLE"
 

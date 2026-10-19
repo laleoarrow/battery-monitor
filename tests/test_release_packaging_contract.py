@@ -2,9 +2,11 @@ import json
 import pathlib
 import plistlib
 import re
+import shlex
 import stat
 import struct
 import subprocess
+import sys
 import unittest
 import xml.etree.ElementTree as ET
 import zlib
@@ -342,11 +344,70 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn('--scratch-path "$SWIFTPM_BUILD_DIR/$architecture"', build)
         self.assertIn('lipo -create "${APP_SLICES[@]}"', build)
         self.assertIn('lipo -create "${HELPER_SLICES[@]}"', build)
-        self.assertIn('lipo "$binary_path" -verify_arch arm64 x86_64', build)
+        self.assertIn('lipo "$binary_path" -verify_arch "$architecture"', build)
         self.assertIn('vtool -arch "$architecture" -show-build', build)
         self.assertIn('MIN_MACOS_VERSION="12.0"', build)
         self.assertNotIn("swiftc", build)
         self.assertNotIn("fall back", build.lower())
+
+    @unittest.skipUnless(sys.platform == "darwin", "requires the macOS lipo tool")
+    def test_universal_verifiers_require_both_architectures_with_single_arch_arguments(self):
+        # Xcode 27 rejects the former two-architecture argv. Exercise the real
+        # verifier functions with real Mach-O fixtures, then a stricter parser
+        # seam so an older host lipo cannot hide the regression.
+        with TemporaryDirectory(prefix="lipo contract-") as folder:
+            scratch = pathlib.Path(folder)
+            source = scratch / "fixture.c"
+            source.write_text("int main(void) { return 0; }\n", encoding="utf-8")
+            for architecture in ("arm64", "x86_64"):
+                run(["/usr/bin/xcrun", "clang", "-target",
+                     f"{architecture}-apple-macos12.0", str(source),
+                     "-o", str(scratch / architecture)], check=True,
+                    capture_output=True, timeout=30)
+            universal = scratch / "universal"
+            run(["/usr/bin/xcrun", "lipo", "-create", str(scratch / "arm64"),
+                 str(scratch / "x86_64"), "-output", str(universal)],
+                check=True, capture_output=True, timeout=10)
+            malformed = scratch / "malformed"
+            malformed.write_text("not a Mach-O file\n", encoding="utf-8")
+            parser = scratch / "xcrun"
+            parser.write_text("""#!/usr/bin/python3
+import os, sys
+arguments = sys.argv[1:]
+if arguments[0] == 'lipo' and '-verify_arch' in arguments:
+    if len(arguments[arguments.index('-verify_arch') + 1:]) != 1:
+        sys.exit('verify_arch requires exactly one architecture')
+os.execv('/usr/bin/xcrun', ['/usr/bin/xcrun', *arguments])
+""", encoding="utf-8")
+            parser.chmod(0o755)
+            old_arguments = run([str(parser), "lipo", str(universal),
+                                 "-verify_arch", "arm64", "x86_64"],
+                                capture_output=True, text=True, timeout=10)
+            self.assertNotEqual(old_arguments.returncode, 0)
+            self.assertIn("exactly one architecture", old_arguments.stderr)
+            for script_name, function in (("build_release.sh", "verify_universal_binary"),
+                                          ("verify_release.sh", "verify_binary")):
+                body = re.search(rf"(?ms)^{function}\(\) \{{.*?^\}}",
+                                 self.source[script_name]).group()
+                for tool in ("/usr/bin/xcrun", str(parser)):
+                    harness = ('set -euo pipefail\nMIN_MACOS_VERSION=12.0\n'
+                               'fail() { echo "$*" >&2; exit 1; }\n'
+                               + body.replace("/usr/bin/xcrun", shlex.quote(tool))
+                               + f'\n{function} "$1"\n')
+                    for fixture in (universal, scratch / "arm64", scratch / "x86_64", malformed):
+                        with self.subTest(script=script_name, tool=tool, fixture=fixture.name):
+                            result = run(["/bin/bash", "-c", harness, "lipo-verifier", str(fixture)],
+                                         capture_output=True, text=True, timeout=10)
+                            self.assertEqual(result.returncode == 0, fixture == universal,
+                                             result.stdout + result.stderr)
+        shipping = [self.source[name] for name in ("build_release.sh", "verify_release.sh",
+                    "verify_dmg.sh", "package_pkg.sh")]
+        shipping += [(ROOT / name).read_text(encoding="utf-8") for name in (
+            "scripts/build_diagnostics.sh", ".github/workflows/macos-helper-install.yml",
+            ".github/workflows/homebrew-install-test.yml")]
+        for text in shipping:
+            self.assertNotIn("-verify_arch arm64 x86_64", text)
+            self.assertIn('-verify_arch "$architecture"', text)
 
     def test_app_and_helper_use_one_explicit_signing_mode(self):
         build = self.source["build_release.sh"]
@@ -671,7 +732,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
         self.assertIn("DMG must expose only Wattson.app and an Applications link", verify)
         self.assertIn('/usr/bin/readlink "$MOUNT_DIR/Applications"', verify)
         self.assertIn('/usr/bin/codesign --verify --deep --strict "$EMBEDDED_APP"', verify)
-        self.assertIn('lipo "$APP_BIN" -verify_arch arm64 x86_64', verify)
+        self.assertIn('lipo "$APP_BIN" -verify_arch "$architecture"', verify)
         self.assertIn(
             'verify_dmg.sh" "$DMG_PATH" "$PACKAGED_APP_DIR"',
             self.source["verify_release.sh"],

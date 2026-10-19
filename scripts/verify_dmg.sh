@@ -67,7 +67,9 @@ if /usr/bin/find "$EMBEDDED_APP" \
 fi
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_INFO")" == com.leoarrow.wattson ]]
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :LSMinimumSystemVersion' "$APP_INFO")" == 12.0 ]]
-/usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
+for architecture in arm64 x86_64; do
+    /usr/bin/xcrun lipo "$APP_BIN" -verify_arch "$architecture"
+done
 /usr/bin/codesign --verify --deep --strict "$EMBEDDED_APP"
 
 if [[ -n "$EXPECTED_APP" ]]; then

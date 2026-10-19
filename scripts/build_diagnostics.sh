@@ -99,15 +99,15 @@ EOF
 /usr/bin/xattr -cr "$APP_DIR"
 /usr/bin/codesign --force --sign - --identifier "$BUNDLE_ID" "$APP_DIR" >/dev/null
 /usr/bin/codesign --verify --deep --strict "$APP_DIR"
-/usr/bin/xcrun lipo "$EXECUTABLE_PATH" -verify_arch arm64 x86_64 \
-    || fail "diagnostics executable is not universal"
-wattson_run "$EXECUTABLE_PATH" --host-redaction-self-test \
-    || fail "diagnostics hostname redaction self-test failed"
 for architecture in arm64 x86_64; do
+    /usr/bin/xcrun lipo "$EXECUTABLE_PATH" -verify_arch "$architecture" \
+        || fail "diagnostics executable is missing $architecture"
     build_info="$(/usr/bin/xcrun vtool -arch "$architecture" -show-build "$EXECUTABLE_PATH")"
     /usr/bin/grep -Eq "minos[[:space:]]+$MIN_MACOS_VERSION([[:space:]]|$)" <<< "$build_info" \
         || fail "$architecture slice does not target macOS $MIN_MACOS_VERSION"
 done
+wattson_run "$EXECUTABLE_PATH" --host-redaction-self-test \
+    || fail "diagnostics hostname redaction self-test failed"
 
 wattson_run /usr/bin/ditto -c -k \
     --norsrc --noextattr --noqtn --noacl --keepParent \
@@ -121,9 +121,11 @@ if /usr/bin/find "$EXTRACTED_APP" -name '._*' -print -quit | /usr/bin/grep -q .;
     fail "archive contains AppleDouble metadata inside the app bundle"
 fi
 /usr/bin/codesign --verify --deep --strict "$EXTRACTED_APP"
-/usr/bin/xcrun lipo "$EXTRACTED_APP/Contents/MacOS/$APP_NAME" \
-    -verify_arch arm64 x86_64 \
-    || fail "extracted diagnostics executable is not universal"
+for architecture in arm64 x86_64; do
+    /usr/bin/xcrun lipo "$EXTRACTED_APP/Contents/MacOS/$APP_NAME" \
+        -verify_arch "$architecture" \
+        || fail "extracted diagnostics executable is missing $architecture"
+done
 
 {
     printf 'name=Wattson Diagnostics\n'

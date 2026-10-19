@@ -131,7 +131,7 @@ class WattsonDiagnosticsContractTests(unittest.TestCase):
     def test_build_produces_a_universal_macos_12_app_archive(self):
         self.assertIn("arm64 x86_64", BUILD_SCRIPT)
         self.assertIn("-apple-macos${MIN_MACOS_VERSION}", BUILD_SCRIPT)
-        self.assertIn("-verify_arch arm64 x86_64", BUILD_SCRIPT)
+        self.assertIn('-verify_arch "$architecture"', BUILD_SCRIPT)
         self.assertIn("Wattson-Diagnostics-v${DIAGNOSTICS_VERSION}-macos-universal.zip", BUILD_SCRIPT)
         self.assertIn("codesign --verify --deep --strict", BUILD_SCRIPT)
         self.assertIn("--norsrc --noextattr --noqtn --noacl", BUILD_SCRIPT)

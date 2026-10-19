@@ -481,8 +481,10 @@ jobs:
           [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]]
           [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_BIN")" == "0:0:544" ]]
           [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_PLIST")" == "0:0:644" ]]
-          /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
-          /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64
+          for architecture in arm64 x86_64; do
+            /usr/bin/xcrun lipo "$APP_BIN" -verify_arch "$architecture"
+            /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch "$architecture"
+          done
           /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null
           /usr/bin/sudo -n "$HELPER_BIN" --health-probe
           assert_helper_enabled

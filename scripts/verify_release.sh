@@ -30,12 +30,12 @@ verify_binary() {
 
     [[ -f "$binary_path" && ! -L "$binary_path" ]] \
         || fail "missing binary: $binary_path"
-    /usr/bin/xcrun lipo "$binary_path" -verify_arch arm64 x86_64 \
-        || fail "binary is missing a required architecture: $binary_path"
     architectures="$(/usr/bin/xcrun lipo -archs "$binary_path")"
     [[ "$(/usr/bin/wc -w <<< "$architectures" | /usr/bin/tr -d ' ')" == "2" ]] \
         || fail "binary contains unexpected architectures: $architectures"
     for architecture in arm64 x86_64; do
+        /usr/bin/xcrun lipo "$binary_path" -verify_arch "$architecture" \
+            || fail "binary is missing $architecture: $binary_path"
         build_info="$(/usr/bin/xcrun vtool -arch "$architecture" -show-build "$binary_path")"
         /usr/bin/grep -Eq "minos[[:space:]]+$MIN_MACOS_VERSION([[:space:]]|$)" <<< "$build_info" \
             || fail "$architecture slice has the wrong deployment target: $binary_path"

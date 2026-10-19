@@ -460,8 +460,10 @@ jobs:
           [[ -n "$PACKAGED_APP_BIN" && -n "$PACKAGED_APP_INFO" && -n "$PACKAGED_HELPER" ]]
           PACKAGED_APP_DIR="${PACKAGED_APP_BIN%/Contents/MacOS/Wattson}"
           readonly PACKAGED_APP_DIR
-          /usr/bin/xcrun lipo "$PACKAGED_APP_BIN" -verify_arch arm64 x86_64
-          /usr/bin/xcrun lipo "$PACKAGED_HELPER" -verify_arch arm64 x86_64
+          for architecture in arm64 x86_64; do
+            /usr/bin/xcrun lipo "$PACKAGED_APP_BIN" -verify_arch "$architecture"
+            /usr/bin/xcrun lipo "$PACKAGED_HELPER" -verify_arch "$architecture"
+          done
           [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$PACKAGED_APP_INFO")" == "$WATTSON_VERSION" ]]
 
           if [[ "$SIGNED_RELEASE" == "1" ]]; then
@@ -737,8 +739,10 @@ jobs:
             [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]]
             [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]]
             [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]]
-            /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
-            /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64
+            for architecture in arm64 x86_64; do
+              /usr/bin/xcrun lipo "$APP_BIN" -verify_arch "$architecture"
+              /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch "$architecture"
+            done
             /usr/bin/codesign --verify --deep --strict "$APP_DIR"
             /usr/bin/sudo -n /usr/bin/codesign --verify --strict "$HELPER_BIN"
             [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_BIN")" == "0:0:544" ]]
@@ -1143,8 +1147,10 @@ jobs:
           [[ "$(/usr/libexec/PlistBuddy -c 'Print :ProgramArguments:2' "$LOGIN_PLIST")" == "/Applications/Wattson.app" ]]
           /bin/launchctl print "$LOGIN_TARGET" >/dev/null
           [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]]
-          /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
-          /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64
+          for architecture in arm64 x86_64; do
+            /usr/bin/xcrun lipo "$APP_BIN" -verify_arch "$architecture"
+            /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch "$architecture"
+          done
           /usr/bin/codesign --verify --deep --strict "$APP_DIR"
           /usr/bin/sudo -n /usr/bin/codesign --verify --strict "$HELPER_BIN"
           /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null

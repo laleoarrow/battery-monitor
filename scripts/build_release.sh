@@ -98,9 +98,9 @@ verify_universal_binary() {
     local architecture
     local build_info
 
-    /usr/bin/xcrun lipo "$binary_path" -verify_arch arm64 x86_64 \
-        || fail "binary is not universal (arm64 + x86_64): $binary_path"
     for architecture in arm64 x86_64; do
+        /usr/bin/xcrun lipo "$binary_path" -verify_arch "$architecture" \
+            || fail "binary is missing $architecture: $binary_path"
         build_info="$(/usr/bin/xcrun vtool -arch "$architecture" -show-build "$binary_path")"
         /usr/bin/grep -Eq "minos[[:space:]]+$MIN_MACOS_VERSION([[:space:]]|$)" <<< "$build_info" \
             || fail "$architecture slice does not target macOS $MIN_MACOS_VERSION: $binary_path"
