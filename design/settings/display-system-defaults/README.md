@@ -8,6 +8,9 @@ actual `NSGlassEffectView` default corner radius; boxed content reads that
 radius instead of guessing a constant. The existing Classic General and
 Modules surfaces are outside this visual change.
 
+The native small radio controls keep an eight-point left margin. Their seven
+preview columns retain their prior global alignment and natural artwork sizes.
+
 Display now contains three native style choices with one shared seven-state
 header and a small percentage popup. Existing `wattson` and `native` saved
 values and drawing remain compatible. The new `native27` choice uses a filled
@@ -40,3 +43,10 @@ macOS 27 / SDK 27 rendering, settings interaction and the existing full CI gate.
 The canonical installed App, helper, daemon and user preferences are preserved.
 Run identities, results, cleanup evidence and remaining limits will be recorded
 after those executions complete. No release or installation is requested here.
+
+The first `40a1493` VM attempt is retained as rejected evidence: all 38 frames
+were captured, but the selected Command Line Tools could not import XCTest,
+so the following native contract was never reached. The frames also exposed
+the flush-left regular radio that prompted the small-control/inset correction.
+The revised VM runner keeps the 38 real frames and eight native contract tests;
+the 14 new Swift tests run with full Xcode on both hosted OS versions.

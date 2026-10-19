@@ -1130,6 +1130,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let iconHeading = view("settings.menu-bar-icon.heading", in: first)
             let iconSubtitle = view("settings.menu-bar-icon.subtitle", in: first)
             let iconGroup = view("settings.menu-bar-icon.group", in: first)
+            let iconPreviewGroup = view("settings.menu-bar-icon.preview-group", in: first)
             let iconButtons = descendants(ofType: NSButton.self, in: iconPage)
                 .filter { $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.style.") == true }
             let wattsonStyle = button("Wattson", in: first)
@@ -1164,8 +1165,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "one shared header names the seven aligned runtime states")
             require(previewStates.map(\.visibleLabel) == expectedStateLabels,
                 "preview fixtures use the same visible production order")
-            require(iconButtons.allSatisfy { approximately($0.frame.width, 503) },
-                "all three style options fit the existing 503-point Settings content width")
+            require(approximately(iconPreviewGroup.frame.width, 503)
+                && iconButtons.allSatisfy { approximately($0.frame.width, iconGroup.bounds.width) },
+                "the preview group retains the existing 503-point width with full-width native option rows")
             let iconRects = iconButtons.map { $0.convert($0.bounds, to: iconPage) }
             require(zip(iconRects, iconRects.dropFirst()).allSatisfy {
                     !$0.intersects($1) && approximately($0.minX, $1.minX)
@@ -1188,9 +1190,11 @@ class SettingsWindowContractTests(unittest.TestCase):
                 $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.title.") != true
             }, "native radio titles have no duplicate text labels")
 
-            let nativeRadioFocusRing = NSButton(
+            let nativeRadioReference = NSButton(
                 radioButtonWithTitle: "Reference", target: nil, action: nil
-            ).focusRingType
+            )
+            nativeRadioReference.controlSize = .small
+            nativeRadioReference.font = .systemFont(ofSize: NSFont.smallSystemFontSize)
             func verifyNativeStyleControls() {
                 for choice in styleChoices {
                     let suffix = choice.suffix
@@ -1198,7 +1202,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                     let expectedTitle = choice.title
                     require(styleButton.cell is NSButtonCell && styleButton.title == expectedTitle
                         && styleButton.accessibilityRole() == .radioButton
-                        && styleButton.focusRingType == nativeRadioFocusRing
+                        && styleButton.focusRingType == nativeRadioReference.focusRingType
+                        && styleButton.controlSize == nativeRadioReference.controlSize
                         && styleButton.focusRingType != .none,
                         "style uses a real titled native radio cell and system focus: " + suffix)
                     guard let cell = styleButton.cell as? NSButtonCell,
@@ -1206,13 +1211,22 @@ class SettingsWindowContractTests(unittest.TestCase):
                         require(false, "native style retains its button cell and font")
                         return
                     }
+                    let radioRect = cell.imageRect(forBounds: styleButton.bounds)
+                    let radioInGroup = styleButton.convert(radioRect, to: iconPreviewGroup)
+                    require(!radioRect.isEmpty && radioInGroup.minX >= 8
+                        && iconPreviewGroup.bounds.insetBy(dx: -0.5, dy: -0.5).contains(radioInGroup),
+                        "native radio artwork keeps an eight-point margin inside its group: "
+                            + "\(suffix) radio=\(radioInGroup) group=\(iconPreviewGroup.bounds)")
                     let titleRect = cell.titleRect(forBounds: styleButton.bounds)
                     let titleSize = (styleButton.title as NSString).size(withAttributes: [.font: font])
                     let firstState = iconStates.first {
                         $0.identifier?.rawValue == "settings.menu-bar-icon.state.\(suffix).battery"
                     }!
                     let previewStart = firstState.convert(firstState.bounds, to: styleButton).minX
-                    require(font.pointSize == 13 && styleButton.alignment == .left
+                    let previewInGroup = firstState.convert(firstState.bounds, to: iconPreviewGroup)
+                    require(approximately(previewInGroup.minX, 86),
+                        "the native radio inset preserves the existing preview column position")
+                    require(font.pointSize == nativeRadioReference.font?.pointSize && styleButton.alignment == .left
                         && titleSize.width <= titleRect.width + 0.5
                         && titleSize.height <= titleRect.height + 0.5
                         && styleButton.bounds.insetBy(dx: -0.5, dy: -0.5).contains(titleRect)

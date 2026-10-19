@@ -48,18 +48,6 @@ EOF
         wattson_run_timeout 240 /usr/bin/env WATTSON_FORCE_INCREASE_CONTRAST=0 WATTSON_FORCE_REDUCE_TRANSPARENCY=0 WATTSON_FORCE_REDUCE_MOTION=1 /usr/bin/python3 "$snapshot/capture-compositor.py" "$app/Contents/MacOS/DisplayCapture" "$share/results/after-macos27-selected" --macos27-selected
         wattson_run_timeout 240 /usr/bin/env WATTSON_FORCE_INCREASE_CONTRAST=0 WATTSON_FORCE_REDUCE_TRANSPARENCY=0 WATTSON_FORCE_REDUCE_MOTION=1 /usr/bin/python3 "$snapshot/capture-compositor.py" "$app/Contents/MacOS/DisplayCapture" "$share/results/after-shared-settings" --shared-settings
         cd "$src"
-        focused_defaults="Wattson.SwiftTests.MenuBarIconStyle.$(/usr/bin/uuidgen)"
-        wattson_cleanup_add_defaults "$focused_defaults"
-        wattson_run_timeout 600 /usr/bin/env WATTSON_ICON_STYLE_TEST_DEFAULTS_SUITE="$focused_defaults" CLANG_MODULE_CACHE_PATH="$run_dir/swift-module-cache" SWIFTPM_MODULECACHE_OVERRIDE="$run_dir/swift-module-cache" xcrun swift test --package-path "$src" --scratch-path "$run_dir/swiftpm-build" --cache-path "$run_dir/swiftpm-cache" --config-path "$run_dir/swiftpm-config" --security-path "$run_dir/swiftpm-security" --filter '(BatteryIcon27Tests|MenuBarIconStyleSettingsTests)' > "$share/results/focused-swift.log" 2>&1
-        python3 - "$share/results" <<'PY'
-import json,pathlib,re,sys
-root=pathlib.Path(sys.argv[1]);log=(root/'focused-swift.log').read_text()
-checks={'batteryNineTests':"Test Suite 'BatteryIcon27Tests' passed" in log and bool(re.search(r'Executed 9 tests?, with 0 failures',log)),
-        'preferencesFiveTests':"Test Suite 'MenuBarIconStyleSettingsTests' passed" in log and bool(re.search(r'Executed 5 tests?, with 0 failures',log)),
-        'executedFourteenTests':bool(re.search(r'Executed 14 tests?, with 0 failures',log))}
-report={'schema':1,'allPassed':all(checks.values()),'checks':checks}
-(root/'focused-swift-results.json').write_text(json.dumps(report,indent=2)+'\n');assert report['allPassed'],checks
-PY
         _WATTSON_RUNNER_STARTING=1
         /usr/bin/python3 "$src/scripts/lib/run_owned.py" --grace 65 --timeout 360 -- /usr/bin/env WATTSON_RUN_INTERACTION=1 PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -m unittest discover -s tests -p test_settings_window_contract.py -v > "$share/results/settings-contract.log" 2> "$share/results/settings-contract.err" &
         _WATTSON_RUNNER_PID=$!

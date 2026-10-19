@@ -41,11 +41,17 @@ and default focus properties are recorded without using private KVC. Actual
 glass corner radii are compared with a freshly constructed native glass view;
 boxed controls record their matching radius separately. The fixture
 uses environment-only accessibility overrides; system accessibility preferences
-are never changed. The 26 VM then runs only `BatteryIcon27Tests` (nine tests)
-and `MenuBarIconStyleSettingsTests` (five tests), with package caches in owned
-scratch and an exact parent-owned preferences suite. The complete native
-Settings contract runs once with `WATTSON_RUN_INTERACTION=1`. Its assertions cover persistence, keyboard,
+are never changed. The complete native Settings contract runs once with
+`WATTSON_RUN_INTERACTION=1`. Its assertions cover persistence, keyboard,
 focus, real preview bounds and in-place appearance refreshes.
+
+The 26.6.1 GUI VM has Command Line Tools without XCTest. The attempted SwiftPM
+execution in `native-macos26-40a1493` failed to compile for that environment
+reason and is not accepted evidence of the 14 Swift tests. `BatteryIcon27Tests`
+(nine tests) and `MenuBarIconStyleSettingsTests` (five tests) instead belong to
+the actual full-Xcode 26 and 27 hosted CI jobs. No test framework is copied or
+emulated in the VM. Its acceptance requires the 38 captures and all eight
+native contract tests; it does not claim SwiftPM execution.
 
 Acceptance also requires matching production-source hashes before and after
 execution, the actual contract completion marker, exact-suite cleanup, a
@@ -58,7 +64,7 @@ evidence; runnable bundles, source/build scratch and shares are disposable.
 portable GUI-only entrypoint for an isolated hosted runner. It preserves the
 same fixture and capture driver and runs the 34 after-change captures and the
 full eight-test native Settings contract, without the four original baseline
-frames or the separately executed focused Swift tests.
+frames. SwiftPM tests run separately in full-Xcode CI.
 It requires an Aqua session, no canonical Wattson installation, clean tracked
 inputs and a new caller-owned evidence directory. Its app bundle, unique
 preferences domain, container and build/process resources use the same shared

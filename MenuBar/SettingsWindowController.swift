@@ -108,6 +108,7 @@ private enum SettingsStyle {
     static let moduleRowHeight: CGFloat = 72
     static let iconStyleRowHeight: CGFloat = 56
     static let iconStyleLabelWidth: CGFloat = 86
+    static let iconStyleContentInset: CGFloat = 8
     static let iconStyleHeaderHeight: CGFloat = 24
     static let surfaceCornerRadius: CGFloat = 14
     static let groupOpticalInset: CGFloat = contentHorizontalInset
@@ -2278,7 +2279,8 @@ private final class MenuBarIconStyleButton: NSButton {
         )
         setButtonType(.radio)
         title = visibleTitle
-        font = SettingsStyle.primaryFont
+        controlSize = .small
+        font = .systemFont(ofSize: NSFont.smallSystemFontSize)
         alignment = .left
         isBordered = false
         imagePosition = .imageLeading
@@ -2352,7 +2354,7 @@ private final class MenuBarIconStyleButton: NSButton {
 
         addSubview(states)
         NSLayoutConstraint.activate([
-            states.leadingAnchor.constraint(equalTo: leadingAnchor, constant: SettingsStyle.iconStyleLabelWidth),
+            states.leadingAnchor.constraint(equalTo: leadingAnchor, constant: SettingsStyle.iconStyleLabelWidth - SettingsStyle.iconStyleContentInset),
             states.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
             states.topAnchor.constraint(equalTo: topAnchor),
             states.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -2562,7 +2564,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             header.trailingAnchor.constraint(equalTo: preview.trailingAnchor),
             header.topAnchor.constraint(equalTo: preview.topAnchor),
             header.heightAnchor.constraint(equalToConstant: SettingsStyle.iconStyleHeaderHeight),
-            group.leadingAnchor.constraint(equalTo: preview.leadingAnchor),
+            group.leadingAnchor.constraint(equalTo: preview.leadingAnchor, constant: SettingsStyle.iconStyleContentInset),
             group.trailingAnchor.constraint(equalTo: preview.trailingAnchor),
             group.topAnchor.constraint(equalTo: header.bottomAnchor),
             group.bottomAnchor.constraint(equalTo: preview.bottomAnchor),
