@@ -116,6 +116,10 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
                             if let parent = text.superview {
                                 let alignment = parent.convert(text.alignmentRect(forFrame: text.frame), to: content)
                                 row["alignmentRect"] = [alignment.minX, alignment.minY, alignment.width, alignment.height]
+                                if identifier.hasPrefix("settings.menu-bar-icon.state-label.") {
+                                    let cell = parent.convert(parent.bounds, to: content)
+                                    row["headerCellFrame"] = [cell.minX, cell.minY, cell.width, cell.height]
+                                }
                             }
                             if let cell = text.cell {
                                 let drawing = text.convert(cell.drawingRect(forBounds: text.bounds), to: content)

@@ -109,7 +109,7 @@ private enum SettingsStyle {
     static let iconStyleRowHeight: CGFloat = 56
     static let iconStyleLabelWidth: CGFloat = 86
     static let iconStyleHeaderHeight: CGFloat = 24
-    static let iconStyleCornerRadius: CGFloat = 8
+    static let iconStyleCornerRadius: CGFloat = 12
     static let surfaceCornerRadius: CGFloat = 14
     static let glassGroupCornerRadius: CGFloat = 20
     static let groupOpticalInset: CGFloat = contentHorizontalInset
@@ -2415,14 +2415,14 @@ private final class MenuBarIconStyleButton: NSButton, SettingsContrastRefreshing
     var cardFillColor: NSColor {
         guard state == .on else { return .clear }
         return increaseContrast()
-            ? SettingsStyle.increasedContrastSelection
+            ? .controlBackgroundColor
             : SettingsStyle.selection
     }
 
     var cardBorderColor: NSColor {
         if state == .on {
             return increaseContrast()
-                ? SettingsStyle.increasedContrastSelectionBorder
+                ? .labelColor
                 : SettingsStyle.green
         }
         return increaseContrast() ? SettingsStyle.increasedContrastBorder : .clear
@@ -2468,7 +2468,7 @@ private final class MenuBarIconStyleButton: NSButton, SettingsContrastRefreshing
         drawCountForTest += 1
 #endif
         let row = NSBezierPath(
-            roundedRect: bounds.insetBy(dx: max(cardBorderWidth / 2, 1), dy: 1),
+            roundedRect: bounds.insetBy(dx: 4, dy: 4),
             xRadius: SettingsStyle.iconStyleCornerRadius,
             yRadius: SettingsStyle.iconStyleCornerRadius
         )
@@ -2482,7 +2482,9 @@ private final class MenuBarIconStyleButton: NSButton, SettingsContrastRefreshing
 
         let radioRect = NSRect(x: 6, y: bounds.midY - 6, width: 12, height: 12)
         let radio = NSBezierPath(ovalIn: radioRect)
-        let radioColor = state == .on ? SettingsStyle.green : SettingsStyle.secondaryText
+        let radioColor: NSColor = state == .on
+            ? (increaseContrast() ? .labelColor : SettingsStyle.green)
+            : SettingsStyle.secondaryText
         radioColor.setStroke()
         radio.lineWidth = increaseContrast() ? 2 : 1.25
         radio.stroke()
@@ -2494,7 +2496,7 @@ private final class MenuBarIconStyleButton: NSButton, SettingsContrastRefreshing
         if window?.firstResponder === self {
             NSColor.keyboardFocusIndicatorColor.setStroke()
             let focus = NSBezierPath(
-                roundedRect: bounds.insetBy(dx: 3, dy: 3),
+                roundedRect: bounds.insetBy(dx: 6, dy: 6),
                 xRadius: SettingsStyle.iconStyleCornerRadius - 2,
                 yRadius: SettingsStyle.iconStyleCornerRadius - 2
             )
@@ -2559,7 +2561,10 @@ private final class MenuBarIconSettingsSectionController: NSObject,
         header.identifier = NSUserInterfaceItemIdentifier("settings.menu-bar-icon.state-header")
         header.setAccessibilityElement(false)
         header.translatesAutoresizingMaskIntoConstraints = false
-        let labels = MenuBarIconPreviewState.allCases.map { state in
+        let labelCells = MenuBarIconPreviewState.allCases.map { state in
+            let cell = NSView()
+            cell.setAccessibilityElement(false)
+            cell.translatesAutoresizingMaskIntoConstraints = false
             let label = NSTextField(labelWithString: state.visibleLabel)
             label.identifier = NSUserInterfaceItemIdentifier(
                 "settings.menu-bar-icon.state-label.\(state.identifierSuffix)"
@@ -2570,9 +2575,15 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             label.lineBreakMode = .byClipping
             label.maximumNumberOfLines = 1
             label.setAccessibilityElement(false)
-            return label
+            label.translatesAutoresizingMaskIntoConstraints = false
+            cell.addSubview(label)
+            NSLayoutConstraint.activate([
+                label.centerXAnchor.constraint(equalTo: cell.centerXAnchor),
+                label.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
+            ])
+            return cell
         }
-        let stateLabels = NSStackView(views: labels)
+        let stateLabels = NSStackView(views: labelCells)
         stateLabels.orientation = .horizontal
         stateLabels.alignment = .height
         stateLabels.distribution = .fillEqually

@@ -1185,7 +1185,13 @@ class SettingsWindowContractTests(unittest.TestCase):
                 for (index, previewState) in previewStates.enumerated() {
                     let header = iconStateLabels[index]
                     let headerFrame = header.convert(header.bounds, to: iconPage)
-                    require(header.attributedStringValue.size().width <= header.frame.width + 1,
+                    let headerTextSize = header.attributedStringValue.size()
+                    let headerInk = CTLineGetBoundsWithOptions(
+                        CTLineCreateWithAttributedString(header.attributedStringValue),
+                        .useGlyphPathBounds
+                    )
+                    let headerTextOriginX = headerFrame.midX - headerTextSize.width / 2
+                    require(headerTextSize.width <= header.frame.width + 1,
                         "shared runtime-state label is readable: " + header.stringValue)
                     for style in ["wattson", "macos"] {
                         let suffix = "\(style).\(previewState.identifierSuffix)"
@@ -1201,6 +1207,10 @@ class SettingsWindowContractTests(unittest.TestCase):
                         let stateFrame = state.convert(state.bounds, to: iconPage)
                         require(approximately(headerFrame.midX, stateFrame.midX),
                             "shared column header aligns with both style rows: " + suffix)
+                        require(headerTextSize.width <= stateFrame.width + 0.5
+                            && headerTextOriginX + headerInk.minX >= stateFrame.minX - 0.5
+                            && headerTextOriginX + headerInk.maxX <= stateFrame.maxX + 0.5,
+                            "shared column header ink fits its corresponding preview column: " + suffix)
                         require((image.image?.size.width ?? 0) > 0
                             && (image.image?.size.height ?? 0) > 0
                             && approximately(image.bounds.size.width, image.image!.size.width)
@@ -1891,13 +1901,13 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "increased contrast gives both styles a legible two-point outline"
             )
             require(
-                srgbHex(controller.iconCardBorderColorForTest("Wattson")) == 0x8AD88E
+                isLabelColor(controller.iconCardBorderColorForTest("Wattson"))
                     && srgbHex(controller.iconCardBorderColorForTest("macOS 26")) == 0x8D949A,
                 "increased contrast distinguishes selected and unselected styles"
             )
             require(
-                srgbHex(controller.iconCardFillColorForTest("Wattson")) == 0x3B5944,
-                "increased contrast strengthens the shared selection fill"
+                controller.iconCardFillColorForTest("Wattson") == NSColor.controlBackgroundColor,
+                "increased contrast keeps real battery artwork on a readable neutral surface"
             )
             require(displayViewIdentities() == retainedDisplayViews, "contrast refresh reuses every Display control and preview")
             verifyDisplayPreviews(showingPercentage: false)
@@ -3120,9 +3130,10 @@ class SettingsWindowContractTests(unittest.TestCase):
             "if window?.firstResponder === self", 1
         )[0]
         self.assertIn(
-            "let radioColor = state == .on ? SettingsStyle.green : SettingsStyle.secondaryText",
+            "increaseContrast() ? .labelColor : SettingsStyle.green",
             radio,
         )
+        self.assertIn(": SettingsStyle.secondaryText", radio)
         self.assertIn("radioColor.setStroke()", radio)
         self.assertIn("radioColor.setFill()", radio)
         self.assertIn("if state == .on {", radio)
