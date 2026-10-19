@@ -1,0 +1,44 @@
+warning: 'battery-monitor': Invalid Exclude '/Users/runner/work/battery-monitor/battery-monitor/dist': File not found.
+warning: 'battery-monitor': Invalid Exclude '/Users/runner/work/battery-monitor/battery-monitor/dist': File not found.
+Building for debugging...
+[Constructing description]
+[Planning deferred tasks]
+[4 / 68] WattsonTests-product
+[34 / 69]
+[36 / 82] Wattson
+[38 / 82] Wattson
+[45 / 82]
+[46 / 82]
+[48 / 82]
+[48 / 82] Wattson
+/Users/runner/work/battery-monitor/battery-monitor/MenuBar/SettingsWindowController.swift:2077:50: [1;33mwarning: [1;39m'weak' ownership of capture 'self' differs from implicitly-captured strong reference in outer scope[0;0m [#]8;;https://docs.swift.org/compiler/documentation/diagnostics/implicit-strong-capture\ImplicitStrongCapture]8;;\]
+[0;36m2070 |[0;0m                 status: self.feedbackDetail.stringValue
+[0;36m2071 |[0;0m             )
+[0;36m2072 |[0;0m             DispatchQueue.global(qos: .utility).async {
+     [0;36m|[0;0m                                                       |- [1;39mnote: [1;39m'self' implicitly strongly captured here[0;0m
+     [0;36m|[0;0m                                                       `- [1;39mnote: [1;39madd 'self' as a capture list item to silence[0;0m
+[0;36m2073 |[0;0m                 let report = FeedbackDiagnostics.collect(context)
+[0;36m2074 |[0;0m                 let result: Result<Void, Error> = Result {
+[0;36m2075 |[0;0m                     try report.text.write(to: destination, atomically: true, encoding: .utf8)
+[0;36m2076 |[0;0m                 }
+[0;36m2077 |[0;0m                 DispatchQueue.main.async { [weak self] in
+     [0;36m|[0;0m                                                  |- [1;33mwarning: [1;39m'weak' ownership of capture 'self' differs from implicitly-captured strong reference in outer scope[0;0m [#]8;;https://docs.swift.org/compiler/documentation/diagnostics/implicit-strong-capture\ImplicitStrongCapture]8;;\]
+     [0;36m|[0;0m                                                  `- [1;39mnote: [1;39mexplicitly assign the capture list item to silence[0;0m
+[0;36m2078 |[0;0m                     guard let self else { return }
+[0;36m2079 |[0;0m                     self.feedbackButton.isEnabled = true
+
+[#ImplicitStrongCapture]: <https://docs.swift.org/compiler/documentation/diagnostics/implicit-strong-capture>
+[50 / 82] WattsonTests-product
+[52 / 82] WattsonHelperV5SupportTests-product
+[58 / 82] WattsonHelperV5SupportTests-product
+[60 / 82]
+[64 / 82] WattsonHelperV5SupportTests-product
+[66 / 82] Wattson
+[68 / 82] Wattson
+[72 / 83] WattsonTests-product
+[75 / 87] WattsonTests-product
+[76 / 87] WattsonTests-product
+[78 / 87] WattsonTests-product
+[81 / 87] WattsonTests-product
+[83 / 87] WattsonTests-product
+Build complete! (25.32 sec)

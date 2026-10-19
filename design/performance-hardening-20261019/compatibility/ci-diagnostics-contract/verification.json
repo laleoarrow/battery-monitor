@@ -1,0 +1,8 @@
+{
+  "sourceCommit": "683bf7699f4ee612896406325eb03a4af74b474a",
+  "workflowContractTests": 41,
+  "failed": 0,
+  "exitCode": 0,
+  "actionlint": "passed",
+  "scope": "Targeted workflow contracts only; failure and timeout paths execute the shared owned child runner and preserve logs. No app launch or canonical installation change."
+}

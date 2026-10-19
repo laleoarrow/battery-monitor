@@ -1,0 +1,9 @@
+# Universal architecture verification compatibility
+
+The actual macOS 27 / Xcode 27 validation built both release slices but rejected the former `lipo "$binary" -verify_arch arm64 x86_64` command with `-verify_arch requires exactly one input file`. That failed run remains in the separate compatibility record.
+
+All 14 shipping verification calls now check one required architecture per invocation. Build and release verification reuse their existing per-architecture `vtool` loops. Package, DMG, diagnostics and hosted install checks explicitly iterate both architectures. Existing minimum-system, signature, architecture-count and lifecycle requirements remain enforced. The diagnostics host self-test runs after its complete architecture/minimum-system validation.
+
+One new executable regression extracts the actual two release verifier functions. Real compiler/lipo fixtures prove that a fat ARM+Intel input passes and either thin input or malformed bytes fail. A small parser seam rejects the old two-architecture argument list and delegates accepted calls to the real host tools; this makes the regression meaningful on older Xcode versions too. All fixture state and children use the shared test lifecycle owner.
+
+Five directly affected contract and cleanup modules passed **90 tests, 0 failures, 0 skips**. A final test-only refinement quotes the inserted tool path with `shlex.quote` and uses a real temporary path containing a space; that final case passed separately (**1 test, 0 failures**). The shipping files are unchanged from the 90-test run. Both edited workflows passed actionlint; all five edited scripts independently passed Bash syntax checks; the scoped diff check passed. See [verification.json](verification.json), [targeted-tests.log](targeted-tests.log), and [lipo.patch](lipo.patch) for exact scope, hashes, limitations and results. Final Xcode 27 acceptance is recorded separately.

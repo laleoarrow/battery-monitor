@@ -1,0 +1,23 @@
+{
+  "errorAssertions": 155,
+  "ownedDomainDeletionErrors": 149,
+  "remainingErrors": 6,
+  "remainingErrorLocations": [
+    "SwiftTests/TestDefaultsCleanup.swift:78",
+    "SwiftTests/TestDefaultsCleanup.swift:84"
+  ],
+  "remainingErrorCase": "TestDefaultsCleanupTests.testPersistedSuiteFileStaysRemovedAfterDaemonReads",
+  "firstDomainError": "2026-10-19T03:34:47.2374540Z /Users/runner/work/battery-monitor/battery-monitor/SwiftTests/BatteryRuntimePresentationTests.swift:377: error: -[WattsonTests.BatteryRuntimePresentationTests testHiddenRuntimeSkipsRenderingAndShowsNewestCachedDirectionAndState] : failed - Could not delete test domain: Error: Domain 'Wattson.SwiftTests.RuntimeModule.E3CEB449-3E1B-422A-B741-AC2F39D875E2' not found.",
+  "allErrorsClassifiedAsTestCleanup": true,
+  "lastVisibleXCTestCase": "2026-10-19T03:35:14.4285460Z Test Case '-[WattsonHelperV5SupportTests.PowerObservationV5SupportTests testUnsupportedTypePreservesRawBytesAndDoesNotPublishWatts]' passed (0.000 seconds).",
+  "allTestsSummaries": [
+    [
+      "2026-10-19T03:35:14.4227310Z Test Suite 'All tests' failed at 2026-10-19 03:35:14.041.",
+      "2026-10-19T03:35:14.4227640Z \t Executed 634 tests, with 155 failures (0 unexpected) in 28.195 (28.290) seconds"
+    ],
+    [
+      "2026-10-19T03:35:14.4287860Z Test Suite 'All tests' passed at 2026-10-19 03:35:14.260.",
+      "2026-10-19T03:35:14.4288180Z \t Executed 30 tests, with 0 failures (0 unexpected) in 0.053 (0.058) seconds"
+    ]
+  ]
+}

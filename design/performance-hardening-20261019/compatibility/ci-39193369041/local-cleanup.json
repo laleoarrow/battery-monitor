@@ -1,0 +1,8 @@
+{
+  "localOwnedLogDownloadScratchRemaining": [],
+  "emptyScratchParentRemoved": true,
+  "runnableArtifactsOrSourceCachesDownloaded": false,
+  "finalEvidenceRetained": true,
+  "remoteCleanupVerified": false,
+  "archiveInspection": "ZIP read in memory from owned project scratch; no filesystem archive extraction and no runnable artifacts retained."
+}

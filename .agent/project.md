@@ -39,8 +39,16 @@ launch-at-login agent. Clients cannot supply an SMC key or SMC write command.
 The unreleased [2026-10-19 performance review](../design/performance-hardening-20261019/README.md)
 preserves process keyboard focus by identity across ranking changes, avoids
 unchanged action-image refreshes, and bounds the helper's poll wait when an
-overdue background sample prevents idle exit. Actual Pro review is waiting for
-manual Mac unlock; macOS 27 SDK/runtime acceptance remains explicitly pending.
+overdue background sample prevents idle exit. Actual SunBrowser Pro review is
+complete and recommends retaining the three minimal changes. Test-only follow-ups
+strengthen real window key dispatch and helper lifecycle boundaries. A new SDK
+diagnostic also required explicitly declaring the existing strong feedback-worker
+capture, preserving its nested weak callback. Frozen `4532daa` passes the opt-in
+macOS 27.0.1 / SDK 27 gate: 664 Swift tests, 613 Python tests (four expected GUI
+skips), three native variants, 20,000 stress iterations, and the ad-hoc universal
+App/helper build. Architecture verification now uses separate `lipo` calls for
+both required slices. Physical sensor and installation/login acceptance remain
+outstanding; no canonical installation or public release was changed.
 
 Power History retains the original 60-slot, two-minute sample ring and its
 sampling cadence. Ordered monotonic timestamps travel with the cached readings

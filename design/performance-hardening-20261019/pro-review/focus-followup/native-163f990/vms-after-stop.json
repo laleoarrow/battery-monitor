@@ -1,0 +1,29 @@
+[
+  {
+    "Accessed" : "2026-10-19T03:32:27Z",
+    "State" : "stopped",
+    "Disk" : 50,
+    "Source" : "local",
+    "Name" : "Wattson-Focus-QA-51D2DBDB",
+    "Size" : 31,
+    "Running" : false
+  },
+  {
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "State" : "stopped",
+    "Disk" : 50,
+    "Source" : "local",
+    "Name" : "macOS-TestLab",
+    "Size" : 33,
+    "Running" : false
+  },
+  {
+    "Accessed" : "2026-10-19T03:24:47Z",
+    "State" : "stopped",
+    "Disk" : 50,
+    "Source" : "local",
+    "Name" : "macOS-TestLab-Base",
+    "Size" : 30,
+    "Running" : false
+  }
+]

@@ -1,0 +1,66 @@
+{
+  "runURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39193369041",
+  "sourceCommit": "000fdeb268940c99b9ea5ce727eecad6469207c9",
+  "branch": "codex/performance-smoothness",
+  "event": "workflow_dispatch",
+  "status": "completed",
+  "conclusion": "cancelled",
+  "updatedUTC": "2026-10-19T03:27:18Z",
+  "cancellationOwner": "Root requested normal cancellation around 03:22 UTC; the monitoring agent performed no mutation.",
+  "forceCancellation": "Root reports its later force-cancel returned HTTP409 because the run was already completed; no force-cancel was applied.",
+  "runner": {
+    "runner_name": "GitHub Actions 1000003099",
+    "runner_group_name": "GitHub Actions",
+    "labels": [
+      "xcode-27"
+    ]
+  },
+  "environment": {
+    "guardConclusion": "success",
+    "validatedByGuard": [
+      "macOS major 27",
+      "macOS SDK major 27",
+      "arm64",
+      "requested source SHA"
+    ],
+    "observedProductMinorVersion": null,
+    "observedOSBuild": null,
+    "observedSDKMinorVersion": null,
+    "observedXcodeBuild": null,
+    "observedImageVersion": null,
+    "limitation": "No Swift job raw logs were returned, so actual minor/build/image values cannot be read. Official image documentation is expected environment information, not substituted run output."
+  },
+  "swiftBuildConclusion": "success",
+  "swiftTest": {
+    "lastVisiblePhase": "Test Swift package",
+    "startedUTC": "2026-10-19T03:11:30Z",
+    "lastRecordedStatus": "in_progress",
+    "elapsedSecondsAtRunCompletion": 948,
+    "lastCase": null,
+    "suiteCount": null,
+    "allTestsSummaryVisible": null,
+    "diagnosis": "Unknown: raw job log unavailable. Cannot distinguish compilation, a running test, test-process shutdown, or preview-runner communication trouble."
+  },
+  "pythonSuiteCount": null,
+  "nativeCompletedVariants": null,
+  "stressIterationsVerified": null,
+  "universalBuildVerified": false,
+  "notExecuted": [
+    "Run the default headless Python suite",
+    "Validate macOS 27 native interaction and animation lifecycles",
+    "Verify macOS 27 universal App and helper build"
+  ],
+  "websiteConclusion": "success",
+  "rawLogs": {
+    "swiftJobHTTPStatus": 404,
+    "ghRunViewLogError": "log not found: 117870777961",
+    "runArchiveMembersFile": "log-archive-members.json",
+    "swiftJobMembersInRunArchive": 0,
+    "websiteRawLog": "job-117870777766.log",
+    "websiteLogSHA256": "412ed3ce94dccc4c0d4da0cbce7a3ddd850f2e348aab5ecaece2c092ab501744"
+  },
+  "acceptance": "Not established; cancelled attempt retained as evidence, neither app pass nor confirmed app regression.",
+  "productionOrWorkflowEdits": false,
+  "rerunDispatchedByThisAgent": false,
+  "remoteTestCleanup": "Cannot independently verify remote child/process/preference/container cleanup without the missing Swift job logs; hosted cancellation is not cleanup proof."
+}

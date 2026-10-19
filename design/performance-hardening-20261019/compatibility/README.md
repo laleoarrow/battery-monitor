@@ -1,8 +1,8 @@
 # macOS 27 compatibility review
 
-This read-only source review found **no demonstrated macOS 27 regression that
-justifies a production patch**. It also cannot establish that Wattson has been
-tested on macOS 27. The distinction matters: source inspection and successful
+The initial read-only source review found **no demonstrated macOS 27 regression that
+justifies a production patch**. That inspection alone cannot establish that Wattson has been
+tested on macOS 27. Subsequent target-runner attempts are recorded below. The distinction matters: source inspection and successful
 macOS 26 tests do not prove behavior on a different WindowServer, AppKit,
 launchd, or kernel.
 
@@ -20,15 +20,15 @@ focus-test clone reported **26.6.1 / 25G76**, as recorded in
 `../focus-native/baseline/results/system.txt`; that observation is not a 27
 runtime result.
 
-At the final inventory, Tart listed only the stopped user VMs `macOS-TestLab`
+At the initial local inventory, Tart listed only the stopped user VMs `macOS-TestLab`
 and `macOS-TestLab-Base`. `tart get` identifies the platform as `darwin`, not
 the guest product version. Their disks were not mounted and they were not
-started. No verifiable macOS 27 environment was found; this does not claim an
+started. No verifiable macOS 27 environment was found locally; this does not claim an
 exhaustive search of every user disk or remote machine. No OS/SDK download,
 upgrade, VM operation, installed-app restart, permission change, or helper
 mutation was performed. No temporary artifacts were needed.
 
-## Concrete validation gaps
+## Original target validation plan
 
 | Gap | Production boundary | Required evidence on macOS 27 |
 | --- | --- | --- |
@@ -69,5 +69,89 @@ implementation work.
   gesture/keyboard changes make the existing native suite useful on 27; they
   do not establish a code defect by themselves.
 
-Compatibility remains **source-reviewed; SDK 27 build and runtime 27 validation
-pending**. Preserve that limit in release and user-facing claims.
+The initial source review is not a compatibility pass. The following hosted
+runs add actual SDK 27 compilation and runtime evidence, with each incomplete
+or failed gate preserved under its exact source commit.
+
+
+## Subsequent hosted validation
+
+Official GitHub runner documentation subsequently identified the opt-in
+`xcode-27` ARM preview image; `macos-latest` was not substituted for 27. The
+[availability record](runner-27-availability.json) identifies the official source.
+The manual CI path checks actual OS/SDK major version, architecture and source
+commit before validation. Normal CI retains its macOS 26 runner.
+
+The [first target attempt](ci-39193369041/README.md), source `000fdeb`, passed
+its macOS 27 / SDK 27 / arm64 environment guard and Swift package build. Its
+Swift test phase did not finish during the observation period and the run was
+cancelled. GitHub returned no Swift job logs in either the job API or run-level
+archive. The last test case and cause are unknown. Python, native interaction
+and universal release verification did not execute in that run. This cancelled
+attempt is neither an application test failure nor a compatibility pass.
+
+Source `683bf76` adds bounded test-bundle compilation and execution as separate
+phases with retained artifacts. Test compilation uses two jobs to bound compiler
+concurrency; this does not assert that memory pressure caused the first run.
+The [second target attempt](ci-39195186472/README.md) completed test compilation
+and executed all 664 Swift tests on macOS **27.0.1 / 26A434**, Xcode **27.0 /
+27A266a**, SDK **27.0**, arm64, image **20261012.0260.1**. The 30 helper tests
+passed. The App target reported 155 failures: 149 exact missing-domain cleanup
+messages and six retained-file assertions in the cleanup fixture. Its old parser
+recognized `Domain (name) not found.`; macOS 27 reports `Domain 'name' not found.`.
+The guard returned before leftover-file removal. No other failure category was
+observed. Python/native/stress/universal gates did not execute. Raw failure
+records are retained rather than replaced by a successful retry.
+
+Test-only `4bbe066` accepts that new exact-domain message, retaining the old format,
+test-domain allowlist and all other failure handling. The focused cleanup test
+passes on 26 with owned scratch removed; a third hosted run verifies 27 and the
+remaining gates. This fixture correction is not a change to production behavior.
+Physical battery/SMC readings, installed helper privileges, PKG upgrades and
+launch-at-login still require their own target-environment acceptance.
+
+
+The [third attempt](ci-39195603040/README.md), `4bbe066`, passes all **664 Swift
+tests**. Python executes **612 tests** with four expected skips and one failure:
+its Settings standalone compiler treats a new `ImplicitStrongCapture` warning
+as an error. The normal Swift build reports the same warning without failing.
+Native/stress/universal did not execute.
+
+The compiler explicitly recommends making the outer capture explicit.
+Production `67f3910` adds only `[self]` to that feedback-worker closure, preserving
+its original strong capture and nested weak main callback. Independent source
+review and an actual Pro follow-up agree; the targeted Settings executable
+contract passes on 26. The fourth run checks that final source on 27.
+
+
+The [fourth attempt](ci-39196405646/README.md), final App source `67f3910`, passes
+all **664 Swift tests**, the **612 Python tests** (four expected opt-in GUI skips),
+three native variants with actual completion markers, and the **20,000-iteration
+animation stress gate**. Actual focus/button/Space cases execute. Each native
+variant retains only the existing synchronous-close mid-reopen qualification.
+This is hosted functional evidence, not full physical sensor or installer evidence.
+
+The remaining gate failed after both release architectures compiled: the new
+`lipo` reported that `-verify_arch` had more than one input for the existing
+combined-architecture invocation. This is not evidence of an App compilation
+or interaction failure. Packaging verification is being made portable by
+checking each required architecture in a separate invocation, keeping both
+requirements, deployment target and signature verification intact.
+
+
+## Final hosted result
+
+[Frozen `4532daa`](ci-39198225803/verification.json) passes the complete opt-in
+workflow on the actual macOS 27.0.1 / Xcode 27 / SDK 27 ARM runner. The final
+source passes all 664 Swift tests, 613 Python tests (four expected opt-in GUI
+skips), all three native interaction variants, 20,000 animation stress
+iterations and the universal App/helper build. The new real Mach-O verifier
+regression executes successfully. App runtime files remain byte-identical to
+the already tested `67f3910`.
+
+All earlier cancelled and failed runs remain under their original source
+identities. Native timing qualifications and exact build-only verification
+boundaries remain in the final proof; a passing workflow is not a claim of
+packaged entitlement comparison, Developer ID/notarization, PKG upgrades,
+launch-at-login or physical battery/SMC acceptance. The released 26-SDK binary
+on 27 and a full appearance cross-product are also separate observations.

@@ -1,0 +1,73 @@
+{
+  "productionSHA256Unchanged": "b73f948185df94c667b62a240ce1f69e91be1ebe71d4c4bca0dcef1ea526d453",
+  "priorHelperContract": {
+    "testsPassed": 53,
+    "proof": "../../helper-poll/validation.json"
+  },
+  "testMethodsAndLines": {
+    "test_helper_poll_deadline_executable_self_test": 872,
+    "test_helper_pending_worker_lifecycle_executable_self_test": 1000,
+    "test_client_socket_io_executable_self_test": 1342,
+    "test_helper_poll_inbox_executable_temp_socket_self_test": 1469
+  },
+  "newExecutableTestMethods": 1,
+  "existingExecutableMethodsStrengthened": 1,
+  "coverage": [
+    {
+      "boundary": "Reader deadline priority (2s) and overdue reader (0)",
+      "priorEvidence": "test_helper_poll_deadline_executable_self_test",
+      "followup": "Existing executable cases retained unchanged; actual production timeout function.",
+      "newTestNeeded": false
+    },
+    {
+      "boundary": "Ceil 1 / 999999 / 1000000 / 1000001 ns; Int32 clamp",
+      "priorEvidence": "test_helper_poll_deadline_executable_self_test",
+      "followup": "Extended existing executable test from one 1ns case to the exact four requested boundaries. Existing clamp retained.",
+      "newTestNeeded": true
+    },
+    {
+      "boundary": "Worker completes immediately after pending snapshot; response/close/clear independent of listener poll",
+      "priorEvidence": "Worker ordering was previously a string-only contract; old controlled probe exercised the real sampler but not worker response ownership.",
+      "followup": "test_helper_pending_worker_lifecycle_executable_self_test: actual TopProcessesWorker plus its independent queue/FD/defer, gated sampling substitute. The poll syscall seam completes and reads reply/EOF before allowing actual listener poll. F_GETFD/EBADF and !hasPending are required.",
+      "newTestNeeded": true
+    },
+    {
+      "boundary": "No activity preserves old idle timestamp, then safe idle exit",
+      "priorEvidence": "Previously source/timeout arithmetic only.",
+      "followup": "test_helper_pending_worker_lifecycle_executable_self_test: exact production main-loop body with only initial last-activity age seeded to 12.1s; one empty 100ms poll after worker completion must return/exit, without another poll.",
+      "newTestNeeded": true
+    },
+    {
+      "boundary": "Listener connection wakes nominal 100ms wait",
+      "priorEvidence": "test_helper_poll_inbox_executable_temp_socket_self_test previously used 25ms polling with <1s health latency; no isolated positive-wait readiness assertion.",
+      "followup": "test_helper_pending_worker_lifecycle_executable_self_test: actual inbox/system poll; semaphore starts owned connector at poll entry; positive 100ms wait admits exactly one listener client. Two-second overall fixture allowance tolerates scheduling; no precise wall-time/latency claim.",
+      "newTestNeeded": true
+    },
+    {
+      "boundary": "Reader EINTR recomputes absolute remaining deadline",
+      "priorEvidence": "Previously string-only EINTR handling.",
+      "followup": "test_helper_pending_worker_lifecycle_executable_self_test: deterministic test-only syscall fault injection (EINTR, not a real kernel signal). Exact main loop and inbox execute again after 20ms elapsed; next positive/expired reader timeout must be lower than the original. Captured output: 2000 -> 1977ms.",
+      "newTestNeeded": true
+    },
+    {
+      "boundary": "Overdue worker EINTR recomputes iteration and permits safe idle exit",
+      "priorEvidence": "Previously string-only EINTR handling.",
+      "followup": "test_helper_pending_worker_lifecycle_executable_self_test: injected first EINTR; exact loop chooses nominal 100ms again with worker pending; worker completes/replies independently; actual empty poll permits idle exit without reset or busy loop.",
+      "newTestNeeded": true
+    },
+    {
+      "boundary": "Disconnected worker socket: no SIGPIPE process termination, FD closed, pending clear",
+      "priorEvidence": "test_client_socket_io_executable_self_test proved client-side no-SIGPIPE; test_helper_poll_inbox_executable_temp_socket_self_test proved abandoned readers/ready requests and aggregate FD bounds, not worker-owned fd.",
+      "followup": "test_helper_pending_worker_lifecycle_executable_self_test: actual helper configureNoSigPipe/writeAll/worker; owned process uses SIGPIPE default; client closes before gated worker replies; process survives, F_GETFD is EBADF and hasPending becomes false.",
+      "newTestNeeded": true
+    },
+    {
+      "boundary": "Framing, incomplete/ready disconnects, deadlines, no abandoned mutation, bounded FD count",
+      "priorEvidence": "test_helper_poll_inbox_executable_temp_socket_self_test",
+      "followup": "Mapped existing exact-production-framing executable coverage; no duplicate assertions or new cases added. Targeted rerun passed.",
+      "newTestNeeded": false
+    }
+  ],
+  "lifecycle": "tests/local_runtime.py owns each temporary directory and bounded compiler/test process group. New socket paths are relative inside the owned temporary cwd. Actual production worker closes transferred socket FDs; actual production main loop/inbox closes listeners/readers; bounded barriers wait for worker ownership cleanup and connector completion before return. No app, installed helper, root operation or canonical socket touched.",
+  "faultInjectionLimit": "EINTR is injected at the syscall seam. Non-injected cases call actual system poll. Initial last-activity age is seeded once in the extracted loop. Only the sampler backend is a barrier substitute; existing controlled real-sampler proof remains separate and unmodified."
+}

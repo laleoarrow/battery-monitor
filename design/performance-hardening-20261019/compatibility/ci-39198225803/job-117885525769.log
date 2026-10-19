@@ -1,0 +1,339 @@
+﻿2026-10-19T04:11:36.1683889Z Current runner version: '2.337.0'
+2026-10-19T04:11:36.1702732Z ##[group]Runner Image Provisioner
+2026-10-19T04:11:36.1703406Z Hosted Compute Agent
+2026-10-19T04:11:36.1703784Z Version: 20261012.601
+2026-10-19T04:11:36.1704179Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-19T04:11:36.1704697Z Build Date: 2026-10-12T17:48:21Z
+2026-10-19T04:11:36.1705118Z Worker ID: {8417aba8-eb25-48c8-83a9-fa3bd1ef8800}
+2026-10-19T04:11:36.1705539Z Region: centralus
+2026-10-19T04:11:36.1705929Z Cloud: Azure
+2026-10-19T04:11:36.1706268Z ##[endgroup]
+2026-10-19T04:11:36.1707340Z ##[group]Operating System
+2026-10-19T04:11:36.1707749Z Ubuntu
+2026-10-19T04:11:36.1708101Z 24.04.5
+2026-10-19T04:11:36.1708471Z LTS
+2026-10-19T04:11:36.1708794Z ##[endgroup]
+2026-10-19T04:11:36.1709195Z ##[group]Runner Image
+2026-10-19T04:11:36.1709577Z Image: ubuntu-24.04
+2026-10-19T04:11:36.1709932Z Version: 20261012.334.1
+2026-10-19T04:11:36.1711008Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-19T04:11:36.1711978Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-19T04:11:36.1712564Z ##[endgroup]
+2026-10-19T04:11:36.1713286Z ##[group]GITHUB_TOKEN Permissions
+2026-10-19T04:11:36.1714704Z Contents: read
+2026-10-19T04:11:36.1715098Z Metadata: read
+2026-10-19T04:11:36.1715737Z ##[endgroup]
+2026-10-19T04:11:36.1717106Z Secret source: Actions
+2026-10-19T04:11:36.1717742Z Cache mode: write
+2026-10-19T04:11:36.1718209Z Prepare workflow directory
+2026-10-19T04:11:36.1945259Z Prepare all required actions
+2026-10-19T04:11:36.1977741Z Getting action download info
+2026-10-19T04:11:36.4001092Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-19T04:11:36.4933467Z Download action repository 'actions/setup-node@820762786026740c76f36085b0efc47a31fe5020' (SHA:820762786026740c76f36085b0efc47a31fe5020)
+2026-10-19T04:11:36.6663595Z Complete job name: Website build, test, lint, and export
+2026-10-19T04:11:36.7131683Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-19T04:11:36.7132196Z with:
+2026-10-19T04:11:36.7132443Z   persist-credentials: false
+2026-10-19T04:11:36.7132739Z   repository: laleoarrow/battery-monitor
+2026-10-19T04:11:36.7134771Z   token: ***
+2026-10-19T04:11:36.7135005Z   ssh-strict: true
+2026-10-19T04:11:36.7135247Z   ssh-user: git
+2026-10-19T04:11:36.7135480Z   clean: true
+2026-10-19T04:11:36.7135726Z   sparse-checkout-cone-mode: true
+2026-10-19T04:11:36.7136015Z   fetch-depth: 1
+2026-10-19T04:11:36.7136251Z   fetch-tags: false
+2026-10-19T04:11:36.7136497Z   show-progress: true
+2026-10-19T04:11:36.7136741Z   lfs: false
+2026-10-19T04:11:36.7136968Z   submodules: false
+2026-10-19T04:11:36.7137219Z   set-safe-directory: true
+2026-10-19T04:11:36.7137500Z   allow-unsafe-pr-checkout: false
+2026-10-19T04:11:36.7137856Z ##[endgroup]
+2026-10-19T04:11:36.7791376Z Syncing repository: laleoarrow/battery-monitor
+2026-10-19T04:11:36.7793056Z ##[group]Getting Git version info
+2026-10-19T04:11:36.7793731Z Working directory is '/home/runner/work/battery-monitor/battery-monitor'
+2026-10-19T04:11:36.7794736Z [command]/usr/bin/git version
+2026-10-19T04:11:36.7851733Z git version 2.55.0
+2026-10-19T04:11:36.7866499Z ##[endgroup]
+2026-10-19T04:11:36.7875104Z Temporarily overriding HOME='/home/runner/work/_temp/fe6bf244-77ab-4834-afe0-006a63cbe6f1' before making global git config changes
+2026-10-19T04:11:36.7876371Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-19T04:11:36.7879443Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/battery-monitor/battery-monitor
+2026-10-19T04:11:36.7922799Z Deleting the contents of '/home/runner/work/battery-monitor/battery-monitor'
+2026-10-19T04:11:36.7926120Z ##[group]Determining repository object format
+2026-10-19T04:11:36.7926961Z ##[endgroup]
+2026-10-19T04:11:36.7927667Z ##[group]Initializing the repository
+2026-10-19T04:11:36.7929726Z [command]/usr/bin/git init /home/runner/work/battery-monitor/battery-monitor
+2026-10-19T04:11:36.8010634Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-19T04:11:36.8011719Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-19T04:11:36.8012542Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-19T04:11:36.8013186Z hint: call:
+2026-10-19T04:11:36.8013535Z hint:
+2026-10-19T04:11:36.8013980Z hint: 	git config --global init.defaultBranch <name>
+2026-10-19T04:11:36.8014519Z hint:
+2026-10-19T04:11:36.8015026Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-19T04:11:36.8015601Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-19T04:11:36.8016013Z hint:
+2026-10-19T04:11:36.8016251Z hint: 	git branch -m <name>
+2026-10-19T04:11:36.8016515Z hint:
+2026-10-19T04:11:36.8016868Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-19T04:11:36.8017506Z Initialized empty Git repository in /home/runner/work/battery-monitor/battery-monitor/.git/
+2026-10-19T04:11:36.8023766Z [command]/usr/bin/git remote add origin https://github.com/laleoarrow/battery-monitor
+2026-10-19T04:11:36.8079725Z ##[endgroup]
+2026-10-19T04:11:36.8080529Z ##[group]Disabling automatic garbage collection
+2026-10-19T04:11:36.8100747Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-19T04:11:36.8102491Z ##[endgroup]
+2026-10-19T04:11:36.8103756Z ##[group]Setting up auth
+2026-10-19T04:11:36.8104414Z Removing SSH command configuration
+2026-10-19T04:11:36.8105535Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-19T04:11:36.8133569Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-19T04:11:36.8445134Z Removing HTTP extra header
+2026-10-19T04:11:36.8449869Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-19T04:11:36.8510794Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-19T04:11:36.8681764Z Removing includeIf entries pointing to credentials config files
+2026-10-19T04:11:36.8685075Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-19T04:11:36.8712531Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-19T04:11:36.8893524Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-8acdf0fc-b8b4-4a20-a264-7062f80fc1cd.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-19T04:11:36.8924828Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git.path /home/runner/work/_temp/git-credentials-8acdf0fc-b8b4-4a20-a264-7062f80fc1cd.config
+2026-10-19T04:11:36.8952471Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-8acdf0fc-b8b4-4a20-a264-7062f80fc1cd.config
+2026-10-19T04:11:36.8983315Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-8acdf0fc-b8b4-4a20-a264-7062f80fc1cd.config
+2026-10-19T04:11:36.9011570Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-8acdf0fc-b8b4-4a20-a264-7062f80fc1cd.config
+2026-10-19T04:11:36.9038124Z ##[endgroup]
+2026-10-19T04:11:36.9038545Z ##[group]Fetching the repository
+2026-10-19T04:11:36.9042851Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +4532daac11c0698ab97f05a6fc47e563b16d4e0e:refs/remotes/origin/codex/performance-smoothness
+2026-10-19T04:11:42.7592055Z From https://github.com/laleoarrow/battery-monitor
+2026-10-19T04:11:42.7593813Z  * [new ref]         4532daac11c0698ab97f05a6fc47e563b16d4e0e -> origin/codex/performance-smoothness
+2026-10-19T04:11:42.7599587Z [command]/usr/bin/git branch --list --remote origin/codex/performance-smoothness
+2026-10-19T04:11:42.7624479Z   origin/codex/performance-smoothness
+2026-10-19T04:11:42.7630555Z [command]/usr/bin/git rev-parse refs/remotes/origin/codex/performance-smoothness
+2026-10-19T04:11:42.7651940Z 4532daac11c0698ab97f05a6fc47e563b16d4e0e
+2026-10-19T04:11:42.7655642Z ##[endgroup]
+2026-10-19T04:11:42.7656770Z ##[group]Determining the checkout info
+2026-10-19T04:11:42.7658108Z ##[endgroup]
+2026-10-19T04:11:42.7658901Z [command]/usr/bin/git sparse-checkout disable
+2026-10-19T04:11:42.7701238Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-19T04:11:42.7728083Z ##[group]Checking out the ref
+2026-10-19T04:11:42.7730725Z [command]/usr/bin/git checkout --progress --force -B codex/performance-smoothness refs/remotes/origin/codex/performance-smoothness
+2026-10-19T04:11:43.6994348Z Switched to a new branch 'codex/performance-smoothness'
+2026-10-19T04:11:43.6996776Z branch 'codex/performance-smoothness' set up to track 'origin/codex/performance-smoothness'.
+2026-10-19T04:11:43.7057612Z ##[endgroup]
+2026-10-19T04:11:43.7102032Z [command]/usr/bin/git log -1 --format=%H
+2026-10-19T04:11:43.7127960Z 4532daac11c0698ab97f05a6fc47e563b16d4e0e
+2026-10-19T04:11:43.7135061Z ##[group]Removing auth
+2026-10-19T04:11:43.7135438Z Removing SSH command configuration
+2026-10-19T04:11:43.7138177Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-19T04:11:43.7169719Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-19T04:11:43.7355565Z Removing HTTP extra header
+2026-10-19T04:11:43.7356663Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-19T04:11:43.7383807Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-19T04:11:43.7563804Z Removing includeIf entries pointing to credentials config files
+2026-10-19T04:11:43.7565627Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-19T04:11:43.7590854Z includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git.path
+2026-10-19T04:11:43.7591555Z includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path
+2026-10-19T04:11:43.7591919Z includeif.gitdir:/github/workspace/.git.path
+2026-10-19T04:11:43.7592203Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-19T04:11:43.7598666Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git.path
+2026-10-19T04:11:43.7621084Z /home/runner/work/_temp/git-credentials-8acdf0fc-b8b4-4a20-a264-7062f80fc1cd.config
+2026-10-19T04:11:43.7627997Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-8acdf0fc\-b8b4\-4a20\-a264\-7062f80fc1cd\.config
+2026-10-19T04:11:43.7664173Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path
+2026-10-19T04:11:43.7685840Z /home/runner/work/_temp/git-credentials-8acdf0fc-b8b4-4a20-a264-7062f80fc1cd.config
+2026-10-19T04:11:43.7691764Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/battery-monitor/battery-monitor/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-8acdf0fc\-b8b4\-4a20\-a264\-7062f80fc1cd\.config
+2026-10-19T04:11:43.7724225Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-19T04:11:43.7748099Z /github/runner_temp/git-credentials-8acdf0fc-b8b4-4a20-a264-7062f80fc1cd.config
+2026-10-19T04:11:43.7755417Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-8acdf0fc\-b8b4\-4a20\-a264\-7062f80fc1cd\.config
+2026-10-19T04:11:43.7785630Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-19T04:11:43.7806918Z /github/runner_temp/git-credentials-8acdf0fc-b8b4-4a20-a264-7062f80fc1cd.config
+2026-10-19T04:11:43.7812377Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-8acdf0fc\-b8b4\-4a20\-a264\-7062f80fc1cd\.config
+2026-10-19T04:11:43.7940248Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-19T04:11:43.8117585Z Removing credentials config '/home/runner/work/_temp/git-credentials-8acdf0fc-b8b4-4a20-a264-7062f80fc1cd.config'
+2026-10-19T04:11:43.8126230Z ##[endgroup]
+2026-10-19T04:11:43.8306667Z ##[group]Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+2026-10-19T04:11:43.8306925Z with:
+2026-10-19T04:11:43.8307078Z   node-version: 22.13.0
+2026-10-19T04:11:43.8307235Z   cache: npm
+2026-10-19T04:11:43.8307412Z   cache-dependency-path: website/package-lock.json
+2026-10-19T04:11:43.8307621Z   check-latest: false
+2026-10-19T04:11:43.8308979Z   token: ***
+2026-10-19T04:11:43.8309135Z   package-manager-cache: true
+2026-10-19T04:11:43.8309309Z ##[endgroup]
+2026-10-19T04:11:43.9159703Z Attempting to download 22.13.0...
+2026-10-19T04:11:44.6555177Z Acquiring 22.13.0 - x64 from https://github.com/actions/node-versions/releases/download/22.13.0-12683784390/node-22.13.0-linux-x64.tar.gz
+2026-10-19T04:11:45.2644154Z Extracting ...
+2026-10-19T04:11:45.2735260Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/ada28198-e95a-438a-ba94-3a2c380cfd92 -f /home/runner/work/_temp/88020664-43d0-4714-9afb-ed2265c01554
+2026-10-19T04:11:46.1955834Z Adding to the cache ...
+2026-10-19T04:11:49.0853526Z ##[group]Environment details
+2026-10-19T04:11:49.2214512Z node: v22.13.0
+2026-10-19T04:11:49.2214814Z npm: 10.9.2
+2026-10-19T04:11:49.2214971Z yarn: 1.22.22
+2026-10-19T04:11:49.2215302Z ##[endgroup]
+2026-10-19T04:11:49.2227491Z [command]/opt/hostedtoolcache/node/22.13.0/x64/bin/npm config get cache
+2026-10-19T04:11:49.2777223Z /home/runner/.npm
+2026-10-19T04:11:49.4078232Z Cache hit for: node-cache-Linux-x64-npm-0ac22d024bb03ef0133a439258b27339c172387865a837b94ad6706ce3308aac
+2026-10-19T04:11:50.5562158Z Received 130023424 of 159315621 (81.6%), 123.9 MBs/sec
+2026-10-19T04:11:50.8369419Z Received 159315621 of 159315621 (100.0%), 118.5 MBs/sec
+2026-10-19T04:11:50.8370036Z Cache Size: ~152 MB (159315621 B)
+2026-10-19T04:11:50.8411001Z [command]/usr/bin/tar -xf /home/runner/work/_temp/9e67d7bc-7370-41fb-b4f9-525e38048acc/cache.tzst -P -C /home/runner/work/battery-monitor/battery-monitor --use-compress-program unzstd
+2026-10-19T04:11:51.2485945Z Cache restored successfully
+2026-10-19T04:11:51.2552266Z Cache restored from key: node-cache-Linux-x64-npm-0ac22d024bb03ef0133a439258b27339c172387865a837b94ad6706ce3308aac
+2026-10-19T04:11:51.2890589Z ##[group]Run npm ci
+2026-10-19T04:11:51.2890781Z [36;1mnpm ci[0m
+2026-10-19T04:11:51.3341264Z shell: /usr/bin/bash -e {0}
+2026-10-19T04:11:51.3341437Z ##[endgroup]
+2026-10-19T04:11:53.4374330Z npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+2026-10-19T04:11:53.5596162Z npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+2026-10-19T04:12:03.3473083Z 
+2026-10-19T04:12:03.3474085Z added 479 packages, and audited 480 packages in 12s
+2026-10-19T04:12:03.3474492Z 
+2026-10-19T04:12:03.3475650Z 159 packages are looking for funding
+2026-10-19T04:12:03.3476511Z   run `npm fund` for details
+2026-10-19T04:12:03.4268923Z 
+2026-10-19T04:12:03.4269623Z 30 vulnerabilities (1 low, 6 moderate, 23 high)
+2026-10-19T04:12:03.4269822Z 
+2026-10-19T04:12:03.4269966Z To address issues that do not require attention, run:
+2026-10-19T04:12:03.4270185Z   npm audit fix
+2026-10-19T04:12:03.4270417Z 
+2026-10-19T04:12:03.4270629Z To address all issues (including breaking changes), run:
+2026-10-19T04:12:03.4270839Z   npm audit fix --force
+2026-10-19T04:12:03.4270923Z 
+2026-10-19T04:12:03.4271015Z Run `npm audit` for details.
+2026-10-19T04:12:03.5299537Z ##[group]Run npm test
+2026-10-19T04:12:03.5299730Z [36;1mnpm test[0m
+2026-10-19T04:12:03.5357880Z shell: /usr/bin/bash -e {0}
+2026-10-19T04:12:03.5358046Z ##[endgroup]
+2026-10-19T04:12:03.7097381Z 
+2026-10-19T04:12:03.7097713Z > wattson-site@0.1.0 test
+2026-10-19T04:12:03.7098070Z > npm run build && npm run export:pages && node --test tests/*.test.mjs
+2026-10-19T04:12:03.7098244Z 
+2026-10-19T04:12:03.7741204Z 
+2026-10-19T04:12:03.7741859Z > wattson-site@0.1.0 build
+2026-10-19T04:12:03.7742206Z > WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build
+2026-10-19T04:12:03.7742367Z 
+2026-10-19T04:12:04.0719993Z 
+2026-10-19T04:12:04.0720771Z   vinext build  (Vite 8.0.13)
+2026-10-19T04:12:04.0720943Z 
+2026-10-19T04:12:04.7120781Z (node:2362) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-19T04:12:04.7121658Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-19T04:12:04.8515779Z (node:2362) ExperimentalWarning: glob is an experimental feature and might change at any time
+2026-10-19T04:12:04.8842562Z [34m[1/5] analyze client references...[39m
+2026-10-19T04:12:04.9174584Z [2K
+2026-10-19T04:12:05.7767493Z transforming...✓ 218 modules transformed.
+2026-10-19T04:12:05.7865490Z rendering chunks...
+2026-10-19T04:12:05.7909760Z [32m✓ built in 905ms[39m
+2026-10-19T04:12:05.7950566Z [34m[2/5] analyze server references...[39m
+2026-10-19T04:12:05.8167369Z [2K
+2026-10-19T04:12:05.9823937Z transforming...✓ 130 modules transformed.
+2026-10-19T04:12:05.9843532Z rendering chunks...
+2026-10-19T04:12:05.9854714Z [32m✓ built in 190ms[39m
+2026-10-19T04:12:05.9886838Z [34m[3/5] build rsc environment...[39m
+2026-10-19T04:12:06.0059911Z [2K
+2026-10-19T04:12:06.2868484Z transforming...✓ 216 modules transformed.
+2026-10-19T04:12:06.3325295Z rendering chunks...
+2026-10-19T04:12:06.3580619Z computing gzip size...
+2026-10-19T04:12:06.3666157Z [32m✓ built in 377ms[39m
+2026-10-19T04:12:06.3699309Z [34m[4/5] build client environment...[39m
+2026-10-19T04:12:06.3858870Z [2K
+2026-10-19T04:12:07.3639681Z transforming...✓ 1712 modules transformed.
+2026-10-19T04:12:07.3964526Z rendering chunks...
+2026-10-19T04:12:07.4341645Z computing gzip size...
+2026-10-19T04:12:07.4392079Z [32m✓ built in 1.07s[39m
+2026-10-19T04:12:07.4433565Z [34m[5/5] build ssr environment...[39m
+2026-10-19T04:12:07.4674104Z [2K
+2026-10-19T04:12:07.6754719Z transforming...✓ 136 modules transformed.
+2026-10-19T04:12:07.7259973Z rendering chunks...
+2026-10-19T04:12:07.7492389Z computing gzip size...
+2026-10-19T04:12:07.7543185Z [32m✓ built in 310ms[39m
+2026-10-19T04:12:07.7607721Z [0m
+2026-10-19T04:12:07.7607892Z   Route (app)
+2026-10-19T04:12:07.7608044Z   ─ ? /
+2026-10-19T04:12:07.7608110Z 
+2026-10-19T04:12:07.7608167Z   ? Unknown
+2026-10-19T04:12:07.7608233Z 
+2026-10-19T04:12:07.7608397Z   ? Some routes could not be classified. vinext currently uses static analysis
+2026-10-19T04:12:07.7608854Z     and cannot detect dynamic API usage (headers(), cookies(), etc.) at build time.
+2026-10-19T04:12:07.7609289Z     Automatic classification will be improved in a future release.
+2026-10-19T04:12:07.7609515Z 
+2026-10-19T04:12:07.7609698Z   Build complete. Run `vinext start` to start the production server.
+2026-10-19T04:12:07.7609920Z 
+2026-10-19T04:12:07.8532290Z 
+2026-10-19T04:12:07.8532873Z > wattson-site@0.1.0 export:pages
+2026-10-19T04:12:07.8533295Z > node scripts/export-pages.mjs
+2026-10-19T04:12:07.8533705Z 
+2026-10-19T04:12:07.9854238Z Exported GitHub Pages site to /home/runner/work/battery-monitor/battery-monitor/docs/
+2026-10-19T04:12:08.0146074Z TAP version 13
+2026-10-19T04:12:08.1323242Z # Subtest: renders the complete English Wattson release page
+2026-10-19T04:12:08.1327789Z ok 1 - renders the complete English Wattson release page
+2026-10-19T04:12:08.1328312Z   ---
+2026-10-19T04:12:08.1328533Z   duration_ms: 98.004817
+2026-10-19T04:12:08.1328740Z   ...
+2026-10-19T04:12:08.1543944Z # Subtest: groups the install routes in one compact, accessible panel
+2026-10-19T04:12:08.1544532Z ok 2 - groups the install routes in one compact, accessible panel
+2026-10-19T04:12:08.1544887Z   ---
+2026-10-19T04:12:08.1545065Z   duration_ms: 22.753906
+2026-10-19T04:12:08.1545254Z   ...
+2026-10-19T04:12:08.1774948Z # Subtest: shows the current AppKit popover instead of an invented web mock
+2026-10-19T04:12:08.1775539Z ok 3 - shows the current AppKit popover instead of an invented web mock
+2026-10-19T04:12:08.1775909Z   ---
+2026-10-19T04:12:08.1776115Z   duration_ms: 19.946101
+2026-10-19T04:12:08.1776329Z   ...
+2026-10-19T04:12:08.1793912Z # Subtest: ships the required static assets
+2026-10-19T04:12:08.1794955Z ok 4 - ships the required static assets
+2026-10-19T04:12:08.1795219Z   ---
+2026-10-19T04:12:08.1795409Z   duration_ms: 5.277046
+2026-10-19T04:12:08.1795609Z   ...
+2026-10-19T04:12:08.1809092Z # Subtest: exports a server-independent GitHub Pages document
+2026-10-19T04:12:08.1809852Z ok 5 - exports a server-independent GitHub Pages document
+2026-10-19T04:12:08.1810195Z   ---
+2026-10-19T04:12:08.1810507Z   duration_ms: 1.669891
+2026-10-19T04:12:08.1810646Z   ...
+2026-10-19T04:12:08.1815339Z # Subtest: preserves non-site documentation during the Pages export
+2026-10-19T04:12:08.1816741Z ok 6 - preserves non-site documentation during the Pages export
+2026-10-19T04:12:08.1817142Z   ---
+2026-10-19T04:12:08.1817491Z   duration_ms: 0.584756
+2026-10-19T04:12:08.1817735Z   ...
+2026-10-19T04:12:08.1829722Z # Subtest: lets release workflows read VERSION when the optional input is blank
+2026-10-19T04:12:08.1830163Z ok 7 - lets release workflows read VERSION when the optional input is blank
+2026-10-19T04:12:08.1830697Z   ---
+2026-10-19T04:12:08.1830923Z   duration_ms: 1.432351
+2026-10-19T04:12:08.1831173Z   ...
+2026-10-19T04:12:08.1945953Z 1..7
+2026-10-19T04:12:08.1946139Z # tests 7
+2026-10-19T04:12:08.1950920Z # suites 0
+2026-10-19T04:12:08.1960911Z # pass 7
+2026-10-19T04:12:08.1961231Z # fail 0
+2026-10-19T04:12:08.1961541Z # cancelled 0
+2026-10-19T04:12:08.1961774Z # skipped 0
+2026-10-19T04:12:08.1961951Z # todo 0
+2026-10-19T04:12:08.1962141Z # duration_ms 186.28781
+2026-10-19T04:12:08.2044429Z ##[group]Run npm run lint
+2026-10-19T04:12:08.2044597Z [36;1mnpm run lint[0m
+2026-10-19T04:12:08.2096505Z shell: /usr/bin/bash -e {0}
+2026-10-19T04:12:08.2096649Z ##[endgroup]
+2026-10-19T04:12:08.2710230Z 
+2026-10-19T04:12:08.2710865Z > wattson-site@0.1.0 lint
+2026-10-19T04:12:08.2711317Z > eslint . --ignore-pattern dist --ignore-pattern .next
+2026-10-19T04:12:08.2711581Z 
+2026-10-19T04:12:09.8382838Z ##[group]Run npm run export:pages
+2026-10-19T04:12:09.8383031Z [36;1mnpm run export:pages[0m
+2026-10-19T04:12:09.8434186Z shell: /usr/bin/bash -e {0}
+2026-10-19T04:12:09.8434324Z ##[endgroup]
+2026-10-19T04:12:09.9036582Z 
+2026-10-19T04:12:09.9037131Z > wattson-site@0.1.0 export:pages
+2026-10-19T04:12:09.9037489Z > node scripts/export-pages.mjs
+2026-10-19T04:12:09.9037592Z 
+2026-10-19T04:12:10.0462088Z Exported GitHub Pages site to /home/runner/work/battery-monitor/battery-monitor/docs/
+2026-10-19T04:12:10.0625071Z Post job cleanup.
+2026-10-19T04:12:10.1311696Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-0ac22d024bb03ef0133a439258b27339c172387865a837b94ad6706ce3308aac, not saving cache.
+2026-10-19T04:12:10.1413687Z Post job cleanup.
+2026-10-19T04:12:10.1919043Z [command]/usr/bin/git version
+2026-10-19T04:12:10.1949339Z git version 2.55.0
+2026-10-19T04:12:10.1970164Z Temporarily overriding HOME='/home/runner/work/_temp/9e08539c-b9f3-4f4b-8a0c-1308fedd8c34' before making global git config changes
+2026-10-19T04:12:10.1971335Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-19T04:12:10.1980676Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/battery-monitor/battery-monitor
+2026-10-19T04:12:10.2004879Z Removing SSH command configuration
+2026-10-19T04:12:10.2008888Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-19T04:12:10.2046026Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-19T04:12:10.2228615Z Removing HTTP extra header
+2026-10-19T04:12:10.2232938Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-19T04:12:10.2262934Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-19T04:12:10.2449309Z Removing includeIf entries pointing to credentials config files
+2026-10-19T04:12:10.2460833Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-19T04:12:10.2487790Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-19T04:12:10.2764549Z Cleaning up orphan processes

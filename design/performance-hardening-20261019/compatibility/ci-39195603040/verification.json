@@ -1,0 +1,189 @@
+{
+  "runURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39195603040",
+  "sourceCommit": "4bbe06679be64bf192157a47ebce135e250f107d",
+  "branch": "codex/performance-smoothness",
+  "event": "workflow_dispatch",
+  "status": "completed",
+  "conclusion": "failure",
+  "environment": {
+    "macOS": "27.0.1",
+    "macOSBuild": "26A434",
+    "xcode": "27.0",
+    "xcodeBuild": "27A266a",
+    "SDK": "27.0",
+    "architecture": "arm64",
+    "image": "xcode-27-arm64",
+    "imageVersion": "20261012.0260.1",
+    "identitySource": "Actual job setup/preflight and source-matched diagnostics artifact"
+  },
+  "swift": {
+    "ordinaryBuild": "success",
+    "buildTests": "success",
+    "appXCTest": {
+      "tests": 634,
+      "failures": 0,
+      "elapsedSeconds": 29.142
+    },
+    "helperXCTest": {
+      "tests": 30,
+      "failures": 0,
+      "elapsedSeconds": 0.049
+    },
+    "totalXCTestTests": 664,
+    "totalFailures": 0,
+    "testDefaultsCleanupRegression": "passed; prior 149+6 assertions absent"
+  },
+  "python": {
+    "status": "failure",
+    "tests": 612,
+    "failures": 1,
+    "skipped": 4,
+    "elapsedSeconds": 284.632
+  },
+  "native": {
+    "status": "not executed",
+    "completedVariants": null
+  },
+  "stress": {
+    "status": "not executed",
+    "verifiedIterations": null
+  },
+  "universal": {
+    "status": "not executed",
+    "minimumOSOrSignaturesVerified": false
+  },
+  "website": {
+    "status": "success",
+    "rawLog": "job-117877583759.log"
+  },
+  "artifact": {
+    "artifactID": 12161927190,
+    "artifactName": "macos27-swift-4bbe06679be64bf192157a47ebce135e250f107d",
+    "archiveSHA256": "fa2150ca64d782937128166b48012f1e04864bf4f43693ee854cff12acfaaa69",
+    "apiDigest": "sha256:fa2150ca64d782937128166b48012f1e04864bf4f43693ee854cff12acfaaa69",
+    "files": {
+      "environment.txt": {
+        "bytes": 104,
+        "sha256": "cae6a4cacab7862dc3fe65bc1fb3e81eff6f7c0be9e7397b2bd35457d880d734"
+      },
+      "source.txt": {
+        "bytes": 41,
+        "sha256": "22ed284935486e2791afddcf0ee8fadada95eed9360e438ea6ec1ac1aaddaeb3"
+      },
+      "swift-test-build.log": {
+        "bytes": 3084,
+        "sha256": "4443ab8e5e3d1939ded702305387c9f95f1392740fdae949d7dc5e67d44fc60e"
+      },
+      "swift-test-run.log": {
+        "bytes": 184253,
+        "sha256": "c1a5b872f6e10d3e1aaffc933395c754e7c7b3869478e6a9fffba24451d6d2ff"
+      }
+    }
+  },
+  "failureAnalysis": "failure-analysis.json",
+  "gateSteps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T03:38:04Z",
+      "completed_at": "2026-10-19T03:38:05Z"
+    },
+    {
+      "name": "Check out the repository",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T03:38:05Z",
+      "completed_at": "2026-10-19T03:38:18Z"
+    },
+    {
+      "name": "Verify macOS 27 validation environment",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T03:38:18Z",
+      "completed_at": "2026-10-19T03:38:22Z"
+    },
+    {
+      "name": "Build Swift package",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T03:38:22Z",
+      "completed_at": "2026-10-19T03:39:00Z"
+    },
+    {
+      "name": "Test Swift package",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-19T03:39:00Z",
+      "completed_at": "2026-10-19T03:39:00Z"
+    },
+    {
+      "name": "Build macOS 27 Swift test bundle",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T03:39:00Z",
+      "completed_at": "2026-10-19T03:39:32Z"
+    },
+    {
+      "name": "Execute macOS 27 Swift tests",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T03:39:32Z",
+      "completed_at": "2026-10-19T03:40:04Z"
+    },
+    {
+      "name": "Preserve macOS 27 Swift diagnostics",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T03:40:04Z",
+      "completed_at": "2026-10-19T03:40:05Z"
+    },
+    {
+      "name": "Run the default headless Python suite",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-19T03:40:05Z",
+      "completed_at": "2026-10-19T03:44:51Z"
+    },
+    {
+      "name": "Validate macOS 27 native interaction and animation lifecycles",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-19T03:44:51Z",
+      "completed_at": "2026-10-19T03:44:51Z"
+    },
+    {
+      "name": "Verify macOS 27 universal App and helper build",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-19T03:44:51Z",
+      "completed_at": "2026-10-19T03:44:51Z"
+    },
+    {
+      "name": "Post Check out the repository",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T03:44:51Z",
+      "completed_at": "2026-10-19T03:44:51Z"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T03:44:51Z",
+      "completed_at": "2026-10-19T03:44:51Z"
+    }
+  ],
+  "acceptance": "Not established: Swift tests passed, Python standalone compiler gate failed, remaining gates did not execute.",
+  "remoteCleanup": "Swift owned-domain cleanup regression passed, but there is no independent final census of every remote preference/container/process; do not infer all remote cleanup from this result.",
+  "monitoringAgentEditsOrMutations": false,
+  "retainedFileHashes": {
+    "job-117877583412.log": "329b24180e60fb9e36385deb34a2d7c8be9a45633ee63575129e49d72ef7a72c",
+    "artifact-verification.json": "85fe6764b76851a2f9615967528197afd927e513d2af12071566250acb8fd8ed",
+    "swift-diagnostics/source.txt": "22ed284935486e2791afddcf0ee8fadada95eed9360e438ea6ec1ac1aaddaeb3",
+    "swift-diagnostics/environment.txt": "cae6a4cacab7862dc3fe65bc1fb3e81eff6f7c0be9e7397b2bd35457d880d734",
+    "swift-diagnostics/swift-test-build.log": "4443ab8e5e3d1939ded702305387c9f95f1392740fdae949d7dc5e67d44fc60e",
+    "swift-diagnostics/swift-test-run.log": "c1a5b872f6e10d3e1aaffc933395c754e7c7b3869478e6a9fffba24451d6d2ff",
+    "job-117877583759.log": "2f475a97d20e2af205ed3e9ee3db16b0b923ac70f5a46052d6a65abf6640bf20"
+  }
+}

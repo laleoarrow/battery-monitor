@@ -1,0 +1,13 @@
+diff --git a/MenuBar/SettingsWindowController.swift b/MenuBar/SettingsWindowController.swift
+index 1a4941b..c5a612b 100644
+--- a/MenuBar/SettingsWindowController.swift
++++ b/MenuBar/SettingsWindowController.swift
+@@ -2069,7 +2069,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
+                 for: self.feedbackButton, purpose: self.feedbackAccessibilityPurpose,
+                 status: self.feedbackDetail.stringValue
+             )
+-            DispatchQueue.global(qos: .utility).async {
++            DispatchQueue.global(qos: .utility).async { [self] in
+                 let report = FeedbackDiagnostics.collect(context)
+                 let result: Result<Void, Error> = Result {
+                     try report.text.write(to: destination, atomically: true, encoding: .utf8)

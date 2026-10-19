@@ -1,0 +1,9 @@
+test_helper_poll_deadline_executable_self_test (test_helper_contract.HelperContractTests.test_helper_poll_deadline_executable_self_test) ... ok
+test_helper_pending_worker_lifecycle_executable_self_test (test_helper_contract.HelperContractTests.test_helper_pending_worker_lifecycle_executable_self_test) ... ok
+test_client_socket_io_executable_self_test (test_helper_contract.HelperContractTests.test_client_socket_io_executable_self_test) ... ok
+test_helper_poll_inbox_executable_temp_socket_self_test (test_helper_contract.HelperContractTests.test_helper_poll_inbox_executable_temp_socket_self_test) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 11.242s
+
+OK

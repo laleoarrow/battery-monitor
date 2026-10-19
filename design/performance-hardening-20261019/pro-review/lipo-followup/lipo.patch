@@ -1,0 +1,281 @@
+diff --git a/.github/workflows/homebrew-install-test.yml b/.github/workflows/homebrew-install-test.yml
+index 8dbfe49..9eb3639 100644
+--- a/.github/workflows/homebrew-install-test.yml
++++ b/.github/workflows/homebrew-install-test.yml
+@@ -481,8 +481,10 @@ jobs:
+           [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]]
+           [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_BIN")" == "0:0:544" ]]
+           [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_PLIST")" == "0:0:644" ]]
+-          /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
+-          /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64
++          for architecture in arm64 x86_64; do
++            /usr/bin/xcrun lipo "$APP_BIN" -verify_arch "$architecture"
++            /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch "$architecture"
++          done
+           /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null
+           /usr/bin/sudo -n "$HELPER_BIN" --health-probe
+           assert_helper_enabled
+diff --git a/.github/workflows/macos-helper-install.yml b/.github/workflows/macos-helper-install.yml
+index 76089fd..2a251a9 100644
+--- a/.github/workflows/macos-helper-install.yml
++++ b/.github/workflows/macos-helper-install.yml
+@@ -460,8 +460,10 @@ jobs:
+           [[ -n "$PACKAGED_APP_BIN" && -n "$PACKAGED_APP_INFO" && -n "$PACKAGED_HELPER" ]]
+           PACKAGED_APP_DIR="${PACKAGED_APP_BIN%/Contents/MacOS/Wattson}"
+           readonly PACKAGED_APP_DIR
+-          /usr/bin/xcrun lipo "$PACKAGED_APP_BIN" -verify_arch arm64 x86_64
+-          /usr/bin/xcrun lipo "$PACKAGED_HELPER" -verify_arch arm64 x86_64
++          for architecture in arm64 x86_64; do
++            /usr/bin/xcrun lipo "$PACKAGED_APP_BIN" -verify_arch "$architecture"
++            /usr/bin/xcrun lipo "$PACKAGED_HELPER" -verify_arch "$architecture"
++          done
+           [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$PACKAGED_APP_INFO")" == "$WATTSON_VERSION" ]]
+ 
+           if [[ "$SIGNED_RELEASE" == "1" ]]; then
+@@ -737,8 +739,10 @@ jobs:
+             [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]]
+             [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_DIR/Contents/Info.plist")" == "$expected_version" ]]
+             [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Contents/Info.plist")" == "com.leoarrow.wattson" ]]
+-            /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
+-            /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64
++            for architecture in arm64 x86_64; do
++              /usr/bin/xcrun lipo "$APP_BIN" -verify_arch "$architecture"
++              /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch "$architecture"
++            done
+             /usr/bin/codesign --verify --deep --strict "$APP_DIR"
+             /usr/bin/sudo -n /usr/bin/codesign --verify --strict "$HELPER_BIN"
+             [[ "$(/usr/bin/sudo -n /usr/bin/stat -f '%u:%g:%OLp' "$HELPER_BIN")" == "0:0:544" ]]
+@@ -1143,8 +1147,10 @@ jobs:
+           [[ "$(/usr/libexec/PlistBuddy -c 'Print :ProgramArguments:2' "$LOGIN_PLIST")" == "/Applications/Wattson.app" ]]
+           /bin/launchctl print "$LOGIN_TARGET" >/dev/null
+           [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$WATTSON_VERSION" ]]
+-          /usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
+-          /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch arm64 x86_64
++          for architecture in arm64 x86_64; do
++            /usr/bin/xcrun lipo "$APP_BIN" -verify_arch "$architecture"
++            /usr/bin/xcrun lipo "$HELPER_BIN" -verify_arch "$architecture"
++          done
+           /usr/bin/codesign --verify --deep --strict "$APP_DIR"
+           /usr/bin/sudo -n /usr/bin/codesign --verify --strict "$HELPER_BIN"
+           /usr/bin/sudo -n /bin/launchctl print "$HELPER_TARGET" >/dev/null
+diff --git a/scripts/build_diagnostics.sh b/scripts/build_diagnostics.sh
+index 9055ca5..ca9f705 100755
+--- a/scripts/build_diagnostics.sh
++++ b/scripts/build_diagnostics.sh
+@@ -99,15 +99,15 @@ EOF
+ /usr/bin/xattr -cr "$APP_DIR"
+ /usr/bin/codesign --force --sign - --identifier "$BUNDLE_ID" "$APP_DIR" >/dev/null
+ /usr/bin/codesign --verify --deep --strict "$APP_DIR"
+-/usr/bin/xcrun lipo "$EXECUTABLE_PATH" -verify_arch arm64 x86_64 \
+-    || fail "diagnostics executable is not universal"
+-wattson_run "$EXECUTABLE_PATH" --host-redaction-self-test \
+-    || fail "diagnostics hostname redaction self-test failed"
+ for architecture in arm64 x86_64; do
++    /usr/bin/xcrun lipo "$EXECUTABLE_PATH" -verify_arch "$architecture" \
++        || fail "diagnostics executable is missing $architecture"
+     build_info="$(/usr/bin/xcrun vtool -arch "$architecture" -show-build "$EXECUTABLE_PATH")"
+     /usr/bin/grep -Eq "minos[[:space:]]+$MIN_MACOS_VERSION([[:space:]]|$)" <<< "$build_info" \
+         || fail "$architecture slice does not target macOS $MIN_MACOS_VERSION"
+ done
++wattson_run "$EXECUTABLE_PATH" --host-redaction-self-test \
++    || fail "diagnostics hostname redaction self-test failed"
+ 
+ wattson_run /usr/bin/ditto -c -k \
+     --norsrc --noextattr --noqtn --noacl --keepParent \
+@@ -121,9 +121,11 @@ if /usr/bin/find "$EXTRACTED_APP" -name '._*' -print -quit | /usr/bin/grep -q .;
+     fail "archive contains AppleDouble metadata inside the app bundle"
+ fi
+ /usr/bin/codesign --verify --deep --strict "$EXTRACTED_APP"
+-/usr/bin/xcrun lipo "$EXTRACTED_APP/Contents/MacOS/$APP_NAME" \
+-    -verify_arch arm64 x86_64 \
+-    || fail "extracted diagnostics executable is not universal"
++for architecture in arm64 x86_64; do
++    /usr/bin/xcrun lipo "$EXTRACTED_APP/Contents/MacOS/$APP_NAME" \
++        -verify_arch "$architecture" \
++        || fail "extracted diagnostics executable is missing $architecture"
++done
+ 
+ {
+     printf 'name=Wattson Diagnostics\n'
+diff --git a/scripts/build_release.sh b/scripts/build_release.sh
+index 6687f9a..83e4eba 100755
+--- a/scripts/build_release.sh
++++ b/scripts/build_release.sh
+@@ -98,9 +98,9 @@ verify_universal_binary() {
+     local architecture
+     local build_info
+ 
+-    /usr/bin/xcrun lipo "$binary_path" -verify_arch arm64 x86_64 \
+-        || fail "binary is not universal (arm64 + x86_64): $binary_path"
+     for architecture in arm64 x86_64; do
++        /usr/bin/xcrun lipo "$binary_path" -verify_arch "$architecture" \
++            || fail "binary is missing $architecture: $binary_path"
+         build_info="$(/usr/bin/xcrun vtool -arch "$architecture" -show-build "$binary_path")"
+         /usr/bin/grep -Eq "minos[[:space:]]+$MIN_MACOS_VERSION([[:space:]]|$)" <<< "$build_info" \
+             || fail "$architecture slice does not target macOS $MIN_MACOS_VERSION: $binary_path"
+diff --git a/scripts/package_pkg.sh b/scripts/package_pkg.sh
+index 0509e48..a642966 100755
+--- a/scripts/package_pkg.sh
++++ b/scripts/package_pkg.sh
+@@ -45,10 +45,12 @@ OUTPUT_PKG="$DIST_DIR/${APP_NAME}-v${APP_VERSION}-macos-universal.pkg"
+     || fail "release build metadata does not match VERSION"
+ [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_DIR/Contents/Info.plist")" == "$APP_VERSION" ]] \
+     || fail "release app version does not match VERSION"
+-/usr/bin/xcrun lipo "$APP_DIR/Contents/MacOS/Wattson" -verify_arch arm64 x86_64 \
+-    || fail "release app is not universal"
+-/usr/bin/xcrun lipo "$HELPER_EXECUTABLE" -verify_arch arm64 x86_64 \
+-    || fail "release helper is not universal"
++for architecture in arm64 x86_64; do
++    /usr/bin/xcrun lipo "$APP_DIR/Contents/MacOS/Wattson" -verify_arch "$architecture" \
++        || fail "release app is missing $architecture"
++    /usr/bin/xcrun lipo "$HELPER_EXECUTABLE" -verify_arch "$architecture" \
++        || fail "release helper is missing $architecture"
++done
+ /usr/bin/codesign --verify --deep --strict "$APP_DIR"
+ /usr/bin/codesign --verify --strict "$HELPER_EXECUTABLE"
+ 
+diff --git a/scripts/verify_dmg.sh b/scripts/verify_dmg.sh
+index 6b27d7c..baa692d 100755
+--- a/scripts/verify_dmg.sh
++++ b/scripts/verify_dmg.sh
+@@ -67,7 +67,9 @@ if /usr/bin/find "$EMBEDDED_APP" \
+ fi
+ [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_INFO")" == com.leoarrow.wattson ]]
+ [[ "$(/usr/libexec/PlistBuddy -c 'Print :LSMinimumSystemVersion' "$APP_INFO")" == 12.0 ]]
+-/usr/bin/xcrun lipo "$APP_BIN" -verify_arch arm64 x86_64
++for architecture in arm64 x86_64; do
++    /usr/bin/xcrun lipo "$APP_BIN" -verify_arch "$architecture"
++done
+ /usr/bin/codesign --verify --deep --strict "$EMBEDDED_APP"
+ 
+ if [[ -n "$EXPECTED_APP" ]]; then
+diff --git a/scripts/verify_release.sh b/scripts/verify_release.sh
+index 12d33d2..e112522 100755
+--- a/scripts/verify_release.sh
++++ b/scripts/verify_release.sh
+@@ -30,12 +30,12 @@ verify_binary() {
+ 
+     [[ -f "$binary_path" && ! -L "$binary_path" ]] \
+         || fail "missing binary: $binary_path"
+-    /usr/bin/xcrun lipo "$binary_path" -verify_arch arm64 x86_64 \
+-        || fail "binary is missing a required architecture: $binary_path"
+     architectures="$(/usr/bin/xcrun lipo -archs "$binary_path")"
+     [[ "$(/usr/bin/wc -w <<< "$architectures" | /usr/bin/tr -d ' ')" == "2" ]] \
+         || fail "binary contains unexpected architectures: $architectures"
+     for architecture in arm64 x86_64; do
++        /usr/bin/xcrun lipo "$binary_path" -verify_arch "$architecture" \
++            || fail "binary is missing $architecture: $binary_path"
+         build_info="$(/usr/bin/xcrun vtool -arch "$architecture" -show-build "$binary_path")"
+         /usr/bin/grep -Eq "minos[[:space:]]+$MIN_MACOS_VERSION([[:space:]]|$)" <<< "$build_info" \
+             || fail "$architecture slice has the wrong deployment target: $binary_path"
+diff --git a/tests/test_diagnostics_contract.py b/tests/test_diagnostics_contract.py
+index 48dece1..191f6aa 100644
+--- a/tests/test_diagnostics_contract.py
++++ b/tests/test_diagnostics_contract.py
+@@ -131,7 +131,7 @@ class WattsonDiagnosticsContractTests(unittest.TestCase):
+     def test_build_produces_a_universal_macos_12_app_archive(self):
+         self.assertIn("arm64 x86_64", BUILD_SCRIPT)
+         self.assertIn("-apple-macos${MIN_MACOS_VERSION}", BUILD_SCRIPT)
+-        self.assertIn("-verify_arch arm64 x86_64", BUILD_SCRIPT)
++        self.assertIn('-verify_arch "$architecture"', BUILD_SCRIPT)
+         self.assertIn("Wattson-Diagnostics-v${DIAGNOSTICS_VERSION}-macos-universal.zip", BUILD_SCRIPT)
+         self.assertIn("codesign --verify --deep --strict", BUILD_SCRIPT)
+         self.assertIn("--norsrc --noextattr --noqtn --noacl", BUILD_SCRIPT)
+diff --git a/tests/test_release_packaging_contract.py b/tests/test_release_packaging_contract.py
+index 11619cd..85fc63c 100644
+--- a/tests/test_release_packaging_contract.py
++++ b/tests/test_release_packaging_contract.py
+@@ -2,9 +2,11 @@ import json
+ import pathlib
+ import plistlib
+ import re
++import shlex
+ import stat
+ import struct
+ import subprocess
++import sys
+ import unittest
+ import xml.etree.ElementTree as ET
+ import zlib
+@@ -342,12 +344,71 @@ class ReleasePackagingContractTests(unittest.TestCase):
+         self.assertIn('--scratch-path "$SWIFTPM_BUILD_DIR/$architecture"', build)
+         self.assertIn('lipo -create "${APP_SLICES[@]}"', build)
+         self.assertIn('lipo -create "${HELPER_SLICES[@]}"', build)
+-        self.assertIn('lipo "$binary_path" -verify_arch arm64 x86_64', build)
++        self.assertIn('lipo "$binary_path" -verify_arch "$architecture"', build)
+         self.assertIn('vtool -arch "$architecture" -show-build', build)
+         self.assertIn('MIN_MACOS_VERSION="12.0"', build)
+         self.assertNotIn("swiftc", build)
+         self.assertNotIn("fall back", build.lower())
+ 
++    @unittest.skipUnless(sys.platform == "darwin", "requires the macOS lipo tool")
++    def test_universal_verifiers_require_both_architectures_with_single_arch_arguments(self):
++        # Xcode 27 rejects the former two-architecture argv. Exercise the real
++        # verifier functions with real Mach-O fixtures, then a stricter parser
++        # seam so an older host lipo cannot hide the regression.
++        with TemporaryDirectory(prefix="lipo contract-") as folder:
++            scratch = pathlib.Path(folder)
++            source = scratch / "fixture.c"
++            source.write_text("int main(void) { return 0; }\n", encoding="utf-8")
++            for architecture in ("arm64", "x86_64"):
++                run(["/usr/bin/xcrun", "clang", "-target",
++                     f"{architecture}-apple-macos12.0", str(source),
++                     "-o", str(scratch / architecture)], check=True,
++                    capture_output=True, timeout=30)
++            universal = scratch / "universal"
++            run(["/usr/bin/xcrun", "lipo", "-create", str(scratch / "arm64"),
++                 str(scratch / "x86_64"), "-output", str(universal)],
++                check=True, capture_output=True, timeout=10)
++            malformed = scratch / "malformed"
++            malformed.write_text("not a Mach-O file\n", encoding="utf-8")
++            parser = scratch / "xcrun"
++            parser.write_text("""#!/usr/bin/python3
++import os, sys
++arguments = sys.argv[1:]
++if arguments[0] == 'lipo' and '-verify_arch' in arguments:
++    if len(arguments[arguments.index('-verify_arch') + 1:]) != 1:
++        sys.exit('verify_arch requires exactly one architecture')
++os.execv('/usr/bin/xcrun', ['/usr/bin/xcrun', *arguments])
++""", encoding="utf-8")
++            parser.chmod(0o755)
++            old_arguments = run([str(parser), "lipo", str(universal),
++                                 "-verify_arch", "arm64", "x86_64"],
++                                capture_output=True, text=True, timeout=10)
++            self.assertNotEqual(old_arguments.returncode, 0)
++            self.assertIn("exactly one architecture", old_arguments.stderr)
++            for script_name, function in (("build_release.sh", "verify_universal_binary"),
++                                          ("verify_release.sh", "verify_binary")):
++                body = re.search(rf"(?ms)^{function}\(\) \{{.*?^\}}",
++                                 self.source[script_name]).group()
++                for tool in ("/usr/bin/xcrun", str(parser)):
++                    harness = ('set -euo pipefail\nMIN_MACOS_VERSION=12.0\n'
++                               'fail() { echo "$*" >&2; exit 1; }\n'
++                               + body.replace("/usr/bin/xcrun", shlex.quote(tool))
++                               + f'\n{function} "$1"\n')
++                    for fixture in (universal, scratch / "arm64", scratch / "x86_64", malformed):
++                        with self.subTest(script=script_name, tool=tool, fixture=fixture.name):
++                            result = run(["/bin/bash", "-c", harness, "lipo-verifier", str(fixture)],
++                                         capture_output=True, text=True, timeout=10)
++                            self.assertEqual(result.returncode == 0, fixture == universal,
++                                             result.stdout + result.stderr)
++        shipping = [self.source[name] for name in ("build_release.sh", "verify_release.sh",
++                    "verify_dmg.sh", "package_pkg.sh")]
++        shipping += [(ROOT / name).read_text(encoding="utf-8") for name in (
++            "scripts/build_diagnostics.sh", ".github/workflows/macos-helper-install.yml",
++            ".github/workflows/homebrew-install-test.yml")]
++        for text in shipping:
++            self.assertNotIn("-verify_arch arm64 x86_64", text)
++            self.assertIn('-verify_arch "$architecture"', text)
++
+     def test_app_and_helper_use_one_explicit_signing_mode(self):
+         build = self.source["build_release.sh"]
+         self.assertIn("WATTSON_DEVELOPER_ID_APP", build)
+@@ -671,7 +732,7 @@ class ReleasePackagingContractTests(unittest.TestCase):
+         self.assertIn("DMG must expose only Wattson.app and an Applications link", verify)
+         self.assertIn('/usr/bin/readlink "$MOUNT_DIR/Applications"', verify)
+         self.assertIn('/usr/bin/codesign --verify --deep --strict "$EMBEDDED_APP"', verify)
+-        self.assertIn('lipo "$APP_BIN" -verify_arch arm64 x86_64', verify)
++        self.assertIn('lipo "$APP_BIN" -verify_arch "$architecture"', verify)
+         self.assertIn(
+             'verify_dmg.sh" "$DMG_PATH" "$PACKAGED_APP_DIR"',
+             self.source["verify_release.sh"],

@@ -1,0 +1,14 @@
+{
+  "allPassed": true,
+  "checks": {
+    "baseline": true,
+    "legacy": true,
+    "accessibility": true,
+    "animationStress": true
+  },
+  "counts": {
+    "baseline": 463,
+    "legacy": 461,
+    "accessibility": 455
+  }
+}

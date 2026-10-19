@@ -1,0 +1,41 @@
+{
+  "sourceCommit": "4bbe06679be64bf192157a47ebce135e250f107d",
+  "productionEdited": false,
+  "testFile": "SwiftTests/TestDefaultsCleanup.swift",
+  "change": "Accept the new exact-domain missing-domain message in addition to the old exact-domain format. Keep all other error handling and test-domain UUID allowlisting.",
+  "failingRuntimeSource": "683bf7699f4ee612896406325eb03a4af74b474a",
+  "failingRun": 39195186472,
+  "observedMacOS27Errors": {
+    "missingDomainMessage": 149,
+    "fileStillExistsAfterEarlyReturn": 6
+  },
+  "macOS26FocusedCleanupTest": {
+    "tests": 1,
+    "failures": 0,
+    "exitCode": 0,
+    "scratchRemoved": true
+  },
+  "macOS27FullRerun": 39195603040,
+  "scope": "Test fixture compatibility only; no production bug is established by these failures.",
+  "productionReadOnlyCheck": {
+    "directories": [
+      "Core",
+      "MenuBar",
+      "Helper",
+      "HelperV5",
+      "Popover"
+    ],
+    "noSystemDefaultsCLIInvocation": true,
+    "noSystemMissingDomainTextParser": true,
+    "settingsAPI": "UserDefaults",
+    "systemBatteryIconAPI": "CFPreferences; nil and fixed worker exit code 23",
+    "productionChangeRequired": false
+  },
+  "finalSDK27Result": {
+    "sourceCommit": "4532daac11c0698ab97f05a6fc47e563b16d4e0e",
+    "fullSwiftTests": 664,
+    "failures": 0,
+    "cleanupRegression": "passed",
+    "proof": "../../compatibility/ci-39198225803/verification.json"
+  }
+}

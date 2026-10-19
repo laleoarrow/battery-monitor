@@ -1,0 +1,30 @@
+warning: 'battery-monitor': Invalid Exclude '/Users/runner/work/battery-monitor/battery-monitor/dist': File not found.
+warning: 'battery-monitor': Invalid Exclude '/Users/runner/work/battery-monitor/battery-monitor/dist': File not found.
+Building for debugging...
+[Computing dependencies]
+[Pre-planning 1 / 212]
+[Planning deferred tasks]
+[8 / 78] WattsonTests-product
+[34 / 69] Wattson
+[37 / 82]
+[40 / 82] Wattson
+[46 / 82]
+[47 / 82]
+[47 / 82] Wattson
+[48 / 82] WattsonTests-product
+[50 / 82] WattsonHelperV5SupportTests-product
+[52 / 82] WattsonHelperV5SupportTests-product
+[56 / 82] WattsonHelperV5SupportTests-product
+[58 / 82] WattsonHelperV5SupportTests-product
+[60 / 82] WattsonHelperV5SupportTests-product
+[64 / 82] WattsonHelperV5SupportTests-product
+[66 / 82] Wattson
+[68 / 82] Wattson
+[72 / 83] WattsonTests-product
+[75 / 87] WattsonTests-product
+[76 / 87] WattsonTests-product
+[78 / 87] WattsonTests-product
+[81 / 87] WattsonTests-product
+[83 / 87] WattsonTests-product
+[85 / 87] WattsonTests-product
+Build complete! (37.53 sec)

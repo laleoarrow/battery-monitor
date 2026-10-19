@@ -1,0 +1,19 @@
+{
+  "checkedAtUTC": "2026-10-19T04:29:43.379955+00:00",
+  "retainedAndSourceHashesRechecked": 73,
+  "allMatched": true,
+  "evidenceJSONFilesParsed": 105,
+  "evidenceJSONLParsed": true,
+  "finalSourceCommit": "4532daac11c0698ab97f05a6fc47e563b16d4e0e",
+  "runtimeSourceUnchangedFrom": "67f39101c5ec9582561166a14a04e1970da7fa3d",
+  "originalThreeProductionFilesMatchDF7": true,
+  "fullSDK27Gate": "passed",
+  "hostedProofSHA256": "e2abc785f2cde84dbadc5b4835a1d32a289978293bb1b6f84187766ca00e1952",
+  "nativeSourceCommit": "163f9902df566d02fbc235b1a2027583ad76c638",
+  "canonicalPreservation": "canonical-preservation-final.json",
+  "additionalProductionChange": "capture-followup/verification.json",
+  "additionalProductionChangeProReview": "approved_response_complete",
+  "buildToolCompatibilityFix": "lipo-followup/verification.json",
+  "sourceAttachmentHashVerified": true,
+  "unverifiedHardwareAndDistributionBoundaries": "../compatibility/ci-39198225803/verification.json"
+}

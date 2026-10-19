@@ -32,7 +32,10 @@
     "minimumMacOS": "12.0",
     "exitCode": 0,
     "signatureAndBundleVerificationPassed": true,
-    "artifactRetained": false
+    "artifactRetained": false,
+    "configuredEntitlementsUsedForSigning": true,
+    "packagedEntitlementsCanonicalComparisonExecuted": false,
+    "developerIDAndNotarizationExecuted": false
   },
   "rowImageRegression": {
     "oldRowWithGuardedButtonFailures": 9,
@@ -53,18 +56,18 @@
     "rawSettingsValuesLogged": false
   },
   "proReview": {
-    "status": "pending_manual_unlock",
+    "status": "complete",
     "browser": "SunBrowser (com.adspower.SunBrowser)",
-    "selectedProModeVerified": false,
-    "promptSubmitted": false,
-    "responseReceived": false,
-    "blocker": "CUA app inventory reported that the Mac is locked and automatic unlock failed. Manual unlock was requested; no unlock reply has arrived.",
-    "availableBrowserConnector": "No SunBrowser connector was present; an unrelated Edge session was not used.",
-    "preparedPrompt": "prompt.txt",
-    "localReviewIsNotProReview": true,
-    "nextStep": "After manual unlock, bind the running SunBrowser by its full path, verify actual Pro mode, submit this bounded source review, evaluate its advice against the code and rerun affected checks if changes are needed."
+    "selectedProModeVerified": true,
+    "promptSubmitted": true,
+    "responseReceived": true,
+    "mandatoryAdditionalProductionChanges": 0,
+    "conversationURL": "https://chatgpt.com/c/6ad58891-d4ac-83ee-9892-4acc9fc80fef",
+    "decisionRecord": "../pro-review/decision.md",
+    "proDidNotRunTests": true,
+    "sdk27CaptureFollowup": "approved; response complete; ../pro-review/capture-followup/verification.json"
   },
-  "macOS27Acceptance": "Source reviewed; SDK27 build/runtime27 validation pending",
+  "macOS27Acceptance": "Complete hosted SDK27/runtime and universal build gate passed for final source; physical hardware and installed lifecycle acceptance remain separate.",
   "nativeValidation": {
     "sourceCommit": "df7d4bcbeb0200e6ee5001182d92f62229aba88f",
     "independentFocusChecks": 34,
@@ -78,9 +81,70 @@
     "evidenceHashesRechecked": 48
   },
   "localValidationComplete": true,
-  "fullUserRequestComplete": false,
-  "remainingWork": [
-    "Actual SunBrowser Pro review after manual unlock",
-    "macOS27 SDK/runtime acceptance"
-  ]
+  "remainingWork": [],
+  "postProFollowup": {
+    "sourceCommit": "163f9902df566d02fbc235b1a2027583ad76c638",
+    "productionUnchanged": true,
+    "nativeChecks": 1379,
+    "independentFocusChecks": 34,
+    "stressIterations": 20000,
+    "noNewFocusQualifiedPaths": true,
+    "guestAndHostCleanupPassed": true,
+    "nativeProof": "../pro-review/focus-followup/native-163f990/owned-source-verification.json",
+    "targetedHelperExecutableTests": 4,
+    "targetedHelperFailures": 0,
+    "helperProof": "../pro-review/helper-followup/targeted-executions.json",
+    "workflowDiagnosticsSourceCommit": "683bf7699f4ee612896406325eb03a4af74b474a",
+    "workflowContractTests": 41,
+    "workflowContractFailures": 0,
+    "finalLocalAudit": "../pro-review/final-local-audit.json"
+  },
+  "finalCanonicalPreservation": "../pro-review/canonical-preservation-final.json",
+  "scope": "Original local df7d4bc checks are retained. finalAcceptance describes the final frozen source and full hosted macOS27 gate.",
+  "optimizationRoundComplete": true,
+  "automatedSDK27AcceptanceComplete": true,
+  "hardwareAndInstalledLifecycleAcceptanceComplete": false,
+  "remainingManualAcceptance": [
+    "Physical battery/SMC and actual privileged helper/TCC behavior on macOS27",
+    "PKG/DMG upgrade and launch-at-login lifecycle on macOS27, including packaged entitlements comparison",
+    "Released SDK26 binary on macOS27 and a full appearance cross-product",
+    "Intel and macOS12 runtime acceptance"
+  ],
+  "finalAcceptance": {
+    "sourceCommit": "4532daac11c0698ab97f05a6fc47e563b16d4e0e",
+    "runtimeSourceUnchangedFrom": "67f39101c5ec9582561166a14a04e1970da7fa3d",
+    "runURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39198225803",
+    "proof": "../compatibility/ci-39198225803/verification.json",
+    "environment": {
+      "macOS": "27.0.1",
+      "macOSBuild": "26A434",
+      "xcode": "27.0",
+      "xcodeBuild": "27A266a",
+      "SDK": "27.0",
+      "architecture": "arm64",
+      "image": "xcode-27-arm64",
+      "imageVersion": "20261012.0260.1",
+      "identitySource": "Actual job setup/preflight raw log lines 17-18 and 195-200, matching Swift artifact source"
+    },
+    "swiftTests": 664,
+    "swiftFailures": 0,
+    "pythonTests": 613,
+    "pythonFailures": 0,
+    "pythonExpectedSkips": 4,
+    "nativeVariantsPassed": 3,
+    "nativeSuccessfulAssertionLogLines": 1377,
+    "nativeButtonFocusActuallyExercised": true,
+    "nativeQualification": "Each variant closed synchronously, so the existing mid-close reopening timing path was unexercised.",
+    "stressIterations": 20000,
+    "universalArchitectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "minimumOSMetadata": "12.0",
+    "strictSignaturesAndBuildOnlyBundleVerificationPassed": true,
+    "packagedEntitlementsCanonicalComparisonExecuted": false,
+    "developerIDNotarizationOrInstallationExecuted": false,
+    "localCanonicalPreservation": "../pro-review/canonical-preservation-final.json",
+    "independentRemoteResourceCensusPerformed": false
+  }
 }

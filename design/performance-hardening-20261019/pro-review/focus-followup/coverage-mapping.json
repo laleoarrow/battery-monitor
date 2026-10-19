@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "status": "native_verified_on_frozen_163f990_source_and_owned_cleanup_complete",
+  "baseCommit": "000fdeb268940c99b9ea5ce727eecad6469207c9",
+  "productionEdited": false,
+  "persistentTestFile": "tests/interaction/main.swift",
+  "persistentTestSHA256": "c486f6e938d0729190cb859431cb2ac193063f7e659df13abeb1a83123b30e13",
+  "testPatchSHA256": "eae16ebbcb9c2ae19aa68657fae1c0997d8503d3647e629ad089ad97d4747e82",
+  "existingImmutableProbeSourceCommit": "df7d4bcbeb0200e6ee5001182d92f62229aba88f",
+  "existingIndependentProbeChecks": 34,
+  "existingIndependentProbeQualifiedPaths": [],
+  "coverageMapping": [
+    {
+      "boundary": "Space via real NSWindow event dispatch; keep selection and first responder consistent",
+      "coverage": "strengthened_persistent_test_native_verified_163f990",
+      "details": "sendFocusKey uses window.sendEvent; both Compact modes assert selection cleared and A row remains firstResponder."
+    },
+    {
+      "boundary": "Focused A and selected B remain independent across rerank, then Down Arrow uses A new rank",
+      "coverage": "new_persistent_test_native_verified_163f990",
+      "details": "Select B via AX, focus A row, rerank B/A/C; NSWindow Down Arrow must select/focus C."
+    },
+    {
+      "boundary": "Focused native action moves both down and up and requests only original identity",
+      "coverage": "strengthened_persistent_test_native_verified_163f990",
+      "details": "Existing native NSButton path loops A/B/C -> B/A/C -> A/B/C; each action records exactly one A request and retains button focus. AppKit refusal remains qualified, never passing."
+    },
+    {
+      "boundary": "Same PID and start time, changed audit token only",
+      "coverage": "new_persistent_test_native_verified_163f990",
+      "details": "Only audit token val.7 changes; clear selection and retire focus to safe responder."
+    },
+    {
+      "boundary": "Unrelated text field editor retains focus when Top N shrinks or list becomes empty",
+      "coverage": "new_persistent_test_native_verified_163f990",
+      "details": "Extend existing external-editor fixture through rerank, smaller Top N, empty and unavailable."
+    },
+    {
+      "boundary": "Escape clears selection but focused row still follows process identity",
+      "coverage": "already_native_verified_v2",
+      "evidenceChecks": [
+        "escapeClearsSelectionButPreservesRowFocus",
+        "unselectedFocusedRowStillFollowsIdentity"
+      ]
+    },
+    {
+      "boundary": "Focused action falls back to same identity row after Top N reduction clears selection",
+      "coverage": "already_native_verified_v2",
+      "evidenceChecks": [
+        "reducedTopNClearsSelectionForRetainedIdentity",
+        "reducedTopNFocusedActionFallsBackToSameIdentityRow"
+      ]
+    },
+    {
+      "boundary": "Same PID with changed start time; identified identity becomes unavailable",
+      "coverage": "already_native_verified_v2",
+      "evidenceChecks": [
+        "recycledPIDClearsOriginalSelection",
+        "recycledPIDRetiresOriginalFocusSafely",
+        "identityUnavailableClearsOriginalSelection",
+        "identityUnavailableRetiresOriginalFocusSafely"
+      ]
+    },
+    {
+      "boundary": "Loading, unavailable and empty states retire process focus safely",
+      "coverage": "already_native_verified_v2",
+      "evidenceChecks": [
+        "loadingRetiresProcessFocus",
+        "unavailableRetiresProcessFocus",
+        "emptyRetiresProcessFocus"
+      ]
+    }
+  ],
+  "limits": [
+    "The new NSWindow.sendEvent and additional assertions actually passed all three native variants on macOS 26.6.1; no macOS 27 runtime claim is made.",
+    "The completed v1/v2 probe inputs, logs and reports were not edited."
+  ],
+  "nativeVerification": {
+    "sourceCommit": "163f9902df566d02fbc235b1a2027583ad76c638",
+    "proof": "native-163f990/owned-source-verification.json",
+    "allPassed": true,
+    "nativeVariantsChecks": {
+      "baseline": 463,
+      "legacy": 461,
+      "accessibility": 455
+    },
+    "independentFocusChecks": 34,
+    "persistentFocusChecksPerVariant": 21,
+    "qualifiedFocusPaths": [],
+    "ownedCleanupPassed": true,
+    "ownedVMCreatedAndRemoved": true
+  },
+  "preparationChecks": {
+    "swiftFrontendParsePassed": true,
+    "gitDiffCheckPassed": true,
+    "noProductionEditsByThisTask": true,
+    "noVMStartedByThisTask": true,
+    "noCommitOrPushByThisTask": true
+  },
+  "preparationNote": "These checks describe the parse-only preparation stage before root authorized the frozen 163f990 VM run; original preparation source and hash fields are preserved above."
+}

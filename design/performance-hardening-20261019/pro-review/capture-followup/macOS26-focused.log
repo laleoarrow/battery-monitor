@@ -1,0 +1,7 @@
+test_appkit_window_layout_state_and_release_contract (test_settings_window_contract.SettingsWindowContractTests) ... settings-contract config: interactive=False runtime-watchdog=120s compile-watchdog=120s optimization=Onone
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 35.237s
+
+OK

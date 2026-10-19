@@ -1,0 +1,138 @@
+{
+  "purpose": "Portable fail-closed universal architecture verification after actual Xcode 27 multi-architecture parser failure",
+  "scope": [
+    "scripts/build_release.sh",
+    "scripts/verify_release.sh",
+    "scripts/verify_dmg.sh",
+    "scripts/package_pkg.sh",
+    "scripts/build_diagnostics.sh",
+    ".github/workflows/macos-helper-install.yml",
+    ".github/workflows/homebrew-install-test.yml",
+    "tests/test_release_packaging_contract.py",
+    "tests/test_diagnostics_contract.py"
+  ],
+  "shippingVerifyArchCalls": 14,
+  "sourceSHA256": {
+    "scripts/build_release.sh": "1635b6ed46809398a311fc5478b46243f710000b4e5c8f595d26f3b6b395dca7",
+    "scripts/verify_release.sh": "ec074b27f4add81f7d59fe0ecabfd9bd78dd1bb53ff276f48d4eaa39c1832358",
+    "scripts/verify_dmg.sh": "5f5300f495833ab4f6fe128ea37eff68d2fb521e032f5c92be1d589a02b28374",
+    "scripts/package_pkg.sh": "04c8f82bacec8df91186852f942d0ff2baf3afda90a54827ebb827e32bda203a",
+    "scripts/build_diagnostics.sh": "8e94b5110307309733dbb7c16b56f337e19e4c22182f7c329a08c2cf04a69a2b",
+    ".github/workflows/macos-helper-install.yml": "c5b3ba2e9924e1e6267ce0f37e56ebc7cd66d159f2c6a5883cc05ad09a463fb2",
+    ".github/workflows/homebrew-install-test.yml": "0ab977befb3b01023781a471d0cc8aa8619546ea66e6f6f785a93892f712aacc",
+    "tests/test_release_packaging_contract.py": "56eeb9de33306712665ec060022740b3093b10aff03c7357d4ab489959ebc0bd",
+    "tests/test_diagnostics_contract.py": "6c75e99005d3009f0d1de312feea0cc9b65c3f710030be0f7df1eaa129ad21db"
+  },
+  "validation": {
+    "host": {
+      "macOS": "26.5.2",
+      "build": "25F84",
+      "architecture": "arm64",
+      "Xcode": "26.6 (17F113)",
+      "SDK": "26.5"
+    },
+    "targetedModules": [
+      "test_release_packaging_contract",
+      "test_diagnostics_contract",
+      "test_release_workflow_contract",
+      "test_release_cleanup",
+      "test_packaging_cleanup"
+    ],
+    "targetedTests": {
+      "count": 90,
+      "failures": 0,
+      "skips": 0,
+      "seconds": 55.405,
+      "log": "targeted-tests.log",
+      "sourceQualification": "90-test run preceded the final test-only shell quoting and temporary-path-with-spaces refinement; shipping scripts/workflows unchanged."
+    },
+    "newExecutableRegression": {
+      "count": 1,
+      "fixture": "real clang-linked arm64 + x86_64 Mach-O executable; real host lipo-created fat input",
+      "functions": [
+        "build_release.sh:verify_universal_binary",
+        "verify_release.sh:verify_binary"
+      ],
+      "inputCases": [
+        "fat arm64+x86_64 passes",
+        "arm64-only fails",
+        "x86_64-only fails",
+        "malformed fails"
+      ],
+      "tools": [
+        "real host xcrun/lipo/vtool",
+        "single-architecture parser seam delegating all accepted operations to real xcrun"
+      ],
+      "legacyMultiArchitectureArgumentList": "explicitly rejected by parser seam; actual Xcode 27 failure is preserved separately in compatibility evidence",
+      "ownership": "tests/local_runtime.py TemporaryDirectory and run own all test files/process groups; no fixture executable is launched"
+    },
+    "actionlint": {
+      "exit": 0,
+      "workflows": [
+        ".github/workflows/macos-helper-install.yml",
+        ".github/workflows/homebrew-install-test.yml"
+      ],
+      "shellcheck": false,
+      "log": "actionlint.log"
+    },
+    "bashSyntax": {
+      "exit": 0,
+      "scripts": [
+        "scripts/build_release.sh",
+        "scripts/verify_release.sh",
+        "scripts/verify_dmg.sh",
+        "scripts/package_pkg.sh",
+        "scripts/build_diagnostics.sh"
+      ],
+      "invocation": "each script independently parsed by /bin/bash -n"
+    },
+    "sourceDiffCheck": {
+      "exit": 0,
+      "paths": [
+        "scripts/build_release.sh",
+        "scripts/verify_release.sh",
+        "scripts/verify_dmg.sh",
+        "scripts/package_pkg.sh",
+        "scripts/build_diagnostics.sh",
+        ".github/workflows/macos-helper-install.yml",
+        ".github/workflows/homebrew-install-test.yml",
+        "tests/test_release_packaging_contract.py",
+        "tests/test_diagnostics_contract.py"
+      ]
+    },
+    "cleanup": {
+      "remainingLipoFixtureDirectories": [],
+      "appRegistrationCreated": false,
+      "canonicalInstallTouched": false
+    },
+    "finalSpacePathRegression": {
+      "count": 1,
+      "failures": 0,
+      "skips": 0,
+      "seconds": 1.215,
+      "log": "final-space-path-regression.log",
+      "change": "shlex.quote(tool) before harness substitution; actual temporary workspace prefix contains a space"
+    }
+  },
+  "constraintsPreserved": [
+    "arm64 and x86_64 are both required",
+    "existing exact architecture count in verify_release.sh",
+    "existing minimum macOS 12 vtool checks",
+    "existing signatures, entitlements, bundle and package checks",
+    "owned staging, mount and process cleanup"
+  ],
+  "limits": [
+    "This local validation used Xcode 26.6; final actual Xcode 27 full gate remains a separate root-owned run.",
+    "No PKG installation, notarization, release publication or canonical App/helper update performed."
+  ],
+  "frozenSourceCommit": "4532daac11c0698ab97f05a6fc47e563b16d4e0e",
+  "finalSDK27Run": 39198225803,
+  "finalSDK27Result": {
+    "sourceCommit": "4532daac11c0698ab97f05a6fc47e563b16d4e0e",
+    "fullWorkflow": "success",
+    "universalBuild": "passed; ARM + Intel, minOS12 metadata, strict signatures and bundle verification",
+    "newRealMachORegression": "passed within 613 Python tests",
+    "proof": "../../compatibility/ci-39198225803/verification.json",
+    "packagedEntitlementsCanonicalComparisonExecuted": false
+  }
+}

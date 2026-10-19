@@ -1,0 +1,6 @@
+test_universal_verifiers_require_both_architectures_with_single_arch_arguments (test_release_packaging_contract.ReleasePackagingContractTests) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.215s
+
+OK

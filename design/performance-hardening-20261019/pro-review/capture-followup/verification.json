@@ -1,0 +1,34 @@
+{
+  "sourceCommit": "67f39101c5ec9582561166a14a04e1970da7fa3d",
+  "file": "MenuBar/SettingsWindowController.swift",
+  "sha256": "70e8bd5eafa0df6d56c585e6f29f9185ace4e5182609520b7ae496ac220f2507",
+  "change": "Explicit [self] capture in feedback background dispatch; preserve existing implicit strong capture and nested weak main callback.",
+  "failingRun": 39195603040,
+  "diagnostic": "ImplicitStrongCapture; warning elevated to error by standalone Settings fixture",
+  "officialDiagnosticURL": "https://docs.swift.org/latest/documentation/diagnostics/implicit-strong-capture/",
+  "macOS26TargetedSettingsContract": {
+    "tests": 1,
+    "failures": 0,
+    "warningsAsErrors": true,
+    "exitCode": 0,
+    "elapsedSeconds": 35.237
+  },
+  "independentSemanticReview": "No ownership/lifecycle or retain-cycle change identified. Outer strong and inner weak remain.",
+  "proFollowup": {
+    "status": "response_complete",
+    "selectedProModeVerified": true,
+    "selectorUI": "Pro, 5 of 5",
+    "conversationURL": "https://chatgpt.com/c/6ad58891-d4ac-83ee-9892-4acc9fc80fef",
+    "verdict": "Accept the one-line explicit capture; same outer strong / inner weak semantics, no new retain cycle; retain original three patch verdict.",
+    "responseCompleteUIObserved": true,
+    "proDidNotRunTests": true
+  },
+  "macOS27FullRerun": 39196405646,
+  "finalSDK27Result": {
+    "sourceCommit": "4532daac11c0698ab97f05a6fc47e563b16d4e0e",
+    "fullSwiftTests": 664,
+    "failures": 0,
+    "settingsWarningsAsErrorsContract": "passed within final Python suite",
+    "proof": "../../compatibility/ci-39198225803/verification.json"
+  }
+}

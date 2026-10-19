@@ -1,0 +1,24 @@
+{
+  "artifactID": 12161927190,
+  "artifactName": "macos27-swift-4bbe06679be64bf192157a47ebce135e250f107d",
+  "archiveSHA256": "fa2150ca64d782937128166b48012f1e04864bf4f43693ee854cff12acfaaa69",
+  "apiDigest": "sha256:fa2150ca64d782937128166b48012f1e04864bf4f43693ee854cff12acfaaa69",
+  "files": {
+    "environment.txt": {
+      "bytes": 104,
+      "sha256": "cae6a4cacab7862dc3fe65bc1fb3e81eff6f7c0be9e7397b2bd35457d880d734"
+    },
+    "source.txt": {
+      "bytes": 41,
+      "sha256": "22ed284935486e2791afddcf0ee8fadada95eed9360e438ea6ec1ac1aaddaeb3"
+    },
+    "swift-test-build.log": {
+      "bytes": 3084,
+      "sha256": "4443ab8e5e3d1939ded702305387c9f95f1392740fdae949d7dc5e67d44fc60e"
+    },
+    "swift-test-run.log": {
+      "bytes": 184253,
+      "sha256": "c1a5b872f6e10d3e1aaffc933395c754e7c7b3869478e6a9fffba24451d6d2ff"
+    }
+  }
+}

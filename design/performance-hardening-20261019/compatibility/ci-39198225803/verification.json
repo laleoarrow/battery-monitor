@@ -1,0 +1,475 @@
+{
+  "runURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39198225803",
+  "sourceCommit": "4532daac11c0698ab97f05a6fc47e563b16d4e0e",
+  "branch": "codex/performance-smoothness",
+  "event": "workflow_dispatch",
+  "status": "completed",
+  "conclusion": "success",
+  "productionAppCoreHelperUnchangedFrom": "67f39101c5ec9582561166a14a04e1970da7fa3d",
+  "changedPathsFromFourthRun": [
+    ".github/workflows/homebrew-install-test.yml",
+    ".github/workflows/macos-helper-install.yml",
+    "scripts/build_diagnostics.sh",
+    "scripts/build_release.sh",
+    "scripts/package_pkg.sh",
+    "scripts/verify_dmg.sh",
+    "scripts/verify_release.sh",
+    "tests/test_diagnostics_contract.py",
+    "tests/test_release_packaging_contract.py"
+  ],
+  "environment": {
+    "macOS": "27.0.1",
+    "macOSBuild": "26A434",
+    "xcode": "27.0",
+    "xcodeBuild": "27A266a",
+    "SDK": "27.0",
+    "architecture": "arm64",
+    "image": "xcode-27-arm64",
+    "imageVersion": "20261012.0260.1",
+    "identitySource": "Actual job setup/preflight raw log lines 17-18 and 195-200, matching Swift artifact source"
+  },
+  "swift": {
+    "ordinaryBuild": "success",
+    "buildTests": "success",
+    "appXCTest": {
+      "tests": 634,
+      "failures": 0,
+      "elapsedSeconds": 27.881,
+      "wallElapsedSeconds": 27.984
+    },
+    "helperXCTest": {
+      "tests": 30,
+      "failures": 0,
+      "elapsedSeconds": 0.05,
+      "wallElapsedSeconds": 0.054
+    },
+    "totalXCTestTests": 664,
+    "totalFailures": 0,
+    "testDefaultsCleanupRegression": "passed; prior exact-domain cleanup failures absent"
+  },
+  "python": {
+    "status": "success",
+    "tests": 613,
+    "failures": 0,
+    "skipped": 4,
+    "elapsedSeconds": 318.382,
+    "summaryEvidence": {
+      "line": 2476,
+      "timestamp": "2026-10-19T04:18:52.0704280Z",
+      "text": "Ran 613 tests in 318.382s"
+    },
+    "skipEvidence": [
+      {
+        "line": 2027,
+        "timestamp": "2026-10-19T04:14:21.5759500Z",
+        "text": "test_interaction_contract_holds_against_real_appkit (test_interaction_behavior.InteractionBehaviorTests) ... skipped 'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'"
+      },
+      {
+        "line": 2028,
+        "timestamp": "2026-10-19T04:14:21.5760970Z",
+        "text": "test_legacy_optical_lens_contract_holds_against_real_appkit (test_interaction_behavior.InteractionBehaviorTests) ... skipped 'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'"
+      },
+      {
+        "line": 2029,
+        "timestamp": "2026-10-19T04:14:21.5762110Z",
+        "text": "test_legacy_slider_contract_holds_against_real_appkit (test_interaction_behavior.InteractionBehaviorTests) ... skipped 'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'"
+      },
+      {
+        "line": 2030,
+        "timestamp": "2026-10-19T04:14:21.5763120Z",
+        "text": "test_reduce_transparency_contract_holds_against_real_appkit (test_interaction_behavior.InteractionBehaviorTests) ... skipped 'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'"
+      }
+    ],
+    "realMachOVerifierRegressionEvidence": {
+      "line": 2279,
+      "timestamp": "2026-10-19T04:15:51.6118640Z",
+      "text": "test_universal_verifiers_require_both_architectures_with_single_arch_arguments (test_release_packaging_contract.ReleasePackagingContractTests) ... ok"
+    }
+  },
+  "native": {
+    "status": "success with qualifications",
+    "completedVariants": 3,
+    "variants": [
+      {
+        "variant": "baseline",
+        "forcedLegacyKnob": 0,
+        "forcedReduceMotion": 0,
+        "forcedReduceTransparency": 0,
+        "status": "passed with synchronous-close qualification",
+        "rawLogStartLine": 2512,
+        "rawLogEndLine": 2994,
+        "completionMarker": {
+          "line": 2994,
+          "timestamp": "2026-10-19T04:20:48.4666240Z",
+          "text": "ALL_INTERACTION_CHECKS_PASSED"
+        },
+        "successfulAssertionLogLines": 462,
+        "qualifications": [
+          {
+            "line": 2536,
+            "timestamp": "2026-10-19T04:20:48.4221900Z",
+            "text": "⏭  当前系统同步完成关闭：没有可验证的关闭中途重开窗口"
+          }
+        ],
+        "processActionButtonFocusUnexercised": false,
+        "processFocusWindowAndButtonEvidence": [
+          {
+            "line": 2900,
+            "timestamp": "2026-10-19T04:20:48.4646070Z",
+            "text": "✅ 进程键盘焦点回归具有真实 key window"
+          },
+          {
+            "line": 2903,
+            "timestamp": "2026-10-19T04:20:48.4646810Z",
+            "text": "✅ 真实 window 分发空格只取消原进程选择并保留焦点 compact=false"
+          },
+          {
+            "line": 2906,
+            "timestamp": "2026-10-19T04:20:48.4647560Z",
+            "text": "✅ 真实 window 分发空格只取消原进程选择并保留焦点 compact=true"
+          },
+          {
+            "line": 2909,
+            "timestamp": "2026-10-19T04:20:48.4648190Z",
+            "text": "✅ 后移 重排时原生强退按钮焦点跟随原进程"
+          },
+          {
+            "line": 2910,
+            "timestamp": "2026-10-19T04:20:48.4648370Z",
+            "text": "✅ 后移 后焦点按钮仅请求原进程身份而不误操作新排名"
+          },
+          {
+            "line": 2911,
+            "timestamp": "2026-10-19T04:20:48.4648560Z",
+            "text": "✅ 前移 重排时原生强退按钮焦点跟随原进程"
+          },
+          {
+            "line": 2912,
+            "timestamp": "2026-10-19T04:20:48.4648730Z",
+            "text": "✅ 前移 后焦点按钮仅请求原进程身份而不误操作新排名"
+          }
+        ]
+      },
+      {
+        "variant": "legacy",
+        "forcedLegacyKnob": 1,
+        "forcedReduceMotion": 0,
+        "forcedReduceTransparency": 0,
+        "status": "passed with synchronous-close qualification",
+        "rawLogStartLine": 2995,
+        "rawLogEndLine": 3475,
+        "completionMarker": {
+          "line": 3475,
+          "timestamp": "2026-10-19T04:22:45.5543940Z",
+          "text": "ALL_INTERACTION_CHECKS_PASSED"
+        },
+        "successfulAssertionLogLines": 460,
+        "qualifications": [
+          {
+            "line": 3019,
+            "timestamp": "2026-10-19T04:22:45.4857650Z",
+            "text": "⏭  当前系统同步完成关闭：没有可验证的关闭中途重开窗口"
+          }
+        ],
+        "processActionButtonFocusUnexercised": false,
+        "processFocusWindowAndButtonEvidence": [
+          {
+            "line": 3381,
+            "timestamp": "2026-10-19T04:22:45.5510100Z",
+            "text": "✅ 进程键盘焦点回归具有真实 key window"
+          },
+          {
+            "line": 3384,
+            "timestamp": "2026-10-19T04:22:45.5510880Z",
+            "text": "✅ 真实 window 分发空格只取消原进程选择并保留焦点 compact=false"
+          },
+          {
+            "line": 3387,
+            "timestamp": "2026-10-19T04:22:45.5511620Z",
+            "text": "✅ 真实 window 分发空格只取消原进程选择并保留焦点 compact=true"
+          },
+          {
+            "line": 3390,
+            "timestamp": "2026-10-19T04:22:45.5512280Z",
+            "text": "✅ 后移 重排时原生强退按钮焦点跟随原进程"
+          },
+          {
+            "line": 3391,
+            "timestamp": "2026-10-19T04:22:45.5512500Z",
+            "text": "✅ 后移 后焦点按钮仅请求原进程身份而不误操作新排名"
+          },
+          {
+            "line": 3392,
+            "timestamp": "2026-10-19T04:22:45.5512750Z",
+            "text": "✅ 前移 重排时原生强退按钮焦点跟随原进程"
+          },
+          {
+            "line": 3393,
+            "timestamp": "2026-10-19T04:22:45.5512950Z",
+            "text": "✅ 前移 后焦点按钮仅请求原进程身份而不误操作新排名"
+          }
+        ]
+      },
+      {
+        "variant": "accessibility",
+        "forcedLegacyKnob": 1,
+        "forcedReduceMotion": 1,
+        "forcedReduceTransparency": 1,
+        "status": "passed with synchronous-close qualification",
+        "rawLogStartLine": 3476,
+        "rawLogEndLine": 3951,
+        "completionMarker": {
+          "line": 3951,
+          "timestamp": "2026-10-19T04:24:39.0237670Z",
+          "text": "ALL_INTERACTION_CHECKS_PASSED"
+        },
+        "successfulAssertionLogLines": 455,
+        "qualifications": [
+          {
+            "line": 3502,
+            "timestamp": "2026-10-19T04:24:39.0031260Z",
+            "text": "⏭  当前系统同步完成关闭：没有可验证的关闭中途重开窗口"
+          }
+        ],
+        "processActionButtonFocusUnexercised": false,
+        "processFocusWindowAndButtonEvidence": [
+          {
+            "line": 3857,
+            "timestamp": "2026-10-19T04:24:39.0216830Z",
+            "text": "✅ 进程键盘焦点回归具有真实 key window"
+          },
+          {
+            "line": 3860,
+            "timestamp": "2026-10-19T04:24:39.0217470Z",
+            "text": "✅ 真实 window 分发空格只取消原进程选择并保留焦点 compact=false"
+          },
+          {
+            "line": 3863,
+            "timestamp": "2026-10-19T04:24:39.0218130Z",
+            "text": "✅ 真实 window 分发空格只取消原进程选择并保留焦点 compact=true"
+          },
+          {
+            "line": 3866,
+            "timestamp": "2026-10-19T04:24:39.0219020Z",
+            "text": "✅ 后移 重排时原生强退按钮焦点跟随原进程"
+          },
+          {
+            "line": 3867,
+            "timestamp": "2026-10-19T04:24:39.0219210Z",
+            "text": "✅ 后移 后焦点按钮仅请求原进程身份而不误操作新排名"
+          },
+          {
+            "line": 3868,
+            "timestamp": "2026-10-19T04:24:39.0219390Z",
+            "text": "✅ 前移 重排时原生强退按钮焦点跟随原进程"
+          },
+          {
+            "line": 3869,
+            "timestamp": "2026-10-19T04:24:39.0219570Z",
+            "text": "✅ 前移 后焦点按钮仅请求原进程身份而不误操作新排名"
+          }
+        ]
+      }
+    ],
+    "interpretation": "Three actual completion markers, not printed workflow grep. Every run qualified the close-mid-animation reopen check because AppKit closed synchronously. Process row Space and action-button focus identity checks were actually logged; no FOCUS_UNEXERCISED, screen-lock or motion-skip marker occurred."
+  },
+  "stress": {
+    "status": "success",
+    "verifiedIterations": 20000,
+    "elapsedSeconds": 0.149,
+    "evidence": {
+      "line": 3952,
+      "timestamp": "2026-10-19T04:24:58.3294830Z",
+      "text": "ANIMATION_STRESS_PASSED iterations=20000 elapsed=0.149s"
+    }
+  },
+  "universal": {
+    "status": "success",
+    "appAndHelperArchitectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "minimumOS": "12.0",
+    "sliceAndMinOSVerification": "Enforced by both frozen build_release.sh verify_universal_binary and verify_release.sh --build-only verify_binary; successful completion implies these fail-closed checks passed. No separate raw vtool output was retained.",
+    "strictSignatures": "App --verify --deep --strict and helper --verify --strict passed in build and build-only verification.",
+    "bundleVerification": "Info.plist identity/version/minOS and required resource checks passed in --build-only.",
+    "entitlements": "App signed with the frozen BatteryPowerApp.entitlements. Packaged canonical entitlement comparison was not executed by --build-only.",
+    "productionEntitlementsCanonicalComparisonExecuted": false,
+    "developerIDVerificationExecuted": false,
+    "notarizationOrPKGInstallExecuted": false,
+    "signingModeEvidence": {
+      "line": 3998,
+      "timestamp": "2026-10-19T04:26:04.8995600Z",
+      "text": "Signing: ad-hoc community build (not notarized)"
+    },
+    "buildOnlyCompletionEvidence": {
+      "line": 3995,
+      "timestamp": "2026-10-19T04:26:04.7285600Z",
+      "text": "Verified universal release build for Wattson 4.3.22"
+    },
+    "disposableExitIntentEvidence": {
+      "line": 3999,
+      "timestamp": "2026-10-19T04:26:04.8998070Z",
+      "text": "Build verified; disposable app and build files are removed on exit."
+    }
+  },
+  "website": {
+    "status": "success",
+    "nodeTests": 7,
+    "failures": 0,
+    "skipped": 0,
+    "buildLintExport": "success",
+    "rawLog": "job-117885525769.log"
+  },
+  "artifact": {
+    "artifactID": 12162797576,
+    "artifactName": "macos27-swift-4532daac11c0698ab97f05a6fc47e563b16d4e0e",
+    "archiveSHA256": "8844ebf4a4c9f7fa4a8a30ef7e3798ee992089fa917aff2a3f3105564074e906",
+    "apiDigest": "sha256:8844ebf4a4c9f7fa4a8a30ef7e3798ee992089fa917aff2a3f3105564074e906",
+    "files": {
+      "swift-test-run.log": {
+        "bytes": 184253,
+        "sha256": "8e079414a62dd8caeeedabe0f50480c4448b50e1d362463e165cb91c243f0bcc"
+      },
+      "source.txt": {
+        "bytes": 41,
+        "sha256": "62649ae357cc3b9c6e0f8cec1958ad4e67fdff66c3d37055e0eae285e08f26fb"
+      },
+      "environment.txt": {
+        "bytes": 104,
+        "sha256": "cae6a4cacab7862dc3fe65bc1fb3e81eff6f7c0be9e7397b2bd35457d880d734"
+      },
+      "swift-test-build.log": {
+        "bytes": 1061,
+        "sha256": "388cd50e03714f96f1777c379090da7c64771766b5b72c8c0e8d9ac240499b7c"
+      }
+    }
+  },
+  "gateSteps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:11:40Z",
+      "completed_at": "2026-10-19T04:11:40Z"
+    },
+    {
+      "name": "Check out the repository",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:11:40Z",
+      "completed_at": "2026-10-19T04:11:55Z"
+    },
+    {
+      "name": "Verify macOS 27 validation environment",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:11:55Z",
+      "completed_at": "2026-10-19T04:11:58Z"
+    },
+    {
+      "name": "Build Swift package",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:11:58Z",
+      "completed_at": "2026-10-19T04:12:33Z"
+    },
+    {
+      "name": "Test Swift package",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-19T04:12:33Z",
+      "completed_at": "2026-10-19T04:12:33Z"
+    },
+    {
+      "name": "Build macOS 27 Swift test bundle",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:12:33Z",
+      "completed_at": "2026-10-19T04:13:01Z"
+    },
+    {
+      "name": "Execute macOS 27 Swift tests",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:13:01Z",
+      "completed_at": "2026-10-19T04:13:31Z"
+    },
+    {
+      "name": "Preserve macOS 27 Swift diagnostics",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:13:31Z",
+      "completed_at": "2026-10-19T04:13:33Z"
+    },
+    {
+      "name": "Run the default headless Python suite",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:13:33Z",
+      "completed_at": "2026-10-19T04:18:52Z"
+    },
+    {
+      "name": "Validate macOS 27 native interaction and animation lifecycles",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:18:52Z",
+      "completed_at": "2026-10-19T04:24:58Z"
+    },
+    {
+      "name": "Verify macOS 27 universal App and helper build",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:24:58Z",
+      "completed_at": "2026-10-19T04:26:05Z"
+    },
+    {
+      "name": "Post Check out the repository",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:26:05Z",
+      "completed_at": "2026-10-19T04:26:05Z"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-19T04:26:05Z",
+      "completed_at": "2026-10-19T04:26:06Z"
+    }
+  ],
+  "acceptance": "The configured full macOS 27 manual CI gates passed for the frozen source, within the explicitly documented native and hardware/distribution limitations. This is not a guarantee of no bugs or full release/installation acceptance.",
+  "remoteCleanup": {
+    "sharedLifecycleEntrypoints": "Frozen native/release scripts configured owned build roots, test preferences/container/app registration and child-process cleanup. Native scripts and release entrypoint completed successfully, and the disposable-release exit intent marker was observed.",
+    "testDefaultsCleanupRegression": "passed in Swift tests",
+    "runnerPostJobCleanup": "GitHub logged termination of one orphan ibtoold process after job steps; this is runner cleanup evidence, not a whole-host audit.",
+    "independentFinalRemoteResourceCensusPerformed": false,
+    "limitation": "Lifecycle execution and successful exits do not independently prove whole-host absence of preferences, containers, registrations, mounts or child processes; this monitor performed no such census."
+  },
+  "compatibilityLimits": [
+    "GitHub xcode-27 is public preview, not stable infrastructure.",
+    "Hosted ARM GUI runtime does not verify physical Mac SMC/battery hardware, privileged helper installation, real user TCC prompts, Developer ID/notarization, Intel runtime or oldest supported runtime.",
+    "Every native run qualified the close-mid-animation reopen path because AppKit closed synchronously.",
+    "--build-only did not execute packaged production-entitlements canonical comparison or PKG/DMG install verification."
+  ],
+  "frozenValidationFileSHA256": {
+    ".github/workflows/ci.yml": "cd446156ceacdb8ebceaf4917e88f7c88e6cff462645ff288fc4c6b8f4c5eb07",
+    "scripts/build_release.sh": "1635b6ed46809398a311fc5478b46243f710000b4e5c8f595d26f3b6b395dca7",
+    "scripts/verify_release.sh": "ec074b27f4add81f7d59fe0ecabfd9bd78dd1bb53ff276f48d4eaa39c1832358",
+    "scripts/verify_interaction.sh": "60d08138a4aaa1dcd02331cf7a8dbacd8c2d013da18ef478e661b7b45953d1b4",
+    "scripts/verify_animation_stress.sh": "8b4a3492b4913c2b3e0be78e0435f2176d0ebed2902a14fa0ce978a2538ea855",
+    "scripts/lib/local_cleanup.sh": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+    "tests/interaction/main.swift": "c486f6e938d0729190cb859431cb2ac193063f7e659df13abeb1a83123b30e13",
+    "BatteryPowerApp.entitlements": "7c701bfd8298ead217eaad4e805fcc51cefd7ae910ef33a3792594b97f2f92f5"
+  },
+  "monitoringTaskEditsProductionOrCI": false,
+  "retainedFileHashes": {
+    "job-117885525517.log": "701e8db31fd0bd6d35fc21cc6819659c7c8c4ac307581bb7b8c3479d5a3c8919",
+    "job-117885525769.log": "b8f895ce2dc3247ded8b2fbdf2d78661316024aaf8920e757fb85aee714fe8e6",
+    "artifact-verification.json": "401f41070a6855f657bb8acf2de7e3ee135b85b253c719a7848d8cdb25fef86f",
+    "swift-diagnostics/source.txt": "62649ae357cc3b9c6e0f8cec1958ad4e67fdff66c3d37055e0eae285e08f26fb",
+    "swift-diagnostics/environment.txt": "cae6a4cacab7862dc3fe65bc1fb3e81eff6f7c0be9e7397b2bd35457d880d734",
+    "swift-diagnostics/swift-test-build.log": "388cd50e03714f96f1777c379090da7c64771766b5b72c8c0e8d9ac240499b7c",
+    "swift-diagnostics/swift-test-run.log": "8e079414a62dd8caeeedabe0f50480c4448b50e1d362463e165cb91c243f0bcc"
+  }
+}

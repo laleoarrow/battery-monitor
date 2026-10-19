@@ -45,7 +45,8 @@ deadline has passed, if the sampler remains pending and no incomplete reader
 owns its own deadline, it uses a finite 100 ms listener wait
 before rechecking worker completion. Incoming connections still wake `poll`
 immediately. Pending reader deadlines retain priority. A completed worker may
-delay an already-eligible idle exit by at most the bounded wait.
+delay observation of an already-eligible idle exit by the requested poll interval
+plus scheduling delay; 100 ms is not a hard real-time exit bound.
 The process reply itself does not wait for the listener: the sampler's own
 `queue.async` closure directly calls `writeAll(line, to: fd)`
 (`Helper/wattson-helper.swift:1505,1520`) before its deferred socket close and

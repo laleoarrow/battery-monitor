@@ -1,0 +1,22 @@
+{
+  "allPassed": true,
+  "testsRun": 4,
+  "elapsedSeconds": 11.242763666959945,
+  "fixtureExecutions": [
+    {
+      "executable": "poll-deadline-self-test",
+      "returnCode": 0,
+      "stdout": "poll deadline self-test passed\n",
+      "stderr": ""
+    },
+    {
+      "executable": "pending-worker-self-test",
+      "returnCode": 0,
+      "stdout": "worker completes independently; no-activity idle exit and fault-injected worker EINTR passed\nhelper-side disconnected reply survived SIGPIPE; FD closed and pending cleared\nfault-injected reader EINTR recomputed absolute deadline: 2000 -> 1977 ms\nlistener connection woke actual positive 100 ms poll\npending worker lifecycle self-test passed\n",
+      "stderr": ""
+    }
+  ],
+  "helperSHA256": "b73f948185df94c667b62a240ce1f69e91be1ebe71d4c4bca0dcef1ea526d453",
+  "helperTestsSHA256": "a883f47a858af199af0ccc17d2b7149ca03b121805173591faf51cb29db57737",
+  "scope": "Four targeted executable tests; no complete-suite rerun, no installed daemon or root privileges. Reader and overdue-worker EINTR are deterministic syscall fault injections, not kernel-signal tests."
+}
