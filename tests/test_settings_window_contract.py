@@ -1128,57 +1128,101 @@ class SettingsWindowContractTests(unittest.TestCase):
             let iconHeading = view("settings.menu-bar-icon.heading", in: first)
             let iconSubtitle = view("settings.menu-bar-icon.subtitle", in: first)
             let iconGroup = view("settings.menu-bar-icon.group", in: first)
-            let iconCards = descendants(ofType: NSView.self, in: iconPage)
-                .filter { $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.card.") == true }
+            let iconButtons = descendants(ofType: NSButton.self, in: iconPage)
+                .filter { $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.style.") == true }
+            let wattsonStyle = button("Wattson", in: first)
+            let macOSStyle = button("macOS 26", in: first)
+            let percentagePopup = view("settings.menu-bar-icon.percentage", in: first) as! NSPopUpButton
+            let iconStates = descendants(ofType: NSView.self, in: iconPage)
+                .filter { $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.state.") == true }
             let iconPreviews = descendants(ofType: NSImageView.self, in: iconPage)
-                .filter {
-                    $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.preview.") == true
-                }
-            let iconStateChips = descendants(ofType: NSBox.self, in: iconPage)
-                .filter {
-                    $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.state.") == true
-                }
+                .filter { $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.preview.") == true }
             let iconStateLabels = descendants(ofType: NSTextField.self, in: iconPage)
-                .filter {
-                    $0.identifier?.rawValue.hasPrefix(
-                        "settings.menu-bar-icon.state-label."
-                    ) == true
-                }
-            require(
-                approximately((iconHeading as? NSTextField)?.font?.pointSize ?? -1, 18),
-                "Icon heading uses 18-point type"
-            )
-            require(
-                approximately((iconSubtitle as? NSTextField)?.font?.pointSize ?? -1, 11),
-                "Icon subtitle uses 11-point type"
-            )
-            require(iconCards.count == 4, "Icon lists all four complete appearances")
-            require(
-                iconCards.allSatisfy {
-                    approximately($0.frame.width, 503) && approximately($0.frame.height, 80)
-                },
-                "each complete icon option occupies one compact full-width row: "
-                    + "\(iconCards.map(\.frame))"
-            )
-            let iconCardYs = iconCards.map(\.frame.minY).sorted()
-            require(
-                iconCardYs.count == 4
-                    && zip(iconCardYs, iconCardYs.dropFirst()).allSatisfy {
-                        approximately($1 - $0, 88)
-                    }
-                    && Set(iconCards.map { Int($0.frame.minX.rounded()) }).count == 1,
-                "four full-width icon rows use eight-point vertical gaps"
-            )
-            require(iconStateChips.count == 28, "four rows expose all seven runtime states")
-            require(iconStateLabels.count == 28, "every runtime-state preview is visibly named")
+                .filter { $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.state-label.") == true }
+            let percentagePreviews = descendants(ofType: NSTextField.self, in: iconPage)
+                .filter { $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.percentage.") == true }
             let expectedStateLabels = [
                 "Battery", "Full", "Charging", "Low", "Low + AC", "Saver", "Saver + AC",
             ]
             let previewStates = MenuBarIconPreviewState.allCases
             require(
-                previewStates.map(\.visibleLabel) == expectedStateLabels,
-                "preview fixtures use the same visible production order"
+                approximately((iconHeading as? NSTextField)?.font?.pointSize ?? -1, 18)
+                    && approximately((iconSubtitle as? NSTextField)?.font?.pointSize ?? -1, 13),
+                "Display retains the compact Settings heading hierarchy"
             )
+            require(iconButtons.count == 2 && iconStates.count == 14 && iconPreviews.count == 14,
+                "Display presents each style once with all seven real runtime previews")
+            require(iconStateLabels.map(\.stringValue) == expectedStateLabels,
+                "one shared header names the seven aligned runtime states")
+            require(previewStates.map(\.visibleLabel) == expectedStateLabels,
+                "preview fixtures use the same visible production order")
+            require(iconButtons.allSatisfy { approximately($0.frame.width, 503) },
+                "both style options fit the existing 503-point Settings content width")
+            let iconRects = iconButtons.map { $0.convert($0.bounds, to: iconPage) }
+            require(!iconRects[0].intersects(iconRects[1])
+                && approximately(iconRects[0].minX, iconRects[1].minX)
+                && iconRects.allSatisfy { iconPage.bounds.insetBy(dx: -1, dy: -1).contains($0) },
+                "style rows align without overlap or content clipping")
+            let iconTitles = descendants(ofType: NSTextField.self, in: iconPage)
+                .filter { $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.title.") == true }
+            require(iconTitles.count == 2 && iconTitles.allSatisfy {
+                ($0.font?.pointSize ?? 0) >= 11
+                    && ($0.font?.pointSize ?? 0) <= 12
+                    && $0.attributedStringValue.size().width <= $0.frame.width + 1
+            }, "both style titles remain compact and fully readable")
+            require(percentagePopup.itemTitles == ["Off", "On"]
+                && percentagePopup.accessibilityLabel() == "Show percentage",
+                "percentage is a separate labelled compact Off/On preference")
+            require(percentagePreviews.count == 14, "both styles retain every real percentage value")
+            require(percentagePreviews.map(\.stringValue).sorted() == [
+                "10%", "10%", "100%", "100%", "20%", "20%", "42%", "42%",
+                "42%", "42%", "72%", "72%", "75%", "75%",
+            ], "both styles preview the actual menu-bar values, including three-digit percentages")
+
+            func verifyDisplayPreviews(showingPercentage: Bool) {
+                first?.contentView?.layoutSubtreeIfNeeded()
+                for (index, previewState) in previewStates.enumerated() {
+                    let header = iconStateLabels[index]
+                    let headerFrame = header.convert(header.bounds, to: iconPage)
+                    require(header.attributedStringValue.size().width <= header.frame.width + 1,
+                        "shared runtime-state label is readable: " + header.stringValue)
+                    for style in ["wattson", "macos"] {
+                        let suffix = "\(style).\(previewState.identifierSuffix)"
+                        let state = iconStates.first {
+                            $0.identifier?.rawValue == "settings.menu-bar-icon.state.\(suffix)"
+                        }!
+                        let image = iconPreviews.first {
+                            $0.identifier?.rawValue == "settings.menu-bar-icon.preview.\(suffix)"
+                        }!
+                        let percentage = percentagePreviews.first {
+                            $0.identifier?.rawValue == "settings.menu-bar-icon.percentage.\(suffix)"
+                        }!
+                        let stateFrame = state.convert(state.bounds, to: iconPage)
+                        require(approximately(headerFrame.midX, stateFrame.midX),
+                            "shared column header aligns with both style rows: " + suffix)
+                        require((image.image?.size.width ?? 0) > 0
+                            && (image.image?.size.height ?? 0) > 0
+                            && approximately(image.bounds.size.width, image.image!.size.width)
+                            && approximately(image.bounds.size.height, image.image!.size.height)
+                            && image.imageScaling == .scaleNone,
+                            "each style keeps its real renderer size without scaling: " + suffix)
+                        let glyphInState = image.convert(image.bounds, to: state)
+                        require(state.bounds.insetBy(dx: -0.5, dy: -0.5).contains(glyphInState),
+                            "the complete production glyph fits its column: " + suffix)
+                        require(percentage.isHidden == !showingPercentage,
+                            "one percentage choice updates both retained style rows: " + suffix)
+                        if showingPercentage {
+                            let textInState = percentage.convert(percentage.bounds, to: state)
+                            require(percentage.attributedStringValue.size().width <= percentage.frame.width + 0.5
+                                && state.bounds.insetBy(dx: -0.5, dy: -0.5).contains(textInState)
+                                && textInState.maxX <= glyphInState.minX + 0.5,
+                                "percentage stays fully visible to the left of its icon: "
+                                    + "\(suffix) text=\(textInState) glyph=\(glyphInState) state=\(state.bounds)")
+                        }
+                    }
+                }
+            }
+            verifyDisplayPreviews(showingPercentage: true)
             let expectedWattsonKeys: [(Int, Bool, BatteryIcon.TintRole)] = [
                 (75, false, .template),
                 (100, true, .template),
@@ -1233,298 +1277,119 @@ class SettingsWindowContractTests(unittest.TestCase):
                         + previewState.visibleLabel
                 )
             }
-            for iconCard in iconCards {
-                let presetTitle = descendants(ofType: NSTextField.self, in: iconCard)
-                    .first { $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.title.") == true }!
-                require(presetTitle.font == .systemFont(ofSize: 12, weight: .medium),
-                    "Display preset titles keep a compact 12-point hierarchy")
-                let rowChips = descendants(ofType: NSBox.self, in: iconCard)
-                    .filter {
-                        $0.identifier?.rawValue.hasPrefix(
-                            "settings.menu-bar-icon.state."
-                        ) == true
-                    }
-                let rowLabels = descendants(ofType: NSTextField.self, in: iconCard)
-                    .filter {
-                        $0.identifier?.rawValue.hasPrefix(
-                            "settings.menu-bar-icon.state-label."
-                        ) == true
-                    }
-                let rowPreviews = descendants(ofType: NSImageView.self, in: iconCard)
-                    .filter {
-                        $0.identifier?.rawValue.hasPrefix(
-                            "settings.menu-bar-icon.preview."
-                        ) == true
-                    }
-                require(
-                    rowChips.count == 7 && rowLabels.count == 7 && rowPreviews.count == 7,
-                    "every option row contains seven complete state previews"
-                )
-                require(
-                    rowLabels.map(\.stringValue) == expectedStateLabels,
-                    "every option row shows all state labels in production order"
-                )
-                require(
-                    rowChips.allSatisfy {
-                        approximately($0.frame.width, 64)
-                            && approximately($0.frame.height, 38)
-                    },
-                    "state chips stay compact and preserve production icon scale"
-                )
-                let chipXs = rowChips.map(\.frame.minX).sorted()
-                require(
-                    zip(chipXs, chipXs.dropFirst()).allSatisfy {
-                        approximately($1 - $0, 69)
-                    },
-                    "seven state chips fit one row with five-point gaps"
-                )
-            }
-            let stateLabelCounts = Dictionary(
-                grouping: iconStateLabels.map(\.stringValue),
-                by: { $0 }
-            ).mapValues(\.count)
-            for expectedState in [
-                "Battery", "Full", "Charging", "Low", "Low + AC", "Saver", "Saver + AC",
-            ] {
-                require(
-                    stateLabelCounts[expectedState] == 4,
-                    "every option shows the \(expectedState) state"
-                )
-            }
-            require(iconPreviews.count == 28, "all 28 states use renderer-backed previews")
-            require(
-                iconPreviews.allSatisfy {
-                    ($0.image?.size.width ?? 0) > 0 && ($0.image?.size.height ?? 0) > 0
-                },
-                "all 28 renderer-backed preview images are nonempty"
-            )
-            let percentagePreviews = descendants(ofType: NSTextField.self, in: iconPage)
-                .filter {
-                    $0.identifier?.rawValue.hasPrefix(
-                        "settings.menu-bar-icon.percentage."
-                    ) == true
-                }
-            require(percentagePreviews.count == 14, "two percentage rows show all seven values")
-            require(
-                percentagePreviews.map(\.stringValue).sorted()
-                    == [
-                        "10%", "10%", "100%", "100%", "20%", "20%",
-                        "42%", "42%", "42%", "42%", "72%", "72%",
-                        "75%", "75%",
-                    ],
-                "percentage rows use every state’s real menu-bar value"
-            )
-            for percentagePreview in percentagePreviews {
-                let matchingIdentifier = percentagePreview.identifier?.rawValue.replacingOccurrences(
-                    of: "settings.menu-bar-icon.percentage.",
-                    with: "settings.menu-bar-icon.preview."
-                )
-                let matchingIcon = iconPreviews.first {
-                    $0.identifier?.rawValue == matchingIdentifier
-                }
-                require(
-                    matchingIcon != nil
-                        && percentagePreview.superview === matchingIcon?.superview
-                        && percentagePreview.frame.maxX <= (matchingIcon?.frame.minX ?? -1) + 1,
-                    "each percentage sits to the left of its matching renderer glyph: "
-                        + "percentage=\(percentagePreview.frame) "
-                        + "icon=\(String(describing: matchingIcon?.frame))"
-                )
-                if let presentation = percentagePreview.superview,
-                   let boxContent = presentation.superview,
-                   let stateBox = boxContent.superview as? NSBox {
-                    let contentFrame = presentation.convert(presentation.bounds, to: stateBox)
-                    require(
-                        stateBox.bounds.insetBy(dx: 2, dy: 1).contains(contentFrame),
-                        "percentage and glyph keep safe insets inside their state chip: "
-                            + "content=\(contentFrame) chip=\(stateBox.bounds)"
-                    )
-                } else {
-                    require(false, "percentage preview retains its state-chip hierarchy")
-                }
-                }
-            let iconTitles = descendants(ofType: NSTextField.self, in: iconPage)
-                .filter {
-                    $0.identifier?.rawValue.hasPrefix(
-                        "settings.menu-bar-icon.title."
-                    ) == true
-                }
-            let iconDetails = descendants(ofType: NSTextField.self, in: iconPage)
-                .filter {
-                    $0.identifier?.rawValue.hasPrefix(
-                        "settings.menu-bar-icon.detail."
-                    ) == true
-                }
-            require(
-                iconTitles.count == 4 && iconDetails.count == 4
-                    && (iconTitles + iconDetails).allSatisfy {
-                        $0.attributedStringValue.size().width <= $0.frame.width + 1
-                    },
-                "all four compact preset labels are fully visible"
-            )
-            require(iconGroup.isAccessibilityElement(), "icon choices expose one AX group")
-            require(iconGroup.accessibilityRole() == .radioGroup, "icon choices use AX radioGroup")
-            require(iconGroup.accessibilityLabel() == "Display", "AX group has a useful label")
-            require(!(iconGroup.accessibilityHelp() ?? "").isEmpty, "AX group has help")
+            require(iconGroup.isAccessibilityElement() && iconGroup.accessibilityRole() == .radioGroup,
+                "style choices expose one accessibility radio group")
+            require(!(iconGroup.accessibilityLabel() ?? "").isEmpty
+                && !(iconGroup.accessibilityHelp() ?? "").isEmpty,
+                "style group has a useful accessible name and help")
+            require(iconButtons.allSatisfy {
+                $0.accessibilityRole() == .radioButton && !($0.accessibilityHelp() ?? "").isEmpty
+            }, "each style exposes accessible radio semantics")
+            require(wattsonStyle.state == .on && macOSStyle.state == .off
+                && percentagePopup.indexOfSelectedItem == 1,
+                "existing Wattson-with-percentage default selects its two independent preferences")
+            require((wattsonStyle.accessibilityValue() as? NSNumber)?.boolValue == true
+                && (macOSStyle.accessibilityValue() as? NSNumber)?.boolValue == false,
+                "accessibility values identify the selected style")
+            require(controller.sidebarNextKeyViewForTest === wattsonStyle
+                && wattsonStyle.nextKeyView === macOSStyle
+                && macOSStyle.nextKeyView === percentagePopup
+                && percentagePopup.nextKeyView === controller.sidebarForTest,
+                "Tab visits the two styles and percentage choice before returning to navigation")
 
-            let wattsonIconOnly = button("Wattson icon only", in: first)
-            let wattsonWithPercentage = button("Wattson with percentage", in: first)
-            let macOSIconOnly = button("macOS 26 icon only", in: first)
-            let macOSWithPercentage = button("macOS 26 with percentage", in: first)
-            let iconButtons = [
-                wattsonIconOnly,
-                wattsonWithPercentage,
-                macOSIconOnly,
-                macOSWithPercentage,
-            ]
-            require(
-                iconButtons.allSatisfy { $0.accessibilityRole() == .radioButton },
-                "whole-card options expose AX radioButton roles"
-            )
-            require(
-                iconButtons.allSatisfy { !($0.accessibilityHelp() ?? "").isEmpty },
-                "both icon radio buttons expose help"
-            )
-            require(
-                iconButtons.filter { $0.state == .on }.count == 1
-                    && wattsonWithPercentage.state == .on,
-                "default Wattson plus percentage selects the second preset"
-            )
-            require(
-                (wattsonWithPercentage.accessibilityValue() as? NSNumber)?.boolValue == true
-                    && iconButtons.filter { $0 !== wattsonWithPercentage }.allSatisfy {
-                        ($0.accessibilityValue() as? NSNumber)?.boolValue == false
-                    },
-                "AX radio values expose selected semantics"
-            )
-            require(
-                controller.sidebarNextKeyViewForTest === wattsonIconOnly,
-                "Tab enters the first Icon card"
-            )
-            require(wattsonIconOnly.nextKeyView === wattsonWithPercentage, "Tab reaches preset two")
-            require(wattsonWithPercentage.nextKeyView === macOSIconOnly, "Tab reaches preset three")
-            require(macOSIconOnly.nextKeyView === macOSWithPercentage, "Tab reaches preset four")
-            require(macOSWithPercentage.nextKeyView === controller.sidebarForTest,
-                "icon Tab loop returns to navigation without the General appearance control")
-
-            macOSWithPercentage.accessibilityPerformPress()
-            require(
-                Settings.menuBarIconStyle == .native && Settings.showsMenuBarPercentage
-                    && macOSWithPercentage.state == .on
-                    && iconButtons.filter { $0.state == .on }.count == 1,
-                "AX press selects the complete macOS-with-percentage preset"
-            )
+            // Begin with the other style so this also verifies a persisted write
+            // rather than only the default fallback value.
+            macOSStyle.accessibilityPerformPress()
+            for (style, styleButton) in [(Settings.MenuBarIconStyle.wattson, wattsonStyle), (.native, macOSStyle)] {
+                for showsPercentage in [false, true] {
+                    styleButton.accessibilityPerformPress()
+                    percentagePopup.selectItem(at: showsPercentage ? 1 : 0)
+                    percentagePopup.sendAction(percentagePopup.action!, to: percentagePopup.target)
+                    require(Settings.menuBarIconStyle == style
+                        && Settings.showsMenuBarPercentage == showsPercentage
+                        && defaults.string(forKey: "menubar.iconStyle") == style.rawValue
+                        && defaults.bool(forKey: "menubar.showsPercentage") == showsPercentage,
+                        "style and percentage retain all four persisted combinations")
+                    require(styleButton.state == .on && iconButtons.filter { $0.state == .on }.count == 1,
+                        "independent preference changes keep exactly one selected style")
+                    verifyDisplayPreviews(showingPercentage: showsPercentage)
+                }
+            }
             Settings.setMenuBarAppearance(iconStyle: .wattson, showsPercentage: true)
 
             first?.displayIfNeeded()
-            let wattsonDrawsBeforeFocus = controller.iconCardDrawCountForTest(
-                "Wattson icon only"
-            )
-            require(first?.makeFirstResponder(wattsonIconOnly) == true, "first preset accepts keyboard focus")
-            require(
-                waitUntil {
-                    first?.displayIfNeeded()
-                    return controller.iconCardDrawCountForTest("Wattson icon only")
-                        > wattsonDrawsBeforeFocus
-                },
-                "focused first preset redraws its visible focus ring"
-            )
-            first?.displayIfNeeded()
-            let wattsonDrawsBeforeTransfer = controller.iconCardDrawCountForTest(
-                "Wattson icon only"
-            )
-            let macOSDrawsBeforeTransfer = controller.iconCardDrawCountForTest(
-                "macOS 26 with percentage"
-            )
-            require(first?.makeFirstResponder(macOSWithPercentage) == true, "fourth preset accepts keyboard focus")
-            require(
-                waitUntil {
-                    first?.displayIfNeeded()
-                    return controller.iconCardDrawCountForTest("Wattson icon only")
-                            > wattsonDrawsBeforeTransfer
-                        && controller.iconCardDrawCountForTest("macOS 26 with percentage")
-                            > macOSDrawsBeforeTransfer
-                },
-                "Tab-style focus movement redraws both old and new visible focus rings"
-            )
+            let wattsonDrawsBeforeFocus = controller.iconCardDrawCountForTest("Wattson")
+            require(first?.makeFirstResponder(wattsonStyle) == true, "first style accepts keyboard focus")
+            require(waitUntil {
+                first?.displayIfNeeded()
+                return controller.iconCardDrawCountForTest("Wattson") > wattsonDrawsBeforeFocus
+            }, "focused style redraws its visible focus ring")
+            let wattsonDrawsBeforeTransfer = controller.iconCardDrawCountForTest("Wattson")
+            let macOSDrawsBeforeTransfer = controller.iconCardDrawCountForTest("macOS 26")
+            require(first?.makeFirstResponder(macOSStyle) == true, "second style accepts keyboard focus")
+            require(waitUntil {
+                first?.displayIfNeeded()
+                return controller.iconCardDrawCountForTest("Wattson") > wattsonDrawsBeforeTransfer
+                    && controller.iconCardDrawCountForTest("macOS 26") > macOSDrawsBeforeTransfer
+            }, "focus movement redraws both old and new style focus rings")
 
-            let normalizedSystemCopy = (macOSIconOnly.accessibilityHelp() ?? "").lowercased()
-            require(
-                normalizedSystemCopy.contains("battery artwork")
-                    && normalizedSystemCopy.contains("macos 26 menu bar"),
-                "System copy truthfully identifies the macOS 26 menu-bar battery artwork"
-            )
-            require(
-                !normalizedSystemCopy.contains("control center")
-                    && !normalizedSystemCopy.contains("private")
-                    && !normalizedSystemCopy.contains("copied")
-                    && !normalizedSystemCopy.contains("macos 27"),
-                "System copy makes no private-art or future-version claim"
-            )
+            let normalizedSystemCopy = (macOSStyle.accessibilityHelp() ?? "").lowercased()
+            require(normalizedSystemCopy.contains("battery artwork")
+                && normalizedSystemCopy.contains("macos 26 menu bar"),
+                "System copy truthfully identifies the macOS 26 menu-bar battery artwork")
+            require(!normalizedSystemCopy.contains("control center")
+                && !normalizedSystemCopy.contains("private")
+                && !normalizedSystemCopy.contains("copied")
+                && !normalizedSystemCopy.contains("macos 27"),
+                "System copy makes no private-art or future-version claim")
 
-            macOSIconOnly.performClick(nil)
-            require(Settings.menuBarIconStyle == .native, "whole-card click persists macOS style")
-            require(!Settings.showsMenuBarPercentage, "whole-card click persists icon-only state")
-            require(macOSIconOnly.state == .on, "click keeps exactly one selected")
-            require(iconButtons.filter { $0.state == .on }.count == 1, "click selection is atomic")
-            Settings.menuBarIconStyle = .wattson
-            require(
-                wattsonIconOnly.state == .on
-                    && iconButtons.filter { $0.state == .on }.count == 1,
-                "external icon-style notification selects the matching complete preset"
-            )
+            func displayViewIdentities() -> [ObjectIdentifier] {
+                descendants(ofType: NSView.self, in: iconPage).filter {
+                    $0.identifier?.rawValue.hasPrefix("settings.menu-bar-icon.") == true
+                }.map(ObjectIdentifier.init)
+            }
+            let retainedDisplayViews = displayViewIdentities()
+            require(first?.makeFirstResponder(percentagePopup) == true, "percentage popup accepts focus")
+            Settings.setMenuBarAppearance(iconStyle: .native, showsPercentage: false)
+            require(macOSStyle.state == .on && percentagePopup.indexOfSelectedItem == 0
+                && first?.firstResponder === percentagePopup,
+                "external notifications synchronize both choices without stealing popup focus")
+            verifyDisplayPreviews(showingPercentage: false)
+            require(first?.makeFirstResponder(wattsonStyle) == true, "style accepts focus before external change")
             Settings.showsMenuBarPercentage = true
-            require(
-                wattsonWithPercentage.state == .on
-                    && iconButtons.filter { $0.state == .on }.count == 1,
-                "external percentage notification selects the matching complete preset"
-            )
+            Settings.menuBarIconStyle = .wattson
+            require(wattsonStyle.state == .on && percentagePopup.indexOfSelectedItem == 1
+                && first?.firstResponder === wattsonStyle,
+                "separate external preference notifications retain style focus")
+            verifyDisplayPreviews(showingPercentage: true)
+            let currentDisplayViews = displayViewIdentities()
+            require(currentDisplayViews == retainedDisplayViews,
+                "style and percentage updates reuse all Display controls and previews")
 
-            wattsonIconOnly.keyDown(with: keyEvent(125))
-            require(
-                Settings.menuBarIconStyle == .wattson && Settings.showsMenuBarPercentage,
-                "Down Arrow advances to the next vertical option row"
-            )
-            wattsonWithPercentage.keyDown(with: keyEvent(126))
-            require(
-                Settings.menuBarIconStyle == .wattson && !Settings.showsMenuBarPercentage,
-                "Up Arrow returns to the previous vertical option row"
-            )
-            wattsonIconOnly.keyDown(with: keyEvent(124))
-            require(
-                Settings.menuBarIconStyle == .wattson && Settings.showsMenuBarPercentage,
-                "Right Arrow advances to Wattson with percentage"
-            )
-            wattsonWithPercentage.keyDown(with: keyEvent(124))
-            require(
-                Settings.menuBarIconStyle == .native && !Settings.showsMenuBarPercentage,
-                "Right Arrow advances to macOS 26 icon only"
-            )
-            macOSIconOnly.keyDown(with: keyEvent(123))
-            require(
-                Settings.menuBarIconStyle == .wattson && Settings.showsMenuBarPercentage,
-                "Left Arrow returns to Wattson with percentage"
-            )
-            wattsonIconOnly.keyDown(with: keyEvent(119))
-            require(
-                Settings.menuBarIconStyle == .native && Settings.showsMenuBarPercentage,
-                "End selects macOS 26 with percentage"
-            )
-            macOSWithPercentage.keyDown(with: keyEvent(115))
-            require(
-                Settings.menuBarIconStyle == .wattson && !Settings.showsMenuBarPercentage,
-                "Home selects Wattson icon only"
-            )
-            Settings.setMenuBarAppearance(iconStyle: .native, showsPercentage: true)
-            wattsonIconOnly.keyDown(with: keyEvent(49, characters: " "))
-            require(
-                Settings.menuBarIconStyle == .wattson && !Settings.showsMenuBarPercentage,
-                "Space activates the focused complete preset"
-            )
-            require(
-                iconButtons.filter { $0.state == .on }.count == 1,
-                "keyboard interactions preserve one selection"
-            )
+            wattsonStyle.keyDown(with: keyEvent(125))
+            require(Settings.menuBarIconStyle == .native && Settings.showsMenuBarPercentage,
+                "Down Arrow selects the next style while preserving percentage")
+            macOSStyle.keyDown(with: keyEvent(126))
+            require(Settings.menuBarIconStyle == .wattson && Settings.showsMenuBarPercentage,
+                "Up Arrow selects the previous style while preserving percentage")
+            wattsonStyle.keyDown(with: keyEvent(124))
+            require(Settings.menuBarIconStyle == .native && Settings.showsMenuBarPercentage,
+                "Right Arrow selects the next style without changing percentage")
+            macOSStyle.keyDown(with: keyEvent(123))
+            require(Settings.menuBarIconStyle == .wattson && Settings.showsMenuBarPercentage,
+                "Left Arrow selects the previous style without changing percentage")
+            Settings.showsMenuBarPercentage = false
+            wattsonStyle.keyDown(with: keyEvent(119))
+            require(Settings.menuBarIconStyle == .native && !Settings.showsMenuBarPercentage,
+                "End selects the final style while preserving icon-only mode")
+            macOSStyle.keyDown(with: keyEvent(115))
+            require(Settings.menuBarIconStyle == .wattson && !Settings.showsMenuBarPercentage,
+                "Home selects the first style while preserving icon-only mode")
+            Settings.menuBarIconStyle = .native
+            wattsonStyle.keyDown(with: keyEvent(49, characters: " "))
+            require(Settings.menuBarIconStyle == .wattson && !Settings.showsMenuBarPercentage
+                && iconButtons.filter { $0.state == .on }.count == 1,
+                "Space activates only the focused style and preserves one selection")
 
             controller.selectSidebarRowForTest(2)
             require(controller.selectedSectionIdentifierForTest == "modules", "modules selectable")
@@ -1978,19 +1843,15 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(moduleBoxes.allSatisfy { $0.borderWidth == 1 }, "normal module list border is one point")
             require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x363838 }, "normal module list keeps reference sRGB")
             require(
-                iconStateChips.allSatisfy {
-                    $0.borderWidth == 1 && srgbHex($0.borderColor) == 0x363838
-                },
-                "normal state-chip borders keep the compact reference treatment"
+                controller.iconCardBorderWidthForTest("Wattson") == 1,
+                "selected style has a restrained one-point normal border"
             )
             require(
-                controller.iconCardBorderWidthForTest("Wattson icon only") == 2,
-                "selected icon card has a clear normal border"
+                srgbHex(controller.iconCardFillColorForTest("Wattson")) == 0x2B362F,
+                "selected style keeps the shared Settings selection fill"
             )
-            require(
-                srgbHex(controller.iconCardFillColorForTest("Wattson icon only")) == 0x2B362F,
-                "selected icon card has a distinct normal fill"
-            )
+            require(controller.iconCardBorderWidthForTest("macOS 26") == 0,
+                "unselected style avoids unnecessary enclosing chrome")
             require(controller.selectedRowStrokeWidthForTest == 0, "normal selected row has no extra outline")
             require(isLabelColor(controller.selectedRowFillColorForTest, alpha: 0.07),
                 "normal sidebar selection has a restrained neutral fill")
@@ -2012,23 +1873,21 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(moduleBoxes.allSatisfy { $0.borderWidth == 2 }, "increased contrast strengthens the module list border")
             require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x8D949A }, "increased contrast brightens the module list border")
             require(
-                iconStateChips.allSatisfy {
-                    $0.borderWidth == 2 && srgbHex($0.borderColor) == 0x8D949A
-                },
-                "increased contrast strengthens every state-chip border"
+                controller.iconCardBorderWidthForTest("Wattson") == 2
+                    && controller.iconCardBorderWidthForTest("macOS 26") == 2,
+                "increased contrast gives both styles a legible two-point outline"
             )
             require(
-                controller.iconCardBorderWidthForTest("Wattson icon only") == 3,
-                "increased contrast strengthens the selected icon-card border"
+                srgbHex(controller.iconCardBorderColorForTest("Wattson")) == 0x8AD88E
+                    && srgbHex(controller.iconCardBorderColorForTest("macOS 26")) == 0x8D949A,
+                "increased contrast distinguishes selected and unselected styles"
             )
             require(
-                srgbHex(controller.iconCardBorderColorForTest("Wattson icon only")) == 0x8AD88E,
-                "increased contrast gives the selected icon card a bright outline"
+                srgbHex(controller.iconCardFillColorForTest("Wattson")) == 0x3B5944,
+                "increased contrast strengthens the shared selection fill"
             )
-            require(
-                srgbHex(controller.iconCardFillColorForTest("Wattson icon only")) == 0x3B5944,
-                "increased contrast strengthens the selected icon-card fill"
-            )
+            require(displayViewIdentities() == retainedDisplayViews, "contrast refresh reuses every Display control and preview")
+            verifyDisplayPreviews(showingPercentage: false)
             require(controller.selectedRowStrokeWidthForTest == 2, "increased contrast outlines selected row")
             require(isLabelColor(controller.selectedRowFillColorForTest, alpha: 0.14),
                 "increased contrast strengthens the neutral sidebar fill")
@@ -2052,15 +1911,10 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(moduleBoxes.allSatisfy { $0.borderWidth == 1 }, "module list border restores exactly")
             require(moduleBoxes.allSatisfy { srgbHex($0.borderColor) == 0x363838 }, "module list border sRGB restores exactly")
             require(
-                iconStateChips.allSatisfy {
-                    $0.borderWidth == 1 && srgbHex($0.borderColor) == 0x363838
-                },
-                "state-chip contrast styling restores exactly"
-            )
-            require(
-                controller.iconCardBorderWidthForTest("Wattson icon only") == 2
-                    && srgbHex(controller.iconCardFillColorForTest("Wattson icon only")) == 0x2B362F,
-                "selected icon-card contrast styling restores exactly"
+                controller.iconCardBorderWidthForTest("Wattson") == 1
+                    && srgbHex(controller.iconCardFillColorForTest("Wattson")) == 0x2B362F
+                    && controller.iconCardBorderWidthForTest("macOS 26") == 0,
+                "style contrast treatment restores exactly without changing geometry"
             )
             require(controller.selectedRowStrokeWidthForTest == 0, "selected row outline is removed on restore")
             require(isLabelColor(controller.selectedRowFillColorForTest, alpha: 0.07),
@@ -2157,6 +2011,54 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(readsBeforeTheme == [fixture.loginReads.count, fixture.batteryReads.count,
                 fixture.loginWrites.count, fixture.batteryWrites.count, fixture.updateChecks.count],
                 "Theme changes never query or mutate system controls")
+            controller.selectSectionForTest(identifier: "menu-bar-icon")
+            let displayGlassBeforeTheme = Settings.liquidGlassEnabled
+            let displayThemeBeforeTheme = Settings.colorScheme
+            let displayStyleBeforeTheme = Settings.menuBarIconStyle
+            let displayPercentageBeforeTheme = Settings.showsMenuBarPercentage
+            for glass in [false, true] {
+                for scheme in [Settings.ColorScheme.light, .dark] {
+                    for increasedContrast in [false, true] {
+                        fixture.increaseContrast = increasedContrast
+                        require(window.makeFirstResponder(percentagePopup),
+                            "percentage popup owns focus before Display appearance refresh")
+                        Settings.colorScheme = scheme
+                        Settings.liquidGlassEnabled = glass
+                        NSWorkspace.shared.notificationCenter.post(
+                            name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+                            object: NSWorkspace.shared
+                        )
+                        for (style, selectedButton) in [
+                            (Settings.MenuBarIconStyle.wattson, wattsonStyle), (.native, macOSStyle),
+                        ] {
+                            for showsPercentage in [false, true] {
+                                Settings.setMenuBarAppearance(iconStyle: style, showsPercentage: showsPercentage)
+                                verifyDisplayPreviews(showingPercentage: showsPercentage)
+                                require(window.firstResponder === percentagePopup
+                                    && selectedButton.state == .on
+                                    && window.frame == themeWindowFrame
+                                    && stableSectionViews == controller.sectionViewIdentitiesForTest,
+                                    "theme, material and contrast keep Display preferences, focus and geometry")
+                                require(displayViewIdentities() == retainedDisplayViews,
+                                    "appearance adaptation reuses every Display control and preview")
+                            }
+                        }
+                    }
+                }
+            }
+            fixture.increaseContrast = false
+            NSWorkspace.shared.notificationCenter.post(
+                name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+                object: NSWorkspace.shared
+            )
+            Settings.colorScheme = displayThemeBeforeTheme
+            Settings.liquidGlassEnabled = displayGlassBeforeTheme
+            Settings.setMenuBarAppearance(iconStyle: displayStyleBeforeTheme,
+                showsPercentage: displayPercentageBeforeTheme)
+            controller.selectSectionForTest(identifier: "general")
+            require(readsBeforeTheme == [fixture.loginReads.count, fixture.batteryReads.count,
+                fixture.loginWrites.count, fixture.batteryWrites.count, fixture.updateChecks.count],
+                "Display appearance and preference changes never query system controls")
             Settings.colorScheme = .dark
             let reopenedTheme = SettingsWindowController(dependencies: dependencies, frameAutosaveName: nil)
             require(reopenedTheme.windowForTest?.appearance?.name == .darkAqua,
@@ -3198,7 +3100,7 @@ class SettingsWindowContractTests(unittest.TestCase):
 
     def test_selected_icon_indicator_uses_semantic_accent(self):
         source = WINDOW.read_text(encoding="utf-8")
-        card = source.split("private final class MenuBarIconCardButton", 1)[1].split(
+        card = source.split("private final class MenuBarIconStyleButton", 1)[1].split(
             "private final class MenuBarIconSettingsSectionController", 1
         )[0]
         radio = card.split("let radio = NSBezierPath(ovalIn: radioRect)", 1)[1].split(
@@ -3211,7 +3113,8 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("radioColor.setStroke()", radio)
         self.assertIn("radioColor.setFill()", radio)
         self.assertIn("if state == .on {", radio)
-        self.assertIn("cardBorderColor.setStroke()\n        card.lineWidth", card)
+        self.assertIn("cardBorderColor.setStroke()", card)
+        self.assertIn("row.lineWidth = cardBorderWidth", card)
         self.assertNotIn("NSColor.selectedControlTextColor", card)
 
     def test_in_app_logo_uses_static_resources_without_changing_system_icons(self):
@@ -3270,15 +3173,14 @@ class SettingsWindowContractTests(unittest.TestCase):
             "Check for Updates on Launch",
             'let identifier = "menu-bar-icon"',
             'let title = "Display"',
-            '"Wattson icon only"',
-            '"Wattson with percentage"',
-            '"macOS 26 icon only"',
-            '"macOS 26 with percentage"',
+            '"Show percentage"',
+            '"Wattson"',
+            '"macOS 26"',
         ):
             self.assertIn(title, source)
         general_source = source.split(
             "private final class GeneralSettingsSectionController", 1
-        )[1].split("private enum MenuBarIconAppearance", 1)[0]
+        )[1].split("private enum MenuBarIconStyleKeyCommand", 1)[0]
         self.assertNotIn("menuBarIconStyle", general_source)
         self.assertNotIn("nativeIconButton", general_source)
         self.assertNotIn("menuBarPercentage", general_source)
@@ -3313,9 +3215,9 @@ class SettingsWindowContractTests(unittest.TestCase):
             "imageView.widthAnchor.constraint(equalToConstant: BatteryIcon.width)",
             source,
         )
-        self.assertIn("mode: previewState.mode", icon_source)
+        self.assertIn("mode: state.mode", icon_source)
         self.assertIn("pressed: false", icon_source)
-        self.assertIn("style: appearance.iconStyle", icon_source)
+        self.assertIn("style: style", icon_source)
         self.assertIn("MenuBarIconPreviewState.allCases", icon_source)
         self.assertIn("Settings.menuBarIconStyle", icon_source)
         self.assertIn("case .menuBarIconStyle", icon_source)
@@ -3325,27 +3227,29 @@ class SettingsWindowContractTests(unittest.TestCase):
         self.assertIn("Settings.setModule", source)
         self.assertNotIn("EnergyModeController", source)
 
-    def test_icon_page_lists_every_complete_menu_bar_appearance(self):
+    def test_display_keeps_style_and_percentage_independent(self):
         source = WINDOW.read_text(encoding="utf-8")
         general_source = source.split(
             "private final class GeneralSettingsSectionController", 1
-        )[1].split("private enum MenuBarIconAppearance", 1)[0]
+        )[1].split("private enum MenuBarIconStyleKeyCommand", 1)[0]
         icon_source = source.split(
-            "private enum MenuBarIconAppearance", 1
+            "private final class MenuBarIconStyleButton", 1
         )[1].split("private final class ModuleSettingsSectionController", 1)[0]
 
-        self.assertNotIn("percentageButton", general_source)
-        self.assertIn("MenuBarIconAppearance.allCases", icon_source)
+        self.assertNotIn("showsMenuBarPercentage", general_source)
+        self.assertIn("Settings.MenuBarIconStyle.allCases", icon_source)
         self.assertIn("MenuBarIconPreviewState.allCases", icon_source)
-        self.assertIn("showsPercentage", icon_source)
+        self.assertIn('"settings.menu-bar-icon.percentage"', icon_source)
+        self.assertIn('setAccessibilityLabel("Show percentage")', icon_source)
         self.assertIn("Settings.showsMenuBarPercentage", icon_source)
-        for label in (
-            "Wattson icon only",
-            "Wattson with percentage",
-            "macOS 26 icon only",
-            "macOS 26 with percentage",
+        self.assertIn("imageView.imageScaling = .scaleNone", icon_source)
+        for old_combined_label in (
+            '"Wattson icon only"',
+            '"Wattson with percentage"',
+            '"macOS 26 icon only"',
+            '"macOS 26 with percentage"',
         ):
-            self.assertIn(label, icon_source)
+            self.assertNotIn(old_combined_label, icon_source)
 
 
 if __name__ == "__main__":
