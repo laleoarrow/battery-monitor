@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "method": "Lossless gzip of unmodified completed raw logs containing trailing whitespace; decompress to restore the original path and exact bytes.",
+  "logs": [
+    {
+      "originalPath": "evidence-38984cd/guest.err",
+      "originalSHA256": "542ca724f46d8a3dffb85c3cd4b6e0d2fdf6c1bd4c484e6978dd9ed2f22cd639",
+      "originalBytes": 30,
+      "storedPath": "evidence-38984cd/guest.err.raw.gz",
+      "storedSHA256": "07c90ea25c935b07fafb10778f2f15fc55007e12b92708e2f7e101aa44228054"
+    },
+    {
+      "originalPath": "evidence-7b7b923/guest.err",
+      "originalSHA256": "542ca724f46d8a3dffb85c3cd4b6e0d2fdf6c1bd4c484e6978dd9ed2f22cd639",
+      "originalBytes": 30,
+      "storedPath": "evidence-7b7b923/guest.err.raw.gz",
+      "storedSHA256": "07c90ea25c935b07fafb10778f2f15fc55007e12b92708e2f7e101aa44228054"
+    },
+    {
+      "originalPath": "evidence-fa6c88f/guest.err",
+      "originalSHA256": "542ca724f46d8a3dffb85c3cd4b6e0d2fdf6c1bd4c484e6978dd9ed2f22cd639",
+      "originalBytes": 30,
+      "storedPath": "evidence-fa6c88f/guest.err.raw.gz",
+      "storedSHA256": "07c90ea25c935b07fafb10778f2f15fc55007e12b92708e2f7e101aa44228054"
+    }
+  ]
+}

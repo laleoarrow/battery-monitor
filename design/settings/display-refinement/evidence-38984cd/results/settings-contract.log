@@ -1,0 +1,8 @@
+settings-contract config: interactive=True runtime-watchdog=180s compile-watchdog=120s optimization=Onone
+settings-contract 0.000s start
+settings-contract 0.106s battery completion failed-write-newer-ready: passed
+settings-contract 0.152s battery completion failed-write-newer-failed: passed
+settings-contract 0.196s battery completion successful-write-readback-failed: passed
+settings-contract 0.241s battery completion failed-status-rejects-old-value: passed
+settings-contract 0.250s battery completion no-window fixtures passed
+percentage stays fully visible to the left of its icon: macos.full text=(-1.0, 21.5, 34.0, 13.0) glyph=(33.0, 21.0, 25.0, 14.0) state=(0.0, 0.0, 59.0, 56.0)

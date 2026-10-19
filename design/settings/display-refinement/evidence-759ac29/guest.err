@@ -1,0 +1,7 @@
+swift-driver version: 1.148.6 could not create image from window
+Traceback (most recent call last):
+  File "/Volumes/My Shared Files/snapshot/capture-compositor.py", line 37, in <module>
+    subprocess.run(['/usr/sbin/screencapture', '-x', '-o', '-l', str(int(frame['window'])), str(target)],
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/sbin/screencapture', '-x', '-o', '-l', '40', '/Volumes/My Shared Files/review/results/before-baseline/classic-light-percentage-on.png']' returned non-zero exit status 1.

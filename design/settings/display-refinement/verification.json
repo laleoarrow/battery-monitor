@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "accepted": true,
+  "frozenSourceCommit": "fa6c88f7ce40a7aa435b0334f222098a58d8c057",
+  "baselineSourceCommit": "b079f290a9919f9153e1d49ced2e49fe1713f691",
+  "sourceSHA256": {
+    "MenuBar/SettingsWindowController.swift": "fb50df1e548481f035ef4d5ba23db49a532f89ebee148f95092a41d8763fcd5b",
+    "tests/test_settings_window_contract.py": "ffcfa991baec1b9277de43aca01c016d15fcaa6fb4d3d2e31a356f6faef722dd",
+    "tests/visual/capture_display_settings.swift": "c47704f1ecb33739ebca92bfc1bad8b9639e22b95d716357303d2f9f32374a50"
+  },
+  "environment": [
+    "ProductName:\t\tmacOS",
+    "ProductVersion:\t\t26.6.1",
+    "BuildVersion:\t\t25G76",
+    "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)",
+    "Target: arm64-apple-macosx26.0"
+  ],
+  "nativeContract": {
+    "testsPassed": 8,
+    "testsFailed": 0,
+    "runtimeSeconds": 130.316,
+    "allAssertionsCompleted": true,
+    "windowReuseCycles": 500,
+    "newControllerWarmup": 150,
+    "newControllerStress": 500,
+    "fileDescriptorsBefore": 9,
+    "fileDescriptorsAfter": 9,
+    "memoryPlateauSpreadBytes": 999424
+  },
+  "renders": {
+    "total": 30,
+    "baseline": 4,
+    "new": 26,
+    "maximumHeaderCenterDeltaPoints": 0.75,
+    "fontSizesPoints": [
+      10.5
+    ]
+  },
+  "verificationReports": {
+    "execution": {
+      "allPassed": true,
+      "path": "evidence-fa6c88f/gate-results.json"
+    },
+    "geometry": {
+      "allPassed": true,
+      "path": "evidence-fa6c88f/geometry-review.json"
+    },
+    "guestResources": {
+      "allPassed": true,
+      "path": "evidence-fa6c88f/results/resource-audit.json"
+    },
+    "preferenceObservation": {
+      "allPassed": true,
+      "path": "evidence-fa6c88f/results/preferences-observation.json"
+    },
+    "canonicalInstallation": {
+      "allPassed": true,
+      "path": "evidence-fa6c88f/canonical-after.json"
+    }
+  },
+  "cleanup": {
+    "ownedCloneRemoved": true,
+    "existingVMStatesPreserved": true,
+    "canonicalVersion": "4.3.23",
+    "canonicalSettingsPreserved": 16,
+    "canonicalPIDPreserved": 66247
+  },
+  "release": {
+    "versionFile": "4.3.23",
+    "installedAppChanged": false,
+    "releaseCreated": false
+  },
+  "rawLogStorageManifest": "raw-log-storage.json",
+  "earlierRejectedEvidence": [
+    "evidence-759ac29",
+    "evidence-b2f00e4",
+    "evidence-38984cd",
+    "evidence-7b7b923"
+  ]
+}

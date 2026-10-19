@@ -1,0 +1,1612 @@
+{
+  "before" : true,
+  "contentSize" : [
+    720,
+    520
+  ],
+  "dark" : true,
+  "glassEffective" : false,
+  "glassRequested" : false,
+  "increaseContrast" : false,
+  "reduceTransparency" : false,
+  "schema" : 1,
+  "showsPercentage" : true,
+  "views" : [
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB19SettingsPageHeading",
+      "fontSize" : 18,
+      "frame" : [
+        197,
+        446,
+        505,
+        21
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.heading",
+      "intrinsicHeight" : 21,
+      "intrinsicWidth" : 62,
+      "text" : "Display"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        197,
+        424,
+        505,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.subtitle",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 244,
+      "text" : "Choose how Wattson appears in the menu bar."
+    },
+    {
+      "class" : "NSStackView",
+      "frame" : [
+        197,
+        66,
+        503,
+        344
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.group"
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB21MenuBarIconCardButton",
+      "frame" : [
+        197,
+        330,
+        503,
+        80
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.card.wattson-icon-only"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 12,
+      "frame" : [
+        207,
+        387,
+        52,
+        15
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.title.wattson-icon-only",
+      "intrinsicHeight" : 15,
+      "intrinsicWidth" : 48,
+      "text" : "Wattson"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        263,
+        387,
+        51.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.detail.wattson-icon-only",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 47.5,
+      "text" : "Icon only"
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        209,
+        338,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-icon-only.battery"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        209,
+        362,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-icon-only.battery",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 37.5,
+      "text" : "Battery"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        229.5,
+        341,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-icon-only.battery",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        278,
+        338,
+        64.5,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-icon-only.full"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        278,
+        362,
+        64.5,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-icon-only.full",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 20.5,
+      "text" : "Full"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        298.5,
+        341,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-icon-only.full",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        347.5,
+        338,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-icon-only.charging"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        347.5,
+        362,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-icon-only.charging",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 45,
+      "text" : "Charging"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        368,
+        341,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-icon-only.charging",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        416.5,
+        338,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-icon-only.low"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        416.5,
+        362,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-icon-only.low",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 22,
+      "text" : "Low"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        437,
+        341,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-icon-only.low",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        485.5,
+        338,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-icon-only.low-ac"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        485.5,
+        362,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-icon-only.low-ac",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 46,
+      "text" : "Low + AC"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        506,
+        341,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-icon-only.low-ac",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        554.5,
+        338,
+        64.5,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-icon-only.saver"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        554.5,
+        362,
+        64.5,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-icon-only.saver",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 29.5,
+      "text" : "Saver"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        575.5,
+        341,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-icon-only.saver",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        624,
+        338,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-icon-only.saver-ac"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        624,
+        362,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-icon-only.saver-ac",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 53.5,
+      "text" : "Saver + AC"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        644.5,
+        341,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-icon-only.saver-ac",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB21MenuBarIconCardButton",
+      "frame" : [
+        197,
+        242,
+        503,
+        80
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.card.wattson-percentage"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 12,
+      "frame" : [
+        207,
+        299,
+        52,
+        15
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.title.wattson-percentage",
+      "intrinsicHeight" : 15,
+      "intrinsicWidth" : 48,
+      "text" : "Wattson"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        263,
+        299,
+        91,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.detail.wattson-percentage",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 87,
+      "text" : "With percentage"
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        209,
+        250,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-percentage.battery"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        209,
+        274,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-percentage.battery",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 37.5,
+      "text" : "Battery"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        214.5,
+        253,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson-percentage.battery",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "75%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        243,
+        253,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-percentage.battery",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        278,
+        250,
+        64.5,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-percentage.full"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        278,
+        274,
+        64.5,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-percentage.full",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 20.5,
+      "text" : "Full"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        280,
+        253,
+        35.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson-percentage.full",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 31.5,
+      "text" : "100%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        315.5,
+        253,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-percentage.full",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        347.5,
+        250,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-percentage.charging"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        347.5,
+        274,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-percentage.charging",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 45,
+      "text" : "Charging"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        352.5,
+        253,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson-percentage.charging",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "72%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        381,
+        253,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-percentage.charging",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        416.5,
+        250,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-percentage.low"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        416.5,
+        274,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-percentage.low",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 22,
+      "text" : "Low"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        422,
+        253,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson-percentage.low",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "10%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        450.5,
+        253,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-percentage.low",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        485.5,
+        250,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-percentage.low-ac"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        485.5,
+        274,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-percentage.low-ac",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 46,
+      "text" : "Low + AC"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        491,
+        253,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson-percentage.low-ac",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "20%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        519.5,
+        253,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-percentage.low-ac",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        554.5,
+        250,
+        64.5,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-percentage.saver"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        554.5,
+        274,
+        64.5,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-percentage.saver",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 29.5,
+      "text" : "Saver"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        560,
+        253,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson-percentage.saver",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "42%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        588.5,
+        253,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-percentage.saver",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        624,
+        250,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson-percentage.saver-ac"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        624,
+        274,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.wattson-percentage.saver-ac",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 53.5,
+      "text" : "Saver + AC"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        629,
+        253,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson-percentage.saver-ac",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "42%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        657.5,
+        253,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson-percentage.saver-ac",
+      "imageScaling" : 3,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB21MenuBarIconCardButton",
+      "frame" : [
+        197,
+        154,
+        503,
+        80
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.card.macos-icon-only"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 12,
+      "frame" : [
+        207,
+        211,
+        64.5,
+        15
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.title.macos-icon-only",
+      "intrinsicHeight" : 15,
+      "intrinsicWidth" : 60.5,
+      "text" : "macOS 26"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        275.5,
+        211,
+        51.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.detail.macos-icon-only",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 47.5,
+      "text" : "Icon only"
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        209,
+        162,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-icon-only.battery"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        209,
+        186,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-icon-only.battery",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 37.5,
+      "text" : "Battery"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        228.5,
+        165,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-icon-only.battery",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        278,
+        162,
+        64.5,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-icon-only.full"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        278,
+        186,
+        64.5,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-icon-only.full",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 20.5,
+      "text" : "Full"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        297.5,
+        165,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-icon-only.full",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        347.5,
+        162,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-icon-only.charging"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        347.5,
+        186,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-icon-only.charging",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 45,
+      "text" : "Charging"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        367,
+        165,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-icon-only.charging",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        416.5,
+        162,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-icon-only.low"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        416.5,
+        186,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-icon-only.low",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 22,
+      "text" : "Low"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        436,
+        165,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-icon-only.low",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        485.5,
+        162,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-icon-only.low-ac"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        485.5,
+        186,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-icon-only.low-ac",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 46,
+      "text" : "Low + AC"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        505,
+        165,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-icon-only.low-ac",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        554.5,
+        162,
+        64.5,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-icon-only.saver"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        554.5,
+        186,
+        64.5,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-icon-only.saver",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 29.5,
+      "text" : "Saver"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        574.5,
+        165,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-icon-only.saver",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        624,
+        162,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-icon-only.saver-ac"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        624,
+        186,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-icon-only.saver-ac",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 53.5,
+      "text" : "Saver + AC"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        643.5,
+        165,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-icon-only.saver-ac",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB21MenuBarIconCardButton",
+      "frame" : [
+        197,
+        66,
+        503,
+        80
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.card.macos-percentage"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 12,
+      "frame" : [
+        207,
+        123,
+        64.5,
+        15
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.title.macos-percentage",
+      "intrinsicHeight" : 15,
+      "intrinsicWidth" : 60.5,
+      "text" : "macOS 26"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        275.5,
+        123,
+        91,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.detail.macos-percentage",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 87,
+      "text" : "With percentage"
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        209,
+        74,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-percentage.battery"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        209,
+        98,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-percentage.battery",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 37.5,
+      "text" : "Battery"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        213.5,
+        77,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.macos-percentage.battery",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "75%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        242,
+        77,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-percentage.battery",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        278,
+        74,
+        64.5,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-percentage.full"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        278,
+        98,
+        64.5,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-percentage.full",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 20.5,
+      "text" : "Full"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        279,
+        77,
+        35.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.macos-percentage.full",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 31.5,
+      "text" : "100%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        314.5,
+        77,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-percentage.full",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        347.5,
+        74,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-percentage.charging"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        347.5,
+        98,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-percentage.charging",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 45,
+      "text" : "Charging"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        351.5,
+        77,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.macos-percentage.charging",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "72%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        380,
+        77,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-percentage.charging",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        416.5,
+        74,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-percentage.low"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        416.5,
+        98,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-percentage.low",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 22,
+      "text" : "Low"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        421,
+        77,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.macos-percentage.low",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "10%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        449.5,
+        77,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-percentage.low",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        485.5,
+        74,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-percentage.low-ac"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        485.5,
+        98,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-percentage.low-ac",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 46,
+      "text" : "Low + AC"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        490,
+        77,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.macos-percentage.low-ac",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "20%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        518.5,
+        77,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-percentage.low-ac",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        554.5,
+        74,
+        64.5,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-percentage.saver"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        554.5,
+        98,
+        64.5,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-percentage.saver",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 29.5,
+      "text" : "Saver"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        559,
+        77,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.macos-percentage.saver",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "42%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        587.5,
+        77,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-percentage.saver",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSBox",
+      "frame" : [
+        624,
+        74,
+        64,
+        38
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos-percentage.saver-ac"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 9,
+      "frame" : [
+        624,
+        98,
+        64,
+        11
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.macos-percentage.saver-ac",
+      "intrinsicHeight" : 11,
+      "intrinsicWidth" : 53.5,
+      "text" : "Saver + AC"
+    },
+    {
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        628,
+        77,
+        28.5,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage.macos-percentage.saver-ac",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 24.5,
+      "text" : "42%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        656.5,
+        77,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos-percentage.saver-ac",
+      "imageScaling" : 3,
+      "imageSize" : [
+        25,
+        14
+      ]
+    }
+  ],
+  "windowKey" : true,
+  "windowSize" : [
+    720,
+    520
+  ]
+}

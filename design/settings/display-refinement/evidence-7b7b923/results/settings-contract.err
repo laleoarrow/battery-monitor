@@ -1,0 +1,29 @@
+test_appkit_window_layout_state_and_release_contract (test_settings_window_contract.SettingsWindowContractTests) ... FAIL
+test_default_sections_use_only_existing_settings (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_display_keeps_style_and_percentage_independent (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_dock_icon_is_a_separate_restart_only_preference (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_in_app_logo_uses_static_resources_without_changing_system_icons (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_liquid_glass_is_an_appearance_only_native_opt_in (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_selected_icon_indicator_uses_semantic_accent (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_source_has_no_timer_and_uses_the_narrow_section_boundary (test_settings_window_contract.SettingsWindowContractTests) ... ok
+
+======================================================================
+FAIL: test_appkit_window_layout_state_and_release_contract (test_settings_window_contract.SettingsWindowContractTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/admin/Project/.display-settings.noindex/run.cZS6Rm/after/tests/test_settings_window_contract.py", line 3061, in test_appkit_window_layout_state_and_release_contract
+    self.assertEqual(
+AssertionError: 1 != 0 : settings window contract failed:
+settings-contract 0.000s start
+settings-contract 0.111s battery completion failed-write-newer-ready: passed
+settings-contract 0.158s battery completion failed-write-newer-failed: passed
+settings-contract 0.203s battery completion successful-write-readback-failed: passed
+settings-contract 0.248s battery completion failed-status-rejects-old-value: passed
+settings-contract 0.257s battery completion no-window fixtures passed
+shared column header aligns with both style rows: wattson.low
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 8.304s
+
+FAILED (failures=1)

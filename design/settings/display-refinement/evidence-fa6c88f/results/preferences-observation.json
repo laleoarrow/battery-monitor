@@ -1,0 +1,7 @@
+{
+  "durationSeconds": 35.061,
+  "filesystemChecks": 211,
+  "unexpectedPreferences": [],
+  "allPassed": true,
+  "method": "Filesystem-only observation after exact-suite cleanup; no defaults reads."
+}

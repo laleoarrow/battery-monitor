@@ -1,0 +1,29 @@
+test_appkit_window_layout_state_and_release_contract (test_settings_window_contract.SettingsWindowContractTests) ... FAIL
+test_default_sections_use_only_existing_settings (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_display_keeps_style_and_percentage_independent (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_dock_icon_is_a_separate_restart_only_preference (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_in_app_logo_uses_static_resources_without_changing_system_icons (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_liquid_glass_is_an_appearance_only_native_opt_in (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_selected_icon_indicator_uses_semantic_accent (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_source_has_no_timer_and_uses_the_narrow_section_boundary (test_settings_window_contract.SettingsWindowContractTests) ... ok
+
+======================================================================
+FAIL: test_appkit_window_layout_state_and_release_contract (test_settings_window_contract.SettingsWindowContractTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/admin/Project/.display-settings.noindex/run.4uUJwF/after/tests/test_settings_window_contract.py", line 3048, in test_appkit_window_layout_state_and_release_contract
+    self.assertEqual(
+AssertionError: 1 != 0 : settings window contract failed:
+settings-contract 0.000s start
+settings-contract 0.106s battery completion failed-write-newer-ready: passed
+settings-contract 0.152s battery completion failed-write-newer-failed: passed
+settings-contract 0.196s battery completion successful-write-readback-failed: passed
+settings-contract 0.241s battery completion failed-status-rejects-old-value: passed
+settings-contract 0.250s battery completion no-window fixtures passed
+percentage stays fully visible to the left of its icon: macos.full text=(-1.0, 21.5, 34.0, 13.0) glyph=(33.0, 21.0, 25.0, 14.0) state=(0.0, 0.0, 59.0, 56.0)
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 7.810s
+
+FAILED (failures=1)

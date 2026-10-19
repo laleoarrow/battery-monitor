@@ -1,0 +1,8 @@
+settings-contract config: interactive=True runtime-watchdog=180s compile-watchdog=120s optimization=Onone
+settings-contract 0.000s start
+settings-contract 0.111s battery completion failed-write-newer-ready: passed
+settings-contract 0.158s battery completion failed-write-newer-failed: passed
+settings-contract 0.203s battery completion successful-write-readback-failed: passed
+settings-contract 0.248s battery completion failed-status-rejects-old-value: passed
+settings-contract 0.257s battery completion no-window fixtures passed
+shared column header aligns with both style rows: wattson.low

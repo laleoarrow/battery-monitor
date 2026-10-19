@@ -1,0 +1,29 @@
+[
+  {
+    "Accessed" : "2026-10-19T13:34:10Z",
+    "Name" : "Wattson-Display-QA-156A3543",
+    "Running" : true,
+    "Disk" : 50,
+    "Source" : "local",
+    "State" : "running",
+    "Size" : 31
+  },
+  {
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "Name" : "macOS-TestLab",
+    "Running" : false,
+    "Disk" : 50,
+    "Source" : "local",
+    "State" : "stopped",
+    "Size" : 33
+  },
+  {
+    "Accessed" : "2026-10-19T13:29:36Z",
+    "Name" : "macOS-TestLab-Base",
+    "Running" : false,
+    "Disk" : 50,
+    "Source" : "local",
+    "State" : "stopped",
+    "Size" : 30
+  }
+]

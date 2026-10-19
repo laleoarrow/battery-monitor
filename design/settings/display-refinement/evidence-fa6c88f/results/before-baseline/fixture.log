@@ -1,0 +1,5 @@
+DISPLAY_CAPTURED classic-light-percentage-on
+DISPLAY_CAPTURED classic-dark-percentage-on
+DISPLAY_CAPTURED glass-light-percentage-on
+DISPLAY_CAPTURED glass-dark-percentage-on
+DISPLAY_CAPTURE_COMPLETE count=4 before=true

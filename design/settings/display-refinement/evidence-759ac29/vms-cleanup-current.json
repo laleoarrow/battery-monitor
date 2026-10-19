@@ -1,0 +1,29 @@
+[
+  {
+    "State" : "running",
+    "Name" : "Wattson-Display-QA-B61477D7",
+    "Size" : 31,
+    "Running" : true,
+    "Accessed" : "2026-10-19T13:01:58Z",
+    "Source" : "local",
+    "Disk" : 50
+  },
+  {
+    "State" : "stopped",
+    "Name" : "macOS-TestLab",
+    "Size" : 33,
+    "Running" : false,
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "Source" : "local",
+    "Disk" : 50
+  },
+  {
+    "State" : "stopped",
+    "Name" : "macOS-TestLab-Base",
+    "Size" : 30,
+    "Running" : false,
+    "Accessed" : "2026-10-19T13:00:43Z",
+    "Source" : "local",
+    "Disk" : 50
+  }
+]

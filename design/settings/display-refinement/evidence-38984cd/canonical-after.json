@@ -1,0 +1,43 @@
+{
+  "allPassed": true,
+  "checks": {
+    "version": true,
+    "processes": true,
+    "files": true,
+    "settings": true
+  },
+  "settingsCompared": 16,
+  "current": {
+    "version": "4.3.23",
+    "processes": [
+      "66247 /Applications/Wattson.app/Contents/MacOS/Wattson"
+    ],
+    "files": {
+      "/Applications/Wattson.app/Contents/MacOS/Wattson": "f5bc038d1017431c32f64858d3dee2194fa2d58203b49d1900c68a4ad4fb4f5d",
+      "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper": "166cdc971d541a4df71ae6f934a517dec5194982cbdcd7f83d9ca4624a3e4b0b",
+      "/Library/LaunchDaemons/com.leoarrow.wattson.helper.plist": "29cd39cb617610c7e42c5c28549d8334c45fbcaf4b1f188fc35bdd6f13f4a599"
+    },
+    "settings": {
+      "/Users/leoarrow/Library/Containers/com.leoarrow.wattson/Data/Library/Preferences/com.leoarrow.wattson.plist": {
+        "appearance.liquidGlassStyle": "8ceb88eddb90bff6a2609c105d57fee0d837d73e8e4c3eefb390db5c8e6f5c13",
+        "popover.topProcessesCompact": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+        "popover.module.flow": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+        "popover.module.history": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+        "popover.module.topProcesses": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+        "appearance.showPopoverArrow": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+        "appearance.inAppLogoStyle": "406a922d115aac36236e06601aa422a46bef9956389cbfb8cc89b4b52e718dd0",
+        "popover.module.lanes": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+        "popover.ringMetrics": "8d6cfee78019a3a31cb7758b0b9828af820a2abfc04c127f2d2552cba36c5df4",
+        "popover.topProcessCount": "e32a9aa8e562ff823b65a4ec71e352d5ac7d51f6d17d3ebd09c6134c034f7214",
+        "appearance.liquidGlassEnabled": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+        "menubar.iconStyle": "b89c0c4a5bf5a1503d1164e8bb848954dc932ec0d81fc84c3885d790c71c6cf1",
+        "appearance.colorScheme": "363e99de0def95bed2a65d60cbe5ddcf926c8322de947b904da2d93a22b21083",
+        "appearance.liquidGlassTransparency": "493455bbe9a59db288581df46c01217b1fbcb961185f7c037c8e48b42a561be4",
+        "popover.moduleOrder": "ef0301491453cdeb78d8a93a0a3968b002a99070bb96a0c9703632d743100ee0",
+        "menubar.showsPercentage": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17"
+      }
+    },
+    "helperContacted": false,
+    "rawSettingsValuesLogged": false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "checks": {
+    "all26NewFrames": true,
+    "sevenSharedHeaders": true,
+    "fourteenNaturalIcons": true,
+    "percentageVisibility": true,
+    "headerAlignmentWithinOnePoint": true,
+    "percentageAlignmentContained": true,
+    "percentageAdvanceFits": true,
+    "unchangedTenPointFivePercentageFont": true
+  },
+  "newFramesReviewed": 26,
+  "maximumHeaderCenterDeltaPoints": 0.75,
+  "actualHeaderCellWidthsPoints": [
+    58,
+    59
+  ],
+  "percentageFontSizesPoints": [
+    10.5
+  ],
+  "failures": [],
+  "method": "Read actual captured production-view geometry; NSTextField transparent frame padding is separated from native alignment and attributed text advance. CoreText ink paths and controls are independently checked by the native Settings contract."
+}

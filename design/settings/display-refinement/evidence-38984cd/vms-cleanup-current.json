@@ -1,0 +1,29 @@
+[
+  {
+    "Source" : "local",
+    "Running" : true,
+    "State" : "running",
+    "Name" : "Wattson-Display-QA-27C7D72C",
+    "Size" : 31,
+    "Disk" : 50,
+    "Accessed" : "2026-10-19T13:13:55Z"
+  },
+  {
+    "Source" : "local",
+    "Running" : false,
+    "State" : "stopped",
+    "Name" : "macOS-TestLab",
+    "Size" : 33,
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "Disk" : 50
+  },
+  {
+    "Source" : "local",
+    "Running" : false,
+    "State" : "stopped",
+    "Name" : "macOS-TestLab-Base",
+    "Size" : 30,
+    "Accessed" : "2026-10-19T13:11:44Z",
+    "Disk" : 50
+  }
+]

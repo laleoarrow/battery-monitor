@@ -1,0 +1,38 @@
+settings-contract config: interactive=True runtime-watchdog=180s compile-watchdog=120s optimization=Onone
+settings-contract 0.000s start
+settings-contract 0.105s battery completion failed-write-newer-ready: passed
+settings-contract 0.157s battery completion failed-write-newer-failed: passed
+settings-contract 0.207s battery completion successful-write-readback-failed: passed
+settings-contract 0.256s battery completion failed-status-rejects-old-value: passed
+settings-contract 0.266s battery completion no-window fixtures passed
+settings-contract 0.567s module-layout rows=[486.0, 486.0, 486.0, 486.0, 486.0, 486.0] page=(0.0, 0.0, 503.0, 444.0) scroll=(-20.0, -20.0, 543.0, 394.0) clip=(0.0, 0.0, 526.0, 394.0) document=(0.0, 0.0, 526.0, 472.0) scroller=0 preferred=0
+settings-contract 0.574s module-order
+settings-contract 9.550s key loop: fullKeyboard=true reverse=false nativeReachedTarget=true
+settings-contract 10.349s key loop: fullKeyboard=true reverse=false nativeReachedTarget=true
+settings-contract 10.349s key loop: fullKeyboard=true reverse=false nativeReachedTarget=true
+settings-contract 10.350s key loop: fullKeyboard=true reverse=false nativeReachedTarget=true
+settings-contract 10.350s key loop: fullKeyboard=true reverse=true nativeReachedTarget=true
+settings-contract 10.350s key loop: fullKeyboard=true reverse=true nativeReachedTarget=true
+settings-contract 10.350s key loop: fullKeyboard=true reverse=true nativeReachedTarget=true
+settings-contract 10.350s key loop: fullKeyboard=true reverse=false nativeReachedTarget=true
+settings-contract 10.351s key loop: fullKeyboard=true reverse=true nativeReachedTarget=true
+settings-contract 11.475s state, layout, appearance and action assertions complete
+settings-contract 18.497s headless 50-controller release assertions complete
+settings-contract 19.813s visible window, keyboard and reopen assertions complete
+settings-contract 20.435s reuse 500-cycle assertions complete
+settings-contract 27.979s warmup 50 created: construction=5.504s presentation=0.339s
+settings-contract 36.533s warmup 50 created: construction=5.553s presentation=0.312s
+settings-contract 45.062s warmup 50 created: construction=5.507s presentation=0.308s
+settings-contract 46.075s warmup 150-controller release assertions complete
+settings-contract 53.319s stress 50 50 created: construction=5.257s presentation=0.289s
+settings-contract 61.826s stress 100 50 created: construction=5.486s presentation=0.308s
+settings-contract 70.273s stress 150 50 created: construction=5.419s presentation=0.294s
+settings-contract 78.569s stress 200 50 created: construction=5.247s presentation=0.286s
+settings-contract 87.091s stress 250 50 created: construction=5.480s presentation=0.307s
+settings-contract 95.345s stress 300 50 created: construction=5.215s presentation=0.288s
+settings-contract 103.744s stress 350 50 created: construction=5.401s presentation=0.296s
+settings-contract 112.206s stress 400 50 created: construction=5.298s presentation=0.295s
+settings-contract 120.635s stress 450 50 created: construction=5.197s presentation=0.286s
+settings-contract 129.303s stress 500 50 created: construction=5.519s presentation=0.307s
+reuse0 rss=1025884160; reuse500 rss=1025884160; warm150 rss=1056636928 fd=9; created50 rss=1056686080 fd=9 windows=11; created100 rss=1056768000 fd=9 windows=11; created150 rss=1057210368 fd=9 windows=11; created200 rss=1057095680 fd=9 windows=11; created250 rss=1057112064 fd=9 windows=11; created300 rss=1057292288 fd=9 windows=11; created350 rss=1057406976 fd=9 windows=11; created400 rss=1057390592 fd=9 windows=11; created450 rss=1057619968 fd=9 windows=11; created500 rss=1057767424 fd=9 windows=11; final rss=1057767424 fd=9 plateauSpread=999424
+settings-contract 130.316s all assertions complete

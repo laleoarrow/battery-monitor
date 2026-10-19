@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "checks": {
+    "guestCompleted": true,
+    "nativeAssertionsCompleted": true,
+    "unittestPassed": true,
+    "before-baseline": true,
+    "after-baseline": true,
+    "after-high-contrast": true,
+    "after-reduce-transparency": true,
+    "after-native-selected": true,
+    "before-source-before": true,
+    "before-source-after": true,
+    "after-source-before": true,
+    "after-source-after": true
+  }
+}

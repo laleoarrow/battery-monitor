@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "captureCount": 8,
+  "captures": [
+    "classic-dark-percentage-off",
+    "classic-dark-percentage-on",
+    "classic-light-percentage-off",
+    "classic-light-percentage-on",
+    "glass-dark-percentage-off",
+    "glass-dark-percentage-on",
+    "glass-light-percentage-off",
+    "glass-light-percentage-on"
+  ],
+  "method": "Actual SettingsWindowController NSWindow; ScreenCaptureKit currentProcess own-window WindowServer capture without TCC consent in disposable GUI VM; no AppKit bitmap approximation."
+}
