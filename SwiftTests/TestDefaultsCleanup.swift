@@ -47,7 +47,9 @@ extension UserDefaults {
             return
         }
         let errorText = String(decoding: errors.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
-        guard deletion.terminationStatus == 0 || errorText.contains("Domain (\(domain)) not found.") else {
+        guard deletion.terminationStatus == 0
+                || errorText.contains("Domain (\(domain)) not found.")
+                || errorText.contains("Domain '\(domain)' not found.") else {
             XCTFail("Could not delete test domain: \(errorText)", file: file, line: line)
             return
         }
