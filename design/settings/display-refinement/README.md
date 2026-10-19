@@ -1,5 +1,10 @@
 # Display settings refinement
 
+This first revision was subsequently rejected by the user for its custom
+corner shapes and appearance. The active refinement is
+[system controls and macOS 27](../display-system-defaults/README.md). The
+verification below remains a historical functional result for its own source.
+
 The requested direction is consistent with Wattson's native settings: simple,
 clear, restrained surfaces and precise alignment. Existing battery artwork and
 all four icon-style/percentage combinations remain available.

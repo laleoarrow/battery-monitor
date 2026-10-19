@@ -4,12 +4,14 @@ import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 ICON_SOURCE = ROOT / "MenuBar" / "BatteryIcon.swift"
+ICON27_SOURCE = ROOT / "MenuBar" / "BatteryIcon27.swift"
 
 
 class BatteryIconContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.source = ICON_SOURCE.read_text(encoding="utf-8")
+        cls.source27 = ICON27_SOURCE.read_text(encoding="utf-8")
 
     def test_default_state_is_a_template_image(self):
         # Template is the only way the icon matches the system battery across
@@ -72,7 +74,7 @@ class BatteryIconContractTests(unittest.TestCase):
         self.assertNotIn("case .plug", native)
 
     def test_native_cache_key_tracks_exact_fill_and_bolt_pixels(self):
-        native_key = self.source.split("if style == .native", 1)[1].split(
+        native_key = self.source.split("if style == .native {", 1)[1].split(
             "let tintRole", 1
         )[0]
         self.assertIn("percent: percent", native_key)
@@ -82,6 +84,43 @@ class BatteryIconContractTests(unittest.TestCase):
             "/// Priority", 1
         )[0]
         self.assertIn("snapshot.percent", fallback)
+
+    def test_native27_is_a_separate_renderer_with_inset_digits(self):
+        new_style = self.source.split("if style == .native27 {", 2)[2].split(
+            "if style == .native {", 1
+        )[0]
+        self.assertIn("BatteryIcon27.image", new_style)
+        self.assertIn("showsPercentage: showsPercentage", new_style)
+        self.assertIn("string: String(percent)", self.source27)
+        self.assertIn(".destinationOut", self.source27)
+        self.assertNotIn('String(percent) + "%"', self.source27)
+
+    def test_native27_loads_running_os_adornments_without_bundled_apple_artwork(self):
+        self.assertIn('"/System/Library/CoreServices/ControlCenter.app"', self.source27)
+        for asset in ("battery-bolt-large", "battery-bolt-mask-large",
+                      "battery-plug-large", "battery-plug-mask-large"):
+            self.assertIn(f'"{asset}"', self.source27)
+        self.assertIn("fallbackAdornment", self.source27)
+        self.assertIn("snapshot.state == .charging ? .bolt : .plug", self.source27)
+
+    def test_native27_key_tracks_internal_percentage_and_connected_state(self):
+        key = self.source.split("if style == .native27 {", 1)[1].split(
+            "if style == .native {", 1
+        )[0]
+        self.assertIn("showsInlinePercentage: showsPercentage", key)
+        self.assertIn("native27Adornment: adornment", key)
+        legacy = self.source.split("if style == .native {", 1)[1].split(
+            "static func image", 1
+        )[0]
+        self.assertNotIn("showsInlinePercentage:", legacy)
+        self.assertNotIn("native27Adornment:", legacy)
+
+    def test_native27_canvas_and_low_power_preserve_template_behavior(self):
+        self.assertIn("static let width: CGFloat = 25", self.source27)
+        self.assertIn("static let height: CGFloat = 16", self.source27)
+        self.assertIn("let isLowPower = !pressed && mode == .low", self.source27)
+        self.assertIn("isLowPower ? NSColor.systemYellow : foreground", self.source27)
+        self.assertIn("image.isTemplate = !isLowPower", self.source27)
 
     def test_color_priority_is_low_power_then_low_battery_then_charging(self):
         low_power = self.source.index("systemYellow")

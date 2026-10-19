@@ -59,7 +59,7 @@ printf 'before %s\nafter %s\n' "$before_ref" "$source_ref" > "$review/frozen-sou
 for phase in before after; do
     ref="$source_ref"
     [[ "$phase" != before ]] || ref="$before_ref"
-    wattson_run_timeout 60 git -C "$repo" archive --format=tar.gz "$ref" Package.swift VERSION BatteryPowerApp.entitlements Core MenuBar Popover Helper HelperV5 scripts tests design/icon/in-app-logo > "$snapshot/$phase.tar.gz"
+    wattson_run_timeout 60 git -C "$repo" archive --format=tar.gz "$ref" Package.swift main.swift VERSION BatteryPowerApp.entitlements Core MenuBar Popover Helper HelperV5 HelperV5Tests SwiftTests scripts tests design/icon/in-app-logo > "$snapshot/$phase.tar.gz"
     shasum -a 256 "$snapshot/$phase.tar.gz" | awk '{print $1}' > "$snapshot/$phase.sha256"
     python3 "$helpers/source-manifest.py" archive "$snapshot/$phase.tar.gz" "$snapshot/$phase-inputs.sha256"
     cp "$snapshot/$phase.sha256" "$snapshot/$phase-inputs.sha256" "$review/"
@@ -106,7 +106,9 @@ checks['guestCompleted']='DISPLAY_SETTINGS_CAPTURE_AND_NATIVE_CONTRACT_PASSED' i
 contract=results/'settings-contract.log';errors=results/'settings-contract.err'
 checks['nativeAssertionsCompleted']=contract.exists() and 'all assertions complete' in contract.read_text()
 checks['unittestPassed']=errors.exists() and '\nOK\n' in errors.read_text()
-for name,count in [('before-baseline',4),('after-baseline',8),('after-high-contrast',8),('after-reduce-transparency',8),('after-native-selected',2)]:
+focused=results/'focused-swift-results.json'
+checks['focusedFourteenSwiftTestsPassed']=focused.is_file() and json.loads(focused.read_text()).get('allPassed') is True
+for name,count in [('before-baseline',4),('after-baseline',8),('after-high-contrast',8),('after-reduce-transparency',8),('after-native-selected',2),('after-macos27-selected',4),('after-shared-settings',4)]:
     directory=results/name;path=directory/'capture-results.json'
     report=json.loads(path.read_text()) if path.is_file() else {}
     checks[name]=report.get('allPassed') is True and report.get('captureCount')==count and len(list(directory.glob('*.png')))==count and len(list(directory.glob('*-geometry.json')))==count

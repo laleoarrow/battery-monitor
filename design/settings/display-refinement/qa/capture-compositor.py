@@ -33,7 +33,7 @@ try:
         captures = sorted(path.stem for path in directory.glob('*.png'))
         for target in directory.glob('*.png'):
             assert target.stat().st_size > 1000 and target.read_bytes().startswith(b'\x89PNG\r\n\x1a\n'), target
-        expected = 2 if '--native-selected' in sys.argv else (4 if '--before' in sys.argv else 8)
+        expected = 4 if '--shared-settings' in sys.argv or '--macos27-selected' in sys.argv else (2 if '--native-selected' in sys.argv else (4 if '--before' in sys.argv else 8))
         assert len(captures) == expected, captures
         assert f'DISPLAY_CAPTURE_COMPLETE count={expected}' in (directory / 'fixture.log').read_text()
         (directory / 'capture-results.json').write_text(json.dumps({

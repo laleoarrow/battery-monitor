@@ -9,6 +9,25 @@ enum Settings {
     enum MenuBarIconStyle: String, CaseIterable {
         case wattson
         case native
+        case native27
+
+        var title: String {
+            switch self {
+            case .wattson: return "Wattson"
+            case .native: return "macOS 26"
+            case .native27: return "macOS 27"
+            }
+        }
+
+        var identifierSuffix: String {
+            switch self {
+            case .wattson: return "wattson"
+            case .native: return "macos"
+            case .native27: return "macos27"
+            }
+        }
+
+        var embedsPercentage: Bool { self == .native27 }
     }
 
     enum LiquidGlassStyle: String, CaseIterable {
@@ -287,7 +306,7 @@ enum Settings {
 
     /// Lands both dimensions of a complete menu-bar appearance before either
     /// existing notification is posted. Settings surfaces can therefore move
-    /// between the four presets without observers briefly selecting an
+    /// between style/percentage combinations without observers briefly selecting an
     /// intermediate icon/percentage combination.
     static func setMenuBarAppearance(
         iconStyle: MenuBarIconStyle,

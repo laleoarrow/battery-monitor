@@ -31,11 +31,21 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
     private let directory = URL(fileURLWithPath: CommandLine.arguments[1])
     private let before = CommandLine.arguments.contains("--before")
     private let nativeSelected = CommandLine.arguments.contains("--native-selected")
+    private let macOS27Selected = CommandLine.arguments.contains("--macos27-selected")
+    private let sharedSettings = CommandLine.arguments.contains("--shared-settings")
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         Settings.configureForTest(defaults: defaults)
         Settings.checksForUpdatesOnLaunch = false
-        Settings.menuBarIconStyle = nativeSelected ? .native : .wattson
+        if macOS27Selected {
+            guard let style = Settings.MenuBarIconStyle(rawValue: "native27") else {
+                fputs("DISPLAY_CAPTURE_FAILED: macOS 27 style is missing\n", stderr)
+                exit(1)
+            }
+            Settings.menuBarIconStyle = style
+        } else {
+            Settings.menuBarIconStyle = nativeSelected ? .native : .wattson
+        }
         let dependencies = SettingsWindowDependencies(
             loginItemState: { .enabled }, refreshLoginItem: { $0(.enabled) },
             setLoginItemEnabled: { enabled, done in done(.success(enabled ? .enabled : .notRegistered)) },
@@ -59,7 +69,7 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
                 try await captureAll()
                 controller.windowForTest?.close()
                 Settings.resetTestConfiguration()
-                print("DISPLAY_CAPTURE_COMPLETE count=\(nativeSelected ? 2 : (before ? 4 : 8)) before=\(before)")
+                print("DISPLAY_CAPTURE_COMPLETE count=\(sharedSettings || macOS27Selected ? 4 : (nativeSelected ? 2 : (before ? 4 : 8))) before=\(before)")
                 fflush(stdout)
                 NSApp.terminate(nil)
             } catch {
@@ -75,15 +85,16 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
 
     @MainActor private func captureAll() async throws {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        for glass in nativeSelected ? [true] : [false, true] {
+        for glass in nativeSelected || macOS27Selected || sharedSettings ? [true] : [false, true] {
             Settings.liquidGlassStyle = .regular
             Settings.liquidGlassEnabled = glass
             for dark in [false, true] {
                 Settings.colorScheme = dark ? .dark : .light
                 NSApp.appearance = NSAppearance(named: dark ? .darkAqua : .aqua)
-                for percentage in before || nativeSelected ? [true] : [false, true] {
+                for percentage in before || nativeSelected || sharedSettings ? [true] : [false, true] {
+                  for section in sharedSettings ? ["general", "modules"] : ["menu-bar-icon"] {
                     Settings.showsMenuBarPercentage = percentage
-                    controller.selectSectionForTest(identifier: "menu-bar-icon")
+                    controller.selectSectionForTest(identifier: section)
                     controller.refreshSectionsForTest()
                     controller.show()
                     guard let window = controller.windowForTest,
@@ -95,11 +106,12 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
                     content.layoutSubtreeIfNeeded()
                     window.displayIfNeeded()
                     try await Task.sleep(nanoseconds: 800_000_000)
-                    let name = "\(glass ? "glass" : "classic")-\(dark ? "dark" : "light")-percentage-\(percentage ? "on" : "off")"
+                    let name = sharedSettings ? "glass-\(section)-\(dark ? "dark" : "light")"
+                        : "\(glass ? "glass" : "classic")-\(dark ? "dark" : "light")-percentage-\(percentage ? "on" : "off")"
                     let views = descendants(content)
                     let details: [[String: Any]] = views.compactMap { view in
                         guard let identifier = view.identifier?.rawValue,
-                              identifier.hasPrefix("settings.menu-bar-icon.") else { return nil }
+                              identifier.hasPrefix(sharedSettings ? "settings." : "settings.menu-bar-icon.") else { return nil }
                         let frame = view.convert(view.bounds, to: content)
                         var row: [String: Any] = [
                             "identifier": identifier, "class": NSStringFromClass(type(of: view)),
@@ -150,19 +162,57 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
                             row["imageSize"] = [artwork.size.width, artwork.size.height]
                             row["imageScaling"] = image.imageScaling.rawValue
                         }
+                        if let button = view as? NSButton {
+                            row["buttonTitle"] = button.title
+                            row["buttonFontSize"] = button.font?.pointSize
+                            row["buttonCellClass"] = button.cell.map { NSStringFromClass(type(of: $0)) }
+                            row["accessibilityRole"] = button.accessibilityRole()?.rawValue
+                            row["isBordered"] = button.isBordered
+                            row["bezelStyle"] = button.bezelStyle.rawValue
+                            row["controlSize"] = button.controlSize.rawValue
+                            row["focusRingType"] = button.focusRingType.rawValue
+                            row["imagePosition"] = button.imagePosition.rawValue
+                            row["buttonState"] = button.state.rawValue
+                            let focus = button.convert(button.focusRingMaskBounds, to: content)
+                            row["focusRingMaskBounds"] = [focus.minX, focus.minY, focus.width, focus.height]
+                            if let cell = button.cell {
+                                let title = button.convert(cell.titleRect(forBounds: button.bounds), to: content)
+                                let image = button.convert(cell.imageRect(forBounds: button.bounds), to: content)
+                                row["buttonCellTitleRect"] = [title.minX, title.minY, title.width, title.height]
+                                row["buttonCellImageRect"] = [image.minX, image.minY, image.width, image.height]
+                            }
+                        }
                         return row
                     }
-                    let report: [String: Any] = [
+                    var report: [String: Any] = [
                         "schema": 1, "before": before, "glassRequested": glass,
+                        "section": section,
                         "glassEffective": Settings.usesLiquidGlass, "dark": dark,
                         "showsPercentage": percentage, "windowKey": window.isKeyWindow,
-                        "selectedIconStyle": Settings.menuBarIconStyle == .native ? "native" : "wattson",
+                        "selectedIconStyle": Settings.menuBarIconStyle.rawValue,
                         "windowSize": [window.frame.width, window.frame.height],
                         "contentSize": [content.bounds.width, content.bounds.height],
                         "increaseContrast": ProcessInfo.processInfo.environment["WATTSON_FORCE_INCREASE_CONTRAST"] == "1",
                         "reduceTransparency": ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] == "1",
                         "views": details,
                     ]
+                    if #available(macOS 26, *) {
+                        report["freshNativeGlassCornerRadius"] = NSGlassEffectView().cornerRadius
+                        report["glassSurfaces"] = views.compactMap { view -> [String: Any]? in
+                            guard let glass = view as? NSGlassEffectView else { return nil }
+                            let frame = glass.convert(glass.bounds, to: content)
+                            var surface: [String: Any] = [
+                                "identifier": glass.identifier?.rawValue ?? "",
+                                "frame": [frame.minX, frame.minY, frame.width, frame.height],
+                                "cornerRadius": glass.cornerRadius,
+                                "hidden": glass.isHiddenOrHasHiddenAncestor,
+                            ]
+                            if let box = glass.contentView as? NSBox {
+                                surface["boxedControlsCornerRadius"] = box.cornerRadius
+                            }
+                            return surface
+                        }
+                    }
                     try JSONSerialization.data(withJSONObject: report, options: [.sortedKeys, .prettyPrinted])
                         .write(to: directory.appendingPathComponent(name + "-geometry.json"), options: .atomic)
                     guard #available(macOS 14.4, *) else { throw missing("macOS 14.4 capture API") }
@@ -189,6 +239,7 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
                     try png.write(to: directory.appendingPathComponent(name + ".png"), options: .atomic)
                     print("DISPLAY_CAPTURED \(name)")
                     fflush(stdout)
+                  }
                 }
             }
         }

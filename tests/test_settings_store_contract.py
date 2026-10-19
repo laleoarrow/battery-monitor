@@ -52,7 +52,7 @@ class SettingsStoreContractTests(unittest.TestCase):
             expect(Settings.showsMenuBarPercentage, "percentage must default on")
             expect(Settings.menuBarIconStyle == .wattson,
                    "existing users must retain the Wattson icon by default")
-            expect(Settings.MenuBarIconStyle.allCases.map(\.rawValue) == ["wattson", "native"],
+            expect(Settings.MenuBarIconStyle.allCases.map(\.rawValue) == ["wattson", "native", "native27"],
                    "icon styles must remain strongly typed and ordered")
             expect(Settings.checksForUpdatesOnLaunch,
                    "launch update checking must default on")

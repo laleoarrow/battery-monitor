@@ -39,6 +39,22 @@ class MenuBarPercentageContractTests(unittest.TestCase):
     def test_hiding_the_percentage_leaves_the_glyph_alone(self):
         self.assertIn(".imageRight : .imageOnly", self.status)
 
+    def test_inline_style_does_not_repeat_the_percentage_outside_the_image(self):
+        presentation = self.status.split("struct StatusButtonPresentation", 1)[1].split(
+            "struct StartupAvailabilityReducer", 1
+        )[0]
+        self.assertIn("style: Settings.MenuBarIconStyle = .wattson", presentation)
+        self.assertIn("showsPercentage && !style.embedsPercentage", presentation)
+        self.assertIn('title = showsExternalPercentage ? "\\(snapshot.percent)% " : ""', presentation)
+
+    def test_image_and_key_receive_one_consistent_percentage_setting(self):
+        refresh = self.status.split("private func refreshStatusItem()", 1)[1].split(
+            "#if DEBUG", 1
+        )[0]
+        self.assertEqual(refresh.count("Settings.showsMenuBarPercentage"), 1)
+        self.assertEqual(refresh.count("showsPercentage: showsPercentage"), 3)
+        self.assertIn("style: iconStyle", refresh)
+
     def test_status_item_redraws_when_the_setting_changes(self):
         self.assertIn("Settings.didChange", self.status)
         self.assertIn("static let didChange", self.settings)

@@ -90,6 +90,23 @@ class StatusItemContractTests(unittest.TestCase):
         self.assertIn("renderedStatusIconKey", refresh)
         self.assertIn("if key != renderedStatusIconKey", refresh)
 
+    def test_inline_percentage_updates_only_the_glyph_and_keeps_status_layout_cached(self):
+        refresh = self.source.split("private func refreshStatusItem()", 1)[1].split(
+            "#if DEBUG", 1
+        )[0]
+        for expression in (
+            "showsPercentage: showsPercentage",
+            "style: iconStyle",
+            "if presentation.showsPercentage != rendered?.showsPercentage",
+            "if presentation.title != rendered?.title",
+        ):
+            self.assertIn(expression, refresh)
+        presentation = self.source.split("struct StatusButtonPresentation", 1)[1].split(
+            "struct StartupAvailabilityReducer", 1
+        )[0]
+        self.assertIn("!style.embedsPercentage", presentation)
+        self.assertIn("self.showsPercentage = showsExternalPercentage", presentation)
+
     def test_first_live_sample_is_deferred_until_after_the_opening_event(self):
         clock = self.source.split("private func startDisplayClock()", 1)[1].split(
             "private func stopDisplayClock()", 1
@@ -381,7 +398,7 @@ class StatusItemContractTests(unittest.TestCase):
     def test_icon_style_participates_in_the_cached_status_image_key(self):
         refresh = self.source.split("private func refreshStatusItem()", 1)[1]
         self.assertIn("let iconStyle = Settings.menuBarIconStyle", refresh)
-        self.assertEqual(refresh.count("style: iconStyle"), 2)
+        self.assertEqual(refresh.count("style: iconStyle"), 3)
         self.assertIn("if key != renderedStatusIconKey", refresh)
 
     def test_fresh_smc_power_is_read_off_main_then_applied_before_presentation(self):

@@ -1,0 +1,118 @@
+{
+  "addedResourceNames": [
+    "battery-bolt-large",
+    "battery-bolt-mask-large",
+    "battery-plug-large",
+    "battery-plug-mask-large"
+  ],
+  "addedVectorRecords": [
+    {
+      "AssetType": "Vector",
+      "Colorspace": "generic",
+      "Height": 16,
+      "Name": "battery-bolt-large",
+      "NameIdentifier": 4187,
+      "Presentation State": "Active",
+      "RenditionName": "bolt large.pdf",
+      "SHA1Digest": "6BA9BD129DAB569C81BFAC3FDC0B677A2194B5EB9CC08BC44C6C7781264B8522",
+      "SizeOnDisk": 4216,
+      "State": "Normal",
+      "Width": 12.571399688720703
+    },
+    {
+      "AssetType": "Vector",
+      "Colorspace": "generic",
+      "Height": 16,
+      "Name": "battery-bolt-mask-large",
+      "NameIdentifier": 3464,
+      "Presentation State": "Active",
+      "RenditionName": "bolt mask large.pdf",
+      "SHA1Digest": "EA2E2AD8158340D41434CB97DD791A62BF697D932686A47ACB2D0EDD7D8FE90C",
+      "SizeOnDisk": 4186,
+      "State": "Normal",
+      "Width": 12.571399688720703
+    },
+    {
+      "AssetType": "Vector",
+      "Colorspace": "generic",
+      "Height": 16,
+      "Name": "battery-plug-large",
+      "NameIdentifier": 36593,
+      "Presentation State": "Active",
+      "RenditionName": "plug large.pdf",
+      "SHA1Digest": "C0BEBA9BC9CAD787E9ADF1C581283BA1C7189B57FA6DDCE75CB84A98915CA5F9",
+      "SizeOnDisk": 4420,
+      "State": "Normal",
+      "Width": 12.571399688720703
+    },
+    {
+      "AssetType": "Vector",
+      "Colorspace": "generic",
+      "Height": 16,
+      "Name": "battery-plug-mask-large",
+      "NameIdentifier": 19190,
+      "Presentation State": "Active",
+      "RenditionName": "plug mask large.pdf",
+      "SHA1Digest": "B0B51970C8E2F67D1CF20E6CD5F2D466D3EB745A3F984CA79273CBD1560782F1",
+      "SizeOnDisk": 4321,
+      "State": "Normal",
+      "Width": 12.571399688720703
+    }
+  ],
+  "artifactID": 12199899814,
+  "baselineCatalogBatteryRecords": 41,
+  "baselineOS": "Version 26.5.2 (Build 25F84)",
+  "frozenSource": "25e540f339ba03cc52b7aaabd3799c8588534a12",
+  "knownResourceComparisons": [
+    {
+      "name": "battery-outline",
+      "sameDimensions": true,
+      "sameRenderedPNG": true,
+      "sameTemplateFlag": true,
+      "sizePoints": {
+        "height": 12,
+        "width": 23
+      }
+    },
+    {
+      "name": "battery-cap",
+      "sameDimensions": true,
+      "sameRenderedPNG": true,
+      "sameTemplateFlag": true,
+      "sizePoints": {
+        "height": 12,
+        "width": 2
+      }
+    },
+    {
+      "name": "battery-bolt",
+      "sameDimensions": true,
+      "sameRenderedPNG": true,
+      "sameTemplateFlag": true,
+      "sizePoints": {
+        "height": 14,
+        "width": 11
+      }
+    },
+    {
+      "name": "battery-bolt-mask",
+      "sameDimensions": true,
+      "sameRenderedPNG": true,
+      "sameTemplateFlag": true,
+      "sizePoints": {
+        "height": 14,
+        "width": 11
+      }
+    }
+  ],
+  "limits": [
+    "Known resource PNG equality does not establish complete Control Center menu-bar composition.",
+    "New large adornment variants were inventoried via assetutil; this probe did not decode or render them.",
+    "Decoded TIFF hashes may reflect representation metadata and are not used as a visual equality claim.",
+    "Local baseline was collected from uncommitted probe source; its context records input hashes and sourceDirty=true."
+  ],
+  "observedCatalogBatteryRecords": 53,
+  "observedOS": "Version 27.0.1 (Build 26A434)",
+  "schema": 1,
+  "workflowRun": 39281290176
+}

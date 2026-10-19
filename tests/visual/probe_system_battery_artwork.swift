@@ -3,9 +3,14 @@ import CryptoKit
 
 // Read-only test evidence. This executable creates no application or window.
 // It records resources owned by the running OS; none are bundled into Wattson.
-private let resourceNames = [
+private let requiredResourceNames = [
     "battery-outline", "battery-cap", "battery-bolt", "battery-bolt-mask",
 ]
+private let optionalResourceNames = [
+    "battery-bolt-large", "battery-bolt-mask-large",
+    "battery-plug-large", "battery-plug-mask-large",
+]
+private let resourceNames = requiredResourceNames + optionalResourceNames
 
 private func digest(_ data: Data) -> String {
     SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
@@ -54,6 +59,7 @@ var result: [String: Any] = [
     "resources": [[String: Any]](),
 ]
 var missing: [String] = []
+var missingOptional: [String] = []
 do {
     let context = try Data(contentsOf: output.appendingPathComponent("context.json"))
     result["context"] = try JSONSerialization.jsonObject(with: context)
@@ -61,16 +67,17 @@ do {
     result["bundleVersion"] = bundle?.object(forInfoDictionaryKey: "CFBundleVersion") ?? NSNull()
     var resources: [[String: Any]] = []
     for name in resourceNames {
+        let required = requiredResourceNames.contains(name)
         guard let image = bundle?.image(forResource: NSImage.Name(name)) else {
-            missing.append(name)
-            resources.append(["name": name, "available": false])
+            if required { missing.append(name) } else { missingOptional.append(name) }
+            resources.append(["name": name, "required": required, "available": false])
             continue
         }
         let png = try renderedPNG(image, scale: 4)
         let file = "\(name)@4x.png"
         try png.write(to: output.appendingPathComponent(file), options: .atomic)
         var entry: [String: Any] = [
-            "name": name, "available": true,
+            "name": name, "required": required, "available": true,
             "sizePoints": ["width": image.size.width, "height": image.size.height],
             "isTemplate": image.isTemplate,
             "png": file, "renderScale": 4, "pngSHA256": digest(png),
@@ -92,7 +99,10 @@ do {
         resources.append(entry)
     }
     result["resources"] = resources
+    result["requiredResourceNames"] = requiredResourceNames
+    result["optionalResourceNames"] = optionalResourceNames
     result["missingResources"] = missing
+    result["missingOptionalResources"] = missingOptional
     result["allKnownResourcesAvailable"] = missing.isEmpty
     result["status"] = missing.isEmpty ? "complete" : "missing-resources"
 } catch {
@@ -110,4 +120,4 @@ guard result["status"] as? String == "complete" else {
     fputs("System battery artwork probe did not complete; inspect artwork.json.\n", stderr)
     exit(1)
 }
-print("SYSTEM_BATTERY_ARTWORK_PROBE_PASSED resources=\(resourceNames.count)")
+print("SYSTEM_BATTERY_ARTWORK_PROBE_PASSED resources=\(requiredResourceNames.count) optionalAvailable=\(optionalResourceNames.count - missingOptional.count)")

@@ -23,6 +23,8 @@ enum BatteryIcon {
         let tintRole: TintRole
         let appearanceName: String
         let increasedContrast: Bool
+        var showsInlinePercentage = false
+        var native27Adornment: BatteryIcon27.Adornment? = nil
     }
 
     static func renderKey(
@@ -30,10 +32,25 @@ enum BatteryIcon {
         mode: EnergyMode,
         pressed: Bool,
         style: Settings.MenuBarIconStyle,
+        showsPercentage: Bool = false,
         appearance: NSAppearance,
         increasedContrast: Bool
     ) -> RenderKey {
         let percent = min(max(snapshot.percent, 0), 100)
+        if style == .native27 {
+            let tintRole: TintRole = !pressed && mode == .low ? .lowPower : .template
+            let adornment = BatteryIcon27.adornment(for: snapshot)
+            return RenderKey(
+                percent: percent,
+                showsBolt: adornment == .bolt,
+                style: style,
+                tintRole: tintRole,
+                appearanceName: tintRole == .template ? "" : appearance.name.rawValue,
+                increasedContrast: tintRole == .template ? false : increasedContrast,
+                showsInlinePercentage: showsPercentage,
+                native27Adornment: adornment
+            )
+        }
         if style == .native {
             let nativeTintRole: TintRole = !pressed && mode == .low ? .lowPower : .template
             return RenderKey(
@@ -75,8 +92,15 @@ enum BatteryIcon {
         for snapshot: PowerSnapshot,
         mode: EnergyMode,
         pressed: Bool,
-        style: Settings.MenuBarIconStyle
+        style: Settings.MenuBarIconStyle,
+        showsPercentage: Bool = false
     ) -> NSImage {
+        if style == .native27 {
+            return BatteryIcon27.image(
+                for: snapshot, mode: mode, pressed: pressed,
+                showsPercentage: showsPercentage
+            )
+        }
         if style == .native {
             return nativeImage(for: snapshot, mode: mode, pressed: pressed)
         }

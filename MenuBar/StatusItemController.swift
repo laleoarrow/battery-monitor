@@ -29,9 +29,15 @@ struct StatusButtonPresentation: Equatable {
     let showsPercentage: Bool
     let alpha: CGFloat
 
-    init(snapshot: PowerSnapshot, showsPercentage: Bool, degraded: Bool) {
-        title = showsPercentage ? "\(snapshot.percent)% " : ""
-        self.showsPercentage = showsPercentage
+    init(
+        snapshot: PowerSnapshot,
+        showsPercentage: Bool,
+        degraded: Bool,
+        style: Settings.MenuBarIconStyle = .wattson
+    ) {
+        let showsExternalPercentage = showsPercentage && !style.embedsPercentage
+        title = showsExternalPercentage ? "\(snapshot.percent)% " : ""
+        self.showsPercentage = showsExternalPercentage
         alpha = degraded ? 0.45 : 1.0
     }
 }
@@ -736,9 +742,11 @@ final class StatusItemController: NSObject {
         }
         let mode = EnergyModeController.current
         let iconStyle = Settings.menuBarIconStyle
+        let showsPercentage = Settings.showsMenuBarPercentage
         let key = BatteryIcon.renderKey(
             for: snapshot, mode: mode, pressed: pressed,
             style: iconStyle,
+            showsPercentage: showsPercentage,
             appearance: button.effectiveAppearance,
             increasedContrast: NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
         )
@@ -747,15 +755,17 @@ final class StatusItemController: NSObject {
                 for: snapshot,
                 mode: mode,
                 pressed: pressed,
-                style: iconStyle
+                style: iconStyle,
+                showsPercentage: showsPercentage
             )
             renderedStatusIconKey = key
         }
 
         let presentation = StatusButtonPresentation(
             snapshot: snapshot,
-            showsPercentage: Settings.showsMenuBarPercentage,
-            degraded: isDegraded
+            showsPercentage: showsPercentage,
+            degraded: isDegraded,
+            style: iconStyle
         )
         let rendered = renderedStatusButtonPresentation
 

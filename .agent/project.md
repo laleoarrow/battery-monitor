@@ -335,11 +335,14 @@ Functional Settings groups use NSGlassEffectView; General's shared container
 batches its Startup & Menu Bar, Updates, Appearance and Support groups inside the scroll document, not around the toolbar
 or system sidebar. Single-group pages need no additional container. Liquid Glass
 belongs to General > Appearance, and only joins that page's keyboard loop.
-Display separates the two existing menu-bar preferences: two selectable artwork
-rows share seven state headings, with a small Off/On percentage popup below.
-Both rows use the production icon renderer at natural size. Percentage changes
-update retained labels in place, and selecting a style preserves percentage.
-See the [Display refinement](../design/settings/display-refinement/README.md).
+Display separates icon style and percentage with three native radio rows:
+Wattson, macOS 26 and macOS 27. They share seven state headings and the production
+renderer at natural size. A small Off/On popup controls the percentage; macOS 27
+embeds its digits inside the glyph while the older choices retain external text.
+The controls and settings remain in place when selection changes. Display uses
+system radio/focus drawing and the shared Glass groups retain the system's
+default corner radius. See the
+[system controls review](../design/settings/display-system-defaults/README.md).
 General scrolls as needed for the added logo choice or expanded recovery help;
 keyboard focus brings the logo selector into view. Modules use monochrome SF Symbols, 12-point descriptions, inset
 separators and right-aligned switches. See the

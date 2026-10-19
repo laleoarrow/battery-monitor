@@ -9,7 +9,7 @@ import time
 home = pathlib.Path.home()
 scratch = home / 'Project/.display-settings.noindex'
 result = pathlib.Path(sys.argv[1])
-prefixes = ('com.leoarrow.wattson.displayqa.', 'Wattson.TestRuntime.')
+prefixes = ('com.leoarrow.wattson.displayqa.', 'Wattson.TestRuntime.', 'Wattson.SwiftTests.MenuBarIconStyle.')
 
 
 def entries(directory):
