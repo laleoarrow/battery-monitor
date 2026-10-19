@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import ScreenCaptureKit
 
 /// The real Settings hierarchy in an owned GUI VM. No sampler, helper, persistent
 /// preferences, system controls, or capture-permission prompt is started here.
@@ -128,17 +129,28 @@ private final class DisplayCaptureDelegate: NSObject, NSApplicationDelegate {
                     ]
                     try JSONSerialization.data(withJSONObject: report, options: [.sortedKeys, .prettyPrinted])
                         .write(to: directory.appendingPathComponent(name + "-geometry.json"), options: .atomic)
-                    let request = try JSONSerialization.data(withJSONObject: ["window": window.windowNumber, "name": name])
-                    try request.write(to: directory.appendingPathComponent("frame.json"), options: .atomic)
-                    var captured = false
-                    for _ in 0..<600 {
-                        if FileManager.default.fileExists(atPath: directory.appendingPathComponent(name + ".captured").path) {
-                            captured = true
-                            break
-                        }
-                        try await Task.sleep(nanoseconds: 100_000_000)
+                    guard #available(macOS 14.4, *) else { throw missing("macOS 14.4 capture API") }
+                    // This API intentionally exposes only this process's own
+                    // shareable windows without requesting any TCC permission.
+                    let shareable = try await SCShareableContent.currentProcess
+                    guard let item = shareable.windows.first(where: {
+                        $0.windowID == CGWindowID(window.windowNumber)
+                    }) else { throw missing("own shareable window") }
+                    let configuration = SCStreamConfiguration()
+                    let scale = window.backingScaleFactor
+                    configuration.width = Int(window.frame.width * scale)
+                    configuration.height = Int(window.frame.height * scale)
+                    configuration.showsCursor = false
+                    configuration.capturesAudio = false
+                    configuration.ignoreShadowsSingleWindow = true
+                    let image = try await SCScreenshotManager.captureImage(
+                        contentFilter: SCContentFilter(desktopIndependentWindow: item),
+                        configuration: configuration
+                    )
+                    guard let png = NSBitmapImageRep(cgImage: image).representation(using: .png, properties: [:]) else {
+                        throw missing("PNG encoding")
                     }
-                    guard captured else { throw missing("capture receipt \(name)") }
+                    try png.write(to: directory.appendingPathComponent(name + ".png"), options: .atomic)
                     print("DISPLAY_CAPTURED \(name)")
                     fflush(stdout)
                 }

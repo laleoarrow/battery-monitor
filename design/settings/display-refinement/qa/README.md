@@ -15,9 +15,11 @@ login-item operation, or persistent setting is used by the capture fixture.
 The fixture app is ad hoc signed without a sandbox; the separate contract
 harness retains its existing own application and preferences isolation.
 
-An external guest capture broker uses the fixture's exact NSWindow ID with
-`screencapture -l`. These are actual WindowServer compositor captures, including
-the real Glass surface, rather than bitmap approximations. The expected set is:
+The fixture uses ScreenCaptureKit `SCShareableContent.currentProcess` to select
+only its own exact NSWindow ID, followed by `SCScreenshotManager.captureImage`.
+The macOS SDK documents this enumeration as available without TCC user consent.
+These are actual WindowServer compositor captures, including the real Glass
+surface, rather than bitmap approximations. The expected set is:
 
 - Before: Classic/Glass × Light/Dark with percentage On, four captures.
 - After: Classic/Glass × Light/Dark × percentage Off/On, eight captures.

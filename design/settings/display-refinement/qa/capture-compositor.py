@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A VM-only capture broker for the fixture's exact WindowServer window IDs."""
+"""Own the GUI fixture process and validate its own-window compositor outputs."""
 import json
 import pathlib
 import signal
@@ -27,26 +27,18 @@ try:
         while process.poll() is None:
             if time.monotonic() - started > 180:
                 raise TimeoutError('Display capture exceeded 180 seconds')
-            request = directory / 'frame.json'
-            if request.exists():
-                frame = json.loads(request.read_text())
-                name = frame['name']
-                if name not in captures:
-                    assert name.replace('-', '').isalnum(), name
-                    target = directory / (name + '.png')
-                    subprocess.run(['/usr/sbin/screencapture', '-x', '-o', '-l', str(int(frame['window'])), str(target)],
-                                   check=True, timeout=15)
-                    assert target.is_file() and target.stat().st_size > 1000, target
-                    captures.append(name)
-                    (directory / (name + '.captured')).write_text('WindowServer screencapture completed\n')
+            captures = sorted(path.stem for path in directory.glob('*.png'))
             time.sleep(.05)
         assert process.returncode == 0, (process.returncode, (directory / 'fixture.err').read_text())
+        captures = sorted(path.stem for path in directory.glob('*.png'))
+        for target in directory.glob('*.png'):
+            assert target.stat().st_size > 1000 and target.read_bytes().startswith(b'\x89PNG\r\n\x1a\n'), target
         expected = 4 if '--before' in sys.argv else 8
         assert len(captures) == expected, captures
         assert f'DISPLAY_CAPTURE_COMPLETE count={expected}' in (directory / 'fixture.log').read_text()
         (directory / 'capture-results.json').write_text(json.dumps({
             'schema': 1, 'allPassed': True, 'captureCount': len(captures), 'captures': captures,
-            'method': 'Actual SettingsWindowController NSWindow; exact-window WindowServer screencapture in disposable GUI VM; no AppKit bitmap approximation.',
+            'method': 'Actual SettingsWindowController NSWindow; ScreenCaptureKit currentProcess own-window WindowServer capture without TCC consent in disposable GUI VM; no AppKit bitmap approximation.',
         }, indent=2) + '\n')
 finally:
     if process is not None and process.poll() is None:

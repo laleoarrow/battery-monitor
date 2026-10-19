@@ -2189,18 +2189,6 @@ enum MenuBarIconPreviewState: CaseIterable {
         }
     }
 
-    var accessibilityDescription: String {
-        switch self {
-        case .onBattery: return "75 percent on battery"
-        case .pluggedFull: return "100 percent full and connected to power"
-        case .charging: return "72 percent charging"
-        case .lowBattery: return "10 percent low battery"
-        case .lowBatteryPlugged: return "20 percent low battery connected to power"
-        case .lowPower: return "42 percent in Low Power Mode"
-        case .lowPowerPlugged: return "42 percent in Low Power Mode connected to power"
-        }
-    }
-
     var mode: EnergyMode {
         switch self {
         case .lowPower, .lowPowerPlugged: return .low
