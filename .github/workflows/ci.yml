@@ -54,6 +54,22 @@ jobs:
           fi
           printf 'DEVELOPER_DIR=%s\n' "$DEVELOPER_DIR" >> "$GITHUB_ENV"
 
+      - name: Probe macOS 27 system battery artwork
+        if: github.event_name == 'workflow_dispatch' && inputs.macos27
+        shell: bash
+        timeout-minutes: 4
+        run: /bin/bash scripts/verify_system_battery_artwork.sh .build/macos27-battery-artwork.noindex
+
+      - name: Preserve macOS 27 system battery artwork
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.macos27
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: macos27-battery-artwork-${{ github.sha }}
+          path: .build/macos27-battery-artwork.noindex
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Build Swift package
         run: swift build
 
