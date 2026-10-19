@@ -1,0 +1,119 @@
+{
+  "checkedDateLocal": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "researchMode": "Read-only public GitHub sources; no credentials, workflow edits, dispatch, downloads of operating systems, or VM operations",
+  "availableDocumentedPath": true,
+  "recommendedStandardLabel": "xcode-27",
+  "otherDocumentedLabel": "xcode-27-xlarge",
+  "imageStatus": "public preview",
+  "architecture": "arm64",
+  "standardRunnerResources": {
+    "cpu": "3 cores, M1",
+    "memoryGB": 7,
+    "storageGB": 14
+  },
+  "documentedImage": {
+    "os": "macOS 27.0.1",
+    "osBuild": "26A434",
+    "kernel": "Darwin 27.0.0",
+    "imageVersion": "20261012.0260.1",
+    "releaseTag": "xcode-27-arm64/20261012.0260",
+    "releasePublishedUTC": "2026-10-12T10:37:15Z",
+    "releaseTargetCommit": "28aee264b4fb97ad0e570bc3c523966e40973146",
+    "defaultXcode": {
+      "version": "27.0",
+      "build": "27A266a",
+      "developerDirectory": "/Applications/Xcode_27.app/Contents/Developer",
+      "macOSSDK": "27.0",
+      "sdkName": "macosx27.0"
+    },
+    "additionalXcodes": [
+      {"version": "27.1 RC", "build": "27A9275", "macOSSDK": "27.0"},
+      {"version": "27.2 beta", "build": "27B5028f", "macOSSDK": "27.2"}
+    ],
+    "softwareReadmeLastCommit": "bf53d8b8e0ec75c9f9ef200efc8a4cf21ce128b6",
+    "softwareReadmeLastCommitUTC": "2026-10-16T09:28:38Z"
+  },
+  "labelCautions": [
+    "Use the actually documented xcode-27 label; macos-27 is not listed in the inspected supported-image tables.",
+    "The inspected runner-images README maps standard arm64 macos-latest to macOS 26, not 27.",
+    "A published image release with prerelease=false does not make the xcode-27 runner family GA; the supported label remains public preview.",
+    "The macOS base changed from 26 to 27 in the official announcement's 2026-09-16 update; the old original issue wording is not the current OS mapping.",
+    "The label is mutable. Retain actual Set up job image identity, sw_vers, uname, xcodebuild -version, active SDK and source SHA for any run."
+  ],
+  "sources": [
+    {
+      "url": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners",
+      "supports": "Standard xcode-27 arm64 label, hardware resources, and arm64 nested-virtualization limitation"
+    },
+    {
+      "url": "https://github.com/actions/runner-images/blob/main/README.md",
+      "rawURL": "https://raw.githubusercontent.com/actions/runner-images/main/README.md",
+      "rawSHA256": "7691efc4ce2d8a54055e2a504ce5b168413158c0c6169005f59ece6acf9ee2f2",
+      "supports": "Available xcode-27 labels, current macos-latest mapping and preview policy"
+    },
+    {
+      "url": "https://github.com/actions/runner-images/blob/bf53d8b8e0ec75c9f9ef200efc8a4cf21ce128b6/images/macos/xcode-27-arm64-Readme.md",
+      "liveURL": "https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md",
+      "rawURL": "https://raw.githubusercontent.com/actions/runner-images/main/images/macos/xcode-27-arm64-Readme.md",
+      "rawSHA256": "2745cead8124e897f224d41a485e716e355945a2aa4761a057b7a775cdddd7bb",
+      "supports": "OS, image, default Xcode and installed SDK versions"
+    },
+    {
+      "url": "https://github.com/actions/runner-images/releases/tag/xcode-27-arm64/20261012.0260",
+      "supports": "Published image 20261012.0260.1 and macOS 27.0.1 build 26A434"
+    },
+    {
+      "url": "https://github.com/actions/runner-images/issues/14404",
+      "supports": "Preview announcement, documented label, and 2026-09-16 macOS 27 base update"
+    }
+  ],
+  "minimumManualValidationPlan": {
+    "workflowPolicy": "The root-authorized minimal implementation reuses registered ci.yml with a default-false workflow_dispatch boolean macos27. Only a manual dispatch with this flag uses xcode-27 and adds native/universal validation. Default push, PR and false-flag dispatch behavior stays on macos-26; release workflows stay unchanged.",
+    "conditionalRunnerExpression": "github.event_name == 'workflow_dispatch' && inputs.macos27 && 'xcode-27' || 'macos-26'",
+    "workflowPermissions": "contents: read; checkout existing pinned checkout action with persist-credentials:false; no signing environment or release/token imports",
+    "jobTimeoutMinutes": 60,
+    "defaultJobTimeoutMinutesPreserved": 30,
+    "suggestedStepTimeoutsMinutes": {"environment": 3, "nativeVariantsAndStress": 20, "universalBuild": 15},
+    "sourceIdentity": "Check out one frozen reviewed commit; retain git rev-parse HEAD with actual runner/OS/SDK identity. Do not accept a different source or assume the workflow label pins image bytes.",
+    "developerDirectory": "/Applications/Xcode_27.app/Contents/Developer",
+    "developerDirectorySetup": "Only in the macos27 dispatch path, validate this documented directory and export it for subsequent steps using GITHUB_ENV. Do not set an empty DEVELOPER_DIR for the default path or silently fall back to a beta Xcode.",
+    "preflightCommands": [
+      "/usr/bin/sw_vers",
+      "/usr/bin/uname -m",
+      "/usr/bin/xcodebuild -version",
+      "/usr/bin/xcrun --sdk macosx --show-sdk-version",
+      "/usr/bin/stat -f '%Su:%u' /dev/console"
+    ],
+    "expectedPreflight": "Actual macOS major version 27, arm64, selected Xcode major version 27 and macOS SDK major version 27, recording exact versions. Currently documented stable default is Xcode/SDK 27.0. A mismatch fails environment validation; it is not an app regression.",
+    "headlessCommands": [
+      "swift build",
+      "env WATTSON_FORCE_REDUCE_MOTION=0 WATTSON_FORCE_REDUCE_TRANSPARENCY=0 swift test",
+      "env -u WATTSON_RUN_INTERACTION /usr/bin/python3 -m unittest discover -s tests -v"
+    ],
+    "universalBuildCommand": "/bin/bash scripts/build_release.sh",
+    "universalBuildProof": "This existing no-argument entrypoint builds arm64 and x86_64 App/helper slices, combines them, checks architectures/minimum deployment/signatures with verify_release.sh --build-only, and removes disposable build output. Do not use --keep-build, install a PKG, or publish a rebuilt 4.3.22 artifact.",
+    "nativeCommandsIfLoggedInGUIAvailable": [
+      "env WATTSON_FORCE_REDUCE_MOTION=0 WATTSON_FORCE_REDUCE_TRANSPARENCY=0 /bin/bash scripts/verify_interaction.sh",
+      "env WATTSON_FORCE_LEGACY_KNOB=1 WATTSON_FORCE_REDUCE_MOTION=0 WATTSON_FORCE_REDUCE_TRANSPARENCY=0 /bin/bash scripts/verify_interaction.sh",
+      "env WATTSON_FORCE_LEGACY_KNOB=1 WATTSON_FORCE_REDUCE_MOTION=1 WATTSON_FORCE_REDUCE_TRANSPARENCY=1 /bin/bash scripts/verify_interaction.sh",
+      "/bin/bash scripts/verify_animation_stress.sh"
+    ],
+    "nativeFeasibility": "Existing macos-helper-install.yml already runs these exact scripts directly on hosted macOS 26. On xcode-27, attempt them in the runner's own GUI session; do not create nested VMs. A logged-in WindowServer session on this preview image is not established by its software README alone.",
+    "acceptanceMarkers": [
+      "Require all three native runs to exit 0 and each emit ALL_INTERACTION_CHECKS_PASSED.",
+      "RUNNABLE_CHECKS_PASSED_SOME_SKIPPED, SCREEN_LOCKED_CHECKS_SKIPPED, exit 2 or absent GUI is not full native acceptance.",
+      "Require ANIMATION_STRESS_PASSED iterations=20000 and exit 0 for the stress run; this is lifecycle verification, not a measured whole-app speedup.",
+      "Require Swift/Python suite summaries with actual failure/skip counts; never convert preview infrastructure failure into an app pass."
+    ],
+    "cleanupAndEvidence": "Reuse each script's local_cleanup.sh/run_owned.py ownership, unique test bundle/defaults/container and bounded execution. Preserve only source/environment identities, logs and completion markers. Upload only narrow evidence, not a runnable .app or full environment dump. Verify owned scratch/process/registration/preference/container/mount cleanup even after failure; use shell pipefail if tee retains logs.",
+    "implementationStatus": "Implemented the root-authorized minimal opt-in flag in ci.yml; targeted workflow tests and YAML/shell syntax checks passed. Root owns commit/push/dispatch; no job was dispatched by this agent."
+  },
+  "remainingLimits": [
+    "Public-preview infrastructure can queue or fail independently of the app and is not stable release infrastructure.",
+    "No macOS 27 Intel runner is listed; cross-building an x86_64 slice on arm64 is compilation evidence, not an Intel execution test.",
+    "Hosted virtual machines cannot establish successful physical battery/SMC measurements. Preserve that hardware validation limit.",
+    "The existing interaction suite does not install the privileged helper; a green native run does not prove a full macOS 27 PKG/helper/login lifecycle.",
+    "This is documented availability, not a capacity reservation or proof that a workflow run has succeeded."
+  ]
+}

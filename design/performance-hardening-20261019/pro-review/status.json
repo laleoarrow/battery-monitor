@@ -1,12 +1,23 @@
 {
-  "status": "pending_manual_unlock",
+  "status": "in_progress",
+  "statusRecordedAtUTC": "2026-10-19T03:05:26.758407+00:00",
   "browser": "SunBrowser (com.adspower.SunBrowser)",
-  "selectedProModeVerified": false,
-  "promptSubmitted": false,
+  "runningAppPath": "/Users/leoarrow/Library/Application Support/adspower_global/cwd_global/chrome_150/SunBrowser.app",
+  "selectedProModeVerified": true,
+  "modeUIEvidence": "text Pro, 5 of 5. Use Left and Right arrow keys to adjust power",
+  "promptSubmitted": true,
   "responseReceived": false,
-  "blocker": "CUA app inventory reported that the Mac is locked and automatic unlock failed. Manual unlock was requested; no unlock reply has arrived.",
-  "availableBrowserConnector": "No SunBrowser connector was present; an unrelated Edge session was not used.",
+  "conversationURL": "https://chatgpt.com/c/6ad58891-d4ac-83ee-9892-4acc9fc80fef",
+  "conversationTitle": "审查性能稳定性补丁",
+  "sourceCommit": "df7d4bcbeb0200e6ee5001182d92f62229aba88f",
+  "sourceAttachment": {
+    "path": "source-context.txt",
+    "bytes": 27497,
+    "sha256": "e6d990ccde8bfef9bd1d385e7adc0919453c2316f641b47490ce5369afee58b2",
+    "uploadedAndVisibleInConversation": true
+  },
   "preparedPrompt": "prompt.txt",
-  "localReviewIsNotProReview": true,
-  "nextStep": "After manual unlock, bind the running SunBrowser by its full path, verify actual Pro mode, submit this bounded source review, evaluate its advice against the code and rerun affected checks if changes are needed."
+  "submissionNote": "Actual submitted text condensed the prepared prompt and updated completed QA counts; the conversation retains the exact submitted text.",
+  "observedProgress": "Inspecting source context file; Helper review, Focus review and Appearance review started working.",
+  "nextStep": "Read the completed Pro response, assess against frozen source, reproduce supported findings and rerun affected checks."
 }

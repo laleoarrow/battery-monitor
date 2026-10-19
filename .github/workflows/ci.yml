@@ -4,6 +4,11 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      macos27:
+        description: Validate macOS 27 using the public-preview xcode-27 runner
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -15,13 +20,39 @@ concurrency:
 jobs:
   test:
     name: SwiftPM and Python tests
-    runs-on: macos-26
-    timeout-minutes: 30
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.macos27 && 'xcode-27' || 'macos-26' }}
+    timeout-minutes: ${{ github.event_name == 'workflow_dispatch' && inputs.macos27 && 60 || 30 }}
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Verify macOS 27 validation environment
+        if: github.event_name == 'workflow_dispatch' && inputs.macos27
+        shell: bash
+        timeout-minutes: 3
+        run: |
+          set -euo pipefail
+          export DEVELOPER_DIR=/Applications/Xcode_27.app/Contents/Developer
+          if [[ ! -d "$DEVELOPER_DIR" ]]; then
+            echo "The documented Xcode 27 installation is unavailable." >&2
+            exit 1
+          fi
+          OS_VERSION="$(/usr/bin/sw_vers -productVersion)"
+          SDK_VERSION="$(/usr/bin/xcrun --sdk macosx --show-sdk-version)"
+          ARCHITECTURE="$(/usr/bin/uname -m)"
+          SOURCE_SHA="$(git rev-parse HEAD)"
+          /usr/bin/sw_vers
+          /usr/bin/xcodebuild -version
+          printf 'SDK=%s architecture=%s source=%s image=%s\n' \
+            "$SDK_VERSION" "$ARCHITECTURE" "$GITHUB_SHA" "${ImageVersion:-unreported}"
+          if [[ "$OS_VERSION" != 27.* || "$SDK_VERSION" != 27.* \
+                || "$ARCHITECTURE" != arm64 || "$SOURCE_SHA" != "$GITHUB_SHA" ]]; then
+            echo "Expected macOS 27, SDK 27, arm64, and the requested source commit." >&2
+            exit 1
+          fi
+          printf 'DEVELOPER_DIR=%s\n' "$DEVELOPER_DIR" >> "$GITHUB_ENV"
 
       - name: Build Swift package
         run: swift build
@@ -35,6 +66,46 @@ jobs:
       - name: Run the default headless Python suite
         shell: bash
         run: env -u WATTSON_RUN_INTERACTION /usr/bin/python3 -m unittest discover -s tests -v
+
+      - name: Validate macOS 27 native interaction and animation lifecycles
+        if: github.event_name == 'workflow_dispatch' && inputs.macos27
+        shell: bash
+        timeout-minutes: 20
+        run: |
+          set -euo pipefail
+          source scripts/lib/local_cleanup.sh
+          wattson_cleanup_init
+          mkdir -p .build/macos27-validation.noindex
+          LOG_DIR="$(mktemp -d .build/macos27-validation.noindex/run.XXXXXX)"
+          wattson_cleanup_add_dir "$LOG_DIR"
+          run_interaction() {
+            local variant="$1"
+            local status=0
+            wattson_run_script scripts/verify_interaction.sh > "$LOG_DIR/$variant.log" 2>&1 || status=$?
+            cat "$LOG_DIR/$variant.log"
+            if [[ "$status" != 0 ]]; then return "$status"; fi
+            if ! /usr/bin/grep -Fxq ALL_INTERACTION_CHECKS_PASSED "$LOG_DIR/$variant.log"; then
+              echo "Incomplete native interaction validation: $variant" >&2
+              return 1
+            fi
+          }
+          WATTSON_FORCE_LEGACY_KNOB=0 WATTSON_FORCE_REDUCE_MOTION=0 \
+            WATTSON_FORCE_REDUCE_TRANSPARENCY=0 run_interaction baseline
+          WATTSON_FORCE_LEGACY_KNOB=1 WATTSON_FORCE_REDUCE_MOTION=0 \
+            WATTSON_FORCE_REDUCE_TRANSPARENCY=0 run_interaction legacy
+          WATTSON_FORCE_LEGACY_KNOB=1 WATTSON_FORCE_REDUCE_MOTION=1 \
+            WATTSON_FORCE_REDUCE_TRANSPARENCY=1 run_interaction accessibility
+          status=0
+          wattson_run_script scripts/verify_animation_stress.sh > "$LOG_DIR/stress.log" 2>&1 || status=$?
+          cat "$LOG_DIR/stress.log"
+          if [[ "$status" != 0 ]]; then exit "$status"; fi
+          /usr/bin/grep -Eq '^ANIMATION_STRESS_PASSED iterations=20000 elapsed=[0-9]+[.][0-9]+s$' "$LOG_DIR/stress.log"
+
+      - name: Verify macOS 27 universal App and helper build
+        if: github.event_name == 'workflow_dispatch' && inputs.macos27
+        shell: bash
+        timeout-minutes: 15
+        run: /bin/bash scripts/build_release.sh
 
   website:
     name: Website build, test, lint, and export

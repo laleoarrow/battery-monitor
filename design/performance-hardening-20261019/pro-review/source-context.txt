@@ -1,0 +1,628 @@
+Supplemental source context for the actual Pro review
+
+Immutable source extraction, not a review conclusion. Excerpts are whitespace-dedented; gaps are marked.
+Frozen commit: df7d4bcbeb0200e6ee5001182d92f62229aba88f
+Baseline commit: 9ab0c43911eb8780fc3772397228acbae33039a1
+
+Frozen full-blob SHA-256:
+66dfb53aed4430e85f94ca87a9f8c0cf41555bb2007d6432b206c7c658fbeb3f  Popover/TopProcessesView.swift
+8329aee74f67bef2c513d781ac6acc12e07e0be3f99dd893729ec651be745ace  Popover/ProcessActionButton.swift
+b73f948185df94c667b62a240ce1f69e91be1ebe71d4c4bca0dcef1ea526d453  Helper/wattson-helper.swift
+
+=== Popover/TopProcessesView.swift:14-32 | state and complete Selection identity key ===
+private var infoPopover: NSPopover?
+private var count = 3
+private var compact = false
+private var renderedState: TopProcessesState?
+private var selectedProcess: Selection?
+var forceQuitHandler: ((EnergyProcess) -> Void)?
+
+private enum Selection: Equatable {
+    case identified(ProcessIdentity)
+    case unavailable(Int32, String)
+
+    init(_ process: EnergyProcess) {
+        if let identity = process.terminationIdentity {
+            self = .identified(identity)
+        } else {
+            self = .unavailable(process.pid, process.name)
+        }
+    }
+}
+
+=== Popover/TopProcessesView.swift:71-89 | row selection/move/clear/action callbacks ===
+for row in rows {
+    row.isHidden = true
+    row.selectionHandler = { [weak self, weak row] in
+        guard let self, let process = row?.process else { return }
+        let selection = Selection(process)
+        self.select(self.selectedProcess == selection ? nil : selection)
+    }
+    row.moveSelectionHandler = { [weak self, weak row] direction in
+        guard let self, let row, let index = self.rows.firstIndex(where: { $0 === row }) else { return }
+        let next = index + direction
+        guard self.rows.indices.contains(next), !self.rows[next].isHidden,
+              let process = self.rows[next].process else { return }
+        self.select(Selection(process))
+        self.window?.makeFirstResponder(self.rows[next])
+    }
+    row.clearSelectionHandler = { [weak self] in self?.select(nil) }
+    row.forceQuitHandler = { [weak self] process in self?.forceQuitHandler?(process) }
+    addSubview(row)
+}
+
+=== Popover/TopProcessesView.swift:148-231 | complete update, select and updateActionFeedback ===
+    func update(state: TopProcessesState, count: Int, compact: Bool = false,
+                color: NSColor = PopoverStyle.blue) {
+        rows.forEach { $0.setBarColor(color) }
+        updateActionFeedback()
+        let count = min(max(count, 1), 10)
+        guard renderedState != state || self.count != count || self.compact != compact else { return }
+        let focusedRow = rows.first { $0 === window?.firstResponder || $0.forceQuitButton === window?.firstResponder }
+        let focusedProcess = focusedRow?.process.map(Selection.init)
+        let focusedAction = focusedRow != nil && focusedRow?.forceQuitButton === window?.firstResponder
+        if count < self.count { select(nil) }
+        renderedState = state
+        self.count = count
+        self.compact = compact
+#if DEBUG
+        contentUpdatesForTest += 1
+#endif
+        let processes: [EnergyProcess]
+        switch state {
+        case .loading:
+            processes = []
+            status.stringValue = "Measuring…"
+            status.setAccessibilityHelp("Measuring process CPU activity and idle wakeups over about one second.")
+        case .unavailable:
+            processes = []
+            status.stringValue = "Unavailable"
+            status.setAccessibilityHelp("Process activity readings require the Wattson helper and a successful sampling interval.")
+        case .ready(let values):
+            processes = Array(values.prefix(self.count))
+            status.stringValue = "No active processes"
+            status.setAccessibilityHelp("No active process readings were reported in the recent sampling interval.")
+        }
+        status.isHidden = !processes.isEmpty
+        switch state {
+        case .loading: status.toolTip = "Sampling activity…"
+        case .unavailable: status.toolTip = "Requires the Wattson helper"
+        case .ready: status.toolTip = nil
+        }
+        if let selectedProcess, !processes.contains(where: { Selection($0) == selectedProcess }) {
+            self.selectedProcess = nil
+        }
+        for (index, row) in rows.enumerated() {
+            guard index < processes.count else {
+                row.clear()
+                row.isHidden = true
+                continue
+            }
+            row.update(process: processes[index], compact: compact)
+            row.isHidden = false
+            row.setSelected(selectedProcess == Selection(processes[index]))
+        }
+        if let focusedProcess, let window {
+            if let row = rows.first(where: { !$0.isHidden && $0.process.map(Selection.init) == focusedProcess }) {
+                let target: NSView = focusedAction && row.isSelected && row.forceQuitButton.isEnabled
+                    ? row.forceQuitButton : row
+                if window.firstResponder !== target { window.makeFirstResponder(target) }
+            } else {
+                window.makeFirstResponder(nil)
+            }
+        }
+        needsLayout = true
+        updateActionFeedback()
+    }
+
+    private func select(_ selection: Selection?) {
+        guard selectedProcess != selection else { return }
+        selectedProcess = selection
+        for row in rows {
+            row.setSelected(!row.isHidden && row.process.map { Selection($0) == selection } == true)
+        }
+        needsLayout = true
+        updateActionFeedback()
+    }
+
+    private func updateActionFeedback() {
+        guard let row = rows.first(where: { !$0.isHidden && $0.isSelected }) else {
+            actionFeedback.update(regions: [])
+            return
+        }
+        row.layoutSubtreeIfNeeded()
+        let button = row.forceQuitButton
+        actionFeedback.setTintColor(button.tintColor)
+        actionFeedback.update(regions: [.init(rect: button.convert(button.bounds, to: actionFeedback),
+                                              enabled: button.isEnabled)])
+    }
+
+=== Popover/TopProcessesView.swift:303-316 | row state and responder eligibility ===
+        private var ratio: CGFloat = 0
+        private(set) var process: EnergyProcess?
+        private(set) var isSelected = false
+        var selectionHandler: (() -> Void)?
+        var moveSelectionHandler: ((Int) -> Void)?
+        var clearSelectionHandler: (() -> Void)?
+        var forceQuitHandler: ((EnergyProcess) -> Void)?
+#if DEBUG
+        private var gradientPreviewStyle: GradientPreviewStyle = .fixedScaleHorizontal
+#endif
+
+        override var isFlipped: Bool { true }
+        override var acceptsFirstResponder: Bool { !isHiddenOrHasHiddenAncestor && process != nil }
+        override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+
+=== Popover/TopProcessesView.swift:400-447 | complete row appearance callback, setBarColor and refreshAppearance (including button tint and explicit refresh) ===
+        override func viewDidChangeEffectiveAppearance() {
+            super.viewDidChangeEffectiveAppearance()
+            refreshAppearance()
+        }
+
+        func setBarColor(_ color: NSColor) {
+            guard !barColor.isEqual(color) else { return }
+            barColor = color
+            refreshAppearance()
+        }
+
+        func refreshAppearance() {
+            effectiveAppearance.performAsCurrentDrawingAppearance {
+                let contrast = PopoverStyle.isHighContrast(effectiveAppearance)
+                let tint = barColor.usingColorSpace(.sRGB)!
+                let endpoint = contrast ? tint : tint.blended(withFraction: 0.18, of: .black)!
+                forceQuitButton.setTintColor(endpoint)
+                forceQuitButton.refreshAppearance()
+                PopoverStyle.setWithoutAnimation {
+                    self.layer?.backgroundColor = self.isSelected
+                        ? NSColor.labelColor.withAlphaComponent(contrast ? 0.08 : 0.045).cgColor
+                        : NSColor.clear.cgColor
+                    self.layer?.borderColor = contrast ? NSColor.labelColor.cgColor : NSColor.clear.cgColor
+                    self.layer?.borderWidth = self.isSelected && contrast ? 1 : 0
+                    self.track.backgroundColor = NSColor.clear.cgColor
+                    self.track.borderColor = contrast ? NSColor.labelColor.cgColor
+                        : tint.blended(withFraction: PopoverStyle.isDark(self.effectiveAppearance) ? 0.72 : 0.5,
+                                       of: .white)!
+                            .withAlphaComponent(PopoverStyle.isDark(self.effectiveAppearance) ? 0.75 : 1).cgColor
+                    self.fill.colors = contrast
+                        ? [tint.cgColor, tint.cgColor, tint.cgColor]
+                        : [tint.blended(withFraction: 0.65, of: .white)!.cgColor, tint.cgColor,
+                           endpoint.cgColor]
+#if DEBUG
+                    let vertical = self.gradientPreviewStyle == .vertical || self.gradientPreviewStyle == .activityTint
+                    self.fill.startPoint = vertical ? CGPoint(x: 0.5, y: 0) : CGPoint(x: 0, y: 0.5)
+                    self.fill.endPoint = vertical ? CGPoint(x: 0.5, y: 1) : CGPoint(x: 1, y: 0.5)
+                    if self.gradientPreviewStyle == .activityTint && !contrast {
+                        let low = [0xD4ECFF, 0x90C9F5, 0x5BA5E3].map { NSColor(rgb: $0) }
+                        let high = [0x78BCFF, 0x187DE0, 0x0754B0].map { NSColor(rgb: $0) }
+                        self.fill.colors = zip(low, high).map {
+                            $0.blended(withFraction: self.ratio, of: $1)!.cgColor
+                        }
+                    }
+#endif
+                }
+            }
+        }
+
+=== Popover/TopProcessesView.swift:449-450 | ProcessRow.update opening statements; text-formatting body omitted ===
+func update(process: EnergyProcess, compact: Bool) {
+    self.process = process
+
+=== Popover/TopProcessesView.swift:468-473 | ProcessRow.update final enabled/accessibility/layout statements and method end ===
+    forceQuitButton.isEnabled = process.terminationIdentity != nil
+    forceQuitButton.toolTip = process.terminationIdentity != nil ? "Force Quit" : "Force Quit Unavailable"
+    forceQuitButton.setAccessibilityLabel("Force Quit \(process.name)")
+    forceQuitButton.setAccessibilityHelp(forceQuitButton.toolTip)
+    needsLayout = true
+}
+
+=== Popover/TopProcessesView.swift:475-524 | complete clear/selection/hitTest/mouse/key/accessibility/action methods ===
+func clear() {
+    process = nil
+    setSelected(false)
+}
+
+func setSelected(_ selected: Bool) {
+    guard isSelected != selected else { return }
+    isSelected = selected
+    forceQuitButton.isHidden = !selected
+    value.isHidden = selected
+    forceQuitButton.setAccessibilityElement(selected)
+    setAccessibilitySelected(selected)
+    setAccessibilityChildren(selected ? [forceQuitButton] : [])
+    refreshAppearance()
+    needsLayout = true
+}
+
+override func hitTest(_ point: NSPoint) -> NSView? {
+    guard let hit = super.hitTest(point) else { return nil }
+    return hit is NSButton ? hit : self
+}
+
+override func mouseDown(with event: NSEvent) {
+    guard !isHiddenOrHasHiddenAncestor, process != nil else { return }
+    window?.makeFirstResponder(self)
+    selectionHandler?()
+}
+
+override func keyDown(with event: NSEvent) {
+    guard !isHiddenOrHasHiddenAncestor, process != nil else { return }
+    switch event.keyCode {
+    case 36, 49, 76: selectionHandler?()
+    case 126: moveSelectionHandler?(-1)
+    case 125: moveSelectionHandler?(1)
+    case 53: clearSelectionHandler?()
+    default: super.keyDown(with: event)
+    }
+}
+
+override func accessibilityPerformPress() -> Bool {
+    guard !isHiddenOrHasHiddenAncestor, process != nil else { return false }
+    selectionHandler?()
+    return true
+}
+
+@objc private func forceQuitSelectedProcess(_ sender: NSButton) {
+    guard isSelected, !isHiddenOrHasHiddenAncestor, sender.isEnabled,
+          let process, process.terminationIdentity != nil else { return }
+    forceQuitHandler?(process)
+}
+
+=== Popover/ProcessActionButton.swift:29-88 | enabled/tint/appearance/accessibility methods; drawing omitted ===
+    override var isEnabled: Bool {
+        didSet {
+            if isEnabled != oldValue { refreshAppearance() }
+        }
+    }
+
+    func setTintColor(_ color: NSColor) {
+        guard !sourceTintColor.isEqual(color) else { return }
+        sourceTintColor = color
+        refreshAppearance()
+    }
+
+    func refreshAppearance() {
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            tintColor = NSColor(cgColor: sourceTintColor.cgColor)!
+            let glyph: NSColor
+            if !isEnabled {
+                glyph = .secondaryLabelColor
+            } else if usesOpaqueAppearance {
+                let rgb = tintColor.usingColorSpace(.sRGB)!
+                let components = [rgb.redComponent, rgb.greenComponent, rgb.blueComponent].map {
+                    $0 <= 0.04045 ? $0 / 12.92 : pow(($0 + 0.055) / 1.055, 2.4)
+                }
+                let luminance = components[0] * 0.2126 + components[1] * 0.7152 + components[2] * 0.0722
+                glyph = luminance > 0.179 ? .black : .white
+            } else {
+                glyph = PopoverStyle.isDark(effectiveAppearance)
+                    ? tintColor.blended(withFraction: 0.88, of: .white)!
+                    : tintColor.blended(withFraction: 0.68, of: .black)!
+            }
+            bezelColor = isEnabled && !usesOpaqueAppearance ? tintColor : nil
+            if #available(macOS 26.0, *) {
+                tintProminence = isEnabled && !usesOpaqueAppearance ? .secondary : .none
+            }
+            contentTintColor = glyph
+            image = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Force Quit")?
+                .withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 9, weight: .semibold)
+                    .applying(.init(paletteColors: [glyph])))
+        }
+        needsDisplay = true
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        refreshAppearance()
+    }
+
+    private var usesOpaqueAppearance: Bool {
+        let reduceTransparency: Bool
+#if DEBUG
+        if let forced = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_TRANSPARENCY"] {
+            reduceTransparency = forced == "1"
+        } else {
+            reduceTransparency = NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency
+        }
+#else
+        reduceTransparency = NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency
+#endif
+        return reduceTransparency || PopoverStyle.isHighContrast(effectiveAppearance)
+    }
+
+=== Helper/wattson-helper.swift:11-11 | unchanged idle timeout constant ===
+private let idleTimeout: TimeInterval = 12
+
+=== Helper/wattson-helper.swift:25-25 | shared worker declaration ===
+private let topProcessesWorker = TopProcessesWorker()
+
+=== Helper/wattson-helper.swift:251-271 | complete writeAll response writer ===
+private func writeAll(_ data: Data, to fd: Int32) -> Bool {
+    data.withUnsafeBytes { rawBuffer in
+        guard let baseAddress = rawBuffer.baseAddress else { return data.isEmpty }
+        var offset = 0
+        while offset < rawBuffer.count {
+            let count = write(
+                fd,
+                baseAddress.advanced(by: offset),
+                rawBuffer.count - offset
+            )
+            if count > 0 {
+                offset += count
+            } else if count < 0, errno == EINTR {
+                continue
+            } else {
+                return false
+            }
+        }
+        return true
+    }
+}
+
+=== Helper/wattson-helper.swift:393-420 | complete timeout conversion including deadline precedence ===
+/// Convert the next absolute inbox deadline into poll's relative millisecond
+/// timeout. An incomplete reader owns the deadline while it is pending; without
+/// one, use the absolute idle deadline, or a bounded wait for an overdue worker.
+private func socketPollTimeoutMilliseconds(
+    requestContinuousNow: UInt64,
+    nextReadContinuousDeadline: UInt64?,
+    idleUptimeNow: UInt64,
+    idleUptimeDeadline: UInt64,
+    backgroundWorkPending: Bool
+) -> Int32 {
+    let now: UInt64
+    let deadline: UInt64
+    if let nextReadContinuousDeadline {
+        now = requestContinuousNow
+        deadline = nextReadContinuousDeadline
+    } else if backgroundWorkPending, idleUptimeDeadline <= idleUptimeNow {
+        return 100
+    } else {
+        now = idleUptimeNow
+        deadline = idleUptimeDeadline
+    }
+    guard deadline > now else { return 0 }
+
+    let remaining = deadline - now
+    let wholeMilliseconds = remaining / 1_000_000
+    let roundedMilliseconds = wholeMilliseconds + (remaining % 1_000_000 == 0 ? 0 : 1)
+    return Int32(min(UInt64(Int32.max), roundedMilliseconds))
+}
+
+=== Helper/wattson-helper.swift:459-464 | inbox pending and earliest incomplete-reader deadline ===
+var count: Int { reading.count + ready.count }
+var hasPending: Bool { count > 0 }
+var nextReadContinuousDeadline: UInt64? {
+    reading.map(\.continuousDeadline).min()
+}
+
+
+=== Helper/wattson-helper.swift:1397-1410 | complete getTopProcesses dispatch and descriptor ownership transfer ===
+if op == "getTopProcesses" {
+    // Only the operation and protocol marker are accepted. No name, PID,
+    // executable, arguments or sample count can alter the native read.
+    guard Set(object.keys).isSubset(of: ["op", "_wattsonProtocol"]) else {
+        _ = writeAll(Data(#"{"ok":false,"error":"rejected"}"#.utf8), to: fd)
+        return
+    }
+    if topProcessesWorker.start(fd: fd, peerUID: peerUID) {
+        ownsFD = false
+    } else {
+        _ = writeAll(Data(#"{"ok":false,"error":"top processes busy"}"#.utf8), to: fd)
+    }
+    return
+}
+
+=== Helper/wattson-helper.swift:1483-1525 | complete TopProcessesWorker pending/sampling/reply/cleanup ===
+/// One fixed read-only sample may run alongside the FIFO control worker.
+/// The native reader never changes credentials or accepts client arguments.
+/// The socket is owned by this worker only after start returns true.
+private final class TopProcessesWorker {
+    private let queue = DispatchQueue(label: "com.leoarrow.wattson.helper.top-processes", qos: .utility)
+    private let lock = NSLock()
+    private var sampling = false
+
+    var hasPending: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return sampling
+    }
+
+    func start(fd: Int32, peerUID: uid_t) -> Bool {
+        lock.lock()
+        guard !sampling else {
+            lock.unlock()
+            return false
+        }
+        sampling = true
+        lock.unlock()
+        queue.async {
+            defer {
+                close(fd)
+                self.lock.lock()
+                self.sampling = false
+                self.lock.unlock()
+            }
+            autoreleasepool {
+                guard peerUID == consoleUID() else { return }
+                let processes = HelperTopProcesses.sample(peerUID: peerUID)
+                guard peerUID == consoleUID() else { return }
+                let line = processes.flatMap(HelperTopProcesses.responseLine)
+                    ?? Data(#"{"ok":false,"error":"top processes unavailable"}"#.utf8)
+                        + Data([UInt8(ascii: "\n")])
+                guard line.count <= HelperTopProcesses.maximumResponseBytes else { return }
+                _ = writeAll(line, to: fd)
+            }
+        }
+        return true
+    }
+}
+
+=== Helper/wattson-helper.swift:1554-1628 | main polling loop, initial state and idle exit ===
+        let listener = fds[0]
+        free(fds)
+
+        guard configureNonBlocking(listener), configureCloseOnExec(listener) else {
+            os_log("could not configure listener", log: log, type: .fault)
+            close(listener)
+            return
+        }
+
+        let idleTimeoutNanoseconds = UInt64(idleTimeout * 1_000_000_000)
+        var lastActivityUptime = DispatchTime.now().uptimeNanoseconds
+        var inbox = SocketRequestInbox()
+        defer {
+            inbox.closeAll()
+            close(listener)
+        }
+
+        while true {
+            var activity = false
+            var pollFailed = false
+
+            // A command-line LaunchDaemon has no AppKit run-loop pool. Drain
+            // Foundation Data/JSON temporaries after each framing or execution
+            // pass so a helper kept warm by 2 s sampling remains memory-flat.
+            autoreleasepool {
+                switch inbox.takeNextReady() {
+                case let .request(request):
+                    // Exactly one FIFO request executes per pass. No operation
+                    // overlaps credential-changing work from another request.
+                    handle(request)
+                    activity = true
+                    return
+                case .expired:
+                    activity = true
+                    return
+                case .abandoned:
+                    activity = true
+                    return
+                case .none:
+                    break
+                }
+
+                let requestContinuousNow = socketRequestContinuousNowNanoseconds()
+                let idleUptimeNow = DispatchTime.now().uptimeNanoseconds
+                let timeoutMilliseconds = socketPollTimeoutMilliseconds(
+                    requestContinuousNow: requestContinuousNow,
+                    nextReadContinuousDeadline: inbox.nextReadContinuousDeadline,
+                    idleUptimeNow: idleUptimeNow,
+                    idleUptimeDeadline: lastActivityUptime + idleTimeoutNanoseconds,
+                    backgroundWorkPending: topProcessesWorker.hasPending
+                )
+                guard let didActivity = inbox.poll(
+                    listener: listener,
+                    timeoutMilliseconds: timeoutMilliseconds
+                ) else {
+                    pollFailed = true
+                    return
+                }
+                activity = didActivity
+            }
+
+            if pollFailed {
+                os_log("socket inbox poll failed", log: log, type: .fault)
+                return
+            }
+            let idleUptimeNow = DispatchTime.now().uptimeNanoseconds
+            if activity { lastActivityUptime = idleUptimeNow }
+            if !inbox.hasPending, !topProcessesWorker.hasPending,
+               idleUptimeNow >= lastActivityUptime,
+               idleUptimeNow - lastActivityUptime >= idleTimeoutNanoseconds {
+                return
+            }
+        }
+    }
+}
+
+=== Exact git diff --unified=3 9ab0c43..df7d4bc -- Popover/TopProcessesView.swift Popover/ProcessActionButton.swift Helper/wattson-helper.swift ===
+diff --git a/Helper/wattson-helper.swift b/Helper/wattson-helper.swift
+index 1758753..c50b853 100644
+--- a/Helper/wattson-helper.swift
++++ b/Helper/wattson-helper.swift
+@@ -392,18 +392,21 @@ private func readJSONObject(from fd: Int32) -> [String: Any]? {
+ 
+ /// Convert the next absolute inbox deadline into poll's relative millisecond
+ /// timeout. An incomplete reader owns the deadline while it is pending; without
+-/// one, the listener can sleep until the helper's absolute idle deadline.
++/// one, use the absolute idle deadline, or a bounded wait for an overdue worker.
+ private func socketPollTimeoutMilliseconds(
+     requestContinuousNow: UInt64,
+     nextReadContinuousDeadline: UInt64?,
+     idleUptimeNow: UInt64,
+-    idleUptimeDeadline: UInt64
++    idleUptimeDeadline: UInt64,
++    backgroundWorkPending: Bool
+ ) -> Int32 {
+     let now: UInt64
+     let deadline: UInt64
+     if let nextReadContinuousDeadline {
+         now = requestContinuousNow
+         deadline = nextReadContinuousDeadline
++    } else if backgroundWorkPending, idleUptimeDeadline <= idleUptimeNow {
++        return 100
+     } else {
+         now = idleUptimeNow
+         deadline = idleUptimeDeadline
+@@ -1596,7 +1599,8 @@ private enum WattsonHelperMain {
+                     requestContinuousNow: requestContinuousNow,
+                     nextReadContinuousDeadline: inbox.nextReadContinuousDeadline,
+                     idleUptimeNow: idleUptimeNow,
+-                    idleUptimeDeadline: lastActivityUptime + idleTimeoutNanoseconds
++                    idleUptimeDeadline: lastActivityUptime + idleTimeoutNanoseconds,
++                    backgroundWorkPending: topProcessesWorker.hasPending
+                 )
+                 guard let didActivity = inbox.poll(
+                     listener: listener,
+diff --git a/Popover/ProcessActionButton.swift b/Popover/ProcessActionButton.swift
+index 5f0c579..73d8d65 100644
+--- a/Popover/ProcessActionButton.swift
++++ b/Popover/ProcessActionButton.swift
+@@ -27,7 +27,9 @@ final class ProcessActionButton: NSButton {
+     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+ 
+     override var isEnabled: Bool {
+-        didSet { refreshAppearance() }
++        didSet {
++            if isEnabled != oldValue { refreshAppearance() }
++        }
+     }
+ 
+     func setTintColor(_ color: NSColor) {
+diff --git a/Popover/TopProcessesView.swift b/Popover/TopProcessesView.swift
+index c4f5958..8b9efac 100644
+--- a/Popover/TopProcessesView.swift
++++ b/Popover/TopProcessesView.swift
+@@ -151,6 +151,9 @@ final class TopProcessesView: PopoverSection {
+         updateActionFeedback()
+         let count = min(max(count, 1), 10)
+         guard renderedState != state || self.count != count || self.compact != compact else { return }
++        let focusedRow = rows.first { $0 === window?.firstResponder || $0.forceQuitButton === window?.firstResponder }
++        let focusedProcess = focusedRow?.process.map(Selection.init)
++        let focusedAction = focusedRow != nil && focusedRow?.forceQuitButton === window?.firstResponder
+         if count < self.count { select(nil) }
+         renderedState = state
+         self.count = count
+@@ -192,6 +195,15 @@ final class TopProcessesView: PopoverSection {
+             row.isHidden = false
+             row.setSelected(selectedProcess == Selection(processes[index]))
+         }
++        if let focusedProcess, let window {
++            if let row = rows.first(where: { !$0.isHidden && $0.process.map(Selection.init) == focusedProcess }) {
++                let target: NSView = focusedAction && row.isSelected && row.forceQuitButton.isEnabled
++                    ? row.forceQuitButton : row
++                if window.firstResponder !== target { window.makeFirstResponder(target) }
++            } else {
++                window.makeFirstResponder(nil)
++            }
++        }
+         needsLayout = true
+         updateActionFeedback()
+     }
+@@ -454,7 +466,6 @@ final class TopProcessesView: PopoverSection {
+             setAccessibilityValue("Activity Score \(Self.shortNumber(score)); CPU \(Self.shortNumber(process.cpuPercent))%; idle wakeups \(Self.wakeupNumber(process.idleWakeupsPerSecond)) per second")
+             toolTip = "\(process.name) · PID \(process.pid)\n\(summary)"
+             forceQuitButton.isEnabled = process.terminationIdentity != nil
+-            forceQuitButton.refreshAppearance()
+             forceQuitButton.toolTip = process.terminationIdentity != nil ? "Force Quit" : "Force Quit Unavailable"
+             forceQuitButton.setAccessibilityLabel("Force Quit \(process.name)")
+             forceQuitButton.setAccessibilityHelp(forceQuitButton.toolTip)

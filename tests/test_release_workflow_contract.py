@@ -18,6 +18,50 @@ CANDIDATE = (ROOT / ".github/workflows/macos-helper-install.yml").read_text(enco
 
 
 class ReleaseWorkflowContractTests(unittest.TestCase):
+    def test_macos27_validation_is_manual_and_preserves_default_ci(self):
+        condition = "github.event_name == 'workflow_dispatch' && inputs.macos27"
+        self.assertIn("type: boolean\n        default: false", CI)
+        self.assertIn("runs-on: ${{ " + condition + " && 'xcode-27' || 'macos-26' }}", CI)
+        self.assertIn("timeout-minutes: ${{ " + condition + " && 60 || 30 }}", CI)
+        self.assertEqual(CI.count("if: " + condition), 3)
+
+    def test_macos27_native_gate_rejects_missing_skipped_and_failed_completion(self):
+        gate = CI.split(
+            "- name: Validate macOS 27 native interaction and animation lifecycles", 1
+        )[1].split("      - name:", 1)[0]
+        script = textwrap.dedent(gate.split("run: |", 1)[1]).replace(
+            "source scripts/lib/local_cleanup.sh",
+            f'source "{ROOT}/scripts/lib/local_cleanup.sh"',
+        )
+        stress_marker = "ANIMATION_STRESS_PASSED iterations=20000 elapsed=0.001s"
+        for marker, status, stress, expected in (
+            ("ALL_INTERACTION_CHECKS_PASSED", 0, stress_marker, 0),
+            ("", 0, stress_marker, 1),
+            ("RUNNABLE_CHECKS_PASSED_SOME_SKIPPED", 0, stress_marker, 1),
+            ("ALL_INTERACTION_CHECKS_PASSED", 2, stress_marker, 2),
+            ("ALL_INTERACTION_CHECKS_PASSED", 0, "", 1),
+        ):
+            with self.subTest(marker=marker, status=status), TemporaryDirectory() as temporary:
+                workspace = pathlib.Path(temporary)
+                scripts = workspace / "scripts"
+                scripts.mkdir()
+                (scripts / "verify_interaction.sh").write_text(
+                    '#!/bin/bash\nprintf "%s\\n" "$STUB_MARKER"\nexit "$STUB_STATUS"\n'
+                )
+                (scripts / "verify_animation_stress.sh").write_text(
+                    '#!/bin/bash\nprintf "%s\\n" "$STUB_STRESS_MARKER"\n'
+                )
+                result = run(
+                    ["/bin/bash", "-c", script], cwd=workspace,
+                    env=dict(os.environ, STUB_MARKER=marker, STUB_STATUS=str(status),
+                             STUB_STRESS_MARKER=stress),
+                    capture_output=True, text=True, timeout=10,
+                )
+                self.assertEqual(result.returncode, expected, result.stderr)
+                if expected == 0:
+                    self.assertEqual(result.stdout.count("ALL_INTERACTION_CHECKS_PASSED"), 3)
+                self.assertEqual(list((workspace / ".build/macos27-validation.noindex").iterdir()), [])
+
     def test_candidate_rejects_missing_lifecycle_completion_outputs(self):
         gate = CANDIDATE.split(
             "- name: Require complete installation lifecycles and clean receipts", 1
