@@ -97,4 +97,25 @@ audit_status=0
 wattson_run_timeout 70 tart exec "$vm" /usr/bin/python3 '/Volumes/My Shared Files/snapshot/audit-guest.py' '/Volumes/My Shared Files/review/results' > "$review/resource-audit.log" 2> "$review/resource-audit.err" || audit_status=$?
 [[ "$guest_status" == 0 ]] || exit "$guest_status"
 [[ "$audit_status" == 0 ]] || exit "$audit_status"
+# Tart may return zero even when the remote shell exits early. Require the
+# actual workload markers and every expected capture before accepting the run.
+python3 - "$review" <<'PY'
+import json,pathlib,sys
+review=pathlib.Path(sys.argv[1]);results=review/'results';checks={}
+checks['guestCompleted']='DISPLAY_SETTINGS_CAPTURE_AND_NATIVE_CONTRACT_PASSED' in (review/'guest.log').read_text()
+contract=results/'settings-contract.log';errors=results/'settings-contract.err'
+checks['nativeAssertionsCompleted']=contract.exists() and 'all assertions complete' in contract.read_text()
+checks['unittestPassed']=errors.exists() and '\nOK\n' in errors.read_text()
+for name,count in [('before-baseline',4),('after-baseline',8),('after-high-contrast',8),('after-reduce-transparency',8)]:
+    directory=results/name;path=directory/'capture-results.json'
+    report=json.loads(path.read_text()) if path.is_file() else {}
+    checks[name]=report.get('allPassed') is True and report.get('captureCount')==count and len(list(directory.glob('*.png')))==count and len(list(directory.glob('*-geometry.json')))==count
+for phase in ['before','after']:
+    for edge in ['before','after']:
+        path=results/f'{phase}-source-{edge}.json'
+        checks[f'{phase}-source-{edge}']=path.is_file() and json.loads(path.read_text()).get('allPassed') is True
+report={'schema':1,'allPassed':all(checks.values()),'checks':checks}
+(review/'gate-results.json').write_text(json.dumps(report,indent=2)+'\n')
+assert report['allPassed'],checks
+PY
 printf 'DISPLAY_NATIVE_QA_AND_CLEANUP_PASSED\n'

@@ -41,7 +41,7 @@ EOF
         contrast=0; transparency=0
         [[ "$variant" != high-contrast ]] || contrast=1
         [[ "$variant" != reduce-transparency ]] || transparency=1
-        wattson_run_timeout 240 /usr/bin/env WATTSON_FORCE_INCREASE_CONTRAST="$contrast" WATTSON_FORCE_REDUCE_TRANSPARENCY="$transparency" WATTSON_FORCE_REDUCE_MOTION=1 /usr/bin/python3 "$snapshot/capture-compositor.py" "$app/Contents/MacOS/DisplayCapture" "$share/results/$phase-$variant" "${before_arg[@]}"
+        wattson_run_timeout 240 /usr/bin/env WATTSON_FORCE_INCREASE_CONTRAST="$contrast" WATTSON_FORCE_REDUCE_TRANSPARENCY="$transparency" WATTSON_FORCE_REDUCE_MOTION=1 /usr/bin/python3 "$snapshot/capture-compositor.py" "$app/Contents/MacOS/DisplayCapture" "$share/results/$phase-$variant" ${before_arg[@]+"${before_arg[@]}"}
     done
     if [[ "$phase" == after ]]; then
         cd "$src"
