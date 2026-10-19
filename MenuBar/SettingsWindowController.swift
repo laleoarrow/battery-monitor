@@ -2069,7 +2069,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
                 for: self.feedbackButton, purpose: self.feedbackAccessibilityPurpose,
                 status: self.feedbackDetail.stringValue
             )
-            DispatchQueue.global(qos: .utility).async {
+            DispatchQueue.global(qos: .utility).async { [self] in
                 let report = FeedbackDiagnostics.collect(context)
                 let result: Result<Void, Error> = Result {
                     try report.text.write(to: destination, atomically: true, encoding: .utf8)
