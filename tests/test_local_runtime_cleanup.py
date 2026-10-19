@@ -1,5 +1,6 @@
 import json
 import io
+import errno
 import os
 import pathlib
 import signal
@@ -8,7 +9,7 @@ import subprocess
 import sys
 import time
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import local_runtime
 
@@ -250,6 +251,90 @@ with local_runtime.TemporaryDirectory() as directory:
                     (pathlib.Path(directory) / "Fixture.app").mkdir()
                     local_runtime.run(self.child_command(), capture_output=True, timeout=0.3)
         self.assert_unregistered_before_removal(directory)
+
+    def test_timeout_probe_permission_error_still_stops_owned_descendants(self):
+        killpg = os.killpg
+        signals = []
+
+        def signal_group(group, number):
+            signals.append((group, number))
+            if number == 0:
+                raise PermissionError(errno.EPERM, "probe denied")
+            return killpg(group, number)
+
+        # A separate owned group must survive the timed-out group's cleanup.
+        other = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"],
+                                 start_new_session=True)
+        self.workspace.processes.append(other)
+        with patch.object(local_runtime.os, "killpg", side_effect=signal_group):
+            started = time.monotonic()
+            with self.assertRaises(subprocess.TimeoutExpired) as caught:
+                local_runtime.run(self.child_command(), capture_output=True,
+                                  timeout=.3, cleanup_grace=.2)
+        self.assertEqual(caught.exception.timeout, .3)
+        self.assertLess(time.monotonic() - started, 3)
+        group = int(self.pids.read_text().split()[0])
+        self.assertIn((group, 0), signals)
+        self.assertIn((group, signal.SIGKILL), signals)
+        self.assertTrue(all(target == group for target, _ in signals), signals)
+        self.assertFalse(local_runtime._live_group(group))
+        self.assertIsNone(other.poll())
+
+    def test_signal_permission_error_is_reported_and_owned_child_retained(self):
+        # Denied termination is different from a denied existence probe. Keep
+        # ownership for the workspace's retry, preserve the command's timeout
+        # and captured trace, and report the cleanup failure separately.
+        killpg = os.killpg
+        command = [sys.executable, "-c",
+                   "import signal,sys,time; signal.signal(signal.SIGTERM,signal.SIG_IGN); "
+                   "print('phase trace',file=sys.stderr,flush=True); time.sleep(60)"]
+        for denied in (signal.SIGTERM, signal.SIGKILL):
+            with self.subTest(denied=denied):
+                def signal_group(group, number):
+                    if number in (0, denied):
+                        raise PermissionError(errno.EPERM, "signal denied")
+                    return killpg(group, number)
+
+                with patch.object(local_runtime.os, "killpg", side_effect=signal_group), \
+                        patch("sys.stderr", new_callable=io.StringIO) as errors:
+                    started = time.monotonic()
+                    with self.assertRaises(subprocess.TimeoutExpired) as caught:
+                        local_runtime.run(command, capture_output=True,
+                                          timeout=.2, cleanup_grace=.1)
+                self.assertLess(time.monotonic() - started, 3)
+                self.assertEqual(caught.exception.stderr, b"phase trace\n")
+                self.assertIn("cleanup failed for owned process group", errors.getvalue())
+                self.assertIn("signal denied", errors.getvalue())
+                self.assertEqual(len(self.workspace.processes), 1)
+                process = self.workspace.processes[0]
+                self.assertTrue(local_runtime._live_group(process.pid))
+                self.assertTrue(process.stdout.closed)
+                self.assertTrue(process.stderr.closed)
+                local_runtime._stop(process)
+                self.workspace.processes.remove(process)
+
+    def test_cleanup_failure_after_success_is_an_error(self):
+        with patch.object(local_runtime, "_stop", side_effect=PermissionError("signal denied")):
+            with self.assertRaisesRegex(RuntimeError, "cleanup failed.*signal denied"):
+                local_runtime.run([sys.executable, "-c", "pass"], capture_output=True)
+        self.assertEqual(len(self.workspace.processes), 1)
+
+    def test_permission_error_for_an_exited_group_is_not_a_cleanup_failure(self):
+        process = Mock(pid=123)
+        with patch.object(local_runtime.os, "killpg", side_effect=PermissionError(errno.EPERM, "denied")), \
+                patch.object(local_runtime, "_live_group", return_value=False):
+            self.assertFalse(local_runtime._signal_group(process, 0))
+            self.assertFalse(local_runtime._signal_group(process, signal.SIGTERM))
+
+    def test_reaping_an_owned_child_has_a_deadline(self):
+        for signals in ([False], [True, False]):
+            with self.subTest(signals=signals):
+                process = Mock(pid=123, cleanup_grace=.1)
+                process.wait.side_effect = subprocess.TimeoutExpired("owned child", 1)
+                with patch.object(local_runtime, "_signal_group", side_effect=signals):
+                    with self.assertRaises(subprocess.TimeoutExpired):
+                        local_runtime._stop(process)
+                process.wait.assert_called_once_with(timeout=1)
 
     def test_timeout_allows_nested_shell_supervisor_to_reap_its_group(self):
         with patch.object(local_runtime, "LSREGISTER", self.registrar):

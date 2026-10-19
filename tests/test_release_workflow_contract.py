@@ -23,7 +23,18 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("type: boolean\n        default: false", CI)
         self.assertIn("runs-on: ${{ " + condition + " && 'xcode-27' || 'macos-26' }}", CI)
         self.assertIn("timeout-minutes: ${{ " + condition + " && 60 || 30 }}", CI)
-        self.assertEqual(CI.count("if: " + condition), 5)
+        for name in (
+            "Verify macOS 27 validation environment",
+            "Probe macOS 27 system battery artwork",
+            "Validate macOS 27 Display rendering and settings interaction",
+            "Build macOS 27 Swift test bundle",
+            "Execute macOS 27 Swift tests",
+            "Validate macOS 27 native interaction and animation lifecycles",
+            "Verify macOS 27 universal App and helper build",
+        ):
+            with self.subTest(step=name):
+                step = CI.split("- name: " + name, 1)[1].split("      - name:", 1)[0]
+                self.assertIn("if: " + condition, step)
         self.assertIn("if: github.event_name != 'workflow_dispatch' || !inputs.macos27", CI)
 
     def test_macos27_swift_diagnostics_preserve_failure_and_bound_children(self):
@@ -35,7 +46,7 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
             script = textwrap.dedent(step.split("run: |", 1)[1]).replace(
                 "source scripts/lib/local_cleanup.sh",
                 f'source "{ROOT}/scripts/lib/local_cleanup.sh"',
-            ).replace("wattson_run_timeout 360", "wattson_run_timeout 1")
+            ).replace("wattson_run_timeout 360", "wattson_run_timeout 2")
             # The executable seam exercises the real owned runner and pipefail.
             script = "\n".join(line for line in script.splitlines() if not any(
                 command in line for command in ("git rev-parse", "/usr/bin/sw_vers",

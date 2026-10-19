@@ -37,7 +37,7 @@ and [macOS 27 release notes](https://developer.apple.com/documentation/macos-rel
 provide the official platform context. These sources do not establish the
 result of testing Wattson itself.
 
-Verification is performed on one frozen source: real production-renderer
+Verification pins each source commit: real production-renderer
 captures and native settings interaction on the owned macOS 26 VM, plus actual
 macOS 27 / SDK 27 rendering, settings interaction and the existing full CI gate.
 The canonical installed App, helper, daemon and user preferences are preserved.
@@ -50,3 +50,21 @@ so the following native contract was never reached. The frames also exposed
 the flush-left regular radio that prompted the small-control/inset correction.
 The revised VM runner keeps the 38 real frames and eight native contract tests;
 the 14 new Swift tests run with full Xcode on both hosted OS versions.
+
+At `a8b7679`, the owned macOS 26.6.1 run passed 38 captures, all eight native
+tests, source gates and cleanup, preserving the canonical installation and 16
+settings. Full-Xcode macOS 26.6.2 passed all 678 Swift tests. Its Python run
+exposed an obsolete assertion counting CI steps; the replacement verifies the
+manual guard on each required macOS 27 step instead. The timeout stub also
+keeps a two-second startup budget after a local one-second cold-start failure.
+
+The same source produced 34 source-matched real macOS 27.0.1 frames with no
+visual blocker, but its native contract exceeded 180 seconds. Cleanup then
+masked the captured phase trace with a signal-zero permission error. This is
+rejected runtime acceptance, not a successful full gate. The test-runtime fix
+distinguishes a denied existence probe from a denied TERM/KILL, preserves the
+original timeout and its stderr, and retains failed-stop ownership for retry.
+Fifteen targeted lifecycle regressions and all 41 workflow tests pass locally.
+No production code changed after `a8b7679`; the next macOS 27 run retains the
+same 180-second watchdog to recover concrete phase evidence before any budget
+change.

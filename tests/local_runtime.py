@@ -46,9 +46,14 @@ def _signal_group(process, number):
     except ProcessLookupError:
         return False
     except PermissionError:
+        live = _live_group(process.pid)
+        # A denied signal-zero probe still means the group may be alive.
+        # Keep waiting/escalating for that owned group instead of aborting.
+        if number == 0:
+            return live
         # Darwin can report EPERM for a group containing only orphan zombies.
         # Do not hide a permission failure while a live group member remains.
-        if _live_group(process.pid):
+        if live:
             raise
         return False
 
@@ -57,7 +62,7 @@ def _signal_group(process, number):
 def _stop(process):
     """Stop descendants as well as the direct child, then reap our child."""
     if not _signal_group(process, signal.SIGTERM):
-        process.wait()
+        process.wait(timeout=1)
         return
     # Lifecycle shell callers explicitly allow time for their nested runners
     # and EXIT traps; ordinary compilers and binaries keep a short deadline.
@@ -69,7 +74,7 @@ def _stop(process):
         time.sleep(0.02)
     else:
         _signal_group(process, signal.SIGKILL)
-    process.wait()
+    process.wait(timeout=1)
     deadline = time.monotonic() + 1
     while _live_group(process.pid):
         if time.monotonic() >= deadline:
@@ -213,9 +218,27 @@ def run(*args, input=None, capture_output=False, timeout=120, check=False,
             result.check_returncode()
         return result
     finally:
-        _stop(process)
+        # Preserve the command's failure and captured trace while reporting any
+        # cleanup failure separately; failed stops remain owned for a retry.
+        failed = sys.exc_info()[0] is not None
+        errors = []
+        try:
+            _stop(process)
+        except (OSError, subprocess.SubprocessError) as error:
+            errors.append(error)
+        else:
+            if process in workspace.processes:
+                workspace.processes.remove(process)
         for stream in (process.stdin, process.stdout, process.stderr):
             if stream is not None:
-                stream.close()
-        if process in workspace.processes:
-            workspace.processes.remove(process)
+                try:
+                    stream.close()
+                except OSError as error:
+                    errors.append(error)
+        if errors:
+            message = (f"Test command cleanup failed for owned process group {process.pid}: "
+                       + "; ".join(str(error) for error in errors))
+            if failed:
+                print(message, file=sys.stderr)
+            else:
+                raise RuntimeError(message) from errors[0]
