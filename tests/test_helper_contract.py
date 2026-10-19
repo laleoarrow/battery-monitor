@@ -926,16 +926,19 @@ class HelperContractTests(unittest.TestCase):
                 ) == 0,
                 "an overdue reader must be serviced without another sleep"
             )
-            require(
-                socketPollTimeoutMilliseconds(
-                    requestContinuousNow: requestContinuousNow,
-                    nextReadContinuousDeadline: nil,
-                    idleUptimeNow: idleUptimeNow,
-                    idleUptimeDeadline: idleUptimeNow + 1,
-                    backgroundWorkPending: true
-                ) == 1,
-                "sub-millisecond waits must round up"
-            )
+            for (nanoseconds, milliseconds) in [(UInt64(1), Int32(1)),
+                                               (999_999, 1), (1_000_000, 1), (1_000_001, 2)] {
+                require(
+                    socketPollTimeoutMilliseconds(
+                        requestContinuousNow: requestContinuousNow,
+                        nextReadContinuousDeadline: nil,
+                        idleUptimeNow: idleUptimeNow,
+                        idleUptimeDeadline: idleUptimeNow + nanoseconds,
+                        backgroundWorkPending: true
+                    ) == milliseconds,
+                    "nanosecond waits must round up at millisecond boundaries"
+                )
+            }
             require(
                 socketPollTimeoutMilliseconds(
                     requestContinuousNow: requestContinuousNow,
@@ -993,6 +996,262 @@ class HelperContractTests(unittest.TestCase):
             )
             self.assertEqual(run_result.returncode, 0, run_result.stderr)
             self.assertIn("poll deadline self-test passed", run_result.stdout)
+
+    def test_helper_pending_worker_lifecycle_executable_self_test(self):
+        framing = self.source.split("// MARK: - Socket Framing", 1)[1].split(
+            "// MARK: - Console User", 1
+        )[0]
+        worker = "private final class TopProcessesWorker" + self.source.split(
+            "private final class TopProcessesWorker", 1
+        )[1].split("@main", 1)[0]
+        main_loop = "let idleTimeoutNanoseconds =" + self.source.split(
+            "let idleTimeoutNanoseconds =", 1
+        )[1].rsplit("\n    }\n}", 1)[0]
+        # Only seed the fixture's initial idle age. Every production iteration,
+        # activity update, clock read, timeout choice and exit guard stays intact.
+        main_loop = main_loop.replace(
+            "var lastActivityUptime = DispatchTime.now().uptimeNanoseconds",
+            "var lastActivityUptime = DispatchTime.now().uptimeNanoseconds - 12_100_000_000",
+            1,
+        )
+        harness = "import Darwin\nimport Foundation\nimport os\n" + framing + worker
+        harness += "\nprivate func runProductionLoop(listener: Int32) {\n" + main_loop + "\n}\n"
+        harness += textwrap.dedent(r'''
+            private let idleTimeout: TimeInterval = 12
+            private let log = OSLog(subsystem: "wattson.helper.test", category: "lifecycle")
+            private let topProcessesWorker = TopProcessesWorker()
+            private let systemPoll = poll
+            private func consoleUID() -> uid_t? { getuid() }
+            private func handle(_ request: SocketRequest) { close(request.fd) }
+            private func require(_ condition: @autoclosure () -> Bool, _ message: String) {
+                guard condition() else {
+                    FileHandle.standardError.write(Data((message + "\n").utf8))
+                    exit(1)
+                }
+            }
+
+            // The sampler alone is a deterministic barrier substitute. The
+            // production worker owns the FD, sends the reply and settles state.
+            private enum HelperTopProcesses {
+                static let maximumResponseBytes = 4096
+                static let entered = DispatchSemaphore(value: 0)
+                static let release = DispatchSemaphore(value: 0)
+                static let reply = Data("{\"ok\":true,\"processes\":[]}\n".utf8)
+                static func sample(peerUID: uid_t) -> [Int]? {
+                    entered.signal()
+                    require(release.wait(timeout: .now() + 2) == .success, "sampler barrier timeout")
+                    return []
+                }
+                static func responseLine(_ rows: [Int]) -> Data? { reply }
+            }
+            private func awaitWorkerCompletion() {
+                let deadline = DispatchTime.now().uptimeNanoseconds + 1_000_000_000
+                while topProcessesWorker.hasPending && DispatchTime.now().uptimeNanoseconds < deadline {
+                    usleep(1_000)
+                }
+                require(!topProcessesWorker.hasPending, "worker must clear pending after closing its FD")
+            }
+            private func prepareSample() -> (server: Int32, client: Int32) {
+                var pair = [Int32](repeating: 0, count: 2)
+                require(socketpair(AF_UNIX, SOCK_STREAM, 0, &pair) == 0, "owned sample socketpair")
+                require(configureNoSigPipe(pair[0]), "helper-side SO_NOSIGPIPE")
+                var timeout = timeval(tv_sec: 2, tv_usec: 0)
+                require(setsockopt(pair[1], SOL_SOCKET, SO_RCVTIMEO, &timeout,
+                    socklen_t(MemoryLayout<timeval>.size)) == 0, "bounded reply read")
+                require(topProcessesWorker.start(fd: pair[0], peerUID: getuid()), "worker start")
+                require(HelperTopProcesses.entered.wait(timeout: .now() + 2) == .success, "worker entered sampler")
+                require(topProcessesWorker.hasPending, "sample must remain pending")
+                return (pair[0], pair[1])
+            }
+            private func finishSampleAndReadReply() {
+                HelperTopProcesses.release.signal()
+                var received = Data()
+                var bytes = [UInt8](repeating: 0, count: 128)
+                while true {
+                    let count = recv(sampleClient, &bytes, bytes.count, 0)
+                    if count == 0 { break }
+                    if count < 0 && errno == EINTR { continue }
+                    require(count > 0, "worker reply and EOF must arrive before listener poll")
+                    received.append(contentsOf: bytes.prefix(count))
+                }
+                require(received == HelperTopProcesses.reply, "independent complete worker reply")
+                awaitWorkerCompletion()
+                require(fcntl(sampleServer, F_GETFD) == -1 && errno == EBADF, "worker must close owned FD")
+                replyPrecededListenerPoll = true
+            }
+
+            private enum Mode { case completion, interruptedWorker, interruptedReader, listenerWake }
+            private var mode = Mode.completion
+            private var calls = 0
+            private var sampleServer: Int32 = -1
+            private var sampleClient: Int32 = -1
+            private var replyPrecededListenerPoll = false
+            private var interruptedReaderTimeout: Int32?
+            private var recomputedReaderTimeout: Int32?
+            private let connectAfterPollEntry = DispatchSemaphore(value: 0)
+
+            // Test-only syscall seam: real framing/main-loop/worker source above
+            // is unchanged. Only two EINTR cases are fault-injected (no kernel
+            // signal claim); all ordinary waits invoke the actual system poll.
+            private enum Darwin {
+                static func poll(_ fds: UnsafeMutablePointer<pollfd>?, _ count: nfds_t,
+                                 _ timeout: Int32) -> Int32 {
+                    calls += 1
+                    switch mode {
+                    case .completion:
+                        require(calls == 1, "no-activity poll must preserve original idle age and exit")
+                        require(timeout == 100, "pending snapshot must choose finite wait")
+                        finishSampleAndReadReply()
+                    case .interruptedWorker:
+                        require(timeout == 100, "overdue worker wait after EINTR")
+                        if calls == 1 {
+                            usleep(20_000)
+                            errno = EINTR
+                            return -1
+                        }
+                        require(calls == 2, "EINTR must re-enter loop once without resetting idle age")
+                        finishSampleAndReadReply()
+                    case .interruptedReader:
+                        if let original = interruptedReaderTimeout {
+                            recomputedReaderTimeout = timeout
+                            require(timeout < original, "EINTR must recompute remaining absolute reader deadline")
+                            // End this isolated loop after observing recomputation;
+                            // the real fatal-poll path owns reader/listener cleanup.
+                            errno = EIO
+                            return -1
+                        }
+                        if count > 1 {
+                            require(timeout > 0 && timeout <= 2000, "accepted reader owns its deadline")
+                            interruptedReaderTimeout = timeout
+                            usleep(20_000)
+                            errno = EINTR
+                            return -1
+                        }
+                    case .listenerWake:
+                        require(timeout == 100, "listener uses worker's nominal wait")
+                        connectAfterPollEntry.signal()
+                    }
+                    return systemPoll(fds, count, timeout)
+                }
+            }
+            private func address(_ path: String) -> sockaddr_un {
+                var value = sockaddr_un()
+                value.sun_family = sa_family_t(AF_UNIX)
+                value.sun_len = UInt8(MemoryLayout<sockaddr_un>.size)
+                let bytes = Array(path.utf8)
+                require(bytes.count < MemoryLayout.size(ofValue: value.sun_path), "short owned socket path")
+                withUnsafeMutableBytes(of: &value.sun_path) { $0.copyBytes(from: bytes) }
+                return value
+            }
+            private func listener(_ path: String) -> Int32 {
+                let fd = socket(AF_UNIX, SOCK_STREAM, 0)
+                require(fd >= 0, "owned listener")
+                var value = address(path)
+                let result = withUnsafePointer(to: &value) {
+                    $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                        bind(fd, $0, socklen_t(MemoryLayout<sockaddr_un>.size))
+                    }
+                }
+                require(result == 0 && listen(fd, 8) == 0 && configureNonBlocking(fd), "bind owned listener")
+                return fd
+            }
+            private func connectClient(_ path: String) -> Int32 {
+                let fd = socket(AF_UNIX, SOCK_STREAM, 0)
+                require(fd >= 0, "owned client")
+                var value = address(path)
+                let result = withUnsafePointer(to: &value) {
+                    $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                        connect(fd, $0, socklen_t(MemoryLayout<sockaddr_un>.size))
+                    }
+                }
+                require(result == 0, "connect owned client")
+                return fd
+            }
+            for testMode in [Mode.completion, Mode.interruptedWorker] {
+                mode = testMode
+                calls = 0
+                replyPrecededListenerPoll = false
+                let path = "worker-" + UUID().uuidString + ".sock"
+                defer { unlink(path) }
+                let pair = prepareSample()
+                sampleServer = pair.server
+                sampleClient = pair.client
+                runProductionLoop(listener: listener(path))
+                require(replyPrecededListenerPoll, "reply must not await listener timeout")
+                require(calls == (testMode == .completion ? 1 : 2), "bounded no-activity idle exit")
+                close(pair.client)
+            }
+            print("worker completes independently; no-activity idle exit and fault-injected worker EINTR passed")
+
+            // Default SIGPIPE would kill this owned test process if helper-side
+            // no-SIGPIPE configuration failed. The actual worker writes, closes
+            // its transferred FD and clears pending even after disconnect.
+            let previousSigpipe = signal(SIGPIPE, SIG_DFL)
+            let disconnected = prepareSample()
+            close(disconnected.client)
+            HelperTopProcesses.release.signal()
+            awaitWorkerCompletion()
+            require(fcntl(disconnected.server, F_GETFD) == -1 && errno == EBADF, "disconnected worker FD closed")
+            _ = signal(SIGPIPE, previousSigpipe)
+            print("helper-side disconnected reply survived SIGPIPE; FD closed and pending cleared")
+
+            do {
+                mode = .interruptedReader
+                calls = 0
+                let path = "reader-" + UUID().uuidString + ".sock"
+                defer { unlink(path) }
+                let listening = listener(path)
+                let client = connectClient(path)
+                defer { close(client) }
+                runProductionLoop(listener: listening)
+                require(interruptedReaderTimeout != nil && recomputedReaderTimeout != nil,
+                        "real loop must re-read clocks after injected reader EINTR")
+                print("fault-injected reader EINTR recomputed absolute deadline: \(interruptedReaderTimeout!) -> \(recomputedReaderTimeout!) ms")
+            }
+            do {
+                mode = .listenerWake
+                calls = 0
+                let path = "wake-" + UUID().uuidString + ".sock"
+                let listening = listener(path)
+                var inbox = SocketRequestInbox()
+                defer { inbox.closeAll(); close(listening); unlink(path) }
+                let connected = DispatchSemaphore(value: 0)
+                var client: Int32 = -1
+                DispatchQueue.global(qos: .userInitiated).async {
+                    require(connectAfterPollEntry.wait(timeout: .now() + 2) == .success, "poll entry barrier")
+                    client = connectClient(path)
+                    connected.signal()
+                }
+                let timeout = socketPollTimeoutMilliseconds(requestContinuousNow: 1,
+                    nextReadContinuousDeadline: nil, idleUptimeNow: 2,
+                    idleUptimeDeadline: 1, backgroundWorkPending: true)
+                let deadline = DispatchTime.now().uptimeNanoseconds + 2_000_000_000
+                var activity = false
+                repeat {
+                    guard let result = inbox.poll(listener: listening, timeoutMilliseconds: timeout) else {
+                        require(false, "listener poll failed")
+                        break
+                    }
+                    activity = result
+                } while !activity && DispatchTime.now().uptimeNanoseconds < deadline
+                require(connected.wait(timeout: .now() + 2) == .success, "owned connector settles")
+                close(client)
+                require(activity && inbox.count == 1, "listener readiness must wake positive wait and admit client")
+                print("listener connection woke actual positive 100 ms poll")
+            }
+            print("pending worker lifecycle self-test passed")
+        ''')
+        with TemporaryDirectory() as directory:
+            path = pathlib.Path(directory)
+            main = path / "main.swift"
+            executable = path / "pending-worker-self-test"
+            main.write_text(harness, encoding="utf-8")
+            compiled = run(["/usr/bin/xcrun", "swiftc", str(main), "-o", str(executable)],
+                           capture_output=True, text=True, timeout=60)
+            self.assertEqual(compiled.returncode, 0, compiled.stderr)
+            result = run([str(executable)], cwd=directory, capture_output=True, text=True, timeout=12)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("pending worker lifecycle self-test passed", result.stdout)
 
     def test_ready_requests_keep_the_accept_deadline_until_execution(self):
         socket_request = self.source.split("private struct SocketRequest", 1)[1].split(
