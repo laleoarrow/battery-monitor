@@ -1,0 +1,20 @@
+--- verify_details.py.before
++++ verify_details.py.after
+@@ -97,7 +97,7 @@
+     payload_app = record['ownedVerificationResources']['expandedApp']
+     assert not scratch.exists(), 'Owned verification scratch remains'
+     registrar = '/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister'
+-    registrations = run([registrar, '-dump'], timeout=15).decode()
++    registrations = run([registrar, '-dump'], timeout=45).decode()
+     spotlight = run(['/usr/bin/mdfind', 'kMDItemCFBundleIdentifier == "com.leoarrow.wattson"'], timeout=15).decode().splitlines()
+     assert payload_app not in registrations and payload_app not in spotlight, 'Expanded test App registration remains'
+     assert APP.is_dir() and HELPER.is_file() and DAEMON.is_file(), 'Canonical installation missing after cleanup'
+--- verify-installed.sh.before
++++ verify-installed.sh.after
+@@ -24,5 +24,5 @@
+ wattson_run_script "$evidence/verify-payload.sh" "$pkg" "$approved_sha" "$source_commit" "$provenance" "$before" "$attempt" > "$attempt/payload.log" 2> "$attempt/payload.err" || payload_status=$?
+ printf '%s\n' "$payload_status" > "$attempt/payload-and-cleanup-exit-code.txt"
+ [[ "$payload_status" == 0 ]] || exit "$payload_status"
+-wattson_run_timeout 40 /usr/bin/python3 "$evidence/verify_details.py" finalize "$attempt/checks-passed-before-cleanup.json" "$evidence/local-install-verified.json" > "$attempt/finalize.log" 2> "$attempt/finalize.err"
++wattson_run_timeout 90 /usr/bin/python3 "$evidence/verify_details.py" finalize "$attempt/checks-passed-before-cleanup.json" "$evidence/local-install-verified.json" > "$attempt/finalize.log" 2> "$attempt/finalize.err"
+ /bin/cat "$attempt/finalize.log"

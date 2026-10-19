@@ -1,0 +1,53 @@
+{
+  "reason": "Preserve exact tool output including whitespace in compressed records; no log contents normalized or lost.",
+  "records": [
+    {
+      "originalPath": "candidate.log",
+      "archive": "candidate.log.raw.gz",
+      "rawSHA256": "aa028ead9d2af1ebd17b441a04573de7ec507c78fc5621736b91723aed53d1ea",
+      "archiveSHA256": "d768c56a035aa8175758fd494d3a7333efcda268c3a1155827d87c2a420b8ec7",
+      "rawBytes": 1784942,
+      "preservedByteForByte": true
+    },
+    {
+      "originalPath": "headless.log",
+      "archive": "headless.log.raw.gz",
+      "rawSHA256": "9f48d30c4b64303dd07e3989c30d5d08fe5d5526acd242cbbd6b38e0a6147765",
+      "archiveSHA256": "aa18765217ba9c3974a3a1d7a4fc18bfd6f1248292dbb466bcfaf1a02e9ad431",
+      "rawBytes": 528140,
+      "preservedByteForByte": true
+    },
+    {
+      "originalPath": "headless-watch.log",
+      "archive": "headless-watch.log.raw.gz",
+      "rawSHA256": "e2238fc401a3e9875dcf1c94448f22c98e20c7b21fb318e15594a2ce53855e64",
+      "archiveSHA256": "3b912171ad0dad0e91afedb0543cdd81aaa803d65b5c70f1c83083fa3b4d4198",
+      "rawBytes": 11024,
+      "preservedByteForByte": true
+    },
+    {
+      "originalPath": "public-homebrew-watch.log",
+      "archive": "public-homebrew-watch.log.raw.gz",
+      "rawSHA256": "0709a956451d51e7bcc5c49925a3df4f4ac03b1149ecaf2f20c2a787f5af801e",
+      "archiveSHA256": "8a76eb630d194e68aa6418212e10b44bbe5047921023cc4762e8a1ff0d35b9f6",
+      "rawBytes": 2989,
+      "preservedByteForByte": true
+    },
+    {
+      "originalPath": "tap-ci-watch.log",
+      "archive": "tap-ci-watch.log.raw.gz",
+      "rawSHA256": "02191ae5fd0ed0aeea7b9109a7d03b5431f2bfd54bda439ae5c550d6e399ccd4",
+      "archiveSHA256": "135ac6f815e7bfaf68d2e7731a9ffba5e89066ee6fe233104c2879bca75903fd",
+      "rawBytes": 13831,
+      "preservedByteForByte": true
+    },
+    {
+      "originalPath": "tap-sync-review.f1Uv2M/tap-change.diff",
+      "archive": "tap-sync-review.f1Uv2M/tap-change.diff.raw.gz",
+      "rawSHA256": "d581b383de019d8bcb89518d279dc113222e985530eb2aa3b2c53501fea2055b",
+      "archiveSHA256": "d12a94bcd835b00072f00e2a7ba41b640cf358c39f50e9c9c4f3a5a35a378b47",
+      "rawBytes": 499,
+      "preservedByteForByte": true
+    }
+  ]
+}

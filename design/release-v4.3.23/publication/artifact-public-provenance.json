@@ -1,0 +1,65 @@
+{
+  "anonymousDownload": true,
+  "authentication": "Anonymous urllib REST/CDN, no gh, token, Authorization header, cookies or netrc; default TLS verification",
+  "candidateProof": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/design/release-v4.3.23/publication/artifact-39220053878-review.opbuoE/artifact-proof.json",
+  "candidateProofSHA256": "4a067b6ee6fe6dec4885781a753ece65d8946459653045eacaea246cfcc33f3f",
+  "candidateRunID": 39220053878,
+  "checkedAtUTC": "2026-10-19T09:01:30.557350+00:00",
+  "files": {
+    "SHA256SUMS.txt": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/655755604",
+      "bytes": 303,
+      "cmpToCandidate": true,
+      "http_status": 200,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.23/SHA256SUMS.txt",
+      "ranges": 0,
+      "releaseAssetID": 655755604,
+      "sha256": "00e21041fe20d2a7982c72d39c7f25a305913ff6f76fd2d2c08dab25e7bb40ad"
+    },
+    "Wattson-v4.3.23-macos-universal.dmg": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/655755606",
+      "boundedSplitRetries": 0,
+      "bytes": 6784770,
+      "cmpToCandidate": true,
+      "http_status": 206,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.23/Wattson-v4.3.23-macos-universal.dmg",
+      "rangeBytes": 262144,
+      "ranges": 26,
+      "releaseAssetID": 655755606,
+      "sha256": "a9d5aa9b17d1ffd1488a052874995b381f700beb9e8e9b514c040eadece85ce6"
+    },
+    "Wattson-v4.3.23-macos-universal.pkg": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/655755602",
+      "boundedSplitRetries": 0,
+      "bytes": 6904436,
+      "cmpToCandidate": true,
+      "http_status": 206,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.23/Wattson-v4.3.23-macos-universal.pkg",
+      "rangeBytes": 262144,
+      "ranges": 27,
+      "releaseAssetID": 655755602,
+      "sha256": "ac7afe96273c87dfc9a67059737055ce502db8e027f88c6db66994787e6fb47b"
+    },
+    "Wattson-v4.3.23-release-info.txt": {
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/655755603",
+      "bytes": 395,
+      "cmpToCandidate": true,
+      "http_status": 200,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v4.3.23/Wattson-v4.3.23-release-info.txt",
+      "ranges": 0,
+      "releaseAssetID": 655755603,
+      "sha256": "b417bda65d808bc9bee8e070d8f7480f2c336458c93da152e838db4bdab5004b"
+    }
+  },
+  "packageSHA256": "ac7afe96273c87dfc9a67059737055ce502db8e027f88c6db66994787e6fb47b",
+  "packageVerified": true,
+  "publicAssetDirectory": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/public-v4.3.23-verify",
+  "publicAssetsMatchCandidate": true,
+  "rebuildPerformed": false,
+  "releaseID": 417088134,
+  "sourceCommit": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+  "strictThreeEntryManifest": true,
+  "structureReverified": false,
+  "verificationInheritance": "Exact public byte equality inherits the accepted candidate frozen verifier and per-slice signature/entitlement inspection.",
+  "version": "4.3.23"
+}

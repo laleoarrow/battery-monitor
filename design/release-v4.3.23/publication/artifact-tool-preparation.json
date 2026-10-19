@@ -1,0 +1,31 @@
+{
+  "version": "4.3.23",
+  "source_sha": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+  "headless_run": 39218951312,
+  "candidate_run": 39220053878,
+  "state": "tools prepared; no actual candidate/public download, verification or tap clone/push performed",
+  "bash_syntax_passed": [
+    "artifact-verify.sh",
+    "tap-sync.sh",
+    "artifact-public-verify.sh"
+  ],
+  "python_ast_and_inline_blocks_passed": true,
+  "assertion_optimization_disabled_by_entrypoints": true,
+  "uses_shared_owner_exit_without_subshell_cleanup": true,
+  "offline_checks": [
+    "artifact-tool-checks.json",
+    "artifact-public-tool-checks.json"
+  ],
+  "file_sha256": {
+    "artifact-verify.sh": "06147c654d659ebb069c42e8e7ff27ee127bb3b63368ac44da5db19a92a78de8",
+    "artifact-transfer.py": "2a05e695e8a4920008c7fe191671d36a86ed559ea478625fc906fb9d8ef63860",
+    "artifact-inspect.py": "f59117b919a441c23f0c90503d8211506805c232ba1a742d32e2ef2fa9416a3a",
+    "artifact-proof.py": "040c3101a61e75c32f18da8cde357dcbf6a9861e8b6cafd877a85451184b2129",
+    "tap-sync.sh": "048eef0332762f6b3738f92499bd38a417d4202cbc70744af97469102449f513",
+    "artifact-public-verify.sh": "62544e0af62eeb455af037ec6f09706443fb5d9bb62916024488d1ddb9765758",
+    "artifact-public-download.py": "7e74b3dc4138ed5c17db21c0d0257e9ab3fb5dbc85fc86eb7d1261b75b015b3d",
+    "artifact-README.md": "cbcb0ccb9e013acf6bf5bb4103c80e5140bb22305233a11080245d9aeff60a0c",
+    "artifact-tool-checks.json": "c3feddf835893ddada095a70500034dd17f9659489f9d0216aae3c0721902546",
+    "artifact-public-tool-checks.json": "139c9ccd73b1cfeb9a246f0d7d722f21b153ea0377622cc187cb6b990b73d320"
+  }
+}

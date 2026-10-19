@@ -1,0 +1,56 @@
+{
+  "checkedAtUTC": "2026-10-19T09:09:53.540667+00:00",
+  "version": "4.3.23",
+  "sourceCommit": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+  "packageSHA256": "ac7afe96273c87dfc9a67059737055ce502db8e027f88c6db66994787e6fb47b",
+  "canonicalAfter": {
+    "version": "4.3.23",
+    "buildVersion": "4.3.23",
+    "bundleIdentifier": "com.leoarrow.wattson",
+    "canonicalAppPIDs": [],
+    "appExecutableSHA256": "f5bc038d1017431c32f64858d3dee2194fa2d58203b49d1900c68a4ad4fb4f5d",
+    "appInfoPlistSHA256": "34ff036f3dc0abb5fc0ca643a84549b68e798f18b3c68da17966c103a02a602a",
+    "appBundleTreeSHA256": "2b77259d16ad38afac478b6c3740bc1b066f5864469ff6cb974a04df5d10fb25",
+    "appBundleFilesOrSymlinks": 13,
+    "helperSHA256": "166cdc971d541a4df71ae6f934a517dec5194982cbdcd7f83d9ca4624a3e4b0b",
+    "daemonSHA256": "29cd39cb617610c7e42c5c28549d8334c45fbcaf4b1f188fc35bdd6f13f4a599",
+    "receipt": {
+      "identifier": "com.leoarrow.wattson.pkg",
+      "version": "4.3.23",
+      "installTime": 1792400950
+    }
+  },
+  "appAndHelperAndDaemonMatchVerifiedPayload": true,
+  "signatureVerified": true,
+  "architectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "helperHealth": true,
+  "helperV5Negotiated": true,
+  "existingSettingsUnchanged": true,
+  "existingSettingsCompared": 16,
+  "processSampling": {
+    "count": 10,
+    "responseBytes": 2302,
+    "elapsedSeconds": 1.103825,
+    "formulaPassed": true
+  },
+  "rawSettingsValuesLogged": false,
+  "rawProcessValuesLogged": false,
+  "publicRelease": true,
+  "popupInteractionVerified": false,
+  "verificationDidNotInstallOrLaunchGUI": true,
+  "ownedVerificationResources": {
+    "scratch": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.23-install.noindex/verify.Pq1djw",
+    "expandedApp": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/release-v4.3.23-install.noindex/verify.Pq1djw/expanded/Wattson-component.pkg/Payload/Applications/Wattson.app"
+  },
+  "cleanupVerified": {
+    "ownedScratchRemoved": true,
+    "expandedAppLaunchServicesAbsent": true,
+    "expandedAppSpotlightAbsent": true,
+    "ownedMountsCreated": false,
+    "canonicalInstallationNotCleaned": true,
+    "canonicalAppHelperDaemonStillPresent": true
+  }
+}

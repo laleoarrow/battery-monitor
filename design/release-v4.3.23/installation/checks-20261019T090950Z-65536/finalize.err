@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/design/release-v4.3.23/installation/verify_details.py", line 100, in <module>
+    registrations = run([registrar, '-dump'], timeout=15).decode()
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/design/release-v4.3.23/installation/installation_state.py", line 46, in run
+    return subprocess.run(arguments, capture_output=True, check=True,
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 507, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1134, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1980, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1178, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister', '-dump']' timed out after 15 seconds

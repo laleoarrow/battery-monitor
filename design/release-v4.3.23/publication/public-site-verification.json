@@ -1,0 +1,13 @@
+{
+  "url": "https://laleoarrow.github.io/battery-monitor/",
+  "finalURL": "https://laleoarrow.github.io/battery-monitor/",
+  "status": 200,
+  "anonymous": true,
+  "checks": {
+    "version": true,
+    "pkg": true,
+    "dmg": true
+  },
+  "htmlSHA256": "a5e352ac57a82d0c159415541368f3417293a11a3c430d8f881195be9d34f374",
+  "checkedAtUTC": "2026-10-19T09:10:15.003716+00:00"
+}

@@ -1,0 +1,83 @@
+{
+  "checkedAtUTC": "2026-10-19T09:05:31.331334+00:00",
+  "version": "4.3.23",
+  "sourceCommit": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+  "releaseURL": "https://github.com/laleoarrow/battery-monitor/releases/tag/v4.3.23",
+  "releaseID": 417088134,
+  "packageSHA256": "ac7afe96273c87dfc9a67059737055ce502db8e027f88c6db66994787e6fb47b",
+  "localArtifactChainVerified": true,
+  "candidate": {
+    "runID": 39220053878,
+    "artifactID": 12172156550,
+    "archiveSHA256": "799029caf8302dc6b00cb18a3356150a034b304472c0c664eaefc78e460b285e",
+    "proof": "artifact-39220053878-review.opbuoE/artifact-proof.json",
+    "frozenPKGDMGVerifierAndSignatureSupplementPassed": true
+  },
+  "public": {
+    "provenance": "artifact-public-provenance.json",
+    "anonymousDownload": true,
+    "exactFourAPIDigestsAndRetainedFileHashesMatchCandidate": true,
+    "publicAssetsMatchCandidate": true,
+    "packageVerified": true,
+    "staticBundleVerificationRepeated": false
+  },
+  "tap": {
+    "commit": "b0cd04743548b5e89e3a0cf5971d248a0bf36caa",
+    "ordinaryPushExit": 0,
+    "onlyChangedPath": "Casks/wattson.rb",
+    "changedLines": 2,
+    "rubySyntax": "Syntax OK",
+    "remoteMainMatchedAfterPush": true,
+    "CIrunID": 39227127129,
+    "record": "tap-sync-review.f1Uv2M"
+  },
+  "ownerCleanup": {
+    "candidate": {
+      "realExitCode": 0,
+      "ownedWorkspaceAbsentAfterExit": true,
+      "evidence": "artifact-execution-39220053878-cleanup.json"
+    },
+    "public": {
+      "realExitCode": 0,
+      "ownedWorkspaceAbsentAfterExit": true,
+      "evidence": "artifact-public-cleanup.json"
+    },
+    "tap": {
+      "realExitCode": 0,
+      "ownedWorkspaceAbsentAfterExit": true,
+      "evidence": "tap-execution-cleanup.json"
+    }
+  },
+  "toolPreparationHashesStillMatch": true,
+  "distribution": {
+    "app": "ad-hoc",
+    "helper": "ad-hoc",
+    "PKG": "unsigned",
+    "DMG": "unsigned",
+    "notarized": false
+  },
+  "rootOwnedFinalGates": {
+    "owner": "root",
+    "status": "pending root final-state update; no success inferred here",
+    "tapCIrunID": 39227127129,
+    "tapCIConclusion": null,
+    "publicHomebrewRunID": null,
+    "publicHomebrewConclusion": null,
+    "latestPromotionVerified": null,
+    "PagesRunID": null,
+    "PagesConclusion": null
+  },
+  "limitations": [
+    "No whole-host cleanup census was performed; owned workspace absence and successful shared lifecycle exits were verified.",
+    "Physical battery/SMC and visible canonical App acceptance are outside this artifact byte chain.",
+    "Final tap CI, public Homebrew, latest and Pages states are owned and completed by root."
+  ],
+  "primaryEvidenceSHA256": {
+    "artifact-39220053878-review.opbuoE/artifact-proof.json": "4a067b6ee6fe6dec4885781a753ece65d8946459653045eacaea246cfcc33f3f",
+    "artifact-public-provenance.json": "1ae30e6fd7c5930b84165c65b0744b081bbb6962e37bd17c05df47f20bbe0988",
+    "artifact-execution-39220053878-cleanup.json": "9c298227e230a37d5ce9c6bc3c30dafebb347aff7ca99408ac1c8c442d17ccbe",
+    "artifact-public-cleanup.json": "d34d17f5fa6f55b47d2db2032594bbfc4217fff52a92ec6903245651ae5ee5d8",
+    "tap-execution-cleanup.json": "c42d2ffb740e1c9840dad7ede271e0edf518d0833f4d4bd25ef786074ce78196",
+    "tap-sync-review.f1Uv2M/tap-preflight.json": "0dd90e450f9de1eff57e7ed8be5fba598da535eaf4f13b36b3d2ae0b9d8bb30a"
+  }
+}

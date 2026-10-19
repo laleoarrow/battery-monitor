@@ -1,0 +1,44 @@
+{
+  "checkedAtUTC": "2026-10-19T09:15:38.192536+00:00",
+  "version": "4.3.23",
+  "frozenRuntimeSource": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+  "communityDistribution": {
+    "app": "ad-hoc",
+    "helper": "ad-hoc",
+    "pkg": "unsigned",
+    "dmg": "unsigned",
+    "notarized": false
+  },
+  "gates": {
+    "headless": 39218951312,
+    "candidate": 39220053878,
+    "tap": 39227127129,
+    "publicHomebrew": 39227575911,
+    "pages": 39227745286
+  },
+  "allGatesSuccessful": true,
+  "tapSource": "b0cd04743548b5e89e3a0cf5971d248a0bf36caa",
+  "latest": true,
+  "anonymousPublicAssetsMatchCandidate": true,
+  "siteStatus200AndVersionLinksVerified": true,
+  "packageSHA256": "ac7afe96273c87dfc9a67059737055ce502db8e027f88c6db66994787e6fb47b",
+  "canonicalVersion": "4.3.23",
+  "canonicalPayloadMatchesPublicPackage": true,
+  "settingsPreservedAfterLaunch": 16,
+  "userConfirmedPopupAndProcessActivityNormal": true,
+  "canonicalVerificationScratchCleaned": true,
+  "gitOnlyMainAndOneWorktreeBeforeEvidenceCommit": true,
+  "allHistoricalTagsPreserved": true,
+  "failedHistoricalCIRecordsPreserved": true,
+  "historicalBranchesAndResourcesRecoverablyArchived": true,
+  "documentationOnlyCommitWillFollow": true,
+  "emailSent": false,
+  "proofSHA256": {
+    "publication/artifact-public-provenance.json": "1ae30e6fd7c5930b84165c65b0744b081bbb6962e37bd17c05df47f20bbe0988",
+    "publication/artifact-chain-summary.json": "5fad61c12253008ad16ffb34be36cef61e704c63e896c65f891c0b250ddb72ca",
+    "installation/local-install-verified.json": "123c2496b1b4314c8c27ea82645ba3d717607e901adc29159315c2bb32e99592",
+    "installation/startup-verification.json": "b1bb27294747086e6a15727dc44cb446deed43e4f27b174213ffd8da084c25df",
+    "cleanup/git-summary.json": "5fe5da6ae8c38a14955d2f2ca089d34b7819dfe58396643b16fbd7b6fcb2ac35",
+    "cleanup/artifact-summary.json": "c2e12ab858cd96b9751154f159583d2a492789a13426b852f070a57f7c7a3271"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "real_exit_code": 0,
+  "owned_workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/public-v4.3.23.noindex/download.2ijpqL",
+  "owned_workspace_absent_after_exit": true,
+  "publicAssetsMatchCandidate": true,
+  "packageVerified": true,
+  "sourceCommit": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+  "packageSHA256": "ac7afe96273c87dfc9a67059737055ce502db8e027f88c6db66994787e6fb47b",
+  "public_provenance": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/design/release-v4.3.23/publication/artifact-public-provenance.json",
+  "public_files_rehashed_after_retention": true,
+  "scope": "Owned download workspace absence confirmed after shared EXIT; no whole-host census claimed."
+}

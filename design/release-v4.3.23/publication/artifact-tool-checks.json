@@ -1,0 +1,18 @@
+{
+  "scope": "Offline proof/tap fixtures only; no network, credentials, App or Git mutation; no actual candidate validation.",
+  "all_passed": true,
+  "passed": [
+    "proof_accepts_matching_completed_inputs",
+    "proof_rejects_canonical_change",
+    "tap_preflight_matching_four_assets",
+    "tap_rejects_changed_public_digest",
+    "tap_rejects_changed_saved_release",
+    "tap_rejects_duplicate_public_asset",
+    "tap_rejects_wrong_annotated_commit",
+    "tap_rejects_moved_main",
+    "tap_edit_changes_only_version_and_sha",
+    "tap_edit_rejects_unexpected_base_version"
+  ],
+  "count": 10,
+  "transfer_fixture_note": "Earlier transport/readiness fixture run completed its 20 readiness/archive/manifest cases before a relative-path error in the proof test setup. Proof setup was corrected to absolute paths and both proof cases passed here."
+}

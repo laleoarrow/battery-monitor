@@ -1,0 +1,15 @@
+{
+  "version": "4.3.23",
+  "source_sha": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+  "candidate_run_id": 39220053878,
+  "candidate_proof": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/design/release-v4.3.23/publication/artifact-39220053878-review.opbuoE/artifact-proof.json",
+  "release_id": 417088134,
+  "all_four_public_api_digests_match_candidate": true,
+  "public_pkg_sha256": "ac7afe96273c87dfc9a67059737055ce502db8e027f88c6db66994787e6fb47b",
+  "candidate_file_sha256": {
+    "Wattson-v4.3.23-macos-universal.pkg": "ac7afe96273c87dfc9a67059737055ce502db8e027f88c6db66994787e6fb47b",
+    "Wattson-v4.3.23-macos-universal.dmg": "a9d5aa9b17d1ffd1488a052874995b381f700beb9e8e9b514c040eadece85ce6",
+    "Wattson-v4.3.23-release-info.txt": "b417bda65d808bc9bee8e070d8f7480f2c336458c93da152e838db4bdab5004b",
+    "SHA256SUMS.txt": "00e21041fe20d2a7982c72d39c7f25a305913ff6f76fd2d2c08dab25e7bb40ad"
+  }
+}

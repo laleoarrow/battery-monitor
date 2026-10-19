@@ -1,0 +1,13 @@
+{
+  "scope": "Offline public-proof fixtures with stubbed metadata/download; no network, real assets, credentials or App execution.",
+  "all_passed": true,
+  "count": 6,
+  "passed": [
+    "public_exact_bytes_and_install_fields",
+    "public_changed_api_digest_rejected",
+    "public_wrong_annotation_source_rejected",
+    "public_changed_download_rejected",
+    "public_duplicate_asset_rejected",
+    "public_lightweight_tag_rejected"
+  ]
+}

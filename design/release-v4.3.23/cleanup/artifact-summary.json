@@ -1,0 +1,69 @@
+{
+  "status": "verified",
+  "recordedAtUTC": "2026-10-19T08:01:13.812205+00:00",
+  "scope": "Explicitly audited historical build caches and immutable duplicate archives only; release 4.3.23 inputs and outputs, Git worktrees and refs excluded.",
+  "removedCacheDirectories": [
+    {
+      "path": ".build/arm64-apple-macosx",
+      "duAllocatedBytesBefore": 605474816,
+      "removed": true
+    },
+    {
+      "path": ".build/top-processes-review.noindex/swiftpm",
+      "duAllocatedBytesBefore": 387137536,
+      "removed": true
+    },
+    {
+      "path": ".build/local.noindex/release.F7tZKO/swiftpm",
+      "duAllocatedBytesBefore": 191623168,
+      "removed": true
+    },
+    {
+      "path": "dist/release-4.2.0-20260913/snapshot.T3s73P/source/.build-headless",
+      "duAllocatedBytesBefore": 310812672,
+      "removed": true
+    },
+    {
+      "path": "dist/release-4.2.0-20260913/snapshot.d8TYkO/source/.build-headless",
+      "duAllocatedBytesBefore": 310579200,
+      "removed": true
+    }
+  ],
+  "removedCacheAllocatedBytesBefore": 1805627392,
+  "historicRecovery": {
+    "path": "dist/local-cleanup-20261019.noindex/historical-runnable-files.tar.gz",
+    "sha256": "acb01841d11d49df8c7a626e05164cc89b80861f67e7ea0cdb5074d32711bc44",
+    "size": 27163436,
+    "membersFullyReadAndVerified": 34,
+    "runnableFiles": 10
+  },
+  "duplicateArchiveGroupsVerified": 46,
+  "duplicatePathsHashVerified": 100,
+  "hardlinksCreatedAndInodeVerified": 23,
+  "duplicateLogicalBytesConsolidated": 769476754,
+  "duplicatePathsPreservedWithoutLinking": 31,
+  "metadataMismatchCategories": {
+    "extended_attributes": 20,
+    "mode": 11
+  },
+  "removedRootPythonCache": [
+    {
+      "path": "__pycache__/battery_monitor.cpython-314.pyc",
+      "size": 28542,
+      "sha256": "6a6f4df66a513839315ff2985da75f66810292da95aeb05e646671706245c184"
+    }
+  ],
+  "finalChecks": {
+    "cachePathsAbsent": true,
+    "rootPycacheAbsent": true,
+    "matchingProcesses": 0,
+    "matchingMounts": 0,
+    "matchingDiskImages": 0,
+    "ownedTemporaryDirectoriesAbsent": true,
+    "recoveryArchiveSHA256Verified": true
+  },
+  "retained": "Unique source/QA/design/screenshot archives, all historical installer paths, earlier cleanup recovery archives, current release and canonical installation.",
+  "localDetailedEvidence": "dist/local-cleanup-20261019.noindex/cleanup-verification.json",
+  "limitations": "Cache totals are du allocation before removal; deduplication totals are logical duplicate bytes, not a filesystem-wide measured free-space increase.",
+  "allHistoricalArchivePathsPreserved": true
+}

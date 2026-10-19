@@ -1,0 +1,15 @@
+{
+  "run_id": 39220053878,
+  "sourceCommit": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+  "real_exit_code": 0,
+  "owned_workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/artifact-v4.3.23.noindex/run.cNqGWh",
+  "owned_workspace_absent_after_exit": true,
+  "accepted_exact_four_files": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/github-candidate-v4.3.23-39220053878",
+  "candidate_proof": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/design/release-v4.3.23/publication/artifact-39220053878-review.opbuoE/artifact-proof.json",
+  "packageSHA256": "ac7afe96273c87dfc9a67059737055ce502db8e027f88c6db66994787e6fb47b",
+  "artifact_id": 12172156550,
+  "api_archive_digest_verified": true,
+  "candidate_signature_supplement_passed": true,
+  "retained_file_hashes_rechecked": true,
+  "scope": "No independent whole-host resource census; shared cleanup completed successfully and its owned directory is absent."
+}

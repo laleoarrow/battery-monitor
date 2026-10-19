@@ -1,0 +1,17 @@
+{
+  "checkedAtUTC": "2026-10-19T09:14:08.080977+00:00",
+  "version": "4.3.23",
+  "packageSHA256": "ac7afe96273c87dfc9a67059737055ce502db8e027f88c6db66994787e6fb47b",
+  "installerUI": "The installation was successful. The software was installed.",
+  "canonicalAppPIDs": [
+    66247
+  ],
+  "existingSettingsPreservedAfterLaunch": 16,
+  "postInstallFinalizerExit": 0,
+  "localInstallProofSHA256": "123c2496b1b4314c8c27ea82645ba3d717607e901adc29159315c2bb32e99592",
+  "cuaPopupReadAttempts": 2,
+  "cuaPopupReadResult": "timeoutReached; user independently confirmed normal display",
+  "popupVisuallyVerified": false,
+  "userConfirmedPopupAndProcessActivityNormal": true,
+  "userConfirmation": "\u663e\u793a\u6b63\u5e38"
+}

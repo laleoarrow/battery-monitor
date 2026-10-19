@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "status": "complete-single-main-branch-and-primary-worktree",
+  "frozenMain": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+  "protection": {
+    "directory": "dist/git-cleanup-20261019.noindex",
+    "gitBundle": {
+      "file": "historical-git.bundle",
+      "sha256": "219f332506592b2fa1416025edd4dc05d520ec3dd1c49d2526215c73b2c864fb",
+      "refs": 21,
+      "danglingTips": 10,
+      "bundleVerifyPassed": true,
+      "freshBareRepositoryRestorePassed": true
+    },
+    "worktreeIgnoredArchives": [
+      {
+        "worktree": ".build/module-icons-vector-worktree.noindex",
+        "file": "worktree-1-ignored.tar.gz",
+        "sha256": "42bba3436cfd2c7a8a4bb38646cfd580ab43ec2dda448de66d60477ac6b5abbb",
+        "bytes": 4184675,
+        "entries": 36,
+        "everyArchivedContentHashVerified": true
+      },
+      {
+        "worktree": ".build/pro-modules-worktree.noindex",
+        "file": "worktree-2-ignored.tar.gz",
+        "sha256": "7d5d7dbdcd92fcb8b56fb42be3c590b81bf1579a1aef7c85deec6a500aad5ab6",
+        "bytes": 187783223,
+        "entries": 3133,
+        "everyArchivedContentHashVerified": true
+      }
+    ]
+  },
+  "removedWorktrees": [
+    ".build/module-icons-vector-worktree.noindex",
+    ".build/pro-modules-worktree.noindex"
+  ],
+  "deletedLocalBranches": [
+    {
+      "branch": "codex/fix-installed-popover",
+      "tip": "cf13c6ffe3d03fb127edbb0796e719133512848b",
+      "reason": "ancestor-of-main"
+    },
+    {
+      "branch": "codex/history-axis-smoothness",
+      "tip": "f818ae3e06c1fcbd69d506d7631d905a37228ce2",
+      "reason": "ancestor-of-main"
+    },
+    {
+      "branch": "codex/local-artifact-cleanup",
+      "tip": "cefa6134da7d37d825b7b622a9e5fa09be025144",
+      "reason": "ancestor-of-main"
+    },
+    {
+      "branch": "codex/module-icons-vector",
+      "tip": "e97e25fa2fe1ed8220f3f918c91fecbd027a47f0",
+      "reason": "patch-equivalent-to-main"
+    },
+    {
+      "branch": "codex/optional-popover-arrow",
+      "tip": "bdeb9a57f5e5f2bd17e2a26beb22fb24b80409a6",
+      "reason": "ancestor-of-main"
+    },
+    {
+      "branch": "codex/pro-modules-order",
+      "tip": "b6c5d8d54bcd6945e99059958f498fa8d8eb9cdc",
+      "reason": "ancestor-of-main"
+    },
+    {
+      "branch": "codex/restore-footer-glass-depth",
+      "tip": "37e601856f3e03dab53e52dab7f873aac9fb7639",
+      "reason": "patch-equivalent-to-main"
+    },
+    {
+      "branch": "codex/settings-native-hierarchy",
+      "tip": "957c5bc470ca95afa53518ad559e271fa9ee0ae4",
+      "reason": "ancestor-of-main"
+    },
+    {
+      "branch": "codex/sidebar-vector-icons",
+      "tip": "c4b84050d9cff0e58b6e4a7fb914dc3dae20c435",
+      "reason": "final-production-and-artwork-identical-to-main-ancestor-b6c5d8d"
+    },
+    {
+      "branch": "codex/top-energy-processes",
+      "tip": "0ec6a855351edc99826c6f3f6060b10267d85c06",
+      "reason": "ancestor-of-main"
+    },
+    {
+      "branch": "codex/performance-smoothness",
+      "tip": "8ff106d99d1362f81ada80f78d7e78b3375b3b3e",
+      "reason": "ancestor-of-released-main-and-bundle-protected"
+    }
+  ],
+  "deletedRemoteBranches": [
+    {
+      "branch": "codex/restore-footer-glass-depth",
+      "tip": "37e601856f3e03dab53e52dab7f873aac9fb7639",
+      "expectedTipGuardUsed": true
+    },
+    {
+      "branch": "codex/performance-smoothness",
+      "tip": "8ff106d99d1362f81ada80f78d7e78b3375b3b3e",
+      "expectedTipGuardUsed": true
+    }
+  ],
+  "retainedUntilRelease": [],
+  "preserved": [
+    "all-historical-tags",
+    "all-ten-dangling-commit-tips-in-bundle",
+    "all-ignored-files-in-the-two-removed-worktrees",
+    "all-other-build-caches-and-dist-artifacts",
+    "canonical-app-helper-and-production-data"
+  ],
+  "noGCOrReflogExpiration": true,
+  "sourceUnchanged": true,
+  "temporaryVerificationRepositoriesCleaned": true,
+  "finalVerification": {
+    "releasedTag": "v4.3.23",
+    "releasedSource": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+    "localBranches": [
+      "main"
+    ],
+    "remoteBranches": [
+      "main"
+    ],
+    "remoteTrackingRefs": [
+      "origin/HEAD",
+      "origin/main"
+    ],
+    "worktreeCount": 1,
+    "fetchPrunePassed": true,
+    "fetchAutomaticGCDisabled": true,
+    "connectivityFsckPassed": true,
+    "connectivityFsckExitCode": 0,
+    "unmergedIndexEntries": 0,
+    "diffCheckPassed": true,
+    "gitLockFiles": [],
+    "activeMergeRebaseCherryPickStates": [],
+    "allPreexistingTagRefsUnchanged": true,
+    "tagRefsPreserved": 53,
+    "performanceTipConfirmedInBundle": true,
+    "temporaryVerificationResourcesCleaned": true,
+    "pendingReleaseDocumentationOwnedByParent": true
+  }
+}

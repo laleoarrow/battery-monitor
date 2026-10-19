@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "checkedAtUTC": "2026-10-19T08:10:47.585866+00:00",
+  "status": "revised_owner_shell_cleanup_and_optimization_guards_verified_with_rejections_only",
+  "allPassed": true,
+  "cases": [
+    {
+      "name": "outer rejects missing arguments",
+      "exitCode": 64,
+      "expectedExitCode": 64,
+      "requiredDiagnosticMatched": true,
+      "passed": true
+    },
+    {
+      "name": "inner rejects missing arguments",
+      "exitCode": 64,
+      "expectedExitCode": 64,
+      "requiredDiagnosticMatched": true,
+      "passed": true
+    },
+    {
+      "name": "outer clears inherited PYTHONOPTIMIZE=1 and enforces provenance assert",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "requiredDiagnosticMatched": true,
+      "passed": true
+    },
+    {
+      "name": "outer clears inherited PYTHONOPTIMIZE=2 and enforces provenance assert",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "requiredDiagnosticMatched": true,
+      "passed": true
+    },
+    {
+      "name": "direct details refuses explicit -OO before any checks",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "requiredDiagnosticMatched": true,
+      "passed": true
+    },
+    {
+      "name": "direct collector refuses inherited optimization before canonical reads",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "requiredDiagnosticMatched": true,
+      "passed": true
+    }
+  ],
+  "checks": {
+    "bashSyntaxPassed": true,
+    "pythonASTPassed": true,
+    "ownedRejectionFixtureRemoved": true,
+    "noInstallationPycache": true,
+    "originalBeforeUnchanged": true,
+    "canonicalPID80435StillSame": true,
+    "noPostInstallAttemptCreated": true,
+    "helperContacted": false,
+    "softwareInstalled": false,
+    "canonicalLifecycleChanged": false
+  },
+  "revisionSourceSHA256": {
+    "installation_state.py": "eb887b42d0aff0610a430f37193a0a2e148ea9271936e3526e923a502901211d",
+    "verify-installed.sh": "8d4315462cb6ef41d6f45517ca528253bd5dc1c8fa8e89ad1f615a336115d2c1",
+    "verify-payload.sh": "760480d52d4b01b87cd46ee71128e003f39f83858a52a30603863b602199717f",
+    "verify_details.py": "58c7338a228465e93e5ab215ab02b8381376433581dcc1f0fe884daafbbf0f58"
+  },
+  "independentReviewPending": false,
+  "independentReview": {
+    "record": "independent-review.json",
+    "reviewer": "/root/helper_boundary_audit",
+    "blockingFindings": 0,
+    "reviewedHashesMatchRevision": true
+  }
+}

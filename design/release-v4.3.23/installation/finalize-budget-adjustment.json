@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "changedAtUTC": "2026-10-19T09:12:12.366457+00:00",
+  "reason": "The completed public-PKG verification inner and its owner-shell cleanup passed; finalization failed only because read-only lsregister -dump exceeded 15 seconds.",
+  "failedAttempt": "checks-20261019T090950Z-65536",
+  "failureRecordPreserved": "checks-20261019T090950Z-65536/finalize.err",
+  "completedStage": "checks-20261019T090950Z-65536/checks-passed-before-cleanup.json",
+  "completedStageSHA256": "ce4a19bbe7277488bc60b979c1557e10dd665a25b74ecba5317d21bd7f6fc6f9",
+  "payloadAndOwnerCleanupExitCode": 0,
+  "completedStageSettingsCompared": 16,
+  "scratchAlreadyRemoved": true,
+  "budgetSeconds": {
+    "launchServicesObservationBefore": 15,
+    "launchServicesObservationNow": 45,
+    "spotlightObservationUnchanged": 15,
+    "overallFinalizeRunnerBefore": 40,
+    "overallFinalizeRunnerNow": 90
+  },
+  "assertionsUnchanged": true,
+  "automaticRetryAdded": false,
+  "productionOrSharedLibraryChanged": false,
+  "finalizeExecutedByThisRevision": false,
+  "helperContactedByThisRevision": false,
+  "sourceHashes": {
+    "verify_details.py": {
+      "before": "58c7338a228465e93e5ab215ab02b8381376433581dcc1f0fe884daafbbf0f58",
+      "after": "bd455bd055094afb0fab79acb1fd7d632f942abe43f5ceb6a4fdf2df5f921233"
+    },
+    "verify-installed.sh": {
+      "before": "8d4315462cb6ef41d6f45517ca528253bd5dc1c8fa8e89ad1f615a336115d2c1",
+      "after": "76f31d024f087f79dca41aa0f102a66d6a6978933f1f8727420646e5d8c32fe2"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "reviewedAtUTC": "2026-10-19T08:12:22.853529+00:00",
+  "reviewer": "/root/helper_boundary_audit",
+  "scope": "Independent static review of four revised installation scripts and read-only shared lifecycle implementation",
+  "blockingFindings": [],
+  "checks": {
+    "outerWaitsForInnerSharedExit": true,
+    "nonzeroInnerCleanupPreventsFinalization": true,
+    "cleanupOwnershipExcludesCanonicalInstallation": true,
+    "fixedCLIProbesUseOwnedRunners": true,
+    "bothShellsUnsetPythonOptimize": true,
+    "bothPythonEntrypointsRefuseOptimizedInterpreterBeforeAssertions": true,
+    "shellSyntaxPassed": true,
+    "pythonASTPassed": true
+  },
+  "evidenceNote": "Reviewer correctly identified the original preparation hashes as stale for the revision. The original record is preserved; revision-verification.json and this review bind the current four-file hashes instead.",
+  "reviewedSourceSHA256": {
+    "verify-payload.sh": "760480d52d4b01b87cd46ee71128e003f39f83858a52a30603863b602199717f",
+    "installation_state.py": "eb887b42d0aff0610a430f37193a0a2e148ea9271936e3526e923a502901211d",
+    "verify_details.py": "58c7338a228465e93e5ab215ab02b8381376433581dcc1f0fe884daafbbf0f58",
+    "verify-installed.sh": "8d4315462cb6ef41d6f45517ca528253bd5dc1c8fa8e89ad1f615a336115d2c1"
+  },
+  "runtimePostInstallVerificationExecuted": false,
+  "runtimeSignalCleanupExercisedByThisReview": false,
+  "helperContacted": false,
+  "canonicalLifecycleChanged": false
+}

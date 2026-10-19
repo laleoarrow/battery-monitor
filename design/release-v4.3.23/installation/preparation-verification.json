@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "preparedAtUTC": "2026-10-19T08:04:10.305924+00:00",
+  "sourceCommit": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+  "status": "prepared_read_only_before_collected_public_package_inputs_pending",
+  "syntaxChecks": {
+    "shellBashN": true,
+    "pythonAST": true
+  },
+  "before": {
+    "record": "before.json",
+    "settingsHashed": 15,
+    "canonicalVersion": "4.3.22",
+    "canonicalPIDs": [
+      80435
+    ],
+    "PIDStillSameAfterPreparation": true,
+    "helperContacted": false,
+    "canonicalLifecycleChanged": false
+  },
+  "postInstallVerifierExecuted": false,
+  "publicPackageInputsPending": [
+    "public PKG absolute path",
+    "approved PKG SHA256",
+    "public package verification JSON path"
+  ],
+  "sourceInputsSHA256": {
+    "README.md": "bda553a83902ec65e439cbfa759ca0a9068f4cdd6caf60b71642d8ede8e061a0",
+    "before.json": "c609577702f17d1c239f3bdd5913e2adab9317a1f539336593be98363a292b16",
+    "installation_state.py": "aa3455140c63fcb3cddf0a6f55ff5aa08d812fc27a5408d083ca06c01f25cc05",
+    "verify-installed.sh": "49d2f985c70704b8a45fc254869e134fb4e329b692e6f51f1a607f6eb3b302c5",
+    "verify_details.py": "b688ccae4f7dedd998c111c16db3d81b3edccc84d8a5ec85c7b05cf04a6b1f85"
+  }
+}

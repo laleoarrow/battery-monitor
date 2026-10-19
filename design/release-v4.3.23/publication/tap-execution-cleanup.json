@@ -1,0 +1,16 @@
+{
+  "real_exit_code": 0,
+  "owned_workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/tap-sync-v4.3.23.noindex/work.4cQtkr",
+  "owned_workspace_absent_after_exit": true,
+  "exact_tap_commit": "b0cd04743548b5e89e3a0cf5971d248a0bf36caa",
+  "remote_main_matches": true,
+  "changed_paths": [
+    "Casks/wattson.rb"
+  ],
+  "tap_ci_run_id": 39227127129,
+  "tap_ci_url": "https://github.com/laleoarrow/homebrew-tap/actions/runs/39227127129",
+  "tap_ci_status": "in_progress",
+  "tap_ci_conclusion": null,
+  "public_ci_or_pages_dispatch_performed": false,
+  "scope": "Owned clone cleanup verified; no whole-host resource census claimed."
+}

@@ -1,0 +1,11 @@
+{
+  "conclusion": "success",
+  "event": "push",
+  "head_branch": "main",
+  "head_sha": "23185f299ce61b8e373ebf5115b461ad2aa01226",
+  "html_url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39218951312",
+  "id": 39218951312,
+  "path": ".github/workflows/ci.yml",
+  "run_attempt": 1,
+  "status": "completed"
+}
