@@ -1,0 +1,5 @@
+Artifact evidence: /Users/leoarrow/Project/mypackage/agents/电池功率/design/release-v5.0.0/publication/artifact-39395441580-review.PGRCqH
+All candidate jobs passed; artifact 12253045301 is ready.
+Exact four candidate assets downloaded; archive digest, manifest and metadata pass.
+Running frozen standalone verify_release.sh on uploaded PKG and DMG.
+Verified exact candidate assets retained: /Users/leoarrow/Project/mypackage/agents/电池功率/dist/github-candidate-v5.0.0-39395441580

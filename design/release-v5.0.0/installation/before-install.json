@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "checkedAtUTC": "2026-10-20T08:33:43.611235+00:00",
+  "expectedVersion": "5.0.0",
+  "sourceCommit": "39c48e3e0564384f4aefb4aff1c1f6e99c6a9c7b",
+  "settingsValueHashes": {
+    "0": {
+      "appearance.liquidGlassStyle": "8ceb88eddb90bff6a2609c105d57fee0d837d73e8e4c3eefb390db5c8e6f5c13",
+      "popover.topProcessesCompact": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "popover.module.flow": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "popover.module.history": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "popover.module.topProcesses": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "appearance.showPopoverArrow": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "appearance.inAppLogoStyle": "406a922d115aac36236e06601aa422a46bef9956389cbfb8cc89b4b52e718dd0",
+      "popover.module.lanes": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "popover.ringMetrics": "8d6cfee78019a3a31cb7758b0b9828af820a2abfc04c127f2d2552cba36c5df4",
+      "popover.topProcessCount": "e32a9aa8e562ff823b65a4ec71e352d5ac7d51f6d17d3ebd09c6134c034f7214",
+      "appearance.liquidGlassEnabled": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "menubar.iconStyle": "b89c0c4a5bf5a1503d1164e8bb848954dc932ec0d81fc84c3885d790c71c6cf1",
+      "menubar.showsPercentage": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "appearance.colorScheme": "363e99de0def95bed2a65d60cbe5ddcf926c8322de947b904da2d93a22b21083",
+      "appearance.liquidGlassTransparency": "493455bbe9a59db288581df46c01217b1fbcb961185f7c037c8e48b42a561be4",
+      "popover.moduleOrder": "ef0301491453cdeb78d8a93a0a3968b002a99070bb96a0c9703632d743100ee0"
+    }
+  },
+  "productSettingsCount": 16,
+  "requiredSettingsCount": 16,
+  "canonicalBefore": {
+    "version": "4.3.24",
+    "buildVersion": "4.3.24",
+    "bundleIdentifier": "com.leoarrow.wattson",
+    "canonicalAppPIDs": [
+      88727
+    ],
+    "appExecutableSHA256": "6602a88b6822b928a7933caadfe91397704d1d2c6cc983bdb73fc0344c7a7b4d",
+    "appInfoPlistSHA256": "7597603ad05bfcbc4389d6b1840d64c5bffd572ab4d3e9dcf57607d457f78166",
+    "appBundleTreeSHA256": "3695c8bbecf47c792e007b766ee62f8dd5825eb4671ecadcb91ce5fcdece6ef6",
+    "appBundleFilesOrSymlinks": 13,
+    "helperSHA256": "c875c9e13a7f5839e24ebc02e73bdab4b5742fdbb0b46d1f3be8273ba5b296ff",
+    "daemonSHA256": "29cd39cb617610c7e42c5c28549d8334c45fbcaf4b1f188fc35bdd6f13f4a599",
+    "receipt": {
+      "identifier": "com.leoarrow.wattson.pkg",
+      "version": "4.3.24",
+      "installTime": 1792473984
+    }
+  },
+  "rawSettingsValuesLogged": false,
+  "helperContacted": false,
+  "canonicalLifecycleChanged": false
+}

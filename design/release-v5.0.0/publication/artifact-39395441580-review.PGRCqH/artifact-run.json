@@ -1,0 +1,11 @@
+{
+  "conclusion": "success",
+  "event": "workflow_dispatch",
+  "head_branch": "main",
+  "head_sha": "39c48e3e0564384f4aefb4aff1c1f6e99c6a9c7b",
+  "html_url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39395441580",
+  "id": 39395441580,
+  "path": ".github/workflows/macos-helper-install.yml",
+  "run_attempt": 1,
+  "status": "completed"
+}

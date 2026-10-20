@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "checkedAtUTC": "2026-10-20T09:09:52.184706+00:00",
+  "version": "5.0.0",
+  "sourceSHA": "39c48e3e0564384f4aefb4aff1c1f6e99c6a9c7b",
+  "workflowRun": 39395437279,
+  "workflowURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39395437279",
+  "allPassed": true,
+  "status": "completed",
+  "conclusion": "success",
+  "event": "workflow_dispatch",
+  "branch": "main",
+  "environment": {
+    "systemVersion": "27.0.1",
+    "systemBuild": "26A434",
+    "architecture": "arm64",
+    "sdkVersion": "27.0",
+    "xcodeVersion": "27.0",
+    "xcodeBuild": "27A266a"
+  },
+  "display": {
+    "captureCount": 34,
+    "nativeSettingsTests": 8,
+    "systemArtworkRequiredResources": 4,
+    "systemArtworkOptionalResourcesAvailable": 4,
+    "evidence": "Successful source-verified production capture gate completion marker and workflow step; captures retained by GitHub artifact, not duplicated locally."
+  },
+  "swift": {
+    "tests": 700,
+    "failures": 0,
+    "products": [
+      {
+        "product": "WattsonTests.xctest",
+        "tests": 670,
+        "failures": 0
+      },
+      {
+        "product": "WattsonHelperV5SupportTests.xctest",
+        "tests": 30,
+        "failures": 0
+      }
+    ]
+  },
+  "python": {
+    "tests": 626,
+    "seconds": 358.419,
+    "expectedSkips": 4,
+    "lifecycleTestsPassed": 16
+  },
+  "nativeVariantCompletions": [
+    "2026-10-20T09:00:36.5404100Z",
+    "2026-10-20T09:02:59.1346070Z",
+    "2026-10-20T09:05:12.6987380Z"
+  ],
+  "animationStress": {
+    "iterations": 20000,
+    "elapsedSeconds": 0.145
+  },
+  "universal": {
+    "version": "5.0.0",
+    "architectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "appAndHelperVerified": true,
+    "signing": "ad-hoc; not notarized"
+  },
+  "website": {
+    "tests": 7,
+    "failures": 0,
+    "lintPassed": true,
+    "exportPassed": true
+  },
+  "cleanup": {
+    "sharedOwnedLifecycleTestsPassed": 16,
+    "disposableBuildCompletionMarker": true,
+    "postJobCleanupPassed": true,
+    "runnerTerminatedAppleIBToolDaemon": true,
+    "scope": "Shared lifecycle regressions, successful build-owner EXIT and runner cleanup observed; no independent whole-runner process census claimed."
+  },
+  "githubJobs": [
+    {
+      "id": 118536910439,
+      "name": "SwiftPM and Python tests",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 118536910702,
+      "name": "Website build, test, lint, and export",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "rawLogs": {
+    "tests": {
+      "path": "macos27-tests.log.raw.gz",
+      "uncompressedBytes": 545925,
+      "uncompressedSHA256": "243e3e226f68ddebf0adcf8de0543a3c29c579d1ab019e62e185cfd92f9c3c59",
+      "gzipSHA256": "9a0d30d58b5c22934b9eac0799e4beb1ee60af76a9fb4e7b70af3a81456231b0"
+    },
+    "website": {
+      "path": "macos27-website.log.raw.gz",
+      "uncompressedBytes": 28143,
+      "uncompressedSHA256": "9d1ff9cfe2a4e6582663eca3e942a0520346ac7730a01709f06048b727aff61c",
+      "gzipSHA256": "442a1f49a57f1b05e0c446055177d25fa6236f833d6fd854c0c4820a0e2c7ec4"
+    }
+  },
+  "limits": [
+    "Actual hosted macOS 27 software/build/render/interaction verification, not physical battery-hardware or installer acceptance on macOS 27.",
+    "No new product code, installation, production preferences, workflow dispatch or Git mutation by the monitor."
+  ]
+}

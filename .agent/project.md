@@ -22,11 +22,13 @@ loading and unavailable official values display `—`; raw full-charge/design mA
 ratios never substitute for system health. The separate mAh metrics retain their
 battery-controller meaning, explained in tooltips. See the
 [system metric authority validation](../design/system-metric-authority/README.md).
-The canonical installation is the verified local 4.3.24 candidate from that
-record: App/helper/receipt match its PKG and all 16 settings are retained. The
-sandboxed production health reader returned the official 84% on this Mac.
-Canonical popup visual acceptance remains pending because CUA app access timed
-out; this local update does not create a public release.
+The canonical installation is the verified public 5.0.0 package:
+App/helper/receipt match its exact public bytes and all 16 settings are retained.
+The user confirmed that the popup and Display page render normally after this
+upgrade; direct CUA access timed out. See the
+[5.0.0 release record](../design/release-v5.0.0/README.md).
+The preceding local 4.3.24 validation recorded the sandboxed production health
+reader returning the official 84% on this Mac.
 
 ## Runtime architecture
 
@@ -98,8 +100,8 @@ closing, hiding, detaching, degraded readings and Reduce Motion stop animations.
 No chart timer is used. The [4.3.16 axis motion review](../design/history-axis-smoothness/README.md)
 records the corrected independent native probe, ABBA preparation measurements,
 explicit construction counts, Pro review, and exact installation evidence.
-Wattson 4.3.22 is now the stable [public GitHub release](https://github.com/laleoarrow/battery-monitor/releases/tag/v4.3.22)
-from frozen `7f41533b017d26519a69d541d3ffd2dea587f413`; exact candidate,
+The earlier Wattson 4.3.22 [public GitHub release](https://github.com/laleoarrow/battery-monitor/releases/tag/v4.3.22)
+was built from frozen `7f41533b017d26519a69d541d3ffd2dea587f413`; exact candidate,
 Homebrew, Pages and anonymous public-asset checks passed. The
 [publication record](../design/release-v4.3.22/publication/final-release-verification.json)
 keeps maintainer synchronization separate: the verified public PKG is ready,
@@ -374,9 +376,9 @@ per platform (four expected opt-in GUI skips). The 27 gate also passes 34 real
 800 × 520 frames, eight native Settings tests, three interaction variants,
 20,000 animation iterations and the universal App/helper build. Details are in the
 [integration record](../design/settings/display-system-defaults/integration-verification.json).
-This Display work performs no additional installation or public release. The
-recorded local 4.3.24 installation contains the three visual styles, but precedes
-the final accessibility-label and spacing follow-ups.
+These Display changes, including the final accessibility-label and spacing
+follow-ups, are included in public 5.0.0 and its verified canonical installation.
+The preceding local 4.3.24 installation remains historical evidence.
 General scrolls as needed for the added logo choice or expanded recovery help;
 keyboard focus brings the logo selector into view. Modules use monochrome SF Symbols, 12-point descriptions, inset
 separators and right-aligned switches. See the

@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "version": "5.0.0",
+  "verifiedAtUTC": "2026-10-20T09:20:44.241669+00:00",
+  "sourceSHA": "39c48e3e0564384f4aefb4aff1c1f6e99c6a9c7b",
+  "pagesRun": {
+    "conclusion": "success",
+    "databaseId": 39399622500,
+    "headSha": "39c48e3e0564384f4aefb4aff1c1f6e99c6a9c7b",
+    "status": "completed",
+    "updatedAt": "2026-10-20T09:18:45Z",
+    "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39399622500"
+  },
+  "anonymousRequests": true,
+  "authorizationHeadersOrRepositoryTokensUsedForPublicURLs": false,
+  "tlsCertificateVerificationEnabled": true,
+  "transport": "/usr/bin/curl with -q disables user curl config; no auth flags",
+  "allLinksReady": true,
+  "checkedLinks": [
+    {
+      "name": "main-site",
+      "url": "https://laleoarrow.github.io/battery-monitor/",
+      "method": "GET",
+      "status": 200,
+      "authenticated": false,
+      "bytes": 21182,
+      "sha256": "62e4c95e3da9ee5977f324674af26346900ee4651bffd54e26a0d7bfbee5825e",
+      "versionedDownloadLinksAndNewDisplayCopyPresent": true
+    },
+    {
+      "name": "gallery",
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.0/",
+      "method": "GET",
+      "status": 200,
+      "authenticated": false,
+      "bytes": 6319,
+      "sha256": "a777d48d538476e6d73ae239cab4bddc210da5f02c3f977116b7cf0e9198f491",
+      "frozenSourcePath": "design/releases/v5.0.0/index.html",
+      "byteForByteMatchesFrozenSource": true
+    },
+    {
+      "name": "previews/vector-preview.png",
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.0/previews/vector-preview.png",
+      "method": "GET",
+      "status": 200,
+      "authenticated": false,
+      "bytes": 112392,
+      "sha256": "2a5ffae110a6cda6ea88ca123467af52e3b97e8405a89d079d37d164da913886",
+      "frozenSourcePath": "design/releases/v5.0.0/previews/vector-preview.png",
+      "byteForByteMatchesFrozenSource": true
+    },
+    {
+      "name": "previews/sidebar-vector-preview.png",
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.0/previews/sidebar-vector-preview.png",
+      "method": "GET",
+      "status": 200,
+      "authenticated": false,
+      "bytes": 64622,
+      "sha256": "9337177a387d0562b47f16edfddb9ed5ad965ac3f91566478a13ba75c97d9c5c",
+      "frozenSourcePath": "design/releases/v5.0.0/previews/sidebar-vector-preview.png",
+      "byteForByteMatchesFrozenSource": true
+    },
+    {
+      "name": "previews/general-vector-preview.png",
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.0/previews/general-vector-preview.png",
+      "method": "GET",
+      "status": 200,
+      "authenticated": false,
+      "bytes": 106510,
+      "sha256": "06a71b779e47e63b423b014eee8a454f6c2edcbd6c2ce74fd7cdd4bdbf7a9598",
+      "frozenSourcePath": "design/releases/v5.0.0/previews/general-vector-preview.png",
+      "byteForByteMatchesFrozenSource": true
+    },
+    {
+      "name": "previews/power-vector-preview.png",
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.0/previews/power-vector-preview.png",
+      "method": "GET",
+      "status": 200,
+      "authenticated": false,
+      "bytes": 167053,
+      "sha256": "d7e058a2d9cbc53274625359a5ee27c5b7700647a5dae8550fde2a3040ffa08b",
+      "frozenSourcePath": "design/releases/v5.0.0/previews/power-vector-preview.png",
+      "byteForByteMatchesFrozenSource": true
+    },
+    {
+      "name": "previews/power-state-matrix.png",
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.0/previews/power-state-matrix.png",
+      "method": "GET",
+      "status": 200,
+      "authenticated": false,
+      "bytes": 231051,
+      "sha256": "8a1c76304a556dc02b9e94b6af0e4be13b52dcb55a56d085578ac44175e6082d",
+      "frozenSourcePath": "design/releases/v5.0.0/previews/power-state-matrix.png",
+      "byteForByteMatchesFrozenSource": true
+    },
+    {
+      "name": "Wattson-v5.0.0-Modules-SVG.zip",
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.0/Wattson-v5.0.0-Modules-SVG.zip",
+      "method": "GET",
+      "status": 200,
+      "authenticated": false,
+      "bytes": 3987,
+      "sha256": "3717dab54bff6fd7b0ef1d137b2a0dd1434216b70fbf23739c86518884eece4e",
+      "frozenSourcePath": "design/releases/v5.0.0/Wattson-v5.0.0-Modules-SVG.zip",
+      "byteForByteMatchesFrozenSource": true
+    },
+    {
+      "name": "Wattson-v5.0.0-Sidebar-SVG.zip",
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.0/Wattson-v5.0.0-Sidebar-SVG.zip",
+      "method": "GET",
+      "status": 200,
+      "authenticated": false,
+      "bytes": 2067,
+      "sha256": "cb27781b4275b4c3261f26da43494f53088109254a79af2c1fee61ef71087419",
+      "frozenSourcePath": "design/releases/v5.0.0/Wattson-v5.0.0-Sidebar-SVG.zip",
+      "byteForByteMatchesFrozenSource": true
+    },
+    {
+      "name": "Wattson-v5.0.0-General-SVG.zip",
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.0/Wattson-v5.0.0-General-SVG.zip",
+      "method": "GET",
+      "status": 200,
+      "authenticated": false,
+      "bytes": 3403,
+      "sha256": "1ddf841e15b7bcf0f83435c141fe5b73041d74ce71d0e5bbc1aa2f5f4b572a20",
+      "frozenSourcePath": "design/releases/v5.0.0/Wattson-v5.0.0-General-SVG.zip",
+      "byteForByteMatchesFrozenSource": true
+    },
+    {
+      "name": "Wattson-v5.0.0-Power-SVG.zip",
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.0/Wattson-v5.0.0-Power-SVG.zip",
+      "method": "GET",
+      "status": 200,
+      "authenticated": false,
+      "bytes": 3767,
+      "sha256": "ea32a280e8e530e4dc966f49c303004bdc6e9f9d77d6d5aa4dc26bcbb4b5aa5e",
+      "frozenSourcePath": "design/releases/v5.0.0/Wattson-v5.0.0-Power-SVG.zip",
+      "byteForByteMatchesFrozenSource": true
+    },
+    {
+      "name": "release",
+      "url": "https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.0",
+      "method": "HEAD",
+      "status": 200,
+      "authenticated": false
+    },
+    {
+      "name": "PKG",
+      "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.0/Wattson-v5.0.0-macos-universal.pkg",
+      "method": "HEAD",
+      "status": 200,
+      "authenticated": false
+    },
+    {
+      "name": "DMG",
+      "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.0/Wattson-v5.0.0-macos-universal.dmg",
+      "method": "HEAD",
+      "status": 200,
+      "authenticated": false
+    }
+  ],
+  "initialAttempt": "Python3.14 urllib lacked a trusted issuer certificate; native curl used normal certificate verification, without disabling TLS checks",
+  "limits": "Installer URLs verified with HEAD only; exact public installer bytes were independently verified by the release publication chain. This check changes no published content."
+}

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "checkedAtUTC": "2026-10-20T08:48:35.538118+00:00",
+  "version": "5.0.0",
+  "scriptSHA256": "6b41465007f15e1475bb43c30cbd81dbce4046fbff9dffa3aeb30b884af42a21",
+  "shellSyntaxPassed": true,
+  "embeddedPythonASTPassed": true,
+  "invalidArgumentsRejected": 3,
+  "twoLineCaskUpdateFixturePassed": true,
+  "oldVersionMismatchRejected": true,
+  "rubySyntaxFixturePassed": true,
+  "ownedFixtureRemoved": true,
+  "tapSyncExecuted": false,
+  "networkWrites": false,
+  "canonicalLifecycleChanged": false
+}

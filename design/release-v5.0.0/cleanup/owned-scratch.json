@@ -1,0 +1,11 @@
+{
+  "checkedAtUTC": "2026-10-20T09:19:09.406207+00:00",
+  "removedEmptyOwnedParents": [
+    ".build/artifact-v5.0.0.noindex",
+    ".build/public-v5.0.0.noindex",
+    ".build/tap-sync-v5.0.0.noindex",
+    ".build/release-v5.0.0-install.noindex"
+  ],
+  "canonicalInstallationAndUserDataUntouched": true,
+  "distributionArtifactsPreserved": true
+}
