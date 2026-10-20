@@ -73,6 +73,15 @@ App/helper build. Architecture verification now uses separate `lipo` calls for
 both required slices. Physical sensor and installation/login acceptance remain
 outstanding; no canonical installation or public release was changed.
 
+The [2026-10-20 review](../design/performance-hardening-20261020/README.md)
+preserves 5.0.0 behavior and adds real health-reader failure coverage through
+a DEBUG-only command seam. SunBrowser Pro and independent local reviews found
+no new confirmed product bug and recommended retaining the existing sampling,
+IPC and Settings refresh paths. The local post-change suites pass 700 Swift
+and 627 Python tests (four expected opt-in skips), plus 20,000 no-window
+animation iterations. This source/test review does not update the canonical
+installation or publish a new release.
+
 Power History retains the original 60-slot, two-minute sample ring and its
 sampling cadence. Ordered monotonic timestamps travel with the cached readings
 to a fixed 120-second viewport. Shape-preserving cubic segments pass through

@@ -77,9 +77,28 @@ final class SystemBatteryHealth {
     /// Fixed, read-only command. This method is synchronous and belongs only on
     /// the utility worker (or an explicit diagnostic probe), never a UI callback.
     static func readLivePercent() -> Double? {
+        readPercent(
+            executableURL: URL(fileURLWithPath: "/usr/sbin/system_profiler"),
+            arguments: ["SPPowerDataType", "-json", "-timeout", "5"],
+            budgetNanoseconds: 7_500_000_000
+        )
+    }
+
+#if DEBUG
+    static func readPercentForTest(
+        executableURL: URL, arguments: [String], budgetNanoseconds: UInt64
+    ) -> Double? {
+        readPercent(executableURL: executableURL, arguments: arguments,
+                    budgetNanoseconds: budgetNanoseconds)
+    }
+#endif
+
+    private static func readPercent(
+        executableURL: URL, arguments: [String], budgetNanoseconds: UInt64
+    ) -> Double? {
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/sbin/system_profiler")
-        process.arguments = ["SPPowerDataType", "-json", "-timeout", "5"]
+        process.executableURL = executableURL
+        process.arguments = arguments
         var environment = ProcessInfo.processInfo.environment
         environment["LC_ALL"] = "C"
         environment["LANG"] = "C"
@@ -97,7 +116,7 @@ final class SystemBatteryHealth {
         let originalFlags = fcntl(outputFD, F_GETFL)
         guard originalFlags >= 0,
               fcntl(outputFD, F_SETFL, originalFlags | O_NONBLOCK) == 0 else { return nil }
-        let deadline = DispatchTime.now().uptimeNanoseconds + 7_500_000_000
+        let deadline = DispatchTime.now().uptimeNanoseconds + budgetNanoseconds
         guard (try? process.run()) != nil else { return nil }
         try? outputWriteHandle.close()
         defer {
