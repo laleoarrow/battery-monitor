@@ -349,7 +349,7 @@ eligible; a permanently unprivileged helper worker validates and sends the fixed
 identity-bound signal. Older helpers or systems keep readable rows with the
 action disabled. See the same document for the operation's exact boundaries.
 
-The unreleased process whitelist adds a Command-click eye-slash action in the same capsule. Confirming
+The 5.0.1 process whitelist adds a Command-click eye-slash action in the same capsule. Confirming
 it saves an exact process-name rule and immediately hides every matching name;
 it also works when termination is unavailable. Settings > Modules > Process
 Activity > Whitelist manages exact, wildcard (`*`/`?`) and regular-expression

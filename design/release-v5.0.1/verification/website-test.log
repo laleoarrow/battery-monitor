@@ -1,0 +1,66 @@
+
+> wattson-site@0.1.0 test
+> npm run build && npm run export:pages && node --test tests/*.test.mjs
+
+
+> wattson-site@0.1.0 build
+> WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build
+
+
+  vinext build  (Vite 8.0.13)
+
+[1/5] analyze client references...
+[2Ktransforming...✓ 218 modules transformed.
+rendering chunks...
+✓ built in 500ms
+[2/5] analyze server references...
+[2Ktransforming...✓ 130 modules transformed.
+rendering chunks...
+✓ built in 104ms
+[3/5] build rsc environment...
+[2Ktransforming...✓ 216 modules transformed.
+rendering chunks...
+computing gzip size...
+✓ built in 258ms
+[4/5] build client environment...
+[2Ktransforming...✓ 1712 modules transformed.
+rendering chunks...
+computing gzip size...
+✓ built in 634ms
+[5/5] build ssr environment...
+[2Ktransforming...✓ 136 modules transformed.
+rendering chunks...
+computing gzip size...
+✓ built in 245ms
+[0m
+  Route (app)
+  ─ ? /
+
+  ? Unknown
+
+  ? Some routes could not be classified. vinext currently uses static analysis
+    and cannot detect dynamic API usage (headers(), cookies(), etc.) at build time.
+    Automatic classification will be improved in a future release.
+
+  Build complete. Run `vinext start` to start the production server.
+
+
+> wattson-site@0.1.0 export:pages
+> node scripts/export-pages.mjs
+
+Exported GitHub Pages site to /Users/leoarrow/Project/mypackage/agents/%E7%94%B5%E6%B1%A0%E5%8A%9F%E7%8E%87/docs/
+✔ renders the complete English Wattson release page (87.644583ms)
+✔ groups the install routes in one compact, accessible panel (18.874208ms)
+✔ shows the current AppKit popover instead of an invented web mock (15.556667ms)
+✔ ships the required static assets (0.425666ms)
+✔ exports a server-independent GitHub Pages document (3.248834ms)
+✔ preserves non-site documentation during the Pages export (0.438542ms)
+✔ lets release workflows read VERSION when the optional input is blank (0.709667ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 211.078167

@@ -1,0 +1,15 @@
+{
+  "checkedAtUTC": "2026-10-20T12:53:30.880380+00:00",
+  "version": "5.0.1",
+  "allPassed": true,
+  "count": 6,
+  "passed": [
+    "all_installation_sources_parse",
+    "installed_verifier_rejects_missing_or_malformed_identity_before_scratch",
+    "baseline_hashes_all_existing_product_keys_including_optional_whitelist_without_values",
+    "changed_whitelist_does_not_match_baseline_hash",
+    "baseline_rejects_missing_required_existing_setting",
+    "owned_fixture_scratch_removed"
+  ],
+  "scope": "Offline syntax, argument rejection, and hashed preference fixtures only; no canonical preferences, helper contact, installation, app launch, public downloads or publication."
+}

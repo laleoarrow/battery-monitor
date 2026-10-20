@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#E9E9E9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title>Wattson process activity module</title>
+<defs>
+<linearGradient id="middleBar" gradientUnits="userSpaceOnUse" x1="2.2" y1="0" x2="16" y2="0">
+<stop offset="0" stop-color="#0A84FF" stop-opacity="1"/>
+<stop offset="1" stop-color="#0A84FF" stop-opacity="0.38"/>
+</linearGradient>
+<linearGradient id="longBar" gradientUnits="userSpaceOnUse" x1="2.2" y1="0" x2="21" y2="0">
+<stop offset="0" stop-color="#0A84FF" stop-opacity="1"/>
+<stop offset="1" stop-color="#0A84FF" stop-opacity="0.38"/>
+</linearGradient>
+</defs>
+<rect x="2.2" y="2.2" width="18.8" height="4.2" rx="0.85" fill="url(#longBar)" data-contrast="solid" stroke="currentColor" stroke-width="1.15"/>
+<rect x="2.2" y="9.6" width="13.8" height="4.2" rx="0.85" fill="url(#middleBar)" data-contrast="solid" stroke="currentColor" stroke-width="1.15"/>
+<rect x="2.2" y="17.0" width="9.8" height="4.2" rx="0.85" stroke="currentColor" stroke-width="1.15"/>
+</svg>

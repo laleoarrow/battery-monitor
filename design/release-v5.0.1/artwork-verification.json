@@ -1,0 +1,59 @@
+{
+  "version": "5.0.1",
+  "scope": "Versioned approved design gallery and editable SVG packages only",
+  "gallerySource": "design/releases/v5.0.1/",
+  "plannedPublicGalleryURL": "https://laleoarrow.github.io/battery-monitor/design/v5.0.1/",
+  "publicURLVerification": "Pending stable release Pages deployment; no publication performed by this preparation",
+  "galleryManifestSHA256": "992accfae51483d9b417293ff81c1c6a46921a0692034f1ca2a9ec3c373e338d",
+  "galleryChecksumManifestSHA256": "1afef63b18d65cbf3002490ac63dc9072f2c13fc49e41ecf98a137f44020ffc5",
+  "checks": {
+    "repeatedGenerationByteIdentical": true,
+    "latestApprovedSourceAndCopyHashesMatch": true,
+    "vectorXMLAndNoEmbeddedRasterOrExternalResource": true,
+    "zipIntegrityAndExactSVGContent": true,
+    "allGalleryChecksumsVerify": 36,
+    "localHTMLLinksResolve": true,
+    "HTMLImageDimensionsAndAltText": 5,
+    "previewImagesInspected": 5,
+    "darkLightPairsPresent": true,
+    "fourRequiredSupplyStatesPlusLowBatteryAndLowPower": true,
+    "runtimeScreenshotsIncluded": false,
+    "sourceFilesChanged": false,
+    "temporaryFilesCreated": false,
+    "appLaunchesRegistrationsPreferencesOrMounts": 0
+  },
+  "families": {
+    "originalModules": 5,
+    "approvedProcessActivityAdditional": 1,
+    "sidebar": 3,
+    "general": 5,
+    "power": 5
+  },
+  "packages": [
+    {
+      "path": "Wattson-v5.0.1-Modules-SVG.zip",
+      "sha256": "aa2b384b1fb3c81e4b7d4be8ea40697511576102282540e361b735fabffc9d23",
+      "bytes": 3987,
+      "runtimeMasterCount": 6
+    },
+    {
+      "path": "Wattson-v5.0.1-Sidebar-SVG.zip",
+      "sha256": "5245db39ee9a95534ae7f958740c2a965e9201d3c02b22ff4f145467d0e81a00",
+      "bytes": 2066,
+      "runtimeMasterCount": 3
+    },
+    {
+      "path": "Wattson-v5.0.1-General-SVG.zip",
+      "sha256": "2385f1c0151ec447f8bbf24aa3cb9770f2f4fad6c084aee501edcde518e31c14",
+      "bytes": 3404,
+      "runtimeMasterCount": 5
+    },
+    {
+      "path": "Wattson-v5.0.1-Power-SVG.zip",
+      "sha256": "e2c3497983408ee83632a94695e1aa540e122f35f8ef89213ad0ad1d2dedfd62",
+      "bytes": 3768,
+      "runtimeMasterCount": 5
+    }
+  ],
+  "installerAssetContract": "Separate artwork packages; PKG, DMG, release-info.txt and SHA256SUMS.txt installer contract unchanged"
+}
