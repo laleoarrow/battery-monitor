@@ -5,6 +5,43 @@ import XCTest
 /// These tests construct hidden windows only. Real focus, menu event delivery,
 /// backdrop rendering and cross-app dismissal belong to the GUI VM harness.
 final class GlassPopoverPanelTests: XCTestCase {
+    private final class AttachmentAppearanceProbe: NSView {
+        var attachedAppearances: [NSAppearance.Name] = []
+
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+            if window != nil, let appearance = effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) {
+                attachedAppearances.append(appearance)
+            }
+        }
+    }
+
+    func testContentFirstAttachesInTheRequestedAppearance() throws {
+        guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
+        let application = NSApplication.shared
+        let previousAppearance = application.appearance
+        defer { application.appearance = previousAppearance }
+        for style in [NSGlassEffectView.Style.regular, .clear] {
+            for requested in [NSAppearance.Name.aqua, .darkAqua] {
+                let opposite: NSAppearance.Name = requested == .aqua ? .darkAqua : .aqua
+                application.appearance = try XCTUnwrap(NSAppearance(named: opposite))
+                let appearance = try XCTUnwrap(NSAppearance(named: requested))
+                let content = AttachmentAppearanceProbe(frame: NSRect(x: 0, y: 0, width: 360, height: 400))
+                let inset = GlassPopoverPanel.contentInset(for: style == .clear ? .clear : .regular)
+                let panel = GlassPopoverPanel(content: content,
+                    frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset, height: 412 + 2 * inset),
+                    style: style, appearance: appearance)
+                defer { panel.detachContent() }
+                XCTAssertEqual(content.attachedAppearances.first, requested)
+                XCTAssertEqual(panel.appearance?.name, requested)
+                XCTAssertEqual(panel.materialView?.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]), requested)
+                XCTAssertNil(content.appearance)
+                XCTAssertEqual(content.frame.size, NSSize(width: 360, height: 400))
+                XCTAssertFalse(panel.isVisible)
+            }
+        }
+    }
+
     func testHalfPointAnchorDoesNotExpandInitialContentOrChangeWidthOnRefresh() throws {
         guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
         _ = NSApplication.shared

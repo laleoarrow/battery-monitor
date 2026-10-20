@@ -34,10 +34,13 @@ final class GlassPopoverPanel: NSPanel {
     override var canBecomeMain: Bool { false }
 
     @available(macOS 26.0, *)
-    init(content: NSView, frame: NSRect, style: NSGlassEffectView.Style, showsArrow: Bool = true) {
+    init(content: NSView, frame: NSRect, style: NSGlassEffectView.Style, showsArrow: Bool = true,
+         appearance: NSAppearance? = nil) {
         self.showsArrow = showsArrow
         super.init(contentRect: frame, styleMask: [.borderless, .nonactivatingPanel],
                    backing: .buffered, defer: false)
+        // Attach the material and content in their intended appearance.
+        self.appearance = appearance
         // AppKit expands a half-point origin during initialization. Use the
         // same sizing path as later placement before laying out the content.
         setFrame(frame, display: false)
