@@ -55,6 +55,24 @@ class MenuBarPercentageContractTests(unittest.TestCase):
         self.assertEqual(refresh.count("showsPercentage: showsPercentage"), 3)
         self.assertIn("style: iconStyle", refresh)
 
+    def test_inline_percentage_accessibility_follows_the_presentation_cache(self):
+        refresh = self.status.split("private func refreshStatusItem()", 1)[1].split(
+            "#if DEBUG", 1
+        )[0]
+        self.assertIn(
+            "if presentation.accessibilityLabel != rendered?.accessibilityLabel",
+            refresh,
+        )
+        self.assertIn("button.setAccessibilityLabel(presentation.accessibilityLabel)", refresh)
+        unavailable = refresh.split("guard hasUsableSnapshot else {", 1)[1].split(
+            "let mode = EnergyModeController.current", 1
+        )[0]
+        self.assertIn("if renderedStatusButtonPresentation?.accessibilityLabel != nil", unavailable)
+        self.assertLess(
+            unavailable.index("button.setAccessibilityLabel(nil)"),
+            unavailable.index("renderedStatusButtonPresentation = nil"),
+        )
+
     def test_status_item_redraws_when_the_setting_changes(self):
         self.assertIn("Settings.didChange", self.status)
         self.assertIn("static let didChange", self.settings)

@@ -201,6 +201,38 @@ final class BatteryIcon27Tests: XCTestCase {
         }
     }
 
+    func testInsetPercentageHasAnAccessibleLabelOnlyWhenShown() {
+        for style in Settings.MenuBarIconStyle.allCases {
+            for showsPercentage in [false, true] {
+                for degraded in [false, true] {
+                    let presentation = StatusButtonPresentation(
+                        snapshot: PowerSnapshot(percent: 42),
+                        showsPercentage: showsPercentage, degraded: degraded, style: style
+                    )
+                    XCTAssertEqual(
+                        presentation.accessibilityLabel,
+                        style == .native27 && showsPercentage ? "Wattson, battery 42%" : nil
+                    )
+                }
+            }
+        }
+    }
+
+    func testInsetPercentageAccessibilityTracksAndClampsTheDisplayedNumber() {
+        func presentation(_ percent: Int) -> StatusButtonPresentation {
+            StatusButtonPresentation(
+                snapshot: PowerSnapshot(percent: percent), showsPercentage: true,
+                degraded: false, style: .native27
+            )
+        }
+        for percent in [0, 1, 42, 99, 100] {
+            XCTAssertEqual(presentation(percent).accessibilityLabel, "Wattson, battery \(percent)%")
+        }
+        XCTAssertNotEqual(presentation(42), presentation(43))
+        XCTAssertEqual(presentation(Int.min), presentation(0))
+        XCTAssertEqual(presentation(Int.max), presentation(100))
+    }
+
     func testUnchangedTelemetryDoesNotInvalidateNewStylePixels() {
         let baseline = PowerSnapshot(percent: 42, plugged: true, adapterW: 50, batteryW: 10, systemW: 40)
         let changed = PowerSnapshot(percent: 42, plugged: true, adapterW: 80, batteryW: 20, systemW: 60)

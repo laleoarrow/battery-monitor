@@ -28,6 +28,7 @@ struct StatusButtonPresentation: Equatable {
     let title: String
     let showsPercentage: Bool
     let alpha: CGFloat
+    let accessibilityLabel: String?
 
     init(
         snapshot: PowerSnapshot,
@@ -39,6 +40,8 @@ struct StatusButtonPresentation: Equatable {
         title = showsExternalPercentage ? "\(snapshot.percent)% " : ""
         self.showsPercentage = showsExternalPercentage
         alpha = degraded ? 0.45 : 1.0
+        accessibilityLabel = showsPercentage && style.embedsPercentage
+            ? "Wattson, battery \(min(max(snapshot.percent, 0), 100))%" : nil
     }
 }
 
@@ -736,6 +739,9 @@ final class StatusItemController: NSObject {
             button.imagePosition = .noImage
             button.title = "—"
             button.alphaValue = 0.45
+            if renderedStatusButtonPresentation?.accessibilityLabel != nil {
+                button.setAccessibilityLabel(nil)
+            }
             renderedStatusIconKey = nil
             renderedStatusButtonPresentation = nil
             return
@@ -782,6 +788,9 @@ final class StatusItemController: NSObject {
         }
         if presentation.alpha != rendered?.alpha {
             button.alphaValue = presentation.alpha
+        }
+        if presentation.accessibilityLabel != rendered?.accessibilityLabel {
+            button.setAccessibilityLabel(presentation.accessibilityLabel)
         }
         renderedStatusButtonPresentation = presentation
     }
