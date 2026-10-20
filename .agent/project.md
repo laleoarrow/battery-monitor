@@ -22,6 +22,11 @@ loading and unavailable official values display `—`; raw full-charge/design mA
 ratios never substitute for system health. The separate mAh metrics retain their
 battery-controller meaning, explained in tooltips. See the
 [system metric authority validation](../design/system-metric-authority/README.md).
+The canonical installation is the verified local 4.3.24 candidate from that
+record: App/helper/receipt match its PKG and all 16 settings are retained. The
+sandboxed production health reader returned the official 84% on this Mac.
+Canonical popup visual acceptance remains pending because CUA app access timed
+out; this local update does not create a public release.
 
 ## Runtime architecture
 
@@ -99,7 +104,7 @@ Homebrew, Pages and anonymous public-asset checks passed. The
 [publication record](../design/release-v4.3.22/publication/final-release-verification.json)
 keeps maintainer synchronization separate: the verified public PKG is ready,
 but installation is waiting for the Mac to be unlocked.
-Wattson 4.3.22 is the current verified local preview installation. Its
+A preceding verified local preview installation was Wattson 4.3.22. Its
 [installation record](../design/process-activity-palette/local-preview-v4.3.22/local-install-verified.json)
 verifies matching App/helper/daemon payloads, all 15 retained settings and actual
 sampling. Process bars follow the App chart palette; the uniform 38 × 16-point

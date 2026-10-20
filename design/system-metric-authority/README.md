@@ -54,6 +54,26 @@ The public IOPS description on this Mac has no official health percentage;
   all 16 stored product settings (`before-install.json`). Installation is a
   separate step requiring macOS administrator authentication.
 
+## Canonical installation
+
+The verified local 4.3.24 PKG was installed successfully through the macOS
+administrator authorization flow. `install-verification.json` confirms matching
+App/helper/daemon payloads, app/build/receipt versions, strict signatures, exact
+production entitlements, both architectures and fixed helper health/v5 probes.
+All 16 product-setting hashes are unchanged. `installed-process.json` confirms
+one stable canonical process after the upgrade.
+
+The first verifier attempt passed payload checks but its inline Python finalizer
+received empty stdin through the background process owner. It produced no success
+manifest. The finalizer now runs from an owned scratch file; the corrected
+verifier passed and cleaned its payload directory. The separate first-attempt
+record is retained. Both attempts were read-only installation verification.
+
+Actual canonical popup acceptance remains unverified: CUA app access timed out
+twice. No claim is made that the new installed popup was clicked or visually
+inspected. The successful six-state production renders and sandboxed live 84%
+reading are separate evidence, as described above.
+
 The local candidate is not a public release. No public tag, Homebrew change,
 Pages deployment or release email is implied by these checks. Pre-existing
 untracked Display validation evidence is outside this change and is preserved.

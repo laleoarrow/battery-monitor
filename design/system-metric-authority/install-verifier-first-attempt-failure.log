@@ -1,0 +1,7 @@
+Verifier exit code: 1
+cat: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/system-install-verify.noindex/run.aGRkAn/checks.json: No such file or directory
+
+The bounded process runner launched the inline Python interpreter with empty stdin,
+so the finalizer executed no code and created no checks.json. No installation
+success manifest was emitted. The owned payload workspace was cleaned on exit.
+The verifier was corrected to execute an owned scratch Python file and rerun.

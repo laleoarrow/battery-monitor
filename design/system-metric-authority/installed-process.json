@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-20T05:28:52.011805+00:00",
+  "canonicalPIDs": [
+    88727
+  ],
+  "singleCanonicalProcess": true,
+  "samePIDObservedAfterInstallation": true,
+  "version": "4.3.24",
+  "popupVerified": false,
+  "popupVerificationLimitation": "CUA getApp timed out twice (path and bundle identifier); no canonical visible popup acceptance claimed."
+}
