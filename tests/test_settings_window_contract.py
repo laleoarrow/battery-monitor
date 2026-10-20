@@ -27,8 +27,9 @@ class SettingsWindowContractTests(unittest.TestCase):
             self.skipTest("Xcode command line tools are unavailable")
 
         interactive = os.environ.get("WATTSON_RUN_INTERACTION") == "1"
-        # The full native-window stress workload exceeded the old hang watchdog, not a latency SLA.
-        runtime_timeout = 180 if interactive else 120
+        # macOS 27 reached stress cycle 300 at 178s with assertions passing;
+        # keep the full workload and give its cumulative stress a bounded budget.
+        runtime_timeout = 300 if interactive else 120
         print(
             f"settings-contract config: interactive={interactive} "
             f"runtime-watchdog={runtime_timeout}s compile-watchdog=120s optimization=Onone",

@@ -68,3 +68,14 @@ Fifteen targeted lifecycle regressions and all 41 workflow tests pass locally.
 No production code changed after `a8b7679`; the next macOS 27 run retains the
 same 180-second watchdog to recover concrete phase evidence before any budget
 change.
+
+At `7c7705f`, macOS 26 passed the owned 38-frame/eight-test GUI run again and
+completed full CI: 678 Swift, 625 Python (four expected GUI skips), and seven
+website tests plus lint/export. The macOS 27 timeout now preserves progress:
+functional assertions finish at 24.057s, native keyboard/reopen at 42.760s,
+500 reuse cycles at 43.796s, 150 warmup releases at 96.481s, and fresh-window
+stress reaches 300/500 at 178.293s. No assertion or cleanup failure occurs;
+the 180s watchdog interrupts the remaining stress. The interactive budget is
+therefore 300s, with a 480s outer budget for compilation, execution and cleanup.
+All cycle counts, release checks, 8 MiB plateau and +2 descriptor bounds remain
+unchanged. Completion still requires a new successful macOS 27 execution.

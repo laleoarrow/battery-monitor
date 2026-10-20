@@ -65,7 +65,7 @@ for mode in native-selected macos27-selected shared-settings; do
     wattson_run_timeout 240 /usr/bin/env WATTSON_FORCE_INCREASE_CONTRAST=0 WATTSON_FORCE_REDUCE_TRANSPARENCY=0 WATTSON_FORCE_REDUCE_MOTION=1 /usr/bin/python3 "$DRIVER" "$APP/Contents/MacOS/DisplayCapture" "$OUTPUT/after-$mode" "--$mode"
 done
 _WATTSON_RUNNER_STARTING=1
-/usr/bin/python3 "$ROOT_DIR/scripts/lib/run_owned.py" --grace 65 --timeout 360 -- /usr/bin/env WATTSON_RUN_INTERACTION=1 PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -m unittest discover -s "$ROOT_DIR/tests" -p test_settings_window_contract.py -v > "$OUTPUT/settings-contract.log" 2> "$OUTPUT/settings-contract.err" &
+/usr/bin/python3 "$ROOT_DIR/scripts/lib/run_owned.py" --grace 65 --timeout 480 -- /usr/bin/env WATTSON_RUN_INTERACTION=1 PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -m unittest discover -s "$ROOT_DIR/tests" -p test_settings_window_contract.py -v > "$OUTPUT/settings-contract.log" 2> "$OUTPUT/settings-contract.err" &
 _WATTSON_RUNNER_PID=$!
 _wattson_runner_registered
 wait "$_WATTSON_RUNNER_PID"
