@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+  "files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "896e464cc32d1c3f943affef07adfe2c3e8ec4684eade7d20ef9c605be1e388c",
+      "arm64VerificationMentioned": true,
+      "x86_64VerificationMentioned": false,
+      "lipoArchGuard": false
+    },
+    {
+      "path": "scripts/build_release.sh",
+      "sha256": "1635b6ed46809398a311fc5478b46243f710000b4e5c8f595d26f3b6b395dca7",
+      "arm64VerificationMentioned": true,
+      "x86_64VerificationMentioned": true,
+      "lipoArchGuard": true
+    },
+    {
+      "path": "scripts/verify_release.sh",
+      "sha256": "ec074b27f4add81f7d59fe0ecabfd9bd78dd1bb53ff276f48d4eaa39c1832358",
+      "arm64VerificationMentioned": true,
+      "x86_64VerificationMentioned": true,
+      "lipoArchGuard": true
+    },
+    {
+      "path": "scripts/lib/local_cleanup.sh",
+      "sha256": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+      "arm64VerificationMentioned": false,
+      "x86_64VerificationMentioned": false,
+      "lipoArchGuard": false
+    },
+    {
+      "path": "scripts/lib/run_owned.py",
+      "sha256": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+      "arm64VerificationMentioned": false,
+      "x86_64VerificationMentioned": false,
+      "lipoArchGuard": false
+    }
+  ],
+  "scope": "Immutable source contract hashes; actual completed build markers are required separately."
+}

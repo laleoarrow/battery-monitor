@@ -1,0 +1,109 @@
+{
+  "allPassed": true,
+  "animationStress": {
+    "elapsedSeconds": 0.116,
+    "iterations": 20000
+  },
+  "checks": {
+    "actual27Environment": true,
+    "display34AndNative8": true,
+    "disposableBuildCleanup": true,
+    "nativeThreeMarkers": true,
+    "newHealthInputSourceHashVerified": true,
+    "postJobCleanup": true,
+    "python625FourExpectedSkips": true,
+    "runAndJobsCompletedSuccess": true,
+    "sixteenLifecycleTests": true,
+    "sourceMatches": true,
+    "stress20000": true,
+    "swiftDerived698": true,
+    "verifiedUniversalAppHelper4_3_24": true,
+    "websiteSevenLintExport": true
+  },
+  "display": {
+    "captures": 34,
+    "growthLimitBytes": 8388608,
+    "independentUpwardRSSGrowthBytes": 360448,
+    "nativeTests": 8,
+    "seconds": 149.901
+  },
+  "environment": {
+    "architecture": "arm64",
+    "sdkVersion": "27.0",
+    "systemBuild": "26A434",
+    "systemVersion": "27.0.1",
+    "xcodeVersion": "Xcode 27.0\nBuild version 27A266a"
+  },
+  "githubJobs": [
+    {
+      "conclusion": "success",
+      "id": 118474042008,
+      "name": "SwiftPM and Python tests",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "id": 118474042337,
+      "name": "Website build, test, lint, and export",
+      "status": "completed"
+    }
+  ],
+  "limits": [
+    "Hosted compatibility/build/render/interaction evidence; not physical sensor or installation acceptance.",
+    "The monitor did not mutate code, the canonical app, helper, settings or workflow state."
+  ],
+  "nativeVariantCompletions": [
+    "2026-10-20T05:52:36.3019490Z",
+    "2026-10-20T05:54:35.2516580Z",
+    "2026-10-20T05:56:28.9125280Z"
+  ],
+  "python": {
+    "expectedSkips": 4,
+    "lifecyclePassed": 16,
+    "seconds": 335.955,
+    "tests": 625
+  },
+  "schema": 1,
+  "scope": "Health/charging integration baseline. Final AX source a84c4b8 requires its own acceptance; this run completed successfully and was not cancelled.",
+  "sourceSHA": "e9da1bdd0b039de188d32b2f83d4689b94a52300",
+  "status": "accepted-complete-integration-baseline",
+  "swift": {
+    "currentSuites": {
+      "BatteryIcon27Tests": {
+        "failures": 0,
+        "tests": 11
+      },
+      "MenuBarIconStyleSettingsTests": {
+        "failures": 0,
+        "tests": 5
+      },
+      "SystemBatteryHealthTests": {
+        "failures": 0,
+        "tests": 11
+      }
+    },
+    "products": [
+      {
+        "failures": 0,
+        "product": "WattsonTests.xctest",
+        "tests": 668
+      },
+      {
+        "failures": 0,
+        "product": "WattsonHelperV5SupportTests.xctest",
+        "tests": 30
+      }
+    ],
+    "tests": 698
+  },
+  "universal": {
+    "appAndHelperVerified": true,
+    "architectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "signing": "ad-hoc; not notarized",
+    "version": "4.3.24"
+  },
+  "workflowRun": 39375844295
+}

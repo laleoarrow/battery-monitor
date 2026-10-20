@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+  "workflowRun": 39389731667,
+  "workflowURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39389731667",
+  "status": "accepted-complete-final-spacing-integration",
+  "scope": "Final 800-point Settings spacing revision plus preserved macOS 27, battery-health/charging and accessibility integration.",
+  "allPassed": true,
+  "checks": {
+    "sourceMatches": true,
+    "runAndJobsCompletedSuccess": true,
+    "actual27Environment": true,
+    "allArtifactSourceAndZIPHashesVerified": true,
+    "integratedHealthAndAXSourceHashVerified": true,
+    "display34AndNative8": true,
+    "captures800By520": true,
+    "independentTopRowsSpacingImproved": true,
+    "nativeInkGapAtLeast14": true,
+    "all105NaturalFontGlyphMetricsUnchanged": true,
+    "swiftDerived700": true,
+    "bothNewAXTestsPassed": true,
+    "spacingSwiftThreePassed": true,
+    "python626FourExpectedSkips": true,
+    "sixteenLifecycleTests": true,
+    "newAXStaticRegressionPassed": true,
+    "nativeThreeMarkers": true,
+    "stress20000": true,
+    "verifiedUniversalAppHelper4_3_24": true,
+    "disposableBuildCleanup": true,
+    "websiteSevenLintExport": true,
+    "postJobCleanup": true,
+    "ownedDownloadScratchRemoved": true
+  },
+  "githubJobs": [
+    {
+      "id": 118518069436,
+      "name": "Website build, test, lint, and export",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 118518069808,
+      "name": "SwiftPM and Python tests",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "environment": {
+    "architecture": "arm64",
+    "sdkVersion": "27.0",
+    "systemBuild": "26A434",
+    "systemVersion": "27.0.1",
+    "xcodeVersion": "Xcode 27.0\nBuild version 27A266a"
+  },
+  "artifacts": [
+    {
+      "folder": "artwork",
+      "artifactID": 12249012951,
+      "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+      "sourceMatches": true,
+      "digest": "sha256:c36be915f224d26424c7f70d8da5620d6495be16e36c8071036c474cc215ea4a",
+      "zipDigestVerified": true
+    },
+    {
+      "folder": "display",
+      "artifactID": 12248529777,
+      "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+      "sourceMatches": true,
+      "digest": "sha256:3d24d112c896a6377ad5180c319ce5ada274034ca1a981c6ed00b59da305c0af",
+      "zipDigestVerified": true
+    },
+    {
+      "folder": "swift",
+      "artifactID": 12249730706,
+      "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+      "sourceMatches": true,
+      "digest": "sha256:db2e502dcdcff9bf1c4e3bdefc64f0296aea555779d9fe117df51448a49c31e5",
+      "zipDigestVerified": true
+    }
+  ],
+  "display": {
+    "captures": 34,
+    "contentSize": [
+      800,
+      520
+    ],
+    "nativeTests": 8,
+    "seconds": 204.551,
+    "independentUpwardRSSGrowthBytes": 1392640,
+    "rawRSSSpreadBytes": 1392640,
+    "growthLimitBytes": 8388608,
+    "memoryMechanism": "Unproven; no OS reclamation claim.",
+    "minimumNativeInkGap": 17.461181640625,
+    "conservativeAlignmentToPreviousCanvasMinima": [
+      {
+        "style": "wattson",
+        "before": 7,
+        "after": 18
+      },
+      {
+        "style": "macos",
+        "before": 5,
+        "after": 16
+      }
+    ],
+    "naturalFontGlyphMetricsUnchanged": 105
+  },
+  "swift": {
+    "tests": 700,
+    "products": [
+      {
+        "product": "WattsonTests.xctest",
+        "tests": 670,
+        "failures": 0
+      },
+      {
+        "product": "WattsonHelperV5SupportTests.xctest",
+        "tests": 30,
+        "failures": 0
+      }
+    ],
+    "currentSuites": {
+      "BatteryIcon27Tests": {
+        "tests": 13,
+        "failures": 0
+      },
+      "SystemBatteryHealthTests": {
+        "tests": 11,
+        "failures": 0
+      },
+      "MenuBarIconStyleSettingsTests": {
+        "tests": 5,
+        "failures": 0
+      },
+      "SettingsGlassOpticalMarginTests": {
+        "tests": 3,
+        "failures": 0
+      }
+    },
+    "AXCases": {
+      "testInsetPercentageAccessibilityTracksAndClampsTheDisplayedNumber": true,
+      "testInsetPercentageHasAnAccessibleLabelOnlyWhenShown": true
+    }
+  },
+  "python": {
+    "tests": 626,
+    "seconds": 340.306,
+    "expectedSkips": 4,
+    "lifecyclePassed": 16
+  },
+  "nativeVariantCompletions": [
+    "2026-10-20T08:11:02.7887320Z",
+    "2026-10-20T08:13:00.2500530Z",
+    "2026-10-20T08:14:56.7417430Z"
+  ],
+  "animationStress": {
+    "iterations": 20000,
+    "elapsedSeconds": 0.12
+  },
+  "universal": {
+    "version": "4.3.24",
+    "architectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "appAndHelperVerified": true,
+    "signing": "ad-hoc; not notarized"
+  },
+  "cleanupObservation": "Project-owned disposable-build completion marker present. GitHub post-job cleanup also terminated one Apple ibtoold process; no claim that every tool daemon was reaped by project code.",
+  "preview": "display/after-macos27-selected/glass-dark-percentage-on.png",
+  "previewLight": "display/after-macos27-selected/glass-light-percentage-on.png",
+  "limits": [
+    "Hosted compatibility/build/render/interaction evidence; not physical sensor or installation acceptance.",
+    "The monitor did not mutate code, the canonical app, helper, settings or workflow state.",
+    "Independent geometry gaps use alignment-left to previous natural image-canvas right; exact native ink gap comes from CoreText assertions."
+  ]
+}

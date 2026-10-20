@@ -1,0 +1,20 @@
+{
+  "architecture": "arm64",
+  "catalog": {
+    "exists": true,
+    "path": "/System/Library/CoreServices/ControlCenter.app/Contents/Resources/Assets.car",
+    "sha256": "a7a178c469c3e5ca0f9373b9207df5ab3fcd6421701c678586d6027cea03f283",
+    "sizeBytes": 1025560
+  },
+  "sdkVersion": "27.0",
+  "sourceDirty": false,
+  "sourceFilesSHA256": {
+    "MenuBar/BatteryIcon.swift": "8601f4210426709981acdbff92be1688747ef385a479c36a8fddc7139f698961",
+    "scripts/verify_system_battery_artwork.sh": "3eb8f4af0cdc8d14939c805f6c092bfdc8debeea8511196096f9b7d961b12efd",
+    "tests/visual/probe_system_battery_artwork.swift": "1d400152120e3fa8d5ff8fec45ce913ca17a9f69efb71e75639b218c926a8eee"
+  },
+  "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+  "systemBuild": "26A434",
+  "systemVersion": "27.0.1",
+  "xcodeVersion": "Xcode 27.0\nBuild version 27A266a"
+}

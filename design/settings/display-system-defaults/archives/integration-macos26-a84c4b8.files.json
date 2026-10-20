@@ -1,0 +1,42 @@
+{
+  "integration-macos26-a84c4b8/evidence-files.sha256.json": {
+    "bytes": 1212,
+    "sha256": "337d2afffdc6e8c910f105203860ccb71af77f65afccffeac4536c925572aa0d"
+  },
+  "integration-macos26-a84c4b8/execution-audit.json": {
+    "bytes": 14146,
+    "sha256": "cf82c59bf408a0a5ffd5937071fefdc4f7dd2dc6c3368ae0f95626f7dae54f53"
+  },
+  "integration-macos26-a84c4b8/source-files.json": {
+    "bytes": 10616,
+    "sha256": "2878244ed61ab667d23f4c766a9a580378ab05a2d46b5aad21f72256cbfee249"
+  },
+  "integration-macos26-a84c4b8/source-provenance.json": {
+    "bytes": 7057,
+    "sha256": "93f68fae1277dd881425c6d22b1dda3606f99a7d2f28f322bc46c5c65a492990"
+  },
+  "integration-macos26-a84c4b8/tests-job.log.raw.gz": {
+    "bytes": 57476,
+    "sha256": "b0de31d9c619276f8b3bd1baa826788ce2f6ca024ae596d6025df232c1011179"
+  },
+  "integration-macos26-a84c4b8/website-job.log.raw.gz": {
+    "bytes": 6731,
+    "sha256": "fb679aa6a178422aec6970d77b86e8b67b32303b3fdf82572b95e5ed00116256"
+  },
+  "integration-macos26-a84c4b8/workflow-jobs-initial.json": {
+    "bytes": 6406,
+    "sha256": "d8298980049e5d20d88c1422fe7ff2626055bbecab7a67d03027b819d771dd96"
+  },
+  "integration-macos26-a84c4b8/workflow-jobs.json": {
+    "bytes": 6731,
+    "sha256": "f104eace1fa662401d84af8a4a23a567a7aca3444f7958df38ab3b47c83fe479"
+  },
+  "integration-macos26-a84c4b8/workflow-run-initial.json": {
+    "bytes": 12714,
+    "sha256": "5a89676b0d69b8a970255d6ac437c1f61386b79f20bf7139f5d1de00ab720549"
+  },
+  "integration-macos26-a84c4b8/workflow-run.json": {
+    "bytes": 12717,
+    "sha256": "26c867de67c997a92c6febe820c612cc9b832d997e6b6a58d5e7e906c25fcbd7"
+  }
+}

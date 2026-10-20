@@ -91,6 +91,61 @@
       "fileCount": 118,
       "uncompressedFileBytes": 3272976,
       "allFileBytesVerified": true
+    },
+    {
+      "originalDirectory": "integration-macos26-e9da1bd",
+      "archive": "archives/integration-macos26-e9da1bd.tar.gz",
+      "archiveSHA256": "9d2028de6d80e83b23fa09e5ec8b9b4c84d961ec0830f8b84d265ce8fa7140f5",
+      "fileManifest": "archives/integration-macos26-e9da1bd.files.json",
+      "fileManifestSHA256": "75509c7022a8e9134f0cbe7e67881acd8c3c300aa9af91672cd5f58af1b5277f",
+      "fileCount": 10,
+      "uncompressedFileBytes": 130647,
+      "allFileBytesVerified": true,
+      "retainedLooseFiles": [
+        "integration-macos26-e9da1bd/execution-audit.json"
+      ]
+    },
+    {
+      "originalDirectory": "integration-macos27-e9da1bd",
+      "archive": "archives/integration-macos27-e9da1bd.tar.gz",
+      "archiveSHA256": "1208d03221afffaf2b563daf314d48def245910fea89c07e0a8aaf3ce5eabcb3",
+      "fileManifest": "archives/integration-macos27-e9da1bd.files.json",
+      "fileManifestSHA256": "54b83c57d94d162ea4c13dbe9dc16f30715805b046e7fc77282a7b660cee37e7",
+      "fileCount": 130,
+      "uncompressedFileBytes": 4034127,
+      "allFileBytesVerified": true,
+      "retainedLooseFiles": [
+        "integration-macos27-e9da1bd/display/after-macos27-selected/glass-dark-percentage-on.png",
+        "integration-macos27-e9da1bd/execution-audit.json"
+      ]
+    },
+    {
+      "originalDirectory": "integration-macos26-a84c4b8",
+      "archive": "archives/integration-macos26-a84c4b8.tar.gz",
+      "archiveSHA256": "414131edf1f9be1d0bb5ece6e8fb57540adfd935baab632026bad30b2ff09a6b",
+      "fileManifest": "archives/integration-macos26-a84c4b8.files.json",
+      "fileManifestSHA256": "c6fad541aca021d280ec6e020a7b293ac211bbd8aca611dae06e91b659f628fe",
+      "fileCount": 10,
+      "uncompressedFileBytes": 135806,
+      "allFileBytesVerified": true,
+      "retainedLooseFiles": [
+        "integration-macos26-a84c4b8/execution-audit.json"
+      ]
+    },
+    {
+      "originalDirectory": "integration-macos27-a84c4b8",
+      "archive": "archives/integration-macos27-a84c4b8.tar.gz",
+      "archiveSHA256": "61d7b6990d30c5f918fe177a152b7c45bb24198c2677b93b8713c133bbae9815",
+      "fileManifest": "archives/integration-macos27-a84c4b8.files.json",
+      "fileManifestSHA256": "78eb2394a1ac55928ead6009bf44a13bcf48366fc35c07bc4bc7170598a17590",
+      "fileCount": 130,
+      "uncompressedFileBytes": 4037378,
+      "allFileBytesVerified": true,
+      "retainedLooseFiles": [
+        "integration-macos27-a84c4b8/display/after-macos27-selected/glass-dark-percentage-on.png",
+        "integration-macos27-a84c4b8/display/after-macos27-selected/glass-light-percentage-on.png",
+        "integration-macos27-a84c4b8/execution-audit.json"
+      ]
     }
   ]
 }

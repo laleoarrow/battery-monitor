@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+  "workflowRun": 39389731667,
+  "files": [
+    {
+      "file": "tests-job.log",
+      "bytes": 545129,
+      "sha256": "fee4476afe2c5452c195e9e21fdfb2c781aa32234f70a4085e9438860a06223a",
+      "unchangedOriginalRawBytes": true
+    },
+    {
+      "file": "website-job.log",
+      "bytes": 28409,
+      "sha256": "fa42281a8298074ee095d1090fe0e6689984a56258d95c213565a0b9a6874d5c",
+      "unchangedOriginalRawBytes": true
+    }
+  ],
+  "note": "SHA-256 values describe original unmodified job-log bytes. Any later lossless compression must preserve these bytes on decompression."
+}

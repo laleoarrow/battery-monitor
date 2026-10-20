@@ -1,0 +1,256 @@
+{
+  "batteryIcon27TestMethods": [
+    "testChargingUsesBoltAndEveryOtherConnectedStateUsesPlug",
+    "testReportedChargingStateControlsAdornmentAndWattsonTint",
+    "testReportedChargingChangesInvalidateGlyphAndTintWithoutWattChanges",
+    "testBoundaryPercentagesUseOneFixedResolutionIndependentCanvas",
+    "testOutOfRangePercentClampsBothRenderingAndCacheKey",
+    "testOnlyInsetPercentageChangesGlyphCacheWhenPercentageToggles",
+    "testPlugAndBoltHaveDistinctKeysAndPixelsButMixedSupplyKeepsPlug",
+    "testMacOS27StyleHasDistinctPixelsFromMacOS26",
+    "testLowPowerColorsOnlyTheFillAndPressRestoresTemplate",
+    "testInsetNumberAvoidsDuplicatingTheStatusTitle",
+    "testInsetPercentageHasAnAccessibleLabelOnlyWhenShown",
+    "testInsetPercentageAccessibilityTracksAndClampsTheDisplayedNumber",
+    "testUnchangedTelemetryDoesNotInvalidateNewStylePixels"
+  ],
+  "explicitMacOS27ConditionalStepCount": 7,
+  "localRuntimeCleanupMethods": [
+    "test_source_only_runners_preserve_caller_traps_and_complete_cleanup",
+    "test_success_and_command_failure_remove_workspace",
+    "test_communicate_retries_preserve_input_output_and_timeout",
+    "test_signals_inside_popen_wait_locks_do_not_reenter_cleanup",
+    "test_assertion_failure_also_cleans_workspace",
+    "test_cleanup_error_does_not_skip_later_resources_or_mask_failure",
+    "test_timeout_stops_descendants_before_unregistering",
+    "test_timeout_probe_permission_error_still_stops_owned_descendants",
+    "test_signal_permission_error_is_reported_and_owned_child_retained",
+    "test_cleanup_failure_after_success_is_an_error",
+    "test_permission_error_for_an_exited_group_is_not_a_cleanup_failure",
+    "test_reaping_an_owned_child_has_a_deadline",
+    "test_timeout_allows_nested_shell_supervisor_to_reap_its_group",
+    "test_timeout_waits_for_slow_nested_lifecycle_cleanup",
+    "test_parent_interrupts_stop_children_and_remove_workspace",
+    "test_foundation_preferences_are_removed_after_harness_failure"
+  ],
+  "menubarPercentageContractMethods": [
+    {
+      "suite": "MenuBarPercentageContractTests",
+      "test": "test_percentage_is_on_by_default"
+    },
+    {
+      "suite": "MenuBarPercentageContractTests",
+      "test": "test_percentage_sits_left_of_the_glyph"
+    },
+    {
+      "suite": "MenuBarPercentageContractTests",
+      "test": "test_percentage_uses_tabular_digits"
+    },
+    {
+      "suite": "MenuBarPercentageContractTests",
+      "test": "test_title_is_plain_so_appkit_keeps_the_colour_right"
+    },
+    {
+      "suite": "MenuBarPercentageContractTests",
+      "test": "test_hiding_the_percentage_leaves_the_glyph_alone"
+    },
+    {
+      "suite": "MenuBarPercentageContractTests",
+      "test": "test_inline_style_does_not_repeat_the_percentage_outside_the_image"
+    },
+    {
+      "suite": "MenuBarPercentageContractTests",
+      "test": "test_image_and_key_receive_one_consistent_percentage_setting"
+    },
+    {
+      "suite": "MenuBarPercentageContractTests",
+      "test": "test_inline_percentage_accessibility_follows_the_presentation_cache"
+    },
+    {
+      "suite": "MenuBarPercentageContractTests",
+      "test": "test_status_item_redraws_when_the_setting_changes"
+    },
+    {
+      "suite": "MenuBarPercentageContractTests",
+      "test": "test_toggle_is_reachable_from_the_popover"
+    }
+  ],
+  "provider": "GitHub contents API with exact frozen ref",
+  "schema": 1,
+  "settingsWindowContentSize": {
+    "height": 520,
+    "width": 800
+  },
+  "sourceFiles": {
+    ".github/workflows/ci.yml": {
+      "bytes": 9092,
+      "gitBlobSHA": "00d9e839d1a6b4fc882dc9599789f66b3f01631b",
+      "sha256": "896e464cc32d1c3f943affef07adfe2c3e8ec4684eade7d20ef9c605be1e388c"
+    },
+    "Core/AppleSmartBatteryPowerObservationReader.swift": {
+      "bytes": 34823,
+      "gitBlobSHA": "abbacc6a0f63fb013bf06ea6a82250da215fabc0",
+      "sha256": "0b04d653c0ca313740470bf846901adbe2cc720b784e7c5b079e23dcad5879e6"
+    },
+    "Core/BatteryRuntimeEstimate.swift": {
+      "bytes": 12635,
+      "gitBlobSHA": "ced2b3a86a7bd9ecf3b5a3c2abd372f0518c7e52",
+      "sha256": "9b20d7aef48f9406705680b3b159fc8db7baed7470d5409cb7a6d87aabd62dba"
+    },
+    "Core/BatterySampler.swift": {
+      "bytes": 23369,
+      "gitBlobSHA": "a84c54c64a21dbb56de2ac48c8324c5fdb01794d",
+      "sha256": "973fff6cd0d14648ba7f211f934f920a72fcac59a6be7d962c7e987af436b5a7"
+    },
+    "Core/PowerSnapshot.swift": {
+      "bytes": 4148,
+      "gitBlobSHA": "3d74efac165f6cc01efebf3b76a4161fe1860224",
+      "sha256": "7b0b1d78ef714e951840a3b0414ac1915f1161792267051acd823b2f9c39e962"
+    },
+    "Core/Settings.swift": {
+      "bytes": 15932,
+      "gitBlobSHA": "c045af46d3b33ce66c5b12411b519b2a8fc53a13",
+      "sha256": "f0542ead97a4579eb1791f5d04e9bfced9be6c5746cefdbaae19e12271b9fe0b"
+    },
+    "Core/SettingsAppearance.swift": {
+      "bytes": 270,
+      "gitBlobSHA": "44c2a75cafb76f0bd3063a8ae28626212e9f4738",
+      "sha256": "9e318deeafb66b1cb472033195577a45b9412817b695ffbeca6546219aaf581c"
+    },
+    "Core/SystemBatteryHealth.swift": {
+      "bytes": 6034,
+      "gitBlobSHA": "70e8999388d157a3abcfaf347e9a13de87a6ed8a",
+      "sha256": "114b2a9758354c8054133718aedef7a0251ea303abe928ed1d8c3f09ff71706b"
+    },
+    "MenuBar/BatteryIcon.swift": {
+      "bytes": 13957,
+      "gitBlobSHA": "43eaa090255a68d19c927a71fd58da52a31efe4c",
+      "sha256": "8601f4210426709981acdbff92be1688747ef385a479c36a8fddc7139f698961"
+    },
+    "MenuBar/BatteryIcon27.swift": {
+      "bytes": 7394,
+      "gitBlobSHA": "ba3f2cd3ca4536aef0b46c994ceaba038ee06e09",
+      "sha256": "fa7077752e5d058e414321bd8de0340dc00d8bac70911c17e4766c2ecb37225e"
+    },
+    "MenuBar/SettingsWindowController.swift": {
+      "bytes": 189801,
+      "gitBlobSHA": "977e1c81d9e1525a2b796d824344b6f4769b3065",
+      "sha256": "b7fa2bf0614f3628f3b84a92e1194968eaae7a8ab5475feaf68bda51510f9d86"
+    },
+    "MenuBar/StatusItemController.swift": {
+      "bytes": 32637,
+      "gitBlobSHA": "de77bd81f99a632b30b0d95bc8033c12bfdd86f9",
+      "sha256": "e38829be2547b963d8093b10e36f08ee7b149d945525f41be8f408eac6c1b7de"
+    },
+    "Popover/PopoverStyle.swift": {
+      "bytes": 8364,
+      "gitBlobSHA": "4262350c7a5404659302fdcae170650d02ade7d0",
+      "sha256": "0bc528d7f46097c796e10c428cafffce6e1a6976ede0359af063a8d7e612aa97"
+    },
+    "Popover/RingGaugeLayer.swift": {
+      "bytes": 14744,
+      "gitBlobSHA": "7e2f3ed061bfa8f3c3178b43bef74c5f48b342d5",
+      "sha256": "f218350e3fbfcfdaf1cde03f04aeaf886b29c42604be2f2292f3a16d34bc15be"
+    },
+    "SwiftTests/BatteryIcon27Tests.swift": {
+      "bytes": 11291,
+      "gitBlobSHA": "9cf816e3f0bfed6c7dcc794ed7e9a40f6884164e",
+      "sha256": "841cafa9763b173cacbef88a663a607f9bf19ce6c59a92259e60c447c7386084"
+    },
+    "SwiftTests/BatteryRuntimeEstimateTests.swift": {
+      "bytes": 31597,
+      "gitBlobSHA": "451dc9181cb386501b04747c5672ceb810fa3174",
+      "sha256": "1d8c75b7f72ecb82b352658088a21da0bd8e7c4a2f35322521cd8500f6686bba"
+    },
+    "SwiftTests/MenuBarIconStyleSettingsTests.swift": {
+      "bytes": 6866,
+      "gitBlobSHA": "ff3e7723db54e20b5838dfce5423a7ff5ec05148",
+      "sha256": "d0c3261520b8387b2ce644f74875495a3be73866e3f26823c869b4a3d4984369"
+    },
+    "SwiftTests/PowerObservationRuntimeTests.swift": {
+      "bytes": 25185,
+      "gitBlobSHA": "9e57cea0d29fe951c0cae97bdb0976d2e925a678",
+      "sha256": "f6f07d0e8fd1860271c6bcc93a56caa391ece862bd9b9150c6a90e5031cafbcd"
+    },
+    "SwiftTests/PowerPresentationStateTests.swift": {
+      "bytes": 7843,
+      "gitBlobSHA": "3a01e0e8705bffe25d09f37d3c902aefb8cc0d37",
+      "sha256": "cb60f84a24a17ac17b4e6607512c759f9af96a86472ab697bfd10ffbe3ba5f74"
+    },
+    "SwiftTests/RingMetricTelemetryTests.swift": {
+      "bytes": 10406,
+      "gitBlobSHA": "3159faf0830554bcb939af3b531a90cf3a46551d",
+      "sha256": "b093018af623cb91177df960fc295cd8eacaf34bcd9eb330e96ed8800bf15f10"
+    },
+    "SwiftTests/RingMetricViewTests.swift": {
+      "bytes": 11601,
+      "gitBlobSHA": "fb0abfacd458b29fbf9435bd71fa4570e4777507",
+      "sha256": "7b1e08ebbacbbb3d2ef5e2a50e288bb632dc838932c1c37d8f8602159258185a"
+    },
+    "SwiftTests/SettingsGlassOpticalMarginTests.swift": {
+      "bytes": 10240,
+      "gitBlobSHA": "aa92e3d2e33ffb6e7872b19dab499ed9f069edc8",
+      "sha256": "a110536ed402961c000fa2081fc4c0c0a3860f899677bd7b0aa8c24751f747dd"
+    },
+    "SwiftTests/SystemBatteryHealthTests.swift": {
+      "bytes": 6736,
+      "gitBlobSHA": "4365535abfd432f4007a9ed26acf6bf230abffbc",
+      "sha256": "7cc046188c866f2d151c2c9c87d00493779bed63e2a1c300ac9860d29b2314e8"
+    },
+    "SwiftTests/WattsonTests.swift": {
+      "bytes": 134685,
+      "gitBlobSHA": "bf6fcd4c1bfba91ed7bd23e78f1db3b3f43add26",
+      "sha256": "ccc6296e32abc707e522bc53d11214bf9834db1d5ccc62b9cd1d2bc42ead90d4"
+    },
+    "VERSION": {
+      "bytes": 7,
+      "gitBlobSHA": "681fe896afe03d397ad976c5b1d7f4e988ff47ee",
+      "sha256": "df1887315d5e4dd292babca0b9228213cd036311376c62d655fa57eb4e607ae6"
+    },
+    "tests/local_runtime.py": {
+      "bytes": 9436,
+      "gitBlobSHA": "f8bff77a6b8b65498984bdffa9270bb5a72ce413",
+      "sha256": "7a112b85f1f5b1039da480f201201eafd2a2de13be7efcc1c9d44488ff8001c2"
+    },
+    "tests/test_local_runtime_cleanup.py": {
+      "bytes": 24283,
+      "gitBlobSHA": "b6c898d38f3e3313c9e70e825ce6acc05697d4b5",
+      "sha256": "0b0507ba465fe9d97873c606f7f52370a93e9d86f404b35ddfe8dbfb779bcc2f"
+    },
+    "tests/test_menubar_percentage_contract.py": {
+      "bytes": 3974,
+      "gitBlobSHA": "c97c6007b175f2568678966aad36d796293e9b17",
+      "sha256": "50c2a123d5e8499c5c7a47dd9ae04424bbd7abb540cf0fd6e22af8b7e3d3a814"
+    },
+    "tests/test_release_workflow_contract.py": {
+      "bytes": 44058,
+      "gitBlobSHA": "64a7d9fdbf206f940e506857bd09293eb1134b33",
+      "sha256": "fc9b946af716f81de004afc46279f97330693fd7916ed81809eb38af5ff5c673"
+    },
+    "tests/test_settings_window_contract.py": {
+      "bytes": 222289,
+      "gitBlobSHA": "a5a2822a557a6795c53f79532441ba4b2a42e3c2",
+      "sha256": "67e12d0dbbce5dfbf7bf5954c43918c54b0891cf3d4cf22e92c9fa070a9292c1"
+    },
+    "tests/visual/capture_display_settings.swift": {
+      "bytes": 15779,
+      "gitBlobSHA": "6df8d8ad69e82bd51dbc03cfc6bc47b527d219af",
+      "sha256": "0a9468034887f3c033fd0bcc613dc05fdea6852f8274b717778a5c5183f063c9"
+    }
+  },
+  "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+  "sourceTestCountScope": "Counts functions across each entire source file; files may contain more than one XCTestCase suite. Executed suite counts are independently parsed from the actual raw test log.",
+  "swiftTestFunctionCountByFileStem": {
+    "BatteryIcon27Tests": 13,
+    "BatteryRuntimeEstimateTests": 39,
+    "MenuBarIconStyleSettingsTests": 5,
+    "PowerObservationRuntimeTests": 14,
+    "PowerPresentationStateTests": 6,
+    "RingMetricTelemetryTests": 12,
+    "RingMetricViewTests": 8,
+    "SettingsGlassOpticalMarginTests": 3,
+    "SystemBatteryHealthTests": 11,
+    "WattsonTests": 82
+  },
+  "version": "4.3.24"
+}

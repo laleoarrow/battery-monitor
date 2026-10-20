@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+  "cleanSource": true,
+  "environment": {
+    "architecture": "arm64",
+    "sdkVersion": "27.0",
+    "systemBuild": "26A434",
+    "systemVersion": "27.0.1",
+    "xcodeVersion": "Xcode 27.0\nBuild version 27A266a"
+  },
+  "sourceHashInputsVerified": [
+    "MenuBar/BatteryIcon.swift",
+    "scripts/verify_system_battery_artwork.sh",
+    "tests/visual/probe_system_battery_artwork.swift"
+  ],
+  "allEightPNGHashesVerified": true,
+  "resources": [
+    {
+      "name": "battery-outline",
+      "required": true,
+      "available": true,
+      "isTemplate": true,
+      "sizePoints": {
+        "height": 12,
+        "width": 23
+      },
+      "png": "battery-outline@4x.png",
+      "pngSHA256": "04cb9faeab1f0f4d2c8776f71d0c853dd98721bd28ce06f99139b6189d021089"
+    },
+    {
+      "name": "battery-cap",
+      "required": true,
+      "available": true,
+      "isTemplate": true,
+      "sizePoints": {
+        "height": 12,
+        "width": 2
+      },
+      "png": "battery-cap@4x.png",
+      "pngSHA256": "749bd452f07d9944c180daa9fa7e1b1bf8773e5f3c7be41f4c16ceef0b5692cd"
+    },
+    {
+      "name": "battery-bolt",
+      "required": true,
+      "available": true,
+      "isTemplate": true,
+      "sizePoints": {
+        "height": 14,
+        "width": 11
+      },
+      "png": "battery-bolt@4x.png",
+      "pngSHA256": "7791691758cd4b463e91eab115b135b364bdceab61747a7f92e7e42cceebf5cf"
+    },
+    {
+      "name": "battery-bolt-mask",
+      "required": true,
+      "available": true,
+      "isTemplate": false,
+      "sizePoints": {
+        "height": 14,
+        "width": 11
+      },
+      "png": "battery-bolt-mask@4x.png",
+      "pngSHA256": "0a9259857bb84cde2f9ca4e723b44a508ddb5a90500d1c803c631468dd879530"
+    },
+    {
+      "name": "battery-bolt-large",
+      "required": false,
+      "available": true,
+      "isTemplate": true,
+      "sizePoints": {
+        "height": 16,
+        "width": 13
+      },
+      "png": "battery-bolt-large@4x.png",
+      "pngSHA256": "59764c21b8ee19a1c98fb7eef12b5951cf525320b78c19c620e2c7791140d2d0"
+    },
+    {
+      "name": "battery-bolt-mask-large",
+      "required": false,
+      "available": true,
+      "isTemplate": false,
+      "sizePoints": {
+        "height": 16,
+        "width": 13
+      },
+      "png": "battery-bolt-mask-large@4x.png",
+      "pngSHA256": "cf0f914dcd036294c93aafcebfe7228ecc545288a11563b95d165a5a71cec7e5"
+    },
+    {
+      "name": "battery-plug-large",
+      "required": false,
+      "available": true,
+      "isTemplate": true,
+      "sizePoints": {
+        "height": 16,
+        "width": 13
+      },
+      "png": "battery-plug-large@4x.png",
+      "pngSHA256": "1f7c646c60651b9007edfd1550c242fcd7ebace83a44b612d4faf4290f0558ec"
+    },
+    {
+      "name": "battery-plug-mask-large",
+      "required": false,
+      "available": true,
+      "isTemplate": false,
+      "sizePoints": {
+        "height": 16,
+        "width": 13
+      },
+      "png": "battery-plug-mask-large@4x.png",
+      "pngSHA256": "ab7877d1bce4d38e6aac7971479e0f3be5f6f88e6247fd49a2bd5842dccd43ea"
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "allPassed": true,
+  "animationStress": {
+    "elapsedSeconds": 0.159,
+    "iterations": 20000
+  },
+  "artifacts": [
+    {
+      "artifactID": 12247847176,
+      "digest": "sha256:2669d86b5a424e3d87ba91f451ea728e48266ee5930c04837bb11508a794b11e",
+      "folder": "artwork",
+      "sourceMatches": true,
+      "sourceSHA": "a84c4b87286dbfa1c186677a56470e6199e4d2c4",
+      "zipDigestVerified": true
+    },
+    {
+      "artifactID": 12247169262,
+      "digest": "sha256:68152ed05cec2bba53a598b050ac337f0328371c63512745100bf5a349cc6565",
+      "folder": "display",
+      "sourceMatches": true,
+      "sourceSHA": "a84c4b87286dbfa1c186677a56470e6199e4d2c4",
+      "zipDigestVerified": true
+    },
+    {
+      "artifactID": 12248241141,
+      "digest": "sha256:60bf99ae18059ad9258b1e62f8f624452f80e5f90f3efeeaefe177fd3cf100dd",
+      "folder": "swift",
+      "sourceMatches": true,
+      "sourceSHA": "a84c4b87286dbfa1c186677a56470e6199e4d2c4",
+      "zipDigestVerified": true
+    }
+  ],
+  "checks": {
+    "actual27Environment": true,
+    "allArtifactSourceAndZIPHashesVerified": true,
+    "bothNewAXTestsPassed": true,
+    "display34AndNative8": true,
+    "disposableBuildCleanup": true,
+    "integratedHealthAndAXSourceHashVerified": true,
+    "nativeThreeMarkers": true,
+    "newAXStaticRegressionPassed": true,
+    "ownedDownloadScratchRemoved": true,
+    "postJobCleanup": true,
+    "python626FourExpectedSkips": true,
+    "runAndJobsCompletedSuccess": true,
+    "sixteenLifecycleTests": true,
+    "sourceMatches": true,
+    "stress20000": true,
+    "swiftDerived700": true,
+    "verifiedUniversalAppHelper4_3_24": true,
+    "websiteSevenLintExport": true
+  },
+  "display": {
+    "captures": 34,
+    "growthLimitBytes": 8388608,
+    "independentUpwardRSSGrowthBytes": 475136,
+    "memoryMechanism": "Unproven; no OS reclamation claim.",
+    "nativeTests": 8,
+    "rawRSSSpreadBytes": 9125888,
+    "seconds": 187.275
+  },
+  "environment": {
+    "architecture": "arm64",
+    "sdkVersion": "27.0",
+    "systemBuild": "26A434",
+    "systemVersion": "27.0.1",
+    "xcodeVersion": "Xcode 27.0\nBuild version 27A266a"
+  },
+  "githubJobs": [
+    {
+      "conclusion": "success",
+      "id": 118507392189,
+      "name": "SwiftPM and Python tests",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "id": 118507392317,
+      "name": "Website build, test, lint, and export",
+      "status": "completed"
+    }
+  ],
+  "limits": [
+    "Hosted compatibility/build/render/interaction evidence; not physical sensor or installation acceptance.",
+    "The monitor did not mutate code, the canonical app, helper, settings or workflow state.",
+    "The screenshot is preserved as the before-spacing baseline, not approval of the requested next layout."
+  ],
+  "nativeVariantCompletions": [
+    "2026-10-20T07:41:48.7292430Z",
+    "2026-10-20T07:44:21.3172830Z",
+    "2026-10-20T07:46:50.1324560Z"
+  ],
+  "preview": "display/after-macos27-selected/glass-dark-percentage-on.png",
+  "python": {
+    "expectedSkips": 4,
+    "lifecyclePassed": 16,
+    "seconds": 351.667,
+    "tests": 626
+  },
+  "schema": 1,
+  "scope": "Complete health/charging/AX functional integration baseline before the newly requested preview-spacing revision. That revision requires separate source/render acceptance.",
+  "sourceSHA": "a84c4b87286dbfa1c186677a56470e6199e4d2c4",
+  "status": "accepted-complete-ax-functional-baseline",
+  "swift": {
+    "AXCases": {
+      "testInsetPercentageAccessibilityTracksAndClampsTheDisplayedNumber": true,
+      "testInsetPercentageHasAnAccessibleLabelOnlyWhenShown": true
+    },
+    "currentSuites": {
+      "BatteryIcon27Tests": {
+        "failures": 0,
+        "tests": 13
+      },
+      "MenuBarIconStyleSettingsTests": {
+        "failures": 0,
+        "tests": 5
+      },
+      "SystemBatteryHealthTests": {
+        "failures": 0,
+        "tests": 11
+      }
+    },
+    "products": [
+      {
+        "failures": 0,
+        "product": "WattsonTests.xctest",
+        "tests": 670
+      },
+      {
+        "failures": 0,
+        "product": "WattsonHelperV5SupportTests.xctest",
+        "tests": 30
+      }
+    ],
+    "tests": 700
+  },
+  "universal": {
+    "appAndHelperVerified": true,
+    "architectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "signing": "ad-hoc; not notarized",
+    "version": "4.3.24"
+  },
+  "workflowRun": 39386467784,
+  "workflowURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39386467784"
+}

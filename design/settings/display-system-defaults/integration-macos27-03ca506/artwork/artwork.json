@@ -1,0 +1,573 @@
+{
+  "allKnownResourcesAvailable" : true,
+  "bundleVersion" : "1",
+  "context" : {
+    "architecture" : "arm64",
+    "catalog" : {
+      "exists" : true,
+      "path" : "\/System\/Library\/CoreServices\/ControlCenter.app\/Contents\/Resources\/Assets.car",
+      "sha256" : "a7a178c469c3e5ca0f9373b9207df5ab3fcd6421701c678586d6027cea03f283",
+      "sizeBytes" : 1025560
+    },
+    "sdkVersion" : "27.0",
+    "sourceDirty" : false,
+    "sourceFilesSHA256" : {
+      "MenuBar\/BatteryIcon.swift" : "8601f4210426709981acdbff92be1688747ef385a479c36a8fddc7139f698961",
+      "scripts\/verify_system_battery_artwork.sh" : "3eb8f4af0cdc8d14939c805f6c092bfdc8debeea8511196096f9b7d961b12efd",
+      "tests\/visual\/probe_system_battery_artwork.swift" : "1d400152120e3fa8d5ff8fec45ce913ca17a9f69efb71e75639b218c926a8eee"
+    },
+    "sourceSHA" : "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+    "systemBuild" : "26A434",
+    "systemVersion" : "27.0.1",
+    "xcodeVersion" : "Xcode 27.0\nBuild version 27A266a"
+  },
+  "missingOptionalResources" : [
+
+  ],
+  "missingResources" : [
+
+  ],
+  "optionalResourceNames" : [
+    "battery-bolt-large",
+    "battery-bolt-mask-large",
+    "battery-plug-large",
+    "battery-plug-mask-large"
+  ],
+  "purpose" : "Read-only OS-owned battery artwork evidence; no product assets",
+  "requiredResourceNames" : [
+    "battery-outline",
+    "battery-cap",
+    "battery-bolt",
+    "battery-bolt-mask"
+  ],
+  "resources" : [
+    {
+      "available" : true,
+      "decodedTIFFSHA256" : "58b4638802b23f7d9f0257f9d0b9e167197500c5b0c237e58d436b368276b9cb",
+      "isTemplate" : true,
+      "name" : "battery-outline",
+      "png" : "battery-outline@4x.png",
+      "pngSHA256" : "04cb9faeab1f0f4d2c8776f71d0c853dd98721bd28ce06f99139b6189d021089",
+      "renderScale" : 4,
+      "representations" : [
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 12,
+          "pixelsWide" : 23,
+          "sizePoints" : {
+            "height" : 12,
+            "width" : 23
+          }
+        },
+        {
+          "class" : "NSCustomImageRep",
+          "pixelsHigh" : 12,
+          "pixelsWide" : 23,
+          "sizePoints" : {
+            "height" : 12,
+            "width" : 23
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 24,
+          "pixelsWide" : 46,
+          "sizePoints" : {
+            "height" : 12,
+            "width" : 23
+          }
+        },
+        {
+          "class" : "NSCustomImageRep",
+          "pixelsHigh" : 24,
+          "pixelsWide" : 46,
+          "sizePoints" : {
+            "height" : 12,
+            "width" : 23
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 12,
+            "width" : 23
+          }
+        }
+      ],
+      "required" : true,
+      "sizePoints" : {
+        "height" : 12,
+        "width" : 23
+      }
+    },
+    {
+      "available" : true,
+      "decodedTIFFSHA256" : "dd8d7d76c5e3f5140d9a4244a386cc740125233d20bef1c7964b344eab9a740b",
+      "isTemplate" : true,
+      "name" : "battery-cap",
+      "png" : "battery-cap@4x.png",
+      "pngSHA256" : "749bd452f07d9944c180daa9fa7e1b1bf8773e5f3c7be41f4c16ceef0b5692cd",
+      "renderScale" : 4,
+      "representations" : [
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 12,
+          "pixelsWide" : 2,
+          "sizePoints" : {
+            "height" : 12,
+            "width" : 2
+          }
+        },
+        {
+          "class" : "NSCustomImageRep",
+          "pixelsHigh" : 12,
+          "pixelsWide" : 2,
+          "sizePoints" : {
+            "height" : 12,
+            "width" : 2
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 24,
+          "pixelsWide" : 4,
+          "sizePoints" : {
+            "height" : 12,
+            "width" : 2
+          }
+        },
+        {
+          "class" : "NSCustomImageRep",
+          "pixelsHigh" : 24,
+          "pixelsWide" : 4,
+          "sizePoints" : {
+            "height" : 12,
+            "width" : 2
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 12,
+            "width" : 2
+          }
+        }
+      ],
+      "required" : true,
+      "sizePoints" : {
+        "height" : 12,
+        "width" : 2
+      }
+    },
+    {
+      "available" : true,
+      "decodedTIFFSHA256" : "6e7147ba111af5dc460c0a78b579b2367d62a0df030190873a64d6af8d981571",
+      "isTemplate" : true,
+      "name" : "battery-bolt",
+      "png" : "battery-bolt@4x.png",
+      "pngSHA256" : "7791691758cd4b463e91eab115b135b364bdceab61747a7f92e7e42cceebf5cf",
+      "renderScale" : 4,
+      "representations" : [
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 14,
+          "pixelsWide" : 11,
+          "sizePoints" : {
+            "height" : 14,
+            "width" : 11
+          }
+        },
+        {
+          "class" : "NSCustomImageRep",
+          "pixelsHigh" : 14,
+          "pixelsWide" : 11,
+          "sizePoints" : {
+            "height" : 14,
+            "width" : 11
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 28,
+          "pixelsWide" : 22,
+          "sizePoints" : {
+            "height" : 14,
+            "width" : 11
+          }
+        },
+        {
+          "class" : "NSCustomImageRep",
+          "pixelsHigh" : 28,
+          "pixelsWide" : 22,
+          "sizePoints" : {
+            "height" : 14,
+            "width" : 11
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 14,
+            "width" : 11
+          }
+        }
+      ],
+      "required" : true,
+      "sizePoints" : {
+        "height" : 14,
+        "width" : 11
+      }
+    },
+    {
+      "available" : true,
+      "decodedTIFFSHA256" : "5d08cccbad73a73368e5859d18c11c54d39a8bfebade9660a361d7d0bcf5d87c",
+      "isTemplate" : false,
+      "name" : "battery-bolt-mask",
+      "png" : "battery-bolt-mask@4x.png",
+      "pngSHA256" : "0a9259857bb84cde2f9ca4e723b44a508ddb5a90500d1c803c631468dd879530",
+      "renderScale" : 4,
+      "representations" : [
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 14,
+          "pixelsWide" : 11,
+          "sizePoints" : {
+            "height" : 14,
+            "width" : 11
+          }
+        },
+        {
+          "class" : "NSCustomImageRep",
+          "pixelsHigh" : 14,
+          "pixelsWide" : 11,
+          "sizePoints" : {
+            "height" : 14,
+            "width" : 11
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 28,
+          "pixelsWide" : 22,
+          "sizePoints" : {
+            "height" : 14,
+            "width" : 11
+          }
+        },
+        {
+          "class" : "NSCustomImageRep",
+          "pixelsHigh" : 28,
+          "pixelsWide" : 22,
+          "sizePoints" : {
+            "height" : 14,
+            "width" : 11
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 14,
+            "width" : 11
+          }
+        }
+      ],
+      "required" : true,
+      "sizePoints" : {
+        "height" : 14,
+        "width" : 11
+      }
+    },
+    {
+      "available" : true,
+      "decodedTIFFSHA256" : "fab2cbfdb3ebbe88a550f9e58abce0f10ebe03746396956d6d841e0b404163a9",
+      "isTemplate" : true,
+      "name" : "battery-bolt-large",
+      "png" : "battery-bolt-large@4x.png",
+      "pngSHA256" : "59764c21b8ee19a1c98fb7eef12b5951cf525320b78c19c620e2c7791140d2d0",
+      "renderScale" : 4,
+      "representations" : [
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 16,
+          "pixelsWide" : 13,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 16,
+          "pixelsWide" : 13,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 32,
+          "pixelsWide" : 25,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 12.5
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 32,
+          "pixelsWide" : 25,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 12.5
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        }
+      ],
+      "required" : false,
+      "sizePoints" : {
+        "height" : 16,
+        "width" : 13
+      }
+    },
+    {
+      "available" : true,
+      "decodedTIFFSHA256" : "facac3e50010c7b717463a4c4041809e7e529802ea29085ef22f62c14c3fbfdb",
+      "isTemplate" : false,
+      "name" : "battery-bolt-mask-large",
+      "png" : "battery-bolt-mask-large@4x.png",
+      "pngSHA256" : "cf0f914dcd036294c93aafcebfe7228ecc545288a11563b95d165a5a71cec7e5",
+      "renderScale" : 4,
+      "representations" : [
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 16,
+          "pixelsWide" : 13,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 16,
+          "pixelsWide" : 13,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 32,
+          "pixelsWide" : 25,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 12.5
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 32,
+          "pixelsWide" : 25,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 12.5
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        }
+      ],
+      "required" : false,
+      "sizePoints" : {
+        "height" : 16,
+        "width" : 13
+      }
+    },
+    {
+      "available" : true,
+      "decodedTIFFSHA256" : "55bfceb672d76dc44d3898507da29a725baae85ce3d596284b05c7f64e0b43ed",
+      "isTemplate" : true,
+      "name" : "battery-plug-large",
+      "png" : "battery-plug-large@4x.png",
+      "pngSHA256" : "1f7c646c60651b9007edfd1550c242fcd7ebace83a44b612d4faf4290f0558ec",
+      "renderScale" : 4,
+      "representations" : [
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 16,
+          "pixelsWide" : 13,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 16,
+          "pixelsWide" : 13,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 32,
+          "pixelsWide" : 25,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 12.5
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 32,
+          "pixelsWide" : 25,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 12.5
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        }
+      ],
+      "required" : false,
+      "sizePoints" : {
+        "height" : 16,
+        "width" : 13
+      }
+    },
+    {
+      "available" : true,
+      "decodedTIFFSHA256" : "d05eae39e11ee48a70a5d6bb96f07ffc4ba1b1e553d7b66012991dc2cb95108f",
+      "isTemplate" : false,
+      "name" : "battery-plug-mask-large",
+      "png" : "battery-plug-mask-large@4x.png",
+      "pngSHA256" : "ab7877d1bce4d38e6aac7971479e0f3be5f6f88e6247fd49a2bd5842dccd43ea",
+      "renderScale" : 4,
+      "representations" : [
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 16,
+          "pixelsWide" : 13,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 16,
+          "pixelsWide" : 13,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 32,
+          "pixelsWide" : 25,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 12.5
+          }
+        },
+        {
+          "class" : "NSCGImageRep",
+          "pixelsHigh" : 32,
+          "pixelsWide" : 25,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 12.5
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        },
+        {
+          "class" : "NSPDFImageRep",
+          "pixelsHigh" : 0,
+          "pixelsWide" : 0,
+          "sizePoints" : {
+            "height" : 16,
+            "width" : 13
+          }
+        }
+      ],
+      "required" : false,
+      "sizePoints" : {
+        "height" : 16,
+        "width" : 13
+      }
+    }
+  ],
+  "runtimeVersion" : "Version 27.0.1 (Build 26A434)",
+  "schema" : 1,
+  "status" : "complete",
+  "systemBundle" : "\/System\/Library\/CoreServices\/ControlCenter.app"
+}

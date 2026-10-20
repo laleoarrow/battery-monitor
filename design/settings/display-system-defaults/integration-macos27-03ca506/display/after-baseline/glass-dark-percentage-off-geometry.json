@@ -1,0 +1,2535 @@
+{
+  "before" : false,
+  "contentSize" : [
+    800,
+    520
+  ],
+  "dark" : true,
+  "freshNativeGlassCornerRadius" : 8,
+  "glassEffective" : true,
+  "glassRequested" : true,
+  "glassSurfaces" : [
+    {
+      "cornerRadius" : 8,
+      "frame" : [
+        196,
+        226,
+        584,
+        192
+      ],
+      "hidden" : false,
+      "identifier" : "settings.control-group.glass"
+    },
+    {
+      "cornerRadius" : 0,
+      "frame" : [
+        0,
+        0,
+        176,
+        520
+      ],
+      "hidden" : false,
+      "identifier" : ""
+    }
+  ],
+  "increaseContrast" : false,
+  "reduceTransparency" : false,
+  "schema" : 1,
+  "section" : "menu-bar-icon",
+  "selectedIconStyle" : "wattson",
+  "showsPercentage" : false,
+  "views" : [
+    {
+      "alignmentRect" : [
+        198,
+        434,
+        582,
+        21
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "attributedStringSize" : [
+        61.667784740406205,
+        21
+      ],
+      "cellDrawingRect" : [
+        196,
+        434,
+        586,
+        21
+      ],
+      "cellTitleRect" : [
+        196,
+        434,
+        586,
+        21
+      ],
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB19SettingsPageHeading",
+      "fontSize" : 18,
+      "frame" : [
+        196,
+        434,
+        586,
+        21
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.heading",
+      "intrinsicHeight" : 21,
+      "intrinsicWidth" : 62,
+      "text" : "Display"
+    },
+    {
+      "alignmentRect" : [
+        198,
+        428,
+        582,
+        16
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "attributedStringSize" : [
+        86.14404296875,
+        16
+      ],
+      "cellDrawingRect" : [
+        196,
+        428,
+        586,
+        16
+      ],
+      "cellTitleRect" : [
+        196,
+        428,
+        586,
+        16
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 13,
+      "frame" : [
+        196,
+        428,
+        586,
+        16
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.subtitle",
+      "intrinsicHeight" : 16,
+      "intrinsicWidth" : 87,
+      "text" : "Menu bar icon"
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        196,
+        226,
+        584,
+        192
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview-group"
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        196,
+        394,
+        584,
+        24
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-header"
+    },
+    {
+      "alignmentRect" : [
+        296,
+        400,
+        42,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "attributedStringSize" : [
+        37.889746963977814,
+        13
+      ],
+      "cellDrawingRect" : [
+        294,
+        400,
+        46,
+        13
+      ],
+      "cellTitleRect" : [
+        294,
+        400,
+        46,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        294,
+        400,
+        46,
+        13
+      ],
+      "headerCellFrame" : [
+        282,
+        394,
+        71,
+        24
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.battery",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 42,
+      "text" : "Battery"
+    },
+    {
+      "alignmentRect" : [
+        376,
+        400,
+        23,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "attributedStringSize" : [
+        18.404617667198181,
+        13
+      ],
+      "cellDrawingRect" : [
+        374,
+        400,
+        27,
+        13
+      ],
+      "cellTitleRect" : [
+        374,
+        400,
+        27,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        374,
+        400,
+        27,
+        13
+      ],
+      "headerCellFrame" : [
+        353,
+        394,
+        70,
+        24
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.full",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 23,
+      "text" : "Full"
+    },
+    {
+      "alignmentRect" : [
+        433,
+        400,
+        51,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "attributedStringSize" : [
+        46.81747967004776,
+        13
+      ],
+      "cellDrawingRect" : [
+        431,
+        400,
+        55,
+        13
+      ],
+      "cellTitleRect" : [
+        431,
+        400,
+        55,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        431,
+        400,
+        55,
+        13
+      ],
+      "headerCellFrame" : [
+        423,
+        394,
+        71,
+        24
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.charging",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 51,
+      "text" : "Charging"
+    },
+    {
+      "alignmentRect" : [
+        517,
+        400,
+        25,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "attributedStringSize" : [
+        20.598089933395386,
+        13
+      ],
+      "cellDrawingRect" : [
+        515,
+        400,
+        29,
+        13
+      ],
+      "cellTitleRect" : [
+        515,
+        400,
+        29,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        515,
+        400,
+        29,
+        13
+      ],
+      "headerCellFrame" : [
+        494,
+        394,
+        70,
+        24
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.low",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 25,
+      "text" : "Low"
+    },
+    {
+      "alignmentRect" : [
+        573,
+        400,
+        53,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "attributedStringSize" : [
+        48.124045372009277,
+        13
+      ],
+      "cellDrawingRect" : [
+        571,
+        400,
+        57,
+        13
+      ],
+      "cellTitleRect" : [
+        571,
+        400,
+        57,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        571,
+        400,
+        57,
+        13
+      ],
+      "headerCellFrame" : [
+        564,
+        394,
+        71,
+        24
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.low-ac",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 53,
+      "text" : "Low + AC"
+    },
+    {
+      "alignmentRect" : [
+        654,
+        400,
+        33,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "attributedStringSize" : [
+        28.975896835327148,
+        13
+      ],
+      "cellDrawingRect" : [
+        652,
+        400,
+        37,
+        13
+      ],
+      "cellTitleRect" : [
+        652,
+        400,
+        37,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        652,
+        400,
+        37,
+        13
+      ],
+      "headerCellFrame" : [
+        635,
+        394,
+        70,
+        24
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.saver",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 33,
+      "text" : "Saver"
+    },
+    {
+      "alignmentRect" : [
+        710,
+        400,
+        61,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "attributedStringSize" : [
+        56.50185227394104,
+        13
+      ],
+      "cellDrawingRect" : [
+        708,
+        400,
+        65,
+        13
+      ],
+      "cellTitleRect" : [
+        708,
+        400,
+        65,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        708,
+        400,
+        65,
+        13
+      ],
+      "headerCellFrame" : [
+        705,
+        394,
+        71,
+        24
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state-label.saver-ac",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 61,
+      "text" : "Saver + AC"
+    },
+    {
+      "class" : "NSStackView",
+      "frame" : [
+        204,
+        226,
+        576,
+        168
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.group"
+    },
+    {
+      "accessibilityRole" : "AXRadioButton",
+      "bezelStyle" : 0,
+      "buttonCellClass" : "NSButtonCell",
+      "buttonCellImageRect" : [
+        204,
+        359,
+        14,
+        14
+      ],
+      "buttonCellTitleRect" : [
+        222,
+        359,
+        44,
+        14
+      ],
+      "buttonFontSize" : 11,
+      "buttonState" : 1,
+      "buttonTitle" : "Wattson",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB22MenuBarIconStyleButton",
+      "controlSize" : 1,
+      "focusRingMaskBounds" : [
+        204,
+        394,
+        0,
+        0
+      ],
+      "focusRingType" : 0,
+      "frame" : [
+        204,
+        338,
+        576,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.style.wattson",
+      "imagePosition" : 7,
+      "isBordered" : false
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        282,
+        338,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson.battery"
+    },
+    {
+      "alignmentRect" : [
+        306,
+        360,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        24,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        304,
+        360,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        304,
+        360,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        304,
+        360,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson.battery",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.wattson.battery",
+      "text" : "75%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        306,
+        359,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson.battery",
+      "imageScaling" : 2,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        353,
+        338,
+        70,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson.full"
+    },
+    {
+      "alignmentRect" : [
+        376,
+        360,
+        30,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        22,
+        30,
+        13
+      ],
+      "attributedStringSize" : [
+        29.926025390625,
+        13
+      ],
+      "cellDrawingRect" : [
+        374,
+        360,
+        34,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        22,
+        34,
+        13
+      ],
+      "cellTitleRect" : [
+        374,
+        360,
+        34,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        22,
+        34,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        374,
+        360,
+        34,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson.full",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 30,
+      "stateIdentifier" : "settings.menu-bar-icon.state.wattson.full",
+      "text" : "100%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        376,
+        359,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson.full",
+      "imageScaling" : 2,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        423,
+        338,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson.charging"
+    },
+    {
+      "alignmentRect" : [
+        447,
+        360,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        24,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        445,
+        360,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        445,
+        360,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        445,
+        360,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson.charging",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.wattson.charging",
+      "text" : "72%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        447,
+        359,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson.charging",
+      "imageScaling" : 2,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        494,
+        338,
+        70,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson.low"
+    },
+    {
+      "alignmentRect" : [
+        518,
+        360,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        24,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        516,
+        360,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        516,
+        360,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        516,
+        360,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson.low",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.wattson.low",
+      "text" : "10%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        518,
+        359,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson.low",
+      "imageScaling" : 2,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        564,
+        338,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson.low-ac"
+    },
+    {
+      "alignmentRect" : [
+        588,
+        360,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        24,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        586,
+        360,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        586,
+        360,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        586,
+        360,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson.low-ac",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.wattson.low-ac",
+      "text" : "20%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        588,
+        359,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson.low-ac",
+      "imageScaling" : 2,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        635,
+        338,
+        70,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson.saver"
+    },
+    {
+      "alignmentRect" : [
+        659,
+        360,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        24,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        657,
+        360,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        657,
+        360,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        657,
+        360,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson.saver",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.wattson.saver",
+      "text" : "42%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        659,
+        359,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson.saver",
+      "imageScaling" : 2,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        705,
+        338,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.wattson.saver-ac"
+    },
+    {
+      "alignmentRect" : [
+        729,
+        360,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        24,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        727,
+        360,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        727,
+        360,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        22,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        727,
+        360,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.wattson.saver-ac",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.wattson.saver-ac",
+      "text" : "42%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        729,
+        359,
+        23,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.wattson.saver-ac",
+      "imageScaling" : 2,
+      "imageSize" : [
+        23,
+        14
+      ]
+    },
+    {
+      "accessibilityRole" : "AXRadioButton",
+      "bezelStyle" : 0,
+      "buttonCellClass" : "NSButtonCell",
+      "buttonCellImageRect" : [
+        204,
+        303,
+        14,
+        14
+      ],
+      "buttonCellTitleRect" : [
+        222,
+        303,
+        55,
+        14
+      ],
+      "buttonFontSize" : 11,
+      "buttonState" : 0,
+      "buttonTitle" : "macOS 26",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB22MenuBarIconStyleButton",
+      "controlSize" : 1,
+      "focusRingMaskBounds" : [
+        204,
+        338,
+        0,
+        0
+      ],
+      "focusRingType" : 0,
+      "frame" : [
+        204,
+        282,
+        576,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.style.macos",
+      "imagePosition" : 7,
+      "isBordered" : false
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        282,
+        282,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos.battery"
+    },
+    {
+      "alignmentRect" : [
+        305,
+        304,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        303,
+        304,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        303,
+        304,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        303,
+        304,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos.battery",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos.battery",
+      "text" : "75%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        305,
+        303,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos.battery",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        353,
+        282,
+        70,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos.full"
+    },
+    {
+      "alignmentRect" : [
+        375,
+        304,
+        30,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        22,
+        22,
+        30,
+        13
+      ],
+      "attributedStringSize" : [
+        29.926025390625,
+        13
+      ],
+      "cellDrawingRect" : [
+        373,
+        304,
+        34,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        20,
+        22,
+        34,
+        13
+      ],
+      "cellTitleRect" : [
+        373,
+        304,
+        34,
+        13
+      ],
+      "cellTitleRectInState" : [
+        20,
+        22,
+        34,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        373,
+        304,
+        34,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos.full",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 30,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos.full",
+      "text" : "100%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        375,
+        303,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos.full",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        423,
+        282,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos.charging"
+    },
+    {
+      "alignmentRect" : [
+        446,
+        304,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        444,
+        304,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        444,
+        304,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        444,
+        304,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos.charging",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos.charging",
+      "text" : "72%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        446,
+        303,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos.charging",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        494,
+        282,
+        70,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos.low"
+    },
+    {
+      "alignmentRect" : [
+        517,
+        304,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        515,
+        304,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        515,
+        304,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        515,
+        304,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos.low",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos.low",
+      "text" : "10%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        517,
+        303,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos.low",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        564,
+        282,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos.low-ac"
+    },
+    {
+      "alignmentRect" : [
+        587,
+        304,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        585,
+        304,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        585,
+        304,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        585,
+        304,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos.low-ac",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos.low-ac",
+      "text" : "20%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        587,
+        303,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos.low-ac",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        635,
+        282,
+        70,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos.saver"
+    },
+    {
+      "alignmentRect" : [
+        658,
+        304,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        656,
+        304,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        656,
+        304,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        656,
+        304,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos.saver",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos.saver",
+      "text" : "42%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        658,
+        303,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos.saver",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        705,
+        282,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos.saver-ac"
+    },
+    {
+      "alignmentRect" : [
+        728,
+        304,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        22,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        726,
+        304,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        726,
+        304,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        22,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        726,
+        304,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos.saver-ac",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos.saver-ac",
+      "text" : "42%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        728,
+        303,
+        25,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos.saver-ac",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        14
+      ]
+    },
+    {
+      "accessibilityRole" : "AXRadioButton",
+      "bezelStyle" : 0,
+      "buttonCellClass" : "NSButtonCell",
+      "buttonCellImageRect" : [
+        204,
+        247,
+        14,
+        14
+      ],
+      "buttonCellTitleRect" : [
+        222,
+        247,
+        54,
+        14
+      ],
+      "buttonFontSize" : 11,
+      "buttonState" : 0,
+      "buttonTitle" : "macOS 27",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB22MenuBarIconStyleButton",
+      "controlSize" : 1,
+      "focusRingMaskBounds" : [
+        204,
+        282,
+        0,
+        0
+      ],
+      "focusRingType" : 0,
+      "frame" : [
+        204,
+        226,
+        576,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.style.macos27",
+      "imagePosition" : 7,
+      "isBordered" : false
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        282,
+        226,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos27.battery"
+    },
+    {
+      "alignmentRect" : [
+        305,
+        249,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        23,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        303,
+        249,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        303,
+        249,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        303,
+        249,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos27.battery",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos27.battery",
+      "text" : "75%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        305,
+        246,
+        25,
+        16
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos27.battery",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        16
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        353,
+        226,
+        70,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos27.full"
+    },
+    {
+      "alignmentRect" : [
+        375,
+        249,
+        30,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        22,
+        23,
+        30,
+        13
+      ],
+      "attributedStringSize" : [
+        29.926025390625,
+        13
+      ],
+      "cellDrawingRect" : [
+        373,
+        249,
+        34,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        20,
+        23,
+        34,
+        13
+      ],
+      "cellTitleRect" : [
+        373,
+        249,
+        34,
+        13
+      ],
+      "cellTitleRectInState" : [
+        20,
+        23,
+        34,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        373,
+        249,
+        34,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos27.full",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 30,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos27.full",
+      "text" : "100%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        375,
+        246,
+        25,
+        16
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos27.full",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        16
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        423,
+        226,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos27.charging"
+    },
+    {
+      "alignmentRect" : [
+        446,
+        249,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        23,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        444,
+        249,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        444,
+        249,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        444,
+        249,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos27.charging",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos27.charging",
+      "text" : "72%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        446,
+        246,
+        25,
+        16
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos27.charging",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        16
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        494,
+        226,
+        70,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos27.low"
+    },
+    {
+      "alignmentRect" : [
+        517,
+        249,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        23,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        515,
+        249,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        515,
+        249,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        515,
+        249,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos27.low",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos27.low",
+      "text" : "10%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        517,
+        246,
+        25,
+        16
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos27.low",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        16
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        564,
+        226,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos27.low-ac"
+    },
+    {
+      "alignmentRect" : [
+        587,
+        249,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        23,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        585,
+        249,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        585,
+        249,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        585,
+        249,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos27.low-ac",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos27.low-ac",
+      "text" : "20%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        587,
+        246,
+        25,
+        16
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos27.low-ac",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        16
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        635,
+        226,
+        70,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos27.saver"
+    },
+    {
+      "alignmentRect" : [
+        658,
+        249,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        23,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        656,
+        249,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        656,
+        249,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        656,
+        249,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos27.saver",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos27.saver",
+      "text" : "42%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        658,
+        246,
+        25,
+        16
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos27.saver",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        16
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        705,
+        226,
+        71,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.state.macos27.saver-ac"
+    },
+    {
+      "alignmentRect" : [
+        728,
+        249,
+        24,
+        13
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "alignmentRectInState" : [
+        23,
+        23,
+        24,
+        13
+      ],
+      "attributedStringSize" : [
+        23.219970703125,
+        13
+      ],
+      "cellDrawingRect" : [
+        726,
+        249,
+        28,
+        13
+      ],
+      "cellDrawingRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "cellTitleRect" : [
+        726,
+        249,
+        28,
+        13
+      ],
+      "cellTitleRectInState" : [
+        21,
+        23,
+        28,
+        13
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 10.5,
+      "frame" : [
+        726,
+        249,
+        28,
+        13
+      ],
+      "hidden" : true,
+      "identifier" : "settings.menu-bar-icon.percentage.macos27.saver-ac",
+      "intrinsicHeight" : 13,
+      "intrinsicWidth" : 24,
+      "stateIdentifier" : "settings.menu-bar-icon.state.macos27.saver-ac",
+      "text" : "42%"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        728,
+        246,
+        25,
+        16
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.preview.macos27.saver-ac",
+      "imageScaling" : 2,
+      "imageSize" : [
+        25,
+        16
+      ]
+    },
+    {
+      "accessibilityRole" : "AXUnknown",
+      "bezelStyle" : 1,
+      "buttonCellClass" : "NSPopUpButtonCell",
+      "buttonCellImageRect" : [
+        713,
+        208,
+        0,
+        0
+      ],
+      "buttonCellTitleRect" : [
+        723,
+        191,
+        17,
+        14
+      ],
+      "buttonFontSize" : 11,
+      "buttonState" : 1,
+      "buttonTitle" : "Off",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB29SettingsAppearancePopupButton",
+      "controlSize" : 1,
+      "focusRingMaskBounds" : [
+        713,
+        208,
+        0,
+        0
+      ],
+      "focusRingType" : 0,
+      "frame" : [
+        713,
+        188,
+        57,
+        20
+      ],
+      "hidden" : false,
+      "identifier" : "settings.menu-bar-icon.percentage",
+      "imagePosition" : 0,
+      "isBordered" : true
+    }
+  ],
+  "windowKey" : true,
+  "windowSize" : [
+    800,
+    520
+  ]
+}

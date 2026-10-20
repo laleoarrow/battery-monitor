@@ -124,6 +124,66 @@
       "originalBytes": 26631,
       "storedPath": "native-macos27-5b5ab47/website-job.log.raw.gz",
       "storedSHA256": "4cc073e2cb2d73233692af76165a2f334576707206db4cc5e2a083af8a7d8fb1"
+    },
+    {
+      "originalPath": "integration-macos26-e9da1bd/tests-job.log",
+      "originalSHA256": "a2c34033ab66bcb73e57fdbe161f871d3df6169fd8024636e29e06fdeb7ba900",
+      "originalBytes": 370431,
+      "storedPath": "integration-macos26-e9da1bd/tests-job.log.raw.gz",
+      "storedSHA256": "1adf47d0b30dd2ce34347b332331990c7de628f6c2304f54c1634694d715d5f3",
+      "archive": "archives/integration-macos26-e9da1bd.tar.gz"
+    },
+    {
+      "originalPath": "integration-macos26-e9da1bd/website-job.log",
+      "originalSHA256": "a07ca3c1b63487ce98f8fa1048c4f843c313e09c5e26658340bfaf0ba1cc2c01",
+      "originalBytes": 27803,
+      "storedPath": "integration-macos26-e9da1bd/website-job.log.raw.gz",
+      "storedSHA256": "3d1516c5a7514bd7dac3618429d0caba33c870558fdd572c2496a730929438ab",
+      "archive": "archives/integration-macos26-e9da1bd.tar.gz"
+    },
+    {
+      "originalPath": "integration-macos26-a84c4b8/tests-job.log",
+      "originalSHA256": "ba3c9b7385999d08f01e32d990bbc6e54870dd6f1dd9297e58229d7cd42a39ba",
+      "originalBytes": 370279,
+      "storedPath": "integration-macos26-a84c4b8/tests-job.log.raw.gz",
+      "storedSHA256": "b0de31d9c619276f8b3bd1baa826788ce2f6ca024ae596d6025df232c1011179",
+      "archive": "archives/integration-macos26-a84c4b8.tar.gz"
+    },
+    {
+      "originalPath": "integration-macos26-a84c4b8/website-job.log",
+      "originalSHA256": "cc81bdf629384642fe5d0b7aa485872085ea147071236b58b5ab6497d9fd4f83",
+      "originalBytes": 27633,
+      "storedPath": "integration-macos26-a84c4b8/website-job.log.raw.gz",
+      "storedSHA256": "fb679aa6a178422aec6970d77b86e8b67b32303b3fdf82572b95e5ed00116256",
+      "archive": "archives/integration-macos26-a84c4b8.tar.gz"
+    },
+    {
+      "originalPath": "integration-macos26-03ca506/tests-job.log",
+      "originalSHA256": "b5c9a759163f271179a9bd8b82dd71579a6b5dd4f8ba4a70be3468f8fc8b4ddf",
+      "originalBytes": 370527,
+      "storedPath": "integration-macos26-03ca506/tests-job.log.raw.gz",
+      "storedSHA256": "7b4dd96d8ee4ee36e83d910c8274f4c3c3d933cf139c83877db2fb70dc6f481c"
+    },
+    {
+      "originalPath": "integration-macos26-03ca506/website-job.log",
+      "originalSHA256": "bc972872a4fed37d96ecc731d7841bb80089750508a74db2a007293f12df0494",
+      "originalBytes": 28440,
+      "storedPath": "integration-macos26-03ca506/website-job.log.raw.gz",
+      "storedSHA256": "a8a9ce33dceb14ffeccb687f5df66a4e754dfe8e206e421670294cbd3db40d8f"
+    },
+    {
+      "originalPath": "integration-macos27-03ca506/tests-job.log",
+      "originalSHA256": "fee4476afe2c5452c195e9e21fdfb2c781aa32234f70a4085e9438860a06223a",
+      "originalBytes": 545129,
+      "storedPath": "integration-macos27-03ca506/tests-job.log.raw.gz",
+      "storedSHA256": "9079c5af1fedc967a9cbeb59010648f66888812dd96ea2b81e45e6a494fb8451"
+    },
+    {
+      "originalPath": "integration-macos27-03ca506/website-job.log",
+      "originalSHA256": "fa42281a8298074ee095d1090fe0e6689984a56258d95c213565a0b9a6874d5c",
+      "originalBytes": 28409,
+      "storedPath": "integration-macos27-03ca506/website-job.log.raw.gz",
+      "storedSHA256": "a6b822d4009a84a703666333a71b904b182116cdef35953aeb2ee82eec51e6f1"
     }
   ]
 }

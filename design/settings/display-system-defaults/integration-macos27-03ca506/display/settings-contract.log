@@ -1,0 +1,73 @@
+settings-contract config: interactive=True runtime-watchdog=300s compile-watchdog=120s optimization=Onone
+settings-contract 0.000s start
+settings-contract 0.004s RSS growth policy regression cases passed
+settings-contract 0.560s battery completion failed-write-newer-ready: passed
+settings-contract 0.680s battery completion failed-write-newer-failed: passed
+settings-contract 0.812s battery completion successful-write-readback-failed: passed
+settings-contract 0.946s battery completion failed-status-rejects-old-value: passed
+settings-contract 0.997s battery completion no-window fixtures passed
+settings-contract 1.533s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 1.583s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 1.645s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 1.662s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 1.676s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 1.678s key loop: fullKeyboard=false reverse=false nativeReachedTarget=false
+settings-contract 1.678s key loop: fullKeyboard=false reverse=true nativeReachedTarget=false
+settings-contract 1.678s key loop: fullKeyboard=false reverse=false nativeReachedTarget=false
+settings-contract 1.678s key loop: fullKeyboard=false reverse=true nativeReachedTarget=false
+settings-contract 1.678s key loop: fullKeyboard=false reverse=false nativeReachedTarget=false
+settings-contract 1.678s key loop: fullKeyboard=false reverse=true nativeReachedTarget=false
+settings-contract 1.695s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 1.748s module-layout rows=[583.0, 583.0, 583.0, 583.0, 583.0, 583.0] page=(0.0, 0.0, 583.0, 444.0) scroll=(-20.0, -20.0, 623.0, 394.0) clip=(0.0, 0.0, 623.0, 394.0) document=(0.0, 0.0, 623.0, 472.0) scroller=1 preferred=1
+settings-contract 1.772s module-order
+settings-contract 16.706s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 16.727s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 16.744s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 16.766s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 16.782s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 16.798s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 16.827s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 16.842s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 16.854s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 16.881s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 16.897s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 16.913s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.035s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.047s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.059s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.092s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.115s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.128s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.177s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.200s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.222s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.248s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.268s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.282s display-spacing minimumAdjacentInkGap=17.461181640625
+settings-contract 17.818s key loop: fullKeyboard=false reverse=false nativeReachedTarget=false
+settings-contract 19.204s key loop: fullKeyboard=false reverse=false nativeReachedTarget=false
+settings-contract 19.204s key loop: fullKeyboard=false reverse=false nativeReachedTarget=false
+settings-contract 19.205s key loop: fullKeyboard=false reverse=true nativeReachedTarget=false
+settings-contract 19.205s key loop: fullKeyboard=false reverse=true nativeReachedTarget=false
+settings-contract 19.205s key loop: fullKeyboard=false reverse=false nativeReachedTarget=false
+settings-contract 19.205s key loop: fullKeyboard=false reverse=true nativeReachedTarget=false
+settings-contract 20.760s state, layout, appearance and action assertions complete
+settings-contract 32.821s headless 50-controller release assertions complete
+settings-contract 34.543s visible window, keyboard and reopen assertions complete
+settings-contract 35.438s reuse 500-cycle assertions complete
+settings-contract 46.639s warmup 50 created: construction=6.892s presentation=0.572s
+settings-contract 56.112s warmup 50 created: construction=5.472s presentation=0.438s
+settings-contract 65.879s warmup 50 created: construction=4.958s presentation=0.399s
+settings-contract 66.883s warmup 150-controller release assertions complete
+settings-contract 76.805s stress 50 50 created: construction=5.860s presentation=0.478s
+settings-contract 90.124s stress 100 50 created: construction=6.154s presentation=0.507s
+settings-contract 102.863s stress 150 50 created: construction=7.373s presentation=0.557s
+settings-contract 115.619s stress 200 50 created: construction=7.176s presentation=0.564s
+settings-contract 126.981s stress 250 50 created: construction=6.279s presentation=0.505s
+settings-contract 138.815s stress 300 50 created: construction=6.674s presentation=0.536s
+settings-contract 151.144s stress 350 50 created: construction=6.212s presentation=0.520s
+settings-contract 163.204s stress 400 50 created: construction=6.582s presentation=0.531s
+settings-contract 174.767s stress 450 50 created: construction=6.453s presentation=0.552s
+settings-contract 187.193s stress 500 50 created: construction=6.479s presentation=0.554s
+reuse0 rss=938459136; reuse500 rss=938950656; warm150 rss=965312512 fd=9; created50 rss=966213632 fd=9 windows=3; created100 rss=900055040 fd=9 windows=3; created150 rss=900988928 fd=9 windows=3; created200 rss=900382720 fd=9 windows=3; created250 rss=900874240 fd=9 windows=3; created300 rss=900579328 fd=9 windows=3; created350 rss=900743168 fd=9 windows=3; created400 rss=901087232 fd=9 windows=3; created450 rss=901447680 fd=9 windows=3; created500 rss=900939776 fd=9 windows=3; final rss=900939776 fd=9 plateauSpread=1392640 plateauUpwardGrowth=1392640
+settings-contract 188.325s all assertions complete

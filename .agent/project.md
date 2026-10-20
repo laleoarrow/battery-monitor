@@ -364,12 +364,19 @@ The controls and settings remain in place when selection changes. Display uses
 system radio/focus drawing and the shared Glass groups retain the system's
 default corner radius. See the
 [system controls review](../design/settings/display-system-defaults/README.md).
-Frozen `5b5ab47` passes full CI on macOS 26.6.2 / SDK 26.5 and macOS 27.0.1 /
-SDK 27: 678 Swift tests and 625 Python tests per platform (four expected opt-in
-GUI skips). The 27 gate additionally verifies 34 real frames, eight native
-Settings tests, three interaction variants, 20,000 animation iterations and a
-universal App/helper build. The 26 GUI proof retains 38 frames and eight native
-tests with identical production/fixture bytes. No installation is performed.
+Frozen `03ca506` adds the final accessibility-label and preview-spacing
+follow-ups. Settings uses one fixed 800 × 520-point window across its pages;
+the seven preview cells are about 70.5 points wide. The top two styles retain
+their original fonts and natural glyphs, with at least 14 points between the
+preceding glyph and the next percentage's text ink. Complete CI passes on macOS
+26.6.2 / SDK 26.5 and actual macOS 27.0.1 / SDK 27: 700 Swift and 626 Python tests
+per platform (four expected opt-in GUI skips). The 27 gate also passes 34 real
+800 × 520 frames, eight native Settings tests, three interaction variants,
+20,000 animation iterations and the universal App/helper build. Details are in the
+[integration record](../design/settings/display-system-defaults/integration-verification.json).
+This Display work performs no additional installation or public release. The
+recorded local 4.3.24 installation contains the three visual styles, but precedes
+the final accessibility-label and spacing follow-ups.
 General scrolls as needed for the added logo choice or expanded recovery help;
 keyboard focus brings the logo selector into view. Modules use monochrome SF Symbols, 12-point descriptions, inset
 separators and right-aligned switches. See the

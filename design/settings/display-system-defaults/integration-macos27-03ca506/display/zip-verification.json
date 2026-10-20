@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "artifactID": 12248529777,
+  "workflowRun": 39389731667,
+  "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+  "sha256": "3d24d112c896a6377ad5180c319ce5ada274034ca1a981c6ed00b59da305c0af",
+  "matchesArtifactDigest": true,
+  "ownedZIPRemoved": true
+}

@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+  "allPassed": true,
+  "tests": 700,
+  "products": [
+    {
+      "product": "WattsonTests.xctest",
+      "tests": 670,
+      "failures": 0
+    },
+    {
+      "product": "WattsonHelperV5SupportTests.xctest",
+      "tests": 30,
+      "failures": 0
+    }
+  ],
+  "currentSuites": {
+    "BatteryIcon27Tests": {
+      "tests": 13,
+      "failures": 0
+    },
+    "SystemBatteryHealthTests": {
+      "tests": 11,
+      "failures": 0
+    },
+    "MenuBarIconStyleSettingsTests": {
+      "tests": 5,
+      "failures": 0
+    },
+    "SettingsGlassOpticalMarginTests": {
+      "tests": 3,
+      "failures": 0
+    }
+  },
+  "AXCases": {
+    "testInsetPercentageAccessibilityTracksAndClampsTheDisplayedNumber": true,
+    "testInsetPercentageHasAnAccessibleLabelOnlyWhenShown": true
+  },
+  "environmentFile": "environment.txt"
+}

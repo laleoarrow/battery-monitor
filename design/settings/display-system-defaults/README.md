@@ -1,5 +1,9 @@
 # Display: system controls and macOS 27
 
+The [latest integration record](integration-verification.json) pins `03ca506`,
+including the final accessibility and preview-spacing follow-ups. Earlier
+acceptance below is kept with its original frozen source.
+
 The previous revision passed its functional checks, but the user rejected its
 inconsistent custom corner shapes and visual treatment. This revision removes
 the custom row background, outline, radio indicator and focus drawing. AppKit
@@ -142,7 +146,78 @@ During evidence cleanup, the shared branch received `0ae7ee0` and `98d53c1`
 from the separate [system metric authority work](../../system-metric-authority/README.md).
 They update battery health/charging authority and install a local 4.3.24
 candidate. Those commits and their installation are preserved. The 5b5ab47
-reports above do not cover that later production delta. An integrated source
-is being frozen for complete macOS 26/27 CI before final acceptance of the
-combined branch; the Display Settings controller and capture fixture remain
-unchanged. No additional local installation is performed by this Display work.
+reports above do not cover that later production delta. Integrated `e9da1bd`
+passes complete macOS 26 and 27 CI: 698 Swift and 625 Python tests per platform,
+with four expected opt-in GUI skips. Its macOS 27 run also passes 34 captures,
+eight native Settings tests, three interaction variants, 20,000 animation
+iterations and the universal App/helper build. The sealed
+[macOS 26 audit](integration-macos26-e9da1bd/execution-audit.json) and
+[macOS 27 audit](integration-macos27-e9da1bd/execution-audit.json) remain viewable;
+their full original evidence is preserved in the byte-verified run archives.
+
+A final accessibility follow-up adds an explicit battery-percentage label when
+macOS 27 embeds the shown digits in its image. Older styles and percentage Off
+retain AppKit's default label behavior, and unavailable data clears the override.
+Fourteen selected Swift and 57 focused Python tests pass locally. These checks
+cover presentation and wiring, not live VoiceOver observation. Integrated
+`a84c4b8` then passes complete macOS 26/27 CI: 700 Swift and 626 Python tests per
+platform, four expected opt-in skips, and the complete macOS 27 capture,
+interaction, stress and universal-build gates. Its
+[macOS 26 audit](integration-macos26-a84c4b8/execution-audit.json) and
+[macOS 27 audit](integration-macos27-a84c4b8/execution-audit.json) remain viewable.
+No additional local installation is performed by this Display work.
+
+## Preview spacing correction
+
+The user found the upper two rows crowded with percentage On. In the 720-point
+window, each preview cell was about 59 points wide, almost the full width of
+macOS 26's `100%` plus battery glyph. The tightest visible gaps were about five
+points for macOS 26 and seven for Wattson.
+
+`03ca506` changes only the shared Settings width from 720 to 800 points in
+production. All pages retain one fixed window size; height, row geometry,
+sidebar, native controls, fonts and glyph sizes stay the same. The preview cells
+grow to about 70.5 points. The native Settings contract now measures the gap
+from each preceding glyph to the next percentage's actual text ink and requires
+at least 14 points. Eight headless native Settings tests and eleven focused
+Swift tests pass locally. Actual macOS 27 validation then passes 34 real
+800 × 520 frames and eight native Settings tests. The independent conservative
+geometry comparison improves Wattson's tightest gap from 7 to 18 points and
+macOS 26's from 5 to 16 points. All 30 native CoreText gap traces meet the
+14-point requirement; their minimum is 17.461 points. The 105 font, image and
+alignment metric comparisons are unchanged. General and Modules retain their
+existing vertical scrolling with no horizontal clipping. Complete macOS 26 CI
+passes 700 Swift and 626 Python tests; the final macOS 27 full gate is recorded
+separately in the latest integration record.
+
+## Accepted integrated verification
+
+Final source is `03ca506ddcc71b8ddf391c1b0258df36c85a763f`.
+
+| Actual environment | Complete result | Evidence |
+| --- | --- | --- |
+| macOS 26.6.2, Xcode 26.6, SDK 26.5 | 700 Swift, 626 Python with four expected opt-in GUI skips; seven website tests, lint and export | [Final 26 audit](integration-macos26-03ca506/execution-audit.json) |
+| macOS 27.0.1, Xcode 27.0, SDK 27.0 | 34 composited frames, eight native Settings tests, 700 Swift, 626 Python with four expected opt-in skips; three native interaction variants, 20,000 animation iterations and universal App/helper verification | [Final 27 audit](integration-macos27-03ca506/execution-audit.json) |
+
+Both final workflows and all jobs conclude `success`:
+[macOS 26](https://github.com/laleoarrow/battery-monitor/actions/runs/39389722167)
+and [macOS 27](https://github.com/laleoarrow/battery-monitor/actions/runs/39389731667).
+The Swift total is 670 App tests plus 30 helper tests, counted once. All 68
+selected production files match the frozen source in the
+[continuity record](integration-source-continuity.json). The only production
+change after the fully accepted `a84c4b8` functional baseline is the shared
+Settings width constant; the new source nevertheless passes the complete gate.
+
+The [Light](integration-macos27-03ca506/display/after-macos27-selected/glass-light-percentage-on.png)
+and [Dark](integration-macos27-03ca506/display/after-macos27-selected/glass-dark-percentage-on.png)
+images are actual macOS 27 windows. The
+[display audit](integration-macos27-03ca506/display/independent-display-audit.json)
+separates measured CoreText ink gaps from the conservative before/after frame
+comparison. Their source inputs and artifact digests are verified.
+
+A read-only canonical check still matches the recorded local 4.3.24 executable
+from `0ae7ee0`. It contains the three Display styles but predates the final
+accessibility-label and spacing follow-ups. This Display work does not install
+another App or publish a release. The build uses ad-hoc signatures. Physical
+macOS 27 battery hardware, login/install acceptance and live VoiceOver
+observation remain outside these software gates.

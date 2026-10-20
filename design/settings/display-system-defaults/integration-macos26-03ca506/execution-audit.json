@@ -1,0 +1,510 @@
+{
+  "allPassed": true,
+  "cleanup": {
+    "bothRemoteJobsReachedOrphanProcessCleanup": true,
+    "downloadScratchOwnedBySharedLifecycleAndRemoved": true,
+    "localCanonicalAppHelperSettingsUntouched": true
+  },
+  "displaySpacing": {
+    "nativeSettingsContractPassed": true,
+    "separateHeadlessSpacingTraceObserved": false,
+    "sourceContentSize": {
+      "height": 520,
+      "width": 800
+    },
+    "traceLines": []
+  },
+  "environment": {
+    "architecture": "arm64",
+    "sdkVersion": "26.5",
+    "systemBuild": "25G83",
+    "systemVersion": "26.6.2",
+    "xcodeBuild": "17F113",
+    "xcodeVersion": "26.6"
+  },
+  "githubMetadata": {
+    "conclusion": "success",
+    "headSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+    "jobs": [
+      {
+        "completedAt": "2026-10-20T08:03:08Z",
+        "conclusion": "success",
+        "id": 118518033721,
+        "name": "SwiftPM and Python tests",
+        "startedAt": "2026-10-20T07:55:12Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-20T07:55:53Z",
+        "conclusion": "success",
+        "id": 118518033905,
+        "name": "Website build, test, lint, and export",
+        "startedAt": "2026-10-20T07:55:07Z",
+        "status": "completed"
+      }
+    ],
+    "status": "completed"
+  },
+  "integrationVersion": "4.3.24",
+  "limits": [
+    "This is spacing integration-source macOS 26 headless CI; four real AppKit interaction tests are intentionally opt-in and listed as skips. It does not claim macOS 27 native Display image-gap acceptance or canonical installation validation."
+  ],
+  "python": {
+    "durationSeconds": 336.5,
+    "expectedSkips": 4,
+    "explicitMacOS27ConditionalStepCount": 7,
+    "failures": 0,
+    "localRuntimeCleanup": {
+      "foundationCleanupPassed": true,
+      "nonFoundationLifecycleRegressions": 15,
+      "passed": 16,
+      "tests": [
+        "test_source_only_runners_preserve_caller_traps_and_complete_cleanup",
+        "test_success_and_command_failure_remove_workspace",
+        "test_communicate_retries_preserve_input_output_and_timeout",
+        "test_signals_inside_popen_wait_locks_do_not_reenter_cleanup",
+        "test_assertion_failure_also_cleans_workspace",
+        "test_cleanup_error_does_not_skip_later_resources_or_mask_failure",
+        "test_timeout_stops_descendants_before_unregistering",
+        "test_timeout_probe_permission_error_still_stops_owned_descendants",
+        "test_signal_permission_error_is_reported_and_owned_child_retained",
+        "test_cleanup_failure_after_success_is_an_error",
+        "test_permission_error_for_an_exited_group_is_not_a_cleanup_failure",
+        "test_reaping_an_owned_child_has_a_deadline",
+        "test_timeout_allows_nested_shell_supervisor_to_reap_its_group",
+        "test_timeout_waits_for_slow_nested_lifecycle_cleanup",
+        "test_parent_interrupts_stop_children_and_remove_workspace",
+        "test_foundation_preferences_are_removed_after_harness_failure"
+      ],
+      "totalTests": 16
+    },
+    "macOS27WorkflowGuardContractPassed": true,
+    "menuBarPercentageContract": {
+      "inlinePercentageAXStaticRegressionPassed": true,
+      "passed": 10,
+      "tests": [
+        {
+          "suite": "MenuBarPercentageContractTests",
+          "test": "test_percentage_is_on_by_default"
+        },
+        {
+          "suite": "MenuBarPercentageContractTests",
+          "test": "test_percentage_sits_left_of_the_glyph"
+        },
+        {
+          "suite": "MenuBarPercentageContractTests",
+          "test": "test_percentage_uses_tabular_digits"
+        },
+        {
+          "suite": "MenuBarPercentageContractTests",
+          "test": "test_title_is_plain_so_appkit_keeps_the_colour_right"
+        },
+        {
+          "suite": "MenuBarPercentageContractTests",
+          "test": "test_hiding_the_percentage_leaves_the_glyph_alone"
+        },
+        {
+          "suite": "MenuBarPercentageContractTests",
+          "test": "test_inline_style_does_not_repeat_the_percentage_outside_the_image"
+        },
+        {
+          "suite": "MenuBarPercentageContractTests",
+          "test": "test_image_and_key_receive_one_consistent_percentage_setting"
+        },
+        {
+          "suite": "MenuBarPercentageContractTests",
+          "test": "test_inline_percentage_accessibility_follows_the_presentation_cache"
+        },
+        {
+          "suite": "MenuBarPercentageContractTests",
+          "test": "test_status_item_redraws_when_the_setting_changes"
+        },
+        {
+          "suite": "MenuBarPercentageContractTests",
+          "test": "test_toggle_is_reachable_from_the_popover"
+        }
+      ]
+    },
+    "passed": true,
+    "settingsWindowContract": {
+      "nativeAppKitLayoutStateAndReleasePassed": true,
+      "passed": 8,
+      "tests": [
+        "test_appkit_window_layout_state_and_release_contract",
+        "test_default_sections_use_only_existing_settings",
+        "test_display_keeps_style_and_percentage_independent",
+        "test_display_uses_native_radio_drawing_and_system_glass_corners",
+        "test_dock_icon_is_a_separate_restart_only_preference",
+        "test_in_app_logo_uses_static_resources_without_changing_system_icons",
+        "test_liquid_glass_is_an_appearance_only_native_opt_in",
+        "test_source_has_no_timer_and_uses_the_narrow_section_boundary"
+      ]
+    },
+    "skips": [
+      {
+        "reason": "'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'",
+        "suite": "test_interaction_behavior.InteractionBehaviorTests",
+        "test": "test_interaction_contract_holds_against_real_appkit"
+      },
+      {
+        "reason": "'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'",
+        "suite": "test_interaction_behavior.InteractionBehaviorTests",
+        "test": "test_legacy_optical_lens_contract_holds_against_real_appkit"
+      },
+      {
+        "reason": "'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'",
+        "suite": "test_interaction_behavior.InteractionBehaviorTests",
+        "test": "test_legacy_slider_contract_holds_against_real_appkit"
+      },
+      {
+        "reason": "'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'",
+        "suite": "test_interaction_behavior.InteractionBehaviorTests",
+        "test": "test_reduce_transparency_contract_holds_against_real_appkit"
+      }
+    ],
+    "tests": 626
+  },
+  "schema": 3,
+  "sourceMatches": true,
+  "sourceSHA": "03ca506ddcc71b8ddf391c1b0258df36c85a763f",
+  "status": "accepted-complete-spacing-integration-headless-ci",
+  "swift": {
+    "batteryIcon27AXRegressionTestsPassed": [
+      "testInsetPercentageHasAnAccessibleLabelOnlyWhenShown",
+      "testInsetPercentageAccessibilityTracksAndClampsTheDisplayedNumber"
+    ],
+    "durationSeconds": 29.654,
+    "executedSuites": {
+      "BatteryIcon27Tests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 13
+      },
+      "BatteryRuntimeEstimateTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 20
+      },
+      "BatteryRuntimePresentationTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 12
+      },
+      "BatteryTimeFallbackTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 19
+      },
+      "ColorSchemeSettingsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 3
+      },
+      "DockIconSettingsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 5
+      },
+      "FeedbackDiagnosticsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 8
+      },
+      "FlowNodeIconTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 1
+      },
+      "FooterHoverFeedbackViewTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 15
+      },
+      "FooterHoverIntegrationTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 5
+      },
+      "GlassPopoverBackgroundTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 3
+      },
+      "GlassPopoverPanelTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 12
+      },
+      "GlassPopoverShapeTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 3
+      },
+      "GlassTransparencySettingsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 3
+      },
+      "GlobalPopoverClickTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 8
+      },
+      "HelperProcessTerminationTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 7
+      },
+      "HelperTopProcessesTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 11
+      },
+      "HistoryChartTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 36
+      },
+      "HistoryViewTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 12
+      },
+      "InAppLogoSettingsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 4
+      },
+      "InteractiveGlassModeControlTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 16
+      },
+      "LiquidGlassStyleSettingsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 4
+      },
+      "MenuBarIconStyleSettingsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 5
+      },
+      "ModeSliderAppearanceTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 6
+      },
+      "ModuleOrderSettingsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 8
+      },
+      "ModuleOrderViewTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 6
+      },
+      "NativeGlassModeControlTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 9
+      },
+      "NativeModeSegmentedControlTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 25
+      },
+      "PopoverAppearanceTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 12
+      },
+      "PopoverArrowSettingsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 4
+      },
+      "PopoverPlacementTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 18
+      },
+      "PowerFlowEfficiencyTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 7
+      },
+      "PowerHistoryFreshnessTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 4
+      },
+      "PowerInputFallbackTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 10
+      },
+      "PowerObservationCaptureTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 28
+      },
+      "PowerObservationFusionFoundationTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 23
+      },
+      "PowerObservationFusionReplayTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 3
+      },
+      "PowerObservationPhase2FixtureTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 4
+      },
+      "PowerObservationRuntimeTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 14
+      },
+      "PowerObservationShadowTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 4
+      },
+      "PowerObservationV5SupportTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 12
+      },
+      "PowerObservationWireV5Tests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 26
+      },
+      "PowerPresentationStateTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 6
+      },
+      "PowerSymbolArtworkTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 5
+      },
+      "ProcessActionButtonTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 8
+      },
+      "ProcessTerminationPresenterTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 5
+      },
+      "ProcessTerminationTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 4
+      },
+      "RawPowerObservationTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 22
+      },
+      "RingMetricSettingsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 9
+      },
+      "RingMetricTelemetryTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 12
+      },
+      "RingMetricViewTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 8
+      },
+      "SamplingEfficiencyTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 11
+      },
+      "SettingsControlsRecoveryTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 3
+      },
+      "SettingsGlassOpticalMarginTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 3
+      },
+      "SettingsIconReuseTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 3
+      },
+      "StatusClickDismissalTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 6
+      },
+      "SystemBatteryHealthTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 11
+      },
+      "TestDefaultsCleanupTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 1
+      },
+      "TopProcessSettingsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 7
+      },
+      "TopProcessesMonitorTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 12
+      },
+      "TopProcessesTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 4
+      },
+      "TopProcessesViewTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 30
+      },
+      "WattsonTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 82
+      }
+    },
+    "failures": 0,
+    "passed": true,
+    "testCountDerivation": "Actual completed spacing integration product log; all 63 per-suite counts independently sum to 700. No previous pass reused.",
+    "tests": 700
+  },
+  "website": {
+    "exportCompleted": true,
+    "failures": 0,
+    "lintCompleted": true,
+    "passed": 7,
+    "postJobCleanup": true,
+    "sourceMatches": true,
+    "tests": 7
+  },
+  "workflowRun": 39389722167,
+  "workflowURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39389722167"
+}
