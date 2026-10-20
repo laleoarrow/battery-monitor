@@ -47,36 +47,23 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /Community build/i);
   assert.match(html, /system Light and Dark Mode/i);
   assert.match(html, /scrolls on short screens without shrinking/i);
-  assert.match(html, /macOS-style battery glyph/i);
   assert.match(html, /diagonal adapter plug/i);
   assert.match(html, /green bracketed charging battery/i);
   assert.match(html, /simplified matching System chip/i);
   assert.match(html, /Classic remains the default/i);
-  assert.match(html, /On macOS 26, optional Liquid Glass/i);
+  assert.match(html, /On macOS 26 and later, optional Liquid Glass/i);
   assert.match(html, /Standard Glass for a softly frosted popup/i);
   assert.match(html, /Clear Glass to reveal more of the backdrop/i);
-  assert.match(html, /dedicated Menu Bar Icon page/i);
-  assert.match(html, /Wattson icon only/i);
-  assert.match(html, /Wattson with percentage/i);
-  assert.match(html, /macOS 26 icon only/i);
-  assert.match(html, /macOS 26 with percentage/i);
-  assert.match(html, /appearances vertically/i);
-  assert.match(html, /one full-width option per row/i);
-  assert.match(html, /seven real production-rendered states/i);
-  assert.match(
-    html,
-    /Battery, Full, Charging, Low, Low \+ AC, Saver, and Saver \+ AC/i,
-  );
-  assert.match(html, /full-size macOS 26 Control Center battery parts from the running system/i);
-  assert.match(html, /23×12 outline and 11×14 bolt/i);
-  assert.match(html, /Every connected state uses the system bolt/i);
-  assert.match(html, /only the battery fill is yellow/i);
-  assert.match(html, /outline, cap, and bolt keep the menu-bar foreground colour/i);
+  assert.match(html, /Display page offers three menu-bar styles: Wattson, macOS 26, and macOS 27/i);
+  assert.match(html, /Native radio controls select the style/i);
+  assert.match(html, /shared Off\/On control sets whether to show the percentage/i);
+  assert.match(html, /Seven real production-rendered states share one header/i);
+  assert.match(html, /Battery, Full, Charging, Low, Low \+ AC, Saver, and Saver \+ AC/i);
   assert.match(html, /real BatteryIcon renderer/i);
-  assert.match(
-    html,
-    /percentage rows show matching per-state values to the left of each glyph/i,
-  );
+  assert.match(html, /Wattson and macOS 26 place percentages beside the glyph/i);
+  assert.match(html, /macOS 27 embeds them inside the battery/i);
+  assert.match(html, /optional percentage is also available to accessibility tools/i);
+  assert.match(html, /vector fallbacks on older macOS versions/i);
   assert.match(html, /General includes Check for Updates and Check for Updates on Launch/i);
   assert.match(html, /Manual checks read GitHub Latest Release/i);
   assert.match(html, /launch checks default on, stay quiet when current or offline/i);
@@ -92,7 +79,7 @@ test("renders the complete English Wattson release page", async () => {
   assert.match(html, /Keyboard, disabled, and pending states remain supported/i);
   assert.match(html, /accessibility preferences use simpler native controls/i);
   assert.doesNotMatch(html, /now slightly smaller|Settings sidebar uses the real packaged Wattson app icon/i);
-  assert.match(html, /720×520/i);
+  assert.match(html, /800×520/i);
   const expectedVersion = await configuredReleaseVersion();
   assert.match(html, new RegExp(expectedVersion.replaceAll(".", "\\."), "i"));
   assert.match(html, /bundled stable release/i);

@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "preparedAtUTC": "2026-10-20T08:29:39.075570+00:00",
+  "expectedVersion": "5.0.0",
+  "status": "prepared_only_baseline_and_post_install_not_executed",
+  "syntaxChecks": {
+    "pythonAST": true,
+    "shellBashN": true
+  },
+  "rejectionChecks": [
+    {
+      "check": "invalid_provenance_inherited_optimization_0",
+      "rejected": true
+    },
+    {
+      "check": "invalid_provenance_inherited_optimization_1",
+      "rejected": true
+    },
+    {
+      "check": "invalid_provenance_inherited_optimization_2",
+      "rejected": true
+    },
+    {
+      "check": "direct_optimized_installation_state.py",
+      "rejected": true
+    },
+    {
+      "check": "direct_optimized_verify_details.py",
+      "rejected": true
+    },
+    {
+      "check": "missing_arguments",
+      "rejected": true
+    }
+  ],
+  "rejectionFixturesRemoved": true,
+  "postInstallVerifierExecuted": false,
+  "helperContacted": false,
+  "canonicalLifecycleChanged": false,
+  "sourceInputsSHA256": {
+    "README.md": "46a82c77daccb7279c9b7c16c7153c590d9a9764a58cf15a09b1b938fec8cc27",
+    "installation_state.py": "48515777a1c918c31127e9943ce28ac35e2ce849ded2d57ed08e629fbb691b06",
+    "verify-installed.sh": "db9486cfc2163fa8a1a258633c742396af63eb66f0a0c590d871a5d8cf8decb8",
+    "verify-payload.sh": "d56d5290b1bdbd8b633799a74ec7d8bb983e301f79a528341929fbe30c972ee3",
+    "verify_details.py": "005d11f59ba64b7665aaeb753f436a8192c756d3a3c98ce1aee7c6c1d9227142"
+  }
+}

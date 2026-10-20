@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#E9E9E9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title>Wattson System Battery menu-bar icon</title>
+<defs>
+<linearGradient id="window" gradientUnits="userSpaceOnUse" x1="0" y1="8.8" x2="0" y2="19.4">
+<stop offset="0" stop-color="#0A84FF" stop-opacity="0.02"/>
+<stop offset="1" stop-color="#0A84FF" stop-opacity="0.17"/>
+</linearGradient>
+</defs>
+<rect x="3.4" y="8.8" width="17.2" height="10.6" rx="1.6" fill="url(#window)" data-decorative="true"/>
+<rect x="2.7" y="3.8" width="18.6" height="16.4" rx="2.4" stroke="currentColor" stroke-width="1.35"/>
+<path d="M 3.1 8.8 L 20.9 8.8" stroke="currentColor" stroke-width="1.1"/>
+<rect x="13.3" y="5.3" width="4.9" height="2" rx="0.5" fill="#0A84FF"/>
+<path d="M 19.1 5.9 L 19.1 6.7" stroke="#0A84FF" stroke-width="0.8"/>
+</svg>

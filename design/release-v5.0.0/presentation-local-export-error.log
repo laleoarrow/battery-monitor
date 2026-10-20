@@ -1,0 +1,5 @@
+TypeError: Cannot convert argument to a ByteString because the character at index 118 has a value of 30005 which is greater than 255.
+    at webidl.converters.ByteString (node:internal/deps/undici/undici:5071:17)
+    at _Headers.set (node:internal/deps/undici/undici:10333:35)
+    at le (file:///Users/leoarrow/Project/mypackage/agents/%E7%94%B5%E6%B1%A0%E5%8A%9F%E7%8E%87/.build/release-presentation-v500.noindex/check.PlKuWV/website/dist/server/_next/static/text-stream-Jd5RCakL.js:1:2925)
+Node.js v25.3.0

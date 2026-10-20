@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#C7C7CC" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title>Wattson selected Pro B — Disconnected</title>
+<defs><linearGradient id="adapter-b-wash" gradientUnits="userSpaceOnUse" x1="14.46507" y1="8.7053173" x2="7.2222666" y2="17.336954"><stop offset="0" stop-color="currentColor" stop-opacity="0.02"/><stop offset="1" stop-color="currentColor" stop-opacity="0.08"/></linearGradient></defs>
+<path d="M 6.8537169 17.776174 L 3.7290562 21.5" stroke="currentColor" stroke-width="1.5954409"/>
+<path d="M 16.222477 2.5 L 12.809386 6.5675633 M 20.270944 5.897067 L 16.857853 9.9646303" stroke="currentColor" stroke-width="1.5954409"/>
+<path d="M 11.256851 6.0133019 L 17.673289 11.397333 C 17.926432 11.609745 17.959445 11.987079 17.747032 12.240223 L 13.965392 16.747007 C 12.266217 18.772004 9.2472639 19.036128 7.2222666 17.336954 C 5.1972694 15.63778 4.9331452 12.618826 6.6323196 10.593829 L 10.41396 6.0870453 C 10.626373 5.8339015 11.003707 5.8008891 11.256851 6.0133019 Z" fill="url(#adapter-b-wash)" data-decorative="true"/>
+<path d="M 11.256851 6.0133019 L 17.673289 11.397333 C 17.926432 11.609745 17.959445 11.987079 17.747032 12.240223 L 13.965392 16.747007 C 12.266217 18.772004 9.2472639 19.036128 7.2222666 17.336954 C 5.1972694 15.63778 4.9331452 12.618826 6.6323196 10.593829 L 10.41396 6.0870453 C 10.626373 5.8339015 11.003707 5.8008891 11.256851 6.0133019 Z" stroke="currentColor" stroke-width="1.1467232"/>
+</svg>

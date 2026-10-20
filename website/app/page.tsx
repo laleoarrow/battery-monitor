@@ -259,29 +259,24 @@ export default function Home() {
               <span className="feature-number">02</span>
               <h3>Native by design</h3>
               <p>
-                Classic remains the default. On macOS 26, optional Liquid Glass
+                Classic remains the default. On macOS 26 and later, optional Liquid Glass
                 offers Standard Glass for a softly frosted popup or Clear Glass
                 to reveal more of the backdrop.
                 The popover follows system Light and Dark Mode, retains its
                 native material, and scrolls on short screens without shrinking
                 the instruments. Reduce Transparency, Reduce Motion, Increase
                 Contrast, and visible keyboard focus remain supported.
-                The dedicated Menu Bar Icon page uses Wattson’s mark and the
-                macOS-style battery glyph across all four complete menu-bar
-                appearances. It lists the appearances vertically, one full-width
-                option per row: Wattson icon only, Wattson with percentage,
-                macOS 26 icon only, and macOS 26 with percentage. Every row previews
-                seven real production-rendered states: Battery, Full, Charging,
-                Low, Low +
-                AC, Saver, and Saver + AC. Every preview uses the real
-                BatteryIcon renderer; percentage rows show matching per-state
-                values to the left of each glyph. The macOS 26 rows use full-size
-                macOS 26 Control Center battery parts from the running system,
-                including the 23×12 outline and 11×14 bolt, instead of smaller
-                Control Center artwork or generic SF Symbols. Every connected
-                state uses the system bolt. In Low Power Mode, only the battery
-                fill is yellow; the outline, cap, and bolt keep the menu-bar
-                foreground colour. General includes Check for Updates and Check for
+                The Display page offers three menu-bar styles: Wattson, macOS 26,
+                and macOS 27. Native radio controls select the style, and a shared
+                Off/On control sets whether to show the percentage. Seven real
+                production-rendered states share one header: Battery, Full,
+                Charging, Low, Low + AC, Saver, and Saver + AC. The real BatteryIcon
+                renderer keeps previews aligned with the menu bar. Wattson and
+                macOS 26 place percentages beside the glyph; macOS 27 embeds them
+                inside the battery. Its optional percentage is also available to
+                accessibility tools. Supported systems provide their battery
+                artwork, with vector fallbacks on older macOS versions. General
+                includes Check for Updates and Check for
                 Updates on Launch. Manual checks read GitHub Latest Release and
                 open its trusted release page; launch checks default on, stay
                 quiet when current or offline, and never download or install
@@ -305,9 +300,9 @@ export default function Home() {
               <span className="feature-number">03</span>
               <h3>Control in one click</h3>
               <p>
-                Settings fits a compact 720×520 window, with General, Menu Bar
-                Icon, and Modules arranged for quick scanning. In Liquid Glass
-                on macOS 26, drag the selected power-mode capsule and release to
+                Settings uses an 800×520 window, with General, Display,
+                and Modules arranged for quick scanning. In Liquid Glass
+                on macOS 26 and later, drag the selected power-mode capsule and release to
                 request a mode change. Keyboard, disabled, and pending states
                 remain supported; accessibility preferences use simpler native
                 controls.

@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "version": "5.0.0",
+  "gallery": {
+    "path": "design/releases/v5.0.0",
+    "files": 37,
+    "localHTMLLinksExist": true,
+    "approvedPreviewsCopiedByteForByte": 5,
+    "approvedSVGMastersCopiedByteForByte": 19,
+    "deterministicVersionedSourceZIPs": 4,
+    "zipIntegrityAndAllDesignChecksumsPass": true,
+    "runtimeScreenshotsIncluded": false,
+    "publicHTTPSVerificationPendingPagesDeployment": true
+  },
+  "localWebsite": {
+    "nodeVersion": "25.3.0",
+    "npmVersion": "11.8.0",
+    "isolatedScratch": ".build/release-presentation-v500.noindex/check.PlKuWV",
+    "lockedDependencyInstallPassed": true,
+    "fiveStageBuildPassed": true,
+    "exportPassed": false,
+    "testsAndLint": "Not reached because export failed",
+    "failure": "Node/undici ByteString rejected Chinese checkout path in header; no workaround applied",
+    "errorExcerpt": "presentation-local-export-error.log",
+    "requiredReleaseGate": "Exact release SHA CI with configured Node22.13.0 on hosted ASCII checkout"
+  },
+  "cleanup": {
+    "sharedLifecycleHelper": "scripts/lib/local_cleanup.sh",
+    "ownedScratchRemovedOnFailure": true,
+    "appRegistrationsPreferencesContainersMountsCreated": false
+  },
+  "reviewedSourceSHA256": {
+    "website/app/page.tsx": "2c2e0c8d5221bf819a64430ede0bdcbb851895eb331efeffa64b6955368d03a7",
+    "website/tests/rendered-html.test.mjs": "9d94fed3b1ce91d04318dd162303386c850ab0a6f54f246f824ee7e5c51ce853",
+    "design/release-v5.0.0/release-notes.md": "0e3c4ebc5878082553ada494f1fb17c8ff0f632d3d7a5a08c4b50ac3a17ffa37"
+  }
+}

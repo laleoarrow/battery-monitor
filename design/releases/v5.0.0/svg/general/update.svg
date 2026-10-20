@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#E9E9E9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title>Wattson Check for Updates</title>
+<defs>
+<linearGradient id="download" gradientUnits="userSpaceOnUse" x1="0" y1="6" x2="0" y2="21.4">
+<stop offset="0" stop-color="#0A84FF" stop-opacity="0"/>
+<stop offset="1" stop-color="#0A84FF" stop-opacity="0.2"/>
+</linearGradient>
+</defs>
+<circle cx="12" cy="12" r="9.4" fill="url(#download)" data-decorative="true"/>
+<circle cx="12" cy="12" r="9.4" stroke="currentColor" stroke-width="1.35"/>
+<path d="M 12 6.6 L 12 17.1 M 8.4 13.5 L 12 17.1 L 15.6 13.5" stroke="#0A84FF" stroke-width="1.65"/>
+</svg>
