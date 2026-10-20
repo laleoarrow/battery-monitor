@@ -79,7 +79,7 @@ struct SettingsWindowDependencies {
 }
 
 private enum SettingsStyle {
-    static let contentSize = NSSize(width: 720, height: 520)
+    static let contentSize = NSSize(width: 800, height: 520)
     static let sidebarWidth: CGFloat = 176
     static let contentHorizontalInset: CGFloat = 20
     static let contentTopInset: CGFloat = 56

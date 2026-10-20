@@ -116,7 +116,7 @@ final class SettingsGlassOpticalMarginTests: XCTestCase {
             let rows = descendants(list).filter {
                 $0.identifier?.rawValue.hasPrefix("settings.general.row.") == true
             }
-            XCTAssertEqual(list.frame.width, 503, accuracy: 0.5)
+            XCTAssertEqual(list.frame.width, 583, accuracy: 0.5)
             XCTAssertEqual(list.frame.height, 136, accuracy: 0.5)
             XCTAssertEqual(rows.count, 2)
             let orderedRows = rows.sorted {

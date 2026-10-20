@@ -608,12 +608,12 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(first?.titleVisibility == .hidden, "centered window title hidden")
             require(first?.titlebarAppearsTransparent == true, "titlebar is visually unified")
             require(
-                first?.contentView?.frame.size == NSSize(width: 720, height: 520),
+                first?.contentView?.frame.size == NSSize(width: 800, height: 520),
                 "compact content size"
             )
             require(
-                first?.contentMinSize == NSSize(width: 720, height: 520)
-                    && first?.contentMaxSize == NSSize(width: 720, height: 520),
+                first?.contentMinSize == NSSize(width: 800, height: 520)
+                    && first?.contentMaxSize == NSSize(width: 800, height: 520),
                 "compact composition cannot be distorted by resizing"
             )
             require(first?.appearance == nil, "System theme inherits macOS appearance")
@@ -686,7 +686,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(divider.wantsUpdateLayer, "Dark Aqua divider stays dynamic")
             require(approximately(divider.frame.width, 1), "Dark Aqua divider stays one point")
             first?.appearance = nil
-            require(approximately(controller.contentHostFrameForTest.width, 503), "compact content width")
+            require(approximately(controller.contentHostFrameForTest.width, 583), "compact content width")
             require(controller.sidebarStyleForTest == .sourceList, "source-list sidebar")
             require(controller.sidebarAllowsEmptySelectionForTest == false, "sidebar disallows empty selection")
             require(approximately(controller.sidebarRowHeightForTest, 32), "compact navigation row height")
@@ -780,7 +780,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 (generalList, ["login", "battery"]),
                 (updatesList, ["update", "automatic-updates"]),
             ] {
-                require(approximately(list.frame.width, 503), "full-width General group")
+                require(approximately(list.frame.width, 583), "full-width General group")
                 require(approximately(list.frame.height, 136), "each operational group is 2 × 68 points")
                 require((list as? NSBox)?.cornerRadius == 14, "consistent rounded General groups")
                 let rows = descendants(ofType: NSView.self, in: list)
@@ -1209,9 +1209,9 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "one shared header names the seven aligned runtime states")
             require(previewStates.map(\.visibleLabel) == expectedStateLabels,
                 "preview fixtures use the same visible production order")
-            require(approximately(iconPreviewGroup.frame.width, 503)
+            require(approximately(iconPreviewGroup.frame.width, 583)
                 && iconButtons.allSatisfy { approximately($0.frame.width, iconGroup.bounds.width) },
-                "the preview group retains the existing 503-point width with full-width native option rows")
+                "the wider preview group uses the full 583-point content width with native option rows")
             let iconRects = iconButtons.map { $0.convert($0.bounds, to: iconPage) }
             require(zip(iconRects, iconRects.dropFirst()).allSatisfy {
                     !$0.intersects($1) && approximately($0.minX, $1.minX)
@@ -1285,6 +1285,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                 first?.contentView?.layoutSubtreeIfNeeded()
                 require(percentagePreviews.filter { !$0.isHidden }.count == (showingPercentage ? 14 : 0),
                     "On exposes exactly fourteen external labels; macOS 27 embeds its numbers")
+                var previousGlyphRight: [Settings.MenuBarIconStyle: CGFloat] = [:]
+                var minimumAdjacentGap = CGFloat.greatestFiniteMagnitude
                 for (index, previewState) in previewStates.enumerated() {
                     let header = iconStateLabels[index]
                     let headerFrame = header.convert(header.bounds, to: iconPage)
@@ -1349,8 +1351,19 @@ class SettingsWindowContractTests(unittest.TestCase):
                                 && textInState.maxX <= glyphInState.minX + 0.5,
                                 "percentage stays fully visible to the left of its icon: "
                                     + "\(suffix) text=\(textInState) glyph=\(glyphInState) state=\(state.bounds)")
+                            if let previousRight = previousGlyphRight[choice.style] {
+                                let gap = stateFrame.minX + textInState.minX + textInk.minX - previousRight
+                                minimumAdjacentGap = min(minimumAdjacentGap, gap)
+                                require(gap >= 14,
+                                    "adjacent percentage-and-icon previews retain breathing room: "
+                                        + "\(suffix) inkGap=\(gap)")
+                            }
+                            previousGlyphRight[choice.style] = stateFrame.minX + glyphInState.maxX
                         }
                     }
+                }
+                if showingPercentage {
+                    tracePhase("display-spacing minimumAdjacentInkGap=\(minimumAdjacentGap)")
                 }
             }
             verifyDisplayPreviews(showingPercentage: true)
