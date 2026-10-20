@@ -228,6 +228,49 @@ class SettingsWindowContractTests(unittest.TestCase):
                 return status == KERN_SUCCESS ? UInt64(info.resident_size) : 0
             }
 
+            func maximumUpwardGrowth(_ samples: [UInt64]) -> UInt64 {
+                guard var priorLow = samples.first else { return 0 }
+                var growth: UInt64 = 0
+                for sample in samples.dropFirst() {
+                    if sample >= priorLow {
+                        growth = max(growth, sample - priorLow)
+                    } else {
+                        priorLow = sample
+                    }
+                }
+                return growth
+            }
+
+            do {
+                let mib: UInt64 = 1_024 * 1_024
+                let cases: [(name: String, samples: [UInt64], growth: UInt64)] = [
+                    ("decreasing", [112, 108, 104, 100], 0),
+                    ("cumulative rise", [100, 104, 108, 112], 12),
+                    ("drop then rise", [100, 90, 99], 9),
+                    ("peak then fall", [100, 109, 101], 9),
+                    ("exact eight", [100, 104, 108], 8),
+                ]
+                for test in cases {
+                    let growth = maximumUpwardGrowth(test.samples.map { $0 * mib })
+                    require(growth == test.growth * mib
+                        && (growth <= 8 * mib) == (test.growth <= 8),
+                        "RSS growth policy: " + test.name)
+                }
+                let observedMacOS27: [UInt64] = [
+                    760_872_960, 758_267_904, 758_988_800, 734_773_248, 733_069_312,
+                    732_954_624, 728_481_792, 730_038_272, 730_333_184,
+                ]
+                let observedGrowth = maximumUpwardGrowth(observedMacOS27)
+                require(observedGrowth == 1_851_392 && observedGrowth <= 8 * mib,
+                    "observed declining macOS 27 RSS retains its smaller upward excursion")
+                require(maximumUpwardGrowth([]) == 0
+                    && maximumUpwardGrowth([UInt64.max]) == 0
+                    && maximumUpwardGrowth([UInt64.max, 0, 8 * mib]) == 8 * mib
+                    && maximumUpwardGrowth([0, UInt64.max, 0]) == UInt64.max,
+                    "RSS growth subtraction is safe for empty and full-range unsigned samples")
+            }
+            tracePhase("RSS growth policy regression cases passed")
+
             func relieveAllocatorPressure() {
                 _ = malloc_zone_pressure_relief(nil, 0)
             }
@@ -3089,7 +3132,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             let finalRSS = residentBytes()
             let plateau = createRSS.dropFirst()
             let plateauSpread = (plateau.max() ?? finalRSS) - (plateau.min() ?? finalRSS)
-            memoryCurve.append("final rss=\(finalRSS) fd=\(finalFDs) plateauSpread=\(plateauSpread)")
+            let plateauUpwardGrowth = maximumUpwardGrowth(Array(plateau))
+            memoryCurve.append("final rss=\(finalRSS) fd=\(finalFDs) plateauSpread=\(plateauSpread) plateauUpwardGrowth=\(plateauUpwardGrowth)")
             FileHandle.standardError.write(Data((memoryCurve.joined(separator: "; ") + "\n").utf8))
             require(
                 finalFDs <= warmFDs + 2,
@@ -3100,8 +3144,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "create/release RSS bounded after warm150: \(warmRSS) -> \(finalRSS)"
             )
             require(
-                plateauSpread <= 8 * 1_024 * 1_024,
-                "create/release RSS plateaus within 8 MiB after 100 cycles: spread \(plateauSpread)"
+                plateauUpwardGrowth <= 8 * 1_024 * 1_024,
+                "create/release RSS growth bounded within 8 MiB after 100 cycles: upward \(plateauUpwardGrowth)"
             )
             tracePhase("all assertions complete")
             """

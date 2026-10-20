@@ -79,3 +79,18 @@ the 180s watchdog interrupts the remaining stress. The interactive budget is
 therefore 300s, with a 480s outer budget for compilation, execution and cleanup.
 All cycle counts, release checks, 8 MiB plateau and +2 descriptor bounds remain
 unchanged. Completion still requires a new successful macOS 27 execution.
+
+At `2dbe973`, full macOS 26 CI passes again. The macOS 27 workload completes
+all 500 stress creations at 225.776s, then fails the old bidirectional RSS
+flatness assertion: its range is 32,391,168 bytes, while RSS falls from
+760,872,960 at cycle 100 to 730,333,184 at cycle 500. The cause of that fall
+is not established. FDs remain nine, window count remains three, and object
+release assertions pass. This failed run remains rejected.
+
+The revised memory assertion bounds the maximum **upward** RSS excursion from
+any earlier minimum at the same 8 MiB. It keeps the raw spread as a diagnostic,
+the final-versus-warm and reuse RSS limits, weak-object release checks, +2 FD
+bound, sample schedule and every cycle. Pure regression sequences distinguish
+decreases, cumulative rises, a rise after a large drop, and a peak followed by
+a fall. This intentionally tests bounded sampled growth rather than flatness;
+RSS alone cannot establish absence of leaks. A fresh complete run is required.
