@@ -1,0 +1,13 @@
+test_appkit_window_layout_state_and_release_contract (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_default_sections_use_only_existing_settings (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_display_keeps_style_and_percentage_independent (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_display_uses_native_radio_drawing_and_system_glass_corners (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_dock_icon_is_a_separate_restart_only_preference (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_in_app_logo_uses_static_resources_without_changing_system_icons (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_liquid_glass_is_an_appearance_only_native_opt_in (test_settings_window_contract.SettingsWindowContractTests) ... ok
+test_source_has_no_timer_and_uses_the_narrow_section_boundary (test_settings_window_contract.SettingsWindowContractTests) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 152.881s
+
+OK

@@ -1,0 +1,252 @@
+{
+  "allPassed": true,
+  "animationStress": {
+    "completedUTC": "2026-10-20T05:21:49.3292080Z",
+    "elapsedSeconds": 0.143,
+    "iterations": 20000
+  },
+  "checks": {
+    "allEightSystemAssetPNGsHashMatch": true,
+    "allExpectedStepsSuccess": true,
+    "allJobsCompletedSuccess": true,
+    "allSixteenLifecycleTestsPass": true,
+    "animationStress20000Completed": true,
+    "bothJobsPostCleanupReached": true,
+    "display34AndNative8Verified": true,
+    "disposableReleaseCleanupExitReached": true,
+    "exactArtifactSourceAndEnvironment": true,
+    "exactFrozenRunSource": true,
+    "ownedDownloadScratchRemoved": true,
+    "python625PassedWithFourExpectedSkips": true,
+    "runCompletedSuccess": true,
+    "swift678Verified": true,
+    "threeActualNativeVariantCompletionMarkers": true,
+    "universalBuildVerificationReached": true,
+    "websiteSevenTestsLintExportSource": true,
+    "workflowGuardContractPass": true
+  },
+  "cleanup": {
+    "disposableReleaseCleanupReached": true,
+    "localCanonicalAppHelperSettingsTouched": false,
+    "runnerPostJobOrphanCleanupReached": true,
+    "runnerTerminatedIbtoold": true,
+    "sharedLifecycleDownloadScratchRemoved": true
+  },
+  "contractSourceFiles": {
+    ".github/workflows/ci.yml": {
+      "bytes": 9092,
+      "sha256": "896e464cc32d1c3f943affef07adfe2c3e8ec4684eade7d20ef9c605be1e388c"
+    },
+    "scripts/build_release.sh": {
+      "bytes": 8636,
+      "sha256": "1635b6ed46809398a311fc5478b46243f710000b4e5c8f595d26f3b6b395dca7"
+    },
+    "scripts/lib/local_cleanup.sh": {
+      "bytes": 7867,
+      "sha256": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249"
+    },
+    "scripts/lib/run_owned.py": {
+      "bytes": 3778,
+      "sha256": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872"
+    },
+    "scripts/verify_animation_stress.sh": {
+      "bytes": 1251,
+      "sha256": "8b4a3492b4913c2b3e0be78e0435f2176d0ebed2902a14fa0ce978a2538ea855"
+    },
+    "scripts/verify_interaction.sh": {
+      "bytes": 2855,
+      "sha256": "60d08138a4aaa1dcd02331cf7a8dbacd8c2d013da18ef478e661b7b45953d1b4"
+    },
+    "scripts/verify_release.sh": {
+      "bytes": 17536,
+      "sha256": "ec074b27f4add81f7d59fe0ecabfd9bd78dd1bb53ff276f48d4eaa39c1832358"
+    }
+  },
+  "display": {
+    "allPassed": true,
+    "captures": 34,
+    "growthLimitBytes": 8388608,
+    "independentUpwardRSSGrowthBytes": 147456,
+    "memoryMechanism": "Unproven; no OS memory-management attribution",
+    "nativeSettingsSeconds": 152.107,
+    "nativeSettingsTests": 8,
+    "rawRSSSpreadBytes": 29671424
+  },
+  "environment": {
+    "architecture": "arm64",
+    "catalog": {
+      "exists": true,
+      "path": "/System/Library/CoreServices/ControlCenter.app/Contents/Resources/Assets.car",
+      "sha256": "a7a178c469c3e5ca0f9373b9207df5ab3fcd6421701c678586d6027cea03f283",
+      "sizeBytes": 1025560
+    },
+    "sdkVersion": "27.0",
+    "sourceDirty": false,
+    "sourceFilesSHA256": {
+      "MenuBar/BatteryIcon.swift": "67ba97e456b67a53969b98562bc0223cff41ecdb94869a393bd4cb9ac27e6b36",
+      "scripts/verify_system_battery_artwork.sh": "3eb8f4af0cdc8d14939c805f6c092bfdc8debeea8511196096f9b7d961b12efd",
+      "tests/visual/probe_system_battery_artwork.swift": "1d400152120e3fa8d5ff8fec45ce913ca17a9f69efb71e75639b218c926a8eee"
+    },
+    "sourceSHA": "5b5ab47753fd6cbba971ccb0dd892b99c0b116d0",
+    "systemBuild": "26A434",
+    "systemVersion": "27.0.1",
+    "xcodeVersion": "Xcode 27.0\nBuild version 27A266a"
+  },
+  "githubMetadata": {
+    "conclusion": "success",
+    "jobs": [
+      {
+        "conclusion": "success",
+        "id": 118464455563,
+        "name": "Website build, test, lint, and export",
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "id": 118464455938,
+        "name": "SwiftPM and Python tests",
+        "status": "completed"
+      }
+    ],
+    "status": "completed"
+  },
+  "limits": [
+    "This is compatibility/build/render/interaction evidence on a hosted macOS 27 arm64 GUI runner, not physical battery-sensor or installation acceptance.",
+    "The universal test build is ad-hoc signed and not notarized; no installation or public release was performed.",
+    "Raw RSS spread remains a diagnostic; the independently verified unchanged 8 MiB guard constrains maximum upward growth from any earlier retained sample."
+  ],
+  "nativeVariants": [
+    {
+      "actualMarker": "ALL_INTERACTION_CHECKS_PASSED",
+      "completionTimestampUTC": "2026-10-20T05:17:27.7555400Z",
+      "variant": "baseline"
+    },
+    {
+      "actualMarker": "ALL_INTERACTION_CHECKS_PASSED",
+      "completionTimestampUTC": "2026-10-20T05:19:23.7160740Z",
+      "variant": "legacy"
+    },
+    {
+      "actualMarker": "ALL_INTERACTION_CHECKS_PASSED",
+      "completionTimestampUTC": "2026-10-20T05:21:24.3670520Z",
+      "variant": "accessibility"
+    }
+  ],
+  "python": {
+    "durationSeconds": 319.26,
+    "expectedSkips": 4,
+    "lifecycleTestsPassed": [
+      "test_assertion_failure_also_cleans_workspace",
+      "test_cleanup_error_does_not_skip_later_resources_or_mask_failure",
+      "test_cleanup_failure_after_success_is_an_error",
+      "test_communicate_retries_preserve_input_output_and_timeout",
+      "test_foundation_preferences_are_removed_after_harness_failure",
+      "test_parent_interrupts_stop_children_and_remove_workspace",
+      "test_permission_error_for_an_exited_group_is_not_a_cleanup_failure",
+      "test_reaping_an_owned_child_has_a_deadline",
+      "test_signal_permission_error_is_reported_and_owned_child_retained",
+      "test_signals_inside_popen_wait_locks_do_not_reenter_cleanup",
+      "test_source_only_runners_preserve_caller_traps_and_complete_cleanup",
+      "test_success_and_command_failure_remove_workspace",
+      "test_timeout_allows_nested_shell_supervisor_to_reap_its_group",
+      "test_timeout_probe_permission_error_still_stops_owned_descendants",
+      "test_timeout_stops_descendants_before_unregistering",
+      "test_timeout_waits_for_slow_nested_lifecycle_cleanup"
+    ],
+    "passed": true,
+    "tests": 625,
+    "workflowGuardContractPassed": true
+  },
+  "resourceHashes": [
+    {
+      "available": true,
+      "name": "battery-outline",
+      "pngSHA256Matches": true
+    },
+    {
+      "available": true,
+      "name": "battery-cap",
+      "pngSHA256Matches": true
+    },
+    {
+      "available": true,
+      "name": "battery-bolt",
+      "pngSHA256Matches": true
+    },
+    {
+      "available": true,
+      "name": "battery-bolt-mask",
+      "pngSHA256Matches": true
+    },
+    {
+      "available": true,
+      "name": "battery-bolt-large",
+      "pngSHA256Matches": true
+    },
+    {
+      "available": true,
+      "name": "battery-bolt-mask-large",
+      "pngSHA256Matches": true
+    },
+    {
+      "available": true,
+      "name": "battery-plug-large",
+      "pngSHA256Matches": true
+    },
+    {
+      "available": true,
+      "name": "battery-plug-mask-large",
+      "pngSHA256Matches": true
+    }
+  ],
+  "schema": 2,
+  "sourceSHA": "5b5ab47753fd6cbba971ccb0dd892b99c0b116d0",
+  "status": "accepted-complete-macos27-ci",
+  "stepChecks": {
+    "Build Swift package": true,
+    "Build macOS 27 Swift test bundle": true,
+    "Execute macOS 27 Swift tests": true,
+    "Post Check out the repository": true,
+    "Preserve macOS 27 Display validation": true,
+    "Preserve macOS 27 Swift diagnostics": true,
+    "Preserve macOS 27 system battery artwork": true,
+    "Probe macOS 27 system battery artwork": true,
+    "Run the default headless Python suite": true,
+    "Validate macOS 27 Display rendering and settings interaction": true,
+    "Validate macOS 27 native interaction and animation lifecycles": true,
+    "Verify macOS 27 universal App and helper build": true,
+    "Verify macOS 27 validation environment": true
+  },
+  "swift": {
+    "allPassed": true,
+    "newSuites": {
+      "BatteryIcon27Tests": 9,
+      "MenuBarIconStyleSettingsTests": 5
+    },
+    "products": [
+      {
+        "failures": 0,
+        "product": "WattsonTests.xctest",
+        "tests": 648
+      },
+      {
+        "failures": 0,
+        "product": "WattsonHelperV5SupportTests.xctest",
+        "tests": 30
+      }
+    ],
+    "tests": 678
+  },
+  "universalBuild": {
+    "appAndHelperVerified": true,
+    "architectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "disposableBuildCleanupMarkerReached": true,
+    "signing": "ad-hoc community build; not notarized",
+    "verificationMethod": "Exact frozen build_release.sh and verify_release.sh run single-architecture lipo -verify_arch guards for each required slice of each binary before printing the reached universal verification marker."
+  },
+  "workflowRun": 39372862325,
+  "workflowURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39372862325"
+}

@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "originalDirectory": "native-macos26-ci-7c7705f",
+  "files": {
+    "evidence-files.sha256.json": {
+      "bytes": 1080,
+      "sha256": "e41295526a5d14a630fba957b0235b4af7e51999b124817f4114a33772efcbc0"
+    },
+    "execution-audit.json": {
+      "bytes": 4583,
+      "sha256": "392a6a503874a8650440633915c470db1596ad373da5d1d147020201e0e0aa03"
+    },
+    "source-provenance.json": {
+      "bytes": 1460,
+      "sha256": "5d1762f6013da813975bb6edd0b927d036bbea875166030556e9ee94c3834cd0"
+    },
+    "tests-job.log.raw.gz": {
+      "bytes": 56049,
+      "sha256": "cc0e09eb9fbd48c6dad506595cd1169b9d28bbac51acb59e5d14fd3e174015c3"
+    },
+    "website-job.log.raw.gz": {
+      "bytes": 6803,
+      "sha256": "04ce72ef92eb107e44c056c73c7b1bf1e4fa6de1eca828e77f6207db6c4344b2"
+    },
+    "workflow-jobs-initial.json": {
+      "bytes": 6234,
+      "sha256": "4aacfc324362b10b3d701a4f7745ee5619baa2ee2f1e16ef402bcebea7958e1a"
+    },
+    "workflow-jobs.json": {
+      "bytes": 6731,
+      "sha256": "69be5569cccb48ee64a640565ea8553e78d29da810ecca387566e3c9ff962c4e"
+    },
+    "workflow-run-initial.json": {
+      "bytes": 12730,
+      "sha256": "741313d239f3cc6601e2781a86398afd23c5e7f6fbd6e8ed5f5ccb633bc5bb94"
+    },
+    "workflow-run.json": {
+      "bytes": 12733,
+      "sha256": "a9c96b7a119da7e26643f885db40d660a2d8f838f82c9d53d8d13478fb6c8e75"
+    }
+  }
+}

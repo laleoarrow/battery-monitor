@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "captureCount": 4,
+  "captures": [
+    "glass-general-dark",
+    "glass-general-light",
+    "glass-modules-dark",
+    "glass-modules-light"
+  ],
+  "method": "Actual SettingsWindowController NSWindow; ScreenCaptureKit currentProcess own-window WindowServer capture without TCC consent in disposable GUI VM; no AppKit bitmap approximation."
+}

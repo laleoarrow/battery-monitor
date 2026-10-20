@@ -1,0 +1,421 @@
+{
+  "allPassed": true,
+  "checks": {
+    "allAssertionsComplete": true,
+    "allShippingDisplayGatesPassed": true,
+    "captureCount34": true,
+    "frozenSourceMatches": true,
+    "growthRegressionCasesPass": true,
+    "independentAllPairsGrowthMatches": true,
+    "manifestMatchesFrozenCommit": true,
+    "nativeEightTestsPass": true,
+    "rawSpreadMatches": true,
+    "sameEightMiBGrowthThreshold": true,
+    "steadyFDAndWindowCounts": true,
+    "tenStressSamples": true
+  },
+  "memoryLedger": {
+    "growthLimitBytes": 8388608,
+    "independentGrowthBytes": 147456,
+    "independentMethod": "Enumerate every earlier/later pair; take maximum positive later-minus-earlier RSS difference, bounded below by zero",
+    "independentRawSpreadBytes": 29671424,
+    "mechanism": "Unproven; no attribution to operating-system memory reclamation",
+    "reportedGrowthBytes": 147456,
+    "reportedRawSpreadBytes": 29671424,
+    "samples": [
+      {
+        "created": 50,
+        "fileDescriptors": 9,
+        "rssBytes": 917078016,
+        "windowCount": 3
+      },
+      {
+        "created": 100,
+        "fileDescriptors": 9,
+        "rssBytes": 917405696,
+        "windowCount": 3
+      },
+      {
+        "created": 150,
+        "fileDescriptors": 9,
+        "rssBytes": 916979712,
+        "windowCount": 3
+      },
+      {
+        "created": 200,
+        "fileDescriptors": 9,
+        "rssBytes": 916209664,
+        "windowCount": 3
+      },
+      {
+        "created": 250,
+        "fileDescriptors": 9,
+        "rssBytes": 912343040,
+        "windowCount": 3
+      },
+      {
+        "created": 300,
+        "fileDescriptors": 9,
+        "rssBytes": 912310272,
+        "windowCount": 3
+      },
+      {
+        "created": 350,
+        "fileDescriptors": 9,
+        "rssBytes": 912375808,
+        "windowCount": 3
+      },
+      {
+        "created": 400,
+        "fileDescriptors": 9,
+        "rssBytes": 912457728,
+        "windowCount": 3
+      },
+      {
+        "created": 450,
+        "fileDescriptors": 9,
+        "rssBytes": 897073152,
+        "windowCount": 3
+      },
+      {
+        "created": 500,
+        "fileDescriptors": 9,
+        "rssBytes": 887734272,
+        "windowCount": 3
+      }
+    ],
+    "sampling": "Original dropFirst(1): exclude first created50 sample; retain created100 through created500"
+  },
+  "nativeTestSummary": "Ran 8 tests in 152.107s",
+  "schema": 1,
+  "scope": "Display34 and native Settings8 acceptance; full CI stages remain separate",
+  "sourceManifest": [
+    {
+      "expectedSHA256": "2c88aadecb9b2a03a4d4d426056c1978f0a4e4e391c5741a9911ebcc507377d8",
+      "matchesFrozenSource": true,
+      "path": "Core/AppleSmartBatteryPowerObservationReader.swift"
+    },
+    {
+      "expectedSHA256": "46cbabf239194a8c514fd95e9edfa43905f0a772792b8319a0147a21e4b37445",
+      "matchesFrozenSource": true,
+      "path": "Core/BatteryRuntimeEstimate.swift"
+    },
+    {
+      "expectedSHA256": "6c1ce82bd47a3550cc8030dad20d856c84ae169328edde49958375730ea92bd1",
+      "matchesFrozenSource": true,
+      "path": "Core/BatterySampler.swift"
+    },
+    {
+      "expectedSHA256": "609fe7864c25605b10550301758f4d01836a0ad63740e335c1ab6f5b8172a8b3",
+      "matchesFrozenSource": true,
+      "path": "Core/EnergyMode.swift"
+    },
+    {
+      "expectedSHA256": "70ecc1dc031d498f89ab39d208a7054aa8108edc1e28f4f9edee1be0f2d06be8",
+      "matchesFrozenSource": true,
+      "path": "Core/FeedbackDiagnostics.swift"
+    },
+    {
+      "expectedSHA256": "a6e5876b87a08c021985c5e10574e6eda67615fe314d097881dbf280cc8aa9bf",
+      "matchesFrozenSource": true,
+      "path": "Core/GlassBackgroundView.swift"
+    },
+    {
+      "expectedSHA256": "2620a616fecb42cf85a708e03d20a6f5e464b33e034e33e988fd9a1b8d01b5de",
+      "matchesFrozenSource": true,
+      "path": "Core/HelperClient.swift"
+    },
+    {
+      "expectedSHA256": "9fd766fa6d54aef1a7077983b4e70097a0cc43c7109102b129371672f15832fe",
+      "matchesFrozenSource": true,
+      "path": "Core/HelperClientPowerObservationV5.swift"
+    },
+    {
+      "expectedSHA256": "5c98a0bac80be88e6d4f34c00a5e4ab1377b813636df3f8489ad19f1f8b2dd70",
+      "matchesFrozenSource": true,
+      "path": "Core/HistoryChart.swift"
+    },
+    {
+      "expectedSHA256": "0d9ef7aad7666f2c373f4349e8ee4b538c2d07374af44153addce14649b43169",
+      "matchesFrozenSource": true,
+      "path": "Core/LoginItemController.swift"
+    },
+    {
+      "expectedSHA256": "81e1d17ba4c8de96eec8a2e004f311188bc5851704649f7863002199f79d5615",
+      "matchesFrozenSource": true,
+      "path": "Core/PopoverPlacement.swift"
+    },
+    {
+      "expectedSHA256": "28efd1747083b0d72b2278c55ef57d51c1f02176f5ee0d5cf56d633c4541a70d",
+      "matchesFrozenSource": true,
+      "path": "Core/PopupEventLog.swift"
+    },
+    {
+      "expectedSHA256": "6eb4a9d5bb892623cc028c3ae517d446b37cacd9df42b97c4df36f79c5caaf95",
+      "matchesFrozenSource": true,
+      "path": "Core/PowerHistory.swift"
+    },
+    {
+      "expectedSHA256": "7e877a9d5353d979f8f66ed20b27072b27a21e4cd7d46c8284290ab18a861d2b",
+      "matchesFrozenSource": true,
+      "path": "Core/PowerObservationFusion.swift"
+    },
+    {
+      "expectedSHA256": "d346e7b8a5697efad0f5d98f12f541f4ed1be28bb781e0b3fe4fa3893a5f4c30",
+      "matchesFrozenSource": true,
+      "path": "Core/PowerObservationFusionReplay.swift"
+    },
+    {
+      "expectedSHA256": "28f39e08e70af2dde354b328da16afc6793815e1bf5eca609e7857a98c2054de",
+      "matchesFrozenSource": true,
+      "path": "Core/PowerObservationRuntimeController.swift"
+    },
+    {
+      "expectedSHA256": "3974ee357d7125fcc54509ad975d8881f30783fb131db9e8e16a050cffa22522",
+      "matchesFrozenSource": true,
+      "path": "Core/PowerObservationShadow.swift"
+    },
+    {
+      "expectedSHA256": "8f9d926a4acf76de2afe2eae31bfcff97420f0090878faeb8cb32317a984ba5a",
+      "matchesFrozenSource": true,
+      "path": "Core/PowerObservationTrace.swift"
+    },
+    {
+      "expectedSHA256": "74cc385246cb918fe7942a17700fe98d2d52034ea880d8d2c6923a5d815649ec",
+      "matchesFrozenSource": true,
+      "path": "Core/PowerObservationWireV5.swift"
+    },
+    {
+      "expectedSHA256": "59646f03f806218a3100403873dd114fb6901f67fe96b1ed55c6f8d06db9223d",
+      "matchesFrozenSource": true,
+      "path": "Core/PowerSnapshot.swift"
+    },
+    {
+      "expectedSHA256": "5b26d5166a22c279a0caa67f66b826df88a149060856c690ea40400cdfed51bb",
+      "matchesFrozenSource": true,
+      "path": "Core/ProcessTermination.swift"
+    },
+    {
+      "expectedSHA256": "ab961b7bbc0201fb22e2a72c2d66a4d16f1d5c0563ca4aee30ef287bc29ea2bc",
+      "matchesFrozenSource": true,
+      "path": "Core/RawPowerObservation.swift"
+    },
+    {
+      "expectedSHA256": "f0542ead97a4579eb1791f5d04e9bfced9be6c5746cefdbaae19e12271b9fe0b",
+      "matchesFrozenSource": true,
+      "path": "Core/Settings.swift"
+    },
+    {
+      "expectedSHA256": "9e318deeafb66b1cb472033195577a45b9412817b695ffbeca6546219aaf581c",
+      "matchesFrozenSource": true,
+      "path": "Core/SettingsAppearance.swift"
+    },
+    {
+      "expectedSHA256": "832e53ec590711771c2a1f837a1af936af1241c20b176ca370e8da864a4aa949",
+      "matchesFrozenSource": true,
+      "path": "Core/SystemBatteryIcon.swift"
+    },
+    {
+      "expectedSHA256": "ac5be878ecf58d86031d3c8d3fe51e59edcd698576688ba01c9703a2f72efea0",
+      "matchesFrozenSource": true,
+      "path": "Core/TopProcesses.swift"
+    },
+    {
+      "expectedSHA256": "f9b2b449dd686bf3d89a058e0c6214cce6dd446f5bc830ddd6f0137132aa4f5c",
+      "matchesFrozenSource": true,
+      "path": "Core/TopProcessesMonitor.swift"
+    },
+    {
+      "expectedSHA256": "1e725a7dca032579c7f4b2e4601374829169be1ea55b76b65f0a4d1e06f2feb6",
+      "matchesFrozenSource": true,
+      "path": "Core/UpdateChecker.swift"
+    },
+    {
+      "expectedSHA256": "723fd740660035795a5550ad2ad90d05306f246e21aa5acbb556797bc77f41da",
+      "matchesFrozenSource": true,
+      "path": "Core/VisualEncoding.swift"
+    },
+    {
+      "expectedSHA256": "2d16b056ba6493479b918331748d09c1350e9f882d2ad442203f38baf99ba099",
+      "matchesFrozenSource": true,
+      "path": "MenuBar/AppDelegate.swift"
+    },
+    {
+      "expectedSHA256": "67ba97e456b67a53969b98562bc0223cff41ecdb94869a393bd4cb9ac27e6b36",
+      "matchesFrozenSource": true,
+      "path": "MenuBar/BatteryIcon.swift"
+    },
+    {
+      "expectedSHA256": "7dda4b5ec6b0b09c4f24ed595d161edaa0b0bf3b293d477291856561a3c7d1ae",
+      "matchesFrozenSource": true,
+      "path": "MenuBar/BatteryIcon27.swift"
+    },
+    {
+      "expectedSHA256": "a06623103f819926b9739d6f62fe87683f9e1edd041b1e6baa8bf662d07eedb7",
+      "matchesFrozenSource": true,
+      "path": "MenuBar/ClickRouter.swift"
+    },
+    {
+      "expectedSHA256": "fe5c32b3c65571e05289dc838b1cb117841f0268abb9016b8e71a59946488106",
+      "matchesFrozenSource": true,
+      "path": "MenuBar/ModuleIconArtwork.swift"
+    },
+    {
+      "expectedSHA256": "9b36eabebb0f905534e676531f842da0aee97654a572357ced80ca0f7b20cec5",
+      "matchesFrozenSource": true,
+      "path": "MenuBar/SettingsWindowController.swift"
+    },
+    {
+      "expectedSHA256": "e31708962a9e65338a5649fcb84174e2e1c931bf574b4f268d373c59c0533c42",
+      "matchesFrozenSource": true,
+      "path": "MenuBar/StatusItemController.swift"
+    },
+    {
+      "expectedSHA256": "4df575e283095ebc236e071e3e406cf8fde9cabb5fe4a8035604cd4acb683060",
+      "matchesFrozenSource": true,
+      "path": "Popover/FooterHoverFeedbackView.swift"
+    },
+    {
+      "expectedSHA256": "822a8a2762bfbf68264750eecf2424b2cb7f6dc1a3180d8a43c7a5a8fd8aac3b",
+      "matchesFrozenSource": true,
+      "path": "Popover/GlassPopoverMaterialView.swift"
+    },
+    {
+      "expectedSHA256": "f446c587fcec748e097f8dcc64caba0d0b98221c206bffce9341fd3038af01eb",
+      "matchesFrozenSource": true,
+      "path": "Popover/GlassPopoverPanel.swift"
+    },
+    {
+      "expectedSHA256": "f5b3ad0a53691be908b6da06d3186758e4cfeff9a505e457669fcaa6ef000458",
+      "matchesFrozenSource": true,
+      "path": "Popover/HistoryLayer.swift"
+    },
+    {
+      "expectedSHA256": "a65dc2d2563ed99030a59bd63d14f2eac2965bec9f9686ec60a1a2dcb419894a",
+      "matchesFrozenSource": true,
+      "path": "Popover/InteractiveGlassModeControl.swift"
+    },
+    {
+      "expectedSHA256": "9a090e29b92ac276b36d2d3f6fc53618733644e5c342f65b15c429c2f3a45351",
+      "matchesFrozenSource": true,
+      "path": "Popover/LaneLayer.swift"
+    },
+    {
+      "expectedSHA256": "35d1d69fee67ac2bf69b630be5452389e87b6f072771099c7fc025f3090b3b6b",
+      "matchesFrozenSource": true,
+      "path": "Popover/ModeSliderView.swift"
+    },
+    {
+      "expectedSHA256": "55423cc7b07962aeaed27aa181e4800f500f13351b207031de392a166efbba09",
+      "matchesFrozenSource": true,
+      "path": "Popover/NativeGlassModeControl.swift"
+    },
+    {
+      "expectedSHA256": "d89a9be2e3afe021194e7489cabd0ac79cce233b37349912df099f4a736756a5",
+      "matchesFrozenSource": true,
+      "path": "Popover/NativeModeSegmentedControl.swift"
+    },
+    {
+      "expectedSHA256": "36656988dd9094f27389402674238a6dd4449fe9cabcfd9f5d4403e2fce3f32e",
+      "matchesFrozenSource": true,
+      "path": "Popover/PopoverContentView.swift"
+    },
+    {
+      "expectedSHA256": "b5ae133eb04c774d707e064d70a6e940b7f94988e9e4dfb4b9cb1162ca0893fc",
+      "matchesFrozenSource": true,
+      "path": "Popover/PopoverController.swift"
+    },
+    {
+      "expectedSHA256": "2690a1284845d72f84242bcc70adbfaaef103917daeffdcf498c062457c2d208",
+      "matchesFrozenSource": true,
+      "path": "Popover/PopoverPreview.swift"
+    },
+    {
+      "expectedSHA256": "e97d386c30599d974a343289f51b9f59cce662119c3943942c9f392357beade6",
+      "matchesFrozenSource": true,
+      "path": "Popover/PopoverStyle.swift"
+    },
+    {
+      "expectedSHA256": "177a35c7afd7f0e2dd9e111c03c9ad8d11897e036bb18fb24dd65894786632fb",
+      "matchesFrozenSource": true,
+      "path": "Popover/PowerFlowLayer.swift"
+    },
+    {
+      "expectedSHA256": "ce31f7f7929a998ebe05e19b10069740aa649d81400a251f6ec235cca931c21f",
+      "matchesFrozenSource": true,
+      "path": "Popover/PowerIconView.swift"
+    },
+    {
+      "expectedSHA256": "8329aee74f67bef2c513d781ac6acc12e07e0be3f99dd893729ec651be745ace",
+      "matchesFrozenSource": true,
+      "path": "Popover/ProcessActionButton.swift"
+    },
+    {
+      "expectedSHA256": "26c830396a428b81baaf727303048eadbc2df2e96e7647855f0a9ccba8a2289c",
+      "matchesFrozenSource": true,
+      "path": "Popover/ProcessTerminationPresenter.swift"
+    },
+    {
+      "expectedSHA256": "2b822eb9e6fa74eab2f9c2bee73989b66bc7afc2a5edf18728fa0e38c1629ba8",
+      "matchesFrozenSource": true,
+      "path": "Popover/RingGaugeLayer.swift"
+    },
+    {
+      "expectedSHA256": "66dfb53aed4430e85f94ca87a9f8c0cf41555bb2007d6432b206c7c658fbeb3f",
+      "matchesFrozenSource": true,
+      "path": "Popover/TopProcessesView.swift"
+    },
+    {
+      "expectedSHA256": "0a9468034887f3c033fd0bcc613dc05fdea6852f8274b717778a5c5183f063c9",
+      "matchesFrozenSource": true,
+      "path": "tests/visual/capture_display_settings.swift"
+    },
+    {
+      "expectedSHA256": "3a724f43b4cbb6cc2e166b88375b2d5ec5e5f44fd55596f773eb760e085440f0",
+      "matchesFrozenSource": true,
+      "path": "tests/test_settings_window_contract.py"
+    },
+    {
+      "expectedSHA256": "7a112b85f1f5b1039da480f201201eafd2a2de13be7efcc1c9d44488ff8001c2",
+      "matchesFrozenSource": true,
+      "path": "tests/local_runtime.py"
+    },
+    {
+      "expectedSHA256": "73db5a9fb514ec073ae48b8959fc8ea824805b801e81704a057272fa9b889fd2",
+      "matchesFrozenSource": true,
+      "path": "design/settings/display-refinement/qa/capture-compositor.py"
+    },
+    {
+      "expectedSHA256": "1c9a2509243f15480ebd9d1cdee5f305b274ccb35d51887183e6cf336f9a1fb8",
+      "matchesFrozenSource": true,
+      "path": "scripts/verify_display_settings.sh"
+    },
+    {
+      "expectedSHA256": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+      "matchesFrozenSource": true,
+      "path": "scripts/lib/local_cleanup.sh"
+    },
+    {
+      "expectedSHA256": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+      "matchesFrozenSource": true,
+      "path": "scripts/lib/run_owned.py"
+    },
+    {
+      "expectedSHA256": "4fa6f526276c87bb7b4f9d8c8ea2fdc4f9ddaf2e7609c06c5526dae2328b57a0",
+      "matchesFrozenSource": true,
+      "path": "design/icon/in-app-logo/AppLogoClearDark.png"
+    },
+    {
+      "expectedSHA256": "e9882dfaab15ce5eff5ebaaa28821b2d6f12600f03c1986b469281127db02b2a",
+      "matchesFrozenSource": true,
+      "path": "design/icon/in-app-logo/AppLogoClearLight.png"
+    },
+    {
+      "expectedSHA256": "b5d4134fe0c4254279de1953a17214ed69d0473bb1e49093a597ea82e10219f8",
+      "matchesFrozenSource": true,
+      "path": "design/icon/in-app-logo/AppLogoColor.png"
+    }
+  ],
+  "sourceSHA": "5b5ab47753fd6cbba971ccb0dd892b99c0b116d0",
+  "workflowRun": 39372862325
+}

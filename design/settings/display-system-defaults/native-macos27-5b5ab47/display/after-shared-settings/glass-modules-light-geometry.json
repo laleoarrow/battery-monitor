@@ -1,0 +1,905 @@
+{
+  "before" : false,
+  "contentSize" : [
+    720,
+    520
+  ],
+  "dark" : false,
+  "freshNativeGlassCornerRadius" : 8,
+  "glassEffective" : true,
+  "glassRequested" : true,
+  "glassSurfaces" : [
+    {
+      "boxedControlsCornerRadius" : 8,
+      "cornerRadius" : 8,
+      "frame" : [
+        196,
+        -30,
+        487,
+        432
+      ],
+      "hidden" : false,
+      "identifier" : "settings.control-group.glass"
+    },
+    {
+      "cornerRadius" : 0,
+      "frame" : [
+        0,
+        0,
+        176,
+        520
+      ],
+      "hidden" : false,
+      "identifier" : ""
+    }
+  ],
+  "increaseContrast" : false,
+  "reduceTransparency" : false,
+  "schema" : 1,
+  "section" : "modules",
+  "selectedIconStyle" : "wattson",
+  "showsPercentage" : true,
+  "views" : [
+    {
+      "class" : "NSView",
+      "frame" : [
+        0,
+        0,
+        720,
+        520
+      ],
+      "hidden" : false,
+      "identifier" : "settings.viewport"
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB16SettingsFillView",
+      "frame" : [
+        0,
+        0,
+        720,
+        520
+      ],
+      "hidden" : false,
+      "identifier" : "settings.root"
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB20DynamicSeparatorView",
+      "frame" : [
+        176,
+        0,
+        1,
+        520
+      ],
+      "hidden" : true,
+      "identifier" : "settings.sidebar.divider"
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        0,
+        0,
+        720,
+        520
+      ],
+      "hidden" : false,
+      "identifier" : "settings.native-split"
+    },
+    {
+      "class" : "NSVisualEffectView",
+      "frame" : [
+        0,
+        0,
+        720,
+        520
+      ],
+      "hidden" : false,
+      "identifier" : "settings.window.backdrop"
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        196,
+        20,
+        504,
+        432
+      ],
+      "hidden" : false,
+      "identifier" : "settings.content.host"
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        196,
+        20,
+        504,
+        432
+      ],
+      "hidden" : false,
+      "identifier" : "settings.section.modules"
+    },
+    {
+      "alignmentRect" : [
+        198,
+        434,
+        502,
+        21
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "attributedStringSize" : [
+        71.736127912372467,
+        21
+      ],
+      "cellDrawingRect" : [
+        196,
+        434,
+        506,
+        21
+      ],
+      "cellTitleRect" : [
+        196,
+        434,
+        506,
+        21
+      ],
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB19SettingsPageHeading",
+      "fontSize" : 18,
+      "frame" : [
+        196,
+        434,
+        506,
+        21
+      ],
+      "hidden" : true,
+      "identifier" : "settings.modules.heading",
+      "intrinsicHeight" : 21,
+      "intrinsicWidth" : 72,
+      "text" : "Modules"
+    },
+    {
+      "alignmentRect" : [
+        198,
+        432,
+        231,
+        14
+      ],
+      "alignmentRectInsets" : [
+        0,
+        2,
+        0,
+        2
+      ],
+      "attributedStringSize" : [
+        230.0009765625,
+        14
+      ],
+      "cellDrawingRect" : [
+        196,
+        432,
+        235,
+        14
+      ],
+      "cellTitleRect" : [
+        196,
+        432,
+        235,
+        14
+      ],
+      "class" : "NSTextField",
+      "fontSize" : 11,
+      "frame" : [
+        196,
+        432,
+        235,
+        14
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.subtitle",
+      "intrinsicHeight" : 14,
+      "intrinsicWidth" : 231,
+      "text" : "Choose what appears in the power popover."
+    },
+    {
+      "class" : "NSScrollView",
+      "frame" : [
+        176,
+        0,
+        544,
+        422
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.scroll"
+    },
+    {
+      "class" : "NSGlassEffectView",
+      "frame" : [
+        196,
+        -30,
+        487,
+        432
+      ],
+      "hidden" : false,
+      "identifier" : "settings.control-group.glass"
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB25SettingsAdaptiveBorderBox",
+      "frame" : [
+        196,
+        -30,
+        487,
+        432
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.list"
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        196,
+        330,
+        487,
+        72
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.row.flow"
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB22ModuleSettingsIconView",
+      "frame" : [
+        212,
+        352,
+        28,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.icon.flow",
+      "imageScaling" : 0,
+      "imageSize" : [
+        20,
+        20
+      ]
+    },
+    {
+      "accessibilityRole" : "AXUnknown",
+      "bezelStyle" : 0,
+      "buttonCellClass" : "NSButtonCell",
+      "buttonCellImageRect" : [
+        656,
+        362,
+        14,
+        8
+      ],
+      "buttonCellTitleRect" : [
+        651,
+        380,
+        0,
+        0
+      ],
+      "buttonFontSize" : 13,
+      "buttonState" : 0,
+      "buttonTitle" : "",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB19ModuleReorderHandle",
+      "controlSize" : 0,
+      "focusRingMaskBounds" : [
+        651,
+        380,
+        0,
+        0
+      ],
+      "focusRingType" : 1,
+      "frame" : [
+        651,
+        352,
+        24,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.reorder.flow",
+      "imagePosition" : 1,
+      "isBordered" : false
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        196,
+        258,
+        487,
+        72
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.row.ring"
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB22ModuleSettingsIconView",
+      "frame" : [
+        212,
+        280,
+        28,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.icon.ring",
+      "imageScaling" : 0,
+      "imageSize" : [
+        20,
+        20
+      ]
+    },
+    {
+      "accessibilityRole" : "AXUnknown",
+      "bezelStyle" : 1,
+      "buttonCellClass" : "NSPopUpButtonCell",
+      "buttonCellImageRect" : [
+        460,
+        294,
+        0,
+        0
+      ],
+      "buttonCellTitleRect" : [
+        470,
+        277,
+        40,
+        14
+      ],
+      "buttonFontSize" : 11,
+      "buttonState" : 0,
+      "buttonTitle" : "Metrics",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB29SettingsAppearancePopupButton",
+      "controlSize" : 1,
+      "focusRingMaskBounds" : [
+        460,
+        294,
+        0,
+        0
+      ],
+      "focusRingType" : 0,
+      "frame" : [
+        460,
+        274,
+        80,
+        20
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.ring-metrics",
+      "imagePosition" : 0,
+      "isBordered" : true
+    },
+    {
+      "accessibilityRole" : "AXUnknown",
+      "bezelStyle" : 0,
+      "buttonCellClass" : "NSButtonCell",
+      "buttonCellImageRect" : [
+        656,
+        290,
+        14,
+        8
+      ],
+      "buttonCellTitleRect" : [
+        651,
+        308,
+        0,
+        0
+      ],
+      "buttonFontSize" : 13,
+      "buttonState" : 0,
+      "buttonTitle" : "",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB19ModuleReorderHandle",
+      "controlSize" : 0,
+      "focusRingMaskBounds" : [
+        651,
+        308,
+        0,
+        0
+      ],
+      "focusRingType" : 1,
+      "frame" : [
+        651,
+        280,
+        24,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.reorder.ring",
+      "imagePosition" : 1,
+      "isBordered" : false
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        196,
+        186,
+        487,
+        72
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.row.lanes"
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB22ModuleSettingsIconView",
+      "frame" : [
+        212,
+        208,
+        28,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.icon.lanes",
+      "imageScaling" : 0,
+      "imageSize" : [
+        20,
+        20
+      ]
+    },
+    {
+      "accessibilityRole" : "AXUnknown",
+      "bezelStyle" : 0,
+      "buttonCellClass" : "NSButtonCell",
+      "buttonCellImageRect" : [
+        656,
+        218,
+        14,
+        8
+      ],
+      "buttonCellTitleRect" : [
+        651,
+        236,
+        0,
+        0
+      ],
+      "buttonFontSize" : 13,
+      "buttonState" : 0,
+      "buttonTitle" : "",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB19ModuleReorderHandle",
+      "controlSize" : 0,
+      "focusRingMaskBounds" : [
+        651,
+        236,
+        0,
+        0
+      ],
+      "focusRingType" : 1,
+      "frame" : [
+        651,
+        208,
+        24,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.reorder.lanes",
+      "imagePosition" : 1,
+      "isBordered" : false
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        196,
+        114,
+        487,
+        72
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.row.history"
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB22ModuleSettingsIconView",
+      "frame" : [
+        212,
+        136,
+        28,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.icon.history",
+      "imageScaling" : 0,
+      "imageSize" : [
+        20,
+        20
+      ]
+    },
+    {
+      "accessibilityRole" : "AXUnknown",
+      "bezelStyle" : 0,
+      "buttonCellClass" : "NSButtonCell",
+      "buttonCellImageRect" : [
+        656,
+        146,
+        14,
+        8
+      ],
+      "buttonCellTitleRect" : [
+        651,
+        164,
+        0,
+        0
+      ],
+      "buttonFontSize" : 13,
+      "buttonState" : 0,
+      "buttonTitle" : "",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB19ModuleReorderHandle",
+      "controlSize" : 0,
+      "focusRingMaskBounds" : [
+        651,
+        164,
+        0,
+        0
+      ],
+      "focusRingType" : 1,
+      "frame" : [
+        651,
+        136,
+        24,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.reorder.history",
+      "imagePosition" : 1,
+      "isBordered" : false
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        196,
+        42,
+        487,
+        72
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.row.runtime"
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB22ModuleSettingsIconView",
+      "frame" : [
+        212,
+        64,
+        28,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.icon.runtime",
+      "imageScaling" : 0,
+      "imageSize" : [
+        20,
+        20
+      ]
+    },
+    {
+      "accessibilityRole" : "AXUnknown",
+      "bezelStyle" : 0,
+      "buttonCellClass" : "NSButtonCell",
+      "buttonCellImageRect" : [
+        656,
+        74,
+        14,
+        8
+      ],
+      "buttonCellTitleRect" : [
+        651,
+        92,
+        0,
+        0
+      ],
+      "buttonFontSize" : 13,
+      "buttonState" : 0,
+      "buttonTitle" : "",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB19ModuleReorderHandle",
+      "controlSize" : 0,
+      "focusRingMaskBounds" : [
+        651,
+        92,
+        0,
+        0
+      ],
+      "focusRingType" : 1,
+      "frame" : [
+        651,
+        64,
+        24,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.reorder.runtime",
+      "imagePosition" : 1,
+      "isBordered" : false
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        196,
+        -30,
+        487,
+        72
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.row.topProcesses"
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB22ModuleSettingsIconView",
+      "frame" : [
+        212,
+        -8,
+        28,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.icon.topProcesses",
+      "imageScaling" : 0,
+      "imageSize" : [
+        20,
+        20
+      ]
+    },
+    {
+      "accessibilityRole" : "AXUnknown",
+      "bezelStyle" : 1,
+      "buttonCellClass" : "NSPopUpButtonCell",
+      "buttonCellImageRect" : [
+        349,
+        6,
+        0,
+        0
+      ],
+      "buttonCellTitleRect" : [
+        359,
+        -11,
+        7,
+        14
+      ],
+      "buttonFontSize" : 11,
+      "buttonState" : 1,
+      "buttonTitle" : "3",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB29SettingsAppearancePopupButton",
+      "controlSize" : 1,
+      "focusRingMaskBounds" : [
+        349,
+        6,
+        0,
+        0
+      ],
+      "focusRingType" : 0,
+      "frame" : [
+        349,
+        -14,
+        53,
+        20
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.top-process-count",
+      "imagePosition" : 0,
+      "isBordered" : true
+    },
+    {
+      "accessibilityRole" : "AXUnknown",
+      "bezelStyle" : 1,
+      "buttonCellClass" : "NSPopUpButtonCell",
+      "buttonCellImageRect" : [
+        499,
+        6,
+        0,
+        0
+      ],
+      "buttonCellTitleRect" : [
+        509,
+        -11,
+        17,
+        14
+      ],
+      "buttonFontSize" : 11,
+      "buttonState" : 1,
+      "buttonTitle" : "Off",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB29SettingsAppearancePopupButton",
+      "controlSize" : 1,
+      "focusRingMaskBounds" : [
+        499,
+        6,
+        0,
+        0
+      ],
+      "focusRingType" : 0,
+      "frame" : [
+        499,
+        -14,
+        57,
+        20
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.top-processes-compact",
+      "imagePosition" : 0,
+      "isBordered" : true
+    },
+    {
+      "accessibilityRole" : "AXUnknown",
+      "bezelStyle" : 0,
+      "buttonCellClass" : "NSButtonCell",
+      "buttonCellImageRect" : [
+        656,
+        2,
+        14,
+        8
+      ],
+      "buttonCellTitleRect" : [
+        651,
+        20,
+        0,
+        0
+      ],
+      "buttonFontSize" : 13,
+      "buttonState" : 0,
+      "buttonTitle" : "",
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB19ModuleReorderHandle",
+      "controlSize" : 0,
+      "focusRingMaskBounds" : [
+        651,
+        20,
+        0,
+        0
+      ],
+      "focusRingType" : 1,
+      "frame" : [
+        651,
+        -8,
+        24,
+        28
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.reorder.topProcesses",
+      "imagePosition" : 1,
+      "isBordered" : false
+    },
+    {
+      "accessibilityRole" : "AXUnknown",
+      "bezelStyle" : 16,
+      "buttonCellClass" : "NSButtonCell",
+      "buttonCellImageRect" : [
+        565,
+        450,
+        0,
+        0
+      ],
+      "buttonCellTitleRect" : [
+        575,
+        432,
+        115,
+        14
+      ],
+      "buttonFontSize" : 11,
+      "buttonState" : 0,
+      "buttonTitle" : "Restore Default Order",
+      "class" : "NSButton",
+      "controlSize" : 1,
+      "focusRingMaskBounds" : [
+        565,
+        450,
+        0,
+        0
+      ],
+      "focusRingType" : 0,
+      "frame" : [
+        565,
+        428,
+        135,
+        22
+      ],
+      "hidden" : false,
+      "identifier" : "settings.modules.restore-default-order",
+      "imagePosition" : 0,
+      "isBordered" : true
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB16SettingsFillView",
+      "frame" : [
+        0,
+        0,
+        176,
+        520
+      ],
+      "hidden" : false,
+      "identifier" : "settings.sidebar"
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        0,
+        412,
+        176,
+        56
+      ],
+      "hidden" : false,
+      "identifier" : "settings.sidebar.identity"
+    },
+    {
+      "class" : "_TtC14DisplayCaptureP33_2C1A56B676C24575FBB002BDE7428DCB21SettingsLogoImageView",
+      "frame" : [
+        16,
+        424,
+        32,
+        32
+      ],
+      "hidden" : false,
+      "identifier" : "settings.sidebar.identity.tile",
+      "imageScaling" : 0,
+      "imageSize" : [
+        128,
+        128
+      ]
+    },
+    {
+      "class" : "NSView",
+      "frame" : [
+        0,
+        468,
+        176,
+        52
+      ],
+      "hidden" : false,
+      "identifier" : "settings.sidebar.traffic-safe-area"
+    },
+    {
+      "class" : "NSScrollView",
+      "frame" : [
+        12,
+        276,
+        152,
+        124
+      ],
+      "hidden" : false,
+      "identifier" : "settings.sidebar.navigation"
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        28,
+        370,
+        24,
+        24
+      ],
+      "hidden" : false,
+      "identifier" : "settings.sidebar.icon.general",
+      "imageScaling" : 0,
+      "imageSize" : [
+        18,
+        18
+      ]
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        28,
+        334,
+        24,
+        24
+      ],
+      "hidden" : false,
+      "identifier" : "settings.sidebar.icon.menu-bar-icon",
+      "imageScaling" : 0,
+      "imageSize" : [
+        18,
+        18
+      ]
+    },
+    {
+      "class" : "NSImageView",
+      "frame" : [
+        28,
+        298,
+        24,
+        24
+      ],
+      "hidden" : false,
+      "identifier" : "settings.sidebar.icon.modules",
+      "imageScaling" : 0,
+      "imageSize" : [
+        18,
+        18
+      ]
+    }
+  ],
+  "windowKey" : true,
+  "windowSize" : [
+    720,
+    520
+  ]
+}

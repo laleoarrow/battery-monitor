@@ -190,7 +190,7 @@ Homebrew/Pages gates.
 - Deployment target: macOS 12.
 - Architectures: arm64 and x86_64.
 - High Power mode is exposed only when the hardware reports support.
-- macOS 26 uses native Liquid Glass; macOS 12–25 use the AppKit fallback.
+- macOS 26 and later use native Liquid Glass; macOS 12–25 use the AppKit fallback.
 
 General > Appearance provides an opt-in **Liquid Glass** presentation on
 macOS 26 and later. Classic remains the default. Its material choice is
@@ -364,6 +364,12 @@ The controls and settings remain in place when selection changes. Display uses
 system radio/focus drawing and the shared Glass groups retain the system's
 default corner radius. See the
 [system controls review](../design/settings/display-system-defaults/README.md).
+Frozen `5b5ab47` passes full CI on macOS 26.6.2 / SDK 26.5 and macOS 27.0.1 /
+SDK 27: 678 Swift tests and 625 Python tests per platform (four expected opt-in
+GUI skips). The 27 gate additionally verifies 34 real frames, eight native
+Settings tests, three interaction variants, 20,000 animation iterations and a
+universal App/helper build. The 26 GUI proof retains 38 frames and eight native
+tests with identical production/fixture bytes. No installation is performed.
 General scrolls as needed for the added logo choice or expanded recovery help;
 keyboard focus brings the logo selector into view. Modules use monochrome SF Symbols, 12-point descriptions, inset
 separators and right-aligned switches. See the

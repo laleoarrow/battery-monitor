@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "captureCount": 34,
+  "checks": {
+    "nativeAssertionsCompleted": true,
+    "nativeEightTestsPassed": true,
+    "after-baseline": true,
+    "after-high-contrast": true,
+    "after-reduce-transparency": true,
+    "after-native-selected": true,
+    "after-macos27-selected": true,
+    "after-shared-settings": true,
+    "nativeGlassCorners": true,
+    "glassSurfacesPresentWhenEnabled": true,
+    "boxedControlsCorners": true,
+    "threeStylesAndSevenStates": true,
+    "naturalPreviewSizes": true,
+    "percentagePresentation": true,
+    "native27Canvas": true
+  }
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "Accessed" : "2026-10-19T16:45:06Z",
+    "State" : "running",
+    "Name" : "Wattson-Display-QA-5583AD49",
+    "Source" : "local",
+    "Running" : true,
+    "Size" : 31,
+    "Disk" : 50
+  },
+  {
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "State" : "stopped",
+    "Name" : "macOS-TestLab",
+    "Source" : "local",
+    "Running" : false,
+    "Size" : 33,
+    "Disk" : 50
+  },
+  {
+    "Accessed" : "2026-10-19T16:40:08Z",
+    "State" : "stopped",
+    "Name" : "macOS-TestLab-Base",
+    "Source" : "local",
+    "Running" : false,
+    "Size" : 30,
+    "Disk" : 50
+  }
+]

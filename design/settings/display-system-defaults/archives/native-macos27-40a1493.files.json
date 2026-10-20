@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "originalDirectory": "native-macos27-40a1493",
+  "files": {
+    "artwork/artifact-provenance.json": {
+      "bytes": 772,
+      "sha256": "480f3515e277c71342322a338a06d88af77760b93556719bb5adfe8b2c10bc2a"
+    },
+    "artwork/artwork.json": {
+      "bytes": 14622,
+      "sha256": "8fca0e4298db99336fc252fd82ac3a0c07ad7d5fb52ad9060320cf656cab7581"
+    },
+    "artwork/battery-bolt-large@4x.png": {
+      "bytes": 916,
+      "sha256": "59764c21b8ee19a1c98fb7eef12b5951cf525320b78c19c620e2c7791140d2d0"
+    },
+    "artwork/battery-bolt-mask-large@4x.png": {
+      "bytes": 1003,
+      "sha256": "cf0f914dcd036294c93aafcebfe7228ecc545288a11563b95d165a5a71cec7e5"
+    },
+    "artwork/battery-bolt-mask@4x.png": {
+      "bytes": 922,
+      "sha256": "0a9259857bb84cde2f9ca4e723b44a508ddb5a90500d1c803c631468dd879530"
+    },
+    "artwork/battery-bolt@4x.png": {
+      "bytes": 836,
+      "sha256": "7791691758cd4b463e91eab115b135b364bdceab61747a7f92e7e42cceebf5cf"
+    },
+    "artwork/battery-cap@4x.png": {
+      "bytes": 304,
+      "sha256": "749bd452f07d9944c180daa9fa7e1b1bf8773e5f3c7be41f4c16ceef0b5692cd"
+    },
+    "artwork/battery-outline@4x.png": {
+      "bytes": 1080,
+      "sha256": "04cb9faeab1f0f4d2c8776f71d0c853dd98721bd28ce06f99139b6189d021089"
+    },
+    "artwork/battery-plug-large@4x.png": {
+      "bytes": 844,
+      "sha256": "1f7c646c60651b9007edfd1550c242fcd7ebace83a44b612d4faf4290f0558ec"
+    },
+    "artwork/battery-plug-mask-large@4x.png": {
+      "bytes": 803,
+      "sha256": "ab7877d1bce4d38e6aac7971479e0f3be5f6f88e6247fd49a2bd5842dccd43ea"
+    },
+    "artwork/catalog-battery.json": {
+      "bytes": 30570,
+      "sha256": "360fc7027fc85b25af33bcf5bcbed76500dd897ddd98b8bb0dd5f87d500d372a"
+    },
+    "artwork/catalog-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artwork/compile.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artwork/context.json": {
+      "bytes": 856,
+      "sha256": "4119675bbe68f936e68bab9cb18e8c061841194c7f5806ee6912c721a41ae581"
+    },
+    "artwork/probe.log": {
+      "bytes": 68,
+      "sha256": "111d2ca66f39e9cae36cab3d6ff2ac795696f60514fe2a8e6c77cb8465669b5c"
+    }
+  }
+}

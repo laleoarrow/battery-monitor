@@ -1,0 +1,23 @@
+{
+  "source": "7c7705faf830c8b0eb2b46443c7f12846d651d98",
+  "framesReviewed": 34,
+  "displayFrames": 30,
+  "allPassed": true,
+  "maximumHeaderCenterDeltaPoints": 0.25,
+  "minimumNativeRadioLeftInsetPoints": 8,
+  "visiblePercentageFontSizes": [
+    10.5
+  ],
+  "native27ImageSizes": [
+    [
+      25,
+      16
+    ]
+  ],
+  "nativeGlassActualAndFreshPairs": [
+    [
+      8,
+      8
+    ]
+  ]
+}

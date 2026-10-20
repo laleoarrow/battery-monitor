@@ -1,0 +1,144 @@
+{
+  "allPassed": true,
+  "cleanup": {
+    "bothRemoteJobsReachedOrphanProcessCleanup": true,
+    "downloadScratchOwnedBySharedLifecycleAndRemoved": true,
+    "localCanonicalAppHelperSettingsUntouched": true
+  },
+  "environment": {
+    "architecture": "arm64",
+    "sdkVersion": "26.5",
+    "systemBuild": "25G83",
+    "systemVersion": "26.6.2",
+    "xcodeBuild": "17F113",
+    "xcodeVersion": "26.6"
+  },
+  "githubMetadata": {
+    "conclusion": "success",
+    "headSHA": "5b5ab47753fd6cbba971ccb0dd892b99c0b116d0",
+    "jobs": [
+      {
+        "completedAt": "2026-10-20T05:12:32Z",
+        "conclusion": "success",
+        "id": 118464264101,
+        "name": "SwiftPM and Python tests",
+        "startedAt": "2026-10-20T05:03:27Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-20T05:03:55Z",
+        "conclusion": "success",
+        "id": 118464264553,
+        "name": "Website build, test, lint, and export",
+        "startedAt": "2026-10-20T05:03:17Z",
+        "status": "completed"
+      }
+    ],
+    "status": "completed"
+  },
+  "limits": [
+    "This is macOS 26 headless CI; four real AppKit interaction tests are intentionally opt-in and are listed as skips. It does not claim macOS 27 native Display acceptance."
+  ],
+  "python": {
+    "durationSeconds": 368.061,
+    "expectedSkips": 4,
+    "explicitMacOS27ConditionalStepCount": 7,
+    "failures": 0,
+    "localRuntimeCleanup": {
+      "foundationCleanupPassed": true,
+      "nonFoundationLifecycleRegressions": 15,
+      "passed": 16,
+      "tests": [
+        "test_source_only_runners_preserve_caller_traps_and_complete_cleanup",
+        "test_success_and_command_failure_remove_workspace",
+        "test_communicate_retries_preserve_input_output_and_timeout",
+        "test_signals_inside_popen_wait_locks_do_not_reenter_cleanup",
+        "test_assertion_failure_also_cleans_workspace",
+        "test_cleanup_error_does_not_skip_later_resources_or_mask_failure",
+        "test_timeout_stops_descendants_before_unregistering",
+        "test_timeout_probe_permission_error_still_stops_owned_descendants",
+        "test_signal_permission_error_is_reported_and_owned_child_retained",
+        "test_cleanup_failure_after_success_is_an_error",
+        "test_permission_error_for_an_exited_group_is_not_a_cleanup_failure",
+        "test_reaping_an_owned_child_has_a_deadline",
+        "test_timeout_allows_nested_shell_supervisor_to_reap_its_group",
+        "test_timeout_waits_for_slow_nested_lifecycle_cleanup",
+        "test_parent_interrupts_stop_children_and_remove_workspace",
+        "test_foundation_preferences_are_removed_after_harness_failure"
+      ],
+      "totalTests": 16
+    },
+    "macOS27WorkflowGuardContractPassed": true,
+    "passed": true,
+    "settingsWindowContract": {
+      "nativeAppKitLayoutStateAndReleasePassed": true,
+      "passed": 8,
+      "tests": [
+        "test_appkit_window_layout_state_and_release_contract",
+        "test_default_sections_use_only_existing_settings",
+        "test_display_keeps_style_and_percentage_independent",
+        "test_display_uses_native_radio_drawing_and_system_glass_corners",
+        "test_dock_icon_is_a_separate_restart_only_preference",
+        "test_in_app_logo_uses_static_resources_without_changing_system_icons",
+        "test_liquid_glass_is_an_appearance_only_native_opt_in",
+        "test_source_has_no_timer_and_uses_the_narrow_section_boundary"
+      ]
+    },
+    "skips": [
+      {
+        "reason": "'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'",
+        "suite": "test_interaction_behavior.InteractionBehaviorTests",
+        "test": "test_interaction_contract_holds_against_real_appkit"
+      },
+      {
+        "reason": "'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'",
+        "suite": "test_interaction_behavior.InteractionBehaviorTests",
+        "test": "test_legacy_optical_lens_contract_holds_against_real_appkit"
+      },
+      {
+        "reason": "'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'",
+        "suite": "test_interaction_behavior.InteractionBehaviorTests",
+        "test": "test_legacy_slider_contract_holds_against_real_appkit"
+      },
+      {
+        "reason": "'real AppKit interaction is opt-in (WATTSON_RUN_INTERACTION=1)'",
+        "suite": "test_interaction_behavior.InteractionBehaviorTests",
+        "test": "test_reduce_transparency_contract_holds_against_real_appkit"
+      }
+    ],
+    "tests": 625
+  },
+  "schema": 2,
+  "sourceMatches": true,
+  "sourceSHA": "5b5ab47753fd6cbba971ccb0dd892b99c0b116d0",
+  "status": "accepted-complete-headless-ci",
+  "swift": {
+    "durationSeconds": 45.121,
+    "failures": 0,
+    "newSuites": {
+      "BatteryIcon27Tests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 9
+      },
+      "MenuBarIconStyleSettingsTests": {
+        "failures": 0,
+        "passed": true,
+        "tests": 5
+      }
+    },
+    "passed": true,
+    "tests": 678
+  },
+  "website": {
+    "exportCompleted": true,
+    "failures": 0,
+    "lintCompleted": true,
+    "passed": 7,
+    "postJobCleanup": true,
+    "sourceMatches": true,
+    "tests": 7
+  },
+  "workflowRun": 39372822015,
+  "workflowURL": "https://github.com/laleoarrow/battery-monitor/actions/runs/39372822015"
+}

@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "method": "All original file bytes retained and verified before duplicate loose directories are removed; tar filesystem metadata normalized. Extract an archive into this review directory to restore original paths.",
+  "runs": [
+    {
+      "originalDirectory": "native-macos26-40a1493",
+      "archive": "archives/native-macos26-40a1493.tar.gz",
+      "archiveSHA256": "8f8622eb3e308b497c49ec5067e9efc0e8208ddbfa94a87a5756cba90f627a58",
+      "fileManifest": "archives/native-macos26-40a1493.files.json",
+      "fileManifestSHA256": "c9fbc98077c05cbe6e6104f3b8ecf87408a22d49b3cf195727c283b7182b75ac",
+      "fileCount": 132,
+      "uncompressedFileBytes": 7469321,
+      "allFileBytesVerified": true
+    },
+    {
+      "originalDirectory": "native-macos26-a8b7679",
+      "archive": "archives/native-macos26-a8b7679.tar.gz",
+      "archiveSHA256": "8d2b0e8dff902efa97073eadeec8a64425847250080ad09cccac0827d7562601",
+      "fileManifest": "archives/native-macos26-a8b7679.files.json",
+      "fileManifestSHA256": "eb211b08cfac9db1c00e4d36e691e3535baa4f59c96675f2731fac6ef3d024ce",
+      "fileCount": 136,
+      "uncompressedFileBytes": 7583887,
+      "allFileBytesVerified": true
+    },
+    {
+      "originalDirectory": "native-macos26-ci-a8b7679",
+      "archive": "archives/native-macos26-ci-a8b7679.tar.gz",
+      "archiveSHA256": "79554171e1d8f835eb8b73fbf5f3e1309ab96f967cf89c77aabad0543ef5b6ae",
+      "fileManifest": "archives/native-macos26-ci-a8b7679.files.json",
+      "fileManifestSHA256": "2f23a07c24c5cab8e6f6592b720834098c893903c6ff99d347e6bb0e5d1824fa",
+      "fileCount": 7,
+      "uncompressedFileBytes": 79659,
+      "allFileBytesVerified": true
+    },
+    {
+      "originalDirectory": "native-macos26-ci-7c7705f",
+      "archive": "archives/native-macos26-ci-7c7705f.tar.gz",
+      "archiveSHA256": "92f0901029c717deebd86a60ceb74b6e9ddec55194e6c6b0ea184c56bf9e319a",
+      "fileManifest": "archives/native-macos26-ci-7c7705f.files.json",
+      "fileManifestSHA256": "4a249e5f0449ad005f0fc5ba7354b7f88fb2f35a72b3218664449f9fcc792de5",
+      "fileCount": 9,
+      "uncompressedFileBytes": 108403,
+      "allFileBytesVerified": true
+    },
+    {
+      "originalDirectory": "native-macos26-ci-2dbe973",
+      "archive": "archives/native-macos26-ci-2dbe973.tar.gz",
+      "archiveSHA256": "3a67602893aaef2967d4eeb4b5c65c9e02c55db7642f415e8d60385561c5211c",
+      "fileManifest": "archives/native-macos26-ci-2dbe973.files.json",
+      "fileManifestSHA256": "20ca124019f3afe468c7a9d123177b2589082b3c5d150b82b423e59f19c6f439",
+      "fileCount": 10,
+      "uncompressedFileBytes": 112682,
+      "allFileBytesVerified": true
+    },
+    {
+      "originalDirectory": "native-macos27-40a1493",
+      "archive": "archives/native-macos27-40a1493.tar.gz",
+      "archiveSHA256": "32e3b7d9e98bbf4ad8adc7905aeca715b5cd5a6dbbb3602bcbe1b10fe41b8adb",
+      "fileManifest": "archives/native-macos27-40a1493.files.json",
+      "fileManifestSHA256": "36197ef615afaeffa320f55e99a509d023029ac0ee58cce8396f40d93a24f4d2",
+      "fileCount": 15,
+      "uncompressedFileBytes": 53596,
+      "allFileBytesVerified": true
+    },
+    {
+      "originalDirectory": "native-macos27-a8b7679",
+      "archive": "archives/native-macos27-a8b7679.tar.gz",
+      "archiveSHA256": "c7f20e21027d07aa91c7cfbfde17b9af1686ef1dbc4e17ad7fa71f4fa684644f",
+      "fileManifest": "archives/native-macos27-a8b7679.files.json",
+      "fileManifestSHA256": "a389244b402b625af33a34bdfb8cdbeb45f1cc3d22c5ff14f0008adc045b367f",
+      "fileCount": 115,
+      "uncompressedFileBytes": 3240762,
+      "allFileBytesVerified": true
+    },
+    {
+      "originalDirectory": "native-macos27-7c7705f",
+      "archive": "archives/native-macos27-7c7705f.tar.gz",
+      "archiveSHA256": "b36d58559c33c15363adcbb6708cc43a113335190757a3429a19f27298dc924e",
+      "fileManifest": "archives/native-macos27-7c7705f.files.json",
+      "fileManifestSHA256": "b822da9cfc89bcbfc406961d01c05ceca7298ca0024769cfffe20edd00d1c662",
+      "fileCount": 115,
+      "uncompressedFileBytes": 3248698,
+      "allFileBytesVerified": true
+    },
+    {
+      "originalDirectory": "native-macos27-2dbe973",
+      "archive": "archives/native-macos27-2dbe973.tar.gz",
+      "archiveSHA256": "781f19b7dee82dfe10d85b5dcfbe2690a3ea4d0d4f61ddf2f5ab2fb43a13ca64",
+      "fileManifest": "archives/native-macos27-2dbe973.files.json",
+      "fileManifestSHA256": "37384ab1aede0207fbf008686c09c15e1fb333b1b65402354b60ad4c4304b80f",
+      "fileCount": 118,
+      "uncompressedFileBytes": 3272976,
+      "allFileBytesVerified": true
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "files": {
+    "artwork/compile.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artwork/probe.log": {
+      "bytes": 68,
+      "sha256": "111d2ca66f39e9cae36cab3d6ff2ac795696f60514fe2a8e6c77cb8465669b5c"
+    },
+    "display/after-baseline/fixture.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "display/after-baseline/fixture.log": {
+      "bytes": 398,
+      "sha256": "73ca013814742d2920d51b2c073177ae0e006c4d4b356799859f8c072f055ed2"
+    },
+    "display/after-high-contrast/fixture.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "display/after-high-contrast/fixture.log": {
+      "bytes": 398,
+      "sha256": "73ca013814742d2920d51b2c073177ae0e006c4d4b356799859f8c072f055ed2"
+    },
+    "display/after-macos27-selected/fixture.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "display/after-macos27-selected/fixture.log": {
+      "bytes": 218,
+      "sha256": "10b50dc666295b5c0e7ba2c9994db496c88a57827b295fea534d823a5afcef60"
+    },
+    "display/after-native-selected/fixture.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "display/after-native-selected/fixture.log": {
+      "bytes": 131,
+      "sha256": "4f06219454f9922c67d2480a20a5a0c8b10591680bdca939fa0047d52f467619"
+    },
+    "display/after-reduce-transparency/fixture.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "display/after-reduce-transparency/fixture.log": {
+      "bytes": 398,
+      "sha256": "73ca013814742d2920d51b2c073177ae0e006c4d4b356799859f8c072f055ed2"
+    },
+    "display/after-shared-settings/fixture.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "display/after-shared-settings/fixture.log": {
+      "bytes": 192,
+      "sha256": "82a76f04fccf8315b400c97bdb183519a26e9832fc2bfd28fb8440f6168825a9"
+    },
+    "display/build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "display/settings-contract.err": {
+      "bytes": 1092,
+      "sha256": "06edc7380820d50a40e0b479bbcb1c14b6a90529e89e3be5643ce1fc5a46a974"
+    },
+    "display/settings-contract.log": {
+      "bytes": 4237,
+      "sha256": "0671978134fa2ea1cd4fecd5508faefaa05227549916589371dec9c0247b1304"
+    },
+    "display/sign.log": {
+      "bytes": 142,
+      "sha256": "f862c713c5e5611d10b572312346200356b09395cc5c40587de8ee11ce917f57"
+    },
+    "display/source-verification.log": {
+      "bytes": 5681,
+      "sha256": "224e1e15dd357e2f5edd739ff1caf6c594e359e624b1b99debd630b42f9bc158"
+    },
+    "swift/swift-test-build.log": {
+      "bytes": 928,
+      "sha256": "ce11b80ef409670f05e8dc320c2aa39d1a9a0b35c00f8bb85069226cd4fb3120"
+    },
+    "swift/swift-test-run.log": {
+      "bytes": 188205,
+      "sha256": "165f34f78de70cb831d90cbb835b40ee6d810c2f5766e38861f586479d416ae0"
+    },
+    "tests-job.log": {
+      "bytes": 536213,
+      "sha256": "e16e62e7255a127e9f92ab2e21e88d3ac26888156e108d7037af3a42995c84eb"
+    },
+    "website-job.log": {
+      "bytes": 26631,
+      "sha256": "b9841150af8b316f9442d75c3190d9578c3f2486ed074044d91c2bd1fcd5b60e"
+    }
+  },
+  "note": "Hashes describe exact original raw bytes. Any later lossless archive must decompress to these hashes.",
+  "schema": 1
+}

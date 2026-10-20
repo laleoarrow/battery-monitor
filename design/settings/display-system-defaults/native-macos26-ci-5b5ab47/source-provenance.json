@@ -1,0 +1,69 @@
+{
+  "observedSourceInBothRawLogs": true,
+  "rawJobLogSHA256": {
+    "tests": "90239b283f5ca5c4702bc19c522ac01cc55040411289e5039218b4ba05b4dd75",
+    "website": "9c4ee6887db56708f3348964eb1a810c7539feb868eb6f390a34ccd4c9838c7d"
+  },
+  "schema": 1,
+  "sourceFiles": {
+    ".github/workflows/ci.yml": {
+      "bytes": 9092,
+      "gitBlobSHA": "00d9e839d1a6b4fc882dc9599789f66b3f01631b",
+      "sha256": "896e464cc32d1c3f943affef07adfe2c3e8ec4684eade7d20ef9c605be1e388c"
+    },
+    "Core/Settings.swift": {
+      "bytes": 15932,
+      "gitBlobSHA": "c045af46d3b33ce66c5b12411b519b2a8fc53a13",
+      "sha256": "f0542ead97a4579eb1791f5d04e9bfced9be6c5746cefdbaae19e12271b9fe0b"
+    },
+    "MenuBar/BatteryIcon.swift": {
+      "bytes": 13949,
+      "gitBlobSHA": "bac566932ce62ebdf57bf0c4cf56ed5438f5132a",
+      "sha256": "67ba97e456b67a53969b98562bc0223cff41ecdb94869a393bd4cb9ac27e6b36"
+    },
+    "MenuBar/BatteryIcon27.swift": {
+      "bytes": 7390,
+      "gitBlobSHA": "6ff0abe0abd29077f0a9469ec6b8996663ffc50f",
+      "sha256": "7dda4b5ec6b0b09c4f24ed595d161edaa0b0bf3b293d477291856561a3c7d1ae"
+    },
+    "MenuBar/SettingsWindowController.swift": {
+      "bytes": 189801,
+      "gitBlobSHA": "a5d09281e8bf025eb0531bb32718b1f69a58c22e",
+      "sha256": "9b36eabebb0f905534e676531f842da0aee97654a572357ced80ca0f7b20cec5"
+    },
+    "SwiftTests/BatteryIcon27Tests.swift": {
+      "bytes": 7743,
+      "gitBlobSHA": "9fac11efe55cba5c5de10660ff233246e1c0d77b",
+      "sha256": "99ad49fc7d9e73adf67f6814d0235f31b7eefb6d1e8fe6c4a1909b353287c463"
+    },
+    "SwiftTests/MenuBarIconStyleSettingsTests.swift": {
+      "bytes": 6866,
+      "gitBlobSHA": "ff3e7723db54e20b5838dfce5423a7ff5ec05148",
+      "sha256": "d0c3261520b8387b2ce644f74875495a3be73866e3f26823c869b4a3d4984369"
+    },
+    "tests/local_runtime.py": {
+      "bytes": 9436,
+      "gitBlobSHA": "f8bff77a6b8b65498984bdffa9270bb5a72ce413",
+      "sha256": "7a112b85f1f5b1039da480f201201eafd2a2de13be7efcc1c9d44488ff8001c2"
+    },
+    "tests/test_local_runtime_cleanup.py": {
+      "bytes": 24283,
+      "gitBlobSHA": "b6c898d38f3e3313c9e70e825ce6acc05697d4b5",
+      "sha256": "0b0507ba465fe9d97873c606f7f52370a93e9d86f404b35ddfe8dbfb779bcc2f"
+    },
+    "tests/test_release_workflow_contract.py": {
+      "bytes": 44058,
+      "gitBlobSHA": "64a7d9fdbf206f940e506857bd09293eb1134b33",
+      "sha256": "fc9b946af716f81de004afc46279f97330693fd7916ed81809eb38af5ff5c673"
+    },
+    "tests/test_settings_window_contract.py": {
+      "bytes": 221361,
+      "gitBlobSHA": "d814ca2006294bbab6458bbc2d8eb7795d7a1892",
+      "sha256": "3a724f43b4cbb6cc2e166b88375b2d5ec5e5f44fd55596f773eb760e085440f0"
+    }
+  },
+  "sourceMatches": true,
+  "sourceMetadataProvider": "GitHub contents API with exact frozen ref",
+  "sourceSHA": "5b5ab47753fd6cbba971ccb0dd892b99c0b116d0",
+  "workflowRun": 39372822015
+}

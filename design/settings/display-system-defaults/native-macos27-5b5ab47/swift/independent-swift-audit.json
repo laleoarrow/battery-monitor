@@ -1,0 +1,29 @@
+{
+  "allPassed": true,
+  "checks": {
+    "appearanceFiveTestsPassed": true,
+    "batteryNineTestsPassed": true,
+    "combinedTests678": true,
+    "environmentOS27SDK27": true,
+    "sourceMatches": true,
+    "twoProductsCompleted": true,
+    "zeroFailures": true
+  },
+  "counting": "Sum each completed .xctest product exactly once; do not double count its All tests echo.",
+  "products": [
+    {
+      "failures": 0,
+      "product": "WattsonTests.xctest",
+      "tests": 648
+    },
+    {
+      "failures": 0,
+      "product": "WattsonHelperV5SupportTests.xctest",
+      "tests": 30
+    }
+  ],
+  "schema": 1,
+  "scope": "actual macOS 27 Swift tests only",
+  "sourceSHA": "5b5ab47753fd6cbba971ccb0dd892b99c0b116d0",
+  "workflowRun": 39372862325
+}

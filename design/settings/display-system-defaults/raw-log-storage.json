@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "method": "Lossless gzip of original raw log bytes. When archive is present, storedPath names a member inside that lossless run archive; otherwise it is relative to this review directory.",
+  "logs": [
+    {
+      "originalPath": "native-macos26-40a1493/guest.err",
+      "originalSHA256": "542ca724f46d8a3dffb85c3cd4b6e0d2fdf6c1bd4c484e6978dd9ed2f22cd639",
+      "originalBytes": 30,
+      "storedPath": "native-macos26-40a1493/guest.err.raw.gz",
+      "storedSHA256": "07c90ea25c935b07fafb10778f2f15fc55007e12b92708e2f7e101aa44228054",
+      "archive": "archives/native-macos26-40a1493.tar.gz"
+    },
+    {
+      "originalPath": "native-macos26-40a1493/results/focused-swift.log",
+      "originalSHA256": "80d8306eab52bf5bd1ba6cf79abde7e28ce10076b6051b9e769d0ad1b39a9a52",
+      "originalBytes": 5461,
+      "storedPath": "native-macos26-40a1493/results/focused-swift.log.raw.gz",
+      "storedSHA256": "240748224c6dcf589ffa13d4a4be0c3153ff380b2b1982662705af9c1b0dc501",
+      "archive": "archives/native-macos26-40a1493.tar.gz"
+    },
+    {
+      "originalPath": "native-macos26-a8b7679/guest.err",
+      "originalSHA256": "542ca724f46d8a3dffb85c3cd4b6e0d2fdf6c1bd4c484e6978dd9ed2f22cd639",
+      "originalBytes": 30,
+      "storedPath": "native-macos26-a8b7679/guest.err.raw.gz",
+      "storedSHA256": "07c90ea25c935b07fafb10778f2f15fc55007e12b92708e2f7e101aa44228054",
+      "archive": "archives/native-macos26-a8b7679.tar.gz"
+    },
+    {
+      "originalPath": "native-macos26-ci-a8b7679/tests-job.log",
+      "originalSHA256": "20ce77b049fe2eebe4970842086852f90130a4339ca5b7e07c95c1994b05296e",
+      "originalBytes": 362102,
+      "storedPath": "native-macos26-ci-a8b7679/tests-job.log.raw.gz",
+      "storedSHA256": "a6d1725ec81296969d69a905403181297a5cfb303d35bfe1c774b6fef2b31314",
+      "archive": "archives/native-macos26-ci-a8b7679.tar.gz"
+    },
+    {
+      "originalPath": "native-macos26-ci-a8b7679/website-job.log",
+      "originalSHA256": "40feacb168cac55b43b2cf37ea572724b2fb6ca4f6f0cf3dad4dda174a22188d",
+      "originalBytes": 28230,
+      "storedPath": "native-macos26-ci-a8b7679/website-job.log.raw.gz",
+      "storedSHA256": "7dfce7cf0c20ea3d6472541c7ff5b909123df0e57528afc2621ce1e9288575cf",
+      "archive": "archives/native-macos26-ci-a8b7679.tar.gz"
+    },
+    {
+      "originalPath": "native-macos27-a8b7679/tests-job.log",
+      "originalSHA256": "f259b91867e3d3808dee0449688494c7003253e67ae5d1d0263ad92da4135dd7",
+      "originalBytes": 28684,
+      "storedPath": "native-macos27-a8b7679/tests-job.log.raw.gz",
+      "storedSHA256": "874729deedb959aa82a45c273a636645d8f14dfb38eeff989eed61026455a8ab",
+      "archive": "archives/native-macos27-a8b7679.tar.gz"
+    },
+    {
+      "originalPath": "native-macos27-a8b7679/website-job.log",
+      "originalSHA256": "696e6816095b9d16692c4e985e722712af1178ad5e0913ddfbee859089f88feb",
+      "originalBytes": 26255,
+      "storedPath": "native-macos27-a8b7679/website-job.log.raw.gz",
+      "storedSHA256": "49e0a91b648992205e29cadd9907a09f7315de78d37351afdbbce4e887c841ea",
+      "archive": "archives/native-macos27-a8b7679.tar.gz"
+    },
+    {
+      "originalPath": "native-macos26-7c7705f/guest.err",
+      "originalSHA256": "542ca724f46d8a3dffb85c3cd4b6e0d2fdf6c1bd4c484e6978dd9ed2f22cd639",
+      "originalBytes": 30,
+      "storedPath": "native-macos26-7c7705f/guest.err.raw.gz",
+      "storedSHA256": "07c90ea25c935b07fafb10778f2f15fc55007e12b92708e2f7e101aa44228054"
+    },
+    {
+      "originalPath": "native-macos27-7c7705f/tests-job.log",
+      "originalSHA256": "cdea1941574902d1e4d92bafb45205a9f0ba7d74d5184d2e8e3153144bdaa873",
+      "originalBytes": 28808,
+      "storedPath": "native-macos27-7c7705f/tests-job.log.raw.gz",
+      "storedSHA256": "3d269003ccffdabb23286c32f367f11716953bdb7d09bb423e18de5f445ccd34",
+      "archive": "archives/native-macos27-7c7705f.tar.gz"
+    },
+    {
+      "originalPath": "native-macos27-7c7705f/website-job.log",
+      "originalSHA256": "992c6f0286318b5a3e8ffb171bea1ec65a7e441135fd66546c2dd382dd902da0",
+      "originalBytes": 28202,
+      "storedPath": "native-macos27-7c7705f/website-job.log.raw.gz",
+      "storedSHA256": "d96d747c98a99d1b570d0372c4c7f10dbb75b68bc0a4bbf2988b378efbb153f3",
+      "archive": "archives/native-macos27-7c7705f.tar.gz"
+    },
+    {
+      "originalPath": "native-macos27-2dbe973/tests-job.log",
+      "originalSHA256": "93776d0e0c67e91bbf90df0ac08313ec23ef238604481914493cb2e8fe733668",
+      "originalBytes": 27816,
+      "storedPath": "native-macos27-2dbe973/tests-job.log.raw.gz",
+      "storedSHA256": "fe340eec33ca0594fe2867b6088c3bd8085613e9af5b0002dbe3e105a6dd273b",
+      "archive": "archives/native-macos27-2dbe973.tar.gz"
+    },
+    {
+      "originalPath": "native-macos27-2dbe973/website-job.log",
+      "originalSHA256": "04c75225713057802b5dfb07079fe2e46bd29d85221d17ca0178c38c6235d1f5",
+      "originalBytes": 28123,
+      "storedPath": "native-macos27-2dbe973/website-job.log.raw.gz",
+      "storedSHA256": "5e8e63fd41e7c43b20097a55ee04b35d49ae95ab7a9d5060938d5146f9f8e59b",
+      "archive": "archives/native-macos27-2dbe973.tar.gz"
+    },
+    {
+      "originalPath": "native-macos26-ci-5b5ab47/tests-job.log",
+      "originalSHA256": "90239b283f5ca5c4702bc19c522ac01cc55040411289e5039218b4ba05b4dd75",
+      "originalBytes": 362103,
+      "storedPath": "native-macos26-ci-5b5ab47/tests-job.log.raw.gz",
+      "storedSHA256": "3e1cf1f55335508beb57b26b0b8f8157932d342b5b23a60c321ee6c661567a45"
+    },
+    {
+      "originalPath": "native-macos26-ci-5b5ab47/website-job.log",
+      "originalSHA256": "9c4ee6887db56708f3348964eb1a810c7539feb868eb6f390a34ccd4c9838c7d",
+      "originalBytes": 26604,
+      "storedPath": "native-macos26-ci-5b5ab47/website-job.log.raw.gz",
+      "storedSHA256": "61be07f6b9a5895d9e17dcb3c3fe96b8554a9132381fad306dd75b8e588621a2"
+    },
+    {
+      "originalPath": "native-macos27-5b5ab47/tests-job.log",
+      "originalSHA256": "e16e62e7255a127e9f92ab2e21e88d3ac26888156e108d7037af3a42995c84eb",
+      "originalBytes": 536213,
+      "storedPath": "native-macos27-5b5ab47/tests-job.log.raw.gz",
+      "storedSHA256": "09e0adcdbd1c86d633f04cf9f14d70fbdbdc9179af31d6c43e0f0c66961e5301"
+    },
+    {
+      "originalPath": "native-macos27-5b5ab47/website-job.log",
+      "originalSHA256": "b9841150af8b316f9442d75c3190d9578c3f2486ed074044d91c2bd1fcd5b60e",
+      "originalBytes": 26631,
+      "storedPath": "native-macos27-5b5ab47/website-job.log.raw.gz",
+      "storedSHA256": "4cc073e2cb2d73233692af76165a2f334576707206db4cc5e2a083af8a7d8fb1"
+    }
+  ]
+}

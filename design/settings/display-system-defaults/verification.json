@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "accepted": true,
+  "status": "accepted-complete-macos26-and-macos27-validation",
+  "frozenSourceCommit": "5b5ab47753fd6cbba971ccb0dd892b99c0b116d0",
+  "sourceSHA256": {
+    "Core/Settings.swift": "f0542ead97a4579eb1791f5d04e9bfced9be6c5746cefdbaae19e12271b9fe0b",
+    "MenuBar/SettingsWindowController.swift": "9b36eabebb0f905534e676531f842da0aee97654a572357ced80ca0f7b20cec5",
+    "MenuBar/BatteryIcon.swift": "8601f4210426709981acdbff92be1688747ef385a479c36a8fddc7139f698961",
+    "MenuBar/BatteryIcon27.swift": "fa7077752e5d058e414321bd8de0340dc00d8bac70911c17e4766c2ecb37225e",
+    "MenuBar/StatusItemController.swift": "e31708962a9e65338a5649fcb84174e2e1c931bf574b4f268d373c59c0533c42",
+    "tests/test_settings_window_contract.py": "3a724f43b4cbb6cc2e166b88375b2d5ec5e5f44fd55596f773eb760e085440f0",
+    "tests/local_runtime.py": "7a112b85f1f5b1039da480f201201eafd2a2de13be7efcc1c9d44488ff8001c2"
+  },
+  "macOS26GUI": {
+    "sourceCommit": "7c7705faf830c8b0eb2b46443c7f12846d651d98",
+    "systemVersion": "26.6.1",
+    "captures": 38,
+    "nativeTests": 8,
+    "allPassed": true,
+    "report": "native-macos26-7c7705f/gate-results.json",
+    "productionContinuityReport": "production-source-continuity.json"
+  },
+  "macOS26CI": {
+    "allPassed": true,
+    "workflowRun": 39372822015,
+    "systemVersion": "26.6.2",
+    "swiftTests": 678,
+    "pythonTests": 625,
+    "expectedPythonSkips": 4,
+    "websiteTests": 7,
+    "report": "native-macos26-ci-5b5ab47/execution-audit.json"
+  },
+  "macOS27": {
+    "allPassed": true,
+    "workflowRun": 39372862325,
+    "systemVersion": "27.0.1",
+    "captures": 34,
+    "nativeSettingsTests": 8,
+    "swiftTests": 678,
+    "displayReport": "native-macos27-5b5ab47/display/independent-display-audit.json",
+    "fullCIReportPending": false,
+    "pythonTests": 625,
+    "expectedPythonSkips": 4,
+    "nativeInteractionVariants": 3,
+    "animationStressIterations": 20000,
+    "universalArchitectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "report": "native-macos27-5b5ab47/execution-audit.json",
+    "maximumSampledRSSGrowthBytes": 147456,
+    "sampledRSSGrowthLimitBytes": 8388608
+  },
+  "canonicalPreservation": {
+    "installedVersion": "4.3.23",
+    "settingsCompared": 16,
+    "changedByThisTask": false,
+    "report": "native-macos26-7c7705f/canonical-after.json"
+  },
+  "rollout": {
+    "installedAppChanged": false,
+    "releaseCreated": false,
+    "versionFile": "4.3.23"
+  },
+  "rawLogStorageManifest": "raw-log-storage.json",
+  "limits": [
+    "Production and fixture sources are identical across the macOS 26 GUI run and the final source; the native test watchdog and sampled RSS policy were repaired separately.",
+    "Physical macOS 27 battery hardware, installation/login behavior and notarization are outside this UI/source validation.",
+    "Sampled RSS growth and weak-reference release assertions do not establish absence of every possible leak."
+  ],
+  "historicalEvidenceArchives": "archives/index.json",
+  "verificationCounts": {
+    "macOS26GUIFrames": 38,
+    "macOS27GUIFrames": 34,
+    "nativeSettingsTestsPerGUIRun": 8,
+    "swiftTestsPerFullCIRun": 678,
+    "pythonTestsPerFullCIRun": 625,
+    "expectedPythonSkipsPerFullCIRun": 4
+  }
+}

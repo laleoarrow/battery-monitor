@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "allPassed": true,
+  "checks": {
+    "guestCompleted": true,
+    "nativeAssertionsCompleted": true,
+    "unittestPassed": true,
+    "before-baseline": true,
+    "after-baseline": true,
+    "after-high-contrast": true,
+    "after-reduce-transparency": true,
+    "after-native-selected": true,
+    "after-macos27-selected": true,
+    "after-shared-settings": true,
+    "before-source-before": true,
+    "before-source-after": true,
+    "after-source-before": true,
+    "after-source-after": true
+  }
+}
