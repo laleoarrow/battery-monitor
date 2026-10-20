@@ -34,10 +34,12 @@ final class GlassPopoverPanel: NSPanel {
     override var canBecomeMain: Bool { false }
 
     @available(macOS 26.0, *)
-    init(content: NSView, frame: NSRect, style: NSGlassEffectView.Style, showsArrow: Bool = true) {
+    init(content: NSView, frame: NSRect, style: NSGlassEffectView.Style, showsArrow: Bool = true,
+         appearance: NSAppearance? = nil) {
         self.showsArrow = showsArrow
         super.init(contentRect: frame, styleMask: [.borderless, .nonactivatingPanel],
                    backing: .buffered, defer: false)
+        self.appearance = appearance
         // AppKit expands a half-point origin during initialization. Use the
         // same sizing path as later placement before laying out the content.
         setFrame(frame, display: false)
@@ -77,8 +79,15 @@ final class GlassPopoverPanel: NSPanel {
         // the sibling material keeps its arrow and external optical margin.
         content.frame = foreground.bounds
         content.autoresizingMask = [.width, .height]
-        foreground.addSubview(content)
-        contentView!.addSubview(foreground)
+        if content.window == nil {
+            // Inherit the destination appearance without a windowless parent.
+            contentView!.addSubview(foreground)
+            foreground.addSubview(content)
+        } else {
+            // Preserve the existing detach transition for live content.
+            foreground.addSubview(content)
+            contentView!.addSubview(foreground)
+        }
         hostedContent = content
         self.foreground = foreground
         self.background = background

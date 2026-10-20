@@ -858,6 +858,39 @@ final class TopProcessesViewTests: XCTestCase {
         XCTAssertNil(view.selectedProcessForTest)
     }
 
+    func testMovingLiveContentToGlassClearsSelectionBeforeAnUnchangedUpdate() throws {
+        guard #available(macOS 26.0, *) else { throw XCTSkip("Native Liquid Glass needs macOS 26") }
+        let application = NSApplication.shared
+        let originalAppearance = application.appearance
+        application.appearance = try XCTUnwrap(NSAppearance(named: .aqua))
+        defer { application.appearance = originalAppearance }
+        for style in [NSGlassEffectView.Style.regular, .clear] {
+            let view = makeView()
+            let state = TopProcessesState.ready([identifiedProcess(41)])
+            view.update(state: state, count: 3)
+            let oldWindow = NSWindow(contentRect: view.bounds, styleMask: .borderless,
+                                     backing: .buffered, defer: false)
+            defer { oldWindow.orderOut(nil) }
+            oldWindow.contentView!.addSubview(view)
+            XCTAssertTrue(view.processRowsForTest[0].accessibilityPerformPress())
+            XCTAssertNotNil(view.selectedProcessForTest)
+            let oldAction = try XCTUnwrap(view.forceQuitButtonsForTest.first)
+            var requests = 0
+            view.forceQuitHandler = { _ in requests += 1 }
+            let inset = GlassPopoverPanel.contentInset(for: style == .clear ? .clear : .regular)
+            let panel = GlassPopoverPanel(content: view,
+                frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset, height: 212 + 2 * inset), style: style)
+            defer { panel.detachContent() }
+            XCTAssertTrue(view.window === panel)
+            view.update(state: state, count: 3)
+            XCTAssertNil(view.selectedProcessForTest)
+            XCTAssertTrue(view.forceQuitButtonsForTest.allSatisfy(\.isHidden))
+            oldAction.performClick(nil)
+            XCTAssertEqual(requests, 0)
+            XCTAssertFalse(panel.isVisible)
+        }
+    }
+
     func testKeyboardAndAccessibilitySelectionExposeCrossWithoutTerminating() throws {
         let view = makeView()
         view.update(state: .ready([identifiedProcess(41), identifiedProcess(42)]), count: 3)

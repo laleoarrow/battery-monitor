@@ -241,9 +241,9 @@ final class PopoverController: NSObject, NSPopoverDelegate {
             retireClassicHost()
             let panel = GlassPopoverPanel(content: content.view, frame: frame,
                 style: Settings.liquidGlassStyle == .clear ? .clear : .regular,
-                showsArrow: Settings.showPopoverArrow)
+                showsArrow: Settings.showPopoverArrow,
+                appearance: Settings.colorScheme.appearance)
             panel.point(to: placement.anchorFrame.midX)
-            panel.appearance = Settings.colorScheme.appearance
             panel.onDismiss = { [weak self] in self?.close() }
             panel.onEscape = { [weak self] in _ = self?.handleEscape() }
             glassPanel = panel
