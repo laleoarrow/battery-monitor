@@ -1,0 +1,26 @@
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module WattsonTests
+[4/5] Compiling WattsonTests TopProcessesViewTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking WattsonPackageTests
+Build complete! (2.72s)
+Test Suite 'Selected tests' started at 2026-10-20 20:11:53.841.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-20 20:11:53.842.
+Test Suite 'TopProcessesViewTests' started at 2026-10-20 20:11:53.842.
+Test Case '-[WattsonTests.TopProcessesViewTests testMovingLiveContentToGlassClearsSelectionBeforeAnUnchangedUpdate]' started.
+Test Case '-[WattsonTests.TopProcessesViewTests testMovingLiveContentToGlassClearsSelectionBeforeAnUnchangedUpdate]' passed (0.173 seconds).
+Test Suite 'TopProcessesViewTests' passed at 2026-10-20 20:11:54.015.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.173 (0.173) seconds
+Test Suite 'WattsonPackageTests.xctest' passed at 2026-10-20 20:11:54.015.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.173 (0.173) seconds
+Test Suite 'Selected tests' passed at 2026-10-20 20:11:54.015.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.173 (0.174) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

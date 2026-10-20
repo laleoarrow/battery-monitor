@@ -1,0 +1,62 @@
+{
+  "wallUTC": "2026-10-20T12:22:01Z",
+  "scope": "No probe, compilation, VM or live sampling executed. Interpreter rejection and offline existing-evidence validation only.",
+  "change": "Reject optimized Python before arguments/importing lifecycle/probe/output; prevent this process from writing import bytecode; remove inherited PYTHONOPTIMIZE for child commands.",
+  "entrypointCases": [
+    {
+      "case": "ordinary_no_args",
+      "exitStatus": 1,
+      "optimizedInterpreterRejectedBeforeArguments": false,
+      "probeNotLaunched": true
+    },
+    {
+      "case": "explicit_O_no_args",
+      "exitStatus": 1,
+      "optimizedInterpreterRejectedBeforeArguments": true,
+      "probeNotLaunched": true
+    },
+    {
+      "case": "environment_optimize_no_args",
+      "exitStatus": 1,
+      "optimizedInterpreterRejectedBeforeArguments": true,
+      "probeNotLaunched": true
+    }
+  ],
+  "recordedMeasurePythonSHA256": "9d983a615f51c69372dcd7b5e7b2977f69bcfa28405fb2c85df20ba9a00ba2b1",
+  "currentMeasurePythonSHA256": "94ea1983fa61dca7090b2b1915e899ea35c46db31e93f5dd7b619d57b90e6ca6",
+  "hashDifferenceReason": "Post-measurement entrypoint guard only; the older cleanup manifest and all measured evidence are preserved.",
+  "offlineValidationUsesPythonAssert": false,
+  "offlineChecks": {
+    "runtimeSampleCount32": true,
+    "runtimeIndicesContiguous": true,
+    "runtimeNeverOnMainThread": true,
+    "snapshotsAvailable32": true,
+    "helperV5Results32": true,
+    "oneHealthColdRecord": true,
+    "oneRealHealthProfilerCall": true,
+    "noPeriodicHealthProfilerCall": true,
+    "noRemainingHealthLiveReads": true,
+    "allFiveRealStagesExactly32Calls": true,
+    "summaryCountsMatchRaw": true,
+    "threeProcessReadsWithTenRows": true,
+    "tenHealthHotBatches": true,
+    "canonicalPIDSetUnchangedRecorded": true,
+    "helperPIDSetUnchangedRecorded": true,
+    "noSensorOrProcessIdentityFields": true,
+    "frozenRevisionMatches": true,
+    "compiledSwiftProbeUnchanged": true,
+    "previousOwnedScratchRemoved": true,
+    "allExistingSamplingEvidenceBytesUnchanged": true
+  },
+  "existingEvidenceSHA256": {
+    "summary.json": "7e15c387617d7c52d95513644945a2818484cae74a6fa15cf989cdc5f707270d",
+    "metadata.json": "be64ab648a01a7471e12b22416451927b15ef3f216430b11df4b066a87657499",
+    "measurements.jsonl": "2d5f25216d1de573adbf0bfc3950d9d53b1baf99c39ac57c24d16ad7fc1ac25c",
+    "compiled-inputs.sha256": "af6b14e4c7df213c4d2882ef9cbb827dafb31bdff3a137cfb1afa3c372e29e92",
+    "README.md": "6bbd9f16dda689a9003ad3be09692288d07eb38b0efdbd34e18e506e6aeeefbe",
+    "cleanup.json": "db858081d69b9576623009c426a4bac423fa1bd422aba116df5aebf93d040315",
+    "warmup.jsonl": "3104ce5008cd8c3a4df86f32d130c7bf6b9dd02b5f90755aa6a8a5a48522939d",
+    "lifecycle-handler-checks.json": "975c84adf1b40779794312b5e7c1dea9a4140762048a56cedc8c58b45c9c2c70"
+  },
+  "noNewSamplingBytecode": true
+}

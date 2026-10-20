@@ -82,6 +82,18 @@ and 627 Python tests (four expected opt-in skips), plus 20,000 no-window
 animation iterations. This source/test review does not update the canonical
 installation or publish a new release.
 
+The separate [measured performance review](../design/performance-measurements-20261020/README.md)
+locates repeated appearance refreshes during Glass warm opening. The panel now
+receives the existing optional appearance before building its children and
+attaches detached content through its windowed foreground. Live-window inputs
+retain the original detach transition for History and process-selection cleanup;
+System stays nil and live theme observers remain. Exact-source uninstrumented
+ABBA in the macOS 26.6.1 GUI VM reduces opposite-appearance synchronous warm
+opens from about 68–69 ms to 37–38 ms. These are controller/software observations,
+not physical display latency, launch time or a whole-app CPU claim. Real host
+acquisition is already about 2.66 ms at its normal two-second cadence, which is
+preserved. The evidence keeps rejected candidates, controls and cleanup separate.
+
 Power History retains the original 60-slot, two-minute sample ring and its
 sampling cadence. Ordered monotonic timestamps travel with the cached readings
 to a fixed 120-second viewport. Shape-preserving cubic segments pass through

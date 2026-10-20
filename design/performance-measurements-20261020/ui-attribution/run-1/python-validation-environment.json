@@ -1,0 +1,12 @@
+{
+  "host": {
+    "PYTHONOPTIMIZE": null,
+    "optimize": 0
+  },
+  "guest": {
+    "PYTHONOPTIMIZE": null,
+    "optimize": 0
+  },
+  "recordedUTC": "2026-10-20T11:02:54Z",
+  "scope": "Live host/guest probe during owned attribution run; no environment assignment in wrapper/guest scripts."
+}

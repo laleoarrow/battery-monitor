@@ -1,0 +1,1004 @@
+{
+  "schema": 1,
+  "diagnostic_only": true,
+  "source": "design/performance-measurements-20261020/ui-attribution/run-4-combined/single-diagnostic.jsonl",
+  "source_sha256": "716a9605436e253f401de9da9d37429676068cd00fafb2f3bd7229c2db024e6f",
+  "interpretation_limits": [
+    "one NSApp / same process, original then combined; this diagnoses mechanism and is not a randomized independent-process performance estimate",
+    "natural software observation; no physical frame delivery/FPS measurement",
+    "inclusive callbacks nest inside open/panel stages; their durations are not additional exclusive costs",
+    "quantiles are per-event nearest rank; medians of stages need not add to median full-call cost"
+  ],
+  "environment": {
+    "application_appearance_override": null,
+    "application_effective_appearance": "NSAppearanceNameAqua",
+    "cases_executed": [
+      "popup_reopen_warm"
+    ],
+    "cold_count": 0,
+    "cold_definition": "new controller in the same process; first sample of each case retained as warmup; OS/framework caches are not cleared",
+    "diagnostic_limit": "checkpoint overhead included; traces serialized after call timing; cold/theme counts must be zero and are verified by driver; observer/animation milestones are perturbed by trace serialization",
+    "diagnostic_only": true,
+    "diagnostic_variants": [
+      "original",
+      "early_window_first"
+    ],
+    "fixed_open_color_scheme": "dark",
+    "fixture": "charging / all modules / Top 3 detailed / 60 history samples",
+    "increase_contrast": false,
+    "observation": "continuous NSApp.run; approximately 1 ms asynchronous polling; forced explicitly submits layout/display/CA before observing; natural adds no harness submission. A nonempty presentation layer and effectiveAppearance are software state, not proof of a newly displayed theme or physical frame delivery. Entrance removal has a bounded 3-second observation and retains censored samples; closing must clear the key.",
+    "open_external_refreshes": "skipped; synchronous UI path only; sampling measured separately",
+    "optimization": "-O -D DEBUG",
+    "os": "Version 26.6.1 (Build 25G76)",
+    "physical_memory_bytes": 34359738368,
+    "processors": 8,
+    "recorded_at": "2026-10-20T11:49:46Z",
+    "reduce_motion": false,
+    "reduce_transparency": false,
+    "schema": 3,
+    "screens": [
+      {
+        "frame": "{{0, 0}, {1024, 768}}",
+        "scale": 2
+      }
+    ],
+    "source_revision": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+    "submission": "natural",
+    "theme_count": 0,
+    "type": "environment",
+    "warm_count": 20,
+    "warmups_per_case": 3
+  },
+  "groups": {
+    "classic/original": {
+      "count": 20,
+      "call_ms": {
+        "count": 20,
+        "p50": 4.489167,
+        "p95": 7.597125,
+        "min": 3.730875,
+        "max": 9.765458
+      },
+      "callback_count_signatures": [
+        {
+          "counts": {},
+          "samples": 20
+        }
+      ],
+      "callback_appearance_sequence_signatures": [
+        {
+          "events": [],
+          "samples": 20
+        }
+      ],
+      "content_refresh_inclusive_ms": {
+        "count": 20,
+        "p50": 0,
+        "p95": 0,
+        "min": 0,
+        "max": 0
+      },
+      "max_absolute_call_minus_open_total_ms": 0.024750000000000938,
+      "max_absolute_open_total_minus_exclusive_sum_ms": 0.003665999999999059,
+      "selected_stages_ms": {},
+      "host_appearance_signatures": [
+        {
+          "effective_appearance": "NSAppearanceNameDarkAqua",
+          "override": "NSAppearanceNameDarkAqua",
+          "entrance_animation_removed": true,
+          "samples": 20
+        }
+      ],
+      "representative_trace": {
+        "call_ms": 4.667417,
+        "callback_capture": "synchronous_open_only; inclusive callbacks nest within stages",
+        "callback_counts": {},
+        "callback_events": [],
+        "callback_inclusive_ms": {},
+        "cold": false,
+        "index": 3,
+        "mode": "classic",
+        "stages_ms": {
+          "open.activate_content_and_entrance_animation": 0.669875,
+          "open.classic_show": 0.962041,
+          "open.final_placement_and_size": 0.213875,
+          "open.initial_placement_and_size": 0.518666,
+          "open.outside_monitors_and_visibility": 1.348917,
+          "open.prime_cached_content": 0.942959,
+          "open.tail": 0.001833,
+          "open.total": 4.659875
+        },
+        "type": "open_attribution",
+        "variant": "original",
+        "warmup": false
+      }
+    },
+    "classic/early_window_first": {
+      "count": 20,
+      "call_ms": {
+        "count": 20,
+        "p50": 4.664083,
+        "p95": 8.094708,
+        "min": 3.653167,
+        "max": 8.17725
+      },
+      "callback_count_signatures": [
+        {
+          "counts": {},
+          "samples": 20
+        }
+      ],
+      "callback_appearance_sequence_signatures": [
+        {
+          "events": [],
+          "samples": 20
+        }
+      ],
+      "content_refresh_inclusive_ms": {
+        "count": 20,
+        "p50": 0,
+        "p95": 0,
+        "min": 0,
+        "max": 0
+      },
+      "max_absolute_call_minus_open_total_ms": 0.04083300000000012,
+      "max_absolute_open_total_minus_exclusive_sum_ms": 0.003498999999999697,
+      "selected_stages_ms": {},
+      "host_appearance_signatures": [
+        {
+          "effective_appearance": "NSAppearanceNameDarkAqua",
+          "override": "NSAppearanceNameDarkAqua",
+          "entrance_animation_removed": true,
+          "samples": 20
+        }
+      ],
+      "representative_trace": {
+        "call_ms": 8.094708,
+        "callback_capture": "synchronous_open_only; inclusive callbacks nest within stages",
+        "callback_counts": {},
+        "callback_events": [],
+        "callback_inclusive_ms": {},
+        "cold": false,
+        "index": 3,
+        "mode": "classic",
+        "stages_ms": {
+          "open.activate_content_and_entrance_animation": 1.284625,
+          "open.classic_show": 1.938541,
+          "open.final_placement_and_size": 0.641709,
+          "open.initial_placement_and_size": 1.145334,
+          "open.outside_monitors_and_visibility": 0.74425,
+          "open.prime_cached_content": 2.322791,
+          "open.tail": 0.002875,
+          "open.total": 8.082541
+        },
+        "type": "open_attribution",
+        "variant": "early_window_first",
+        "warmup": false
+      }
+    },
+    "glass_regular/original": {
+      "count": 20,
+      "call_ms": {
+        "count": 20,
+        "p50": 69.87825,
+        "p95": 72.96875,
+        "min": 64.843959,
+        "max": 73.178583
+      },
+      "callback_count_signatures": [
+        {
+          "counts": {
+            "content.refreshAppearance.nil": 1,
+            "content.refreshAppearance.window": 2,
+            "surface.effectiveAppearance.nil": 1,
+            "surface.effectiveAppearance.window": 1,
+            "surface.move.window": 1
+          },
+          "samples": 20
+        }
+      ],
+      "callback_appearance_sequence_signatures": [
+        {
+          "events": [
+            [
+              "content.refreshAppearance.nil",
+              "NSAppearanceNameAqua",
+              false
+            ],
+            [
+              "surface.effectiveAppearance.nil",
+              "NSAppearanceNameAqua",
+              false
+            ],
+            [
+              "content.refreshAppearance.window",
+              "NSAppearanceNameAqua",
+              true
+            ],
+            [
+              "surface.move.window",
+              "NSAppearanceNameAqua",
+              true
+            ],
+            [
+              "content.refreshAppearance.window",
+              "NSAppearanceNameDarkAqua",
+              true
+            ],
+            [
+              "surface.effectiveAppearance.window",
+              "NSAppearanceNameDarkAqua",
+              true
+            ]
+          ],
+          "samples": 20
+        }
+      ],
+      "content_refresh_inclusive_ms": {
+        "count": 20,
+        "p50": 12.365251,
+        "p95": 14.342709000000001,
+        "min": 10.605417,
+        "max": 14.8415
+      },
+      "max_absolute_call_minus_open_total_ms": 0.015709000000001083,
+      "max_absolute_open_total_minus_exclusive_sum_ms": 0.0009580000000113387,
+      "selected_stages_ms": {
+        "open.make_key_and_order_front": {
+          "count": 20,
+          "p50": 11.573708,
+          "p95": 14.010833,
+          "min": 9.324,
+          "max": 14.282833
+        },
+        "open.panel_init": {
+          "count": 20,
+          "p50": 30.415291,
+          "p95": 33.185875,
+          "min": 27.654542,
+          "max": 35.666667
+        },
+        "open.point": {
+          "count": 20,
+          "p50": 0.018291,
+          "p95": 0.036541,
+          "min": 0.012625,
+          "max": 0.116875
+        },
+        "open.set_window_appearance": {
+          "count": 20,
+          "p50": 15.124417,
+          "p95": 16.807,
+          "min": 12.838792,
+          "max": 17.241791
+        },
+        "panel.attach_content_to_foreground": {
+          "count": 20,
+          "p50": 15.465583,
+          "p95": 18.783834,
+          "min": 13.429583,
+          "max": 19.818708
+        },
+        "panel.attach_foreground_to_window": {
+          "count": 20,
+          "p50": 13.169875,
+          "p95": 14.497333,
+          "min": 10.559292,
+          "max": 14.651125
+        },
+        "panel.conditional_early_appearance": {
+          "count": 20,
+          "p50": 0.0015,
+          "p95": 0.004958,
+          "min": 0.000667,
+          "max": 0.008542
+        }
+      },
+      "host_appearance_signatures": [
+        {
+          "effective_appearance": "NSAppearanceNameDarkAqua",
+          "override": "NSAppearanceNameDarkAqua",
+          "entrance_animation_removed": true,
+          "samples": 20
+        }
+      ],
+      "representative_trace": {
+        "call_ms": 67.0365,
+        "callback_capture": "synchronous_open_only; inclusive callbacks nest within stages",
+        "callback_counts": {
+          "content.refreshAppearance.nil": 1,
+          "content.refreshAppearance.window": 2,
+          "surface.effectiveAppearance.nil": 1,
+          "surface.effectiveAppearance.window": 1,
+          "surface.move.window": 1
+        },
+        "callback_events": [
+          {
+            "effective_appearance_at_end": "NSAppearanceNameAqua",
+            "end_relative_ns": 15932250,
+            "inclusive_ms": 3.714916,
+            "name": "content.refreshAppearance.nil",
+            "start_relative_ns": 12217334,
+            "window_attached_at_end": false
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameAqua",
+            "end_relative_ns": 15935875,
+            "inclusive_ms": 3.720166,
+            "name": "surface.effectiveAppearance.nil",
+            "start_relative_ns": 12215709,
+            "window_attached_at_end": false
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameAqua",
+            "end_relative_ns": 40526459,
+            "inclusive_ms": 4.040417,
+            "name": "content.refreshAppearance.window",
+            "start_relative_ns": 36486042,
+            "window_attached_at_end": true
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameAqua",
+            "end_relative_ns": 40530209,
+            "inclusive_ms": 4.046209,
+            "name": "surface.move.window",
+            "start_relative_ns": 36484000,
+            "window_attached_at_end": true
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameDarkAqua",
+            "end_relative_ns": 44787417,
+            "inclusive_ms": 3.749792,
+            "name": "content.refreshAppearance.window",
+            "start_relative_ns": 41037625,
+            "window_attached_at_end": true
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameDarkAqua",
+            "end_relative_ns": 44790667,
+            "inclusive_ms": 3.75375,
+            "name": "surface.effectiveAppearance.window",
+            "start_relative_ns": 41036917,
+            "window_attached_at_end": true
+          }
+        ],
+        "callback_inclusive_ms": {
+          "content.refreshAppearance.nil": 3.714916,
+          "content.refreshAppearance.window": 7.790208999999999,
+          "surface.effectiveAppearance.nil": 3.720166,
+          "surface.effectiveAppearance.window": 3.75375,
+          "surface.move.window": 4.046209
+        },
+        "cold": false,
+        "index": 3,
+        "mode": "glass_regular",
+        "stages_ms": {
+          "material.frame_and_accessibility": 0.012875,
+          "material.root_view_and_ns_hosting_super_init": 0.236208,
+          "material.tail": 0.000334,
+          "material.total": 0.249667,
+          "open.activate_content_and_entrance_animation": 0.691791,
+          "open.final_placement_and_size": 2.604875,
+          "open.initial_focus": 0.055917,
+          "open.initial_placement_and_size": 6.381292,
+          "open.make_key_and_order_front": 11.228458,
+          "open.outside_monitors_and_visibility": 0.571459,
+          "open.panel_init": 31.183917,
+          "open.point": 0.022333,
+          "open.prime_cached_content": 0.793292,
+          "open.retire_classic": 0.001833,
+          "open.set_window_appearance": 13.487625,
+          "open.store_panel_and_callbacks": 0.001792,
+          "open.tail": 0.001166,
+          "open.total": 67.026041,
+          "panel.attach_content_to_foreground": 14.993625,
+          "panel.attach_foreground_to_window": 14.320167,
+          "panel.conditional_early_appearance": 0.004958,
+          "panel.configure_window": 0.288625,
+          "panel.ns_panel_super_init": 1.288875,
+          "panel.store_host_references": 0.001041,
+          "panel.swiftui_material_init": 0.254417,
+          "panel.tail": 0.000417,
+          "panel.total": 31.180667,
+          "panel.update_outline": 0.02825
+        },
+        "type": "open_attribution",
+        "variant": "original",
+        "warmup": false
+      }
+    },
+    "glass_regular/early_window_first": {
+      "count": 20,
+      "call_ms": {
+        "count": 20,
+        "p50": 36.783625,
+        "p95": 40.894625,
+        "min": 32.990167,
+        "max": 41.574083
+      },
+      "callback_count_signatures": [
+        {
+          "counts": {
+            "content.refreshAppearance.window": 1,
+            "surface.move.window": 1
+          },
+          "samples": 20
+        }
+      ],
+      "callback_appearance_sequence_signatures": [
+        {
+          "events": [
+            [
+              "content.refreshAppearance.window",
+              "NSAppearanceNameDarkAqua",
+              true
+            ],
+            [
+              "surface.move.window",
+              "NSAppearanceNameDarkAqua",
+              true
+            ]
+          ],
+          "samples": 20
+        }
+      ],
+      "content_refresh_inclusive_ms": {
+        "count": 20,
+        "p50": 4.323958,
+        "p95": 4.682625,
+        "min": 3.415375,
+        "max": 4.684625
+      },
+      "max_absolute_call_minus_open_total_ms": 0.02137599999999651,
+      "max_absolute_open_total_minus_exclusive_sum_ms": 0.0003740000000007626,
+      "selected_stages_ms": {
+        "open.make_key_and_order_front": {
+          "count": 20,
+          "p50": 10.223542,
+          "p95": 12.272,
+          "min": 7.84325,
+          "max": 12.435958
+        },
+        "open.panel_init": {
+          "count": 20,
+          "p50": 14.292458,
+          "p95": 16.6365,
+          "min": 12.047916,
+          "max": 17.723292
+        },
+        "open.point": {
+          "count": 20,
+          "p50": 0.024666,
+          "p95": 0.039375,
+          "min": 0.015292,
+          "max": 0.039667
+        },
+        "open.set_window_appearance": {
+          "count": 20,
+          "p50": 0.00575,
+          "p95": 0.010917,
+          "min": 0.003417,
+          "max": 0.011417
+        },
+        "panel.attach_content_to_foreground": {
+          "count": 20,
+          "p50": 12.701958,
+          "p95": 14.803791,
+          "min": 10.562667,
+          "max": 15.984417
+        },
+        "panel.attach_foreground_to_window": {
+          "count": 20,
+          "p50": 0.322709,
+          "p95": 0.48025,
+          "min": 0.255042,
+          "max": 0.543959
+        },
+        "panel.conditional_early_appearance": {
+          "count": 20,
+          "p50": 0.038541,
+          "p95": 0.058334,
+          "min": 0.030208,
+          "max": 0.066209
+        }
+      },
+      "host_appearance_signatures": [
+        {
+          "effective_appearance": "NSAppearanceNameDarkAqua",
+          "override": "NSAppearanceNameDarkAqua",
+          "entrance_animation_removed": true,
+          "samples": 20
+        }
+      ],
+      "representative_trace": {
+        "call_ms": 36.240625,
+        "callback_capture": "synchronous_open_only; inclusive callbacks nest within stages",
+        "callback_counts": {
+          "content.refreshAppearance.window": 1,
+          "surface.move.window": 1
+        },
+        "callback_events": [
+          {
+            "effective_appearance_at_end": "NSAppearanceNameDarkAqua",
+            "end_relative_ns": 23523834,
+            "inclusive_ms": 4.492834,
+            "name": "content.refreshAppearance.window",
+            "start_relative_ns": 19031000,
+            "window_attached_at_end": true
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameDarkAqua",
+            "end_relative_ns": 23527959,
+            "inclusive_ms": 4.49825,
+            "name": "surface.move.window",
+            "start_relative_ns": 19029709,
+            "window_attached_at_end": true
+          }
+        ],
+        "callback_inclusive_ms": {
+          "content.refreshAppearance.window": 4.492834,
+          "surface.move.window": 4.49825
+        },
+        "cold": false,
+        "index": 3,
+        "mode": "glass_regular",
+        "stages_ms": {
+          "material.frame_and_accessibility": 0.00675,
+          "material.root_view_and_ns_hosting_super_init": 0.115167,
+          "material.tail": 0.000333,
+          "material.total": 0.122417,
+          "open.activate_content_and_entrance_animation": 0.788666,
+          "open.final_placement_and_size": 3.395125,
+          "open.initial_focus": 0.061584,
+          "open.initial_placement_and_size": 6.857667,
+          "open.make_key_and_order_front": 10.984375,
+          "open.outside_monitors_and_visibility": 0.619792,
+          "open.panel_init": 12.451584,
+          "open.point": 0.015916,
+          "open.prime_cached_content": 1.045333,
+          "open.retire_classic": 0.002708,
+          "open.set_window_appearance": 0.003834,
+          "open.store_panel_and_callbacks": 0.000541,
+          "open.tail": 0.000667,
+          "open.total": 36.228084,
+          "panel.attach_content_to_foreground": 11.111041,
+          "panel.attach_foreground_to_window": 0.255042,
+          "panel.conditional_early_appearance": 0.030208,
+          "panel.configure_window": 0.172167,
+          "panel.ns_panel_super_init": 0.732375,
+          "panel.store_host_references": 0.000875,
+          "panel.swiftui_material_init": 0.125125,
+          "panel.tail": 0.000375,
+          "panel.total": 12.4475,
+          "panel.update_outline": 0.020042
+        },
+        "type": "open_attribution",
+        "variant": "early_window_first",
+        "warmup": false
+      }
+    },
+    "glass_clear/original": {
+      "count": 20,
+      "call_ms": {
+        "count": 20,
+        "p50": 66.021583,
+        "p95": 71.654417,
+        "min": 62.565583,
+        "max": 71.722167
+      },
+      "callback_count_signatures": [
+        {
+          "counts": {
+            "content.refreshAppearance.nil": 1,
+            "content.refreshAppearance.window": 2,
+            "surface.effectiveAppearance.nil": 1,
+            "surface.effectiveAppearance.window": 1,
+            "surface.move.window": 1
+          },
+          "samples": 20
+        }
+      ],
+      "callback_appearance_sequence_signatures": [
+        {
+          "events": [
+            [
+              "content.refreshAppearance.nil",
+              "NSAppearanceNameAqua",
+              false
+            ],
+            [
+              "surface.effectiveAppearance.nil",
+              "NSAppearanceNameAqua",
+              false
+            ],
+            [
+              "content.refreshAppearance.window",
+              "NSAppearanceNameAqua",
+              true
+            ],
+            [
+              "surface.move.window",
+              "NSAppearanceNameAqua",
+              true
+            ],
+            [
+              "content.refreshAppearance.window",
+              "NSAppearanceNameDarkAqua",
+              true
+            ],
+            [
+              "surface.effectiveAppearance.window",
+              "NSAppearanceNameDarkAqua",
+              true
+            ]
+          ],
+          "samples": 20
+        }
+      ],
+      "content_refresh_inclusive_ms": {
+        "count": 20,
+        "p50": 11.554333,
+        "p95": 12.29425,
+        "min": 9.912707000000001,
+        "max": 12.580292
+      },
+      "max_absolute_call_minus_open_total_ms": 0.01841699999999946,
+      "max_absolute_open_total_minus_exclusive_sum_ms": 0.00041699999999877946,
+      "selected_stages_ms": {
+        "open.make_key_and_order_front": {
+          "count": 20,
+          "p50": 11.353083,
+          "p95": 12.893166,
+          "min": 9.130542,
+          "max": 13.349208
+        },
+        "open.panel_init": {
+          "count": 20,
+          "p50": 29.839208,
+          "p95": 31.699083,
+          "min": 27.141667,
+          "max": 32.535792
+        },
+        "open.point": {
+          "count": 20,
+          "p50": 0.018875,
+          "p95": 0.040959,
+          "min": 0.012792,
+          "max": 0.060542
+        },
+        "open.set_window_appearance": {
+          "count": 20,
+          "p50": 13.243208,
+          "p95": 14.625708,
+          "min": 11.720125,
+          "max": 16.450417
+        },
+        "panel.attach_content_to_foreground": {
+          "count": 20,
+          "p50": 15.471291,
+          "p95": 16.59325,
+          "min": 14.346084,
+          "max": 16.860459
+        },
+        "panel.attach_foreground_to_window": {
+          "count": 20,
+          "p50": 12.6255,
+          "p95": 13.94125,
+          "min": 11.059125,
+          "max": 14.179334
+        },
+        "panel.conditional_early_appearance": {
+          "count": 20,
+          "p50": 0.001542,
+          "p95": 0.003042,
+          "min": 0.000666,
+          "max": 0.003542
+        }
+      },
+      "host_appearance_signatures": [
+        {
+          "effective_appearance": "NSAppearanceNameDarkAqua",
+          "override": "NSAppearanceNameDarkAqua",
+          "entrance_animation_removed": true,
+          "samples": 20
+        }
+      ],
+      "representative_trace": {
+        "call_ms": 71.654417,
+        "callback_capture": "synchronous_open_only; inclusive callbacks nest within stages",
+        "callback_counts": {
+          "content.refreshAppearance.nil": 1,
+          "content.refreshAppearance.window": 2,
+          "surface.effectiveAppearance.nil": 1,
+          "surface.effectiveAppearance.window": 1,
+          "surface.move.window": 1
+        },
+        "callback_events": [
+          {
+            "effective_appearance_at_end": "NSAppearanceNameAqua",
+            "end_relative_ns": 16783917,
+            "inclusive_ms": 4.026417,
+            "name": "content.refreshAppearance.nil",
+            "start_relative_ns": 12757500,
+            "window_attached_at_end": false
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameAqua",
+            "end_relative_ns": 16791334,
+            "inclusive_ms": 4.034792,
+            "name": "surface.effectiveAppearance.nil",
+            "start_relative_ns": 12756542,
+            "window_attached_at_end": false
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameAqua",
+            "end_relative_ns": 40881834,
+            "inclusive_ms": 4.212584,
+            "name": "content.refreshAppearance.window",
+            "start_relative_ns": 36669250,
+            "window_attached_at_end": true
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameAqua",
+            "end_relative_ns": 40886209,
+            "inclusive_ms": 4.219375,
+            "name": "surface.move.window",
+            "start_relative_ns": 36666834,
+            "window_attached_at_end": true
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameDarkAqua",
+            "end_relative_ns": 44822792,
+            "inclusive_ms": 3.473917,
+            "name": "content.refreshAppearance.window",
+            "start_relative_ns": 41348875,
+            "window_attached_at_end": true
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameDarkAqua",
+            "end_relative_ns": 44826084,
+            "inclusive_ms": 3.477959,
+            "name": "surface.effectiveAppearance.window",
+            "start_relative_ns": 41348125,
+            "window_attached_at_end": true
+          }
+        ],
+        "callback_inclusive_ms": {
+          "content.refreshAppearance.nil": 4.026417,
+          "content.refreshAppearance.window": 7.686501,
+          "surface.effectiveAppearance.nil": 4.034792,
+          "surface.effectiveAppearance.window": 3.477959,
+          "surface.move.window": 4.219375
+        },
+        "cold": false,
+        "index": 3,
+        "mode": "glass_clear",
+        "stages_ms": {
+          "material.frame_and_accessibility": 0.0085,
+          "material.root_view_and_ns_hosting_super_init": 0.133958,
+          "material.tail": 0.00025,
+          "material.total": 0.142917,
+          "open.activate_content_and_entrance_animation": 0.707,
+          "open.final_placement_and_size": 3.220208,
+          "open.initial_focus": 0.05575,
+          "open.initial_placement_and_size": 6.913208,
+          "open.make_key_and_order_front": 12.463792,
+          "open.outside_monitors_and_visibility": 0.676416,
+          "open.panel_init": 30.113708,
+          "open.point": 0.018875,
+          "open.prime_cached_content": 1.009167,
+          "open.retire_classic": 0.002917,
+          "open.set_window_appearance": 16.450417,
+          "open.store_panel_and_callbacks": 0.006625,
+          "open.tail": 0.000542,
+          "open.total": 71.638875,
+          "panel.attach_content_to_foreground": 15.700917,
+          "panel.attach_foreground_to_window": 13.166791,
+          "panel.conditional_early_appearance": 0.001208,
+          "panel.configure_window": 0.203083,
+          "panel.ns_panel_super_init": 0.863917,
+          "panel.store_host_references": 0.001209,
+          "panel.swiftui_material_init": 0.147167,
+          "panel.tail": 0.000333,
+          "panel.total": 30.106,
+          "panel.update_outline": 0.021125
+        },
+        "type": "open_attribution",
+        "variant": "original",
+        "warmup": false
+      }
+    },
+    "glass_clear/early_window_first": {
+      "count": 20,
+      "call_ms": {
+        "count": 20,
+        "p50": 36.8195,
+        "p95": 40.17675,
+        "min": 33.353917,
+        "max": 40.736834
+      },
+      "callback_count_signatures": [
+        {
+          "counts": {
+            "content.refreshAppearance.window": 1,
+            "surface.move.window": 1
+          },
+          "samples": 20
+        }
+      ],
+      "callback_appearance_sequence_signatures": [
+        {
+          "events": [
+            [
+              "content.refreshAppearance.window",
+              "NSAppearanceNameDarkAqua",
+              true
+            ],
+            [
+              "surface.move.window",
+              "NSAppearanceNameDarkAqua",
+              true
+            ]
+          ],
+          "samples": 20
+        }
+      ],
+      "content_refresh_inclusive_ms": {
+        "count": 20,
+        "p50": 4.331917,
+        "p95": 4.690833,
+        "min": 3.560875,
+        "max": 4.785833
+      },
+      "max_absolute_call_minus_open_total_ms": 0.014415999999997098,
+      "max_absolute_open_total_minus_exclusive_sum_ms": 0.0002500000000011937,
+      "selected_stages_ms": {
+        "open.make_key_and_order_front": {
+          "count": 20,
+          "p50": 10.130666,
+          "p95": 11.700917,
+          "min": 8.2205,
+          "max": 12.333417
+        },
+        "open.panel_init": {
+          "count": 20,
+          "p50": 14.305458,
+          "p95": 16.434083,
+          "min": 12.824084,
+          "max": 17.250583
+        },
+        "open.point": {
+          "count": 20,
+          "p50": 0.025833,
+          "p95": 0.044875,
+          "min": 0.015958,
+          "max": 0.063208
+        },
+        "open.set_window_appearance": {
+          "count": 20,
+          "p50": 0.005459,
+          "p95": 0.012625,
+          "min": 0.003667,
+          "max": 0.012834
+        },
+        "panel.attach_content_to_foreground": {
+          "count": 20,
+          "p50": 12.695875,
+          "p95": 14.413333,
+          "min": 11.074084,
+          "max": 14.988083
+        },
+        "panel.attach_foreground_to_window": {
+          "count": 20,
+          "p50": 0.325875,
+          "p95": 0.464459,
+          "min": 0.269833,
+          "max": 0.47775
+        },
+        "panel.conditional_early_appearance": {
+          "count": 20,
+          "p50": 0.039917,
+          "p95": 0.059208,
+          "min": 0.029125,
+          "max": 0.072833
+        }
+      },
+      "host_appearance_signatures": [
+        {
+          "effective_appearance": "NSAppearanceNameDarkAqua",
+          "override": "NSAppearanceNameDarkAqua",
+          "entrance_animation_removed": true,
+          "samples": 20
+        }
+      ],
+      "representative_trace": {
+        "call_ms": 34.048583,
+        "callback_capture": "synchronous_open_only; inclusive callbacks nest within stages",
+        "callback_counts": {
+          "content.refreshAppearance.window": 1,
+          "surface.move.window": 1
+        },
+        "callback_events": [
+          {
+            "effective_appearance_at_end": "NSAppearanceNameDarkAqua",
+            "end_relative_ns": 22697833,
+            "inclusive_ms": 3.616083,
+            "name": "content.refreshAppearance.window",
+            "start_relative_ns": 19081750,
+            "window_attached_at_end": true
+          },
+          {
+            "effective_appearance_at_end": "NSAppearanceNameDarkAqua",
+            "end_relative_ns": 22701417,
+            "inclusive_ms": 3.6215,
+            "name": "surface.move.window",
+            "start_relative_ns": 19079917,
+            "window_attached_at_end": true
+          }
+        ],
+        "callback_inclusive_ms": {
+          "content.refreshAppearance.window": 3.616083,
+          "surface.move.window": 3.6215
+        },
+        "cold": false,
+        "index": 3,
+        "mode": "glass_clear",
+        "stages_ms": {
+          "material.frame_and_accessibility": 0.007541,
+          "material.root_view_and_ns_hosting_super_init": 0.139709,
+          "material.tail": 0.00025,
+          "material.total": 0.14775,
+          "open.activate_content_and_entrance_animation": 0.757417,
+          "open.final_placement_and_size": 3.034583,
+          "open.initial_focus": 0.108958,
+          "open.initial_placement_and_size": 6.174708,
+          "open.make_key_and_order_front": 9.566084,
+          "open.outside_monitors_and_visibility": 0.659833,
+          "open.panel_init": 12.824084,
+          "open.point": 0.015958,
+          "open.prime_cached_content": 0.888625,
+          "open.retire_classic": 0.003,
+          "open.set_window_appearance": 0.003958,
+          "open.store_panel_and_callbacks": 0.000625,
+          "open.tail": 0.001,
+          "open.total": 34.039083,
+          "panel.attach_content_to_foreground": 11.074084,
+          "panel.attach_foreground_to_window": 0.288333,
+          "panel.conditional_early_appearance": 0.041083,
+          "panel.configure_window": 0.204083,
+          "panel.ns_panel_super_init": 1.03775,
+          "panel.store_host_references": 0.001041,
+          "panel.swiftui_material_init": 0.151792,
+          "panel.tail": 0.000292,
+          "panel.total": 12.820416,
+          "panel.update_outline": 0.02175
+        },
+        "type": "open_attribution",
+        "variant": "early_window_first",
+        "warmup": false
+      }
+    }
+  },
+  "comparisons": {
+    "classic": {
+      "original_minus_combined_p50_ms": -0.17491599999999963,
+      "original_minus_combined_p95_ms": -0.49758300000000055,
+      "p50_reduction_percent": -3.89640216102452
+    },
+    "glass_regular": {
+      "original_minus_combined_p50_ms": 33.09462499999999,
+      "original_minus_combined_p95_ms": 32.074125,
+      "p50_reduction_percent": 47.36040899707705
+    },
+    "glass_clear": {
+      "original_minus_combined_p50_ms": 29.20208300000001,
+      "original_minus_combined_p95_ms": 31.477666999999997,
+      "p50_reduction_percent": 44.231116057910945
+    }
+  },
+  "conclusion": {
+    "glass_mechanism": "For both Glass materials, all 20 original traces refresh first nil/Aqua, then attached/Aqua, then attached/Dark; all 20 combined traces refresh once, attached/Dark. Both removed effectiveAppearance callback events and reduced synchronous open by more than 29 ms at p50.",
+    "formal_follow_up": "Candidate has enough evidence for independent-process ABBA plus System/Light controls and existing real interaction validation. Production changes and decision remain with root.",
+    "classic_control": "No callback work in either warm variant and call p50 change -0.175 ms savings; combined intervention applies only to Glass."
+  }
+}

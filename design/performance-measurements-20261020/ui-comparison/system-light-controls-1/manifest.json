@@ -1,0 +1,44 @@
+{
+  "appearanceControls": true,
+  "archives": {
+    "baseline.tar.gz": "612d3b26d76130ed1f3f91433c9ccef6e093aa93f374c97cd4d6ce10a10d5b42",
+    "candidate.tar.gz": "468a57cf1afb246880993760ecd3e36ddbc7063ae449f3eb871b2dabc86824cb",
+    "tools.tar.gz": "b590bf9c1d0531bc40f1f4799d3e294b625a83802937d5af2f59f4c8a6ac8fc8"
+  },
+  "configuration": {
+    "cold": 0,
+    "colorScheme": "dark",
+    "repeatBaseline": 1,
+    "submission": "natural",
+    "theme": 0,
+    "warm": 8
+  },
+  "pythonValidation": {
+    "PYTHONOPTIMIZE": null,
+    "optimize": 0
+  },
+  "schema": 1,
+  "singleDiagnosticPass": false,
+  "smokeOnly": false,
+  "sources": {
+    "baseline": {
+      "gitRef": "d6b40247",
+      "revision": "d6b40247cd50c05af4ec9a99956c8ff1937c4894"
+    },
+    "candidate": {
+      "gitRef": "5d5391a96aa9465eb1beaa3bf6bcb2bea1208067",
+      "revision": "5d5391a96aa9465eb1beaa3bf6bcb2bea1208067"
+    }
+  },
+  "tools": {
+    "scripts/lib/local_cleanup.sh": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+    "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+    "scripts/measure_ui_latency.sh": "b89380db311aa9dfbee20ccf0d9d690d79c4a0ce8511aa6d42dc66402d8be77c",
+    "tests/performance/ui-latency.swift": "1a5e18a911bd6813751291e1457e4a807a3e9c042c839a83aedd17fc118ca170"
+  },
+  "transport": {
+    "scripts/measure_ui_vm.sh": "cb18b54383eaaeea9442ca13058f2ab67b4d528b000cb851a14136353304c3c2",
+    "tests/performance/ui-vm-guest.sh": "8eee5a4109d265806b797e0830eb0f213500702272aaac5cfe126ee345665409",
+    "tests/performance/ui_vm.py": "f5d7e690fe0234f111b6f8a26e5cf95748a8d3dce597ef4513aebd83d4674494"
+  }
+}

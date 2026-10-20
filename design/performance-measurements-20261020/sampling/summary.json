@@ -1,0 +1,138 @@
+{
+  "baseline": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+  "runtimeWallMilliseconds": {
+    "count": 32,
+    "minimum": 2.041958,
+    "median": 2.658312,
+    "p95NearestRank": 3.9645,
+    "maximum": 6.828542,
+    "sum": 91.320753
+  },
+  "runtimeClientCPUMilliseconds": {
+    "count": 32,
+    "minimum": 0.481,
+    "median": 0.7735,
+    "p95NearestRank": 1.313,
+    "maximum": 1.411,
+    "sum": 25.582000000000004
+  },
+  "runtimeClientMeanCPUCoresAt2SecondCadence": 0.00039971875,
+  "stagesWallMilliseconds": {
+    "registry_allowlisted_read": {
+      "count": 32,
+      "minimum": 0.153083,
+      "median": 0.248354,
+      "p95NearestRank": 0.623667,
+      "maximum": 1.126833,
+      "sum": 9.579746999999998
+    },
+    "iops_system_read": {
+      "count": 32,
+      "minimum": 0.129667,
+      "median": 0.213979,
+      "p95NearestRank": 0.351584,
+      "maximum": 0.356917,
+      "sum": 6.694544
+    },
+    "health_cache_read": {
+      "count": 32,
+      "minimum": 0.000459,
+      "median": 0.000958,
+      "p95NearestRank": 0.002,
+      "maximum": 0.002375,
+      "sum": 0.034082000000000015
+    },
+    "battery_runtime_branch": {
+      "count": 32,
+      "minimum": 0.343167,
+      "median": 0.5763335,
+      "p95NearestRank": 1.149417,
+      "maximum": 1.615125,
+      "sum": 19.321334999999994
+    },
+    "helper_v5_ipc": {
+      "count": 32,
+      "minimum": 1.981125,
+      "median": 2.5777080000000003,
+      "p95NearestRank": 3.405042,
+      "maximum": 6.66575,
+      "sum": 87.74470899999997
+    }
+  },
+  "callsDuringRuntime": {
+    "registry_allowlisted_read": 32,
+    "iops_system_read": 32,
+    "health_cache_read": 32,
+    "battery_runtime_branch": 32,
+    "helper_v5_ipc": 32
+  },
+  "allSnapshotsAvailable": true,
+  "helperOutcomes": {
+    "v5": 32
+  },
+  "healthCold": {
+    "available": true,
+    "calls": [
+      {
+        "stage": "health_live_profiler",
+        "wallNanoseconds": 215641500
+      }
+    ],
+    "completionWallNanoseconds": 223952458,
+    "directChildrenCPUNanoseconds": 40734000,
+    "firstCallCPUNanoseconds": 39000,
+    "firstCallNanoseconds": 39417,
+    "firstCallReturnedCachedValue": false,
+    "selfCPUNanoseconds": 2051000,
+    "stage": "health_cold"
+  },
+  "healthHotNanosecondsPerCall": {
+    "count": 10,
+    "minimum": 24.8667,
+    "median": 25.4021,
+    "p95NearestRank": 38.5042,
+    "maximum": 38.5042,
+    "sum": 276.0335
+  },
+  "topProcessesWallMilliseconds": {
+    "count": 3,
+    "minimum": 1167.454333,
+    "median": 1170.049333,
+    "p95NearestRank": 1187.650292,
+    "maximum": 1187.650292,
+    "sum": 3525.153958
+  },
+  "topProcessesClientCPUMilliseconds": {
+    "count": 3,
+    "minimum": 0.43,
+    "median": 0.436,
+    "p95NearestRank": 0.468,
+    "maximum": 0.468,
+    "sum": 1.334
+  },
+  "topProcessesRowCounts": [
+    10,
+    10,
+    10
+  ],
+  "canonicalPIDsUnchanged": true,
+  "canonicalBefore": [
+    {
+      "cpuSeconds": 6.13,
+      "rssKiB": 137840
+    }
+  ],
+  "canonicalAfter": [
+    {
+      "cpuSeconds": 6.19,
+      "rssKiB": 137840
+    }
+  ],
+  "canonicalCPUSecondsDelta": 0.0600000000000005,
+  "helperPIDSetUnchanged": true,
+  "helperCPUSecondsDelta": 0.15000000000000036,
+  "helperObservedBeforeCount": 1,
+  "helperObservedAfterCount": 1,
+  "windowWallSeconds": 69.922862417,
+  "wallFinishedUTC": "2026-10-20T10:47:38Z"
+}

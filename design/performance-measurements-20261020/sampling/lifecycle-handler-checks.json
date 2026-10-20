@@ -1,0 +1,47 @@
+{
+  "method": "Actual entrypoint finish handler extracted verbatim and exercised with shared lifecycle in parent-owned project-local fixture; no sampling duration or sensor fixture.",
+  "cases": [
+    {
+      "case": "success",
+      "exitStatus": 0,
+      "expectedStatus": 0,
+      "coordinationRemoved": true,
+      "ownedScratchRemoved": true
+    },
+    {
+      "case": "failure",
+      "exitStatus": 7,
+      "expectedStatus": 7,
+      "coordinationRemoved": true,
+      "ownedScratchRemoved": true
+    },
+    {
+      "case": "timeout",
+      "exitStatus": 124,
+      "expectedStatus": 124,
+      "coordinationRemoved": true,
+      "ownedScratchRemoved": true
+    },
+    {
+      "case": "HUP",
+      "exitStatus": 129,
+      "expectedStatus": 129,
+      "coordinationRemoved": true,
+      "ownedScratchRemoved": true
+    },
+    {
+      "case": "INT",
+      "exitStatus": 130,
+      "expectedStatus": 130,
+      "coordinationRemoved": true,
+      "ownedScratchRemoved": true
+    },
+    {
+      "case": "TERM",
+      "exitStatus": 143,
+      "expectedStatus": 143,
+      "coordinationRemoved": true,
+      "ownedScratchRemoved": true
+    }
+  ]
+}

@@ -1,0 +1,831 @@
+{
+  "blocks": {
+    "block-1-baseline-system.jsonl": {
+      "environment": {
+        "application_appearance_override": null,
+        "application_effective_appearance": "NSAppearanceNameAqua",
+        "cold_count": 0,
+        "cold_definition": "new controller in the same process; first sample of each case retained as warmup; OS/framework caches are not cleared",
+        "fixed_open_color_scheme": "system",
+        "fixture": "charging / all modules / Top 3 detailed / 60 history samples",
+        "increase_contrast": false,
+        "observation": "continuous NSApp.run; approximately 1 ms asynchronous polling; forced explicitly submits layout/display/CA before observing; natural adds no harness submission. A nonempty presentation layer and effectiveAppearance are software state, not proof of a newly displayed theme or physical frame delivery. Entrance removal has a bounded 3-second observation and retains censored samples; closing must clear the key.",
+        "open_external_refreshes": "skipped; synchronous UI path only; sampling measured separately",
+        "optimization": "-O -D DEBUG",
+        "os": "Version 26.6.1 (Build 25G76)",
+        "physical_memory_bytes": 34359738368,
+        "processors": 8,
+        "recorded_at": "2026-10-20T12:15:11Z",
+        "reduce_motion": false,
+        "reduce_transparency": false,
+        "schema": 3,
+        "screens": [
+          {
+            "frame": "{{0, 0}, {1024, 768}}",
+            "scale": 2
+          }
+        ],
+        "source_revision": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+        "submission": "natural",
+        "theme_count": 0,
+        "type": "environment",
+        "warm_count": 8,
+        "warmups_per_case": 3
+      },
+      "hostAppearances": {
+        "NSAppearanceNameAqua": 24
+      },
+      "measuredCount": 24,
+      "summaries": {
+        "classic/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 5.7875,
+            "min": 4.132833,
+            "p50": 4.913,
+            "p95": 5.7875
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 8,
+            "max": 266.072125,
+            "min": 251.801,
+            "p50": 260.51775,
+            "p95": 266.072125
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 8,
+          "fixed_open_color_scheme": "system",
+          "group": "classic/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 8,
+            "max": 266.072625,
+            "min": 251.8015,
+            "p50": 260.518291,
+            "p95": 266.072625
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 7.30875,
+            "min": 5.806291,
+            "p50": 6.791958,
+            "p95": 7.30875
+          }
+        },
+        "glass_clear/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 49.779042,
+            "min": 33.644791,
+            "p50": 35.304042,
+            "p95": 49.779042
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 8,
+            "max": 525.720166,
+            "min": 458.615542,
+            "p50": 475.568084,
+            "p95": 525.720166
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 8,
+          "fixed_open_color_scheme": "system",
+          "group": "glass_clear/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 8,
+            "max": 525.720625,
+            "min": 458.616083,
+            "p50": 475.568625,
+            "p95": 525.720625
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 59.7425,
+            "min": 42.357416,
+            "p50": 43.401834,
+            "p95": 59.7425
+          }
+        },
+        "glass_regular/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 39.457125,
+            "min": 35.031042,
+            "p50": 36.1735,
+            "p95": 39.457125
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 8,
+            "max": 522.672583,
+            "min": 462.515417,
+            "p50": 477.420334,
+            "p95": 522.672583
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 8,
+          "fixed_open_color_scheme": "system",
+          "group": "glass_regular/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 8,
+            "max": 522.673125,
+            "min": 462.515875,
+            "p50": 477.420666,
+            "p95": 522.673125
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 47.325417,
+            "min": 41.95925,
+            "p50": 44.165166,
+            "p95": 47.325417
+          }
+        }
+      }
+    },
+    "block-2-candidate-system.jsonl": {
+      "environment": {
+        "application_appearance_override": null,
+        "application_effective_appearance": "NSAppearanceNameAqua",
+        "cold_count": 0,
+        "cold_definition": "new controller in the same process; first sample of each case retained as warmup; OS/framework caches are not cleared",
+        "fixed_open_color_scheme": "system",
+        "fixture": "charging / all modules / Top 3 detailed / 60 history samples",
+        "increase_contrast": false,
+        "observation": "continuous NSApp.run; approximately 1 ms asynchronous polling; forced explicitly submits layout/display/CA before observing; natural adds no harness submission. A nonempty presentation layer and effectiveAppearance are software state, not proof of a newly displayed theme or physical frame delivery. Entrance removal has a bounded 3-second observation and retains censored samples; closing must clear the key.",
+        "open_external_refreshes": "skipped; synchronous UI path only; sampling measured separately",
+        "optimization": "-O -D DEBUG",
+        "os": "Version 26.6.1 (Build 25G76)",
+        "physical_memory_bytes": 34359738368,
+        "processors": 8,
+        "recorded_at": "2026-10-20T12:16:27Z",
+        "reduce_motion": false,
+        "reduce_transparency": false,
+        "schema": 3,
+        "screens": [
+          {
+            "frame": "{{0, 0}, {1024, 768}}",
+            "scale": 2
+          }
+        ],
+        "source_revision": "5d5391a96aa9465eb1beaa3bf6bcb2bea1208067",
+        "submission": "natural",
+        "theme_count": 0,
+        "type": "environment",
+        "warm_count": 8,
+        "warmups_per_case": 3
+      },
+      "hostAppearances": {
+        "NSAppearanceNameAqua": 24
+      },
+      "measuredCount": 24,
+      "summaries": {
+        "classic/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 8.503042,
+            "min": 5.064917,
+            "p50": 5.581958,
+            "p95": 8.503042
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 8,
+            "max": 267.04675,
+            "min": 255.582083,
+            "p50": 260.871083,
+            "p95": 267.04675
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 8,
+          "fixed_open_color_scheme": "system",
+          "group": "classic/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 8,
+            "max": 267.04725,
+            "min": 255.582667,
+            "p50": 260.871958,
+            "p95": 267.04725
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 11.349875,
+            "min": 6.487375,
+            "p50": 6.938791,
+            "p95": 11.349875
+          }
+        },
+        "glass_clear/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 38.487958,
+            "min": 32.269042,
+            "p50": 35.994583,
+            "p95": 38.487958
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 8,
+            "max": 517.338459,
+            "min": 460.631375,
+            "p50": 468.356916,
+            "p95": 517.338459
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 8,
+          "fixed_open_color_scheme": "system",
+          "group": "glass_clear/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 8,
+            "max": 517.338834,
+            "min": 460.631792,
+            "p50": 468.357458,
+            "p95": 517.338834
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 46.131916,
+            "min": 39.59725,
+            "p50": 43.66625,
+            "p95": 46.131916
+          }
+        },
+        "glass_regular/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 38.549583,
+            "min": 33.50675,
+            "p50": 35.198583,
+            "p95": 38.549583
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 8,
+            "max": 499.215625,
+            "min": 459.726041,
+            "p50": 467.018917,
+            "p95": 499.215625
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 8,
+          "fixed_open_color_scheme": "system",
+          "group": "glass_regular/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 8,
+            "max": 499.216042,
+            "min": 459.7265,
+            "p50": 467.019416,
+            "p95": 499.216042
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 45.928667,
+            "min": 41.243792,
+            "p50": 43.483542,
+            "p95": 45.928667
+          }
+        }
+      }
+    },
+    "block-3-baseline-light.jsonl": {
+      "environment": {
+        "application_appearance_override": null,
+        "application_effective_appearance": "NSAppearanceNameAqua",
+        "cold_count": 0,
+        "cold_definition": "new controller in the same process; first sample of each case retained as warmup; OS/framework caches are not cleared",
+        "fixed_open_color_scheme": "light",
+        "fixture": "charging / all modules / Top 3 detailed / 60 history samples",
+        "increase_contrast": false,
+        "observation": "continuous NSApp.run; approximately 1 ms asynchronous polling; forced explicitly submits layout/display/CA before observing; natural adds no harness submission. A nonempty presentation layer and effectiveAppearance are software state, not proof of a newly displayed theme or physical frame delivery. Entrance removal has a bounded 3-second observation and retains censored samples; closing must clear the key.",
+        "open_external_refreshes": "skipped; synchronous UI path only; sampling measured separately",
+        "optimization": "-O -D DEBUG",
+        "os": "Version 26.6.1 (Build 25G76)",
+        "physical_memory_bytes": 34359738368,
+        "processors": 8,
+        "recorded_at": "2026-10-20T12:17:45Z",
+        "reduce_motion": false,
+        "reduce_transparency": false,
+        "schema": 3,
+        "screens": [
+          {
+            "frame": "{{0, 0}, {1024, 768}}",
+            "scale": 2
+          }
+        ],
+        "source_revision": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+        "submission": "natural",
+        "theme_count": 0,
+        "type": "environment",
+        "warm_count": 8,
+        "warmups_per_case": 3
+      },
+      "hostAppearances": {
+        "NSAppearanceNameAqua": 24
+      },
+      "measuredCount": 24,
+      "summaries": {
+        "classic/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 5.928083,
+            "min": 3.946,
+            "p50": 5.023333,
+            "p95": 5.928083
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 8,
+            "max": 264.061417,
+            "min": 250.713709,
+            "p50": 257.655875,
+            "p95": 264.061417
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 8,
+          "fixed_open_color_scheme": "light",
+          "group": "classic/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 8,
+            "max": 264.062167,
+            "min": 250.71425,
+            "p50": 257.656708,
+            "p95": 264.062167
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 8.200334,
+            "min": 5.210291,
+            "p50": 6.829125,
+            "p95": 8.200334
+          }
+        },
+        "glass_clear/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 39.432458,
+            "min": 33.985333,
+            "p50": 35.273167,
+            "p95": 39.432458
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 8,
+            "max": 519.263041,
+            "min": 457.827042,
+            "p50": 469.811542,
+            "p95": 519.263041
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 8,
+          "fixed_open_color_scheme": "light",
+          "group": "glass_clear/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 8,
+            "max": 519.263542,
+            "min": 457.827583,
+            "p50": 469.812333,
+            "p95": 519.263542
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 48.953125,
+            "min": 41.451625,
+            "p50": 42.959041,
+            "p95": 48.953125
+          }
+        },
+        "glass_regular/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 57.736625,
+            "min": 32.742625,
+            "p50": 35.060292,
+            "p95": 57.736625
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 8,
+            "max": 519.867,
+            "min": 457.470584,
+            "p50": 504.84,
+            "p95": 519.867
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 8,
+          "fixed_open_color_scheme": "light",
+          "group": "glass_regular/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 8,
+            "max": 519.867625,
+            "min": 457.471333,
+            "p50": 504.840625,
+            "p95": 519.867625
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 67.854959,
+            "min": 39.831292,
+            "p50": 42.825,
+            "p95": 67.854959
+          }
+        }
+      }
+    },
+    "block-4-candidate-light.jsonl": {
+      "environment": {
+        "application_appearance_override": null,
+        "application_effective_appearance": "NSAppearanceNameAqua",
+        "cold_count": 0,
+        "cold_definition": "new controller in the same process; first sample of each case retained as warmup; OS/framework caches are not cleared",
+        "fixed_open_color_scheme": "light",
+        "fixture": "charging / all modules / Top 3 detailed / 60 history samples",
+        "increase_contrast": false,
+        "observation": "continuous NSApp.run; approximately 1 ms asynchronous polling; forced explicitly submits layout/display/CA before observing; natural adds no harness submission. A nonempty presentation layer and effectiveAppearance are software state, not proof of a newly displayed theme or physical frame delivery. Entrance removal has a bounded 3-second observation and retains censored samples; closing must clear the key.",
+        "open_external_refreshes": "skipped; synchronous UI path only; sampling measured separately",
+        "optimization": "-O -D DEBUG",
+        "os": "Version 26.6.1 (Build 25G76)",
+        "physical_memory_bytes": 34359738368,
+        "processors": 8,
+        "recorded_at": "2026-10-20T12:19:03Z",
+        "reduce_motion": false,
+        "reduce_transparency": false,
+        "schema": 3,
+        "screens": [
+          {
+            "frame": "{{0, 0}, {1024, 768}}",
+            "scale": 2
+          }
+        ],
+        "source_revision": "5d5391a96aa9465eb1beaa3bf6bcb2bea1208067",
+        "submission": "natural",
+        "theme_count": 0,
+        "type": "environment",
+        "warm_count": 8,
+        "warmups_per_case": 3
+      },
+      "hostAppearances": {
+        "NSAppearanceNameAqua": 24
+      },
+      "measuredCount": 24,
+      "summaries": {
+        "classic/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 5.15025,
+            "min": 3.544125,
+            "p50": 4.623,
+            "p95": 5.15025
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 8,
+            "max": 271.092792,
+            "min": 250.153375,
+            "p50": 257.15375,
+            "p95": 271.092792
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 8,
+          "fixed_open_color_scheme": "light",
+          "group": "classic/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 8,
+            "max": 271.0945,
+            "min": 250.153875,
+            "p50": 257.154375,
+            "p95": 271.0945
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 6.516959,
+            "min": 5.146916,
+            "p50": 6.108875,
+            "p95": 6.516959
+          }
+        },
+        "glass_clear/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 37.209792,
+            "min": 31.557667,
+            "p50": 34.18675,
+            "p95": 37.209792
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 7,
+            "max": 601.873167,
+            "min": 457.1015,
+            "p50": 533.010417,
+            "p95": 601.873167
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 1,
+          "entrance_animation_removed_count": 7,
+          "fixed_open_color_scheme": "light",
+          "group": "glass_clear/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 7,
+            "max": 601.873875,
+            "min": 457.102417,
+            "p50": 533.011125,
+            "p95": 601.873875
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 45.161125,
+            "min": 38.559584,
+            "p50": 41.555292,
+            "p95": 45.161125
+          }
+        },
+        "glass_regular/popup_reopen_warm": {
+          "call_ms": {
+            "count": 8,
+            "max": 37.8995,
+            "min": 31.942583,
+            "p50": 37.432375,
+            "p95": 37.8995
+          },
+          "construction_and_cache_ms": {
+            "count": 8,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 8,
+            "max": 574.981667,
+            "min": 470.133625,
+            "p50": 533.578625,
+            "p95": 574.981667
+          },
+          "count": 8,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 8,
+          "fixed_open_color_scheme": "light",
+          "group": "glass_regular/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 8,
+            "max": 574.982375,
+            "min": 470.134167,
+            "p50": 533.579083,
+            "p95": 574.982375
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 8,
+            "max": 47.322,
+            "min": 39.375167,
+            "p50": 45.227125,
+            "p95": 47.322
+          }
+        }
+      }
+    }
+  },
+  "comparison": {
+    "light/classic": {
+      "baselineCallMS": {
+        "p50": 5.023,
+        "p95": 5.928
+      },
+      "baselineCensoredCount": 0,
+      "baselineVisibleLayerMS": {
+        "p50": 6.829,
+        "p95": 8.2
+      },
+      "candidateCallMS": {
+        "p50": 4.623,
+        "p95": 5.15
+      },
+      "candidateCensoredCount": 0,
+      "candidateVisibleLayerMS": {
+        "p50": 6.109,
+        "p95": 6.517
+      }
+    },
+    "light/glass_clear": {
+      "baselineCallMS": {
+        "p50": 35.273,
+        "p95": 39.432
+      },
+      "baselineCensoredCount": 0,
+      "baselineVisibleLayerMS": {
+        "p50": 42.959,
+        "p95": 48.953
+      },
+      "candidateCallMS": {
+        "p50": 34.187,
+        "p95": 37.21
+      },
+      "candidateCensoredCount": 1,
+      "candidateVisibleLayerMS": {
+        "p50": 41.555,
+        "p95": 45.161
+      }
+    },
+    "light/glass_regular": {
+      "baselineCallMS": {
+        "p50": 35.06,
+        "p95": 57.737
+      },
+      "baselineCensoredCount": 0,
+      "baselineVisibleLayerMS": {
+        "p50": 42.825,
+        "p95": 67.855
+      },
+      "candidateCallMS": {
+        "p50": 37.432,
+        "p95": 37.9
+      },
+      "candidateCensoredCount": 0,
+      "candidateVisibleLayerMS": {
+        "p50": 45.227,
+        "p95": 47.322
+      }
+    },
+    "system/classic": {
+      "baselineCallMS": {
+        "p50": 4.913,
+        "p95": 5.787
+      },
+      "baselineCensoredCount": 0,
+      "baselineVisibleLayerMS": {
+        "p50": 6.792,
+        "p95": 7.309
+      },
+      "candidateCallMS": {
+        "p50": 5.582,
+        "p95": 8.503
+      },
+      "candidateCensoredCount": 0,
+      "candidateVisibleLayerMS": {
+        "p50": 6.939,
+        "p95": 11.35
+      }
+    },
+    "system/glass_clear": {
+      "baselineCallMS": {
+        "p50": 35.304,
+        "p95": 49.779
+      },
+      "baselineCensoredCount": 0,
+      "baselineVisibleLayerMS": {
+        "p50": 43.402,
+        "p95": 59.742
+      },
+      "candidateCallMS": {
+        "p50": 35.995,
+        "p95": 38.488
+      },
+      "candidateCensoredCount": 0,
+      "candidateVisibleLayerMS": {
+        "p50": 43.666,
+        "p95": 46.132
+      }
+    },
+    "system/glass_regular": {
+      "baselineCallMS": {
+        "p50": 36.173,
+        "p95": 39.457
+      },
+      "baselineCensoredCount": 0,
+      "baselineVisibleLayerMS": {
+        "p50": 44.165,
+        "p95": 47.325
+      },
+      "candidateCallMS": {
+        "p50": 35.199,
+        "p95": 38.55
+      },
+      "candidateCensoredCount": 0,
+      "candidateVisibleLayerMS": {
+        "p50": 43.484,
+        "p95": 45.929
+      }
+    }
+  },
+  "guestCleanupPassed": true,
+  "interaction": {
+    "allPassed": true,
+    "allPassedMarker": true,
+    "assertionFailureCount": 0,
+    "assertionPassCount": 463,
+    "entrypoint": "scripts/verify_interaction.sh",
+    "log": "candidate-interaction.log",
+    "source": "candidate",
+    "sourceRevision": "5d5391a96aa9465eb1beaa3bf6bcb2bea1208067"
+  },
+  "schema": 1,
+  "scope": "Short non-regression controls: System then Light, one baseline/candidate process each; not a precise cross-theme speedup estimate.",
+  "vmCleanup": {
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "ownedCloneRemoved": true,
+    "ownedVM": "Wattson-UILatency-856707D5-60C6-4D7B-9991-76E6E8797EB8"
+  }
+}

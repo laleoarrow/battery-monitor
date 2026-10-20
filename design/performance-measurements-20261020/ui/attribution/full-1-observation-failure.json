@@ -1,0 +1,102 @@
+{
+  "failure": {
+    "error": "timedOut(\"controller entrance animation removed\")",
+    "type": "failure"
+  },
+  "completed_sample_counts": [
+    {
+      "mode": "classic",
+      "case": "popup_controller_cold",
+      "warmup": true,
+      "count": 3
+    },
+    {
+      "mode": "classic",
+      "case": "popup_controller_cold",
+      "warmup": false,
+      "count": 30
+    },
+    {
+      "mode": "classic",
+      "case": "popup_reopen_warm",
+      "warmup": true,
+      "count": 3
+    },
+    {
+      "mode": "classic",
+      "case": "popup_reopen_warm",
+      "warmup": false,
+      "count": 60
+    },
+    {
+      "mode": "classic",
+      "case": "theme_popup",
+      "warmup": true,
+      "count": 3
+    },
+    {
+      "mode": "classic",
+      "case": "theme_popup",
+      "warmup": false,
+      "count": 60
+    },
+    {
+      "mode": "classic",
+      "case": "theme_general",
+      "warmup": true,
+      "count": 3
+    },
+    {
+      "mode": "classic",
+      "case": "theme_general",
+      "warmup": false,
+      "count": 60
+    },
+    {
+      "mode": "classic",
+      "case": "theme_menu-bar-icon",
+      "warmup": true,
+      "count": 3
+    },
+    {
+      "mode": "classic",
+      "case": "theme_menu-bar-icon",
+      "warmup": false,
+      "count": 60
+    },
+    {
+      "mode": "classic",
+      "case": "theme_modules",
+      "warmup": true,
+      "count": 3
+    },
+    {
+      "mode": "classic",
+      "case": "theme_modules",
+      "warmup": false,
+      "count": 60
+    },
+    {
+      "mode": "glass_regular",
+      "case": "popup_controller_cold",
+      "warmup": true,
+      "count": 1
+    }
+  ],
+  "last_successful_sample": {
+    "call_ms": 71.778833,
+    "case": "popup_controller_cold",
+    "construction_and_cache_ms": 57.752458,
+    "controller_entrance_finished_ms": 428.989375,
+    "index": 0,
+    "mode": "glass_regular",
+    "submit_cumulative_ms": 146.408292,
+    "total_including_construction_ms": 486.742708,
+    "type": "sample",
+    "uptime_start_ns": 323702276583,
+    "visible_layer_observed_ms": 151.089458,
+    "warmup": true
+  },
+  "limitation": "v1 failed before writing the failing sample or window/layer/animation diagnostics; no product-root-cause classification is supported.",
+  "v2_correction": "keep call and software window observation, censor entrance removal at 3 seconds with null completion and captured CA/window/main-actor polling diagnostics; still require native close to remove the entrance key."
+}

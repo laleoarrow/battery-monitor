@@ -1,0 +1,37 @@
+{
+  "archives": {
+    "baseline.tar.gz": "8b12e2b2a6884ad658ee56a9946a1f9bffff79d354691e36a47c534767a14d62",
+    "tools.tar.gz": "d627145647bc2283adc8211b029630e251dbadb0ded8267fee82c704f0cddb35"
+  },
+  "configuration": {
+    "cold": 0,
+    "repeatBaseline": 1,
+    "submission": "natural",
+    "theme": 0,
+    "warm": 20
+  },
+  "diagnosticPatchSHA256": "719844125c89ca87a8edfd698654c2b911bd54c4a4817fadbc2315a281ae6589",
+  "pythonValidation": {
+    "PYTHONOPTIMIZE": null,
+    "optimize": 0
+  },
+  "schema": 1,
+  "smokeOnly": false,
+  "sources": {
+    "baseline": {
+      "gitRef": "d6b40247",
+      "revision": "d6b40247cd50c05af4ec9a99956c8ff1937c4894"
+    }
+  },
+  "tools": {
+    "scripts/lib/local_cleanup.sh": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+    "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+    "scripts/measure_ui_latency.sh": "b89380db311aa9dfbee20ccf0d9d690d79c4a0ce8511aa6d42dc66402d8be77c",
+    "tests/performance/ui-latency.swift": "167fe037884a7f0f533076f88c4bf35f7013f67335ba87cbd898352dba16b6ae"
+  },
+  "transport": {
+    "scripts/measure_ui_vm.sh": "cb18b54383eaaeea9442ca13058f2ab67b4d528b000cb851a14136353304c3c2",
+    "tests/performance/ui-vm-guest.sh": "56d7097d297cd329b7641fee53bef377c53c8f6843d1216348366f0a2a15c279",
+    "tests/performance/ui_vm.py": "e74c1081936d6aaedd32b7d30686f2bff24ba93326a692b77d97dfaeb349b18a"
+  }
+}

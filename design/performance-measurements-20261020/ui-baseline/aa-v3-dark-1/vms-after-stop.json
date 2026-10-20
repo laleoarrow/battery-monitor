@@ -1,0 +1,29 @@
+[
+  {
+    "Size" : 31,
+    "State" : "stopped",
+    "Name" : "Wattson-UILatency-A36C9201-23AE-453F-91EC-DA3C9508B643",
+    "Running" : false,
+    "Source" : "local",
+    "Accessed" : "2026-10-20T11:21:49Z",
+    "Disk" : 50
+  },
+  {
+    "Size" : 33,
+    "State" : "stopped",
+    "Name" : "macOS-TestLab",
+    "Running" : false,
+    "Source" : "local",
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "Disk" : 50
+  },
+  {
+    "Size" : 30,
+    "State" : "stopped",
+    "Name" : "macOS-TestLab-Base",
+    "Running" : false,
+    "Source" : "local",
+    "Accessed" : "2026-10-20T11:13:45Z",
+    "Disk" : 50
+  }
+]

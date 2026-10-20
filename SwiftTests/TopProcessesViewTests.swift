@@ -875,8 +875,13 @@ final class TopProcessesViewTests: XCTestCase {
             XCTAssertTrue(view.processRowsForTest[0].accessibilityPerformPress())
             XCTAssertNotNil(view.selectedProcessForTest)
             let oldAction = try XCTUnwrap(view.forceQuitButtonsForTest.first)
+            XCTAssertTrue(oldAction.isEnabled)
+            XCTAssertFalse(oldAction.isHidden)
             var requests = 0
             view.forceQuitHandler = { _ in requests += 1 }
+            oldAction.performClick(nil)
+            XCTAssertEqual(requests, 1)
+            requests = 0
             let inset = GlassPopoverPanel.contentInset(for: style == .clear ? .clear : .regular)
             let panel = GlassPopoverPanel(content: view,
                 frame: NSRect(x: 0, y: 0, width: 360 + 2 * inset, height: 212 + 2 * inset), style: style)

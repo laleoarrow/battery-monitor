@@ -1,0 +1,4 @@
+patching file 'Popover/PopoverController.swift'
+patching file 'Popover/GlassPopoverPanel.swift'
+patching file 'Popover/GlassPopoverMaterialView.swift'
+patching file 'tests/performance/ui-latency.swift'

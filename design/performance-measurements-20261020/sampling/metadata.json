@@ -1,0 +1,93 @@
+{
+  "baseline": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+  "repositoryHEAD": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+  "osVersion": "26.5.2",
+  "osBuild": "25F84",
+  "architecture": "arm64",
+  "compiler": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0",
+  "optimization": "-O -whole-module-optimization -swift-version 5 arm64-apple-macos12.0",
+  "runtimeSamples": 32,
+  "targetSpacingSeconds": 2,
+  "topProcessesReads": 3,
+  "healthCacheBatchCount": 10,
+  "healthReadsPerBatch": 10000,
+  "wallStartedUTC": "2026-10-20T10:46:28Z",
+  "limitations": [
+    "Real optimized unsandboxed CLI calling frozen production sources; not the canonical app's complete process image.",
+    "Production dependency injection wraps real IOKit/IOPS/helper/live-health reads; no sensor or duration fixtures.",
+    "The health cache's default fixed profiler reader runs on an instrumented utility queue so actual child launches can be counted.",
+    "Cold means empty in-process health cache; no OS, filesystem or firmware cache was flushed.",
+    "Per-stage wall times overlap between parallel battery and helper branches; they must not be added as serialized costs.",
+    "Client CPU is getrusage(RUSAGE_SELF); helper and profiler child CPU are not included in runtime sample CPU.",
+    "Canonical/helper process CPU is coarse ps cumulative time over the window, shared with ordinary app work; it is not exclusive attribution.",
+    "One live host, naturally varying workload; no display FPS, battery-life or macOS 27 physical hardware claim.",
+    "Process Activity returns up to 10 helper rows regardless of the UI Top N setting; only row counts are retained.",
+    "Thermal state and power-source state were not recorded or experimentally controlled for this run."
+  ],
+  "compiledSources": [
+    {
+      "path": "Core/AppleSmartBatteryPowerObservationReader.swift",
+      "sha256": "0b04d653c0ca313740470bf846901adbe2cc720b784e7c5b079e23dcad5879e6"
+    },
+    {
+      "path": "Core/BatteryRuntimeEstimate.swift",
+      "sha256": "9b20d7aef48f9406705680b3b159fc8db7baed7470d5409cb7a6d87aabd62dba"
+    },
+    {
+      "path": "Core/BatterySampler.swift",
+      "sha256": "973fff6cd0d14648ba7f211f934f920a72fcac59a6be7d962c7e987af436b5a7"
+    },
+    {
+      "path": "Core/HelperClient.swift",
+      "sha256": "2620a616fecb42cf85a708e03d20a6f5e464b33e034e33e988fd9a1b8d01b5de"
+    },
+    {
+      "path": "Core/HelperClientPowerObservationV5.swift",
+      "sha256": "9fd766fa6d54aef1a7077983b4e70097a0cc43c7109102b129371672f15832fe"
+    },
+    {
+      "path": "Core/PowerObservationFusion.swift",
+      "sha256": "7e877a9d5353d979f8f66ed20b27072b27a21e4cd7d46c8284290ab18a861d2b"
+    },
+    {
+      "path": "Core/PowerObservationRuntimeController.swift",
+      "sha256": "28f39e08e70af2dde354b328da16afc6793815e1bf5eca609e7857a98c2054de"
+    },
+    {
+      "path": "Core/PowerObservationShadow.swift",
+      "sha256": "3974ee357d7125fcc54509ad975d8881f30783fb131db9e8e16a050cffa22522"
+    },
+    {
+      "path": "Core/PowerObservationTrace.swift",
+      "sha256": "8f9d926a4acf76de2afe2eae31bfcff97420f0090878faeb8cb32317a984ba5a"
+    },
+    {
+      "path": "Core/PowerObservationWireV5.swift",
+      "sha256": "74cc385246cb918fe7942a17700fe98d2d52034ea880d8d2c6923a5d815649ec"
+    },
+    {
+      "path": "Core/PowerSnapshot.swift",
+      "sha256": "7b0b1d78ef714e951840a3b0414ac1915f1161792267051acd823b2f9c39e962"
+    },
+    {
+      "path": "Core/ProcessTermination.swift",
+      "sha256": "5b26d5166a22c279a0caa67f66b826df88a149060856c690ea40400cdfed51bb"
+    },
+    {
+      "path": "Core/RawPowerObservation.swift",
+      "sha256": "ab961b7bbc0201fb22e2a72c2d66a4d16f1d5c0563ca4aee30ef287bc29ea2bc"
+    },
+    {
+      "path": "Core/SystemBatteryHealth.swift",
+      "sha256": "0a0965d79a8ba92d3709a88e3fe31e47d4215342adb665f1e6650261d2435e0d"
+    },
+    {
+      "path": "Core/TopProcesses.swift",
+      "sha256": "ac5be878ecf58d86031d3c8d3fe51e59edcd698576688ba01c9703a2f72efea0"
+    },
+    {
+      "path": "tests/performance/sampling/main.swift",
+      "sha256": "302218275aaefbcc521fbd89666781f21b6f9f503d53c6384bf1ff3f0f18c80c"
+    }
+  ]
+}

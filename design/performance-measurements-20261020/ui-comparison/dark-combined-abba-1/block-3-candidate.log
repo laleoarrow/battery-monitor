@@ -1,0 +1,15 @@
+/Users/admin/Project/.wattson-ui-vm.noindex/run.AGGtEE/candidate/tests/performance/ui-latency.swift:187:51: warning: class property 'isMainThread' is unavailable from asynchronous contexts; Work intended for the main actor should be marked with @MainActor; this is an error in the Swift 6 language mode
+185 |                 "observation_wait_ms": milliseconds(since: animationWaitStart),
+186 |                 "observer_resumed_uptime_ns": DispatchTime.now().uptimeNanoseconds,
+187 |                 "observer_on_main_thread": Thread.isMainThread,
+    |                                                   `- warning: class property 'isMainThread' is unavailable from asynchronous contexts; Work intended for the main actor should be marked with @MainActor; this is an error in the Swift 6 language mode
+188 |                 "ca_media_time": now, "window_visible": window.isVisible,
+189 |                 "window_occlusion_visible": window.occlusionState.contains(.visible),
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSThread.h:51:34: note: 'isMainThread' declared here
+49 | @property (readonly) BOOL isMainThread API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));
+50 | 
+51 | @property (class, readonly) BOOL isMainThread API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0)) NS_SWIFT_UNAVAILABLE_FROM_ASYNC("Work intended for the main actor should be marked with @MainActor"); // reports whether current thread is main
+   |                                  `- note: 'isMainThread' declared here
+52 | @property (class, readonly, strong) NSThread *mainThread API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));
+53 | 

@@ -1,0 +1,106 @@
+{
+  "diagnosticOnly": true,
+  "rows": 60,
+  "perMode": {
+    "classic": {
+      "samples": 20,
+      "callMinusScopedTotalMS": {
+        "median": 0.008854499999999987,
+        "max": 0.012124999999999275,
+        "min": 0.007249999999999979
+      },
+      "scopedTotalMinusExclusiveStageSumMS": {
+        "median": 0.0016879999999996897,
+        "max": 0.003834000000000337,
+        "min": 0.0008750000000001812
+      },
+      "meanStagesMS": {
+        "open.activate_content_and_entrance_animation": 0.72251885,
+        "open.classic_show": 1.20121235,
+        "open.final_placement_and_size": 0.26002935,
+        "open.initial_placement_and_size": 0.572398,
+        "open.outside_monitors_and_visibility": 1.08930805,
+        "open.prime_cached_content": 1.06829575,
+        "open.tail": 0.00169805,
+        "open.total": 4.91726235
+      }
+    },
+    "glass_clear": {
+      "samples": 20,
+      "callMinusScopedTotalMS": {
+        "median": 0.009375000000005684,
+        "max": 0.015416999999999348,
+        "min": 0.005874999999988972
+      },
+      "scopedTotalMinusExclusiveStageSumMS": {
+        "median": 0.0003750000000053433,
+        "max": 0.0007090000000005148,
+        "min": 0.0002500000000011937
+      },
+      "meanStagesMS": {
+        "material.frame_and_accessibility": 0.01024355,
+        "material.root_view_and_ns_hosting_super_init": 0.15737085,
+        "material.tail": 0.00028135,
+        "material.total": 0.16809575,
+        "open.activate_content_and_entrance_animation": 0.68218525,
+        "open.final_placement_and_size": 3.4125979,
+        "open.initial_focus": 0.07475005,
+        "open.initial_placement_and_size": 6.60719585,
+        "open.make_key_and_order_front": 11.32477295,
+        "open.outside_monitors_and_visibility": 0.69791055,
+        "open.panel_init": 29.33877715,
+        "open.point_appearance_and_callbacks": 12.9639895,
+        "open.prime_cached_content": 0.93301235,
+        "open.retire_classic": 0.00441675,
+        "open.tail": 0.00174575,
+        "open.total": 66.04175845,
+        "panel.configure_window": 0.23198545,
+        "panel.create_background_and_attach_content": 27.9192627,
+        "panel.ns_panel_super_init": 0.9857583,
+        "panel.swiftui_material_init": 0.1712353,
+        "panel.tail": 0.00153745,
+        "panel.total": 29.3345499,
+        "panel.update_outline": 0.02454375
+      }
+    },
+    "glass_regular": {
+      "samples": 20,
+      "callMinusScopedTotalMS": {
+        "median": 0.009312999999998794,
+        "max": 0.017541000000008466,
+        "min": 0.005916999999996619
+      },
+      "scopedTotalMinusExclusiveStageSumMS": {
+        "median": 0.00041650000000004184,
+        "max": 0.0050829999999990605,
+        "min": 0.0002499999999940883
+      },
+      "meanStagesMS": {
+        "material.frame_and_accessibility": 0.01136055,
+        "material.root_view_and_ns_hosting_super_init": 0.1712188,
+        "material.tail": 0.00030605,
+        "material.total": 0.1831042,
+        "open.activate_content_and_entrance_animation": 0.7312396999999999,
+        "open.final_placement_and_size": 3.62959575,
+        "open.initial_focus": 0.06795845,
+        "open.initial_placement_and_size": 6.61566035,
+        "open.make_key_and_order_front": 11.28294785,
+        "open.outside_monitors_and_visibility": 0.6976540999999999,
+        "open.panel_init": 29.450443749999998,
+        "open.point_appearance_and_callbacks": 13.161272799999999,
+        "open.prime_cached_content": 0.92870635,
+        "open.retire_classic": 0.00422925,
+        "open.tail": 0.00178945,
+        "open.total": 66.572148,
+        "panel.configure_window": 0.24354375,
+        "panel.create_background_and_attach_content": 27.9525873,
+        "panel.ns_panel_super_init": 1.0332042,
+        "panel.swiftui_material_init": 0.1871667,
+        "panel.tail": 0.00186475,
+        "panel.total": 29.4452376,
+        "panel.update_outline": 0.02665005
+      }
+    }
+  },
+  "interpretation": "Only exclusive open.* stages add to open.total; panel.* and material.* are nested diagnostics. create_background_and_attach_content is inclusive and does not isolate individual attachment callbacks. point_appearance_and_callbacks does not separate rootView updates from NSWindow appearance propagation."
+}

@@ -1,0 +1,3394 @@
+{
+  "blocks": {
+    "block-1-baseline.jsonl": {
+      "allIdentitiesRetained": true,
+      "environment": {
+        "application_appearance_override": null,
+        "application_effective_appearance": "NSAppearanceNameAqua",
+        "cold_count": 0,
+        "cold_definition": "new controller in the same process; first sample of each case retained as warmup; OS/framework caches are not cleared",
+        "fixed_open_color_scheme": "dark",
+        "fixture": "charging / all modules / Top 3 detailed / 60 history samples",
+        "increase_contrast": false,
+        "observation": "continuous NSApp.run; approximately 1 ms asynchronous polling; forced explicitly submits layout/display/CA before observing; natural adds no harness submission. A nonempty presentation layer and effectiveAppearance are software state, not proof of a newly displayed theme or physical frame delivery. Entrance removal has a bounded 3-second observation and retains censored samples; closing must clear the key.",
+        "open_external_refreshes": "skipped; synchronous UI path only; sampling measured separately",
+        "optimization": "-O -D DEBUG",
+        "os": "Version 26.6.1 (Build 25G76)",
+        "physical_memory_bytes": 34359738368,
+        "processors": 8,
+        "recorded_at": "2026-10-20T12:01:11Z",
+        "reduce_motion": false,
+        "reduce_transparency": false,
+        "schema": 3,
+        "screens": [
+          {
+            "frame": "{{0, 0}, {1024, 768}}",
+            "scale": 2
+          }
+        ],
+        "source_revision": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+        "submission": "natural",
+        "theme_count": 6,
+        "type": "environment",
+        "warm_count": 20,
+        "warmups_per_case": 3
+      },
+      "measuredCount": 132,
+      "summaries": {
+        "classic/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 11.575667,
+            "min": 4.06225,
+            "p50": 5.995375,
+            "p95": 11.495
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 20,
+            "max": 276.044708,
+            "min": 254.052667,
+            "p50": 258.726083,
+            "p95": 266.993959
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 20,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 20,
+            "max": 276.045459,
+            "min": 254.053167,
+            "p50": 258.726958,
+            "p95": 266.994666
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 13.249958,
+            "min": 5.39775,
+            "p50": 7.5575,
+            "p95": 13.190583
+          }
+        },
+        "classic/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 30.93775,
+            "min": 26.574666,
+            "p50": 27.318416,
+            "p95": 30.93775
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 2.922625,
+            "min": 2.572,
+            "p50": 2.720667,
+            "p95": 2.922625
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 35.665583,
+            "min": 32.123125,
+            "p50": 34.580959,
+            "p95": 35.665583
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.764,
+            "min": 2.844917,
+            "p50": 3.527542,
+            "p95": 3.764
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 16.624083,
+            "min": 13.632417,
+            "p50": 15.000333,
+            "p95": 16.624083
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.057167,
+            "min": 2.388209,
+            "p50": 2.788041,
+            "p95": 3.057167
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 15.185375,
+            "min": 13.881792,
+            "p50": 14.99025,
+            "p95": 15.185375
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 2.792083,
+            "min": 2.625875,
+            "p50": 2.663125,
+            "p95": 2.792083
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 25.0855,
+            "min": 20.866292,
+            "p50": 24.165709,
+            "p95": 25.0855
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.707709,
+            "min": 2.999042,
+            "p50": 3.431125,
+            "p95": 3.707709
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 23.855166,
+            "min": 21.450958,
+            "p50": 21.488125,
+            "p95": 23.855166
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.340208,
+            "min": 2.926042,
+            "p50": 3.108542,
+            "p95": 3.340208
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 35.445375,
+            "min": 26.660042,
+            "p50": 27.333334,
+            "p95": 35.445375
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 20.857167,
+            "min": 15.149584,
+            "p50": 15.258459,
+            "p95": 20.857167
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 33.043209,
+            "min": 25.256833,
+            "p50": 26.317958,
+            "p95": 33.043209
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 19.747042,
+            "min": 14.508958,
+            "p50": 15.436125,
+            "p95": 19.747042
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 73.893375,
+            "min": 64.72,
+            "p50": 68.401334,
+            "p95": 73.422
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 20,
+            "max": 511.455667,
+            "min": 446.289834,
+            "p50": 465.79925,
+            "p95": 498.611792
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 20,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 20,
+            "max": 511.456167,
+            "min": 446.290375,
+            "p50": 465.800292,
+            "p95": 498.612167
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 83.764875,
+            "min": 73.873417,
+            "p50": 78.351542,
+            "p95": 83.576417
+          }
+        },
+        "glass_clear/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 40.623625,
+            "min": 9.589708,
+            "p50": 40.203792,
+            "p95": 40.623625
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.731542,
+            "min": 3.313458,
+            "p50": 3.496083,
+            "p95": 3.731542
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 45.600708,
+            "min": 40.551792,
+            "p50": 45.410959,
+            "p95": 45.600708
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.6725,
+            "min": 3.25875,
+            "p50": 3.829084,
+            "p95": 4.6725
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 20.032333,
+            "min": 16.507625,
+            "p50": 19.633917,
+            "p95": 20.032333
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.59475,
+            "min": 3.43475,
+            "p50": 3.527125,
+            "p95": 3.59475
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 22.983083,
+            "min": 21.296167,
+            "p50": 21.845667,
+            "p95": 22.983083
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.6405,
+            "min": 3.113917,
+            "p50": 3.388833,
+            "p95": 3.6405
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 33.009583,
+            "min": 11.702875,
+            "p50": 31.36475,
+            "p95": 33.009583
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 5.912625,
+            "min": 3.220042,
+            "p50": 3.593,
+            "p95": 5.912625
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 31.011541,
+            "min": 27.641583,
+            "p50": 30.881333,
+            "p95": 31.011541
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.585125,
+            "min": 3.381125,
+            "p50": 3.512417,
+            "p95": 3.585125
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 40.47975,
+            "min": 33.289333,
+            "p50": 33.5425,
+            "p95": 40.47975
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 20.603167,
+            "min": 15.914625,
+            "p50": 17.7665,
+            "p95": 20.603167
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 39.307375,
+            "min": 33.123333,
+            "p50": 37.979541,
+            "p95": 39.307375
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 17.832708,
+            "min": 16.084708,
+            "p50": 17.32125,
+            "p95": 17.832708
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 73.780041,
+            "min": 63.235708,
+            "p50": 67.844417,
+            "p95": 73.426583
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 20,
+            "max": 508.271916,
+            "min": 440.722125,
+            "p50": 465.363917,
+            "p95": 502.207958
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 20,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 20,
+            "max": 508.272417,
+            "min": 440.723125,
+            "p50": 465.364375,
+            "p95": 502.2085
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 84.618583,
+            "min": 72.27925,
+            "p50": 78.070375,
+            "p95": 83.88125
+          }
+        },
+        "glass_regular/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 43.236417,
+            "min": 9.01775,
+            "p50": 41.834916,
+            "p95": 43.236417
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.397125,
+            "min": 2.784792,
+            "p50": 3.149083,
+            "p95": 3.397125
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 9.356583,
+            "min": 8.419292,
+            "p50": 8.431166,
+            "p95": 9.356583
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.074208,
+            "min": 2.975167,
+            "p50": 3.035875,
+            "p95": 3.074208
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 19.409458,
+            "min": 8.775417,
+            "p50": 19.294291,
+            "p95": 19.409458
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.623417,
+            "min": 3.180333,
+            "p50": 3.283791,
+            "p95": 3.623417
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 22.247792,
+            "min": 21.377459,
+            "p50": 21.638459,
+            "p95": 22.247792
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.871917,
+            "min": 3.185875,
+            "p50": 3.632709,
+            "p95": 3.871917
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 30.772584,
+            "min": 9.557916,
+            "p50": 10.129542,
+            "p95": 30.772584
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.412167,
+            "min": 3.359542,
+            "p50": 3.397541,
+            "p95": 4.412167
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 30.76025,
+            "min": 6.023667,
+            "p50": 11.055209,
+            "p95": 30.76025
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 5.122125,
+            "min": 3.539,
+            "p50": 3.746375,
+            "p95": 5.122125
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 44.384667,
+            "min": 35.159042,
+            "p50": 37.214583,
+            "p95": 44.384667
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 19.574292,
+            "min": 16.641833,
+            "p50": 16.933917,
+            "p95": 19.574292
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 35.553041,
+            "min": 34.712042,
+            "p50": 35.330875,
+            "p95": 35.553041
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 18.741041,
+            "min": 15.964417,
+            "p50": 17.731542,
+            "p95": 18.741041
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        }
+      }
+    },
+    "block-2-candidate.jsonl": {
+      "allIdentitiesRetained": true,
+      "environment": {
+        "application_appearance_override": null,
+        "application_effective_appearance": "NSAppearanceNameAqua",
+        "cold_count": 0,
+        "cold_definition": "new controller in the same process; first sample of each case retained as warmup; OS/framework caches are not cleared",
+        "fixed_open_color_scheme": "dark",
+        "fixture": "charging / all modules / Top 3 detailed / 60 history samples",
+        "increase_contrast": false,
+        "observation": "continuous NSApp.run; approximately 1 ms asynchronous polling; forced explicitly submits layout/display/CA before observing; natural adds no harness submission. A nonempty presentation layer and effectiveAppearance are software state, not proof of a newly displayed theme or physical frame delivery. Entrance removal has a bounded 3-second observation and retains censored samples; closing must clear the key.",
+        "open_external_refreshes": "skipped; synchronous UI path only; sampling measured separately",
+        "optimization": "-O -D DEBUG",
+        "os": "Version 26.6.1 (Build 25G76)",
+        "physical_memory_bytes": 34359738368,
+        "processors": 8,
+        "recorded_at": "2026-10-20T12:03:14Z",
+        "reduce_motion": false,
+        "reduce_transparency": false,
+        "schema": 3,
+        "screens": [
+          {
+            "frame": "{{0, 0}, {1024, 768}}",
+            "scale": 2
+          }
+        ],
+        "source_revision": "5d5391a96aa9465eb1beaa3bf6bcb2bea1208067",
+        "submission": "natural",
+        "theme_count": 6,
+        "type": "environment",
+        "warm_count": 20,
+        "warmups_per_case": 3
+      },
+      "measuredCount": 132,
+      "summaries": {
+        "classic/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 13.045958,
+            "min": 3.723417,
+            "p50": 4.845625,
+            "p95": 9.201625
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 20,
+            "max": 274.090625,
+            "min": 248.68925,
+            "p50": 258.16975,
+            "p95": 272.662875
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 20,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 20,
+            "max": 274.091209,
+            "min": 248.690291,
+            "p50": 258.170584,
+            "p95": 272.663417
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 14.625541,
+            "min": 4.920125,
+            "p50": 6.683083,
+            "p95": 11.447292
+          }
+        },
+        "classic/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 30.209708,
+            "min": 12.997042,
+            "p50": 26.634833,
+            "p95": 30.209708
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.21575,
+            "min": 2.823625,
+            "p50": 3.166083,
+            "p95": 3.21575
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 42.227333,
+            "min": 25.584542,
+            "p50": 26.067125,
+            "p95": 42.227333
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.269083,
+            "min": 2.729792,
+            "p50": 2.763667,
+            "p95": 4.269083
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 22.3035,
+            "min": 14.410792,
+            "p50": 17.194667,
+            "p95": 22.3035
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 6.462291,
+            "min": 3.213542,
+            "p50": 3.89725,
+            "p95": 6.462291
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 15.115166,
+            "min": 13.547042,
+            "p50": 14.353958,
+            "p95": 15.115166
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.499958,
+            "min": 2.517416,
+            "p50": 2.73525,
+            "p95": 3.499958
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 22.948458,
+            "min": 20.910125,
+            "p50": 21.820833,
+            "p95": 22.948458
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.375708,
+            "min": 2.896667,
+            "p50": 3.263917,
+            "p95": 3.375708
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 25.927875,
+            "min": 18.68175,
+            "p50": 20.22425,
+            "p95": 25.927875
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.933,
+            "min": 2.459875,
+            "p50": 3.520208,
+            "p95": 3.933
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 28.735625,
+            "min": 25.948625,
+            "p50": 26.17875,
+            "p95": 28.735625
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 15.768916,
+            "min": 15.602917,
+            "p50": 15.715,
+            "p95": 15.768916
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 38.298125,
+            "min": 26.838333,
+            "p50": 33.488833,
+            "p95": 38.298125
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 21.482083,
+            "min": 16.021458,
+            "p50": 18.406666,
+            "p95": 21.482083
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 53.5195,
+            "min": 33.789083,
+            "p50": 37.472833,
+            "p95": 45.454542
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 14,
+            "max": 601.859792,
+            "min": 462.030375,
+            "p50": 549.98575,
+            "p95": 601.859792
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 6,
+          "entrance_animation_removed_count": 14,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 14,
+            "max": 601.860584,
+            "min": 462.030958,
+            "p50": 549.986167,
+            "p95": 601.860584
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 62.754292,
+            "min": 41.82775,
+            "p50": 46.10625,
+            "p95": 54.604
+          }
+        },
+        "glass_clear/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 58.951708,
+            "min": 47.896833,
+            "p50": 48.563542,
+            "p95": 58.951708
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.380166,
+            "min": 3.086958,
+            "p50": 4.289083,
+            "p95": 4.380166
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 50.467125,
+            "min": 38.748708,
+            "p50": 44.530958,
+            "p95": 50.467125
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 5.62625,
+            "min": 3.384625,
+            "p50": 5.032833,
+            "p95": 5.62625
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 19.289916,
+            "min": 16.644791,
+            "p50": 16.898667,
+            "p95": 19.289916
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.760708,
+            "min": 3.060541,
+            "p50": 3.275,
+            "p95": 3.760708
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 24.931917,
+            "min": 22.668333,
+            "p50": 24.324917,
+            "p95": 24.931917
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.594583,
+            "min": 3.1195,
+            "p50": 3.184333,
+            "p95": 3.594583
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 56.498083,
+            "min": 5.998958,
+            "p50": 23.463625,
+            "p95": 56.498083
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 10.284458,
+            "min": 3.62275,
+            "p50": 3.748208,
+            "p95": 10.284458
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 33.919958,
+            "min": 26.950834,
+            "p50": 29.274417,
+            "p95": 33.919958
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 8.200292,
+            "min": 3.710209,
+            "p50": 4.0925,
+            "p95": 8.200292
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 35.364209,
+            "min": 32.926958,
+            "p50": 34.327417,
+            "p95": 35.364209
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 17.174834,
+            "min": 15.892958,
+            "p50": 16.784084,
+            "p95": 17.174834
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 43.234417,
+            "min": 33.779875,
+            "p50": 42.78,
+            "p95": 43.234417
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 21.699084,
+            "min": 15.426625,
+            "p50": 18.345542,
+            "p95": 21.699084
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 43.195167,
+            "min": 33.566667,
+            "p50": 37.881208,
+            "p95": 42.116542
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 20,
+            "max": 617.470041,
+            "min": 458.55175,
+            "p50": 581.114292,
+            "p95": 601.778042
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 20,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 20,
+            "max": 617.470583,
+            "min": 458.5525,
+            "p50": 581.114833,
+            "p95": 601.779
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 50.204167,
+            "min": 40.5365,
+            "p50": 46.583541,
+            "p95": 49.400542
+          }
+        },
+        "glass_regular/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 53.729042,
+            "min": 39.369667,
+            "p50": 41.136459,
+            "p95": 53.729042
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.582,
+            "min": 2.947042,
+            "p50": 3.190417,
+            "p95": 3.582
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 41.139542,
+            "min": 12.766667,
+            "p50": 40.492875,
+            "p95": 41.139542
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.788,
+            "min": 3.112542,
+            "p50": 3.310334,
+            "p95": 3.788
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 26.85575,
+            "min": 18.932,
+            "p50": 20.500375,
+            "p95": 26.85575
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.154209,
+            "min": 3.113667,
+            "p50": 3.696792,
+            "p95": 4.154209
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 77.557333,
+            "min": 22.215458,
+            "p50": 23.340833,
+            "p95": 77.557333
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.954458,
+            "min": 4.072375,
+            "p50": 4.800042,
+            "p95": 4.954458
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 32.036084,
+            "min": 5.662542,
+            "p50": 24.095792,
+            "p95": 32.036084
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.409375,
+            "min": 3.312792,
+            "p50": 3.624875,
+            "p95": 4.409375
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 38.625959,
+            "min": 6.431416,
+            "p50": 23.245625,
+            "p95": 38.625959
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.664959,
+            "min": 3.202042,
+            "p50": 4.22225,
+            "p95": 4.664959
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 37.549417,
+            "min": 23.586875,
+            "p50": 37.218,
+            "p95": 37.549417
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 18.308167,
+            "min": 15.421666,
+            "p50": 17.038333,
+            "p95": 18.308167
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 47.599833,
+            "min": 31.485375,
+            "p50": 34.726125,
+            "p95": 47.599833
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 21.286583,
+            "min": 15.830875,
+            "p50": 17.062125,
+            "p95": 21.286583
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        }
+      }
+    },
+    "block-3-candidate.jsonl": {
+      "allIdentitiesRetained": true,
+      "environment": {
+        "application_appearance_override": null,
+        "application_effective_appearance": "NSAppearanceNameAqua",
+        "cold_count": 0,
+        "cold_definition": "new controller in the same process; first sample of each case retained as warmup; OS/framework caches are not cleared",
+        "fixed_open_color_scheme": "dark",
+        "fixture": "charging / all modules / Top 3 detailed / 60 history samples",
+        "increase_contrast": false,
+        "observation": "continuous NSApp.run; approximately 1 ms asynchronous polling; forced explicitly submits layout/display/CA before observing; natural adds no harness submission. A nonempty presentation layer and effectiveAppearance are software state, not proof of a newly displayed theme or physical frame delivery. Entrance removal has a bounded 3-second observation and retains censored samples; closing must clear the key.",
+        "open_external_refreshes": "skipped; synchronous UI path only; sampling measured separately",
+        "optimization": "-O -D DEBUG",
+        "os": "Version 26.6.1 (Build 25G76)",
+        "physical_memory_bytes": 34359738368,
+        "processors": 8,
+        "recorded_at": "2026-10-20T12:05:46Z",
+        "reduce_motion": false,
+        "reduce_transparency": false,
+        "schema": 3,
+        "screens": [
+          {
+            "frame": "{{0, 0}, {1024, 768}}",
+            "scale": 2
+          }
+        ],
+        "source_revision": "5d5391a96aa9465eb1beaa3bf6bcb2bea1208067",
+        "submission": "natural",
+        "theme_count": 6,
+        "type": "environment",
+        "warm_count": 20,
+        "warmups_per_case": 3
+      },
+      "measuredCount": 132,
+      "summaries": {
+        "classic/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 5.000458,
+            "min": 3.748375,
+            "p50": 4.35925,
+            "p95": 4.878
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 20,
+            "max": 268.231208,
+            "min": 249.10425,
+            "p50": 257.496084,
+            "p95": 267.46625
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 20,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 20,
+            "max": 268.231709,
+            "min": 249.105083,
+            "p50": 257.496541,
+            "p95": 267.466625
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 7.536083,
+            "min": 5.266541,
+            "p50": 5.978334,
+            "p95": 6.800958
+          }
+        },
+        "classic/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 34.946125,
+            "min": 28.068417,
+            "p50": 28.987167,
+            "p95": 34.946125
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.202542,
+            "min": 2.73275,
+            "p50": 2.78675,
+            "p95": 3.202542
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 25.051833,
+            "min": 5.998334,
+            "p50": 25.003084,
+            "p95": 25.051833
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.149166,
+            "min": 2.591167,
+            "p50": 2.904792,
+            "p95": 3.149166
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 27.184292,
+            "min": 14.02875,
+            "p50": 16.097542,
+            "p95": 27.184292
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 2.815334,
+            "min": 2.478792,
+            "p50": 2.705459,
+            "p95": 2.815334
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 14.3635,
+            "min": 12.942292,
+            "p50": 13.929,
+            "p95": 14.3635
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 2.744041,
+            "min": 2.368583,
+            "p50": 2.632333,
+            "p95": 2.744041
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 21.169167,
+            "min": 18.769667,
+            "p50": 20.989,
+            "p95": 21.169167
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.400917,
+            "min": 2.769125,
+            "p50": 2.82225,
+            "p95": 3.400917
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 21.158375,
+            "min": 19.051958,
+            "p50": 19.187041,
+            "p95": 21.158375
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 2.978875,
+            "min": 2.72525,
+            "p50": 2.908375,
+            "p95": 2.978875
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 34.157333,
+            "min": 27.439958,
+            "p50": 28.995916,
+            "p95": 34.157333
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 20.858417,
+            "min": 15.819917,
+            "p50": 16.728291,
+            "p95": 20.858417
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 36.466583,
+            "min": 25.155583,
+            "p50": 27.149708,
+            "p95": 36.466583
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 21.225666,
+            "min": 14.6875,
+            "p50": 16.147958,
+            "p95": 21.225666
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 47.444583,
+            "min": 32.683041,
+            "p50": 37.176292,
+            "p95": 44.293292
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 19,
+            "max": 601.34475,
+            "min": 456.683,
+            "p50": 561.725833,
+            "p95": 601.34475
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 1,
+          "entrance_animation_removed_count": 19,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 19,
+            "max": 601.345208,
+            "min": 456.683375,
+            "p50": 561.726792,
+            "p95": 601.345208
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 59.037292,
+            "min": 39.377916,
+            "p50": 45.085709,
+            "p95": 52.117917
+          }
+        },
+        "glass_clear/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 54.310459,
+            "min": 13.118708,
+            "p50": 47.128833,
+            "p95": 54.310459
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.442291,
+            "min": 3.310416,
+            "p50": 3.403917,
+            "p95": 3.442291
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 47.767959,
+            "min": 42.470917,
+            "p50": 42.536042,
+            "p95": 47.767959
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.661875,
+            "min": 3.223625,
+            "p50": 3.388792,
+            "p95": 3.661875
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 24.409625,
+            "min": 18.43875,
+            "p50": 19.760667,
+            "p95": 24.409625
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 5.005917,
+            "min": 3.007458,
+            "p50": 3.978583,
+            "p95": 5.005917
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 19.285666,
+            "min": 16.982417,
+            "p50": 17.431292,
+            "p95": 19.285666
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.753208,
+            "min": 3.006625,
+            "p50": 3.419416,
+            "p95": 3.753208
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 32.48675,
+            "min": 6.032167,
+            "p50": 14.184417,
+            "p95": 32.48675
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.998625,
+            "min": 3.547625,
+            "p50": 3.745417,
+            "p95": 3.998625
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 34.465084,
+            "min": 30.6235,
+            "p50": 32.560541,
+            "p95": 34.465084
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.02475,
+            "min": 3.70275,
+            "p50": 3.783459,
+            "p95": 4.02475
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 40.783041,
+            "min": 32.622917,
+            "p50": 33.743667,
+            "p95": 40.783041
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 20.182833,
+            "min": 14.465625,
+            "p50": 15.000917,
+            "p95": 20.182833
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 59.286917,
+            "min": 32.466791,
+            "p50": 33.055916,
+            "p95": 59.286917
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 23.276667,
+            "min": 14.402958,
+            "p50": 15.866416,
+            "p95": 23.276667
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 42.892333,
+            "min": 33.712208,
+            "p50": 38.032583,
+            "p95": 42.27075
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 20,
+            "max": 596.622958,
+            "min": 456.022917,
+            "p50": 512.722708,
+            "p95": 580.729375
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 20,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 20,
+            "max": 596.623542,
+            "min": 456.023416,
+            "p50": 512.723208,
+            "p95": 580.729833
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 51.781625,
+            "min": 42.957625,
+            "p50": 47.055,
+            "p95": 51.369958
+          }
+        },
+        "glass_regular/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 55.626334,
+            "min": 45.347417,
+            "p50": 49.278209,
+            "p95": 55.626334
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.807084,
+            "min": 3.279459,
+            "p50": 3.420917,
+            "p95": 4.807084
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 49.635917,
+            "min": 40.701709,
+            "p50": 43.709667,
+            "p95": 49.635917
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 6.306208,
+            "min": 3.174417,
+            "p50": 3.325542,
+            "p95": 6.306208
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 25.126042,
+            "min": 17.127375,
+            "p50": 19.307834,
+            "p95": 25.126042
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.06125,
+            "min": 3.176834,
+            "p50": 3.317834,
+            "p95": 4.06125
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 26.714625,
+            "min": 18.948208,
+            "p50": 19.809375,
+            "p95": 26.714625
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.759791,
+            "min": 3.007875,
+            "p50": 3.188917,
+            "p95": 4.759791
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 33.371167,
+            "min": 24.84125,
+            "p50": 31.114834,
+            "p95": 33.371167
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.080125,
+            "min": 3.784375,
+            "p50": 4.019792,
+            "p95": 4.080125
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 27.344291,
+            "min": 13.639042,
+            "p50": 24.954375,
+            "p95": 27.344291
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.772333,
+            "min": 3.19225,
+            "p50": 3.756708,
+            "p95": 3.772333
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 43.627125,
+            "min": 33.559,
+            "p50": 34.65225,
+            "p95": 43.627125
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 20.692708,
+            "min": 15.905167,
+            "p50": 17.098209,
+            "p95": 20.692708
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 37.189583,
+            "min": 34.662333,
+            "p50": 36.499542,
+            "p95": 37.189583
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 20.431875,
+            "min": 16.05625,
+            "p50": 16.638208,
+            "p95": 20.431875
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        }
+      }
+    },
+    "block-4-baseline.jsonl": {
+      "allIdentitiesRetained": true,
+      "environment": {
+        "application_appearance_override": null,
+        "application_effective_appearance": "NSAppearanceNameAqua",
+        "cold_count": 0,
+        "cold_definition": "new controller in the same process; first sample of each case retained as warmup; OS/framework caches are not cleared",
+        "fixed_open_color_scheme": "dark",
+        "fixture": "charging / all modules / Top 3 detailed / 60 history samples",
+        "increase_contrast": false,
+        "observation": "continuous NSApp.run; approximately 1 ms asynchronous polling; forced explicitly submits layout/display/CA before observing; natural adds no harness submission. A nonempty presentation layer and effectiveAppearance are software state, not proof of a newly displayed theme or physical frame delivery. Entrance removal has a bounded 3-second observation and retains censored samples; closing must clear the key.",
+        "open_external_refreshes": "skipped; synchronous UI path only; sampling measured separately",
+        "optimization": "-O -D DEBUG",
+        "os": "Version 26.6.1 (Build 25G76)",
+        "physical_memory_bytes": 34359738368,
+        "processors": 8,
+        "recorded_at": "2026-10-20T12:08:03Z",
+        "reduce_motion": false,
+        "reduce_transparency": false,
+        "schema": 3,
+        "screens": [
+          {
+            "frame": "{{0, 0}, {1024, 768}}",
+            "scale": 2
+          }
+        ],
+        "source_revision": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+        "submission": "natural",
+        "theme_count": 6,
+        "type": "environment",
+        "warm_count": 20,
+        "warmups_per_case": 3
+      },
+      "measuredCount": 132,
+      "summaries": {
+        "classic/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 9.226333,
+            "min": 3.880291,
+            "p50": 4.807833,
+            "p95": 8.178416
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 20,
+            "max": 273.121083,
+            "min": 251.252792,
+            "p50": 262.142041,
+            "p95": 272.751917
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 0,
+          "entrance_animation_removed_count": 20,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 20,
+            "max": 273.12175,
+            "min": 251.253667,
+            "p50": 262.1425,
+            "p95": 272.752959
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 11.051291,
+            "min": 5.115417,
+            "p50": 6.743959,
+            "p95": 9.785458
+          }
+        },
+        "classic/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 30.998416,
+            "min": 26.104958,
+            "p50": 27.7945,
+            "p95": 30.998416
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.997916,
+            "min": 2.642125,
+            "p50": 2.689375,
+            "p95": 4.997916
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 27.412875,
+            "min": 26.508291,
+            "p50": 27.147291,
+            "p95": 27.412875
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.810166,
+            "min": 2.908083,
+            "p50": 3.645125,
+            "p95": 3.810166
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 16.169125,
+            "min": 13.87525,
+            "p50": 15.774458,
+            "p95": 16.169125
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 5.376541,
+            "min": 2.79325,
+            "p50": 3.358125,
+            "p95": 5.376541
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 15.306875,
+            "min": 13.721875,
+            "p50": 14.337542,
+            "p95": 15.306875
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.00925,
+            "min": 2.6435,
+            "p50": 2.657625,
+            "p95": 3.00925
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 25.050833,
+            "min": 20.298708,
+            "p50": 24.044709,
+            "p95": 25.050833
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.156666,
+            "min": 2.870583,
+            "p50": 3.053542,
+            "p95": 3.156666
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 21.521416,
+            "min": 19.963625,
+            "p50": 20.985875,
+            "p95": 21.521416
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.616458,
+            "min": 3.384541,
+            "p50": 3.441209,
+            "p95": 3.616458
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 35.387833,
+            "min": 28.5605,
+            "p50": 33.475708,
+            "p95": 35.387833
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 20.610708,
+            "min": 17.8125,
+            "p50": 20.342333,
+            "p95": 20.610708
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "classic/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 26.763667,
+            "min": 26.0415,
+            "p50": 26.330666,
+            "p95": 26.763667
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 17.058417,
+            "min": 14.67525,
+            "p50": 15.242541,
+            "p95": 17.058417
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "classic/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 74.001,
+            "min": 65.100334,
+            "p50": 69.607125,
+            "p95": 73.575334
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 13,
+            "max": 591.903042,
+            "min": 496.918333,
+            "p50": 555.351042,
+            "p95": 591.903042
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 7,
+          "entrance_animation_removed_count": 13,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 13,
+            "max": 591.903667,
+            "min": 496.918917,
+            "p50": 555.351625,
+            "p95": 591.903667
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 86.984542,
+            "min": 74.4545,
+            "p50": 79.898042,
+            "p95": 83.388709
+          }
+        },
+        "glass_clear/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 52.606334,
+            "min": 9.233041,
+            "p50": 39.771875,
+            "p95": 52.606334
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.528708,
+            "min": 2.968459,
+            "p50": 3.240667,
+            "p95": 3.528708
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 52.487417,
+            "min": 39.111375,
+            "p50": 46.31175,
+            "p95": 52.487417
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.011792,
+            "min": 3.203708,
+            "p50": 3.720333,
+            "p95": 4.011792
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 26.544625,
+            "min": 17.686375,
+            "p50": 18.779,
+            "p95": 26.544625
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.07725,
+            "min": 3.357541,
+            "p50": 3.796417,
+            "p95": 4.07725
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 17.444375,
+            "min": 13.590541,
+            "p50": 16.336583,
+            "p95": 17.444375
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.720291,
+            "min": 3.152792,
+            "p50": 3.162917,
+            "p95": 3.720291
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 37.470458,
+            "min": 32.415584,
+            "p50": 33.995708,
+            "p95": 37.470458
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.814875,
+            "min": 4.037708,
+            "p50": 4.763292,
+            "p95": 4.814875
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 30.88375,
+            "min": 27.562917,
+            "p50": 30.6015,
+            "p95": 30.88375
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.624625,
+            "min": 3.838625,
+            "p50": 3.910792,
+            "p95": 4.624625
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 41.088458,
+            "min": 34.528792,
+            "p50": 35.559958,
+            "p95": 41.088458
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 18.258958,
+            "min": 16.359083,
+            "p50": 16.51725,
+            "p95": 18.258958
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_clear/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 48.426,
+            "min": 30.494541,
+            "p50": 33.045041,
+            "p95": 48.426
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 22.66775,
+            "min": 15.970333,
+            "p50": 16.811333,
+            "p95": 22.66775
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_clear/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/popup_reopen_warm": {
+          "call_ms": {
+            "count": 20,
+            "max": 74.20025,
+            "min": 64.3095,
+            "p50": 68.319,
+            "p95": 72.17525
+          },
+          "construction_and_cache_ms": {
+            "count": 20,
+            "max": 0,
+            "min": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "controller_entrance_finished_ms": {
+            "count": 12,
+            "max": 604.725417,
+            "min": 492.274209,
+            "p50": 540.763709,
+            "p95": 604.725417
+          },
+          "count": 20,
+          "entrance_animation_censored_count": 8,
+          "entrance_animation_removed_count": 12,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/popup_reopen_warm",
+          "submission": "natural",
+          "total_including_construction_ms": {
+            "count": 12,
+            "max": 604.726083,
+            "min": 492.27475,
+            "p50": 540.764458,
+            "p95": 604.726083
+          },
+          "type": "summary",
+          "visible_layer_observed_ms": {
+            "count": 20,
+            "max": 85.053,
+            "min": 73.630542,
+            "p50": 78.301834,
+            "p95": 84.209833
+          }
+        },
+        "glass_regular/theme_general/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 45.595958,
+            "min": 5.170708,
+            "p50": 44.379208,
+            "p95": 45.595958
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.92575,
+            "min": 3.555041,
+            "p50": 4.059875,
+            "p95": 4.92575
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_general/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_general/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 41.551833,
+            "min": 6.015417,
+            "p50": 39.660583,
+            "p95": 41.551833
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.637292,
+            "min": 3.093291,
+            "p50": 3.595792,
+            "p95": 3.637292
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_general/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_menu-bar-icon/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 19.933875,
+            "min": 16.641084,
+            "p50": 19.768375,
+            "p95": 19.933875
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.245708,
+            "min": 3.137917,
+            "p50": 3.15575,
+            "p95": 3.245708
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_menu-bar-icon/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_menu-bar-icon/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 19.8165,
+            "min": 18.258375,
+            "p50": 18.80325,
+            "p95": 19.8165
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.827084,
+            "min": 3.348292,
+            "p50": 3.656667,
+            "p95": 4.827084
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_menu-bar-icon/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_modules/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 32.947208,
+            "min": 29.247958,
+            "p50": 31.457083,
+            "p95": 32.947208
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 3.996375,
+            "min": 3.416208,
+            "p50": 3.628833,
+            "p95": 3.996375
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_modules/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_modules/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 25.026459,
+            "min": 7.288916,
+            "p50": 7.552583,
+            "p95": 25.026459
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 4.426292,
+            "min": 4.098417,
+            "p50": 4.168,
+            "p95": 4.426292
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_modules/light",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_popup/dark": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 42.695625,
+            "min": 33.488959,
+            "p50": 36.204083,
+            "p95": 42.695625
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 19.182209,
+            "min": 14.860417,
+            "p50": 16.264,
+            "p95": 19.182209
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_popup/dark",
+          "submission": "natural",
+          "type": "summary"
+        },
+        "glass_regular/theme_popup/light": {
+          "appearance_observed_ms": {
+            "count": 3,
+            "max": 45.025667,
+            "min": 32.481083,
+            "p50": 33.968667,
+            "p95": 45.025667
+          },
+          "call_ms": {
+            "count": 3,
+            "max": 19.542,
+            "min": 15.382333,
+            "p50": 16.548042,
+            "p95": 19.542
+          },
+          "count": 3,
+          "fixed_open_color_scheme": "dark",
+          "group": "glass_regular/theme_popup/light",
+          "submission": "natural",
+          "type": "summary"
+        }
+      }
+    }
+  },
+  "completeABBA": true,
+  "guestCleanupPassed": true,
+  "limitations": [
+    "Warm opens in fixed dark override; natural submission and software layer visibility are not physical frame delivery.",
+    "Theme direction has 3 measured samples per process; use only as a non-regression check.",
+    "Entrance animation observation is bounded at 3 seconds and censored samples retain call/layer data."
+  ],
+  "pooled": {
+    "baseline/classic/popup_reopen_warm": {
+      "call_ms": {
+        "p50": 4.953,
+        "p95": 10.118
+      },
+      "controller_entrance_finished_ms": {
+        "p50": 260.311,
+        "p95": 272.752
+      },
+      "count": 40,
+      "entranceAnimationCensoredCount": 0,
+      "hostEffectiveAppearances": {
+        "NSAppearanceNameDarkAqua": 40
+      },
+      "visible_layer_observed_ms": {
+        "p50": 7.381,
+        "p95": 11.741
+      }
+    },
+    "baseline/classic/theme_general/dark": {
+      "appearance_observed_ms": {
+        "p50": 27.318,
+        "p95": 30.998
+      },
+      "call_ms": {
+        "p50": 2.689,
+        "p95": 4.998
+      },
+      "count": 6
+    },
+    "baseline/classic/theme_general/light": {
+      "appearance_observed_ms": {
+        "p50": 27.413,
+        "p95": 35.666
+      },
+      "call_ms": {
+        "p50": 3.528,
+        "p95": 3.81
+      },
+      "count": 6
+    },
+    "baseline/classic/theme_menu-bar-icon/dark": {
+      "appearance_observed_ms": {
+        "p50": 15.0,
+        "p95": 16.624
+      },
+      "call_ms": {
+        "p50": 2.793,
+        "p95": 5.377
+      },
+      "count": 6
+    },
+    "baseline/classic/theme_menu-bar-icon/light": {
+      "appearance_observed_ms": {
+        "p50": 14.338,
+        "p95": 15.307
+      },
+      "call_ms": {
+        "p50": 2.658,
+        "p95": 3.009
+      },
+      "count": 6
+    },
+    "baseline/classic/theme_modules/dark": {
+      "appearance_observed_ms": {
+        "p50": 24.045,
+        "p95": 25.085
+      },
+      "call_ms": {
+        "p50": 3.054,
+        "p95": 3.708
+      },
+      "count": 6
+    },
+    "baseline/classic/theme_modules/light": {
+      "appearance_observed_ms": {
+        "p50": 21.451,
+        "p95": 23.855
+      },
+      "call_ms": {
+        "p50": 3.34,
+        "p95": 3.616
+      },
+      "count": 6
+    },
+    "baseline/classic/theme_popup/dark": {
+      "appearance_observed_ms": {
+        "p50": 28.561,
+        "p95": 35.445
+      },
+      "call_ms": {
+        "p50": 17.812,
+        "p95": 20.857
+      },
+      "count": 6
+    },
+    "baseline/classic/theme_popup/light": {
+      "appearance_observed_ms": {
+        "p50": 26.318,
+        "p95": 33.043
+      },
+      "call_ms": {
+        "p50": 15.243,
+        "p95": 19.747
+      },
+      "count": 6
+    },
+    "baseline/glass_clear/popup_reopen_warm": {
+      "call_ms": {
+        "p50": 69.166,
+        "p95": 73.575
+      },
+      "controller_entrance_finished_ms": {
+        "p50": 493.086,
+        "p95": 588.776
+      },
+      "count": 40,
+      "entranceAnimationCensoredCount": 7,
+      "hostEffectiveAppearances": {
+        "NSAppearanceNameDarkAqua": 40
+      },
+      "visible_layer_observed_ms": {
+        "p50": 79.213,
+        "p95": 83.576
+      }
+    },
+    "baseline/glass_clear/theme_general/dark": {
+      "appearance_observed_ms": {
+        "p50": 39.772,
+        "p95": 52.606
+      },
+      "call_ms": {
+        "p50": 3.313,
+        "p95": 3.732
+      },
+      "count": 6
+    },
+    "baseline/glass_clear/theme_general/light": {
+      "appearance_observed_ms": {
+        "p50": 45.411,
+        "p95": 52.487
+      },
+      "call_ms": {
+        "p50": 3.72,
+        "p95": 4.673
+      },
+      "count": 6
+    },
+    "baseline/glass_clear/theme_menu-bar-icon/dark": {
+      "appearance_observed_ms": {
+        "p50": 18.779,
+        "p95": 26.545
+      },
+      "call_ms": {
+        "p50": 3.527,
+        "p95": 4.077
+      },
+      "count": 6
+    },
+    "baseline/glass_clear/theme_menu-bar-icon/light": {
+      "appearance_observed_ms": {
+        "p50": 17.444,
+        "p95": 22.983
+      },
+      "call_ms": {
+        "p50": 3.163,
+        "p95": 3.72
+      },
+      "count": 6
+    },
+    "baseline/glass_clear/theme_modules/dark": {
+      "appearance_observed_ms": {
+        "p50": 32.416,
+        "p95": 37.47
+      },
+      "call_ms": {
+        "p50": 4.038,
+        "p95": 5.913
+      },
+      "count": 6
+    },
+    "baseline/glass_clear/theme_modules/light": {
+      "appearance_observed_ms": {
+        "p50": 30.602,
+        "p95": 31.012
+      },
+      "call_ms": {
+        "p50": 3.585,
+        "p95": 4.625
+      },
+      "count": 6
+    },
+    "baseline/glass_clear/theme_popup/dark": {
+      "appearance_observed_ms": {
+        "p50": 34.529,
+        "p95": 41.088
+      },
+      "call_ms": {
+        "p50": 16.517,
+        "p95": 20.603
+      },
+      "count": 6
+    },
+    "baseline/glass_clear/theme_popup/light": {
+      "appearance_observed_ms": {
+        "p50": 33.123,
+        "p95": 48.426
+      },
+      "call_ms": {
+        "p50": 16.811,
+        "p95": 22.668
+      },
+      "count": 6
+    },
+    "baseline/glass_regular/popup_reopen_warm": {
+      "call_ms": {
+        "p50": 68.319,
+        "p95": 73.427
+      },
+      "controller_entrance_finished_ms": {
+        "p50": 494.915,
+        "p95": 592.527
+      },
+      "count": 40,
+      "entranceAnimationCensoredCount": 8,
+      "hostEffectiveAppearances": {
+        "NSAppearanceNameDarkAqua": 40
+      },
+      "visible_layer_observed_ms": {
+        "p50": 78.246,
+        "p95": 84.21
+      }
+    },
+    "baseline/glass_regular/theme_general/dark": {
+      "appearance_observed_ms": {
+        "p50": 41.835,
+        "p95": 45.596
+      },
+      "call_ms": {
+        "p50": 3.397,
+        "p95": 4.926
+      },
+      "count": 6
+    },
+    "baseline/glass_regular/theme_general/light": {
+      "appearance_observed_ms": {
+        "p50": 8.431,
+        "p95": 41.552
+      },
+      "call_ms": {
+        "p50": 3.074,
+        "p95": 3.637
+      },
+      "count": 6
+    },
+    "baseline/glass_regular/theme_menu-bar-icon/dark": {
+      "appearance_observed_ms": {
+        "p50": 19.294,
+        "p95": 19.934
+      },
+      "call_ms": {
+        "p50": 3.18,
+        "p95": 3.623
+      },
+      "count": 6
+    },
+    "baseline/glass_regular/theme_menu-bar-icon/light": {
+      "appearance_observed_ms": {
+        "p50": 19.817,
+        "p95": 22.248
+      },
+      "call_ms": {
+        "p50": 3.633,
+        "p95": 4.827
+      },
+      "count": 6
+    },
+    "baseline/glass_regular/theme_modules/dark": {
+      "appearance_observed_ms": {
+        "p50": 29.248,
+        "p95": 32.947
+      },
+      "call_ms": {
+        "p50": 3.416,
+        "p95": 4.412
+      },
+      "count": 6
+    },
+    "baseline/glass_regular/theme_modules/light": {
+      "appearance_observed_ms": {
+        "p50": 7.553,
+        "p95": 30.76
+      },
+      "call_ms": {
+        "p50": 4.098,
+        "p95": 5.122
+      },
+      "count": 6
+    },
+    "baseline/glass_regular/theme_popup/dark": {
+      "appearance_observed_ms": {
+        "p50": 36.204,
+        "p95": 44.385
+      },
+      "call_ms": {
+        "p50": 16.642,
+        "p95": 19.574
+      },
+      "count": 6
+    },
+    "baseline/glass_regular/theme_popup/light": {
+      "appearance_observed_ms": {
+        "p50": 34.712,
+        "p95": 45.026
+      },
+      "call_ms": {
+        "p50": 16.548,
+        "p95": 19.542
+      },
+      "count": 6
+    },
+    "candidate/classic/popup_reopen_warm": {
+      "call_ms": {
+        "p50": 4.592,
+        "p95": 6.432
+      },
+      "controller_entrance_finished_ms": {
+        "p50": 258.17,
+        "p95": 271.171
+      },
+      "count": 40,
+      "entranceAnimationCensoredCount": 0,
+      "hostEffectiveAppearances": {
+        "NSAppearanceNameDarkAqua": 40
+      },
+      "visible_layer_observed_ms": {
+        "p50": 6.098,
+        "p95": 8.791
+      }
+    },
+    "candidate/classic/theme_general/dark": {
+      "appearance_observed_ms": {
+        "p50": 28.068,
+        "p95": 34.946
+      },
+      "call_ms": {
+        "p50": 2.824,
+        "p95": 3.216
+      },
+      "count": 6
+    },
+    "candidate/classic/theme_general/light": {
+      "appearance_observed_ms": {
+        "p50": 25.052,
+        "p95": 42.227
+      },
+      "call_ms": {
+        "p50": 2.764,
+        "p95": 4.269
+      },
+      "count": 6
+    },
+    "candidate/classic/theme_menu-bar-icon/dark": {
+      "appearance_observed_ms": {
+        "p50": 16.098,
+        "p95": 27.184
+      },
+      "call_ms": {
+        "p50": 2.815,
+        "p95": 6.462
+      },
+      "count": 6
+    },
+    "candidate/classic/theme_menu-bar-icon/light": {
+      "appearance_observed_ms": {
+        "p50": 13.929,
+        "p95": 15.115
+      },
+      "call_ms": {
+        "p50": 2.632,
+        "p95": 3.5
+      },
+      "count": 6
+    },
+    "candidate/classic/theme_modules/dark": {
+      "appearance_observed_ms": {
+        "p50": 20.989,
+        "p95": 22.948
+      },
+      "call_ms": {
+        "p50": 2.897,
+        "p95": 3.401
+      },
+      "count": 6
+    },
+    "candidate/classic/theme_modules/light": {
+      "appearance_observed_ms": {
+        "p50": 19.187,
+        "p95": 25.928
+      },
+      "call_ms": {
+        "p50": 2.908,
+        "p95": 3.933
+      },
+      "count": 6
+    },
+    "candidate/classic/theme_popup/dark": {
+      "appearance_observed_ms": {
+        "p50": 27.44,
+        "p95": 34.157
+      },
+      "call_ms": {
+        "p50": 15.769,
+        "p95": 20.858
+      },
+      "count": 6
+    },
+    "candidate/classic/theme_popup/light": {
+      "appearance_observed_ms": {
+        "p50": 27.15,
+        "p95": 38.298
+      },
+      "call_ms": {
+        "p50": 16.148,
+        "p95": 21.482
+      },
+      "count": 6
+    },
+    "candidate/glass_clear/popup_reopen_warm": {
+      "call_ms": {
+        "p50": 37.473,
+        "p95": 45.455
+      },
+      "controller_entrance_finished_ms": {
+        "p50": 561.519,
+        "p95": 601.345
+      },
+      "count": 40,
+      "entranceAnimationCensoredCount": 7,
+      "hostEffectiveAppearances": {
+        "NSAppearanceNameDarkAqua": 40
+      },
+      "visible_layer_observed_ms": {
+        "p50": 45.806,
+        "p95": 54.604
+      }
+    },
+    "candidate/glass_clear/theme_general/dark": {
+      "appearance_observed_ms": {
+        "p50": 47.897,
+        "p95": 58.952
+      },
+      "call_ms": {
+        "p50": 3.404,
+        "p95": 4.38
+      },
+      "count": 6
+    },
+    "candidate/glass_clear/theme_general/light": {
+      "appearance_observed_ms": {
+        "p50": 42.536,
+        "p95": 50.467
+      },
+      "call_ms": {
+        "p50": 3.389,
+        "p95": 5.626
+      },
+      "count": 6
+    },
+    "candidate/glass_clear/theme_menu-bar-icon/dark": {
+      "appearance_observed_ms": {
+        "p50": 18.439,
+        "p95": 24.41
+      },
+      "call_ms": {
+        "p50": 3.275,
+        "p95": 5.006
+      },
+      "count": 6
+    },
+    "candidate/glass_clear/theme_menu-bar-icon/light": {
+      "appearance_observed_ms": {
+        "p50": 19.286,
+        "p95": 24.932
+      },
+      "call_ms": {
+        "p50": 3.184,
+        "p95": 3.753
+      },
+      "count": 6
+    },
+    "candidate/glass_clear/theme_modules/dark": {
+      "appearance_observed_ms": {
+        "p50": 14.184,
+        "p95": 56.498
+      },
+      "call_ms": {
+        "p50": 3.745,
+        "p95": 10.284
+      },
+      "count": 6
+    },
+    "candidate/glass_clear/theme_modules/light": {
+      "appearance_observed_ms": {
+        "p50": 30.623,
+        "p95": 34.465
+      },
+      "call_ms": {
+        "p50": 3.783,
+        "p95": 8.2
+      },
+      "count": 6
+    },
+    "candidate/glass_clear/theme_popup/dark": {
+      "appearance_observed_ms": {
+        "p50": 33.744,
+        "p95": 40.783
+      },
+      "call_ms": {
+        "p50": 15.893,
+        "p95": 20.183
+      },
+      "count": 6
+    },
+    "candidate/glass_clear/theme_popup/light": {
+      "appearance_observed_ms": {
+        "p50": 33.78,
+        "p95": 59.287
+      },
+      "call_ms": {
+        "p50": 15.866,
+        "p95": 23.277
+      },
+      "count": 6
+    },
+    "candidate/glass_regular/popup_reopen_warm": {
+      "call_ms": {
+        "p50": 38.033,
+        "p95": 42.271
+      },
+      "controller_entrance_finished_ms": {
+        "p50": 524.525,
+        "p95": 599.709
+      },
+      "count": 40,
+      "entranceAnimationCensoredCount": 0,
+      "hostEffectiveAppearances": {
+        "NSAppearanceNameDarkAqua": 40
+      },
+      "visible_layer_observed_ms": {
+        "p50": 47.055,
+        "p95": 50.479
+      }
+    },
+    "candidate/glass_regular/theme_general/dark": {
+      "appearance_observed_ms": {
+        "p50": 45.347,
+        "p95": 55.626
+      },
+      "call_ms": {
+        "p50": 3.279,
+        "p95": 4.807
+      },
+      "count": 6
+    },
+    "candidate/glass_regular/theme_general/light": {
+      "appearance_observed_ms": {
+        "p50": 40.702,
+        "p95": 49.636
+      },
+      "call_ms": {
+        "p50": 3.31,
+        "p95": 6.306
+      },
+      "count": 6
+    },
+    "candidate/glass_regular/theme_menu-bar-icon/dark": {
+      "appearance_observed_ms": {
+        "p50": 19.308,
+        "p95": 26.856
+      },
+      "call_ms": {
+        "p50": 3.318,
+        "p95": 4.154
+      },
+      "count": 6
+    },
+    "candidate/glass_regular/theme_menu-bar-icon/light": {
+      "appearance_observed_ms": {
+        "p50": 22.215,
+        "p95": 77.557
+      },
+      "call_ms": {
+        "p50": 4.072,
+        "p95": 4.954
+      },
+      "count": 6
+    },
+    "candidate/glass_regular/theme_modules/dark": {
+      "appearance_observed_ms": {
+        "p50": 24.841,
+        "p95": 33.371
+      },
+      "call_ms": {
+        "p50": 3.784,
+        "p95": 4.409
+      },
+      "count": 6
+    },
+    "candidate/glass_regular/theme_modules/light": {
+      "appearance_observed_ms": {
+        "p50": 23.246,
+        "p95": 38.626
+      },
+      "call_ms": {
+        "p50": 3.757,
+        "p95": 4.665
+      },
+      "count": 6
+    },
+    "candidate/glass_regular/theme_popup/dark": {
+      "appearance_observed_ms": {
+        "p50": 34.652,
+        "p95": 43.627
+      },
+      "call_ms": {
+        "p50": 17.038,
+        "p95": 20.693
+      },
+      "count": 6
+    },
+    "candidate/glass_regular/theme_popup/light": {
+      "appearance_observed_ms": {
+        "p50": 34.726,
+        "p95": 47.6
+      },
+      "call_ms": {
+        "p50": 16.638,
+        "p95": 21.287
+      },
+      "count": 6
+    }
+  },
+  "schema": 1,
+  "vmCleanup": {
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "ownedCloneRemoved": true,
+    "ownedVM": "Wattson-UILatency-07BD82CA-FA3E-460F-B8DD-43EE5D864936"
+  },
+  "warmComparison": {
+    "classic": {
+      "call_ms": {
+        "p50SavingsMS": 0.361,
+        "p50SavingsPercent": 7.29,
+        "p95SavingsMS": 3.686
+      },
+      "visible_layer_observed_ms": {
+        "p50SavingsMS": 1.284,
+        "p50SavingsPercent": 17.39,
+        "p95SavingsMS": 2.949
+      }
+    },
+    "glass_clear": {
+      "call_ms": {
+        "p50SavingsMS": 31.693,
+        "p50SavingsPercent": 45.82,
+        "p95SavingsMS": 28.121
+      },
+      "visible_layer_observed_ms": {
+        "p50SavingsMS": 33.408,
+        "p50SavingsPercent": 42.17,
+        "p95SavingsMS": 28.972
+      }
+    },
+    "glass_regular": {
+      "call_ms": {
+        "p50SavingsMS": 30.286,
+        "p50SavingsPercent": 44.33,
+        "p95SavingsMS": 31.156
+      },
+      "visible_layer_observed_ms": {
+        "p50SavingsMS": 31.191,
+        "p50SavingsPercent": 39.86,
+        "p95SavingsMS": 33.731
+      }
+    }
+  }
+}

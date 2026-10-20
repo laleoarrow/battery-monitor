@@ -1,0 +1,302 @@
+--- a/Popover/PopoverController.swift
++++ b/Popover/PopoverController.swift
+@@ -1,4 +1,60 @@
+ import AppKit
++
++// Diagnostic source copy only. No callback output or serialization occurs
++// while open runs. Callback durations are inclusive and must not be added
++// to containing open/panel stage durations or to each other when nested.
++enum UIOpenAttribution {
++    static var stages = [String: Double]()
++    static var foregroundFirst = false
++    static var variant: String { foregroundFirst ? "foreground_first" : "original" }
++    static var callbackCounts = [String: Int]()
++    static var callbackMS = [String: Double]()
++    static var callbackEvents = [[String: Any]]()
++    static var collecting = false
++    static var origin: UInt64 = 0
++    static func reset() {
++        stages = [:]
++        callbackCounts = [:]
++        callbackMS = [:]
++        callbackEvents = []
++        origin = DispatchTime.now().uptimeNanoseconds
++        collecting = true
++    }
++    final class Scope {
++        let prefix: String
++        let start = DispatchTime.now().uptimeNanoseconds
++        var last = DispatchTime.now().uptimeNanoseconds
++        init(_ prefix: String) { self.prefix = prefix }
++        func mark(_ name: String) {
++            let now = DispatchTime.now().uptimeNanoseconds
++            UIOpenAttribution.stages[prefix + "." + name] = Double(now - last) / 1_000_000
++            last = now
++        }
++        func finish() {
++            mark("tail")
++            UIOpenAttribution.stages[prefix + ".total"] = Double(DispatchTime.now().uptimeNanoseconds - start) / 1_000_000
++        }
++    }
++    final class Callback {
++        let name: String
++        let active = UIOpenAttribution.collecting
++        let start = DispatchTime.now().uptimeNanoseconds
++        init(_ label: String, attached: Bool) { name = label + (attached ? ".window" : ".nil") }
++        func finish(view: NSView) {
++            guard active else { return }
++            let end = DispatchTime.now().uptimeNanoseconds
++            let elapsed = Double(end - start) / 1_000_000
++            UIOpenAttribution.callbackCounts[name, default: 0] += 1
++            UIOpenAttribution.callbackMS[name, default: 0] += elapsed
++            UIOpenAttribution.callbackEvents.append([
++                "name": name, "start_relative_ns": start - UIOpenAttribution.origin,
++                "end_relative_ns": end - UIOpenAttribution.origin, "inclusive_ms": elapsed,
++                "window_attached_at_end": view.window != nil,
++                "effective_appearance_at_end": view.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua])?.rawValue ?? "unknown",
++            ])
++        }
++    }
++}
+ 
+ final class PopoverController: NSObject, NSPopoverDelegate {
+     private struct Presentation {
+@@ -205,6 +261,9 @@
+ 
+     private func open(relativeTo button: NSStatusBarButton,
+                       skipExternalRefreshes: Bool = false) {
++        UIOpenAttribution.reset()
++        let diagnostic = UIOpenAttribution.Scope("open")
++        defer { diagnostic.finish(); UIOpenAttribution.collecting = false }
+         // Reuse an open host. Reparenting its content into a second panel
+         // leaves the original native glass window visible but empty.
+         guard !wantsOpen else { refreshPlacement(); return }
+@@ -223,6 +282,7 @@
+         popover.animates = !reduceMotion
+         usingGlassPanel = useGlass
+         setContentSize(placement.contentSize)
++        diagnostic.mark("initial_placement_and_size")
+         // Prime every module with the newest cached telemetry before AppKit
+         // captures the first frame. This replaces hidden periodic rendering
+         // without introducing a stale flash on open.
+@@ -230,31 +290,41 @@
+             latestSystemBatteryIconHidden, readStatus: latestSystemBatteryIconReadStatus
+         )
+         applyLatestPresentation()
++        diagnostic.mark("prime_cached_content")
+         // A newly visible/hidden module can change the natural height while
+         // priming cached data. Resolve the final viewport before hosting it.
+         guard let refreshedPlacement = resolvePlacement(relativeTo: button) else { return }
+         placement = refreshedPlacement
+         guard !useGlass || placement.glassPanelFrame(margin: GlassPopoverPanel.contentInset) != nil else { return }
+         setContentSize(placement.contentSize)
++        diagnostic.mark("final_placement_and_size")
+         if #available(macOS 26.0, *), useGlass,
+            let frame = placement.glassPanelFrame(margin: GlassPopoverPanel.contentInset) {
+             retireClassicHost()
++            diagnostic.mark("retire_classic")
+             let panel = GlassPopoverPanel(content: content.view, frame: frame,
+                 style: Settings.liquidGlassStyle == .clear ? .clear : .regular,
+                 showsArrow: Settings.showPopoverArrow)
++            diagnostic.mark("panel_init")
+             panel.point(to: placement.anchorFrame.midX)
++            diagnostic.mark("point")
+             panel.appearance = Settings.colorScheme.appearance
++            diagnostic.mark("set_window_appearance")
+             panel.onDismiss = { [weak self] in self?.close() }
+             panel.onEscape = { [weak self] in _ = self?.handleEscape() }
+             glassPanel = panel
++            diagnostic.mark("store_panel_and_callbacks")
+             panel.makeKeyAndOrderFront(nil)
++            diagnostic.mark("make_key_and_order_front")
+             if let initialFocus = panel.initialFirstResponder { panel.makeFirstResponder(initialFocus) }
++            diagnostic.mark("initial_focus")
+         } else {
+             popover.contentViewController = content
+             let positioningRect = button.convert(
+                 button.window!.convertFromScreen(placement.anchorFrame), from: nil)
+             popover.show(relativeTo: positioningRect, of: button, preferredEdge: .maxY)
+             if popover.isShown { showsRequested += 1 }
++            diagnostic.mark("classic_show")
+         }
+         guard hostIsShown else { close(); return }   // never leave a monitor behind
+         anchorButton = button
+@@ -267,12 +337,14 @@
+         if !reopeningDuringDismissal {
+             playEntranceAnimation(reduceMotion: reduceMotion)
+         }
++        diagnostic.mark("activate_content_and_entrance_animation")
+         presentationGeneration &+= 1
+         let generation = presentationGeneration
+         wantsOpen = true
+         if skipExternalRefreshes {
+             startWatchingForOutsideClicks()
+             visibilityHandler?(true)
++            diagnostic.mark("outside_monitors_and_visibility")
+             return
+         }
+         LoginItemController.refresh()
+--- a/Popover/GlassPopoverPanel.swift
++++ b/Popover/GlassPopoverPanel.swift
+@@ -35,9 +35,12 @@
+ 
+     @available(macOS 26.0, *)
+     init(content: NSView, frame: NSRect, style: NSGlassEffectView.Style, showsArrow: Bool = true) {
++        let diagnostic = UIOpenAttribution.Scope("panel")
++        defer { diagnostic.finish() }
+         self.showsArrow = showsArrow
+         super.init(contentRect: frame, styleMask: [.borderless, .nonactivatingPanel],
+                    backing: .buffered, defer: false)
++        diagnostic.mark("ns_panel_super_init")
+         // AppKit expands a half-point origin during initialization. Use the
+         // same sizing path as later placement before laying out the content.
+         setFrame(frame, display: false)
+@@ -53,8 +56,10 @@
+         level = .popUpMenu
+         collectionBehavior = [.transient, .moveToActiveSpace, .fullScreenAuxiliary]
+         let inset = Self.contentInset(for: style == .clear ? .clear : .regular)
++        diagnostic.mark("configure_window")
+         let glass = GlassPopoverMaterialView(frame: contentView!.bounds.insetBy(dx: inset, dy: inset),
+                                             style: style, showsArrow: showsArrow)
++        diagnostic.mark("swiftui_material_init")
+         glass.autoresizingMask = [.width, .height]
+         // SwiftUI glass alone leaves zero-alpha pixels that WindowServer clicks
+         // through. One 8-bit alpha step keeps the shaped surface interactive;
+@@ -77,13 +82,24 @@
+         // the sibling material keeps its arrow and external optical margin.
+         content.frame = foreground.bounds
+         content.autoresizingMask = [.width, .height]
+-        foreground.addSubview(content)
+-        contentView!.addSubview(foreground)
++        if UIOpenAttribution.foregroundFirst {
++            contentView!.addSubview(foreground)
++            diagnostic.mark("attach_foreground_to_window")
++            foreground.addSubview(content)
++            diagnostic.mark("attach_content_to_foreground")
++        } else {
++            foreground.addSubview(content)
++            diagnostic.mark("attach_content_to_foreground")
++            contentView!.addSubview(foreground)
++            diagnostic.mark("attach_foreground_to_window")
++        }
+         hostedContent = content
+         self.foreground = foreground
+         self.background = background
+         material = glass
++        diagnostic.mark("store_host_references")
+         updateOutline()
++        diagnostic.mark("update_outline")
+     }
+ 
+     /// Keep the arrow tied to its actual menu-bar anchor after screen clamping.
+--- a/Popover/GlassPopoverMaterialView.swift
++++ b/Popover/GlassPopoverMaterialView.swift
+@@ -64,13 +64,17 @@
+     private(set) var showsArrow: Bool
+ 
+     init(frame: NSRect, style: NSGlassEffectView.Style, showsArrow: Bool = true) {
++        let diagnostic = UIOpenAttribution.Scope("material")
++        defer { diagnostic.finish() }
+         self.style = style
+         self.showsArrow = showsArrow
+         arrowX = frame.width / 2
+         super.init(rootView: Self.material(style: style, arrowX: arrowX, showsArrow: showsArrow))
++        diagnostic.mark("root_view_and_ns_hosting_super_init")
+         sizingOptions = []
+         self.frame = frame
+         setAccessibilityElement(false)
++        diagnostic.mark("frame_and_accessibility")
+     }
+ 
+     @available(*, unavailable)
+--- a/tests/performance/ui-latency.swift
++++ b/tests/performance/ui-latency.swift
+@@ -101,6 +101,8 @@
+     }
+ 
+     private func record(_ row: [String: Any]) {
++        var row = row
++        row["variant"] = UIOpenAttribution.variant
+         samples.append(row)
+         emit(row)
+     }
+@@ -151,6 +153,10 @@
+         let openStart = DispatchTime.now().uptimeNanoseconds
+         controller.openForSettingsCommandTest(relativeTo: item.button!)
+         let callMS = milliseconds(since: openStart)
++        emit(["type": "open_attribution", "mode": mode, "cold": cold, "index": index,
++            "warmup": index < warmups, "call_ms": callMS, "stages_ms": UIOpenAttribution.stages, "callback_counts": UIOpenAttribution.callbackCounts,
++            "callback_inclusive_ms": UIOpenAttribution.callbackMS, "callback_events": UIOpenAttribution.callbackEvents,
++            "variant": UIOpenAttribution.variant, "callback_capture": "synchronous_open_only; inclusive callbacks nest within stages"])
+         guard let window = controller.contentWindowForTest, let view = controller.contentViewForTest else {
+             throw MeasurementError.timedOut("popup host missing")
+         }
+@@ -264,7 +270,7 @@
+     private func summarize() {
+         let measured = samples.filter { ($0["warmup"] as? Bool) == false }
+         let groups = Dictionary(grouping: measured) {
+-            "\($0["mode"]!)/\($0["case"]!)" + ($0["target"].map { "/\($0)" } ?? "")
++            "\($0["mode"]!)/\($0["case"]!)/\($0["variant"]!)" + ($0["target"].map { "/\($0)" } ?? "")
+         }
+         for key in groups.keys.sorted() {
+             let rows = groups[key]!
+@@ -300,6 +306,8 @@
+         Settings.topProcessesCompact = false
+         item.button?.image = NSImage(systemSymbolName: "battery.100", accessibilityDescription: nil)
+         emit(["type": "environment", "schema": 3, "submission": submission,
++            "diagnostic_only": true, "diagnostic_variants": ["original", "foreground_first"], "cases_executed": ["popup_reopen_warm"],
++            "diagnostic_limit": "checkpoint overhead included; traces serialized after call timing; cold/theme counts must be zero and are verified by driver; observer/animation milestones are perturbed by trace serialization",
+             "fixed_open_color_scheme": fixedOpenColorScheme,
+             "application_effective_appearance": NSApp.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua])?.rawValue ?? "unknown",
+             "application_appearance_override": NSApp.appearance.map { $0.name.rawValue as Any } ?? NSNull(),
+@@ -330,12 +338,16 @@
+                     try await measureOpen(mode: mode, cold: true, index: index)
+                 }
+             }
+-            if warmCount > 0 {
+-                for index in 0..<(warmCount + warmups) {
+-                    try await measureOpen(mode: mode, cold: false, index: index)
++            for diagnosticForegroundFirst in [false, true] {
++                UIOpenAttribution.foregroundFirst = diagnosticForegroundFirst
++                if warmCount > 0 {
++                    for index in 0..<(warmCount + warmups) {
++                        try await measureOpen(mode: mode, cold: false, index: index)
++                    }
+                 }
+-            }
+-            popup = nil
++                popup = nil
++                emit(["type": "variant_complete", "mode": mode, "variant": UIOpenAttribution.variant])
++            }
+             if themeCount > 0 {
+                 for surface in ["popup", "general", "menu-bar-icon", "modules"] {
+                     try await measureThemes(mode: mode, surface: surface)
+--- a/Popover/PopoverContentView.swift
++++ b/Popover/PopoverContentView.swift
+@@ -749,6 +749,8 @@
+     weak var initialFocusView: NSView?
+ 
+     override func viewDidMoveToWindow() {
++        let diagnostic = UIOpenAttribution.Callback("surface.move", attached: window != nil)
++        defer { diagnostic.finish(view: self) }
+         super.viewDidMoveToWindow()
+         // Mouse opening must not focus a footer button and scroll away from
+         // the heading. Tab can then enter the controls through AppKit's loop.
+@@ -757,6 +759,8 @@
+     }
+ 
+     override func viewDidChangeEffectiveAppearance() {
++        let diagnostic = UIOpenAttribution.Callback("surface.effectiveAppearance", attached: window != nil)
++        defer { diagnostic.finish(view: self) }
+         super.viewDidChangeEffectiveAppearance()
+         appearanceDidChange?()
+     }
+@@ -860,6 +864,8 @@
+     }
+ 
+     private func refreshAppearance() {
++        let diagnostic = UIOpenAttribution.Callback("content.refreshAppearance", attached: view.window != nil)
++        defer { diagnostic.finish(view: view) }
+         view.effectiveAppearance.performAsCurrentDrawingAppearance {
+             var reduceTransparency = NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency
+ #if DEBUG

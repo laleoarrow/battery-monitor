@@ -1,0 +1,669 @@
+{
+  "diagnosticOnly": true,
+  "source": "ui-attribution/run-3-move/single-diagnostic.jsonl",
+  "timingBasis": "Approximate stage bounds reconstructed from exclusive checkpoint durations, relative to trace origin; scope bookkeeping offsets are below 0.03 ms. Event membership uses 0.05 ms tolerance.",
+  "groups": {
+    "glass_regular/original": {
+      "samples": 20,
+      "surfaceEventMembership": [
+        {
+          "name": "surface.effectiveAppearance.nil",
+          "phase": "panel.attach_content_to_foreground",
+          "count": 20
+        },
+        {
+          "name": "surface.move.window",
+          "phase": "panel.attach_foreground_to_window",
+          "count": 20
+        },
+        {
+          "name": "surface.effectiveAppearance.window",
+          "phase": "open.set_window_appearance",
+          "count": 20
+        }
+      ],
+      "nilMoveEventCount": 0,
+      "nilRefreshCalls": 20,
+      "windowRefreshCalls": 40,
+      "nilAppearanceStartMSMedian": 12.517833,
+      "nilAppearanceInclusiveMSMedian": 3.966854,
+      "maximumCallMinusScopedTotalMS": 0.017583999999999378,
+      "callbackCountSignatures": [
+        {
+          "counts": {
+            "content.refreshAppearance.nil": 1,
+            "content.refreshAppearance.window": 2,
+            "surface.effectiveAppearance.nil": 1,
+            "surface.effectiveAppearance.window": 1,
+            "surface.move.window": 1
+          },
+          "samples": 20
+        }
+      ]
+    },
+    "glass_regular/foreground_first": {
+      "samples": 20,
+      "surfaceEventMembership": [
+        {
+          "name": "surface.effectiveAppearance.nil",
+          "phase": "panel.attach_content_to_foreground",
+          "count": 20
+        },
+        {
+          "name": "surface.move.window",
+          "phase": "panel.attach_content_to_foreground",
+          "count": 20
+        },
+        {
+          "name": "surface.effectiveAppearance.window",
+          "phase": "open.set_window_appearance",
+          "count": 20
+        }
+      ],
+      "nilMoveEventCount": 0,
+      "nilRefreshCalls": 20,
+      "windowRefreshCalls": 40,
+      "nilAppearanceStartMSMedian": 13.2225,
+      "nilAppearanceInclusiveMSMedian": 3.8903125000000003,
+      "maximumCallMinusScopedTotalMS": 0.016834000000002902,
+      "callbackCountSignatures": [
+        {
+          "counts": {
+            "content.refreshAppearance.nil": 1,
+            "content.refreshAppearance.window": 2,
+            "surface.effectiveAppearance.nil": 1,
+            "surface.effectiveAppearance.window": 1,
+            "surface.move.window": 1
+          },
+          "samples": 20
+        }
+      ]
+    },
+    "glass_clear/original": {
+      "samples": 20,
+      "surfaceEventMembership": [
+        {
+          "name": "surface.effectiveAppearance.nil",
+          "phase": "panel.attach_content_to_foreground",
+          "count": 20
+        },
+        {
+          "name": "surface.move.window",
+          "phase": "panel.attach_foreground_to_window",
+          "count": 20
+        },
+        {
+          "name": "surface.effectiveAppearance.window",
+          "phase": "open.set_window_appearance",
+          "count": 20
+        }
+      ],
+      "nilMoveEventCount": 0,
+      "nilRefreshCalls": 20,
+      "windowRefreshCalls": 40,
+      "nilAppearanceStartMSMedian": 12.6576045,
+      "nilAppearanceInclusiveMSMedian": 3.9263329999999996,
+      "maximumCallMinusScopedTotalMS": 0.017749999999992383,
+      "callbackCountSignatures": [
+        {
+          "counts": {
+            "content.refreshAppearance.nil": 1,
+            "content.refreshAppearance.window": 2,
+            "surface.effectiveAppearance.nil": 1,
+            "surface.effectiveAppearance.window": 1,
+            "surface.move.window": 1
+          },
+          "samples": 20
+        }
+      ]
+    },
+    "glass_clear/foreground_first": {
+      "samples": 20,
+      "surfaceEventMembership": [
+        {
+          "name": "surface.effectiveAppearance.nil",
+          "phase": "panel.attach_content_to_foreground",
+          "count": 20
+        },
+        {
+          "name": "surface.move.window",
+          "phase": "panel.attach_content_to_foreground",
+          "count": 20
+        },
+        {
+          "name": "surface.effectiveAppearance.window",
+          "phase": "open.set_window_appearance",
+          "count": 20
+        }
+      ],
+      "nilMoveEventCount": 0,
+      "nilRefreshCalls": 20,
+      "windowRefreshCalls": 40,
+      "nilAppearanceStartMSMedian": 12.992542,
+      "nilAppearanceInclusiveMSMedian": 3.9348125,
+      "maximumCallMinusScopedTotalMS": 0.023499999999998522,
+      "callbackCountSignatures": [
+        {
+          "counts": {
+            "content.refreshAppearance.nil": 1,
+            "content.refreshAppearance.window": 2,
+            "surface.effectiveAppearance.nil": 1,
+            "surface.effectiveAppearance.window": 1,
+            "surface.move.window": 1
+          },
+          "samples": 20
+        }
+      ]
+    }
+  },
+  "representatives": [
+    {
+      "mode": "glass_regular",
+      "variant": "original",
+      "index": 3,
+      "callMS": 64.908208,
+      "stageBoundsMS": {
+        "open.initial_placement_and_size": [
+          0.0,
+          6.723917
+        ],
+        "open.prime_cached_content": [
+          6.723917,
+          7.600958
+        ],
+        "open.final_placement_and_size": [
+          7.600958,
+          11.225833
+        ],
+        "open.retire_classic": [
+          11.225833,
+          11.234207999999999
+        ],
+        "open.panel_init": [
+          11.234207999999999,
+          40.672208
+        ],
+        "open.point": [
+          40.672208,
+          40.703375
+        ],
+        "open.set_window_appearance": [
+          40.703375,
+          53.6185
+        ],
+        "open.store_panel_and_callbacks": [
+          53.6185,
+          53.620458
+        ],
+        "open.make_key_and_order_front": [
+          53.620458,
+          63.536708
+        ],
+        "open.initial_focus": [
+          63.536708,
+          63.583042
+        ],
+        "open.activate_content_and_entrance_animation": [
+          63.583042,
+          64.137875
+        ],
+        "open.outside_monitors_and_visibility": [
+          64.137875,
+          64.893875
+        ],
+        "open.tail": [
+          64.893875,
+          64.89754199999999
+        ],
+        "panel.ns_panel_super_init": [
+          11.234207999999999,
+          12.378207999999999
+        ],
+        "panel.configure_window": [
+          12.378207999999999,
+          12.628542
+        ],
+        "panel.swiftui_material_init": [
+          12.628542,
+          12.810417
+        ],
+        "panel.attach_content_to_foreground": [
+          12.810417,
+          27.667625
+        ],
+        "panel.attach_foreground_to_window": [
+          27.667625,
+          40.633250000000004
+        ],
+        "panel.store_host_references": [
+          40.633250000000004,
+          40.635083
+        ],
+        "panel.update_outline": [
+          40.635083,
+          40.666292
+        ],
+        "panel.tail": [
+          40.666292,
+          40.666792
+        ]
+      },
+      "callbackCounts": {
+        "content.refreshAppearance.nil": 1,
+        "content.refreshAppearance.window": 2,
+        "surface.effectiveAppearance.nil": 1,
+        "surface.effectiveAppearance.window": 1,
+        "surface.move.window": 1
+      },
+      "surfaceTimeline": [
+        {
+          "name": "surface.effectiveAppearance.nil",
+          "startMS": 13.267667,
+          "endMS": 16.918375,
+          "inclusiveMS": 3.650708,
+          "phase": "panel.attach_content_to_foreground",
+          "appearance": "NSAppearanceNameAqua"
+        },
+        {
+          "name": "surface.move.window",
+          "startMS": 36.370375,
+          "endMS": 40.274,
+          "inclusiveMS": 3.903625,
+          "phase": "panel.attach_foreground_to_window",
+          "appearance": "NSAppearanceNameAqua"
+        },
+        {
+          "name": "surface.effectiveAppearance.window",
+          "startMS": 40.74025,
+          "endMS": 44.599,
+          "inclusiveMS": 3.85875,
+          "phase": "open.set_window_appearance",
+          "appearance": "NSAppearanceNameDarkAqua"
+        }
+      ]
+    },
+    {
+      "mode": "glass_regular",
+      "variant": "foreground_first",
+      "index": 3,
+      "callMS": 63.069,
+      "stageBoundsMS": {
+        "open.initial_placement_and_size": [
+          0.0,
+          6.748041
+        ],
+        "open.prime_cached_content": [
+          6.748041,
+          7.6729579999999995
+        ],
+        "open.final_placement_and_size": [
+          7.6729579999999995,
+          10.609416
+        ],
+        "open.retire_classic": [
+          10.609416,
+          10.612124999999999
+        ],
+        "open.panel_init": [
+          10.612124999999999,
+          38.073625
+        ],
+        "open.point": [
+          38.073625,
+          38.100041
+        ],
+        "open.set_window_appearance": [
+          38.100041,
+          51.129416
+        ],
+        "open.store_panel_and_callbacks": [
+          51.129416,
+          51.131875
+        ],
+        "open.make_key_and_order_front": [
+          51.131875,
+          61.819708
+        ],
+        "open.initial_focus": [
+          61.819708,
+          61.870958
+        ],
+        "open.activate_content_and_entrance_animation": [
+          61.870958,
+          62.482541000000005
+        ],
+        "open.outside_monitors_and_visibility": [
+          62.482541000000005,
+          63.05391600000001
+        ],
+        "open.tail": [
+          63.05391600000001,
+          63.056875000000005
+        ],
+        "panel.ns_panel_super_init": [
+          10.612124999999999,
+          11.477082999999999
+        ],
+        "panel.configure_window": [
+          11.477082999999999,
+          11.693041
+        ],
+        "panel.swiftui_material_init": [
+          11.693041,
+          11.828624999999999
+        ],
+        "panel.attach_foreground_to_window": [
+          11.828624999999999,
+          12.108999999999998
+        ],
+        "panel.attach_content_to_foreground": [
+          12.108999999999998,
+          38.046707999999995
+        ],
+        "panel.store_host_references": [
+          38.046707999999995,
+          38.048415999999996
+        ],
+        "panel.update_outline": [
+          38.048415999999996,
+          38.069624999999995
+        ],
+        "panel.tail": [
+          38.069624999999995,
+          38.06991599999999
+        ]
+      },
+      "callbackCounts": {
+        "content.refreshAppearance.nil": 1,
+        "content.refreshAppearance.window": 2,
+        "surface.effectiveAppearance.nil": 1,
+        "surface.effectiveAppearance.window": 1,
+        "surface.move.window": 1
+      },
+      "surfaceTimeline": [
+        {
+          "name": "surface.effectiveAppearance.nil",
+          "startMS": 12.429375,
+          "endMS": 16.181375,
+          "inclusiveMS": 3.752,
+          "phase": "panel.attach_content_to_foreground",
+          "appearance": "NSAppearanceNameAqua"
+        },
+        {
+          "name": "surface.move.window",
+          "startMS": 33.580542,
+          "endMS": 37.75225,
+          "inclusiveMS": 4.171708,
+          "phase": "panel.attach_content_to_foreground",
+          "appearance": "NSAppearanceNameAqua"
+        },
+        {
+          "name": "surface.effectiveAppearance.window",
+          "startMS": 38.144042,
+          "endMS": 41.579333,
+          "inclusiveMS": 3.435291,
+          "phase": "open.set_window_appearance",
+          "appearance": "NSAppearanceNameDarkAqua"
+        }
+      ]
+    },
+    {
+      "mode": "glass_clear",
+      "variant": "original",
+      "index": 3,
+      "callMS": 65.207292,
+      "stageBoundsMS": {
+        "open.initial_placement_and_size": [
+          0.0,
+          6.501083
+        ],
+        "open.prime_cached_content": [
+          6.501083,
+          7.450583
+        ],
+        "open.final_placement_and_size": [
+          7.450583,
+          11.157125
+        ],
+        "open.retire_classic": [
+          11.157125,
+          11.162375
+        ],
+        "open.panel_init": [
+          11.162375,
+          40.221042
+        ],
+        "open.point": [
+          40.221042,
+          40.249958
+        ],
+        "open.set_window_appearance": [
+          40.249958,
+          52.398917
+        ],
+        "open.store_panel_and_callbacks": [
+          52.398917,
+          52.4
+        ],
+        "open.make_key_and_order_front": [
+          52.4,
+          63.622167
+        ],
+        "open.initial_focus": [
+          63.622167,
+          63.78225
+        ],
+        "open.activate_content_and_entrance_animation": [
+          63.78225,
+          64.539208
+        ],
+        "open.outside_monitors_and_visibility": [
+          64.539208,
+          65.190208
+        ],
+        "open.tail": [
+          65.190208,
+          65.194167
+        ],
+        "panel.ns_panel_super_init": [
+          11.162375,
+          12.102792
+        ],
+        "panel.configure_window": [
+          12.102792,
+          12.322417000000002
+        ],
+        "panel.swiftui_material_init": [
+          12.322417000000002,
+          12.475375000000001
+        ],
+        "panel.attach_content_to_foreground": [
+          12.475375000000001,
+          27.601125000000003
+        ],
+        "panel.attach_foreground_to_window": [
+          27.601125000000003,
+          40.190917
+        ],
+        "panel.store_host_references": [
+          40.190917,
+          40.192917
+        ],
+        "panel.update_outline": [
+          40.192917,
+          40.214
+        ],
+        "panel.tail": [
+          40.214,
+          40.21425
+        ]
+      },
+      "callbackCounts": {
+        "content.refreshAppearance.nil": 1,
+        "content.refreshAppearance.window": 2,
+        "surface.effectiveAppearance.nil": 1,
+        "surface.effectiveAppearance.window": 1,
+        "surface.move.window": 1
+      },
+      "surfaceTimeline": [
+        {
+          "name": "surface.effectiveAppearance.nil",
+          "startMS": 12.833459,
+          "endMS": 16.676417,
+          "inclusiveMS": 3.842958,
+          "phase": "panel.attach_content_to_foreground",
+          "appearance": "NSAppearanceNameAqua"
+        },
+        {
+          "name": "surface.move.window",
+          "startMS": 35.694625,
+          "endMS": 39.727084,
+          "inclusiveMS": 4.032459,
+          "phase": "panel.attach_foreground_to_window",
+          "appearance": "NSAppearanceNameAqua"
+        },
+        {
+          "name": "surface.effectiveAppearance.window",
+          "startMS": 40.325875,
+          "endMS": 43.817625,
+          "inclusiveMS": 3.49175,
+          "phase": "open.set_window_appearance",
+          "appearance": "NSAppearanceNameDarkAqua"
+        }
+      ]
+    },
+    {
+      "mode": "glass_clear",
+      "variant": "foreground_first",
+      "index": 3,
+      "callMS": 67.037375,
+      "stageBoundsMS": {
+        "open.initial_placement_and_size": [
+          0.0,
+          6.024
+        ],
+        "open.prime_cached_content": [
+          6.024,
+          6.902375
+        ],
+        "open.final_placement_and_size": [
+          6.902375,
+          10.396791
+        ],
+        "open.retire_classic": [
+          10.396791,
+          10.402291
+        ],
+        "open.panel_init": [
+          10.402291,
+          40.270458
+        ],
+        "open.point": [
+          40.270458,
+          40.295916
+        ],
+        "open.set_window_appearance": [
+          40.295916,
+          54.290915999999996
+        ],
+        "open.store_panel_and_callbacks": [
+          54.290915999999996,
+          54.298666
+        ],
+        "open.make_key_and_order_front": [
+          54.298666,
+          65.504666
+        ],
+        "open.initial_focus": [
+          65.504666,
+          65.598083
+        ],
+        "open.activate_content_and_entrance_animation": [
+          65.598083,
+          66.298666
+        ],
+        "open.outside_monitors_and_visibility": [
+          66.298666,
+          67.021541
+        ],
+        "open.tail": [
+          67.021541,
+          67.025
+        ],
+        "panel.ns_panel_super_init": [
+          10.402291,
+          11.400541
+        ],
+        "panel.configure_window": [
+          11.400541,
+          11.632458
+        ],
+        "panel.swiftui_material_init": [
+          11.632458,
+          11.801375
+        ],
+        "panel.attach_foreground_to_window": [
+          11.801375,
+          12.148208
+        ],
+        "panel.attach_content_to_foreground": [
+          12.148208,
+          40.241541
+        ],
+        "panel.store_host_references": [
+          40.241541,
+          40.243125
+        ],
+        "panel.update_outline": [
+          40.243125,
+          40.264583
+        ],
+        "panel.tail": [
+          40.264583,
+          40.264875
+        ]
+      },
+      "callbackCounts": {
+        "content.refreshAppearance.nil": 1,
+        "content.refreshAppearance.window": 2,
+        "surface.effectiveAppearance.nil": 1,
+        "surface.effectiveAppearance.window": 1,
+        "surface.move.window": 1
+      },
+      "surfaceTimeline": [
+        {
+          "name": "surface.effectiveAppearance.nil",
+          "startMS": 12.472208,
+          "endMS": 16.53,
+          "inclusiveMS": 4.057792,
+          "phase": "panel.attach_content_to_foreground",
+          "appearance": "NSAppearanceNameAqua"
+        },
+        {
+          "name": "surface.move.window",
+          "startMS": 35.696208,
+          "endMS": 39.992667,
+          "inclusiveMS": 4.296459,
+          "phase": "panel.attach_content_to_foreground",
+          "appearance": "NSAppearanceNameAqua"
+        },
+        {
+          "name": "surface.effectiveAppearance.window",
+          "startMS": 40.364292,
+          "endMS": 43.959917,
+          "inclusiveMS": 3.595625,
+          "phase": "open.set_window_appearance",
+          "appearance": "NSAppearanceNameDarkAqua"
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    "Across all 80 measured Glass traces, the nil event is an effective-appearance callback and falls in panel.attach_content_to_foreground for both variants; no surface.move.nil event is observed.",
+    "In original, attach_content_to_foreground is the first attachment checkpoint and also includes preceding background/foreground setup. In foreground_first, the empty foreground has already joined the window and its checkpoint has returned; the nil effective-appearance callback occurs while adding content to that already-windowed foreground, before the content.window pointer becomes non-nil.",
+    "No nil effective-appearance event occurs in open initial placement, prime, or final placement. foreground_first evidence excludes the earlier shared frame/autoresizing setup as the trigger for its nil event.",
+    "Both variants retain three content refreshes per measured open: one nil Aqua effective-appearance refresh, one attached Aqua move refresh, then one attached DarkAqua effective-appearance refresh during the late appearance setter.",
+    "This leaves a conditional interaction mechanism: early dark window appearance plus foreground-first could let the pre-window-pointer content appearance callback already resolve DarkAqua, potentially avoiding the later attached color transition. Neither one-factor experiment demonstrated this, so callback counts and full call time must be measured before treating the combination as an optimization.",
+    "Callback durations include nested refreshAppearance durations; do not sum these with the containing panel/open stages or each other."
+  ]
+}

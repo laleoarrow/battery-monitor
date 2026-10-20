@@ -1,0 +1,25 @@
+{
+  "archives": {
+    "baseline.tar.gz": "8b12e2b2a6884ad658ee56a9946a1f9bffff79d354691e36a47c534767a14d62",
+    "tools.tar.gz": "6b9e80a822de879ac20479339c72a0dc058188adba7693d0019fdab8d1a6da02"
+  },
+  "schema": 1,
+  "smokeOnly": true,
+  "sources": {
+    "baseline": {
+      "gitRef": "d6b40247",
+      "revision": "d6b40247cd50c05af4ec9a99956c8ff1937c4894"
+    }
+  },
+  "tools": {
+    "scripts/lib/local_cleanup.sh": "9b2a5313c1cd52a0893b2e3b0ebcc132209230d6fc66ee0255d60bcfa22c3249",
+    "scripts/lib/run_owned.py": "812affd1cd82b1b6373a16435b66224f0b8abf583ce259d087247ab8dd5f1872",
+    "scripts/measure_ui_latency.sh": "b89380db311aa9dfbee20ccf0d9d690d79c4a0ce8511aa6d42dc66402d8be77c",
+    "tests/performance/ui-latency.swift": "95772ff4b85a9f9e9751eb0264328fa904efda5c3e84f9589ba9b808102abb7e"
+  },
+  "transport": {
+    "scripts/measure_ui_vm.sh": "83a922006d7a3e46dfbf51d8bbd5af451291decd51ed564c1842aba941c0a3e7",
+    "tests/performance/ui-vm-guest.sh": "f306a9065d442812b1169fd647363d3084a11cfac43d9862a551c92178a0b51a",
+    "tests/performance/ui_vm.py": "a29d2f317b8b6542bc0b8e0022a725b21f21e92655745af7a2ce457fee90771a"
+  }
+}

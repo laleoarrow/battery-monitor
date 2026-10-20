@@ -1,0 +1,9 @@
+{
+  "status": "no_measurement",
+  "purpose": "A generic hidden NSView callback check; not the production controller diagnostic",
+  "exit_code": 133,
+  "usable_callback_output": false,
+  "cause": "not established; setup/compiler invocation returned before probe output",
+  "owned_scratch_removed": true,
+  "conclusion": "No AppKit or product behavior is inferred from this attempt. Use the successful production run-3 traces instead."
+}

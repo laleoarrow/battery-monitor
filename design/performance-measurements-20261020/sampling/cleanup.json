@@ -1,0 +1,25 @@
+{
+  "wallUTC": "2026-10-20T10:51:14Z",
+  "remainingOwnedScratchEntries": [],
+  "remainingOwnedProcesses": 0,
+  "coordinationFilesRemoved": true,
+  "noAppBundleCreated": true,
+  "noPreferenceDomainCreated": true,
+  "canonicalProcessContinuityVerifiedIn": "summary.json",
+  "harnessFiles": [
+    {
+      "path": "tests/performance/sampling/main.swift",
+      "sha256": "302218275aaefbcc521fbd89666781f21b6f9f503d53c6384bf1ff3f0f18c80c"
+    },
+    {
+      "path": "tests/performance/sampling/measure.py",
+      "sha256": "9d983a615f51c69372dcd7b5e7b2977f69bcfa28405fb2c85df20ba9a00ba2b1"
+    },
+    {
+      "path": "scripts/measure_background_sampling.sh",
+      "sha256": "2661882b6de0751d28f013b08cb303098a1bec0629cb87edd6b16d84f77e2385"
+    }
+  ],
+  "existingOutputProtectionVerified": true,
+  "lifecycleHandlerChecks": "lifecycle-handler-checks.json"
+}

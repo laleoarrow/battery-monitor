@@ -1,0 +1,75 @@
+SwiftPM and Python tests	Verify macOS 27 validation environment	2026-10-20T12:04:15.5748780Z ProductVersion:		27.0.1
+SwiftPM and Python tests	Verify macOS 27 validation environment	2026-10-20T12:04:15.5755100Z BuildVersion:		26A434
+SwiftPM and Python tests	Verify macOS 27 validation environment	2026-10-20T12:04:15.6446980Z Xcode 27.0
+SwiftPM and Python tests	Verify macOS 27 validation environment	2026-10-20T12:04:15.6447390Z Build version 27A266a
+SwiftPM and Python tests	Verify macOS 27 validation environment	2026-10-20T12:04:15.6450020Z SDK=27.0 architecture=arm64 source=5d5391a96aa9465eb1beaa3bf6bcb2bea1208067 image=20261012.0260.1
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:14.1263500Z 	 Executed 13 tests, with 0 failures (0 unexpected) in 0.080 (0.082) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:14.1302830Z 	 Executed 20 tests, with 0 failures (0 unexpected) in 0.005 (0.007) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:14.1327770Z 	 Executed 12 tests, with 0 failures (0 unexpected) in 0.782 (0.784) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:15.4653660Z 	 Executed 19 tests, with 0 failures (0 unexpected) in 0.016 (0.018) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:15.4661330Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.156 (0.156) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:15.4675240Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 0.055 (0.056) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:15.4692960Z 	 Executed 8 tests, with 0 failures (0 unexpected) in 0.005 (0.006) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:15.4725860Z 	 Executed 15 tests, with 0 failures (0 unexpected) in 0.123 (0.125) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:15.4736290Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 0.281 (0.282) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:15.4744460Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.563 (0.563) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:16.8086320Z 	 Executed 12 tests, with 0 failures (0 unexpected) in 0.166 (0.168) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:16.8092490Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:16.8101320Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.061 (0.062) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:16.8116860Z 	 Executed 8 tests, with 0 failures (0 unexpected) in 0.016 (0.017) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:16.8176220Z 	 Executed 36 tests, with 0 failures (0 unexpected) in 1.044 (1.048) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:16.8194700Z 	 Executed 12 tests, with 0 failures (0 unexpected) in 0.095 (0.097) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:18.2522620Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.048 (0.048) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:18.2550450Z 	 Executed 16 tests, with 0 failures (0 unexpected) in 0.003 (0.005) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:18.2558150Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.045 (0.046) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:18.2567630Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 0.065 (0.066) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:18.2578760Z 	 Executed 6 tests, with 0 failures (0 unexpected) in 0.044 (0.045) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:18.2591990Z 	 Executed 8 tests, with 0 failures (0 unexpected) in 0.090 (0.091) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:18.2608540Z 	 Executed 6 tests, with 0 failures (0 unexpected) in 0.695 (0.696) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:21.2360560Z 	 Executed 9 tests, with 0 failures (0 unexpected) in 0.526 (0.528) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:21.2404220Z 	 Executed 25 tests, with 0 failures (0 unexpected) in 0.692 (0.697) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:21.2423820Z 	 Executed 12 tests, with 0 failures (0 unexpected) in 2.174 (2.176) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:21.2431400Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.049 (0.049) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:21.3412960Z 	 Executed 18 tests, with 0 failures (0 unexpected) in 0.004 (0.006) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:21.3425840Z 	 Executed 7 tests, with 0 failures (0 unexpected) in 0.060 (0.061) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:21.3433550Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:21.3451460Z 	 Executed 10 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:21.3503610Z 	 Executed 28 tests, with 0 failures (0 unexpected) in 0.033 (0.036) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:23.0924080Z 	 Executed 23 tests, with 0 failures (0 unexpected) in 0.006 (0.009) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:23.0931490Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:23.0941020Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:23.0969710Z 	 Executed 14 tests, with 0 failures (0 unexpected) in 0.005 (0.007) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:23.0978450Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:24.2867350Z 	 Executed 26 tests, with 0 failures (0 unexpected) in 1.730 (1.734) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:24.2880880Z 	 Executed 6 tests, with 0 failures (0 unexpected) in 0.283 (0.284) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:24.2895220Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 0.361 (0.362) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:24.2910090Z 	 Executed 8 tests, with 0 failures (0 unexpected) in 0.080 (0.081) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:24.2919640Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:24.2927390Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:24.2961040Z 	 Executed 22 tests, with 0 failures (0 unexpected) in 0.180 (0.182) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:26.9691350Z 	 Executed 9 tests, with 0 failures (0 unexpected) in 0.778 (0.780) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:26.9713230Z 	 Executed 12 tests, with 0 failures (0 unexpected) in 0.003 (0.005) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:26.9730870Z 	 Executed 8 tests, with 0 failures (0 unexpected) in 0.377 (0.378) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:26.9764020Z 	 Executed 11 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:26.9770820Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.262 (0.263) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:26.9779410Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.696 (0.697) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:26.9786500Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.832 (0.832) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:26.9799160Z 	 Executed 6 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:31.1003760Z 	 Executed 11 tests, with 0 failures (0 unexpected) in 0.003 (0.005) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:31.1025800Z 	 Executed 7 tests, with 0 failures (0 unexpected) in 0.159 (0.160) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:31.1050440Z 	 Executed 12 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:31.1059840Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:39.8060570Z 	 Executed 31 tests, with 0 failures (0 unexpected) in 2.639 (2.644) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:41.0598070Z 	 Executed 82 tests, with 0 failures (0 unexpected) in 9.450 (9.469) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:41.0598770Z 	 Executed 671 tests, with 0 failures (0 unexpected) in 27.397 (27.494) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:41.0599410Z 	 Executed 671 tests, with 0 failures (0 unexpected) in 27.397 (27.498) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:41.0613500Z 	 Executed 7 tests, with 0 failures (0 unexpected) in 0.017 (0.018) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:41.0632390Z 	 Executed 11 tests, with 0 failures (0 unexpected) in 0.029 (0.030) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:41.0660280Z 	 Executed 12 tests, with 0 failures (0 unexpected) in 0.003 (0.005) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:41.0661050Z 	 Executed 30 tests, with 0 failures (0 unexpected) in 0.050 (0.053) seconds
+SwiftPM and Python tests	Execute macOS 27 Swift tests	2026-10-20T12:09:41.0661700Z 	 Executed 30 tests, with 0 failures (0 unexpected) in 0.050 (0.054) seconds
+SwiftPM and Python tests	Run the default headless Python suite	2026-10-20T12:15:08.1366770Z Ran 627 tests in 324.940s
+SwiftPM and Python tests	Validate macOS 27 native interaction and animation lifecycles	2026-10-20T12:17:10.8133880Z ALL_INTERACTION_CHECKS_PASSED
+SwiftPM and Python tests	Validate macOS 27 native interaction and animation lifecycles	2026-10-20T12:19:08.3780430Z ALL_INTERACTION_CHECKS_PASSED
+SwiftPM and Python tests	Validate macOS 27 native interaction and animation lifecycles	2026-10-20T12:21:03.6946630Z ALL_INTERACTION_CHECKS_PASSED
+SwiftPM and Python tests	Validate macOS 27 native interaction and animation lifecycles	2026-10-20T12:21:24.2613350Z ANIMATION_STRESS_PASSED iterations=20000 elapsed=0.138s

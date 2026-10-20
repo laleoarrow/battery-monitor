@@ -1,0 +1,261 @@
+{
+  "ABBACompleted": false,
+  "baseline": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+  "candidate": "2248c8ec8f4d4a55f1cddd69506d83135117c561",
+  "completedBlocks": [
+    "A1",
+    "B1"
+  ],
+  "decision": "screen_rejected",
+  "existingVMStatesPreserved": true,
+  "groups": {
+    "classic/popup_reopen_warm": {
+      "aCallP50MS": 4.619041,
+      "aCallP95MS": 6.658292,
+      "aCensored": 0,
+      "bCallP50MS": 4.807833,
+      "bCallP95MS": 5.630959,
+      "bCensored": 0,
+      "savedCallP50MS": -0.1887919999999994
+    },
+    "classic/theme_general/dark": {
+      "aCallP50MS": 2.7985,
+      "aCallP95MS": 3.776375,
+      "aCensored": null,
+      "bCallP50MS": 2.883459,
+      "bCallP95MS": 3.244875,
+      "bCensored": null,
+      "savedCallP50MS": -0.084959
+    },
+    "classic/theme_general/light": {
+      "aCallP50MS": 3.286208,
+      "aCallP95MS": 3.603167,
+      "aCensored": null,
+      "bCallP50MS": 2.678916,
+      "bCallP95MS": 5.335209,
+      "bCensored": null,
+      "savedCallP50MS": 0.6072919999999997
+    },
+    "classic/theme_menu-bar-icon/dark": {
+      "aCallP50MS": 2.93675,
+      "aCallP95MS": 3.334625,
+      "aCensored": null,
+      "bCallP50MS": 2.7655,
+      "bCallP95MS": 5.137291,
+      "bCensored": null,
+      "savedCallP50MS": 0.17125000000000012
+    },
+    "classic/theme_menu-bar-icon/light": {
+      "aCallP50MS": 2.684459,
+      "aCallP95MS": 2.912708,
+      "aCensored": null,
+      "bCallP50MS": 3.344833,
+      "bCallP95MS": 5.296125,
+      "bCensored": null,
+      "savedCallP50MS": -0.660374
+    },
+    "classic/theme_modules/dark": {
+      "aCallP50MS": 3.049209,
+      "aCallP95MS": 3.721542,
+      "aCensored": null,
+      "bCallP50MS": 3.13525,
+      "bCallP95MS": 3.412208,
+      "bCensored": null,
+      "savedCallP50MS": -0.08604100000000026
+    },
+    "classic/theme_modules/light": {
+      "aCallP50MS": 3.35775,
+      "aCallP95MS": 3.539292,
+      "aCensored": null,
+      "bCallP50MS": 2.969834,
+      "bCallP95MS": 3.231792,
+      "bCensored": null,
+      "savedCallP50MS": 0.3879159999999997
+    },
+    "classic/theme_popup/dark": {
+      "aCallP50MS": 18.949958,
+      "aCallP95MS": 19.851167,
+      "aCensored": null,
+      "bCallP50MS": 15.785583,
+      "bCallP95MS": 17.134625,
+      "bCensored": null,
+      "savedCallP50MS": 3.164374999999998
+    },
+    "classic/theme_popup/light": {
+      "aCallP50MS": 16.078916,
+      "aCallP95MS": 18.99625,
+      "aCensored": null,
+      "bCallP50MS": 16.422875,
+      "bCallP95MS": 16.509,
+      "bCensored": null,
+      "savedCallP50MS": -0.3439590000000017
+    },
+    "glass_clear/popup_reopen_warm": {
+      "aCallP50MS": 65.683667,
+      "aCallP95MS": 71.692333,
+      "aCensored": 0,
+      "bCallP50MS": 67.465875,
+      "bCallP95MS": 70.700542,
+      "bCensored": 10,
+      "savedCallP50MS": -1.7822079999999971
+    },
+    "glass_clear/theme_general/dark": {
+      "aCallP50MS": 3.233375,
+      "aCallP95MS": 3.286833,
+      "aCensored": null,
+      "bCallP50MS": 3.517833,
+      "bCallP95MS": 5.152167,
+      "bCensored": null,
+      "savedCallP50MS": -0.2844579999999999
+    },
+    "glass_clear/theme_general/light": {
+      "aCallP50MS": 3.738167,
+      "aCallP95MS": 3.824708,
+      "aCensored": null,
+      "bCallP50MS": 3.20575,
+      "bCallP95MS": 3.853042,
+      "bCensored": null,
+      "savedCallP50MS": 0.5324169999999997
+    },
+    "glass_clear/theme_menu-bar-icon/dark": {
+      "aCallP50MS": 3.090958,
+      "aCallP95MS": 3.655792,
+      "aCensored": null,
+      "bCallP50MS": 3.653084,
+      "bCallP95MS": 3.77675,
+      "bCensored": null,
+      "savedCallP50MS": -0.5621260000000001
+    },
+    "glass_clear/theme_menu-bar-icon/light": {
+      "aCallP50MS": 3.059917,
+      "aCallP95MS": 3.136084,
+      "aCensored": null,
+      "bCallP50MS": 3.202417,
+      "bCallP95MS": 3.75,
+      "bCensored": null,
+      "savedCallP50MS": -0.14250000000000007
+    },
+    "glass_clear/theme_modules/dark": {
+      "aCallP50MS": 4.163167,
+      "aCallP95MS": 4.727167,
+      "aCensored": null,
+      "bCallP50MS": 3.391833,
+      "bCallP95MS": 3.622708,
+      "bCensored": null,
+      "savedCallP50MS": 0.7713339999999995
+    },
+    "glass_clear/theme_modules/light": {
+      "aCallP50MS": 3.311958,
+      "aCallP95MS": 3.437792,
+      "aCensored": null,
+      "bCallP50MS": 3.602167,
+      "bCallP95MS": 3.638958,
+      "bCensored": null,
+      "savedCallP50MS": -0.29020899999999994
+    },
+    "glass_clear/theme_popup/dark": {
+      "aCallP50MS": 15.474833,
+      "aCallP95MS": 16.269958,
+      "aCensored": null,
+      "bCallP50MS": 19.694416,
+      "bCallP95MS": 21.45225,
+      "bCensored": null,
+      "savedCallP50MS": -4.219583
+    },
+    "glass_clear/theme_popup/light": {
+      "aCallP50MS": 16.421417,
+      "aCallP95MS": 17.468334,
+      "aCensored": null,
+      "bCallP50MS": 16.703292,
+      "bCallP95MS": 16.877792,
+      "bCensored": null,
+      "savedCallP50MS": -0.28187499999999943
+    },
+    "glass_regular/popup_reopen_warm": {
+      "aCallP50MS": 65.877792,
+      "aCallP95MS": 69.397125,
+      "aCensored": 0,
+      "bCallP50MS": 66.984042,
+      "bCallP95MS": 72.127209,
+      "bCensored": 5,
+      "savedCallP50MS": -1.1062500000000028
+    },
+    "glass_regular/theme_general/dark": {
+      "aCallP50MS": 3.233042,
+      "aCallP95MS": 3.801084,
+      "aCensored": null,
+      "bCallP50MS": 3.445542,
+      "bCallP95MS": 3.88175,
+      "bCensored": null,
+      "savedCallP50MS": -0.2124999999999999
+    },
+    "glass_regular/theme_general/light": {
+      "aCallP50MS": 3.3725,
+      "aCallP95MS": 4.171167,
+      "aCensored": null,
+      "bCallP50MS": 3.600584,
+      "bCallP95MS": 4.094958,
+      "bCensored": null,
+      "savedCallP50MS": -0.22808399999999995
+    },
+    "glass_regular/theme_menu-bar-icon/dark": {
+      "aCallP50MS": 3.089792,
+      "aCallP95MS": 3.335375,
+      "aCensored": null,
+      "bCallP50MS": 3.001666,
+      "bCallP95MS": 3.933791,
+      "bCensored": null,
+      "savedCallP50MS": 0.08812599999999993
+    },
+    "glass_regular/theme_menu-bar-icon/light": {
+      "aCallP50MS": 3.183625,
+      "aCallP95MS": 3.398959,
+      "aCensored": null,
+      "bCallP50MS": 3.473291,
+      "bCallP95MS": 4.050375,
+      "bCensored": null,
+      "savedCallP50MS": -0.289666
+    },
+    "glass_regular/theme_modules/dark": {
+      "aCallP50MS": 3.863458,
+      "aCallP95MS": 3.896875,
+      "aCensored": null,
+      "bCallP50MS": 3.597292,
+      "bCallP95MS": 3.912542,
+      "bCensored": null,
+      "savedCallP50MS": 0.2661660000000001
+    },
+    "glass_regular/theme_modules/light": {
+      "aCallP50MS": 3.717666,
+      "aCallP95MS": 4.172125,
+      "aCensored": null,
+      "bCallP50MS": 3.585042,
+      "bCallP95MS": 3.605625,
+      "bCensored": null,
+      "savedCallP50MS": 0.13262399999999985
+    },
+    "glass_regular/theme_popup/dark": {
+      "aCallP50MS": 15.363417,
+      "aCallP95MS": 19.128208,
+      "aCensored": null,
+      "bCallP50MS": 16.779708,
+      "bCallP95MS": 26.182292,
+      "bCensored": null,
+      "savedCallP50MS": -1.4162909999999993
+    },
+    "glass_regular/theme_popup/light": {
+      "aCallP50MS": 16.815792,
+      "aCallP95MS": 17.61225,
+      "aCensored": null,
+      "bCallP50MS": 16.728,
+      "bCallP95MS": 20.774666,
+      "bCensored": null,
+      "savedCallP50MS": 0.08779199999999676
+    }
+  },
+  "guestDelayedAudit": "Not run after operator cancellation; owned clone was stopped and deleted, disposing its guest resources.",
+  "operatorCancellationExitCode": 143,
+  "ownedVMCloneRemoved": true,
+  "partialBlock": "B2",
+  "reason": "Early appearance alone did not meet the preregistered minimum 3 ms median call saving in the first complete candidate process. Maintainer canceled remaining blocks and all controls/regression for this rejected variant. This is a screening decision, not a product test failure."
+}

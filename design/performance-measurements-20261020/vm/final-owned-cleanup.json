@@ -1,0 +1,19 @@
+{
+  "canonicalHostAppInstalled": true,
+  "canonicalHostAppModifiedByVMWrapper": false,
+  "canonicalNote": "The wrapper only reads and mounts the repository read-only; all test Apps/preferences are in disposable guest clones. Canonical payload verification belongs to the parent task.",
+  "existingVMStates": {
+    "macOS-TestLab": {
+      "Running": false,
+      "State": "stopped"
+    },
+    "macOS-TestLab-Base": {
+      "Running": false,
+      "State": "stopped"
+    }
+  },
+  "ownedVMClonesRemaining": [],
+  "recordedUTC": "2026-10-20T12:23:11Z",
+  "scratchEntriesBeforeRemovingEmptyParent": [],
+  "scratchParentAbsent": true
+}

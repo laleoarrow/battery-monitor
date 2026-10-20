@@ -1,0 +1,12 @@
+{
+  "attributionValid": false,
+  "openAttributionRows": 0,
+  "diagnosticMetadataPresent": false,
+  "cause": "The wrapper passed the patch via a function stdin redirect. Its asynchronous owned runner received empty stdin, so patch returned success without modifying sources.",
+  "executionActuallyObserved": "Original v1 cold/theme measurement paths ran with warm count 20; execution later failed at the controller entrance-animation observation boundary.",
+  "productBugConfirmed": false,
+  "evidencePreserved": true,
+  "guestResourceAuditPassed": true,
+  "ownedCloneRemoved": true,
+  "repair": "Use patch --input with its explicit file path, verify changed diagnostic source markers, and gate smoke results on diagnostic_only plus open_attribution traces and warm-only samples in all three hosts. Retry uses the separately frozen v2 harness."
+}

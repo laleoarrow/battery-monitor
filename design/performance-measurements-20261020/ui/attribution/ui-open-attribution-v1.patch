@@ -1,0 +1,203 @@
+--- a/Popover/PopoverController.swift
++++ b/Popover/PopoverController.swift
+@@ -1,4 +1,25 @@
+ import AppKit
++
++// Diagnostic-only checkpoints; this file is a temporary source copy.
++// A trace stores numbers in memory and is emitted after open returns.
++enum UIOpenAttribution {
++    static var stages = [String: Double]()
++    final class Scope {
++        let prefix: String
++        let start = DispatchTime.now().uptimeNanoseconds
++        var last = DispatchTime.now().uptimeNanoseconds
++        init(_ prefix: String) { self.prefix = prefix }
++        func mark(_ name: String) {
++            let now = DispatchTime.now().uptimeNanoseconds
++            UIOpenAttribution.stages[prefix + "." + name] = Double(now - last) / 1_000_000
++            last = now
++        }
++        func finish() {
++            mark("tail")
++            UIOpenAttribution.stages[prefix + ".total"] = Double(DispatchTime.now().uptimeNanoseconds - start) / 1_000_000
++        }
++    }
++}
+ 
+ final class PopoverController: NSObject, NSPopoverDelegate {
+     private struct Presentation {
+@@ -205,6 +226,9 @@
+ 
+     private func open(relativeTo button: NSStatusBarButton,
+                       skipExternalRefreshes: Bool = false) {
++        UIOpenAttribution.stages = [:]
++        let diagnostic = UIOpenAttribution.Scope("open")
++        defer { diagnostic.finish() }
+         // Reuse an open host. Reparenting its content into a second panel
+         // leaves the original native glass window visible but empty.
+         guard !wantsOpen else { refreshPlacement(); return }
+@@ -223,6 +247,7 @@
+         popover.animates = !reduceMotion
+         usingGlassPanel = useGlass
+         setContentSize(placement.contentSize)
++        diagnostic.mark("initial_placement_and_size")
+         // Prime every module with the newest cached telemetry before AppKit
+         // captures the first frame. This replaces hidden periodic rendering
+         // without introducing a stale flash on open.
+@@ -230,31 +255,39 @@
+             latestSystemBatteryIconHidden, readStatus: latestSystemBatteryIconReadStatus
+         )
+         applyLatestPresentation()
++        diagnostic.mark("prime_cached_content")
+         // A newly visible/hidden module can change the natural height while
+         // priming cached data. Resolve the final viewport before hosting it.
+         guard let refreshedPlacement = resolvePlacement(relativeTo: button) else { return }
+         placement = refreshedPlacement
+         guard !useGlass || placement.glassPanelFrame(margin: GlassPopoverPanel.contentInset) != nil else { return }
+         setContentSize(placement.contentSize)
++        diagnostic.mark("final_placement_and_size")
+         if #available(macOS 26.0, *), useGlass,
+            let frame = placement.glassPanelFrame(margin: GlassPopoverPanel.contentInset) {
+             retireClassicHost()
++            diagnostic.mark("retire_classic")
+             let panel = GlassPopoverPanel(content: content.view, frame: frame,
+                 style: Settings.liquidGlassStyle == .clear ? .clear : .regular,
+                 showsArrow: Settings.showPopoverArrow)
++            diagnostic.mark("panel_init")
+             panel.point(to: placement.anchorFrame.midX)
+             panel.appearance = Settings.colorScheme.appearance
+             panel.onDismiss = { [weak self] in self?.close() }
+             panel.onEscape = { [weak self] in _ = self?.handleEscape() }
+             glassPanel = panel
++            diagnostic.mark("point_appearance_and_callbacks")
+             panel.makeKeyAndOrderFront(nil)
++            diagnostic.mark("make_key_and_order_front")
+             if let initialFocus = panel.initialFirstResponder { panel.makeFirstResponder(initialFocus) }
++            diagnostic.mark("initial_focus")
+         } else {
+             popover.contentViewController = content
+             let positioningRect = button.convert(
+                 button.window!.convertFromScreen(placement.anchorFrame), from: nil)
+             popover.show(relativeTo: positioningRect, of: button, preferredEdge: .maxY)
+             if popover.isShown { showsRequested += 1 }
++            diagnostic.mark("classic_show")
+         }
+         guard hostIsShown else { close(); return }   // never leave a monitor behind
+         anchorButton = button
+@@ -267,12 +300,14 @@
+         if !reopeningDuringDismissal {
+             playEntranceAnimation(reduceMotion: reduceMotion)
+         }
++        diagnostic.mark("activate_content_and_entrance_animation")
+         presentationGeneration &+= 1
+         let generation = presentationGeneration
+         wantsOpen = true
+         if skipExternalRefreshes {
+             startWatchingForOutsideClicks()
+             visibilityHandler?(true)
++            diagnostic.mark("outside_monitors_and_visibility")
+             return
+         }
+         LoginItemController.refresh()
+--- a/Popover/GlassPopoverPanel.swift
++++ b/Popover/GlassPopoverPanel.swift
+@@ -35,9 +35,12 @@
+ 
+     @available(macOS 26.0, *)
+     init(content: NSView, frame: NSRect, style: NSGlassEffectView.Style, showsArrow: Bool = true) {
++        let diagnostic = UIOpenAttribution.Scope("panel")
++        defer { diagnostic.finish() }
+         self.showsArrow = showsArrow
+         super.init(contentRect: frame, styleMask: [.borderless, .nonactivatingPanel],
+                    backing: .buffered, defer: false)
++        diagnostic.mark("ns_panel_super_init")
+         // AppKit expands a half-point origin during initialization. Use the
+         // same sizing path as later placement before laying out the content.
+         setFrame(frame, display: false)
+@@ -53,8 +56,10 @@
+         level = .popUpMenu
+         collectionBehavior = [.transient, .moveToActiveSpace, .fullScreenAuxiliary]
+         let inset = Self.contentInset(for: style == .clear ? .clear : .regular)
++        diagnostic.mark("configure_window")
+         let glass = GlassPopoverMaterialView(frame: contentView!.bounds.insetBy(dx: inset, dy: inset),
+                                             style: style, showsArrow: showsArrow)
++        diagnostic.mark("swiftui_material_init")
+         glass.autoresizingMask = [.width, .height]
+         // SwiftUI glass alone leaves zero-alpha pixels that WindowServer clicks
+         // through. One 8-bit alpha step keeps the shaped surface interactive;
+@@ -83,7 +88,9 @@
+         self.foreground = foreground
+         self.background = background
+         material = glass
++        diagnostic.mark("create_background_and_attach_content")
+         updateOutline()
++        diagnostic.mark("update_outline")
+     }
+ 
+     /// Keep the arrow tied to its actual menu-bar anchor after screen clamping.
+--- a/Popover/GlassPopoverMaterialView.swift
++++ b/Popover/GlassPopoverMaterialView.swift
+@@ -64,13 +64,17 @@
+     private(set) var showsArrow: Bool
+ 
+     init(frame: NSRect, style: NSGlassEffectView.Style, showsArrow: Bool = true) {
++        let diagnostic = UIOpenAttribution.Scope("material")
++        defer { diagnostic.finish() }
+         self.style = style
+         self.showsArrow = showsArrow
+         arrowX = frame.width / 2
+         super.init(rootView: Self.material(style: style, arrowX: arrowX, showsArrow: showsArrow))
++        diagnostic.mark("root_view_and_ns_hosting_super_init")
+         sizingOptions = []
+         self.frame = frame
+         setAccessibilityElement(false)
++        diagnostic.mark("frame_and_accessibility")
+     }
+ 
+     @available(*, unavailable)
+--- a/tests/performance/ui-latency.swift
++++ b/tests/performance/ui-latency.swift
+@@ -54,7 +54,7 @@
+     private var samples = [[String: Any]]()
+     private let warmups = 3
+     private let coldCount = Int(ProcessInfo.processInfo.environment["WATTSON_PERF_COLD_COUNT"] ?? "30") ?? 0
+-    private let warmCount = Int(ProcessInfo.processInfo.environment["WATTSON_PERF_WARM_COUNT"] ?? "60") ?? 0
++    private let warmCount = Int(ProcessInfo.processInfo.environment["WATTSON_PERF_WARM_COUNT"] ?? "20") ?? 0
+     private let themeCount = Int(ProcessInfo.processInfo.environment["WATTSON_PERF_THEME_COUNT"] ?? "60") ?? 0
+ 
+     deinit {
+@@ -130,6 +130,8 @@
+         let openStart = DispatchTime.now().uptimeNanoseconds
+         controller.openForSettingsCommandTest(relativeTo: item.button!)
+         let callMS = milliseconds(since: openStart)
++        emit(["type": "open_attribution", "mode": mode, "cold": cold, "index": index,
++            "warmup": index < warmups, "call_ms": callMS, "stages_ms": UIOpenAttribution.stages])
+         guard let window = controller.contentWindowForTest, let view = controller.contentViewForTest else {
+             throw MeasurementError.timedOut("popup host missing")
+         }
+@@ -236,6 +238,8 @@
+         Settings.topProcessesCompact = false
+         item.button?.image = NSImage(systemSymbolName: "battery.100", accessibilityDescription: nil)
+         emit(["type": "environment", "schema": 1,
++            "diagnostic_only": true, "cases_executed": ["popup_reopen_warm"],
++            "diagnostic_limit": "checkpoint overhead included; traces serialized after call timing; cold/theme loops omitted; observer/animation milestones are perturbed by trace serialization",
+             "recorded_at": ISO8601DateFormatter().string(from: Date()),
+             "source_revision": ProcessInfo.processInfo.environment["WATTSON_PERF_SOURCE_REVISION"] ?? "unknown",
+             "os": ProcessInfo.processInfo.operatingSystemVersionString,
+@@ -258,16 +262,10 @@
+             Settings.liquidGlassEnabled = mode != "classic"
+             Settings.liquidGlassStyle = mode == "glass_clear" ? .clear : .regular
+             Settings.colorScheme = .dark
+-            for index in 0..<(coldCount + warmups) {
+-                try await measureOpen(mode: mode, cold: true, index: index)
+-            }
+             for index in 0..<(warmCount + warmups) {
+                 try await measureOpen(mode: mode, cold: false, index: index)
+             }
+             popup = nil
+-            for surface in ["popup", "general", "menu-bar-icon", "modules"] {
+-                try await measureThemes(mode: mode, surface: surface)
+-            }
+         }
+         summarize()
+         emit(["type": "complete", "sample_count_including_warmup": samples.count])

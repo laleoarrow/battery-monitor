@@ -1,0 +1,609 @@
+{
+  "environment": [
+    {
+      "application_appearance_override": null,
+      "application_effective_appearance": "NSAppearanceNameAqua",
+      "cold_count": 0,
+      "cold_definition": "new controller in the same process; first sample of each case retained as warmup; OS/framework caches are not cleared",
+      "fixed_open_color_scheme": "dark",
+      "fixture": "charging / all modules / Top 3 detailed / 60 history samples",
+      "increase_contrast": false,
+      "observation": "continuous NSApp.run; approximately 1 ms asynchronous polling; forced explicitly submits layout/display/CA before observing; natural adds no harness submission. A nonempty presentation layer and effectiveAppearance are software state, not proof of a newly displayed theme or physical frame delivery. Entrance removal has a bounded 3-second observation and retains censored samples; closing must clear the key.",
+      "open_external_refreshes": "skipped; synchronous UI path only; sampling measured separately",
+      "optimization": "-O -D DEBUG",
+      "os": "Version 26.6.1 (Build 25G76)",
+      "physical_memory_bytes": 34359738368,
+      "processors": 8,
+      "recorded_at": "2026-10-20T11:17:04Z",
+      "reduce_motion": false,
+      "reduce_transparency": false,
+      "schema": 3,
+      "screens": [
+        {
+          "frame": "{{0, 0}, {1024, 768}}",
+          "scale": 2
+        }
+      ],
+      "source_revision": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+      "submission": "natural",
+      "theme_count": 6,
+      "type": "environment",
+      "warm_count": 20,
+      "warmups_per_case": 3
+    },
+    {
+      "application_appearance_override": null,
+      "application_effective_appearance": "NSAppearanceNameAqua",
+      "cold_count": 0,
+      "cold_definition": "new controller in the same process; first sample of each case retained as warmup; OS/framework caches are not cleared",
+      "fixed_open_color_scheme": "dark",
+      "fixture": "charging / all modules / Top 3 detailed / 60 history samples",
+      "increase_contrast": false,
+      "observation": "continuous NSApp.run; approximately 1 ms asynchronous polling; forced explicitly submits layout/display/CA before observing; natural adds no harness submission. A nonempty presentation layer and effectiveAppearance are software state, not proof of a newly displayed theme or physical frame delivery. Entrance removal has a bounded 3-second observation and retains censored samples; closing must clear the key.",
+      "open_external_refreshes": "skipped; synchronous UI path only; sampling measured separately",
+      "optimization": "-O -D DEBUG",
+      "os": "Version 26.6.1 (Build 25G76)",
+      "physical_memory_bytes": 34359738368,
+      "processors": 8,
+      "recorded_at": "2026-10-20T11:19:09Z",
+      "reduce_motion": false,
+      "reduce_transparency": false,
+      "schema": 3,
+      "screens": [
+        {
+          "frame": "{{0, 0}, {1024, 768}}",
+          "scale": 2
+        }
+      ],
+      "source_revision": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+      "submission": "natural",
+      "theme_count": 6,
+      "type": "environment",
+      "warm_count": 20,
+      "warmups_per_case": 3
+    }
+  ],
+  "groups": {
+    "classic/popup_reopen_warm": {
+      "callP50MS": [
+        5.002,
+        4.806
+      ],
+      "callP95MS": [
+        6.623,
+        5.867
+      ],
+      "countPerProcess": [
+        20,
+        20
+      ],
+      "entranceCensored": [
+        0,
+        0
+      ],
+      "p50AbsoluteDifferenceMS": 0.196,
+      "p50DifferencePercentVsFirst": -3.91
+    },
+    "classic/theme_general/dark": {
+      "callP50MS": [
+        2.643,
+        3.261
+      ],
+      "callP95MS": [
+        2.68,
+        3.911
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.618,
+      "p50DifferencePercentVsFirst": 23.38
+    },
+    "classic/theme_general/light": {
+      "callP50MS": [
+        3.171,
+        3.768
+      ],
+      "callP95MS": [
+        3.741,
+        7.475
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.597,
+      "p50DifferencePercentVsFirst": 18.84
+    },
+    "classic/theme_menu-bar-icon/dark": {
+      "callP50MS": [
+        2.629,
+        3.599
+      ],
+      "callP95MS": [
+        3.408,
+        3.886
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.97,
+      "p50DifferencePercentVsFirst": 36.9
+    },
+    "classic/theme_menu-bar-icon/light": {
+      "callP50MS": [
+        2.862,
+        2.912
+      ],
+      "callP95MS": [
+        2.905,
+        7.036
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.05,
+      "p50DifferencePercentVsFirst": 1.74
+    },
+    "classic/theme_modules/dark": {
+      "callP50MS": [
+        3.072,
+        3.051
+      ],
+      "callP95MS": [
+        3.203,
+        3.683
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.021,
+      "p50DifferencePercentVsFirst": -0.69
+    },
+    "classic/theme_modules/light": {
+      "callP50MS": [
+        3.291,
+        2.782
+      ],
+      "callP95MS": [
+        3.961,
+        2.894
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.509,
+      "p50DifferencePercentVsFirst": -15.46
+    },
+    "classic/theme_popup/dark": {
+      "callP50MS": [
+        17.052,
+        15.945
+      ],
+      "callP95MS": [
+        21.263,
+        19.075
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 1.107,
+      "p50DifferencePercentVsFirst": -6.49
+    },
+    "classic/theme_popup/light": {
+      "callP50MS": [
+        14.974,
+        18.881
+      ],
+      "callP95MS": [
+        16.727,
+        20.462
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 3.908,
+      "p50DifferencePercentVsFirst": 26.1
+    },
+    "glass_clear/popup_reopen_warm": {
+      "callP50MS": [
+        67.452,
+        68.943
+      ],
+      "callP95MS": [
+        71.798,
+        72.377
+      ],
+      "countPerProcess": [
+        20,
+        20
+      ],
+      "entranceCensored": [
+        0,
+        8
+      ],
+      "p50AbsoluteDifferenceMS": 1.49,
+      "p50DifferencePercentVsFirst": 2.21
+    },
+    "glass_clear/theme_general/dark": {
+      "callP50MS": [
+        3.669,
+        4.147
+      ],
+      "callP95MS": [
+        4.131,
+        4.492
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.478,
+      "p50DifferencePercentVsFirst": 13.02
+    },
+    "glass_clear/theme_general/light": {
+      "callP50MS": [
+        3.554,
+        3.989
+      ],
+      "callP95MS": [
+        4.385,
+        5.163
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.434,
+      "p50DifferencePercentVsFirst": 12.22
+    },
+    "glass_clear/theme_menu-bar-icon/dark": {
+      "callP50MS": [
+        3.6,
+        3.58
+      ],
+      "callP95MS": [
+        4.005,
+        3.709
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.02,
+      "p50DifferencePercentVsFirst": -0.55
+    },
+    "glass_clear/theme_menu-bar-icon/light": {
+      "callP50MS": [
+        3.616,
+        3.232
+      ],
+      "callP95MS": [
+        4.897,
+        3.321
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.384,
+      "p50DifferencePercentVsFirst": -10.61
+    },
+    "glass_clear/theme_modules/dark": {
+      "callP50MS": [
+        3.308,
+        3.494
+      ],
+      "callP95MS": [
+        3.677,
+        3.827
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.186,
+      "p50DifferencePercentVsFirst": 5.62
+    },
+    "glass_clear/theme_modules/light": {
+      "callP50MS": [
+        3.881,
+        3.609
+      ],
+      "callP95MS": [
+        4.205,
+        3.864
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.272,
+      "p50DifferencePercentVsFirst": -7.01
+    },
+    "glass_clear/theme_popup/dark": {
+      "callP50MS": [
+        16.027,
+        16.141
+      ],
+      "callP95MS": [
+        17.135,
+        16.712
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.115,
+      "p50DifferencePercentVsFirst": 0.71
+    },
+    "glass_clear/theme_popup/light": {
+      "callP50MS": [
+        16.731,
+        16.052
+      ],
+      "callP95MS": [
+        16.946,
+        22.695
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.679,
+      "p50DifferencePercentVsFirst": -4.06
+    },
+    "glass_regular/popup_reopen_warm": {
+      "callP50MS": [
+        67.377,
+        67.982
+      ],
+      "callP95MS": [
+        69.963,
+        71.524
+      ],
+      "countPerProcess": [
+        20,
+        20
+      ],
+      "entranceCensored": [
+        0,
+        6
+      ],
+      "p50AbsoluteDifferenceMS": 0.605,
+      "p50DifferencePercentVsFirst": 0.9
+    },
+    "glass_regular/theme_general/dark": {
+      "callP50MS": [
+        3.171,
+        3.813
+      ],
+      "callP95MS": [
+        3.592,
+        4.159
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.642,
+      "p50DifferencePercentVsFirst": 20.24
+    },
+    "glass_regular/theme_general/light": {
+      "callP50MS": [
+        3.288,
+        3.288
+      ],
+      "callP95MS": [
+        3.952,
+        3.448
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.0,
+      "p50DifferencePercentVsFirst": -0.01
+    },
+    "glass_regular/theme_menu-bar-icon/dark": {
+      "callP50MS": [
+        3.523,
+        3.54
+      ],
+      "callP95MS": [
+        3.667,
+        4.442
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.017,
+      "p50DifferencePercentVsFirst": 0.48
+    },
+    "glass_regular/theme_menu-bar-icon/light": {
+      "callP50MS": [
+        2.926,
+        3.089
+      ],
+      "callP95MS": [
+        3.597,
+        3.157
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.163,
+      "p50DifferencePercentVsFirst": 5.57
+    },
+    "glass_regular/theme_modules/dark": {
+      "callP50MS": [
+        3.394,
+        3.889
+      ],
+      "callP95MS": [
+        3.516,
+        3.933
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.495,
+      "p50DifferencePercentVsFirst": 14.58
+    },
+    "glass_regular/theme_modules/light": {
+      "callP50MS": [
+        3.678,
+        3.907
+      ],
+      "callP95MS": [
+        3.925,
+        4.052
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.229,
+      "p50DifferencePercentVsFirst": 6.22
+    },
+    "glass_regular/theme_popup/dark": {
+      "callP50MS": [
+        18.665,
+        18.821
+      ],
+      "callP95MS": [
+        19.131,
+        20.615
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.156,
+      "p50DifferencePercentVsFirst": 0.83
+    },
+    "glass_regular/theme_popup/light": {
+      "callP50MS": [
+        16.424,
+        15.943
+      ],
+      "callP95MS": [
+        17.419,
+        17.929
+      ],
+      "countPerProcess": [
+        3,
+        3
+      ],
+      "entranceCensored": [
+        null,
+        null
+      ],
+      "p50AbsoluteDifferenceMS": 0.481,
+      "p50DifferencePercentVsFirst": -2.93
+    }
+  },
+  "purpose": "A/A baseline variation; two independent processes, not a confidence interval"
+}

@@ -1,0 +1,261 @@
+{
+  "diagnosticOnly": true,
+  "groups": {
+    "classic": {
+      "callMS": {
+        "p50": 4.84,
+        "p95": 6.431
+      },
+      "entranceCensored": 0,
+      "n": 20,
+      "stagesMS": {
+        "open.activate_content_and_entrance_animation": {
+          "p50": 0.654,
+          "p95": 0.961
+        },
+        "open.classic_show": {
+          "p50": 1.093,
+          "p95": 1.895
+        },
+        "open.final_placement_and_size": {
+          "p50": 0.242,
+          "p95": 0.358
+        },
+        "open.initial_placement_and_size": {
+          "p50": 0.553,
+          "p95": 0.755
+        },
+        "open.outside_monitors_and_visibility": {
+          "p50": 0.983,
+          "p95": 1.833
+        },
+        "open.prime_cached_content": {
+          "p50": 0.974,
+          "p95": 1.449
+        },
+        "open.tail": {
+          "p50": 0.002,
+          "p95": 0.003
+        },
+        "open.total": {
+          "p50": 4.83,
+          "p95": 6.421
+        }
+      }
+    },
+    "glass_clear": {
+      "callMS": {
+        "p50": 66.463,
+        "p95": 69.639
+      },
+      "entranceCensored": 0,
+      "n": 20,
+      "stagesMS": {
+        "material.frame_and_accessibility": {
+          "p50": 0.009,
+          "p95": 0.015
+        },
+        "material.root_view_and_ns_hosting_super_init": {
+          "p50": 0.144,
+          "p95": 0.206
+        },
+        "material.tail": {
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "material.total": {
+          "p50": 0.152,
+          "p95": 0.221
+        },
+        "open.activate_content_and_entrance_animation": {
+          "p50": 0.653,
+          "p95": 0.826
+        },
+        "open.final_placement_and_size": {
+          "p50": 3.154,
+          "p95": 4.347
+        },
+        "open.initial_focus": {
+          "p50": 0.064,
+          "p95": 0.137
+        },
+        "open.initial_placement_and_size": {
+          "p50": 6.432,
+          "p95": 7.239
+        },
+        "open.make_key_and_order_front": {
+          "p50": 11.115,
+          "p95": 13.028
+        },
+        "open.outside_monitors_and_visibility": {
+          "p50": 0.698,
+          "p95": 0.852
+        },
+        "open.panel_init": {
+          "p50": 28.927,
+          "p95": 31.543
+        },
+        "open.point_appearance_and_callbacks": {
+          "p50": 12.7,
+          "p95": 14.202
+        },
+        "open.prime_cached_content": {
+          "p50": 0.887,
+          "p95": 1.21
+        },
+        "open.retire_classic": {
+          "p50": 0.003,
+          "p95": 0.01
+        },
+        "open.tail": {
+          "p50": 0.001,
+          "p95": 0.004
+        },
+        "open.total": {
+          "p50": 66.455,
+          "p95": 69.629
+        },
+        "panel.configure_window": {
+          "p50": 0.224,
+          "p95": 0.293
+        },
+        "panel.create_background_and_attach_content": {
+          "p50": 27.633,
+          "p95": 30.178
+        },
+        "panel.ns_panel_super_init": {
+          "p50": 0.955,
+          "p95": 1.228
+        },
+        "panel.swiftui_material_init": {
+          "p50": 0.154,
+          "p95": 0.229
+        },
+        "panel.tail": {
+          "p50": 0.002,
+          "p95": 0.002
+        },
+        "panel.total": {
+          "p50": 28.922,
+          "p95": 31.54
+        },
+        "panel.update_outline": {
+          "p50": 0.024,
+          "p95": 0.029
+        }
+      }
+    },
+    "glass_regular": {
+      "callMS": {
+        "p50": 66.678,
+        "p95": 68.811
+      },
+      "entranceCensored": 0,
+      "n": 20,
+      "stagesMS": {
+        "material.frame_and_accessibility": {
+          "p50": 0.012,
+          "p95": 0.016
+        },
+        "material.root_view_and_ns_hosting_super_init": {
+          "p50": 0.165,
+          "p95": 0.22
+        },
+        "material.tail": {
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "material.total": {
+          "p50": 0.178,
+          "p95": 0.237
+        },
+        "open.activate_content_and_entrance_animation": {
+          "p50": 0.713,
+          "p95": 0.853
+        },
+        "open.final_placement_and_size": {
+          "p50": 3.42,
+          "p95": 4.521
+        },
+        "open.initial_focus": {
+          "p50": 0.06,
+          "p95": 0.099
+        },
+        "open.initial_placement_and_size": {
+          "p50": 6.649,
+          "p95": 7.112
+        },
+        "open.make_key_and_order_front": {
+          "p50": 11.412,
+          "p95": 12.597
+        },
+        "open.outside_monitors_and_visibility": {
+          "p50": 0.702,
+          "p95": 0.778
+        },
+        "open.panel_init": {
+          "p50": 29.407,
+          "p95": 31.024
+        },
+        "open.point_appearance_and_callbacks": {
+          "p50": 13.061,
+          "p95": 14.553
+        },
+        "open.prime_cached_content": {
+          "p50": 0.931,
+          "p95": 1.081
+        },
+        "open.retire_classic": {
+          "p50": 0.004,
+          "p95": 0.008
+        },
+        "open.tail": {
+          "p50": 0.001,
+          "p95": 0.006
+        },
+        "open.total": {
+          "p50": 66.671,
+          "p95": 68.802
+        },
+        "panel.configure_window": {
+          "p50": 0.245,
+          "p95": 0.295
+        },
+        "panel.create_background_and_attach_content": {
+          "p50": 27.975,
+          "p95": 29.315
+        },
+        "panel.ns_panel_super_init": {
+          "p50": 1.036,
+          "p95": 1.157
+        },
+        "panel.swiftui_material_init": {
+          "p50": 0.185,
+          "p95": 0.24
+        },
+        "panel.tail": {
+          "p50": 0.002,
+          "p95": 0.002
+        },
+        "panel.total": {
+          "p50": 29.404,
+          "p95": 31.02
+        },
+        "panel.update_outline": {
+          "p50": 0.026,
+          "p95": 0.035
+        }
+      }
+    }
+  },
+  "guestCleanup": true,
+  "sourceRevision": "d6b40247cd50c05af4ec9a99956c8ff1937c4894",
+  "vmCleanup": {
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "ownedCloneRemoved": true,
+    "ownedVM": "Wattson-UILatency-C5E0B3AD-251C-4245-A037-B9A41DE00C90"
+  }
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "Running" : false,
+    "Size" : 33,
+    "Source" : "local",
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "Disk" : 50,
+    "State" : "stopped",
+    "Name" : "macOS-TestLab"
+  },
+  {
+    "Running" : false,
+    "Size" : 30,
+    "Source" : "local",
+    "Accessed" : "2026-10-20T11:35:04Z",
+    "Disk" : 50,
+    "State" : "stopped",
+    "Name" : "macOS-TestLab-Base"
+  }
+]

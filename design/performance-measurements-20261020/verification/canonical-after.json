@@ -1,0 +1,26 @@
+{
+  "checkedAtUTC": "2026-10-20T12:22:22.236425+00:00",
+  "canonicalPublicSource": "39c48e3e0564384f4aefb4aff1c1f6e99c6a9c7b",
+  "testedProductSource": "5d5391a96aa9465eb1beaa3bf6bcb2bea1208067",
+  "readOnly": true,
+  "helperContacted": false,
+  "appLaunchedOrInstalled": false,
+  "checks": {
+    "version": true,
+    "buildVersion": true,
+    "bundleIdentifier": true,
+    "appExecutableSHA256": true,
+    "appInfoPlistSHA256": true,
+    "appBundleTreeSHA256": true,
+    "appBundleFilesOrSymlinks": true,
+    "helperSHA256": true,
+    "daemonSHA256": true,
+    "receipt": true,
+    "all16SettingsHashesMatch": true,
+    "canonicalProcessPIDsMatch": true
+  },
+  "allPassed": true,
+  "rawSettingsLogged": false,
+  "settingsCompared": 16,
+  "canonicalVersion": "5.0.0"
+}

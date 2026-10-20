@@ -1,0 +1,259 @@
+{
+  "recordedAtUTC": "2026-10-20T12:23:08.278938+00:00",
+  "conclusion": "success",
+  "createdAt": "2026-10-20T12:03:38Z",
+  "databaseId": 39419420785,
+  "event": "workflow_dispatch",
+  "headSha": "5d5391a96aa9465eb1beaa3bf6bcb2bea1208067",
+  "jobs": [
+    {
+      "completedAt": "2026-10-20T12:22:35Z",
+      "conclusion": "success",
+      "databaseId": 118616492859,
+      "name": "SwiftPM and Python tests",
+      "startedAt": "2026-10-20T12:04:04Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-20T12:04:05Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-20T12:04:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:13Z",
+          "conclusion": "success",
+          "name": "Check out the repository",
+          "number": 2,
+          "startedAt": "2026-10-20T12:04:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:15Z",
+          "conclusion": "success",
+          "name": "Verify macOS 27 validation environment",
+          "number": 3,
+          "startedAt": "2026-10-20T12:04:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:15Z",
+          "conclusion": "skipped",
+          "name": "Verify macOS 26 validation environment",
+          "number": 4,
+          "startedAt": "2026-10-20T12:04:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:26Z",
+          "conclusion": "success",
+          "name": "Probe macOS 27 system battery artwork",
+          "number": 5,
+          "startedAt": "2026-10-20T12:04:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:27Z",
+          "conclusion": "success",
+          "name": "Preserve macOS 27 system battery artwork",
+          "number": 6,
+          "startedAt": "2026-10-20T12:04:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:08:09Z",
+          "conclusion": "success",
+          "name": "Validate macOS 27 Display rendering and settings interaction",
+          "number": 7,
+          "startedAt": "2026-10-20T12:04:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:08:10Z",
+          "conclusion": "success",
+          "name": "Preserve macOS 27 Display validation",
+          "number": 8,
+          "startedAt": "2026-10-20T12:08:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:08:43Z",
+          "conclusion": "success",
+          "name": "Build Swift package",
+          "number": 9,
+          "startedAt": "2026-10-20T12:08:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:08:43Z",
+          "conclusion": "skipped",
+          "name": "Test Swift package",
+          "number": 10,
+          "startedAt": "2026-10-20T12:08:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:09:11Z",
+          "conclusion": "success",
+          "name": "Build macOS 27 Swift test bundle",
+          "number": 11,
+          "startedAt": "2026-10-20T12:08:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:09:41Z",
+          "conclusion": "success",
+          "name": "Execute macOS 27 Swift tests",
+          "number": 12,
+          "startedAt": "2026-10-20T12:09:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:09:42Z",
+          "conclusion": "success",
+          "name": "Preserve macOS 27 Swift diagnostics",
+          "number": 13,
+          "startedAt": "2026-10-20T12:09:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:15:08Z",
+          "conclusion": "success",
+          "name": "Run the default headless Python suite",
+          "number": 14,
+          "startedAt": "2026-10-20T12:09:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:21:24Z",
+          "conclusion": "success",
+          "name": "Validate macOS 27 native interaction and animation lifecycles",
+          "number": 15,
+          "startedAt": "2026-10-20T12:15:08Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:22:32Z",
+          "conclusion": "success",
+          "name": "Verify macOS 27 universal App and helper build",
+          "number": 16,
+          "startedAt": "2026-10-20T12:21:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:22:33Z",
+          "conclusion": "success",
+          "name": "Post Check out the repository",
+          "number": 32,
+          "startedAt": "2026-10-20T12:22:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:22:33Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 33,
+          "startedAt": "2026-10-20T12:22:33Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39419420785/job/118616492859"
+    },
+    {
+      "completedAt": "2026-10-20T12:04:34Z",
+      "conclusion": "success",
+      "databaseId": 118616493288,
+      "name": "Website build, test, lint, and export",
+      "startedAt": "2026-10-20T12:03:59Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-20T12:04:01Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-20T12:04:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:07Z",
+          "conclusion": "success",
+          "name": "Check out the repository",
+          "number": 2,
+          "startedAt": "2026-10-20T12:04:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:14Z",
+          "conclusion": "success",
+          "name": "Set up Node.js",
+          "number": 3,
+          "startedAt": "2026-10-20T12:04:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:25Z",
+          "conclusion": "success",
+          "name": "Install locked website dependencies",
+          "number": 4,
+          "startedAt": "2026-10-20T12:04:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:29Z",
+          "conclusion": "success",
+          "name": "Build and test the rendered website",
+          "number": 5,
+          "startedAt": "2026-10-20T12:04:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:31Z",
+          "conclusion": "success",
+          "name": "Lint the website",
+          "number": 6,
+          "startedAt": "2026-10-20T12:04:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:31Z",
+          "conclusion": "success",
+          "name": "Export the GitHub Pages site",
+          "number": 7,
+          "startedAt": "2026-10-20T12:04:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:31Z",
+          "conclusion": "success",
+          "name": "Post Set up Node.js",
+          "number": 13,
+          "startedAt": "2026-10-20T12:04:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:32Z",
+          "conclusion": "success",
+          "name": "Post Check out the repository",
+          "number": 14,
+          "startedAt": "2026-10-20T12:04:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-20T12:04:32Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 15,
+          "startedAt": "2026-10-20T12:04:32Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39419420785/job/118616493288"
+    }
+  ],
+  "status": "completed",
+  "updatedAt": "2026-10-20T12:22:36Z",
+  "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39419420785"
+}

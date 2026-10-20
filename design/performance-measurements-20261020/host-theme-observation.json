@@ -1,0 +1,14 @@
+{
+  "recordedUTC": "2026-10-20T11:45:53.386378+00:00",
+  "source": "read-only on-disk preference observation; not an effectiveAppearance measurement",
+  "values": {
+    "app": {
+      "colorScheme": "system",
+      "liquidGlassEnabled": true,
+      "liquidGlassStyle": "regular"
+    },
+    "global": {
+      "AppleInterfaceStyle": "Dark"
+    }
+  }
+}

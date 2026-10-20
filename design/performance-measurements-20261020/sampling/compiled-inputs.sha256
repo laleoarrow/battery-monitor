@@ -1,0 +1,17 @@
+0b04d653c0ca313740470bf846901adbe2cc720b784e7c5b079e23dcad5879e6  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/AppleSmartBatteryPowerObservationReader.swift
+9b20d7aef48f9406705680b3b159fc8db7baed7470d5409cb7a6d87aabd62dba  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/BatteryRuntimeEstimate.swift
+973fff6cd0d14648ba7f211f934f920a72fcac59a6be7d962c7e987af436b5a7  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/BatterySampler.swift
+2620a616fecb42cf85a708e03d20a6f5e464b33e034e33e988fd9a1b8d01b5de  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/HelperClient.swift
+9fd766fa6d54aef1a7077983b4e70097a0cc43c7109102b129371672f15832fe  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/HelperClientPowerObservationV5.swift
+7e877a9d5353d979f8f66ed20b27072b27a21e4cd7d46c8284290ab18a861d2b  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/PowerObservationFusion.swift
+28f39e08e70af2dde354b328da16afc6793815e1bf5eca609e7857a98c2054de  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/PowerObservationRuntimeController.swift
+3974ee357d7125fcc54509ad975d8881f30783fb131db9e8e16a050cffa22522  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/PowerObservationShadow.swift
+8f9d926a4acf76de2afe2eae31bfcff97420f0090878faeb8cb32317a984ba5a  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/PowerObservationTrace.swift
+74cc385246cb918fe7942a17700fe98d2d52034ea880d8d2c6923a5d815649ec  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/PowerObservationWireV5.swift
+7b0b1d78ef714e951840a3b0414ac1915f1161792267051acd823b2f9c39e962  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/PowerSnapshot.swift
+5b26d5166a22c279a0caa67f66b826df88a149060856c690ea40400cdfed51bb  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/ProcessTermination.swift
+ab961b7bbc0201fb22e2a72c2d66a4d16f1d5c0563ca4aee30ef287bc29ea2bc  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/RawPowerObservation.swift
+0a0965d79a8ba92d3709a88e3fe31e47d4215342adb665f1e6650261d2435e0d  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/SystemBatteryHealth.swift
+ac5be878ecf58d86031d3c8d3fe51e59edcd698576688ba01c9703a2f72efea0  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/TopProcesses.swift
+302218275aaefbcc521fbd89666781f21b6f9f503d53c6384bf1ff3f0f18c80c  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/sources/main.swift
+58d8768814be719cb523252f7cd53d6f336cc37c7f982b808806e81b01a2c14c  /Users/leoarrow/Project/mypackage/agents/电池功率/.build/background-sampling.noindex/run.d28FXR/SamplingProbe
