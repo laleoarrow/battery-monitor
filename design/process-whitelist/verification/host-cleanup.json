@@ -1,0 +1,17 @@
+{
+  "canonicalAppRunning": true,
+  "canonicalSignatureValid": true,
+  "spotlightApps": [
+    "/Applications/Wattson.app"
+  ],
+  "launchServicesCanonicalIdentifierRecords": [
+    [
+      "path:                       /Applications/Wattson.app (0x218c8)",
+      "identifier:                 com.leoarrow.wattson"
+    ]
+  ],
+  "featureOwnedScratch": {
+    ".build/process-whitelist-vm.noindex": []
+  },
+  "verifiedUniversalBuildScratchRemoved": true
+}

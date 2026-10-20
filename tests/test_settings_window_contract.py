@@ -1724,8 +1724,10 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(Settings.topProcessesCompact, "disabled compact popup cannot change saved preferences")
             let runtimeHandleForCount = view("settings.modules.reorder.runtime", in: first)
             let topProcessSwitch = button(Settings.Module.topProcesses.title, in: first)
-            require(runtimeHandleForCount.nextKeyView === topProcessSwitch,
-                "a disabled process count is skipped in the keyboard loop")
+            let processWhitelist = view("settings.modules.process-whitelist", in: first) as! NSButton
+            require(runtimeHandleForCount.nextKeyView === processWhitelist
+                && processWhitelist.nextKeyView === topProcessSwitch && processWhitelist.isEnabled,
+                "whitelist management remains available when process display controls are disabled")
             Settings.topProcessCount = 4
             Settings.topProcessesCompact = false
             require(topProcessCount.selectedItem?.tag == 4,
@@ -1736,10 +1738,11 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(topProcessCount.isEnabled && topProcessCount.selectedItem?.tag == 4
                 && topProcessesCompact.isEnabled && topProcessesCompact.selectedItem?.tag == 0,
                 "showing the module restores both retained display controls")
-            require(runtimeHandleForCount.nextKeyView === topProcessCount
+            require(runtimeHandleForCount.nextKeyView === processWhitelist
+                && processWhitelist.nextKeyView === topProcessCount
                 && topProcessCount.nextKeyView === topProcessesCompact
                 && topProcessesCompact.nextKeyView === topProcessSwitch,
-                "count then compact view appear before the module switch in keyboard order")
+                "whitelist, count and compact view appear before the module switch in keyboard order")
             Settings.topProcessCount = 3
             let initialModuleOffset = moduleScroll.contentView.bounds.origin
             require(first?.makeFirstResponder(topProcessCount) == true,
@@ -3194,6 +3197,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     str(SYSTEM_ICON),
                     str(LOGIN_ITEM),
                     str(SETTINGS),
+                    str(ROOT / "Core" / "ProcessWhitelist.swift"),
                     str(ROOT / "Core" / "SettingsAppearance.swift"),
                     str(ROOT / "Core" / "GlassBackgroundView.swift"),
                     str(ROOT / "Core" / "FeedbackDiagnostics.swift"),
@@ -3204,6 +3208,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                     str(BATTERY_ICON_27),
                     str(ROOT / "MenuBar" / "ModuleIconArtwork.swift"),
                     str(WINDOW),
+                    str(ROOT / "MenuBar" / "ProcessWhitelistWindowController.swift"),
                     str(main),
                     "-o",
                     str(executable),

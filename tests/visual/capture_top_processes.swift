@@ -206,7 +206,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
                 ? "WindowServer capture of a real native 2×2 fixture window containing four production TopProcessesView renderers with DEBUG-only gradient variants, plus four dark standalone owned windows. Same process fixtures and fixed 0–100 scale in every variant. Chinese comparison labels belong only to the fixture."
                 : isModuleOnly
                 ? "WindowServer capture of default-three production TopProcessesView in two owned Classic fixture windows, light and dark, with an owned underlay in a disposable ARM GUI VM."
-                : "Production AppKit content cache plus WindowServer capture of real Classic/Regular Glass popover and Settings windows and an owned underlay in a disposable ARM GUI VM.",
+                : "Production AppKit content cache plus WindowServer capture of real Classic/Regular Glass popover and Settings windows and an owned underlay in a disposable ARM GUI VM. Native window mouse events exercise ordinary and Command-click process actions; the selected whitelist button saves an exact rule, hides that name, and refills the visible rank. The actual Settings whitelist sheet adds Exact/Wildcard/Regex rules and rejects invalid regex.",
             "limitations": "Process energy, battery telemetry, history, and Settings privileged dependencies are deterministic fixtures. No sampling correctness or physical-hardware power-mode assertion is inferred from screenshots.",
         ]
         try JSONSerialization.data(withJSONObject: evidence, options: [.prettyPrinted, .sortedKeys])
@@ -396,11 +396,48 @@ private final class Probe: NSObject, NSApplicationDelegate {
             try composite(window, background: background, name: name + "-" + position, fields: ["processCount": count, "scrolling": scrolling, "listFrame": NSStringFromRect(list.convert(list.bounds, to: document))])
         }
         if count == 3 && name.contains("on-battery") {
+            try await whitelistAction(list, window: window, background: background, name: name)
             try await hostedHelp(list, controller: controller, background: background, name: name + "-help")
         }
         controller.handleOutsideClick()
         popover = nil
         try await pause(0.2)
+    }
+
+    @MainActor private func whitelistAction(_ list: TopProcessesView, window: NSWindow, background: NSWindow, name: String) async throws {
+        let previousRules = Settings.processWhitelist
+        defer {
+            Settings.processWhitelist = previousRules
+            list.update(state: .ready(processes), count: 3)
+        }
+        guard let row = list.subviews.first(where: { $0.identifier?.rawValue == "top-processes.row" && !$0.isHidden }) else { throw failure("No process row for whitelist capture") }
+        func clickRow(_ modifiers: NSEvent.ModifierFlags) throws {
+            let point = row.convert(NSPoint(x: 30, y: 10), to: nil)
+            for type in [NSEvent.EventType.leftMouseDown, .leftMouseUp] {
+                guard let event = NSEvent.mouseEvent(with: type, location: point, modifierFlags: modifiers,
+                    timestamp: ProcessInfo.processInfo.systemUptime, windowNumber: window.windowNumber,
+                    context: nil, eventNumber: 0, clickCount: 1, pressure: 1) else { throw failure("Cannot create process-row click") }
+                window.sendEvent(event)
+            }
+        }
+        try clickRow([])
+        try await pause(0.08)
+        guard let action = descendants(row).compactMap({ $0 as? ProcessActionButton }).first else { throw failure("Missing process action button") }
+        try check(!action.isHidden && action.actionKind == .forceQuit, "Ordinary row click did not select Force Quit: \(name)")
+        try composite(window, background: background, name: name + "-force-quit", fields: ["processAction": "forceQuit", "nativeWindowEventDispatch": true])
+        try clickRow(.command)
+        try await pause(0.08)
+        try check(!action.isHidden && action.actionKind == .whitelist && action.isEnabled, "Command-click did not select Whitelist: \(name)")
+        try check(action.accessibilityLabel() == "Add Safari to Whitelist", "Whitelist action has incorrect accessible label")
+        try composite(window, background: background, name: name + "-whitelist-selected", fields: ["processAction": "whitelist", "nativeWindowEventDispatch": true, "symbol": "eye.slash"])
+        let listScreenRect = window.convertToScreen(list.convert(list.bounds, to: nil)).insetBy(dx: -8, dy: -8)
+        try composite(window, background: background, name: name + "-whitelist-selected-row", fields: ["processAction": "whitelist", "nativeWindowEventDispatch": true, "symbol": "eye.slash"], screenRect: listScreenRect)
+        action.performClick(nil)
+        try await pause(0.1)
+        try check(Settings.processWhitelist == previousRules + [ProcessWhitelistRule(pattern: "Safari", mode: .exact)], "Whitelist action did not save literal process name")
+        try validate(list, count: 3, expectedProcesses: Array(processes.dropFirst().prefix(3)))
+        try composite(window, background: background, name: name + "-whitelist-hidden", fields: ["hiddenProcess": "Safari", "ruleMode": "exact", "nextRankedProcessVisible": true])
+        try composite(window, background: background, name: name + "-whitelist-hidden-row", fields: ["hiddenProcess": "Safari", "ruleMode": "exact", "nextRankedProcessVisible": true], screenRect: listScreenRect)
     }
 
     @MainActor private func actualSettings(background: NSWindow, name: String) async throws {
@@ -466,6 +503,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
             let rowInWindow = countRow.convert(countRow.bounds, to: nil)
             try composite(window, background: background, name: name + "-controls", fields: fields, screenRect: window.convertToScreen(rowInWindow).insetBy(dx: -8, dy: -8))
         }
+        try await whitelistEditor(window, background: background, name: name)
         Settings.setModule(.topProcesses, visible: false)
         controller.refreshSectionsForTest()
         try check(!count.isEnabled && !compact.isEnabled, "Hidden module leaves count/compact enabled: \(name)")
@@ -478,6 +516,58 @@ private final class Probe: NSObject, NSApplicationDelegate {
         try check(compact.selectedTag() == 0, "External preference change did not refresh Compact popup: \(name)")
         window.close()
         settings = nil
+    }
+
+    @MainActor private func whitelistEditor(_ parent: NSWindow, background: NSWindow, name: String) async throws {
+        let previousRules = Settings.processWhitelist
+        defer { Settings.processWhitelist = previousRules }
+        guard let parentContent = parent.contentView,
+              let open = descendants(parentContent).compactMap({ $0 as? NSButton }).first(where: { $0.identifier?.rawValue == "settings.modules.process-whitelist" }) else { throw failure("No Settings whitelist button") }
+        try check(open.isEnabled && !open.isHiddenOrHasHiddenAncestor, "Settings whitelist button is unavailable")
+        open.performClick(nil)
+        try await pause(0.25)
+        guard let sheet = parent.attachedSheet, let content = sheet.contentView else { throw failure("Whitelist editor did not open as Settings sheet") }
+        defer { if sheet.sheetParent != nil { parent.endSheet(sheet); sheet.orderOut(nil) } }
+        func control<T: NSView>(_ suffix: String, _: T.Type) throws -> T {
+            guard let control = descendants(content).first(where: { $0.identifier?.rawValue == "settings.process-whitelist." + suffix }) as? T else { throw failure("Missing whitelist control: \(suffix)") }
+            return control
+        }
+        let table = try control("rules", NSTableView.self)
+        let mode = try control("mode", NSPopUpButton.self)
+        let pattern = try control("pattern", NSTextField.self)
+        let add = try control("add", NSButton.self)
+        let done = try control("done", NSButton.self)
+        let validation = try control("validation", NSTextField.self)
+        try check(mode.itemArray.map(\.title) == ["Exact", "Wildcard", "Regex"], "Whitelist match choices are incorrect")
+        Settings.processWhitelist = []
+        for (index, value) in ["Safari", "Code Helper*", "^python[0-9.]+$"].enumerated() {
+            mode.selectItem(at: index)
+            if let action = mode.action { mode.sendAction(action, to: mode.target) }
+            pattern.stringValue = value
+            pattern.delegate?.controlTextDidChange?(Notification(name: NSControl.textDidChangeNotification, object: pattern))
+            try check(add.isEnabled, "Valid whitelist pattern cannot be added")
+            add.performClick(nil)
+            try await pause(0.05)
+        }
+        try check(table.numberOfRows == 3 && Settings.processWhitelist.count == 3, "Whitelist editor did not save all match modes")
+        content.layoutSubtreeIfNeeded()
+        for view in [mode, pattern, add, done] {
+            try check(content.bounds.insetBy(dx: -0.5, dy: -0.5).contains(view.convert(view.bounds, to: content)), "Whitelist editor control is clipped")
+        }
+        for field in descendants(content).compactMap({ $0 as? NSTextField }) where !field.isHiddenOrHasHiddenAncestor && field.cell?.wraps == true {
+            guard let cell = field.cell else { continue }
+            let required = cell.cellSize(forBounds: NSRect(x: 0, y: 0, width: field.bounds.width, height: 100_000))
+            try check(required.height <= field.bounds.height + 0.5, "Whitelist editor help text is clipped")
+        }
+        try composite(sheet, background: background, name: name + "-whitelist-editor", fields: ["rules": 3, "matchModes": ["exact", "wildcard", "regex"], "actualSettingsSheet": true])
+        mode.selectItem(at: 2)
+        pattern.stringValue = "["
+        if let action = mode.action { mode.sendAction(action, to: mode.target) }
+        try check(!add.isEnabled && !validation.stringValue.isEmpty, "Invalid regex was not rejected in whitelist editor")
+        try composite(sheet, background: background, name: name + "-whitelist-invalid-regex", fields: ["invalidRegexBlocked": true, "validation": validation.stringValue])
+        done.performClick(nil)
+        try await pause(0.1)
+        try check(parent.attachedSheet == nil, "Whitelist Done did not dismiss Settings sheet")
     }
 
     private func validate(_ list: TopProcessesView, count: Int, expectedProcesses: [EnergyProcess], gradientStyle: TopProcessesView.GradientPreviewStyle? = nil, compact: Bool = false) throws {

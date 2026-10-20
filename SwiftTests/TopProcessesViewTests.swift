@@ -357,7 +357,7 @@ final class TopProcessesViewTests: XCTestCase {
                                  fields[2].frame.width)
         XCTAssertEqual(row.accessibilityLabel(), longName)
         XCTAssertTrue((row.accessibilityValue() as? String)?.contains("CPU 72.0%; idle wakeups 240 per second") == true)
-        XCTAssertEqual(row.accessibilityHelp(), "Select to show Force Quit.")
+        XCTAssertEqual(row.accessibilityHelp(), "Select to show Force Quit. Command-click to show Add to Whitelist.")
         XCTAssertTrue(row.subviews.allSatisfy { !$0.isAccessibilityElement() })
         let images = row.subviews.compactMap { $0 as? NSImageView }
         XCTAssertEqual(images.count, 1)

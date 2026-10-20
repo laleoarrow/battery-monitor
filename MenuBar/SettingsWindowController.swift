@@ -729,6 +729,16 @@ private final class SettingsAppearancePopupButton: NSPopUpButton {
     }
 }
 
+private final class SettingsWhitelistButton: NSButton {
+    weak var focusScrollView: NSView?
+
+    override func becomeFirstResponder() -> Bool {
+        let accepted = super.becomeFirstResponder()
+        if accepted, let row = focusScrollView { revealSettingsRow(row) }
+        return accepted
+    }
+}
+
 private final class SettingsFeedbackButton: NSButton {
     override func becomeFirstResponder() -> Bool {
         let accepted = super.becomeFirstResponder()
@@ -2633,7 +2643,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .checkForUpdatesOnLaunch, .module, .moduleOrder, .ringMetrics, .topProcessCount, .topProcessesCompact, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
+            case .checkForUpdatesOnLaunch, .module, .moduleOrder, .ringMetrics, .topProcessCount, .topProcessesCompact, .processWhitelist, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
                 break
             }
         }
@@ -3135,6 +3145,8 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
     private let ringMetrics = SettingsAppearancePopupButton(frame: .zero, pullsDown: true)
     private let topProcessCount = SettingsAppearancePopupButton()
     private let topProcessesCompact = SettingsAppearancePopupButton()
+    private let processWhitelist = SettingsWhitelistButton(title: "Whitelist…", target: nil, action: nil)
+    private var whitelistWindowController: ProcessWhitelistWindowController?
     var orderDidChange: (() -> Void)?
     private var settingsObserver: NSObjectProtocol?
 
@@ -3146,6 +3158,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
     }
 
     deinit {
+        whitelistWindowController?.close()
         if let settingsObserver {
             NotificationCenter.default.removeObserver(settingsObserver)
         }
@@ -3350,7 +3363,26 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
         } else {
             secondary = detail
         }
-        let text = NSStackView(views: [primary, secondary])
+        let titleView: NSView
+        if module == .topProcesses {
+            processWhitelist.identifier = NSUserInterfaceItemIdentifier("settings.modules.process-whitelist")
+            processWhitelist.setAccessibilityIdentifier("settings.modules.process-whitelist")
+            processWhitelist.setAccessibilityLabel("Process whitelist")
+            processWhitelist.bezelStyle = .rounded
+            processWhitelist.controlSize = .small
+            processWhitelist.font = SettingsStyle.detailFont
+            processWhitelist.target = self
+            processWhitelist.action = #selector(openProcessWhitelist(_:))
+            processWhitelist.focusScrollView = row
+            let titleRow = NSStackView(views: [primary, processWhitelist])
+            titleRow.orientation = .horizontal
+            titleRow.alignment = .centerY
+            titleRow.spacing = 10
+            titleView = titleRow
+        } else {
+            titleView = primary
+        }
+        let text = NSStackView(views: [titleView, secondary])
         text.orientation = .vertical
         text.alignment = .leading
         text.spacing = 5
@@ -3431,7 +3463,7 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             if case let .module(module) = change { self.refresh(module) }
             if change == .moduleOrder { self.rows.applySavedOrder() }
             if change == .ringMetrics { self.refresh(.ring) }
-            if change == .topProcessCount || change == .topProcessesCompact { self.refresh(.topProcesses) }
+            if change == .topProcessCount || change == .topProcessesCompact || change == .processWhitelist { self.refresh(.topProcesses) }
         }
     }
 
@@ -3459,6 +3491,9 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
             topProcessCount.isEnabled = Settings.isModuleVisible(module)
             topProcessesCompact.selectItem(withTag: Settings.topProcessesCompact ? 1 : 0)
             topProcessesCompact.isEnabled = Settings.isModuleVisible(module)
+            let count = Settings.processWhitelist.count
+            processWhitelist.toolTip = "Hide processes matching whitelist rules. \(count) saved \(count == 1 ? "rule" : "rules")."
+            processWhitelist.setAccessibilityHelp(processWhitelist.toolTip)
         }
     }
 
@@ -3488,6 +3523,14 @@ private final class ModuleSettingsSectionController: NSObject, SettingsSectionCo
     @objc private func changeTopProcessesCompact(_ sender: NSPopUpButton) {
         guard sender.isEnabled, let tag = sender.selectedItem?.tag, tag == 0 || tag == 1 else { return }
         Settings.topProcessesCompact = tag == 1
+    }
+
+    @objc private func openProcessWhitelist(_ sender: NSButton) {
+        guard let window = view.window else { return }
+        if whitelistWindowController == nil {
+            whitelistWindowController = ProcessWhitelistWindowController()
+        }
+        whitelistWindowController?.present(asSheetFor: window)
     }
 
     @objc private func restoreDefaultOrder(_ sender: NSButton) {

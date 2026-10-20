@@ -326,7 +326,7 @@ final class StatusItemController: NSObject {
                 self?.refreshStatusItem()
             case .module(.topProcesses):
                 self?.refreshTopProcessesMonitoring()
-            case .module, .moduleOrder, .ringMetrics, .topProcessCount, .topProcessesCompact, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
+            case .module, .moduleOrder, .ringMetrics, .topProcessCount, .topProcessesCompact, .processWhitelist, .checkForUpdatesOnLaunch, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
                 break
             case nil:
                 self?.refreshPresentation()

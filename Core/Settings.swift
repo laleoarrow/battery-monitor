@@ -135,6 +135,7 @@ enum Settings {
         case ringMetrics
         case topProcessCount
         case topProcessesCompact
+        case processWhitelist
     }
 
     static let didChange = Notification.Name("WattsonSettingsDidChange")
@@ -154,6 +155,7 @@ enum Settings {
     private static let ringMetricsKey = "popover.ringMetrics"
     private static let topProcessCountKey = "popover.topProcessCount"
     private static let topProcessesCompactKey = "popover.topProcessesCompact"
+    private static let processWhitelistKey = "popover.processWhitelist"
 #if DEBUG
     private static var testDefaults: UserDefaults?
 #endif
@@ -397,6 +399,36 @@ enum Settings {
             defaults.set(newValue, forKey: topProcessesCompactKey)
             postChange(.topProcessesCompact)
         }
+    }
+
+    /// Rules hide matching names from Process Activity without changing sampling.
+    static var processWhitelist: [ProcessWhitelistRule] {
+        get {
+            guard let data = defaults.data(forKey: processWhitelistKey),
+                  let rules = try? JSONDecoder().decode([ProcessWhitelistRule].self, from: data) else {
+                return []
+            }
+            return normalizedProcessWhitelist(rules)
+        }
+        set {
+            let rules = normalizedProcessWhitelist(newValue)
+            guard rules != processWhitelist,
+                  let data = try? JSONEncoder().encode(rules) else { return }
+            defaults.set(data, forKey: processWhitelistKey)
+            postChange(.processWhitelist)
+        }
+    }
+
+    static func addProcessToWhitelist(named name: String) {
+        processWhitelist += [ProcessWhitelistRule(pattern: name, mode: .exact)]
+    }
+
+    private static func normalizedProcessWhitelist(_ rules: [ProcessWhitelistRule]) -> [ProcessWhitelistRule] {
+        var normalized: [ProcessWhitelistRule] = []
+        for rule in rules where rule.validationMessage == nil && !normalized.contains(rule) {
+            normalized.append(rule)
+        }
+        return normalized
     }
 
     static func setModule(_ module: Module, visible: Bool) {

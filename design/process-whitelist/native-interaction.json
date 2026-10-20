@@ -1,0 +1,10 @@
+{
+  "allPassed": true,
+  "checkLines": 463,
+  "completedMarker": "ALL_INTERACTION_CHECKS_PASSED",
+  "entrypoint": "scripts/verify_interaction.sh",
+  "logSHA256": "4e94f7f5c87bcd3f78fa6116bf30558489092de0089e4ccddb29f9063a2deb76",
+  "rawLog": "dist/process-whitelist/final-source-validation-20261020/interaction.log",
+  "schema": 1,
+  "wrapperExitCode": 0
+}

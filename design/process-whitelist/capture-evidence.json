@@ -1,0 +1,2350 @@
+{
+  "assertions": 6926,
+  "cases": [
+    {
+      "case": "layout-light-charging-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-light-charging-1.png",
+      "imageSHA256": "ab1eee4f14cd49d2b54c888e0174cbc05a14fa99c600a0c99be223e28dbac30c",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-light-charging-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-light-charging-3.png",
+      "imageSHA256": "22274e6c3b8d09e8c83d1e7eb372e4c20b6d0968253311ed4c8d974df77afc99",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-light-charging-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-light-charging-10.png",
+      "imageSHA256": "8dc95a1343cf0bd2b3e819d166aedf86aa8b4b42a120331a8de2a9092dadc751",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-light-full-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-light-full-1.png",
+      "imageSHA256": "a36c541510b8303b65c8e1378c27cf23b8cd932016e370833948b4bf304e4ee9",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-light-full-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-light-full-3.png",
+      "imageSHA256": "e1c017565d65e70e3c48b99d7a1e47c741996e082331484e00710f1ca73a99d8",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-light-full-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-light-full-10.png",
+      "imageSHA256": "aad98c39d4a6222de78c4c8a834036afcc19b11b4f8cc49eea687c4c8b6350b0",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-light-on-battery-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-light-on-battery-1.png",
+      "imageSHA256": "58603dd96444bd943bbeec4e0563cd36d26b5ed4062c7b2be7058fdd1d7443b8",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-light-on-battery-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-light-on-battery-3.png",
+      "imageSHA256": "1e16c5a21a626349babc4a34033b987144bb1b3952bf3457a8c5eefda01490bc",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-light-on-battery-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-light-on-battery-10.png",
+      "imageSHA256": "7648439d532ff6d13d88a0a395a3148e2fddb76d7c09fe8f78deec80e5c72f7a",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-light-mixed-supply-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-light-mixed-supply-1.png",
+      "imageSHA256": "ca6f721d219576ff0b295df380f9c1425bdbb57f30c67a3aefd7c7ccee07b909",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-light-mixed-supply-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-light-mixed-supply-3.png",
+      "imageSHA256": "2db345c7eb18ef45ac737e49bdf12910a742c84691e53a06d0d179332998ec52",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-light-mixed-supply-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-light-mixed-supply-10.png",
+      "imageSHA256": "2434c9d9c0e02bcb30fbebbdba8f568853e27c201e074d9afd1a484001c0475a",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-light-low-battery-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-light-low-battery-1.png",
+      "imageSHA256": "d1ea801d5f02bb5b71d075d5d0ec779bcce201ba87ba4159c6f04c8fa855dff5",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-light-low-battery-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-light-low-battery-3.png",
+      "imageSHA256": "47248be928f26f15647b0fc7ba786204ba45c98abf855f1ee0f0c1648a32c4fd",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-light-low-battery-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-light-low-battery-10.png",
+      "imageSHA256": "502ede280592340e4f7fa382987f6a53d7f6fcf06bf009d7977e4107f3c012db",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-light-low-power-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-light-low-power-1.png",
+      "imageSHA256": "c35206e8141cf72885a59cc2b17adbcef0cccb1303f40765e8e667802ffc4657",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-light-low-power-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-light-low-power-3.png",
+      "imageSHA256": "d6abcd9d3bfa3f8284ee8e6dde2d59d1ccd03836b270e7aca2cba8a8b4ecedff",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-light-low-power-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-light-low-power-10.png",
+      "imageSHA256": "c5fdbbfee1cebb75ac5128ebe8decba457adf7e337e30fff77dc6b3557296d69",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-light-loading",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-light-loading.png",
+      "imageSHA256": "3fbfcecf017a087b72dae0cd14bbe62b47ee4a7b9765015bd8c53acb5908cf22",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-light-empty",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-light-empty.png",
+      "imageSHA256": "93ae0adceecd538e7149603a658e322fe4e6436ce55b40abafcc39ab4a237ce4",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-light-unavailable",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-light-unavailable.png",
+      "imageSHA256": "515182006ffadddb597ebf733e98f199ce6bd7183e3d79aa8bec2429f56233b4",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-light-zero-use",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-light-zero-use.png",
+      "imageSHA256": "ee5decaec1457bb570ee83a6e63db12525797ed7d49a1a8c01a17033c92a3697",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-dark-charging-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-dark-charging-1.png",
+      "imageSHA256": "1efad42495adbc9f8160e6d68bacb92cdc54bf937fb8f8e8e383a2d1e8291404",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-dark-charging-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-dark-charging-3.png",
+      "imageSHA256": "b001f8add90e3ad43337ec95aae556a1485a2576535750377fe841f3c916179e",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-dark-charging-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-dark-charging-10.png",
+      "imageSHA256": "eb2d01fbde599fd39ee65e3f4225c4b95ec3fa7060e4da77295d4f3d660d85e5",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-dark-full-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-dark-full-1.png",
+      "imageSHA256": "e3b697678e02fb824e58f1b934e231d0e25d4c6e3e917274c4606d871de7124a",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-dark-full-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-dark-full-3.png",
+      "imageSHA256": "e12f6813352be91424d6ee8f817c895fda49ec490a91a9c0b0245be06f979e40",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-dark-full-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-dark-full-10.png",
+      "imageSHA256": "6a104fd316faab7f53c654bc6d362df10b33de604b934a4f95034061b12809b7",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-dark-on-battery-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-dark-on-battery-1.png",
+      "imageSHA256": "a779e73f3fc2139b3a6264a688a0b6d771f84aa8c16af8db17753197dabd5ab8",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-dark-on-battery-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-dark-on-battery-3.png",
+      "imageSHA256": "bedd9c7a3bba0377e166298add4d69b4f257ebf32bd5fd75ef1500216349f543",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-dark-on-battery-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-dark-on-battery-10.png",
+      "imageSHA256": "66da333df3456a4298f1288e153d6ed962ace00239da4248c3676497e0e5ece2",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-dark-mixed-supply-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-dark-mixed-supply-1.png",
+      "imageSHA256": "c0ee695097b2daf70cac3ea121e5e699f19bc7eb1515ad86f007908957f5ba66",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-dark-mixed-supply-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-dark-mixed-supply-3.png",
+      "imageSHA256": "520a02d96026f247a039a7c4521a8d8e61d6fd8472f086c922480e625875d07f",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-dark-mixed-supply-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-dark-mixed-supply-10.png",
+      "imageSHA256": "86e1cb24cf05468ef027339ff128bc70e37691eb46253929472a241910f68a5e",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-dark-low-battery-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-dark-low-battery-1.png",
+      "imageSHA256": "8d19a42fa291dcddaf61f6e2d5a228bbd5b11bbe62f6c8bc117f08153c02971a",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-dark-low-battery-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-dark-low-battery-3.png",
+      "imageSHA256": "67d5ee64a5fe083b3e3f98f9da0bb754cd2697e16fb744fcba9eb22985e223c3",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-dark-low-battery-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-dark-low-battery-10.png",
+      "imageSHA256": "687e7cc2390f7d9221a5b884b28b4d73addd99ab32fc6e5f9728f4d7ed478874",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-dark-low-power-1",
+      "composited": false,
+      "contentHeight": 879,
+      "image": "layout-dark-low-power-1.png",
+      "imageSHA256": "f86ae5dd9e29178e17407b6edc52ed20e8e577e659080f961c1ade1d32605b84",
+      "pixels": [
+        720,
+        1758
+      ],
+      "processCount": 1
+    },
+    {
+      "case": "layout-dark-low-power-3",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-dark-low-power-3.png",
+      "imageSHA256": "0c4e3ce6aa1699d9596a9dc379cc1202764d8a22c5ee9ed9dd94c55b52cc2c3b",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-dark-low-power-10",
+      "composited": false,
+      "contentHeight": 1275,
+      "image": "layout-dark-low-power-10.png",
+      "imageSHA256": "2f9b9ce15dcaae0f307de2ca6907c5aa7839fe94a862d0b30cbf34a26df7b038",
+      "pixels": [
+        720,
+        2550
+      ],
+      "processCount": 10
+    },
+    {
+      "case": "layout-dark-loading",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-dark-loading.png",
+      "imageSHA256": "bca61f7a643a8230988235d27e8674052b80b322008f70e391f75579af5adc77",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-dark-empty",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-dark-empty.png",
+      "imageSHA256": "568b5a1422fd5c692e0098947a97008740aab7b1f4913b5b1266fbb9acaa051c",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-dark-unavailable",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-dark-unavailable.png",
+      "imageSHA256": "ead358aaf623ef6535eec71d29cac6bad7f6134e154320292c46c4f7014e2967",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "layout-dark-zero-use",
+      "composited": false,
+      "contentHeight": 967,
+      "image": "layout-dark-zero-use.png",
+      "imageSHA256": "1a3bcceadd1e09f49f4e881e7614c84199a89a99edc8effb285f603b055e6c19",
+      "pixels": [
+        720,
+        1934
+      ],
+      "processCount": 3
+    },
+    {
+      "case": "module-classic-light",
+      "compact": false,
+      "composited": true,
+      "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer.",
+      "fixtureScores": [
+        84,
+        46,
+        8.1
+      ],
+      "glass": false,
+      "gradientVariant": "release-default-fixed-scale-horizontal",
+      "image": "module-classic-light.png",
+      "imageSHA256": "5d77c587737e9afd41414c6f1da3e1d69203719d51a295a7c196c55764880998",
+      "pixels": [
+        752,
+        416
+      ],
+      "processCount": 3,
+      "productionSectionOnly": true,
+      "windowFrame": "{{332, 288}, {360, 192}}"
+    },
+    {
+      "case": "module-overflow-light",
+      "compact": false,
+      "composited": true,
+      "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer.",
+      "fixtureScores": [
+        999.95,
+        156,
+        100.0001
+      ],
+      "glass": false,
+      "gradientVariant": "release-default-fixed-scale-horizontal",
+      "image": "module-overflow-light.png",
+      "imageSHA256": "97ffe4edd01aa65691c323b1a0bb2d6272e79f8a8635b04326d23cb594c9c047",
+      "pixels": [
+        752,
+        416
+      ],
+      "processCount": 3,
+      "productionSectionOnly": true,
+      "windowFrame": "{{332, 288}, {360, 192}}"
+    },
+    {
+      "case": "module-tiny-light",
+      "compact": false,
+      "composited": true,
+      "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer.",
+      "fixtureScores": [
+        0.006,
+        0.0004,
+        0
+      ],
+      "glass": false,
+      "gradientVariant": "release-default-fixed-scale-horizontal",
+      "image": "module-tiny-light.png",
+      "imageSHA256": "bb844a6e2078b515644625dda749c3602d12bc61bcadd29d9d6022683e463074",
+      "pixels": [
+        752,
+        416
+      ],
+      "processCount": 3,
+      "productionSectionOnly": true,
+      "windowFrame": "{{332, 288}, {360, 192}}"
+    },
+    {
+      "case": "classic-light-charging-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-charging-3-top.png",
+      "imageSHA256": "bd17e60e5bd531f8940bb8cbe0565e9cfedbdeb9d5bfc11ed0bd897e6594f441",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-charging-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-charging-3-bottom.png",
+      "imageSHA256": "7386e5dd34d0e16bc80ee65020253510410f867cddddc1031b78f7fbab6e02ff",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-full-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-full-3-top.png",
+      "imageSHA256": "931cf1237fd10a5d16b26ae71d5ce826a3ab3e00f9367702eea20cc6daab0c53",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-full-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-full-3-bottom.png",
+      "imageSHA256": "bb1ae6a0913d0af41eb89fb79c9ce62ef35d7136cc7394ece7c5ce8b25efa835",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-on-battery-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-on-battery-3-top.png",
+      "imageSHA256": "39e9b0225edb5683ade54276c7461393c49e785d9aeb93696184da00f26c9e56",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-on-battery-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-on-battery-3-bottom.png",
+      "imageSHA256": "d39c99bf9208d8e113469524f6df7a087147c94c6716a73e2c543f26c1710ed0",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-on-battery-3-force-quit",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-on-battery-3-force-quit.png",
+      "imageSHA256": "f0f9eb6ae62eb58de35ea4a5a1a10447c0d86d3d0c2295038f429947682020c0",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        804,
+        1392
+      ],
+      "processAction": "forceQuit",
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-on-battery-3-whitelist-selected",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-on-battery-3-whitelist-selected.png",
+      "imageSHA256": "137ac0a65d6cd222431ccb4503acdacf306808f57611402588e156c7e714c67a",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        804,
+        1392
+      ],
+      "processAction": "whitelist",
+      "symbol": "eye.slash",
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-on-battery-3-whitelist-selected-row",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-on-battery-3-whitelist-selected-row.png",
+      "imageSHA256": "f74b7f65c358bae08de85dc392540247d58a8a4471d71471ccade6808148f926",
+      "nativeCaptureScreenRect": "{{577.5, 157}, {344, 184}}",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        688,
+        368
+      ],
+      "processAction": "whitelist",
+      "symbol": "eye.slash",
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-on-battery-3-whitelist-hidden",
+      "composited": true,
+      "glass": false,
+      "hiddenProcess": "Safari",
+      "image": "classic-light-on-battery-3-whitelist-hidden.png",
+      "imageSHA256": "f56f83ebfccbbf036845146fe2781690063d5c579a6c394502ccb77c12dc117c",
+      "nextRankedProcessVisible": true,
+      "pixels": [
+        804,
+        1392
+      ],
+      "ruleMode": "exact",
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-on-battery-3-whitelist-hidden-row",
+      "composited": true,
+      "glass": false,
+      "hiddenProcess": "Safari",
+      "image": "classic-light-on-battery-3-whitelist-hidden-row.png",
+      "imageSHA256": "92a65933e86edb032de09d881e256b223c86933ba56e4cf35e3b9ed8dd81ca3d",
+      "nativeCaptureScreenRect": "{{577.5, 157}, {344, 184}}",
+      "nextRankedProcessVisible": true,
+      "pixels": [
+        688,
+        368
+      ],
+      "ruleMode": "exact",
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "actualInfoPopover": true,
+      "case": "classic-light-on-battery-3-help",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-on-battery-3-help.png",
+      "imageSHA256": "5c1e0d54aa08b2516d118bebb13a07cd230663d8e087d908ed86ca7f2dd12974",
+      "pixels": [
+        704,
+        290
+      ],
+      "textCellHeights": [
+        {
+          "frame": "{{14, 14}, {282, 75}}",
+          "requiredCellHeight": 75,
+          "text": "Activity Score combines CPU usage and idle wakeups. Higher scores indicate greater process activity, not measured power consumption. Bars use a fixed 0\u2013100 scale; \u203a marks scores above 100. CPU 100% means one logical core."
+        }
+      ],
+      "windowFrame": "{{688, 184}, {336, 129}}"
+    },
+    {
+      "case": "classic-light-mixed-supply-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-mixed-supply-3-top.png",
+      "imageSHA256": "ef395f579b4300e4a54d8fbebabe431671d97b619cdd26eb4d00b955fb1f425f",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-mixed-supply-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-mixed-supply-3-bottom.png",
+      "imageSHA256": "3d78de625e7fb6ed666f672e2f01eb2a430a32d111e9ffd5c0a9be99315b985f",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-low-battery-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-low-battery-3-top.png",
+      "imageSHA256": "b3ce527d69d568c69cf210fa8526257a87822d99083c5967740060a4fb4799d9",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-low-battery-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-low-battery-3-bottom.png",
+      "imageSHA256": "6b4cc3f9c388c88e0a5121392900ecbb8c30b3d472d407b94691408b355fdb43",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-low-power-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-low-power-3-top.png",
+      "imageSHA256": "799380eaa38db199ed654059da45e92f01b863a7f60146f177beb9204170884f",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-low-power-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-low-power-3-bottom.png",
+      "imageSHA256": "089ca85672a1f4cd69ba91cbeffd2d143e6cc34a38e236afee995558e4c7c471",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-on-battery-1-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-on-battery-1-top.png",
+      "imageSHA256": "4fa1fdb3f4f2d2f4f7aef9745dc0cd691ca1da0b9cf063b3c42fc078ae1e2d49",
+      "listFrame": "{{7.5, 709}, {328, 80}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 1,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-on-battery-1-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-on-battery-1-bottom.png",
+      "imageSHA256": "96a8f1edcae4072ab11f03d5220dd2349187c5eabcf70e4304d3843ec9315a7e",
+      "listFrame": "{{7.5, 709}, {328, 80}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 1,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-on-battery-10-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-on-battery-10-top.png",
+      "imageSHA256": "254c277be2a13f0cffa4c2a6798f2047e7fcd68190ea804df840eea38ebac1c7",
+      "listFrame": "{{7.5, 709}, {328, 476}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 10,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-light-on-battery-10-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-light-on-battery-10-bottom.png",
+      "imageSHA256": "1cb6e9e2bc7be0bbd7fb8d64f72c606b5c8ecdd5afd6f674331dc6d3a2df2f64",
+      "listFrame": "{{7.5, 709}, {328, 476}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 10,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "settings-classic-light-top",
+      "composited": true,
+      "count": 10,
+      "glass": false,
+      "image": "settings-classic-light-top.png",
+      "imageSHA256": "1f1883b574e7635f5016cf2e60aa0b836e726f05fed8099f525f52ab70af3eb4",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "case": "settings-classic-light-count",
+      "composited": true,
+      "count": 10,
+      "countFrame": "{{173, 418.5}, {52, 20}}",
+      "glass": false,
+      "image": "settings-classic-light-count.png",
+      "imageSHA256": "1dee71a7a8edea6dd017e1b58c605e7df9fb275030e703cdd89d29b42488483f",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "scrollVisibleRect": "{{-0.5, 77.5}, {624, 395}}",
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "case": "settings-classic-light-compact",
+      "compact": true,
+      "compactFrame": "{{321.5, 418.5}, {56.5, 20}}",
+      "composited": true,
+      "controlSize": "small",
+      "count": 10,
+      "countFrame": "{{173, 418.5}, {52, 20}}",
+      "fontPointSize": 11,
+      "glass": false,
+      "image": "settings-classic-light-compact.png",
+      "imageSHA256": "0cb1b2d99e758a1d60e26498759615b0b3d11e40078c3856e2f2705ada0bad54",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "rowFrame": "{{0, 0}, {583, 72}}",
+      "scrollVisibleRect": "{{-0.5, 77.5}, {624, 395}}",
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "actualSettingsSheet": true,
+      "case": "settings-classic-light-whitelist-editor",
+      "composited": true,
+      "glass": false,
+      "image": "settings-classic-light-whitelist-editor.png",
+      "imageSHA256": "751913e56227ede34830cd04e081b118ed407260fc7aa4eac2d7d64066aa5bb6",
+      "matchModes": [
+        "exact",
+        "wildcard",
+        "regex"
+      ],
+      "pixels": [
+        1072,
+        832
+      ],
+      "rules": 3,
+      "windowFrame": "{{140, 120}, {520, 400}}"
+    },
+    {
+      "case": "settings-classic-light-whitelist-invalid-regex",
+      "composited": true,
+      "glass": false,
+      "image": "settings-classic-light-whitelist-invalid-regex.png",
+      "imageSHA256": "751913e56227ede34830cd04e081b118ed407260fc7aa4eac2d7d64066aa5bb6",
+      "invalidRegexBlocked": true,
+      "pixels": [
+        1072,
+        832
+      ],
+      "validation": "Invalid regular expression.",
+      "windowFrame": "{{140, 120}, {520, 400}}"
+    },
+    {
+      "case": "module-classic-dark",
+      "compact": false,
+      "composited": true,
+      "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer.",
+      "fixtureScores": [
+        84,
+        46,
+        8.1
+      ],
+      "glass": false,
+      "gradientVariant": "release-default-fixed-scale-horizontal",
+      "image": "module-classic-dark.png",
+      "imageSHA256": "295c4d0005f698cd9d53637daada9d2da887639f0f604bab796eb6bf2eb86fe7",
+      "pixels": [
+        752,
+        416
+      ],
+      "processCount": 3,
+      "productionSectionOnly": true,
+      "windowFrame": "{{332, 288}, {360, 192}}"
+    },
+    {
+      "case": "module-overflow-dark",
+      "compact": false,
+      "composited": true,
+      "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer.",
+      "fixtureScores": [
+        999.95,
+        156,
+        100.0001
+      ],
+      "glass": false,
+      "gradientVariant": "release-default-fixed-scale-horizontal",
+      "image": "module-overflow-dark.png",
+      "imageSHA256": "525796e359eab0c6708d79c5a969a026106e8528fdbb24dff6ff3f2a794cf0d7",
+      "pixels": [
+        752,
+        416
+      ],
+      "processCount": 3,
+      "productionSectionOnly": true,
+      "windowFrame": "{{332, 288}, {360, 192}}"
+    },
+    {
+      "case": "module-tiny-dark",
+      "compact": false,
+      "composited": true,
+      "container": "Fixture window with production Classic surface color and 16-point side insets; production TopProcessesView renderer.",
+      "fixtureScores": [
+        0.006,
+        0.0004,
+        0
+      ],
+      "glass": false,
+      "gradientVariant": "release-default-fixed-scale-horizontal",
+      "image": "module-tiny-dark.png",
+      "imageSHA256": "629b491f40c49346848f3060c322d2562fa82b5f0a88eb104ecf29c4dae2f09a",
+      "pixels": [
+        752,
+        416
+      ],
+      "processCount": 3,
+      "productionSectionOnly": true,
+      "windowFrame": "{{332, 288}, {360, 192}}"
+    },
+    {
+      "case": "classic-dark-charging-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-charging-3-top.png",
+      "imageSHA256": "ea002e382b7993f62cd93cacb482a4271bc8f35f3882bda2abe114c9349a7135",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-charging-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-charging-3-bottom.png",
+      "imageSHA256": "a640da69e98bc2702228d33d5a13b43aaab0647879dd7e40b3a0a0297649e7c6",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-full-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-full-3-top.png",
+      "imageSHA256": "20b32825402daff732de27cce8bdf60480cfbbe9e10b0dd6fa7825c2b9fc3b89",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-full-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-full-3-bottom.png",
+      "imageSHA256": "a2d3d3a869adb4516cb710fcfc509821dc148592f7a3250a693d1f1535c27ce7",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-on-battery-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-on-battery-3-top.png",
+      "imageSHA256": "6dfdfa05a52689d032a3fa525e4a979a11d0f76fb90f7fe8079add565ea0d61f",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-on-battery-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-on-battery-3-bottom.png",
+      "imageSHA256": "5c1bfb768ac45fdc1ebfc9026130dc7592879f76962bc31ae64daa421780d9bf",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-on-battery-3-force-quit",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-on-battery-3-force-quit.png",
+      "imageSHA256": "08ee6fe18322319d9170e94d97e86d74880e6fa67cc762c29a49d575320ec058",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        804,
+        1392
+      ],
+      "processAction": "forceQuit",
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-on-battery-3-whitelist-selected",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-on-battery-3-whitelist-selected.png",
+      "imageSHA256": "3148788ad5c4ebeed4077dde96437ea601a92292a77a1fdb568994716a703b66",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        804,
+        1392
+      ],
+      "processAction": "whitelist",
+      "symbol": "eye.slash",
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-on-battery-3-whitelist-selected-row",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-on-battery-3-whitelist-selected-row.png",
+      "imageSHA256": "5ab0684b20a9891f98f9ba07b19740b6b9004d171f9ecb03a6568e5a239185c7",
+      "nativeCaptureScreenRect": "{{577.5, 157}, {344, 184}}",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        688,
+        368
+      ],
+      "processAction": "whitelist",
+      "symbol": "eye.slash",
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-on-battery-3-whitelist-hidden",
+      "composited": true,
+      "glass": false,
+      "hiddenProcess": "Safari",
+      "image": "classic-dark-on-battery-3-whitelist-hidden.png",
+      "imageSHA256": "da4fd7cddd39d34fddbac2f6d940a69b2257de33a9fb9d6be1c237ebe3ee49cb",
+      "nextRankedProcessVisible": true,
+      "pixels": [
+        804,
+        1392
+      ],
+      "ruleMode": "exact",
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-on-battery-3-whitelist-hidden-row",
+      "composited": true,
+      "glass": false,
+      "hiddenProcess": "Safari",
+      "image": "classic-dark-on-battery-3-whitelist-hidden-row.png",
+      "imageSHA256": "ef885cde995e55ea576a1aedbfc3fdca3613cbd31df18e150367c3242702bbb8",
+      "nativeCaptureScreenRect": "{{577.5, 157}, {344, 184}}",
+      "nextRankedProcessVisible": true,
+      "pixels": [
+        688,
+        368
+      ],
+      "ruleMode": "exact",
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "actualInfoPopover": true,
+      "case": "classic-dark-on-battery-3-help",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-on-battery-3-help.png",
+      "imageSHA256": "1cb861f4bdbe9d8e4fdaea5dfc362fb0785a8143f40456cd6944dd6a8f004aac",
+      "pixels": [
+        704,
+        290
+      ],
+      "textCellHeights": [
+        {
+          "frame": "{{14, 14}, {282, 75}}",
+          "requiredCellHeight": 75,
+          "text": "Activity Score combines CPU usage and idle wakeups. Higher scores indicate greater process activity, not measured power consumption. Bars use a fixed 0\u2013100 scale; \u203a marks scores above 100. CPU 100% means one logical core."
+        }
+      ],
+      "windowFrame": "{{688, 184}, {336, 129}}"
+    },
+    {
+      "case": "classic-dark-mixed-supply-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-mixed-supply-3-top.png",
+      "imageSHA256": "ea3b9a77cbe776c856a61e06f3d555ff0bda010375415be7569dbfc4c98355c0",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-mixed-supply-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-mixed-supply-3-bottom.png",
+      "imageSHA256": "5467359f098c9bcceebe6faf04fdac27f8c5be32f0badc02bad77bfd550bf350",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-low-battery-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-low-battery-3-top.png",
+      "imageSHA256": "b07e9666579cf5ce7f9439a26f1b092dc078d701a7c4ef5a7074f8c8bcd7bca5",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-low-battery-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-low-battery-3-bottom.png",
+      "imageSHA256": "6bccccabd93245d003518609d96770e94d6c42af807378ed8b6b3519400cc766",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-low-power-3-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-low-power-3-top.png",
+      "imageSHA256": "483129728ff2e34e61f9e13e80d26054cd7e338902f1fd9dec2e5df9e3515859",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-low-power-3-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-low-power-3-bottom.png",
+      "imageSHA256": "214981bafcb7ec4b4a5ea5bdbb38d228513c48eeff098c37f5eeaac6d87a2caf",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-on-battery-1-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-on-battery-1-top.png",
+      "imageSHA256": "b94df304bd595e21380bfd002edfbe7424be3a3229e53012c6f2ff4a958b8b53",
+      "listFrame": "{{7.5, 709}, {328, 80}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 1,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-on-battery-1-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-on-battery-1-bottom.png",
+      "imageSHA256": "4a17aa98878b606543687b9d1406de07282f0ad31fb0e9c427e6ae371cccb23e",
+      "listFrame": "{{7.5, 709}, {328, 80}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 1,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-on-battery-10-top",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-on-battery-10-top.png",
+      "imageSHA256": "487b775d44e4135f57577a42559d3b239412204dd7cc8987c60edd7c1570bc0d",
+      "listFrame": "{{7.5, 709}, {328, 476}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 10,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "classic-dark-on-battery-10-bottom",
+      "composited": true,
+      "glass": false,
+      "image": "classic-dark-on-battery-10-bottom.png",
+      "imageSHA256": "f57be06775ee9ae4d3cf3fae69bbc216d070012580b2d033d0ab695af4114951",
+      "listFrame": "{{7.5, 709}, {328, 476}}",
+      "pixels": [
+        804,
+        1392
+      ],
+      "processCount": 10,
+      "scrolling": true,
+      "windowFrame": "{{565, 62}, {386, 680}}"
+    },
+    {
+      "case": "settings-classic-dark-top",
+      "composited": true,
+      "count": 10,
+      "glass": false,
+      "image": "settings-classic-dark-top.png",
+      "imageSHA256": "8d869b7e2a0443a724e5b62b5670bf0126c59a3040452229b9515bc102a2ed27",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "case": "settings-classic-dark-count",
+      "composited": true,
+      "count": 10,
+      "countFrame": "{{173, 418.5}, {52, 20}}",
+      "glass": false,
+      "image": "settings-classic-dark-count.png",
+      "imageSHA256": "8d74d6b7c3a7aa75f1ed330952e7d7f5b1370bda71275b96c446e12e88077295",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "scrollVisibleRect": "{{-0.5, 77.5}, {624, 395}}",
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "case": "settings-classic-dark-compact",
+      "compact": true,
+      "compactFrame": "{{321.5, 418.5}, {56.5, 20}}",
+      "composited": true,
+      "controlSize": "small",
+      "count": 10,
+      "countFrame": "{{173, 418.5}, {52, 20}}",
+      "fontPointSize": 11,
+      "glass": false,
+      "image": "settings-classic-dark-compact.png",
+      "imageSHA256": "04335123f6da15cfe4afadeb73036d849f06d2a36d3bcde327f747d3b5c3b17c",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "rowFrame": "{{0, 0}, {583, 72}}",
+      "scrollVisibleRect": "{{-0.5, 77.5}, {624, 395}}",
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "actualSettingsSheet": true,
+      "case": "settings-classic-dark-whitelist-editor",
+      "composited": true,
+      "glass": false,
+      "image": "settings-classic-dark-whitelist-editor.png",
+      "imageSHA256": "af3a123b3601baaaa9ea06673d71e2c0e6ff20c1f6e82d6ab023d649f893e9f6",
+      "matchModes": [
+        "exact",
+        "wildcard",
+        "regex"
+      ],
+      "pixels": [
+        1072,
+        832
+      ],
+      "rules": 3,
+      "windowFrame": "{{140, 120}, {520, 400}}"
+    },
+    {
+      "case": "settings-classic-dark-whitelist-invalid-regex",
+      "composited": true,
+      "glass": false,
+      "image": "settings-classic-dark-whitelist-invalid-regex.png",
+      "imageSHA256": "af3a123b3601baaaa9ea06673d71e2c0e6ff20c1f6e82d6ab023d649f893e9f6",
+      "invalidRegexBlocked": true,
+      "pixels": [
+        1072,
+        832
+      ],
+      "validation": "Invalid regular expression.",
+      "windowFrame": "{{140, 120}, {520, 400}}"
+    },
+    {
+      "case": "glass-light-charging-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-charging-3-top.png",
+      "imageSHA256": "33cceef4901a438291dfdee71e16c96b1ae02a36862886b6909c7081577b267b",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-charging-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-charging-3-bottom.png",
+      "imageSHA256": "bdd61b6729be15ca27c918caa206c74419c33218f1d984334d2ba8b590a77dc3",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-full-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-full-3-top.png",
+      "imageSHA256": "28603b133dba10acc4343f4a4aaf8692579095ad8f7736379af2f7df2d101be3",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-full-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-full-3-bottom.png",
+      "imageSHA256": "94b9159def5d3b55177675638d7ebf3c726fd72aa4724565b82043fe83598eb5",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-on-battery-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-on-battery-3-top.png",
+      "imageSHA256": "f5c042874195625047713c4197312307a9942cc976bac997d3e531c3fe5427b5",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-on-battery-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-on-battery-3-bottom.png",
+      "imageSHA256": "04809b6af039e4d1b91096d8ad1d822b729fc29bb8a0e6d329658e3cf3ee54ff",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-on-battery-3-force-quit",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-on-battery-3-force-quit.png",
+      "imageSHA256": "63b78afea38e5ec3cbdaf09ee3ebedbf8bd89ef349cb1ac20ea34809955eaba5",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        880,
+        1444
+      ],
+      "processAction": "forceQuit",
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-on-battery-3-whitelist-selected",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-on-battery-3-whitelist-selected.png",
+      "imageSHA256": "54acff1e2edfa1363b0aac5ab122c3ff49b2a7e3d4553fc01c23840ee45d0531",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        880,
+        1444
+      ],
+      "processAction": "whitelist",
+      "symbol": "eye.slash",
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-on-battery-3-whitelist-selected-row",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-on-battery-3-whitelist-selected-row.png",
+      "imageSHA256": "7d723c51f09046676f3b71bb78d3f8ca183164519e7e7174cb5a6835eb7257de",
+      "nativeCaptureScreenRect": "{{577.5, 174}, {344, 184}}",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        688,
+        368
+      ],
+      "processAction": "whitelist",
+      "symbol": "eye.slash",
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-on-battery-3-whitelist-hidden",
+      "composited": true,
+      "glass": true,
+      "hiddenProcess": "Safari",
+      "image": "glass-light-on-battery-3-whitelist-hidden.png",
+      "imageSHA256": "af9f4df2546ed3fd693195dbf39ffdea98c6c7987890fd79d59034f65fab992a",
+      "nextRankedProcessVisible": true,
+      "pixels": [
+        880,
+        1444
+      ],
+      "ruleMode": "exact",
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-on-battery-3-whitelist-hidden-row",
+      "composited": true,
+      "glass": true,
+      "hiddenProcess": "Safari",
+      "image": "glass-light-on-battery-3-whitelist-hidden-row.png",
+      "imageSHA256": "79074b790f2eb8dad68afc2b069d5d22417c74ae83b7403ffe110fb59c63ab17",
+      "nativeCaptureScreenRect": "{{577.5, 174}, {344, 184}}",
+      "nextRankedProcessVisible": true,
+      "pixels": [
+        688,
+        368
+      ],
+      "ruleMode": "exact",
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "actualInfoPopover": true,
+      "case": "glass-light-on-battery-3-help",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-on-battery-3-help.png",
+      "imageSHA256": "9ebd223f653ec3f6dacaf4e5604971a7df8bb6b7ec552010f723725b3bdbc137",
+      "pixels": [
+        704,
+        290
+      ],
+      "textCellHeights": [
+        {
+          "frame": "{{14, 14}, {282, 75}}",
+          "requiredCellHeight": 75,
+          "text": "Activity Score combines CPU usage and idle wakeups. Higher scores indicate greater process activity, not measured power consumption. Bars use a fixed 0\u2013100 scale; \u203a marks scores above 100. CPU 100% means one logical core."
+        }
+      ],
+      "windowFrame": "{{688, 342}, {336, 129}}"
+    },
+    {
+      "case": "glass-light-mixed-supply-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-mixed-supply-3-top.png",
+      "imageSHA256": "f6e482e735216ce8c6c9550977a65281a3c3218e1478757edf6a81f7422e409b",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-mixed-supply-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-mixed-supply-3-bottom.png",
+      "imageSHA256": "9f280c5977529ce8ec7c6882c60acdfd162fb9f9d88430ef176a98c4c3b861b1",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-low-battery-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-low-battery-3-top.png",
+      "imageSHA256": "a040364df91609e7bb058a5a7385c6c8563686978009279e16688593c6e3b90e",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-low-battery-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-low-battery-3-bottom.png",
+      "imageSHA256": "dbb4ec06cce495ee70ec5665c186ef0609d1156c2e338cc35c742dcb9870d0b8",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-low-power-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-low-power-3-top.png",
+      "imageSHA256": "933c964e50a046d7160e4afe1ec6a0942f78dde227919e000bebfca2ce648205",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-low-power-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-low-power-3-bottom.png",
+      "imageSHA256": "9c4b43864c0e9074bddeee5030d03f0e9ec9c4acda57e0323ced5c3f5a24619b",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-on-battery-1-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-on-battery-1-top.png",
+      "imageSHA256": "5e82d1ebe8ca2c15afe2ea26bac40dccf7b134fe1df9ef112ac1e8aedb7ddadc",
+      "listFrame": "{{7.5, 709}, {328, 80}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 1,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-on-battery-1-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-on-battery-1-bottom.png",
+      "imageSHA256": "e54edf32e02b47b1c3fca865c3d63a8be8960e0e65afc6cd1722b6c5d258d1fe",
+      "listFrame": "{{7.5, 709}, {328, 80}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 1,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-on-battery-10-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-on-battery-10-top.png",
+      "imageSHA256": "b4caf6bcf76f8981699593a7ef2a3f3c5c02cc9fbb7b62493cd3b977b7c28978",
+      "listFrame": "{{7.5, 709}, {328, 476}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 10,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-light-on-battery-10-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-light-on-battery-10-bottom.png",
+      "imageSHA256": "f78a531c5a14fa8fc87979973abef30013186819cd61d455007fdee565ec2598",
+      "listFrame": "{{7.5, 709}, {328, 476}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 10,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "settings-glass-light-top",
+      "composited": true,
+      "count": 10,
+      "glass": true,
+      "image": "settings-glass-light-top.png",
+      "imageSHA256": "a7b74207995dd6435b258494b5196ce40903d8b986b07487a62660a5ed11bbe5",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "case": "settings-glass-light-count",
+      "composited": true,
+      "count": 10,
+      "countFrame": "{{173, 418.5}, {52, 20}}",
+      "glass": true,
+      "image": "settings-glass-light-count.png",
+      "imageSHA256": "ab9c53468c6e612bb1a2531e0044dc14b4acd8796f021e48fda61b63b78e9e97",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "scrollVisibleRect": "{{-0.5, 49.5}, {617, 423}}",
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "case": "settings-glass-light-compact",
+      "compact": true,
+      "compactFrame": "{{321.5, 418.5}, {56.5, 20}}",
+      "composited": true,
+      "controlSize": "small",
+      "count": 10,
+      "countFrame": "{{173, 418.5}, {52, 20}}",
+      "fontPointSize": 11,
+      "glass": true,
+      "image": "settings-glass-light-compact.png",
+      "imageSHA256": "d65a0fa14fff38ace7bb9ef830d2e92e7245bccd3ea162d07f3df659f02f50f6",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "rowFrame": "{{0, 0}, {576, 72}}",
+      "scrollVisibleRect": "{{-0.5, 49.5}, {617, 423}}",
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "actualSettingsSheet": true,
+      "case": "settings-glass-light-whitelist-editor",
+      "composited": true,
+      "glass": true,
+      "image": "settings-glass-light-whitelist-editor.png",
+      "imageSHA256": "751913e56227ede34830cd04e081b118ed407260fc7aa4eac2d7d64066aa5bb6",
+      "matchModes": [
+        "exact",
+        "wildcard",
+        "regex"
+      ],
+      "pixels": [
+        1072,
+        832
+      ],
+      "rules": 3,
+      "windowFrame": "{{140, 120}, {520, 400}}"
+    },
+    {
+      "case": "settings-glass-light-whitelist-invalid-regex",
+      "composited": true,
+      "glass": true,
+      "image": "settings-glass-light-whitelist-invalid-regex.png",
+      "imageSHA256": "751913e56227ede34830cd04e081b118ed407260fc7aa4eac2d7d64066aa5bb6",
+      "invalidRegexBlocked": true,
+      "pixels": [
+        1072,
+        832
+      ],
+      "validation": "Invalid regular expression.",
+      "windowFrame": "{{140, 120}, {520, 400}}"
+    },
+    {
+      "case": "glass-dark-charging-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-charging-3-top.png",
+      "imageSHA256": "0ce3910fa60f37b2397d6545c6913f3de2f52b44c8e4834968c72e3feaed29b9",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-charging-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-charging-3-bottom.png",
+      "imageSHA256": "28e59493d97e6fe431fe4e82c8caf1108242c03b810698e91ecb2704f9b18192",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-full-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-full-3-top.png",
+      "imageSHA256": "2ccb5c00f9e79e6ac3eb840944d8d8b529f26a09427f3543c9d7994218f21e2a",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-full-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-full-3-bottom.png",
+      "imageSHA256": "c00ea17adf9a4f193580d881eb787e28c62ad1146ea9759732f7b038ccfcd15b",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-on-battery-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-on-battery-3-top.png",
+      "imageSHA256": "bbed17b468c7e96a32cfa054e2df18fb37b2fdce21f92296088532331f918848",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-on-battery-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-on-battery-3-bottom.png",
+      "imageSHA256": "ff09c2cbc87ec3b072a9f5cce2a53466623924950ac529a1c878a10792b4ead4",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-on-battery-3-force-quit",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-on-battery-3-force-quit.png",
+      "imageSHA256": "e9296fda2f0ff7baf611216b2398c23d3bbf1ae5ae50532c2b430962951d9f69",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        880,
+        1444
+      ],
+      "processAction": "forceQuit",
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-on-battery-3-whitelist-selected",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-on-battery-3-whitelist-selected.png",
+      "imageSHA256": "761769d1462e8cd5e2018961844d11b254a3bef60c775882cc15adaf7087879b",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        880,
+        1444
+      ],
+      "processAction": "whitelist",
+      "symbol": "eye.slash",
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-on-battery-3-whitelist-selected-row",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-on-battery-3-whitelist-selected-row.png",
+      "imageSHA256": "0941fd32e022914118a41532365e6165b8e2510d05d9ce8ac47ef8eb12f8d726",
+      "nativeCaptureScreenRect": "{{577.5, 174}, {344, 184}}",
+      "nativeWindowEventDispatch": true,
+      "pixels": [
+        688,
+        368
+      ],
+      "processAction": "whitelist",
+      "symbol": "eye.slash",
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-on-battery-3-whitelist-hidden",
+      "composited": true,
+      "glass": true,
+      "hiddenProcess": "Safari",
+      "image": "glass-dark-on-battery-3-whitelist-hidden.png",
+      "imageSHA256": "d2e97e1e653d0117a190912a5c197025d54efb22d1fca190159ea9cf3de264d5",
+      "nextRankedProcessVisible": true,
+      "pixels": [
+        880,
+        1444
+      ],
+      "ruleMode": "exact",
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-on-battery-3-whitelist-hidden-row",
+      "composited": true,
+      "glass": true,
+      "hiddenProcess": "Safari",
+      "image": "glass-dark-on-battery-3-whitelist-hidden-row.png",
+      "imageSHA256": "b715ad745f9bebdc9ee90cbf1f5346aed8688f4ec823f7a770e45feae0becf03",
+      "nativeCaptureScreenRect": "{{577.5, 174}, {344, 184}}",
+      "nextRankedProcessVisible": true,
+      "pixels": [
+        688,
+        368
+      ],
+      "ruleMode": "exact",
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "actualInfoPopover": true,
+      "case": "glass-dark-on-battery-3-help",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-on-battery-3-help.png",
+      "imageSHA256": "d4fd1a9cf9bbf81a7f81a08e6fe6e84ee7ff83b331401fc3c059287586c32b5f",
+      "pixels": [
+        704,
+        290
+      ],
+      "textCellHeights": [
+        {
+          "frame": "{{14, 14}, {282, 75}}",
+          "requiredCellHeight": 75,
+          "text": "Activity Score combines CPU usage and idle wakeups. Higher scores indicate greater process activity, not measured power consumption. Bars use a fixed 0\u2013100 scale; \u203a marks scores above 100. CPU 100% means one logical core."
+        }
+      ],
+      "windowFrame": "{{688, 342}, {336, 129}}"
+    },
+    {
+      "case": "glass-dark-mixed-supply-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-mixed-supply-3-top.png",
+      "imageSHA256": "3de369ee42c9e8e43979502a0b82e197e64c1d185796686952cf4fe86be34581",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-mixed-supply-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-mixed-supply-3-bottom.png",
+      "imageSHA256": "d92f4c987070398bedd6c9b1a61c74bfcdb55ebeab6e6c9178437db67d171ee9",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-low-battery-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-low-battery-3-top.png",
+      "imageSHA256": "cd0dd0bad99e26889756360730bbb1568efd76dd796377bd1519f39c4ccda044",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-low-battery-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-low-battery-3-bottom.png",
+      "imageSHA256": "17c0729063c8ad7743b10effcc8c15821ca7a3aa0e7df967cd07dd6834358550",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-low-power-3-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-low-power-3-top.png",
+      "imageSHA256": "c0dbbc5e4045afe79a7ed359874f1518c8c8785d84a8f8e945eae48ff4c58e4f",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-low-power-3-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-low-power-3-bottom.png",
+      "imageSHA256": "1c4acb8ebc0d6a6e7d07e5d67a817d83c334cbbceea3543cee9ddfcfd8a74da2",
+      "listFrame": "{{7.5, 709}, {328, 168}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 3,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-on-battery-1-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-on-battery-1-top.png",
+      "imageSHA256": "209e6e76e3092da14dba7767db3a09d42067180f1f8037db978692375ef6eee8",
+      "listFrame": "{{7.5, 709}, {328, 80}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 1,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-on-battery-1-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-on-battery-1-bottom.png",
+      "imageSHA256": "6e37311cfc54dd2695f6a2e849458ae7ac17053a5928bdefd721bf37eba1a6bc",
+      "listFrame": "{{7.5, 709}, {328, 80}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 1,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-on-battery-10-top",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-on-battery-10-top.png",
+      "imageSHA256": "a89dacb790f1dec3fe8bf056157b5552b0a9d1f419e0438b09cc68edadcddbfb",
+      "listFrame": "{{7.5, 709}, {328, 476}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 10,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "glass-dark-on-battery-10-bottom",
+      "composited": true,
+      "glass": true,
+      "image": "glass-dark-on-battery-10-bottom.png",
+      "imageSHA256": "8cfd5839bcfe76eae0f52c9bdc4e0001531a142ad8ce19ff593e3e51479ead7b",
+      "listFrame": "{{7.5, 709}, {328, 476}}",
+      "pixels": [
+        880,
+        1444
+      ],
+      "processCount": 10,
+      "scrolling": true,
+      "windowFrame": "{{546, 60}, {424, 706}}"
+    },
+    {
+      "case": "settings-glass-dark-top",
+      "composited": true,
+      "count": 10,
+      "glass": true,
+      "image": "settings-glass-dark-top.png",
+      "imageSHA256": "6572ddecc23356ac99342469748135a34343b2b26009014770193eb4958893db",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "case": "settings-glass-dark-count",
+      "composited": true,
+      "count": 10,
+      "countFrame": "{{173, 418.5}, {52, 20}}",
+      "glass": true,
+      "image": "settings-glass-dark-count.png",
+      "imageSHA256": "b805fa5a59265e4b64464f5c8dc0e6ed5ebe079d650215a0027acf5511c52efe",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "scrollVisibleRect": "{{-0.5, 49.5}, {617, 423}}",
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "case": "settings-glass-dark-compact",
+      "compact": true,
+      "compactFrame": "{{321.5, 418.5}, {56.5, 20}}",
+      "composited": true,
+      "controlSize": "small",
+      "count": 10,
+      "countFrame": "{{173, 418.5}, {52, 20}}",
+      "fontPointSize": 11,
+      "glass": true,
+      "image": "settings-glass-dark-compact.png",
+      "imageSHA256": "82c6d4afdbd1b92c2b4b11c295c14fb7bac3a491dd8d33e70bde15f6ad08af23",
+      "pixels": [
+        1632,
+        1072
+      ],
+      "rowFrame": "{{0, 0}, {576, 72}}",
+      "scrollVisibleRect": "{{-0.5, 49.5}, {617, 423}}",
+      "windowFrame": "{{0, 60}, {800, 520}}"
+    },
+    {
+      "actualSettingsSheet": true,
+      "case": "settings-glass-dark-whitelist-editor",
+      "composited": true,
+      "glass": true,
+      "image": "settings-glass-dark-whitelist-editor.png",
+      "imageSHA256": "af3a123b3601baaaa9ea06673d71e2c0e6ff20c1f6e82d6ab023d649f893e9f6",
+      "matchModes": [
+        "exact",
+        "wildcard",
+        "regex"
+      ],
+      "pixels": [
+        1072,
+        832
+      ],
+      "rules": 3,
+      "windowFrame": "{{140, 120}, {520, 400}}"
+    },
+    {
+      "case": "settings-glass-dark-whitelist-invalid-regex",
+      "composited": true,
+      "glass": true,
+      "image": "settings-glass-dark-whitelist-invalid-regex.png",
+      "imageSHA256": "af3a123b3601baaaa9ea06673d71e2c0e6ff20c1f6e82d6ab023d649f893e9f6",
+      "invalidRegexBlocked": true,
+      "pixels": [
+        1072,
+        832
+      ],
+      "validation": "Invalid regular expression.",
+      "windowFrame": "{{140, 120}, {520, 400}}"
+    }
+  ],
+  "failures": 0,
+  "highContrast": false,
+  "limitations": "Process energy, battery telemetry, history, and Settings privileged dependencies are deterministic fixtures. No sampling correctness or physical-hardware power-mode assertion is inferred from screenshots.",
+  "method": "Production AppKit content cache plus WindowServer capture of real Classic/Regular Glass popover and Settings windows and an owned underlay in a disposable ARM GUI VM. Native window mouse events exercise ordinary and Command-click process actions; the selected whitelist button saves an exact rule, hides that name, and refills the visible rank. The actual Settings whitelist sheet adds Exact/Wildcard/Regex rules and rejects invalid regex.",
+  "mode": "full-matrix",
+  "rawCaptureDirectory": "dist/process-whitelist/final-source-validation-20261020/captures",
+  "retainedImages": [
+    "gallery/classic-light-on-battery-3-whitelist-selected-row.png",
+    "gallery/classic-dark-on-battery-3-whitelist-selected-row.png",
+    "gallery/glass-light-on-battery-3-whitelist-selected-row.png",
+    "gallery/glass-dark-on-battery-3-whitelist-selected-row.png",
+    "gallery/classic-light-on-battery-3-whitelist-hidden-row.png",
+    "gallery/glass-dark-on-battery-3-whitelist-hidden-row.png",
+    "gallery/settings-classic-light-whitelist-editor.png",
+    "gallery/settings-glass-dark-whitelist-editor.png"
+  ],
+  "schema": 1
+}

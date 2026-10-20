@@ -1112,6 +1112,8 @@ final class PopoverContentViewController: NSViewController {
                 guard let self else { return }
                 self.ringView.reloadMetrics()
                 self.updateModule(.ring)
+            case .processWhitelist:
+                self?.updateModule(.topProcesses)
             case .topProcessCount, .topProcessesCompact:
                 guard let self else { return }
                 self.topProcessesHeight?.constant = TopProcessesView.preferredHeight(

@@ -15,7 +15,11 @@ final class TopProcessesView: PopoverSection {
     private var count = 3
     private var compact = false
     private var renderedState: TopProcessesState?
+    private var renderedWhitelist: [ProcessWhitelistRule] = []
+    private var whitelistMatcher = ProcessWhitelistMatcher(rules: [])
+    private var barColor = PopoverStyle.blue
     private var selectedProcess: Selection?
+    private var selectedAction: ProcessActionButton.Action = .forceQuit
     var forceQuitHandler: ((EnergyProcess) -> Void)?
 
     private enum Selection: Equatable {
@@ -70,21 +74,28 @@ final class TopProcessesView: PopoverSection {
         addSubview(status)
         for row in rows {
             row.isHidden = true
-            row.selectionHandler = { [weak self, weak row] in
+            row.selectionHandler = { [weak self, weak row] command in
                 guard let self, let process = row?.process else { return }
                 let selection = Selection(process)
-                self.select(self.selectedProcess == selection ? nil : selection)
+                let action: ProcessActionButton.Action = command ? .whitelist : .forceQuit
+                self.select(self.selectedProcess == selection && self.selectedAction == action ? nil : selection,
+                            action: action)
             }
             row.moveSelectionHandler = { [weak self, weak row] direction in
                 guard let self, let row, let index = self.rows.firstIndex(where: { $0 === row }) else { return }
                 let next = index + direction
                 guard self.rows.indices.contains(next), !self.rows[next].isHidden,
                       let process = self.rows[next].process else { return }
-                self.select(Selection(process))
+                self.select(Selection(process), action: self.selectedAction)
                 self.window?.makeFirstResponder(self.rows[next])
             }
             row.clearSelectionHandler = { [weak self] in self?.select(nil) }
             row.forceQuitHandler = { [weak self] process in self?.forceQuitHandler?(process) }
+            row.whitelistHandler = { [weak self] process in
+                Settings.addProcessToWhitelist(named: process.name)
+                guard let self, let state = self.renderedState else { return }
+                self.update(state: state, count: self.count, compact: self.compact, color: self.barColor)
+            }
             addSubview(row)
         }
         addSubview(actionFeedback)
@@ -147,10 +158,17 @@ final class TopProcessesView: PopoverSection {
 
     func update(state: TopProcessesState, count: Int, compact: Bool = false,
                 color: NSColor = PopoverStyle.blue) {
+        barColor = color
         rows.forEach { $0.setBarColor(color) }
         updateActionFeedback()
         let count = min(max(count, 1), 10)
-        guard renderedState != state || self.count != count || self.compact != compact else { return }
+        let whitelist = Settings.processWhitelist
+        guard renderedState != state || self.count != count || self.compact != compact
+                || renderedWhitelist != whitelist else { return }
+        if renderedWhitelist != whitelist {
+            renderedWhitelist = whitelist
+            whitelistMatcher = ProcessWhitelistMatcher(rules: whitelist)
+        }
         let focusedRow = rows.first { $0 === window?.firstResponder || $0.forceQuitButton === window?.firstResponder }
         let focusedProcess = focusedRow?.process.map(Selection.init)
         let focusedAction = focusedRow != nil && focusedRow?.forceQuitButton === window?.firstResponder
@@ -172,9 +190,12 @@ final class TopProcessesView: PopoverSection {
             status.stringValue = "Unavailable"
             status.setAccessibilityHelp("Process activity readings require the Wattson helper and a successful sampling interval.")
         case .ready(let values):
-            processes = Array(values.prefix(self.count))
-            status.stringValue = "No active processes"
-            status.setAccessibilityHelp("No active process readings were reported in the recent sampling interval.")
+            processes = Array(values.lazy.filter { !self.whitelistMatcher.matches($0.name) }.prefix(self.count))
+            let allHidden = !values.isEmpty && processes.isEmpty
+            status.stringValue = allHidden ? "All processes are whitelisted" : "No active processes"
+            status.setAccessibilityHelp(allHidden
+                ? "All sampled processes match the whitelist. Manage rules in Settings > Modules > Whitelist."
+                : "No active process readings were reported in the recent sampling interval.")
         }
         status.isHidden = !processes.isEmpty
         switch state {
@@ -184,6 +205,7 @@ final class TopProcessesView: PopoverSection {
         }
         if let selectedProcess, !processes.contains(where: { Selection($0) == selectedProcess }) {
             self.selectedProcess = nil
+            selectedAction = .forceQuit
         }
         for (index, row) in rows.enumerated() {
             guard index < processes.count else {
@@ -193,7 +215,7 @@ final class TopProcessesView: PopoverSection {
             }
             row.update(process: processes[index], compact: compact)
             row.isHidden = false
-            row.setSelected(selectedProcess == Selection(processes[index]))
+            row.setSelected(selectedProcess == Selection(processes[index]), action: selectedAction)
         }
         if let focusedProcess, let window {
             if let row = rows.first(where: { !$0.isHidden && $0.process.map(Selection.init) == focusedProcess }) {
@@ -208,11 +230,13 @@ final class TopProcessesView: PopoverSection {
         updateActionFeedback()
     }
 
-    private func select(_ selection: Selection?) {
-        guard selectedProcess != selection else { return }
+    private func select(_ selection: Selection?, action: ProcessActionButton.Action = .forceQuit) {
+        guard selectedProcess != selection || selectedAction != action else { return }
         selectedProcess = selection
+        selectedAction = selection == nil ? .forceQuit : action
         for row in rows {
-            row.setSelected(!row.isHidden && row.process.map { Selection($0) == selection } == true)
+            row.setSelected(!row.isHidden && row.process.map { Selection($0) == selection } == true,
+                            action: selectedAction)
         }
         needsLayout = true
         updateActionFeedback()
@@ -303,10 +327,11 @@ final class TopProcessesView: PopoverSection {
         private var ratio: CGFloat = 0
         private(set) var process: EnergyProcess?
         private(set) var isSelected = false
-        var selectionHandler: (() -> Void)?
+        var selectionHandler: ((Bool) -> Void)?
         var moveSelectionHandler: ((Int) -> Void)?
         var clearSelectionHandler: (() -> Void)?
         var forceQuitHandler: ((EnergyProcess) -> Void)?
+        var whitelistHandler: ((EnergyProcess) -> Void)?
 #if DEBUG
         private var gradientPreviewStyle: GradientPreviewStyle = .fixedScaleHorizontal
 #endif
@@ -370,7 +395,7 @@ final class TopProcessesView: PopoverSection {
             setAccessibilityRole(.group)
             setAccessibilityChildren([])
             setAccessibilitySelected(false)
-            setAccessibilityHelp("Select to show Force Quit.")
+            setAccessibilityHelp("Select to show Force Quit. Command-click to show Add to Whitelist.")
             refreshAppearance()
         }
 
@@ -465,11 +490,23 @@ final class TopProcessesView: PopoverSection {
             setAccessibilityLabel(process.name)
             setAccessibilityValue("Activity Score \(Self.shortNumber(score)); CPU \(Self.shortNumber(process.cpuPercent))%; idle wakeups \(Self.wakeupNumber(process.idleWakeupsPerSecond)) per second")
             toolTip = "\(process.name) · PID \(process.pid)\n\(summary)"
-            forceQuitButton.isEnabled = process.terminationIdentity != nil
-            forceQuitButton.toolTip = process.terminationIdentity != nil ? "Force Quit" : "Force Quit Unavailable"
-            forceQuitButton.setAccessibilityLabel("Force Quit \(process.name)")
-            forceQuitButton.setAccessibilityHelp(forceQuitButton.toolTip)
+            refreshAction()
             needsLayout = true
+        }
+
+        private func refreshAction() {
+            guard let process else { return }
+            let whitelist = forceQuitButton.actionKind == .whitelist
+            forceQuitButton.isEnabled = whitelist || process.terminationIdentity != nil
+            forceQuitButton.identifier = NSUserInterfaceItemIdentifier(whitelist
+                ? "top-processes.whitelist" : "top-processes.force-quit")
+            forceQuitButton.toolTip = whitelist ? "Add to Whitelist"
+                : (process.terminationIdentity != nil ? "Force Quit" : "Force Quit Unavailable")
+            forceQuitButton.setAccessibilityLabel(whitelist
+                ? "Add \(process.name) to Whitelist" : "Force Quit \(process.name)")
+            forceQuitButton.setAccessibilityHelp(whitelist
+                ? "Hide all processes with this exact name. Manage rules in Settings > Modules > Whitelist."
+                : forceQuitButton.toolTip)
         }
 
         func clear() {
@@ -477,9 +514,12 @@ final class TopProcessesView: PopoverSection {
             setSelected(false)
         }
 
-        func setSelected(_ selected: Bool) {
-            guard isSelected != selected else { return }
+        func setSelected(_ selected: Bool, action: ProcessActionButton.Action = .forceQuit) {
+            let action = selected ? action : .forceQuit
+            guard isSelected != selected || forceQuitButton.actionKind != action else { return }
             isSelected = selected
+            forceQuitButton.actionKind = action
+            refreshAction()
             forceQuitButton.isHidden = !selected
             value.isHidden = selected
             forceQuitButton.setAccessibilityElement(selected)
@@ -497,13 +537,13 @@ final class TopProcessesView: PopoverSection {
         override func mouseDown(with event: NSEvent) {
             guard !isHiddenOrHasHiddenAncestor, process != nil else { return }
             window?.makeFirstResponder(self)
-            selectionHandler?()
+            selectionHandler?(event.modifierFlags.contains(.command))
         }
 
         override func keyDown(with event: NSEvent) {
             guard !isHiddenOrHasHiddenAncestor, process != nil else { return }
             switch event.keyCode {
-            case 36, 49, 76: selectionHandler?()
+            case 36, 49, 76: selectionHandler?(event.modifierFlags.contains(.command))
             case 126: moveSelectionHandler?(-1)
             case 125: moveSelectionHandler?(1)
             case 53: clearSelectionHandler?()
@@ -513,14 +553,17 @@ final class TopProcessesView: PopoverSection {
 
         override func accessibilityPerformPress() -> Bool {
             guard !isHiddenOrHasHiddenAncestor, process != nil else { return false }
-            selectionHandler?()
+            selectionHandler?(false)
             return true
         }
 
         @objc private func forceQuitSelectedProcess(_ sender: NSButton) {
-            guard isSelected, !isHiddenOrHasHiddenAncestor, sender.isEnabled,
-                  let process, process.terminationIdentity != nil else { return }
-            forceQuitHandler?(process)
+            guard isSelected, !isHiddenOrHasHiddenAncestor, sender.isEnabled, let process else { return }
+            if forceQuitButton.actionKind == .whitelist {
+                whitelistHandler?(process)
+            } else if process.terminationIdentity != nil {
+                forceQuitHandler?(process)
+            }
         }
 
         private static func shortNumber(_ number: Double) -> String {

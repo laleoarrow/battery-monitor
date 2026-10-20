@@ -108,7 +108,33 @@ its original refresh deadline. An expired or missing sample starts with
 **Measuring…** and a fresh read. Wake and a force-quit action clear the cache;
 force quit also stops monitoring before the popup's closing animation. A failed read replaces previous
 rows with **Unavailable** and can recover on the next interval. No process list
-is saved to preferences, diagnostics or disk.
+is saved to preferences, diagnostics or disk; only user-selected whitelist rules
+are saved to preferences.
+
+## Hiding processes with the whitelist
+
+Command-click a process row to reveal an **eye with a slash** capsule instead
+of **×**, then click the capsule to add its exact name to the whitelist. Releasing
+Command before clicking the capsule keeps the selected action. This hides all
+processes with that name immediately, including future instances, without ending
+them. Command-Return or Command-Space selects the same action from the keyboard.
+Ordinary clicks retain Force Quit, and Escape clears either selection.
+
+Open **Settings > Modules > Process Activity > Whitelist…** to add or remove
+rules. All matching is case-sensitive:
+
+- **Exact** matches the complete process name literally, including punctuation.
+- **Wildcard** matches the complete name; `*` matches any number of characters
+  and `?` matches one character. For example, `python3.*` hides `python3.12`.
+- **Regex** searches within the name. Use anchors for a complete-name match,
+  such as `^python3\.[0-9]+$`. Invalid expressions show a validation message.
+
+Changes apply to the current readings immediately and persist across launches.
+Remove a rule to show matching processes again. Rules match the displayed process
+name, without reading paths or command-line arguments. Filtering happens before
+the configured display count, within the helper's existing top-ten candidate
+list; exclusions can therefore leave fewer visible rows. When every returned
+candidate matches, the module shows **All processes are whitelisted**.
 
 ## Ending a process
 

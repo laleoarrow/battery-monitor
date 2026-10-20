@@ -85,7 +85,8 @@ def pack(repo, share, baseline, candidate, diagnostic_patch=""):
 def owned_resources():
     home = pathlib.Path.home()
     prefixes = ("Wattson.UILatency.", "com.leoarrow.wattson.uilatency.",
-                "Wattson.SettingsCommandInteraction.", "com.leoarrow.wattson.interactiontests.")
+                "Wattson.SettingsCommandInteraction.", "com.leoarrow.wattson.interactiontests.",
+                "com.leoarrow.wattson.topprocessesqa.")
     def entries(relative):
         path = home / relative
         return sorted(item.name for item in path.iterdir() if item.name.startswith(prefixes)) if path.exists() else []

@@ -306,6 +306,7 @@ class SettingsStoreContractTests(unittest.TestCase):
                     "-D",
                     "DEBUG",
                     str(SETTINGS),
+                    str(ROOT / "Core" / "ProcessWhitelist.swift"),
                     str(main),
                     "-o",
                     str(binary),

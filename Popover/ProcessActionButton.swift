@@ -2,6 +2,10 @@ import AppKit
 
 /// A small native action capsule; the module owns its shared pointer reflection.
 final class ProcessActionButton: NSButton {
+    enum Action { case forceQuit, whitelist }
+    var actionKind: Action = .forceQuit {
+        didSet { if actionKind != oldValue { refreshAppearance() } }
+    }
     private var sourceTintColor = PopoverStyle.blue
     private(set) var tintColor = PopoverStyle.blue
 
@@ -61,7 +65,8 @@ final class ProcessActionButton: NSButton {
                 tintProminence = isEnabled && !usesOpaqueAppearance ? .secondary : .none
             }
             contentTintColor = glyph
-            image = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Force Quit")?
+            image = NSImage(systemSymbolName: actionKind == .whitelist ? "eye.slash" : "xmark",
+                            accessibilityDescription: actionKind == .whitelist ? "Add to Whitelist" : "Force Quit")?
                 .withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 9, weight: .semibold)
                     .applying(.init(paletteColors: [glyph])))
         }
