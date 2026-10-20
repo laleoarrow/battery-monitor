@@ -1,0 +1,13 @@
+{
+  "checkedAtUTC": "2026-10-20T13:51:05.022526+00:00",
+  "frozenModuleMatchesSourceCommit": true,
+  "frozenModuleSHA256": "61e822e6b36732cbd805eae2c8eb9da98e9ad26fddef2b96a59a561100b8f3dd",
+  "onlyImportedFunctionReplaced": "download",
+  "onlyProvenanceDescriptionCorrected": "authentication",
+  "originalStagedProvenanceSHA256": "7f4e386adc765669ae0150a0822fc2b00b02f82778f35833fe9c2aab47cd44bc",
+  "sourceCommit": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+  "transport": "Bounded anonymous curl HTTP/1.1; validated anonymous REST asset IDs to private HTTPS release-assets.githubusercontent.com redirects; 128 KiB ranges, <=8 workers, exact HTTP206/Content-Range/length per chunk; HTTP200 text; assembled exact API size/digest; every unchanged main guard.",
+  "truthfulFinalProvenanceSHA256": "f5fcaa097203fa44a193e184a815cfd0d4ed9259c77418b0264d63c3ff1de0b2",
+  "unchangedMainCompleted": true,
+  "validationFieldsUnchanged": true
+}

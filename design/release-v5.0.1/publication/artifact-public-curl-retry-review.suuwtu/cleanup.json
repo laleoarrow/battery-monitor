@@ -1,0 +1,8 @@
+{
+  "checkedAtUTC": "2026-10-20T13:52:01.721436+00:00",
+  "wrapperExitCode": 1,
+  "ownedWorkspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/public-v5.0.1.noindex/curl-retry.27k2Qd",
+  "ownedWorkspaceRemoved": true,
+  "didNotPromotePublicArtifacts": true,
+  "scope": "The recorded failed first-range attempt; later independent retry succeeded."
+}

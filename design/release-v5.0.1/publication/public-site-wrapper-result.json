@@ -1,0 +1,17 @@
+{
+  "wrapper": "design/release-v5.0.1/publication/verify-public-artwork.sh",
+  "wrapperExitCode": 0,
+  "completedAtUTC": "2026-10-20T13:59:20.880225+00:00",
+  "pagesRunID": "39434778438",
+  "frozenSourceSHA": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+  "proof": "design/release-v5.0.1/publication/public-site-verification.json",
+  "proofSHA256": "c17738a0ab3fe75a152a66480ef08463da990c27f3649610c8fe4063af409a0a",
+  "acceptedPublicVerification": true,
+  "galleryResourcesHTTP200ExactHash": 37,
+  "ZIPCRCs": 4,
+  "exactFrozenSVGMasters": 19,
+  "anonymousLatestRelease": "v5.0.1",
+  "mainSiteVersionAndDownloadURLs": "v5.0.1",
+  "externalMutations": 0,
+  "temporaryFilesCreated": 0
+}

@@ -1,0 +1,13 @@
+{
+  "checkedAtUTC": "2026-10-20T13:33:45.329003+00:00",
+  "wrapperExitCode": 0,
+  "runID": 39427444794,
+  "sourceCommit": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/artifact-v5.0.1.noindex/run.p9cyo3",
+  "ownedWorkspaceRemoved": true,
+  "ownedMountReferencesAbsent": true,
+  "ownedLaunchServicesReferencesAbsent": true,
+  "retainedCandidateFilesMatchProof": true,
+  "proofInputsUnchanged": true,
+  "scope": "Only the recorded owned workspace and its mount/registration references; no whole-machine cleanup census."
+}

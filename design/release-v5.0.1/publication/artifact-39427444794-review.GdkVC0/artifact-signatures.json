@@ -1,0 +1,150 @@
+{
+  "action": "signatures",
+  "app_versions": {
+    "CFBundleShortVersionString": "5.0.1",
+    "CFBundleVersion": "5.0.1"
+  },
+  "checked_at_utc": "2026-10-20T13:32:33.005525+00:00",
+  "code_signatures": {
+    "app": {
+      "all_architectures_verified": true,
+      "slices": {
+        "arm64": {
+          "canonical_entitlements_sha256": "1243ae2aec2614f98a9d16327ce342a5975266604c3807111fdcf1b671836c0b",
+          "debug_entitlements_absent": true,
+          "entitlements_match_frozen": true,
+          "signature": "adhoc",
+          "team_identifier": null
+        },
+        "x86_64": {
+          "canonical_entitlements_sha256": "1243ae2aec2614f98a9d16327ce342a5975266604c3807111fdcf1b671836c0b",
+          "debug_entitlements_absent": true,
+          "entitlements_match_frozen": true,
+          "signature": "adhoc",
+          "team_identifier": null
+        }
+      }
+    },
+    "helper": {
+      "all_architectures_verified": true,
+      "slices": {
+        "arm64": {
+          "canonical_entitlements_sha256": "9261ecceda608ef174256e5fdc774c1e6e3dcf533409c1bc393d490d01c713f1",
+          "debug_entitlements_absent": true,
+          "entitlements_match_frozen": false,
+          "signature": "adhoc",
+          "team_identifier": null
+        },
+        "x86_64": {
+          "canonical_entitlements_sha256": "9261ecceda608ef174256e5fdc774c1e6e3dcf533409c1bc393d490d01c713f1",
+          "debug_entitlements_absent": true,
+          "entitlements_match_frozen": false,
+          "signature": "adhoc",
+          "team_identifier": null
+        }
+      }
+    }
+  },
+  "commands": [
+    {
+      "check": "PKG full expansion",
+      "exit_code": 0,
+      "timeout_seconds": 90
+    },
+    {
+      "check": "app all-architecture signature verification",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "app arm64 signature display",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "app arm64 entitlements",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "app x86_64 signature display",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "app x86_64 entitlements",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "helper all-architecture signature verification",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "helper arm64 signature display",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "helper arm64 entitlements",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "helper x86_64 signature display",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "helper x86_64 entitlements",
+      "exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "PKG unsigned signature display",
+      "exit_code": 1,
+      "timeout_seconds": 30
+    },
+    {
+      "check": "DMG unsigned signature display",
+      "exit_code": 1,
+      "timeout_seconds": 30
+    }
+  ],
+  "container_signatures": {
+    "dmg": "unsigned",
+    "pkg": "unsigned"
+  },
+  "frozen_entitlements_sha256": "7c701bfd8298ead217eaad4e805fcc51cefd7ae910ef33a3792594b97f2f92f5",
+  "owned_expansion": "signature-expand.u3oat0jz/expanded",
+  "payload_files": {
+    "app_code_resources": {
+      "present": true,
+      "sha256": "57777a3ecf1783da3d1be808e6f84bb2a49278c55e0c757c6e786850a5141d9b",
+      "size": 4644
+    },
+    "app_executable": {
+      "present": true,
+      "sha256": "7255a381ef84c0d328c8782f3087497b9db6b68d1ff57e4e6c63ed59a2a6e20e",
+      "size": 7150128
+    },
+    "app_info": {
+      "present": true,
+      "sha256": "9a08ecd2dae68ebdc7e5fb578bd3564845367d19c406d95defb5563ac079da73",
+      "size": 989
+    },
+    "daemon": {
+      "present": true,
+      "sha256": "29cd39cb617610c7e42c5c28549d8334c45fbcaf4b1f188fc35bdd6f13f4a599",
+      "size": 783
+    },
+    "helper": {
+      "present": true,
+      "sha256": "bbc818b8a6ed9e299098163044ea6bf10974c6e9e78527225ec401f6816cc4c9",
+      "size": 1083888
+    }
+  },
+  "scope": "Static signature supplement; frozen verify_release.sh independently proves architectures, minOS, and PKG/DMG App identity.",
+  "status": "passed"
+}

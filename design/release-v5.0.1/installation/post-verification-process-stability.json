@@ -1,0 +1,11 @@
+{
+  "checkedAtUTC": "2026-10-20T13:53:40.744339+00:00",
+  "canonicalAppPIDs": [
+    51156
+  ],
+  "appRunning": true,
+  "samePIDsAcrossVerificationAndThreeSecondObservation": true,
+  "observationSeconds": 3,
+  "lifecycleChanged": false,
+  "rawProcessNamesLogged": false
+}

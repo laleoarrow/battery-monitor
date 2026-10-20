@@ -1,0 +1,145 @@
+{
+  "artifacts": [
+    {
+      "archive_download_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267937358/zip",
+      "created_at": "2026-10-20T13:28:28Z",
+      "digest": "sha256:783588077a1df1e2f57f8062f44313a5ebc9d1953d9869e4e613f61a7309f94f",
+      "expired": false,
+      "expires_at": "2026-10-27T13:28:26Z",
+      "id": 12267937358,
+      "name": "wattson-install-log-macos-15-39427444794-1",
+      "node_id": "MDg6QXJ0aWZhY3QxMjI2NzkzNzM1OA==",
+      "size_in_bytes": 2137,
+      "updated_at": "2026-10-20T13:28:28Z",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267937358",
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1269478704,
+        "head_sha": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+        "id": 39427444794,
+        "repository_id": 1269478704
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267827050/zip",
+      "created_at": "2026-10-20T13:25:46Z",
+      "digest": "sha256:5a9e7d16380c8a5d00ee0c3289ea406793b36183d5fea1403a276d355defe37a",
+      "expired": false,
+      "expires_at": "2026-10-27T13:25:44Z",
+      "id": 12267827050,
+      "name": "wattson-release-build-log-39427444794-1",
+      "node_id": "MDg6QXJ0aWZhY3QxMjI2NzgyNzA1MA==",
+      "size_in_bytes": 1143,
+      "updated_at": "2026-10-20T13:25:46Z",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267827050",
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1269478704,
+        "head_sha": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+        "id": 39427444794,
+        "repository_id": 1269478704
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267782377/zip",
+      "created_at": "2026-10-20T13:27:03Z",
+      "digest": "sha256:75b568f4727729fd97c321b061e4bc9291da22229e3a93b871bf62d977ce23fc",
+      "expired": false,
+      "expires_at": "2026-10-27T13:27:01Z",
+      "id": 12267782377,
+      "name": "wattson-install-log-macos-15-intel-39427444794-1",
+      "node_id": "MDg6QXJ0aWZhY3QxMjI2Nzc4MjM3Nw==",
+      "size_in_bytes": 1803,
+      "updated_at": "2026-10-20T13:27:03Z",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267782377",
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1269478704,
+        "head_sha": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+        "id": 39427444794,
+        "repository_id": 1269478704
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267612321/zip",
+      "created_at": "2026-10-20T13:27:20Z",
+      "digest": "sha256:d75646dce2020eea73a83e6cbfa60dbb934e073dc1a798570ab3d642194810ee",
+      "expired": false,
+      "expires_at": "2026-10-27T13:27:18Z",
+      "id": 12267612321,
+      "name": "wattson-install-log-macos-26-39427444794-1",
+      "node_id": "MDg6QXJ0aWZhY3QxMjI2NzYxMjMyMQ==",
+      "size_in_bytes": 2146,
+      "updated_at": "2026-10-20T13:27:20Z",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267612321",
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1269478704,
+        "head_sha": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+        "id": 39427444794,
+        "repository_id": 1269478704
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267313000/zip",
+      "created_at": "2026-10-20T13:27:35Z",
+      "digest": "sha256:8578e924807d2d3fca72505c728ab2373d237e0a897bb1d38fc44331a05f2161",
+      "expired": false,
+      "expires_at": "2026-10-27T13:27:33Z",
+      "id": 12267313000,
+      "name": "wattson-install-log-macos-26-intel-39427444794-1",
+      "node_id": "MDg6QXJ0aWZhY3QxMjI2NzMxMzAwMA==",
+      "size_in_bytes": 1855,
+      "updated_at": "2026-10-20T13:27:35Z",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267313000",
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1269478704,
+        "head_sha": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+        "id": 39427444794,
+        "repository_id": 1269478704
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267307870/zip",
+      "created_at": "2026-10-20T13:27:04Z",
+      "digest": "sha256:20522013401c5c05fadbcffea4ddba906a7ab5a2a4294af3b55c593c05ca1772",
+      "expired": false,
+      "expires_at": "2026-10-27T13:27:03Z",
+      "id": 12267307870,
+      "name": "wattson-install-log-macos-14-39427444794-1",
+      "node_id": "MDg6QXJ0aWZhY3QxMjI2NzMwNzg3MA==",
+      "size_in_bytes": 2123,
+      "updated_at": "2026-10-20T13:27:04Z",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267307870",
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1269478704,
+        "head_sha": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+        "id": 39427444794,
+        "repository_id": 1269478704
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267302673/zip",
+      "created_at": "2026-10-20T13:25:44Z",
+      "digest": "sha256:c47af6866dea00f84423a9fa6fe77a80c3739f45c02b5092ec6df32b4790c9fd",
+      "expired": false,
+      "expires_at": "2026-10-27T13:25:36Z",
+      "id": 12267302673,
+      "name": "Wattson-release-candidate-v5.0.1",
+      "node_id": "MDg6QXJ0aWZhY3QxMjI2NzMwMjY3Mw==",
+      "size_in_bytes": 13777027,
+      "updated_at": "2026-10-20T13:25:44Z",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/artifacts/12267302673",
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1269478704,
+        "head_sha": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+        "id": 39427444794,
+        "repository_id": 1269478704
+      }
+    }
+  ],
+  "total_count": 7
+}

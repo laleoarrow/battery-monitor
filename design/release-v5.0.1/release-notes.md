@@ -33,3 +33,13 @@
 - Homebrew：`brew install --cask laleoarrow/tap/wattson`；已有安装使用 `brew upgrade --cask wattson`。
 
 Community 分发：App / helper 为 ad-hoc 签名；PKG / DMG 未签名、未公证。请核对发布来源与随附的 SHA256SUMS.txt，macOS 的信任检查仍适用；App-only 路径不绕过 Gatekeeper。
+
+## 发布验证
+
+冻结源码：`f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6`。
+
+- [Headless CI](https://github.com/laleoarrow/battery-monitor/actions/runs/39426129210)：728 项 Swift、631 项 Python（4 项预期跳过），以及网站构建、测试与导出通过。
+- [候选包与五平台安装矩阵](https://github.com/laleoarrow/battery-monitor/actions/runs/39427444794)：同一组候选字节通过 macOS 14／15／26 Apple Silicon 与 15／26 Intel 的安装、升级、helper、DMG 和卸载验证。
+- [macOS 27 兼容性检查](https://github.com/laleoarrow/battery-monitor/actions/runs/39427450627)：系统图标、Display 设置、完整测试、三组原生交互、20,000 次动画压力及双架构构建通过；这项软件检查不等同于 macOS 27 安装包矩阵。
+
+性能数字来自已合入优化提交的受控对照测量，方法与适用范围见前文。

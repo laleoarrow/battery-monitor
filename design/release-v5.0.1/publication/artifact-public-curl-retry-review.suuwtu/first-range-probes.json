@@ -1,0 +1,28 @@
+{
+  "allPassed": false,
+  "checkedAtUTC": "2026-10-20T13:48:16.903673+00:00",
+  "firstRangeProbes": {
+    "Wattson-v5.0.1-macos-universal.dmg": {
+      "contentRange": null,
+      "curlExitCode": 28,
+      "errorClass": "CurlExit28",
+      "exactContentRangeAndLength": false,
+      "httpStatus": 0,
+      "success": false
+    },
+    "Wattson-v5.0.1-macos-universal.pkg": {
+      "contentRange": null,
+      "curlExitCode": 28,
+      "errorClass": "CurlExit28",
+      "exactContentRangeAndLength": false,
+      "httpStatus": 0,
+      "success": false
+    }
+  },
+  "metadata": {
+    "curlExitCode": 0,
+    "errorClass": null,
+    "httpStatus": 200,
+    "success": true
+  }
+}

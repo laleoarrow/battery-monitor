@@ -1,0 +1,13 @@
+{
+  "checkedAtUTC": "2026-10-20T13:38:03.879543+00:00",
+  "wrapperExitCode": 1,
+  "attempt": 1,
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/public-v5.0.1.noindex/download.LKTQPA",
+  "ownedWorkspaceRemoved": true,
+  "retainedPublicAssetsAbsent": true,
+  "successProvenanceAbsent": true,
+  "failure": "Anonymous public CDN split retry failed (URLError)",
+  "downloadOnly": true,
+  "ownedMountsOrAppsCreated": false,
+  "scope": "Failed anonymous download; no artifact inspection or app execution is part of this verifier."
+}

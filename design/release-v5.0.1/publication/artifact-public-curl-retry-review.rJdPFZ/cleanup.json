@@ -1,0 +1,11 @@
+{
+  "checkedAtUTC": "2026-10-20T13:44:55.263248+00:00",
+  "wrapperExitCode": 1,
+  "ownedWorkspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/public-v5.0.1.noindex/curl-retry.4rOseR",
+  "ownedWorkspaceRemoved": true,
+  "ownedMountReferencesAbsent": true,
+  "ownedLaunchServicesReferencesAbsent": true,
+  "successProvenanceAbsent": true,
+  "publicAssetsAbsent": true,
+  "scope": "Only recorded curl retry workspace; anonymous transport failed closed, no unchanged validation main was run."
+}

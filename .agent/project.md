@@ -22,11 +22,13 @@ loading and unavailable official values display `—`; raw full-charge/design mA
 ratios never substitute for system health. The separate mAh metrics retain their
 battery-controller meaning, explained in tooltips. See the
 [system metric authority validation](../design/system-metric-authority/README.md).
-The canonical installation is the verified public 5.0.0 package:
-App/helper/receipt match its exact public bytes and all 16 settings are retained.
-The user confirmed that the popup and Display page render normally after this
-upgrade; direct CUA access timed out. See the
-[5.0.0 release record](../design/release-v5.0.0/README.md).
+The canonical installation is the verified public 5.0.1 package:
+App/helper/receipt match its exact public bytes and all 16 existing settings are
+retained. Helper health, v5 negotiation and real process sampling passed.
+Direct CUA access timed out, so canonical menu-bar click acceptance remains
+unverified; the production-renderer and native-input whitelist checks passed
+separately in the disposable GUI VM. See the
+[5.0.1 release record](../design/release-v5.0.1/README.md).
 The preceding local 4.3.24 validation recorded the sandboxed production health
 reader returning the official 84% on this Mac.
 

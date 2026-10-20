@@ -1,0 +1,17 @@
+{
+  "version": "5.0.1",
+  "source_sha": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+  "candidate_run_id": 39427444794,
+  "candidate_proof": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/design/release-v5.0.1/publication/artifact-39427444794-review.GdkVC0/artifact-proof.json",
+  "release_id": 418439777,
+  "all_four_public_api_digests_match_candidate": true,
+  "public_pkg_sha256": "5bc42648e9238e8e3665672c172e7e1d7fc5c60cca70ff9c40db8331602f6362",
+  "candidate_file_sha256": {
+    "Wattson-v5.0.1-macos-universal.dmg": "04b881579853a1e4735622c6a0e0b7ce7d089df6a442aef6953738e5575aa032",
+    "SHA256SUMS.txt": "bac462b36ac18dcfbc5af0298e12c0e046c4900feb398564e060cf7bf4a6d653",
+    "Wattson-v5.0.1-macos-universal.pkg": "5bc42648e9238e8e3665672c172e7e1d7fc5c60cca70ff9c40db8331602f6362",
+    "Wattson-v5.0.1-release-info.txt": "1c0e82bd00261386a491522526f3359c4361bc3fcc54a2de26d280cf3d6d6598"
+  },
+  "public_provenance_sha256": "f5fcaa097203fa44a193e184a815cfd0d4ed9259c77418b0264d63c3ff1de0b2",
+  "public_bytes_match_candidate": true
+}

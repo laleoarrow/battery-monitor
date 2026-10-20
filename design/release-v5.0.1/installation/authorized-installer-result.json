@@ -1,0 +1,8 @@
+{
+  "version": "5.0.1",
+  "method": "Native macOS administrator authorization for /usr/sbin/installer",
+  "packageSHA256": "5bc42648e9238e8e3665672c172e7e1d7fc5c60cca70ff9c40db8331602f6362",
+  "exitCode": 0,
+  "stdout": "",
+  "stderr": ""
+}

@@ -1,0 +1,74 @@
+{
+  "version": "5.0.1",
+  "verifiedAtUTC": "2026-10-20T14:00:32.045925+00:00",
+  "frozenSourceCommit": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+  "annotatedTag": "v5.0.1",
+  "releaseID": 418439777,
+  "releaseURL": "https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.1",
+  "latest": true,
+  "allPublicReleaseGatesPassed": true,
+  "gates": {
+    "headlessPush": {
+      "runID": 39426129210,
+      "sourceSHA": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+      "conclusion": "success",
+      "evidence": "headless-final.json"
+    },
+    "candidate": {
+      "runID": 39427444794,
+      "sourceSHA": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+      "conclusion": "success",
+      "evidence": "candidate-final.json"
+    },
+    "macOS27Software": {
+      "runID": 39427450627,
+      "sourceSHA": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+      "conclusion": "success",
+      "evidence": "macos27-final.json"
+    },
+    "publicHomebrew": {
+      "runID": 39434614881,
+      "sourceSHA": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+      "conclusion": "success",
+      "evidence": "homebrew-final.json"
+    },
+    "pages": {
+      "runID": 39434778438,
+      "sourceSHA": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+      "conclusion": "success",
+      "evidence": "pages-final.json"
+    },
+    "tap": {
+      "runID": 39434110323,
+      "commit": "f101280c1bfc6768a766bb924b1687c50701f4af",
+      "conclusion": "success",
+      "evidence": "tap-ci-final.json"
+    }
+  },
+  "fourPublicAssetsMatchReviewedCandidate": true,
+  "packageSHA256": "5bc42648e9238e8e3665672c172e7e1d7fc5c60cca70ff9c40db8331602f6362",
+  "signing": "Community: ad-hoc App/helper; unsigned PKG/DMG; not notarized",
+  "publicSite": "https://laleoarrow.github.io/battery-monitor/",
+  "publicGallery": "https://laleoarrow.github.io/battery-monitor/design/v5.0.1/",
+  "galleryChecksummedEntries": 36,
+  "svgZIPs": 4,
+  "svgMasters": 19,
+  "canonicalInstalledVersion": "5.0.1",
+  "canonicalPayloadSignaturesHelperAndProcessSamplingVerified": true,
+  "existingSettingsRetained": 16,
+  "canonicalClickAcceptance": false,
+  "canonicalClickLimitation": "CUA server timed out; no actual canonical menu-bar click/open/close acceptance is claimed. Separate production-renderer and native-input whitelist tests passed in the disposable GUI VM.",
+  "featureCommitIncluded": "9276560",
+  "performanceCommitIncluded": "7169eca",
+  "publicAssetsRebuiltOrReplaced": false,
+  "evidenceSHA256": {
+    "design/release-v5.0.1/publication/artifact-public-provenance.json": "f5fcaa097203fa44a193e184a815cfd0d4ed9259c77418b0264d63c3ff1de0b2",
+    "design/release-v5.0.1/publication/public-site-verification.json": "c17738a0ab3fe75a152a66480ef08463da990c27f3649610c8fe4063af409a0a",
+    "design/release-v5.0.1/publication/candidate-reviewed.json": "373539ff51fdf89ea6133fa65a8bc09b29fb07fc4df223018bcd2f75db5533b9",
+    "design/release-v5.0.1/publication/independent-tag-release-audit.json": "b87b17bafed7ccbee0ffffe6548b79ea83d30480eb9eccebc5dbae4e7c799dac",
+    "design/release-v5.0.1/publication/independent-tap-audit.json": "d2959a7f3c0b35590d9371d8489066c82de66f46b3abb6da1ec21a16bc5f9c4c",
+    "design/release-v5.0.1/publication/independent-homebrew-pages-audit.json": "d35016a2cc43c9902095dd04a8f8c5fbb15e72303132c91ce28d5504385dbef7",
+    "design/release-v5.0.1/installation/local-install-verified.json": "4f40803da5a4d48371e2ad13514556f9a42440d080b4080d562386632a90b1f9",
+    "design/release-v5.0.1/installation/canonical-ui-access.json": "eb008c19a23d0b3691439d35a7a9cb404be3d04abb718f4fa6a67b6c25ec7fa9"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "version": "5.0.1",
+  "verifiedAtUTC": "2026-10-20T13:45:44.764505+00:00",
+  "sourceCommit": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+  "annotatedTagObject": "0fd99539dd8e782299fefc977bd0526eb62d7118",
+  "tagPeelsToFrozenSource": true,
+  "remoteMainStillFrozen": true,
+  "releaseID": 418439777,
+  "releaseURL": "https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.1",
+  "draft": false,
+  "prerelease": false,
+  "latestAtInspection": "v5.0.0",
+  "tagPushCI": {
+    "id": 39431614773,
+    "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39431614773",
+    "headSHA": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+    "headBranch": "v5.0.1",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 118657812095,
+        "name": "SwiftPM and Python tests",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 118657812274,
+        "name": "Website build, test, lint, and export",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "assets": [
+    {
+      "name": "SHA256SUMS.txt",
+      "bytes": 300,
+      "sha256": "bac462b36ac18dcfbc5af0298e12c0e046c4900feb398564e060cf7bf4a6d653",
+      "apiDigestMatchesReviewedCandidate": true
+    },
+    {
+      "name": "Wattson-v5.0.1-macos-universal.dmg",
+      "bytes": 6886843,
+      "sha256": "04b881579853a1e4735622c6a0e0b7ce7d089df6a442aef6953738e5575aa032",
+      "apiDigestMatchesReviewedCandidate": true
+    },
+    {
+      "name": "Wattson-v5.0.1-macos-universal.pkg",
+      "bytes": 6989581,
+      "sha256": "5bc42648e9238e8e3665672c172e7e1d7fc5c60cca70ff9c40db8331602f6362",
+      "apiDigestMatchesReviewedCandidate": true
+    },
+    {
+      "name": "Wattson-v5.0.1-release-info.txt",
+      "bytes": 393,
+      "sha256": "1c0e82bd00261386a491522526f3359c4361bc3fcc54a2de26d280cf3d6d6598",
+      "apiDigestMatchesReviewedCandidate": true
+    }
+  ],
+  "scope": "Independent read-only GitHub tag/release binding and tag CI audit; public anonymous byte transport and installation are separately verified."
+}

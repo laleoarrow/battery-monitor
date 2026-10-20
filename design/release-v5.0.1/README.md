@@ -21,9 +21,29 @@ Community distribution uses ad-hoc App/helper signatures, unsigned PKG/DMG and
 no notarization. The complete PKG synchronizes App/helper/receipt. The app-only
 DMG does not add helper-backed process monitoring or privileged controls.
 
-Publication requires successful exact-main Headless CI, the candidate build and
-five hosted install jobs, checked candidate/public byte equality, the exact tap
-commit's CI, public Intel/Apple-silicon Homebrew lifecycle and Pages deployment.
-Canonical installation uses that exact verified public PKG. These stages are
-recorded separately in publication/ and installation/; their completion must be
-verified before the release is announced.
+Publication and canonical package synchronization completed on 2026-10-20.
+The stable [GitHub release](https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.1)
+is Latest, and the [public gallery](https://laleoarrow.github.io/battery-monitor/design/v5.0.1/)
+matches frozen source `f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6`.
+Exact-source Headless CI, macOS 27 software validation, the candidate build and
+five hosted install jobs, the tap's CI, public Intel/Apple-silicon Homebrew
+lifecycles and Pages deployment passed. All four anonymous public downloads
+match the reviewed candidate bytes. All 37 gallery resources, four SVG ZIPs and
+19 SVG masters match the frozen source.
+
+The canonical App, helper and receipt are 5.0.1 and match the verified public
+PKG; signatures, helper health, v5 negotiation and real process sampling passed.
+All 16 existing settings were retained. Direct CUA access timed out, so actual
+canonical menu-bar click/open/close acceptance remains unverified. A stable
+process alone is not GUI acceptance; the disposable-VM production-renderer and
+native-input whitelist checks are separate evidence.
+
+- [Final release verification](publication/final-release-verification.json)
+- [Anonymous public artifact provenance](publication/artifact-public-provenance.json)
+- [Public website and artwork verification](publication/public-site-verification.json)
+- [Canonical installation verification](installation/local-install-verified.json)
+- [Canonical UI access limitation](installation/canonical-ui-access.json)
+
+Post-release evidence commits do not change the frozen tag or distribution
+artifacts. Temporary verification resources were cleaned; the canonical App,
+helper, receipt and production preferences remain installed.

@@ -1,0 +1,13 @@
+{
+  "checkedAtUTC": "2026-10-20T13:38:53.443685+00:00",
+  "wrapperExitCode": 1,
+  "attempt": 2,
+  "workspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/public-v5.0.1.noindex/download.FMKHqY",
+  "ownedWorkspaceRemoved": true,
+  "ownedMountReferencesAbsentForBothAttempts": true,
+  "ownedLaunchServicesReferencesAbsentForBothAttempts": true,
+  "retainedPublicAssetsAbsent": true,
+  "successProvenanceAbsent": true,
+  "failure": "Anonymous transfer or parsing failed",
+  "scope": "Only the two recorded owned download workspaces and their mount/registration references; no whole-machine cleanup census."
+}

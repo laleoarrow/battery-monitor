@@ -1,0 +1,72 @@
+{
+  "version": "5.0.1",
+  "verifiedAtUTC": "2026-10-20T13:58:09.097223+00:00",
+  "sourceCommit": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+  "remoteMainStillFrozen": true,
+  "releaseID": 418439777,
+  "releaseURL": "https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.1",
+  "latestRelease": "v5.0.1",
+  "homebrewLifecycle": {
+    "id": 39434614881,
+    "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39434614881",
+    "workflow": ".github/workflows/homebrew-install-test.yml",
+    "createdAtUTC": "2026-10-20T13:55:21Z",
+    "headSHA": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+    "headBranch": "main",
+    "event": "workflow_dispatch",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 118668231310,
+        "name": "Verify the public release and tested Homebrew cask",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 118668295114,
+        "name": "Homebrew lifecycle on macos-26",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 118668295173,
+        "name": "Homebrew lifecycle on macos-15-intel",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 118668745972,
+        "name": "Deploy site after both public cask lifecycles pass",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "pages": {
+    "id": 39434778438,
+    "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/39434778438",
+    "workflow": ".github/workflows/pages.yml",
+    "createdAtUTC": "2026-10-20T13:56:29Z",
+    "headSHA": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+    "headBranch": "main",
+    "event": "workflow_dispatch",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 118668806300,
+        "name": "Build the static Pages artifact",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 118669261097,
+        "name": "Deploy GitHub Pages",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "scope": "Independent read-only workflow/latest/main audit. Public website and artwork byte validation and canonical installation remain separately verified."
+}

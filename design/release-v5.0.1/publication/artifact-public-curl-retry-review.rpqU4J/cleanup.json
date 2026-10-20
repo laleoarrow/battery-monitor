@@ -1,0 +1,15 @@
+{
+  "checkedAtUTC": "2026-10-20T13:52:01.720245+00:00",
+  "wrapperExitCode": 0,
+  "ownedWorkspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/public-v5.0.1.noindex/curl-retry.osEYys",
+  "ownedWorkspaceRemoved": true,
+  "ownedMountReferencesAbsent": true,
+  "ownedLaunchServicesReferencesAbsent": true,
+  "provenanceSHA256": "f5fcaa097203fa44a193e184a815cfd0d4ed9259c77418b0264d63c3ff1de0b2",
+  "transportBindingSHA256": "e0a610d3c8f94c6189cb797787616dd9d2fa7c612b585de9851c942e8018c3ca",
+  "retryPythonSHA256": "ec2244b858604bdc3beaa66b91eb248d63a14e30080515c94d7fb97c65b6877e",
+  "retryWrapperSHA256": "b9bb47de7f332e52d2d2710899ec5632c40192d83ab8a720fd84d8c5e3f1cdcc",
+  "allFourRetainedPublicFilesRehashed": true,
+  "frozenVerifierStillUnchanged": true,
+  "scope": "Only recorded successful retry workspace and its mount/registration references; no whole-machine cleanup census."
+}

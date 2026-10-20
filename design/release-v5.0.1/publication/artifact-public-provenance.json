@@ -1,0 +1,765 @@
+{
+  "anonymousDownload": true,
+  "authentication": "Anonymous urllib REST metadata and bounded curl HTTP/1.1 HTTPS anonymous REST/CDN redirect ranges/text; no gh, token, Authorization header, cookies, netrc or inherited auth environment; default TLS verification",
+  "candidateProof": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/design/release-v5.0.1/publication/artifact-39427444794-review.GdkVC0/artifact-proof.json",
+  "candidateProofSHA256": "843ac4043a1edaa5f92cfb0fb7ee3b450ec72aee371a6130611c365187f2a6b7",
+  "candidateRunID": 39427444794,
+  "checkedAtUTC": "2026-10-20T13:51:05.003192+00:00",
+  "files": {
+    "SHA256SUMS.txt": {
+      "CDNRedirectQueryNotLogged": true,
+      "anonymousBrowserDownloadURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.1/SHA256SUMS.txt",
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/659421619",
+      "authorizationCookiesAndNetrcAbsent": true,
+      "bytes": 300,
+      "cmpToCandidate": true,
+      "connectTimeoutSeconds": 10,
+      "curlConfigDisabled": true,
+      "curlEnvironmentAllowlist": [
+        "PATH",
+        "LC_ALL",
+        "TMPDIR"
+      ],
+      "http_status": 200,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.1/SHA256SUMS.txt",
+      "ranges": 0,
+      "releaseAssetID": 659421619,
+      "requestTimeoutSeconds": 60,
+      "retries": 2,
+      "sha256": "bac462b36ac18dcfbc5af0298e12c0e046c4900feb398564e060cf7bf4a6d653",
+      "transportMethod": "curl HTTP/1.1 HTTPS validated anonymous REST/CDN redirect; bounded ranges for large assets"
+    },
+    "Wattson-v5.0.1-macos-universal.dmg": {
+      "CDNRedirectQueryNotLogged": true,
+      "anonymousBrowserDownloadURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.1/Wattson-v5.0.1-macos-universal.dmg",
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/659421649",
+      "authorizationCookiesAndNetrcAbsent": true,
+      "bytes": 6886843,
+      "cmpToCandidate": true,
+      "connectTimeoutSeconds": 10,
+      "curlConfigDisabled": true,
+      "curlEnvironmentAllowlist": [
+        "PATH",
+        "LC_ALL",
+        "TMPDIR"
+      ],
+      "everyRangeContentRangeAndLengthVerified": true,
+      "http_status": 206,
+      "maxWorkers": 8,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.1/Wattson-v5.0.1-macos-universal.dmg",
+      "rangeBytes": 131072,
+      "rangeChecks": [
+        {
+          "begin": 0,
+          "end": 131071,
+          "httpStatus": 206,
+          "sha256": "8958ef7f0be8e3ca617cbec009f5333a6c74b84fe57efce2c6914e58eae5c5c4"
+        },
+        {
+          "begin": 131072,
+          "end": 262143,
+          "httpStatus": 206,
+          "sha256": "2188238ef1ca68717dcfb90350875123f8ec062beb229a3b67ed643b01633f43"
+        },
+        {
+          "begin": 262144,
+          "end": 393215,
+          "httpStatus": 206,
+          "sha256": "1798fc762f2612b6a4739882c4cb4b47c95ea849a69dff298dac1d46d7990e80"
+        },
+        {
+          "begin": 393216,
+          "end": 524287,
+          "httpStatus": 206,
+          "sha256": "3239ebf77bb85daa46028ab827a9d82b4345f95a3b611135df74166783f557e1"
+        },
+        {
+          "begin": 524288,
+          "end": 655359,
+          "httpStatus": 206,
+          "sha256": "05f999cce9c5cb54db9cd8bd5db98c0a8a26d00d9524845cdf832093bd6992d9"
+        },
+        {
+          "begin": 655360,
+          "end": 786431,
+          "httpStatus": 206,
+          "sha256": "cd5c1fa849486a1da6ed0b75a1aac75d3b8748df7022976b0c7305230555b89e"
+        },
+        {
+          "begin": 786432,
+          "end": 917503,
+          "httpStatus": 206,
+          "sha256": "b1417372bb1415f42d67df5721122377c823570f76bb78a255d0a9da585b7a54"
+        },
+        {
+          "begin": 917504,
+          "end": 1048575,
+          "httpStatus": 206,
+          "sha256": "b9fe08c0c5d7279475be3fdeda72cd1596fdc238e52b65b38aa05df48ed25c58"
+        },
+        {
+          "begin": 1048576,
+          "end": 1179647,
+          "httpStatus": 206,
+          "sha256": "26ca673e722141487efb2a7459be92b8428df7bb6ee46717f13da4cbe9e9c3b7"
+        },
+        {
+          "begin": 1179648,
+          "end": 1310719,
+          "httpStatus": 206,
+          "sha256": "2d16e5ee5ac9ff76573df559f6dbb1911b9231ba58d1a16aa1b9a0f2cf76e0a9"
+        },
+        {
+          "begin": 1310720,
+          "end": 1441791,
+          "httpStatus": 206,
+          "sha256": "be8dedb1d7ce1a57fe2f34666ba6f89b6169b82281d529f8404fd99ca7b6438d"
+        },
+        {
+          "begin": 1441792,
+          "end": 1572863,
+          "httpStatus": 206,
+          "sha256": "c8c2c32899f754be9fbe0a8ee098fc6921bfc10e941fddd26caf01e4d8b7907c"
+        },
+        {
+          "begin": 1572864,
+          "end": 1703935,
+          "httpStatus": 206,
+          "sha256": "78d9698883eb1798739b05b3c366e8b2e32be8d3b973f951bd855bc5fafc29b5"
+        },
+        {
+          "begin": 1703936,
+          "end": 1835007,
+          "httpStatus": 206,
+          "sha256": "6374e44e14cdfa75ca90ecbe7acc9caa5c5bc1419978bbcc89c2002ba396c983"
+        },
+        {
+          "begin": 1835008,
+          "end": 1966079,
+          "httpStatus": 206,
+          "sha256": "1f87241682769258d90f591f03622471b7e684b1329ff4f854da7c174fe1ffa0"
+        },
+        {
+          "begin": 1966080,
+          "end": 2097151,
+          "httpStatus": 206,
+          "sha256": "8a8e4ed8dda035a7050cdb6e02659e21545a473865359b2c77e495eb9308d263"
+        },
+        {
+          "begin": 2097152,
+          "end": 2228223,
+          "httpStatus": 206,
+          "sha256": "fcce1917c89228a71c4f97bde1ac58756669c2de2b1e7ccd37da9f2c3d593805"
+        },
+        {
+          "begin": 2228224,
+          "end": 2359295,
+          "httpStatus": 206,
+          "sha256": "33e190622661cf53acbfb7c3ddf4c6d9e87590ffe2fdc512f7ba09cb46bcbf57"
+        },
+        {
+          "begin": 2359296,
+          "end": 2490367,
+          "httpStatus": 206,
+          "sha256": "01ec771101ef974e6690d00cdf5f85403ff58ff06a6c3fac9857774cf3f66218"
+        },
+        {
+          "begin": 2490368,
+          "end": 2621439,
+          "httpStatus": 206,
+          "sha256": "6473a5ec44a2d3b201a69764b333e7f3c6c1c54f1ce079e75e34c569e86b6d30"
+        },
+        {
+          "begin": 2621440,
+          "end": 2752511,
+          "httpStatus": 206,
+          "sha256": "48e8f0799583158ff68cb74c0fe65e9d461ffbcac7ab134eabeb8c2b8761b21c"
+        },
+        {
+          "begin": 2752512,
+          "end": 2883583,
+          "httpStatus": 206,
+          "sha256": "8431e455cda31f7aab0e9ef27a73a48bcef303c8861645be6ef25391875abd0c"
+        },
+        {
+          "begin": 2883584,
+          "end": 3014655,
+          "httpStatus": 206,
+          "sha256": "6ab40b4d47da1a6fe0e2549c91397abae7e334e6c601bf6b5b1f24ae9a62f59d"
+        },
+        {
+          "begin": 3014656,
+          "end": 3145727,
+          "httpStatus": 206,
+          "sha256": "d8d36dc85b5933870679bcef943215c23354c19588e6c78d30f01a50474e6e10"
+        },
+        {
+          "begin": 3145728,
+          "end": 3276799,
+          "httpStatus": 206,
+          "sha256": "6c5db2214ef83fe2cc3b96671f6830787cf9fffec00065ca2ef6f100a838f6bd"
+        },
+        {
+          "begin": 3276800,
+          "end": 3407871,
+          "httpStatus": 206,
+          "sha256": "be3ba56de76c3a37035337b3a451354cc26a5a70c9617d7cb7d3fc3397e1d8d3"
+        },
+        {
+          "begin": 3407872,
+          "end": 3538943,
+          "httpStatus": 206,
+          "sha256": "386afe7c8c323b9225015a21bb8ab5ea3a0244a13fcaf743d002012c1a43ab11"
+        },
+        {
+          "begin": 3538944,
+          "end": 3670015,
+          "httpStatus": 206,
+          "sha256": "de2f992de81ed62e7b2b9576fe62612484a1299dade629a19414e8f8aed0b450"
+        },
+        {
+          "begin": 3670016,
+          "end": 3801087,
+          "httpStatus": 206,
+          "sha256": "a709353489c6724a37621e6ac131254a5889afcf5cd4e38a95237bd268841687"
+        },
+        {
+          "begin": 3801088,
+          "end": 3932159,
+          "httpStatus": 206,
+          "sha256": "d49a57e7f9f92c9d6232b00391f8fc54c50f28b4802e9c35ee95146e570adebd"
+        },
+        {
+          "begin": 3932160,
+          "end": 4063231,
+          "httpStatus": 206,
+          "sha256": "7cfaa6e6d4a7d7abb11a3775f9fbc2941d22cfde4e048d78bf180865b5a1e7b7"
+        },
+        {
+          "begin": 4063232,
+          "end": 4194303,
+          "httpStatus": 206,
+          "sha256": "a59e3ba09dcc988b68146afeba82af9a9701e3b28a4a62dcde59ad2fb974f5f1"
+        },
+        {
+          "begin": 4194304,
+          "end": 4325375,
+          "httpStatus": 206,
+          "sha256": "b4d0471ac9863ee71eafa21984bfe5f60519b4ab4feaa4c0ecc968008e75de9b"
+        },
+        {
+          "begin": 4325376,
+          "end": 4456447,
+          "httpStatus": 206,
+          "sha256": "c6ad0e4b4748260e34134fb192e75b222db065d48d4e820b3cf9317411bb6971"
+        },
+        {
+          "begin": 4456448,
+          "end": 4587519,
+          "httpStatus": 206,
+          "sha256": "3f73e0b9ff894de3fa915a6d9b5dad1473f7a583a50ba6443f67cac6e36166b9"
+        },
+        {
+          "begin": 4587520,
+          "end": 4718591,
+          "httpStatus": 206,
+          "sha256": "cf513d3073453b53538c29d17cd4d2db6f145b1b0162efb623cc74ccbcffdfed"
+        },
+        {
+          "begin": 4718592,
+          "end": 4849663,
+          "httpStatus": 206,
+          "sha256": "3555473b802f2ef7f732e5b5ffe12f1e27933ac6e8275bd3255d5fca6051deea"
+        },
+        {
+          "begin": 4849664,
+          "end": 4980735,
+          "httpStatus": 206,
+          "sha256": "35b1f4e4d9a3e78fc5ed9bbdbbaea1506b509f7982a3bf94495fde06c0f3d03c"
+        },
+        {
+          "begin": 4980736,
+          "end": 5111807,
+          "httpStatus": 206,
+          "sha256": "b3698ee51b1a1f30e443f48a93a38323880149067fa982ace4c5860b79efcbd8"
+        },
+        {
+          "begin": 5111808,
+          "end": 5242879,
+          "httpStatus": 206,
+          "sha256": "0815751751603cc288745819ebb4827736a323f49f3d18959603474f82f50bc9"
+        },
+        {
+          "begin": 5242880,
+          "end": 5373951,
+          "httpStatus": 206,
+          "sha256": "8513217c65570f022e517e59ede9b2bfd866636a2ba1c6f3cce602fefb0b1b36"
+        },
+        {
+          "begin": 5373952,
+          "end": 5505023,
+          "httpStatus": 206,
+          "sha256": "15cdd57fefb608cffaaed08fdc5fffbdad378b86372205b4ebd6cd30495da5b3"
+        },
+        {
+          "begin": 5505024,
+          "end": 5636095,
+          "httpStatus": 206,
+          "sha256": "1505fdf7e290d498a18daac651e7a6c9645f360b8de590ce974260211bfa88ea"
+        },
+        {
+          "begin": 5636096,
+          "end": 5767167,
+          "httpStatus": 206,
+          "sha256": "05d849ccf639a52fb66f05d12f7d656cbd83bf47cbdce074e1863e50dbf88eca"
+        },
+        {
+          "begin": 5767168,
+          "end": 5898239,
+          "httpStatus": 206,
+          "sha256": "72fc380f91ab34facacfc99b2b246c9e76f5300cbecb7b7d8c9aad196bc18766"
+        },
+        {
+          "begin": 5898240,
+          "end": 6029311,
+          "httpStatus": 206,
+          "sha256": "4a7bb160468ac74ba50d41e8d4cd7f8c2e91f1bb4a2660efc99108c0a6df04aa"
+        },
+        {
+          "begin": 6029312,
+          "end": 6160383,
+          "httpStatus": 206,
+          "sha256": "a0667737cc40402426d6494a8286fc13248328150d22890bca92673d790bbfda"
+        },
+        {
+          "begin": 6160384,
+          "end": 6291455,
+          "httpStatus": 206,
+          "sha256": "2f4b74ecfebf9e254d510220d07e766124007bfde9b7bb003ca2cc83d025c958"
+        },
+        {
+          "begin": 6291456,
+          "end": 6422527,
+          "httpStatus": 206,
+          "sha256": "a7f581c4d5ba1da275624bf4d691b19a8332bbbd8eb92953ccb7481faef83b10"
+        },
+        {
+          "begin": 6422528,
+          "end": 6553599,
+          "httpStatus": 206,
+          "sha256": "d2daeaa102b87d2be931cc924c8ffd51baabc1793d2aedb48e7bf45ee37524b8"
+        },
+        {
+          "begin": 6553600,
+          "end": 6684671,
+          "httpStatus": 206,
+          "sha256": "6badb13591769b0a1cf8c207861f7bef649cb26a7db00b25148f80df863829cd"
+        },
+        {
+          "begin": 6684672,
+          "end": 6815743,
+          "httpStatus": 206,
+          "sha256": "02879c2ebb055c990210196235958f5dd201c0c49e5a37155784e15ea7eb00ed"
+        },
+        {
+          "begin": 6815744,
+          "end": 6886842,
+          "httpStatus": 206,
+          "sha256": "e6f85b946c5a23f2cebaddb3fc7f9674187b94836b2a08066e2c1e2a7c04aa45"
+        }
+      ],
+      "ranges": 53,
+      "releaseAssetID": 659421649,
+      "requestTimeoutSeconds": 60,
+      "retries": 2,
+      "sha256": "04b881579853a1e4735622c6a0e0b7ce7d089df6a442aef6953738e5575aa032",
+      "transportMethod": "curl HTTP/1.1 HTTPS validated anonymous REST/CDN redirect; bounded ranges for large assets"
+    },
+    "Wattson-v5.0.1-macos-universal.pkg": {
+      "CDNRedirectQueryNotLogged": true,
+      "anonymousBrowserDownloadURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.1/Wattson-v5.0.1-macos-universal.pkg",
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/659421623",
+      "authorizationCookiesAndNetrcAbsent": true,
+      "bytes": 6989581,
+      "cmpToCandidate": true,
+      "connectTimeoutSeconds": 10,
+      "curlConfigDisabled": true,
+      "curlEnvironmentAllowlist": [
+        "PATH",
+        "LC_ALL",
+        "TMPDIR"
+      ],
+      "everyRangeContentRangeAndLengthVerified": true,
+      "http_status": 206,
+      "maxWorkers": 8,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.1/Wattson-v5.0.1-macos-universal.pkg",
+      "rangeBytes": 131072,
+      "rangeChecks": [
+        {
+          "begin": 0,
+          "end": 131071,
+          "httpStatus": 206,
+          "sha256": "a81e1354f6c3e27fd37bcc1eb98c76e92e47e091e721c7b3a4a2260464d79fdc"
+        },
+        {
+          "begin": 131072,
+          "end": 262143,
+          "httpStatus": 206,
+          "sha256": "96658af701518bb1883a10a38f44c41a21ac6585d60733745fc9e7c6d91d175f"
+        },
+        {
+          "begin": 262144,
+          "end": 393215,
+          "httpStatus": 206,
+          "sha256": "6ba618086cf807610a508965e4c47e87d7f9ccaeb4cc29b1dc7f5b1270348086"
+        },
+        {
+          "begin": 393216,
+          "end": 524287,
+          "httpStatus": 206,
+          "sha256": "55a2c5ba4aab2ad1cc8c12141a2d6d0d451ca11d21b1f0f3ea083ea7baa2317d"
+        },
+        {
+          "begin": 524288,
+          "end": 655359,
+          "httpStatus": 206,
+          "sha256": "d6d2901557245f725d2a2af92ba5c67bf3e24cf17a94f571a69ecbdecca5ac6b"
+        },
+        {
+          "begin": 655360,
+          "end": 786431,
+          "httpStatus": 206,
+          "sha256": "e4a6c930a0b0eb701ab8d59cd0826b2e66dd97ab7fcd216f3af5e15c88645e3d"
+        },
+        {
+          "begin": 786432,
+          "end": 917503,
+          "httpStatus": 206,
+          "sha256": "ea1244ea24931b9180907fa7ac28a13366749773c027db47b5c0c4c78593714e"
+        },
+        {
+          "begin": 917504,
+          "end": 1048575,
+          "httpStatus": 206,
+          "sha256": "a14f75de37b243d59d4f5208ba08950fd3dd13fdf2bf2ca6b19ef343e70a2c07"
+        },
+        {
+          "begin": 1048576,
+          "end": 1179647,
+          "httpStatus": 206,
+          "sha256": "487fccabca541cb6bbcdd38805e885bd12670cbc42aa650f4fc53a93365d7ec1"
+        },
+        {
+          "begin": 1179648,
+          "end": 1310719,
+          "httpStatus": 206,
+          "sha256": "b224beeeb7159b7f6ceacb0b83bb3852a57abbe51c91167ee0d744d192c368cf"
+        },
+        {
+          "begin": 1310720,
+          "end": 1441791,
+          "httpStatus": 206,
+          "sha256": "4a41a0db0e052173a752d81d5a09f944837ba73d7e4bfe2fa69f9bdac14e99bb"
+        },
+        {
+          "begin": 1441792,
+          "end": 1572863,
+          "httpStatus": 206,
+          "sha256": "97ca1a518b44fe161de9d1d3740f83d978ad036ec8224af32e287435c60a85f8"
+        },
+        {
+          "begin": 1572864,
+          "end": 1703935,
+          "httpStatus": 206,
+          "sha256": "32a762929751b4b295491a5e9a38acf382be8513e1bdfa7305437d2f66f47c04"
+        },
+        {
+          "begin": 1703936,
+          "end": 1835007,
+          "httpStatus": 206,
+          "sha256": "653b3d1523ace313933ef155dac02f8c8865e62010b9d36dd496b6beaf43b847"
+        },
+        {
+          "begin": 1835008,
+          "end": 1966079,
+          "httpStatus": 206,
+          "sha256": "03094b1f9670bb74cb858e5248014975061e3cead2babe8487f317e6fd81e927"
+        },
+        {
+          "begin": 1966080,
+          "end": 2097151,
+          "httpStatus": 206,
+          "sha256": "7985ea68c33ee324b61bb60b50892eaea4bc661ce455495fc42c4a171256bbc6"
+        },
+        {
+          "begin": 2097152,
+          "end": 2228223,
+          "httpStatus": 206,
+          "sha256": "e93e8fb407f9e2db70dbcaa5131a9c11fe7603d6029d6bb40a05ad8fcfec766c"
+        },
+        {
+          "begin": 2228224,
+          "end": 2359295,
+          "httpStatus": 206,
+          "sha256": "13df7ede0780565b3131c26139d7fd1bcc3b16554df6cad5c689cd3da86f1b17"
+        },
+        {
+          "begin": 2359296,
+          "end": 2490367,
+          "httpStatus": 206,
+          "sha256": "c72e6dce346893318795b8eb41ed41817f8ff411e07aab0d5f13a9b235abafa4"
+        },
+        {
+          "begin": 2490368,
+          "end": 2621439,
+          "httpStatus": 206,
+          "sha256": "daab02a5887c5e04a78555e3464801feb91291f67d1c681ff9d088a04b04e533"
+        },
+        {
+          "begin": 2621440,
+          "end": 2752511,
+          "httpStatus": 206,
+          "sha256": "d7f9022f74ef64f844604691a67b68374e7699d474a95630f95fb0c5135b6148"
+        },
+        {
+          "begin": 2752512,
+          "end": 2883583,
+          "httpStatus": 206,
+          "sha256": "b6867f56a18ac2fce5bcece67c0ef56d19dc87d4211d00f9936ec9b2322ab188"
+        },
+        {
+          "begin": 2883584,
+          "end": 3014655,
+          "httpStatus": 206,
+          "sha256": "d6edb012694f2a4b4710bc8a8c383115b4080fddfd94d48790cb54ee90c0f635"
+        },
+        {
+          "begin": 3014656,
+          "end": 3145727,
+          "httpStatus": 206,
+          "sha256": "936a81b02320d0c3759f1265f69d2df1b5d7a2bf73bc7a63cf2b778bad2facde"
+        },
+        {
+          "begin": 3145728,
+          "end": 3276799,
+          "httpStatus": 206,
+          "sha256": "1ed3a86bdf45445c9e82ec4681a4c6a8e35cf81f11121b399051540098f66d47"
+        },
+        {
+          "begin": 3276800,
+          "end": 3407871,
+          "httpStatus": 206,
+          "sha256": "a4891677d5febb347a140da26e3b8b407ec6230b2883cbc0bffc698fb883e594"
+        },
+        {
+          "begin": 3407872,
+          "end": 3538943,
+          "httpStatus": 206,
+          "sha256": "843f82af105326ca439fc61d580eb1e15033c5c92fe5d06f20aa1ecba8424107"
+        },
+        {
+          "begin": 3538944,
+          "end": 3670015,
+          "httpStatus": 206,
+          "sha256": "dd1fa1dfe57a2f45c74ed1d9774be94d0b01b1d8ef910918fcdcc20185ed632d"
+        },
+        {
+          "begin": 3670016,
+          "end": 3801087,
+          "httpStatus": 206,
+          "sha256": "99ff29e0b688f6f80c36bc5651f58295955de25ff62ced22b91ca08bc853addf"
+        },
+        {
+          "begin": 3801088,
+          "end": 3932159,
+          "httpStatus": 206,
+          "sha256": "2d5b09448d1d4a1e9788f5519278962d4249f69c1e2d0b16d0efef3503d285e0"
+        },
+        {
+          "begin": 3932160,
+          "end": 4063231,
+          "httpStatus": 206,
+          "sha256": "8def27308e654052d8b5ce0cea7dd07996e2c82fe0845fdd28df99caf93dccd8"
+        },
+        {
+          "begin": 4063232,
+          "end": 4194303,
+          "httpStatus": 206,
+          "sha256": "3a6c5f6c0fdc23cf2f6e55367febeb24f0d29eb62ac21f138560ee2298e83bdc"
+        },
+        {
+          "begin": 4194304,
+          "end": 4325375,
+          "httpStatus": 206,
+          "sha256": "58ff281378a27a1dd607edb084ffe0080a164584b3b44f2ec8b3b850ca8e6990"
+        },
+        {
+          "begin": 4325376,
+          "end": 4456447,
+          "httpStatus": 206,
+          "sha256": "ede431f052b3aa6c3d40ada39138849b98ad9ba36b97456006239a61a4335c23"
+        },
+        {
+          "begin": 4456448,
+          "end": 4587519,
+          "httpStatus": 206,
+          "sha256": "bc98b67e3e54a32ef76a1a1dc1bc4fa11a360bc6194cae15c992d83a0e628618"
+        },
+        {
+          "begin": 4587520,
+          "end": 4718591,
+          "httpStatus": 206,
+          "sha256": "a4d10b77a9940a47a5d86219a387eaa23cacf0097517c52e67e8b429acd66783"
+        },
+        {
+          "begin": 4718592,
+          "end": 4849663,
+          "httpStatus": 206,
+          "sha256": "84887fe9a51315bc952f2521bb3e884bd3463fe64fc24e3b4bbfa525eac377b9"
+        },
+        {
+          "begin": 4849664,
+          "end": 4980735,
+          "httpStatus": 206,
+          "sha256": "106f911f0b6f1326157c2616119290be4fb4a5e74c8c32f9d46c5419ca078d57"
+        },
+        {
+          "begin": 4980736,
+          "end": 5111807,
+          "httpStatus": 206,
+          "sha256": "c2ca7d136a072d052a8457e5abfa378c920840a004e1c03bd5945acfe513ed41"
+        },
+        {
+          "begin": 5111808,
+          "end": 5242879,
+          "httpStatus": 206,
+          "sha256": "c35e266b951a5393553993249dbeff0a1c1c062bbc7b23da67c9d977ffc79219"
+        },
+        {
+          "begin": 5242880,
+          "end": 5373951,
+          "httpStatus": 206,
+          "sha256": "abeb22c253197e78a7d5cc97b7608ff4e2aec5d59c9aedaa312dbd8cb6124704"
+        },
+        {
+          "begin": 5373952,
+          "end": 5505023,
+          "httpStatus": 206,
+          "sha256": "b7094b8df2f2c320a1539b465d277900a82cae522b42705294b33730bc4b6f39"
+        },
+        {
+          "begin": 5505024,
+          "end": 5636095,
+          "httpStatus": 206,
+          "sha256": "533c44883a0c26013baf7d81e23c52aa9a1e2faa0f58ead7168014072ed77dbc"
+        },
+        {
+          "begin": 5636096,
+          "end": 5767167,
+          "httpStatus": 206,
+          "sha256": "225f18cc0de5c23367ccae0a8ae123b32f1cdc730f27e182c8f6cf8db9fbecf9"
+        },
+        {
+          "begin": 5767168,
+          "end": 5898239,
+          "httpStatus": 206,
+          "sha256": "bbdd090a0e5ff4eb7c84b0fba57073506bec7004a48b15df10c2fe967d621a5f"
+        },
+        {
+          "begin": 5898240,
+          "end": 6029311,
+          "httpStatus": 206,
+          "sha256": "1e23101e899e59352a74d8da5e94f8a0080b8ed9175bbae3e5e964fcde028592"
+        },
+        {
+          "begin": 6029312,
+          "end": 6160383,
+          "httpStatus": 206,
+          "sha256": "2ca63a415c019622c563d01243a4ce5b8a71fe174c126327659e4b90062e6289"
+        },
+        {
+          "begin": 6160384,
+          "end": 6291455,
+          "httpStatus": 206,
+          "sha256": "7ec0ce577166d83c6e0ecc6e451edaa09e2f8ccee2fb3927b8967bfbd7f04d22"
+        },
+        {
+          "begin": 6291456,
+          "end": 6422527,
+          "httpStatus": 206,
+          "sha256": "d752e21c3efe86b4490fd859877085ca5b315554ad6236ba978004d614a90197"
+        },
+        {
+          "begin": 6422528,
+          "end": 6553599,
+          "httpStatus": 206,
+          "sha256": "f1cf17b24e9e8f186310323b45021c6096727dee0bd551d32457b3a9016c2e7c"
+        },
+        {
+          "begin": 6553600,
+          "end": 6684671,
+          "httpStatus": 206,
+          "sha256": "022801d2234dc975612b0f4d5b006f3b11f64a0b7a43f838daf9be1c049b1afc"
+        },
+        {
+          "begin": 6684672,
+          "end": 6815743,
+          "httpStatus": 206,
+          "sha256": "b204cd01635122af1df04ccdac4ddb0060b39783c22754faf20a9e3b9b9cc773"
+        },
+        {
+          "begin": 6815744,
+          "end": 6946815,
+          "httpStatus": 206,
+          "sha256": "9b229bc4723c1394cd4aea5db8783775fedeb0183b9d9f8033421b3c03ad849a"
+        },
+        {
+          "begin": 6946816,
+          "end": 6989580,
+          "httpStatus": 206,
+          "sha256": "8cae68625ae6569582f6653152130412a41b6fa0ca8c73ce9ade17925c8ff2c5"
+        }
+      ],
+      "ranges": 54,
+      "releaseAssetID": 659421623,
+      "requestTimeoutSeconds": 60,
+      "retries": 2,
+      "sha256": "5bc42648e9238e8e3665672c172e7e1d7fc5c60cca70ff9c40db8331602f6362",
+      "transportMethod": "curl HTTP/1.1 HTTPS validated anonymous REST/CDN redirect; bounded ranges for large assets"
+    },
+    "Wattson-v5.0.1-release-info.txt": {
+      "CDNRedirectQueryNotLogged": true,
+      "anonymousBrowserDownloadURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.1/Wattson-v5.0.1-release-info.txt",
+      "anonymousRESTAssetURL": "https://api.github.com/repos/laleoarrow/battery-monitor/releases/assets/659421624",
+      "authorizationCookiesAndNetrcAbsent": true,
+      "bytes": 393,
+      "cmpToCandidate": true,
+      "connectTimeoutSeconds": 10,
+      "curlConfigDisabled": true,
+      "curlEnvironmentAllowlist": [
+        "PATH",
+        "LC_ALL",
+        "TMPDIR"
+      ],
+      "http_status": 200,
+      "publicURL": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.1/Wattson-v5.0.1-release-info.txt",
+      "ranges": 0,
+      "releaseAssetID": 659421624,
+      "requestTimeoutSeconds": 60,
+      "retries": 2,
+      "sha256": "1c0e82bd00261386a491522526f3359c4361bc3fcc54a2de26d280cf3d6d6598",
+      "transportMethod": "curl HTTP/1.1 HTTPS validated anonymous REST/CDN redirect; bounded ranges for large assets"
+    }
+  },
+  "packageSHA256": "5bc42648e9238e8e3665672c172e7e1d7fc5c60cca70ff9c40db8331602f6362",
+  "packageVerified": true,
+  "publicAssetDirectory": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/public-v5.0.1-verify",
+  "publicAssetsMatchCandidate": true,
+  "rebuildPerformed": false,
+  "releaseID": 418439777,
+  "sourceCommit": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+  "strictThreeEntryManifest": true,
+  "structureReverified": false,
+  "verificationInheritance": "Exact public byte equality inherits the accepted candidate frozen verifier and per-slice signature/entitlement inspection.",
+  "version": "5.0.1"
+}

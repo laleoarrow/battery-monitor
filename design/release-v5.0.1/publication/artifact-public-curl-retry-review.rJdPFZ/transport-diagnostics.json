@@ -1,0 +1,50 @@
+{
+  "allFourNormalDownloadsReliable": false,
+  "assets": {
+    "SHA256SUMS.txt": {
+      "bytes": 300,
+      "curlExitCode": 0,
+      "errorClass": null,
+      "exactSizeAndAPIDigestMatch": true,
+      "httpStatus": 200,
+      "sha256": "bac462b36ac18dcfbc5af0298e12c0e046c4900feb398564e060cf7bf4a6d653",
+      "success": true
+    },
+    "Wattson-v5.0.1-macos-universal.dmg": {
+      "bytes": 1707711,
+      "curlExitCode": 28,
+      "errorClass": "CurlExit28",
+      "exactSizeAndAPIDigestMatch": false,
+      "httpStatus": 200,
+      "sha256": "4e3ca2b9f156364b92cb5ce335cc83c95714654dc3a7e4727c18b345ec6e4758",
+      "success": false
+    },
+    "Wattson-v5.0.1-macos-universal.pkg": {
+      "bytes": 1718839,
+      "curlExitCode": 28,
+      "errorClass": "CurlExit28",
+      "exactSizeAndAPIDigestMatch": false,
+      "httpStatus": 200,
+      "sha256": "1c6511cd2ffe9b8c4b7881a58227dd775be6a723d78671573f683fd7fbf78baa",
+      "success": false
+    },
+    "Wattson-v5.0.1-release-info.txt": {
+      "bytes": 393,
+      "curlExitCode": 0,
+      "errorClass": null,
+      "exactSizeAndAPIDigestMatch": true,
+      "httpStatus": 200,
+      "sha256": "1c0e82bd00261386a491522526f3359c4361bc3fcc54a2de26d280cf3d6d6598",
+      "success": true
+    }
+  },
+  "checkedAtUTC": "2026-10-20T13:40:59.443248+00:00",
+  "frozenModuleSHA256": "61e822e6b36732cbd805eae2c8eb9da98e9ad26fddef2b96a59a561100b8f3dd",
+  "metadata": {
+    "curlExitCode": 0,
+    "errorClass": null,
+    "httpStatus": 200,
+    "success": true
+  },
+  "scope": "Anonymous transport only; no release acceptance."
+}

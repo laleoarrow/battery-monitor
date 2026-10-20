@@ -1,0 +1,12 @@
+{
+  "checkedAtUTC": "2026-10-20T13:53:29.199241+00:00",
+  "canonicalApp": "/Applications/Wattson.app",
+  "tool": "mcp__cua_repl",
+  "attempts": 2,
+  "bothGetAppAttempts": "Computer Use server error -10005: timeoutReached",
+  "actualCanonicalClickAcceptance": false,
+  "status": "unavailable",
+  "limitation": "Desktop automation could not obtain the canonical App state; no actual canonical menu-bar click/open/close success is claimed. Fixture-based production-renderer and native-input tests are recorded separately in design/process-whitelist.",
+  "productionPreferencesChangedForUICheck": false,
+  "productionProcessScreenshotsCaptured": false
+}

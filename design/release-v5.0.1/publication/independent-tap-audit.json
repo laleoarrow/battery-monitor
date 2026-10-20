@@ -1,0 +1,45 @@
+{
+  "version": "5.0.1",
+  "verifiedAtUTC": "2026-10-20T13:55:28.652337+00:00",
+  "tapCommit": "f101280c1bfc6768a766bb924b1687c50701f4af",
+  "tapMainMatches": true,
+  "packageSHA256": "5bc42648e9238e8e3665672c172e7e1d7fc5c60cca70ff9c40db8331602f6362",
+  "savedDiffChangedLines": 2,
+  "ownedWorkspaceRemoved": true,
+  "ownedWorkspace": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/tap-sync-v5.0.1.noindex/work.CEwJvC",
+  "caskURL": "https://raw.githubusercontent.com/laleoarrow/homebrew-tap/f101280c1bfc6768a766bb924b1687c50701f4af/Casks/wattson.rb",
+  "anonymousCaskHTTP": 200,
+  "publicCaskMatchesSavedAfter": true,
+  "caskSHA256": "bbb4317f5558531aa03669791b3527d5a4393556aebc367c9c1901ab452fd2d6",
+  "tapPushCI": {
+    "id": 39434110323,
+    "url": "https://github.com/laleoarrow/homebrew-tap/actions/runs/39434110323",
+    "workflow": ".github/workflows/tests.yml",
+    "event": "push",
+    "headBranch": "main",
+    "headSHA": "f101280c1bfc6768a766bb924b1687c50701f4af",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 118666495438,
+        "name": "test-bot (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 118666495632,
+        "name": "test-bot (macos-15-intel)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 118666495706,
+        "name": "test-bot (macos-26)",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "scope": "Independent cask/tap-CI/owned-scratch audit. Public Homebrew lifecycle remains a separate required gate."
+}

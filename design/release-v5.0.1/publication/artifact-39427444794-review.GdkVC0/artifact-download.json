@@ -1,0 +1,50 @@
+{
+  "archive_bytes": 13777027,
+  "archive_sha256": "c47af6866dea00f84423a9fa6fe77a80c3739f45c02b5092ec6df32b4790c9fd",
+  "artifact_id": 12267302673,
+  "checked_at_utc": "2026-10-20T13:32:29.412604+00:00",
+  "elapsed_seconds": 152.77,
+  "files": {
+    "SHA256SUMS.txt": {
+      "bytes": 300,
+      "sha256": "bac462b36ac18dcfbc5af0298e12c0e046c4900feb398564e060cf7bf4a6d653"
+    },
+    "Wattson-v5.0.1-macos-universal.dmg": {
+      "bytes": 6886843,
+      "sha256": "04b881579853a1e4735622c6a0e0b7ce7d089df6a442aef6953738e5575aa032"
+    },
+    "Wattson-v5.0.1-macos-universal.pkg": {
+      "bytes": 6989581,
+      "sha256": "5bc42648e9238e8e3665672c172e7e1d7fc5c60cca70ff9c40db8331602f6362"
+    },
+    "Wattson-v5.0.1-release-info.txt": {
+      "bytes": 393,
+      "sha256": "1c0e82bd00261386a491522526f3359c4361bc3fcc54a2de26d280cf3d6d6598"
+    }
+  },
+  "github_digest_and_size_match": true,
+  "metadata": {
+    "app_signature": "ad-hoc",
+    "architectures": "arm64,x86_64",
+    "build_number": "5.0.1",
+    "distribution_mode": "community-ad-hoc",
+    "dmg_contents": "app-only",
+    "dmg_signature": "unsigned",
+    "helper_path": "/Library/PrivilegedHelperTools/com.leoarrow.wattson.helper",
+    "helper_signature": "ad-hoc",
+    "install_path": "/Applications/Wattson.app",
+    "minimum_macos": "12.0",
+    "notarized": "no",
+    "package_signature": "unsigned",
+    "pkg_contents": "app-and-helper",
+    "stapled": "no",
+    "version": "5.0.1"
+  },
+  "run_id": 39427444794,
+  "source_sha": "f2f225f5889ba1ec5cae41ee2d8fca4b80406ed6",
+  "strict_manifest_valid": true,
+  "strict_metadata_valid": true,
+  "transport": "TLS-verified HTTP/1.1; authorization only to GitHub API; signed redirect only in private scratch; no raw curl output retained",
+  "verified_http206_ranges": 8,
+  "zip_exact_four_and_crc_valid": true
+}

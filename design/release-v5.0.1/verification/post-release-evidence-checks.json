@@ -1,0 +1,19 @@
+{
+  "jsonFilesParsedBeforeThisRecord": 58,
+  "pythonSyntaxValid": true,
+  "shellSyntaxValid": true,
+  "stagedWhitespaceCheckPassedExceptPreservedRawOutputs": true,
+  "rawOutputExceptions": [
+    {
+      "path": "installation/authorized-installer.log",
+      "sha256": "beb38972e273684fd81b1d24437dffa8a604cb0d8c164fb8497019625735c3c7",
+      "reason": "Original installer output or unified-diff context whitespace preserved byte for byte."
+    },
+    {
+      "path": "publication/tap-sync-review.qn44Ql/tap-change.diff",
+      "sha256": "8f76d0095872972983a293bff8a6eed9909d931e55fbdf582a3cb431d5571e20",
+      "reason": "Original installer output or unified-diff context whitespace preserved byte for byte."
+    }
+  ],
+  "runtimeSourcesChangedAfterFrozenRelease": false
+}
