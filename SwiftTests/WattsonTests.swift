@@ -675,7 +675,7 @@ final class WattsonTests: XCTestCase {
         XCTAssertEqual(flow.topologyForTest, "adapterLed")
         XCTAssertEqual(
             flow.nodePresentationsForTest.map { $0.caption },
-            ["Adapter", "Battery · Full", "System Total"]
+            ["Adapter", "Battery · Idle", "System Total"]
         )
         let deviceReadout = (flow.accessibilityChildren() ?? [])
             .compactMap { $0 as? NSTextField }
@@ -2175,7 +2175,8 @@ final class WattsonTests: XCTestCase {
 
         let pluggedIdle = PowerSnapshot(
             percent: 100, plugged: true, adapterW: 52,
-            batteryW: 0, systemW: 52, deviceOutputW: 7.5
+            batteryW: 0, systemW: 52, deviceOutputW: 7.5,
+            batteryTimeEstimate: .full, batteryTimeEstimateSource: .system
         )
         var pluggedIdleWithoutDeviceOutput = pluggedIdle
         pluggedIdleWithoutDeviceOutput.deviceOutputW = nil

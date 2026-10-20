@@ -70,7 +70,7 @@ enum BatteryIcon {
             tintRole = .lowPower
         } else if snapshot.percent <= 20 {
             tintRole = .lowBattery
-        } else if snapshot.state == .charging {
+        } else if snapshot.isChargingPresentation {
             tintRole = .charging
         } else {
             tintRole = .template
@@ -322,7 +322,7 @@ enum BatteryIcon {
     private static func color(for snapshot: PowerSnapshot, mode: EnergyMode) -> NSColor? {
         if mode == .low { return .systemYellow }
         if snapshot.percent <= 20 { return .systemRed }
-        if snapshot.state == .charging { return .systemGreen }
+        if snapshot.isChargingPresentation { return .systemGreen }
         return nil
     }
 

@@ -1,0 +1,6 @@
+{
+  "checkedAt" : "2026-10-20T05:16:07Z",
+  "macOSMaximumCapacityPercent" : 84,
+  "parser" : "SystemBatteryHealth.readLivePercent",
+  "source" : "system_profiler SPPowerDataType -json"
+}

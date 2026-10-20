@@ -90,7 +90,17 @@ final class RingGaugeView: PopoverSection {
             } else if metric == .adapterCurrent || metric == .adapterVoltage {
                 value.toolTip = "Measured adapter input, when available from this Mac."
                 value.setAccessibilityHelp(value.toolTip)
+            } else if metric == .batteryHealth {
+                value.toolTip = "Maximum capacity reported by macOS. The raw capacity-to-design ratio is a different measurement."
+                value.setAccessibilityHelp(value.toolTip)
+            } else if metric == .maxCapacity {
+                value.toolTip = "Raw full-charge capacity from the battery controller, in mAh. This is not the macOS Maximum Capacity percentage."
+                value.setAccessibilityHelp(value.toolTip)
+            } else if metric == .designCapacity {
+                value.toolTip = "Battery design capacity in mAh, as reported by the battery controller."
+                value.setAccessibilityHelp(value.toolTip)
             }
+            caption.toolTip = value.toolTip
             values.append(value)
         }
         needsLayout = true
@@ -161,6 +171,12 @@ final class RingGaugeView: PopoverSection {
             captions[index].stringValue = reading.caption
             values[index].stringValue = reading.value
             values[index].setAccessibilityLabel(reading.caption)
+            if metric == .timeEstimate {
+                let help = timeEstimateHelp(snapshot)
+                captions[index].toolTip = help
+                values[index].toolTip = help
+                values[index].setAccessibilityHelp(help)
+            }
             // State words need a smaller proportional face than numeric values.
             values[index].font = metric == .timeEstimate
                 ? .systemFont(ofSize: 12, weight: .medium) : PopoverStyle.mono(15)
@@ -230,6 +246,21 @@ final class RingGaugeView: PopoverSection {
         guard let minutes, minutes >= 0 else { return "Calculating…" }
         let time = minutes == 0 ? "<1m" : minutes < 60 ? "\(minutes)m" : "\(minutes / 60)h \(minutes % 60)m"
         return !snapshot.plugged && snapshot.batteryTimeEstimateSource == .observedDischarge ? "≈\(time)" : time
+    }
+
+    private func timeEstimateHelp(_ snapshot: PowerSnapshot) -> String {
+        switch snapshot.batteryTimeEstimateSource {
+        case .batteryGauge:
+            return snapshot.plugged
+                ? "The battery controller estimates time until full. It changes with charging conditions and workload."
+                : "The battery controller estimates remaining battery time. It changes with workload."
+        case .observedDischarge:
+            return "Approximate runtime from remaining battery charge and recent average discharge current. It changes with workload."
+        default:
+            return snapshot.plugged
+                ? "macOS estimates time until the battery is full while charging. It changes with charging conditions and workload."
+                : "macOS estimates remaining battery time for current usage. It changes with workload."
+        }
     }
 
     private func applyRotation() {

@@ -98,6 +98,47 @@ final class RingMetricViewTests: XCTestCase {
         }
     }
 
+    func testCapacityHelpDistinguishesSystemHealthFromPhysicalCapacity() throws {
+        Settings.ringMetrics = [.batteryHealth, .maxCapacity, .designCapacity]
+        let gauge = makeGauge()
+        let expected: [(String, String)] = [
+            ("Battery Health", "Maximum capacity reported by macOS. The raw capacity-to-design ratio is a different measurement."),
+            ("Max Capacity", "Raw full-charge capacity from the battery controller, in mAh. This is not the macOS Maximum Capacity percentage."),
+            ("Design Capacity", "Battery design capacity in mAh, as reported by the battery controller."),
+        ]
+        for (caption, help) in expected {
+            let field = try XCTUnwrap(gauge.subviews.compactMap { $0 as? NSTextField }.first {
+                $0.accessibilityLabel() == caption
+            })
+            XCTAssertEqual(field.toolTip, help)
+            XCTAssertEqual(field.accessibilityHelp(), help)
+        }
+    }
+
+    func testRuntimeHelpTracksItsSourceWhenReadingsChange() throws {
+        Settings.ringMetrics = [.timeEstimate]
+        let gauge = makeGauge()
+        let cases: [(Bool, BatteryTimeEstimateSource, String)] = [
+            (false, .system, "macOS estimates remaining battery time for current usage. It changes with workload."),
+            (false, .batteryGauge, "The battery controller estimates remaining battery time. It changes with workload."),
+            (false, .observedDischarge, "Approximate runtime from remaining battery charge and recent average discharge current. It changes with workload."),
+            (true, .system, "macOS estimates time until the battery is full while charging. It changes with charging conditions and workload."),
+            (true, .batteryGauge, "The battery controller estimates time until full. It changes with charging conditions and workload."),
+        ]
+        for (plugged, source, help) in cases {
+            gauge.update(snapshot: PowerSnapshot(
+                plugged: plugged,
+                batteryTimeEstimate: plugged ? .charging(12) : .remaining(12),
+                batteryTimeEstimateSource: source
+            ))
+            let field = try XCTUnwrap(gauge.subviews.compactMap { $0 as? NSTextField }.first {
+                $0.accessibilityLabel() == (plugged ? "Time to Full" : "Battery Runtime")
+            })
+            XCTAssertEqual(field.toolTip, help)
+            XCTAssertEqual(field.accessibilityHelp(), help)
+        }
+    }
+
     func testTimeEstimateFollowsPowerStateAndStatusWordsFit() {
         Settings.ringMetrics = [.timeEstimate]
         let gauge = makeGauge()

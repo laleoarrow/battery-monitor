@@ -1326,7 +1326,8 @@ let headerSnapshots = [
     PowerSnapshot(percent: 72, plugged: true, adapterW: 68, batteryW: 22.2,
                   systemW: 45.8, temperatureC: 34.2, cycleCount: 116),
     PowerSnapshot(percent: 100, plugged: true, adapterW: 52, batteryW: 0,
-                  systemW: 52, temperatureC: 31.8, cycleCount: 116),
+                  systemW: 52, temperatureC: 31.8, cycleCount: 116,
+                  batteryTimeEstimate: .full, batteryTimeEstimateSource: .system),
     PowerSnapshot(percent: 41, plugged: false, adapterW: 0, batteryW: -36.9,
                   systemW: 36.9, temperatureC: 33.1, cycleCount: 116),
     PowerSnapshot(percent: 18, plugged: true, adapterW: 28, batteryW: -31.7,
@@ -1349,7 +1350,8 @@ check("顶栏保留四种正常供电状态文案",
 
 let thresholdSnapshot = PowerSnapshot(
     percent: 100, plugged: true, adapterW: 52, batteryW: 0, systemW: 50,
-    temperatureC: 31.8, cycleCount: 116
+    temperatureC: 31.8, cycleCount: 116,
+    batteryTimeEstimate: .full, batteryTimeEstimateSource: .system
 )
 check("守恒偏差恰好 2 W 时仍显示正常状态",
       header.statePresentationForTest(snapshot: thresholdSnapshot).text == "Plugged In · Full")

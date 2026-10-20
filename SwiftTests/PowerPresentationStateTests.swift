@@ -94,7 +94,7 @@ final class PowerPresentationStateTests: XCTestCase {
         XCTAssertEqual(content.runningModuleAnimationCountForTest, 0)
     }
 
-    func testIdleBatteryLabelsDoNotClaimFullBelowOneHundredPercent() {
+    func testIdleBatteryLabelsUseReportedFullStateInsteadOfPercentage() {
         let header = PopoverHeaderView()
         let flow = makeFlow()
         let ring = RingGaugeView()
@@ -103,12 +103,18 @@ final class PowerPresentationStateTests: XCTestCase {
             let own = (view as? NSTextField).map { [$0.stringValue] } ?? []
             return own + view.subviews.flatMap { strings(in: $0) }
         }
-        for percent in [80, 100] {
+        let cases: [(Int, BatteryTimeEstimate?, BatteryTimeEstimateSource?, Bool)] = [
+            (80, nil, nil, false), (100, nil, nil, false),
+            (100, .notCharging, .system, false),
+            (99, .full, .system, true), (80, .full, .batteryGauge, true),
+            (100, .full, nil, false), (100, .full, .observedDischarge, false),
+        ]
+        for (percent, estimate, source, isFull) in cases {
             let snapshot = PowerSnapshot(
                 percent: percent, plugged: true, adapterW: 20,
-                batteryW: 0, systemW: 20
+                batteryW: 0, systemW: 20,
+                batteryTimeEstimate: estimate, batteryTimeEstimateSource: source
             )
-            let isFull = percent == 100
             XCTAssertEqual(
                 header.statePresentationForTest(snapshot: snapshot).text,
                 isFull ? "Plugged In · Full" : "Plugged In · Not Charging"
@@ -123,6 +129,42 @@ final class PowerPresentationStateTests: XCTestCase {
             for view in [ring as NSView, lanes as NSView] {
                 XCTAssertTrue(strings(in: view).contains(isFull ? "Full" : "Idle"))
                 if !isFull { XCTAssertFalse(strings(in: view).contains("Full")) }
+            }
+        }
+    }
+
+    func testReportedChargingStateOverridesPowerThresholdWithoutChangingFlow() {
+        let header = PopoverHeaderView()
+        let flow = makeFlow()
+        let cases: [(Double, BatteryTimeEstimate, String)] = [
+            (0, .charging(nil), "Charging"),
+            (0.1, .charging(12), "Charging"),
+            (1, .notCharging, "Plugged In · Not Charging"),
+            (1, .full, "Plugged In · Full"),
+        ]
+        for (batteryW, estimate, expected) in cases {
+            let snapshot = PowerSnapshot(
+                percent: 100, plugged: true, adapterW: 20 + batteryW,
+                batteryW: batteryW, systemW: 20,
+                batteryTimeEstimate: estimate, batteryTimeEstimateSource: .system
+            )
+            XCTAssertEqual(header.statePresentationForTest(snapshot: snapshot).text, expected)
+            XCTAssertEqual(snapshot.state, batteryW > PowerSnapshot.epsilon ? .charging : .pluggedIdle)
+            flow.update(snapshot: snapshot, animated: false)
+            XCTAssertEqual(flow.topologyForTest, "adapterLed")
+        }
+    }
+
+    func testReportedExternalStatesCannotReplaceBatteryOrMixedSupplyState() {
+        for estimate in [BatteryTimeEstimate.full, .notCharging, .charging(12)] {
+            for plugged in [false, true] {
+                let snapshot = PowerSnapshot(
+                    percent: 100, plugged: plugged, adapterW: plugged ? 10 : 0,
+                    batteryW: -10, systemW: plugged ? 20 : 10,
+                    batteryTimeEstimate: estimate, batteryTimeEstimateSource: .system
+                )
+                XCTAssertEqual(PopoverStyle.stateTitle(snapshot), plugged ? "Mixed Power · Adapter Limited" : "On Battery")
+                XCTAssertEqual(PopoverStyle.batteryFlowLabel(snapshot), plugged ? "Battery Assist" : "Battery Output")
             }
         }
     }

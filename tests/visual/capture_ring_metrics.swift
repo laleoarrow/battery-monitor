@@ -75,7 +75,8 @@ private enum CaptureRingMetrics {
             snapshot.batteryCurrentMA = Int((snapshot.batteryW / 12.81 * 1_000).rounded())
             snapshot.adapterVoltageV = snapshot.plugged ? 20 : nil
             snapshot.adapterCurrentMA = snapshot.plugged ? Int((snapshot.adapterW / 20 * 1_000).rounded()) : nil
-            snapshot.batteryHealthPercent = 81.3
+            snapshot.batteryHealthPercent = 84
+            snapshot.batteryTimeEstimateSource = .system
             snapshot.maxCapacityMAh = 6_975
             snapshot.designCapacityMAh = 8_579
             return (name, snapshot)

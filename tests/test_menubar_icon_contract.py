@@ -101,7 +101,7 @@ class BatteryIconContractTests(unittest.TestCase):
                       "battery-plug-large", "battery-plug-mask-large"):
             self.assertIn(f'"{asset}"', self.source27)
         self.assertIn("fallbackAdornment", self.source27)
-        self.assertIn("snapshot.state == .charging ? .bolt : .plug", self.source27)
+        self.assertIn("snapshot.isChargingPresentation ? .bolt : .plug", self.source27)
 
     def test_native27_key_tracks_internal_percentage_and_connected_state(self):
         key = self.source.split("if style == .native27 {", 1)[1].split(

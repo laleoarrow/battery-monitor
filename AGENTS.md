@@ -12,6 +12,10 @@ with Swift.
 
 ## Project rules
 
+- Metrics shared with macOS must prioritize Apple's system-reported values and
+  states. Battery health means macOS Maximum Capacity (%), never raw full-charge
+  capacity divided by design capacity. Missing official health stays unavailable;
+  sensor measurements and Wattson estimates must identify their different meaning.
 - All project code and assets must live under `/Users/leoarrow/Project/mypackage/agents/电池功率`.
 - The canonical user-facing app is `/Applications/Wattson.app`, installed by
   the native PKG together with its privileged helper and package receipt.

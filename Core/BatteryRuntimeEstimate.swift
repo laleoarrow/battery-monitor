@@ -1,6 +1,20 @@
 import Foundation
 import IOKit.ps
 
+struct SystemBatteryReading {
+    var percent: Int? = nil
+    var timeEstimate: BatteryTimeEstimate? = nil
+
+    var chargingState: BatteryChargingState? {
+        switch timeEstimate {
+        case .charging: return .charging
+        case .full: return .full
+        case .notCharging: return .notCharging
+        default: return nil
+        }
+    }
+}
+
 enum BatteryRuntimeEstimate {
     /// Read the direction and its corresponding minutes from the same internal
     /// battery description. macOS uses -1 while calculating either estimate.
@@ -31,13 +45,33 @@ enum BatteryRuntimeEstimate {
     }
 
     static func systemEstimate() -> BatteryTimeEstimate? {
+        systemReading().timeEstimate
+    }
+
+    /// One public IOPS snapshot supplies the user-visible charge level and
+    /// charging state. Firmware capacity ratios are only a fallback.
+    static func systemReading() -> SystemBatteryReading {
         guard let info = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
               let sources = IOPSCopyPowerSourcesList(info)?.takeRetainedValue() as? [CFTypeRef]
-        else { return nil }
+        else { return .init() }
         let descriptions = sources.compactMap { source in
             IOPSGetPowerSourceDescription(info, source)?.takeUnretainedValue() as? [String: Any]
         }
-        return estimate(from: descriptions)
+        return reading(from: descriptions)
+    }
+
+    static func reading(from descriptions: [[String: Any]]) -> SystemBatteryReading {
+        let battery = descriptions.first {
+            $0[kIOPSTypeKey] as? String == kIOPSInternalBatteryType
+                && BatterySampler.optionalBoolValue($0[kIOPSIsPresentKey]) == true
+        }
+        return SystemBatteryReading(
+            percent: BatterySampler.resolvedBatteryPercent(
+                currentCapacity: battery?[kIOPSCurrentCapacityKey],
+                maxCapacity: battery?[kIOPSMaxCapacityKey]
+            ),
+            timeEstimate: estimate(from: descriptions)
+        )
     }
 
     static func applying(

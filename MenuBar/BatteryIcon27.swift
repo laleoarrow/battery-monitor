@@ -12,7 +12,7 @@ enum BatteryIcon27 {
 
     static func adornment(for snapshot: PowerSnapshot) -> Adornment {
         guard snapshot.plugged else { return .none }
-        return snapshot.state == .charging ? .bolt : .plug
+        return snapshot.isChargingPresentation ? .bolt : .plug
     }
 
     private static let systemAssets: (

@@ -26,11 +26,15 @@ enum BatterySampler {
             from: properties,
             lowPowerMode: ProcessInfo.processInfo.isLowPowerModeEnabled
         )
-        guard case let .snapshot(snapshot) = result else { return result }
+        guard case var .snapshot(snapshot) = result else { return result }
+        let systemReading = BatteryRuntimeEstimate.systemReading()
+        snapshot.percent = systemReading.percent ?? snapshot.percent
+        snapshot.systemChargingState = systemReading.chargingState
+        snapshot.batteryHealthPercent = SystemBatteryHealth.shared.currentPercent()
         var fallback = BatteryTimeFallback()
         return .snapshot(fallback.applying(
             to: snapshot, properties: properties ?? [:],
-            systemEstimate: BatteryRuntimeEstimate.systemEstimate(),
+            systemEstimate: systemReading.timeEstimate,
             atNanoseconds: DispatchTime.now().uptimeNanoseconds
         ))
     }
@@ -92,14 +96,11 @@ enum BatterySampler {
             snapshot.adapterVoltageV = telemetry["SystemVoltageIn"].map { Double($0) / 1_000 }
             snapshot.adapterCurrentMA = telemetry["SystemCurrentIn"]
         }
-        // MaxCapacity is a percentage on Apple silicon. Only the explicit raw
-        // maximum and design capacity supply physical mAh for battery health.
+        // These are physical mAh readings, not macOS Maximum Capacity (%).
+        // Health is supplied separately by the official system power report;
+        // a raw capacity ratio must never substitute for a missing system value.
         snapshot.maxCapacityMAh = validCapacityMAh(props["AppleRawMaxCapacity"])
         snapshot.designCapacityMAh = validCapacityMAh(props["DesignCapacity"])
-        if let maximum = snapshot.maxCapacityMAh,
-           let design = snapshot.designCapacityMAh {
-            snapshot.batteryHealthPercent = Double(maximum) * 100 / Double(design)
-        }
         let instantBatteryW = resolvedInstantBatteryW(
             voltage: voltage,
             instantAmperage: instantAmperage,

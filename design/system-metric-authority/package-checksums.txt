@@ -1,0 +1,3 @@
+a988b725eae28a14e258699bb8c95cb8a90d90ad7802d8ede8a6fa144ff2c591  Wattson-v4.3.24-macos-universal.pkg
+9ef98bc3a48e1167d481e13eeeff798b531c644db0cc679e808bdd74870d8158  Wattson-v4.3.24-macos-universal.dmg
+47b01150859d593ca7cc50b52475b7fa679b0a1057f19887fd9df9e5d72996f4  Wattson-v4.3.24-release-info.txt

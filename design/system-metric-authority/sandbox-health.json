@@ -1,0 +1,21 @@
+{
+  "allPassed": true,
+  "checkedAt": "2026-10-20T05:18:31.504787+00:00",
+  "cleanup": {
+    "canonicalPIDUnchanged": 66247,
+    "checkedAt": "2026-10-20T05:19:33.524072+00:00",
+    "launchServicesProbeRegistrationAbsent": true,
+    "ownedContainersAndApplicationScriptsRemoved": true,
+    "ownedDefaultsRemoved": true,
+    "ownedScratchRemoved": true,
+    "spotlightProbeApplicationAbsent": true
+  },
+  "containerHome": true,
+  "elapsedSeconds": 0.22197424998739734,
+  "exactProductionEntitlementsVerified": true,
+  "exitCode": 0,
+  "expectedMaximumCapacityPercent": 84,
+  "maximumCapacityPercent": 84,
+  "productionSourceSHA256": "114b2a9758354c8054133718aedef7a0251ea303abe928ed1d8c3f09ff71706b",
+  "source": "production SystemBatteryHealth.readLivePercent"
+}

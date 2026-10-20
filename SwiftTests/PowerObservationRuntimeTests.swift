@@ -203,6 +203,7 @@ final class PowerObservationRuntimeTests: XCTestCase {
         let backend = RuntimeBatteryBackend(properties: telemetryProperties())
         let clock = RuntimeClock(values: [0, 10, 20, 30, 200, 210])
         let reader = AppleSmartBatteryPowerObservationReader(
+            systemBatteryReading: { .init() }, batteryHealthPercent: { nil },
             backend: backend,
             clock: clock.next,
             maximumTrackingGapNanoseconds: 100
@@ -231,6 +232,7 @@ final class PowerObservationRuntimeTests: XCTestCase {
             value: UInt64.max
         )
         let signedReader = AppleSmartBatteryPowerObservationReader(
+            systemBatteryReading: { .init() }, batteryHealthPercent: { nil },
             backend: RuntimeBatteryBackend(properties: signedProperties),
             clock: RuntimeClock(values: [300, 310]).next
         )
@@ -254,6 +256,7 @@ final class PowerObservationRuntimeTests: XCTestCase {
         let backend = RuntimeBatteryBackend(properties: telemetryProperties())
         let clock = RuntimeClock(values: [0, 10, 20, 30, 40, 50])
         let reader = AppleSmartBatteryPowerObservationReader(
+            systemBatteryReading: { .init() }, batteryHealthPercent: { nil },
             backend: backend,
             clock: clock.next,
             maximumTrackingGapNanoseconds: 1_000
@@ -277,6 +280,7 @@ final class PowerObservationRuntimeTests: XCTestCase {
     func testRuntimeReadsBatteryFieldsOnceForVisibleAndShadowAcrossPowerStates() throws {
         let backend = RuntimeBatteryBackend(properties: [:])
         let reader = AppleSmartBatteryPowerObservationReader(
+            systemBatteryReading: { .init() }, batteryHealthPercent: { nil },
             backend: backend,
             clock: RuntimeClock(values: Array(0..<20)).next,
             lowPowerMode: { true }
@@ -332,6 +336,7 @@ final class PowerObservationRuntimeTests: XCTestCase {
         properties["PowerOutDetails"] = [["Watts": 7_000]]
         let backend = RuntimeBatteryBackend(properties: properties)
         let reader = AppleSmartBatteryPowerObservationReader(
+            systemBatteryReading: { .init() }, batteryHealthPercent: { nil },
             backend: backend,
             clock: RuntimeClock(values: Array(0..<10)).next,
             lowPowerMode: { false }
@@ -364,6 +369,7 @@ final class PowerObservationRuntimeTests: XCTestCase {
         }
         let runtime = PowerObservationRuntimeController(
             batteryReader: AppleSmartBatteryPowerObservationReader(
+            systemBatteryReading: { .init() }, batteryHealthPercent: { nil },
                 backend: backend, lowPowerMode: { false }
             ),
             helperObservation: { _ in
@@ -383,6 +389,7 @@ final class PowerObservationRuntimeTests: XCTestCase {
             var properties = telemetryProperties()
             properties["PowerOutDetails"] = details
             let reader = AppleSmartBatteryPowerObservationReader(
+            systemBatteryReading: { .init() }, batteryHealthPercent: { nil },
                 backend: RuntimeBatteryBackend(properties: properties),
                 clock: RuntimeClock(values: [0, 10]).next
             )

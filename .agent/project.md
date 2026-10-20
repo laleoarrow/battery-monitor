@@ -7,6 +7,22 @@ through IOKit, refreshes whole-machine power from two fixed read-only SMC keys
 when the helper is available, and displays the result in a live power-flow
 popover.
 
+Shared macOS metrics use the system's user-visible values. Battery charge level
+and charging status come from one public IOPS description per sample; registry
+charge level remains a fallback when IOPS is unavailable. Charging status is
+retained separately from runtime estimation so an unavailable time estimate
+cannot turn trickle charging into "Full" or "Not Charging". Physical power-flow
+topology remains based on measured power, including mixed supply.
+
+Battery Health displays macOS **Maximum Capacity (%)**, read from the official
+`system_profiler SPPowerDataType -json` battery health report. A bounded utility
+worker caches successful reads for 15 minutes, coalesces refreshes, and retries
+failed reads after one minute. A failed refresh clears the health value. Initial
+loading and unavailable official values display `—`; raw full-charge/design mAh
+ratios never substitute for system health. The separate mAh metrics retain their
+battery-controller meaning, explained in tooltips. See the
+[system metric authority validation](../design/system-metric-authority/README.md).
+
 ## Runtime architecture
 
 - `Core/`: sampling, state models, history, settings, and helper client.

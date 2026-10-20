@@ -68,7 +68,8 @@ final class AppleSmartBatteryPowerObservationReader:
     private let backend: any AppleSmartBatteryPowerRawSnapshotReading
     private let clock: () -> UInt64
     private let lowPowerMode: () -> Bool
-    private let batteryTimeEstimate: () -> BatteryTimeEstimate?
+    private let systemBatteryReading: () -> SystemBatteryReading
+    private let batteryHealthPercent: () -> Double?
     private let maximumTrackingGapNanoseconds: UInt64
     private let trackerLock = NSLock()
     private var previousTelemetryToken: String?
@@ -77,6 +78,8 @@ final class AppleSmartBatteryPowerObservationReader:
     private var batteryTimeFallback = BatteryTimeFallback()
 
     init(
+        systemBatteryReading: @escaping () -> SystemBatteryReading = BatteryRuntimeEstimate.systemReading,
+        batteryHealthPercent: @escaping () -> Double? = { SystemBatteryHealth.shared.currentPercent() },
         backend: any AppleSmartBatteryPowerRawSnapshotReading =
             SystemAppleSmartBatteryPowerRawSnapshotReader(),
         clock: @escaping () -> UInt64 =
@@ -86,14 +89,14 @@ final class AppleSmartBatteryPowerObservationReader:
                 .defaultTrackingGapNanoseconds,
         lowPowerMode: @escaping () -> Bool = {
             ProcessInfo.processInfo.isLowPowerModeEnabled
-        },
-        batteryTimeEstimate: @escaping () -> BatteryTimeEstimate? = BatteryRuntimeEstimate.systemEstimate
+        }
     ) {
         self.backend = backend
         self.clock = clock
         self.maximumTrackingGapNanoseconds = maximumTrackingGapNanoseconds
         self.lowPowerMode = lowPowerMode
-        self.batteryTimeEstimate = batteryTimeEstimate
+        self.systemBatteryReading = systemBatteryReading
+        self.batteryHealthPercent = batteryHealthPercent
     }
 
     func readObservation() -> AppleSmartBatteryObservation {
@@ -106,15 +109,18 @@ final class AppleSmartBatteryPowerObservationReader:
         // registry properties still have no firmware-level atomicity guarantee.
         let (raw, capture) = readRaw(keys: Self.runtimePropertyAllowlist)
         let snapshot: PowerSnapshot?
-        if case let .snapshot(value) = BatterySampler.sampleResult(
+        if case var .snapshot(value) = BatterySampler.sampleResult(
             from: raw.servicePresent ? raw.properties : nil,
             lowPowerMode: lowPowerMode()
         ) {
-            let systemEstimate = batteryTimeEstimate()
+            let systemReading = systemBatteryReading()
+            value.percent = systemReading.percent ?? value.percent
+            value.systemChargingState = systemReading.chargingState
+            value.batteryHealthPercent = batteryHealthPercent()
             trackerLock.lock()
             snapshot = batteryTimeFallback.applying(
                 to: value, properties: raw.properties,
-                systemEstimate: systemEstimate,
+                systemEstimate: systemReading.timeEstimate,
                 atNanoseconds: capture.endedContinuousNanoseconds
             )
             trackerLock.unlock()

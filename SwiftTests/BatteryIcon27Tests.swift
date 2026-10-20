@@ -46,6 +46,46 @@ final class BatteryIcon27Tests: XCTestCase {
         )), .none)
     }
 
+    func testReportedChargingStateControlsAdornmentAndWattsonTint() {
+        let cases: [(Double, BatteryTimeEstimate, BatteryTimeEstimateSource?, Bool)] = [
+            (0, .charging(nil), .system, true),
+            (0.1, .charging(12), .system, true),
+            (0, .charging(12), .batteryGauge, true),
+            (10, .full, .system, false),
+            (10, .notCharging, .system, false),
+            (-10, .charging(12), .system, false),
+            (0, .charging(12), nil, false),
+            (0, .charging(12), .observedDischarge, false),
+        ]
+        for (watts, estimate, source, charging) in cases {
+            let snapshot = PowerSnapshot(
+                percent: 80, plugged: true, batteryW: watts,
+                batteryTimeEstimate: estimate, batteryTimeEstimateSource: source
+            )
+            XCTAssertEqual(BatteryIcon27.adornment(for: snapshot), charging ? .bolt : .plug)
+            XCTAssertEqual(key(snapshot).showsBolt, charging)
+            XCTAssertEqual(key(snapshot, style: .wattson).tintRole, charging ? .charging : .template)
+            XCTAssertEqual(key(snapshot, style: .wattson, mode: .low).tintRole, .lowPower)
+            XCTAssertEqual(key(snapshot, style: .wattson, pressed: true).tintRole, .template)
+            // The macOS 26 artwork uses its bolt for every connected state.
+            XCTAssertTrue(key(snapshot, style: .native).showsBolt)
+        }
+    }
+
+    func testReportedChargingChangesInvalidateGlyphAndTintWithoutWattChanges() throws {
+        let charging = PowerSnapshot(
+            percent: 80, plugged: true, batteryW: 0,
+            batteryTimeEstimate: .charging(nil), batteryTimeEstimateSource: .system
+        )
+        var paused = charging
+        paused.batteryTimeEstimate = .notCharging
+        for style in [Settings.MenuBarIconStyle.native27, .wattson] {
+            XCTAssertNotEqual(key(charging, style: style), key(paused, style: style))
+            XCTAssertNotEqual(try pixels(charging, style: style), try pixels(paused, style: style))
+        }
+        XCTAssertEqual(key(charging, style: .native), key(paused, style: .native))
+    }
+
     func testBoundaryPercentagesUseOneFixedResolutionIndependentCanvas() throws {
         for percent in [0, 1, 99, 100] {
             for plugged in [false, true] {

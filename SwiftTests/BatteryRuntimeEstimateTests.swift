@@ -183,13 +183,79 @@ final class BatteryRuntimeEstimateTests: XCTestCase {
         XCTAssertNil(snapshot.batteryTimeEstimate)
     }
 
+    func testSystemReadingSelectsPresentInternalBatteryAndKeepsUnknownTime() {
+        var battery = powerSource(charging: true, minutes: -1)
+        battery["Current Capacity"] = 73
+        battery["Max Capacity"] = 100
+        var accessory = battery
+        accessory["Type"] = "UPS"
+        accessory["Current Capacity"] = 5
+        var absent = battery
+        absent["Is Present"] = false
+        absent["Current Capacity"] = 20
+        let reading = BatteryRuntimeEstimate.reading(from: [accessory, absent, battery])
+        XCTAssertEqual(reading.percent, 73)
+        XCTAssertEqual(reading.timeEstimate, .charging(nil))
+        XCTAssertEqual(reading.chargingState, .charging)
+        for invalid: Any in [true, "73", -1, 73.5, NSNull()] {
+            battery["Current Capacity"] = invalid
+            let invalidReading = BatteryRuntimeEstimate.reading(from: [battery])
+            XCTAssertNil(invalidReading.percent)
+            XCTAssertEqual(invalidReading.chargingState, .charging)
+        }
+        XCTAssertNil(BatteryRuntimeEstimate.reading(from: [accessory, absent]).percent)
+    }
+
+    func testRuntimeUsesSystemPercentageAndClearsUnavailableHealthWithoutRatioFallback() throws {
+        let backend = RuntimeEstimateBatteryBackend(properties: batteryProperties())
+        backend.properties["AppleRawMaxCapacity"] = 6_895
+        backend.properties["DesignCapacity"] = 8_579
+        var system = SystemBatteryReading(percent: 73, timeEstimate: .remaining(125))
+        var health: Double? = 84
+        let reader = AppleSmartBatteryPowerObservationReader(
+            systemBatteryReading: { system }, batteryHealthPercent: { health },
+            backend: backend, lowPowerMode: { false }
+        )
+        let official = try XCTUnwrap(reader.readRuntimeSample().visibleSnapshot)
+        XCTAssertEqual(official.percent, 73)
+        XCTAssertEqual(official.batteryHealthPercent, 84)
+        XCTAssertEqual(official.maxCapacityMAh, 6_895)
+        health = nil
+        system = .init()
+        let unavailable = try XCTUnwrap(reader.readRuntimeSample().visibleSnapshot)
+        XCTAssertEqual(unavailable.percent, 80)
+        XCTAssertNil(unavailable.batteryHealthPercent)
+    }
+
+    func testSystemChargingStatusSurvivesUnavailableRuntimeAndClearsOnNextSample() throws {
+        let backend = RuntimeEstimateBatteryBackend(properties: batteryProperties())
+        backend.properties["ExternalConnected"] = true
+        backend.properties["IsCharging"] = true
+        backend.properties["InstantAmperage"] = 10
+        var now: UInt64 = 0
+        var system = SystemBatteryReading(percent: 100, timeEstimate: .charging(nil))
+        let reader = AppleSmartBatteryPowerObservationReader(
+            systemBatteryReading: { system }, batteryHealthPercent: { nil },
+            backend: backend, clock: { now }, lowPowerMode: { false }
+        )
+        for second in 0...61 {
+            now = UInt64(second) * 1_000_000_000
+            let sample = try XCTUnwrap(reader.readRuntimeSample().visibleSnapshot)
+            XCTAssertEqual(sample.state, .pluggedIdle)
+            XCTAssertEqual(sample.reportedBatteryState, .charging)
+            XCTAssertEqual(PopoverStyle.stateTitle(sample), "Charging")
+        }
+        system = .init()
+        XCTAssertNil(reader.readRuntimeSample().visibleSnapshot?.systemChargingState)
+    }
+
     func testRuntimeReaderReadsOncePerValidSampleIncludingExternalPower() {
         let backend = RuntimeEstimateBatteryBackend(properties: batteryProperties())
         var reads = 0
         var freshEstimate: BatteryTimeEstimate? = .remaining(125)
         let reader = AppleSmartBatteryPowerObservationReader(
-            backend: backend, lowPowerMode: { false },
-            batteryTimeEstimate: { reads += 1; return freshEstimate }
+            systemBatteryReading: { reads += 1; return .init(timeEstimate: freshEstimate) },
+            batteryHealthPercent: { nil }, backend: backend, lowPowerMode: { false }
         )
         for (plugged, charging, current, estimate): (Bool, Bool, Int, BatteryTimeEstimate?) in [
             (false, false, -1_000, .remaining(125)),
@@ -215,8 +281,8 @@ final class BatteryRuntimeEstimateTests: XCTestCase {
         let backend = RuntimeEstimateBatteryBackend(properties: [:])
         var reads = 0
         let reader = AppleSmartBatteryPowerObservationReader(
-            backend: backend, lowPowerMode: { false },
-            batteryTimeEstimate: { reads += 1; return .remaining(125) }
+            systemBatteryReading: { reads += 1; return .init(timeEstimate: .remaining(125)) },
+            batteryHealthPercent: { nil }, backend: backend, lowPowerMode: { false }
         )
         XCTAssertNil(reader.readRuntimeSample().visibleSnapshot)
         backend.properties = batteryProperties()
@@ -545,7 +611,8 @@ final class BatteryTimeFallbackTests: XCTestCase {
         let backend = RuntimeEstimateBatteryBackend(properties: properties())
         var now: UInt64 = 0
         let reader = AppleSmartBatteryPowerObservationReader(
-            backend: backend, clock: { now * self.second }, lowPowerMode: { false }, batteryTimeEstimate: { nil }
+            systemBatteryReading: { .init() }, batteryHealthPercent: { nil },
+            backend: backend, clock: { now * self.second }, lowPowerMode: { false }
         )
         for time: UInt64 in 0...60 {
             now = time

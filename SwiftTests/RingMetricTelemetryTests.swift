@@ -12,10 +12,7 @@ final class RingMetricTelemetryTests: XCTestCase {
         XCTAssertEqual(snapshot.adapterCurrentMA, 2_363)
         XCTAssertEqual(snapshot.maxCapacityMAh, 6_975)
         XCTAssertEqual(snapshot.designCapacityMAh, 8_579)
-        XCTAssertEqual(
-            try XCTUnwrap(snapshot.batteryHealthPercent),
-            6_975.0 / 8_579 * 100, accuracy: 0.0001
-        )
+        XCTAssertNil(snapshot.batteryHealthPercent)
     }
 
     func testBatteryCurrentPrefersInstantAndFallsBackToAverage() throws {
@@ -143,7 +140,7 @@ final class RingMetricTelemetryTests: XCTestCase {
         }
     }
 
-    func testHealthUsesPhysicalRawCapacityInsteadOfAppleSiliconPercentage() throws {
+    func testPhysicalCapacityNeverSubstitutesForSystemHealth() throws {
         var properties = fixture()
         properties["MaxCapacity"] = 100
         XCTAssertEqual(try sample(properties).maxCapacityMAh, 6_975)
@@ -160,7 +157,7 @@ final class RingMetricTelemetryTests: XCTestCase {
         XCTAssertNil(try sample(properties).batteryHealthPercent)
     }
 
-    func testHealthRequiresBothValidPhysicalCapacityMeasurements() throws {
+    func testPhysicalCapacitiesValidateIndependentlyOfUnavailableSystemHealth() throws {
         for key in ["AppleRawMaxCapacity", "DesignCapacity"] {
             for invalid: Any in [true, 6_975.5, "6975", NSNull(), -1, 0, 100_001] {
                 var properties = fixture()
@@ -184,8 +181,8 @@ final class RingMetricTelemetryTests: XCTestCase {
     func testRuntimeAllowlistCarriesCapacityAndMeasuredInputThroughFusion() throws {
         let backend = RingMetricBatteryBackend(properties: fixture())
         let reader = AppleSmartBatteryPowerObservationReader(
-            backend: backend, clock: { 100 }, lowPowerMode: { false },
-            batteryTimeEstimate: { nil }
+            systemBatteryReading: { .init(percent: 73) }, batteryHealthPercent: { 84 },
+            backend: backend, clock: { 100 }, lowPowerMode: { false }
         )
         let runtime = PowerObservationRuntimeController(
             batteryReader: reader,
@@ -205,7 +202,8 @@ final class RingMetricTelemetryTests: XCTestCase {
         XCTAssertEqual(snapshot.adapterCurrentMA, 2_363)
         XCTAssertEqual(snapshot.maxCapacityMAh, 6_975)
         XCTAssertEqual(snapshot.designCapacityMAh, 8_579)
-        XCTAssertNotNil(snapshot.batteryHealthPercent)
+        XCTAssertEqual(snapshot.batteryHealthPercent, 84)
+        XCTAssertEqual(snapshot.percent, 73)
     }
 
     private func sample(_ properties: [String: Any]) throws -> PowerSnapshot {

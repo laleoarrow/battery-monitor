@@ -20,6 +20,10 @@ enum BatteryTimeEstimateSource: String {
     case observedDischarge
 }
 
+enum BatteryChargingState {
+    case charging, full, notCharging
+}
+
 struct PowerSnapshot {
     static let epsilon: Double = 0.3
 
@@ -46,6 +50,7 @@ struct PowerSnapshot {
     /// Measured adapter input, distinct from negotiated adapter capability.
     var adapterVoltageV: Double? = nil
     var adapterCurrentMA: Int? = nil
+    /// macOS System Information Maximum Capacity (%), never a raw mAh ratio.
     var batteryHealthPercent: Double? = nil
     var maxCapacityMAh: Int? = nil
     var designCapacityMAh: Int? = nil
@@ -53,6 +58,27 @@ struct PowerSnapshot {
     /// `nil` means no trustworthy state or estimate is available for this sample.
     var batteryTimeEstimate: BatteryTimeEstimate? = nil
     var batteryTimeEstimateSource: BatteryTimeEstimateSource? = nil
+    /// Kept independently of time estimation so "calculating" or a fallback
+    /// timeout cannot discard macOS charging status.
+    var systemChargingState: BatteryChargingState? = nil
+
+    var reportedBatteryState: BatteryChargingState? {
+        guard plugged, state != .mixedSupply else { return nil }
+        if let systemChargingState { return systemChargingState }
+        guard batteryTimeEstimateSource == .system
+                || batteryTimeEstimateSource == .batteryGauge else { return nil }
+        switch batteryTimeEstimate {
+        case .charging: return .charging
+        case .full: return .full
+        case .notCharging: return .notCharging
+        default: return nil
+        }
+    }
+
+    var isChargingPresentation: Bool {
+        if let reportedBatteryState { return reportedBatteryState == .charging }
+        return state == .charging
+    }
 
     /// Everything the sources are putting out right now. Drives the visual
     /// encoding curve and the popover's headline number.
