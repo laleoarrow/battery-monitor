@@ -6,6 +6,8 @@ with Swift.
 ## Read first
 
 - Start with `.agent/README.md`.
+- Before any build or test, read `.agent/cleanup.md` for the user's standing
+  cleanup requirement and the managed entrypoints.
 - Use `.agent/project.md` for architecture and key files.
 - Use `.agent/debugging.md` for runtime debugging, layout fixes, and verification.
 - Use `.agent/release.md` for packaging, install/deployment steps, and release tagging.

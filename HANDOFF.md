@@ -123,7 +123,7 @@ The mode selector keeps the v2.1.5 interaction contract:
 Headless checks:
 
 ```bash
-swift test
+bash scripts/test_swift.sh
 python3 -m unittest discover -s tests -v
 bash scripts/release.sh 3.0.26
 ```
