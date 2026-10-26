@@ -4,10 +4,11 @@ import pathlib
 import shutil
 import signal
 import subprocess
-import tempfile
 import time
 import unittest
 import zipfile
+
+from local_runtime import TemporaryDirectory, run
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -17,9 +18,8 @@ SUPPORT = ROOT / "Support" / "Issue19"
 @unittest.skipUnless(pathlib.Path("/usr/bin/osascript").exists(), "macOS JXA required")
 class PopupEventSanitizerTests(unittest.TestCase):
     def setUp(self):
-        self.scratch_root = ROOT / ".build" / "issue19-support-tests.noindex"
-        self.scratch_root.mkdir(parents=True, exist_ok=True)
-        self.directory = tempfile.TemporaryDirectory(dir=self.scratch_root)
+        self.directory = TemporaryDirectory(prefix="issue19-support-")
+        self.addCleanup(self.directory.cleanup)
         self.work = pathlib.Path(self.directory.name)
         (self.work / "snapshot.raw").write_text(
             json.dumps({"installation": {"version": "4.3.3", "runningInstances": [{"pid": 123}]}})
@@ -27,16 +27,12 @@ class PopupEventSanitizerTests(unittest.TestCase):
 
     def tearDown(self):
         self.directory.cleanup()
-        try:
-            self.scratch_root.rmdir()
-        except OSError:
-            pass
 
     def sanitize(self, entries, mode="captured"):
         (self.work / "events.ndjson").write_text(
             "\n".join(json.dumps(entry) for entry in entries)
         )
-        result = subprocess.run(
+        result = run(
             ["/usr/bin/osascript", "-l", "JavaScript", str(SUPPORT / "collect.js"),
              "events", str(self.work), mode],
             check=True, capture_output=True, text=True, timeout=10,
@@ -127,7 +123,7 @@ class PopupEventSanitizerTests(unittest.TestCase):
         for installation, expected in cases:
             with self.subTest(installation=installation):
                 (self.work / "snapshot.raw").write_text(json.dumps({"installation": installation}))
-                result = subprocess.run(
+                result = run(
                     ["/usr/bin/osascript", "-l", "JavaScript", str(SUPPORT / "collect.js"),
                      "plan", str(self.work)],
                     check=True, capture_output=True, text=True, timeout=10,
@@ -144,7 +140,7 @@ class PopupEventSanitizerTests(unittest.TestCase):
     def test_capture_limit_uses_utf8_bytes_before_whitespace_trimming(self):
         path = self.work / "events.ndjson"
         path.write_text("é" * 131071 + "\n\n", encoding="utf-8")
-        result = subprocess.run(
+        result = run(
             ["/usr/bin/osascript", "-l", "JavaScript", str(SUPPORT / "collect.js"),
              "events", str(self.work), "captured"],
             check=True, capture_output=True, text=True, timeout=10,
@@ -155,9 +151,8 @@ class PopupEventSanitizerTests(unittest.TestCase):
 @unittest.skipUnless(pathlib.Path("/usr/bin/ditto").exists(), "macOS archive tooling required")
 class SupportLifecycleTests(unittest.TestCase):
     def setUp(self):
-        self.scratch_root = ROOT / ".build" / "issue19-support-tests.noindex"
-        self.scratch_root.mkdir(parents=True, exist_ok=True)
-        self.directory = tempfile.TemporaryDirectory(dir=self.scratch_root)
+        self.directory = TemporaryDirectory(prefix="issue19-support-")
+        self.addCleanup(self.directory.cleanup)
         self.work = pathlib.Path(self.directory.name)
         self.bundle = self.work / "Support" / "Issue19"
         shutil.copytree(SUPPORT, self.bundle)
@@ -167,7 +162,7 @@ class SupportLifecycleTests(unittest.TestCase):
         self.environment = dict(os.environ, TMPDIR=str(self.native_tmp))
         self.mock = self.work / "mock"
         self.mock.mkdir()
-        self.processes = []
+        self.processes = self.directory.processes
         self.make_mock("swvers", "echo 26.0\n")
         self.make_mock("sysctl", "echo MacBookPro18,3\n")
         self.make_mock("uname", "echo arm64\n")
@@ -190,19 +185,13 @@ esac
         self.script.write_text(source)
 
     def tearDown(self):
-        for process in self.processes:
-            if process.poll() is None:
-                os.killpg(process.pid, signal.SIGKILL)
-                process.wait(timeout=5)
+        processes = list(self.processes)
+        self.directory.cleanup()
+        for process in processes:
             if process.stdout:
                 process.stdout.close()
             if process.stderr:
                 process.stderr.close()
-        self.directory.cleanup()
-        try:
-            self.scratch_root.rmdir()
-        except OSError:
-            pass
 
     def make_mock(self, name, body):
         path = self.mock / name
@@ -211,9 +200,10 @@ esac
         return path
 
     def run_command(self, extra=None):
-        return subprocess.run(
+        return run(
             ["/bin/bash", str(self.script), "--collect-only", "--output", str(self.out)]
             + (extra or []), capture_output=True, text=True, timeout=15, env=self.environment,
+            cleanup_grace=65,
         )
 
     def assert_scratch_removed(self):
@@ -250,9 +240,9 @@ esac
         marker = self.work / "unexpected-log"
         log_mock = self.make_mock("log", f"touch '{marker}'\nexit 1\n")
         self.script.write_text(self.script.read_text().replace("/usr/bin/log stream", str(log_mock) + " stream"))
-        result = subprocess.run(
+        result = run(
             ["/bin/bash", str(self.script), "--output", str(self.out)],
-            capture_output=True, text=True, timeout=10, env=self.environment,
+            capture_output=True, text=True, timeout=10, env=self.environment, cleanup_grace=65,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("4.3.3 没有点击事件记录", result.stdout)
@@ -265,10 +255,10 @@ esac
         failed_mktemp = self.make_mock("mktemp", "exit 1\n")
         helper.write_text(helper.read_text().replace("/usr/bin/mktemp", str(failed_mktemp)))
         owned_root = self.work / "allocation-failure.noindex"
-        result = subprocess.run(
+        result = run(
             ["/bin/bash", "-c", 'set -eu; source "$1"; support_begin "$2"',
              "allocation-test", str(helper), str(owned_root)],
-            capture_output=True, text=True, timeout=5,
+            capture_output=True, text=True, timeout=5, cleanup_grace=65,
         )
         self.assertNotEqual(result.returncode, 0)
         self.assertFalse(owned_root.exists())
@@ -295,6 +285,7 @@ esac
                 stdout=output, stderr=subprocess.STDOUT, text=True, start_new_session=True,
                 env=self.environment,
             )
+        process.cleanup_grace = 65
         self.processes.append(process)
         deadline = time.monotonic() + 10
         while not marker.exists() and time.monotonic() < deadline:
@@ -307,19 +298,90 @@ esac
             os.kill(int(marker.read_text()), 0)
         self.assert_scratch_removed()
 
-    def test_build_archive_preserves_executable_and_cleans_build_scratch(self):
+    def prepare_build(self):
         script_dir = self.work / "scripts"
         script_dir.mkdir()
+        shutil.copytree(ROOT / "scripts" / "lib", script_dir / "lib")
         script = script_dir / "build_issue19_support.sh"
         shutil.copy2(ROOT / "scripts" / script.name, script)
-        result = subprocess.run(["/bin/bash", str(script)], capture_output=True,
-                                text=True, timeout=10)
+        return script
+
+    def assert_build_scratch_removed(self):
+        scratch = self.work / ".build" / "issue19-support.noindex"
+        self.assertFalse(scratch.exists() and list(scratch.iterdir()))
+
+    def test_build_archive_preserves_executable_and_cleans_build_scratch(self):
+        script = self.prepare_build()
+        result = run(["/bin/bash", str(script)], capture_output=True,
+                     text=True, timeout=10, cleanup_grace=65)
         self.assertEqual(result.returncode, 0, result.stderr)
         archive_path = self.work / "dist" / "support" / "Wattson-Issue19-Support-v2.zip"
         with zipfile.ZipFile(archive_path) as archive:
             item = archive.getinfo("Wattson-Issue19-Support/Collect-Wattson-Issue19.command")
             self.assertTrue((item.external_attr >> 16) & 0o100)
-        self.assertFalse((self.work / ".build" / "issue19-support.noindex").exists())
+        checksum = run(["/usr/bin/shasum", "-a", "256", "-c", "Wattson-Issue19-Support-v2.sha256"],
+                       cwd=archive_path.parent, capture_output=True, text=True, check=True)
+        self.assertIn("OK", checksum.stdout)
+        self.assert_build_scratch_removed()
+
+    def test_failed_build_preserves_previous_archive_and_cleans_partial_output(self):
+        script = self.prepare_build()
+        ditto = self.make_mock("ditto", 'printf partial > "${@: -1}"\nexit 9\n')
+        script.write_text(script.read_text().replace("/usr/bin/ditto", str(ditto)))
+        output = self.work / "dist" / "support"
+        output.mkdir(parents=True)
+        archive = output / "Wattson-Issue19-Support-v2.zip"
+        checksum = output / "Wattson-Issue19-Support-v2.sha256"
+        archive.write_text("previous archive")
+        checksum.write_text("previous checksum")
+        result = run(["/bin/bash", str(script)], capture_output=True, text=True,
+                     timeout=10, cleanup_grace=65)
+        self.assertEqual(result.returncode, 9, result.stderr)
+        self.assertEqual(archive.read_text(), "previous archive")
+        self.assertEqual(checksum.read_text(), "previous checksum")
+        self.assert_build_scratch_removed()
+
+    def test_build_timeout_and_parent_term_stop_children_before_removing_scratch(self):
+        script = self.prepare_build()
+        marker = self.work / "packaging-pids.json"
+        child_ready = self.work / "packaging-child.pid"
+        ditto = self.mock / "blocking-ditto"
+        ditto.write_text('''#!/usr/bin/python3
+import json, os, pathlib, signal, subprocess, sys, time
+signal.signal(signal.SIGTERM, signal.SIG_IGN)
+if sys.argv[1:] == ['leaf']:
+    pathlib.Path(os.environ['CHILD_READY']).write_text(str(os.getpid()))
+else:
+    pathlib.Path(sys.argv[-1]).write_text('partial archive')
+    child = subprocess.Popen([sys.executable, __file__, 'leaf'])
+    while not pathlib.Path(os.environ['CHILD_READY']).exists():
+        time.sleep(0.01)
+    pathlib.Path(os.environ['PACKAGING_PIDS']).write_text(json.dumps([os.getpid(), child.pid]))
+    if os.environ['PACKAGING_MODE'] == 'signal':
+        os.kill(int(os.environ['PACKAGING_SHELL']), signal.SIGTERM)
+while True:
+    time.sleep(0.1)
+''')
+        ditto.chmod(0o755)
+        source = script.read_text().replace("/usr/bin/ditto", str(ditto))
+        for mode, expected in (("timeout", 124), ("signal", 143)):
+            with self.subTest(mode=mode):
+                child_ready.unlink(missing_ok=True)
+                marker.unlink(missing_ok=True)
+                fixture = source.replace("wattson_run_timeout 45", "wattson_run_timeout 0.5") if mode == "timeout" else source
+                script.write_text("export PACKAGING_SHELL=$$\n" + fixture)
+                environment = dict(self.environment, PACKAGING_PIDS=str(marker),
+                                   CHILD_READY=str(child_ready), PACKAGING_MODE=mode)
+                result = run(["/bin/bash", str(script)], capture_output=True, text=True,
+                             timeout=10, cleanup_grace=65, env=environment)
+                self.assertEqual(result.returncode, expected, result.stderr)
+                self.assertTrue(marker.exists())
+                for pid in json.loads(marker.read_text()):
+                    state = run(["/bin/ps", "-p", str(pid), "-o", "stat="],
+                                capture_output=True, text=True).stdout.strip()
+                    self.assertTrue(not state or state.startswith("Z"), (pid, state))
+                self.assert_build_scratch_removed()
+                self.assertFalse(list((self.work / "dist" / "support").glob("*.zip")))
 
 
 if __name__ == "__main__":
