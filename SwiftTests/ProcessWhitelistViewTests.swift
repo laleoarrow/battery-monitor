@@ -9,7 +9,7 @@ final class ProcessWhitelistViewTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suiteName = "Wattson.SwiftTests.ProcessWhitelistView.\(UUID().uuidString)"
+        suiteName = testDefaultsSuite("ProcessWhitelistView")
         defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)

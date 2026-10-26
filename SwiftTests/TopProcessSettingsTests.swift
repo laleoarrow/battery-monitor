@@ -10,7 +10,7 @@ final class TopProcessSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suite = "Wattson.SwiftTests.TopProcesses.\(UUID().uuidString)"
+        suite = testDefaultsSuite("TopProcesses")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }

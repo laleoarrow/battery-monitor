@@ -8,7 +8,7 @@ final class ColorSchemeSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suite = "Wattson.SwiftTests.ColorScheme.\(UUID().uuidString)"
+        suite = testDefaultsSuite("ColorScheme")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }

@@ -8,7 +8,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suiteName = "Wattson.SwiftTests.NativeModeTests.\(UUID().uuidString)"
+        suiteName = testDefaultsSuite("NativeModeTests")
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)

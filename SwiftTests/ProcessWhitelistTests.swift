@@ -8,7 +8,7 @@ final class ProcessWhitelistTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suite = "Wattson.SwiftTests.ProcessWhitelist.\(UUID().uuidString)"
+        suite = testDefaultsSuite("ProcessWhitelist")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }

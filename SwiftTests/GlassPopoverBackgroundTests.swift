@@ -20,7 +20,7 @@ final class GlassPopoverBackgroundTests: XCTestCase {
             previousEnvironment[key] = ProcessInfo.processInfo.environment[key]
             setenv(key, value, 1)
         }
-        suite = "Wattson.SwiftTests.GlassPopoverBackground.\(UUID().uuidString)"
+        suite = testDefaultsSuite("GlassPopoverBackground")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
         Settings.liquidGlassEnabled = true

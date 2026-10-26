@@ -9,7 +9,7 @@ final class NativeGlassModeControlTests: XCTestCase {
     override func setUp() {
         super.setUp()
         _ = NSApplication.shared
-        suiteName = "Wattson.SwiftTests.NativeGlassModeTests.\(UUID().uuidString)"
+        suiteName = testDefaultsSuite("NativeGlassModeTests")
         Settings.configureForTest(defaults: UserDefaults(suiteName: suiteName)!)
         previousReduceMotion = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
         // C remains the native click-only Glass fallback for Reduce Motion.

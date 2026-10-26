@@ -31,6 +31,10 @@ with Swift.
   Use the disposable ARM GUI test VM when visible interaction would interfere
   with the user's desktop.
 - Keep git repository status clean and update tags/commits appropriately.
+- Run Swift tests through `scripts/test_swift.sh`. Create preference domains
+  with `testDefaultsSuite` or register injected domains with
+  `registerTestDefaultsSuite` before use. The parent cleans this run's exact
+  domains after the test process exits, including failure and interruption.
 - Every build/test entrypoint must own and automatically clean its temporary
   files, app registrations, test preferences, newly created test containers,
   child processes, and mounts on success, failure, timeout, and catchable

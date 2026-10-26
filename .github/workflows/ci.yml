@@ -106,7 +106,7 @@ jobs:
         run: >-
           env WATTSON_FORCE_REDUCE_MOTION=0
           WATTSON_FORCE_REDUCE_TRANSPARENCY=0
-          swift test
+          /bin/bash scripts/test_swift.sh
 
       - name: Build macOS 27 Swift test bundle
         if: github.event_name == 'workflow_dispatch' && inputs.macos27
@@ -130,10 +130,8 @@ jobs:
         timeout-minutes: 8
         run: |
           set -euo pipefail
-          source scripts/lib/local_cleanup.sh
-          wattson_cleanup_init
-          wattson_run_timeout 360 env WATTSON_FORCE_REDUCE_MOTION=0 \
-            WATTSON_FORCE_REDUCE_TRANSPARENCY=0 swift test --skip-build 2>&1 \
+          WATTSON_SWIFT_TEST_TIMEOUT=360 WATTSON_FORCE_REDUCE_MOTION=0 \
+            WATTSON_FORCE_REDUCE_TRANSPARENCY=0 /bin/bash scripts/test_swift.sh --skip-build 2>&1 \
             | tee .build/macos27-evidence.noindex/swift-test-run.log
 
       - name: Preserve macOS 27 Swift diagnostics

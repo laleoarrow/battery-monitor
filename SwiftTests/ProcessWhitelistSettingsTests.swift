@@ -10,7 +10,7 @@ final class ProcessWhitelistSettingsTests: XCTestCase {
     override func setUp() {
         super.setUp()
         _ = NSApplication.shared
-        suite = "Wattson.SwiftTests.ProcessWhitelistEditor.\(UUID().uuidString)"
+        suite = testDefaultsSuite("ProcessWhitelistEditor")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
         controller = ProcessWhitelistWindowController()

@@ -169,7 +169,7 @@ email.
 Run the headless development checks:
 
 ```bash
-swift test
+bash scripts/test_swift.sh
 /usr/bin/python3 -m unittest discover -s tests -v
 ```
 

@@ -8,7 +8,7 @@ final class DockIconSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suiteName = "Wattson.SwiftTests.DockIcon.\(UUID().uuidString)"
+        suiteName = testDefaultsSuite("DockIcon")
         defaults = UserDefaults(suiteName: suiteName)!
         Settings.configureForTest(defaults: defaults)
     }

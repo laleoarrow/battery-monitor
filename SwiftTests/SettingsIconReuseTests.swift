@@ -10,7 +10,7 @@ final class SettingsIconReuseTests: XCTestCase {
     override func setUp() {
         super.setUp()
         _ = NSApplication.shared
-        suite = "Wattson.SwiftTests.SettingsIconReuse.\(UUID().uuidString)"
+        suite = testDefaultsSuite("SettingsIconReuse")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }

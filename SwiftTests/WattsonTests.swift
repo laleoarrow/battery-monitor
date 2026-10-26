@@ -2317,7 +2317,7 @@ final class WattsonTests: XCTestCase {
     }
 
     func testHiddenModulesSkipUpdatesAndRefreshOnceWhenShown() {
-        let suiteName = "Wattson.SwiftTests.HiddenModules.\(UUID().uuidString)"
+        let suiteName = testDefaultsSuite("HiddenModules")
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)
@@ -2353,7 +2353,7 @@ final class WattsonTests: XCTestCase {
     }
 
     func testSettingsModuleChangeUpdatesLivePopover() {
-        let suiteName = "Wattson.SwiftTests.LivePopoverSettings.\(UUID().uuidString)"
+        let suiteName = testDefaultsSuite("LivePopoverSettings")
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)
@@ -2379,7 +2379,7 @@ final class WattsonTests: XCTestCase {
     }
 
     func testShowingModuleWhilePopoverIsClosedDoesNotRenderIt() {
-        let suiteName = "Wattson.SwiftTests.ClosedPopoverSettings.\(UUID().uuidString)"
+        let suiteName = testDefaultsSuite("ClosedPopoverSettings")
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)
@@ -2405,7 +2405,7 @@ final class WattsonTests: XCTestCase {
     }
 
     func testQuickMenuModuleActionWritesSharedSettings() {
-        let suiteName = "Wattson.SwiftTests.QuickMenuSettings.\(UUID().uuidString)"
+        let suiteName = testDefaultsSuite("QuickMenuSettings")
         let defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)

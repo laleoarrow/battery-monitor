@@ -3,7 +3,7 @@
 ## Safe headless checks
 
 ```bash
-swift test
+bash scripts/test_swift.sh
 python3 -m unittest discover -s tests -v
 bash -n scripts/*.sh Packaging/pkg/preinstall Packaging/pkg/postinstall
 git diff --check
@@ -11,6 +11,18 @@ git diff --check
 
 The default Python suite skips real AppKit interaction. It is safe for an
 active desktop and must keep `WATTSON_RUN_INTERACTION` unset in ordinary CI.
+
+Run Swift tests through `scripts/test_swift.sh`, including filtered and
+`--skip-build` runs. Running preference-writing tests without its manifest
+exits before creating a suite and reports the required command.
+Create test preference domains with `testDefaultsSuite`;
+existing injected domains use `registerTestDefaultsSuite`. Each domain is
+recorded before use in that invocation's manifest. After the test process group
+stops, the parent clears those exact domains from the real user's preferences
+on success, failure, timeout or catchable interruption.
+It does not sweep domains belonging to previous or concurrent runs. The runner
+removes inherited `CFFIXED_USER_HOME`; that variable can redirect Foundation's
+home lookup while macOS still writes UserDefaults into the real user directory.
 
 ## Local app-bundle hygiene
 
@@ -37,7 +49,8 @@ shell script requires `run(..., cleanup_grace=65)` so the outer test waits for
 the inner script's bounded unmount and unregister cleanup; ordinary commands
 retain the three-second termination grace. `CFFIXED_USER_HOME`
 alone does not isolate macOS UserDefaults: inject a unique parent-owned suite
-and clear that exact domain at exit. Sandboxed test apps need unique bundle IDs
+and clear that exact domain at exit using the real account's home directory.
+Sandboxed test apps need unique bundle IDs
 and cleanup of only their newly created containers and Application Scripts
 directories. Keep the production app's
 preferences, sandbox, support directory and login agent intact.

@@ -11,7 +11,7 @@ final class SettingsGlassOpticalMarginTests: XCTestCase {
     override func setUp() {
         super.setUp()
         _ = NSApplication.shared
-        suite = "Wattson.SwiftTests.SettingsGlassOpticalMargin.\(UUID().uuidString)"
+        suite = testDefaultsSuite("SettingsGlassOpticalMargin")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }

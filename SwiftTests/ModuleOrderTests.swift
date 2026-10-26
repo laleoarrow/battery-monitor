@@ -17,7 +17,7 @@ final class ModuleOrderSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suite = "Wattson.SwiftTests.ModuleOrder.\(moduleOrderTestRunID())"
+        suite = registerTestDefaultsSuite("Wattson.SwiftTests.ModuleOrder.\(moduleOrderTestRunID())")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }
@@ -120,7 +120,7 @@ final class ModuleOrderViewTests: XCTestCase {
     override func setUp() {
         super.setUp()
         _ = NSApplication.shared
-        suite = "Wattson.SwiftTests.ModuleOrderView.\(moduleOrderTestRunID())"
+        suite = registerTestDefaultsSuite("Wattson.SwiftTests.ModuleOrderView.\(moduleOrderTestRunID())")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }

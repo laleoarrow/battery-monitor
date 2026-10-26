@@ -5,7 +5,7 @@ import XCTest
 final class PopoverAppearanceTests: XCTestCase {
     func testGlassPreferencePreservesSystemAppearanceWithoutRebuildingClosedContent() throws {
         _ = NSApplication.shared
-        let suite = "Wattson.SwiftTests.PopoverAppearance.\(UUID().uuidString)"
+        let suite = testDefaultsSuite("PopoverAppearance")
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         Settings.configureForTest(defaults: defaults)
         defer {
@@ -49,7 +49,7 @@ final class PopoverAppearanceTests: XCTestCase {
 
     func testGlassPopoverInitialAppearanceAndObserverLifetime() throws {
         _ = NSApplication.shared
-        let suite = "Wattson.SwiftTests.PopoverAppearanceLifetime.\(UUID().uuidString)"
+        let suite = testDefaultsSuite("PopoverAppearanceLifetime")
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         Settings.configureForTest(defaults: defaults)
         defer {

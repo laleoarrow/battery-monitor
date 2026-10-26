@@ -5,45 +5,61 @@ import Foundation
 private func cleanupPerformanceDefaults(_ defaults: UserDefaults, suite: String) -> Bool {
     guard suite.hasPrefix("Wattson.Performance."),
           UUID(uuidString: String(suite.dropFirst("Wattson.Performance.".count))) != nil else { return false }
-    defaults.removePersistentDomain(forName: suite)
-    guard defaults.synchronize() else { return false }
-    // Synchronization alone can leave cfprefsd able to recreate an empty plist.
-    let deletion = Process()
-    let completed = DispatchSemaphore(value: 0)
-    let errors = Pipe()
-    deletion.executableURL = URL(fileURLWithPath: "/usr/bin/defaults")
-    deletion.arguments = ["delete", suite]
-    deletion.standardOutput = FileHandle.nullDevice
-    deletion.standardError = errors
-    deletion.terminationHandler = { _ in completed.signal() }
-    do { try deletion.run() } catch { return false }
-    guard completed.wait(timeout: .now() + 3) == .success else {
-        deletion.terminate()
-        if completed.wait(timeout: .now() + 0.5) != .success {
-            _ = Darwin.kill(deletion.processIdentifier, SIGKILL)
-            _ = completed.wait(timeout: .now() + 1)
-        }
-        return false
-    }
-    let errorText = String(decoding: errors.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
-    guard deletion.terminationStatus == 0 || errorText.contains("Domain (\(suite)) not found.") else { return false }
-    let preference = FileManager.default.homeDirectoryForCurrentUser
+    guard let account = getpwuid(getuid()) else { return false }
+    let preference = URL(fileURLWithPath: String(cString: account.pointee.pw_dir))
         .appendingPathComponent("Library/Preferences/\(suite).plist")
+    let daemonCleared: Bool = {
+        defaults.removePersistentDomain(forName: suite)
+        let synchronized = defaults.synchronize()
+        // CFFIXED_USER_HOME redirects Foundation paths, not cfprefsd storage.
+        let deletion = Process()
+        let completed = DispatchSemaphore(value: 0)
+        let errors = Pipe()
+        deletion.executableURL = URL(fileURLWithPath: "/usr/bin/defaults")
+        deletion.arguments = ["delete", suite]
+        var environment = ProcessInfo.processInfo.environment
+        environment.removeValue(forKey: "CFFIXED_USER_HOME")
+        environment["LC_ALL"] = "C"
+        deletion.environment = environment
+        deletion.standardOutput = FileHandle.nullDevice
+        deletion.standardError = errors
+        deletion.terminationHandler = { _ in completed.signal() }
+        do { try deletion.run() } catch { return false }
+        guard completed.wait(timeout: .now() + 3) == .success else {
+            deletion.terminate()
+            if completed.wait(timeout: .now() + 0.5) != .success {
+                _ = Darwin.kill(deletion.processIdentifier, SIGKILL)
+                _ = completed.wait(timeout: .now() + 1)
+            }
+            return false
+        }
+        let errorText = String(decoding: errors.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+        return synchronized && (deletion.terminationStatus == 0
+            || errorText.contains("Domain (\(suite)) not found.")
+            || errorText.contains("Domain '\(suite)' not found."))
+    }()
+    // A daemon error must not skip removal of the exact test-owned file.
     do { try FileManager.default.removeItem(at: preference) }
     catch CocoaError.fileNoSuchFile { }
     catch { return false }
-    return true
+    return daemonCleared
 }
 
 // Controlled production-renderer microbenchmark. Run the same optimized build
 // flags, fixtures and iteration count on both revisions in an isolated GUI VM.
 // This measures update/commit cost, not real display FPS or whole-app energy.
+guard let suite = ProcessInfo.processInfo.environment["WATTSON_TEST_DEFAULTS_SUITE"],
+      suite.hasPrefix("Wattson.Performance."),
+      let identifier = UUID(uuidString: String(suite.dropFirst("Wattson.Performance.".count))),
+      suite == "Wattson.Performance.\(identifier.uuidString)" else {
+    FileHandle.standardError.write(Data("Run this harness with bash scripts/measure_renderers.sh --run-gui\n".utf8))
+    exit(EXIT_FAILURE)
+}
 let iterations = CommandLine.arguments.dropFirst().first.flatMap(Int.init) ?? 2_000
 precondition((100...20_000).contains(iterations))
 _ = NSApplication.shared
 NSApp.setActivationPolicy(.accessory)
 NSApp.finishLaunching()
-let suite = "Wattson.Performance.\(UUID().uuidString)"
 let defaults = UserDefaults(suiteName: suite)!
 Settings.configureForTest(defaults: defaults)
 defer {

@@ -105,6 +105,7 @@ wattson_cleanup_add_defaults() {
     [[ "$1" =~ ^[A-Za-z0-9][A-Za-z0-9.-]+$ ]] || return 2
     _WATTSON_CLEANUP_DEFAULTS+=("$1");
 }
+wattson_cleanup_add_defaults_manifest() { _WATTSON_CLEANUP_DEFAULTS_MANIFESTS+=("$1"); }
 wattson_cleanup_add_container() {
     local identifier="$1"
     [[ "$identifier" =~ ^[A-Za-z0-9][A-Za-z0-9.-]+$ ]] || return 2
@@ -135,8 +136,10 @@ _wattson_cleanup() {
         wait "$_WATTSON_RUNNER_PID" 2>/dev/null
         _WATTSON_RUNNER_PID=""
     fi
-    local app mountpoint directory failed_mount skip executable defaults_suite registered_app
+    local app mountpoint directory failed_mount skip executable defaults_suite registered_app manifest entry
     local failed_mounts=()
+    local manifest_defaults=()
+    local manifest_requested=0 manifest_registered=0 manifest_remaining=0
     for executable in "${_WATTSON_CLEANUP_EXECUTABLES[@]+"${_WATTSON_CLEANUP_EXECUTABLES[@]}"}"; do
         if ! wattson_stop_executable "$executable"; then
             [[ "$status" != 0 ]] || status=1
@@ -169,9 +172,31 @@ _wattson_cleanup() {
             [[ "$status" != 0 ]] || status=1
         fi
     done
+    # Swift tests publish a marker before creating each suite. Read only this
+    # invocation's manifests after its process group has stopped.
+    for manifest in "${_WATTSON_CLEANUP_DEFAULTS_MANIFESTS[@]+"${_WATTSON_CLEANUP_DEFAULTS_MANIFESTS[@]}"}"; do
+        manifest_requested=1
+        if [[ ! -d "$manifest" || -L "$manifest" || ! -r "$manifest" || ! -x "$manifest" ]]; then
+            echo "Cleanup refused an invalid test defaults manifest: $manifest" >&2
+            [[ "$status" != 0 ]] || status=1
+            continue
+        fi
+        while IFS= read -r -d '' entry; do
+            defaults_suite="${entry##*/}"
+            if [[ ! -f "$entry" || -L "$entry" || -s "$entry" ]] \
+                || [[ ! "$defaults_suite" =~ ^Wattson[.]SwiftTests[.][A-Za-z]+[.][A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$ ]]; then
+                echo "Cleanup refused an invalid test defaults marker: $entry" >&2
+                [[ "$status" != 0 ]] || status=1
+                continue
+            fi
+            wattson_cleanup_add_defaults "$defaults_suite"
+            manifest_defaults+=("$defaults_suite")
+            manifest_registered=$((manifest_registered + 1))
+        done < <(/usr/bin/find "$manifest" -mindepth 1 -maxdepth 1 -print0)
+    done
     for defaults_suite in "${_WATTSON_CLEANUP_DEFAULTS[@]+"${_WATTSON_CLEANUP_DEFAULTS[@]}"}"; do
         local defaults_status=0
-        wattson_run_timeout 10 /usr/bin/defaults delete "$defaults_suite" >/dev/null 2>&1 || defaults_status=$?
+        wattson_run_timeout 10 /usr/bin/env -u CFFIXED_USER_HOME /usr/bin/defaults delete "$defaults_suite" >/dev/null 2>&1 || defaults_status=$?
         if [[ "$defaults_status" == 124 || ( "$defaults_status" != 0 && -f "$HOME/Library/Preferences/$defaults_suite.plist" ) ]]; then
             echo "Cleanup could not clear defaults domain: $defaults_suite" >&2
             [[ "$status" != 0 ]] || status=1
@@ -179,7 +204,21 @@ _wattson_cleanup() {
         /bin/rm -f -- "$HOME/Library/Preferences/$defaults_suite.plist" || {
             [[ "$status" != 0 ]] || status=1
         }
+        if [[ -e "$HOME/Library/Preferences/$defaults_suite.plist" || -L "$HOME/Library/Preferences/$defaults_suite.plist" ]]; then
+            echo "Cleanup left a test preference file: $defaults_suite" >&2
+            [[ "$status" != 0 ]] || status=1
+        fi
     done
+    if [[ "$manifest_requested" == 1 ]]; then
+        for defaults_suite in "${manifest_defaults[@]+"${manifest_defaults[@]}"}"; do
+            if [[ -e "$HOME/Library/Preferences/$defaults_suite.plist" || -L "$HOME/Library/Preferences/$defaults_suite.plist" ]]; then
+                echo "Cleanup left a test preference file: $defaults_suite" >&2
+                manifest_remaining=$((manifest_remaining + 1))
+                [[ "$status" != 0 ]] || status=1
+            fi
+        done
+        echo "SWIFT_TEST_DEFAULTS_CLEANUP registered=$manifest_registered remaining=$manifest_remaining"
+    fi
     for directory in "${_WATTSON_CLEANUP_DIRS[@]+"${_WATTSON_CLEANUP_DIRS[@]}"}"; do
         skip=0
         for failed_mount in "${failed_mounts[@]+"${failed_mounts[@]}"}"; do
@@ -204,6 +243,7 @@ wattson_cleanup_init() {
     _WATTSON_CLEANUP_MOUNTS=()
     _WATTSON_CLEANUP_EXECUTABLES=()
     _WATTSON_CLEANUP_DEFAULTS=()
+    _WATTSON_CLEANUP_DEFAULTS_MANIFESTS=()
     _WATTSON_RUNNER_PID=""
     _WATTSON_RUNNER_STARTING=0
     _WATTSON_PENDING_SIGNAL=0

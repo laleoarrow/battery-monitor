@@ -8,7 +8,7 @@ final class LiquidGlassStyleSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suiteName = "Wattson.SwiftTests.LiquidGlassStyle.\(UUID().uuidString)"
+        suiteName = testDefaultsSuite("LiquidGlassStyle")
         defaults = UserDefaults(suiteName: suiteName)!
         Settings.configureForTest(defaults: defaults)
     }

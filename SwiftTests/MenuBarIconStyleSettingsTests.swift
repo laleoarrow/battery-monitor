@@ -9,7 +9,8 @@ final class MenuBarIconStyleSettingsTests: XCTestCase {
     override func setUp() {
         super.setUp()
         suiteName = ProcessInfo.processInfo.environment["WATTSON_ICON_STYLE_TEST_DEFAULTS_SUITE"]
-            ?? "Wattson.SwiftTests.MenuBarIconStyle.\(UUID().uuidString)"
+            .map { registerTestDefaultsSuite($0) }
+            ?? testDefaultsSuite("MenuBarIconStyle")
         defaults = UserDefaults(suiteName: suiteName)!
         Settings.configureForTest(defaults: defaults)
     }

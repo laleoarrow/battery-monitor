@@ -55,7 +55,7 @@ final class PowerPresentationStateTests: XCTestCase {
     }
 
     func testFailedReadingFreezesMotionUntilFreshReadingReturns() {
-        let suiteName = "Wattson.SwiftTests.PowerPresentation.\(UUID().uuidString)"
+        let suiteName = testDefaultsSuite("PowerPresentation")
         let defaults = UserDefaults(suiteName: suiteName)!
         Settings.configureForTest(defaults: defaults)
         defer {

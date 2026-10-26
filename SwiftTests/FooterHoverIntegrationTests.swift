@@ -9,7 +9,7 @@ final class FooterHoverIntegrationTests: XCTestCase {
     override func setUp() {
         super.setUp()
         _ = NSApplication.shared
-        suiteName = "Wattson.SwiftTests.FooterHover.\(UUID().uuidString)"
+        suiteName = testDefaultsSuite("FooterHover")
         Settings.configureForTest(defaults: UserDefaults(suiteName: suiteName)!)
         previousMotion = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
     }

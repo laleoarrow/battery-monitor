@@ -9,7 +9,7 @@ final class PopoverArrowSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suite = "Wattson.SwiftTests.PopoverArrow.\(UUID().uuidString)"
+        suite = testDefaultsSuite("PopoverArrow")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }

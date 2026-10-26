@@ -8,7 +8,7 @@ final class InAppLogoSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suiteName = "Wattson.SwiftTests.InAppLogo.\(UUID().uuidString)"
+        suiteName = testDefaultsSuite("InAppLogo")
         defaults = UserDefaults(suiteName: suiteName)!
         Settings.configureForTest(defaults: defaults)
     }

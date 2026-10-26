@@ -9,7 +9,7 @@ final class TopProcessesViewTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suiteName = "Wattson.SwiftTests.TopProcesses.\(UUID().uuidString)"
+        suiteName = testDefaultsSuite("TopProcesses")
         defaults = UserDefaults(suiteName: suiteName)!
         defaults.removePersistentDomain(forName: suiteName)
         Settings.configureForTest(defaults: defaults)

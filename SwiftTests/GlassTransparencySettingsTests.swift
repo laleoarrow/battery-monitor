@@ -9,7 +9,7 @@ final class GlassTransparencySettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suite = "Wattson.SwiftTests.GlassTransparency.\(UUID().uuidString)"
+        suite = testDefaultsSuite("GlassTransparency")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }

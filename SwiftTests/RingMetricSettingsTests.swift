@@ -9,7 +9,7 @@ final class RingMetricSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        suite = "Wattson.SwiftTests.RingMetrics.\(UUID().uuidString)"
+        suite = testDefaultsSuite("RingMetrics")
         defaults = UserDefaults(suiteName: suite)!
         Settings.configureForTest(defaults: defaults)
     }

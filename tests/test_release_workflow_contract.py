@@ -1,6 +1,7 @@
 import pathlib
 import os
 import re
+import shutil
 import textwrap
 import unittest
 
@@ -46,7 +47,9 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
             script = textwrap.dedent(step.split("run: |", 1)[1]).replace(
                 "source scripts/lib/local_cleanup.sh",
                 f'source "{ROOT}/scripts/lib/local_cleanup.sh"',
-            ).replace("wattson_run_timeout 360", "wattson_run_timeout 2")
+            ).replace("wattson_run_timeout 360", "wattson_run_timeout 2").replace(
+                "WATTSON_SWIFT_TEST_TIMEOUT=360", "WATTSON_SWIFT_TEST_TIMEOUT=2"
+            )
             # The executable seam exercises the real owned runner and pipefail.
             script = "\n".join(line for line in script.splitlines() if not any(
                 command in line for command in ("git rev-parse", "/usr/bin/sw_vers",
@@ -54,6 +57,9 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
             for mode, expected in (("pass", 0), ("fail", 2), ("hang", 124)):
                 with self.subTest(name=name, mode=mode), TemporaryDirectory() as temporary:
                     workspace = pathlib.Path(temporary)
+                    (workspace / "scripts").mkdir()
+                    shutil.copytree(ROOT / "scripts/lib", workspace / "scripts/lib")
+                    shutil.copy2(ROOT / "scripts/test_swift.sh", workspace / "scripts/test_swift.sh")
                     binary_dir = workspace / "bin"
                     binary_dir.mkdir()
                     swift = binary_dir / "swift"
@@ -69,6 +75,7 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
                         env=dict(os.environ, STUB_MODE=mode,
                                  PATH=str(binary_dir) + os.pathsep + os.environ["PATH"]),
                         capture_output=True, text=True, timeout=8,
+                        cleanup_grace=65,
                     )
                     self.assertEqual(result.returncode, expected, result.stderr)
                     self.assertIn("swift " + arguments, (evidence / log_name).read_text())
