@@ -1,0 +1,280 @@
+{
+  "schema": 1,
+  "checkedAtUTC": "2026-10-27T16:31:03.687415+00:00",
+  "sourceCommit": "4372dedc3261601bbdeb7124e708dd9386b2db81",
+  "extractedCandidateAssertionsPassed": true,
+  "candidateRootCauseProven": false,
+  "releaseGateSatisfied": false,
+  "sameVMOriginalFailedCandidatePassed": true,
+  "negativeControlsAllRejected": true,
+  "originalGlobalRunApplicationAndOneSecondTimeoutRetained": true,
+  "productionInputsMatchingFrozenSourceCount": 59,
+  "productionInputsIdenticalBetweenAB": true,
+  "sharedVisibilityPreconditionsPassed": false,
+  "cases": {
+    "baseline": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.024987749999994,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u77ed\u8fc7\u6e21\u5b8c\u6210\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62",
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": false,
+      "visibilityBeforeHistoryInputs": {
+        "applicationActive": false,
+        "beforeOriginalHistoryInputs": true,
+        "preparationElapsedSeconds": 5.015290708333339,
+        "ready": false,
+        "windowMiniaturized": false,
+        "windowNotOccluded": false,
+        "windowOnActiveSpace": true,
+        "windowVisible": true
+      },
+      "windowNotOccludedAtVerdictObservation": true,
+      "processExitCode": 1,
+      "assertionsPassed": 35,
+      "verdictObservation": {
+        "applicationActive": true,
+        "windowVisible": true,
+        "windowNotOccluded": true,
+        "screenLocked": false,
+        "pathTargetErrorsPoints": [
+          0,
+          0,
+          0
+        ],
+        "headTargetErrorsPoints": [
+          0
+        ],
+        "strokeAnimations": [
+          {
+            "beginTime": 104.50124841666668,
+            "duration": 0.35,
+            "key": "history.stroke",
+            "removedOnCompletion": true,
+            "repeatCount": "0.0"
+          }
+        ]
+      }
+    },
+    "candidate": {
+      "settled": true,
+      "decisionElapsedSeconds": 0.2826110416666694,
+      "remainingKeys": [],
+      "failedAssertions": [],
+      "faultInjected": false,
+      "visibilityBeforeHistoryInputs": {
+        "applicationActive": false,
+        "beforeOriginalHistoryInputs": true,
+        "preparationElapsedSeconds": 5.0339585833333444,
+        "ready": false,
+        "windowMiniaturized": false,
+        "windowNotOccluded": false,
+        "windowOnActiveSpace": true,
+        "windowVisible": true
+      },
+      "windowNotOccludedAtVerdictObservation": true,
+      "processExitCode": 0,
+      "assertionsPassed": 37,
+      "verdictObservation": {
+        "applicationActive": true,
+        "windowVisible": true,
+        "windowNotOccluded": true,
+        "screenLocked": false,
+        "pathTargetErrorsPoints": [
+          0,
+          0,
+          0
+        ],
+        "headTargetErrorsPoints": [
+          0
+        ],
+        "strokeAnimations": []
+      }
+    },
+    "infinite": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0217654583333342,
+      "remainingKeys": [
+        "history.stroke"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "visibilityBeforeHistoryInputs": {
+        "applicationActive": false,
+        "beforeOriginalHistoryInputs": true,
+        "preparationElapsedSeconds": 5.050658416666678,
+        "ready": false,
+        "windowMiniaturized": false,
+        "windowNotOccluded": false,
+        "windowOnActiveSpace": true,
+        "windowVisible": true
+      },
+      "windowNotOccludedAtVerdictObservation": true,
+      "processExitCode": 1,
+      "assertionsPassed": 36,
+      "verdictObservation": {
+        "applicationActive": true,
+        "windowVisible": true,
+        "windowNotOccluded": true,
+        "screenLocked": false,
+        "pathTargetErrorsPoints": [
+          0,
+          0,
+          0
+        ],
+        "headTargetErrorsPoints": [
+          0
+        ],
+        "strokeAnimations": [
+          {
+            "beginTime": 119.33718262500003,
+            "duration": 0.18,
+            "key": "history.stroke",
+            "removedOnCompletion": true,
+            "repeatCount": "inf"
+          }
+        ]
+      }
+    },
+    "long": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.053245375000003,
+      "remainingKeys": [
+        "history.stroke"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "visibilityBeforeHistoryInputs": {
+        "applicationActive": false,
+        "beforeOriginalHistoryInputs": true,
+        "preparationElapsedSeconds": 5.022897708333332,
+        "ready": false,
+        "windowMiniaturized": false,
+        "windowNotOccluded": false,
+        "windowOnActiveSpace": true,
+        "windowVisible": true
+      },
+      "windowNotOccludedAtVerdictObservation": true,
+      "processExitCode": 1,
+      "assertionsPassed": 36,
+      "verdictObservation": {
+        "applicationActive": true,
+        "windowVisible": true,
+        "windowNotOccluded": true,
+        "screenLocked": false,
+        "pathTargetErrorsPoints": [
+          0,
+          0,
+          0
+        ],
+        "headTargetErrorsPoints": [
+          0
+        ],
+        "strokeAnimations": [
+          {
+            "beginTime": 127.0524985416667,
+            "duration": 2,
+            "key": "history.stroke",
+            "removedOnCompletion": true,
+            "repeatCount": "0.0"
+          }
+        ]
+      }
+    },
+    "retained": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0152949166666758,
+      "remainingKeys": [
+        "history.stroke"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "visibilityBeforeHistoryInputs": {
+        "applicationActive": false,
+        "beforeOriginalHistoryInputs": true,
+        "preparationElapsedSeconds": 5.030592333333345,
+        "ready": false,
+        "windowMiniaturized": false,
+        "windowNotOccluded": false,
+        "windowOnActiveSpace": true,
+        "windowVisible": true
+      },
+      "windowNotOccludedAtVerdictObservation": true,
+      "processExitCode": 1,
+      "assertionsPassed": 36,
+      "verdictObservation": {
+        "applicationActive": true,
+        "windowVisible": true,
+        "windowNotOccluded": true,
+        "screenLocked": false,
+        "pathTargetErrorsPoints": [
+          0,
+          0,
+          0
+        ],
+        "headTargetErrorsPoints": [
+          0
+        ],
+        "strokeAnimations": [
+          {
+            "beginTime": 134.84249025000003,
+            "duration": 0.18,
+            "key": "history.stroke",
+            "removedOnCompletion": false,
+            "repeatCount": "0.0"
+          }
+        ]
+      }
+    }
+  },
+  "limits": [
+    "All five initial active/unoccluded readiness attempts were false. At verdict observation all five windows were visible, unoccluded and on the active Space. This is not proof of controlled visibility throughout the wait.",
+    "Baseline also failed its ordinary-scroll completion assertion; candidate passed every extracted original assertion.",
+    "Only the original History prefix through contracted-axis was replayed; preceding non-History state and later History tests were not included.",
+    "Original one-second polling runner is unchanged; negative verdict observations include the existing next-poll scheduling delay. No new timeout allowance was added.",
+    "All negative animations use the actual history.stroke key and identical from/to paths. Presentation geometry equality alone is never the acceptance test.",
+    "Geometry records are sequential post-verdict reads. This result supports further full-suite validation of the exact predicate change, not a final causal account or release acceptance.",
+    "paired-run-1 stopped at unavailable visibility readiness before any History input; its failure evidence is retained. No further wait-mechanism trials were performed."
+  ],
+  "cleanup": {
+    "guestAuditPassed": true,
+    "guestObservationSeconds": 37.439,
+    "ownedVMDeleted": true,
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "hostOwnedScratchRemoved": true,
+    "innerOwnerReportedDefaultsDeleteFailure": true,
+    "innerOwnerWarnings": [
+      "Cleanup could not clear defaults domain: Wattson.SettingsCommandInteraction.14A97E89-0A39-4DF2-A081-B17A0B513B98"
+    ],
+    "hostExitCode": 1,
+    "finalResourcesAbsentDoesNotEraseOwnerError": true
+  },
+  "evidenceSHA256": {
+    "baseline-main.swift": "80b0031c309eaf498212eae5a90c7ed7541489cbbbea78ff32c90ed17e7edc30",
+    "candidate-main.swift": "f90e4a78dbec1252294595cd50e4e840af2ac20a6d5d4747c79c05dbc351caa4",
+    "baseline.json": "52569a890ee35565250dd1223708c3f00a82ab1a24acab0b93c0b2574c543444",
+    "candidate.json": "2b015653b851dfddf2fdc6c8022bf265cdd5a317c9887169a0ad52834f2dbd84",
+    "infinite.json": "8019d4191f7dd34ebed579a51cfa34251d876e6f9b843fdb49a59dc47dee4946",
+    "long.json": "e00efcb91976e10e434df68665be1689226a105b64749310ef2455a6e212f17e",
+    "retained.json": "105a7b671dcc2c7f4ca688b7c0b74fc1599d67f52ac9260fe321bc7231f48feb",
+    "paired-results.json": "d9986677ebdfd8b1abd1e4cf9b65ae970dab8118501937b33c855470138b6ab3",
+    "guest-cleanup-audit.json": "b570e5fa3773e67ba8df7b37a838d8123da01ad34bb4dceb911f1ee4ea8776e7",
+    "vm-cleanup-summary.json": "8cf01aa6cdeaeda5e230aa02ac588fef258570dfa998dd97daf70947df21ff0d",
+    "probe-owner.log": "ab76ed2d2bcd25e8ad76b560354d938a66d8aff3e3ee66938dc2ac1a9456a610"
+  }
+}

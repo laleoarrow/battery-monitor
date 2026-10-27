@@ -1,0 +1,29 @@
+[
+  {
+    "Accessed" : "2026-10-27T16:18:07Z",
+    "State" : "stopped",
+    "Name" : "Wattson-HistoryRunloop-21191A02-A751-4359-8508-4074F24884BE",
+    "Source" : "local",
+    "Running" : false,
+    "Disk" : 50,
+    "Size" : 31
+  },
+  {
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "State" : "stopped",
+    "Name" : "macOS-TestLab",
+    "Source" : "local",
+    "Running" : false,
+    "Disk" : 50,
+    "Size" : 33
+  },
+  {
+    "Accessed" : "2026-10-27T16:15:20Z",
+    "State" : "stopped",
+    "Name" : "macOS-TestLab-Base",
+    "Source" : "local",
+    "Running" : false,
+    "Disk" : 50,
+    "Size" : 30
+  }
+]

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/admin/Project/.wattson-ui-vm.noindex/run.bQyaqC/source/design/release-v5.0.2/diagnostics/history-runloop-candidate/review.py", line 20, in <module>
+    assert passed is True and report["allExtractedAssertionsPassed"] and elapsed <= 1 and not failed and exit_code == 0
+AssertionError
+Cleanup could not clear defaults domain: Wattson.SettingsCommandInteraction.436B5FB9-B785-4D27-906A-F1B4ECF14B60

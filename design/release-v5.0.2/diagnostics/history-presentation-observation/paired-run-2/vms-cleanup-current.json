@@ -1,0 +1,29 @@
+[
+  {
+    "Size" : 31,
+    "Name" : "Wattson-HistoryPresentation-CBBE17CD-0C2E-445C-83DF-5750C34BEB37",
+    "Source" : "local",
+    "State" : "running",
+    "Running" : true,
+    "Accessed" : "2026-10-27T16:29:24Z",
+    "Disk" : 50
+  },
+  {
+    "Size" : 33,
+    "Name" : "macOS-TestLab",
+    "Source" : "local",
+    "State" : "stopped",
+    "Running" : false,
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "Disk" : 50
+  },
+  {
+    "Size" : 30,
+    "Name" : "macOS-TestLab-Base",
+    "Source" : "local",
+    "State" : "stopped",
+    "Running" : false,
+    "Accessed" : "2026-10-27T16:27:06Z",
+    "Disk" : 50
+  }
+]

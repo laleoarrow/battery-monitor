@@ -42,3 +42,16 @@ not install the helper and is not the upgrade route for existing PKG installs.
 Preparation is in progress. No 5.0.2 public release or email is asserted by this
 source document. Candidate, public artifact, Homebrew, Pages and canonical
 installation evidence will be retained alongside the final release record.
+
+Candidate validation exposed two pre-existing test-harness problems. Finite
+stdin could stall across Apple Python 3.9 communication retries; the test owner
+now stages those finite fixture inputs in a managed temporary file. The full
+Headless CI for that correction passed on `4372ded`.
+
+History completion checks now observe the hosted presentation tree before
+flushing and checking the original animation keys. The original one-second
+deadline remains, with three explicit negative controls for infinite, long and
+retained animations. The extracted paired probe supports this change, but does
+not establish the underlying Core Animation cause or replace the complete
+interaction suite and candidate gate. Failed trials, visibility limitations and
+cleanup warnings remain in [the diagnostic record](diagnostics/).

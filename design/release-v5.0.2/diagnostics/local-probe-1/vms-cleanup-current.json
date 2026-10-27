@@ -1,0 +1,29 @@
+[
+  {
+    "State" : "running",
+    "Running" : true,
+    "Disk" : 50,
+    "Size" : 31,
+    "Accessed" : "2026-10-27T15:38:09Z",
+    "Source" : "local",
+    "Name" : "Wattson-HistoryDiagnostic-C3E0B9AD-65CE-422D-BED9-80E5F5B69F57"
+  },
+  {
+    "State" : "stopped",
+    "Running" : false,
+    "Disk" : 50,
+    "Size" : 33,
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "Source" : "local",
+    "Name" : "macOS-TestLab"
+  },
+  {
+    "State" : "stopped",
+    "Running" : false,
+    "Disk" : 50,
+    "Size" : 30,
+    "Accessed" : "2026-10-27T15:36:40Z",
+    "Source" : "local",
+    "Name" : "macOS-TestLab-Base"
+  }
+]

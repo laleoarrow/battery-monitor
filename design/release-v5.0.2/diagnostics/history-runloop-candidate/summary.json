@@ -1,0 +1,222 @@
+{
+  "schema": 1,
+  "checkedAtUTC": "2026-10-27T16:20:36.647150+00:00",
+  "sourceCommit": "e4dcd5a78eed2dbe94a1e984b0dab9f2371cd443",
+  "candidateValidated": false,
+  "reason": "Candidate control still failed the original contracted-axis assertion; no promotion to production or release acceptance.",
+  "sameOneSecondDeadline": true,
+  "globalRunApplicationUnchanged": true,
+  "originalAssertionsRetained": true,
+  "productionAndOriginalHarnessDiff": [],
+  "cases": {
+    "baseline": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0273964166666616,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": false,
+      "processExitCode": 1,
+      "assertionsPassed": 36,
+      "windowVisible": true,
+      "windowNotOccluded": true,
+      "screenLocked": false,
+      "pathTargetErrorsPoints": [
+        0,
+        0,
+        0
+      ],
+      "headTargetErrorsPoints": [
+        0
+      ],
+      "strokeAnimations": [
+        {
+          "beginTime": 113.30265045833336,
+          "duration": 0.35,
+          "key": "history.stroke",
+          "removedOnCompletion": true,
+          "repeatCount": "0.0"
+        }
+      ]
+    },
+    "candidate": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0142370000000085,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": false,
+      "processExitCode": 1,
+      "assertionsPassed": 36,
+      "windowVisible": true,
+      "windowNotOccluded": false,
+      "screenLocked": false,
+      "pathTargetErrorsPoints": [
+        0,
+        0,
+        0
+      ],
+      "headTargetErrorsPoints": [
+        0
+      ],
+      "strokeAnimations": [
+        {
+          "beginTime": 116.2720182916667,
+          "duration": 0.35,
+          "key": "history.stroke",
+          "removedOnCompletion": true,
+          "repeatCount": "0.0"
+        }
+      ]
+    },
+    "infinite": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0068766250000039,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "processExitCode": 1,
+      "assertionsPassed": 36,
+      "windowVisible": true,
+      "windowNotOccluded": false,
+      "screenLocked": false,
+      "pathTargetErrorsPoints": [
+        0,
+        0,
+        0
+      ],
+      "headTargetErrorsPoints": [
+        0
+      ],
+      "strokeAnimations": [
+        {
+          "beginTime": 119.42689908333335,
+          "duration": 0.18,
+          "key": "history.stroke",
+          "removedOnCompletion": true,
+          "repeatCount": "inf"
+        }
+      ]
+    },
+    "long": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0065459583333336,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "processExitCode": 1,
+      "assertionsPassed": 36,
+      "windowVisible": true,
+      "windowNotOccluded": false,
+      "screenLocked": false,
+      "pathTargetErrorsPoints": [
+        0,
+        0,
+        0
+      ],
+      "headTargetErrorsPoints": [
+        0
+      ],
+      "strokeAnimations": [
+        {
+          "beginTime": 122.30215195833335,
+          "duration": 2,
+          "key": "history.stroke",
+          "removedOnCompletion": true,
+          "repeatCount": "0.0"
+        }
+      ]
+    },
+    "retained": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0193587500000092,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "processExitCode": 1,
+      "assertionsPassed": 36,
+      "windowVisible": true,
+      "windowNotOccluded": false,
+      "screenLocked": false,
+      "pathTargetErrorsPoints": [
+        0,
+        0,
+        0
+      ],
+      "headTargetErrorsPoints": [
+        0
+      ],
+      "strokeAnimations": [
+        {
+          "beginTime": 125.22589070833337,
+          "duration": 0.18,
+          "key": "history.stroke",
+          "removedOnCompletion": false,
+          "repeatCount": "0.0"
+        }
+      ]
+    }
+  },
+  "negativeControlsAllRejected": true,
+  "limits": [
+    "One paired run on a disposable ARM VM; extracted History prefix does not replay earlier non-History state.",
+    "Candidate and negative-control windows reported visible but occluded; baseline reported visible and not occluded. This is not a visibility-controlled causal comparison.",
+    "Geometry observations follow the immutable wait verdict. The recorder calls presentation() before collecting each layer key list; these are sequential reads, not atomic snapshots.",
+    "No post-verdict explicit transaction flush was performed. Geometry equality and negative-control failures do not establish that the proposed wait fixes hosted CI.",
+    "The review reporter was rerun offline after the VM ended to retain all case results even when candidate acceptance failed. No native case was rerun."
+  ],
+  "cleanup": {
+    "guestAuditPassed": true,
+    "guestObservationSeconds": 37.724,
+    "ownedVMDeleted": true,
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "hostOwnedScratchRemoved": true,
+    "innerOwnerReportedDefaultsDeleteFailure": true,
+    "innerOwnerErrorPreservedIn": "paired-run-1/probe-owner.log",
+    "hostExitCode": 1,
+    "finalResourcesAbsentDoesNotEraseOwnerError": true
+  },
+  "evidenceSHA256": {
+    "baseline-main.swift": "47f6858a2af99085ce004623bff89aefd7b12cb57604a55bb358e9d75524284d",
+    "candidate-main.swift": "75d115d54c2f46cd85be4e82ba32fd992cbbeaebcfe7b6544ce8dd8c311b3cc1",
+    "baseline.json": "1d2baf98c107afa9b05f1a4061314a4c66a789c770fe8042298f77e06f8d93e1",
+    "candidate.json": "4ad8977c6beb92f4fe6f373a4b8a5c2adffd52316eafadff6d07148c0ebd6bd3",
+    "infinite.json": "314a3fd349c1836da2530fade5f7f7917b24ec3eda6155b7e393a56c97b93996",
+    "long.json": "506ca1917a9a24f67ac2c02de49a262c86dd2ab3d01b37b52cf9ea7c03cd90a7",
+    "retained.json": "907f11439b46881822e1cf7c3258dfbb08ddaa99ac8bd8de3e41ac10094a2c85",
+    "guest-cleanup-audit.json": "557c3349931464d51e7efc3e66afa1fbb658c4312176f71d473d168ca7e487c0",
+    "vm-cleanup-summary.json": "cd1e68b723d60552c6a57ab9b51afa5101f78ce8a530953a5796cd4c694eda2f",
+    "probe-owner.log": "7c514a2b191a80b961a6e1e971a201a4c55d80a1f1abdee8a5078b28ca5af428"
+  }
+}

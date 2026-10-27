@@ -1,0 +1,22 @@
+{
+  "sourceSHA": "e4dcd5a78eed2dbe94a1e984b0dab9f2371cd443",
+  "nativeAcceptanceProductSHA": "a7621f735b01308ae8299b946da83f2c13dcd2e5",
+  "independentReadOnlyReviewPassed": true,
+  "productSourceResourcesPackagingWorkflowsAndNativeTestsUnchanged": true,
+  "mailAndReleaseClaimsMatchFourStatesThemeAndReduceMotion": true,
+  "communitySigningAndDMGDescriptionsAccurate": true,
+  "noHistoricalSourceSHADefaults": true,
+  "recipientAddressesAbsentFromSource": true,
+  "localAcceptance": {
+    "swiftTests": 735,
+    "pythonTests": 652,
+    "pythonSkipped": 4,
+    "stressIterations": 20000,
+    "websiteTests": 8,
+    "websiteLintPassed": true,
+    "publicationOfflineChecks": 36,
+    "publicInstallOfflineChecks": 15,
+    "nativeAppKitInteractionPassed": true,
+    "ownedTemporaryResourcesCleaned": true
+  }
+}

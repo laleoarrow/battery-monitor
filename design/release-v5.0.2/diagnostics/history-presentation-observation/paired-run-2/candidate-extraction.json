@@ -1,0 +1,10 @@
+{
+  "strategy": "candidate",
+  "originalHarnessSHA256": "c954d1d2d87aa2f81a42f945a6cb10c2802f7a61e17a8392037856033ea4cfc2",
+  "extractedHarnessSHA256": "f90e4a78dbec1252294595cd50e4e840af2ac20a6d5d4747c79c05dbc351caa4",
+  "globalRunApplicationUnchanged": true,
+  "originalAssertionsRetained": true,
+  "originalDeadlineSeconds": 1,
+  "productionSourcesUnchanged": true,
+  "sharedVisibilityPreconditionBeforeHistoryInputs": true
+}

@@ -1,0 +1,9 @@
+{
+  "originalHarnessSHA256": "c954d1d2d87aa2f81a42f945a6cb10c2802f7a61e17a8392037856033ea4cfc2",
+  "extractedHarnessSHA256": "8e24140b4d2d969b6bfea10b89a4648bed474499c9f82bcb31958a4002c321a5",
+  "lastRetainedAssertion": "check(\"History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62\", settleHistoryFixture(\"contracted-axis\"))",
+  "originalDeadlineSeconds": 1,
+  "diagnosticFlushOnlyAfterOriginalVerdict": true,
+  "precedingHistoryLifecycleRetained": true,
+  "earlierNonHistorySuiteReplayed": false
+}

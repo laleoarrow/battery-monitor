@@ -1,0 +1,27 @@
+{
+  "candidateExecuted": false,
+  "candidateValidated": false,
+  "historyInputsExecuted": false,
+  "reason": "Shared visibility precondition unavailable; this is not a candidate-wait outcome.",
+  "baselineReadiness": {
+    "applicationActive": false,
+    "beforeOriginalHistoryInputs": true,
+    "preparationElapsedSeconds": 5.001452874999998,
+    "ready": false,
+    "windowMiniaturized": false,
+    "windowNotOccluded": false,
+    "windowOnActiveSpace": true,
+    "windowVisible": true
+  },
+  "cleanup": {
+    "guestAuditPassed": true,
+    "guestObservationSeconds": 37.386,
+    "ownedVMDeleted": true,
+    "hostScratchRemoved": true,
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "ownerCleanupWarnings": []
+  }
+}

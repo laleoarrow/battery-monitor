@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "date": "2026-10-27",
+  "sourceCommit": "e4dcd5a78eed2dbe94a1e984b0dab9f2371cd443",
+  "guestSystem": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.1\nBuildVersion:\t\t25G76\nApple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0\n26.5",
+  "singleRun": true,
+  "originalDeadlineSeconds": 1,
+  "originalContractedAxisPassed": false,
+  "originalProbeExitCode": 1,
+  "ownerExitCode": 1,
+  "precedingAssertionsPassed": 36,
+  "assertionsFailed": 1,
+  "observations": [
+    {
+      "phase": "original-poll-terminal-before-stop",
+      "elapsedSeconds": 1.0229208333333304,
+      "originalAssertionPassed": false,
+      "keys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "pathCount": 3,
+      "allPathTopologiesMatch": true,
+      "pathTargetErrorsPoints": [
+        0,
+        0,
+        0
+      ],
+      "headTargetErrorsPoints": [
+        0
+      ],
+      "windowVisible": true,
+      "windowNotOccluded": true,
+      "windowOnActiveSpace": true,
+      "visibleRect": "{{0, 0}, {328, 112}}",
+      "screenLocked": false,
+      "applicationActive": false
+    },
+    {
+      "phase": "after-original-loop-return-before-flush",
+      "elapsedSeconds": 1.0250422499999985,
+      "originalAssertionPassed": false,
+      "keys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "pathCount": 3,
+      "allPathTopologiesMatch": true,
+      "pathTargetErrorsPoints": [
+        0,
+        0,
+        0
+      ],
+      "headTargetErrorsPoints": [
+        0
+      ],
+      "windowVisible": true,
+      "windowNotOccluded": true,
+      "windowOnActiveSpace": true,
+      "visibleRect": "{{0, 0}, {328, 112}}",
+      "screenLocked": false,
+      "applicationActive": false
+    },
+    {
+      "phase": "after-diagnostic-flush",
+      "elapsedSeconds": 1.0264450833333427,
+      "originalAssertionPassed": false,
+      "keys": [],
+      "pathCount": 3,
+      "allPathTopologiesMatch": true,
+      "pathTargetErrorsPoints": [
+        0,
+        0,
+        0
+      ],
+      "headTargetErrorsPoints": [
+        0
+      ],
+      "windowVisible": true,
+      "windowNotOccluded": true,
+      "windowOnActiveSpace": true,
+      "visibleRect": "{{0, 0}, {328, 112}}",
+      "screenLocked": false,
+      "applicationActive": false
+    }
+  ],
+  "finding": "The extracted contracted-axis fixture retained fill/stroke/head keys at its original deadline poll while all observed model/presentation path points and head position already matched. The keys were still present immediately after the application loop returned and absent immediately after one diagnostic flush. The original failure remains unchanged.",
+  "limits": [
+    "Preceding History lifecycle and 60+4 immediate updates are retained; earlier non-History suite state is not replayed.",
+    "Each layer record is sequential, not an atomic frame snapshot; key and aggregate state reads can occur at different instants.",
+    "The callback runs after the original terminal condition/deadline decision; its collection takes time. The original one-second polling deadline can be observed on the next 50 ms poll, here at 1.022921 seconds.",
+    "The existing timeout/owner-clock text appears after the added diagnostic flush; use the three labeled records as the phase-specific evidence.",
+    "Geometry snapshots do not establish physical frame delivery, FPS, or the final root cause. Association with flush/loop boundaries does not prove causation.",
+    "This local diagnostic does not replace the failed full hosted-CI gate or turn it into a pass."
+  ],
+  "cleanup": {
+    "guestAuditPassed": true,
+    "ownedVMDeleted": true,
+    "otherVMStatesPreserved": {
+      "macOS-TestLab": true,
+      "macOS-TestLab-Base": true
+    },
+    "hostOwnedScratchRemaining": 0,
+    "guestPreferenceObservationSeconds": 37.631
+  },
+  "evidence": {
+    "raw": "local-probe-1/contracted-axis.json",
+    "log": "local-probe-1/probe.log",
+    "guestCleanup": "local-probe-1/guest-cleanup-audit.json",
+    "vmCleanup": "local-probe-1/vm-cleanup-summary.json"
+  }
+}

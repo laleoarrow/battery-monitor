@@ -1,0 +1,125 @@
+{
+  "diagnosticChecksPassed": true,
+  "issues": [],
+  "cases": {
+    "baseline": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.024987749999994,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u77ed\u8fc7\u6e21\u5b8c\u6210\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62",
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": false,
+      "visibilityBeforeHistoryInputs": {
+        "applicationActive": false,
+        "beforeOriginalHistoryInputs": true,
+        "preparationElapsedSeconds": 5.015290708333339,
+        "ready": false,
+        "windowMiniaturized": false,
+        "windowNotOccluded": false,
+        "windowOnActiveSpace": true,
+        "windowVisible": true
+      },
+      "windowNotOccludedAtVerdictObservation": true,
+      "processExitCode": 1
+    },
+    "candidate": {
+      "settled": true,
+      "decisionElapsedSeconds": 0.2826110416666694,
+      "remainingKeys": [],
+      "failedAssertions": [],
+      "faultInjected": false,
+      "visibilityBeforeHistoryInputs": {
+        "applicationActive": false,
+        "beforeOriginalHistoryInputs": true,
+        "preparationElapsedSeconds": 5.0339585833333444,
+        "ready": false,
+        "windowMiniaturized": false,
+        "windowNotOccluded": false,
+        "windowOnActiveSpace": true,
+        "windowVisible": true
+      },
+      "windowNotOccludedAtVerdictObservation": true,
+      "processExitCode": 0
+    },
+    "infinite": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0217654583333342,
+      "remainingKeys": [
+        "history.stroke"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "visibilityBeforeHistoryInputs": {
+        "applicationActive": false,
+        "beforeOriginalHistoryInputs": true,
+        "preparationElapsedSeconds": 5.050658416666678,
+        "ready": false,
+        "windowMiniaturized": false,
+        "windowNotOccluded": false,
+        "windowOnActiveSpace": true,
+        "windowVisible": true
+      },
+      "windowNotOccludedAtVerdictObservation": true,
+      "processExitCode": 1
+    },
+    "long": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.053245375000003,
+      "remainingKeys": [
+        "history.stroke"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "visibilityBeforeHistoryInputs": {
+        "applicationActive": false,
+        "beforeOriginalHistoryInputs": true,
+        "preparationElapsedSeconds": 5.022897708333332,
+        "ready": false,
+        "windowMiniaturized": false,
+        "windowNotOccluded": false,
+        "windowOnActiveSpace": true,
+        "windowVisible": true
+      },
+      "windowNotOccludedAtVerdictObservation": true,
+      "processExitCode": 1
+    },
+    "retained": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0152949166666758,
+      "remainingKeys": [
+        "history.stroke"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "visibilityBeforeHistoryInputs": {
+        "applicationActive": false,
+        "beforeOriginalHistoryInputs": true,
+        "preparationElapsedSeconds": 5.030592333333345,
+        "ready": false,
+        "windowMiniaturized": false,
+        "windowNotOccluded": false,
+        "windowOnActiveSpace": true,
+        "windowVisible": true
+      },
+      "windowNotOccludedAtVerdictObservation": true,
+      "processExitCode": 1
+    }
+  },
+  "sameVMOriginalFailedCandidatePassed": true,
+  "sameOneSecondDeadline": true,
+  "sharedVisibilityPreconditionsPassed": false,
+  "negativeControlsUseRealStrokeKeyAndIdenticalPaths": true,
+  "limits": "Extracted History prefix only; not the complete interaction suite or hosted candidate. Cleanup is assessed separately after the owner returns."
+}

@@ -1,0 +1,537 @@
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	﻿2026-10-27T15:21:10.0752800Z ##[group]Run set -euo pipefail
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0753220Z [36;1mset -euo pipefail[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0753510Z [36;1menv WATTSON_FORCE_REDUCE_MOTION=0 \[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0754390Z [36;1m  WATTSON_FORCE_REDUCE_TRANSPARENCY=0 \[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0754710Z [36;1m  /bin/bash scripts/verify_interaction.sh[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0755010Z [36;1menv \[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0755210Z [36;1m  WATTSON_FORCE_LEGACY_KNOB=1 \[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0755550Z [36;1m  WATTSON_FORCE_REDUCE_MOTION=0 \[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0755820Z [36;1m  WATTSON_FORCE_REDUCE_TRANSPARENCY=0 \[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0756180Z [36;1m  /bin/bash scripts/verify_interaction.sh[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0756460Z [36;1menv \[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0756710Z [36;1m  WATTSON_FORCE_LEGACY_KNOB=1 \[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0757020Z [36;1m  WATTSON_FORCE_REDUCE_MOTION=1 \[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0757280Z [36;1m  WATTSON_FORCE_REDUCE_TRANSPARENCY=1 \[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0757620Z [36;1m  /bin/bash scripts/verify_interaction.sh[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.0758050Z [36;1m/bin/bash scripts/verify_animation_stress.sh[0m
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.1137160Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.1138550Z env:
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.1145780Z   GH_TOKEN: ***
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.1146550Z   WATTSON_VERSION: 5.0.2
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.1147530Z   REQUESTED_DISTRIBUTION_MODE: community-ad-hoc
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:10.1147960Z ##[endgroup]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:53.8382290Z ✅ 长按只切换一次  — [InteractionTests.ClickIntent.press, InteractionTests.ClickIntent.primary, InteractionTests.ClickIntent.release]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:53.8384720Z ✅ 只送达 up 的轻触仍会切换
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:53.8385290Z ✅ currentEvent 为 nil 时仍会切换
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:53.8386030Z ✅ 连续两次轻触切换两次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:53.8386690Z ✅ 右键只切模式不开弹窗
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:53.8392060Z ✅ control+点击视为右键
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:53.8393320Z ✅ 按下仍会置 pressed
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:53.8393750Z ✅ 三次快速右键仍按乐观状态逐次翻转
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:53.8394370Z ✅ 同目标的旧右键回调不能冒充最新请求
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:54.5927950Z ✅ 关闭时只缓存最新数据而不渲染隐藏弹窗
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:54.5928800Z ✅ 初始未监听外部点击
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:54.6377940Z ✅ 真实状态项完成初始屏幕定位后才模拟点击
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:54.7454790Z ✅ 隐藏启动回归建立真实隐藏状态 glass=false
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:55.3274330Z ✅ 菜单栏打开恢复隐藏 App 的实际弹窗 glass=false
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:56.3388690Z ✅ 隐藏启动回归建立真实隐藏状态 glass=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:56.5450030Z ✅ 菜单栏打开恢复隐藏 App 的实际弹窗 glass=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:57.4842620Z INITIAL_ANCHOR windowVisible=true hidden=false buttonFrame=(0.0, -1.0, 40.0, 24.0) buttonBounds=(0.0, 0.0, 40.0, 24.0) windowFrame=(761.0, 738.0, 40.0, 30.0) anchor=(761.0, 741.0, 40.0, 24.0) screens=["frame=(0.0, 0.0, 1024.0, 768.0) visible=(0.0, 63.0, 1024.0, 674.0)"] resolved=Optional(InteractionTests.PopoverPlacement(anchorFrame: (761.0, 741.0, 40.0, 24.0), contentSize: (360.0, 650.0), visibleFrame: (0.0, 63.0, 1024.0, 674.0), showsArrow: true))
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:57.6413700Z ✅ 展示前恰好渲染一次最新缓存数据
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:57.6414860Z ✅ 点击打开会安排一次平滑入场动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:58.0605840Z ✅ 轻触图标弹窗打开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:58.0606490Z ✅ Classic 保留原 NSPopover 生命周期与全局监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:58.0607090Z ✅ 打开后开始监听外部点击
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:58.0620740Z ✅ 外部点击后立刻停止监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:59.2710850Z ✅ 点击桌面/其他 app 后弹窗收起
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:21:59.7215960Z ⏭  当前系统同步完成关闭：没有可验证的关闭中途重开窗口
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:00.9355000Z ✅ 关闭动画中途再点可立即重开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:00.9359790Z ✅ 重开后仍在监听外部点击
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:02.1455570Z ✅ 重开后的弹窗仍可被外部点击收起
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:03.7759730Z ✅ AppKit 自行关闭后意图已复位
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:03.7767580Z ✅ AppKit 自行关闭后监听已撤除
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:04.2022650Z ✅ 自行关闭后下一次点击仍能打开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:05.4244680Z ✅ [I19-NATIVE] Classic 自动关闭委托保留同一次锚点按下
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:06.6679150Z ✅ [I19-NATIVE] 原生自动关闭先于按钮动作仍只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:07.2292260Z ✅ [I19-NATIVE] 被保护的关闭之后下一次图标点击仍能重开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:09.7744620Z ✅ [I19-WORKSPACE] Classic 激活通知先于同一次按钮动作仍只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:10.3451520Z ✅ [I19-WORKSPACE] 激活通知保护之后下一次图标点击仍能重开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:11.6061220Z ✅ [I19-IDLE] 鼠标仅停在锚点时 Classic 原生关闭仍被允许
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:12.9454310Z ✅ [I19-IDLE] 无按下时 Classic 自行关闭清理完整
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:14.2574890Z ✅ [I19-IDLE] 鼠标停在锚点不阻止真正切换应用关闭 Classic
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:14.2757190Z ✅ [I19-CACHED] 缓存 NSEventType(rawValue: 2) 不覆盖实时主键按下
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:15.5322780Z ✅ [I19-CACHED] 缓存 NSEventType(rawValue: 10) 不覆盖实时主键按下
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:17.1617420Z ✅ 真实状态窗口事件通过 target/action 打开 Classic
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:17.2792220Z ✅ Classic 内容取得焦点后保留弹窗
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:17.3782870Z ✅ 内容聚焦后的第二次点击实际执行按钮关闭动作
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:17.4273020Z ✅ 第三次事件到达后继续调用按钮动作并重开 Classic
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:18.8171280Z ✅ 四次快速真实按钮动作不会留下排队的原生重开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:18.8943150Z ✅ 真实点击本进程其他窗口仍关闭 Classic
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:18.9301390Z ✅ 本进程外部窗口关闭后图标仍能实际重开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:21.1986370Z ✅ 打开时内容在动  — 18 个动画 ["root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/1-CALayer/0-CAGradientLayer:flow", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/2-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/2-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/3-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/3-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/4-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/4-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/5-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/5-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/6-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/6-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/7-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/7-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/4-NSViewBackingLayer/0-NSViewBackingLayer:breathe", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/2-NSViewBackingLayer/3-CALayer:spin", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/3-NSViewBackingLayer/2-CALayer/0-CALayer/0-CAGradientLayer:sweep", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/5-NSViewBackingLayer/5-NSViewBackingLayer/0-CAGradientLayer:breathing", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/5-NSViewBackingLayer/5-NSViewBackingLayer/1-CAGradientLayer:breathing"]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:21.4383580Z ✅ 运行中开启减少动态效果会立即停止内容动画  — 0 个无限动画，0 个总动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:21.7117040Z ✅ 恢复减少动态效果设置后内容动画状态一致  — 18 个无限动画，19 个总动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:23.3780010Z ✅ 收起后动画已停  — 0 个动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:23.3788300Z ✅ 满电状态在关闭后更新仍不渲染也不重启呼吸动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:25.8638850Z ✅ 中途重开后动画已恢复  — 20 个动画 ["root:wattson.popover.entrance", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer:transition", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/1-CALayer/0-CAGradientLayer:flow", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/2-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/2-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/3-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/3-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/4-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/4-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/5-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/5-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/6-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/6-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/7-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/7-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/4-NSViewBackingLayer/0-NSViewBackingLayer:breathe", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/2-NSViewBackingLayer/3-CALayer:spin", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/3-NSViewBackingLayer/2-CALayer/0-CALayer/0-CAGradientLayer:sweep", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/5-NSViewBackingLayer/5-NSViewBackingLayer/0-CAGradientLayer:breathing", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/5-NSViewBackingLayer/5-NSViewBackingLayer/1-CAGradientLayer:breathing"]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:27.1170110Z ✅ 重开再收起后动画仍会停
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:32.2684570Z ✅ 反复开关后仍能正常打开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.6136600Z ✅ 反复开关后仍能正常收起
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7562000Z ✅ 静止选中片不超过一个档位的宽度  — 选中片 94.0，单档 94.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7564810Z ✅ 静止 Auto 选中片与轨道上下和左边无缝贴合  — 选中片 (0.0, 0.0, 94.0, 30.0)，轨道 (0.0, 0.0, 282.0, 30.0)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7567630Z ✅ 静止选中片与轨道使用同心圆角  — host 15.0，selector 15.0，轨道 15.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7581470Z ✅ 原生材质用 Regular 底轨与 Clear 移动透镜  — track=Optional(0) selector=Optional(1) fill=0.0 opacity=0.045
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7590260Z ✅ 单纯按下不改变中性选中胶囊
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7591600Z ✅ 单纯按下不放大  — 1.00 × 1.00
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7593820Z ✅ 小于拖动阈值的抖动仍不放大  — 1.00 × 1.00
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7615170Z ✅ 开始拖动后 Clear 折射透镜仍保持原生材质
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7635080Z ✅ 拖动中的 1 Hz 刷新不会压平浮起材质  — 刷新前 0.0，刷新后 0.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7636830Z ✅ 拖动期间始终保持静止态尺寸  — 1.00 × 1.00
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7638030Z ✅ 拖到两档正中时两侧文字各约一半亮度  — [0.5, 0.5, 0.0]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7639450Z ✅ 拖动预览不会提前提交系统模式  — []
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:33.7663840Z ✅ 释放后选中胶囊回到中性静止材质
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:34.0836660Z ✅ 吸附完成后恢复近乎透明的静止玻璃  — opacity=0.045
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:34.0925290Z ✅ 拖到最右会选中 High Power  — [InteractionTests.EnergyMode.high]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:34.0926930Z ✅ 非精确落点松手仍有吸附弹簧动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:34.0927870Z ✅ 拖动 60 帧只重着色跨档的那几次  — 2 次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:34.7452490Z ✅ 松手后吸附到 High 档位  — 旋钮 235.0 vs 档位 235.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:34.7503190Z ✅ 能一路拖回 Low Power  — [InteractionTests.EnergyMode.high, InteractionTests.EnergyMode.low]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:34.7505750Z ✅ 拖回后吸附到 Low 档位
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:34.7506640Z ✅ 回程同样不逐帧重着色
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.2447920Z ✅ 不支持 High 时拖过去停在最近可用的 Low  — 选中索引 1 回调 [InteractionTests.EnergyMode.low]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.2449560Z ✅ 滑块命中测试返回自身而非装饰子视图  — ModeSliderView
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.2493440Z ✅ 滑块放在 footer 的实际偏移位置仍能命中
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.2494660Z ✅ 滑块偏移后的 frame 外不会误命中
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.2495320Z ✅ 滑块接受 first mouse
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.2496230Z ✅ 鼠标与键盘操作都不会绘制整条蓝色焦点外框
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.2512190Z ✅ 点击 High Power 档位会切过去  — [InteractionTests.EnergyMode.high]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.2513820Z ✅ 点击第一帧真实玻璃仍留在 Low，目标文字不会抢先亮  — 玻璃 141.0，文字 [0.0, 1.0, 0.0]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.2514850Z ✅ 点击换档使用磁吸流动而非拖拽弹簧或瞬移
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.3603540Z ✅ 点击后原生玻璃沿磁吸路径前进且不越过捕获范围  — 玻璃位置 192.8，起点 141.0，终点 235.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.3605150Z ✅ 点击磁吸全程不进入拖动放大态  — 1.000 × 0.947
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.3607330Z ✅ 点击迁移时原生玻璃与 selector 边界逐帧同步  — glass=(145.8083092244244, 0.80154123118392, 94.0, 28.39691753763216) selector=(145.8083092244244, 0.8015412311839221, 94.0, 28.39691753763216)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:35.3609610Z ✅ 点击移动中文字亮度随玻璃位置连续交叉渐变  — [0.0, 0.44884777069091797, 0.551152229309082]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:36.0141140Z ✅ 点击动画最终精确吸附到 High
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:36.0163600Z ✅ 静止 High 选中片与轨道上下和右边无缝贴合  — 选中片 (188.0, 0.0, 94.0, 30.0)，轨道 (0.0, 0.0, 282.0, 30.0)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:36.0207420Z ✅ High 直接点击 Auto 会提交 Auto  — [InteractionTests.EnergyMode.auto]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:36.0208760Z ✅ High 到 Auto 第一帧真实玻璃仍在 High  — 235.0 vs 235.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:36.0217260Z ✅ 布局与 1 Hz 更新不会把真实玻璃抢先推到 Auto  — 刷新前 235.0，刷新后 235.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:36.1305520Z ✅ High 到 Auto 的真实玻璃沿反向路径前进  — 163.5，终点 47.0...235.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:36.7780940Z ✅ High 到 Auto 会经过 Low 且文字随真实玻璃渐亮  — 终点 47.0，Low 峰值 1.000
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:36.7793920Z ✅ 点击 Low Power 档位会切回来  — [InteractionTests.EnergyMode.low]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:37.4243700Z ✅ 轻触抖动 2pt 仍按点击处理  — [InteractionTests.EnergyMode.auto]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:38.1705490Z ✅ 点击当前档位不重复触发  — []
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:38.1730510Z ✅ 点在两档之间选更近的一个  — [InteractionTests.EnergyMode.high]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:38.9158770Z ✅ Auto 直接点 High 的连续轨迹精确经过 Low 中心  — Low 亮度峰值 1.000
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:38.9162260Z ✅ 离屏降帧时仍能看到 Low 渐亮并最终落到 High  — 呈现峰值 0.948，计算峰值 1.000，最近 4.9pt，终点 235.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:39.1036570Z ✅ 不支持 High 时点它无效  — 选中索引 0 回调 []
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:39.1073610Z ✅ 切换失败后回弹到原档位  — 选中索引 2 回调 [InteractionTests.EnergyMode.low]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:39.1093920Z ✅ 模式写入期间控件保持目标档位且不阻塞
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:39.1104680Z ✅ 拖动后的 1 Hz 刷新不覆盖待确认预览
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:39.1106020Z ✅ 异步确认后目标档位成为已提交状态
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:39.1135500Z ✅ 连续选择会各自排队且最后一次保持待确认
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:39.1136390Z ✅ 较旧写入的迟到回调不会覆盖最新预览
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:39.1140490Z ✅ A 成功而 B 失败时回到实际落地的 A
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:39.7321110Z ✅ 动画中重新抓取不发生位置跳变  — 抓取前 200.61，抓取后 200.61
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:40.8360730Z ✅ 动画中失败回滚从当前可见位置反向启动  — 拒绝前 180.39，回滚起点 180.39
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.3859490Z ✅ 动画中失败最终回到真实档位
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4094840Z ✅ 模式滑块向 VoiceOver 暴露单一可调控件
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4097240Z ✅ VoiceOver 增量可切到下一可用档
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4098470Z ✅ VoiceOver 不会进入禁用的 High Power
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4101030Z ✅ 键盘左箭头与可访问性动作使用同一切换路径
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4112700Z ✅ 同拓扑几何变化保留粒子 layer
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4114010Z ✅ 复用粒子的 ride path 跟随新几何  — [40.0679552, 40.0659392, 35.8701248, 38.4176] -> [34.0679552, 34.0659392, 29.8701248, 32.4176]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4114530Z ✅ 更新路径不重启粒子相位
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4170920Z ✅ 泳道扫光行程覆盖整个填充条  — 行程 284.0，填充宽 142.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4182740Z ✅ 泳道宽度变化后更新行程但不重启相位
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4183110Z ✅ 总功率变化会重定时现有泳道动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4312180Z ✅ 默认显示循环次数并保留原四格布局
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4317890Z ✅ 设备实测输出不会自动覆盖已选循环次数
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4427290Z ✅ 选择外接设备输出后显示实测标签和功率
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4432160Z ✅ 实测零输出与不可用数据保持可区分
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4438390Z ✅ 选择的输出数据变为不可用时显示破折号
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4512870Z ✅ 恢复默认指标后显示循环次数
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4525480Z ✅ 三模块非粒子动画使用同一基准周期
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4525920Z ✅ 三模块非粒子动画使用同一功率倍率
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4539370Z ✅ 紧凑顶栏在充电/已满/电池/混合/偏差/高功率状态均不截断
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4539910Z ✅ 顶栏保留四种正常供电状态文案
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4540420Z ✅ 守恒偏差恰好 2 W 时仍显示正常状态
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4541770Z ✅ 守恒偏差超过 2 W 时右上角显示红色数据异常
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4542660Z ✅ 读取失败优先于守恒偏差
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4916430Z ✅ battery unknown phase disables mutation
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4918530Z ✅ battery pending is not reported as failure
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4919790Z ✅ battery reading has explicit feedback
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4920540Z ✅ battery unknown phase disables mutation
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4921300Z ✅ battery pending is not reported as failure
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4922260Z ✅ battery reading has explicit feedback
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4922650Z ✅ battery unknown phase disables mutation
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4923000Z ✅ battery pending is not reported as failure
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4923380Z ✅ battery reading has explicit feedback
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4923850Z ✅ battery read recovers checkbox and removes status
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.4925750Z ✅ 外观默认关闭并保持原版控件和菜单按钮尺寸
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5115040Z ✅ 玻璃键盘交互前测试 App 已激活且窗口真正获得 key 状态  — active=true key=true canKey=true keyTitle=Wattson Appearance Interaction
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5362580Z GLASS_FOCUS stage=glass-enabled active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5363810Z ✅ 减少动态效果的全局玻璃使用三个 C 原生按钮并转移键盘焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5364220Z ✅ 底部操作层使用单一容器且没有重复玻璃或不透明分段底槽
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5364550Z ✅ 原生玻璃菜单按钮可点击且不与档位控件重叠
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5365410Z GLASS_FOCUS stage=before-menu-click active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5366900Z GLASS_FOCUS stage=after-menu-click active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5368510Z GLASS_MENU_HIT localPoint=(309.0, 55.0) localPointHit=PopoverFooterView parentPoint=(309.0, 23.0) parentPointHit=PopoverButton menuRequests=1
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5369290Z ✅ 嵌套玻璃不吞掉菜单点击或复制菜单动作
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5370170Z GLASS_FOCUS stage=after-availability-update active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5375710Z ✅ 玻璃按钮组保留可访问性标签、选中语义与禁用档位
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5378070Z GLASS_FOCUS stage=after-selected-click active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5379700Z GLASS_FOCUS stage=after-disabled-click active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5384810Z ✅ 已选模式重复点击不取消选择且禁用模式不发起请求
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5422180Z GLASS_FOCUS stage=after-low-request active=true key=true responder=NativeGlassModeControl title= group=true child=true menu=false classic=false enabled=[false, false, false] selected=Optional(InteractionTests.EnergyMode.low)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5424360Z ✅ 真实键盘窗口中忙时焦点暂存于玻璃模式组而不退回窗口
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5425340Z GLASS_FOCUS stage=after-busy-rejected-clicks active=true key=true responder=NativeGlassModeControl title= group=true child=true menu=false classic=false enabled=[false, false, false] selected=Optional(InteractionTests.EnergyMode.low)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5428820Z ✅ 玻璃模式等待确认时禁用全部按钮并拒绝重复请求
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5511390Z GLASS_FOCUS stage=after-glass-disabled active=true key=true responder=ModeSliderView title= group=false child=false menu=false classic=true enabled=[false, false, false] selected=Optional(InteractionTests.EnergyMode.low)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5513130Z GLASS_RESTORE sliderVisible=true nativeHidden=true focus=true modeFrame=(0.0, 36.0, 282.0, 30.0) expectedModeFrame=(0.0, 36.0, 282.0, 30.0) menuFrame=(306.0, 42.0, 22.0, 20.0) expectedMenuFrame=(306.0, 42.0, 22.0, 20.0) nativeParent=true menuParent=true nativeBordered=Optional(true) expectedBordered=Optional(true) containerHidden=Optional(true) menuBordered=false selectedIndex=1 requests=1
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5515820Z ✅ 关闭全局玻璃恢复原版几何并保留待确认档位和焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5518270Z ✅ 跨外观切换的失败回调仍回滚档位且没有重复写入
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5539570Z ✅ 再次开启玻璃复用原有操作宿主而不堆积容器
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5633990Z ✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5679460Z ✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5712380Z ✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5713340Z ✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5758120Z ✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5781000Z ✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5781370Z ✅ 关闭玻璃不关闭用户的减少动态效果
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5840140Z ✅ 第二次模式请求仍暂存键盘焦点并禁用所有档位
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5871650Z ✅ 确认完成后焦点恢复到实际选中且可用的玻璃按钮
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.5938160Z ✅ 用户已将焦点移到菜单时失败恢复不抢回模式焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.7460690Z ✅ A2 交互契约使用可见真实窗口
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.7464160Z ✅ 正常动态效果选择 A2 并保持原有底栏高度
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.7464470Z ✅ A2 透明光学留白不抢占邻接控件点击
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.8738910Z A2_SYSTEM_AX trusted=true windowsStatus=0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9199870Z ✅ A2 公开系统 AX 完整读取唯一测试窗口
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9201210Z ✅ A2 原生 AX 树恰有三个固定顺序且完整命名的模式按钮  — count=3; labels=[Optional("Auto"), Optional("Low Power"), Optional("High Power")]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9201940Z ✅ A2 AX 选中值和禁用 High Power 与显示状态一致
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9254720Z A2_SYSTEM_AX press=Auto mainThread=true status=0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9255990Z A2_SYSTEM_AX press=High Power mainThread=true status=0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9256680Z ✅ A2 AX 重复选择和禁用选择不产生请求
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9257690Z ✅ A2 共享拖动状态路径连续移动但不调用 helper 意图
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9274720Z ✅ A2 松手路径仅提交一次并立即进入 owner 忙态
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9275980Z ✅ A2 忙态拒绝点击键盘和拖动的重复请求
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9371110Z ✅ A2 待确认状态跨经典主题来回切换而不丢失
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9383440Z ✅ A2 失败回滚到 owner 最新观测并恢复可用模式
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9389940Z ✅ A2 Escape 取消共享拖动状态且迟到松手不提交
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9402470Z ✅ A2 AppKit 键盘入口产生一个可确认的模式请求
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9408300Z ✅ A2 确认后回车重复选择不会取消或重复提交
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9418130Z A2_SYSTEM_AX trusted=true windowsStatus=0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9502930Z ✅ A2 公开系统 AX 完整读取唯一测试窗口
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9504130Z ✅ A2 恰有一个原生可访问设置菜单按钮  — count=1
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9545000Z A2_SYSTEM_AX press=Choose Modules mainThread=true status=0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9553960Z ✅ A2 菜单使用真实宿主锚点且不产生电源模式写入  — press=true; menus=1; modeRequests=[InteractionTests.EnergyMode.low, InteractionTests.EnergyMode.low]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9767650Z ✅ 运行时减少动态效果切到 C 并取消 A2 未提交拖动
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9812990Z ✅ 恢复动画复用同一 A2 宿主且隐藏 C 不增加请求
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9823750Z ✅ WATTSON_FORCE_REDUCE_TRANSPARENCY 优先使用可读的 C 并取消 A2 未提交状态
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9834120Z ✅ WATTSON_FORCE_REDUCE_TRANSPARENCY 关闭后恢复同一 A2 且模式保持不变
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9842800Z ✅ WATTSON_FORCE_INCREASE_CONTRAST 优先使用可读的 C 并取消 A2 未提交状态
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:41.9845790Z ✅ WATTSON_FORCE_INCREASE_CONTRAST 关闭后恢复同一 A2 且模式保持不变
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:42.6362790Z ✅ 设置菜单空白区域点击前画面已稳定且圆形区域完整可见  — entrance=1 key=true presentationOpacity=Optional(1.0) presentationTransform=Optional(__C.CATransform3D(m11: 1.0, m12: 0.0, m13: 0.0, m14: 0.0, m21: 0.0, m22: 1.0, m23: 0.0, m24: 0.0, m31: 0.0, m32: 0.0, m33: 1.0, m34: 0.0, m41: 0.0, m42: 0.0, m43: 0.0, m44: 1.0)) circle=(290.0, 36.0, 38.0, 38.0) visible=(-8.0, -548.0, 343.0, 626.0)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:42.6540700Z ✅ 设置圆形按钮的空白区域单击即打开菜单 (13.0, 7.0)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:42.6614470Z ✅ 设置圆形按钮的空白区域单击即打开菜单 (-13.0, -7.0)
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:42.6944030Z ✅ 实际玻璃宿主自行关闭也取消 A2 拖动且拒绝迟到松手
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:42.7605080Z ✅ 实际玻璃宿主重开复用 A2 并没有恢复旧拖动或新增请求
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:42.7624200Z ✅ 重开后的新 A2 手势状态路径可正常提交一次  — requests=1; selected=low; enabled=[]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:42.9976820Z ✅ regular 交互内容位于玻璃背景上方且没有玻璃祖先
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:42.9977390Z ✅ regular 背景使用单一原生材质并保持同一生产内容
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:42.9981510Z ✅ regular 当前可见宿主确实挂载完整内容而非空壳  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:42.9993220Z ✅ regular 透明度 0.0 仅改变背景并保留可见宿主和读数
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.0003680Z ✅ regular 透明度 0.5 仅改变背景并保留可见宿主和读数
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.0015240Z ✅ regular 透明度 1.0 仅改变背景并保留可见宿主和读数
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.0327420Z ✅ [ARROW-OPTION] regular 关闭箭头让正文上移12点并回收受限视口  — bodyTopGain=12.0 viewportGain=12.0 expected=12.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.0328170Z ✅ [ARROW-OPTION] regular 无箭头背景顶边连续且保留圆角裁切
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.0331750Z ✅ [ARROW-OPTION] regular 在线切换保留宿主内容控件菜单和处理器
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.0505750Z ✅ [ARROW-OPTION] regular 恢复箭头回到原始完整布局  — panelArrow=true materialArrow=true samePanel=true frameBefore=(569.0, 63.0, 424.0, 702.0) frameAfter=(569.0, 63.0, 424.0, 702.0) bodyBefore=(601.0, 95.0, 360.0, 626.0) bodyAfter=(601.0, 95.0, 360.0, 626.0) viewportBefore=626.0 viewportAfter=626.0 material=(32.0, 32.0, 360.0, 638.0) foreground=Optional((32.0, 32.0, 360.0, 626.0))
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.0510440Z ✅ regular 重复打开复用当前面板且不留下空玻璃壳
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.2812170Z ✅ regular 跟随 NSAppearanceNameDarkAqua 且不重建玻璃宿主或生产内容
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.2812650Z ✅ regular 明暗切换保持全部展示文字、数值和布局且不写电源模式
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.2817590Z ✅ regular 明暗切换后生产内容仍在当前窗口  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.5658260Z ✅ regular 跟随 NSAppearanceNameAqua 且不重建玻璃宿主或生产内容
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.5745730Z ✅ regular 明暗切换保持全部展示文字、数值和布局且不写电源模式
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.5746770Z ✅ regular 明暗切换后生产内容仍在当前窗口  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.9841850Z ✅ regular 用户主题 dark 即时生效并保留打开的面板
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:43.9848410Z ✅ regular 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:44.4446130Z ✅ regular 用户主题 light 即时生效并保留打开的面板
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:44.4455480Z ✅ regular 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:44.7126260Z ✅ regular 用户主题 system 即时生效并保留打开的面板
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:44.7132260Z ✅ regular 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:44.7136100Z ✅ regular 打开时安装局部和全局监听及生命周期观察
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:44.7136740Z ✅ regular 面板内点击不关闭，其他本 App 窗口点击需要关闭
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:44.7138330Z ✅ [I20-ARROW] regular 箭头对齐真实状态项且位于正文上方  — tip=(781.0, 733.0) anchor=(761.0, 741.0, 40.0, 24.0) bodyTop=721.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:44.7138930Z ✅ regular 锚点鼠标按下留给状态按钮的单次 toggle
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.2207150Z ✅ [I20-WINDOW-PICKS] regular 透明光学边距保持状态窗口中央及四边的原始命中  — statusProxy=4294967296 closed=[0, 193, 193, 0, 0] open=[0, 193, 193, 0, 0] body=209 panel=209
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.2362170Z ✅ [I20-BODY-GRID] regular 透明正文包括空白的5×7网格全部保持面板命中  — hits=35/35 floor=1/255 panel=209
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.2363120Z ✅ regular 状态窗口四边命中区不先关闭再重开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.2363700Z ✅ regular 无窗口事件按完整状态窗口区域识别锚点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.2364140Z ✅ regular 原生菜单跟踪期间保留菜单窗口与无窗口事件
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.2364470Z ✅ regular 菜单期间 Escape 留给菜单而不关闭面板
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.2364750Z ✅ regular 菜单结束后恢复普通外部点击分类
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.2368660Z ✅ regular 背景搭配可见的生产 A2
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.2370800Z ✅ regular 首次 Escape 仅取消拖动并保留面板
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.2746710Z ✅ regular 第二次 Escape 关闭面板并撤除所有监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.3957270Z ✅ regular 全局外部点击处理器关闭且清理全部生命周期资源
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.5102020Z ✅ regular 状态按钮单次 toggle 只关闭不意外重开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.6052630Z ✅ regular 全局监听先收到锚点按下仍保留单次按钮动作
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.6353780Z ✅ regular 同一次全局按下随后按钮动作只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.7350080Z ✅ regular 全局监听先收到锚点按下仍保留单次按钮动作
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.7774490Z ✅ regular 同一次全局按下随后按钮动作只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.8827630Z ✅ regular 全局监听先收到锚点按下仍保留单次按钮动作
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:45.9322630Z ✅ regular 同一次全局按下随后按钮动作只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:46.0705140Z ✅ regular 全局监听先收到锚点按下仍保留单次按钮动作
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:46.1084540Z ✅ regular 同一次全局按下随后按钮动作只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:46.2738130Z ✅ regular 全局非锚点按下仍关闭且清理监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:46.4215440Z ✅ [I19-WORKSPACE] regular 激活通知先于同一次按钮动作只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:46.5819600Z ✅ [I19-IDLE] regular 指针停锚点不阻止真正切换应用关闭
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:46.7573900Z ✅ regular 宿主自行关闭仍执行完整清理
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:46.9000720Z ✅ [ARROW-OPTION] regular 保存关闭箭头后再次打开使用同一生产内容
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:46.9348140Z ✅ [ARROW-OPTION] regular 无箭头时再次点击状态项收起并清理监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.1233480Z ✅ [ARROW-OPTION] regular 无箭头重开后Escape仍关闭并清理监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.3949430Z ✅ clear 交互内容位于玻璃背景上方且没有玻璃祖先
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.4051090Z ✅ clear 背景使用单一原生材质并保持同一生产内容
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.4145450Z ✅ clear 当前可见宿主确实挂载完整内容而非空壳  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.4154440Z ✅ clear 透明度 0.0 仅改变背景并保留可见宿主和读数
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.4161270Z ✅ clear 透明度 0.5 仅改变背景并保留可见宿主和读数
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.4163330Z ✅ clear 透明度 1.0 仅改变背景并保留可见宿主和读数
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.4488310Z ✅ [ARROW-OPTION] clear 关闭箭头让正文上移12点并回收受限视口  — bodyTopGain=12.0 viewportGain=12.0 expected=12.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.4490730Z ✅ [ARROW-OPTION] clear 无箭头背景顶边连续且保留圆角裁切
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.4533550Z ✅ [ARROW-OPTION] clear 在线切换保留宿主内容控件菜单和处理器
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.4772750Z ✅ [ARROW-OPTION] clear 恢复箭头回到原始完整布局  — panelArrow=true materialArrow=true samePanel=true frameBefore=(591.0, 63.0, 380.0, 680.0) frameAfter=(591.0, 63.0, 380.0, 680.0) bodyBefore=(601.0, 73.0, 360.0, 648.0) bodyAfter=(601.0, 73.0, 360.0, 648.0) viewportBefore=648.0 viewportAfter=648.0 material=(10.0, 10.0, 360.0, 660.0) foreground=Optional((10.0, 10.0, 360.0, 648.0))
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.4795200Z ✅ clear 重复打开复用当前面板且不留下空玻璃壳
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.8123100Z ✅ clear 跟随 NSAppearanceNameDarkAqua 且不重建玻璃宿主或生产内容
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.8123730Z ✅ clear 明暗切换保持全部展示文字、数值和布局且不写电源模式
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:47.8124470Z ✅ clear 明暗切换后生产内容仍在当前窗口  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:48.1619200Z ✅ clear 跟随 NSAppearanceNameAqua 且不重建玻璃宿主或生产内容
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:48.1622200Z ✅ clear 明暗切换保持全部展示文字、数值和布局且不写电源模式
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:48.1624770Z ✅ clear 明暗切换后生产内容仍在当前窗口  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:48.7969940Z ✅ clear 用户主题 dark 即时生效并保留打开的面板
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:48.8002870Z ✅ clear 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:49.2277440Z ✅ clear 用户主题 light 即时生效并保留打开的面板
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:49.2281310Z ✅ clear 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:49.4282590Z ✅ clear 用户主题 system 即时生效并保留打开的面板
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:49.4289220Z ✅ clear 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:49.4290890Z ✅ clear 打开时安装局部和全局监听及生命周期观察
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:49.4292170Z ✅ clear 面板内点击不关闭，其他本 App 窗口点击需要关闭
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:49.4303170Z ✅ [I20-ARROW] clear 箭头对齐真实状态项且位于正文上方  — tip=(781.0, 733.0) anchor=(761.0, 741.0, 40.0, 24.0) bodyTop=721.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:49.4307630Z ✅ clear 锚点鼠标按下留给状态按钮的单次 toggle
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:49.9422390Z ✅ [I20-WINDOW-PICKS] clear 透明光学边距保持状态窗口中央及四边的原始命中  — statusProxy=4294967296 closed=[0, 193, 193, 0, 0] open=[0, 193, 193, 0, 0] body=222 panel=222
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.0106630Z ✅ [I20-BODY-GRID] clear 透明正文包括空白的5×7网格全部保持面板命中  — hits=35/35 floor=1/255 panel=222
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.0107380Z ✅ clear 状态窗口四边命中区不先关闭再重开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.0107740Z ✅ clear 无窗口事件按完整状态窗口区域识别锚点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.0109180Z ✅ clear 原生菜单跟踪期间保留菜单窗口与无窗口事件
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.0109640Z ✅ clear 菜单期间 Escape 留给菜单而不关闭面板
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.0110000Z ✅ clear 菜单结束后恢复普通外部点击分类
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.0114040Z ✅ clear 背景搭配可见的生产 A2
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.0115170Z ✅ clear 首次 Escape 仅取消拖动并保留面板
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.0543450Z ✅ clear 第二次 Escape 关闭面板并撤除所有监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.2094630Z ✅ clear 全局外部点击处理器关闭且清理全部生命周期资源
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.3646420Z ✅ clear 状态按钮单次 toggle 只关闭不意外重开
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.4771020Z ✅ clear 全局监听先收到锚点按下仍保留单次按钮动作
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.5251880Z ✅ clear 同一次全局按下随后按钮动作只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.6369990Z ✅ clear 全局监听先收到锚点按下仍保留单次按钮动作
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.6657780Z ✅ clear 同一次全局按下随后按钮动作只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.7703820Z ✅ clear 全局监听先收到锚点按下仍保留单次按钮动作
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.7994970Z ✅ clear 同一次全局按下随后按钮动作只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.9259540Z ✅ clear 全局监听先收到锚点按下仍保留单次按钮动作
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:50.9558290Z ✅ clear 同一次全局按下随后按钮动作只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:51.0756830Z ✅ clear 全局非锚点按下仍关闭且清理监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:51.2529810Z ✅ [I19-WORKSPACE] clear 激活通知先于同一次按钮动作只关闭一次
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:51.3786220Z ✅ [I19-IDLE] clear 指针停锚点不阻止真正切换应用关闭
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:51.5554800Z ✅ clear 宿主自行关闭仍执行完整清理
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:51.7081580Z ✅ [ARROW-OPTION] clear 保存关闭箭头后再次打开使用同一生产内容
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:51.7385450Z ✅ [ARROW-OPTION] clear 无箭头时再次点击状态项收起并清理监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:51.8720240Z ✅ [ARROW-OPTION] clear 无箭头重开后Escape仍关闭并清理监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:52.1950250Z ✅ 拖动中由 B 切换 C 撤销旧手势、替换宿主并复用同一 A2 内容
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:52.1964700Z ✅ B 转 C 后内容挂载在新玻璃宿主而非退休窗口  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:52.5971400Z ✅ 关闭全局玻璃恢复 Classic 系统外观及原生 NSPopover
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:52.5972440Z ✅ 关闭玻璃后实际 Classic 窗口内容非空  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:52.6386900Z ✅ [ARROW-OPTION] Classic忽略玻璃箭头选择 false，保留原生窗口及几何
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:52.6564240Z ✅ [ARROW-OPTION] Classic忽略玻璃箭头选择 true，保留原生窗口及几何
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:53.1439390Z ✅ Classic 用户主题 dark 即时生效并保留当前窗口
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:53.1448140Z ✅ Classic 主题选择后内容仍完整  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:53.6106180Z ✅ Classic 用户主题 light 即时生效并保留当前窗口
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:53.6121520Z ✅ Classic 主题选择后内容仍完整  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:53.9940320Z ✅ Classic 用户主题 system 即时生效并保留当前窗口
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:53.9945780Z ✅ Classic 主题选择后内容仍完整  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:54.9774920Z ✅ Classic 关闭中转玻璃后，退休宿主迟到回调不能关闭新面板  — native-fade-observed=false
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:54.9782920Z ✅ 退休 Classic 关闭回调后新玻璃窗口仍持有完整内容  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:55.2814790Z ✅ 玻璃转回 Classic 使用新的干净原生计数且保留内容
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:55.2820790Z ✅ 玻璃转回 Classic 后内容确实属于新原生窗口  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:56.6018760Z ✅ 跨宿主后 Classic 仍支持快速关闭重开且不会被迟到 didClose 拆除
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:56.6029400Z ✅ 跨宿主后 Classic 关闭重开没有丢失内容  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:56.6163100Z ✅ 跨宿主及重复重开最终关闭后所有监听归零且没有模式写入
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:57.8449450Z ✅ 同 run loop 来回切换最终 glass=false 宿主和内容一致  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:59.5946340Z ✅ 关闭重开与来回切换交错最终 glass=false 不出现空壳  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:22:59.6109370Z ✅ 快速迁移最终 glass=false 关闭后监听清空且没有系统写入
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:00.9449010Z ✅ 同 run loop 来回切换最终 glass=true 宿主和内容一致  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:02.6957090Z ✅ 关闭重开与来回切换交错最终 glass=true 不出现空壳  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:02.7448670Z ✅ 快速迁移最终 glass=true 关闭后监听清空且没有系统写入
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:03.1782190Z ✅ 释放测试先安装了真实玻璃面板监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:03.2086400Z ✅ 打开状态释放 controller 不被监视器保留且面板不继续可见
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:03.5314630Z ✅ Settings 命令位于标准应用菜单
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:03.5315270Z ✅ 应用菜单保留退出命令
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.1301120Z ✅ 执行 Settings 前弹窗真实打开  — open=true, watch=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.1334320Z ✅ Settings 回调前先清除弹窗意图和外部监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.1518550Z ✅ 快捷菜单使 Settings 可见并成为键盘窗口  — visible=true, key=true, active=true, keyTitle=Wattson Settings, canKey=true, same=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.2509670Z ✅ 重复 Settings 命令复用同一窗口
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.7544670Z ✅ Command-Comma 前弹窗和显示时钟都正在运行
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.7687590Z ✅ Command-Comma 在安排 Settings 窗口前同步停止弹窗和显示时钟
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.7775060Z ✅ Command-Comma 关闭后重开同一窗口  — handled=true, visible=true, key=true, active=true, keyTitle=Wattson Settings
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.7789460Z ✅ Settings 未改变 LSUIElement 的 accessory 激活策略
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.7790390Z ✅ 状态项从共享系统电池图标缓存同步
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.8822350Z ✅ 系统电池图标观察者不阻止 StatusItem 释放
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.9563720Z ✅ 打开控制器创建有效的单采样 timer
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.9564190Z ✅ 周期回调使旧 timer 失效并安排唯一有效替代
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.9564800Z ✅ 手动周期回调不读取硬件且不要求额外 fresh follow-up
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.9784150Z ✅ timer 重建后真实打开回调仍请求一次 fresh follow-up  — requests=[(history: false, fresh: false, supersedes: false), (history: false, fresh: true, supersedes: false)]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.9785150Z ✅ 关闭显示保留有效后台采样而不是停止全部采样
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.9785460Z ✅ 关闭后的真实 timer 仍能请求采样并继续重排
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.9785900Z ✅ 快速关闭重开只保留当前打开的有效 timer
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:04.9941220Z ✅ 真实关闭重开拒绝旧打开回调且保留一次当前 fresh 请求  — requests=[(history: false, fresh: true, supersedes: false)]
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:05.0059470Z ✅ 单采样 timer 和采集拦截器不会保留控制器
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:05.0894590Z ✅ 短屏保持自然内容高度并提供原生滚动 viewport
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:05.0894960Z ✅ 短屏可滚到内容底部而不是裁掉 footer
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:05.0990930Z ✅ 恢复足够高度后全量内容重新可见
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:05.1838090Z ✅ 无 window 的失效状态项 anchor 不展示也不遗留监听
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:05.1959520Z ✅ 独立续航行在全部供电状态和读取失败时实际布局不截断
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:05.1960180Z ✅ 续航独立分区有细分割线，左侧时钟与右侧标题时间对齐
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:06.7775450Z ✅ Classic 关闭续航后真实仪表与宿主移除完整续航栏目高度  — footer=356.0→444.0; height=489.0→401.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:08.5692800Z ✅ Classic 关闭重开后继续隐藏已取消勾选的续航
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:09.0519970Z ✅ Classic 重新开启续航后仪表与真实宿主恢复原坐标
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:11.7022170Z ✅ Standard 关闭续航后真实仪表与宿主移除完整续航栏目高度  — footer=348.0→436.0; height=539.0→451.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:13.6851750Z ✅ Standard 关闭重开后继续隐藏已取消勾选的续航
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:14.1853940Z ✅ Standard 重新开启续航后仪表与真实宿主恢复原坐标
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:16.7789320Z ✅ Clear 关闭续航后真实仪表与宿主移除完整续航栏目高度  — footer=348.0→436.0; height=495.0→407.0
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:18.7628140Z ✅ Clear 关闭重开后继续隐藏已取消勾选的续航
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:19.1607970Z ✅ Clear 重新开启续航后仪表与真实宿主恢复原坐标
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.3479770Z ✅ 系统时间光点恒亮而无循环动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.3495790Z ✅ 控制器时间光点缓慢呼吸而无星轨
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6029260Z ✅ 相同时间来源连续采样不会重新启动呼吸周期
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6041860Z ✅ 计算中加快呼吸并启动星轨
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6042640Z ✅ 计算光点呼吸、星轨和尘埃共享起点与3.3秒周期
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6047800Z ✅ 来源光点结束呈现前确有动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6048740Z ✅ 来源光点结束呈现立即移除呼吸星轨与尾迹动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6051440Z ✅ 来源光点结束呈现期间新采样不重启动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6063950Z ✅ 来源光点关闭动画策略前确有动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6064670Z ✅ 来源光点关闭动画策略立即移除呼吸星轨与尾迹动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6069230Z ✅ 来源光点关闭动画策略期间新采样不重启动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6103220Z ✅ 来源光点隐藏视图前确有动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6104300Z ✅ 来源光点隐藏视图立即移除呼吸星轨与尾迹动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6118460Z ✅ 来源光点隐藏视图期间新采样不重启动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6158990Z ✅ 来源光点脱离窗口前确有动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6160110Z ✅ 来源光点脱离窗口立即移除呼吸星轨与尾迹动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:20.6171950Z ✅ 来源光点脱离窗口期间新采样不重启动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:23.4821890Z ✅ 计算开始0.2秒星点已在移动，不再等待三秒
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:23.4825460Z ✅ 真实星轨在2.8秒内仅完成一圈  — winding=6.049916928410245
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:23.4829030Z ✅ 星点一圈对应一次从暗到亮再暗的呼吸
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:23.9200080Z ✅ 每圈后半秒星点和尾迹均不可见，主光点保持暗态
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:24.2524390Z ✅ 停歇结束星轨和呼吸从同一相位开始下一圈
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:24.2558520Z ✅ 计算中持续采样不重置星轨等待时间
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:24.2570590Z ✅ 系统预测恢复立即清除呼吸星轨及所有尾迹动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:24.7718650Z ✅ 读取失败仅保留红色状态灯呼吸而不动画展示过期功率
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.1873540Z ✅ 减少动态效果保留红色来源状态及说明并停止全部动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.1918770Z ✅ 减少动态效果期间失败刷新也不重启动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.5546440Z ✅ 进程键盘焦点回归具有真实 key window
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.6064540Z ✅ 进程行接受真实键盘焦点 compact=false
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.6085870Z ✅ 重排时选择和行焦点均跟随进程身份 compact=false
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.6100320Z ✅ 真实 window 分发空格只取消原进程选择并保留焦点 compact=false
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.6570920Z ✅ 进程行接受真实键盘焦点 compact=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.6593830Z ✅ 重排时选择和行焦点均跟随进程身份 compact=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.6602580Z ✅ 真实 window 分发空格只取消原进程选择并保留焦点 compact=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.7154160Z ✅ 选择 B 与焦点 A 分离时重排分别保留各自身份
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.7170560Z ✅ 真实 window 下箭头从 A 的新排名移到 C
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.7706450Z ✅ 后移 重排时原生强退按钮焦点跟随原进程
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.7707880Z ✅ 后移 后焦点按钮仅请求原进程身份而不误操作新排名
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.7757510Z ✅ 前移 重排时原生强退按钮焦点跟随原进程
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.7758800Z ✅ 前移 后焦点按钮仅请求原进程身份而不误操作新排名
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.8281550Z ✅ 移除 清除选择并退离已换绑或隐藏的进程焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.8770980Z ✅ 掉出 Top N 清除选择并退离已换绑或隐藏的进程焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:25.9231150Z ✅ 仅 audit token 更换 清除选择并退离已换绑或隐藏的进程焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.0639810Z ✅ 外部文本框可取得实际 field editor
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.0706950Z ✅ 进程重排不抢占外部文本编辑焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.0729680Z ✅ 进程列表缩小 Top N不抢占外部文本编辑焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.0731700Z ✅ 进程列表空列表不抢占外部文本编辑焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.0739640Z ✅ 进程列表失效不抢占外部文本编辑焦点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.4297430Z ✅ History 首帧直接呈现而不伪造滚动
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.4310450Z ✅ History 连续真实采样启动同步描边、填充与末端动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.4312690Z ✅ History 动画限于 180 ms 且没有重复、自动反向或常驻填充
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.4314750Z ✅ History 平移描边保持路径拓扑及真实采样位置
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7368370Z ✅ History 短过渡完成后原生图层自行静止
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7395150Z ✅ History 结束呈现前确实有活动动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7395860Z ✅ History 结束呈现立即移除动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7396740Z ✅ History 结束呈现期间新采样不重启动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7397130Z ✅ History 恢复结束呈现状态不重播旧过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7447040Z ✅ History 关闭动画策略前确实有活动动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7448560Z ✅ History 关闭动画策略立即移除动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7449240Z ✅ History 关闭动画策略期间新采样不重启动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7449700Z ✅ History 恢复关闭动画策略状态不重播旧过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7468180Z ✅ History 隐藏视图前确实有活动动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7468740Z ✅ History 隐藏视图立即移除动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7485790Z ✅ History 隐藏视图期间新采样不重启动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7487110Z ✅ History 恢复隐藏视图状态不重播旧过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7505230Z ✅ History 脱离窗口前确实有活动动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7506480Z ✅ History 脱离窗口立即移除动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7511260Z ✅ History 脱离窗口期间新采样不重启动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7511740Z ✅ History 恢复脱离窗口状态不重播旧过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7545380Z ✅ History 新峰值扩轴使用有界的原生路径动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.7566160Z ✅ History 扩轴描边保持路径拓扑及真实采样位置
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.9529440Z ✅ History 扩轴中间帧位于起始范围与目标范围之间
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.9634080Z ✅ History 变轴保持末端圆点尺寸固定
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.9844210Z ✅ History 变轴时描边宽度保持 1.6 点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:26.9991730Z ✅ History 中断变轴直接接续实际描边中的保留采样点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:27.0024350Z ✅ History 中断扩轴从可见坐标接续保留采样点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:27.0028160Z ✅ History 扩缩范围始终以图表底边为原点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:27.3331950Z ✅ History 中断后的扩轴完成并自动静止
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:27.9718310Z ✅ History 旧峰值离开窗口后仍保留缩轴迟滞
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:27.9767450Z ✅ History 缩轴第1个两秒采样仍保持旧范围
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:27.9840000Z ✅ History 缩轴第2个两秒采样仍保持旧范围
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:27.9913520Z ✅ History 缩轴第3个两秒采样仍保持旧范围
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:27.9972170Z ✅ History 八秒迟滞结束后缩轴平滑展开低功率数据
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:28.2461410Z ✅ History 缩轴中间帧连续接近最终范围
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.2812260Z HISTORY_COMPLETION_TIMEOUT contracted-axis elapsed=1.0351983333332555 remaining=history.fill:0.35s,history.stroke:0.35s,history.head:0.35s
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.2817120Z HISTORY_OWNER_CLOCK key=history.fill localNow=835.8378250416669 speed=1.0 offset=0.0 begin=0.0 presentationNow=835.8378250416669 animationBegin=834.5519105833336 duration=0.35 animationSpeed=1.0 animationOffset=0.0 removed=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.2831130Z HISTORY_OWNER_CLOCK key=history.stroke localNow=835.8378250416669 speed=1.0 offset=0.0 begin=0.0 presentationNow=835.8378250416669 animationBegin=834.5519105833336 duration=0.35 animationSpeed=1.0 animationOffset=0.0 removed=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.2834800Z HISTORY_OWNER_CLOCK key=history.head localNow=835.8378250416669 speed=1.0 offset=0.0 begin=0.0 presentationNow=835.8378250416669 animationBegin=834.5519105833336 duration=0.35 animationSpeed=1.0 animationOffset=0.0 removed=true
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.2837530Z ❌ History 缩轴结束后原生图层自行静止
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.2948660Z ✅ History 结束呈现前确实有活动变轴动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.2950370Z ✅ History 结束呈现立即移除变轴与末端动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3045640Z ✅ History 结束呈现期间新峰值不重启变轴
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3052330Z ✅ History 恢复结束呈现状态不重播旧变轴
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3126750Z ✅ History 关闭动画策略前确实有活动变轴动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3127660Z ✅ History 关闭动画策略立即移除变轴与末端动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3181670Z ✅ History 关闭动画策略期间新峰值不重启变轴
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3182670Z ✅ History 恢复关闭动画策略状态不重播旧变轴
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3229350Z ✅ History 隐藏视图前确实有活动变轴动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3230670Z ✅ History 隐藏视图立即移除变轴与末端动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3259790Z ✅ History 隐藏视图期间新峰值不重启变轴
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3260980Z ✅ History 恢复隐藏视图状态不重播旧变轴
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3322290Z ✅ History 脱离窗口前确实有活动变轴动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3326090Z ✅ History 脱离窗口立即移除变轴与末端动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3339040Z ✅ History 脱离窗口期间新峰值不重启变轴
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.3340200Z ✅ History 恢复脱离窗口状态不重播旧变轴
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.5884320Z ✅ History 新增采样首帧保留原区间的实际呈现中点
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.5885350Z ✅ History 末段回归夹具确实覆盖新增样本造成的切线变化
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.6111590Z ✅ History 完成检查从未暂停且已呈现的静态曲线开始
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:29.6163300Z ✅ History 末段完成检查确实启动有界描边、填充与末端动画
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:30.1322530Z ✅ History 控制点过渡到达新曲线后自动静止
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:30.8411810Z ✅ History 生产弹窗把动画策略传至实际栏目
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:30.9662750Z ✅ History 关闭模块立即取消已有过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:30.9804150Z ✅ History 模块关闭后采样不会重启过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:31.0621010Z HISTORY_HOSTED_RESTORE_READY ready=true baselineCommitted=true elapsed=0.010476958333242692 visibleRect=(-16.0, -60.0, 360.0, 262.0) bounds=(0.0, 0.0, 328.0, 112.0) windowVisible=true hidden=false
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:31.0624820Z ✅ History 恢复模块直接呈现最新数据
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:31.0634430Z ✅ History 失败前的有效采样确实启动过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:31.0663020Z ✅ History 读取失败立即取消过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:31.0670450Z ✅ History 过期数据不重启过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:31.0708370Z ✅ History 减少动态效果变化前确实启动过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:31.4885700Z ✅ History 开启减少动态效果立即取消过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:31.4894790Z ✅ History 减少动态效果期间采样保持静止
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:31.8413320Z ✅ History 收起前确实有活动过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:31.8440210Z ✅ History 收起弹窗立即取消过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:31.8458740Z ✅ History 弹窗关闭时新数据不会重启过渡
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:32.7254820Z 
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:32.7818850Z SOME_CHECKS_FAILED
+Build universal PKG and DMG once	Replay real AppKit interaction and animation lifecycles	2026-10-27T15:23:33.8972860Z ##[error]Process completed with exit code 1.

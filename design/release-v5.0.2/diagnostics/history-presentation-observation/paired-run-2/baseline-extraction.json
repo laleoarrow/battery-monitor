@@ -1,0 +1,10 @@
+{
+  "strategy": "baseline",
+  "originalHarnessSHA256": "c954d1d2d87aa2f81a42f945a6cb10c2802f7a61e17a8392037856033ea4cfc2",
+  "extractedHarnessSHA256": "80b0031c309eaf498212eae5a90c7ed7541489cbbbea78ff32c90ed17e7edc30",
+  "globalRunApplicationUnchanged": true,
+  "originalAssertionsRetained": true,
+  "originalDeadlineSeconds": 1,
+  "productionSourcesUnchanged": true,
+  "sharedVisibilityPreconditionBeforeHistoryInputs": true
+}

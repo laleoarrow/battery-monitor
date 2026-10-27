@@ -3332,9 +3332,25 @@ if !screenLocked {
         historyMotionChecksSkipped = true
         log("HISTORY_MOTION_CHECKS_SKIPPED: system Reduce Motion is enabled")
     } else {
+        func historyLayers(_ layer: CALayer?) -> [CALayer] {
+            guard let layer else { return [] }
+            return [layer] + (layer.sublayers ?? []).flatMap { historyLayers($0) }
+                + (layer.mask.map { historyLayers($0) } ?? [])
+        }
         func settleHistoryFixture(_ context: String, view: HistoryView = fixture) -> Bool {
             let started = CACurrentMediaTime()
-            let settled = runApplication(until: { !view.hasChartAnimationForTest }, timeout: 1)
+            let settled = runApplication(until: {
+                // Observe the hosted presentation tree before committing its
+                // completed transactions; live animation keys remain the gate.
+                for layer in historyLayers(view.layer) {
+                    if let presented = layer.presentation() {
+                        _ = presented.position
+                        if let shape = presented as? CAShapeLayer { _ = shape.path }
+                    }
+                }
+                CATransaction.flush()
+                return !view.hasChartAnimationForTest
+            }, timeout: 1)
             if !settled {
                 let remaining = historyAnimations(view.layer).map {
                     "\($0.0):\($0.1.duration)s"
@@ -3399,11 +3415,6 @@ if !screenLocked {
 
         // Axis changes must move through real presentation layers, including
         // when another reading arrives before the previous transition finishes.
-        func historyLayers(_ layer: CALayer?) -> [CALayer] {
-            guard let layer else { return [] }
-            return [layer] + (layer.sublayers ?? []).flatMap { historyLayers($0) }
-                + (layer.mask.map { historyLayers($0) } ?? [])
-        }
         func viewportAnimation() -> (CAShapeLayer, CAPropertyAnimation)? {
             for case let layer as CAShapeLayer in historyLayers(fixture.layer) {
                 if let animation = layer.animation(forKey: "history.stroke") as? CAPropertyAnimation {
@@ -3554,7 +3565,42 @@ if !screenLocked {
         check("History 缩轴中间帧连续接近最终范围",
               (contractionScale ?? 0) > (contractionStart?.m22 ?? 1)
                   && (contractionScale ?? .infinity) < 1)
-        check("History 缩轴结束后原生图层自行静止", settleHistoryFixture("contracted-axis"))
+        let contractionSettled = settleHistoryFixture("contracted-axis")
+        check("History 缩轴结束后原生图层自行静止", contractionSettled)
+
+        // Equal geometry must not make the settling wait accept a live key.
+        // Inject only after the real contraction has completed, then remove
+        // only that test-owned stroke key before continuing the fixture.
+        if contractionSettled, let stroke = contraction?.0, let path = stroke.path {
+            let controls: [(String, CFTimeInterval, Float, Bool)] = [
+                ("无限重复", 0.18, .infinity, true),
+                ("两秒长动画", 2, 0, true),
+                ("完成后保留", 0.18, 0, false),
+            ]
+            for (name, duration, repeatCount, removed) in controls {
+                let animation = CABasicAnimation(keyPath: "path")
+                animation.fromValue = path
+                animation.toValue = path
+                animation.beginTime = stroke.convertTime(CACurrentMediaTime(), from: nil)
+                animation.duration = duration
+                animation.repeatCount = repeatCount
+                animation.isRemovedOnCompletion = removed
+                if !removed { animation.fillMode = .forwards }
+                stroke.add(animation, forKey: "history.stroke")
+                CATransaction.flush()
+                check("History \(name)反例确实注入真实描边键",
+                      fixture.hasChartAnimationForTest && stroke.animation(forKey: "history.stroke") != nil)
+                let started = CACurrentMediaTime()
+                let settled = settleHistoryFixture("negative-control-\(name)")
+                check("History \(name)反例在原一秒期限仍被拒绝",
+                      !settled && CACurrentMediaTime() - started >= 1
+                          && stroke.animation(forKey: "history.stroke") != nil)
+                stroke.removeAnimation(forKey: "history.stroke")
+                check("History \(name)反例仅清理注入键后恢复静止", !fixture.hasChartAnimationForTest)
+            }
+        } else {
+            check("History 描边键反例具备已完成的真实缩轴夹具", false)
+        }
 
         var cancellationPeak = 300.0
         for (name, cancel, restore) in cancellations {

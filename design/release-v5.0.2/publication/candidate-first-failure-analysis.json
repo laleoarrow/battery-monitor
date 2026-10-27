@@ -1,0 +1,41 @@
+{
+  "sourceSHA": "e4dcd5a78eed2dbe94a1e984b0dab9f2371cd443",
+  "failedRunID": 40528379095,
+  "jobID": 122274085849,
+  "failedAssertion": "History 缩轴结束后原生图层自行静止",
+  "stage": "Replay real AppKit interaction and animation lifecycles",
+  "newTimeIndicatorAssertionsPassed": true,
+  "historyLayerUnchangedFromV501": true,
+  "sameSourceLocalVMAssertionPassed": true,
+  "diagnostic": {
+    "deadlineSeconds": 1,
+    "observedSeconds": 1.0351983333332555,
+    "retainedAnimationDurationSeconds": 0.35,
+    "retainedKeys": [
+      "history.fill",
+      "history.stroke",
+      "history.head"
+    ],
+    "isRemovedOnCompletion": true,
+    "ownerClockSpeed": 1,
+    "visualTargetComparedAtTimeout": false
+  },
+  "historicalEvidence": "design/performance-smoothness/README.md",
+  "reviewConclusion": "Evidence supports an existing fixture/compositor commit-timing issue; no deterministic new product defect identified. Root cause is not closed. Retained animation keys alone do not prove continued visible motion or WindowServer frames.",
+  "rootCauseClosed": false,
+  "nextStep": "Fresh manual candidate on identical source with unchanged assertions; preserve first failure. If repeated, inspect presentation-to-target geometry, visibility/occlusion/lock state, and the complete contracted-axis sequence in one continuous AppKit loop before altering production or deadlines.",
+  "followupDiagnostic": {
+    "summary": "design/release-v5.0.2/diagnostics/summary.json",
+    "summarySHA256": "eeb9ec2f2ddc01ca555f8b16d307b11ddb58aac1cc6f53aeb1481b2b198c36b9",
+    "originalAssertionStillFailed": true,
+    "pathAndHeadPresentationCoordinatesMatchedTargetAtTerminalObservation": true,
+    "keysBeforeAndAfterLoopThenFlush": [
+      3,
+      3,
+      0
+    ],
+    "causeStillUnproven": true,
+    "doesNotReplaceFullCandidateGate": true,
+    "cleanupPassed": true
+  }
+}

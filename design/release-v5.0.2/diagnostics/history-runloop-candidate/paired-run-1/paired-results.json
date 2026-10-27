@@ -1,0 +1,82 @@
+{
+  "diagnosticChecksPassed": false,
+  "issues": [
+    "Candidate control did not pass the original fixture within one second"
+  ],
+  "cases": {
+    "baseline": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0273964166666616,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": false,
+      "processExitCode": 1
+    },
+    "candidate": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0142370000000085,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": false,
+      "processExitCode": 1
+    },
+    "infinite": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0068766250000039,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "processExitCode": 1
+    },
+    "long": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0065459583333336,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "processExitCode": 1
+    },
+    "retained": {
+      "settled": false,
+      "decisionElapsedSeconds": 1.0193587500000092,
+      "remainingKeys": [
+        "history.fill",
+        "history.stroke",
+        "history.head"
+      ],
+      "failedAssertions": [
+        "\u274c History \u7f29\u8f74\u7ed3\u675f\u540e\u539f\u751f\u56fe\u5c42\u81ea\u884c\u9759\u6b62"
+      ],
+      "faultInjected": true,
+      "processExitCode": 1
+    }
+  },
+  "sameVMOriginalFailedCandidatePassed": false,
+  "sameOneSecondDeadline": true,
+  "negativeControlsUseRealStrokeKeyAndIdenticalPaths": true,
+  "limits": "Extracted History prefix only; not the complete interaction suite or hosted candidate. Cleanup is assessed separately after the owner returns."
+}
