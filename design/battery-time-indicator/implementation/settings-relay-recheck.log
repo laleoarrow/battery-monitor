@@ -1,0 +1,22 @@
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+[0/1] Planning build
+Building for debugging...
+[0/6] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.82s)
+Test Suite 'Selected tests' started at 2026-10-27 22:30:24.817.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-27 22:30:24.818.
+Test Suite 'WattsonTests' started at 2026-10-27 22:30:24.818.
+Test Case '-[WattsonTests.WattsonTests testPopoverSettingsRelayDefersPresenterToNextMainTurn]' started.
+Test Case '-[WattsonTests.WattsonTests testPopoverSettingsRelayDefersPresenterToNextMainTurn]' passed (0.232 seconds).
+Test Suite 'WattsonTests' passed at 2026-10-27 22:30:25.050.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.232 (0.232) seconds
+Test Suite 'WattsonPackageTests.xctest' passed at 2026-10-27 22:30:25.050.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.232 (0.232) seconds
+Test Suite 'Selected tests' passed at 2026-10-27 22:30:25.050.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.232 (0.233) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+SWIFT_TEST_DEFAULTS_CLEANUP registered=0 remaining=0

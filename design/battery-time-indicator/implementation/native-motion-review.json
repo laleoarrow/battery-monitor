@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "sourceCommit": "a7621f735b01308ae8299b946da83f2c13dcd2e5",
+  "review": "Read-only production animation and WindowServer frame review",
+  "findings": {
+    "systemSteady": true,
+    "fallbackBreathSeconds": 3.6,
+    "unavailableRedBreathSeconds": 2.4,
+    "calculationLapAndBreathSeconds": 2.8,
+    "calculationSharedPauseSeconds": 0.5,
+    "circleEndFlashOrTrailResidueObserved": false,
+    "clippingObserved": false
+  },
+  "observations": {
+    "calculationBrightnessPeaksSeconds": [
+      1.38,
+      4.63,
+      8.02
+    ],
+    "observedDimPauseSeconds": [
+      2.754,
+      3.253
+    ]
+  },
+  "limitations": [
+    "Fixed on-battery inputs use the neutral instrument tint; green/blue palettes and native popup composition are covered by the separate six-state capture set.",
+    "Capture frame 083 to 084 has a 0.752 second gap, followed by catch-up samples; this is capture timing evidence, not a measured production animation stall.",
+    "Frame 000 contains pre-restart compositor output; native viewing GIF uses frames 001 through 080.",
+    "Eight fps verifies the visual cycle, not display-refresh-rate smoothness."
+  ]
+}

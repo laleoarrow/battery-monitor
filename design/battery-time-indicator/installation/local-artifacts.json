@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "version": "5.0.2",
+  "sourceCommit": "a7621f735b01308ae8299b946da83f2c13dcd2e5",
+  "publicRelease": false,
+  "artifacts": {
+    "Wattson-v5.0.2-macos-universal.pkg": "91071555019f83384f110e934a34fd96496591450248e50bfda2491b299d98f4",
+    "Wattson-v5.0.2-macos-universal.dmg": "c4a2740755af7bd669f798c8249629c50221faa083967b20966c776f6f6c9745",
+    "Wattson-v5.0.2-release-info.txt": "a5117673d31fa4d2b2671ce50ee6437cd2bac4c2b0615f67c584cc8b1eee930e",
+    "SHA256SUMS.txt": "d927be1feb3435765fc2c5ce179a2fc14a655db1f0cfa808b48adc568627e51b"
+  },
+  "signing": "community-ad-hoc app/helper; unsigned PKG/DMG; not notarized",
+  "releaseScratchRemoved": true
+}

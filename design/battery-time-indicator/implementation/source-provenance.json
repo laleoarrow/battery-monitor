@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "sourceCommit": "a7621f735b01308ae8299b946da83f2c13dcd2e5",
+  "sourceFilesCompared": {
+    "captures": 60,
+    "battery-time-indicator": 60
+  },
+  "nativeCaptureInputsMatchSource": true
+}

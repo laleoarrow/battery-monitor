@@ -303,15 +303,25 @@ See [battery time estimation](../docs/battery-time-estimate.md) for the formula,
 stabilization policy and pinned source references.
 The runtime section is an independent 88-point module below Power History
 and above the footer controls. It shares the transparent content surface and inset
-hairline separators of the existing instruments. A neutral clock well sits on
-the left, with a quiet title and prominent time both right-aligned. Well, border and
-icon colors resolve against the view's current appearance, including high contrast. Non-numeric
+hairline separators of the existing instruments. A gradient clock well sits on
+the left, with a quiet title and prominent time both right-aligned. A compact
+planet before the title identifies the estimate source: steady for official
+system values, slow breathing for controller/observed fallback, orbiting while
+calculating, and red breathing when unavailable. Calculation starts immediately;
+one 2.8-second orbit shares one dim–bright–dim breath, followed by a common
+0.5-second pause. Sampling does not restart its phase. The clock, planet and
+comet inherit the instrument palette; only the separate failure light turns red.
+Animations stop when presentation ends, the view is hidden/detached, or Reduce
+Motion is enabled. Well, border and icon colors resolve against the view's
+current appearance, including high contrast. Non-numeric
 states use smaller secondary text. Disabling it removes its entire height. The rounded
 glass backing owns the solid accessibility fallback; the
 foreground stays transparent in an actual glass host and refreshes on reparenting.
 See the [selected runtime layout review](../design/feedback-runtime/runtime-layout/README.md)
 for theme and layout evidence, and the [4.3.2 release gallery](../design/releases/v4.3.2/README.md)
-for the installed Standard Glass composited capture.
+for the installed Standard Glass composited capture. The approved source light,
+gradient clock and native verification are recorded in the
+[battery time indicator review](../design/battery-time-indicator/README.md).
 
 Process Activity is an independent, default-on module appended to existing
 module orders. Settings > Modules selects 1–10 processes (default 3), and the
