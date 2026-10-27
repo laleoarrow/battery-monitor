@@ -2865,7 +2865,148 @@ if #available(macOS 26.0, *), !screenLocked, let button = item.button {
     }
 }
 
-// ---- 14a. Process Activity: keyboard focus follows identity across reranking ----
+// ---- 14a. Battery time source: visible motion, cancellation, and failure semantics ----
+if !screenLocked {
+    let previousMotion = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
+    let previousModules = Settings.Module.allCases.map { ($0, Settings.isModuleVisible($0)) }
+    defer {
+        if let previousMotion { setenv("WATTSON_FORCE_REDUCE_MOTION", previousMotion, 1) }
+        else { unsetenv("WATTSON_FORCE_REDUCE_MOTION") }
+        for (module, visible) in previousModules { Settings.setModule(module, visible: visible) }
+    }
+    setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+    func indicatorLayers(_ layer: CALayer?) -> [CALayer] {
+        guard let layer else { return [] }
+        return [layer] + (layer.sublayers ?? []).flatMap { indicatorLayers($0) }
+    }
+    func indicatorAnimations(_ view: NSView) -> [(CALayer, String, CAAnimation)] {
+        indicatorLayers(view.layer).flatMap { layer in
+            (layer.animationKeys() ?? []).compactMap { key in
+                layer.animation(forKey: key).map { (layer, key, $0) }
+            }
+        }
+    }
+    func indicatorDescendants(_ view: NSView) -> [NSView] {
+        [view] + view.subviews.flatMap(indicatorDescendants)
+    }
+    let fixture = BatteryTimeIndicatorView()
+    fixture.frame = NSRect(x: 40, y: 30, width: 20, height: 20)
+    let container = NSView(frame: NSRect(x: 0, y: 0, width: 100, height: 80))
+    container.addSubview(fixture)
+    let window = NSWindow(contentRect: container.bounds, styleMask: [.borderless],
+                          backing: .buffered, defer: false)
+    window.isReleasedWhenClosed = false
+    window.contentView = container
+    window.orderFront(nil)
+    fixture.layoutSubtreeIfNeeded()
+    fixture.setPresentationActive(true)
+    fixture.setAnimationsEnabled(true)
+    defer { fixture.setPresentationActive(false); window.close() }
+    var sample = PowerSnapshot(percent: 67, batteryW: -12, systemW: 12,
+                               batteryTimeEstimate: .remaining(265), batteryTimeEstimateSource: .system)
+    func refreshIndicator() {
+        fixture.update(snapshot: sample, degraded: false)
+        CATransaction.flush()
+    }
+    refreshIndicator()
+    check("系统时间光点恒亮而无循环动画",
+          fixture.status == .system && indicatorAnimations(fixture).isEmpty)
+    sample.batteryTimeEstimateSource = .batteryGauge
+    refreshIndicator()
+    let slowBreathing = indicatorAnimations(fixture).first { $0.1 == "breathing" }?.2
+    check("控制器时间光点缓慢呼吸而无星轨",
+          fixture.status == .fallback && slowBreathing != nil
+              && !indicatorAnimations(fixture).contains { $0.1 == "orbit" })
+    spin(0.15)
+    refreshIndicator()
+    let sameBreathing = indicatorAnimations(fixture).first { $0.1 == "breathing" }?.2
+    check("相同时间来源连续采样不会重新启动呼吸周期",
+          slowBreathing != nil && slowBreathing?.beginTime == sameBreathing?.beginTime)
+    sample.batteryTimeEstimate = .remaining(nil)
+    refreshIndicator()
+    let calculatingAnimations = indicatorAnimations(fixture)
+    let fasterBreathing = calculatingAnimations.first { $0.1 == "breathing" }?.2
+    check("计算中加快呼吸并等待间歇星轨",
+          fixture.status == .calculating && fasterBreathing != nil
+              && (fasterBreathing?.duration ?? .infinity) < (slowBreathing?.duration ?? 0)
+              && calculatingAnimations.contains { $0.1 == "orbit" })
+
+    let cancellations: [(String, () -> Void, () -> Void)] = [
+        ("结束呈现", { fixture.setPresentationActive(false) }, { fixture.setPresentationActive(true) }),
+        ("关闭动画策略", { fixture.setAnimationsEnabled(false) }, { fixture.setAnimationsEnabled(true) }),
+        ("隐藏视图", { fixture.isHidden = true }, { fixture.isHidden = false }),
+        ("脱离窗口", { fixture.removeFromSuperview() }, { container.addSubview(fixture) }),
+    ]
+    for (name, cancel, restore) in cancellations {
+        refreshIndicator()
+        check("来源光点\(name)前确有动画", !indicatorAnimations(fixture).isEmpty)
+        cancel()
+        check("来源光点\(name)立即移除呼吸星轨与尾迹动画", indicatorAnimations(fixture).isEmpty)
+        refreshIndicator()
+        check("来源光点\(name)期间新采样不重启动画", indicatorAnimations(fixture).isEmpty)
+        restore()
+    }
+    fixture.setPresentationActive(false)
+    fixture.setPresentationActive(true)
+    refreshIndicator()
+    spin(3.5)
+    let comet = indicatorLayers(fixture.layer).first { $0.name == "comet" }
+    let firstPosition = comet?.presentation()?.position
+    let firstTransform = comet?.presentation()?.transform
+    spin(0.45)
+    let secondPosition = comet?.presentation()?.position
+    let secondTransform = comet?.presentation()?.transform
+    let changedTransform: Bool
+    if let firstTransform, let secondTransform {
+        changedTransform = !CATransform3DEqualToTransform(firstTransform, secondTransform)
+    } else { changedTransform = false }
+    check("星点在真实窗口的倾斜轨道上随时间移动",
+          firstPosition != nil && secondPosition != nil
+              && (firstPosition != secondPosition || changedTransform))
+    let orbitStart = indicatorAnimations(fixture).first { $0.1 == "orbit" }?.2.beginTime
+    refreshIndicator()
+    check("计算中持续采样不重置星轨等待时间",
+          orbitStart != nil && orbitStart == indicatorAnimations(fixture).first { $0.1 == "orbit" }?.2.beginTime)
+    sample.batteryTimeEstimate = .remaining(120)
+    sample.batteryTimeEstimateSource = .system
+    refreshIndicator()
+    check("系统预测恢复立即清除呼吸星轨及所有尾迹动画",
+          fixture.status == .system && indicatorAnimations(fixture).isEmpty)
+
+    // Failure is a source status, while stale power flow must stay frozen.
+    for module in Settings.Module.allCases { Settings.setModule(module, visible: module == .runtime || module == .flow) }
+    let content = PopoverContentViewController()
+    content.setViewportHeight(content.preferredHeight)
+    let contentWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: PopoverStyle.width,
+                                                     height: content.preferredHeight),
+                                 styleMask: [.borderless], backing: .buffered, defer: false)
+    contentWindow.isReleasedWhenClosed = false
+    contentWindow.contentView = content.view
+    contentWindow.orderFront(nil)
+    content.view.layoutSubtreeIfNeeded()
+    content.setPresentationActive(true)
+    content.setAnimationsEnabled(true)
+    defer { content.setPresentationActive(false); content.setAnimationsEnabled(false); contentWindow.close() }
+    content.update(snapshot: sample, history: [12], peak: 12, degraded: true)
+    if let status = indicatorDescendants(content.view).compactMap({ $0 as? BatteryTimeIndicatorView }).first {
+        let lights = Set(indicatorLayers(status.layer).map(ObjectIdentifier.init))
+        check("读取失败仅保留红色状态灯呼吸而不动画展示过期功率",
+              status.status == .unavailable && !indicatorAnimations(status).isEmpty
+                  && indicatorAnimations(content.view).allSatisfy { lights.contains(ObjectIdentifier($0.0)) })
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
+        NSWorkspace.shared.notificationCenter.post(name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+                                                   object: NSWorkspace.shared)
+        spin(0.05)
+        content.setAnimationsEnabled(true)
+        check("减少动态效果保留红色来源状态及说明并停止全部动画",
+              status.status == .unavailable && indicatorAnimations(status).isEmpty
+                  && !(status.accessibilityHelp() ?? "").isEmpty)
+        content.update(snapshot: sample, history: [12], peak: 12, degraded: true)
+        check("减少动态效果期间失败刷新也不重启动画", indicatorAnimations(status).isEmpty)
+    } else { check("生产时间栏目包含来源指示灯", false) }
+}
+
+// ---- 14b. Process Activity: keyboard focus follows identity across reranking ----
 if !screenLocked {
     // Mock identities are valid, but the handler records requests only. This
     // fixture never contacts the helper or terminates a process.

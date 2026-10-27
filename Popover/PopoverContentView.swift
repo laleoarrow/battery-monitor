@@ -92,6 +92,7 @@ final class PopoverRuntimeView: PopoverSection {
     private let clock = NSImageView()
     private let title = NSTextField(labelWithString: "Estimated Battery Runtime")
     private let runtime = NSTextField(labelWithString: "")
+    private let sourceIndicator = BatteryTimeIndicatorView()
 
     init() {
         super.init(height: Self.preferredHeight)
@@ -117,6 +118,7 @@ final class PopoverRuntimeView: PopoverSection {
         runtime.setAccessibilityLabel("Estimated battery runtime")
         runtime.setAccessibilityHelp("macOS estimates remaining battery time for current usage. It changes with workload.")
         addSubview(runtime)
+        addSubview(sourceIndicator)
         toolTip = "macOS estimates remaining battery time for current usage. It changes with workload."
         refreshAppearance()
     }
@@ -130,6 +132,8 @@ final class PopoverRuntimeView: PopoverSection {
         }
         clock.frame = NSRect(x: 22, y: 32, width: 24, height: 24)
         title.frame = NSRect(x: 68, y: 20, width: bounds.width - 80, height: 16)
+        sourceIndicator.frame = NSRect(x: title.frame.maxX - ceil(title.intrinsicContentSize.width) - 24,
+                                       y: title.frame.midY - 10, width: 20, height: 20)
         runtime.frame = NSRect(x: 68, y: 39, width: bounds.width - 80,
                                height: runtime.intrinsicContentSize.height)
     }
@@ -145,11 +149,13 @@ final class PopoverRuntimeView: PopoverSection {
             }
             clock.contentTintColor = PopoverStyle.neutral
         }
+        sourceIndicator.refreshAppearance()
     }
 
     func update(snapshot: PowerSnapshot, degraded: Bool) {
+        sourceIndicator.update(snapshot: snapshot, degraded: degraded)
         title.stringValue = snapshot.plugged ? "Estimated Time to Full" : "Estimated Battery Runtime"
-        let help: String
+        var help: String
         switch snapshot.batteryTimeEstimateSource {
         case .batteryGauge:
             help = snapshot.plugged
@@ -161,6 +167,9 @@ final class PopoverRuntimeView: PopoverSection {
             help = snapshot.plugged
                 ? "macOS estimates time until the battery is full while charging. It changes with charging conditions and workload."
                 : "macOS estimates remaining battery time for current usage. It changes with workload."
+        }
+        if sourceIndicator.status == .calculating || sourceIndicator.status == .unavailable {
+            help = sourceIndicator.accessibilityHelp() ?? help
         }
         runtime.setAccessibilityLabel(snapshot.plugged ? "Estimated time to full charge" : "Estimated battery runtime")
         runtime.setAccessibilityHelp(help)
@@ -209,11 +218,17 @@ final class PopoverRuntimeView: PopoverSection {
         needsLayout = true
     }
 
+    func setAnimationsEnabled(_ enabled: Bool) { sourceIndicator.setAnimationsEnabled(enabled) }
+    func setPresentationActive(_ active: Bool) { sourceIndicator.setPresentationActive(active) }
+
 #if DEBUG
     func layoutFitsForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> Bool {
         update(snapshot: snapshot, degraded: degraded)
         layoutSubtreeIfNeeded()
         return title.frame.maxY <= runtime.frame.minY
+            && bounds.contains(sourceIndicator.frame)
+            && sourceIndicator.frame.minX >= iconWell.frame.maxX
+            && sourceIndicator.frame.maxX <= title.frame.maxX - ceil(title.intrinsicContentSize.width)
             && bounds.contains(iconWell.frame)
             && iconWell.frame.contains(clock.frame) && iconWell.frame.maxX < runtime.frame.minX
             && [title, runtime].allSatisfy { field in
@@ -990,10 +1005,14 @@ final class PopoverContentViewController: NSViewController {
         if !allowsMotion, let root = view.layer {
             removeAnimationsRecursively(from: root)
         }
+        // A red source indicator reports failure; it is not stale power-flow
+        // telemetry. Keep it breathing while the other degraded modules stop.
+        runtimeView.setAnimationsEnabled(enabled && !runtimeView.isHidden)
     }
 
     func setPresentationActive(_ active: Bool) {
         presentationActive = active
+        runtimeView.setPresentationActive(active && isVisible(.runtime))
         footer.setHoverPresentationActive(active)
         historyView.setPresentationActive(active)
         topProcessesView.setPresentationActive(active && isVisible(.topProcesses))
@@ -1174,6 +1193,7 @@ final class PopoverContentViewController: NSViewController {
             }
         }
         topProcessesView.setPresentationActive(presentationActive && isVisible(.topProcesses))
+        runtimeView.setPresentationActive(presentationActive && isVisible(.runtime))
         if animationsEnabled { setAnimationsEnabled(true) }
         heightDidChange?(preferredHeight)
     }
