@@ -7,7 +7,7 @@ enum ModuleIconArtwork {
 
     enum GeneralIcon: CaseIterable { case login, battery, update, automatic, feedback }
 
-    enum PowerIcon: CaseIterable { case adapter, disconnected, system, battery, charging }
+    enum PowerIcon: CaseIterable { case adapter, disconnected, system, battery, charging, clock }
 
     static func image(for module: Settings.Module, side: CGFloat, ink: NSColor,
                       accent: NSColor, increasedContrast: Bool) -> NSImage {
@@ -900,6 +900,40 @@ enum ModuleIconArtwork {
                     path.line(to: NSPoint(x: 15.6, y: 10.9))
                     path.line(to: NSPoint(x: 12.8, y: 10.9))
                     path.close()
+                    accent.setFill()
+                    path.fill()
+                }
+            case .clock:
+                do {
+                    if !increasedContrast {
+                        let path = CGMutablePath()
+                        path.addEllipse(in: CGRect(x: 2.25, y: 2.25, width: 19.5, height: 19.5))
+                        drawGradient(path, strokeWidth: nil,
+                                     colors: [accent.withAlphaComponent(0.08).cgColor, accent.withAlphaComponent(0.3).cgColor],
+                                     locations: [0, 1], start: NSPoint(x: 4, y: 4), end: NSPoint(x: 20, y: 20))
+                    }
+                }
+                do {
+                    let path = NSBezierPath(ovalIn: NSRect(x: 1.65, y: 1.65, width: 20.7, height: 20.7))
+                    ink.setStroke()
+                    path.lineWidth = 1.25 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+                do {
+                    let path = NSBezierPath()
+                    path.move(to: NSPoint(x: 12, y: 5.6))
+                    path.line(to: NSPoint(x: 12, y: 12))
+                    path.line(to: NSPoint(x: 16.8, y: 12))
+                    accent.setStroke()
+                    path.lineWidth = 1.7 * contrastScale
+                    path.lineCapStyle = .round
+                    path.lineJoinStyle = .round
+                    path.stroke()
+                }
+                do {
+                    let path = NSBezierPath(ovalIn: NSRect(x: 10.7, y: 10.7, width: 2.6, height: 2.6))
                     accent.setFill()
                     path.fill()
                 }

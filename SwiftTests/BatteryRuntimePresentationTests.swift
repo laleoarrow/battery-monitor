@@ -125,8 +125,10 @@ final class BatteryRuntimePresentationTests: XCTestCase {
                 let colors = runtime.wellColorsForTest
                 let appearance = runtime.effectiveAppearance
                 try assertColor(colors.fill, matches: PopoverStyle.well, in: appearance)
-                try assertColor(colors.border, matches: PopoverStyle.wellBorder, in: appearance)
-                try assertColor(resolved(try XCTUnwrap(colors.iconTint), in: appearance), matches: PopoverStyle.neutral, in: appearance)
+                try assertColor(colors.border, matches: PopoverStyle.neutral.withAlphaComponent(0.34), in: appearance)
+                XCTAssertNil(colors.iconTint)
+                let clock = try XCTUnwrap(runtime.subviews.compactMap { $0 as? NSImageView }.first)
+                XCTAssertFalse(try XCTUnwrap(clock.image).isTemplate)
                 let separator = try XCTUnwrap(runtime.layer?.sublayers?.first { $0.frame.height == 0.5 })
                 try assertColor(separator.backgroundColor, matches: PopoverStyle.separator, in: appearance)
                 XCTAssertEqual(runtime.layer?.backgroundColor?.alpha ?? 0, 0)
@@ -159,7 +161,8 @@ final class BatteryRuntimePresentationTests: XCTestCase {
                         )
                         let colors = runtime.wellColorsForTest
                         let appearance = runtime.effectiveAppearance
-                        try assertColor(colors.border, matches: PopoverStyle.wellBorder, in: appearance)
+                        try assertColor(colors.border, matches: contrast ? PopoverStyle.wellBorder
+                                        : PopoverStyle.neutral.withAlphaComponent(0.34), in: appearance)
                         try assertColor(colors.fill, matches: PopoverStyle.well, in: appearance)
                         let separator = try XCTUnwrap(runtime.layer?.sublayers?.first { $0.frame.height == 0.5 })
                         try assertColor(separator.backgroundColor, matches: PopoverStyle.separator, in: appearance)

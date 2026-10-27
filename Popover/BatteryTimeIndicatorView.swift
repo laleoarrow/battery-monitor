@@ -10,9 +10,11 @@ final class BatteryTimeIndicatorView: NSView {
     private let halo = CAGradientLayer()
     private let comet = CALayer()
     private let dust = (0..<7).map { _ in CALayer() }
-    private var tint = PopoverStyle.blue
+    private var tint = PopoverStyle.neutral
     private var animationsEnabled = false
     private var presentationActive = false
+    private static let lapDuration: CFTimeInterval = 2.8
+    private static let cycleDuration: CFTimeInterval = lapDuration + 0.5
 
     static func status(for snapshot: PowerSnapshot, degraded: Bool) -> Status {
         guard !degraded else { return .unavailable }
@@ -88,7 +90,7 @@ final class BatteryTimeIndicatorView: NSView {
     func update(snapshot: PowerSnapshot, degraded: Bool) {
         let next = Self.status(for: snapshot, degraded: degraded)
         if next != status { stopMotion(); status = next }
-        tint = snapshot.state == .charging ? PopoverStyle.green : PopoverStyle.blue
+        tint = snapshot.state == .mixedSupply ? PopoverStyle.blue : PopoverStyle.stateColor(snapshot.state)
         let source: String
         switch status {
         case .system: source = "macOS"
@@ -167,19 +169,31 @@ final class BatteryTimeIndicatorView: NSView {
               !isHiddenOrHasHiddenAncestor, !visibleRect.isEmpty, !Self.reducesMotion,
               status != .system else { stopMotion(); return }
         // Fixed keys preserve phase across normal two-second telemetry updates.
-        if planet.animation(forKey: "breathing") == nil {
-            let duration: CFTimeInterval = status == .fallback ? 3.6 : status == .calculating ? 1.8 : 2.4
+        if planet.animation(forKey: "breathing") == nil
+            || (status == .calculating && comet.animation(forKey: "orbit") == nil) {
+            let now = CACurrentMediaTime()
             let breath = CAKeyframeAnimation(keyPath: "opacity")
-            breath.values = [1, 0.48, 1]
-            breath.keyTimes = [0, 0.5, 1]
-            breath.timingFunctions = [.init(name: .easeInEaseOut), .init(name: .easeInEaseOut)]
-            breath.duration = duration
+            if status == .calculating {
+                // One dim–bright–dim breath per lap, followed by the same
+                // half-second dim pause as the comet. All layers share now.
+                breath.values = (0...64).map { 0.52 + 0.48 * pow(sin(.pi * Double($0) / 64), 2) } + [0.52]
+                breath.keyTimes = (0...64).map {
+                    NSNumber(value: Double($0) / 64 * Self.lapDuration / Self.cycleDuration)
+                } + [1]
+                breath.duration = Self.cycleDuration
+                startOrbit(at: now)
+            } else {
+                breath.values = [1, 0.48, 1]
+                breath.keyTimes = [0, 0.5, 1]
+                breath.timingFunctions = [.init(name: .easeInEaseOut), .init(name: .easeInEaseOut)]
+                breath.duration = status == .fallback ? 3.6 : 2.4
+            }
             breath.repeatCount = .infinity
-            breath.beginTime = planet.convertTime(CACurrentMediaTime(), from: nil)
+            breath.beginTime = planet.convertTime(now, from: nil)
             planet.add(breath, forKey: "breathing")
+            breath.beginTime = halo.convertTime(now, from: nil)
             halo.add(breath, forKey: "breathing")
         }
-        if status == .calculating, comet.animation(forKey: "orbit") == nil { startOrbit() }
     }
 
     private func stopMotion() {
@@ -193,29 +207,28 @@ final class BatteryTimeIndicatorView: NSView {
                        y: bounds.midY + x * sin(tilt) + y * cos(tilt))
     }
 
-    private func startOrbit() {
-        let now = CACurrentMediaTime()
+    private func startOrbit(at now: CFTimeInterval) {
         for (index, particle) in ([comet] + dust).enumerated() {
-            // One inclined lap after a three-second pause, then darkness.
+            // Start immediately; pause for half a second after each lap.
             // The small phase offsets leave a tapered, curved dust trail.
             let angles = (0...64).map { CGFloat($0) / 64 * .pi * 2 - CGFloat(index) * 0.13 }
             let movement = CAKeyframeAnimation(keyPath: "position")
             movement.values = angles.map { NSValue(point: orbitPoint(angle: $0)) }
-            movement.beginTime = 3
-            movement.duration = 2.8
+            movement.duration = Self.lapDuration
             movement.calculationMode = .linear
             let depth = CAKeyframeAnimation(keyPath: "zPosition")
             depth.values = angles.map { sin($0) > 0 ? 1 : -1 }
-            depth.beginTime = 3
-            depth.duration = 2.8
+            depth.duration = Self.lapDuration
             let visibility = CAKeyframeAnimation(keyPath: "opacity")
             let alpha = index == 0 ? 1 : 0.7 * pow(0.72, Double(index - 1))
-            visibility.values = [0, 0, alpha, alpha, 0, 0]
-            visibility.keyTimes = [0, 0.375, 0.40, 0.69, 0.725, 1]
-            visibility.duration = 8
+            visibility.values = [0, alpha, alpha, 0, 0]
+            visibility.keyTimes = [0, NSNumber(value: 0.2 / Self.cycleDuration),
+                                   NSNumber(value: (Self.lapDuration - 0.25) / Self.cycleDuration),
+                                   NSNumber(value: Self.lapDuration / Self.cycleDuration), 1]
+            visibility.duration = Self.cycleDuration
             let orbit = CAAnimationGroup()
             orbit.animations = [movement, depth, visibility]
-            orbit.duration = 8
+            orbit.duration = Self.cycleDuration
             orbit.repeatCount = .infinity
             orbit.beginTime = particle.convertTime(now, from: nil)
             particle.add(orbit, forKey: "orbit")

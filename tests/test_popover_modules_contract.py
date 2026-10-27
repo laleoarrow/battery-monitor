@@ -198,7 +198,8 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("removeAllAnimations()", self.content)
 
     def test_hiding_the_popover_cancels_uncommitted_footer_interaction(self):
-        presentation = self.content.split("func setPresentationActive(_ active: Bool)", 1)[1].split(
+        controller = self.content.split("final class PopoverContentViewController", 1)[1]
+        presentation = controller.split("func setPresentationActive(_ active: Bool)", 1)[1].split(
             "\n    private func", 1
         )[0]
         self.assertIn("if !active", presentation)

@@ -2926,10 +2926,15 @@ if !screenLocked {
     refreshIndicator()
     let calculatingAnimations = indicatorAnimations(fixture)
     let fasterBreathing = calculatingAnimations.first { $0.1 == "breathing" }?.2
-    check("计算中加快呼吸并等待间歇星轨",
+    check("计算中加快呼吸并启动星轨",
           fixture.status == .calculating && fasterBreathing != nil
               && (fasterBreathing?.duration ?? .infinity) < (slowBreathing?.duration ?? 0)
               && calculatingAnimations.contains { $0.1 == "orbit" })
+    let calculationClocks = calculatingAnimations.filter { $0.1 == "breathing" || $0.1 == "orbit" }
+    let mediaEpochs = calculationClocks.map { $0.0.convertTime($0.2.beginTime, to: nil) }
+    check("计算光点呼吸、星轨和尘埃共享起点与3.3秒周期",
+          !mediaEpochs.isEmpty && mediaEpochs.allSatisfy { abs($0 - mediaEpochs[0]) < 0.000_001 }
+              && calculationClocks.allSatisfy { abs($0.2.duration - 3.3) < 0.000_001 })
 
     let cancellations: [(String, () -> Void, () -> Void)] = [
         ("结束呈现", { fixture.setPresentationActive(false) }, { fixture.setPresentationActive(true) }),
@@ -2949,20 +2954,47 @@ if !screenLocked {
     fixture.setPresentationActive(false)
     fixture.setPresentationActive(true)
     refreshIndicator()
-    spin(3.5)
     let comet = indicatorLayers(fixture.layer).first { $0.name == "comet" }
-    let firstPosition = comet?.presentation()?.position
-    let firstTransform = comet?.presentation()?.transform
-    spin(0.45)
-    let secondPosition = comet?.presentation()?.position
-    let secondTransform = comet?.presentation()?.transform
-    let changedTransform: Bool
-    if let firstTransform, let secondTransform {
-        changedTransform = !CATransform3DEqualToTransform(firstTransform, secondTransform)
-    } else { changedTransform = false }
-    check("星点在真实窗口的倾斜轨道上随时间移动",
-          firstPosition != nil && secondPosition != nil
-              && (firstPosition != secondPosition || changedTransform))
+    let planet = indicatorLayers(fixture.layer).first { $0.name == "planet" }
+    if let comet, let planet, let orbit = comet.animation(forKey: "orbit") {
+        let epoch = comet.convertTime(orbit.beginTime, to: nil)
+        func observe(at elapsed: CFTimeInterval) -> (position: CGPoint, cometOpacity: Float, planetOpacity: Float) {
+            spin(max(0, epoch + elapsed - CACurrentMediaTime()))
+            return (comet.presentation()?.position ?? .zero, comet.presentation()?.opacity ?? -1,
+                    planet.presentation()?.opacity ?? -1)
+        }
+        let lap = [0.04, 0.2, 0.55, 0.9, 1.25, 1.4, 1.75, 2.1, 2.45, 2.77].map { observe(at: $0) }
+        let center = CGPoint(x: fixture.bounds.midX, y: fixture.bounds.midY)
+        let angles = lap.map { atan2(Double($0.position.y - center.y), Double($0.position.x - center.x)) }
+        let winding = zip(angles, angles.dropFirst()).reduce(0.0) { sum, pair in
+            var delta = pair.1 - pair.0
+            if delta > .pi { delta -= 2 * .pi }
+            if delta < -.pi { delta += 2 * .pi }
+            return sum + delta
+        }
+        check("计算开始0.2秒星点已在移动，不再等待三秒",
+              lap[1].cometOpacity > 0 && hypot(Double(lap[1].position.x - lap[0].position.x),
+                                              Double(lap[1].position.y - lap[0].position.y)) > 0.2)
+        check("真实星轨在2.8秒内仅完成一圈",
+              abs(winding) > 5.7 && abs(winding) < 6.5, "winding=\(winding)")
+        check("星点一圈对应一次从暗到亮再暗的呼吸",
+              lap[0].planetOpacity > 0 && lap[0].planetOpacity < 0.65
+                  && lap[5].planetOpacity > 0.9 && lap.last!.planetOpacity < 0.65)
+        let pauseStart = observe(at: 2.9)
+        let pauseEnd = observe(at: 3.15)
+        let particles = (fixture.layer?.sublayers ?? []).filter { !($0 is CAGradientLayer) }
+        check("每圈后半秒星点和尾迹均不可见，主光点保持暗态",
+              pauseStart.cometOpacity >= 0 && pauseStart.cometOpacity < 0.02
+                  && pauseEnd.cometOpacity >= 0 && pauseEnd.cometOpacity < 0.02
+                  && abs(pauseStart.planetOpacity - 0.52) < 0.05
+                  && abs(pauseEnd.planetOpacity - 0.52) < 0.05
+                  && particles.allSatisfy { ($0.presentation()?.opacity ?? 1) < 0.02 })
+        let repeatStart = observe(at: 3.5)
+        check("停歇结束星轨和呼吸从同一相位开始下一圈",
+              repeatStart.cometOpacity > 0
+                  && hypot(Double(repeatStart.position.x - lap[1].position.x),
+                           Double(repeatStart.position.y - lap[1].position.y)) < 2)
+    } else { check("计算中真实窗口具备星点和呼吸图层", false) }
     let orbitStart = indicatorAnimations(fixture).first { $0.1 == "orbit" }?.2.beginTime
     refreshIndicator()
     check("计算中持续采样不重置星轨等待时间",

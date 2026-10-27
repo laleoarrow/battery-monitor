@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#C7C7CC" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title>Wattson Battery time clock</title>
+<defs>
+<linearGradient id="face" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="20" y2="20">
+<stop offset="0" stop-color="#0A84FF" stop-opacity="0.08"/>
+<stop offset="1" stop-color="#0A84FF" stop-opacity="0.30"/>
+</linearGradient>
+</defs>
+<circle cx="12" cy="12" r="9.75" fill="url(#face)" data-decorative="true"/>
+<circle cx="12" cy="12" r="10.35" stroke="currentColor" stroke-width="1.25"/>
+<polyline points="12,5.6 12,12 16.8,12" stroke="#0A84FF" stroke-width="1.7"/>
+<circle cx="12" cy="12" r="1.3" fill="#0A84FF"/>
+</svg>

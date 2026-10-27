@@ -129,6 +129,34 @@ final class BatteryTimeIndicatorTests: XCTestCase {
         })
     }
 
+    func testPlanetUsesTheSameStatePaletteAsTheOtherInstruments() throws {
+        let indicator = BatteryTimeIndicatorView()
+        let cases: [(PowerSnapshot, NSColor)] = [
+            (PowerSnapshot(batteryW: -12, batteryTimeEstimate: .remaining(42),
+                           batteryTimeEstimateSource: .system), PopoverStyle.neutral),
+            (PowerSnapshot(plugged: true, batteryW: 12, batteryTimeEstimate: .charging(42),
+                           batteryTimeEstimateSource: .system), PopoverStyle.green),
+            (PowerSnapshot(plugged: true, batteryTimeEstimate: .full,
+                           batteryTimeEstimateSource: .system), PopoverStyle.blue),
+            (PowerSnapshot(plugged: true, batteryW: -12, batteryTimeEstimate: .notCharging,
+                           batteryTimeEstimateSource: .system), PopoverStyle.blue),
+        ]
+        let planet = try XCTUnwrap(layers(indicator.layer).compactMap { $0 as? CAGradientLayer }
+            .first { $0.name == "planet" })
+        for name: NSAppearance.Name in [.aqua, .darkAqua] {
+            indicator.appearance = try XCTUnwrap(NSAppearance(named: name))
+            for (snapshot, expected) in cases {
+                indicator.update(snapshot: snapshot, degraded: false)
+                let colors = try XCTUnwrap(planet.colors as? [CGColor])
+                var resolved: CGColor?
+                indicator.effectiveAppearance.performAsCurrentDrawingAppearance {
+                    resolved = expected.usingColorSpace(.sRGB)?.cgColor
+                }
+                XCTAssertEqual(colors[1], try XCTUnwrap(resolved))
+            }
+        }
+    }
+
     private func descendants(_ view: NSView) -> [NSView] {
         [view] + view.subviews.flatMap(descendants)
     }

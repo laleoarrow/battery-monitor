@@ -136,7 +136,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
             try capture(window, background: background, name: "states-\(scheme.rawValue)", elapsed: nil)
         }
         // Restart only the fixture's presentation so the saved sequence begins
-        // before the first orbit, including its initial waiting interval.
+        // with the first lap and includes the shared half-second pauses.
         rows.forEach { $0.setPresentationActive(false) }
         rows.forEach { $0.setPresentationActive(true) }
         let start = CACurrentMediaTime()

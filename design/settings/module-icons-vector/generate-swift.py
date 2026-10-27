@@ -143,7 +143,7 @@ lines = [
     "import AppKit", "", "enum ModuleIconArtwork {",
     "    enum SidebarIcon: CaseIterable { case general, display, modules }", "",
     "    enum GeneralIcon: CaseIterable { case login, battery, update, automatic, feedback }", "",
-    "    enum PowerIcon: CaseIterable { case adapter, disconnected, system, battery, charging }", "",
+    "    enum PowerIcon: CaseIterable { case adapter, disconnected, system, battery, charging, clock }", "",
     "    static func image(for module: Settings.Module, side: CGFloat, ink: NSColor,",
     "                      accent: NSColor, increasedContrast: Bool) -> NSImage {",
     "        let image = NSImage(size: NSSize(width: side, height: side), flipped: false) { rect in",
@@ -203,7 +203,7 @@ lines.extend([
     "            let fillFraction = min(max(chargeFraction, 0), 1)",
     "            switch icon {",
 ])
-emit_cases(lines, ROOT / "design/popover/power-icons-vector", ("adapter", "disconnected", "system", "battery", "charging"))
+emit_cases(lines, ROOT / "design/popover/power-icons-vector", ("adapter", "disconnected", "system", "battery", "charging", "clock"))
 lines.extend(["            }", "            return true", "        }", "        image.isTemplate = false", "        return image", "    }", ""])
 lines.extend('''    private static func drawGradient(_ path: CGPath, strokeWidth: CGFloat?,
                                      colors: [CGColor], locations: [CGFloat],

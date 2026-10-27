@@ -88,11 +88,18 @@ final class PopoverHeaderView: PopoverSection {
 
 final class PopoverRuntimeView: PopoverSection {
     static let preferredHeight: CGFloat = 88
+    private struct ClockAppearance: Equatable {
+        let ink: NSColor
+        let accent: NSColor
+        let increasedContrast: Bool
+    }
     private let iconWell = CALayer()
     private let clock = NSImageView()
     private let title = NSTextField(labelWithString: "Estimated Battery Runtime")
     private let runtime = NSTextField(labelWithString: "")
     private let sourceIndicator = BatteryTimeIndicatorView()
+    private var clockTint = PopoverStyle.neutral
+    private var renderedClock: ClockAppearance?
 
     init() {
         super.init(height: Self.preferredHeight)
@@ -100,9 +107,8 @@ final class PopoverRuntimeView: PopoverSection {
         iconWell.cornerCurve = .continuous
         layer?.addSublayer(iconWell)
 
-        clock.image = NSImage(systemSymbolName: "clock", accessibilityDescription: nil)?
-            .withSymbolConfiguration(.init(pointSize: 24, weight: .regular))
-        clock.contentTintColor = PopoverStyle.neutral
+        clock.imageScaling = .scaleProportionallyDown
+        clock.contentTintColor = nil
         clock.setAccessibilityElement(false)
         addSubview(clock)
 
@@ -140,19 +146,36 @@ final class PopoverRuntimeView: PopoverSection {
 
     override func refreshAppearance() {
         super.refreshAppearance()
-        effectiveAppearance.performAsCurrentDrawingAppearance {
-            let contrast = PopoverStyle.isHighContrast(effectiveAppearance)
-            PopoverStyle.setWithoutAnimation {
-                self.iconWell.backgroundColor = PopoverStyle.well.cgColor
-                self.iconWell.borderColor = PopoverStyle.wellBorder.cgColor
-                self.iconWell.borderWidth = contrast ? 1 : 0.5
-            }
-            clock.contentTintColor = PopoverStyle.neutral
-        }
+        refreshClock()
         sourceIndicator.refreshAppearance()
     }
 
+    private func refreshClock() {
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            let contrast = PopoverStyle.isHighContrast(effectiveAppearance)
+            let configuration = ClockAppearance(
+                ink: PopoverStyle.neutral.usingColorSpace(.sRGB) ?? PopoverStyle.neutral,
+                accent: clockTint.usingColorSpace(.sRGB) ?? clockTint,
+                increasedContrast: contrast
+            )
+            guard renderedClock != configuration else { return }
+            PopoverStyle.setWithoutAnimation {
+                self.iconWell.backgroundColor = PopoverStyle.well.cgColor
+                self.iconWell.borderColor = contrast ? PopoverStyle.wellBorder.cgColor
+                    : configuration.accent.withAlphaComponent(0.34).cgColor
+                self.iconWell.borderWidth = contrast ? 1 : 0.5
+            }
+            clock.image = ModuleIconArtwork.powerImage(
+                for: .clock, side: 24, ink: configuration.ink, accent: configuration.accent,
+                increasedContrast: contrast
+            )
+            renderedClock = configuration
+        }
+    }
+
     func update(snapshot: PowerSnapshot, degraded: Bool) {
+        clockTint = snapshot.state == .mixedSupply ? PopoverStyle.blue : PopoverStyle.stateColor(snapshot.state)
+        refreshClock()
         sourceIndicator.update(snapshot: snapshot, degraded: degraded)
         title.stringValue = snapshot.plugged ? "Estimated Time to Full" : "Estimated Battery Runtime"
         var help: String
