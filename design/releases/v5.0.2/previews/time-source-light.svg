@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1040" viewBox="0 0 1200 1040" role="img" aria-labelledby="title desc">
+<title id="title">Wattson 5.0.2 时间来源与渐变时钟设计预览</title>
+<desc id="desc">系统值恒亮，备用估算缓慢呼吸，计算中呼吸与星轨同步，无法计算时红色脉动。批准的矢量设计放大图，非App运行截图。</desc>
+<rect width="1200" height="1040" fill="#f6f6f8"/>
+<g font-family="-apple-system,BlinkMacSystemFont,PingFang SC,Helvetica Neue,sans-serif">
+<text x="48" y="56" fill="#65656d" font-size="18" font-weight="600" text-anchor="start">WATTSON 5.0.2  /  设计预览</text>
+<text x="1152" y="56" fill="#65656d" font-size="18" font-weight="500" text-anchor="end">LIGHT</text>
+<text x="48" y="118" fill="#222228" font-size="42" font-weight="600" text-anchor="start">看清时间，也看清来源。</text>
+<text x="48" y="162" fill="#65656d" font-size="23" font-weight="400" text-anchor="start">一颗光点，轻轻区分系统值、备用估算与计算中。</text>
+<rect x="48" y="206" width="540" height="252" rx="24" fill="#ffffff" stroke="#d5d5dc"/>
+<text x="76" y="250" fill="#222228" font-size="23" font-weight="600" text-anchor="start">系统数据</text>
+<text x="560" y="250" fill="#65656d" font-size="17" font-weight="400" text-anchor="end">主题色恒亮</text>
+<rect x="76" y="297" width="64" height="64" rx="16" fill="#e5e5eb" stroke="#565662" stroke-opacity=".34"/>
+<svg x="90.54545454545455" y="311.54545454545456" width="34.90909090909091" height="34.90909090909091" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+<defs>
+<linearGradient id="face-0" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="20" y2="20">
+<stop offset="0" stop-color="#565662" stop-opacity="0.08"/>
+<stop offset="1" stop-color="#565662" stop-opacity="0.30"/>
+</linearGradient>
+</defs>
+<circle cx="12" cy="12" r="9.75" fill="url(#face-0)" data-decorative="true"/>
+<circle cx="12" cy="12" r="10.35" stroke="#565662" stroke-width="1.25"/>
+<polyline points="12,5.6 12,12 16.8,12" stroke="#565662" stroke-width="1.7"/>
+<circle cx="12" cy="12" r="1.3" fill="#565662"/>
+</svg>
+<defs><radialGradient id="planet-0" cx="30%" cy="25%"><stop stop-color="#c4c4c8"/><stop offset=".48" stop-color="#565662"/><stop offset="1" stop-color="#474750"/></radialGradient><radialGradient id="halo-0"><stop stop-color="#565662" stop-opacity=".30"/><stop offset=".35" stop-color="#565662" stop-opacity=".13"/><stop offset=".72" stop-color="#565662" stop-opacity="0"/></radialGradient></defs>
+<circle cx="318" cy="312" r="16" fill="url(#halo-0)" opacity="1"/><circle cx="318" cy="312" r="6.4" fill="url(#planet-0)" opacity="1"/>
+<text x="560" y="318" fill="#65656d" font-size="19" font-weight="400" text-anchor="end">Estimated Battery Runtime</text>
+<text x="560" y="363" fill="#222228" font-size="36" font-weight="600" text-anchor="end">4h 25m</text>
+<text x="76" y="424" fill="#65656d" font-size="18" font-weight="400" text-anchor="start">来自 macOS 的剩余时间</text>
+<rect x="612" y="206" width="540" height="252" rx="24" fill="#ffffff" stroke="#d5d5dc"/>
+<text x="640" y="250" fill="#222228" font-size="23" font-weight="600" text-anchor="start">备用估算</text>
+<text x="1124" y="250" fill="#65656d" font-size="17" font-weight="400" text-anchor="end">缓慢呼吸</text>
+<rect x="640" y="297" width="64" height="64" rx="16" fill="#e5e5eb" stroke="#565662" stroke-opacity=".34"/>
+<svg x="654.5454545454545" y="311.54545454545456" width="34.90909090909091" height="34.90909090909091" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+<defs>
+<linearGradient id="face-1" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="20" y2="20">
+<stop offset="0" stop-color="#565662" stop-opacity="0.08"/>
+<stop offset="1" stop-color="#565662" stop-opacity="0.30"/>
+</linearGradient>
+</defs>
+<circle cx="12" cy="12" r="9.75" fill="url(#face-1)" data-decorative="true"/>
+<circle cx="12" cy="12" r="10.35" stroke="#565662" stroke-width="1.25"/>
+<polyline points="12,5.6 12,12 16.8,12" stroke="#565662" stroke-width="1.7"/>
+<circle cx="12" cy="12" r="1.3" fill="#565662"/>
+</svg>
+<defs><radialGradient id="planet-1" cx="30%" cy="25%"><stop stop-color="#c4c4c8"/><stop offset=".48" stop-color="#565662"/><stop offset="1" stop-color="#474750"/></radialGradient><radialGradient id="halo-1"><stop stop-color="#565662" stop-opacity=".30"/><stop offset=".35" stop-color="#565662" stop-opacity=".13"/><stop offset=".72" stop-color="#565662" stop-opacity="0"/></radialGradient></defs>
+<circle cx="882" cy="312" r="16" fill="url(#halo-1)" opacity="0.72"/><circle cx="882" cy="312" r="6.4" fill="url(#planet-1)" opacity="0.72"/>
+<text x="1124" y="318" fill="#65656d" font-size="19" font-weight="400" text-anchor="end">Estimated Battery Runtime</text>
+<text x="1124" y="363" fill="#222228" font-size="36" font-weight="600" text-anchor="end">≈4h 25m</text>
+<text x="640" y="424" fill="#65656d" font-size="18" font-weight="400" text-anchor="start">系统值暂缺时，显示备用估算</text>
+<rect x="48" y="486" width="540" height="252" rx="24" fill="#ffffff" stroke="#d5d5dc"/>
+<text x="76" y="530" fill="#222228" font-size="23" font-weight="600" text-anchor="start">计算中</text>
+<text x="560" y="530" fill="#65656d" font-size="17" font-weight="400" text-anchor="end">呼吸与星轨同步</text>
+<rect x="76" y="577" width="64" height="64" rx="16" fill="#e5e5eb" stroke="#565662" stroke-opacity=".34"/>
+<svg x="90.54545454545455" y="591.5454545454545" width="34.90909090909091" height="34.90909090909091" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+<defs>
+<linearGradient id="face-2" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="20" y2="20">
+<stop offset="0" stop-color="#565662" stop-opacity="0.08"/>
+<stop offset="1" stop-color="#565662" stop-opacity="0.30"/>
+</linearGradient>
+</defs>
+<circle cx="12" cy="12" r="9.75" fill="url(#face-2)" data-decorative="true"/>
+<circle cx="12" cy="12" r="10.35" stroke="#565662" stroke-width="1.25"/>
+<polyline points="12,5.6 12,12 16.8,12" stroke="#565662" stroke-width="1.7"/>
+<circle cx="12" cy="12" r="1.3" fill="#565662"/>
+</svg>
+<defs><radialGradient id="planet-2" cx="30%" cy="25%"><stop stop-color="#c4c4c8"/><stop offset=".48" stop-color="#565662"/><stop offset="1" stop-color="#474750"/></radialGradient><radialGradient id="halo-2"><stop stop-color="#565662" stop-opacity=".30"/><stop offset=".35" stop-color="#565662" stop-opacity=".13"/><stop offset=".72" stop-color="#565662" stop-opacity="0"/></radialGradient></defs>
+<circle cx="318" cy="592" r="16" fill="url(#halo-2)" opacity="1"/><circle cx="318" cy="592" r="6.4" fill="url(#planet-2)" opacity="1"/>
+<circle cx="314.663" cy="601.607" r="0.360" fill="#565662" opacity="0.098"/>
+<circle cx="313.221" cy="601.871" r="0.480" fill="#565662" opacity="0.135"/>
+<circle cx="311.859" cy="601.967" r="0.600" fill="#565662" opacity="0.188"/>
+<circle cx="310.601" cy="601.896" r="0.720" fill="#565662" opacity="0.261"/>
+<circle cx="309.468" cy="601.657" r="0.840" fill="#565662" opacity="0.363"/>
+<circle cx="308.479" cy="601.256" r="0.960" fill="#565662" opacity="0.504"/>
+<circle cx="307.651" cy="600.698" r="1.080" fill="#565662" opacity="0.700"/>
+<circle cx="306.997" cy="599.994" r="1.520" fill="#c4c4c8" opacity="1.000"/>
+<text x="560" y="598" fill="#65656d" font-size="19" font-weight="400" text-anchor="end">Estimated Battery Runtime</text>
+<text x="560" y="643" fill="#65656d" font-size="28" font-weight="400" text-anchor="end">Calculating…</text>
+<text x="76" y="704" fill="#65656d" font-size="18" font-weight="400" text-anchor="start">立即绕行 · 一圈后歇 0.5 秒</text>
+<rect x="612" y="486" width="540" height="252" rx="24" fill="#ffffff" stroke="#d5d5dc"/>
+<text x="640" y="530" fill="#222228" font-size="23" font-weight="600" text-anchor="start">无法计算</text>
+<text x="1124" y="530" fill="#65656d" font-size="17" font-weight="400" text-anchor="end">柔和红色脉动</text>
+<rect x="640" y="577" width="64" height="64" rx="16" fill="#e5e5eb" stroke="#565662" stroke-opacity=".34"/>
+<svg x="654.5454545454545" y="591.5454545454545" width="34.90909090909091" height="34.90909090909091" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+<defs>
+<linearGradient id="face-3" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="20" y2="20">
+<stop offset="0" stop-color="#565662" stop-opacity="0.08"/>
+<stop offset="1" stop-color="#565662" stop-opacity="0.30"/>
+</linearGradient>
+</defs>
+<circle cx="12" cy="12" r="9.75" fill="url(#face-3)" data-decorative="true"/>
+<circle cx="12" cy="12" r="10.35" stroke="#565662" stroke-width="1.25"/>
+<polyline points="12,5.6 12,12 16.8,12" stroke="#565662" stroke-width="1.7"/>
+<circle cx="12" cy="12" r="1.3" fill="#565662"/>
+</svg>
+<defs><radialGradient id="planet-3" cx="30%" cy="25%"><stop stop-color="#ebb3b4"/><stop offset=".48" stop-color="#c72528"/><stop offset="1" stop-color="#a31e21"/></radialGradient><radialGradient id="halo-3"><stop stop-color="#c72528" stop-opacity=".30"/><stop offset=".35" stop-color="#c72528" stop-opacity=".13"/><stop offset=".72" stop-color="#c72528" stop-opacity="0"/></radialGradient></defs>
+<circle cx="882" cy="592" r="16" fill="url(#halo-3)" opacity="0.8"/><circle cx="882" cy="592" r="6.4" fill="url(#planet-3)" opacity="0.8"/>
+<text x="1124" y="598" fill="#65656d" font-size="19" font-weight="400" text-anchor="end">Estimated Battery Runtime</text>
+<text x="1124" y="643" fill="#65656d" font-size="28" font-weight="400" text-anchor="end">Unavailable</text>
+<text x="640" y="704" fill="#65656d" font-size="18" font-weight="400" text-anchor="start">当前数据不足以给出时间</text>
+<text x="48" y="812" fill="#222228" font-size="25" font-weight="600" text-anchor="start">主题，自然相随</text>
+<text x="48" y="846" fill="#65656d" font-size="20" font-weight="400" text-anchor="start">光点、时钟与仪表共用配色。红色只用于无法计算的状态光点。</text>
+<rect x="48" y="878" width="52" height="52" rx="16" fill="#e5e5eb" stroke="#565662" stroke-opacity=".34"/>
+<svg x="59.81818181818182" y="889.8181818181819" width="28.363636363636363" height="28.363636363636363" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+<defs>
+<linearGradient id="face-palette-0" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="20" y2="20">
+<stop offset="0" stop-color="#565662" stop-opacity="0.08"/>
+<stop offset="1" stop-color="#565662" stop-opacity="0.30"/>
+</linearGradient>
+</defs>
+<circle cx="12" cy="12" r="9.75" fill="url(#face-palette-0)" data-decorative="true"/>
+<circle cx="12" cy="12" r="10.35" stroke="#565662" stroke-width="1.25"/>
+<polyline points="12,5.6 12,12 16.8,12" stroke="#565662" stroke-width="1.7"/>
+<circle cx="12" cy="12" r="1.3" fill="#565662"/>
+</svg>
+<defs><radialGradient id="planet-palette-0" cx="30%" cy="25%"><stop stop-color="#c4c4c8"/><stop offset=".48" stop-color="#565662"/><stop offset="1" stop-color="#474750"/></radialGradient><radialGradient id="halo-palette-0"><stop stop-color="#565662" stop-opacity=".30"/><stop offset=".35" stop-color="#565662" stop-opacity=".13"/><stop offset=".72" stop-color="#565662" stop-opacity="0"/></radialGradient></defs>
+<circle cx="134" cy="904" r="16" fill="url(#halo-palette-0)" opacity="1"/><circle cx="134" cy="904" r="6.4" fill="url(#planet-palette-0)" opacity="1"/>
+<text x="162" y="912" fill="#222228" font-size="21" font-weight="500" text-anchor="start">电池 · 银灰</text>
+<rect x="424" y="878" width="52" height="52" rx="16" fill="#e5e5eb" stroke="#18783a" stroke-opacity=".34"/>
+<svg x="435.8181818181818" y="889.8181818181819" width="28.363636363636363" height="28.363636363636363" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+<defs>
+<linearGradient id="face-palette-1" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="20" y2="20">
+<stop offset="0" stop-color="#18783a" stop-opacity="0.08"/>
+<stop offset="1" stop-color="#18783a" stop-opacity="0.30"/>
+</linearGradient>
+</defs>
+<circle cx="12" cy="12" r="9.75" fill="url(#face-palette-1)" data-decorative="true"/>
+<circle cx="12" cy="12" r="10.35" stroke="#565662" stroke-width="1.25"/>
+<polyline points="12,5.6 12,12 16.8,12" stroke="#18783a" stroke-width="1.7"/>
+<circle cx="12" cy="12" r="1.3" fill="#18783a"/>
+</svg>
+<defs><radialGradient id="planet-palette-1" cx="30%" cy="25%"><stop stop-color="#aed0ba"/><stop offset=".48" stop-color="#18783a"/><stop offset="1" stop-color="#146230"/></radialGradient><radialGradient id="halo-palette-1"><stop stop-color="#18783a" stop-opacity=".30"/><stop offset=".35" stop-color="#18783a" stop-opacity=".13"/><stop offset=".72" stop-color="#18783a" stop-opacity="0"/></radialGradient></defs>
+<circle cx="510" cy="904" r="16" fill="url(#halo-palette-1)" opacity="1"/><circle cx="510" cy="904" r="6.4" fill="url(#planet-palette-1)" opacity="1"/>
+<text x="538" y="912" fill="#222228" font-size="21" font-weight="500" text-anchor="start">充电 · 绿色</text>
+<rect x="800" y="878" width="52" height="52" rx="16" fill="#e5e5eb" stroke="#0064cf" stroke-opacity=".34"/>
+<svg x="811.8181818181819" y="889.8181818181819" width="28.363636363636363" height="28.363636363636363" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+<defs>
+<linearGradient id="face-palette-2" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="20" y2="20">
+<stop offset="0" stop-color="#0064cf" stop-opacity="0.08"/>
+<stop offset="1" stop-color="#0064cf" stop-opacity="0.30"/>
+</linearGradient>
+</defs>
+<circle cx="12" cy="12" r="9.75" fill="url(#face-palette-2)" data-decorative="true"/>
+<circle cx="12" cy="12" r="10.35" stroke="#565662" stroke-width="1.25"/>
+<polyline points="12,5.6 12,12 16.8,12" stroke="#0064cf" stroke-width="1.7"/>
+<circle cx="12" cy="12" r="1.3" fill="#0064cf"/>
+</svg>
+<defs><radialGradient id="planet-palette-2" cx="30%" cy="25%"><stop stop-color="#a6c9ee"/><stop offset=".48" stop-color="#0064cf"/><stop offset="1" stop-color="#0052aa"/></radialGradient><radialGradient id="halo-palette-2"><stop stop-color="#0064cf" stop-opacity=".30"/><stop offset=".35" stop-color="#0064cf" stop-opacity=".13"/><stop offset=".72" stop-color="#0064cf" stop-opacity="0"/></radialGradient></defs>
+<circle cx="886" cy="904" r="16" fill="url(#halo-palette-2)" opacity="1"/><circle cx="886" cy="904" r="6.4" fill="url(#planet-palette-2)" opacity="1"/>
+<text x="914" y="912" fill="#222228" font-size="21" font-weight="500" text-anchor="start">接电 · 蓝色</text>
+<path d="M48 966H1152" stroke="#d5d5dc"/>
+<text x="48" y="1003" fill="#65656d" font-size="18" font-weight="400" text-anchor="start">已批准 SVG 设计放大图 · 示例数值 · 非 App 运行截图</text>
+<text x="1152" y="1003" fill="#65656d" font-size="18" font-weight="400" text-anchor="end">wattson / 5.0.2</text>
+</g></svg>

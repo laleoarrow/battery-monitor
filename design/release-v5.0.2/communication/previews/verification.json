@@ -1,0 +1,124 @@
+{
+  "kind": "Mail design preview — isolated Chromium browser rendering, not a mail-client screenshot",
+  "playwright": "1.58.2",
+  "browser": "155.0.8059.85",
+  "emailSHA256": "cdbcf9223e0f76ca29b878f603154a4ec52b039884cace832438a0649eeba9ee",
+  "publicLinksVerified": false,
+  "previewImages": [
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.2/previews/time-source-light.png",
+      "localArtwork": "time-source-light.png",
+      "sha256": "af03e6514217e3d48befdfdf60db323364234562f05bbd47535a2e647c3dc5c1"
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.2/previews/time-source-dark.png",
+      "localArtwork": "time-source-dark.png",
+      "sha256": "07407e2e54dbdf8ae413f44a3ecb23451eac8171402c6a5098d70091cd52d114"
+    }
+  ],
+  "artworkMethod": "Public image URLs fulfilled from the corresponding local approved-design PNGs; no network requests sent.",
+  "cases": [
+    {
+      "name": "desktop-light",
+      "file": "mail-design-preview-desktop-light.png",
+      "viewportWidth": 1000,
+      "documentWidth": 1000,
+      "documentHeight": 2277,
+      "heading": "剩余时间，\n一眼看清依据。",
+      "images": [
+        {
+          "alt": "Wattson 5.0.2 浅色设计预览：续航来源光点与渐变时钟，非运行中 App 截图",
+          "width": 500,
+          "height": 433,
+          "naturalWidth": 1200
+        },
+        {
+          "alt": "Wattson 5.0.2 深色设计预览：续航来源光点与渐变时钟，非运行中 App 截图",
+          "width": 500,
+          "height": 433,
+          "naturalWidth": 1200
+        }
+      ],
+      "linkCount": 7,
+      "background": "rgb(243, 245, 248)",
+      "titleColor": "rgb(23, 36, 50)"
+    },
+    {
+      "name": "desktop-dark",
+      "file": "mail-design-preview-desktop-dark.png",
+      "viewportWidth": 1000,
+      "documentWidth": 1000,
+      "documentHeight": 2277,
+      "heading": "剩余时间，\n一眼看清依据。",
+      "images": [
+        {
+          "alt": "Wattson 5.0.2 浅色设计预览：续航来源光点与渐变时钟，非运行中 App 截图",
+          "width": 500,
+          "height": 433,
+          "naturalWidth": 1200
+        },
+        {
+          "alt": "Wattson 5.0.2 深色设计预览：续航来源光点与渐变时钟，非运行中 App 截图",
+          "width": 500,
+          "height": 433,
+          "naturalWidth": 1200
+        }
+      ],
+      "linkCount": 7,
+      "background": "rgb(21, 25, 31)",
+      "titleColor": "rgb(240, 243, 248)"
+    },
+    {
+      "name": "narrow-light",
+      "file": "mail-design-preview-narrow-light.png",
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "documentHeight": 2111,
+      "heading": "剩余时间，\n一眼看清依据。",
+      "images": [
+        {
+          "alt": "Wattson 5.0.2 浅色设计预览：续航来源光点与渐变时钟，非运行中 App 截图",
+          "width": 258,
+          "height": 224,
+          "naturalWidth": 1200
+        },
+        {
+          "alt": "Wattson 5.0.2 深色设计预览：续航来源光点与渐变时钟，非运行中 App 截图",
+          "width": 258,
+          "height": 224,
+          "naturalWidth": 1200
+        }
+      ],
+      "linkCount": 7,
+      "background": "rgb(243, 245, 248)",
+      "titleColor": "rgb(23, 36, 50)"
+    },
+    {
+      "name": "narrow-dark",
+      "file": "mail-design-preview-narrow-dark.png",
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "documentHeight": 2111,
+      "heading": "剩余时间，\n一眼看清依据。",
+      "images": [
+        {
+          "alt": "Wattson 5.0.2 浅色设计预览：续航来源光点与渐变时钟，非运行中 App 截图",
+          "width": 258,
+          "height": 224,
+          "naturalWidth": 1200
+        },
+        {
+          "alt": "Wattson 5.0.2 深色设计预览：续航来源光点与渐变时钟，非运行中 App 截图",
+          "width": 258,
+          "height": 224,
+          "naturalWidth": 1200
+        }
+      ],
+      "linkCount": 7,
+      "background": "rgb(21, 25, 31)",
+      "titleColor": "rgb(240, 243, 248)"
+    }
+  ],
+  "limitations": "Not an Apple Mail, Gmail or Outlook render. Email-client sanitization, image blocking and automatic color inversion may differ. Public release and artwork URLs require separate anonymous verification after publication.",
+  "browserContextClosed": true
+}

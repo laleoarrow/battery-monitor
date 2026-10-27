@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Wattson 5.0.2 已批准设计画廊：时间来源光点、渐变时钟，以及可下载的 Modules、侧栏、General 和 Power SVG 原稿。">
+  <title>Wattson 5.0.2 · 设计画廊</title>
+  <style>
+    :root{color-scheme:light dark;--bg:#f6f6f8;--card:#fff;--ink:#222228;--muted:#65656d;--line:#d5d5dc;--accent:#0064cf}
+    @media(prefers-color-scheme:dark){:root{--bg:#19191d;--card:#242428;--ink:#f2f2f7;--muted:#aaaab4;--line:#414149;--accent:#78b7ff}}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1180px;margin:auto;padding:64px 28px}a{color:var(--accent);text-underline-offset:4px}a:hover{text-decoration-thickness:2px}a:focus-visible{outline:2px solid var(--accent);outline-offset:5px}h1{font-size:clamp(32px,5vw,54px);line-height:1.2;letter-spacing:-.04em;margin:20px 0}h2{font-size:27px;line-height:1.3;letter-spacing:-.025em;margin:0 0 14px}h3{font-size:18px;margin:0 0 8px}p{margin:10px 0;color:var(--muted)}.eyebrow{font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--muted)}.intro{max-width:740px;font-size:19px}nav{display:flex;gap:10px 22px;flex-wrap:wrap;margin-top:28px;font-size:15px}section{margin-top:56px}.section-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-bottom:20px}.section-head p{margin:0}.pair,.families{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}figure img{display:block;width:100%;height:auto}figcaption{padding:20px 24px;color:var(--muted);font-size:14px}figcaption strong{color:var(--ink);font-size:16px;display:block;margin-bottom:5px}.note{font-size:14px;max-width:900px}.motion{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:26px 28px;border:1px solid var(--line);border-radius:20px;background:var(--card);margin-top:20px}.motion p{margin-bottom:0}.button{display:inline-block;white-space:nowrap;border:1px solid var(--line);border-radius:11px;padding:10px 18px;text-decoration:none;font-size:15px}.sources{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.source{background:var(--card);padding:22px;border:1px solid var(--line);border-radius:16px}.source p{font-size:14px}.source a{font-size:14px}footer{border-top:1px solid var(--line);margin-top:60px;padding-top:24px;color:var(--muted);font-size:14px}.wide{margin-top:20px}
+    @media(max-width:760px){main{padding:36px 18px}.pair,.families{grid-template-columns:1fr}.sources{grid-template-columns:1fr 1fr}.motion{align-items:flex-start;flex-direction:column;gap:16px}section{margin-top:40px}h2{font-size:24px}.intro{font-size:17px}figcaption{padding:18px}nav{gap:10px 18px}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">WATTSON 5.0.2 · 已批准设计画廊</div>
+    <h1>看清时间，也看清来源。</h1>
+    <p class="intro">一颗轻亮的光点，标明系统数据、备用估算与计算中。渐变时钟沿用仪表配色，让细节自然融入界面。</p>
+    <nav aria-label="画廊导航"><a href="#time">时间来源</a><a href="#icons">设置图标</a><a href="#power">电源状态</a><a href="#sources">SVG 原稿</a><a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.2">版本与下载 ↗</a></nav>
+  </header>
+  <section id="time" aria-labelledby="time-title">
+    <div class="section-head"><h2 id="time-title">一个光点，四种状态</h2><p class="note">Light / Dark · 已批准 SVG 设计放大图</p></div>
+    <div class="pair">
+      <figure><a href="previews/time-source-light.png"><img src="previews/time-source-light.png" width="1200" height="1040" alt="Light 设计预览：系统数据恒亮、备用估算呼吸、计算中同步星轨、无法计算红色脉动，以及银灰、绿色、蓝色渐变时钟。"></a><figcaption><strong>Light · 轻而清晰</strong>中性轮廓与淡淡渐变，保留时间栏目的熟悉结构。</figcaption></figure>
+      <figure><a href="previews/time-source-dark.png"><img src="previews/time-source-dark.png" width="1200" height="1040" alt="Dark 设计预览：与 Light 相同的四种来源状态，银灰时钟和主题光点适配深色背景。"></a><figcaption><strong>Dark · 微光有度</strong>光点与指针跟随主题；无法计算时，仅状态光点变红。</figcaption></figure>
+    </div>
+    <div class="motion"><div><h3>一圈，一次呼吸。</h3><p>计算中立即开始斜向绕行，星轨与呼吸共同收暗；停歇 0.5 秒，再开始下一圈。</p></div><a class="button" href="motion-preview.html">查看动态设计 →</a></div>
+    <p class="note">系统值恒亮；系统值暂缺时，备用估算缓慢呼吸。图中时间为示例，静态图展示动效的一帧。以上为已批准 HTML / SVG 设计预览，并非 App 运行截图或测量准确率演示。</p>
+  </section>
+  <section id="icons" aria-labelledby="icons-title">
+    <div class="section-head"><h2 id="icons-title">统一的图标语言</h2><p class="note">保留的批准原稿 · 原生离屏图标效果</p></div>
+    <figure><a href="previews/vector-preview.png"><img src="previews/vector-preview.png" width="1680" height="660" loading="lazy" alt="六枚 Modules 图标的 Dark 和 Light 离屏效果，含功率流、环形仪表、功率条、历史、电池时间和进程活动。"></a><figcaption><strong>Modules · 六枚模块图标</strong>从功率流到进程活动，轮廓与渐变保持一致。Dark 在上，Light 在下。</figcaption></figure>
+    <div class="families wide">
+      <figure><a href="previews/sidebar-vector-preview.png"><img src="previews/sidebar-vector-preview.png" width="900" height="780" loading="lazy" alt="General、Display、Modules 三枚侧栏图标的 Dark、Light 和选中状态。"></a><figcaption><strong>侧栏 · 三枚导航图标</strong>Dark、Light 与强调选中状态。</figcaption></figure>
+      <figure><a href="previews/general-vector-preview.png"><img src="previews/general-vector-preview.png" width="1400" height="660" loading="lazy" alt="登录启动、系统电池图标、检查更新、自动更新和反馈五枚 General 图标。"></a><figcaption><strong>General · 五枚设置图标</strong>Dark 在上，Light 在下；沿用已批准的设置图标原稿。</figcaption></figure>
+    </div>
+  </section>
+  <section id="power" aria-labelledby="power-title">
+    <div class="section-head"><h2 id="power-title">颜色，回应供电状态</h2><p class="note">固定场景 · 原生离屏图标效果</p></div>
+    <div class="pair">
+      <figure><a href="previews/power-vector-preview.png"><img src="previews/power-vector-preview.png" width="1400" height="1120" loading="lazy" alt="既有 Power 图标在充电、接电已满、电池供电与混合供电四种状态下的 Dark 和 Light 效果。"></a><figcaption><strong>Power · 供电图标</strong>充电绿、接电蓝、混合供电中的电池辅助琥珀色，各有含义。</figcaption></figure>
+      <figure><a href="previews/power-state-matrix.png"><img src="previews/power-state-matrix.png" width="1400" height="1632" loading="lazy" alt="Power 图标六状态矩阵：充电、已满、电池、混合供电、低电量和低电量模式，Dark 在上，Light 在下。"></a><figcaption><strong>六种状态 · Light / Dark</strong>加入低电量与低电量模式。以上两张保留效果图展示既有五枚 Power 图标；新增渐变时钟见页面上方。</figcaption></figure>
+    </div>
+    <p class="note">这些设置与供电图标效果图从批准来源逐字节保留，使用固定场景离屏绘制，并非运行中的 App 窗口或实时电池数据。</p>
+  </section>
+  <section id="sources" aria-labelledby="sources-title">
+    <div class="section-head"><h2 id="sources-title">可编辑 SVG 原稿</h2><p class="note">20 枚原稿 · 4 个版本化源文件包</p></div>
+    <div class="sources">
+      <article class="source"><h3>Modules</h3><p>6 枚模块图标</p><a href="Wattson-v5.0.2-Modules-SVG.zip" download>下载 SVG ZIP</a></article>
+      <article class="source"><h3>侧栏</h3><p>3 枚导航图标</p><a href="Wattson-v5.0.2-Sidebar-SVG.zip" download>下载 SVG ZIP</a></article>
+      <article class="source"><h3>General</h3><p>5 枚设置图标</p><a href="Wattson-v5.0.2-General-SVG.zip" download>下载 SVG ZIP</a></article>
+      <article class="source"><h3>Power</h3><p>6 枚图标，含新时钟</p><a href="Wattson-v5.0.2-Power-SVG.zip" download>下载 SVG ZIP</a></article>
+    </div>
+    <p class="note">原稿与本版本源码逐字节一致，背景透明、无嵌入位图。App 绘图按外观与供电状态赋色；SVG 中的蓝色是主题色占位。状态光点由原生代码绘制，动态设计在上方单独预览。</p>
+    <p class="note"><a href="previews/time-source-light.svg" download>Light 设计图 SVG</a> · <a href="previews/time-source-dark.svg" download>Dark 设计图 SVG</a> · <a href="manifest.json">来源清单</a> · <a href="SHA256SUMS.txt">SHA-256 校验</a></p>
+  </section>
+  <footer>Wattson 5.0.2 · 设计资源与安装包分开提供。<br><a href="https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.2">查看版本说明与安装方式</a> · <a href="../../">Wattson 首页</a></footer>
+</main>
+</body>
+</html>

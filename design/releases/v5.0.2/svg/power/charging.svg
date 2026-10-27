@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#C7C7CC" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title>Wattson Charging battery</title>
+<defs>
+<linearGradient id="charge" gradientUnits="userSpaceOnUse" x1="4.5" y1="8.1" x2="18" y2="15.9">
+<stop offset="0" stop-color="#0A84FF" stop-opacity="0.42"/>
+<stop offset="1" stop-color="#0A84FF" stop-opacity="0.12"/>
+</linearGradient>
+</defs>
+<rect x="2.5" y="6.2" width="17.2" height="11.6" rx="2.5" stroke="currentColor" stroke-width="1.3"/>
+<path d="M 21.3 10.4 L 21.3 13.6" stroke="#0A84FF" stroke-width="1.3"/>
+<rect x="4.5" y="8.1" width="13.2" height="7.8" rx="1.1" fill="url(#charge)" data-decorative="true"/>
+<path d="M 12.9 6.5 L 8.9 12.6 L 11.5 12.6 L 10.7 17.5 L 15.6 10.9 L 12.8 10.9 Z" fill="#0A84FF"/>
+</svg>

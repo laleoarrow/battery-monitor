@@ -70,6 +70,11 @@ are historical records superseded by `implementation/native/`.
 
 ## Local installation
 
-Packaging and canonical installation verification are in progress. Final
-installer hashes and installed app/helper/receipt/settings checks will be recorded
-under `installation/`; installation is not yet asserted here.
+The local universal PKG/DMG passed structural and checksum verification.
+`installation/local-artifacts.json` records their hashes and completed scratch
+cleanup. The preview installation was still waiting for administrator
+authentication when the user requested public release. Its owned authorization
+request was stopped before an installer began, avoiding a duplicate upgrade;
+the canonical 5.0.1 payload and settings were verified unchanged. See
+`installation/preview-install-deferred.json`. Canonical synchronization will use
+the exact reviewed public 5.0.2 PKG after its public release gates pass.

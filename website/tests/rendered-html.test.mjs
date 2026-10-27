@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
+import { access, readFile, readdir, stat } from "node:fs/promises";
 import test from "node:test";
 
 async function render() {
@@ -213,6 +213,29 @@ test("exports a server-independent GitHub Pages document", async () => {
   assert.doesNotMatch(html, /vinext\.navigationRuntime|"initialCacheKind":"dynamic"/i);
   assert.doesNotMatch(html, /class="copy-button"/i);
   assert.equal(assets.some((asset) => asset.endsWith(".js")), false);
+});
+
+test("exports current and historical design galleries with unchanged assets", async () => {
+  const galleries = new URL("../../design/releases/", import.meta.url);
+  let exportedCount = 0;
+  for (const entry of await readdir(galleries, { withFileTypes: true })) {
+    if (!entry.isDirectory() || !/^v\d+\.\d+\.\d+$/.test(entry.name)) continue;
+    const source = new URL(`${entry.name}/`, galleries);
+    const paths = await readdir(source, { recursive: true });
+    if (!paths.includes("index.html")) continue;
+    const destination = new URL(`../../docs/design/${entry.name}/`, import.meta.url);
+    for (const path of paths) {
+      const sourceFile = new URL(path, source);
+      if (!(await stat(sourceFile)).isFile()) continue;
+      assert.deepEqual(
+        await readFile(new URL(path, destination)),
+        await readFile(sourceFile),
+        `${entry.name}/${path} must remain byte-identical in the Pages artifact`,
+      );
+    }
+    exportedCount += 1;
+  }
+  assert.ok(exportedCount > 1, "the export must include historical galleries");
 });
 
 test("preserves non-site documentation during the Pages export", async () => {

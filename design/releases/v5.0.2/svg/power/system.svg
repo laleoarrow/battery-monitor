@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#C7C7CC" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title>Wattson System chip</title>
+<defs>
+<linearGradient id="core" gradientUnits="userSpaceOnUse" x1="8.5" y1="8.5" x2="15.5" y2="15.5">
+<stop offset="0" stop-color="#0A84FF" stop-opacity="0.08"/>
+<stop offset="1" stop-color="#0A84FF" stop-opacity="0.44"/>
+</linearGradient>
+</defs>
+<path d="M 8 3 L 8 5.5 M 12 3 L 12 5.5 M 16 3 L 16 5.5 M 8 18.5 L 8 21 M 12 18.5 L 12 21 M 16 18.5 L 16 21 M 3 8 L 5.5 8 M 3 12 L 5.5 12 M 3 16 L 5.5 16 M 18.5 8 L 21 8 M 18.5 12 L 21 12 M 18.5 16 L 21 16" stroke="currentColor" stroke-width="1.35"/>
+<rect x="5.5" y="5.5" width="13" height="13" rx="2.6" stroke="currentColor" stroke-width="1.35"/>
+<rect x="8.5" y="8.5" width="7" height="7" rx="1.4" fill="url(#core)" data-decorative="true"/>
+<rect x="8.5" y="8.5" width="7" height="7" rx="1.4" stroke="#0A84FF" stroke-width="1.2"/>
+</svg>

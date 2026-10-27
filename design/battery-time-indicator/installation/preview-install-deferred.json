@@ -1,0 +1,8 @@
+{
+  "reason": "User requested public release; defer canonical synchronization until the exact reviewed public PKG is available, avoiding a duplicate local preview install.",
+  "ownedAuthorizationRequestPID": 83886,
+  "action": "SIGTERM to the owned osascript authorization request while no installer process existed",
+  "publicInstallStillRequired": true,
+  "canonicalPayloadAndSettingsUnchanged": true,
+  "canonicalVersion": "5.0.1"
+}

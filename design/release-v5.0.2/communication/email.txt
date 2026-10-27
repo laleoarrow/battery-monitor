@@ -1,0 +1,40 @@
+Cody，你好：
+
+Wattson 5.0.2 带来一个小而实用的更新：在续航时间旁，用一颗微光星球，告诉你当前数值来自哪里。
+
+🔥 续航有来源，状态看得见
+
+主题色恒亮：正在显示 macOS 提供的预计时间。
+缓慢呼吸：正在使用来自电池控制器或 Wattson 的本地估算。
+倾斜星轨：仍在计算中。星点与呼吸同步，绕行一圈后稍作停歇。
+红色呼吸：当前无法取得可用估算，Wattson 会继续尝试读取。
+
+🔥 熟悉的界面，多一点细腻
+
+渐变时钟与现有图标保持一致，光点随供电状态和浅深色主题调整。开启“减少动态效果”后保留静态指示，来源说明仍可查看。
+
+所有时间均为动态预测，会随工作负载与充电条件更新。
+
+设计预览
+浅色：https://laleoarrow.github.io/battery-monitor/design/v5.0.2/previews/time-source-light.png
+深色：https://laleoarrow.github.io/battery-monitor/design/v5.0.2/previews/time-source-dark.png
+版本设计示意，展示浅深色与状态细节；不是运行中 App 的截图。
+完整设计画廊：https://laleoarrow.github.io/battery-monitor/design/v5.0.2/
+
+查看 5.0.2 更新
+https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.2
+
+完整安装 · PKG
+https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.2/Wattson-v5.0.2-macos-universal.pkg
+
+轻量安装 · DMG
+https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.2/Wattson-v5.0.2-macos-universal.dmg
+
+支持 macOS 12 及以上，兼容 Apple Silicon 与 Intel。
+已有 PKG / Homebrew 安装请继续通过 PKG / Homebrew 升级，以同步 App 与辅助组件。DMG 仅安装 App，不包含辅助组件，提供无需该组件的只读监测。
+
+Community 版本：App / helper 为 ad-hoc 签名；PKG / DMG 未签名、未公证。macOS 的安全检查仍适用。
+校验文件：https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.2/SHA256SUMS.txt
+
+欢迎试用，也期待听到你的使用感受。
+Wattson

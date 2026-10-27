@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#E9E9E9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title>Wattson lanes module</title>
+<defs>
+<linearGradient id="middleBar" gradientUnits="userSpaceOnUse" x1="0" y1="8.2" x2="0" y2="22">
+<stop offset="0" stop-color="#0A84FF" stop-opacity="1"/>
+<stop offset="1" stop-color="#0A84FF" stop-opacity="0.38"/>
+</linearGradient>
+<linearGradient id="tallBar" gradientUnits="userSpaceOnUse" x1="0" y1="3.2" x2="0" y2="22">
+<stop offset="0" stop-color="#0A84FF" stop-opacity="1"/>
+<stop offset="1" stop-color="#0A84FF" stop-opacity="0.38"/>
+</linearGradient>
+</defs>
+<rect x="2.2" y="12.2" width="4.2" height="9.8" rx="0.85" stroke="currentColor" stroke-width="1.15"/>
+<rect x="9.6" y="8.2" width="4.2" height="13.8" rx="0.85" fill="url(#middleBar)" data-contrast="solid" stroke="currentColor" stroke-width="1.15"/>
+<rect x="17.0" y="3.2" width="4.2" height="18.8" rx="0.85" fill="url(#tallBar)" data-contrast="solid" stroke="currentColor" stroke-width="1.15"/>
+</svg>

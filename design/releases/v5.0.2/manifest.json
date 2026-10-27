@@ -1,0 +1,216 @@
+{
+  "schema": 1,
+  "version": "5.0.2",
+  "presentation": "Approved icon design previews and native offscreen artwork proofs",
+  "runtimeScreenshotsIncluded": false,
+  "retainedIconArtworkReusedUnchanged": true,
+  "approvedTimeDesignSource": "design/battery-time-indicator/planet-source-preview.html",
+  "motionPreview": "motion-preview.html",
+  "artworkScope": "Approved time-source indicator and gradient clock design compositions, plus retained Settings and Power offscreen artwork proofs. Example values only; no accuracy, live telemetry, composited material or native animation performance claim.",
+  "svgSources": [
+    {
+      "source": "design/settings/module-icons-vector/flow.svg",
+      "copy": "svg/modules/flow.svg",
+      "sha256": "e39a6f033c7e2d0fb692f4fd616fa8fd1833c9212febca20b3b984b24e68f232",
+      "bytes": 825
+    },
+    {
+      "source": "design/settings/module-icons-vector/history.svg",
+      "copy": "svg/modules/history.svg",
+      "sha256": "80aa04f4db75e7997cca70b06fa4dad5ac9fb93102f24556a322f1dea9d17a57",
+      "bytes": 1142
+    },
+    {
+      "source": "design/settings/module-icons-vector/lanes.svg",
+      "copy": "svg/modules/lanes.svg",
+      "sha256": "25f530db992fe2fd0c3d1b3bdd3d0805f75bea0612b17cc3bfa980d771a23cba",
+      "bytes": 1068
+    },
+    {
+      "source": "design/settings/module-icons-vector/ring.svg",
+      "copy": "svg/modules/ring.svg",
+      "sha256": "a019c3c532ded8d915da49e72999ad2dc28ae2def4ff75d6af813f8d2c5b8ce3",
+      "bytes": 1115
+    },
+    {
+      "source": "design/settings/module-icons-vector/runtime.svg",
+      "copy": "svg/modules/runtime.svg",
+      "sha256": "f73bd8ea33f222d5a5ae8bb9bafaaa6151653651552ed4b1c1fdd22caf9b6a4b",
+      "bytes": 803
+    },
+    {
+      "source": "design/settings/module-icons-vector/topProcesses.svg",
+      "copy": "svg/modules/topProcesses.svg",
+      "sha256": "4c7baf0b061603ec5c4c3236c9350c7f2bbb8dd0e7f0733145a8e0e8e2c852f3",
+      "bytes": 1078
+    },
+    {
+      "source": "design/settings/sidebar-icons-vector/display.svg",
+      "copy": "svg/sidebar/display.svg",
+      "sha256": "894541c98670a340a46d32944d3623eb4e632128ad3305ff204f7ef1d02fe7bf",
+      "bytes": 802
+    },
+    {
+      "source": "design/settings/sidebar-icons-vector/general.svg",
+      "copy": "svg/sidebar/general.svg",
+      "sha256": "73a3a1329995cad9a4daaccdfceca3b43ea23603f391aaa1ae4e9a49b2ec8b18",
+      "bytes": 949
+    },
+    {
+      "source": "design/settings/sidebar-icons-vector/modules.svg",
+      "copy": "svg/sidebar/modules.svg",
+      "sha256": "bb0e4b22290166c7dd00d0621711bbf84087f3d4100c1918b58e3c7f2b836ea5",
+      "bytes": 867
+    },
+    {
+      "source": "design/settings/general-icons-vector/automatic.svg",
+      "copy": "svg/general/automatic.svg",
+      "sha256": "79544b47e4c3a8f77b384d209a4b51f7a626a646066a262b5e4d49648b6ea76e",
+      "bytes": 840
+    },
+    {
+      "source": "design/settings/general-icons-vector/battery.svg",
+      "copy": "svg/general/battery.svg",
+      "sha256": "2ac96e43a5e0f0f8a976f7ebb8d177c5c47a8ec3d6ef32e2a9408243a0404956",
+      "bytes": 885
+    },
+    {
+      "source": "design/settings/general-icons-vector/feedback.svg",
+      "copy": "svg/general/feedback.svg",
+      "sha256": "3e3a039db30e6df4aa8d562b7dec11d82747af1b9183d51bc9ca2575c438e06d",
+      "bytes": 1304
+    },
+    {
+      "source": "design/settings/general-icons-vector/login.svg",
+      "copy": "svg/general/login.svg",
+      "sha256": "8aee865a0cfa5845a90d37eb527b5b27ab5f3ebbe4fa9eb7c15850583305091d",
+      "bytes": 837
+    },
+    {
+      "source": "design/settings/general-icons-vector/update.svg",
+      "copy": "svg/general/update.svg",
+      "sha256": "ce2d936eefef8b25abfcf6dba4d4ba92b9fcc540710d4b6d4faff84c50c64bf9",
+      "bytes": 705
+    },
+    {
+      "source": "design/popover/power-icons-vector/adapter.svg",
+      "copy": "svg/power/adapter.svg",
+      "sha256": "ac4bb3e8b73b4dc61b2181e80c26a0da21faeb4c60933c3a03c0c32691242cc4",
+      "bytes": 1513
+    },
+    {
+      "source": "design/popover/power-icons-vector/battery.svg",
+      "copy": "svg/power/battery.svg",
+      "sha256": "0692d01c6a31e8e331c32177ab3071316f98e08834ebdedcba568e44807da43d",
+      "bytes": 754
+    },
+    {
+      "source": "design/popover/power-icons-vector/charging.svg",
+      "copy": "svg/power/charging.svg",
+      "sha256": "6db3bf2053e422e43a2c384d7f4bee82be01b4b9364d5f4359560bf44c2fbd39",
+      "bytes": 829
+    },
+    {
+      "source": "design/popover/power-icons-vector/clock.svg",
+      "copy": "svg/power/clock.svg",
+      "sha256": "50bfc927e6a920c77d07debc9daa8729d6d8d8dd2f0f4645f45b8f805fc95f1d",
+      "bytes": 730
+    },
+    {
+      "source": "design/popover/power-icons-vector/disconnected.svg",
+      "copy": "svg/power/disconnected.svg",
+      "sha256": "234ea9638c0c611d618f290be06a941c9f92bbdcfc73d306e6c38515120b06ff",
+      "bytes": 1538
+    },
+    {
+      "source": "design/popover/power-icons-vector/system.svg",
+      "copy": "svg/power/system.svg",
+      "sha256": "d3cee58412f7ad41e616919b233438d0379b1515d03cc0f5b1964ddfb91212c7",
+      "bytes": 983
+    }
+  ],
+  "sourcePackages": [
+    {
+      "path": "Wattson-v5.0.2-Modules-SVG.zip",
+      "sha256": "76da0ab43c2ed6ac1904a6d10c0eb137e98c1a50feee121ef775180f6547cdc0",
+      "bytes": 3988,
+      "runtimeMasterCount": 6
+    },
+    {
+      "path": "Wattson-v5.0.2-Sidebar-SVG.zip",
+      "sha256": "727c2ec75e7624b4f689fab69d3a27c881ed1c53f2f7b50f10ee0e6832a3c0bb",
+      "bytes": 2066,
+      "runtimeMasterCount": 3
+    },
+    {
+      "path": "Wattson-v5.0.2-General-SVG.zip",
+      "sha256": "7ba1ee8312cfa6b390df5400fe9885c312becb9ac7906c31785c11a62ea76225",
+      "bytes": 3404,
+      "runtimeMasterCount": 5
+    },
+    {
+      "path": "Wattson-v5.0.2-Power-SVG.zip",
+      "sha256": "eea5fbbeb7ffd87097d9bdb0ca7dbae03b478aefcf1433fb18f52d907a179ad7",
+      "bytes": 4298,
+      "runtimeMasterCount": 6
+    }
+  ],
+  "previews": [
+    {
+      "path": "previews/vector-preview.png",
+      "source": "design/settings/module-icons-vector/vector-preview.png",
+      "sha256": "2a5ffae110a6cda6ea88ca123467af52e3b97e8405a89d079d37d164da913886",
+      "bytes": 112392,
+      "method": "Existing approved native offscreen artwork proof, copied unchanged; no running-app screenshot"
+    },
+    {
+      "path": "previews/sidebar-vector-preview.png",
+      "source": "design/settings/sidebar-icons-vector/sidebar-vector-preview.png",
+      "sha256": "9337177a387d0562b47f16edfddb9ed5ad965ac3f91566478a13ba75c97d9c5c",
+      "bytes": 64622,
+      "method": "Existing approved native offscreen artwork proof, copied unchanged; no running-app screenshot"
+    },
+    {
+      "path": "previews/general-vector-preview.png",
+      "source": "design/settings/general-icons-vector/general-vector-preview.png",
+      "sha256": "06a71b779e47e63b423b014eee8a454f6c2edcbd6c2ce74fd7cdd4bdbf7a9598",
+      "bytes": 106510,
+      "method": "Existing approved native offscreen artwork proof, copied unchanged; no running-app screenshot"
+    },
+    {
+      "path": "previews/power-vector-preview.png",
+      "source": "design/popover/power-icons-vector/power-vector-preview.png",
+      "sha256": "d7e058a2d9cbc53274625359a5ee27c5b7700647a5dae8550fde2a3040ffa08b",
+      "bytes": 167053,
+      "method": "Existing approved native offscreen artwork proof, copied unchanged; no running-app screenshot"
+    },
+    {
+      "path": "previews/power-state-matrix.png",
+      "source": "design/popover/power-icons-vector/power-state-matrix.png",
+      "sha256": "8a1c76304a556dc02b9e94b6af0e4be13b52dcb55a56d085578ac44175e6082d",
+      "bytes": 231051,
+      "method": "Existing approved native offscreen artwork proof, copied unchanged; no running-app screenshot"
+    },
+    {
+      "path": "previews/time-source-light.png",
+      "source": "design/releases/v5.0.2/previews/time-source-light.svg",
+      "sourceSha256": "746759576a97b8e4d34557ac3bdc77f036304a43d5767891afc76969c06d8c87",
+      "sha256": "af03e6514217e3d48befdfdf60db323364234562f05bbd47535a2e647c3dc5c1",
+      "bytes": 131330,
+      "width": 1200,
+      "height": 1040,
+      "method": "Browser-rendered approved SVG design composition; fixed example values; no running-app screenshot"
+    },
+    {
+      "path": "previews/time-source-dark.png",
+      "source": "design/releases/v5.0.2/previews/time-source-dark.svg",
+      "sourceSha256": "57d74bda4d22e6845c916bb33ce5e1cb500f0d8758cb04dd04a16ed0cdcd94ae",
+      "sha256": "07407e2e54dbdf8ae413f44a3ecb23451eac8171402c6a5098d70091cd52d114",
+      "bytes": 132718,
+      "width": 1200,
+      "height": 1040,
+      "method": "Browser-rendered approved SVG design composition; fixed example values; no running-app screenshot"
+    }
+  ],
+  "installerAssetContractUnchanged": true
+}
